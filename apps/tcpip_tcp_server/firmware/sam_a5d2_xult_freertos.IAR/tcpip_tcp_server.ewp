@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.1.24770</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -78,7 +78,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>SAM9X60	Microchip SAM9X60</state>
+                    <state>ATSAMA5D27	Microchip ATSAMA5D27</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -116,8 +116,8 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -133,31 +133,31 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>SAM9X60	Microchip SAM9X60</state>
+                    <state>ATSAMA5D27	Microchip ATSAMA5D27</state>
                 </option>
                 <option>
                     <name>FPU2</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>5</state>
                 </option>
                 <option>
                     <name>NrRegs</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>NEON</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -202,12 +202,12 @@
                 </option>
                 <option>
                     <name>TrustZone</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZoneModes</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -215,12 +215,14 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>36</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state>__SAM9X60__</state>
+                    <state>__FPU_PRESENT=1</state>
+                    <state>__SAMA5D2__</state>
+                    <state>__PIC32C__</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -260,7 +262,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state>Pe188, Pe186, Pe1029</state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -345,15 +347,15 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\common</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common</state>
                     <state>$PROJ_DIR$\..\src</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos</state>
-                    <state>$PROJ_DIR$\..\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include</state>
                     <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926</state>
+                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\include</state>
                     <state>$PROJ_DIR$\.</state>
                 </option>
@@ -367,7 +369,7 @@
                 </option>
                 <option>
                     <name>IProcessorMode2</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCOptLevel</name>
@@ -476,10 +478,6 @@
                 <option>
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>CCStackProtection</name>
-                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -612,7 +610,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state>$FILE_BNAME$.o</state>
+                    <state />
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -628,6 +626,9 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
+                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\.</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -716,7 +717,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>sam_9x60_ek_freertos.out</state>
+                    <state>sam_a5d2_xult_freertos.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -780,7 +781,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\ddram.icf</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -828,7 +829,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state />
+                    
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -1013,7 +1014,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>tcpip_tcp_client_import_lib.o</state>
+                    <state>###Unitialized###</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1146,7 +1147,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>SAM9X60	Microchip SAM9X60</state>
+                    <state>ATSAMA5D27	Microchip ATSAMA5D27</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -1184,8 +1185,8 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1201,31 +1202,31 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>SAM9X60	Microchip SAM9X60</state>
+                    <state>ATSAMA5D27	Microchip ATSAMA5D27</state>
                 </option>
                 <option>
                     <name>FPU2</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>5</state>
                 </option>
                 <option>
                     <name>NrRegs</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>NEON</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>28</version>
-                    <state>12</state>
+                    <version>27</version>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -1270,12 +1271,12 @@
                 </option>
                 <option>
                     <name>TrustZone</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZoneModes</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -1283,12 +1284,14 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>36</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state>__SAM9X60__</state>
+                    <state>__FPU_PRESENT=1</state>
+                    <state>__SAMA5D2__</state>
+                    <state>__PIC32C__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>
@@ -1414,15 +1417,15 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\common</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common</state>
                     <state>$PROJ_DIR$\..\src</state>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos</state>
-                    <state>$PROJ_DIR$\..\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include</state>
                     <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926</state>
+                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\include</state>
                     <state>$PROJ_DIR$\.</state>
                 </option>
@@ -1436,7 +1439,7 @@
                 </option>
                 <option>
                     <name>IProcessorMode2</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCOptLevel</name>
@@ -1545,10 +1548,6 @@
                 <option>
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>CCStackProtection</name>
-                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -1697,6 +1696,9 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
+                    <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\.</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1785,7 +1787,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>sam_9x60_ek_freertos.out</state>
+                    <state>sam_a5d2_xult_freertos.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1849,7 +1851,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\ddram.icf</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2145,64 +2147,61 @@
             <group>
                 <name>config</name>
                 <group>
-                    <name>sam_9x60_ek_freertos</name>
-                    <group>
-                        <name>bsp</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\bsp\bsp.h</name>
-                        </file>
-                    </group>
+                    <name>sam_a5d2_xult_freertos</name>
                     <group>
                         <name>peripheral</name>
                         <group>
                             <name>pit</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\pit\plib_pit.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pit\plib_pit.h</name>
                             </file>
                         </group>
                         <group>
                             <name>tc</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\tc\plib_tc0.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\tc\plib_tc0.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\tc\plib_tc_common.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\tc\plib_tc_common.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>uart</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\uart\plib_uart_common.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\uart\plib_uart1.h</name>
                             </file>
                         </group>
                         <group>
                             <name>mmu</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\mmu\plib_mmu.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\mmu\plib_mmu.h</name>
                             </file>
+                        </group>
+                        <group>
+                            <name>matrix</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\mmu\cp15.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\matrix\plib_matrix.h</name>
                             </file>
                         </group>
                         <group>
                             <name>clk</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\clk\plib_clk.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\clk\plib_clk.h</name>
                             </file>
                         </group>
                         <group>
                             <name>pio</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\pio\plib_pio.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio.h</name>
                             </file>
                         </group>
                         <group>
                             <name>aic</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\aic\plib_aic.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>dbgu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\dbgu\plib_dbgu_common.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\dbgu\plib_dbgu.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\aic\plib_aic.h</name>
                             </file>
                         </group>
                     </group>
@@ -2211,427 +2210,427 @@
                         <group>
                             <name>time</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\time\sys_time.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\time\sys_time.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\time\sys_time_definitions.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\time\sys_time_definitions.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\time\src\sys_time_local.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\time\src\sys_time_local.h</name>
                             </file>
                         </group>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\sys_clk_h2_adapter.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_clk_h2_adapter.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\sys_time_h2_adapter.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_time_h2_adapter.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\sys_random_h2_adapter.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_random_h2_adapter.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\sys_reset_h2_adapter.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_reset_h2_adapter.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\system.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\system.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\system_common.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\system_common.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\system_module.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\system_module.h</name>
                         </file>
                         <group>
                             <name>int</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\int\sys_int.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\sys_int.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\int\sys_int_mapping.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>cache</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\cache\sys_cache.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\sys_int_mapping.h</name>
                             </file>
                         </group>
                         <group>
                             <name>debug</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\debug\sys_debug.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\sys_debug.h</name>
                             </file>
                         </group>
                         <group>
                             <name>command</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\command\sys_command.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\command\sys_command.h</name>
                             </file>
                         </group>
                         <group>
                             <name>console</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\sys_console.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\sys_console.h</name>
                             </file>
                         </group>
+                    </group>
+                    <group>
+                        <name>bsp</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\bsp\bsp.h</name>
+                        </file>
                     </group>
                     <group>
                         <name>library</name>
                         <group>
                             <name>tcpip</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_common_ports.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_common_ports.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_mac.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_mac.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_mac_object.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_mac_object.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_manager.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_manager.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_heap.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_heap.h</name>
                             </file>
                             <group>
                                 <name>src</name>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_heap_alloc.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_heap_alloc.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ndp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ndp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ndp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ndp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ipv4_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv4_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ipv4_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv4_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ipv6_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv6_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ipv6_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv6_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\icmp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\icmp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\icmpv6_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\icmpv6_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\arp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\arp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\arp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\arp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\udp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\udp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\udp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\udp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcps_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcps_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcps_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcps_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\zero_conf_helper.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\zero_conf_helper.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\zero_conf_link_local_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\zero_conf_link_local_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\zero_conf_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\zero_conf_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dns_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dns_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dns_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dns_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dnss_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dnss_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dnss_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dnss_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ftp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ftp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ftpc_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftpc_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ftpc_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftpc_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\nbns_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\nbns_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ddns_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ddns_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\telnet_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\telnet_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\smtp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\smtp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\sntp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\sntp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\http_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\http_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\http_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\http_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\http_net_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\http_net_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\http_net_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\http_net_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\snmp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\snmp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\snmp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\snmp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\snmpv3_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\snmpv3_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_announce_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_announce_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\smtpc_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\smtpc_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\smtpc_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\smtpc_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\igmp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\igmp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\igmp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\igmp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tftpc_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tftpc_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tftpc_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tftpc_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tftps_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tftps_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tftps_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tftps_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_reboot_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_reboot_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\iperf_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\iperf_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_commands_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_commands_manager.h</name>
                                 </file>
                                 <group>
                                     <name>common</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\common\helpers.h</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\helpers.h</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\common\sys_fs_shell.h</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_shell.h</name>
                                     </file>
                                 </group>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\hash_fnv.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\hash_fnv.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\link_list.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\link_list.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\oahash.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\oahash.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_helpers_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_helpers_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_manager_control.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_manager_control.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_module_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_module_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_notify.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_notify.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_packet.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_packet.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_types.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_types.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\berkeley_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\berkeley_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcpv6_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcpv6_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcpv6_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcpv6_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\lldp_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\lldp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\lldp_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\lldp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\lldp_tlv.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\lldp_tlv.h</name>
                                 </file>
                             </group>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_helpers.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_helpers.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ndp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ndp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ipv4.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ipv4.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ipv6.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ipv6.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\icmpv6.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\icmpv6.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\dhcpv6.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dhcpv6.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\arp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\arp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\udp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\udp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\berkeley_api.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\berkeley_api.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\dhcp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dhcp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\dhcps.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dhcps.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\zero_conf_link_local.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\zero_conf_link_local.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\zero_conf_multicast_dns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\zero_conf_multicast_dns.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\dns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dns.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\dnss.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dnss.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ftp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ftp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ftpc.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ftpc.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\icmp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\icmp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\nbns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\nbns.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\ddns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ddns.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\telnet.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\telnet.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\smtp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\smtp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\sntp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\sntp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\http.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\http.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\http_net.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\http_net.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\snmp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\snmp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\snmpv3.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\snmpv3.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_announce.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_announce.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\lldp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\lldp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\smtpc.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\smtpc.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\igmp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\igmp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tftpc.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tftpc.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tftps.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tftps.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_reboot.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_reboot.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\iperf.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\iperf.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_commands.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_commands.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\tcpip_ethernet.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\tcpip_ethernet.h</name>
                             </file>
                         </group>
                     </group>
@@ -2640,44 +2639,65 @@
                         <group>
                             <name>pres</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\net_pres\pres\net_pres.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\net_pres.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\net_pres\pres\net_pres_socketapi.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\net_pres_socketapi.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\net_pres\pres\net_pres_socketapiconversion.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\net_pres_socketapiconversion.h</name>
                             </file>
                         </group>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system_config.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system_config.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system_definitions.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system_definitions.h</name>
                     </file>
                     <group>
                         <name>driver</name>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\driver.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\driver.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\driver_common.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\driver_common.h</name>
                         </file>
                         <group>
-                            <name>miim</name>
+                            <name>gmac</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\drv_miim.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\drv_gmac.h</name>
                             </file>
                             <group>
                                 <name>src</name>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\drv_miim_local.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\src\drv_gmac_local.h</name>
                                 </file>
                                 <group>
                                     <name>dynamic</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\dynamic\drv_miim_mapping.h</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\src\dynamic\drv_gmac_lib.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <name>miim</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\drv_miim.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\src\drv_miim_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\src\dynamic\drv_miim_mapping.h</name>
                                     </file>
                                 </group>
                             </group>
@@ -2685,221 +2705,245 @@
                         <group>
                             <name>ethphy</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\drv_ethphy.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\drv_ethphy.h</name>
                             </file>
                             <group>
                                 <name>src</name>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\drv_ethphy_local.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\src\drv_ethphy_local.h</name>
                                 </file>
                                 <group>
                                     <name>dynamic</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
                                     </file>
                                 </group>
                             </group>
                         </group>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\user.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\user.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\configuration.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\configuration.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\device_cache.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\device_cache.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\toolchain_specifics.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\toolchain_specifics.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\definitions.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\definitions.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\FreeRTOSConfig.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\FreeRTOSConfig.h</name>
                     </file>
                 </group>
             </group>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\drv_emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\drv_emac_local.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib.h</name>
-            </file>
             <group>
                 <name>packs</name>
                 <group>
-                    <name>SAM9X60_DFP</name>
+                    <name>ATSAMA5D27_DFP</name>
                     <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
+                        <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\device.h</name>
                     </file>
                     <group>
                         <name>component</name>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\adc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\acc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aes.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\adc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aic.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aes.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\bsc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aesb.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\can.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aic.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\classd.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aximx.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\dbgu.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\chipid.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\classd.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\flexcom.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\flexcom.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gfx2d.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\gmac.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gpbr.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\i2sc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\i2smcc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\icm.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\isi.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\isc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\lcdc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\l2cc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\lcdc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\mpddrc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\matrix.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\otpc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\mcan.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pio.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\mpddrc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pdmic.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit64b.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pio.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pit.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmecc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pmc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmerrloc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\ptc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pwm.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pwm.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\qspi.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\qspi.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rstc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\rstc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\rtc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtt.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\rxlp.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sckc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sckc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdmmc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sdmmc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdramc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\secumod.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sfr.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sfc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sha.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sfr.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\shdwc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sfrbu.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\smc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sha.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\ssc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\shdwc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\syscwp.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\smc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tc.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\spi.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tdes.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\ssc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\trng.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\tc.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\udphs.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\tdes.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhpfs.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\trng.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhphs.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\twihs.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\wdt.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\uart.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\xdmac.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\udphs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\uhphs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\wdt.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\xdmac.h</name>
                         </file>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
+                        <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\atsama5d27.h</name>
                     </file>
                     <group>
                         <name>pio</name>
                         <file>
-                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\pio\sam9x60.h</name>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\pio\sama5d27.h</name>
                         </file>
+                    </group>
+                </group>
+                <group>
+                    <name>CMSIS</name>
+                    <group>
+                        <name>CMSIS</name>
+                        <group>
+                            <name>Core_A</name>
+                            <group>
+                                <name>Include</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_cp15.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\core_ca.h</name>
+                                </file>
+                            </group>
+                        </group>
                     </group>
                 </group>
             </group>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\osal\osal.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\osal\osal.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\osal\osal_definitions.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\osal\osal_definitions.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\osal\osal_freertos.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\osal\osal_freertos.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\app.h</name>
@@ -2966,9 +3010,12 @@
                             <group>
                                 <name>SAM</name>
                                 <group>
-                                    <name>ARM926</name>
+                                    <name>CA5</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926\portmacro.h</name>
+                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portASM.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portmacro.h</name>
                                     </file>
                                 </group>
                             </group>
@@ -2982,13 +3029,7 @@
             <group>
                 <name>config</name>
                 <group>
-                    <name>sam_9x60_ek_freertos</name>
-                    <group>
-                        <name>bsp</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\bsp\bsp.c</name>
-                        </file>
-                    </group>
+                    <name>sam_a5d2_xult_freertos</name>
                     <group>
                         <name>library</name>
                         <group>
@@ -2996,64 +3037,64 @@
                             <group>
                                 <name>src</name>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\icmp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\icmp.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\nbns.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\nbns.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcp.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\arp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\arp.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_commands.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_commands.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\ipv4.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv4.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_heap_alloc.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_heap_alloc.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_heap_internal.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_heap_internal.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dhcp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcp.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dns.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dns.c</name>
                                 </file>
                                 <group>
                                     <name>common</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\helpers.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\helpers.c</name>
                                     </file>
                                 </group>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\hash_fnv.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\hash_fnv.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\oahash.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\oahash.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_helpers.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_helpers.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_manager.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_manager.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_notify.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_notify.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_packet.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_packet.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\tcpip_announce.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\tcpip_announce.c</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\udp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\udp.c</name>
                                 </file>
                             </group>
                         </group>
@@ -3063,43 +3104,49 @@
                         <group>
                             <name>pit</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\pit\plib_pit.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pit\plib_pit.c</name>
                             </file>
                         </group>
                         <group>
                             <name>tc</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\tc\plib_tc0.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\tc\plib_tc0.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>uart</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\uart\plib_uart1.c</name>
                             </file>
                         </group>
                         <group>
                             <name>mmu</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\mmu\plib_mmu.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\mmu\plib_mmu.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>matrix</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\matrix\plib_matrix.c</name>
                             </file>
                         </group>
                         <group>
                             <name>clk</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\clk\plib_clk.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\clk\plib_clk.c</name>
                             </file>
                         </group>
                         <group>
                             <name>pio</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\pio\plib_pio.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio.c</name>
                             </file>
                         </group>
                         <group>
                             <name>aic</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\aic\plib_aic.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>dbgu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\peripheral\dbgu\plib_dbgu.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\aic\plib_aic.c</name>
                             </file>
                         </group>
                     </group>
@@ -3108,81 +3155,78 @@
                         <group>
                             <name>time</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\time\src\sys_time.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\time\src\sys_time.c</name>
                             </file>
                         </group>
                         <group>
                             <name>console</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\src\sys_console_uart.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\src\sys_console_uart_definitions.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart_definitions.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\src\sys_console_uart.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart.c</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\src\sys_console.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console.c</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\console\src\sys_console_local.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_local.h</name>
                             </file>
                         </group>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\sys_time_h2_adapter.c</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_time_h2_adapter.c</name>
                         </file>
                         <group>
                             <name>int</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\int\src\sys_int.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>cache</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\cache\sys_cache.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\src\sys_int.c</name>
                             </file>
                         </group>
                         <group>
                             <name>command</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\command\src\sys_command.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\command\src\sys_command.c</name>
                             </file>
                         </group>
                         <group>
                             <name>debug</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\debug\src\sys_debug_local.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\src\sys_debug_local.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\system\debug\src\sys_debug.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\src\sys_debug.c</name>
                             </file>
                         </group>
                     </group>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\tasks.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\initialization.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\interrupts.c</name>
-                    </file>
                     <group>
-                        <name>stdio</name>
+                        <name>bsp</name>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\stdio\iar_monitor.c</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\bsp\bsp.c</name>
                         </file>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\cstartup.s</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\vectortrap.s</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\tasks.c</name>
                     </file>
                     <group>
                         <name>driver</name>
+                        <group>
+                            <name>gmac</name>
+                            <group>
+                                <name>src</name>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\src\dynamic\drv_gmac.c</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\gmac\src\dynamic\drv_gmac_lib_samA5D2.c</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
                         <group>
                             <name>miim</name>
                             <group>
@@ -3190,7 +3234,7 @@
                                 <group>
                                     <name>dynamic</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\dynamic\drv_miim.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\src\dynamic\drv_miim.c</name>
                                     </file>
                                 </group>
                             </group>
@@ -3202,37 +3246,46 @@
                                 <group>
                                     <name>dynamic</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_ethphy.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\src\dynamic\drv_ethphy.c</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
                                     </file>
                                 </group>
                             </group>
                         </group>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\freertos_hooks.c</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\initialization.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\interrupts.c</name>
+                    </file>
+                    <group>
+                        <name>stdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\stdio\iar_monitor.c</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\cstartup.s</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\fault_handlers.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\freertos_hooks.c</name>
                     </file>
                 </group>
             </group>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_statistics.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\osal\osal_freertos.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\osal\osal_freertos.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\app.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>
+                <name>$PROJ_DIR$\..\src\main.c</name>
             </file>
             <group>
                 <name>FreeRTOS</name>
@@ -3264,7 +3317,7 @@
                         <group>
                             <name>MemMang</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\MemMang\heap_3.c</name>
+                                <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\MemMang\heap_1.c</name>
                             </file>
                         </group>
                         <group>
@@ -3272,15 +3325,15 @@
                             <group>
                                 <name>SAM</name>
                                 <group>
-                                    <name>ARM926</name>
+                                    <name>CA5</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926\port.c</name>
+                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\port.c</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926\portASM.s</name>
+                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portASM.s</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\ARM926\FreeRTOS_tick_config.c</name>
+                                        <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\FreeRTOS_tick_config.c</name>
                                     </file>
                                 </group>
                             </group>
@@ -3292,11 +3345,8 @@
         <group>
             <name>Linker File</name>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\ddram.icf</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\ddr.icf</name>
             </file>
         </group>
     </group>
-    <file>
-        <name>$PROJ_DIR$\..\src\app_commands.c</name>
-    </file>
-</project>
+    </project>

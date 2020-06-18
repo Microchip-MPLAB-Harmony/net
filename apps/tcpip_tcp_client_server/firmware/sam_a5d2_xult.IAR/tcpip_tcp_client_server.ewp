@@ -1301,6 +1301,8 @@
                 <option>
                     <name>CCDefines</name>
                     <state>__FPU_PRESENT=1</state>
+                    <state>__SAMA5D2__</state>
+                    <state>__PIC32C__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>

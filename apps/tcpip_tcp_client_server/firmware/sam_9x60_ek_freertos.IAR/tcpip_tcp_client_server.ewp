@@ -220,8 +220,7 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state>__SAM9X60__
-</state>
+                    <state>__SAM9X60__</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1289,6 +1288,7 @@
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>__SAM9X60__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>

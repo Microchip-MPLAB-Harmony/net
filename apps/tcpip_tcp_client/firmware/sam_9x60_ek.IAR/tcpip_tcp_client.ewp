@@ -1298,6 +1298,7 @@
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>__SAM9X60__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>

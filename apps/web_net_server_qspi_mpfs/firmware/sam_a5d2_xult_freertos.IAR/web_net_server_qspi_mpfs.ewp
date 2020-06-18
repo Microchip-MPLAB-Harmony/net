@@ -1300,6 +1300,8 @@
                     <state>__FPU_PRESENT=1</state>
                     <state>HAVE_CONFIG_H</state>
                     <state>WOLFSSL_IGNORE_FILE_WARN</state>
+                    <state>__SAMA5D2__</state>
+                    <state>__PIC32C__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>
