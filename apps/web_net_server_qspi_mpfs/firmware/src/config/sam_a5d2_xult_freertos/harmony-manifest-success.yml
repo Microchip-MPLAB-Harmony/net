@@ -4,7 +4,7 @@
 
 
 project: web_net_server_qspi_mpfs
-creation_date: 2020-06-16T09:51:13.475-07:00[America/Phoenix]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-06-18T09:05:49.816-07:00[America/Phoenix]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: Standalone            # [IDE|Standalone|Headless]
 mplabx_version: NA        # if MPLAB X plugin only
@@ -16,7 +16,7 @@ modules:
     - {name: "bsp", version: "v3.7.0"}
     - {name: "bt", version: "unknown"}
     - {name: "CMSIS-FreeRTOS", version: "unknown"}
-    - {name: "core", version: "v3.7.1"}
+    - {name: "core", version: "v3.7.2"}
     - {name: "crypto", version: "v3.5.1"}
     - {name: "cryptoauthlib", version: "unknown"}
     - {name: "csp", version: "v3.7.1"}
