@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Advanced MPFS Settings</title>
+<title>IPV6_DATA_PIC_RAM Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01768.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01033.html" target="topic">MPFS Utility</a> &gt; <a href="01027.html" target="topic">Advanced MPFS Settings</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01027.html" target="topic">IPV6_DATA_PIC_RAM Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01032.html" target="topic">Previous</a> | <a href="01033.html" target="topic">Up</a> | <a href="01030.html" target="topic">Next</a></div>
+<a href="01026.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01065.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Advanced MPFS Settings Topic Title: Advanced MPFS Settings)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_DATA_PIC_RAM Topic Title: IPV6_DATA_PIC_RAM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Advanced MPFS Settings</div>
+IPV6_DATA_PIC_RAM Macro</div>
 </div>
 </div>
 
@@ -49,34 +49,17 @@ Advanced MPFS Settings</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Advanced Settings dialog found in Step 2 provides greater control over how files are processed.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="advanced_1_mpfs.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The<strong> Dynamic Files</strong> list indicates which file types to parse for dynamic variables. By default, all files with the extensions .htm, .html, .cgi, or .xml are parsed. If an application has dynamic variables in other file types, these types must be added to the list. This field must be a comma-separated list of extensions and file names.&nbsp;</p>
-<p class="Element10">
-Default Dynamic Files: *.htm, *.html, *.cgi, and *.xml.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The <strong>Do Not Compress</strong> field indicates which file types should never be compressed. Compressing files with GZIP saves both storage space and transmission time. However, this is only suitable for static content such as CSS or JavaScript. Any files with dynamic variables will automatically be excluded. In addition, any file that the device may need to process internally should be excluded. Files included via SSI include directive &lt;!--#include file=&quot;header.htm&quot; --&gt; should not be compressed, nor should any BIB file used for the SNMP module (if present). Additional file types can be added to this list if a custom application will be accessing the MPFS.&nbsp;</p>
-<p class="Element10">
-Default Do Not Compress Files: snmp.bib, and *.bin.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The GZIP compressor will attempt to shrink all files. In some cases, especially with images, little or no compression is achieved. When this occurs, the file is stored &quot;as is&quot; in the MPFS image.</p></div>
+Data to transmit is stored in PIC RAM</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">IPV6_DATA_PIC_RAM</span></strong> (0x3u)        <i><span style="color: #008000">// Data to transmit is stored in PIC RAM</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01768.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01033.html" target="topic">MPFS Utility</a> &gt; <a href="01027.html" target="topic">Advanced MPFS Settings</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01027.html" target="topic">IPV6_DATA_PIC_RAM Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +67,13 @@ The GZIP compressor will attempt to shrink all files. In some cases, especially 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01032.html" target="topic">Previous</a> | <a href="01033.html" target="topic">Up</a> | <a href="01030.html" target="topic">Next</a></div>
+<a href="01026.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01065.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Advanced MPFS Settings Topic Title: Advanced MPFS Settings)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_DATA_PIC_RAM Topic Title: IPV6_DATA_PIC_RAM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

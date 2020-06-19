@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_MIIM_Initialize Function</title>
+<title>DRV_MIIM_INDEX_0 Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00415.html" target="topic">a) Functions</a> &gt; <a href="00677.html" target="topic">DRV_MIIM_Initialize Function</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Configuring the Library</a> &gt; <a href="00677.html" target="topic">DRV_MIIM_INDEX_0 Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00671.html" target="topic">Previous</a> | <a href="00415.html" target="topic">Up</a> | <a href="00699.html" target="topic">Next</a></div>
+<a href="00673.html" target="topic">Previous</a> | <a href="00417.html" target="topic">Up</a> | <a href="00678.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_MIIM_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_INDEX_0 Topic Title: DRV_MIIM_INDEX_0 Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_MIIM_Initialize Function</div>
+DRV_MIIM_INDEX_0 Macro</div>
 </div>
 </div>
 
@@ -49,57 +49,28 @@ DRV_MIIM_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes the MIIM driver, making it ready for clients to open and use it.</p></div>
+MIIM Driver Module Index Numbers&nbsp;</p>
+<p class="Element10">
+These constants provide the MIIM driver index definitions.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">SYS_MODULE_OBJ <strong><span style="color: #000000">DRV_MIIM_Initialize</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">index</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">a valid handle to a driver object, if successful.</li>
-<li class="Element605">SYS_MODULE_OBJ_INVALID if initialization failed.</li>
-</ul></p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">DRV_MIIM_INDEX_0</span></strong> 0</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">This function must be called before any other MIIM routine is called.</li>
-<li class="Element605">This function should only be called once during system initialization unless <a href="00670.html" target="topic">DRV_MIIM_Deinitialize</a> is called to deinitialize the driver instance. </li>
-<li class="Element605">The returned object must be passed as argument to <a href="00709.html" target="topic">DRV_MIIM_Reinitialize</a>, <a href="00670.html" target="topic">DRV_MIIM_Deinitialize</a>, <a href="00725.html" target="topic">DRV_MIIM_Tasks</a> and <a href="00724.html" target="topic">DRV_MIIM_Status</a> routines.</li>
-</ul></p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
-</div>
+These constants should be used in place of hard-coded numeric literals.&nbsp;</p>
+<p class="Element10">
+These values should be passed into the <a href="00682.html" target="topic">DRV_MIIM_Initialize</a> and <a href="00704.html" target="topic">DRV_MIIM_Open</a> routines to identify the driver instance in use.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00415.html" target="topic">a) Functions</a> &gt; <a href="00677.html" target="topic">DRV_MIIM_Initialize Function</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Configuring the Library</a> &gt; <a href="00677.html" target="topic">DRV_MIIM_INDEX_0 Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +78,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00671.html" target="topic">Previous</a> | <a href="00415.html" target="topic">Up</a> | <a href="00699.html" target="topic">Next</a></div>
+<a href="00673.html" target="topic">Previous</a> | <a href="00417.html" target="topic">Up</a> | <a href="00678.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_MIIM_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_INDEX_0 Topic Title: DRV_MIIM_INDEX_0 Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

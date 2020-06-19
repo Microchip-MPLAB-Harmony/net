@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_NTP_QUERY_INTERVAL Macro</title>
+<title>TCPIP_NBNS_Task Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01362.html" target="topic">SNTP Module</a> &gt; <a href="01798.html" target="topic">Configuring the Library</a> &gt; <a href="03410.html" target="topic">TCPIP_NTP_QUERY_INTERVAL Macro</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01139.html" target="topic">NBNS Module</a> &gt; <a href="01739.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03410.html" target="topic">TCPIP_NBNS_Task Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03409.html" target="topic">Previous</a> | <a href="01798.html" target="topic">Up</a> | <a href="03411.html" target="topic">Next</a></div>
+<a href="01739.html" target="topic">Previous</a> | <a href="01739.html" target="topic">Up</a> | <a href="03408.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_NTP_QUERY_INTERVAL Topic Title: TCPIP_NTP_QUERY_INTERVAL Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_NBNS_Task Topic Title: TCPIP_NBNS_Task Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_NTP_QUERY_INTERVAL Macro</div>
+TCPIP_NBNS_Task Function</div>
 </div>
 </div>
 
@@ -49,17 +49,38 @@ TCPIP_NTP_QUERY_INTERVAL Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Defines how frequently to resynchronize the date/time, seconds (default: 10 minutes)</p></div>
+This function performs NBNS module tasks in the TCP/IP stack.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_NTP_QUERY_INTERVAL</span></strong> (10ul*60ul)</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_NBNS_Task</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The NBNS module should have been initialized.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01362.html" target="topic">SNTP Module</a> &gt; <a href="01798.html" target="topic">Configuring the Library</a> &gt; <a href="03410.html" target="topic">TCPIP_NTP_QUERY_INTERVAL Macro</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01139.html" target="topic">NBNS Module</a> &gt; <a href="01739.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03410.html" target="topic">TCPIP_NBNS_Task Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +88,13 @@ C</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03409.html" target="topic">Previous</a> | <a href="01798.html" target="topic">Up</a> | <a href="03411.html" target="topic">Next</a></div>
+<a href="01739.html" target="topic">Previous</a> | <a href="01739.html" target="topic">Up</a> | <a href="03408.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_NTP_QUERY_INTERVAL Topic Title: TCPIP_NTP_QUERY_INTERVAL Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_NBNS_Task Topic Title: TCPIP_NBNS_Task Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

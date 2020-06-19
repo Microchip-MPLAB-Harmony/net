@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_CertStoreGetServerCert Function</title>
+<title>IPV6_NO_UPPER_LAYER_CHECKSUM Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; c) Certificate Store Functions &gt; <a href="01065.html" target="topic">NET_PRES_CertStoreGetServerCert Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01065.html" target="topic">IPV6_NO_UPPER_LAYER_CHECKSUM Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01064.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01090.html" target="topic">Next</a></div>
+<a href="01027.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="03094.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_CertStoreGetServerCert@uint8_t **@int32_t *@uint8_t **@int32_t *@uint8_t Topic Title: NET_PRES_CertStoreGetServerCert Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NO_UPPER_LAYER_CHECKSUM Topic Title: IPV6_NO_UPPER_LAYER_CHECKSUM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_CertStoreGetServerCert Function</div>
+IPV6_NO_UPPER_LAYER_CHECKSUM Macro</div>
 </div>
 </div>
 
@@ -49,83 +49,17 @@ NET_PRES_CertStoreGetServerCert Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Get Server Certificate and Key function&nbsp;</p>
-<p class="Element10">
-This function is used by server connections to retrieve their certificate and private key. Multiple server certificates can be stored in the certificate store, for example one for a Web server and one for a mail server.</p></div>
+Value flag for no upper layer checksum</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_CertStoreGetServerCert</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> uint8_t ** <strong><span style="color: #000000">serverCertPtr</span></strong>, 
-    int32_t * <strong><span style="color: #000000">serverCertSize</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> uint8_t ** <strong><span style="color: #000000">serverKeyPtr</span></strong>, 
-    int32_t * <strong><span style="color: #000000">serverKeySize</span></strong>, 
-    uint8_t <strong><span style="color: #000000">certIndex</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serverCertPtr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to the server certificate&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serverCertSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The size of the server certificate&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serverKeyPtr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to the server private key&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serverKeySize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The size of the server private key&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-certIndex&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Most likely '0', but this parameter is provided to select a different server certificate&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">true - Indicates success</li>
-<li class="Element605">false - Indicates failure</li>
-</ul></p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">IPV6_NO_UPPER_LAYER_CHECKSUM</span></strong> (0xFFFFu)    <i><span style="color: #008000">// Value flag for no upper layer checksum</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; c) Certificate Store Functions &gt; <a href="01065.html" target="topic">NET_PRES_CertStoreGetServerCert Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01065.html" target="topic">IPV6_NO_UPPER_LAYER_CHECKSUM Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +67,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01064.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01090.html" target="topic">Next</a></div>
+<a href="01027.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="03094.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_CertStoreGetServerCert@uint8_t **@int32_t *@uint8_t **@int32_t *@uint8_t Topic Title: NET_PRES_CertStoreGetServerCert Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NO_UPPER_LAYER_CHECKSUM Topic Title: IPV6_NO_UPPER_LAYER_CHECKSUM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>getsockopt Function</title>
+<title>ftpc_config.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00785.html" target="topic">getsockopt Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01597.html" target="topic">Files</a> &gt; <a href="00785.html" target="topic">ftpc_config.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01402.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01304.html" target="topic">Next</a></div>
+<a href="00784.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="01582.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: getsockopt@SOCKET@uint32_t@uint32_t@uint8_t *@uint32_t * Topic Title: getsockopt Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ftpc_config.h Topic Title: ftpc_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-getsockopt Function</div>
+ftpc_config.h</div>
 </div>
 </div>
 
@@ -46,99 +46,92 @@ getsockopt Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Various options can be set at the <a href="01402.html" target="topic">socket</a> level. This function provides compatibility with BSD implementations.</p></div>
+Microchip Technology Inc.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">getsockopt</span></strong>(
-    <a href="01401.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    uint32_t <strong><span style="color: #000000">level</span></strong>, 
-    uint32_t <strong><span style="color: #000000">option_name</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">option_value</span></strong>, 
-    uint32_t * <strong><span style="color: #000000">option_length</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+ftpc_config.h</p></div>
 </div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element312">
+<p class="Element10">
+FTP Client Module API Header File&nbsp;</p>
+<p class="Element10">
+The FTPC module is the protocol which is used to transfer files.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Socket descriptor returned from a previous call to <a href="01402.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-level&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-On which level the operation is to be performed:
-<ul class="Element634">
-<li class="Element604"><a href="00942.html" target="topic">IPPROTO_IP</a> - Applies to the IP protocol layer (not yet supported)</li>
-<li class="Element604"><a href="00944.html" target="topic">IPPROTO_TCP</a> - Applies to the TCP protocol layer</li>
-<li class="Element604"><a href="01406.html" target="topic">SOL_SOCKET</a> - Applies to the <a href="01402.html" target="topic">socket</a> layer</li>
-<li class="Element604"><a href="00943.html" target="topic">IPPROTO_IPV6</a> - Applies to the IPv6 protocol layer (not yet supported)</li>
-<li class="Element604"><a href="00941.html" target="topic">IPPROTO_ICMPV6</a> - Applies to the ICMPv6 protocol layer (not yet supported)</li>
-</ul>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-option_name&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The name of the option to be set:
-<ul class="Element634">
-<li class="Element604"><a href="00944.html" target="topic">IPPROTO_TCP</a></li>
-<li class="Element604"><a href="01434.html" target="topic">TCP_NODELAY</a> - Specifies whether or not the stack should use the Nagle algorithm</li>
-<li class="Element604"><a href="01406.html" target="topic">SOL_SOCKET</a></li>
-<li class="Element604"><a href="01369.html" target="topic">SO_LINGER</a> - Specifies what the stack should do with unsent data on close()</li>
-<li class="Element604"><a href="01371.html" target="topic">SO_RCVBUF</a> - Specifies the size of the Receive Buffer (TCP only)</li>
-<li class="Element604"><a href="01375.html" target="topic">SO_SNDBUF</a> - Specifies the size of the Transmit Buffer</li>
-</ul>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-option_value&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-For all values of option_name this is a pointer to the data, which in most cases is an integer. The only exception is <a href="01369.html" target="topic">SO_LINGER</a> which points to a <a href="01102.html" target="topic">linger</a> structure.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-option_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The size of the data pointed to by option_value&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02472.html" target="topic">TCPIP_FTPC_COMMANDS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Specify whether FTP Client command in the tcpip_commands is enabled.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02507.html" target="topic">TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Specify the Default Receive Buffer Size for the FTP Client Data Socket if 0, the TCP Socket Receive buffer size will be used by FTPC data <a href="01409.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02508.html" target="topic">TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Specify the Default Transmit Buffer Size for the FTP Client Data Socket if 0, the TCP Socket Transmit buffer size will be used by FTPC data <a href="01409.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02540.html" target="topic">TCPIP_FTPC_MAX_NUM_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Specify the maximum number of supported simultaneous FTP client connections.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02573.html" target="topic">TCPIP_FTPC_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The FTP Client task rate in milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03917.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02574.html" target="topic">TCPIP_FTPC_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Specify the time-out for FTP Client commands, in seconds This is the time to wait for a response from FTP server&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element634">
-<li class="Element604">0 - If successful</li>
-<li class="Element604">-1 - If unsuccessful</li>
-</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00785.html" target="topic">getsockopt Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01597.html" target="topic">Files</a> &gt; <a href="00785.html" target="topic">ftpc_config.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -146,13 +139,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01402.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01304.html" target="topic">Next</a></div>
+<a href="00784.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="01582.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: getsockopt@SOCKET@uint32_t@uint32_t@uint8_t *@uint32_t * Topic Title: getsockopt Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ftpc_config.h Topic Title: ftpc_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

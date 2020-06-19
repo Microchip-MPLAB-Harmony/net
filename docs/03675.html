@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SNMPv3_TrapConfigDataGet Function</title>
+<title>TCPIP_SNMP_WriteCommunitySet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01314.html" target="topic">SNMP Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03675.html" target="topic">TCPIP_SNMPv3_TrapConfigDataGet Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01321.html" target="topic">SNMP Module</a> &gt; <a href="01791.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03675.html" target="topic">TCPIP_SNMP_WriteCommunitySet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03666.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03667.html" target="topic">Next</a></div>
+<a href="03671.html" target="topic">Previous</a> | <a href="01791.html" target="topic">Up</a> | <a href="03678.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPv3_TrapConfigDataGet@uint8_t@uint8_t *@uint8_t * Topic Title: TCPIP_SNMPv3_TrapConfigDataGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_WriteCommunitySet@int@int@uint8_t * Topic Title: TCPIP_SNMP_WriteCommunitySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SNMPv3_TrapConfigDataGet Function</div>
+TCPIP_SNMP_WriteCommunitySet Function</div>
 </div>
 </div>
 
@@ -49,14 +49,14 @@ TCPIP_SNMPv3_TrapConfigDataGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to get SNMPv3 message model type and security model type using user index.</p></div>
+This function is used to collect WRITE community string from user and set the community table with respect to the index value.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_SNMPv3_TrapConfigDataGet</span></strong>(
-    uint8_t <strong><span style="color: #000000">userIndex</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">msgModelType</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">securityModelType</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMP_WriteCommunitySet</span></strong>(
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">index</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">len</span></strong>, 
+    uint8_t * <strong><span style="color: #000000">src</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -80,19 +80,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-userIndex&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-user name index&nbsp;</div></td></tr><tr>
+One of the index of community table and it should be less than <a href="03631.html" target="topic">TCPIP_SNMP_MAX_COMMUNITY_SUPPORT</a>.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-msgModelType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-message processing type&nbsp;</div></td></tr><tr>
+Length of the community string expected. It should not be more than <a href="03626.html" target="topic">TCPIP_SNMP_COMMUNITY_MAX_LEN</a>.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-securityModelType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+src&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-security model type&nbsp;</div></td></tr></table></div></div>
+Copy this community string to SNMP community table.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -100,7 +100,11 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+
+<ul class="Element635">
+<li class="Element605">true - if the community string is collected</li>
+<li class="Element605">false - if the community string is not collected</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -114,7 +118,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01314.html" target="topic">SNMP Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03675.html" target="topic">TCPIP_SNMPv3_TrapConfigDataGet Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01321.html" target="topic">SNMP Module</a> &gt; <a href="01791.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03675.html" target="topic">TCPIP_SNMP_WriteCommunitySet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +126,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03666.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03667.html" target="topic">Next</a></div>
+<a href="03671.html" target="topic">Previous</a> | <a href="01791.html" target="topic">Up</a> | <a href="03678.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPv3_TrapConfigDataGet@uint8_t@uint8_t *@uint8_t * Topic Title: TCPIP_SNMPv3_TrapConfigDataGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_WriteCommunitySet@int@int@uint8_t * Topic Title: TCPIP_SNMP_WriteCommunitySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

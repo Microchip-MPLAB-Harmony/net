@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Overview</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00772.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Using the Library</a> &gt; <a href="00405.html" target="topic">Library Overview</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00405.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00396.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00400.html" target="topic">Next</a></div>
+<a href="00410.html" target="topic">Previous</a> | <a href="00777.html" target="topic">Up</a> | <a href="00402.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Overview</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,55 +49,20 @@ Library Overview</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Refer to the <strong>Driver Library Overview</strong> section for information on how the driver operates in a system. Refer to the <a href="01106.html" target="topic">TCP/IP Stack MAC Driver Module</a> help for the interface that the Ethernet driver has to implement in a MPLAB Harmony system.&nbsp;</p>
+The configuration of the Ethernet MAC driver is done as part of the MPLAB Harmony TCP/IP Stack configuration and is based on the <span class="Element146"><a href="03111.html" target="topic">tcpip_mac_config.h</a> and specific GMAC parameters with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
 <p class="Element10">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the Ethernet GMAC Driver Library.</span> &nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="40%">
-<div class="Element66">
-Library Interface Section&nbsp;</div></td><td class="Element65" valign="top" width="60%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Client Level Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Open, Close, Initialize, Reinitialize, and Deinitialize functions to support the TCP/IP Stack. Plus link status and power options.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Receive Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Receive routines.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Transmit Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Transmit routines.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Event Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Ethernet event support routines.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Other Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Additional routines.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Data Types and Constants&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Typedefs and #defines.&nbsp;</div></td></tr></table></div></div>
-</div>
+This header file contains the configuration selection for the Ethernet GMAC Driver.&nbsp;</p>
+<p class="Element10">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01431.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.&nbsp;</p>
+<p class="Element10">
+See the <a href="01113.html" target="topic">TCP/IP Stack MAC Driver Module</a> help file for configuration options.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00772.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Using the Library</a> &gt; <a href="00405.html" target="topic">Library Overview</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00405.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -105,13 +70,13 @@ Typedefs and #defines.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00396.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00400.html" target="topic">Next</a></div>
+<a href="00410.html" target="topic">Previous</a> | <a href="00777.html" target="topic">Up</a> | <a href="00402.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

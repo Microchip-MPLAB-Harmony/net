@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>arp_config.h</title>
+<title>MHC Configuration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00285.html" target="topic">ARP Module</a> &gt; <a href="01489.html" target="topic">Files</a> &gt; <a href="00288.html" target="topic">arp_config.h</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00287.html" target="topic">wolfmqtt_demo</a> &gt; <a href="00288.html" target="topic">MHC Configuration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00286.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01421.html" target="topic">Next</a></div>
+<a href="00289.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: arp_config.h Topic Title: arp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT MHC Topic Title: MHC Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-arp_config.h</div>
+MHC Configuration</div>
 </div>
 </div>
 
@@ -46,136 +46,62 @@ arp_config.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
-</div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
-<div class="Element11">
-<div class="Element10">
+From the MPLAB X IDE menu select Tools-&gt;Embedded-&gt;MPLAB Harmony Configurator.&nbsp;</p>
 <p class="Element10">
-arp_config.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
+After selecting the &quot;MPLAB Harmony Project Path&quot; and pressing the &quot;Launch&quot; button, click the &quot;Open default saved state file&quot; and the following MHC project graph should be displayed:&nbsp;</p>
 <p class="Element10">
-Address Resolution Protocol (ARP) Configuration file&nbsp;</p>
+<img src="wolfmqtt_mhc_project.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
-This file contains the ARP module configuration options&nbsp;</p>
+&nbsp;</p>
 <p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00287.html" target="topic">ARP_CACHE_DELETE_OLD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-On initialization, delete the old cache if still in place Else don't re-initialize Default should be 1&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01909.html" target="topic">TCPIP_ARP_CACHE_ENTRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of entries in the cache. Default number of entries per interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01910.html" target="topic">TCPIP_ARP_CACHE_ENTRY_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of ARP requests generated for resolving an entry.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01911.html" target="topic">TCPIP_ARP_CACHE_PENDING_ENTRY_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Timeout for a cache entry pending to be solved, in seconds. The entry will be removed if the tmo elapsed and the entry has not been solved. A solved entry moves to the solved entries timeout.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01912.html" target="topic">TCPIP_ARP_CACHE_PENDING_RETRY_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Timeout for resending an ARP request for a pending entry. In order to prevent the ARP flooding the standard recommends it to be greater than 1 sec. It should be less than <a href="01911.html" target="topic">TCPIP_ARP_CACHE_PENDING_ENTRY_TMO</a>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01913.html" target="topic">TCPIP_ARP_CACHE_PERMANENT_QUOTA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Max percentage of permanent entries in the cache. Note that since permanent entries cannot be removed they tend to degrade the efficiency of the cache look up.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01914.html" target="topic">TCPIP_ARP_CACHE_PURGE_QUANTA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The number of entries to delete, once the threshold is reached.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01915.html" target="topic">TCPIP_ARP_CACHE_PURGE_THRESHOLD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Default purge threshold, percentage Once the number of resolved entries in the cache gets beyond the threshold some resolved entries will be purged.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01916.html" target="topic">TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Timeout for a solved entry in the cache, in seconds. The entry will be removed if the tmo elapsed and the entry has not been referenced again&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01945.html" target="topic">TCPIP_ARP_GRATUITOUS_PROBE_COUNT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of ARP requests generated when sending a gratuitous ARP probe. Default value should be 1.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01968.html" target="topic">TCPIP_ARP_PRIMARY_CACHE_ONLY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ARP caches configuration for aliases. If this symbol is true, then the alias interfaces share the cache with the primary interface. Otherwise each interface uses its own cache. Default value should be 1 if the alias interfaces are in the same network with the primary interface&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01989.html" target="topic">TCPIP_ARP_TASK_PROCESS_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ARP task processing rate, in seconds. The ARP module will process a timer event with this rate for maintaining its own queues, processing timeouts, etc. Choose it so that the other ARP_CACHE_xxx_TMO are multiple of this The default value is 2 seconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03904.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr></table></div></div>
-</div>
+Note that the project has already selected the 3<sup>rd</sup> party wolfMQTT and wolfSSL libraries (for supporting encrypted connections).&nbsp;</p>
+<p class="Element10">
+The NET_PRES layer is also needed because the Harmony wolfMQTT NET glue layer uses the NET_PRES to handle the connections to the broker.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+In order to regenerate the project after changes have been made, the wolfSSL libraries need to be downloaded and present at the Harmony 3 &lt;install-dir&gt;/wolfMQTT/ and &lt;install-dir&gt;/wolfSSL/ respectively, at the same level with &lt;install-dir&gt;/net/.&nbsp;</p>
+<p class="Element10">
+Use the github repositories for <a href="#" onclick="openExternalLink('https://github.com/wolfSSL/wolfMQTT');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfMQTT</a> and <a href="#" onclick="openExternalLink('https://github.com/wolfSSL/wolfssl');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfSSL</a>.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+To configure the wolfMQTT and the wolfMWQTT NET glue layer, select the &quot;wolfMQTT Library&quot; module:&nbsp;</p>
+<p class="Element10">
+<img src="wolfmqtt_mhc_net_glue.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The configuration options for the wolfMQTT are the standard ones supported by wolfMQTT (see <a href="#" onclick="openExternalLink('https://www.wolfssl.com/products/wolfmqtt');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfMQTT</a> site).&nbsp;</p>
+<p class="Element10">
+The configuration options for the wolfMQTT NET glue allow the application to:
+<ul class="Element634">
+<li class="Element604">force TLS mode</li>
+<li class="Element604">enable IPv6 operation</li>
+<li class="Element604">set the maximum length of the MQTT broker</li>
+<li class="Element604">enable the NET glue debug and debug strings</li>
+<li class="Element604">set the allocation functions</li>
+<li class="Element604">set the MQTT TX and RX buffer sizes</li>
+<li class="Element604">generate the custom MQTT application template:
+<ul class="Element635">
+<li class="Element605">the files app_mqtt_task.c, app_mqtt_task.h and app_mqtt_commands.c will be added to the project</li>
+<li class="Element605">this is how the out of the box wolfmqtt demo is built.</li>
+</ul></li>
+</ul>&nbsp;</p>
+<p class="Element10">
+Once all settings are reviewed/updated the project can be regenerated, built and programmed on the target board.&nbsp;</p>
+<p class="Element10">
+If the custom application template was included, the MQTT connection can be started using the &quot;mqtt start&quot; command (see <a href="00289.html" target="topic">Running the Demonstration</a>).</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00285.html" target="topic">ARP Module</a> &gt; <a href="01489.html" target="topic">Files</a> &gt; <a href="00288.html" target="topic">arp_config.h</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00287.html" target="topic">wolfmqtt_demo</a> &gt; <a href="00288.html" target="topic">MHC Configuration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -183,13 +109,13 @@ ARP task processing rate, in seconds. The ARP module will process a timer event 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00286.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01421.html" target="topic">Next</a></div>
+<a href="00289.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00189.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: arp_config.h Topic Title: arp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT MHC Topic Title: MHC Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

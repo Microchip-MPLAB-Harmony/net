@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_NetIPv6AddressGet Function</title>
+<title>TCPIP_STACK_NetAddressMacSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03883.html" target="topic">TCPIP_STACK_NetIPv6AddressGet Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03883.html" target="topic">TCPIP_STACK_NetAddressMacSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03871.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03870.html" target="topic">Next</a></div>
+<a href="03896.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03914.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetIPv6AddressGet@TCPIP_NET_HANDLE@IPV6_ADDR_TYPE@IPV6_ADDR_STRUCT*@IPV6_ADDR_HANDLE Topic Title: TCPIP_STACK_NetIPv6AddressGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetAddressMacSet@TCPIP_NET_HANDLE@TCPIP_MAC_ADDR* Topic Title: TCPIP_STACK_NetAddressMacSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_NetIPv6AddressGet Function</div>
+TCPIP_STACK_NetAddressMacSet Function</div>
 </div>
 </div>
 
@@ -49,22 +49,20 @@ TCPIP_STACK_NetIPv6AddressGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows the listing of the IPv6 addresses associated with an interface.</p></div>
+This function sets the network interface physical MAC address.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">IPV6_ADDR_HANDLE <strong><span style="color: #000000">TCPIP_STACK_NetIPv6AddressGet</span></strong>(
-    <a href="03400.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
-    IPV6_ADDR_TYPE <strong><span style="color: #000000">addType</span></strong>, 
-    IPV6_ADDR_STRUCT* <strong><span style="color: #000000">pAddStruct</span></strong>, 
-    IPV6_ADDR_HANDLE <strong><span style="color: #000000">addHandle</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_STACK_NetAddressMacSet</span></strong>(
+    <a href="03413.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> TCPIP_MAC_ADDR* <strong><span style="color: #000000">pAddr</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TCP/IP stack should have been initialized by <a href="03853.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03901.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
+The TCP/IP stack should have been initialized by <a href="03866.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03914.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,32 +81,12 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-handle of the interface to retrieve the addresses for&nbsp;</div></td></tr><tr>
+Interface handle to set the address of.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-type of address to request IPV6_ADDR_TYPE_UNICAST and IPV6_ADDR_TYPE_MULTICAST supported for now&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pAddStruct&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-structure provided by the user that will be filled with corresponding IPV6_ADDR_STRUCT data&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-addHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-an address handle that allows iteration across multiple IPv6 addresses.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-On the first call&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-has to be 0; it will begin the listing of the IPv6 addresses&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-On subsequent calls&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-has to be a handle previously returned by a call to this function&nbsp;</div></td></tr></table></div></div>
+pointer to a valid physical (MAC) address.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -118,8 +96,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element634">
-<li class="Element604">Non-NULL IPV6_ADDR_HANDLE - if an valid IPv6 address was found and the pAddStruct structure was filled with data</li>
-<li class="Element604">0 - if no other IPv6 exists or if the supplied IPV6_ADDR_HANDLE is invalid</li>
+<li class="Element604">true - if the MAC address of the interface is set</li>
+<li class="Element604">false - if no such interface or interface is not enabled</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -127,26 +105,16 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+One should use extreme caution when using these functions to change the settings of a running network interface. Changing these parameters at runtime can lead to unexpected behavior or loss of network connectivity. The preferred way to change the parameters for a running interface is to do so as part of the network configuration passed at the stack initialization.&nbsp;</p>
+<p class="Element10">
+This function updates the MAC address in the stack data structures. It does not re-program the MAC with the new address. The MAC programming is done only at MAC initialization.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"> IPV6_ADDR_STRUCT currAddr;
- IPV6_ADDR_HANDLE currHandle;
- <a href="03400.html" target="topic">TCPIP_NET_HANDLE</a> hNet = <a href="03881.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;PIC32INT&quot;);
- <strong><span style="color: #000080">char</span></strong>    ipv6AddBuff[44];
-
- currHandle = 0;
- <strong><span style="color: #000080">do</span></strong>
- {
-      currHandle = TCPIP_STACK_NetIPv6AddressGet(netH, IPV6_ADDR_TYPE_UNICAST, &amp;currAddr, currHandle);
-      <strong><span style="color: #000080">if</span></strong>(currHandle)
-      {   <i><span style="color: #008000">// have a valid address; display it</span></i>
-          TCPIP_HELPER_IPv6AddressToString(&amp;currAddr.address, ipv6AddBuff, <strong><span style="color: #000080">sizeof</span></strong>(ipv6AddBuff));
-      }
- }<strong><span style="color: #000080">while</span></strong>(currHandle != 0);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"> <a href="03413.html" target="topic">TCPIP_NET_HANDLE</a> netH = <a href="03894.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;PIC32INT&quot;);
+ TCPIP_STACK_NetAddressMacSet(netH, &amp;myMacAddress);</pre></div></div>
 </div>
 </div>
 </div>
@@ -154,7 +122,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03883.html" target="topic">TCPIP_STACK_NetIPv6AddressGet Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03883.html" target="topic">TCPIP_STACK_NetAddressMacSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -162,13 +130,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03871.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03870.html" target="topic">Next</a></div>
+<a href="03896.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03914.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetIPv6AddressGet@TCPIP_NET_HANDLE@IPV6_ADDR_TYPE@IPV6_ADDR_STRUCT*@IPV6_ADDR_HANDLE Topic Title: TCPIP_STACK_NetIPv6AddressGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetAddressMacSet@TCPIP_NET_HANDLE@TCPIP_MAC_ADDR* Topic Title: TCPIP_STACK_NetAddressMacSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

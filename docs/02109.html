@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_DHCPS_RemovePoolEntries Function</title>
+<title>TCPIP_DHCPS_MODULE_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00352.html" target="topic">DHCP Server Module</a> &gt; <a href="01538.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="02109.html" target="topic">TCPIP_DHCPS_RemovePoolEntries Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00357.html" target="topic">DHCP Server Module</a> &gt; <a href="01546.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="02109.html" target="topic">TCPIP_DHCPS_MODULE_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02086.html" target="topic">Previous</a> | <a href="01538.html" target="topic">Up</a> | <a href="02088.html" target="topic">Next</a></div>
+<a href="02081.html" target="topic">Previous</a> | <a href="01546.html" target="topic">Up</a> | <a href="02108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_RemovePoolEntries@TCPIP_NET_HANDLE@TCPIP_DHCPS_POOL_ENTRY_TYPE Topic Title: TCPIP_DHCPS_RemovePoolEntries Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_MODULE_CONFIG Topic Title: TCPIP_DHCPS_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_DHCPS_RemovePoolEntries Function</div>
+TCPIP_DHCPS_MODULE_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,70 +49,65 @@ TCPIP_DHCPS_RemovePoolEntries Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to remove the DHCP server entries from the pool as per <a href="02106.html" target="topic">TCPIP_DHCPS_POOL_ENTRY_TYPE</a>.</p></div>
+Structure: TCPIP_DHCPS_MODULE_CONFIG&nbsp;</p>
+<p class="Element10">
+DHCP server configuration and initialization data . Configuration is part of tcpip_stack_init.c.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_DHCPS_RemovePoolEntries</span></strong>(
-    <a href="03400.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
-    <a href="02106.html" target="topic">TCPIP_DHCPS_POOL_ENTRY_TYPE</a> <strong><span style="color: #000000">type</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">enabled</span></strong>;
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">deleteOldLease</span></strong>;
+  size_t <strong><span style="color: #000000">leaseEntries</span></strong>;
+  uint32_t <strong><span style="color: #000000">entrySolvedTmo</span></strong>;
+  <a href="02081.html" target="topic">TCPIP_DHCPS_ADDRESS_CONFIG</a> * <strong><span style="color: #000000">dhcpServer</span></strong>;
+} TCPIP_DHCPS_MODULE_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-the DHCP Server module should have been initialized.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Interface handle to use&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-type&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-type of entries to remove: DHCP_SERVER_POOL_ENTRY_ALL, DHCP_SERVER_POOL_ENTRY_IN_USE&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+bool enabled;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+enable DHCP server&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+bool deleteOldLease;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+delete old cache if still in place, specific DHCP parameters&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+size_t leaseEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+max number of lease entries&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t entrySolvedTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+solved entry removed after this tmo in seconds&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_DHCPS_ADDRESS_CONFIG * dhcpServer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+DHCP server lease address configuration details uint32_t dhcpServerCnt; // Max DHCP server support&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">true - If successful</li>
-<li class="Element605">false - If unsuccessful</li>
-</ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00352.html" target="topic">DHCP Server Module</a> &gt; <a href="01538.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="02109.html" target="topic">TCPIP_DHCPS_RemovePoolEntries Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00357.html" target="topic">DHCP Server Module</a> &gt; <a href="01546.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="02109.html" target="topic">TCPIP_DHCPS_MODULE_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -120,13 +115,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02086.html" target="topic">Previous</a> | <a href="01538.html" target="topic">Up</a> | <a href="02088.html" target="topic">Next</a></div>
+<a href="02081.html" target="topic">Previous</a> | <a href="01546.html" target="topic">Up</a> | <a href="02108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_RemovePoolEntries@TCPIP_NET_HANDLE@TCPIP_DHCPS_POOL_ENTRY_TYPE Topic Title: TCPIP_DHCPS_RemovePoolEntries Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_MODULE_CONFIG Topic Title: TCPIP_DHCPS_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

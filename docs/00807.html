@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Heap Usage Estimate</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00807.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01697.html" target="topic">TCP/IP Stack Library Overview</a> &gt; <a href="00807.html" target="topic">Heap Usage Estimate</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01753.html" target="topic">Previous</a> | <a href="01697.html" target="topic">Up</a> | <a href="00265.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Heap Usage Estimate Topic Title: Heap Usage Estimate)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Heap Usage Estimate</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The overall heap estimate is available with the 'TCPIP CORE' module configurations as shown below.&nbsp;</p>
+<p class="Element10">
+<a href="00807.html" target="topic"><img src="TCPIP Heap Estimate.png" border="0" alt="" title=""></a>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The estimated heap size for TCP/IP is displayed in kilobytes. The TCP/IP heap size is derived by adding the heap estimation for each of the TCP/IP modules.&nbsp;</p>
+<p class="Element10">
+The module-wise heap estimation can be viewed with each TCP/IP modules by enabling ‘Module-wise Heap Estimate’ as shown below.&nbsp;</p>
+<p class="Element10">
+<img src="TCPIP Heap Estimate modulewise.png" border="0" alt="" title="">&nbsp;</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Please note the following points regarding heap estimation,</p>
+<ul class="Element630">
+<li class="Element600">This calculation provides an estimation close to &quot;worst case&quot; scenario.</li>
+<li class="Element600">Calculation does not consider all the run-time dynamic memory allocations/de-allocations.</li>
+<li class="Element600">Calculation does not consider the dynamic changes of the TCP and/or UDP <a href="01409.html" target="topic">socket</a> buffer sizes.</li>
+<li class="Element600">The heap runtime tool gives a more accurate picture of heap usage. The run time tool is preferred as the static estimation of heap usage is approximative only.</li>
+<li class="Element600">The heap runtime tool can be used by enabling <a href="03779.html" target="topic">TCPIP_STACK_DRAM_DEBUG_ENABLE</a> and TCPIP_STACK_DRAM_TRACE_ENABLE symbols. Then &quot;heapinfo&quot; command will give runtime heap usage.</li>
+<li class="Element600">It should be noted that even if an &quot;out of memory&quot; condition occurs at run time, the stack will behave graciously, and it will report the error, so that the operation can be re-tried.</li>
+</ul></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01697.html" target="topic">TCP/IP Stack Library Overview</a> &gt; <a href="00807.html" target="topic">Heap Usage Estimate</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01753.html" target="topic">Previous</a> | <a href="01697.html" target="topic">Up</a> | <a href="00265.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Heap Usage Estimate Topic Title: Heap Usage Estimate)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

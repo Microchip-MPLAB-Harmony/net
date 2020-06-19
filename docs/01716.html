@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01707.html" target="topic">Previous</a> | <a href="01107.html" target="topic">Up</a> | <a href="02573.html" target="topic">Next</a></div>
+<a href="01717.html" target="topic">Previous</a> | <a href="01114.html" target="topic">Up</a> | <a href="03431.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,12 +49,14 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the Manager module.&nbsp;</p>
+The configuration of the Manager TCP/IP Stack is based on the file <span class="Element146"><a href="02001.html" target="topic">tcpip_config.h</a></span>, with the actual symbols generated in the configuration.h.&nbsp;</p>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
+This header file contains the configuration of the stack and the modules that are included in the current build of the stack.&nbsp;</p>
+<p class="Element10">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01431.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
 </div>
-<a name="61292048656C7065722046756E6374696F6E73"></a><div class="Element14">
-a) Helper Functions</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -68,867 +70,363 @@ a) Helper Functions</div>
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02573.html" target="topic">TCPIP_Helper_FormatNetBIOSName</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Formats a string to a valid NetBIOS name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02574.html" target="topic">TCPIP_Helper_htonl</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_htonl.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02575.html" target="topic">TCPIP_Helper_htonll</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_htonll.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02576.html" target="topic">TCPIP_Helper_htons</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_htons.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02577.html" target="topic">TCPIP_Helper_IPAddressToString</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts an IPV4 address to an ASCII string.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02578.html" target="topic">TCPIP_Helper_IPv6AddressToString</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts an IPv6 address to a string representation.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02579.html" target="topic">TCPIP_Helper_IsBcastAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_IsBcastAddress.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02580.html" target="topic">TCPIP_Helper_IsMcastAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_IsMcastAddress.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02581.html" target="topic">TCPIP_Helper_IsPrivateAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Detects a private (non-routable) address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02582.html" target="topic">TCPIP_Helper_MACAddressToString</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts a MAC address to a string.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02584.html" target="topic">TCPIP_Helper_ntohl</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-!defined(__PIC32MX__)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02586.html" target="topic">TCPIP_Helper_ntohll</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_ntohll.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02588.html" target="topic">TCPIP_Helper_ntohs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is function TCPIP_Helper_ntohs.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02589.html" target="topic">TCPIP_Helper_SecurePortGetByIndex</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the secure port belonging to a specified index.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02590.html" target="topic">TCPIP_Helper_SecurePortSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the required port secure connection status.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02591.html" target="topic">TCPIP_Helper_StringToIPAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts an ASCII string to an IPV4 address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02592.html" target="topic">TCPIP_Helper_StringToIPv6Address</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts a string to an IPv6 address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02593.html" target="topic">TCPIP_Helper_StringToMACAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Converts a string to an MAC address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02594.html" target="topic">TCPIP_Helper_TCPSecurePortGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Checks if the required TCP port is a secure port.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02595.html" target="topic">TCPIP_Helper_UDPSecurePortGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Checks if the required UDP port is a secure port.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02571.html" target="topic">TCPIP_Helper_Base64Decode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Helper function to decode a Base-64 encoded array.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02572.html" target="topic">TCPIP_Helper_Base64Encode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Helper function to encode to Base-64.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6229205461736B20616E6420496E697469616C697A652046756E6374696F6E73"></a><div class="Element14">
-b) Task and Initialize Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03774.html" target="topic">TCPIP_STACK_HandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters an event notification handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03775.html" target="topic">TCPIP_STACK_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets a new event notification handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03392.html" target="topic">TCPIP_MODULE_SignalFunctionDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters a signal function for a stack module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03393.html" target="topic">TCPIP_MODULE_SignalFunctionRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Registers a new signal function for a stack module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03394.html" target="topic">TCPIP_MODULE_SignalGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current signals for a TCP/IP module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03938.html" target="topic">TCPIP_STACK_VersionGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the TCP/IP stack version in numerical format.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03939.html" target="topic">TCPIP_STACK_VersionStrGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the TCP/IP stack version in string format.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03903.html" target="topic">TCPIP_STACK_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-TCP/IP Stack task function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03764.html" target="topic">TCPIP_STACK_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stack deinitialization function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03853.html" target="topic">TCPIP_STACK_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stack initialization function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03858.html" target="topic">TCPIP_STACK_MACObjectGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the network MAC driver object of this interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03897.html" target="topic">TCPIP_STACK_PacketHandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters a previously registered packet handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03898.html" target="topic">TCPIP_STACK_PacketHandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets a new packet processing handler.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6329204E6574776F726B2053746174757320616E6420436F6E74726F6C2046756E6374696F6E73"></a><div class="Element14">
-c) Network Status and Control Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03852.html" target="topic">TCPIP_STACK_IndexToNet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface handle from interface number.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03873.html" target="topic">TCPIP_STACK_NetBIOSName</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface NetBIOS name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03874.html" target="topic">TCPIP_STACK_NetBiosNameSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface NetBIOS name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03877.html" target="topic">TCPIP_STACK_NetDefaultGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Default network interface handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03878.html" target="topic">TCPIP_STACK_NetDefaultSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the default network interface handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03881.html" target="topic">TCPIP_STACK_NetHandleGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface handle from a name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03882.html" target="topic">TCPIP_STACK_NetIndexGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface number from interface handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03890.html" target="topic">TCPIP_STACK_NetMask</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface IPv4 address mask.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03893.html" target="topic">TCPIP_STACK_NetNameGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface name from a handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03895.html" target="topic">TCPIP_STACK_NumberOfNetworksGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of network interfaces in the stack.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03771.html" target="topic">TCPIP_STACK_EventsPendingGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the currently pending events.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03860.html" target="topic">TCPIP_STACK_ModuleConfigGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get stack module configuration data.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03887.html" target="topic">TCPIP_STACK_NetMACIdGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the MAC ID of the network interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03889.html" target="topic">TCPIP_STACK_NetMACStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the MAC statistics data.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03854.html" target="topic">TCPIP_STACK_InitializeDataGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the TCP/IP stack initialization data.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03891.html" target="topic">TCPIP_STACK_NetMulticastGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Default multicast network interface handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03892.html" target="topic">TCPIP_STACK_NetMulticastSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the default multicast network interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03880.html" target="topic">TCPIP_STACK_NetGetType</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the network interface type: primary, alias, etc.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6429204E6574776F726B2055702F446F776E2F4C696E6B65642046756E6374696F6E73"></a><div class="Element14">
-d) Network Up/Down/Linked Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03879.html" target="topic">TCPIP_STACK_NetDown</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Turns down a network interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03884.html" target="topic">TCPIP_STACK_NetIsLinked</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the network interface link status.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03886.html" target="topic">TCPIP_STACK_NetIsUp</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the network interface up or down status.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03894.html" target="topic">TCPIP_STACK_NetUp</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Turns up a network interface. As part of this process, the corresponding MAC driver is initialized.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03872.html" target="topic">TCPIP_STACK_NetAliasNameGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface alias name from a handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03885.html" target="topic">TCPIP_STACK_NetIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the network interface configuration status.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03888.html" target="topic">TCPIP_STACK_NetMACRegisterStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the MAC statistics register data.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204E6574776F726B20416464726573732053746174757320616E6420436F6E74726F6C2046756E6374696F6E73"></a><div class="Element14">
-e) Network Address Status and Control Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03861.html" target="topic">TCPIP_STACK_NetAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface IPv4 address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03862.html" target="topic">TCPIP_STACK_NetAddressBcast</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface broadcast address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03863.html" target="topic">TCPIP_STACK_NetAddressDnsPrimary</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface DNS address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03864.html" target="topic">TCPIP_STACK_NetAddressDnsPrimarySet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface IPv4 DNS address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03865.html" target="topic">TCPIP_STACK_NetAddressDnsSecond</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface secondary DNS address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03866.html" target="topic">TCPIP_STACK_NetAddressDnsSecondSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface IPv4 secondary DNS address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03867.html" target="topic">TCPIP_STACK_NetAddressGateway</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface IPv4 gateway address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03868.html" target="topic">TCPIP_STACK_NetAddressGatewaySet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface IPv4 gateway address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03869.html" target="topic">TCPIP_STACK_NetAddressMac</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Network interface MAC address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03871.html" target="topic">TCPIP_STACK_NetAddressSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface IPv4 address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03883.html" target="topic">TCPIP_STACK_NetIPv6AddressGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets network interface IPv6 address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03870.html" target="topic">TCPIP_STACK_NetAddressMacSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets network interface MAC address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03901.html" target="topic">TCPIP_STACK_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the current status of the TCPIP stack module.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6629204E6574776F726B205374727563747572652053746F726167652046756E6374696F6E73"></a><div class="Element14">
-f) Network Structure Storage Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03875.html" target="topic">TCPIP_STACK_NetConfigGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get stack network interface configuration data.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03876.html" target="topic">TCPIP_STACK_NetConfigSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Restores stack network interface configuration data.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="672920486561702046756E6374696F6E73"></a><div class="Element14">
-g) Heap Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03797.html" target="topic">TCPIP_STACK_HEAP_FreeSize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the size of the space currently available in the heap.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03808.html" target="topic">TCPIP_STACK_HEAP_LastError</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the last error encountered in a heap operation and clears the value of the last error variable.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03809.html" target="topic">TCPIP_STACK_HEAP_MaxSize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the maximum size of a block that can be currently allocated from this heap.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03836.html" target="topic">TCPIP_STACK_HEAP_Size</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the size of the heap.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03850.html" target="topic">TCPIP_STACK_HeapHandleGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current TCP/IP stack heap handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03799.html" target="topic">TCPIP_STACK_HEAP_HighWatermark</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current heap watermark.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6829204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-h) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03400.html" target="topic">TCPIP_NET_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a network interface handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02403.html" target="topic">TCPIP_EVENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the possible TCPIP event types.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02422.html" target="topic">TCPIP_EVENT_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a TCPIP stack event handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03770.html" target="topic">TCPIP_STACK_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a function(handler) that will get called to process an event.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03382.html" target="topic">TCPIP_MODULE_SIGNAL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Lists the signals that are generated by the TCP/IP stack manager and processed by the stack modules.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03390.html" target="topic">TCPIP_MODULE_SIGNAL_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a function(handler) that will get called when a stack internal signal occurred.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03391.html" target="topic">TCPIP_MODULE_SIGNAL_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a TCPIP stack signal function handle.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02583.html" target="topic">TCPIP_Helper_ntohl</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03431.html" target="topic">TCPIP_PACKET_LOG_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro TCPIP_Helper_ntohl.&nbsp;</div></td></tr><tr>
+Enable the packet logger Simple module that logs the packets as they fly through the stack from creation until acknowledged Default is disabled&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02585.html" target="topic">TCPIP_Helper_ntohll</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03432.html" target="topic">TCPIP_PKT_LOG_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro TCPIP_Helper_ntohll.&nbsp;</div></td></tr><tr>
+Number of log entries, if the packet logger is enabled Each entry takes approx 24 bytes&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02587.html" target="topic">TCPIP_Helper_ntohs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03773.html" target="topic">TCPIP_STACK_ALIAS_INTERFACE_SUPPORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro TCPIP_Helper_ntohs.&nbsp;</div></td></tr><tr>
+Enable support for alias interfaces An alias interface uses the physical interface of another network interface. It allows multiple IP addresses for a host on the same interface, for example. Default is disabled.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="00006.html" target="topic">__TCPIP_HELPERS_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03774.html" target="topic">TCPIP_STACK_CALLOC_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro __TCPIP_HELPERS_H_.&nbsp;</div></td></tr><tr>
+Stack allocation function, calloc style This is the function the stack will call to allocate memory needed for its own heap: <a href="03781.html" target="topic">TCPIP_STACK_DRAM_SIZE</a>. Use standard C library 'calloc' as a default&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="00007.html" target="topic">__TCPIP_MANAGER_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03775.html" target="topic">TCPIP_STACK_COMMAND_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro __TCPIP_MANAGER_H_.&nbsp;</div></td></tr><tr>
+TCP/IP commands support - requires the system console and the command processor&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03401.html" target="topic">TCPIP_NETWORK_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03776.html" target="topic">TCPIP_STACK_CONFIGURATION_SAVE_RESTORE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Returns the type of a network interface.&nbsp;</div></td></tr><tr>
+This setting enables the configuration get/set operations: <a href="03873.html" target="topic">TCPIP_STACK_ModuleConfigGet</a>, <a href="03888.html" target="topic">TCPIP_STACK_NetConfigGet</a>, <a href="03889.html" target="topic">TCPIP_STACK_NetConfigSet</a> If true, the functionality is built in and could be used by the application If false, these functions do not exist and the generated code is smaller&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03776.html" target="topic">TCPIP_STACK_HEAP_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03778.html" target="topic">TCPIP_STACK_DOWN_OPERATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data required to initialize the TCP/IP stack heap.&nbsp;</div></td></tr><tr>
+This setting enables the <a href="03777.html" target="topic">TCPIP_STACK_Deinitialize</a>() operation If this symbol is false, then the <a href="03777.html" target="topic">TCPIP_STACK_Deinitialize</a> is not built in Useful when stack stop and restart is not needed at run time - smaller code footprint for the TCP/IP stack.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03783.html" target="topic">TCPIP_STACK_HEAP_EXTERNAL_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03779.html" target="topic">TCPIP_STACK_DRAM_DEBUG_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data required to initialize the TCP/IP stack external heap.&nbsp;</div></td></tr><tr>
+Enable debugging of an allocation call that failed. If the system debug is enabled (SYS_DEBUG_ENABLE) the stack will issue a warning message at the system debug channel.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03790.html" target="topic">TCPIP_STACK_HEAP_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03780.html" target="topic">TCPIP_STACK_DRAM_RUN_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the flags supported by a TCP/IP heap.&nbsp;</div></td></tr><tr>
+The minimum amount of dynamic memory left for run time allocation by the stack (IP, UDP, etc) This is just a warning threshold. If after all the modules are initialized the amount of memory available in the TCPIP heap is less then TCPIP_STACK_DRAM_RUN_LIMIT then a warning will be displayed (if the debug channel is enabled) For proper operation there should be always a heap reserve of at least few KB.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03798.html" target="topic">TCPIP_STACK_HEAP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03781.html" target="topic">TCPIP_STACK_DRAM_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines a TCP/IP stack heap handle type.&nbsp;</div></td></tr><tr>
+The total amount of internal dynamic memory heap that the TCPIP stack will create at start up. This is the size of the internal heap, relevant only for the <a href="03933.html" target="topic">TCPIP_STACK_USE_INTERNAL_HEAP</a>&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03800.html" target="topic">TCPIP_STACK_HEAP_INTERNAL_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03782.html" target="topic">TCPIP_STACK_DRAM_TRACE_SLOTS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data required to initialize the TCP/IP stack internal heap.&nbsp;</div></td></tr><tr>
+Enable tracing of the allocated memory by each module. The stack will trace all the memory allocated by a module and various statistics. #define TCPIP_STACK_DRAM_TRACE_ENABLE Number of trace slots to be used. There is on slot needed per module that allocates memory from the heap.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03810.html" target="topic">TCPIP_STACK_HEAP_POOL_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03786.html" target="topic">TCPIP_STACK_FREE_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is type TCPIP_STACK_HEAP_POOL_CONFIG.&nbsp;</div></td></tr><tr>
+Stack deallocation function, free style This is the function the stack will call for freeing the allocated memory when the stack is deinitialized. Use standard C library 'free' as a default&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03820.html" target="topic">TCPIP_STACK_HEAP_POOL_ENTRY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03864.html" target="topic">TCPIP_STACK_IF_UP_DOWN_OPERATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data required to initialize the TCP/IP stack internal memory pool.&nbsp;</div></td></tr><tr>
+This setting enables the <a href="03907.html" target="topic">TCPIP_STACK_NetUp</a>/<a href="03892.html" target="topic">TCPIP_STACK_NetDown</a> operations When enabled, these functions are built in and can be used by an app Useful when interfaces do not need restarting at run time - results in smaller code footprint.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03824.html" target="topic">TCPIP_STACK_HEAP_RES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03868.html" target="topic">TCPIP_STACK_INTERFACE_CHANGE_SIGNALING</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the results of a TCP/IP heap error function.&nbsp;</div></td></tr><tr>
+This setting enables/disables the stack signaling when an interface address changes This could be triggered by the DHCP kicking into action, by ZCLL or other address service, or simply by the user changing the IP address of an interface If it is enabled, the <a href="01409.html" target="topic">socket</a> modules (UDP, TCP) will be notified and they will disconnect their sockets that are currently connected on that interface that has changed. User can be notified by registering an event handler either with <a href="01409.html" target="topic">socket</a> events or with the general stack signaling mechanism Default setting is true&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03837.html" target="topic">TCPIP_STACK_HEAP_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03869.html" target="topic">TCPIP_STACK_INTERNAL_HEAP_POOL_EXPANSION_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines a TCP/IP stack heap type.&nbsp;</div></td></tr><tr>
+The size of the expansion heap for a TCPIP_STACK_USE_INTERNAL_HEAP_POOL This is the amount of heap allocated besides the size resulting from the pool entries and allows expanding at run time. How a specific entry expands is controlled per entry If set to 0, then there is no expansion at run time.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03843.html" target="topic">TCPIP_STACK_HEAP_USAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03870.html" target="topic">TCPIP_STACK_MAC_DOWN_OPERATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines a TCP/IP stack heap purpose.&nbsp;</div></td></tr><tr>
+This setting specifies the behavior of stack regarding the MAC and PHY drivers when the <a href="03778.html" target="topic">TCPIP_STACK_DOWN_OPERATION</a> == false in the situation where the stack initialization failed and the stack cannot be started. If true, the MAC (and the corresponding PHY) <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> will be called. This operation is supposed to exist and this setting will conserve power. If false, the <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> waon't be called and the code footprint could be smaller. The <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> operation, which is expensive, could be unimplemented.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03896.html" target="topic">TCPIP_STACK_PACKET_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03872.html" target="topic">TCPIP_STACK_MALLOC_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Pointer to a function(handler) that will get called to process an incoming packet.&nbsp;</div></td></tr><tr>
+Stack allocation function, malloc style This is the function the stack will call to allocate memory needed for its own heap: <a href="03781.html" target="topic">TCPIP_STACK_DRAM_SIZE</a>. Use standard C library 'malloc' as a default&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03899.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03913.html" target="topic">TCPIP_STACK_SECURE_PORT_ENTRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines a TCPIP stack packet processing handle.&nbsp;</div></td></tr></table></div></div>
+The number of entries in the internally maintained secure port table This table is populated at stack initialization with default well-known port values Currently this number should be &gt;= 10&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03915.html" target="topic">TCPIP_STACK_SUPPORTED_HEAPS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of heap types at run time to enable debugging, statistics, trace on, etc. Currently only 1 heap type is supported at run time, one of: internal heap, internal pool and external&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03917.html" target="topic">TCPIP_STACK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCPIP task processing rate, in milliseconds. The TCP/IP task will require a timer event with this rate for maintaining its own state machine, processing timeouts for all modules, or dispatching the RX traffic if the interrupt operation is not enabled, etc. The lower this value (higher the frequency) the higher the priority of the TCP/IP stack and a higher performance can be obtained.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03918.html" target="topic">TCPIP_STACK_USE_ANNOUNCE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Microchip Embedded Ethernet Device Discoverer server/client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03920.html" target="topic">TCPIP_STACK_USE_BERKELEY_API</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Berkeley Sockets APIs are available&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03921.html" target="topic">TCPIP_STACK_USE_DHCP_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Dynamic Host Configuration Protocol client for obtaining IP address and other parameters&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03922.html" target="topic">TCPIP_STACK_USE_DHCP_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP server&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03924.html" target="topic">TCPIP_STACK_USE_DNS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Domain Name Service Client for resolving hostname strings to IP addresses&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03925.html" target="topic">TCPIP_STACK_USE_DNS_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Domain Name Service Server for redirection to the local device&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03926.html" target="topic">TCPIP_STACK_USE_EVENT_NOTIFICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Event Notifications Options ======================================================================= This setting enables the stack event notification. It allows the MAC drivers to report their TX/RX related events to the stack manager but also allows users of the stack to register notification handler so that they are notified of specific events. The operation of the stack is more efficient when event notification is turned on and this is how the stack is designed to run. Always leave this setting defined. The choice for selecting this parameter will eventually be removed. Maintained for backward compatibility.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03927.html" target="topic">TCPIP_STACK_USE_FTP_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+File Transfer Protocol&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03928.html" target="topic">TCPIP_STACK_USE_HTTP_NET_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+HTTP NET server with POST, Cookies, Authentication, etc. and encryption support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03929.html" target="topic">TCPIP_STACK_USE_ICMP_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Ping query capability&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03930.html" target="topic">TCPIP_STACK_USE_ICMP_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Ping response capability&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03931.html" target="topic">TCPIP_STACK_USE_ICMPV6_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable IPv6 ICMP functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03933.html" target="topic">TCPIP_STACK_USE_INTERNAL_HEAP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+define TCPIP_STACK_USE_EXTERNAL_HEAP define TCPIP_STACK_USE_INTERNAL_HEAP_POOL&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03934.html" target="topic">TCPIP_STACK_USE_IPERF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable the Iperf module for standard network benchmarking&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03935.html" target="topic">TCPIP_STACK_USE_IPV4</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable IPv4 functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03936.html" target="topic">TCPIP_STACK_USE_IPV6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable IPv6 functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03937.html" target="topic">TCPIP_STACK_USE_LLDP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+LLDP limited beta functionality - not supported through MHC configuration&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03938.html" target="topic">TCPIP_STACK_USE_NBNS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+NetBIOS Name Service Server for responding to NBNS hostname broadcast queries&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03939.html" target="topic">TCPIP_STACK_USE_REBOOT_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Module for resetting this PIC remotely. Primarily useful for a Bootloader.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03940.html" target="topic">TCPIP_STACK_USE_SMTPC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Simple Mail Transfer Protocol for sending email with encryption support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03941.html" target="topic">TCPIP_STACK_USE_SNMP_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Simple Network Management Protocol v2C Community Agent&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03942.html" target="topic">TCPIP_STACK_USE_SNMPV3_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SNMP v3 agent&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03943.html" target="topic">TCPIP_STACK_USE_SNTP_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Simple Network Time Protocol for obtaining current date/time from Internet&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03944.html" target="topic">TCPIP_STACK_USE_TCP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable the TCP module&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03945.html" target="topic">TCPIP_STACK_USE_TELNET_SERVER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Telnet server&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03946.html" target="topic">TCPIP_STACK_USE_TFTP_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TFTP client functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03947.html" target="topic">TCPIP_STACK_USE_UDP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable the UDP module&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03948.html" target="topic">TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Zeroconf IPv4 Link-Local Addressing;&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03949.html" target="topic">TCPIP_STACK_USE_ZEROCONF_MDNS_SD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Zeroconf mDNS and mDNS service discovery&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03950.html" target="topic">TCPIP_STACK_USER_NOTIFICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This setting enables the reporting of the events by the stack to the user using the notification system If enabled, then <a href="03788.html" target="topic">TCPIP_STACK_HandlerRegister</a> and <a href="03787.html" target="topic">TCPIP_STACK_HandlerDeregister</a> functions are compiled in and can be used If disabled, these functions do not exist and cannot be used/called Relevant only when <a href="03926.html" target="topic">TCPIP_STACK_USE_EVENT_NOTIFICATION</a> is enabled&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03785.html" target="topic">TCPIP_STACK_EXTERN_PACKET_PROCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This setting enables/disables the processing of the RX packets by an external handler The user of the stack can register an external function to process the incoming packets If true, the functionality is built in and could be used by the application If false, the functionality does not exist and the generated code is slightly smaller&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -936,7 +434,7 @@ Defines a TCPIP stack packet processing handle.&nbsp;</div></td></tr></table></d
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -944,13 +442,13 @@ Defines a TCPIP stack packet processing handle.&nbsp;</div></td></tr></table></d
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01707.html" target="topic">Previous</a> | <a href="01107.html" target="topic">Up</a> | <a href="02573.html" target="topic">Next</a></div>
+<a href="01717.html" target="topic">Previous</a> | <a href="01114.html" target="topic">Up</a> | <a href="03431.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

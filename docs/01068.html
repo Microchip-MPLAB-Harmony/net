@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_EncProviderConnectionClose Type</title>
+<title>IPV6_RX_FRAGMENT_BUFFER Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01068.html" target="topic">NET_PRES_EncProviderConnectionClose Type</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01068.html" target="topic">IPV6_RX_FRAGMENT_BUFFER Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01067.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01069.html" target="topic">Next</a></div>
+<a href="01094.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01036.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnectionClose Topic Title: NET_PRES_EncProviderConnectionClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_RX_FRAGMENT_BUFFER Topic Title: IPV6_RX_FRAGMENT_BUFFER Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_EncProviderConnectionClose Type</div>
+IPV6_RX_FRAGMENT_BUFFER Structure</div>
 </div>
 </div>
 
@@ -49,57 +49,84 @@ NET_PRES_EncProviderConnectionClose Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Presentation Encryption Provider Close Function Pointer Prototype&nbsp;</p>
+Structure: IPV6_RX_FRAGMENT_BUFFER&nbsp;</p>
 <p class="Element10">
-This function pointer defines the close function. It is called by the Networking Presentation Layer after a connection has been closed by the client.</p></div>
+Each fragment is composed of unfragmentable Part and fragmentable part. Allocate memory for the fragmented packet w.r.t to TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE. The RFC specifies that the fragments must be reassembled in one minute or less.secondsRemaining is the times remaining for reassemble.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <a href="01081.html" target="topic">NET_PRES_EncSessionStatus</a> (* <strong><span style="color: #000000">NET_PRES_EncProviderConnectionClose</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_IPV6_RX_FRAGMENT_BUFFER</span></strong> {
+  <strong><span style="color: #000080">struct</span></strong> _IPV6_RX_FRAGMENT_BUFFER * <strong><span style="color: #000000">next</span></strong>;
+  uint8_t * <strong><span style="color: #000000">ptrPacket</span></strong>;
+  uint32_t <strong><span style="color: #000000">identification</span></strong>;
+  uint16_t <strong><span style="color: #000000">bytesInPacket</span></strong>;
+  uint16_t <strong><span style="color: #000000">packetSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">firstFragmentLength</span></strong>;
+  uint8_t <strong><span style="color: #000000">secondsRemaining</span></strong>;
+} IPV6_RX_FRAGMENT_BUFFER;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-A connection must have already been created.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-providerData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to the buffer for the provider to keep connection specific data.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _IPV6_RX_FRAGMENT_BUFFER * next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Next fragmented packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t * ptrPacket;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet information&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t identification;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Fragment id&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t bytesInPacket;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bytes written to packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t packetSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet size (packet is complete when this matches bytesInPacket)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t firstFragmentLength;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Length of the first fragment&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t secondsRemaining;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of seconds remaining during which the fragment can be reassembled&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">NET_PRES_ENC_SS_CLOSING - Connection is closing, function must be called again to pump the close</li>
-<li class="Element605">NET_PRES_ENC_SS_CLOSED - The connection is closed and can be cleaned up</li>
-</ul></p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01068.html" target="topic">NET_PRES_EncProviderConnectionClose Type</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01068.html" target="topic">IPV6_RX_FRAGMENT_BUFFER Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +134,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01067.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01069.html" target="topic">Next</a></div>
+<a href="01094.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01036.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnectionClose Topic Title: NET_PRES_EncProviderConnectionClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_RX_FRAGMENT_BUFFER Topic Title: IPV6_RX_FRAGMENT_BUFFER Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

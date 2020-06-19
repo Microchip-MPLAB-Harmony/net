@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Application</title>
+<title>berkeley_udp_client</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00200.html" target="topic">berkeley_udp_client</a> &gt; <a href="00201.html" target="topic">Building the Application</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00201.html" target="topic">berkeley_udp_client</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00200.html" target="topic">Previous</a> | <a href="00200.html" target="topic">Up</a> | <a href="00202.html" target="topic">Next</a></div>
+<a href="00200.html" target="topic">Previous</a> | <a href="00217.html" target="topic">Up</a> | <a href="00202.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley UDP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley UDP Client Topic Title: berkeley_udp_client)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Application</div>
+berkeley_udp_client</div>
 </div>
 </div>
 
@@ -49,126 +49,44 @@ Building the Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/berkeley_udp_client/firmware</span>.&nbsp;</p>
-<p class="Element10">
-To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element15">
-MPLAB X IDE Project</div>
-<p class="Element10">
-This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
+The Berkeley UDP Client configuration demonstrates creating a network client with the Berkeley API to make a UDP/IP connection to a specified port.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="9%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="14%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley UDP Client on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following Project Graph diagram shows the Harmony components included in the bare-metal Berkeley UDP Client demonstration application.&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_root_1.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_layer_1.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_app_layer_1.png" border="0" alt="" title="">&nbsp;</p></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00202.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section identifies the MPLAB X IDE projects for this demonstration application. This lists the name, location, hardware development board and available configurations for the Berkeley UDP Client Demonstration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00203.html" target="topic">Configuring the Hardware</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00204.html" target="topic">Running the Demonstration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides instructions on how to build and run the demonstration.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00200.html" target="topic">berkeley_udp_client</a> &gt; <a href="00201.html" target="topic">Building the Application</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00201.html" target="topic">berkeley_udp_client</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -176,13 +94,13 @@ The following Project Graph diagram shows the Harmony components included in the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00200.html" target="topic">Previous</a> | <a href="00200.html" target="topic">Up</a> | <a href="00202.html" target="topic">Next</a></div>
+<a href="00200.html" target="topic">Previous</a> | <a href="00217.html" target="topic">Up</a> | <a href="00202.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley UDP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley UDP Client Topic Title: berkeley_udp_client)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

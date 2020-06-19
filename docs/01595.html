@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>a) Functions</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01593.html" target="topic">Library Interface</a> &gt; <a href="01595.html" target="topic">a) Functions</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01595.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01593.html" target="topic">Previous</a> | <a href="01593.html" target="topic">Up</a> | <a href="02438.html" target="topic">Next</a></div>
+<a href="01598.html" target="topic">Previous</a> | <a href="01600.html" target="topic">Up</a> | <a href="02507.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC System Functions Topic Title: a) Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-a) Functions</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -48,10 +48,11 @@ a) Functions</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+<span style="color: #000000">This header file contains the configuration selections for the FTP Client TCP/IP Stack Library. Based on the selections made, the FTP Client TCP/IP Stack Library will or will not support selected features. These configuration settings will apply to all instances of the FTP Client TCP/IP Stack Library. Refer to the TCP/IP Demonstrations Help section for more details.</span></p></div>
 </div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -67,151 +68,46 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02438.html" target="topic">TCPIP_FTPC_Change_Dir</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02507.html" target="topic">TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client change working directory&nbsp;</div></td></tr><tr>
+Specify the Default Receive Buffer Size for the FTP Client Data Socket if 0, the TCP Socket Receive buffer size will be used by FTPC data <a href="01409.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02439.html" target="topic">TCPIP_FTPC_ChangeToParentDir</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02508.html" target="topic">TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client make parent directory as working directory&nbsp;</div></td></tr><tr>
+Specify the Default Transmit Buffer Size for the FTP Client Data Socket if 0, the TCP Socket Transmit buffer size will be used by FTPC data <a href="01409.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02463.html" target="topic">TCPIP_FTPC_Connect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02540.html" target="topic">TCPIP_FTPC_MAX_NUM_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client Connect function.&nbsp;</div></td></tr><tr>
+Specify the maximum number of supported simultaneous FTP client connections.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02503.html" target="topic">TCPIP_FTPC_DeleteFile</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02573.html" target="topic">TCPIP_FTPC_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client delete file&nbsp;</div></td></tr><tr>
+The FTP Client task rate in milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03917.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02504.html" target="topic">TCPIP_FTPC_Disconnect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02574.html" target="topic">TCPIP_FTPC_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client Disconnect function.&nbsp;</div></td></tr><tr>
+Specify the time-out for FTP Client commands, in seconds This is the time to wait for a response from FTP server&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02522.html" target="topic">TCPIP_FTPC_Get_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02472.html" target="topic">TCPIP_FTPC_COMMANDS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-FTP Client status info function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02523.html" target="topic">TCPIP_FTPC_Get_WorkingDir</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client print the name of working directory&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02524.html" target="topic">TCPIP_FTPC_GetFile</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client Get file function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02525.html" target="topic">TCPIP_FTPC_List</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client List function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02526.html" target="topic">TCPIP_FTPC_Login</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client Login function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02527.html" target="topic">TCPIP_FTPC_Logout</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client instance logout&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02528.html" target="topic">TCPIP_FTPC_MakeDir</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client create a new directory&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02535.html" target="topic">TCPIP_FTPC_NameList</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client Name List function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02536.html" target="topic">TCPIP_FTPC_PutFile</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client Put file function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02537.html" target="topic">TCPIP_FTPC_RemoveDir</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-FTP Client remove the directory&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02544.html" target="topic">TCPIP_FTPC_SetActiveMode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set FTP Client connection mode as Active&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02545.html" target="topic">TCPIP_FTPC_SetMode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set FTP Client Transfer Mode&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02546.html" target="topic">TCPIP_FTPC_SetPassiveMode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set FTP Client connection mode as Passive&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02547.html" target="topic">TCPIP_FTPC_SetStruct</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set FTP Client File structure type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02548.html" target="topic">TCPIP_FTPC_SetType</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set FTP Client Data representation type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02561.html" target="topic">TCPIP_FTPC_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+Specify whether FTP Client command in the tcpip_commands is enabled.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -219,7 +115,7 @@ Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01593.html" target="topic">Library Interface</a> &gt; <a href="01595.html" target="topic">a) Functions</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01595.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -227,13 +123,13 @@ Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01593.html" target="topic">Previous</a> | <a href="01593.html" target="topic">Up</a> | <a href="02438.html" target="topic">Next</a></div>
+<a href="01598.html" target="topic">Previous</a> | <a href="01600.html" target="topic">Up</a> | <a href="02507.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC System Functions Topic Title: a) Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

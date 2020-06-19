@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SMTPC_MESSAGE_RESULT Enumeration</title>
+<title>TCPIP_SMTPC_MailMessage Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01311.html" target="topic">SMTPC Module</a> &gt; <a href="01775.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03529.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01318.html" target="topic">SMTPC Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03529.html" target="topic">TCPIP_SMTPC_MailMessage Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03524.html" target="topic">Previous</a> | <a href="01775.html" target="topic">Up</a> | <a href="03563.html" target="topic">Next</a></div>
+<a href="01783.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03597.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MESSAGE_RESULT Topic Title: TCPIP_SMTPC_MESSAGE_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MailMessage@TCPIP_SMTPC_MAIL_MESSAGE*@TCPIP_SMTPC_MESSAGE_RESULT* Topic Title: TCPIP_SMTPC_MailMessage Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SMTPC_MESSAGE_RESULT Enumeration</div>
+TCPIP_SMTPC_MailMessage Function</div>
 </div>
 </div>
 
@@ -49,240 +49,68 @@ TCPIP_SMTPC_MESSAGE_RESULT Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCPIP_SMTPC_MESSAGE_RESULT&nbsp;</p>
-<p class="Element10">
-Enumeration describing the possible result codes returned by the SMTPC client.</p></div>
+This function sends a mail message to the specified server.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_OK</span></strong> = 0,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_PENDING</span></strong> = 1,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_ERROR</span></strong> = -1,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_SERVER_ERROR</span></strong> = -2,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_RCPT_ERROR</span></strong> = -3,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_BUFFER_ERROR</span></strong> = -4,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_FILE_ERROR</span></strong> = -5,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_AUTH_REQUIRED</span></strong> = -6,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_AUTH_LEN_ERROR</span></strong> = -7,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MESSAGE_ADDR_LEN_ERROR</span></strong> = -8,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MAIL_BUSY</span></strong> = -9,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_DNS_ERROR</span></strong> = -10,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_SKT_OPEN_ERROR</span></strong> = -11,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_SKT_BIND_ERROR</span></strong> = -12,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_SKT_CONNECT_TMO</span></strong> = -13,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_SKT_TLS_ERROR</span></strong> = -14,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_SERVER_TMO</span></strong> = -15,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_CONNECTION_REJECT</span></strong> = -16,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_CONNECTION_CLOSE</span></strong> = -17,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_HELLO_REJECT</span></strong> = -18,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_AUTH_UNKNOWN</span></strong> = -19,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_AUTH_LOGIN_REJECT</span></strong> = -20,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_AUTH_LOGIN_SERVER_ERROR</span></strong> = -21,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_AUTH_REJECT</span></strong> = -22,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_TLS_REJECT</span></strong> = -23,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_TLS_FAILED</span></strong> = -24,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_TLS_TMO</span></strong> = -25,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MAIL_FROM_REJECT</span></strong> = -26,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MAIL_RCPT_REJECT</span></strong> = -27,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MAIL_DATA_REJECT</span></strong> = -28,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_MAIL_BODY_REJECT</span></strong> = -29,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_INITIALIZE_ERROR</span></strong> = -40,
-  <strong><span style="color: #000000">TCPIP_SMTPC_RES_INTERNAL_ERROR</span></strong> = -41
-} TCPIP_SMTPC_MESSAGE_RESULT;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03531.html" target="topic">TCPIP_SMTPC_MESSAGE_HANDLE</a> <strong><span style="color: #000000">TCPIP_SMTPC_MailMessage</span></strong>(
+    <strong><span style="color: #000080">const</span></strong> <a href="03507.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a>* <strong><span style="color: #000000">pMailMessage</span></strong>, 
+    <a href="03542.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT</a>* <strong><span style="color: #000000">pRes</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_OK = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-OK, operation successful&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_PENDING = 1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-operation in progress&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_ERROR = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-mail message error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_SERVER_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-message indicated wrong mail server&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_RCPT_ERROR = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-message mail recipient error: from, to, etc.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_BUFFER_ERROR = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-attachment buffer error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_FILE_ERROR = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-attachment file error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_AUTH_REQUIRED = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server requires authentication but username or password haven't been provided&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_AUTH_LEN_ERROR = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-provided credentials are too long, buffer overflow&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MESSAGE_ADDR_LEN_ERROR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-email address too long, buffer overflow&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MAIL_BUSY = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-all mail connections are busy; try later&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_DNS_ERROR = -10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-failure to resolve server name&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_SKT_OPEN_ERROR = -11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-failure to open a communication <a href="01402.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_SKT_BIND_ERROR = -12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-failure to bind a <a href="01402.html" target="topic">socket</a> to the mail server&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_SKT_CONNECT_TMO = -13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-connection to mail server timeout&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_SKT_TLS_ERROR = -14&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-TLS is required but failed to start TLS on the communication <a href="01402.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_SERVER_TMO = -15&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server timeout&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_CONNECTION_REJECT = -16&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the connection&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_CONNECTION_CLOSE = -17&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server closed the connection&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_HELLO_REJECT = -18&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the hello greeting&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_AUTH_UNKNOWN = -19&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server requires authentication mechanism unsupported by SMTPC Currently LOGIN and PLAIN authentications are supported&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_AUTH_LOGIN_REJECT = -20&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the login authentication request&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_AUTH_LOGIN_SERVER_ERROR = -21&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-unexpected server reply to login authentication request&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_AUTH_REJECT = -22&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the supplied authentication&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_TLS_REJECT = -23&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the TLS start&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_TLS_FAILED = -24&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-TLS session negotiation failed&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_TLS_TMO = -25&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-TLS session timeout&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MAIL_FROM_REJECT = -26&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the &quot;from&quot; address&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MAIL_RCPT_REJECT = -27&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the &quot;recipient&quot; address&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MAIL_DATA_REJECT = -28&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the &quot;data&quot; field&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_MAIL_BODY_REJECT = -29&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server rejected the mail body&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_INITIALIZE_ERROR = -40&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-module is not properly initialized, API call is invalid&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SMTPC_RES_INTERNAL_ERROR = -41&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-internal failure, should not happen&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+SMTPC module should have been initialized.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pMailMessage&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to a <a href="03507.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a> describing the mail message to be sent<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pRes&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+address to store the operation result If the call failed, additional info will be reported with this result Can be NULL if not needed.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+a valid handle (!= 0) - if mail message scheduled successfully 0 - if call failed&nbsp;</p>
+<p class="Element10">
+an error code otherwise</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+The returned handle is valid until the final mail notification function is called (<a href="03530.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a>) if exists, or until the mail transaction is completed. After that the messageHandle is no longer valid and should not be used again.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01311.html" target="topic">SMTPC Module</a> &gt; <a href="01775.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03529.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01318.html" target="topic">SMTPC Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03529.html" target="topic">TCPIP_SMTPC_MailMessage Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -290,13 +118,13 @@ None</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03524.html" target="topic">Previous</a> | <a href="01775.html" target="topic">Up</a> | <a href="03563.html" target="topic">Next</a></div>
+<a href="01783.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03597.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MESSAGE_RESULT Topic Title: TCPIP_SMTPC_MESSAGE_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MailMessage@TCPIP_SMTPC_MAIL_MESSAGE*@TCPIP_SMTPC_MESSAGE_RESULT* Topic Title: TCPIP_SMTPC_MailMessage Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

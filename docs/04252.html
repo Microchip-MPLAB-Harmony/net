@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>telnet_config.h</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04252.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01832.html" target="topic">Files</a> &gt; <a href="04252.html" target="topic">telnet_config.h</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04251.html" target="topic">Previous</a> | <a href="01832.html" target="topic">Up</a> | <a href="00363.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: telnet_config.h Topic Title: telnet_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+telnet_config.h</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="436F6D70616E79"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+telnet_config.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Telnet Configuration file&nbsp;</p>
+<p class="Element10">
+This file contains the Telnet module configuration options&nbsp;</p>
+<p class="Element10">
+This file is not part of the project, it is a configuration template file only.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04049.html" target="topic">TCPIP_TELNET_AUTHENTICATION_CONN_INFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Use the telnet connection information data as part of the authentication callback<br>If false no connection info data is provided to the authentication callback This is useful for the default case when all connections will use the same username/password.<br>If true the authentication callback will contain the connection info data to allow different processing based on the source of the authentication request<br>This flag is relevant only when <a href="04074.html" target="topic">TCPIP_TELNET_OBSOLETE_AUTHENTICATION</a> == false&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04065.html" target="topic">TCPIP_TELNET_LINE_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the internal line buffer This buffer is used for receiving and assembling the password, authentication and regular characters Adjust based on the length of the commands sent to the telnet server<br>This buffer is created in the automatic stack. Make sure that there's enough stack space for this buffer&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04066.html" target="topic">TCPIP_TELNET_LISTEN_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Port on which the telnet server is listening Default is TCPIP_TELNET_SERVER_PORT (23) or TCPIP_TELNET_SERVER_SECURE_PORT (992)<br>Adjust as needed&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04067.html" target="topic">TCPIP_TELNET_MAX_CONNECTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum number of Telnet connections&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04074.html" target="topic">TCPIP_TELNET_OBSOLETE_AUTHENTICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+telnet obsolete authentication method disable/enable<br>If false This is the default and the PREFERRED case! The telnet module will call a registrated callback to authenticate the users. Is is the preferred authentication method. It requires the run time registration of an authentication handler<br>Until the moment the authentication handler is registered any login attempts will fail!<br>If true The old OBSOLETE authentication method using the build symbols <a href="04087.html" target="topic">TCPIP_TELNET_USERNAME</a> and <a href="04075.html" target="topic">TCPIP_TELNET_PASSWORD</a> is used This method is DEPRECATED and it will be eventually removed!<br>It is recommended that you leave the setting to false!&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04075.html" target="topic">TCPIP_TELNET_PASSWORD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default Telnet password DEPRECATED. this is used only when there's no authentication callback defined!<br>Use only when <a href="04074.html" target="topic">TCPIP_TELNET_OBSOLETE_AUTHENTICATION</a> == true&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04076.html" target="topic">TCPIP_TELNET_PRINT_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the internal print buffer This buffer is used when the telnet console printf style function is called Adjust based on the length of the messages to be formatted with print statements<br>This buffer is created in the automatic stack. Make sure that there's enough stack space for this buffer&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04077.html" target="topic">TCPIP_TELNET_SKT_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the telnet <a href="01409.html" target="topic">socket</a> RX buffer If long messages are sent over the telnet connection the <a href="01409.html" target="topic">socket</a> should have a large enough buffer to receive the data<br>Leave 0 for default TCP RX buffer size&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04078.html" target="topic">TCPIP_TELNET_SKT_TX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the telnet <a href="01409.html" target="topic">socket</a> TX buffer if long messages are sent over the telnet connection the <a href="01409.html" target="topic">socket</a> should have a large enough buffer to write the data at once<br>Leave 0 for default TCP TX buffer size&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04086.html" target="topic">TCPIP_TELNET_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+telnet task rate, milliseconds<br>The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained<br>The value cannot be lower than the <a href="03917.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04087.html" target="topic">TCPIP_TELNET_USERNAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default Telnet user name<br>DEPRECATED. this is used only when there's no authentication callback defined!<br>Use only when <a href="04074.html" target="topic">TCPIP_TELNET_OBSOLETE_AUTHENTICATION</a> == true&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04088.html" target="topic">TCPIP_TELNET_USERNAME_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum size of the internal buffer to store the user name Adjust based on the length of the user names allowed for the telnet connections<br>A buffer of this size if allocated for each connection to store the login user name<br>Longer user names will be truncated to this size&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01832.html" target="topic">Files</a> &gt; <a href="04252.html" target="topic">telnet_config.h</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04251.html" target="topic">Previous</a> | <a href="01832.html" target="topic">Up</a> | <a href="00363.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: telnet_config.h Topic Title: telnet_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
