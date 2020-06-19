@@ -904,7 +904,6 @@
       <compileType>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibFileItem>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_pic32mc.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
