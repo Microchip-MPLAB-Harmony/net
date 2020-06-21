@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_PacketHandlerRegister Function</title>
+<title>TCPIP_STACK_NetIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03898.html" target="topic">TCPIP_STACK_PacketHandlerRegister Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; d) Network Up/Down/Linked Functions &gt; <a href="03898.html" target="topic">TCPIP_STACK_NetIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03897.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03852.html" target="topic">Next</a></div>
+<a href="03885.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03901.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_PacketHandlerRegister@TCPIP_NET_HANDLE@TCPIP_STACK_PACKET_HANDLER@void* Topic Title: TCPIP_STACK_PacketHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetIsReady@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_NetIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_PacketHandlerRegister Function</div>
+TCPIP_STACK_NetIsReady Function</div>
 </div>
 </div>
 
@@ -49,21 +49,19 @@ TCPIP_STACK_PacketHandlerRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function registers a new packet processing handler. The caller can use the handler to be notified of incoming packets and given a chance to examine/process them.</p></div>
+This function returns the network interface configuration status.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03899.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a> <strong><span style="color: #000000">TCPIP_STACK_PacketHandlerRegister</span></strong>(
-    <a href="03400.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
-    <a href="03896.html" target="topic">TCPIP_STACK_PACKET_HANDLER</a> <strong><span style="color: #000000">pktHandler</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">handlerParam</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_STACK_NetIsReady</span></strong>(
+    <a href="03413.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TCP/IP stack should have been initialized by <a href="03853.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03901.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
+The TCP/IP stack should have been initialized by <a href="03866.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03914.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,17 +80,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-network handle&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pktHandler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-the packet handler which will be called for an incoming packet&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-handlerParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-packet handler parameter&nbsp;</div></td></tr></table></div></div>
+Interface handle.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -102,8 +90,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element634">
-<li class="Element604">a valid <a href="03899.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a> - if the operation succeeded</li>
-<li class="Element604">NULL - if the operation failed</li>
+<li class="Element604">true - if interface exists, the corresponding MAC is linked and the interface is properly configured and ready for transfers</li>
+<li class="Element604">false - if the interface does not exist or interface not ready</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -111,23 +99,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Currently only one packet handler is supported per interface. The call will fail if a handler is already registered. Use <a href="03897.html" target="topic">TCPIP_STACK_PacketHandlerDeregister</a> first&nbsp;</p>
-<p class="Element10">
-Exists only if <a href="03772.html" target="topic">TCPIP_STACK_EXTERN_PACKET_PROCESS</a> is true</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="03899.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a> pktHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPktHandler, myParam );</pre></div></div>
-</div>
+This function should be checked by all users to return true before starting operations on that interface.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03898.html" target="topic">TCPIP_STACK_PacketHandlerRegister Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; d) Network Up/Down/Linked Functions &gt; <a href="03898.html" target="topic">TCPIP_STACK_NetIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +114,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03897.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03852.html" target="topic">Next</a></div>
+<a href="03885.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03901.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_PacketHandlerRegister@TCPIP_NET_HANDLE@TCPIP_STACK_PACKET_HANDLER@void* Topic Title: TCPIP_STACK_PacketHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetIsReady@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_NetIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

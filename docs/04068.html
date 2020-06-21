@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_UDP_ClientOpen Function</title>
+<title>TCPIP_TELNET_MODULE_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01762.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04068.html" target="topic">TCPIP_UDP_ClientOpen Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01835.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="04068.html" target="topic">TCPIP_TELNET_MODULE_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04097.html" target="topic">Previous</a> | <a href="01762.html" target="topic">Up</a> | <a href="04080.html" target="topic">Next</a></div>
+<a href="04059.html" target="topic">Previous</a> | <a href="01835.html" target="topic">Up</a> | <a href="04048.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ClientOpen@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_ClientOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TELNET_MODULE_CONFIG Topic Title: TCPIP_TELNET_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_UDP_ClientOpen Function</div>
+TCPIP_TELNET_MODULE_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,80 +49,65 @@ TCPIP_UDP_ClientOpen Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Provides a unified method for opening UDP client sockets.</p></div>
+Structure: TCPIP_TELNET_MODULE_CONFIG&nbsp;</p>
+<p class="Element10">
+telnet module configuration/initialization</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04158.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">TCPIP_UDP_ClientOpen</span></strong>(
-    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
-    <a href="04157.html" target="topic">UDP_PORT</a> <strong><span style="color: #000000">remotePort</span></strong>, 
-    IP_MULTI_ADDRESS* <strong><span style="color: #000000">remoteAddress</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint16_t <strong><span style="color: #000000">nConnections</span></strong>;
+  uint16_t <strong><span style="color: #000000">sktTxBuffSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">sktRxBuffSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">listenPort</span></strong>;
+  uint16_t <strong><span style="color: #000000">configFlags</span></strong>;
+} TCPIP_TELNET_MODULE_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-UDP is initialized.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-IP_ADDRESS_TYPE addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The type of address being used. Example: IP_ADDRESS_TYPE_IPV4 or IP_ADDRESS_TYPE_IPV6. It can also be IP_ADDRESS_TYPE_ANY if the type of the <a href="01305.html" target="topic">socket</a> will be specified later (using <a href="04067.html" target="topic">TCPIP_UDP_Bind</a>, <a href="04095.html" target="topic">TCPIP_UDP_RemoteBind</a>).&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-UDP_PORT remotePort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The remote UDP port to which a connection should be made. The local port for client sockets will be automatically picked by the UDP module.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-IP_MULTI_ADDRESS* remoteAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The remote address to <a href="00297.html" target="topic">connect</a> to. Not used if addType == IP_ADDRESS_TYPE_ANY. Can be NULL if later set by a call to <a href="04095.html" target="topic">TCPIP_UDP_RemoteBind</a>.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nConnections;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of simultaneous telnet connections allowed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t sktTxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of TX buffer for the associated <a href="01409.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t sktRxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of RX buffer for the associated <a href="01409.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t listenPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+telnet listening port: 23, 992, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t configFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="04060.html" target="topic">TCPIP_TELNET_FLAGS</a> configuration flags&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605"><a href="00835.html" target="topic">INVALID_SOCKET</a> - No sockets of the specified type were available to be opened.</li>
-</ul>&nbsp;</p>
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">A <a href="04158.html" target="topic">UDP_SOCKET</a> handle - Save this handle and use it when calling all other UDP APIs. </li>
-</ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01762.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04068.html" target="topic">TCPIP_UDP_ClientOpen Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01835.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="04068.html" target="topic">TCPIP_TELNET_MODULE_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +115,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04097.html" target="topic">Previous</a> | <a href="01762.html" target="topic">Up</a> | <a href="04080.html" target="topic">Next</a></div>
+<a href="04059.html" target="topic">Previous</a> | <a href="01835.html" target="topic">Up</a> | <a href="04048.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ClientOpen@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_ClientOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TELNET_MODULE_CONFIG Topic Title: TCPIP_TELNET_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

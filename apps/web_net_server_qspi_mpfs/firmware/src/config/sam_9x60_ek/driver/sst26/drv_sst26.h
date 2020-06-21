@@ -52,6 +52,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "drv_sst26_definitions.h"
 
 // DOM-IGNORE-BEGIN
@@ -89,7 +90,7 @@ typedef enum
     DRV_SST26_TRANSFER_ERROR_UNKNOWN,
 } DRV_SST26_TRANSFER_STATUS;
 
-/* 
+/*
  Summary:
     SST26 Device Geometry data.
 
@@ -123,6 +124,75 @@ typedef struct
 // Section: SST26 Driver Module Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+
+// *****************************************************************************
+/* SST26 Driver Transfer Event Handler Function Pointer
+
+   Summary
+    Pointer to a SST26 Driver Event handler function
+
+   Description
+    This data type defines the required function signature for the SST26 driver
+    event handling callback function. A client must register a pointer
+    using the event handling function whose function signature (parameter
+    and return value types) match the types specified by this function pointer
+    in order to receive transfer related event calls back from the driver.
+
+    This data type is only supported when sst26 driver is using
+    - QSPI PLIB in SPI mode
+    - SPI PLIB
+
+  Parameters:
+    event - Identifies the type of event
+
+    context - Value identifying the context of the application that
+    registered the event handling function.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    void APP_MyTransferEventHandler( DRV_SST26_TRANSFER_STATUS event, uintptr_t context )
+    {
+        MY_APP_DATA_STRUCT* pAppData = (MY_APP_DATA_STRUCT*) context;
+
+        switch(event)
+        {
+            case DRV_SST26_TRANSFER_COMPLETED:
+
+                // Handle the transfer complete event.
+                break;
+
+            case DRV_SST26_TRANSFER_ERROR_UNKNOWN:
+            default:
+
+                // Handle error.
+                break;
+        }
+    }
+    </code>
+
+  Remarks:
+    If the event is DRV_SST26_TRANSFER_COMPLETED, it means that the data was
+    transferred successfully.
+
+    If the event is DRV_SST26_TRANSFER_ERROR_UNKNOWN, it means that the data was not
+    transferred successfully.
+
+    The context parameter contains the handle to the client context,
+    provided at the time the event handling function was registered using the
+    DRV_SST26_EventHandlerSet function.  This context handle value is
+    passed back to the client as the "context" parameter.  It can be any value
+    necessary to identify the client context or instance (such as a pointer to
+    the client's data) instance of the client that made the buffer add request.
+
+    The event handler function executes in the driver's interrupt
+    context. It is recommended of the application to not perform process
+    intensive or blocking operations with in this function.
+*/
+
+typedef void ( *DRV_SST26_EVENT_HANDLER )( DRV_SST26_TRANSFER_STATUS event, uintptr_t context );
 
 // *****************************************************************************
 /* Function:
@@ -765,7 +835,7 @@ bool DRV_SST26_PageWrite( const DRV_HANDLE handle, void *tx_data, uint32_t addre
 
   Example:
     <code>
-    
+
     DRV_HANDLE handle;  // Returned from DRV_SST26_Open
 
     if (DRV_SST26_TRANSFER_COMPLETED == DRV_SST26_TransferStatusGet(handle))
@@ -835,6 +905,105 @@ DRV_SST26_TRANSFER_STATUS DRV_SST26_TransferStatusGet( const DRV_HANDLE handle )
 */
 
 bool DRV_SST26_GeometryGet( const DRV_HANDLE handle, DRV_SST26_GEOMETRY *geometry );
+
+// *****************************************************************************
+/* Function:
+    void DRV_SST26_EventHandlerSet(
+        const DRV_HANDLE handle,
+        const DRV_SST26_EVENT_HANDLER eventHandler,
+        const uintptr_t context
+    )
+
+  Summary:
+    Allows a client to identify a transfer event handling function for the driver
+    to call back when the requested transfer has finished.
+
+  Description:
+    This function allows a client to register a transfer event handling function
+    with the driver to call back when the requested transfer has finished.
+
+    The event handler should be set before the client submits any transfer
+    requests that could generate events. The event handler once set, persists
+    until the client closes the driver or sets another event handler (which
+    could be a "NULL" pointer to indicate no callback).
+
+    This function is only supported when sst26 driver is using
+    - QSPI PLIB in SPI mode
+    - SPI PLIB
+
+  Precondition:
+    DRV_SST26_Open must have been called to obtain a valid opened device handle.
+
+  Parameters:
+    handle - A valid open-instance handle, returned from the driver's open routine.
+
+    eventHandler - Pointer to the event handler function.
+
+    context - The value of parameter will be passed back to the client
+    unchanged, when the eventHandler function is called.  It can be used to
+    identify any client specific data object that identifies the instance of the
+    client module (for example, it may be a pointer to the client module's state
+    structure).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    #define BUFFER_SIZE  256
+    #define MEM_ADDRESS  0x00
+
+    // myAppObj is an application specific state data object.
+    MY_APP_OBJ myAppObj;
+
+    uint8_t myBuffer[BUFFER_SIZE];
+
+    // myHandle is the handle returned from DRV_SST26_Open API.
+
+    // Client registers an event handler with driver. This is done once
+
+    DRV_SST26_EventHandlerSet( myHandle, APP_SST26TransferEventHandler, (uintptr_t)&myAppObj );
+
+    if (DRV_SST26_Read(myHandle, myBuffer, BUFFER_SIZE, MEM_ADDRESS) == false)
+    {
+        // Error handling here
+    }
+
+    // The registered event handler is called when the request is complete.
+
+    void APP_SST26TransferEventHandler(DRV_SST26_TRANSFER_STATUS event, uintptr_t context)
+    {
+        // The context handle was set to an application specific
+        // object. It is now retrievable easily in the event handler.
+        MY_APP_OBJ* pMyAppObj = (MY_APP_OBJ *) context;
+
+        switch(event)
+        {
+            case DRV_SST26_TRANSFER_COMPLETED:
+                // This means the data was transferred.
+                break;
+
+            case DRV_SST26_TRANSFER_ERROR:
+                // Error handling here.
+                break;
+
+            default:
+                break;
+        }
+    }
+    </code>
+
+  Remarks:
+    If the client does not want to be notified when the queued buffer transfer
+    has completed, it does not need to register a callback.
+*/
+
+void DRV_SST26_EventHandlerSet(
+    const DRV_HANDLE handle,
+    const DRV_SST26_EVENT_HANDLER eventHandler,
+    const uintptr_t context
+);
 
 #ifdef __cplusplus
 }

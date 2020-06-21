@@ -1,7 +1,7 @@
 /**
  * \brief Peripheral I/O description for SAME54P20A
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-06T17:54:10Z */
+/* file generated from device description version 2020-03-12T17:27:04Z */
 #ifndef _SAME54P20A_GPIO_H_
 #define _SAME54P20A_GPIO_H_
 
@@ -358,326 +358,6 @@
 #define PINMUX_PB03B_ADC0_AIN15                    ((PIN_PB03B_ADC0_AIN15 << 16) | MUX_PB03B_ADC0_AIN15)
 #define PORT_PB03B_ADC0_AIN15                      ((1UL) << 3)
 
-#define PIN_PA03B_ADC0_X0                          (3L)         
-#define MUX_PA03B_ADC0_X0                          (1L)        
-#define PINMUX_PA03B_ADC0_X0                       ((PIN_PA03B_ADC0_X0 << 16) | MUX_PA03B_ADC0_X0)
-#define PORT_PA03B_ADC0_X0                         ((1UL) << 3)
-
-#define PIN_PA03B_ADC0_Y0                          (3L)         
-#define MUX_PA03B_ADC0_Y0                          (1L)        
-#define PINMUX_PA03B_ADC0_Y0                       ((PIN_PA03B_ADC0_Y0 << 16) | MUX_PA03B_ADC0_Y0)
-#define PORT_PA03B_ADC0_Y0                         ((1UL) << 3)
-
-#define PIN_PB08B_ADC0_X1                          (40L)        
-#define MUX_PB08B_ADC0_X1                          (1L)        
-#define PINMUX_PB08B_ADC0_X1                       ((PIN_PB08B_ADC0_X1 << 16) | MUX_PB08B_ADC0_X1)
-#define PORT_PB08B_ADC0_X1                         ((1UL) << 8)
-
-#define PIN_PB08B_ADC0_Y1                          (40L)        
-#define MUX_PB08B_ADC0_Y1                          (1L)        
-#define PINMUX_PB08B_ADC0_Y1                       ((PIN_PB08B_ADC0_Y1 << 16) | MUX_PB08B_ADC0_Y1)
-#define PORT_PB08B_ADC0_Y1                         ((1UL) << 8)
-
-#define PIN_PB09B_ADC0_X2                          (41L)        
-#define MUX_PB09B_ADC0_X2                          (1L)        
-#define PINMUX_PB09B_ADC0_X2                       ((PIN_PB09B_ADC0_X2 << 16) | MUX_PB09B_ADC0_X2)
-#define PORT_PB09B_ADC0_X2                         ((1UL) << 9)
-
-#define PIN_PB09B_ADC0_Y2                          (41L)        
-#define MUX_PB09B_ADC0_Y2                          (1L)        
-#define PINMUX_PB09B_ADC0_Y2                       ((PIN_PB09B_ADC0_Y2 << 16) | MUX_PB09B_ADC0_Y2)
-#define PORT_PB09B_ADC0_Y2                         ((1UL) << 9)
-
-#define PIN_PA04B_ADC0_X3                          (4L)         
-#define MUX_PA04B_ADC0_X3                          (1L)        
-#define PINMUX_PA04B_ADC0_X3                       ((PIN_PA04B_ADC0_X3 << 16) | MUX_PA04B_ADC0_X3)
-#define PORT_PA04B_ADC0_X3                         ((1UL) << 4)
-
-#define PIN_PA04B_ADC0_Y3                          (4L)         
-#define MUX_PA04B_ADC0_Y3                          (1L)        
-#define PINMUX_PA04B_ADC0_Y3                       ((PIN_PA04B_ADC0_Y3 << 16) | MUX_PA04B_ADC0_Y3)
-#define PORT_PA04B_ADC0_Y3                         ((1UL) << 4)
-
-#define PIN_PA06B_ADC0_X4                          (6L)         
-#define MUX_PA06B_ADC0_X4                          (1L)        
-#define PINMUX_PA06B_ADC0_X4                       ((PIN_PA06B_ADC0_X4 << 16) | MUX_PA06B_ADC0_X4)
-#define PORT_PA06B_ADC0_X4                         ((1UL) << 6)
-
-#define PIN_PA06B_ADC0_Y4                          (6L)         
-#define MUX_PA06B_ADC0_Y4                          (1L)        
-#define PINMUX_PA06B_ADC0_Y4                       ((PIN_PA06B_ADC0_Y4 << 16) | MUX_PA06B_ADC0_Y4)
-#define PORT_PA06B_ADC0_Y4                         ((1UL) << 6)
-
-#define PIN_PA07B_ADC0_X5                          (7L)         
-#define MUX_PA07B_ADC0_X5                          (1L)        
-#define PINMUX_PA07B_ADC0_X5                       ((PIN_PA07B_ADC0_X5 << 16) | MUX_PA07B_ADC0_X5)
-#define PORT_PA07B_ADC0_X5                         ((1UL) << 7)
-
-#define PIN_PA07B_ADC0_Y5                          (7L)         
-#define MUX_PA07B_ADC0_Y5                          (1L)        
-#define PINMUX_PA07B_ADC0_Y5                       ((PIN_PA07B_ADC0_Y5 << 16) | MUX_PA07B_ADC0_Y5)
-#define PORT_PA07B_ADC0_Y5                         ((1UL) << 7)
-
-#define PIN_PA08B_ADC0_X6                          (8L)         
-#define MUX_PA08B_ADC0_X6                          (1L)        
-#define PINMUX_PA08B_ADC0_X6                       ((PIN_PA08B_ADC0_X6 << 16) | MUX_PA08B_ADC0_X6)
-#define PORT_PA08B_ADC0_X6                         ((1UL) << 8)
-
-#define PIN_PA08B_ADC0_Y6                          (8L)         
-#define MUX_PA08B_ADC0_Y6                          (1L)        
-#define PINMUX_PA08B_ADC0_Y6                       ((PIN_PA08B_ADC0_Y6 << 16) | MUX_PA08B_ADC0_Y6)
-#define PORT_PA08B_ADC0_Y6                         ((1UL) << 8)
-
-#define PIN_PA09B_ADC0_X7                          (9L)         
-#define MUX_PA09B_ADC0_X7                          (1L)        
-#define PINMUX_PA09B_ADC0_X7                       ((PIN_PA09B_ADC0_X7 << 16) | MUX_PA09B_ADC0_X7)
-#define PORT_PA09B_ADC0_X7                         ((1UL) << 9)
-
-#define PIN_PA09B_ADC0_Y7                          (9L)         
-#define MUX_PA09B_ADC0_Y7                          (1L)        
-#define PINMUX_PA09B_ADC0_Y7                       ((PIN_PA09B_ADC0_Y7 << 16) | MUX_PA09B_ADC0_Y7)
-#define PORT_PA09B_ADC0_Y7                         ((1UL) << 9)
-
-#define PIN_PA10B_ADC0_X8                          (10L)        
-#define MUX_PA10B_ADC0_X8                          (1L)        
-#define PINMUX_PA10B_ADC0_X8                       ((PIN_PA10B_ADC0_X8 << 16) | MUX_PA10B_ADC0_X8)
-#define PORT_PA10B_ADC0_X8                         ((1UL) << 10)
-
-#define PIN_PA10B_ADC0_Y8                          (10L)        
-#define MUX_PA10B_ADC0_Y8                          (1L)        
-#define PINMUX_PA10B_ADC0_Y8                       ((PIN_PA10B_ADC0_Y8 << 16) | MUX_PA10B_ADC0_Y8)
-#define PORT_PA10B_ADC0_Y8                         ((1UL) << 10)
-
-#define PIN_PA11B_ADC0_X9                          (11L)        
-#define MUX_PA11B_ADC0_X9                          (1L)        
-#define PINMUX_PA11B_ADC0_X9                       ((PIN_PA11B_ADC0_X9 << 16) | MUX_PA11B_ADC0_X9)
-#define PORT_PA11B_ADC0_X9                         ((1UL) << 11)
-
-#define PIN_PA11B_ADC0_Y9                          (11L)        
-#define MUX_PA11B_ADC0_Y9                          (1L)        
-#define PINMUX_PA11B_ADC0_Y9                       ((PIN_PA11B_ADC0_Y9 << 16) | MUX_PA11B_ADC0_Y9)
-#define PORT_PA11B_ADC0_Y9                         ((1UL) << 11)
-
-#define PIN_PA16B_ADC0_X10                         (16L)        
-#define MUX_PA16B_ADC0_X10                         (1L)        
-#define PINMUX_PA16B_ADC0_X10                      ((PIN_PA16B_ADC0_X10 << 16) | MUX_PA16B_ADC0_X10)
-#define PORT_PA16B_ADC0_X10                        ((1UL) << 16)
-
-#define PIN_PA16B_ADC0_Y10                         (16L)        
-#define MUX_PA16B_ADC0_Y10                         (1L)        
-#define PINMUX_PA16B_ADC0_Y10                      ((PIN_PA16B_ADC0_Y10 << 16) | MUX_PA16B_ADC0_Y10)
-#define PORT_PA16B_ADC0_Y10                        ((1UL) << 16)
-
-#define PIN_PA17B_ADC0_X11                         (17L)        
-#define MUX_PA17B_ADC0_X11                         (1L)        
-#define PINMUX_PA17B_ADC0_X11                      ((PIN_PA17B_ADC0_X11 << 16) | MUX_PA17B_ADC0_X11)
-#define PORT_PA17B_ADC0_X11                        ((1UL) << 17)
-
-#define PIN_PA17B_ADC0_Y11                         (17L)        
-#define MUX_PA17B_ADC0_Y11                         (1L)        
-#define PINMUX_PA17B_ADC0_Y11                      ((PIN_PA17B_ADC0_Y11 << 16) | MUX_PA17B_ADC0_Y11)
-#define PORT_PA17B_ADC0_Y11                        ((1UL) << 17)
-
-#define PIN_PA18B_ADC0_X12                         (18L)        
-#define MUX_PA18B_ADC0_X12                         (1L)        
-#define PINMUX_PA18B_ADC0_X12                      ((PIN_PA18B_ADC0_X12 << 16) | MUX_PA18B_ADC0_X12)
-#define PORT_PA18B_ADC0_X12                        ((1UL) << 18)
-
-#define PIN_PA18B_ADC0_Y12                         (18L)        
-#define MUX_PA18B_ADC0_Y12                         (1L)        
-#define PINMUX_PA18B_ADC0_Y12                      ((PIN_PA18B_ADC0_Y12 << 16) | MUX_PA18B_ADC0_Y12)
-#define PORT_PA18B_ADC0_Y12                        ((1UL) << 18)
-
-#define PIN_PA19B_ADC0_X13                         (19L)        
-#define MUX_PA19B_ADC0_X13                         (1L)        
-#define PINMUX_PA19B_ADC0_X13                      ((PIN_PA19B_ADC0_X13 << 16) | MUX_PA19B_ADC0_X13)
-#define PORT_PA19B_ADC0_X13                        ((1UL) << 19)
-
-#define PIN_PA19B_ADC0_Y13                         (19L)        
-#define MUX_PA19B_ADC0_Y13                         (1L)        
-#define PINMUX_PA19B_ADC0_Y13                      ((PIN_PA19B_ADC0_Y13 << 16) | MUX_PA19B_ADC0_Y13)
-#define PORT_PA19B_ADC0_Y13                        ((1UL) << 19)
-
-#define PIN_PA20B_ADC0_X14                         (20L)        
-#define MUX_PA20B_ADC0_X14                         (1L)        
-#define PINMUX_PA20B_ADC0_X14                      ((PIN_PA20B_ADC0_X14 << 16) | MUX_PA20B_ADC0_X14)
-#define PORT_PA20B_ADC0_X14                        ((1UL) << 20)
-
-#define PIN_PA20B_ADC0_Y14                         (20L)        
-#define MUX_PA20B_ADC0_Y14                         (1L)        
-#define PINMUX_PA20B_ADC0_Y14                      ((PIN_PA20B_ADC0_Y14 << 16) | MUX_PA20B_ADC0_Y14)
-#define PORT_PA20B_ADC0_Y14                        ((1UL) << 20)
-
-#define PIN_PA21B_ADC0_X15                         (21L)        
-#define MUX_PA21B_ADC0_X15                         (1L)        
-#define PINMUX_PA21B_ADC0_X15                      ((PIN_PA21B_ADC0_X15 << 16) | MUX_PA21B_ADC0_X15)
-#define PORT_PA21B_ADC0_X15                        ((1UL) << 21)
-
-#define PIN_PA21B_ADC0_Y15                         (21L)        
-#define MUX_PA21B_ADC0_Y15                         (1L)        
-#define PINMUX_PA21B_ADC0_Y15                      ((PIN_PA21B_ADC0_Y15 << 16) | MUX_PA21B_ADC0_Y15)
-#define PORT_PA21B_ADC0_Y15                        ((1UL) << 21)
-
-#define PIN_PA22B_ADC0_X16                         (22L)        
-#define MUX_PA22B_ADC0_X16                         (1L)        
-#define PINMUX_PA22B_ADC0_X16                      ((PIN_PA22B_ADC0_X16 << 16) | MUX_PA22B_ADC0_X16)
-#define PORT_PA22B_ADC0_X16                        ((1UL) << 22)
-
-#define PIN_PA22B_ADC0_Y16                         (22L)        
-#define MUX_PA22B_ADC0_Y16                         (1L)        
-#define PINMUX_PA22B_ADC0_Y16                      ((PIN_PA22B_ADC0_Y16 << 16) | MUX_PA22B_ADC0_Y16)
-#define PORT_PA22B_ADC0_Y16                        ((1UL) << 22)
-
-#define PIN_PA23B_ADC0_X17                         (23L)        
-#define MUX_PA23B_ADC0_X17                         (1L)        
-#define PINMUX_PA23B_ADC0_X17                      ((PIN_PA23B_ADC0_X17 << 16) | MUX_PA23B_ADC0_X17)
-#define PORT_PA23B_ADC0_X17                        ((1UL) << 23)
-
-#define PIN_PA23B_ADC0_Y17                         (23L)        
-#define MUX_PA23B_ADC0_Y17                         (1L)        
-#define PINMUX_PA23B_ADC0_Y17                      ((PIN_PA23B_ADC0_Y17 << 16) | MUX_PA23B_ADC0_Y17)
-#define PORT_PA23B_ADC0_Y17                        ((1UL) << 23)
-
-#define PIN_PA27B_ADC0_X18                         (27L)        
-#define MUX_PA27B_ADC0_X18                         (1L)        
-#define PINMUX_PA27B_ADC0_X18                      ((PIN_PA27B_ADC0_X18 << 16) | MUX_PA27B_ADC0_X18)
-#define PORT_PA27B_ADC0_X18                        ((1UL) << 27)
-
-#define PIN_PA27B_ADC0_Y18                         (27L)        
-#define MUX_PA27B_ADC0_Y18                         (1L)        
-#define PINMUX_PA27B_ADC0_Y18                      ((PIN_PA27B_ADC0_Y18 << 16) | MUX_PA27B_ADC0_Y18)
-#define PORT_PA27B_ADC0_Y18                        ((1UL) << 27)
-
-#define PIN_PA30B_ADC0_X19                         (30L)        
-#define MUX_PA30B_ADC0_X19                         (1L)        
-#define PINMUX_PA30B_ADC0_X19                      ((PIN_PA30B_ADC0_X19 << 16) | MUX_PA30B_ADC0_X19)
-#define PORT_PA30B_ADC0_X19                        ((1UL) << 30)
-
-#define PIN_PA30B_ADC0_Y19                         (30L)        
-#define MUX_PA30B_ADC0_Y19                         (1L)        
-#define PINMUX_PA30B_ADC0_Y19                      ((PIN_PA30B_ADC0_Y19 << 16) | MUX_PA30B_ADC0_Y19)
-#define PORT_PA30B_ADC0_Y19                        ((1UL) << 30)
-
-#define PIN_PB02B_ADC0_X20                         (34L)        
-#define MUX_PB02B_ADC0_X20                         (1L)        
-#define PINMUX_PB02B_ADC0_X20                      ((PIN_PB02B_ADC0_X20 << 16) | MUX_PB02B_ADC0_X20)
-#define PORT_PB02B_ADC0_X20                        ((1UL) << 2)
-
-#define PIN_PB02B_ADC0_Y20                         (34L)        
-#define MUX_PB02B_ADC0_Y20                         (1L)        
-#define PINMUX_PB02B_ADC0_Y20                      ((PIN_PB02B_ADC0_Y20 << 16) | MUX_PB02B_ADC0_Y20)
-#define PORT_PB02B_ADC0_Y20                        ((1UL) << 2)
-
-#define PIN_PB03B_ADC0_X21                         (35L)        
-#define MUX_PB03B_ADC0_X21                         (1L)        
-#define PINMUX_PB03B_ADC0_X21                      ((PIN_PB03B_ADC0_X21 << 16) | MUX_PB03B_ADC0_X21)
-#define PORT_PB03B_ADC0_X21                        ((1UL) << 3)
-
-#define PIN_PB03B_ADC0_Y21                         (35L)        
-#define MUX_PB03B_ADC0_Y21                         (1L)        
-#define PINMUX_PB03B_ADC0_Y21                      ((PIN_PB03B_ADC0_Y21 << 16) | MUX_PB03B_ADC0_Y21)
-#define PORT_PB03B_ADC0_Y21                        ((1UL) << 3)
-
-#define PIN_PB04B_ADC0_X22                         (36L)        
-#define MUX_PB04B_ADC0_X22                         (1L)        
-#define PINMUX_PB04B_ADC0_X22                      ((PIN_PB04B_ADC0_X22 << 16) | MUX_PB04B_ADC0_X22)
-#define PORT_PB04B_ADC0_X22                        ((1UL) << 4)
-
-#define PIN_PB04B_ADC0_Y22                         (36L)        
-#define MUX_PB04B_ADC0_Y22                         (1L)        
-#define PINMUX_PB04B_ADC0_Y22                      ((PIN_PB04B_ADC0_Y22 << 16) | MUX_PB04B_ADC0_Y22)
-#define PORT_PB04B_ADC0_Y22                        ((1UL) << 4)
-
-#define PIN_PB05B_ADC0_X23                         (37L)        
-#define MUX_PB05B_ADC0_X23                         (1L)        
-#define PINMUX_PB05B_ADC0_X23                      ((PIN_PB05B_ADC0_X23 << 16) | MUX_PB05B_ADC0_X23)
-#define PORT_PB05B_ADC0_X23                        ((1UL) << 5)
-
-#define PIN_PB05B_ADC0_Y23                         (37L)        
-#define MUX_PB05B_ADC0_Y23                         (1L)        
-#define PINMUX_PB05B_ADC0_Y23                      ((PIN_PB05B_ADC0_Y23 << 16) | MUX_PB05B_ADC0_Y23)
-#define PORT_PB05B_ADC0_Y23                        ((1UL) << 5)
-
-#define PIN_PB06B_ADC0_X24                         (38L)        
-#define MUX_PB06B_ADC0_X24                         (1L)        
-#define PINMUX_PB06B_ADC0_X24                      ((PIN_PB06B_ADC0_X24 << 16) | MUX_PB06B_ADC0_X24)
-#define PORT_PB06B_ADC0_X24                        ((1UL) << 6)
-
-#define PIN_PB06B_ADC0_Y24                         (38L)        
-#define MUX_PB06B_ADC0_Y24                         (1L)        
-#define PINMUX_PB06B_ADC0_Y24                      ((PIN_PB06B_ADC0_Y24 << 16) | MUX_PB06B_ADC0_Y24)
-#define PORT_PB06B_ADC0_Y24                        ((1UL) << 6)
-
-#define PIN_PB07B_ADC0_X25                         (39L)        
-#define MUX_PB07B_ADC0_X25                         (1L)        
-#define PINMUX_PB07B_ADC0_X25                      ((PIN_PB07B_ADC0_X25 << 16) | MUX_PB07B_ADC0_X25)
-#define PORT_PB07B_ADC0_X25                        ((1UL) << 7)
-
-#define PIN_PB07B_ADC0_Y25                         (39L)        
-#define MUX_PB07B_ADC0_Y25                         (1L)        
-#define PINMUX_PB07B_ADC0_Y25                      ((PIN_PB07B_ADC0_Y25 << 16) | MUX_PB07B_ADC0_Y25)
-#define PORT_PB07B_ADC0_Y25                        ((1UL) << 7)
-
-#define PIN_PB12B_ADC0_X26                         (44L)        
-#define MUX_PB12B_ADC0_X26                         (1L)        
-#define PINMUX_PB12B_ADC0_X26                      ((PIN_PB12B_ADC0_X26 << 16) | MUX_PB12B_ADC0_X26)
-#define PORT_PB12B_ADC0_X26                        ((1UL) << 12)
-
-#define PIN_PB12B_ADC0_Y26                         (44L)        
-#define MUX_PB12B_ADC0_Y26                         (1L)        
-#define PINMUX_PB12B_ADC0_Y26                      ((PIN_PB12B_ADC0_Y26 << 16) | MUX_PB12B_ADC0_Y26)
-#define PORT_PB12B_ADC0_Y26                        ((1UL) << 12)
-
-#define PIN_PB13B_ADC0_X27                         (45L)        
-#define MUX_PB13B_ADC0_X27                         (1L)        
-#define PINMUX_PB13B_ADC0_X27                      ((PIN_PB13B_ADC0_X27 << 16) | MUX_PB13B_ADC0_X27)
-#define PORT_PB13B_ADC0_X27                        ((1UL) << 13)
-
-#define PIN_PB13B_ADC0_Y27                         (45L)        
-#define MUX_PB13B_ADC0_Y27                         (1L)        
-#define PINMUX_PB13B_ADC0_Y27                      ((PIN_PB13B_ADC0_Y27 << 16) | MUX_PB13B_ADC0_Y27)
-#define PORT_PB13B_ADC0_Y27                        ((1UL) << 13)
-
-#define PIN_PB14B_ADC0_X28                         (46L)        
-#define MUX_PB14B_ADC0_X28                         (1L)        
-#define PINMUX_PB14B_ADC0_X28                      ((PIN_PB14B_ADC0_X28 << 16) | MUX_PB14B_ADC0_X28)
-#define PORT_PB14B_ADC0_X28                        ((1UL) << 14)
-
-#define PIN_PB14B_ADC0_Y28                         (46L)        
-#define MUX_PB14B_ADC0_Y28                         (1L)        
-#define PINMUX_PB14B_ADC0_Y28                      ((PIN_PB14B_ADC0_Y28 << 16) | MUX_PB14B_ADC0_Y28)
-#define PORT_PB14B_ADC0_Y28                        ((1UL) << 14)
-
-#define PIN_PB15B_ADC0_X29                         (47L)        
-#define MUX_PB15B_ADC0_X29                         (1L)        
-#define PINMUX_PB15B_ADC0_X29                      ((PIN_PB15B_ADC0_X29 << 16) | MUX_PB15B_ADC0_X29)
-#define PORT_PB15B_ADC0_X29                        ((1UL) << 15)
-
-#define PIN_PB15B_ADC0_Y29                         (47L)        
-#define MUX_PB15B_ADC0_Y29                         (1L)        
-#define PINMUX_PB15B_ADC0_Y29                      ((PIN_PB15B_ADC0_Y29 << 16) | MUX_PB15B_ADC0_Y29)
-#define PORT_PB15B_ADC0_Y29                        ((1UL) << 15)
-
-#define PIN_PB00B_ADC0_X30                         (32L)        
-#define MUX_PB00B_ADC0_X30                         (1L)        
-#define PINMUX_PB00B_ADC0_X30                      ((PIN_PB00B_ADC0_X30 << 16) | MUX_PB00B_ADC0_X30)
-#define PORT_PB00B_ADC0_X30                        ((1UL) << 0)
-
-#define PIN_PB00B_ADC0_Y30                         (32L)        
-#define MUX_PB00B_ADC0_Y30                         (1L)        
-#define PINMUX_PB00B_ADC0_Y30                      ((PIN_PB00B_ADC0_Y30 << 16) | MUX_PB00B_ADC0_Y30)
-#define PORT_PB00B_ADC0_Y30                        ((1UL) << 0)
-
-#define PIN_PB01B_ADC0_X31                         (33L)        
-#define MUX_PB01B_ADC0_X31                         (1L)        
-#define PINMUX_PB01B_ADC0_X31                      ((PIN_PB01B_ADC0_X31 << 16) | MUX_PB01B_ADC0_X31)
-#define PORT_PB01B_ADC0_X31                        ((1UL) << 1)
-
-#define PIN_PB01B_ADC0_Y31                         (33L)        
-#define MUX_PB01B_ADC0_Y31                         (1L)        
-#define PINMUX_PB01B_ADC0_Y31                      ((PIN_PB01B_ADC0_Y31 << 16) | MUX_PB01B_ADC0_Y31)
-#define PORT_PB01B_ADC0_Y31                        ((1UL) << 1)
-
 #define PIN_PA03B_ADC0_VREFA                       (3L)         
 #define MUX_PA03B_ADC0_VREFA                       (1L)        
 #define PINMUX_PA03B_ADC0_VREFA                    ((PIN_PA03B_ADC0_VREFA << 16) | MUX_PA03B_ADC0_VREFA)
@@ -692,6 +372,326 @@
 #define MUX_PA06B_ADC0_VREFC                       (1L)        
 #define PINMUX_PA06B_ADC0_VREFC                    ((PIN_PA06B_ADC0_VREFC << 16) | MUX_PA06B_ADC0_VREFC)
 #define PORT_PA06B_ADC0_VREFC                      ((1UL) << 6)
+
+#define PIN_PA03B_ADC0_X0                          (3L)         
+#define MUX_PA03B_ADC0_X0                          (1L)        
+#define PINMUX_PA03B_ADC0_X0                       ((PIN_PA03B_ADC0_X0 << 16) | MUX_PA03B_ADC0_X0)
+#define PORT_PA03B_ADC0_X0                         ((1UL) << 3)
+
+#define PIN_PB08B_ADC0_X1                          (40L)        
+#define MUX_PB08B_ADC0_X1                          (1L)        
+#define PINMUX_PB08B_ADC0_X1                       ((PIN_PB08B_ADC0_X1 << 16) | MUX_PB08B_ADC0_X1)
+#define PORT_PB08B_ADC0_X1                         ((1UL) << 8)
+
+#define PIN_PB09B_ADC0_X2                          (41L)        
+#define MUX_PB09B_ADC0_X2                          (1L)        
+#define PINMUX_PB09B_ADC0_X2                       ((PIN_PB09B_ADC0_X2 << 16) | MUX_PB09B_ADC0_X2)
+#define PORT_PB09B_ADC0_X2                         ((1UL) << 9)
+
+#define PIN_PA04B_ADC0_X3                          (4L)         
+#define MUX_PA04B_ADC0_X3                          (1L)        
+#define PINMUX_PA04B_ADC0_X3                       ((PIN_PA04B_ADC0_X3 << 16) | MUX_PA04B_ADC0_X3)
+#define PORT_PA04B_ADC0_X3                         ((1UL) << 4)
+
+#define PIN_PA06B_ADC0_X4                          (6L)         
+#define MUX_PA06B_ADC0_X4                          (1L)        
+#define PINMUX_PA06B_ADC0_X4                       ((PIN_PA06B_ADC0_X4 << 16) | MUX_PA06B_ADC0_X4)
+#define PORT_PA06B_ADC0_X4                         ((1UL) << 6)
+
+#define PIN_PA07B_ADC0_X5                          (7L)         
+#define MUX_PA07B_ADC0_X5                          (1L)        
+#define PINMUX_PA07B_ADC0_X5                       ((PIN_PA07B_ADC0_X5 << 16) | MUX_PA07B_ADC0_X5)
+#define PORT_PA07B_ADC0_X5                         ((1UL) << 7)
+
+#define PIN_PA08B_ADC0_X6                          (8L)         
+#define MUX_PA08B_ADC0_X6                          (1L)        
+#define PINMUX_PA08B_ADC0_X6                       ((PIN_PA08B_ADC0_X6 << 16) | MUX_PA08B_ADC0_X6)
+#define PORT_PA08B_ADC0_X6                         ((1UL) << 8)
+
+#define PIN_PA09B_ADC0_X7                          (9L)         
+#define MUX_PA09B_ADC0_X7                          (1L)        
+#define PINMUX_PA09B_ADC0_X7                       ((PIN_PA09B_ADC0_X7 << 16) | MUX_PA09B_ADC0_X7)
+#define PORT_PA09B_ADC0_X7                         ((1UL) << 9)
+
+#define PIN_PA10B_ADC0_X8                          (10L)        
+#define MUX_PA10B_ADC0_X8                          (1L)        
+#define PINMUX_PA10B_ADC0_X8                       ((PIN_PA10B_ADC0_X8 << 16) | MUX_PA10B_ADC0_X8)
+#define PORT_PA10B_ADC0_X8                         ((1UL) << 10)
+
+#define PIN_PA11B_ADC0_X9                          (11L)        
+#define MUX_PA11B_ADC0_X9                          (1L)        
+#define PINMUX_PA11B_ADC0_X9                       ((PIN_PA11B_ADC0_X9 << 16) | MUX_PA11B_ADC0_X9)
+#define PORT_PA11B_ADC0_X9                         ((1UL) << 11)
+
+#define PIN_PA16B_ADC0_X10                         (16L)        
+#define MUX_PA16B_ADC0_X10                         (1L)        
+#define PINMUX_PA16B_ADC0_X10                      ((PIN_PA16B_ADC0_X10 << 16) | MUX_PA16B_ADC0_X10)
+#define PORT_PA16B_ADC0_X10                        ((1UL) << 16)
+
+#define PIN_PA17B_ADC0_X11                         (17L)        
+#define MUX_PA17B_ADC0_X11                         (1L)        
+#define PINMUX_PA17B_ADC0_X11                      ((PIN_PA17B_ADC0_X11 << 16) | MUX_PA17B_ADC0_X11)
+#define PORT_PA17B_ADC0_X11                        ((1UL) << 17)
+
+#define PIN_PA18B_ADC0_X12                         (18L)        
+#define MUX_PA18B_ADC0_X12                         (1L)        
+#define PINMUX_PA18B_ADC0_X12                      ((PIN_PA18B_ADC0_X12 << 16) | MUX_PA18B_ADC0_X12)
+#define PORT_PA18B_ADC0_X12                        ((1UL) << 18)
+
+#define PIN_PA19B_ADC0_X13                         (19L)        
+#define MUX_PA19B_ADC0_X13                         (1L)        
+#define PINMUX_PA19B_ADC0_X13                      ((PIN_PA19B_ADC0_X13 << 16) | MUX_PA19B_ADC0_X13)
+#define PORT_PA19B_ADC0_X13                        ((1UL) << 19)
+
+#define PIN_PA20B_ADC0_X14                         (20L)        
+#define MUX_PA20B_ADC0_X14                         (1L)        
+#define PINMUX_PA20B_ADC0_X14                      ((PIN_PA20B_ADC0_X14 << 16) | MUX_PA20B_ADC0_X14)
+#define PORT_PA20B_ADC0_X14                        ((1UL) << 20)
+
+#define PIN_PA21B_ADC0_X15                         (21L)        
+#define MUX_PA21B_ADC0_X15                         (1L)        
+#define PINMUX_PA21B_ADC0_X15                      ((PIN_PA21B_ADC0_X15 << 16) | MUX_PA21B_ADC0_X15)
+#define PORT_PA21B_ADC0_X15                        ((1UL) << 21)
+
+#define PIN_PA22B_ADC0_X16                         (22L)        
+#define MUX_PA22B_ADC0_X16                         (1L)        
+#define PINMUX_PA22B_ADC0_X16                      ((PIN_PA22B_ADC0_X16 << 16) | MUX_PA22B_ADC0_X16)
+#define PORT_PA22B_ADC0_X16                        ((1UL) << 22)
+
+#define PIN_PA23B_ADC0_X17                         (23L)        
+#define MUX_PA23B_ADC0_X17                         (1L)        
+#define PINMUX_PA23B_ADC0_X17                      ((PIN_PA23B_ADC0_X17 << 16) | MUX_PA23B_ADC0_X17)
+#define PORT_PA23B_ADC0_X17                        ((1UL) << 23)
+
+#define PIN_PA27B_ADC0_X18                         (27L)        
+#define MUX_PA27B_ADC0_X18                         (1L)        
+#define PINMUX_PA27B_ADC0_X18                      ((PIN_PA27B_ADC0_X18 << 16) | MUX_PA27B_ADC0_X18)
+#define PORT_PA27B_ADC0_X18                        ((1UL) << 27)
+
+#define PIN_PA30B_ADC0_X19                         (30L)        
+#define MUX_PA30B_ADC0_X19                         (1L)        
+#define PINMUX_PA30B_ADC0_X19                      ((PIN_PA30B_ADC0_X19 << 16) | MUX_PA30B_ADC0_X19)
+#define PORT_PA30B_ADC0_X19                        ((1UL) << 30)
+
+#define PIN_PB02B_ADC0_X20                         (34L)        
+#define MUX_PB02B_ADC0_X20                         (1L)        
+#define PINMUX_PB02B_ADC0_X20                      ((PIN_PB02B_ADC0_X20 << 16) | MUX_PB02B_ADC0_X20)
+#define PORT_PB02B_ADC0_X20                        ((1UL) << 2)
+
+#define PIN_PB03B_ADC0_X21                         (35L)        
+#define MUX_PB03B_ADC0_X21                         (1L)        
+#define PINMUX_PB03B_ADC0_X21                      ((PIN_PB03B_ADC0_X21 << 16) | MUX_PB03B_ADC0_X21)
+#define PORT_PB03B_ADC0_X21                        ((1UL) << 3)
+
+#define PIN_PB04B_ADC0_X22                         (36L)        
+#define MUX_PB04B_ADC0_X22                         (1L)        
+#define PINMUX_PB04B_ADC0_X22                      ((PIN_PB04B_ADC0_X22 << 16) | MUX_PB04B_ADC0_X22)
+#define PORT_PB04B_ADC0_X22                        ((1UL) << 4)
+
+#define PIN_PB05B_ADC0_X23                         (37L)        
+#define MUX_PB05B_ADC0_X23                         (1L)        
+#define PINMUX_PB05B_ADC0_X23                      ((PIN_PB05B_ADC0_X23 << 16) | MUX_PB05B_ADC0_X23)
+#define PORT_PB05B_ADC0_X23                        ((1UL) << 5)
+
+#define PIN_PB06B_ADC0_X24                         (38L)        
+#define MUX_PB06B_ADC0_X24                         (1L)        
+#define PINMUX_PB06B_ADC0_X24                      ((PIN_PB06B_ADC0_X24 << 16) | MUX_PB06B_ADC0_X24)
+#define PORT_PB06B_ADC0_X24                        ((1UL) << 6)
+
+#define PIN_PB07B_ADC0_X25                         (39L)        
+#define MUX_PB07B_ADC0_X25                         (1L)        
+#define PINMUX_PB07B_ADC0_X25                      ((PIN_PB07B_ADC0_X25 << 16) | MUX_PB07B_ADC0_X25)
+#define PORT_PB07B_ADC0_X25                        ((1UL) << 7)
+
+#define PIN_PB12B_ADC0_X26                         (44L)        
+#define MUX_PB12B_ADC0_X26                         (1L)        
+#define PINMUX_PB12B_ADC0_X26                      ((PIN_PB12B_ADC0_X26 << 16) | MUX_PB12B_ADC0_X26)
+#define PORT_PB12B_ADC0_X26                        ((1UL) << 12)
+
+#define PIN_PB13B_ADC0_X27                         (45L)        
+#define MUX_PB13B_ADC0_X27                         (1L)        
+#define PINMUX_PB13B_ADC0_X27                      ((PIN_PB13B_ADC0_X27 << 16) | MUX_PB13B_ADC0_X27)
+#define PORT_PB13B_ADC0_X27                        ((1UL) << 13)
+
+#define PIN_PB14B_ADC0_X28                         (46L)        
+#define MUX_PB14B_ADC0_X28                         (1L)        
+#define PINMUX_PB14B_ADC0_X28                      ((PIN_PB14B_ADC0_X28 << 16) | MUX_PB14B_ADC0_X28)
+#define PORT_PB14B_ADC0_X28                        ((1UL) << 14)
+
+#define PIN_PB15B_ADC0_X29                         (47L)        
+#define MUX_PB15B_ADC0_X29                         (1L)        
+#define PINMUX_PB15B_ADC0_X29                      ((PIN_PB15B_ADC0_X29 << 16) | MUX_PB15B_ADC0_X29)
+#define PORT_PB15B_ADC0_X29                        ((1UL) << 15)
+
+#define PIN_PB00B_ADC0_X30                         (32L)        
+#define MUX_PB00B_ADC0_X30                         (1L)        
+#define PINMUX_PB00B_ADC0_X30                      ((PIN_PB00B_ADC0_X30 << 16) | MUX_PB00B_ADC0_X30)
+#define PORT_PB00B_ADC0_X30                        ((1UL) << 0)
+
+#define PIN_PB01B_ADC0_X31                         (33L)        
+#define MUX_PB01B_ADC0_X31                         (1L)        
+#define PINMUX_PB01B_ADC0_X31                      ((PIN_PB01B_ADC0_X31 << 16) | MUX_PB01B_ADC0_X31)
+#define PORT_PB01B_ADC0_X31                        ((1UL) << 1)
+
+#define PIN_PA03B_ADC0_Y0                          (3L)         
+#define MUX_PA03B_ADC0_Y0                          (1L)        
+#define PINMUX_PA03B_ADC0_Y0                       ((PIN_PA03B_ADC0_Y0 << 16) | MUX_PA03B_ADC0_Y0)
+#define PORT_PA03B_ADC0_Y0                         ((1UL) << 3)
+
+#define PIN_PB08B_ADC0_Y1                          (40L)        
+#define MUX_PB08B_ADC0_Y1                          (1L)        
+#define PINMUX_PB08B_ADC0_Y1                       ((PIN_PB08B_ADC0_Y1 << 16) | MUX_PB08B_ADC0_Y1)
+#define PORT_PB08B_ADC0_Y1                         ((1UL) << 8)
+
+#define PIN_PB09B_ADC0_Y2                          (41L)        
+#define MUX_PB09B_ADC0_Y2                          (1L)        
+#define PINMUX_PB09B_ADC0_Y2                       ((PIN_PB09B_ADC0_Y2 << 16) | MUX_PB09B_ADC0_Y2)
+#define PORT_PB09B_ADC0_Y2                         ((1UL) << 9)
+
+#define PIN_PA04B_ADC0_Y3                          (4L)         
+#define MUX_PA04B_ADC0_Y3                          (1L)        
+#define PINMUX_PA04B_ADC0_Y3                       ((PIN_PA04B_ADC0_Y3 << 16) | MUX_PA04B_ADC0_Y3)
+#define PORT_PA04B_ADC0_Y3                         ((1UL) << 4)
+
+#define PIN_PA06B_ADC0_Y4                          (6L)         
+#define MUX_PA06B_ADC0_Y4                          (1L)        
+#define PINMUX_PA06B_ADC0_Y4                       ((PIN_PA06B_ADC0_Y4 << 16) | MUX_PA06B_ADC0_Y4)
+#define PORT_PA06B_ADC0_Y4                         ((1UL) << 6)
+
+#define PIN_PA07B_ADC0_Y5                          (7L)         
+#define MUX_PA07B_ADC0_Y5                          (1L)        
+#define PINMUX_PA07B_ADC0_Y5                       ((PIN_PA07B_ADC0_Y5 << 16) | MUX_PA07B_ADC0_Y5)
+#define PORT_PA07B_ADC0_Y5                         ((1UL) << 7)
+
+#define PIN_PA08B_ADC0_Y6                          (8L)         
+#define MUX_PA08B_ADC0_Y6                          (1L)        
+#define PINMUX_PA08B_ADC0_Y6                       ((PIN_PA08B_ADC0_Y6 << 16) | MUX_PA08B_ADC0_Y6)
+#define PORT_PA08B_ADC0_Y6                         ((1UL) << 8)
+
+#define PIN_PA09B_ADC0_Y7                          (9L)         
+#define MUX_PA09B_ADC0_Y7                          (1L)        
+#define PINMUX_PA09B_ADC0_Y7                       ((PIN_PA09B_ADC0_Y7 << 16) | MUX_PA09B_ADC0_Y7)
+#define PORT_PA09B_ADC0_Y7                         ((1UL) << 9)
+
+#define PIN_PA10B_ADC0_Y8                          (10L)        
+#define MUX_PA10B_ADC0_Y8                          (1L)        
+#define PINMUX_PA10B_ADC0_Y8                       ((PIN_PA10B_ADC0_Y8 << 16) | MUX_PA10B_ADC0_Y8)
+#define PORT_PA10B_ADC0_Y8                         ((1UL) << 10)
+
+#define PIN_PA11B_ADC0_Y9                          (11L)        
+#define MUX_PA11B_ADC0_Y9                          (1L)        
+#define PINMUX_PA11B_ADC0_Y9                       ((PIN_PA11B_ADC0_Y9 << 16) | MUX_PA11B_ADC0_Y9)
+#define PORT_PA11B_ADC0_Y9                         ((1UL) << 11)
+
+#define PIN_PA16B_ADC0_Y10                         (16L)        
+#define MUX_PA16B_ADC0_Y10                         (1L)        
+#define PINMUX_PA16B_ADC0_Y10                      ((PIN_PA16B_ADC0_Y10 << 16) | MUX_PA16B_ADC0_Y10)
+#define PORT_PA16B_ADC0_Y10                        ((1UL) << 16)
+
+#define PIN_PA17B_ADC0_Y11                         (17L)        
+#define MUX_PA17B_ADC0_Y11                         (1L)        
+#define PINMUX_PA17B_ADC0_Y11                      ((PIN_PA17B_ADC0_Y11 << 16) | MUX_PA17B_ADC0_Y11)
+#define PORT_PA17B_ADC0_Y11                        ((1UL) << 17)
+
+#define PIN_PA18B_ADC0_Y12                         (18L)        
+#define MUX_PA18B_ADC0_Y12                         (1L)        
+#define PINMUX_PA18B_ADC0_Y12                      ((PIN_PA18B_ADC0_Y12 << 16) | MUX_PA18B_ADC0_Y12)
+#define PORT_PA18B_ADC0_Y12                        ((1UL) << 18)
+
+#define PIN_PA19B_ADC0_Y13                         (19L)        
+#define MUX_PA19B_ADC0_Y13                         (1L)        
+#define PINMUX_PA19B_ADC0_Y13                      ((PIN_PA19B_ADC0_Y13 << 16) | MUX_PA19B_ADC0_Y13)
+#define PORT_PA19B_ADC0_Y13                        ((1UL) << 19)
+
+#define PIN_PA20B_ADC0_Y14                         (20L)        
+#define MUX_PA20B_ADC0_Y14                         (1L)        
+#define PINMUX_PA20B_ADC0_Y14                      ((PIN_PA20B_ADC0_Y14 << 16) | MUX_PA20B_ADC0_Y14)
+#define PORT_PA20B_ADC0_Y14                        ((1UL) << 20)
+
+#define PIN_PA21B_ADC0_Y15                         (21L)        
+#define MUX_PA21B_ADC0_Y15                         (1L)        
+#define PINMUX_PA21B_ADC0_Y15                      ((PIN_PA21B_ADC0_Y15 << 16) | MUX_PA21B_ADC0_Y15)
+#define PORT_PA21B_ADC0_Y15                        ((1UL) << 21)
+
+#define PIN_PA22B_ADC0_Y16                         (22L)        
+#define MUX_PA22B_ADC0_Y16                         (1L)        
+#define PINMUX_PA22B_ADC0_Y16                      ((PIN_PA22B_ADC0_Y16 << 16) | MUX_PA22B_ADC0_Y16)
+#define PORT_PA22B_ADC0_Y16                        ((1UL) << 22)
+
+#define PIN_PA23B_ADC0_Y17                         (23L)        
+#define MUX_PA23B_ADC0_Y17                         (1L)        
+#define PINMUX_PA23B_ADC0_Y17                      ((PIN_PA23B_ADC0_Y17 << 16) | MUX_PA23B_ADC0_Y17)
+#define PORT_PA23B_ADC0_Y17                        ((1UL) << 23)
+
+#define PIN_PA27B_ADC0_Y18                         (27L)        
+#define MUX_PA27B_ADC0_Y18                         (1L)        
+#define PINMUX_PA27B_ADC0_Y18                      ((PIN_PA27B_ADC0_Y18 << 16) | MUX_PA27B_ADC0_Y18)
+#define PORT_PA27B_ADC0_Y18                        ((1UL) << 27)
+
+#define PIN_PA30B_ADC0_Y19                         (30L)        
+#define MUX_PA30B_ADC0_Y19                         (1L)        
+#define PINMUX_PA30B_ADC0_Y19                      ((PIN_PA30B_ADC0_Y19 << 16) | MUX_PA30B_ADC0_Y19)
+#define PORT_PA30B_ADC0_Y19                        ((1UL) << 30)
+
+#define PIN_PB02B_ADC0_Y20                         (34L)        
+#define MUX_PB02B_ADC0_Y20                         (1L)        
+#define PINMUX_PB02B_ADC0_Y20                      ((PIN_PB02B_ADC0_Y20 << 16) | MUX_PB02B_ADC0_Y20)
+#define PORT_PB02B_ADC0_Y20                        ((1UL) << 2)
+
+#define PIN_PB03B_ADC0_Y21                         (35L)        
+#define MUX_PB03B_ADC0_Y21                         (1L)        
+#define PINMUX_PB03B_ADC0_Y21                      ((PIN_PB03B_ADC0_Y21 << 16) | MUX_PB03B_ADC0_Y21)
+#define PORT_PB03B_ADC0_Y21                        ((1UL) << 3)
+
+#define PIN_PB04B_ADC0_Y22                         (36L)        
+#define MUX_PB04B_ADC0_Y22                         (1L)        
+#define PINMUX_PB04B_ADC0_Y22                      ((PIN_PB04B_ADC0_Y22 << 16) | MUX_PB04B_ADC0_Y22)
+#define PORT_PB04B_ADC0_Y22                        ((1UL) << 4)
+
+#define PIN_PB05B_ADC0_Y23                         (37L)        
+#define MUX_PB05B_ADC0_Y23                         (1L)        
+#define PINMUX_PB05B_ADC0_Y23                      ((PIN_PB05B_ADC0_Y23 << 16) | MUX_PB05B_ADC0_Y23)
+#define PORT_PB05B_ADC0_Y23                        ((1UL) << 5)
+
+#define PIN_PB06B_ADC0_Y24                         (38L)        
+#define MUX_PB06B_ADC0_Y24                         (1L)        
+#define PINMUX_PB06B_ADC0_Y24                      ((PIN_PB06B_ADC0_Y24 << 16) | MUX_PB06B_ADC0_Y24)
+#define PORT_PB06B_ADC0_Y24                        ((1UL) << 6)
+
+#define PIN_PB07B_ADC0_Y25                         (39L)        
+#define MUX_PB07B_ADC0_Y25                         (1L)        
+#define PINMUX_PB07B_ADC0_Y25                      ((PIN_PB07B_ADC0_Y25 << 16) | MUX_PB07B_ADC0_Y25)
+#define PORT_PB07B_ADC0_Y25                        ((1UL) << 7)
+
+#define PIN_PB12B_ADC0_Y26                         (44L)        
+#define MUX_PB12B_ADC0_Y26                         (1L)        
+#define PINMUX_PB12B_ADC0_Y26                      ((PIN_PB12B_ADC0_Y26 << 16) | MUX_PB12B_ADC0_Y26)
+#define PORT_PB12B_ADC0_Y26                        ((1UL) << 12)
+
+#define PIN_PB13B_ADC0_Y27                         (45L)        
+#define MUX_PB13B_ADC0_Y27                         (1L)        
+#define PINMUX_PB13B_ADC0_Y27                      ((PIN_PB13B_ADC0_Y27 << 16) | MUX_PB13B_ADC0_Y27)
+#define PORT_PB13B_ADC0_Y27                        ((1UL) << 13)
+
+#define PIN_PB14B_ADC0_Y28                         (46L)        
+#define MUX_PB14B_ADC0_Y28                         (1L)        
+#define PINMUX_PB14B_ADC0_Y28                      ((PIN_PB14B_ADC0_Y28 << 16) | MUX_PB14B_ADC0_Y28)
+#define PORT_PB14B_ADC0_Y28                        ((1UL) << 14)
+
+#define PIN_PB15B_ADC0_Y29                         (47L)        
+#define MUX_PB15B_ADC0_Y29                         (1L)        
+#define PINMUX_PB15B_ADC0_Y29                      ((PIN_PB15B_ADC0_Y29 << 16) | MUX_PB15B_ADC0_Y29)
+#define PORT_PB15B_ADC0_Y29                        ((1UL) << 15)
+
+#define PIN_PB00B_ADC0_Y30                         (32L)        
+#define MUX_PB00B_ADC0_Y30                         (1L)        
+#define PINMUX_PB00B_ADC0_Y30                      ((PIN_PB00B_ADC0_Y30 << 16) | MUX_PB00B_ADC0_Y30)
+#define PORT_PB00B_ADC0_Y30                        ((1UL) << 0)
+
+#define PIN_PB01B_ADC0_Y31                         (33L)        
+#define MUX_PB01B_ADC0_Y31                         (1L)        
+#define PINMUX_PB01B_ADC0_Y31                      ((PIN_PB01B_ADC0_Y31 << 16) | MUX_PB01B_ADC0_Y31)
+#define PORT_PB01B_ADC0_Y31                        ((1UL) << 1)
 
 /* ========== PORT definition for ADC1 peripheral ========== */
 #define PIN_PB08B_ADC1_AIN0                        (40L)        

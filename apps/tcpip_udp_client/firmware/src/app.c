@@ -79,6 +79,8 @@ int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr);
 
 APP_DATA appData;
 
+// print buffer
+char printBuffer[180];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -297,8 +299,7 @@ void APP_Tasks ( void )
 
         case APP_TCPIP_WAIT_FOR_RESPONSE:
         {
-            char buffer[180];
-            memset(buffer, 0, sizeof(buffer));
+            memset(printBuffer, 0, sizeof(printBuffer));
             if (SYS_TMR_SystemCountGet() > appData.mTimeOut)
             {
                 SYS_CONSOLE_MESSAGE("\r\nTime out waiting for response\r\n");
@@ -314,9 +315,9 @@ void APP_Tasks ( void )
             }
             if (TCPIP_UDP_GetIsReady(appData.socket))
             {
-                TCPIP_UDP_ArrayGet(appData.socket, (uint8_t*)buffer, sizeof(buffer) - 1);
+                TCPIP_UDP_ArrayGet(appData.socket, (uint8_t*)printBuffer, sizeof(printBuffer) - 1);
                 TCPIP_UDP_Discard(appData.socket);
-                SYS_CONSOLE_PRINT("%s", buffer);
+                SYS_CONSOLE_PRINT("%s", printBuffer);
                 TCPIP_UDP_Close(appData.socket);
                 appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
 

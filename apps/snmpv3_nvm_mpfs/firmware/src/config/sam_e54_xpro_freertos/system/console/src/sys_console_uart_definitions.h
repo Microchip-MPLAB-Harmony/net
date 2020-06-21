@@ -58,71 +58,28 @@
 #endif
 // DOM-IGNORE-END
 
-typedef struct
-{
-    char* pBuffer;
-    size_t size;
-} QElement;
+typedef size_t (*SYS_CONSOLE_UART_PLIB_READ)(uint8_t* pRdBuffer, const size_t size);
+typedef size_t (*SYS_CONSOLE_UART_PLIB_READ_COUNT_GET)(void);
+typedef size_t (*SYS_CONSOLE_UART_PLIB_READ_FREE_BUFFFER_COUNT_GET)(void);
+typedef size_t (*SYS_CONSOLE_UART_PLIB_WRITE)(uint8_t* pWrBuffer, const size_t size );
+typedef size_t (*SYS_CONSOLE_UART_PLIB_WRITE_COUNT_GET)(void);
+typedef size_t (*SYS_CONSOLE_UART_PLIB_WRITE_FREE_BUFFER_COUNT_GET)(void);
 
 typedef struct
 {
-    QElement* pQElementArr;
-    QElement curQElement;
-    uint32_t maxQElements;
-    uint32_t inIndex;
-    uint32_t outIndex;
-} Queue;
-
-typedef void (*SYS_CONSOLE_UART_PLIB_CALLBACK)( uintptr_t context );
-typedef void (*SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)(SYS_CONSOLE_UART_PLIB_CALLBACK callback, uintptr_t context);
-typedef void (*SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)(SYS_CONSOLE_UART_PLIB_CALLBACK callback, uintptr_t context);
-typedef bool (*SYS_CONSOLE_UART_PLIB_READ)(void* buffer, size_t size);
-typedef bool (*SYS_CONSOLE_UART_PLIB_WRITE)(void* buffer, size_t size);
-typedef uint32_t (*SYS_CONSOLE_UART_PLIB_ERROR_GET)(void);
-
-typedef struct
-{
-    SYS_CONSOLE_UART_PLIB_READ read;
-    SYS_CONSOLE_UART_PLIB_WRITE write;
-    SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ readCallbackRegister;
-    SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE writeCallbackRegister;
-    SYS_CONSOLE_UART_PLIB_ERROR_GET errorGet;
+    SYS_CONSOLE_UART_PLIB_READ 							read;
+    SYS_CONSOLE_UART_PLIB_READ_COUNT_GET				readCountGet;
+    SYS_CONSOLE_UART_PLIB_READ_FREE_BUFFFER_COUNT_GET	readFreeBufferCountGet;
+	SYS_CONSOLE_UART_PLIB_WRITE 						write;
+	SYS_CONSOLE_UART_PLIB_WRITE_COUNT_GET				writeCountGet;
+	SYS_CONSOLE_UART_PLIB_WRITE_FREE_BUFFER_COUNT_GET	writeFreeBufferCountGet;
+    
 } SYS_CONSOLE_UART_PLIB_INTERFACE;
 
 typedef struct
 {
-    int32_t         usartTxReadyInt;
-    int32_t         usartTxCompleteInt;
-    int32_t         usartRxCompleteInt;
-    int32_t         usartErrorInt;
-} SYS_CONSOLE_UART_MULTI_INT_SRC;
-
-typedef union
-{
-    SYS_CONSOLE_UART_MULTI_INT_SRC              multi;
-    int32_t                                     usartInterrupt;
-} SYS_CONSOLE_UART_INT_SRC;
-
-typedef struct
-{
-    bool                                        isSingleIntSrc;
-    SYS_CONSOLE_UART_INT_SRC                    intSources;
-} SYS_CONSOLE_UART_INTERRUPT_SOURCES;
-
-typedef struct
-{
-    const SYS_CONSOLE_UART_PLIB_INTERFACE* uartPLIB;
-
-    QElement* readQueueElementsArr;
-
-    QElement* writeQueueElementsArr;
-
-    uint32_t readQueueDepth;
-
-    uint32_t writeQueueDepth;
-
-    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* interruptSources;
-
+    const SYS_CONSOLE_UART_PLIB_INTERFACE* 				uartPLIB;
+	
 } SYS_CONSOLE_UART_INIT_DATA;
 
 // DOM-IGNORE-BEGIN

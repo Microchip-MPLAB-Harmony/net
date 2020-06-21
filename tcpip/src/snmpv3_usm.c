@@ -53,7 +53,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/snmpv3.h"
 #include "tcpip/src/snmp_private.h"
 #include "tcpip/src/snmpv3_private.h"
-#include "tcpip/src/crypto/aes.h"
 #include "crypto/crypto.h"
 
 extern TCPIP_SNMP_DCPT gSnmpDcpt;

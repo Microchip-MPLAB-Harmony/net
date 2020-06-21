@@ -69,23 +69,39 @@ void UART2_Initialize( void );
 
 bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool UART2_Write( void *buffer, const size_t size );
-
-bool UART2_Read( void *buffer, const size_t size );
-
 UART_ERROR UART2_ErrorGet( void );
 
-bool UART2_ReadIsBusy( void );
+bool UART2_AutoBaudQuery( void );
 
-size_t UART2_ReadCountGet( void );
+void UART2_AutoBaudSet( bool enable );
 
-bool UART2_WriteIsBusy( void );
+size_t UART2_Write(uint8_t* pWrBuffer, const size_t size );
 
-size_t UART2_WriteCountGet( void );
+size_t UART2_WriteCountGet(void);
 
-void UART2_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+size_t UART2_WriteFreeBufferCountGet(void);
 
-void UART2_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+size_t UART2_WriteBufferSizeGet(void);
+
+bool UART2_WriteNotificationEnable(bool isEnabled, bool isPersistent);
+
+void UART2_WriteThresholdSet(uint32_t nBytesThreshold);
+
+void UART2_WriteCallbackRegister( UART_RING_BUFFER_CALLBACK callback, uintptr_t context);
+
+size_t UART2_Read(uint8_t* pRdBuffer, const size_t size);
+
+size_t UART2_ReadCountGet(void);
+
+size_t UART2_ReadFreeBufferCountGet(void);
+
+size_t UART2_ReadBufferSizeGet(void);
+
+bool UART2_ReadNotificationEnable(bool isEnabled, bool isPersistent);
+
+void UART2_ReadThresholdSet(uint32_t nBytesThreshold);
+
+void UART2_ReadCallbackRegister( UART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UDP_OPTION_MULTICAST_DATA Structure</title>
+<title>tftps_config.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04248.html" target="topic">UDP Module</a> &gt; <a href="01859.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04259.html" target="topic">UDP_OPTION_MULTICAST_DATA Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04257.html" target="topic">TFTP Server Module</a> &gt; <a href="04248.html" target="topic">Files</a> &gt; <a href="04259.html" target="topic">tftps_config.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04251.html" target="topic">Previous</a> | <a href="01859.html" target="topic">Up</a> | <a href="04194.html" target="topic">Next</a></div>
+<a href="04258.html" target="topic">Previous</a> | <a href="04248.html" target="topic">Up</a> | <a href="01600.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_OPTION_MULTICAST_DATA Topic Title: UDP_OPTION_MULTICAST_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftps_config.h Topic Title: tftps_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UDP_OPTION_MULTICAST_DATA Structure</div>
+tftps_config.h</div>
 </div>
 </div>
 
@@ -46,73 +46,105 @@ UDP_OPTION_MULTICAST_DATA Structure</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Structure: UDP_OPTION_MULTICAST_DATA&nbsp;</p>
-<p class="Element10">
-Allows the multicast options configuration of a <a href="01402.html" target="topic">socket</a>.</p></div>
+Microchip Technology Inc.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <a href="04251.html" target="topic">UDP_MULTICAST_FLAGS</a> <strong><span style="color: #000000">flagsMask</span></strong>;
-  <a href="04251.html" target="topic">UDP_MULTICAST_FLAGS</a> <strong><span style="color: #000000">flagsValue</span></strong>;
-} UDP_OPTION_MULTICAST_DATA;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<p class="Element10">
+tftps_config.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TFTP Server Module API Header File&nbsp;</p>
+<p class="Element10">
+The TFTP module is the simple protocol which is used to transfer files.It has been implemented on top of Internet User Datagram Protocol. If the server grants the request, the connection is opened and the file is sent in fixed length blocks of 512 bytes. Each data packet contains one block of data, and must be acknowledged by an acknowledgment packet before the next packet can be sent.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-UDP_MULTICAST_FLAGS flagsMask;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-mask of flags to be touched (changed) by the operation&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-UDP_MULTICAST_FLAGS flagsValue;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-new value of flags to be changed to, for the flags that are touched, according to the mask&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Using the mask and value members, multiple flags can be set and cleared in one single operations. The <a href="04193.html" target="topic">TCPIP_UDP_OptionsSet</a>() operation for UDP_OPTION_MULTICAST will apply the folowing to the <a href="01402.html" target="topic">socket</a> flags: flags &amp;= ~flagsMask; // clear all flags touched by mask flags |= (flagsValue &amp; flagsMask); // set the corresponding flags that are set in flagsValue. All others will remain cleared.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// set the flag UDP_MCAST_FLAG_LOOP:</span></i>
-UDP_OPTION_MULTICAST_DATA mcastData;
-mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      <i><span style="color: #008000">// specify the flag to touch</span></i>
-mcastData.flagsValue = UDP_MCAST_FLAG_LOOP;     <i><span style="color: #008000">// new value for the flag:</span></i>
-                                                <i><span style="color: #008000">// any value with the bit set for the UDP_MCAST_FLAG_LOOP bit</span></i>
-<a href="04193.html" target="topic">TCPIP_UDP_OptionsSet</a>(hUdp, UDP_OPTION_MULTICAST, &amp;mcastData);
-
-<i><span style="color: #008000">// clear the flag UDP_MCAST_FLAG_LOOP:</span></i>
-mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      <i><span style="color: #008000">// specify the flag to touch</span></i>
-mcastData.flagsValue = 0;                       <i><span style="color: #008000">// new value for the flag:</span></i>
-                                                <i><span style="color: #008000">// any value with the bit cleared for the UDP_MCAST_FLAG_LOOP bit</span></i>
-<a href="04193.html" target="topic">TCPIP_UDP_OptionsSet</a>(hUdp, UDP_OPTION_MULTICAST, &amp;mcastData);
-
-<i><span style="color: #008000">// set UDP_MCAST_FLAG_LOOP and UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK</span></i>
-<i><span style="color: #008000">// clear  UDP_MCAST_FLAG_IGNORE_SOURCE_ADD and UDP_MCAST_FLAG_IGNORE_SOURCE_PORT</span></i>
-mcastData.flagsMask = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT; <i><span style="color: #008000">// flags to touch</span></i>
-mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK ;  <i><span style="color: #008000">// value with bits set for the first 2 flags, cleared for the others</span></i>
-<a href="04193.html" target="topic">TCPIP_UDP_OptionsSet</a>(hUdp, UDP_OPTION_MULTICAST, &amp;mcastData);</pre></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04091.html" target="topic">TCPIP_TFTPC_CMD_PROCESS_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The number of seconds to wait before declaring a TIMEOUT in seconds error on GET or PUT command processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04135.html" target="topic">TCPIP_TFTPS_CLIENT_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The number of Clients requests will be processed for the TFTP server stack.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04137.html" target="topic">TCPIP_TFTPS_DEFAULT_BLOCK_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The maximum value for the file name size. Even though the RFC allows blocks of up to 65464 bytes, In practice the limit is set to 1468 bytes: the size of an Ethernet MTU minus the headers of TFTP (4 bytes), UDP (8 bytes) and IP (20 bytes)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04138.html" target="topic">TCPIP_TFTPS_DEFAULT_FILESIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The maximum size for a file in bytes to be accepted.TFTP Opcode defined by RFC 2347.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04139.html" target="topic">TCPIP_TFTPS_DEFAULT_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This time is used during the TFTP retransmission and TFTP Client wait for these many seconds before retransmitting .&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04151.html" target="topic">TCPIP_TFTPS_FILENAME_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The default length of the file name is defined to 64 bytes.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04177.html" target="topic">TCPIP_TFTPS_RETRANSMIT_COUNT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The number of attempts to retransmit the previous packet before declaring a TIMEOUT error.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04179.html" target="topic">TCPIP_TFTPS_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The TFTP server task rate in milliseconds. The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03917.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04180.html" target="topic">TCPIP_TFTPS_USER_NOTIFICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+allow TFTP Server user notification if enabled, the <a href="04154.html" target="topic">TCPIP_TFTPS_HandlerRegister</a>/<a href="04153.html" target="topic">TCPIP_TFTPS_HandlerDeRegister</a> functions exist and can be used&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -120,7 +152,7 @@ mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04248.html" target="topic">UDP Module</a> &gt; <a href="01859.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04259.html" target="topic">UDP_OPTION_MULTICAST_DATA Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04257.html" target="topic">TFTP Server Module</a> &gt; <a href="04248.html" target="topic">Files</a> &gt; <a href="04259.html" target="topic">tftps_config.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +160,13 @@ mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04251.html" target="topic">Previous</a> | <a href="01859.html" target="topic">Up</a> | <a href="04194.html" target="topic">Next</a></div>
+<a href="04258.html" target="topic">Previous</a> | <a href="04248.html" target="topic">Up</a> | <a href="01600.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_OPTION_MULTICAST_DATA Topic Title: UDP_OPTION_MULTICAST_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftps_config.h Topic Title: tftps_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

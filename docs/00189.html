@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MHC Configuration</title>
+<title>iperf demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00188.html" target="topic">iperf demo</a> &gt; <a href="00189.html" target="topic">MHC Configuration</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00189.html" target="topic">iperf demo</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00187.html" target="topic">Previous</a> | <a href="00188.html" target="topic">Up</a> | <a href="00190.html" target="topic">Next</a></div>
+<a href="00288.html" target="topic">Previous</a> | <a href="00217.html" target="topic">Up</a> | <a href="00187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS iperf Demo MHC Topic Title: MHC Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS iperf Demo ID Topic Title: iperf demo)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MHC Configuration</div>
+iperf demo</div>
 </div>
 </div>
 
@@ -51,36 +51,51 @@ MHC Configuration</div>
 <p class="Element10">
  &nbsp;</p>
 <p class="Element10">
-From the MPLAB X IDE menu select Tools-&gt;Embedded-&gt;MPLAB Harmony Configurator.&nbsp;</p>
+iperf is a standard networking tool that helps to measure networking bandwidth and performance.&nbsp;</p>
 <p class="Element10">
-After selecting the &quot;MPLAB Harmony Project Path&quot; and pressing the &quot;Launch&quot; button, click the &quot;Open default saved state file&quot; and the following MHC project graph should be displayed:&nbsp;</p>
-<p class="Element10">
-<img src="iperf_build_mhc.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-Click on the &quot;TCP/IP Stack&quot; box and then select the &quot;APPLICATION LAYER to visualize the iperf module configuration:&nbsp;</p>
-<p class="Element10">
-<img src="iperf_mhc_config.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-Notice that very few application layer modules are selected for this demo. The focus of this demo is on running the network benchmark program without supporting additional services.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The default sizes of the Iperf RX and TX buffers are set to 4KB. The performance of a <a href="01402.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers.&nbsp;</p>
-<p class="Element10">
-The other iperf parameters could be left with their default values.&nbsp;</p>
-<p class="Element10">
-For a description of the parameters see the <a href="00938.html" target="topic">Iperf Module</a></p></div>
+The iperf demo creates an application that can be used for running iperf and measuring the network performance.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00187.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section identifies the MPLAB X IDE projects for this demonstration application. This lists the name, location, hardware development board and available configurations for the TCP/IP iperf Demonstration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00188.html" target="topic">Configuring the Hardware</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00190.html" target="topic">MHC Configuration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on the MHC configuration for the iperf demonstration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00191.html" target="topic">Running the Demonstration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides instructions on how to build and run the iperf demonstration.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00188.html" target="topic">iperf demo</a> &gt; <a href="00189.html" target="topic">MHC Configuration</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00189.html" target="topic">iperf demo</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -88,13 +103,13 @@ For a description of the parameters see the <a href="00938.html" target="topic">
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00187.html" target="topic">Previous</a> | <a href="00188.html" target="topic">Up</a> | <a href="00190.html" target="topic">Next</a></div>
+<a href="00288.html" target="topic">Previous</a> | <a href="00217.html" target="topic">Up</a> | <a href="00187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS iperf Demo MHC Topic Title: MHC Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS iperf Demo ID Topic Title: iperf demo)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

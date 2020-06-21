@@ -500,7 +500,7 @@ static void TCPIP_TELNET_Process(void)
         tState = pDcpt->telnetState;
 
         // Reset our state if the remote client disconnected from us
-        if(NET_PRES_SocketWasReset(tSocket))
+        if(NET_PRES_SocketWasReset(tSocket) || NET_PRES_SocketWasDisconnected(tSocket))
         {
             NET_PRES_SocketDisconnect(tSocket);
             // Deregister IO and free its space

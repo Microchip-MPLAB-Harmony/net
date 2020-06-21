@@ -5448,7 +5448,16 @@ uint8_t TCPIP_SNMP_ProcessGetVar(OID_INFO* rec, bool bAsOID,PDU_INFO* pduDbPtr)
             {
                 if ( dataTypeInfo.asnLen != 0xff )
                 {
-                    tempLen = varLen = _SNMP_BuildIntegerLen(v.dword);
+                    if((dataTypeInfo.asnType != SNMP_IP_ADDR) && (dataTypeInfo.asnType != SNMP_COUNTER32)&&
+                            (dataTypeInfo.asnType != SNMP_TIME_TICKS) && (dataTypeInfo.asnType != SNMP_GAUGE32)&&
+                            (dataTypeInfo.asnType != SNMP_OPAQUE) && (dataTypeInfo.asnType != SNMP_NSAP_ADDR))
+                    {
+                        tempLen = varLen = _SNMP_BuildIntegerLen(v.dword);
+                    }
+                    else
+                    {
+                        tempLen = varLen = 4;
+                    }
                     v.dword = _SNMP_BuildIntegerValue(v,varLen);
                     while( tempLen-- )
                     {

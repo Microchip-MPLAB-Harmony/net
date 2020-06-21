@@ -111,6 +111,7 @@ static uint32_t     appRxTotBytes = 0;          // statistics counters
 static uint32_t     appTxTotBytes = 0;
 
 static bool         appIsConnected = false;     // client connected flag
+static bool         appReportDisconnect = false;// client has been disconnected report flag
 
 static int          appTcpTxSize = 2048;        // socket TX and RX buffer size
 static int          appTcpRxSize = 2048;
@@ -251,10 +252,21 @@ void APP1_Tasks ( void )
             {
                 if(appDisplayCmdNode)
                 {
-                    (*appDisplayCmdNode->pCmdApi->msg)(appDisplayIoParam, "Srv: Socket Reported Disconnect...\r\n");
+                    (*appDisplayCmdNode->pCmdApi->msg)(appDisplayIoParam, "Srv: Socket Reported Reset...\r\n");
                 }
             }
 
+            if(TCPIP_TCP_WasDisconnected(appSkt))
+            {
+                if(appReportDisconnect == false)
+                {
+                    appReportDisconnect = true;
+                    if(appDisplayCmdNode)
+                    {
+                        (*appDisplayCmdNode->pCmdApi->msg)(appDisplayIoParam, "Srv: Socket Reported Disconnected...\r\n");
+                    }
+                }
+            }
 
             appRecvMessage();
 
@@ -318,7 +330,7 @@ static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Srv: Opened Socket %d, listening on port: %d\r\n", appSkt, appListenPort);
             if(TCPIP_TCP_WasReset(appSkt) == false)
             {
-                (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Srv: Socket Failed to report ini Disconnect...\r\n");
+                (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Srv: Socket Failed to report ini Reset...\r\n");
             }
 
             if(appTcpTxSize != 0)
@@ -337,6 +349,7 @@ static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 }
             }
             appIsConnected = false;
+            appReportDisconnect = false;
             // take over the display
             appDisplayIoParam = pCmdIO->cmdIoParam; 
             appDisplayCmdNode = pCmdIO;

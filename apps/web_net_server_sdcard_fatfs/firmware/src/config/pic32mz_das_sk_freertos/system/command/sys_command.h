@@ -75,41 +75,6 @@
     /* #define SYS_CMD_BUFFER_DMA_READY        __attribute__((coherent)) __attribute__((aligned(4))) //Define this for MZ */
 #endif
 
-#ifdef SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
-
-#undef SYS_CONSOLE_MESSAGE
-#define SYS_CONSOLE_MESSAGE(message) SYS_CMD_MESSAGE(message)
-
-#undef SYS_PRINT
-#define SYS_PRINT(fmt, ...) SYS_CMD_PRINT(fmt, ##__VA_ARGS__)
-
-#undef SYS_MESSAGE
-#define SYS_MESSAGE(message) SYS_CMD_MESSAGE(message)
-
-#undef SYS_CONSOLE_PRINT
-#define SYS_CONSOLE_PRINT(fmt, ...) SYS_CMD_PRINT(fmt, ##__VA_ARGS__)
-
-#endif
-
-#ifdef SYS_CMD_REMAP_SYS_DEBUG_MESSAGE
-
-#undef SYS_DEBUG_MESSAGE
-#define SYS_DEBUG_MESSAGE(level, message)   do { if((level) <= gblErrLvl) SYS_CMD_MESSAGE(message); } while (0)
-
-#undef SYS_DEBUG_PRINT
-#define SYS_DEBUG_PRINT(level, fmt, ...)    do { if((level) <= gblErrLvl) SYS_CMD_PRINT(fmt, ##__VA_ARGS__); } while (0)
-
-#undef SYS_ERROR_PRINT
-#define SYS_ERROR_PRINT(level, fmt, ...)    do { if((level) <= gblErrLvl) SYS_CMD_PRINT(fmt, ##__VA_ARGS__); } while (0)
-
-#undef SYS_DEBUG
-#define SYS_DEBUG(level,message)    SYS_DEBUG_MESSAGE(level,message)
-
-#undef SYS_ERROR
-#define SYS_ERROR(level,fmt, ...)   SYS_ERROR_PRINT(level, fmt, ##__VA_ARGS__)
-
-#endif
-
 #ifndef SYS_COMMAND_INCLUDE_APIS
     #ifndef SYS_CMD_ENABLE
 

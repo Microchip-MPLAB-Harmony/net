@@ -114,6 +114,7 @@ static bool         appSendAsync = false;       // send messages continuously/wh
 
 static bool         appConnectReported = false; // run time connection flags
 static bool         appResetReported = false;
+static bool         appReportDisconnect = false;// client has been disconnected report flag
 
 
 static uint32_t     appRxTotBytes = 0;          // statistics counters
@@ -250,6 +251,18 @@ void APP2_Tasks ( void )
                 appConnectReported = true;
             }
 
+            if(TCPIP_TCP_WasDisconnected(appSkt))
+            {
+                if(appReportDisconnect == false)
+                {
+                    appReportDisconnect = true;
+                    if(appDisplayCmdNode)
+                    {
+                        (*appDisplayCmdNode->pCmdApi->msg)(appDisplayIoParam, "TcpCli1: TCP Socket Reported Disconnected...\r\n");
+                    }
+                }
+            }
+
             appRecvMessage();
 
             if(appSendAsync)
@@ -316,10 +329,11 @@ static void appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "TcpCli1: Opened Client Socket %d to %s\r\n", appSkt, hostString ? appIpv4RemHost : "no host");
             if(TCPIP_TCP_WasReset(appSkt) == false)
             {
-                (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TcpCli1: Socket Failed to report ini Disconnect...\r\n");
+                (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TcpCli1: Socket Failed to report ini Reset...\r\n");
             }
             appConnectReported = false;
             appResetReported = false;
+            appReportDisconnect = false;
             // take over the display
             appDisplayIoParam = pCmdIO->cmdIoParam; 
             appDisplayCmdNode = pCmdIO;

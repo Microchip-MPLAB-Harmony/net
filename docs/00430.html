@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ENC28J60_Initialize Function</title>
+<title>DRV_ENC28J60_Configuration Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00748.html" target="topic">Library Interface</a> &gt; a) System Interaction Functions &gt; <a href="00430.html" target="topic">DRV_ENC28J60_Initialize Function</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00752.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00430.html" target="topic">DRV_ENC28J60_Configuration Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00426.html" target="topic">Previous</a> | <a href="00748.html" target="topic">Up</a> | <a href="00440.html" target="topic">Next</a></div>
+<a href="00434.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00439.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * Topic Title: DRV_ENC28J60_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_Configuration Topic Title: DRV_ENC28J60_Configuration Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ENC28J60_Initialize Function</div>
+DRV_ENC28J60_Configuration Type</div>
 </div>
 </div>
 
@@ -49,65 +49,26 @@ DRV_ENC28J60_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-ENC28J60 Initialization&nbsp;</p>
+ENC28J60 Driver Initialization Data&nbsp;</p>
 <p class="Element10">
-This function initializes the ENC28J60 Driver with configuration data passed into it by either the system_init function or by the <a href="00445.html" target="topic">DRV_ENC28J60_StackInitialize</a> function. Calling this function alone is not enough to initialize the driver, <a href="00444.html" target="topic">DRV_ENC28J60_SetMacCtrlInfo</a> must be called with valid data before the driver is ready to be opened.</p></div>
+This data type defines the data required to initialize or reinitialize the ENC28J60 driver. If the driver is built statically, the members of this data structure are statically over-ridden by static override definitions in the system_config.h file.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">SYS_MODULE_OBJ <strong><span style="color: #000000">DRV_ENC28J60_Initialize</span></strong>(
-    SYS_MODULE_INDEX <strong><span style="color: #000000">index</span></strong>, 
-    SYS_MODULE_INIT * <strong><span style="color: #000000">init</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> _DRV_ENC28J60_Configuration <strong><span style="color: #000000">DRV_ENC28J60_Configuration</span></strong>;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
 None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-This is the index of the driver instance to be initialized. The definition DRV_ENC28J60_NUM_DRV_INSTANCES controls how many instances are available.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-init&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-This is a pointer to a DRV_ENC28J60_CONFIG structure.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">Valid handle to the driver instance - If successful</li>
-<li class="Element605">SYS_MODULE_OBJ_INVALID - If unsuccessful</li>
-</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00748.html" target="topic">Library Interface</a> &gt; a) System Interaction Functions &gt; <a href="00430.html" target="topic">DRV_ENC28J60_Initialize Function</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00752.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00430.html" target="topic">DRV_ENC28J60_Configuration Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -115,13 +76,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00426.html" target="topic">Previous</a> | <a href="00748.html" target="topic">Up</a> | <a href="00440.html" target="topic">Next</a></div>
+<a href="00434.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00439.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * Topic Title: DRV_ENC28J60_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_Configuration Topic Title: DRV_ENC28J60_Configuration Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

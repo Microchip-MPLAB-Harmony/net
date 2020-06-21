@@ -119,7 +119,6 @@ const DRV_SST26_INIT drvSST26InitData =
 {
     .sst26Plib      = &drvSST26PlibAPI,
 };
-
 // </editor-fold>
 
 
@@ -148,6 +147,7 @@ static const NET_PRES_TransportObject netPresTransObject0SS = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_TCP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_TCP_IsConnected,
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_TCP_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_TCP_WasDisconnected,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_TCP_Disconnect,
     .fpConnect           = (NET_PRES_TransBool)TCPIP_TCP_Connect,
     .fpClose             = (NET_PRES_TransClose)TCPIP_TCP_Close,
@@ -171,6 +171,7 @@ static const NET_PRES_TransportObject netPresTransObject0SC = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_TCP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_TCP_IsConnected,
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_TCP_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_TCP_WasDisconnected,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_TCP_Disconnect,
     .fpConnect           = (NET_PRES_TransBool)TCPIP_TCP_Connect,
     .fpClose             = (NET_PRES_TransClose)TCPIP_TCP_Close,
@@ -194,6 +195,7 @@ static const NET_PRES_TransportObject netPresTransObject0DS = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_UDP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_UDP_IsConnected,
     .fpWasReset          = NULL,
+    .fpWasDisconnected   = NULL,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_UDP_Disconnect,
     .fpConnect          = NULL,
     .fpClose             = (NET_PRES_TransClose)TCPIP_UDP_Close,
@@ -217,6 +219,7 @@ static const NET_PRES_TransportObject netPresTransObject0DC = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_UDP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_UDP_IsConnected,
     .fpWasReset          = NULL,
+    .fpWasDisconnected   = NULL,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_UDP_Disconnect,
     .fpConnect          = NULL,
     .fpClose             = (NET_PRES_TransClose)TCPIP_UDP_Close,
@@ -550,15 +553,52 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 }
 // </editor-fold>
 
-/*** File System Initialization Data ***/
+// <editor-fold defaultstate="collapsed" desc="File System Initialization Data">
 
 
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
 {
-	{NULL}
+    {NULL}
 };
 
 
+const SYS_FS_FUNCTIONS MPFSFunctions =
+{
+    .mount             = MPFS_Mount,
+    .unmount           = MPFS_Unmount,
+    .open              = MPFS_Open,
+    .read              = MPFS_Read,
+    .close             = MPFS_Close,
+    .seek              = MPFS_Seek,
+    .fstat             = MPFS_Stat,
+    .tell              = MPFS_GetPosition,
+    .eof               = MPFS_EOF,
+    .size              = MPFS_GetSize,
+    .openDir           = MPFS_DirOpen,
+    .readDir           = MPFS_DirRead,
+    .closeDir          = MPFS_DirClose,
+    .getlabel          = NULL,
+    .currWD            = NULL,
+    .getstrn           = NULL,
+    .write             = NULL,
+    .mkdir             = NULL,
+    .chdir             = NULL,
+    .remove            = NULL,
+    .setlabel          = NULL,
+    .truncate          = NULL,
+    .chdrive           = NULL,
+    .chmode            = NULL,
+    .chtime            = NULL,
+    .rename            = NULL,
+    .sync              = NULL,
+    .putchr            = NULL,
+    .putstrn           = NULL,
+    .formattedprint    = NULL,
+    .testerror         = NULL,
+    .formatDisk        = NULL,
+    .partitionDisk     = NULL,
+    .getCluster        = NULL
+};
 
 const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 {
@@ -568,7 +608,7 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
     }
 };
 
-
+// </editor-fold>
 
 
 
@@ -598,8 +638,6 @@ const SYS_TIME_INIT sysTimeInitData =
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
 
-static QElement sysConsole0UARTRdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0];
-static QElement sysConsole0UARTWrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0];
 
 /* Declared in console device implementation (sys_console_uart.c) */
 extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
@@ -607,30 +645,16 @@ extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
 const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
 {
     .read = (SYS_CONSOLE_UART_PLIB_READ)DBGU_Read,
+	.readCountGet = (SYS_CONSOLE_UART_PLIB_READ_COUNT_GET)DBGU_ReadCountGet,
+	.readFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_READ_FREE_BUFFFER_COUNT_GET)DBGU_ReadFreeBufferCountGet,
     .write = (SYS_CONSOLE_UART_PLIB_WRITE)DBGU_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)DBGU_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)DBGU_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)DBGU_ErrorGet,
-};
-
-
-const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
-{
-    /* Peripheral has single interrupt vector */
-    .isSingleIntSrc                        = true,
-
-    /* Peripheral interrupt line */
-    .intSources.usartInterrupt             = DBGU_IRQn,
+	.writeCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_COUNT_GET)DBGU_WriteCountGet,
+	.writeFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_FREE_BUFFER_COUNT_GET)DBGU_WriteFreeBufferCountGet,
 };
 
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
-    .uartPLIB = &sysConsole0UARTPlibAPI,
-    .readQueueElementsArr = sysConsole0UARTRdQueueElements,
-    .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
-    .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
-    .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSources = &sysConsole0UARTInterruptSources,
+    .uartPLIB = &sysConsole0UARTPlibAPI,    
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =
@@ -639,6 +663,8 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .consDevDesc = &sysConsoleUARTDevDesc,
     .deviceIndex = 0,
 };
+
+
 
 // </editor-fold>
 
@@ -662,6 +688,71 @@ const SYS_DEBUG_INIT debugInit =
 
 
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
+/*******************************************************************************
+  Function:
+    void SYSC_Disable ( void )
+
+  Summary:
+    Disables ununsed SYSC peripherals
+
+  Remarks:
+ */
+static void SYSC_Disable( void )
+{
+    //save context and disable write protection
+    uint32_t sysc_wpmr = SYSCWP_REGS->SYSCWP_SYSC_WPMR &
+      (SYSCWP_SYSC_WPMR_WPEN_Msk | SYSCWP_SYSC_WPMR_WPITEN_Msk);
+    SYSCWP_REGS->SYSCWP_SYSC_WPMR = SYSCWP_SYSC_WPMR_WPKEY_PASSWD &
+                                    ~(SYSCWP_SYSC_WPMR_WPITEN_Msk |
+                                    SYSCWP_SYSC_WPMR_WPITEN_Msk);
+
+
+    /* ----------------------------   RTC  -------------------------------*/
+    //Disable interrupts
+    RTC_REGS->RTC_IDR = RTC_IDR_Msk;
+
+    //Clear interrupt status
+    RTC_REGS->RTC_SCCR = RTC_SCCR_Msk;
+
+    /* ----------------------------   RTT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t rtt_mr = RTT_REGS->RTT_MR;
+    RTT_REGS->RTT_MR = rtt_mr & ~(RTT_MR_RTTDIS_Msk | RTT_MR_RTTINCIEN_Msk);
+
+    //Clear status
+    RTT_REGS->RTT_SR;
+
+    /* ----------------------------   RSTC  ------------------------------*/
+    // Disable interrupt
+    uint32_t rstc_mr = RSTC_REGS->RSTC_MR & (RSTC_MR_ENGCLR_Msk |
+                                             RSTC_MR_ERSTL_Msk |
+                                             RSTC_MR_URSTIEN_Msk |
+                                             RSTC_MR_URSTASYNC_Msk |
+                                             RSTC_MR_SCKSW_Msk |
+                                             RSTC_MR_URSTEN_Msk);
+    rstc_mr = rstc_mr & (~RSTC_MR_URSTIEN_Msk);
+    RSTC_REGS->RSTC_MR = RSTC_MR_KEY_PASSWD | rstc_mr;
+
+    /* ----------------------------   PIT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t pit_mr = PIT_REGS->PIT_MR & PIT_MR_PIV_Msk;
+    PIT_REGS->PIT_MR = pit_mr & ~(PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk);
+
+    //Clear status
+    PIT_REGS->PIT_SR;
+
+   //Context restore SYSC write protect registers
+   SYSCWP_REGS->SYSCWP_SYSC_WPMR = (SYSCWP_SYSC_WPMR_WPKEY_PASSWD | sysc_wpmr);
+}
+
+
+
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -674,6 +765,8 @@ const SYS_DEBUG_INIT debugInit =
 
 void SYS_Initialize ( void* data )
 {
+	SYSC_Disable( );
+
   
     CLK_Initialize();
 

@@ -55,6 +55,8 @@ File System Service Library Interface Declarations and Types
 #include <stddef.h>
 #include <stdarg.h>
 
+#include "configuration.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -138,22 +140,24 @@ typedef enum
 
 typedef enum
 {
+    /* Normal File */
+    SYS_FS_ATTR_FILE    = 0x00,
     /* Read only */
-    SYS_FS_ATTR_RDO =   0x01,
+    SYS_FS_ATTR_RDO     = 0x01,
     /* Hidden */
-    SYS_FS_ATTR_HID =   0x02,
+    SYS_FS_ATTR_HID     = 0x02,
     /* System */
-    SYS_FS_ATTR_SYS =   0x04,
+    SYS_FS_ATTR_SYS     = 0x04,
     /* Volume label */
-    SYS_FS_ATTR_VOL =   0x08,
+    SYS_FS_ATTR_VOL     = 0x08,
     /* LFN entry */
-    SYS_FS_ATTR_LFN =   0x0F,
+    SYS_FS_ATTR_LFN     = 0x0F,
     /* Directory */
-    SYS_FS_ATTR_DIR =   0x10,
+    SYS_FS_ATTR_DIR     = 0x10,
     /* Archive */
-    SYS_FS_ATTR_ARC =   0x20,
+    SYS_FS_ATTR_ARC     = 0x20,
     /* Mask of defined bits */
-    SYS_FS_ATTR_MASK =  0x3F
+    SYS_FS_ATTR_MASK    =  0x3F
 
 }SYS_FS_FILE_DIR_ATTR;
 
@@ -210,33 +214,49 @@ typedef enum
 // *****************************************************************************
 /* File formating partition rule
 
-  Summary:
+Summary:
     Specifes the partitioning rule.
 
-  Description:
-    This type specifies the partitioning rule. When SYS_FS_FORMAT_FDISK format
+Description:
+    This type specifies the partitioning rule. When SYS_FS_FORMAT_FAT* format
     is specified, a primary partition occupying the entire disk space is
-    created and then an FAT volume is created on the partition. When
-    SYS_FS_FORMAT_SFD format is specified, the FAT volume starts from the first
-    sector of the physical drive.
+    created and then an FAT volume is created on the partition. When SYS_FS_FORMAT_ANY
+    format is specified FAT FS code decides on the format. When SYS_FS_FORMAT_SFD
+    format is specified, the FAT volume starts from the first sector of the physical drive.
 
-    The SYS_FS_FORMAT_FDISK partitioning is usually used for hard disk, MMC,
+    The SYS_FS_FORMAT_FAT* partitioning is usually used for hard disk, MMC,
     SDC, CFC and U Disk. It can divide a physical drive into one or more
     partitions with a partition table on the MBR. However Windows does not
     support multiple partition on the removable media. The SYS_FS_FORMAT_SFD is
     non-partitioned method. The FAT volume starts from the first sector on the
     physical drive without partition table. It is usually used for floppy disk,
     micro drive, optical disk, and super-floppy media.
-*/
 
+    Note: The Values mentioned below should be aligned with values in ff.h
+*/
 typedef enum
 {
-    /* Format disk with multiple partition */
-    SYS_FS_FORMAT_FDISK  = 0,
-    /* Format disk with single partition */
-    SYS_FS_FORMAT_SFD    = 1
-
+    SYS_FS_FORMAT_FAT      = 0x01,
+    SYS_FS_FORMAT_FAT32    = 0x02,
+    SYS_FS_FORMAT_EXFAT    = 0x04,
+    SYS_FS_FORMAT_ANY      = 0x07,
+    SYS_FS_FORMAT_SFD      = 0x08
 }SYS_FS_FORMAT;
+
+// *****************************************************************************
+/* Format parameter structure */
+typedef struct {
+    /* Format option */
+    SYS_FS_FORMAT  fmt;
+    /* Number of FATs */
+    uint8_t  n_fat;
+    /* Data area alignment (sector) */
+    uint32_t align;
+    /* Number of root directory entries */
+    uint32_t n_root;
+    /* Cluster size (byte) */
+    uint32_t au_size;
+}SYS_FS_FORMAT_PARAM;
 
 // *****************************************************************************
 /* File open attributes
@@ -259,7 +279,7 @@ typedef enum
     writing to the file =   not possible. Write operation returns error
     */
     SYS_FS_FILE_OPEN_READ    =  0,
-    
+
     /*
     reading the file    =  not possible. Read operation returns error.
     writing to the file =  possible. If file exists, write happens from the
@@ -412,56 +432,7 @@ typedef enum
 
 } SYS_FS_EVENT;
 
-// *****************************************************************************
-/* FAT File System Sector size
-
-  Summary:
-    Lists the definitions for FAT file system sector size.
-
-  Description:
-    Maximum sector size to be handled. Always set the value of sector size to
-    512
-
-  Remarks:
-    None.
-*/
-
-#define FAT_FS_MAX_SS    512
-
-// *****************************************************************************
-/* FAT File System LFN (long file name) selection
-
-  Summary:
-    Lists the definitions for FAT file system LFN selection.
-
-  Description:
-    The FAT_FS_USE_LFN option switches the LFN support. Set the value to 1.
-
-  Remarks:
-    None.
-*/
-
-#define FAT_FS_USE_LFN    1
-
-// *****************************************************************************
-/* FAT File System LFN (Long File Name) max length
-
-  Summary:
-    Maximum length of the Long File Name.
-
-  Description:
-    Defines the maximum length of file name during LFN selection. Set the value
-    to 255.
-
-  Remarks:
-    None.
-*/
-
-#if defined (SYS_FS_FILE_NAME_LEN)
-#define FAT_FS_MAX_LFN (SYS_FS_FILE_NAME_LEN)
-#else
-#define FAT_FS_MAX_LFN 255
-#endif
+typedef int(*FORMAT_DISK)(uint8_t vol, const SYS_FS_FORMAT_PARAM* opt, void* work, uint32_t len);
 
 // *****************************************************************************
 /* SYS FS Function signature structure for native file systems
@@ -554,7 +525,7 @@ typedef struct
     /* Function pointer of native file system to test an error in a file */
     bool(*testerror)(uintptr_t handle);
     /* Function pointer of native file system to format a disk */
-    int(*formatDisk)(uint8_t vol, uint8_t sfd, uint32_t au);
+    FORMAT_DISK formatDisk;
     /* Function pointer of native file system to open a directory */
     int(*openDir)(uintptr_t handle, const char *path);
     /* Function pointer of native file system to read a directory */
@@ -653,15 +624,26 @@ typedef struct
     uint16_t    ftime;
     /* Attribute */
     uint8_t     fattrib;
-    /* Short file name (8.3 format) */
-    char        fname[13];
-#if FAT_FS_USE_LFN
+#if SYS_FS_USE_LFN
+    /* Alternate file name */
+    char        altname[13];
+    /* Primary file name */
+    char        fname[SYS_FS_FILE_NAME_LEN + 1];
+
+    /* Retaining below members for portability.
+     * For FAT-FS lfname[0] will always be '\0'.
+     * Use fname instead
+    */
     /* Pointer to the LFN buffer */
     char       *lfname;
-    /* Size of LFN buffer in TCHAR */
+    /* Size of LFN buffer */
     uint32_t    lfsize;
+#else
+    /* Short file name (8.3 format) */
+    char        fname[13];
 #endif
 } SYS_FS_FSTAT;
+
 
 // *****************************************************************************
 /* SYS FS File time structure
@@ -792,6 +774,50 @@ typedef union
 SYS_FS_RESULT SYS_FS_Initialize
 (
     const void* initData
+);
+
+// *****************************************************************************
+/* Function:
+    void SYS_FS_Tasks
+    (
+        void
+    );
+
+    Summary:
+      Maintains the File System tasks and functionalities.
+
+    Description:
+      This function is used to run the various tasks and functionalities of
+      sys_fs layer.
+
+    Precondition:
+      The SYS_FS_Initialize routine must have been called before running the
+      tasks.
+
+    Parameters:
+      None.
+
+    Returns:
+      None.
+
+    Example:
+      <code>
+
+        void SYS_Tasks ( void )
+        {
+            SYS_FS_Tasks ();
+            // Do other tasks
+        }
+      </code>
+
+    Remarks:
+      This function is not called directly by an application. It is called by
+      the system's Tasks routine (SYS_Tasks).
+*/
+
+void SYS_FS_Tasks
+(
+    void
 );
 
 //******************************************************************************
@@ -1233,60 +1259,6 @@ size_t SYS_FS_FileRead
 (
     SYS_FS_HANDLE handle, 
     void *buf, 
-    size_t nbyte
-);
-
-//******************************************************************************
-/* Function:
-    size_t SYS_FS_FileWrite
-    (
-        SYS_FS_HANDLE handle, 
-        const void *buf, 
-        size_t nbyte
-    );
-
-    Summary:
-      Writes data to the file.
-
-    Description:
-      This function attempts to write nbyte bytes from the buffer pointed to by
-      buf to the file associated with the file handle.
-
-    Precondition:
-      A valid file handle must be obtained before writing a file.
-
-    Parameters:
-      handle      - File handle obtained during file open.
-      buf         - Pointer to buffer from which data is to be written
-      nbyte       - Number of bytes to be written
-
-    Returns:
-      On success returns the number of bytes written successfully(0 or positive
-      number).
-      On failure returns -1. The reason for the failure can be retrieved with
-      SYS_FS_Error or SYS_FS_FileError.
-
-    Example:
-      <code>
-        ...
-        const char *buf = "Hello World";
-        size_t nbytes;
-        size_t bytes_written;
-        SYS_FS_HANDLE fd;
-        ...
-
-        bytes_written = SYS_FS_FileWrite(fd, (const void *)buf, nbytes);
-        ...
-      </code>
-
-    Remarks:
-      None.
-*/
-
-size_t SYS_FS_FileWrite
-(
-    SYS_FS_HANDLE handle, 
-    const void *buf, 
     size_t nbyte
 );
 
@@ -1772,480 +1744,6 @@ SYS_FS_ERROR SYS_FS_FileError
 
 //******************************************************************************
 /* Function:
-    SYS_FS_RESULT SYS_FS_FileTruncate
-    (
-        SYS_FS_HANDLE handle
-    );
-
-    Summary:
-      Truncates a file
-
-    Description:
-      This function truncates the file size to the current file read/write
-      pointer. This function has no effect if the file read/write pointer is
-      already pointing to end of the file.
-
-    Precondition:
-      A valid file handle has to be passed as input to the function. The file
-      has to be opened in a mode where writes to file is possible (such as read
-      plus or write mode).
-
-    Parameters:
-      handle - A valid handle which was obtained while opening the file.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - File truncate operation was successful.
-      SYS_FS_RES_FAILURE - File truncate operation was unsuccessful. The reason
-                           for the failure can be retrieved with SYS_FS_Error
-                           or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_HANDLE fileHandle;
-        size_t nbytes;
-        size_t bytes_read;
-        SYS_FS_RESULT res;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG",
-                (SYS_FS_FILE_OPEN_READ));
-
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Read the file content
-        nbytes = sizeof(buf);
-        bytes_read = SYS_FS_FileRead(buf, nbytes, fileHandle);
-        // Truncate the file
-        res = SYS_FS_FileTruncate(fileHandle);
-        if(res != SYS_FS_RES_SUCCESS)
-        {
-            // Truncation failed.
-        }
-
-        SYS_FS_FileClose(fileHandle);
-
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileTruncate
-(
-    SYS_FS_HANDLE handle
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileSync
-    (
-        SYS_FS_HANDLE handle
-    );
-
-    Summary:
-      Flushes the cached information when writing to a file.
-
-    Description:
-      This function flushes the cached information when writing to a file. The
-      SYS_FS_FileSync function performs the same process as SYS_FS_FileClose
-      function; however, the file is left open and can continue read/write/seek
-      operations to the file.
-
-    Precondition:
-      A valid file handle has to be passed as input to the function. The file
-      which has to be flushed, has to be present and should have been opened in
-      write mode.
-
-    Parameters:
-      handle  - valid file handle
-
-    Returns:
-      SYS_FS_RES_SUCCESS - File sync operation was successful.
-      SYS_FS_RES_FAILURE - File sync operation was unsuccessful. The reason
-                           for the failure can be retrieved with SYS_FS_Error
-                           or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-        SYS_FS_HANDLE fileHandle;
-        const char *buf = "Hello World";
-        size_t nbytes;
-        size_t bytes_written;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
-
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Write data to the file
-        bytes_written = SYS_FS_FileWrite((const void *)buf, nbytes, fileHandle);
-
-        // Flush the file
-        res = SYS_FS_FileSync(fileHandle);
-        if( res != SYS_FS_RES_SUCCESS)
-        {
-            // renaming has gone wrong
-        }
-    </code>
-
-  Remarks:
-    None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileSync
-(
-    SYS_FS_HANDLE handle
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileStringGet
-    (
-        SYS_FS_HANDLE handle,
-        char* buff,
-        uint32_t len
-    );
-
-    Summary:
-      Reads a string from the file into a buffer.
-
-    Description:
-      This function reads a string of specified length from the file into a
-      buffer.  The read operation continues until 
-      1. '\n' is stored 
-      2. reached end of the file or 
-      3. the buffer is filled with len - 1 characters.
-      The read string is terminated with a '\0'.
-
-    Precondition:
-      The file from which a string has to be read, has to be present and should have
-      been opened.
-
-    Parameters:
-      handle     - Handle of the file from which string is to be read.
-      buff       - Buffer in which the string is to be stored.
-      len        - length of string to be read.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - String read operation was successful.
-      SYS_FS_RES_FAILURE - String read operation was unsuccessful. The reason
-                           for the failure can be retrieved with SYS_FS_Error
-                           or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-        SYS_FS_HANDLE fileHandle;
-        char buffer[100];
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Read a string from the file.
-        res = SYS_FS_FileStringGet(fileHandle, buffer, 50);
-        if( res != SYS_FS_RES_SUCCESS)
-        {
-            //String read operation failed.
-        }
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileStringGet
-(
-    SYS_FS_HANDLE handle,
-    char* buff,
-    uint32_t len
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileStringPut
-    (
-        SYS_FS_HANDLE handle,
-        const char *string
-    );
-
-    Summary:
-      Writes a string to a file.
-
-    Description:
-      This function writes a string into a file. The string to be written
-      should be NULL terminated. The terminator character will not be written.
-
-    Precondition:
-      The file into which a string has to be written, has to be present and
-      should have been opened.
-
-    Parameters:
-      handle - File handle to  which string is to be written.
-      string - Pointer to the null terminated string which has to be written
-               into file.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - String write operation was successful.
-      SYS_FS_RES_FAILURE - String write operation was unsuccessful. The reason
-                           for the failure can be retrieved with SYS_FS_Error
-                           or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-        SYS_FS_HANDLE fileHandle;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", SYS_FS_FILE_OPEN_WRITE_PLUS));
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Write a string
-        res = SYS_FS_FileStringPut(fileHandle, "Hello World");
-        if(res != SYS_FS_RES_SUCCESS)
-        {
-            // String write operation failed.
-        }
-      </code>
-
-  Remarks:
-    None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileStringPut
-(
-    SYS_FS_HANDLE handle,
-    const char *string
-);
-
-//******************************************************************************
-/*Function:
-    SYS_FS_RESULT SYS_FS_FileCharacterPut
-    (
-        SYS_FS_HANDLE handle,
-        char data
-    );
-
-    Summary:
-      Writes a character to a file.
-
-    Description:
-      This function writes a character to a file.
-
-    Precondition:
-      The file into which a character has to be written, has to be present and
-      should have been opened.
-
-    Parameters:
-      handle - file handle to which the character is to be written.
-      data   - character to be written to the file.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Write operation was successful.
-      SYS_FS_RES_FAILURE - Write operation was unsuccessful. The reason for
-                           the failure can be retrieved with SYS_FS_Error or
-                           SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-        SYS_FS_HANDLE fileHandle;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Write a character to the file.
-        res = SYS_FS_FileCharacterPut(fileHandle, 'c');
-        if(res != SYS_FS_RES_SUCCESS)
-        {
-            // Character write operation failed.
-        }
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileCharacterPut
-(
-    SYS_FS_HANDLE handle,
-    char data
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FilePrintf
-    (
-        SYS_FS_HANDLE handle,
-        const char *string,
-        ...
-    );
-
-    Summary:
-      Writes a formatted string into a file.
-
-    Description:
-      This function writes a formatted string into a file.
-
-    Precondition:
-      The file into which a string has to be written, must exist and should be
-      open.
-
-    Parameters:
-      handle - File handle to which formatted string is to be written.
-      string - Pointer to formatted string which has to be written into file.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Formatted string write operation was successful.
-      SYS_FS_RES_FAILURE - Formatted string write operation was unsuccessful.
-                           The reason for the failure can be retrieved with
-                           SYS_FS_Error or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-        SYS_FS_HANDLE fileHandle;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.txt", (SYS_FS_FILE_OPEN_WRITE_PLUS));
-
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-
-        // Write a string
-        res = SYS_FS_FilePrintf(fileHandle, "%d", 1234);
-        if( res != SYS_FS_RES_SUCCESS)
-        {
-            // write operation failed.
-        }
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FilePrintf
-(
-    SYS_FS_HANDLE handle,
-    const char *string,
-    ...
-);
-
-//******************************************************************************
-/* Function:
-    bool SYS_FS_FileTestError
-    (
-        SYS_FS_HANDLE handle
-    );
-
-    Summary:
-      Checks for errors in the file.
-
-    Description:
-      This function checks whether or not file has any errors.
-
-    Precondition:
-      A valid file handle must be obtained before passing to the function
-
-    Parameters:
-      handle     - file handle obtained during file Open.
-
-    Returns:
-     On success returns false indicating that the file has no errors.
-     On failure returns true. The reason for the failure can be retrieved with
-     SYS_FS_Error or SYS_FS_FileError.
-
-    Example:
-      <code>
-        SYS_FS_HANDLE fileHandle;
-        bool err;
-
-        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_READ));
-
-        if(fileHandle != SYS_FS_HANDLE_INVALID)
-        {
-            // File open is successful
-        }
-        ...
-        ...
-
-        err = SYS_FS_FileTestError(fileHandle);
-        if(err == true)
-        {
-            // either file has error, or there
-            // was an error in working with the "SYS_FS_FileTestError" function
-        }
-
-      </code>
-
-    Remarks:
-      None.
-*/
-
-bool SYS_FS_FileTestError
-(
-    SYS_FS_HANDLE handle
-);
-
-// *****************************************************************************
-/* Function:
-    void SYS_FS_Tasks
-    (
-        void
-    );
-
-    Summary:
-      Maintains the File System tasks and functionalities.
-
-    Description:
-      This function is used to run the various tasks and functionalities of
-      sys_fs layer.
-
-    Precondition:
-      The SYS_FS_Initialize routine must have been called before running the
-      tasks.
-
-    Parameters:
-      None.
-
-    Returns:
-      None.
-
-    Example:
-      <code>
-
-        void SYS_Tasks ( void )
-        {
-            SYS_FS_Tasks ();
-            // Do other tasks
-        }
-      </code>
-
-    Remarks:
-      This function is not called directly by an application. It is called by
-      the system's Tasks routine (SYS_Tasks).
-*/
-
-void SYS_FS_Tasks
-(
-    void
-);
-
-//******************************************************************************
-/* Function:
     SYS_FS_HANDLE SYS_FS_DirOpen
     (
         const char* path
@@ -2348,156 +1846,6 @@ SYS_FS_HANDLE SYS_FS_DirOpen
 SYS_FS_RESULT SYS_FS_DirClose
 (
     SYS_FS_HANDLE handle
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_DirectoryMake
-    (
-        const char* path
-    );
-
-    Summary:
-      Makes a directory.
-
-    Description:
-      This function makes a new directory as per the specified path.
-
-    Precondition:
-      The disk has to be mounted before a directory could be made.
-
-    Parameters:
-      path     - Path of the new directory
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Indicates that the creation of the directory was successful.
-      SYS_FS_RES_FAILURE - Indicates that the creation of the directory was
-                           unsuccessful. The reason for the failure can be
-                           retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-
-        res = SYS_FS_DirectoryMake("Dir1");
-
-        if(res == SYS_FS_RES_FAILURE)
-        {
-            // Directory make failed
-        }
-
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_DirectoryMake
-(
-    const char* path
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileDirectoryRemove
-    (
-        const char* path
-    );
-
-    Summary:
-      Removes a file or directory.
-
-    Description:
-      This function removes a file or directory as specified by the path.
-
-    Precondition:
-      - The disk has to be mounted before a directory could be removed.
-      - The file or directory to be removed has to present.
-      - The file/sub-directory must not have read-only attribute (AM_RDO), or
-        the function will be rejected with FR_DENIED.
-      - The sub-directory must be empty and must not be current directory, or
-        the function will be rejected with FR_DENIED.
-      - The file/sub-directory must not be opened.
-
-    Parameters:
-      path     - Path of the File or directory to be removed.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Indicates that the file or directory remove
-                           operation was successful.
-      SYS_FS_RES_FAILURE - Indicates that the file or directory remove
-                           operation was unsuccessful. The reason for the
-                           failure can be retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-
-        res = SYS_FS_FileDirectoryRemove("Dir1");
-
-        if(res == SYS_FS_RES_FAILURE)
-        {
-            // Directory remove operation failed
-        }
-        //...
-        //...
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileDirectoryRemove
-(
-    const char* path
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_DirectoryChange
-    (
-        const char* path
-    );
-
-    Summary:
-      Changes to a the directory specified.
-
-    Description:
-      This function changes the present directory to a new directory.
-
-    Precondition:
-      The disk has to be mounted and the directory to be changed must exist.
-
-    Parameters:
-      path     - Path of the directory to be changed to.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Indicates that the directory change operation was
-                           successful.
-      SYS_FS_RES_FAILURE - Indicates that the directory change operation was
-                           unsuccessful. The reason for the failure can be
-                           retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-
-        res = SYS_FS_DirectoryChange("Dir1");
-
-        if(res == SYS_FS_RES_FAILURE)
-        {
-            // Directory change failed
-        }
-
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_DirectoryChange
-(
-    const char* path
 );
 
 //******************************************************************************
@@ -2763,6 +2111,120 @@ SYS_FS_RESULT SYS_FS_DirSearch
 
 //******************************************************************************
 /* Function:
+    SYS_FS_RESULT SYS_FS_FileStringGet
+    (
+        SYS_FS_HANDLE handle,
+        char* buff,
+        uint32_t len
+    );
+
+    Summary:
+      Reads a string from the file into a buffer.
+
+    Description:
+      This function reads a string of specified length from the file into a
+      buffer.  The read operation continues until 
+      1. '\n' is stored 
+      2. reached end of the file or 
+      3. the buffer is filled with len - 1 characters.
+      The read string is terminated with a '\0'.
+
+    Precondition:
+      The file from which a string has to be read, has to be present and should have
+      been opened.
+
+    Parameters:
+      handle     - Handle of the file from which string is to be read.
+      buff       - Buffer in which the string is to be stored.
+      len        - length of string to be read.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - String read operation was successful.
+      SYS_FS_RES_FAILURE - String read operation was unsuccessful. The reason
+                           for the failure can be retrieved with SYS_FS_Error
+                           or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+        SYS_FS_HANDLE fileHandle;
+        char buffer[100];
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Read a string from the file.
+        res = SYS_FS_FileStringGet(fileHandle, buffer, 50);
+        if( res != SYS_FS_RES_SUCCESS)
+        {
+            //String read operation failed.
+        }
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileStringGet
+(
+    SYS_FS_HANDLE handle,
+    char* buff,
+    uint32_t len
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_DirectoryChange
+    (
+        const char* path
+    );
+
+    Summary:
+      Changes to a the directory specified.
+
+    Description:
+      This function changes the present directory to a new directory.
+
+    Precondition:
+      The disk has to be mounted and the directory to be changed must exist.
+
+    Parameters:
+      path     - Path of the directory to be changed to.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Indicates that the directory change operation was
+                           successful.
+      SYS_FS_RES_FAILURE - Indicates that the directory change operation was
+                           unsuccessful. The reason for the failure can be
+                           retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+
+        res = SYS_FS_DirectoryChange("Dir1");
+
+        if(res == SYS_FS_RES_FAILURE)
+        {
+            // Directory change failed
+        }
+
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_DirectoryChange
+(
+    const char* path
+);
+
+//******************************************************************************
+/* Function:
     SYS_FS_RESULT SYS_FS_CurrentWorkingDirectoryGet
     (
         char *buff,
@@ -2859,176 +2321,6 @@ SYS_FS_RESULT SYS_FS_CurrentWorkingDirectoryGet
 (
     char *buff,
     uint32_t len
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
-    (
-        const char* path,
-        SYS_FS_FILE_DIR_ATTR attr,
-        SYS_FS_FILE_DIR_ATTR mask
-    );
-
-    Summary:
-      Sets the mode for the file or directory.
-
-    Description:
-      This function sets the mode for a file or directory from the specified 
-      list of attributes.
-
-    Precondition:
-      The file or directory for which the mode is to be set must exist.
-
-    Parameters:
-      path  - Path for the file/directory, for which the mode is to be set.
-      attr  - Attribute flags to be set in one or more combination of the type
-              SYS_FS_FILE_DIR_ATTR. The specified flags are set and others are
-              cleared.
-      mask  - Attribute mask of type SYS_FS_FILE_DIR_ATTR that specifies which 
-              attribute is changed. The specified attributes are set or
-              cleared.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Mode set operation was successful.
-      SYS_FS_RES_FAILURE - Mode set operation was unsucessful. The reason for
-                           the failure can be retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        // Set read-only flag, clear archive flag and others are retained.
-        SYS_FS_FileDirectoryModeSet("file.txt", SYS_FS_ATTR_RDO, SYS_FS_ATTR_RDO | SYS_FS_ATTR_ARC);
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
-(
-    const char* path,
-    SYS_FS_FILE_DIR_ATTR attr,
-    SYS_FS_FILE_DIR_ATTR mask
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
-    (
-        const char* path,
-        SYS_FS_TIME *time
-    );
-
-    Summary:
-      Sets or changes the time for a file or directory.
-
-    Description:
-      This function sets or change the time for a file or directory.
-
-    Precondition:
-      The file/directory for which time is to be set must exist.
-
-    Parameters:
-      path  - A path for the file/directory, for which the time is to be set.
-      ptr   - Pointer to the structure of type SYS_FS_TIME, which contains the
-              time data to be set.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Set time operation was successful.
-      SYS_FS_RES_FAILURE - Set time operation was unsucessful. The reason for
-                           the failure can be retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        void setTime(void)
-        {
-            SYS_FS_RESULT res;
-            SYS_FS_TIME time;
-
-            time.packedTime = 0;
-
-            // All FAT FS times are calculated based on 0 = 1980
-            time.discreteTime.year = (2013 - 1980);  // Year is 2013
-            time.discreteTime.month = 8;             // Month (August)
-            time.discreteTime.day = 9;               // Day (9)
-            time.discreteTime.hour = 15;             // 3 PM
-            time.discreteTime.minute = 06;           // 06 minutes
-            time.discreteTime.second = 00;           // 00 seconds
-
-            res = SYS_FS_FileDirectoryTimeSet("file.txt", &time);
-            if( res != SYS_FS_RES_SUCCESS)
-            {
-                // time change has gone wrong
-            }
-        }
-      </code>
-
-    Remarks:
-      None.
-*/
-
-SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
-(
-    const char* path,
-    SYS_FS_TIME *time
-);
-
-//******************************************************************************
-/* Function:
-    SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
-    (
-        const char *oldPath,
-        const char *newPath
-    );
-
-    Summary:
-      Renames or moves a file or directory.
-
-    Description:
-      This function renames or moves a file or directory.
-
-    Precondition:
-      The file or directory to be renamed or moved must exist. This function
-      cannot move files or directories from one drive to another. Do not rename
-      or move files that are open.
-
-    Parameters:
-      oldPath     - Path for the file/directory, which has to be renamed/moved.
-      newPath     - New Path for the file/directory.
-
-    Returns:
-      SYS_FS_RES_SUCCESS - Rename/move operation was successful.
-      SYS_FS_RES_FAILURE - Rename/move operation was unsucessful. The reason
-                           for the failure can be retrieved with SYS_FS_Error.
-
-    Example:
-      <code>
-        SYS_FS_RESULT res;
-
-        // rename "file.txt" to "renamed_file.txt"
-        res = SYS_FS_FileDirectoryRenameMove("file.txt", "renamed_file.txt");
-        if( res != SYS_FS_RES_SUCCESS)
-        {
-            // Rename operation failed.
-        }
-
-        // Now, move "renamed_file.txt" inside directory "Dir1"
-        res = SYS_FS_FileDirectoryRenameMove("renamed_file.txt", "Dir1/renamed_file.txt");
-        if( res != SYS_FS_RES_SUCCESS)
-        {
-            // File move operation failed.
-        }
-      </code>
-
-    Remarks:
-      This function cannot move files/ directory from one drive to another. Do
-      not rename/ move files which are open.
-*/
-
-SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
-(
-    const char *oldPath,
-    const char *newPath
 );
 
 //******************************************************************************
@@ -3209,6 +2501,696 @@ SYS_FS_RESULT SYS_FS_DriveLabelGet
 
 //******************************************************************************
 /* Function:
+    size_t SYS_FS_FileWrite
+    (
+        SYS_FS_HANDLE handle, 
+        const void *buf, 
+        size_t nbyte
+    );
+
+    Summary:
+      Writes data to the file.
+
+    Description:
+      This function attempts to write nbyte bytes from the buffer pointed to by
+      buf to the file associated with the file handle.
+
+    Precondition:
+      A valid file handle must be obtained before writing a file.
+
+    Parameters:
+      handle      - File handle obtained during file open.
+      buf         - Pointer to buffer from which data is to be written
+      nbyte       - Number of bytes to be written
+
+    Returns:
+      On success returns the number of bytes written successfully(0 or positive
+      number).
+      On failure returns -1. The reason for the failure can be retrieved with
+      SYS_FS_Error or SYS_FS_FileError.
+
+    Example:
+      <code>
+        ...
+        const char *buf = "Hello World";
+        size_t nbytes;
+        size_t bytes_written;
+        SYS_FS_HANDLE fd;
+        ...
+
+        bytes_written = SYS_FS_FileWrite(fd, (const void *)buf, nbytes);
+        ...
+      </code>
+
+    Remarks:
+      None.
+*/
+
+size_t SYS_FS_FileWrite
+(
+    SYS_FS_HANDLE handle, 
+    const void *buf, 
+    size_t nbyte
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileTruncate
+    (
+        SYS_FS_HANDLE handle
+    );
+
+    Summary:
+      Truncates a file
+
+    Description:
+      This function truncates the file size to the current file read/write
+      pointer. This function has no effect if the file read/write pointer is
+      already pointing to end of the file.
+
+    Precondition:
+      A valid file handle has to be passed as input to the function. The file
+      has to be opened in a mode where writes to file is possible (such as read
+      plus or write mode).
+
+    Parameters:
+      handle - A valid handle which was obtained while opening the file.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - File truncate operation was successful.
+      SYS_FS_RES_FAILURE - File truncate operation was unsuccessful. The reason
+                           for the failure can be retrieved with SYS_FS_Error
+                           or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_HANDLE fileHandle;
+        size_t nbytes;
+        size_t bytes_read;
+        SYS_FS_RESULT res;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG",
+                (SYS_FS_FILE_OPEN_READ));
+
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Read the file content
+        nbytes = sizeof(buf);
+        bytes_read = SYS_FS_FileRead(buf, nbytes, fileHandle);
+        // Truncate the file
+        res = SYS_FS_FileTruncate(fileHandle);
+        if(res != SYS_FS_RES_SUCCESS)
+        {
+            // Truncation failed.
+        }
+
+        SYS_FS_FileClose(fileHandle);
+
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileTruncate
+(
+    SYS_FS_HANDLE handle
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileSync
+    (
+        SYS_FS_HANDLE handle
+    );
+
+    Summary:
+      Flushes the cached information when writing to a file.
+
+    Description:
+      This function flushes the cached information when writing to a file. The
+      SYS_FS_FileSync function performs the same process as SYS_FS_FileClose
+      function; however, the file is left open and can continue read/write/seek
+      operations to the file.
+
+    Precondition:
+      A valid file handle has to be passed as input to the function. The file
+      which has to be flushed, has to be present and should have been opened in
+      write mode.
+
+    Parameters:
+      handle  - valid file handle
+
+    Returns:
+      SYS_FS_RES_SUCCESS - File sync operation was successful.
+      SYS_FS_RES_FAILURE - File sync operation was unsuccessful. The reason
+                           for the failure can be retrieved with SYS_FS_Error
+                           or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+        SYS_FS_HANDLE fileHandle;
+        const char *buf = "Hello World";
+        size_t nbytes;
+        size_t bytes_written;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
+
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Write data to the file
+        bytes_written = SYS_FS_FileWrite((const void *)buf, nbytes, fileHandle);
+
+        // Flush the file
+        res = SYS_FS_FileSync(fileHandle);
+        if( res != SYS_FS_RES_SUCCESS)
+        {
+            // renaming has gone wrong
+        }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileSync
+(
+    SYS_FS_HANDLE handle
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileStringPut
+    (
+        SYS_FS_HANDLE handle,
+        const char *string
+    );
+
+    Summary:
+      Writes a string to a file.
+
+    Description:
+      This function writes a string into a file. The string to be written
+      should be NULL terminated. The terminator character will not be written.
+
+    Precondition:
+      The file into which a string has to be written, has to be present and
+      should have been opened.
+
+    Parameters:
+      handle - File handle to  which string is to be written.
+      string - Pointer to the null terminated string which has to be written
+               into file.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - String write operation was successful.
+      SYS_FS_RES_FAILURE - String write operation was unsuccessful. The reason
+                           for the failure can be retrieved with SYS_FS_Error
+                           or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+        SYS_FS_HANDLE fileHandle;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", SYS_FS_FILE_OPEN_WRITE_PLUS));
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Write a string
+        res = SYS_FS_FileStringPut(fileHandle, "Hello World");
+        if(res != SYS_FS_RES_SUCCESS)
+        {
+            // String write operation failed.
+        }
+      </code>
+
+  Remarks:
+    None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileStringPut
+(
+    SYS_FS_HANDLE handle,
+    const char *string
+);
+
+//******************************************************************************
+/*Function:
+    SYS_FS_RESULT SYS_FS_FileCharacterPut
+    (
+        SYS_FS_HANDLE handle,
+        char data
+    );
+
+    Summary:
+      Writes a character to a file.
+
+    Description:
+      This function writes a character to a file.
+
+    Precondition:
+      The file into which a character has to be written, has to be present and
+      should have been opened.
+
+    Parameters:
+      handle - file handle to which the character is to be written.
+      data   - character to be written to the file.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Write operation was successful.
+      SYS_FS_RES_FAILURE - Write operation was unsuccessful. The reason for
+                           the failure can be retrieved with SYS_FS_Error or
+                           SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+        SYS_FS_HANDLE fileHandle;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_WRITE_PLUS));
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Write a character to the file.
+        res = SYS_FS_FileCharacterPut(fileHandle, 'c');
+        if(res != SYS_FS_RES_SUCCESS)
+        {
+            // Character write operation failed.
+        }
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileCharacterPut
+(
+    SYS_FS_HANDLE handle,
+    char data
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FilePrintf
+    (
+        SYS_FS_HANDLE handle,
+        const char *string,
+        ...
+    );
+
+    Summary:
+      Writes a formatted string into a file.
+
+    Description:
+      This function writes a formatted string into a file.
+
+    Precondition:
+      The file into which a string has to be written, must exist and should be
+      open.
+
+    Parameters:
+      handle - File handle to which formatted string is to be written.
+      string - Pointer to formatted string which has to be written into file.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Formatted string write operation was successful.
+      SYS_FS_RES_FAILURE - Formatted string write operation was unsuccessful.
+                           The reason for the failure can be retrieved with
+                           SYS_FS_Error or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+        SYS_FS_HANDLE fileHandle;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.txt", (SYS_FS_FILE_OPEN_WRITE_PLUS));
+
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+
+        // Write a string
+        res = SYS_FS_FilePrintf(fileHandle, "%d", 1234);
+        if( res != SYS_FS_RES_SUCCESS)
+        {
+            // write operation failed.
+        }
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FilePrintf
+(
+    SYS_FS_HANDLE handle,
+    const char *string,
+    ...
+);
+
+//******************************************************************************
+/* Function:
+    bool SYS_FS_FileTestError
+    (
+        SYS_FS_HANDLE handle
+    );
+
+    Summary:
+      Checks for errors in the file.
+
+    Description:
+      This function checks whether or not file has any errors.
+
+    Precondition:
+      A valid file handle must be obtained before passing to the function
+
+    Parameters:
+      handle     - file handle obtained during file Open.
+
+    Returns:
+     On success returns false indicating that the file has no errors.
+     On failure returns true. The reason for the failure can be retrieved with
+     SYS_FS_Error or SYS_FS_FileError.
+
+    Example:
+      <code>
+        SYS_FS_HANDLE fileHandle;
+        bool err;
+
+        fileHandle = SYS_FS_FileOpen("/mnt/myDrive/FILE.JPG", (SYS_FS_FILE_OPEN_READ));
+
+        if(fileHandle != SYS_FS_HANDLE_INVALID)
+        {
+            // File open is successful
+        }
+        ...
+        ...
+
+        err = SYS_FS_FileTestError(fileHandle);
+        if(err == true)
+        {
+            // either file has error, or there
+            // was an error in working with the "SYS_FS_FileTestError" function
+        }
+
+      </code>
+
+    Remarks:
+      None.
+*/
+
+bool SYS_FS_FileTestError
+(
+    SYS_FS_HANDLE handle
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_DirectoryMake
+    (
+        const char* path
+    );
+
+    Summary:
+      Makes a directory.
+
+    Description:
+      This function makes a new directory as per the specified path.
+
+    Precondition:
+      The disk has to be mounted before a directory could be made.
+
+    Parameters:
+      path     - Path of the new directory
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Indicates that the creation of the directory was successful.
+      SYS_FS_RES_FAILURE - Indicates that the creation of the directory was
+                           unsuccessful. The reason for the failure can be
+                           retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+
+        res = SYS_FS_DirectoryMake("Dir1");
+
+        if(res == SYS_FS_RES_FAILURE)
+        {
+            // Directory make failed
+        }
+
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_DirectoryMake
+(
+    const char* path
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileDirectoryRemove
+    (
+        const char* path
+    );
+
+    Summary:
+      Removes a file or directory.
+
+    Description:
+      This function removes a file or directory as specified by the path.
+
+    Precondition:
+      - The disk has to be mounted before a directory could be removed.
+      - The file or directory to be removed has to present.
+      - The file/sub-directory must not have read-only attribute (AM_RDO), or
+        the function will be rejected with FR_DENIED.
+      - The sub-directory must be empty and must not be current directory, or
+        the function will be rejected with FR_DENIED.
+      - The file/sub-directory must not be opened.
+
+    Parameters:
+      path     - Path of the File or directory to be removed.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Indicates that the file or directory remove
+                           operation was successful.
+      SYS_FS_RES_FAILURE - Indicates that the file or directory remove
+                           operation was unsuccessful. The reason for the
+                           failure can be retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+
+        res = SYS_FS_FileDirectoryRemove("Dir1");
+
+        if(res == SYS_FS_RES_FAILURE)
+        {
+            // Directory remove operation failed
+        }
+        //...
+        //...
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileDirectoryRemove
+(
+    const char* path
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
+    (
+        const char* path,
+        SYS_FS_FILE_DIR_ATTR attr,
+        SYS_FS_FILE_DIR_ATTR mask
+    );
+
+    Summary:
+      Sets the mode for the file or directory.
+
+    Description:
+      This function sets the mode for a file or directory from the specified 
+      list of attributes.
+
+    Precondition:
+      The file or directory for which the mode is to be set must exist.
+
+    Parameters:
+      path  - Path for the file/directory, for which the mode is to be set.
+      attr  - Attribute flags to be set in one or more combination of the type
+              SYS_FS_FILE_DIR_ATTR. The specified flags are set and others are
+              cleared.
+      mask  - Attribute mask of type SYS_FS_FILE_DIR_ATTR that specifies which 
+              attribute is changed. The specified attributes are set or
+              cleared.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Mode set operation was successful.
+      SYS_FS_RES_FAILURE - Mode set operation was unsucessful. The reason for
+                           the failure can be retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        // Set read-only flag, clear archive flag and others are retained.
+        SYS_FS_FileDirectoryModeSet("file.txt", SYS_FS_ATTR_RDO, SYS_FS_ATTR_RDO | SYS_FS_ATTR_ARC);
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
+(
+    const char* path,
+    SYS_FS_FILE_DIR_ATTR attr,
+    SYS_FS_FILE_DIR_ATTR mask
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
+    (
+        const char* path,
+        SYS_FS_TIME *time
+    );
+
+    Summary:
+      Sets or changes the time for a file or directory.
+
+    Description:
+      This function sets or change the time for a file or directory.
+
+    Precondition:
+      The file/directory for which time is to be set must exist.
+
+    Parameters:
+      path  - A path for the file/directory, for which the time is to be set.
+      ptr   - Pointer to the structure of type SYS_FS_TIME, which contains the
+              time data to be set.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Set time operation was successful.
+      SYS_FS_RES_FAILURE - Set time operation was unsucessful. The reason for
+                           the failure can be retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        void setTime(void)
+        {
+            SYS_FS_RESULT res;
+            SYS_FS_TIME time;
+
+            time.packedTime = 0;
+
+            // All FAT FS times are calculated based on 0 = 1980
+            time.discreteTime.year = (2013 - 1980);  // Year is 2013
+            time.discreteTime.month = 8;             // Month (August)
+            time.discreteTime.day = 9;               // Day (9)
+            time.discreteTime.hour = 15;             // 3 PM
+            time.discreteTime.minute = 06;           // 06 minutes
+            time.discreteTime.second = 00;           // 00 seconds
+
+            res = SYS_FS_FileDirectoryTimeSet("file.txt", &time);
+            if( res != SYS_FS_RES_SUCCESS)
+            {
+                // time change has gone wrong
+            }
+        }
+      </code>
+
+    Remarks:
+      None.
+*/
+
+SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
+(
+    const char* path,
+    SYS_FS_TIME *time
+);
+
+//******************************************************************************
+/* Function:
+    SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
+    (
+        const char *oldPath,
+        const char *newPath
+    );
+
+    Summary:
+      Renames or moves a file or directory.
+
+    Description:
+      This function renames or moves a file or directory.
+
+    Precondition:
+      The file or directory to be renamed or moved must exist. This function
+      cannot move files or directories from one drive to another. Do not rename
+      or move files that are open.
+
+    Parameters:
+      oldPath     - Path for the file/directory, which has to be renamed/moved.
+      newPath     - New Path for the file/directory.
+
+    Returns:
+      SYS_FS_RES_SUCCESS - Rename/move operation was successful.
+      SYS_FS_RES_FAILURE - Rename/move operation was unsucessful. The reason
+                           for the failure can be retrieved with SYS_FS_Error.
+
+    Example:
+      <code>
+        SYS_FS_RESULT res;
+
+        // rename "file.txt" to "renamed_file.txt"
+        res = SYS_FS_FileDirectoryRenameMove("file.txt", "renamed_file.txt");
+        if( res != SYS_FS_RES_SUCCESS)
+        {
+            // Rename operation failed.
+        }
+
+        // Now, move "renamed_file.txt" inside directory "Dir1"
+        res = SYS_FS_FileDirectoryRenameMove("renamed_file.txt", "Dir1/renamed_file.txt");
+        if( res != SYS_FS_RES_SUCCESS)
+        {
+            // File move operation failed.
+        }
+      </code>
+
+    Remarks:
+      This function cannot move files/ directory from one drive to another. Do
+      not rename/ move files which are open.
+*/
+
+SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
+(
+    const char *oldPath,
+    const char *newPath
+);
+
+//******************************************************************************
+/* Function:
     SYS_FS_RESULT SYS_FS_DriveLabelSet
     (
         const char* drive,
@@ -3282,45 +3264,70 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
     SYS_FS_RESULT SYS_FS_DriveFormat
     (
         const char* drive,
-        SYS_FS_FORMAT fmt,
-        uint32_t clusterSize
+        const SYS_FS_FORMAT_PARAM* opt,
+        void* work,
+        uint32_t len
     );
 
     Summary:
-      Formats a drive.
+    Formats a drive.
 
     Description:
-      This function formats a logic drive (create a FAT file system on the
-      logical drive), as per the format specified.
+    This function formats a logic drive (create a FAT file system on the
+    logical drive), as per the format specified.
 
-      If the logical drive that has to be formatted has been bound to any
-      partition (1-4) by multiple partition feature, the FAT volume is created
-      into the specified partition. In this case, the second argument fmt is
-      ignored. The physical drive must have been partitioned prior to using
-      this function.
+    If the logical drive that has to be formatted has been bound to any
+    partition (1-4) by multiple partition feature, the FAT volume is created
+    into the specified partition. The physical drive must have been partitioned
+    prior to using this function.
 
     Precondition:
-      At least one disk must be mounted. The physical drive must have already
-      been partitioned.
+    At least one disk must be mounted. The physical drive must have already
+    been partitioned.
 
     Parameters:
-      drive         - Pointer to buffer which will hold the name of drive being
-                      for which the format is to be done. If this string is
-                      NULL, then then current drive will be formatted. It is
-                      important to end the drive name with a "/".
-      fmt           - Format type.
-      clusterSize   - Cluster size. The value must be sector (size * n), where
-                      n is 1 to 128 and power of 2. When a zero is given, the
-                      cluster size depends on the volume size.
+    drive         - Pointer to buffer which will hold the name of drive being
+                    for which the format is to be done. If this string is
+                    NULL, then then current drive will be formatted. It is
+                    important to end the drive name with a "/".
+    opt           - Specifies the structure holding format options. If a null
+                    pointer is given, fat code gives the function all options in default
+                    value. The format option structure has five members described below:
+                    fmt     - Specifies combination of FAT type flags, SYS_FS_FORMAT.
+                              These flags specify which FAT type to be created on the volume.
+                              If two or more types are specified, one out of them will be
+                              selected depends on the volume size and au_size.
+                              The default value is FM_ANY.
+                    au_size - Specifies size of the allocation unit (cluter) in unit of byte.
+                              The valid value is power of 2 between sector size and
+                              128 * sector size inclusive for FAT/FAT32 volume and up to 16 MB.
+                              When a zero is given, the cluster size depends on the volume size.
+                    n_align - Specifies alignment of the volume data area (file allocation pool,
+                              usually erase block boundary of flash media) in unit of sector.
+                              When a zero is given, alignment is decided on the block size.
+                    n_fat   - Specifies number of FAT copies on the FAT/FAT32 volume.
+                              Valid value for this member is 1 or 2. If the FAT type is exFAT,
+                              this member has no effect.
+                    n_root  - Specifies number of root directory entries on the FAT volume.
+                              Valid value for this member is up to 32768 and aligned to
+                              sector size / 32. If the FAT type is FAT32 or exFAT, this member
+                              has no effect.
+    work           - Pointer to the working buffer used for the format process.
+    len            - Size of the working buffer in unit of byte. It needs to be the sector size
+                     of the corresponding physical drive at least. Plenty of working buffer
+                     reduces number of write transactions to the drive and the format process
+                     will finish quickly.
 
     Returns:
-      SYS_FS_RES_SUCCESS - Drive format was successful.
-      SYS_FS_RES_FAILURE - Drive format was unsucessful. The reason for the
-                           failure can be retrieved with SYS_FS_Error.
+    SYS_FS_RES_SUCCESS - Drive format was successful.
+    SYS_FS_RES_FAILURE - Drive format was unsucessful. The reason for the
+                        failure can be retrieved with SYS_FS_Error.
 
     Example:
-      <code>
+    <code>
         SYS_FS_RESULT res;
+        SYS_FS_FORMAT_PARAM opt = { 0 };
+        uint8_t CACHE_ALIGN work[512];
 
         switch(appState)
         {
@@ -3337,7 +3344,13 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
                 break;
 
             case FORMAT_DRIVE:
-                res = SYS_FS_DriveFormat("/mnt/myDrive", SYS_FS_FORMAT_SFD, 0);
+                opt.fmt = SYS_FS_FORMAT_FAT;
+                opt.au_size = 0;
+                opt.n_fat = 1;
+                opt.align = 0;
+                opt.n_root = 1;
+
+                res = SYS_FS_DriveFormat("/mnt/myDrive", &opt, (void *)work, 512);
                 if(res == SYS_FS_RES_FAILURE)
                 {
                     // Format of the drive failed.
@@ -3345,17 +3358,18 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
                 //...
                 break;
         }
-      </code>
+    </code>
 
     Remarks:
-      None.
+    None.
 */
 
 SYS_FS_RESULT SYS_FS_DriveFormat
 (
     const char* drive,
-    SYS_FS_FORMAT fmt,
-    uint32_t clusterSize
+    const SYS_FS_FORMAT_PARAM* opt,
+    void* work,
+    uint32_t len
 );
 
 // ******************************************************************************

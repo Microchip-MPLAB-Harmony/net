@@ -50,7 +50,6 @@
 
 #include "configuration.h"
 #include "driver/driver.h"
-#include "system/debug/sys_debug.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -65,27 +64,6 @@
 // Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* SYS Debug State Machine States
-
-   Summary
-    Defines the various states that can be achieved by the driver operation.
-
-   Description
-    This enumeration defines the various states that can be achieved by the
-    driver operation.
-
-   Remarks:
-    None.
-*/
-
-typedef enum
-{
-    SYS_DEBUG_STATE_IDLE
-
-} SYS_DEBUG_STATES;
-
 
 // *****************************************************************************
 /* SYS DEBUG OBJECT INSTANCE structure
@@ -103,9 +81,7 @@ typedef enum
 typedef struct
 {
     SYS_STATUS                        status;
-    SYS_DEBUG_STATES                  state;
     SYS_MODULE_INDEX                  debugConsole;
-    int                               prtBufPtr;
 } SYS_DEBUG_INSTANCE;
 
 //DOM-IGNORE-BEGIN

@@ -42,8 +42,6 @@ extern "C" {
 #define LED1_Clear()        LED_GREEN_Off()
 #define LED1_Toggle()       LED_GREEN_Toggle()
 
-#include <device.h>
-
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

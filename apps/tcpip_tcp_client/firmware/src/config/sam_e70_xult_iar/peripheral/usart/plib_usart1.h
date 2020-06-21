@@ -63,26 +63,37 @@
 
 void USART1_Initialize( void );
 
-USART_ERROR USART1_ErrorGet( void );
-
 bool USART1_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool USART1_Write( void *buffer, const size_t size );
+USART_ERROR USART1_ErrorGet( void );
 
-bool USART1_Read( void *buffer, const size_t size );
+size_t USART1_Write(uint8_t* pWrBuffer, const size_t size );
 
-bool USART1_WriteIsBusy( void );
+size_t USART1_WriteCountGet(void);
 
-bool USART1_ReadIsBusy( void );
+size_t USART1_WriteFreeBufferCountGet(void);
 
-size_t USART1_WriteCountGet( void );
+size_t USART1_WriteBufferSizeGet(void);
 
-size_t USART1_ReadCountGet( void );
+bool USART1_WriteNotificationEnable(bool isEnabled, bool isPersistent);
 
-void USART1_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+void USART1_WriteThresholdSet(uint32_t nBytesThreshold);
 
-void USART1_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+void USART1_WriteCallbackRegister( USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
+size_t USART1_Read(uint8_t* pRdBuffer, const size_t size);
+
+size_t USART1_ReadCountGet(void);
+
+size_t USART1_ReadFreeBufferCountGet(void);
+
+size_t USART1_ReadBufferSizeGet(void);
+
+bool USART1_ReadNotificationEnable(bool isEnabled, bool isPersistent);
+
+void USART1_ReadThresholdSet(uint32_t nBytesThreshold);
+
+void USART1_ReadCallbackRegister( USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

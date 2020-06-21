@@ -196,7 +196,8 @@ static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_UDP_COMMANDS)
 
 #if (TCPIP_TCP_COMMANDS)
-static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_TCP_COMMANDS)
 
 #if (TCPIP_PACKET_LOG_ENABLE)
@@ -452,7 +453,8 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
     {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     (SYS_CMD_FNC)_Command_TcpInfo,              ": Check TCP statistics"},
+    {"tcpinfo",     _Command_TcpInfo,                           ": Check TCP statistics"},
+    {"tcptrace",    _Command_TcpTrace,                          ": Enable TCP trace"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
     {"plog",        (SYS_CMD_FNC)_Command_PktLog,               ": PKT flight log"},
@@ -4252,26 +4254,70 @@ static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
 
 #if (TCPIP_TCP_COMMANDS)
-static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
-{
-    int  sktNo, ix;
+static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   // tcpinfo <n>
+    int  sktNo, ix, startIx, stopIx;
     TCP_SOCKET_INFO sktInfo;
-
 
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     sktNo = TCPIP_TCP_SocketsNumberGet();
+    
+    if(argc > 1)
+    {
+        startIx = atoi(argv[1]);
+        stopIx = startIx + 1;
+    }
+    else
+    {
+        startIx = 0;
+        stopIx = sktNo;
+    }
+
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "TCP sockets: %d \r\n", sktNo);
-    for(ix = 0; ix < sktNo; ix++)
+    for(ix = startIx; ix < stopIx; ix++)
     {
         if(TCPIP_TCP_SocketInfoGet(ix, &sktInfo))
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, rxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
-                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, flags: 0x%02x\r\n",
+                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.flags);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\trxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
+                    sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
         }
     }
+}
 
-    return true;
+static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   // tcptrace on/off n
+
+    int     sktNo;
+    bool    traceOn;
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    
+    while(argc >= 3)
+    {
+        sktNo = atoi(argv[2]);
+        if(strcmp(argv[1], "on") == 0)
+        {
+            traceOn = true;
+        }
+        else if(strcmp(argv[1], "off") == 0)
+        {
+            traceOn = false;
+        }
+        else
+        {
+            break;
+        }
+
+        bool res = TCPIP_TCP_SocketTraceSet(sktNo, traceOn);
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "tcp trace %s for socket: %d %s\r\n", argv[1], sktNo, res ? "success" : "failed");
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: tcptrace on/off n\r\n");
 }
 
 #endif  // (TCPIP_TCP_COMMANDS)
@@ -5544,11 +5590,14 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         if ((argc < 2)||(argc > 5))
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc nlist -p <server_pathname><filename_to_savelist>\r\n");
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p nlist test test.txt\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc nlist -p test.txt\r\n");
             return false;
         }
 
-        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        ftpcDataConn.ftpcIsPassiveMode = false;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        
         for(uint8_t i =1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
@@ -5592,11 +5641,14 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         if ((argc < 2)||(argc > 5))
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc ls -p <server_pathname><filename_to_savelist>\r\n");
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p ls test list.txt\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc ls -p test list.txt\r\n");
             return false;
         }
 
-        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        ftpcDataConn.ftpcIsPassiveMode = false;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        
         for(uint8_t i =1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
@@ -5631,6 +5683,27 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     else
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Invalid Command\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Supported Commands are,\r\n \
+        connect - Connect to FTP Server\r\n \
+        disconnect - Disconnect from FTP Server\r\n \
+        login - Login to FTP Server\r\n \
+        pwd - Print Working Directory\r\n \
+        mkdir - Create new Directory\r\n \
+        rmdir - Remove Directory\r\n \
+        cd - Change Directory\r\n \
+        cdup - Change to root Directory\r\n \
+        quit - Exits from FTP\r\n \
+        get - Get file from FTP Server\r\n \
+        put - Send file to FTP Server\r\n \
+        dele - Delete File\r\n \
+        ls - Lists files in Current Directory\r\n \
+        nlist - Name of files in Current Directory\r\n \
+        pasv - Enable Passive FTP session\r\n \
+        port - Send port number for Active FTP session\r\n \
+        type - Set file transfer type\r\n \
+        stru - Set File Structure\r\n \
+        mode - Set Transfer mode\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "For command specific help, enter 'ftpc <command>'\r\n");
     }
     return false;
 }

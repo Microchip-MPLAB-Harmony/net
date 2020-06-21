@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HTTP_CONN_HANDLE Type</title>
+<title>DRV_MIIM_SETUP_FLAGS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01506.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00723.html" target="topic">HTTP_CONN_HANDLE Type</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00422.html" target="topic">Library Interface</a> &gt; <a href="00418.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00723.html" target="topic">DRV_MIIM_SETUP_FLAGS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01506.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="02510.html" target="topic">Next</a></div>
+<a href="00718.html" target="topic">Previous</a> | <a href="00418.html" target="topic">Up</a> | <a href="00703.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_CONN_HANDLE Topic Title: HTTP_CONN_HANDLE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_SETUP_FLAGS Topic Title: DRV_MIIM_SETUP_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HTTP_CONN_HANDLE Type</div>
+DRV_MIIM_SETUP_FLAGS Enumeration</div>
 </div>
 </div>
 
@@ -49,17 +49,72 @@ HTTP_CONN_HANDLE Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-HTTP connection identifier, handle of a HTTP connection</p></div>
+MIIM Driver Set up flags&nbsp;</p>
+<p class="Element10">
+This enumeration identifies the setup specific flags supported by the MIIM driver.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">HTTP_CONN_HANDLE</span></strong>;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">DRV_MIIM_SETUP_FLAG_NONE</span></strong>,
+  <strong><span style="color: #000000">DRV_MIIM_SETUP_FLAG_PREAMBLE_SUPPRESSED</span></strong>,
+  <strong><span style="color: #000000">DRV_MIIM_SETUP_FLAG_PREAMBLE_DEFAULT</span></strong>,
+  <strong><span style="color: #000000">DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_INCREMENT</span></strong>,
+  <strong><span style="color: #000000">DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_DEFAULT</span></strong>
+} DRV_MIIM_SETUP_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_SETUP_FLAG_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No flag specified. Default value&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_SETUP_FLAG_PREAMBLE_SUPPRESSED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Suppress the normal 32 bit MIIM preamble field. Some PHYs support suppressed preamble&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_SETUP_FLAG_PREAMBLE_DEFAULT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Include the 32 bit MIIM preamble field. Default operation.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_INCREMENT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Scan operation will read across a range of PHY addresses Scan will start with address 1 through the address set in the scan operation&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_DEFAULT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Scan operation will read just one PHY address. Default operation.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Multiple flags can be simultaneously set.</p></div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01506.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00723.html" target="topic">HTTP_CONN_HANDLE Type</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00422.html" target="topic">Library Interface</a> &gt; <a href="00418.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00723.html" target="topic">DRV_MIIM_SETUP_FLAGS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +122,13 @@ C</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01506.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="02510.html" target="topic">Next</a></div>
+<a href="00718.html" target="topic">Previous</a> | <a href="00418.html" target="topic">Up</a> | <a href="00703.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_CONN_HANDLE Topic Title: HTTP_CONN_HANDLE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_SETUP_FLAGS Topic Title: DRV_MIIM_SETUP_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

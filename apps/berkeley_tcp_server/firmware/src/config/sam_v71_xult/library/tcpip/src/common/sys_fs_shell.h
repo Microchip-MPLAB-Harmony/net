@@ -77,15 +77,27 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
     // file access routines based on the file name
     // file name access rules:
     // fname starting with:
-    //      "/" - means absolute path access; For access to be allowed, this MUST be under the root with which the object was created!
-    //          see SYS_FS_Shell_Create 
-    //          Example: SYS_FS_Shell_Create("/srv/ftp", ...); and then access file "/srv/ftp/dir/file" is OK
-    //          but file "/srv/dir/file" will fail!
+    //      "/" :
+    //          - If the shell was created with the SYS_FS_SHELL_FLAG_REL_ROOT flag (default setting) then this refers to the
+    //            root of the shell
+    //            See SYS_FS_Shell_Create and SYS_FS_SHELL_CREATE_FLAGS  
+    //            Example: SYS_FS_Shell_Create("/srv/ftp", ...); and then access file "/filename" is OK
+    //            translating to "/srv/ftp/filename"
+    //
+    //          - If the shell was created with SYS_FS_SHELL_FLAG_ABS_ROOT flag, then this means absolute path access;
+    //            For access to be allowed, this MUST be under the root with which the object was created!
+    //            See SYS_FS_Shell_Create and SYS_FS_SHELL_CREATE_FLAGS  
+    //            Example: SYS_FS_Shell_Create("/srv/ftp", ...); and then access file "/srv/ftp/dir/file" is OK
+    //            but file "/srv/dir/file" will fail!
+    //
     //      "./" - means relative to the cwd (current working directory). 
     //              Absolute path will be: "root + cwd + name"
+    //
     //      "../../dir/file" - go up n levels from the cwd and open the file
     //          Cannot go higher than the root specified in SYS_FS_Shell_Create!
+    //
     //      "name" - the name refers to the cwd. Absolute path will be: "root + cwd + name"
+    //
     SYS_FS_HANDLE (*fileOpen)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
 
     // file status - default redirects to SYS_FS
@@ -103,9 +115,10 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
 
     // common file/dir operations, based on a handle
     // the file shell object is not intended as a complete replacement of the SYS_FS file handle operations
-    // it implements just the most common ones
+    // it just implements some of the most common ones
     // by default these redirect to the SYS_FS
     // however different implementations could do this differently 
+
     // file close
     SYS_FS_RESULT (*fileClose)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
 
@@ -130,14 +143,18 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
 
     // change the current working directory
     // cwd starting with:
-    //      "/" - absolute. Checked against the root directory
+    //      "/" - relative/absolute based on the value of SYS_FS_SHELL_FLAG_REL_ROOT/SYS_FS_SHELL_FLAG_ABS_ROOT flag.
+    //          Always checked against the root directory
     //          New cwd = cwd parameter  
+    //
     //      "./" - relative to the existent cwd
     //          New cwd = old cwd + cwd
+    //
     //      "../../" - go up n levels from the existent cwd.
     //          Cannot go higher than the root specified in SYS_FS_Shell_Create!
+    //
     //      "name" - refers to the existent cwd:
-    //      New cwd = old cwd + name
+    //       New cwd = old cwd + name
     SYS_FS_SHELL_RES (*cwdSet)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *path);
 
     // copies the cwd directory of the shell
@@ -162,7 +179,17 @@ typedef enum
 {
     SYS_FS_SHELL_FLAG_NONE           = 0,       // no flag, default
 
-    SYS_FS_SHELL_FLAG_MTHREAD        = 0x01,    // create the shell with multi-threaded protection
+    SYS_FS_SHELL_FLAG_REL_ROOT       = 0x00,    // the root is relative
+                                                // i.e. a file specified like "/fname" is interpreted as
+                                                // "shell_root/fname"
+                                                // This is the default setting
+
+    SYS_FS_SHELL_FLAG_ABS_ROOT       = 0x01,    // the root is absolute
+                                                // i.e. a file specified like "/fname" is interpreted as "/fname"
+                                                // from the absolute root of the file system
+                                                //
+
+    SYS_FS_SHELL_FLAG_MTHREAD        = 0x10,    // create the shell with multi-threaded protection
                                                 // Note: this should not be needed in most usage cases
                                                 // It's better to create separate shell objects in each thread
                                                 // However, there are special cases where the threads need to share the same shell object
@@ -182,7 +209,7 @@ typedef enum
 
 // rootDir - could be something like:
 //      "/" - to allow access to the whole file system
-//      "/srv/ftp" - to allow access to any directory below this 
+//      "/srv/ftp" - to allow access only to any directory below this path 
 // flags - creation flags SYS_FS_SHELL_CREATE_FLAGS; see above
 // malloc_func - standard malloc style allocation function to be used
 //      if 0, the build time SYS_FS_SHELL_MALLOC symbol is used
@@ -190,6 +217,11 @@ typedef enum
 //      if 0, the build time SYS_FS_SHELL_FREE symbol is used
 // pRes - address to store the operation result. Could be 0 if not needed. 
 const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, void*(*malloc_func)(size_t), void(*free_fnc)(void*), SYS_FS_SHELL_RES* pRes);
+
+
+// debug only function
+// returns a temporary pointer to the resulted file absolute path
+SYS_FS_SHELL_RES SYS_FS_Shell_GetPath(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, char* resBuff, size_t resBuffSize);
 
 
 #endif	/* _SYS_FS_SHELL_H_ */

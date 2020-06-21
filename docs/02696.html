@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_NET_ConnectionDiscard Function</title>
+<title>TCPIP_HTTP_NET_CHUNKS_NUMBER Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00809.html" target="topic">HTTP Net Module</a> &gt; <a href="01623.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02696.html" target="topic">TCPIP_HTTP_NET_ConnectionDiscard Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00815.html" target="topic">HTTP Net Module</a> &gt; <a href="01622.html" target="topic">Configuring the Library</a> &gt; <a href="02696.html" target="topic">TCPIP_HTTP_NET_CHUNKS_NUMBER Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02693.html" target="topic">Previous</a> | <a href="01623.html" target="topic">Up</a> | <a href="02698.html" target="topic">Next</a></div>
+<a href="02695.html" target="topic">Previous</a> | <a href="01622.html" target="topic">Up</a> | <a href="02747.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionDiscard@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionDiscard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_CHUNKS_NUMBER Topic Title: TCPIP_HTTP_NET_CHUNKS_NUMBER Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_NET_ConnectionDiscard Function</div>
+TCPIP_HTTP_NET_CHUNKS_NUMBER Macro</div>
 </div>
 </div>
 
@@ -49,53 +49,17 @@ TCPIP_HTTP_NET_ConnectionDiscard Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function discards data from the connection RX buffer.</p></div>
+number of chunks that are created It depends on the <a href="02811.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> and on the number of connections Maximum number should be <a href="02808.html" target="topic">TCPIP_HTTP_NET_MAX_CONNECTIONS</a> * <a href="02811.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> i.e. TCPIP_HTTP_NET_MODULE_CONFIG::nConnections * TCPIP_HTTP_NET_MODULE_CONFIG::nChunks All the chunks are in a pool and are used by all connections</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionDiscard</span></strong>(
-    <a href="02687.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-connHandle - a valid HTTP connection.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-connection handle&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The number of bytes that have been discarded from the RX buffer.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_HTTP_NET_CHUNKS_NUMBER</span></strong> 10</pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00809.html" target="topic">HTTP Net Module</a> &gt; <a href="01623.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02696.html" target="topic">TCPIP_HTTP_NET_ConnectionDiscard Function</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00815.html" target="topic">HTTP Net Module</a> &gt; <a href="01622.html" target="topic">Configuring the Library</a> &gt; <a href="02696.html" target="topic">TCPIP_HTTP_NET_CHUNKS_NUMBER Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +67,13 @@ The number of bytes that have been discarded from the RX buffer.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02693.html" target="topic">Previous</a> | <a href="01623.html" target="topic">Up</a> | <a href="02698.html" target="topic">Next</a></div>
+<a href="02695.html" target="topic">Previous</a> | <a href="01622.html" target="topic">Up</a> | <a href="02747.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionDiscard@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionDiscard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_CHUNKS_NUMBER Topic Title: TCPIP_HTTP_NET_CHUNKS_NUMBER Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

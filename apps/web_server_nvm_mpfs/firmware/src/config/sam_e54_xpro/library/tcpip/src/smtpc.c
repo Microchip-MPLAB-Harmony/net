@@ -925,7 +925,7 @@ static void TCPIP_SMTPC_Process(void)
         // process this descriptor
         _SMTPCAssertCond(0 <= pDcpt->currStat && pDcpt->currStat <= sizeof(smtpDcptStateTbl) / sizeof(*smtpDcptStateTbl), __func__, __LINE__);
         // check for possible disconnect
-        if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_CONNECTED) != 0 && NET_PRES_SocketWasReset(pDcpt->skt))
+        if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_CONNECTED) != 0 && pDcpt->skt != NET_PRES_INVALID_SOCKET && (NET_PRES_SocketWasReset(pDcpt->skt) || NET_PRES_SocketWasDisconnected(pDcpt->skt)))
         {   // lost connection to the server
             pDcpt->dcptFlags &= ~(TCPIP_SMTPC_SERVER_FLAG_CONN_MASK);
             newStat = smtpcErrorStop(pDcpt, TCPIP_SMTPC_RES_CONNECTION_CLOSE, TCPIP_SMTPC_DCPT_FLAG_RETRY_SERVER);

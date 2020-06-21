@@ -277,7 +277,7 @@ void APP_Tasks(void) {
 
             if (i <= 0) // close or error condition
             {
-                if (i <= 0 && errno != EWOULDBLOCK) {
+                if (i == 0 || errno != EWOULDBLOCK) {
                     appData.state = APP_BSD_CLOSE; // true error/close condition
                 }
                 // else just wait for some more data

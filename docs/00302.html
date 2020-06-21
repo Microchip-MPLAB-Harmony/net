@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DDNS_POINTERS Structure</title>
+<title>ddns.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00671.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01417.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00302.html" target="topic">DDNS_POINTERS Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00732.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01519.html" target="topic">Files</a> &gt; <a href="00302.html" target="topic">ddns.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00351.html" target="topic">Previous</a> | <a href="01417.html" target="topic">Up</a> | <a href="02259.html" target="topic">Next</a></div>
+<a href="01519.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="00303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DDNS_POINTERS Topic Title: DDNS_POINTERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ddns.h Topic Title: ddns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DDNS_POINTERS Structure</div>
+ddns.h</div>
 </div>
 </div>
 
@@ -46,99 +46,163 @@ DDNS_POINTERS Structure</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This structure of pointers configures the Dynamic DNS Client. Initially, all pointers will be null and the client will be disabled. <span class="Element146">Set <a href="00351.html" target="topic">DDNSClient</a>.[field name].szRAM</span> to use a string stored in RAM, or <span class="Element146"><a href="00351.html" target="topic">DDNSClient</a>.[field name].szROM</span> to use a string stored in const. Where, <span class="Element146">[field name]</span>, is one of the following parameters.&nbsp;</p>
-<p class="Element10">
-If a const string is specified, <span class="Element146">DDNSClient.ROMPointers.[field name]</span> must also be set to 1 to indicate that this field should be retrieved from const instead of RAM.</p></div>
+Microchip Technology Inc.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <strong><span style="color: #000080">union</span></strong> {
-    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
-    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
-  } CheckIPServer;
-  uint16_t <strong><span style="color: #000000">CheckIPPort</span></strong>;
-  <strong><span style="color: #000080">union</span></strong> {
-    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
-    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
-  } UpdateServer;
-  uint16_t <strong><span style="color: #000000">UpdatePort</span></strong>;
-  <strong><span style="color: #000080">union</span></strong> {
-    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
-    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
-  } Username;
-  <strong><span style="color: #000080">union</span></strong> {
-    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
-    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
-  } Password;
-  <strong><span style="color: #000080">union</span></strong> {
-    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
-    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
-  } Host;
-  <strong><span style="color: #000080">struct</span></strong> {
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">CheckIPServer</span></strong> : 1;
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">UpdateServer</span></strong> : 1;
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Username</span></strong> : 1;
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Password</span></strong> : 1;
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Host</span></strong> : 1;
-  } ROMPointers;
-} DDNS_POINTERS;</pre></div></div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element312">
+<p class="Element10">
+ddns.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+DynDNS Headers for Microchip TCP/IP Stack API Header File&nbsp;</p>
+<p class="Element10">
+The Dynamic DNS Client module provides a method for updating a dynamic IP address to a public DDNS service. These services can be used to provide DNS hostname mapping to devices that behind routers, firewalls, and/or on networks that dynamically assign IP addresses.</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-CheckIPServer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The server used to determine the external IP address&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-CheckIPPort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Port on the above server to <a href="00297.html" target="topic">connect</a> to&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-UpdateServer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The server where updates should be posted&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-UpdatePort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Port on the above server to <a href="00297.html" target="topic">connect</a> to&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-Username&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The user name for the dynamic DNS server&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-Password&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The password to supply when making updates&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-Host&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The host name you wish to update&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-ROMPointers&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Indicates which parameters to read from const instead of RAM.&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00330.html" target="topic">DDNS_SERVICES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Dynamic DNS Services. Must support the DynDNS API (Auxlang) and correspond to ddnsServiceHosts and ddnsServicePorts in DynDNS.c.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00334.html" target="topic">DDNS_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Status message for DynDNS client. GOOD and NOCHG are okay, but ABUSE through 911 are fatal. UNCHANGED through INVALID are locally defined.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02003.html" target="topic">TCPIP_DDNS_LastIPGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the status of the most recent update.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02004.html" target="topic">TCPIP_DDNS_LastStatusGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the last known external IP address of the device.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02005.html" target="topic">TCPIP_DDNS_ServiceSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Selects a preconfigured Dynamic DNS service.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02006.html" target="topic">TCPIP_DDNS_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02008.html" target="topic">TCPIP_DDNS_UpdateForce</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Forces an immediate DDNS update.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00304.html" target="topic">DDNS_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type DDNS_MODULE_CONFIG.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00306.html" target="topic">DDNS_POINTERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Configuration parameters for the Dynamic DNS Client&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5661726961626C6573"></a><div class="Element14">
+Variables</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00355.html" target="topic">DDNSClient</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Global DDNS Configuration parameters&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -146,7 +210,7 @@ Indicates which parameters to read from const instead of RAM.&nbsp;</div></td></
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00671.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01417.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00302.html" target="topic">DDNS_POINTERS Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00732.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01519.html" target="topic">Files</a> &gt; <a href="00302.html" target="topic">ddns.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -154,13 +218,13 @@ Indicates which parameters to read from const instead of RAM.&nbsp;</div></td></
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00351.html" target="topic">Previous</a> | <a href="01417.html" target="topic">Up</a> | <a href="02259.html" target="topic">Next</a></div>
+<a href="01519.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="00303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DDNS_POINTERS Topic Title: DDNS_POINTERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ddns.h Topic Title: ddns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

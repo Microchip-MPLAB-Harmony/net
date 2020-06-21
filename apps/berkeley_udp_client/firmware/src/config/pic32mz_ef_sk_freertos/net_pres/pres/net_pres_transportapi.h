@@ -522,6 +522,7 @@ typedef struct _NET_PRES_TransportObject{
     NET_PRES_TransOption fpOptionSet;    // Function call to the the transport's option set call
     NET_PRES_TransBool fpIsConnected;    // Function call to the the transport's is connected call
     NET_PRES_TransBool fpWasReset;       // Function call to the the transport's was reset call
+    NET_PRES_TransBool fpWasDisconnected;// Function call to the the transport's was disconnected call
     NET_PRES_TransBool fpDisconnect;     // Function call to the the transport's disconnect call
     NET_PRES_TransBool fpConnect;        // Function call to the the transport's connect call
     NET_PRES_TransClose fpClose;         // Function call to the the transport's close call

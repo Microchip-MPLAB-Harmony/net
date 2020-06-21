@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Abstraction Model</title>
+<title>EAI_NONAME Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00738.html" target="topic">Abstraction Model</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00294.html" target="topic">Berkeley Module</a> &gt; <a href="01511.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00738.html" target="topic">EAI_NONAME Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00753.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00749.html" target="topic">Next</a></div>
+<a href="00737.html" target="topic">Previous</a> | <a href="01511.html" target="topic">Up</a> | <a href="00739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EAI_NONAME Topic Title: EAI_NONAME Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Abstraction Model</div>
+EAI_NONAME Macro</div>
 </div>
 </div>
 
@@ -49,24 +49,17 @@ Abstraction Model</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The ENC28J60 Driver library has several different layers to it, as illustrated in the following figure. The interface layer has two main sections that are used the most often: The Tasks function, and the TCP/IP Send and Receive functions.&nbsp;</p>
-<p class="Element10">
-The Tasks function manages the internal state machine which detects, resets, and then configures the ENC28J60 External MAC. It also handles the monitoring of the hardware status, sending and receiving packets.&nbsp;</p>
-<p class="Element10">
-The TCP/IP Send and Receive functions interact with the RAM-based queue of packets that are queued to <a href="01302.html" target="topic">send</a> and packets that have been queued waiting for pick-up by the stack.&nbsp;</p>
-<p class="Element10">
-The main state machine does not interface directly to the SPI bus, but instead, interfaces to a virtual bus abstraction layer that allows for the replacement of the specific underlying bus implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="DRV ENC28J60 Abstraction Model.png" border="0" alt="" title="">&nbsp;</p></div>
+NAME or SERVICE is unknown.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">EAI_NONAME</span></strong> -2    <i><span style="color: #008000">/* NAME or SERVICE is unknown.  */</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00738.html" target="topic">Abstraction Model</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00294.html" target="topic">Berkeley Module</a> &gt; <a href="01511.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00738.html" target="topic">EAI_NONAME Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,13 +67,13 @@ The main state machine does not interface directly to the SPI bus, but instead, 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00753.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00749.html" target="topic">Next</a></div>
+<a href="00737.html" target="topic">Previous</a> | <a href="01511.html" target="topic">Up</a> | <a href="00739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EAI_NONAME Topic Title: EAI_NONAME Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

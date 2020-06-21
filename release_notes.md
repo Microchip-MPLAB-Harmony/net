@@ -1,4 +1,314 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.0 (June, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.0:
+
+- **New Configurations**
+
+The following table provides the list of the new configurations included in this release:
+
+| Application                 | Platform          | Description                                             |
+| ------------ | ------------ |  ------------     |
+| web_ftp_server_usb_fatfs    | SAME54                         | HTTP + FTP and USB combined demo for SAME54 device for both baremetal and FreeRTOS|
+| web_net_server_qspi_mpfs    | SAM9X60                        | Web server with MPFS file system on the onboard QSPI Flash Memory|
+| tcpip_tcp_server            | PIC32MZEF ESK with ENC24xJ600  | TCP Server demo using Harmony native API   |
+| tcpip_tcp_server            | PIC32MX ESK II with ENC28J60   | TCP Server demo using Harmony native API   |
+| tcpip_tcp_client            | PIC32MZEF ESK with ENC24xJ600  | TCP Client demo using Harmony native API   |
+| tcpip_tcp_client            | PIC32MX ESK II with ENC28J60   | TCP Client demo using Harmony native API   |
+
+
+- **New features**
+
+The following table provides the list of the new features included in this release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| Ethernet PHY driver   | Added support for KSZ8041, KSZ8863, LAN8700, LAN8720, LAN9303, DP83640, DP83848, IP101GR |
+| Ethernet MAC driver   | Added support for  ENC24xJ600 and ENC28J60 controllers|
+| TCP/IP MHC            | Added TCP/IP Stack heap estimation in MHC configuration|
+| TCP/IP MHC            | MQTT_NET Glue code is now optional|
+| TCP/IP MHC            | MHC Network configuration flags updated to allow all the possible combinations|
+| TCP                   | Changed the TCPIP_TCP_CLOSE_WAIT_TIMEOUT default value to 0|
+| TCP, NET_PRES         | Added API to indicate remote party disconnect (FIN)|
+| FTP                   | Added FTP server run time authentication|
+| TCP Demos             | Updated all the TCP demos to specifically check for the remote party sending FIN |
+| MQTT Demo             | Added MQTT ping command |
+| MPFS Utility          | mpfs.jar renamed to mpfs_net.jar| 
+| MPFS Utility          | mpfs_net.jar utility will generate a MPFS_Net_SettingDetails.xml file for the configuration backup | 
+
+- **Updated Applications**
+
+    - All applications have been regenerated and tested to work with the latest repositories the TCP/IP stack depends on: core, csp, crypto, etc.
+
+    - The TCP TCPIP_TCP_CLOSE_WAIT_TIMEOUT default value is now 0.
+        - This means that the sockets do not close themselves when receiving a FIN from the remote node.
+        - The socket owner needs to actively close the socket.
+        - The TCPIP_TCP_WasDisconnected() and NET_PRES_SocketWasDisconnected() APIs were added for support.
+        - The TCPIP_TCP_CLOSE_WAIT_TIMEOUT is marked as obsolete and will be eventually removed. However the application can still use it for now with a value != 0 if needed. 
+
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in this release:
+
+| Module                | Description                                             |
+| ------ | ------ |
+| drv_gmac          | GMAC driver fix to de-allocate all memory when the driver is closed|
+| drv_gmac          | Fix for SAMA5D2 GMAC showing incorrect queue numbers|
+| FTP server        | Added a new creation flag for the SYS_FS shell to allow proper relative root access|
+| FTP server        | FTP directory search uses now SYS_FS_ATTR_FILE attribute to find all the files and directories within a directory|
+| NET_PRES          | Fix for NET_PRES_SignalHandler callback function pointer|
+| HTTP_NET, HTTP    | Fix for MPFS upload functionality |
+| TCP/IP Stack      | Updated the use of the flexible arrays to conform to the language C standard |
+| TCP/IP MHC        | Fixed MHC error occurring while modifying the NET_PRES component in MHC |
+| TCP/IP MHC        | Fixed MHC error failing to activate IPv6 component in MHC |
+| MPFS Utility      | Fixed MPFS "pre-build" configuration was not able to validate the input MPFS image path |
+| SNMP              | Dependency on legacy aes_pic32mx.a library has been removed. WolfSSL AES-CFB 128 bit is used now for SNMP encryption and decryption|
+| HTTP_NET          | HTTP EventReport converts all event infos to strings |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v5.40](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v2.41](https://www.microchip.com/mplab/compilers) or later
+- [IAR Embedded Workbench for ARM - version 8.50.1](https://www.iar.com/iar-embedded-workbench/) or later for SAMA5D2, SAM9X60 projects
+- Harmony net repository, 3.6.0
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, 3.7.2
+- Harmony csp repository, 3.7.1
+- Harmony bsp repository, 3.7.0
+- Harmony dev_packs repository, 3.7.0
+- Harmony crypto repository, 3.5.1
+- Harmony usb repository, 3.5.0 for demos requiring USB
+- wolfSSL  v4.3.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v4.3.0-stable) for demos requiring wolfSSL encryption
+- wolfMQTT v1.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.2) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS 10.3.0 (https://github.com/Microchip-MPLAB-Harmony/CMSIS-FreeRTOS/tree/v10.3.0) for demos requiring FreeRTOS support
+- MPLAB Harmony Configurator (MHC) v.3.4.0
+- MPLAB® Harmony Configurator (MHC) plug-in, v3.5.0
+
+
+#### Development Kit Support
+
+This release supports applications for the following development kits
+
+| Development Kits |
+| --- |
+| [PIC32MZEF Embedded Connectivity with FPU Starter Kit](https://www.microchip.com/DevelopmentTools/ProductDetails/DM320007-C) |
+| [PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit](https://www.microchip.com/developmenttools/ProductDetails/DM320010-C) |
+| [SAM A5D2 Xplained Ultra Evaluation Kit](https://www.microchip.com/Developmenttools/ProductDetails/ATSAMA5D2C-XULT) |
+| [SAM E54 Xplained Pro Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/ATSAME54-XPRO) |
+| [SAM E70 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAME70-XULT) |
+| [SAM V71 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAMV71-XULT) |
+| [PIC32MX Ethernet Starter Kit II](http://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=DM320004-2) |
+| [SAM9X60-EK Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/DT100126) |
+
+### KNOWN ISSUES
+
+The current known issues are as follows:
+
+* SYS_DEBUG module needs to be removed in demos with external Ethernet controllers ENCx24J600 and ENC28J60:
+    - This is due to DRV_SPI_TransferStatusGet() function returning "Transfer Handle Expired"
+
+* When migrating a project from Net v3.5.1 to v3.6.0, the user may need to remove the "FILE SYSTEM" component from the project graph and then add it back to solve build issues
+
+* wolfMQTT MHC configuration:
+    - In 'wolfMQTT Library Configuration' when checking the 'Enable MQTT TLS' the generated code will fail build because missing of 'wolfSSL/options.h' file.
+    - This file is not currently generated for wolfSSL and needs to be added manually
+
+* web_net_server_qspi_mpfs on sam_a5d2_xult:
+    - Run time exceptions occur after running the application for a while
+    - This issue is currently under investigation
+
+* web_net_server_sdcard_fatfs on sam_9x60_ek:
+    - The HTTP access to the files and the HTTP connection is very slow
+    - This issue is currently under investigation
+
+* For the TCP/IP demos using dual file system with SDMMC and NVM (web_ftp_server_mpfs_fatfs project for example):
+    - A run time issue can occur when HTTP asks for a file status: the SYS_FS call can fail
+    - The workaround is to have DRV_MEMORY_Initialize() (used by MPFS) called before the the call to DRV_SDSPI_Initialize() call (used by the FAT FS)
+    - The mount of MPFS should be done before the FAT FS mount.
+    - This is a known SYS_FS issue which will be solved in a future release.
+
+* The DHCP server module does not handle well the initialization data on multiple interfaces
+    - A run time exception can occur when using the DHCP server on multiple interfaces.
+
+* wolfSSL code using the PIC32MZ crypto engine does not work correctly
+    - PIC32MZ hardware crypto should not be selected in MHC
+    - This is a known issue that is taken care of in a newer wolfSSL release.
+
+* SAM9X60 driver corrupted RX packets may occur:
+    - For RX packets that span more than one descriptor (i.e. packet size > 128 bytes) data corruption may occur.
+    - Some packets may be reported as having wrong checksum and discarded.
+    - This issue is under investigation and will be solved in a future release.
+
+Older known issues:
+
+* For creating an IAR project with MHC for the SAME54 Xplained Pro platform the following steps are needed:
+    - Run MHC in standalone mode
+    - Create new configuration
+    - Uncheck checkbox 'convert to relative path for configuration' in MPLAB Harmony Framework Management Tool 
+    - Add configuration name as 'sam_54_xpro' 
+    - Select device as SAME54P20A
+    - Add components in MHC
+    - Configure TCP/IP Heap size, configure clock, configure Pins
+    - Select the toolchain as IAR, under System module
+    - Configure System Heap size.
+    - Generate Code
+    - Copy flash.icf file from IAR toolchain folder to directory config\<config_name>\
+    - Open IAR IDE
+    - Create new project
+    - Add project connection with .ipcf file in directory config\<config_name>\
+    - Override default linker script with the flash.icf in config\<config_name>\ folder by Project->Options->Linker->Config->Override Default
+    - Update heap and stack size in linker option at Project->Options->Linker->Config
+    - To suppress warnings, add 'Pe186,Pe188' in project options-> c/c++ compiler -> diagnostics -> suppress these diagnostics
+    - Add '\_\_PIC32C\_\_' in  project options-> c/c++ compiler -> preprocessor-> Defined symbols
+    - Add any application source files (not generated by MHC) to project by Project->Add Files
+    - Select the debugger as CMSIS-DAP
+    - Build and debug the project
+
+* For creating an IAR project with MHC for the SAME70/SAMV71 Xplained Ultra platforms the following steps are needed:
+    - Run MHC in standalone mode
+    - Create new configuration
+    - Uncheck checkbox 'convert to relative path for configuration' in MPLAB Harmony Framework Management Tool 
+    - Add configuration name as 'sam_e70_xult_iar'
+    - Select device as SAME70Q21B
+    - Add components in MHC
+    - Configure TCP/IP Heap size, configure clock, configure Pins
+    - Select the toolchain as IAR, under System module
+    - Configure System Heap size.
+    - Generate Code
+    - Copy flash.icf file from IAR toolchain folder to directory config\<config_name>\
+    - Open IAR IDE
+    - Create new project
+    - Add project connection with .ipcf file in directory config\<config_name>\
+    - For SAME70 project, select the device name at Project->Options->General Options as 'Microchip ATSAME70Q21xB'
+    - Override default linker script with the flash.icf in config\<config_name>\ folder by Project->Options->Linker->Config->Override Default
+    - Update heap and stack size in linker option at Project->Options->Linker->Config
+    - To suppress warnings, add 'Pe186,Pe188' in project options-> c/c++ compiler -> diagnostics -> suppress these diagnostics
+    - Add '\_\_PIC32C\_\_' in  project options-> c/c++ compiler -> preprocessor-> Defined symbols
+    - Add any application source files (not generated by MHC) to project by Project->Add Files
+    - Select the debugger as CMSIS-DAP
+    - Build and debug the project.
+
+* For PIC32MX projects on the Ethernet Stater Kit II:
+    - PIC32MX device supports only the core timer. If other timer is selected there will be MHC errors during the demo generation.
+    - Ethernet Starter Kit II doesn’t have on board UART2 connector
+        - If a serial console is needed, a quick workaround may be attaching the Starter Kit to an Explorer 16 Development Board by using a Starter Kit I/O Expansion Board.
+        - Another option is to use a telnet connection
+        - MHC will throw an error if the UART component is not selected
+    - It is preferred that the demos add both telnet and UART2 support. 
+
+* SAM9X60 projects:
+    - SAM9x60 projects with FAT FS work with optimization 0 only
+        - Reading of the status.xml from the SD card could experience temporary lock ups.
+    - The application code uses a Phy reset function
+        - This is caused by a bug on the SAM9X60-EK board (KSZ8081 too sensitive to a jittery clock source)
+    - The processor selection for debugging should be ARM926EJ-S
+
+* For all the IAR projects:
+    - The 'VLA -- variable length arrays' must be allowed in the compiler configuration.
+    - Suppress the diagnostics Pe186, Pe188, Pe1029
+
+* SAMA5D2, SAM9X60 IAR projects known issues:
+    - The SNMP protocol and corresponding demo applications are not available.
+    - IPv6 ULA generation is not available
+    - ZCLL module is not supported
+    - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer with wolfSSL encryption has not yet been fully tested for these projects. This will be done in a future release.
+    - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
+    - The SAMA5D2 projects need the symbols defined: \_\_SAMA5D2\_\_, \_\_PIC32C\_\_
+
+* The code has been updated to allow the integrating of the WINC driver to the H3 TCP/IP Stack.
+    - However the WINC support is not yet available. It will be added in a future release.
+
+* SAM9X60 documentation issues:
+    - The documentation for the SAM9X60 EMAC driver is currently missing.
+    - The code/RAM resource tables do not contain the SAM9X60 platform.
+    - They will be added in a future release.
+
+* When regenerating a project that includes wolfSSL and crypto, MHC will try to include the HAVE_AES_ECB symbol in the configuration.h.
+    -  Do not include this symbol as the build will fail. Simply ignore the change.
+
+* The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
+    - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
+    - For now the SAME70 projects are generated using the LAN8740 PHY instead of KSZ8061 which is the default PHY for this board.
+
+* The ICD4 loads the reset line of the SAM V71 Xplained Ultra board. When running demo projects using the V71, the ICD4 flex cable should be removed after programming to run the application.
+
+* Interactive help using the Show User Manual Entry in the Right-click menu for configuration options provided by this module is not yet available from within the MPLAB Harmony Configurator (MHC).  Please see the *Configuring the Library* section in the help documentation in the doc folder for this Harmony 3 module instead.  Help is available in both CHM and PDF formats.
+
+* The SAME70 and SAMV71 TCPIP demos with SDCARD, won’t work with optimisation 0. Use optimization level 1.
+
+* SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
+* EDBG programming of a hex file on the SAME54 XPRO board may fail.
+* There are some mandatory MISRA violations in some of the repo files. They will be fixed in some next release:
+    - System: sys_debug.c, sys_command.c
+    - TCP/IP: smtpc.c, ndp.c, custom_http_net_app.c, icmpv6.c,
+* Adding TCP/IP components to the project must be done using the TCP/IP Configurators in order to 
+  load the dependencies properly. Adding the TCP/IP components from the "Available Components",
+  without using configurator, might cause build issues.
+* Similarly, remove the TCP/IP components by using the TCP/IP Configurator for the respective layer
+* Do not add the TCP/IP components to the project by using both the TCP/IP Configurator and manually adding from "Available Components".
+* Do not delete the TCP/IP Configurators from project graph.
+* Interactive help using the "Show User Manual Entry" in the Right-click menu for configuration options provided
+  by this module is not yet available from within the MPLAB Harmony Configurator (MHC).
+  Please see the "Configuring the Library" section in the help documentation in the doc folder for this module instead.
+  Help is available in both CHM and PDF formats.
+
+* The tcpip_client_server application does not currently have complete documentation. The commands to 
+  use this demonstration are provided in the run time help available as console commands.
+  This will be added in a future release.
+* When the File System service is used in a demonstration application, make sure to set 
+  "Maximum Simultaneous File Access" to a number above 10.
+  Especially the HTTP server needs to open multiple files simultaneously.
+* When the RTOS is enabled, make sure to include RTOS system API’s (like Time Delay functions)
+  in application task to give other tasks the chance to execute.
+  This can be achieved by enabling the "Use Task Delay" from Application Configuration -> RTOS Configuration.
+  
+
+
+### RELEASE CONTENTS
+
+This topic lists the contents of this release and identifies each module.
+
+#### Description
+
+This table lists the contents of this release, including a brief description.
+
+
+| Folder                                | Description                                                          | 
+| --- | --- | 
+| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        |
+| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        |
+| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        |
+| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         |
+| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        |
+| net/apps/iperf_demo                   | Demo for running iperf and measuring the network performance         |
+| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  |
+| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          |
+| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    |
+| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             |
+| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_tcp_demo_at24mac       | Demo using the TCP/IP Stack initialization callback feature to use the board MAC address stored on the AT24MAC402 EEPROM storage|
+| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             |
+| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             |
+| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             |
+| net/apps/web_ftp_server_mpfs_fatfs    | Dual SYS_FS demo, with HTTP web server using MPFS/NVM and FTP server using FAT FS/SDCARD|
+| net/apps/web_ftp_server_usb_fatfs     | HTTP server demo with MSD Host Class Driver to read/write files from USB Flash Drive |
+| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               |
+| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    |
+| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           |
+| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     |
+| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card |
+| net/apps/wolfmqtt_demo                | MQTT demo using the 3rd party wolfMQTT library |
+| net/apps/wolfssl_tcp_client           | Demo connecting to a Web server using TLS to encrypt the connection with wolfSSL|
+| net/apps/wolfssl_tcp_server           | Web server demo accepting encrypted TLS connections using wolfSSL |
+
+
 ## Net Release v3.5.0 (November, 2019)
 ### ADDITIONS AND UPDATES FOR  3.5.0:
 

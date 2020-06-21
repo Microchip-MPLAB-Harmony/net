@@ -48,6 +48,7 @@
 #include <string.h>
 #include "configuration.h"
 #include "driver/spi/drv_spi.h"
+#include "system/debug/sys_debug.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -736,13 +737,13 @@ SYS_MODULE_OBJ DRV_SPI_Initialize (
     /* Validate the request */
     if(drvIndex >= DRV_SPI_INSTANCES_NUMBER)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Invalid driver instance");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Invalid driver instance");
         return SYS_MODULE_OBJ_INVALID;
     }
 
     if(gDrvSPIObj[drvIndex].inUse == true)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Instance already in use");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Instance already in use");
         return SYS_MODULE_OBJ_INVALID;
     }
 
@@ -809,7 +810,7 @@ SYS_STATUS DRV_SPI_Status( SYS_MODULE_OBJ object)
     /* Validate the request */
     if((object == SYS_MODULE_OBJ_INVALID) || (object >= DRV_SPI_INSTANCES_NUMBER))
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Invalid system object handle");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Invalid system object handle");
         return SYS_STATUS_UNINITIALIZED;
     }
 
@@ -828,7 +829,7 @@ DRV_HANDLE DRV_SPI_Open(
     /* Validate the request */
     if (drvIndex >= DRV_SPI_INSTANCES_NUMBER)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Invalid Driver Instance");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Invalid Driver Instance");
         return DRV_HANDLE_INVALID;
     }
 
@@ -842,7 +843,7 @@ DRV_HANDLE DRV_SPI_Open(
 
     if((dObj->status != SYS_STATUS_READY) || (dObj->inUse == false))
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Was the driver initialized?");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Was the driver initialized?");
         OSAL_MUTEX_Unlock( &dObj->mutexClientObjects);
         return DRV_HANDLE_INVALID;
     }
@@ -921,7 +922,7 @@ void DRV_SPI_Close( DRV_HANDLE handle )
 
     if(clientObj == NULL)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Invalid Driver Handle");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Invalid Driver Handle");
         return;
     }
 
@@ -930,14 +931,14 @@ void DRV_SPI_Close( DRV_HANDLE handle )
     /* Guard against multiple threads trying to open/close the driver */
     if (OSAL_MUTEX_Lock(&dObj->mutexClientObjects , OSAL_WAIT_FOREVER ) == OSAL_RESULT_FALSE)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Failed to get client mutex lock");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Failed to get client mutex lock");
         return;
     }
     /* We will be removing the transfers queued by the client. Guard the linked list
      * against interrupts */
     if(_DRV_SPI_ResourceLock(dObj) == false)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Failed to get resource lock");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Failed to get resource lock");
         return;
     }
 
@@ -977,7 +978,7 @@ void DRV_SPI_TransferEventHandlerSet(
 
     if(clientObj == NULL)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Invalid Driver Handle");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Invalid Driver Handle");
         return;
     }
 
@@ -985,7 +986,7 @@ void DRV_SPI_TransferEventHandlerSet(
 
     if(_DRV_SPI_ResourceLock(dObj) == false)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Failed to get resource lock");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Failed to get resource lock");
         return;
     }
 
@@ -1068,7 +1069,7 @@ void DRV_SPI_WriteReadTransferAdd (
 
         if(_DRV_SPI_ResourceLock(dObj) == false)
         {
-            SYS_DEBUG(SYS_ERROR_ERROR, "Failed to get resource lock");
+            SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Failed to get resource lock");
             return;
         }
 
@@ -1080,7 +1081,7 @@ void DRV_SPI_WriteReadTransferAdd (
             /* This means we could not find a buffer. This will happen if the the
              * transfer queue size parameter is configured to be less */
 
-            SYS_DEBUG(SYS_ERROR_ERROR, "Insufficient Queue Depth");
+            SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Insufficient Queue Depth");
             _DRV_SPI_ResourceUnlock(dObj);
             return;
         }
@@ -1161,7 +1162,7 @@ DRV_SPI_TRANSFER_EVENT DRV_SPI_TransferStatusGet(const DRV_SPI_TRANSFER_HANDLE t
 
     if(drvInstance >= DRV_SPI_INSTANCES_NUMBER)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Transfer Handle Invalid");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Transfer Handle Invalid");
         return DRV_SPI_TRANSFER_EVENT_HANDLE_INVALID;
     }
 
@@ -1173,12 +1174,12 @@ DRV_SPI_TRANSFER_EVENT DRV_SPI_TransferStatusGet(const DRV_SPI_TRANSFER_HANDLE t
     /* Validate the transferIndex and corresponding request */
     if(transferIndex >= dObj->transferObjPoolSize)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Transfer Handle Invalid");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Transfer Handle Invalid");
         return DRV_SPI_TRANSFER_EVENT_HANDLE_INVALID;
     }
     else if(transferHandle != dObj->transferObjPool[transferIndex].transferHandle)
     {
-        SYS_DEBUG(SYS_ERROR_ERROR, "Transfer Handle Expired");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Transfer Handle Expired");
         return DRV_SPI_TRANSFER_EVENT_HANDLE_EXPIRED;
     }
     else

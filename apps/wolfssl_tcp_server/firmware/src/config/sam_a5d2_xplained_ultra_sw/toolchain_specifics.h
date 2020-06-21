@@ -25,6 +25,7 @@
 #define TOOLCHAIN_SPECIFICS_H
 
 
+#include "cmsis_compiler.h"
 #define COMPILER_PRAGMA(arg)            _Pragma(#arg)
 #define SECTION(a)                      COMPILER_PRAGMA(location = a)
 #define NO_INIT                         __no_init
@@ -36,7 +37,7 @@
 #define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
 
 // ************************************************************************
-// H3_IAR_SYS_TYPES 
+// H3_IAR_SYS_TYPES
 
 #define ssize_t                         long
 

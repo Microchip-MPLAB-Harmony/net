@@ -149,6 +149,7 @@ static const NET_PRES_TransportObject netPresTransObject0SS = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_TCP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_TCP_IsConnected,
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_TCP_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_TCP_WasDisconnected,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_TCP_Disconnect,
     .fpConnect           = (NET_PRES_TransBool)TCPIP_TCP_Connect,
     .fpClose             = (NET_PRES_TransClose)TCPIP_TCP_Close,
@@ -172,6 +173,7 @@ static const NET_PRES_TransportObject netPresTransObject0SC = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_TCP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_TCP_IsConnected,
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_TCP_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_TCP_WasDisconnected,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_TCP_Disconnect,
     .fpConnect           = (NET_PRES_TransBool)TCPIP_TCP_Connect,
     .fpClose             = (NET_PRES_TransClose)TCPIP_TCP_Close,
@@ -195,6 +197,7 @@ static const NET_PRES_TransportObject netPresTransObject0DS = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_UDP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_UDP_IsConnected,
     .fpWasReset          = NULL,
+    .fpWasDisconnected   = NULL,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_UDP_Disconnect,
     .fpConnect          = NULL,
     .fpClose             = (NET_PRES_TransClose)TCPIP_UDP_Close,
@@ -218,6 +221,7 @@ static const NET_PRES_TransportObject netPresTransObject0DC = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_UDP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_UDP_IsConnected,
     .fpWasReset          = NULL,
+    .fpWasDisconnected   = NULL,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_UDP_Disconnect,
     .fpConnect          = NULL,
     .fpClose             = (NET_PRES_TransClose)TCPIP_UDP_Close,
@@ -579,15 +583,51 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 }
 // </editor-fold>
 
-/*** File System Initialization Data ***/
+// <editor-fold defaultstate="collapsed" desc="File System Initialization Data">
 
 
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
 {
-	{NULL}
+    {NULL}
 };
 
-
+const SYS_FS_FUNCTIONS FatFsFunctions =
+{
+    .mount             = FATFS_mount,
+    .unmount           = FATFS_unmount,
+    .open              = FATFS_open,
+    .read              = FATFS_read,
+    .close             = FATFS_close,
+    .seek              = FATFS_lseek,
+    .fstat             = FATFS_stat,
+    .getlabel          = FATFS_getlabel,
+    .currWD            = FATFS_getcwd,
+    .getstrn           = FATFS_gets,
+    .openDir           = FATFS_opendir,
+    .readDir           = FATFS_readdir,
+    .closeDir          = FATFS_closedir,
+    .chdir             = FATFS_chdir,
+    .chdrive           = FATFS_chdrive,
+    .write             = FATFS_write,
+    .tell              = FATFS_tell,
+    .eof               = FATFS_eof,
+    .size              = FATFS_size,
+    .mkdir             = FATFS_mkdir,
+    .remove            = FATFS_unlink,
+    .setlabel          = FATFS_setlabel,
+    .truncate          = FATFS_truncate,
+    .chmode            = FATFS_chmod,
+    .chtime            = FATFS_utime,
+    .rename            = FATFS_rename,
+    .sync              = FATFS_sync,
+    .putchr            = FATFS_putc,
+    .putstrn           = FATFS_puts,
+    .formattedprint    = FATFS_printf,
+    .testerror         = FATFS_error,
+    .formatDisk        = (FORMAT_DISK)FATFS_mkfs,
+    .partitionDisk     = FATFS_fdisk,
+    .getCluster        = FATFS_getclusters
+};
 
 
 const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
@@ -598,6 +638,7 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
     }
 };
 
+// </editor-fold>
 
 
 
@@ -627,8 +668,6 @@ const SYS_TIME_INIT sysTimeInitData =
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
 
-static QElement sysConsole0UARTRdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0];
-static QElement sysConsole0UARTWrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0];
 
 /* Declared in console device implementation (sys_console_uart.c) */
 extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
@@ -636,30 +675,16 @@ extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
 const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
 {
     .read = (SYS_CONSOLE_UART_PLIB_READ)USART1_Read,
+	.readCountGet = (SYS_CONSOLE_UART_PLIB_READ_COUNT_GET)USART1_ReadCountGet,
+	.readFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_READ_FREE_BUFFFER_COUNT_GET)USART1_ReadFreeBufferCountGet,
     .write = (SYS_CONSOLE_UART_PLIB_WRITE)USART1_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)USART1_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)USART1_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)USART1_ErrorGet,
-};
-
-
-const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
-{
-    /* Peripheral has single interrupt vector */
-    .isSingleIntSrc                        = true,
-
-    /* Peripheral interrupt line */
-    .intSources.usartInterrupt             = USART1_IRQn,
+	.writeCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_COUNT_GET)USART1_WriteCountGet,
+	.writeFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_FREE_BUFFER_COUNT_GET)USART1_WriteFreeBufferCountGet,
 };
 
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
-    .uartPLIB = &sysConsole0UARTPlibAPI,
-    .readQueueElementsArr = sysConsole0UARTRdQueueElements,
-    .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
-    .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
-    .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSources = &sysConsole0UARTInterruptSources,
+    .uartPLIB = &sysConsole0UARTPlibAPI,    
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =
@@ -668,6 +693,8 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .consDevDesc = &sysConsoleUARTDevDesc,
     .deviceIndex = 0,
 };
+
+
 
 // </editor-fold>
 
@@ -688,6 +715,14 @@ const SYS_DEBUG_INIT debugInit =
 };
 
 
+
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
 
 
 

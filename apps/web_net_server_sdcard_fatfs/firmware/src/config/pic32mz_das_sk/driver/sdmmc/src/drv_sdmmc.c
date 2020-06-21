@@ -52,6 +52,7 @@
 #include "configuration.h"
 #include "driver/sdmmc/drv_sdmmc.h"
 #include "driver/sdmmc/src/drv_sdmmc_local.h"
+#include "system/cache/sys_cache.h"
 #include <string.h>
 
 static DRV_SDMMC_OBJ gDrvSDMMCObj[DRV_SDMMC_INSTANCES_NUMBER];
@@ -1097,6 +1098,9 @@ static void _DRV_SDMMC_MediaInitialize (
             dObj->dataTransferFlags.transferDir = DRV_SDMMC_DATA_TRANSFER_DIR_READ;
             dObj->dataTransferFlags.transferType = DRV_SDMMC_DATA_TRANSFER_TYPE_SINGLE;
 
+            /* Invalidate the cache to force the CPU to read the latest data
+             * from the main memory. */
+            SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)dObj->cardCtxt.scrBuffer, DRV_SDMMC_SCR_BUFFER_LEN);
 
             /* Set up the DMA for the data transfer. */
             dObj->sdmmcPlib->sdhostSetupDma (&dObj->cardCtxt.scrBuffer[0], 8, DRV_SDMMC_OPERATION_TYPE_READ);
@@ -1156,6 +1160,9 @@ static void _DRV_SDMMC_MediaInitialize (
               dObj->sdmmcPlib->sdhostSetBlockCount (0); 
               dObj->sdmmcPlib->sdhostSetBlockSize(DRV_SDMMC_EXT_CSD_RESP_SIZE);
 			  
+              /* Invalidate the cache to force the CPU to read the latest data
+               * from the main memory. */
+              SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)dObj->cardCtxt.extCSDBuffer, DRV_SDMMC_EXT_CSD_RESP_SIZE);
 			  
               dObj->sdmmcPlib->sdhostSetupDma (dObj->cardCtxt.extCSDBuffer,
                                                DRV_SDMMC_EXT_CSD_RESP_SIZE,
@@ -1262,6 +1269,9 @@ static void _DRV_SDMMC_MediaInitialize (
             dObj->dataTransferFlags.transferDir = DRV_SDMMC_DATA_TRANSFER_DIR_READ;
             dObj->dataTransferFlags.transferType = DRV_SDMMC_DATA_TRANSFER_TYPE_SINGLE;
 
+            /* Invalidate the cache to force the CPU to read the latest data
+             * from the main memory. */
+            SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)dObj->cardCtxt.switchStatusBuffer, DRV_SDMMC_SWITCH_STATUS_BUFFER_LEN);
 
             /* Set up the DMA for the data transfer. */
             dObj->sdmmcPlib->sdhostSetupDma (&dObj->cardCtxt.switchStatusBuffer[0], 64, DRV_SDMMC_OPERATION_TYPE_READ);
@@ -2196,6 +2206,18 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
             /* Block count has already been set. */
             dObj->sdmmcPlib->sdhostSetBlockSize(512);
 
+            if (currentBufObj->opType == DRV_SDMMC_OPERATION_TYPE_WRITE)
+            {
+                /* Clean the cache to push the data to be written, from the cache
+                 * memory to the main memory for the DMA */
+                SYS_CACHE_CleanDCache_by_Addr((uint32_t *)currentBufObj->buffer, (currentBufObj->nBlocks << 9));
+            }
+            else if (currentBufObj->opType == DRV_SDMMC_OPERATION_TYPE_READ)
+            {
+                /* Invalidate the cache to force the CPU to read the latest data
+                 * from the main memory. */
+                SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)currentBufObj->buffer, (currentBufObj->nBlocks << 9));
+            }
 
             dObj->dataTransferFlags.isDataPresent = true;
             dObj->sdmmcPlib->sdhostSetupDma (currentBufObj->buffer, (currentBufObj->nBlocks << 9), currentBufObj->opType);

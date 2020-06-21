@@ -42,6 +42,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //#define SYS_FS_SHELL_MTHREAD_PROTECTION     0
 //#define SYS_FS_SHELL_MALLOC                 malloc
 //#define SYS_FS_SHELL_FREE                   free
+#define SYS_FS_SHELL_DEBUG                    0
 
 // SYS_FS workaround
 // SYS_FS functions like SYS_FS_DirOpen() won't properly open a directory
@@ -647,7 +648,7 @@ static SYS_FS_SHELL_RES Shell_GetCwd(const SYS_FS_SHELL_OBJ* pObj, char* cwdBuff
 static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char* fname, char* absBuff, size_t absBuffSize)
 {
     int f_len, cwd_len;
-    char *end_cwd, *up_cwd;
+    char *end_cwd;
 
     if(fname == 0 || (f_len = strlen(fname)) == 0)
     {
@@ -673,7 +674,7 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
         }
         else
         {   // ../ access
-            while((up_cwd = strstr(fname, "../")) == fname)
+            while(strstr(fname, "../") == fname)
             {
                 fname += 3;
                 int up_lev = 0;
@@ -695,26 +696,33 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
                     end_cwd--;
                 }
             }
+            cwd_len = end_cwd - pShell->cwd; 
         }
     }
     else
     { // ok, regular file name; just append whatever to the cwd
         // except if the full path is given
         if(fname[0] == '/')
-        {   // check that it's under our root so we allow access
-            strcpy(absBuff, pShell->root);
-            strcat(absBuff, "/");   // root doesn't have trailing /
-            if(strstr(fname, absBuff) != fname)
-            {
-                return SYS_FS_SHELL_RES_DIR_ERROR;
+        {   
+            if((pShell->createFlags & SYS_FS_SHELL_FLAG_ABS_ROOT) != 0)
+            {   // check that it's under our root so we allow access
+                strcpy(absBuff, pShell->root);
+                strcat(absBuff, "/");   // root doesn't have trailing /
+                if(strstr(fname, absBuff) != fname)
+                {
+                    return SYS_FS_SHELL_RES_DIR_ERROR;
+                }
+                // ok, it's under our root; remove the root part
+                fname += strlen(absBuff);
             }
-            // ok, it's under root; remove the root part
-            fname += strlen(absBuff);
+            else
+            {   // skip the shell->cwd
+                cwd_len = 0;
+            }
         }
     }
 
     // regular checks
-    cwd_len = end_cwd - pShell->cwd; 
     f_len = strlen(fname);
     if(pShell->rootLen + cwd_len + f_len > absBuffSize - 1)
     {    // too long
@@ -723,11 +731,16 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
 
     // start with root
     strcpy(absBuff, pShell->root);
-    // add cwd
-    strncpy(absBuff + pShell->rootLen, pShell->cwd, cwd_len + 1);
+
+    if(cwd_len != 0)
+    {   // add cwd
+        strncpy(absBuff + pShell->rootLen, pShell->cwd, cwd_len + 1);
+    }
+
     // add the file name
     strcpy(absBuff + pShell->rootLen + cwd_len, fname);
     absBuff[absBuffSize - 1] = 0;
+
 #if (SYS_FS_TRAIL_SLASH_WORKAROUND != 0)
     int absLen = strlen(absBuff);
     char* pEnd = absBuff + absLen - 1;
@@ -739,4 +752,25 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
 
     return SYS_FS_SHELL_RES_OK;
 }
+
+#if (SYS_FS_SHELL_DEBUG != 0)
+SYS_FS_SHELL_RES SYS_FS_Shell_GetPath(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, char* resBuff, size_t resBuffSize)
+{
+    if(fname == 0 || resBuff == 0 || resBuffSize == 0)
+    {
+        return SYS_FS_SHELL_RES_BAD_ARG; 
+    }
+
+    SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
+    if(pShell)
+    {
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, resBuff, resBuffSize);
+        _Shell_ObjectUnlock(pShell, absRes);
+
+        return absRes;
+    }
+
+    return SYS_FS_SHELL_RES_NO_OBJECT;
+}
+#endif  // (SYS_FS_SHELL_DEBUG != 0)
 

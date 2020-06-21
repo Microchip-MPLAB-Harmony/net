@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_DATA_SEGMENT Structure</title>
+<title>TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01106.html" target="topic">MAC Driver Module</a> &gt; <a href="01703.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03102.html" target="topic">TCPIP_MAC_DATA_SEGMENT Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03102.html" target="topic">TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03093.html" target="topic">Previous</a> | <a href="01703.html" target="topic">Up</a> | <a href="00107.html" target="topic">Next</a></div>
+<a href="03063.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="03095.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_DATA_SEGMENT Topic Title: TCPIP_MAC_DATA_SEGMENT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_UniqueLocalUnicastAddressAdd@TCPIP_NET_HANDLE@uint16_t@IPV6_ULA_FLAGS@IP_MULTI_ADDRESS* Topic Title: TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_DATA_SEGMENT Structure</div>
+TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</div>
 </div>
 </div>
 
@@ -49,111 +49,105 @@ TCPIP_MAC_DATA_SEGMENT Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCPIP MAC Data Segment&nbsp;</p>
+This function starts the process of adding an ULA address to the specified interface. The segments of the generated address are as follows:
+<ul class="Element634">
+<li class="Element604">FC00::/7 - ULA prefix</li>
+<li class="Element604">L - 1 bit set to 1, locally assigned</li>
+<li class="Element604">Global ID - 40 bit random generated identifier</li>
+<li class="Element604">subnet ID - 16 bit subnet identifier</li>
+<li class="Element604">Interface ID - 64 bit interface identifier generated as a EUI64 from the specified interface MAC</li>
+</ul>&nbsp;</p>
 <p class="Element10">
-Structure of a segment buffer transferred with the MAC. A MAC TX or RX packet can consist of multiple data segments. On TX the MAC has to be able to transmit packets that span multiple data segments. On RX of a network frame the MAC may have to use multiple segments to construct a packet. (For performance reasons, a contiguous MAC packet, with just one segment, if possible, is preferred).</p></div>
+The randomness of the &quot;Global ID&quot; prefix of the generated IPv6 address is obtained by using an NTP server. The supplied NTP server will be contacted to obtain an NTP time stamp. This time stamp together with the EUI64 identifier obtained from the interface MAC are passed through a 160 bits hash algorithm (SHA1) and the least significant 40 bits are used as the GlobalID of the interface.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000"><a href="00107.html" target="topic">_tag_MAC_DATA_SEGMENT</a></span></strong> {
-  <strong><span style="color: #000080">struct</span></strong> <a href="00107.html" target="topic">_tag_MAC_DATA_SEGMENT</a>* <strong><span style="color: #000000">next</span></strong>;
-  uint8_t* <strong><span style="color: #000000">segLoad</span></strong>;
-  uint16_t <strong><span style="color: #000000">segLen</span></strong>;
-  uint16_t <strong><span style="color: #000000">segSize</span></strong>;
-  uint16_t <strong><span style="color: #000000">segFlags</span></strong>;
-  uint16_t <strong><span style="color: #000000">segLoadOffset</span></strong>;
-  uint8_t <strong><span style="color: #000000">segClientData</span></strong>[4];
-} TCPIP_MAC_DATA_SEGMENT;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01099.html" target="topic">IPV6_ULA_RESULT</a> <strong><span style="color: #000000">TCPIP_IPV6_UniqueLocalUnicastAddressAdd</span></strong>(
+    <a href="03413.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    uint16_t <strong><span style="color: #000000">subnetID</span></strong>, 
+    <a href="01095.html" target="topic">IPV6_ULA_FLAGS</a> <strong><span style="color: #000000">genFlags</span></strong>, 
+    IP_MULTI_ADDRESS* <strong><span style="color: #000000">ntpAddress</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-struct _tag_MAC_DATA_SEGMENT* next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Multi-segment support, next segment in the chain.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint8_t* segLoad;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Pointer to segment data payload. It specifies the address of the 1st byte to be transmitted.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t segLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Segment payload size; Number of bytes from this segment that has to be transmitted.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t segSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Segment allocated total usable size. This does not include the segLoadOffset (see below).&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t segFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-<a href="03289.html" target="topic">TCPIP_MAC_SEGMENT_FLAGS</a> segment flags: TCPIP_MAC_SEG_FLAG_STATIC, TCPIP_MAC_SEG_FLAG_RX, TCPIP_MAC_SEG_FLAG_RX, TCPIP_MAC_SEG_FLAG_RX_STICKY&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t segLoadOffset;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Note 1: This offset is used as a performance improvement. It allows for the MAC frame to start on an unaligned address but enforces the alignment of the network layer data and improves the IP checksum calculation. The value of this offset is MAC dependent. A typical value for an Ethernet MAC should be 2 bytes (size of the MAC frame is 14 bytes). Note 2: Normally only the 1st segment of a packet needs this extra room at the beginning of the segment buffer. Note 3: The MAC may make use of this space at the beginning of the segment buffer. This is a space reserved for the MAC purposes. Note 4: It is up to the MAC to check that the value of this offset is enforced. PIC32 MAC specific notes: Note 1. The MAC will reject the packet if the load offset is not at least 2 bytes.
-<ol class="Element635">
-<li value="2" class="Element605">The PIC32 MAC uses these 2 bytes to calculate the offset between the segLoad and the <a href="03163.html" target="topic">TCPIP_MAC_PACKET</a> packet it belongs to. That means that the <a href="03163.html" target="topic">TCPIP_MAC_PACKET</a>* and the segLoad cannot be more than 64 KB apart!</li>
-</ol>&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint8_t segClientData[4];&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Additional client segment data. Ignored by the MAC driver.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The IPv6 stack is initialized and the interface is up and configured.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The interface to add the address to.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+subnetID&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The subnet ID to be used.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+genFlags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Address generation flags:
+<ul class="Element634">
+<li class="Element604">IPV6_ULA_FLAG_NTPV4 - if set, the NTP server will be contacted over an IPv4 connection. Otherwise, a default IPv6 connection will be attempted</li>
+<li class="Element604">IPV6_ULA_FLAG_GENERATE_ONLY - if set, the address will not be added to the list of the addresses for the specified interface</li>
+<li class="Element604">IPV6_ULA_FLAG_SKIP_DAD - if set, the DAD processing will be skipped</li>
+</ul>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ntpAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The NTP server address - it is an IPv4/IPv6 address as selected by the IPV6_ULA_FLAG_NTPV4 flag (the IP address could be obtained with an DNS call into the stack) Not currently used!&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element634">
+<li class="Element604">IPV6_ULA_RES_BUSY - address generation module is busy</li>
+<li class="Element604">IPV6_ULA_RES_IF_ERR - IPv6 interface is not up</li>
+<li class="Element604">IPV6_ULA_RES_OK - if the call succeeded and the generation process was started</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-See notes for the segLoadOffset member. On 32-bit machines, the segment payload is allocated so that it is always 32-bit aligned and its size is 32-bits multiple. The segLoadOffset adds to the payload address and insures that the network layer data is 32-bit aligned.</p></div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00107.html" target="topic">_tag_MAC_DATA_SEGMENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-A data segment that's part of a TX/RX packet.&nbsp;</div></td></tr></table></div></div>
-</div>
+ULA generation needs to be enabled in the stack at build time.&nbsp;</p>
+<p class="Element10">
+Only one address generation at a time is supported for now. Before attempting a new address generation the previous operation has to be completed, otherwise the call will fail.&nbsp;</p>
+<p class="Element10">
+This function requires that the NTP client is enabled in the stack. If not, the call will fail.&nbsp;</p>
+<p class="Element10">
+The caller will be notified by the outcome of the operation by the stack using the standard IPv6 notification handler (registered by <a href="03065.html" target="topic">TCPIP_IPV6_HandlerRegister</a> call).&nbsp;</p>
+<p class="Element10">
+The ntpAddress parameter is not currently used! The NTP timestamp will be obtained using the default NTP server address</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01106.html" target="topic">MAC Driver Module</a> &gt; <a href="01703.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03102.html" target="topic">TCPIP_MAC_DATA_SEGMENT Structure</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03102.html" target="topic">TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -161,13 +155,13 @@ A data segment that's part of a TX/RX packet.&nbsp;</div></td></tr></table></div
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03093.html" target="topic">Previous</a> | <a href="01703.html" target="topic">Up</a> | <a href="00107.html" target="topic">Next</a></div>
+<a href="03063.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="03095.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_DATA_SEGMENT Topic Title: TCPIP_MAC_DATA_SEGMENT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_UniqueLocalUnicastAddressAdd@TCPIP_NET_HANDLE@uint16_t@IPV6_ULA_FLAGS@IP_MULTI_ADDRESS* Topic Title: TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

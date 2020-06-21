@@ -57,6 +57,7 @@
 */
 void PIO_Initialize ( void )
 {
+    MATRIX_REGS->CCFG_SYSIO = 0x0;
     /* Selected System IO pins are configured as GPIO */
     MATRIX_REGS->CCFG_SYSIO |= 0xc10;
 

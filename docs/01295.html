@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>recv Function</title>
+<title>PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01295.html" target="topic">recv Function</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00218.html" target="topic">Introduction</a> &gt; <a href="01430.html" target="topic">TCP/IP Demonstration Hardware</a> &gt; <a href="01295.html" target="topic">PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01105.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01296.html" target="topic">Next</a></div>
+<a href="01294.html" target="topic">Previous</a> | <a href="01430.html" target="topic">Up</a> | <a href="01296.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: recv@SOCKET@char*@int@int Topic Title: recv Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board Topic Title: PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-recv Function</div>
+PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board</div>
 </div>
 </div>
 
@@ -48,87 +48,42 @@ recv Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<div class="Element15">
+Hardware Configurations</div>
 <p class="Element10">
-The recv() function is used to receive incoming data that has been queued for a <a href="01402.html" target="topic">socket</a>. This function can be used with both datagram and stream <a href="01402.html" target="topic">socket</a>. If the available data is too large to fit in the supplied application buffer buf, excess bytes are discarded in case of <a href="01378.html" target="topic">SOCK_DGRAM</a> type sockets. For <a href="01379.html" target="topic">SOCK_STREAM</a> types, the data is buffered internally so the application can retrieve all data by multiple calls of <a href="01296.html" target="topic">recvfrom</a>.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">recv</span></strong>(
-    <a href="01401.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">buf</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">len</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">flags</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+This configuration interfaces external Ethernet controller ENC28J60 to PIC32MX795F512L development board.&nbsp;</p>
 <p class="Element10">
-The <a href="00296.html" target="topic">connect</a> function should be called for TCP and UDP sockets. Server side, accept function should be called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Socket descriptor returned from a previous call to <a href="01402.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-buf&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Application data receive buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Buffer length in bytes&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-flags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-No significance in this implementation&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-If the recv function is successful, the <a href="01402.html" target="topic">socket</a> is valid and it has pending data:
+Refer to the
 <ul class="Element634">
-<li class="Element604">The supplied buffer is non NULL and has non zero length, the function will return the number of bytes copied to the application buffer.</li>
-<li class="Element604">The supplied buffer is NULL or has zero length then no data will be copied and the function will return the number of bytes pending in the <a href="01402.html" target="topic">socket</a> buffer.</li>
+<li class="Element604"> <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320004-2');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX Ethernet Starter Kit</a></li>
+<li class="Element604"> <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/AC164123');"><img src="indicator_external_link.gif" border="0" alt="" title="">Ethernet PICtail Plus Daughter Board</a></li>
+<li class="Element604"> <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Starter Kit I/O Expansion Board</a></li>
 </ul>&nbsp;</p>
 <p class="Element10">
-A return value of <a href="01405.html" target="topic">SOCKET_ERROR</a> (-1) indicates an error condition (and errno set accordingly). errno is set to EWOULDBLOCK if there is no data pending in the <a href="01402.html" target="topic">socket</a> buffer.&nbsp;</p>
+The 10 Mbps Ethernet PICtail Plus Daughter Board is inserted to J2(or J4) on the Starter Kit I/O Expansion Board. The J2, PICtail Plus (SPI) connector on Ethernet PICtail Plus Daughter Board is attached to I/O Expansion Board. The PICtail daughter board is inserted to use SPI1.&nbsp;</p>
 <p class="Element10">
-A value of zero indicates <a href="01402.html" target="topic">socket</a> has been shutdown by the peer.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+The PIC32 Ethernet Starter Kit II is connected to J1 on the Starter Kit I/O Expansion board.&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+&nbsp;</p>
+<p class="Element10">
+The pins 26 and 47 on J11 (on I/O Expansion board) need to be connected to control the Chip-Select line by the PIC32.&nbsp;</p>
+<p class="Element10">
+Note: The PIC32MX Ethernet Starter Kit II does not have an on-board UART connector.&nbsp;</p>
+<p class="Element10">
+If a serial console is needed, Pin 46 (U2RX) and PIn 48 (U2TX) from connector J11 on I/O expansion board can be used for serial console.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="PIC32MX_ENC28J60.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01295.html" target="topic">recv Function</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00218.html" target="topic">Introduction</a> &gt; <a href="01430.html" target="topic">TCP/IP Demonstration Hardware</a> &gt; <a href="01295.html" target="topic">PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +91,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01105.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01296.html" target="topic">Next</a></div>
+<a href="01294.html" target="topic">Previous</a> | <a href="01430.html" target="topic">Up</a> | <a href="01296.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: recv@SOCKET@char*@int@int Topic Title: recv Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board Topic Title: PIC32MX Starter Kit II + Ethernet PICtail Plus DB + I/O Expansion Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -293,7 +293,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapRecommendSize.setDependencies(tcpipStackHeapUpdate, tcpipHeapRecommendlist)
     
     tcpipStackHeapRecommendComment = tcpipStackComponent.createCommentSymbol("TCPIP_STACK_HEAP_SIZE_COMMENT",None)
-    tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer Heap Estimation documentation")
+    tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer to Heap Estimation documentation")
     tcpipStackHeapRecommendComment.setVisible( True )
     
     tcpipStackHeapSizeMask = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_HEAP_CALC_MASK", tcpipStackHeapRecommendSize)

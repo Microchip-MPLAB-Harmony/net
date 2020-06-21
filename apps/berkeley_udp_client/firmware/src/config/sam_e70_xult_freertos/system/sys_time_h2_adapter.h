@@ -85,8 +85,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 typedef uintptr_t SYS_TMR_HANDLE;
 typedef void ( * SYS_TMR_CALLBACK ) ( uintptr_t context, uint32_t currTick );
-#define SYS_TMR_HANDLE_INVALID          ( ( uintptr_t ) -1 )
-
+#if !defined SYS_TMR_HANDLE_INVALID
+#define SYS_TMR_HANDLE_INVALID          SYS_TIME_HANDLE_INVALID
+#endif
 typedef struct{
    SYS_TMR_CALLBACK   callback;
 }SYS_TIME_H2_ADAPTER_OBJ;

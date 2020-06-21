@@ -68,78 +68,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum
-{
-    CONSOLE_UART_READ_IDLE,
-    CONSOLE_UART_READ_BUSY,
-    CONSOLE_UART_READ_DONE,
-    CONSOLE_UART_READ_ERROR
-} CONSOLE_UART_READ_STATUS;
-
-typedef enum
-{
-    CONSOLE_UART_WRITE_IDLE,
-    CONSOLE_UART_WRITE_BUSY,
-    CONSOLE_UART_WRITE_DONE,
-    CONSOLE_UART_WRITE_ERROR,
-} CONSOLE_UART_WRITE_STATUS;
-
-typedef enum
-{
-    CONSOLE_UART_READ_STATE_IDLE,
-    CONSOLE_UART_READ_STATE_BUSY,
-} CONSOLE_UART_READ_STATE;
-
-typedef enum
-{
-    CONSOLE_UART_WRITE_STATE_IDLE,
-    CONSOLE_UART_WRITE_STATE_BUSY,
-} CONSOLE_UART_WRITE_STATE;
-
 typedef struct
 {
     /* Pointer to USART APIs used by the console system service*/
     const SYS_CONSOLE_UART_PLIB_INTERFACE* uartPLIB;
 
-    /* Current state of UART Read */
-    CONSOLE_UART_READ_STATE rdState;
-
-    /* Current state of UART Write */
-    CONSOLE_UART_WRITE_STATE wrState;
-
-    /* Status of reads */
-    volatile CONSOLE_UART_READ_STATUS readStatus;
-
-    /* Status of writes */
-    volatile CONSOLE_UART_WRITE_STATUS writeStatus;
-
     SYS_CONSOLE_STATUS status;
-
-    /* Interrupt source(s) for UART interrupt. */
-    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* interruptSources;
-
-    /* True if in interrupt context */
-    bool inInterruptContext;
-
-    /* Called when read request is complete */
-    SYS_CONSOLE_CALLBACK rdCallback;
-
-    /* Called when write request is complete */
-    SYS_CONSOLE_CALLBACK wrCallback;
-
-    Queue readQueue;
-
-    Queue writeQueue;
-
-    int32_t         usartTxReadyIntStatus;
-
-    int32_t         usartTxCompleteIntStatus;
-
-    int32_t         usartRxCompleteIntStatus;
-
-    int32_t         usartErrorIntStatus;
-
-    int32_t         usartInterruptStatus;
 
     /* Mutex to protect access to the transfer objects */
     OSAL_MUTEX_DECLARE(mutexTransferObjects);
@@ -147,13 +81,15 @@ typedef struct
 } CONSOLE_UART_DATA;
 
 void Console_UART_Initialize(uint32_t index, const void* initData);
-ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count);
-ssize_t Console_UART_Write(uint32_t index, int fd, const void* buf, size_t count);
-void Console_UART_Flush(uint32_t index);
-void Console_UART_RegisterCallback(uint32_t index, SYS_CONSOLE_CALLBACK cbFunc, SYS_CONSOLE_EVENT event);
-void Console_UART_Tasks (uint32_t index, SYS_MODULE_OBJ consObj);
-SYS_CONSOLE_STATUS Console_UART_Status (uint32_t index);
-
+SYS_CONSOLE_STATUS Console_UART_Status(uint32_t index);
+void Console_UART_Tasks(uint32_t index, SYS_MODULE_OBJ object);
+ssize_t Console_UART_Read(uint32_t index, void* pRdBuffer, size_t count);
+ssize_t Console_UART_ReadCountGet(uint32_t index);
+ssize_t Console_UART_ReadFreeBufferCountGet(uint32_t index);
+ssize_t Console_UART_Write(uint32_t index, const void* pWrBuffer, size_t count );
+ssize_t Console_UART_WriteFreeBufferCountGet(uint32_t index);
+ssize_t Console_UART_WriteCountGet(uint32_t index);
+bool Console_UART_Flush(uint32_t index);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus

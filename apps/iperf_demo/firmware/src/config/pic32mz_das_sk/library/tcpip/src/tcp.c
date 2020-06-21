@@ -189,6 +189,16 @@ static void _TcpCleanup(void);
 static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType); 
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 
+// function to get the socket signal in a consistent/safe way
+static __inline__ uint16_t __attribute__((always_inline)) _TcpSktGetSignalLocked(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_FUNCTION* pSigHandler, const void** pSigParam)
+{
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    *pSigHandler = pSkt->sigHandler;
+    *pSigParam = pSkt->sigParam;
+    uint16_t sigMask = pSkt->sigMask;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return sigMask;
+}
 
 static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
 static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN);
@@ -212,6 +222,8 @@ typedef enum
 
 
 static TCP_SOCKET   _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address);
+
+static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt);
 
 #if defined (TCPIP_STACK_USE_IPV4)
 static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
@@ -1573,6 +1585,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     uint16_t            calcChkSum;
     TCB_STUB*           pSkt; 
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
 
@@ -1632,11 +1646,12 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         pRxPkt->pDSeg->segLen -=  optionsSize + sizeof(*pTCPHdr);    
         _TcpHandleSeg(pSkt, pTCPHdr, tcpTotLength - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
 
-        if((sktEvent &= pSkt->sigMask) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if((sktEvent &= sigMask) != 0)
         {
-            if((sigHandler = pSkt->sigHandler) != 0)
+            if(sigHandler != 0)
             {
-                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, sktEvent, pSkt->sigParam);
+                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, sktEvent, sigParam);
             }
         }
 
@@ -1910,37 +1925,12 @@ static bool _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
   Function:
 	bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 
-  Summary:
-	Self-clearing semaphore inidicating socket reset.
-
-  Description:
-	This function is a self-clearing semaphore indicating whether or not
-	a socket has been disconnected since the previous call.  This function
-	works for all possible disconnections: a call to TCPIP_TCP_Disconnect, a FIN 
-	from the remote node, or an acknowledgement timeout caused by the loss
-	of a network link.  It also returns true after the first call to TCPIP_TCP_Initialize.
-	Applications should use this function to reset their state machines.
-	
-	This function was added due to the possibility of an error when relying
-	on TCPIP_TCP_IsConnected returing false to check for a condition requiring a
-	state machine reset.  If a socket is closed (due to a FIN ACK) and then
-	immediately reopened (due to a the arrival of a new SYN) in the same
-	cycle of the stack, calls to TCPIP_TCP_IsConnected by the application will 
-	never return false even though the socket has been disconnected.  This 
-	can cause errors for protocols such as HTTP in which a client will 
-	immediately open a new connection upon closing of a prior one.  Relying
-	on this function instead allows applications to trap those conditions 
-	and properly reset their internal state for the new connection.
-
-  Precondition:
-	TCP is initialized.
-
-  Parameters:
-	hTCP - The socket to check.
-
-  Return Values:
-  	true - The socket has been disconnected since the previous call.
-  	false - The socket has not been disconnected since the previous call.
+	This function was added due to the possibility of ambiguity when checking the socket state
+    reported by TCPIP_TCP_IsConnected.
+	If a socket is closed and then immediately reopened and a SYN received,
+	a call to TCPIP_TCP_IsConnected could still return true although the socket has been disconnected.
+    This can cause errors for protocols such as HTTP in which a client will 
+	immediately open a new connection upon closing of a prior one.
   ***************************************************************************/
 bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 {
@@ -1960,6 +1950,18 @@ bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
     return true;
 }
 
+bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
+{
+    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+
+    if(pSkt)
+    {
+        return pSkt->Flags.bRxFin != 0;
+    }
+
+    // no such socket
+    return false;
+}
 
 /*****************************************************************************
   Function:
@@ -2276,9 +2278,47 @@ bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
     remoteInfo->txSize = pSkt->txEnd - pSkt->txStart;
     remoteInfo->rxPending = _TCPIsGetReady(pSkt);
     remoteInfo->txPending = TCPIP_TCP_FifoTxFullGet(hTCP);
+    remoteInfo->flags = _TCP_SktFlagsGet(pSkt);
 
 	return true;
 }
+
+TCP_SOCKET_FLAGS TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP)
+{
+    TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_NONE;
+
+    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+	
+    if(pSkt != 0)
+    {
+        flags = _TCP_SktFlagsGet(pSkt);
+    }
+
+    return flags;
+}
+
+static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt)
+{
+    TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_VALID;
+
+    if(_TCP_IsConnected(pSkt))
+    {
+        flags |= TCP_SOCKET_FLAG_CONNECTED;
+    }
+
+    if(pSkt->Flags.bSocketReset)
+    {
+        flags |= TCP_SOCKET_FLAG_RST;
+    }
+
+    if(pSkt->Flags.bRxFin)
+    {
+        flags |= TCP_SOCKET_FLAG_FIN;
+    }
+
+    return flags;
+}
+
 
 int TCPIP_TCP_SocketsNumberGet(void)
 {
@@ -3564,6 +3604,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     TCB_STUB*       pSkt; 
     TCPIP_NET_HANDLE     pPktIf;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
 
@@ -3619,11 +3661,12 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         _TcpHandleSeg(pSkt, pTCPHdr, dataLen - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
         pPktIf = pRxPkt->pktIf;
 
-        if((sktEvent &= pSkt->sigMask) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if((sktEvent &= sigMask) != 0)
         {
-            if((sigHandler = pSkt->sigHandler) != 0)
+            if(sigHandler != 0)
             {
-                (*sigHandler)(pSkt->sktIx, pPktIf, sktEvent, pSkt->sigParam);
+                (*sigHandler)(pSkt->sktIx, pPktIf, sktEvent, sigParam);
             }
         }
 
@@ -3673,6 +3716,9 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
     void*           pSendPkt;
     uint16_t 		mss = 0;
     TCP_HEADER *    header = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
 
 #if (TCPIP_TCP_QUIET_TIME != 0)
     if(!tcpQuietDone)
@@ -4052,9 +4098,10 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
     if(sendRes == _TCP_SEND_OK && (vTCPFlags & RST) != 0 )
     {   // signal that we reset the connection
-        if(pSkt->sigHandler != 0 && (pSkt->sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if(sigHandler != 0 && (sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
         {
-            (*pSkt->sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, pSkt->sigParam);
+            (*sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, sigParam);
         } 
     }
 
@@ -4321,6 +4368,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 	pSkt->Flags.bTXASAPWithoutTimerReset = 0;
 	pSkt->Flags.bTXFIN = 0;
 	pSkt->Flags.bSocketReset = 1;
+	pSkt->Flags.bRxFin = 0;
 
 
 	pSkt->flags.bFINSent = 0;
@@ -4388,7 +4436,9 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
     // a socket server will listen after this Close operation
     bool    sktIsKilled;
     bool    freePkt;
-    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void* sigParam;
+    uint16_t    sigMask;
     TCPIP_NET_HANDLE pSktNet = 0;
     TCP_SOCKET   sktIx = 0; 
 
@@ -4445,9 +4495,10 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
         break;
     }
 
-    if((tcpEvent &= pSkt->sigMask))
+    sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+    if((tcpEvent &= sigMask))
     {
-        if((sigHandler = pSkt->sigHandler))
+        if(sigHandler != 0)
         {
             sktIx = pSkt->sktIx;
             pSktNet = pSkt->pSktNet;
@@ -4470,7 +4521,7 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
     if(tcpEvent)
     {   // notify socket user
-        (*sigHandler)(sktIx, pSktNet, tcpEvent, 0);
+        (*sigHandler)(sktIx, pSktNet, tcpEvent, sigParam);
     }
 }
 
@@ -4878,6 +4929,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
         if(localHeaderFlags & RST)
         {
             *pSktEvent |= TCPIP_TCP_SIGNAL_RX_RST;
+            pSkt->Flags.bSocketReset = 1;
         }
         _TcpCloseSocket(pSkt, 0);
         return;
@@ -5321,6 +5373,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             pSkt->RemoteSEQ++;
 
             *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN;
+            pSkt->Flags.bRxFin = 1;
             switch(pSkt->smState)
             {
                 case TCPIP_TCP_STATE_SYN_RECEIVED:
@@ -6262,26 +6315,31 @@ static bool _TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t lo
 
 TCPIP_TCP_SIGNAL_HANDLE TCPIP_TCP_SignalHandlerRegister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_TYPE sigMask, TCPIP_TCP_SIGNAL_FUNCTION handler, const void* hParam)
 {
+    TCPIP_TCP_SIGNAL_HANDLE sHandle = 0;
 
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     if(handler != 0)
     {
-
         TCB_STUB* pSkt = _TcpSocketChk(s);
         if(pSkt != 0 && pSkt->sigHandler == 0)
         {
             pSkt->sigHandler = handler;
             pSkt->sigMask = (uint16_t)sigMask;
             pSkt->sigParam = hParam;
-            return (TCPIP_TCP_SIGNAL_HANDLE)handler;
+            sHandle = (TCPIP_TCP_SIGNAL_HANDLE)handler;
             // Note: this may change if multiple notfication handlers required 
         }
     }
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
 
-    return 0;
+    return sHandle;
 }
 
 bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSig)
 {
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
     TCB_STUB* pSkt = _TcpSocketChk(s);
 
     if(pSkt != 0)
@@ -6290,11 +6348,12 @@ bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSi
         {
             pSkt->sigHandler = 0;
             pSkt->sigMask = 0;
-            return true;
+            res = true;
         }
     }
 
-    return false;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
 }
 
 bool TCPIP_TCP_IsReady(void)

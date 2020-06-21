@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00264.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_ftp_server_usb_fatfs</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00265.html" target="topic">Previous</a> | <a href="00264.html" target="topic">Up</a> | <a href="00222.html" target="topic">Next</a></div>
+<a href="00267.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="01108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP USB FATFS Running Demo Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Running the Demonstration</div>
 </div>
@@ -49,89 +49,228 @@ Running the Demonstration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-To view the web page hosted by the demonstration application, open a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, http://mchpboard_c or https://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00351.html" target="topic">here</a>.&nbsp;</p>
+ &nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+For SAM E54 Xplained Pro Evaluation Kits&nbsp;</p>
 <p class="Element10">
-<strong>For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits</strong>&nbsp;</p>
+1. Ensure a USB micro AB to type A USB Host receptacle converter is connected to the SAME54 device.&nbsp;</p>
 <p class="Element10">
-Please use the following procedure to run the demonstration:
-<ol class="Element634">
-<li value="1" class="Element604">Configure the Development Board as given <a href="00223.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
-<li value="2" class="Element604">Make the demonstration setup as shown <a href="00351.html" target="topic">here</a>.</li>
-<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
-<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element604">Restart the demonstration by pressing the 'RESET' button on the board.</li>
-<li value="8" class="Element604">See that the initialization prints on the serial port terminal.</li>
-<li value="9" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
-</ol>&nbsp;</p>
+2. Make the demonstration setup as shown here.&nbsp;</p>
 <p class="Element10">
-<strong>For PIC32MZ Starter Kits</strong>
-<ol class="Element634">
-<li value="1" class="Element604">Configure the Development Board as given <a href="00267.html" target="topic">here</a>.</li>
-<li value="2" class="Element604">Make the demonstration setup as shown <a href="00351.html" target="topic">here</a>.</li>
-<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
-<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element604">See that the initialization prints on the serial port terminal.</li>
-<li value="8" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
-</ol>&nbsp;</p>
+3. Build and download the demonstration project on the target board.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+4. A virtual COM port will be detected on the computer, when the USB cable is connected.&nbsp;</p>
 <p class="Element10">
-An HTTP server is hosted by the demonstration application. Open<span style="color: #FFFFFF">_</span>a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, https://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00351.html" target="topic">here</a>.&nbsp;</p>
+5. Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+6. Set the serial baud rate to 115200 baud in the terminal application.&nbsp;</p>
 <p class="Element10">
-The demonstration application features following:
-<ul class="Element634">
-<li class="Element604"><i>Real-time Hardware Control and Dynamic Variables</i> - On the Overview page the LEDs can be clicked to toggle the LEDs on the Microchip hardware development board. The SWITCHes on the Microchip hardware development board can be pressed to toggle the Buttons on the web page. The dynamic variables can be updated in real-time on the HTTP server.</li>
-</ul></p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-For the LED and SWITCH functionality portion of the demonstration, configure the GPIOs connected to LEDs and Switches on Microchip hardware development board, through the Pin Configuration manager in MPLAB® Harmony Configurator (MHC).&nbsp;</div></td></tr></table></div></div>
+7. Restart the demonstration by pressing the 'RESET' button on the board.&nbsp;</p>
 <p class="Element10">
-
-<ul class="Element634">
-<li class="Element604"><i>Form Processing</i> - Input can be handled from the client by using the GET and POST methods (this functionality controls the on-board LEDs and is operational only on the Explorer 16 Development Board)</li>
-<li class="Element604"><i>Authentication</i> - Shows an example of the commonly used restricted access feature</li>
-<li class="Element604"><i>Cookies</i> - Shows an example of storing small text strings on the client side</li>
-<li class="Element604"><i>Server Side Includes</i> - An example of how SSI can be used to support dynamic content</li>
-<li class="Element604"><i>File Uploads</i> - Shows an example of a file upload using the POST method. The HTTP server can<span style="color: #FFFFFF">_</span>accept<span style="color: #FFFFFF">_</span>a user-defined MPFS/MPFS2 image file for web pages.</li>
-<li class="Element604"><i>Send E-mail</i> - Shows simple SMTP POST methods</li>
-<li class="Element604"><i>Dynamic DNS</i> - Exercises Dynamic DNS capabilities</li>
-<li class="Element604"><i>Network Configuration</i> - The MAC address, host name, and IP address of the evaluation kit can be viewed in the Network Configuration page and some configurations can be updated</li>
-<li class="Element604"><i>MPFS Upload</i> - A new set of web pages can be uploaded to the web server using this feature, which is accessed through <a href="#" onclick="openExternalLink('http://mchpboard_c/mpfsupload');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://mchpboard_c/mpfsupload</a></li>
-</ul></p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-
-<ol class="Element634">
-<li value="1" class="Element604">The location of the MPFS image is fixed at the beginning of the Flash page specified by DRV_MEMORY_DEVICE_START_ADDRESS. The size of the MPFS upload is limited to DRV_MEMORY_DEVICE_MEDIA_SIZE in the demonstration.</li>
-<li value="2" class="Element604">The HTTP File Upload functionality has to be enabled when the project is generated.</li>
-</ol>&nbsp;</div></td></tr></table></div></div>
+8. See that the initialization prints on the serial port terminal.&nbsp;</p>
 <p class="Element10">
-<img src="web_net_server.png" border="0" alt="" title=""></p></div>
+9. When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.&nbsp;</p>
+<p class="Element10">
+An HTTP server is hosted by the demonstration application. Open_a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, https://mchpboard_c), and then pressing Enter. Refer to Note 4 &amp; 5 here.&nbsp;</p>
+<p class="Element10">
+Also to transfer file , FTP output –&nbsp;</p>
+<p class="Element10">
+C:\&gt;ftp 192.168.100.11&nbsp;</p>
+<p class="Element10">
+Connected to 192.168.100.11.&nbsp;</p>
+<p class="Element10">
+220 Ready&nbsp;</p>
+<p class="Element10">
+User (192.168.100.11:(none)): Microchip&nbsp;</p>
+<p class="Element10">
+331 Password required&nbsp;</p>
+<p class="Element10">
+Password:&nbsp;</p>
+<p class="Element10">
+230 Logged in&nbsp;</p>
+<p class="Element10">
+ftp&gt; pwd&nbsp;</p>
+<p class="Element10">
+257 &quot;/&quot; is cwd&nbsp;</p>
+<p class="Element10">
+ftp&gt; dir&nbsp;</p>
+<p class="Element10">
+200 Command Ok&nbsp;</p>
+<p class="Element10">
+125 File status okay; about to open data connection&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 36 Aug 09 2013 file.txt&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 12 Aug 09 2013 file1.txt&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Feb 25 2019 System Volume Information&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 24 Aug 09 2013 file_hs.txt&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 12 Aug 09 2013 file_hs3.txt&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 468 Aug 09 2013 file_hs5.txt&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 42077 Aug 09 2013 Presentation1.pptx&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jul 16 2019 ATE_EtherCAT_Demo&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 9287357 Jul 17 2019 ATE_EtherCAT_Demo.7z&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jul 17 2019 Dell_Laptop_bakcup&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 979594 Dec 03 2019 IoT Demo.pptx&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Dec 10 2019 wifi_rgb_easy_configuration&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Nov 14 2019 wireless&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Nov 26 2019 test_bypass_http_net_server&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 8186726 Nov 27 2019 test_bypass_http_server_1.zip&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jan 30 2020 FOE_BinFIle&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jan 31 2020 FoE_Hex_imagefiles&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Mar 16 2020 exam&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jun 02 2020 webpages&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 525 Jun 09 2020 New Volume (D) - Shortcut.lnk&nbsp;</p>
+<p class="Element10">
+226 Closing data connection. Requested file action successful.&nbsp;</p>
+<p class="Element10">
+ftp: 1424 bytes received in 0.20Seconds 7.19Kbytes/sec.&nbsp;</p>
+<p class="Element10">
+ftp&gt; cd webpages&nbsp;</p>
+<p class="Element10">
+250 /webpages/ is new cwd&nbsp;</p>
+<p class="Element10">
+ftp&gt; dir&nbsp;</p>
+<p class="Element10">
+200 Command Ok&nbsp;</p>
+<p class="Element10">
+125 File status okay; about to open data connection&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jun 02 2020 dyndns&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jun 02 2020 email&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jun 02 2020 protect&nbsp;</p>
+<p class="Element10">
+drwx------ 0 0 0 0 Jun 02 2020 snmp&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 1388 May 03 2019 auth.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 2104 Feb 11 2020 cookies.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 1986 Feb 11 2020 dynvars.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 161 Feb 11 2020 footer.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 2068 Feb 11 2020 forms.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 2150 Feb 11 2020 harmony.gif&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 1232 Feb 11 2020 header.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 3798 Feb 11 2020 index.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 21 Feb 11 2020 leds.cgi&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 3183 Feb 11 2020 mchp.css&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 1263 Feb 11 2020 mchp.gif&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 3721 Feb 11 2020 mchp.js&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 512 Feb 11 2020 snmp.bib&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 2032 Feb 11 2020 ssi.htm&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 183 Feb 11 2020 status.xml&nbsp;</p>
+<p class="Element10">
+-rwx------ 0 0 0 970 Feb 11 2020 upload.htm&nbsp;</p>
+<p class="Element10">
+226 Closing data connection. Requested file action successful.&nbsp;</p>
+<p class="Element10">
+ftp: 1267 bytes received in 0.17Seconds 7.45Kbytes/sec.&nbsp;</p>
+<p class="Element10">
+ftp&gt; get mchp.css&nbsp;</p>
+<p class="Element10">
+200 Command Ok&nbsp;</p>
+<p class="Element10">
+150 File status okay; about to open data connection&nbsp;</p>
+<p class="Element10">
+226 Transfer Complete&nbsp;</p>
+<p class="Element10">
+ftp: 3183 bytes received in 1.42Seconds 2.24Kbytes/sec.&nbsp;</p>
+<p class="Element10">
+ftp&gt; put ActivityLog.xml&nbsp;</p>
+<p class="Element10">
+200 Command Ok&nbsp;</p>
+<p class="Element10">
+150 File status okay; about to open data connection&nbsp;</p>
+<p class="Element10">
+226 Transfer Complete&nbsp;</p>
+<p class="Element10">
+ftp: 86262 bytes sent in 0.56Seconds 152.68Kbytes/sec.&nbsp;</p>
+<p class="Element10">
+ftp&gt; ls&nbsp;</p>
+<p class="Element10">
+200 Command Ok&nbsp;</p>
+<p class="Element10">
+125 File status okay; about to open data connection&nbsp;</p>
+<p class="Element10">
+Date Type FileSize filename&nbsp;</p>
+<p class="Element10">
+05-03-2019 11:54:24 file 1388 auth.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:38 file 2104 cookies.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:38 file 1986 dynvars.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:38 file 161 footer.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:40 file 2068 forms.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:40 file 2150 harmony.gif&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:40 file 1232 header.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:40 file 3798 index.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:42 file 21 leds.cgi&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:42 file 3183 mchp.css&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:42 file 1263 mchp.gif&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:42 file 3721 mchp.js&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:44 file 512 snmp.bib&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:46 file 2032 ssi.htm&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:46 file 183 status.xml&nbsp;</p>
+<p class="Element10">
+02-11-2020 16:47:46 file 970 upload.htm&nbsp;</p>
+<p class="Element10">
+08-09-2013 15:06:00 file 86262 ActivityLog.xml&nbsp;</p>
+<p class="Element10">
+226 Closing data connection. Requested file action successful.&nbsp;</p>
+<p class="Element10">
+ftp: 799 bytes received in 0.16Seconds 4.99Kbytes/sec.&nbsp;</p>
+<p class="Element10">
+ftp&gt;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00264.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
+<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_ftp_server_usb_fatfs</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -139,13 +278,13 @@ For the LED and SWITCH functionality portion of the demonstration, configure the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00265.html" target="topic">Previous</a> | <a href="00264.html" target="topic">Up</a> | <a href="00222.html" target="topic">Next</a></div>
+<a href="00267.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="01108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP USB FATFS Running Demo Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

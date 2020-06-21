@@ -561,7 +561,7 @@ static void TCPIP_HTTP_Process(void)
 
         // If a socket is disconnected at any time 
         // forget about it and return to idle state.
-        if(TCPIP_TCP_WasReset(pHttpCon->socket))
+        if(TCPIP_TCP_WasReset(pHttpCon->socket) || TCPIP_TCP_WasDisconnected(pHttpCon->socket))
         {
             pHttpCon->sm = SM_HTTP_IDLE;
             pHttpCon->file_sm = SM_IDLE;

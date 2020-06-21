@@ -92,6 +92,15 @@ void _SYS_FS_Tasks(  void *pvParameters  )
 }
 
 
+void _DRV_MEMORY_0_Tasks(  void *pvParameters  )
+{
+    while(1)
+    {
+        DRV_MEMORY_Tasks(sysObj.drvMemory0);
+        vTaskDelay(DRV_MEMORY_RTOS_DELAY_IDX0 / portTICK_PERIOD_MS);
+    }
+}
+
 
 void _NET_PRES_Tasks(  void *pvParameters  )
 {
@@ -124,6 +133,7 @@ void _SYS_CMD_Tasks(  void *pvParameters  )
 
 
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -141,6 +151,7 @@ void SYS_Tasks ( void )
 {
     /* Maintain system services */
     
+
     xTaskCreate( _SYS_FS_Tasks,
         "SYS_FS_TASKS",
         SYS_FS_STACK_SIZE,
@@ -171,6 +182,13 @@ void SYS_Tasks ( void )
     );
 
 
+    xTaskCreate( _DRV_MEMORY_0_Tasks,
+        "DRV_MEM_0_TASKS",
+        DRV_MEMORY_STACK_SIZE_IDX0,
+        (void*)NULL,
+        DRV_MEMORY_PRIORITY_IDX0,
+        (TaskHandle_t*)NULL
+    );
 
 
 
@@ -205,6 +223,7 @@ void SYS_Tasks ( void )
                 NULL,
                 1,
                 &xAPP_Tasks);
+
 
 
 

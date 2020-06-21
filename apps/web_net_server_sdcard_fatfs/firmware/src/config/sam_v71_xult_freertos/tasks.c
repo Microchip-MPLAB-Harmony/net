@@ -67,6 +67,7 @@ void _APP_Tasks(  void *pvParameters  )
     while(1)
     {
         APP_Tasks();
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 
@@ -132,6 +133,7 @@ void _DRV_SDMMC0_Tasks(  void *pvParameters  )
 
 
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -149,6 +151,7 @@ void SYS_Tasks ( void )
 {
     /* Maintain system services */
     
+
     xTaskCreate( _SYS_FS_Tasks,
         "SYS_FS_TASKS",
         SYS_FS_STACK_SIZE,
@@ -222,6 +225,7 @@ void SYS_Tasks ( void )
                 NULL,
                 1,
                 &xAPP_Tasks);
+
 
 
 

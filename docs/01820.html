@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Abstraction Model</title>
+<title>How the Library Works</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04237.html" target="topic">Telnet Module</a> &gt; <a href="01826.html" target="topic">Introduction</a> &gt; <a href="01829.html" target="topic">Using the Library</a> &gt; <a href="01820.html" target="topic">Abstraction Model</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01827.html" target="topic">Using the Library</a> &gt; <a href="01820.html" target="topic">How the Library Works</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01829.html" target="topic">Previous</a> | <a href="01829.html" target="topic">Up</a> | <a href="01828.html" target="topic">Next</a></div>
+<a href="01823.html" target="topic">Previous</a> | <a href="01827.html" target="topic">Up</a> | <a href="01817.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Abstraction Model</div>
+How the Library Works</div>
 </div>
 </div>
 
@@ -49,19 +49,40 @@ Abstraction Model</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Currently, the Telnet TCP/IP Library runs in the background as a server and does not expose any API functions.&nbsp;</p>
+Connections made over TCP guarantee data transfer at the expense of throughput. Connections are made through a three-way handshake process, ensuring a one-to-one connection. Remote nodes advertise how much data they are ready to receive, and all data transmitted must be acknowledged. If a remote node fails to acknowledge the receipt of data, it is automatically retransmitted. This ensures that network errors such as lost, corrupted, or out-of-order packets are automatically corrected.&nbsp;</p>
 <p class="Element10">
-It serves incoming connections by sending the received data string to the command processor, which outputs each command reply to the Telnet channel. </p><p class="Element10" style="text-align: center;">
-<strong>Telnet<span style="color: #000000"> Software Abstraction Block Diagram</strong></span>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="TCPIP TELNET telnet_flow.png" border="0" alt="" title="">&nbsp;</p></div>
+To accomplish this, TCP must use buffers for both the transmit and receive operations. Once the transmit buffer is full, no more data can be sent until the remote node has acknowledged receipt.&nbsp;</p>
+<p class="Element10">
+When the Harmony TCP/IP Stack is used without a RTOS, the application must return to the main system loop to allow the other services in the system, including the TCP/IP stack, to advance.&nbsp;</p>
+<p class="Element10">
+The remote node cannot transmit more data until the local device has acknowledged receipt and receiving space is available in the buffer. When a local application needs to read more data, it must return to the main system/application loop and wait for a new packet to arrive.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01817.html" target="topic">Core Functionality</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic describes the core functionality of the TCP/IP Stack Library TCP module.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04237.html" target="topic">Telnet Module</a> &gt; <a href="01826.html" target="topic">Introduction</a> &gt; <a href="01829.html" target="topic">Using the Library</a> &gt; <a href="01820.html" target="topic">Abstraction Model</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01827.html" target="topic">Using the Library</a> &gt; <a href="01820.html" target="topic">How the Library Works</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -69,13 +90,13 @@ It serves incoming connections by sending the received data string to the comman
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01829.html" target="topic">Previous</a> | <a href="01829.html" target="topic">Up</a> | <a href="01828.html" target="topic">Next</a></div>
+<a href="01823.html" target="topic">Previous</a> | <a href="01827.html" target="topic">Up</a> | <a href="01817.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

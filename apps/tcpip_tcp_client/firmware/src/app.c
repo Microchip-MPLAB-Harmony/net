@@ -232,6 +232,7 @@ void APP_Tasks ( void )
                         {
                             SYS_CONSOLE_MESSAGE("Starting connection\r\n");
                             appData.state = APP_TCPIP_WAIT_FOR_CONNECTION;
+                            TCPIP_TCP_WasReset(appData.socket);     // clear the reset flag
                         }
 
                     }
@@ -283,6 +284,7 @@ void APP_Tasks ( void )
                     }
                     SYS_CONSOLE_MESSAGE("Starting connection\r\n");
                     appData.state = APP_TCPIP_WAIT_FOR_CONNECTION;
+                    TCPIP_TCP_WasReset(appData.socket);     // clear the reset flag
                 }
                 break;
             }
@@ -312,16 +314,19 @@ void APP_Tasks ( void )
         {
             char buffer[80];
             memset(buffer, 0, sizeof(buffer));
-            if (!TCPIP_TCP_IsConnected(appData.socket))
-            {
-                SYS_CONSOLE_MESSAGE("\r\nConnection Closed\r\n");
-                appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
-                break;
-            }
-            if (TCPIP_TCP_GetIsReady(appData.socket))
+            while (TCPIP_TCP_GetIsReady(appData.socket))
             {
                 TCPIP_TCP_ArrayGet(appData.socket, (uint8_t*)buffer, sizeof(buffer) - 1);
                 SYS_CONSOLE_PRINT("%s", buffer);
+            }
+
+            if (!TCPIP_TCP_IsConnected(appData.socket) || TCPIP_TCP_WasDisconnected(appData.socket))
+            {
+                SYS_CONSOLE_MESSAGE("\r\nConnection Closed\r\n");
+                TCPIP_TCP_Close(appData.socket);
+                appData.socket = INVALID_SOCKET;
+                appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
+                break;
             }
         }
         break;

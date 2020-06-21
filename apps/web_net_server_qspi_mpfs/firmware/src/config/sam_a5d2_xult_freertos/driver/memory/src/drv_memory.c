@@ -48,16 +48,13 @@
 // *****************************************************************************
 
 #include "driver/memory/src/drv_memory_local.h"
-#include "system/time/sys_time.h"
+#include "system/debug/sys_debug.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global objects
 // *****************************************************************************
 // *****************************************************************************
-#ifndef SYS_DEBUG_PRINT
-    #define SYS_DEBUG_PRINT(x,y)
-#endif
 
 /*************************************************
  * Hardware instance objects
@@ -94,6 +91,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleErase
     uint32_t blockAddress,
     uint32_t nBlocks
 );
+
 static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleEraseWrite
 (
     DRV_MEMORY_OBJECT *dObj,
@@ -120,13 +118,6 @@ static void DRV_MEMORY_EventHandler( MEMORY_DEVICE_TRANSFER_STATUS status, uintp
 {
     DRV_MEMORY_OBJECT *dObj = (DRV_MEMORY_OBJECT *)context;
     dObj->isTransferDone = true;
-    OSAL_SEM_PostISR(&dObj->transferDone);
-}
-
-static void DRV_MEMORY_TimerHandler( uintptr_t context )
-{
-    DRV_MEMORY_OBJECT *dObj = (DRV_MEMORY_OBJECT *)context;
-    OSAL_SEM_PostISR(&dObj->transferDone);
 }
 
 static inline uint16_t DRV_MEMORY_UPDATE_TOKEN(uint16_t token)
@@ -140,9 +131,29 @@ static inline uint16_t DRV_MEMORY_UPDATE_TOKEN(uint16_t token)
     return token;
 }
 
+/* This functions generates the Free pool of buffer objects */
+static void DRV_MEMORY_BufferObjectsInit( DRV_MEMORY_OBJECT *dObj )
+{
+    uint32_t i;
 
-/* This function populates buffer object with the transfer
- * parameters. It also generates a new command handle for the request.
+    dObj->buffObjFree = dObj->buffObjArr;
+    dObj->buffObjFree[0].index = 0;
+
+    if(dObj->queueSize == 1)
+    {
+        return;
+    }
+
+    for(i=1; i < dObj->queueSize; i++ )
+    {
+        dObj->buffObjFree[i-1].next = &dObj->buffObjFree[i];
+        dObj->buffObjFree[i].index = i;
+    }
+}
+
+/* This function finds a free buffer object and populates it with the transfer
+ * parameters. It also generates a new command handle for the request and
+ * adds it to the queue head for processing.
  */
 static void DRV_MEMORY_AllocateBufferObject
 (
@@ -157,15 +168,23 @@ static void DRV_MEMORY_AllocateBufferObject
     DRV_MEMORY_OBJECT *dObj = &gDrvMemoryObj[clientObj->drvIndex];
     DRV_MEMORY_BUFFER_OBJECT *bufferObj = NULL;
 
-    bufferObj = &dObj->currentBufObj;
+    if(dObj->buffObjFree == (DRV_MEMORY_BUFFER_OBJECT *)NULL)
+    {
+        return;
+    }
 
-    bufferObj->commandHandle = DRV_MEMORY_MAKE_HANDLE(dObj->bufferToken, clientObj->drvIndex, 0);
+    /* Get transfer object from the free list */
+    bufferObj = dObj->buffObjFree;
+    dObj->buffObjFree = dObj->buffObjFree->next;
+
+    bufferObj->commandHandle = DRV_MEMORY_MAKE_HANDLE(dObj->bufferToken, clientObj->drvIndex, bufferObj->index);
     bufferObj->hClient       = clientObj;
     bufferObj->buffer        = buffer;
     bufferObj->blockStart    = blockStart;
     bufferObj->nBlocks       = nBlocks;
     bufferObj->opType        = opType;
     bufferObj->status        = DRV_MEMORY_COMMAND_QUEUED;
+    bufferObj->next          = (DRV_MEMORY_BUFFER_OBJECT *)NULL;
 
     /* Update the token number. */
     dObj->bufferToken = DRV_MEMORY_UPDATE_TOKEN(dObj->bufferToken);
@@ -173,6 +192,20 @@ static void DRV_MEMORY_AllocateBufferObject
     if (handle != NULL)
     {
         *handle = bufferObj->commandHandle;
+    }
+
+    if (dObj->queueHead == NULL)
+    {
+        /* This is the first buffer in the queue */
+        dObj->queueHead = bufferObj;
+        dObj->queueTail = bufferObj;
+    }
+    else
+    {
+        /* This means the write queue is not empty. We must add
+         * the buffer object to the end of the queue */
+        dObj->queueTail->next = bufferObj;
+        dObj->queueTail = bufferObj;
     }
 }
 
@@ -224,6 +257,61 @@ static DRV_MEMORY_CLIENT_OBJECT * DRV_MEMORY_DriverHandleValidate
     }
 
     return (clientObj);
+}
+
+static void DRV_MEMORY_RemoveClientBufferObjects
+(
+    DRV_MEMORY_CLIENT_OBJECT *clientObj,
+    DRV_MEMORY_OBJECT *dObj
+)
+{
+    DRV_MEMORY_BUFFER_OBJECT *current = NULL;
+    DRV_MEMORY_BUFFER_OBJECT *previous = NULL;
+    DRV_MEMORY_BUFFER_OBJECT *dirty = NULL;
+
+    current = dObj->queueHead;
+
+    while(current != NULL)
+    {
+        if(clientObj == (DRV_MEMORY_CLIENT_OBJECT *)current->hClient)
+        {
+            /* That means this transfer object is owned
+               by this client. This transfer object should
+               be removed. The following code removes
+               the object from a linked list queue. */
+            dirty = current;
+
+            if(previous == NULL)
+            {
+                dObj->queueHead = current->next;
+                previous = current;
+            }
+            else
+            {
+                previous->next = current->next;
+            }
+
+            current = current->next;
+
+            /* return the dirty object to the free list */
+            dirty->next = dObj->buffObjFree;
+            dObj->buffObjFree = dirty;
+        }
+        else
+        {
+            previous = current;
+            current = current->next;
+        }
+    }
+
+    if(dObj->queueHead != (DRV_MEMORY_BUFFER_OBJECT *)NULL)
+    {
+        dObj->queueTail = (DRV_MEMORY_BUFFER_OBJECT *)NULL;
+    }
+    else
+    {
+        dObj->queueTail = previous;
+    }
 }
 
 /* This function updates the driver object's geometry information for the memory
@@ -337,6 +425,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleWrite
         case DRV_MEMORY_WRITE_MEM:
         {
             dObj->isTransferDone = false;
+
             if (dObj->memoryDevice->PageWrite(dObj->memDevHandle, (void *)dObj->writePtr, dObj->blockAddress) == true)
             {
                 dObj->writeState = DRV_MEMORY_WRITE_MEM_STATUS;
@@ -400,6 +489,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleErase
         case DRV_MEMORY_ERASE_CMD:
         {
             dObj->isTransferDone = false;
+
             if (dObj->memoryDevice->SectorErase(dObj->memDevHandle, dObj->blockAddress) == true)
             {
                 dObj->eraseState = DRV_MEMORY_ERASE_CMD_STATUS;
@@ -446,7 +536,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleEraseWrite
     uint32_t nBlocks
 )
 {
-    DRV_MEMORY_BUFFER_OBJECT *bufferObj = &dObj->currentBufObj;
+    DRV_MEMORY_BUFFER_OBJECT *bufferObj = dObj->currentBufObj;
     uint8_t pagesPerSector = (dObj->eraseBlockSize / dObj->writeBlockSize);
     uint32_t readBlockStart = 0;
 
@@ -557,91 +647,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleEraseWrite
     return ((MEMORY_DEVICE_TRANSFER_STATUS)transferStatus);
 }
 
-static bool DRV_MEMORY_StartXfer( DRV_MEMORY_OBJECT *dObj )
-{
-    DRV_MEMORY_CLIENT_OBJECT *clientObj = NULL;
-    DRV_MEMORY_BUFFER_OBJECT *bufferObj = NULL;
-    DRV_MEMORY_EVENT event = DRV_MEMORY_EVENT_COMMAND_ERROR;
-    MEMORY_DEVICE_TRANSFER_STATUS transferStatus = MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN;
-    bool isSuccess = false;
-    SYS_TIME_HANDLE handle = SYS_TIME_HANDLE_INVALID;
-
-    bufferObj = &dObj->currentBufObj;
-
-    /* Init the various sub state machines. */
-    dObj->readState  = DRV_MEMORY_READ_INIT;
-    dObj->writeState = DRV_MEMORY_WRITE_INIT;
-    dObj->eraseState = DRV_MEMORY_ERASE_INIT;
-    dObj->ewState = DRV_MEMORY_EW_INIT;
-
-    bufferObj->status = DRV_MEMORY_COMMAND_IN_PROGRESS;
-
-    transferStatus = gMemoryXferFuncPtr[bufferObj->opType](dObj, &bufferObj->buffer[0], bufferObj->blockStart, bufferObj->nBlocks);
-
-    while (transferStatus == MEMORY_DEVICE_TRANSFER_BUSY)
-    {
-        if ((dObj->isMemDevInterruptEnabled == false) && (dObj->memDevStatusPollUs > 0))
-        {
-            handle = SYS_TIME_CallbackRegisterUS(DRV_MEMORY_TimerHandler, (uintptr_t)dObj, dObj->memDevStatusPollUs, SYS_TIME_SINGLE);
-
-            if (handle == SYS_TIME_HANDLE_INVALID)
-            {
-                return false;
-            }
-            /* Wait for the request to process before checking status. This semaphore is released from the
-             * system timer handler
-            */
-            if (OSAL_RESULT_TRUE == OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
-            {
-                    SYS_TIME_TimerDestroy(handle);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else if ((dObj->isMemDevInterruptEnabled == true) && (dObj->memDevStatusPollUs == 0))
-        {
-            if (dObj->isTransferDone == false)
-            {
-                /* Wait for the request to process before checking status. This semaphore is released from the
-                 * event handler called from attached memory device.
-                */
-                if (OSAL_RESULT_TRUE != OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
-                {
-                    return false;
-                }
-            }
-        }
-
-        transferStatus = gMemoryXferFuncPtr[bufferObj->opType](dObj, &bufferObj->buffer[0], bufferObj->blockStart, bufferObj->nBlocks);
-    }
-
-    if (transferStatus == MEMORY_DEVICE_TRANSFER_COMPLETED)
-    {
-        bufferObj->status = DRV_MEMORY_COMMAND_COMPLETED;
-        event = DRV_MEMORY_EVENT_COMMAND_COMPLETE;
-        isSuccess = true;
-    }
-    else if (transferStatus >= MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN)
-    {
-        /* The operation has failed. */
-        bufferObj->status = DRV_MEMORY_COMMAND_ERROR_UNKNOWN;
-        event = DRV_MEMORY_EVENT_COMMAND_ERROR;
-    }
-
-    clientObj = (DRV_MEMORY_CLIENT_OBJECT *)bufferObj->hClient;
-
-    if(clientObj->transferHandler != NULL)
-    {
-        /* Call the event handler */
-        clientObj->transferHandler((SYS_MEDIA_BLOCK_EVENT)event, (DRV_MEMORY_COMMAND_HANDLE)bufferObj->commandHandle, clientObj->context);
-    }
-
-    return isSuccess;
-}
-
-static bool DRV_MEMORY_SetupXfer
+static void DRV_MEMORY_SetupXfer
 (
     const DRV_HANDLE handle,
     DRV_MEMORY_COMMAND_HANDLE *commandHandle,
@@ -655,7 +661,6 @@ static bool DRV_MEMORY_SetupXfer
 {
     DRV_MEMORY_CLIENT_OBJECT *clientObj = NULL;
     DRV_MEMORY_OBJECT *dObj = NULL;
-    bool isSuccess = false;
 
     if (commandHandle != NULL)
     {
@@ -667,29 +672,29 @@ static bool DRV_MEMORY_SetupXfer
 
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Invalid Memory driver handle.\n");
-        return isSuccess;
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Invalid Memory driver handle.\n");
+        return;
     }
 
     /* Check if the driver was opened with read intent */
     if (!(clientObj->intent & io_intent))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Opened with invalid intent.\n");
-        return isSuccess;
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Opened with invalid intent.\n");
+        return;
     }
 
     dObj = &gDrvMemoryObj[clientObj->drvIndex];
 
     if ((buffer == NULL) && (opType != DRV_MEMORY_OPERATION_TYPE_ERASE))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Invalid Buffer.\n");
-        return isSuccess;
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Invalid Buffer.\n");
+        return;
     }
 
     if ((nBlock == 0) || ((blockStart + nBlock) > dObj->mediaGeometryTable[geometry_type].numBlocks))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Invalid Block parameters.\n");
-        return isSuccess;
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Invalid Block parameters.\n");
+        return;
     }
 
     if (OSAL_MUTEX_Lock(&dObj->transferMutex, OSAL_WAIT_FOREVER ) == OSAL_RESULT_TRUE)
@@ -700,7 +705,7 @@ static bool DRV_MEMORY_SetupXfer
             if (opType == DRV_MEMORY_OPERATION_TYPE_ERASE)
             {
                 OSAL_MUTEX_Unlock(&dObj->transferMutex);
-                return isSuccess;
+                return;
             }
             else if (opType == DRV_MEMORY_OPERATION_TYPE_ERASE_WRITE)
             {
@@ -711,12 +716,8 @@ static bool DRV_MEMORY_SetupXfer
 
         DRV_MEMORY_AllocateBufferObject (clientObj, commandHandle, buffer, blockStart, nBlock, opType);
 
-        isSuccess = DRV_MEMORY_StartXfer(dObj);
-
         OSAL_MUTEX_Unlock(&dObj->transferMutex);
     }
-
-    return isSuccess;
 }
 
 // *****************************************************************************
@@ -759,8 +760,6 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
 
     dObj->status = SYS_STATUS_UNINITIALIZED;
 
-    dObj->isTransferDone = false;
-
     /* Indicate that this object is in use */
     dObj->inUse = true;
 
@@ -772,8 +771,15 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
 
     dObj->clientObjPool       = (DRV_MEMORY_CLIENT_OBJECT *)memoryInit->clientObjPool;
     dObj->nClientsMax         = memoryInit->nClientsMax;
+    dObj->buffObjArr          = (DRV_MEMORY_BUFFER_OBJECT *)memoryInit->bufferObj;
+    dObj->queueSize           = memoryInit->queueSize;
+    dObj->buffObjFree         = (DRV_MEMORY_BUFFER_OBJECT *)NULL;
+    dObj->queueHead           = (DRV_MEMORY_BUFFER_OBJECT *)NULL;
+    dObj->queueTail           = (DRV_MEMORY_BUFFER_OBJECT *)NULL;
     dObj->bufferToken         = 1;
     dObj->clientToken         = 1;
+
+    DRV_MEMORY_BufferObjectsInit(dObj);
 
     /* Initialize the attached memory device functions */
     dObj->memoryDevice = memoryInit->memoryDevice;
@@ -782,10 +788,12 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
     dObj->memDevHandle = DRV_HANDLE_INVALID;
 
     dObj->isMemDevInterruptEnabled = memoryInit->isMemDevInterruptEnabled;
-    dObj->memDevStatusPollUs = memoryInit->memDevStatusPollUs;
+    dObj->isTransferDone = true;
 
     /* Set the erase buffer */
     dObj->ewBuffer = memoryInit->ewBuffer;
+
+    dObj->state = DRV_MEMORY_PROCESS_QUEUE;
 
     if (OSAL_MUTEX_Create(&dObj->clientMutex) == OSAL_RESULT_FALSE)
     {
@@ -796,12 +804,6 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
     if (OSAL_MUTEX_Create(&dObj->transferMutex) == OSAL_RESULT_FALSE)
     {
         /* There was insufficient memory available for the mutex to be created */
-        return SYS_MODULE_OBJ_INVALID;
-    }
-
-    if (OSAL_RESULT_FALSE == OSAL_SEM_Create(&dObj->transferDone,OSAL_SEM_TYPE_BINARY, 0, 0))
-    {
-        /* There was insufficient memory available for the semaphore to be created */
         return SYS_MODULE_OBJ_INVALID;
     }
 
@@ -826,7 +828,7 @@ SYS_STATUS DRV_MEMORY_Status
     /* Validate the object */
     if ((object == SYS_MODULE_OBJ_INVALID) || (object >= DRV_MEMORY_INSTANCES_NUMBER))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO,"DRV_MEMORY_Status(): Invalid parameter.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO,"DRV_MEMORY_Status(): Invalid parameter.\n");
         return SYS_STATUS_UNINITIALIZED;
     }
 
@@ -884,7 +886,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Validate the driver index */
     if (drvIndex >= DRV_MEMORY_INSTANCES_NUMBER)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Invalid driver index.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Invalid driver index.\n");
         return DRV_HANDLE_INVALID;
     }
 
@@ -895,7 +897,7 @@ DRV_HANDLE DRV_MEMORY_Open
     {
         if (DRV_MEMORY_IsReady(dObj) != SYS_STATUS_READY)
         {
-            SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is not ready.\n");
+            SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is not ready.\n");
             return DRV_HANDLE_INVALID;
         }
     }
@@ -911,7 +913,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Check if the driver has already been opened in exclusive mode */
     if (dObj->isExclusive)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open in exclusive mode.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open in exclusive mode.\n");
         OSAL_MUTEX_Unlock( &dObj->clientMutex);
         return DRV_HANDLE_INVALID;
     }
@@ -919,7 +921,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Driver has already been opened and cannot be opened exclusively */
     if ((dObj->numClients > 0) && (ioIntent & DRV_IO_INTENT_EXCLUSIVE))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open. Can't be opened in exclusive mode.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open. Can't be opened in exclusive mode.\n");
         OSAL_MUTEX_Unlock( &dObj->clientMutex);
         return DRV_HANDLE_INVALID;
     }
@@ -960,8 +962,6 @@ DRV_HANDLE DRV_MEMORY_Open
                 }
             }
 
-            SYS_DEBUG_PRINT(SYS_ERROR_DEBUG, "DRV_MEMORY_Open(): Open successful.\n");
-
             break;
         }
     }
@@ -985,7 +985,7 @@ void DRV_MEMORY_Close
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT (SYS_ERROR_INFO, "DRV_MEMORY_Close(): Invalid handle.\n");
+        SYS_DEBUG_MESSAGE (SYS_ERROR_INFO, "DRV_MEMORY_Close(): Invalid handle.\n");
         return;
     }
 
@@ -993,6 +993,8 @@ void DRV_MEMORY_Close
 
     if (OSAL_MUTEX_Lock(&dObj->clientMutex , OSAL_WAIT_FOREVER ) == OSAL_RESULT_TRUE)
     {
+        DRV_MEMORY_RemoveClientBufferObjects (clientObj, dObj);
+
         /* Update the client count */
         dObj->numClients --;
         dObj->isExclusive = false;
@@ -1002,12 +1004,10 @@ void DRV_MEMORY_Close
 
         /* Release the instance specific mutex */
         OSAL_MUTEX_Unlock( &dObj->clientMutex );
-
-        SYS_DEBUG_PRINT (SYS_ERROR_DEBUG, "DRV_MEMORY_Close(): Close successful.\n");
     }
 }
 
-void DRV_MEMORY_Read
+void DRV_MEMORY_AsyncRead
 (
     const DRV_HANDLE handle,
     DRV_MEMORY_COMMAND_HANDLE *commandHandle,
@@ -1022,21 +1022,7 @@ void DRV_MEMORY_Read
             DRV_IO_INTENT_READ);
 }
 
-bool DRV_MEMORY_SyncRead
-(
-    const DRV_HANDLE handle,
-    void *targetBuffer,
-    uint32_t blockStart,
-    uint32_t nBlock
-)
-{
-    return DRV_MEMORY_SetupXfer(handle, NULL, targetBuffer, blockStart, nBlock,
-                SYS_MEDIA_GEOMETRY_TABLE_READ_ENTRY,
-                DRV_MEMORY_OPERATION_TYPE_READ,
-                DRV_IO_INTENT_READ);
-}
-
-void DRV_MEMORY_Write
+void DRV_MEMORY_AsyncWrite
 (
     const DRV_HANDLE handle,
     DRV_MEMORY_COMMAND_HANDLE *commandHandle,
@@ -1051,21 +1037,7 @@ void DRV_MEMORY_Write
             DRV_IO_INTENT_WRITE);
 }
 
-bool DRV_MEMORY_SyncWrite
-(
-    const DRV_HANDLE handle,
-    void *sourceBuffer,
-    uint32_t blockStart,
-    uint32_t nBlock
-)
-{
-    return DRV_MEMORY_SetupXfer(handle, NULL, sourceBuffer, blockStart, nBlock,
-                SYS_MEDIA_GEOMETRY_TABLE_WRITE_ENTRY,
-                DRV_MEMORY_OPERATION_TYPE_WRITE,
-                DRV_IO_INTENT_WRITE);
-}
-
-void DRV_MEMORY_Erase
+void DRV_MEMORY_AsyncErase
 (
     const DRV_HANDLE handle,
     DRV_MEMORY_COMMAND_HANDLE *commandHandle,
@@ -1079,20 +1051,7 @@ void DRV_MEMORY_Erase
             DRV_IO_INTENT_WRITE);
 }
 
-bool DRV_MEMORY_SyncErase
-(
-    const DRV_HANDLE handle,
-    uint32_t blockStart,
-    uint32_t nBlock
-)
-{
-    return DRV_MEMORY_SetupXfer(handle, NULL, NULL, blockStart, nBlock,
-                SYS_MEDIA_GEOMETRY_TABLE_ERASE_ENTRY,
-                DRV_MEMORY_OPERATION_TYPE_ERASE,
-                DRV_IO_INTENT_WRITE);
-}
-
-void DRV_MEMORY_EraseWrite
+void DRV_MEMORY_AsyncEraseWrite
 (
     const DRV_HANDLE handle,
     DRV_MEMORY_COMMAND_HANDLE *commandHandle,
@@ -1107,18 +1066,27 @@ void DRV_MEMORY_EraseWrite
             DRV_IO_INTENT_WRITE);
 }
 
-bool DRV_MEMORY_SyncEraseWrite
+MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_TransferStatusGet
 (
-    const DRV_HANDLE handle,
-    void *sourceBuffer,
-    uint32_t blockStart,
-    uint32_t nBlock
+    const DRV_HANDLE handle
 )
 {
-    return DRV_MEMORY_SetupXfer(handle, NULL, sourceBuffer, blockStart, nBlock,
-                SYS_MEDIA_GEOMETRY_TABLE_WRITE_ENTRY,
-                DRV_MEMORY_OPERATION_TYPE_ERASE_WRITE,
-                DRV_IO_INTENT_WRITE);
+    DRV_MEMORY_CLIENT_OBJECT *clientObj = NULL;
+    DRV_MEMORY_OBJECT *dObj = NULL;
+
+    /* Get the Client object from the handle passed */
+    clientObj = DRV_MEMORY_DriverHandleValidate(handle);
+
+    /* Check if the client object is valid */
+    if (clientObj == NULL)
+    {
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_TransferStatusGet(): Invalid driver handle.\n");
+        return MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN;
+    }
+
+    dObj = &gDrvMemoryObj[clientObj->drvIndex];
+
+    return ((MEMORY_DEVICE_TRANSFER_STATUS)dObj->memoryDevice->TransferStatusGet(dObj->memDevHandle));
 }
 
 DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
@@ -1127,6 +1095,7 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     const DRV_MEMORY_COMMAND_HANDLE commandHandle
 )
 {
+    uint16_t iEntry;
     DRV_MEMORY_CLIENT_OBJECT *clientObj = NULL;
     DRV_MEMORY_OBJECT *dObj = NULL;
     DRV_MEMORY_COMMAND_STATUS status = DRV_MEMORY_COMMAND_ERROR_UNKNOWN;
@@ -1137,11 +1106,16 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_CommandStatusGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_CommandStatusGet(): Invalid driver handle.\n");
         return status;
     }
 
     dObj = &gDrvMemoryObj[clientObj->drvIndex];
+
+    /* The lower 8 bits of the command handle is the buffer index and the
+     * upper 24 bits of the command handle are the token and driver index.
+     */
+    iEntry = commandHandle & DRV_MEMORY_INDEX_MASK;
 
     /* Acquire the instance specific mutex to protect the instance specific
      * client pool
@@ -1149,15 +1123,135 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     if (OSAL_MUTEX_Lock(&dObj->transferMutex , OSAL_WAIT_FOREVER ) == OSAL_RESULT_TRUE)
     {
         /* Compare the buffer handle with buffer handle in the object */
-        if(dObj->currentBufObj.commandHandle == commandHandle)
+        if(dObj->buffObjArr[iEntry].commandHandle == commandHandle)
         {
             /* Return the last known buffer object status */
-            status = (dObj->currentBufObj.status);
+            status = (dObj->buffObjArr[iEntry].status);
         }
         OSAL_MUTEX_Unlock(&dObj->transferMutex);
     }
 
     return status;
+}
+
+void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object )
+{
+    DRV_MEMORY_OBJECT *dObj = NULL;
+    DRV_MEMORY_CLIENT_OBJECT *clientObj = NULL;
+    DRV_MEMORY_BUFFER_OBJECT *bufferObj = NULL;
+    DRV_MEMORY_EVENT event = DRV_MEMORY_EVENT_COMMAND_ERROR;
+    bool isDone = false;
+    MEMORY_DEVICE_TRANSFER_STATUS transferStatus = MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN;
+
+    if(object == SYS_MODULE_OBJ_INVALID)
+    {
+        /* Invalid system object */
+        return;
+    }
+
+    dObj = &gDrvMemoryObj[object];
+
+    if (dObj->status != SYS_STATUS_READY)
+    {
+        return;
+    }
+
+    if (OSAL_MUTEX_Lock(&dObj->transferMutex , OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    {
+        return;
+    }
+
+    if ((dObj->isMemDevInterruptEnabled == true) && (dObj->isTransferDone == false))
+    {
+        OSAL_MUTEX_Unlock(&dObj->transferMutex);
+        return;
+    }
+
+    switch (dObj->state)
+    {
+        case DRV_MEMORY_PROCESS_QUEUE:
+        {
+            /* Process the queued requests. */
+            dObj->currentBufObj = dObj->queueHead;
+
+            if (dObj->currentBufObj == NULL)
+            {
+                /* Queue is empty. Continue to remain in the same state. */
+                dObj->queueTail = NULL;
+                break;
+            }
+            else
+            {
+                /* Init the various sub state machines. */
+                dObj->readState  = DRV_MEMORY_READ_INIT;
+                dObj->writeState = DRV_MEMORY_WRITE_INIT;
+                dObj->eraseState = DRV_MEMORY_ERASE_INIT;
+                dObj->ewState    = DRV_MEMORY_EW_INIT;
+
+                dObj->state = DRV_MEMORY_TRANSFER;
+
+                dObj->currentBufObj->status = DRV_MEMORY_COMMAND_IN_PROGRESS;
+            }
+        }
+
+        case DRV_MEMORY_TRANSFER:
+        {
+            bufferObj = dObj->currentBufObj;
+
+            transferStatus = gMemoryXferFuncPtr[bufferObj->opType](dObj, &bufferObj->buffer[0], bufferObj->blockStart, bufferObj->nBlocks);
+
+            if (transferStatus == MEMORY_DEVICE_TRANSFER_COMPLETED)
+            {
+                bufferObj->status = DRV_MEMORY_COMMAND_COMPLETED;
+                event = DRV_MEMORY_EVENT_COMMAND_COMPLETE;
+                isDone = true;
+            }
+            else if (transferStatus >= MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN)
+            {
+                /* The operation has failed. */
+                bufferObj->status = DRV_MEMORY_COMMAND_ERROR_UNKNOWN;
+                event = DRV_MEMORY_EVENT_COMMAND_ERROR;
+                isDone = true;
+            }
+
+            if (isDone)
+            {
+                clientObj = (DRV_MEMORY_CLIENT_OBJECT *)bufferObj->hClient;
+
+                dObj->isTransferDone = true;
+
+                /* Go back waiting for the next request */
+                dObj->state = DRV_MEMORY_PROCESS_QUEUE;
+
+                /* Get the next buffer in the queue */
+                dObj->queueHead = dObj->queueHead->next;
+
+                /* Return the processed buffer to free list */
+                bufferObj->next = dObj->buffObjFree;
+                dObj->buffObjFree = bufferObj;
+
+                if(clientObj->transferHandler != NULL)
+                {
+                    /* Call the event handler */
+                    clientObj->transferHandler((SYS_MEDIA_BLOCK_EVENT)event, (DRV_MEMORY_COMMAND_HANDLE)bufferObj->commandHandle, clientObj->context);
+                }
+            }
+            break;
+        }
+
+        case DRV_MEMORY_IDLE:
+        {
+            break;
+        }
+
+        case DRV_MEMORY_ERROR:
+        default:
+        {
+            break;
+        }
+    }
+
+    OSAL_MUTEX_Unlock(&dObj->transferMutex);
 }
 
 void DRV_MEMORY_TransferHandlerSet
@@ -1174,7 +1268,7 @@ void DRV_MEMORY_TransferHandlerSet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_TransferHandlerSet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_TransferHandlerSet(): Invalid driver handle.\n");
         return;
     }
 
@@ -1197,7 +1291,7 @@ SYS_MEDIA_GEOMETRY * DRV_MEMORY_GeometryGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_GeometryGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_GeometryGet(): Invalid driver handle.\n");
         return NULL;
     }
 
@@ -1213,7 +1307,7 @@ bool DRV_MEMORY_IsAttached
     /* Validate the driver handle */
     if (DRV_MEMORY_DriverHandleValidate(handle) == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_IsAttached(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_IsAttached(): Invalid driver handle.\n");
         return false;
     }
 
@@ -1243,7 +1337,7 @@ uintptr_t DRV_MEMORY_AddressGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_AddressGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_AddressGet(): Invalid driver handle.\n");
         return (uintptr_t)NULL;
     }
 

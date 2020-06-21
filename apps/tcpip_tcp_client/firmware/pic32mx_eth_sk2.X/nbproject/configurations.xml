@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mx_eth_sk2" projectFiles="true">
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -195,13 +197,13 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/command/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/console/sys_console.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
+            <logicalFolder name="f3" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
@@ -242,12 +244,20 @@
       <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Important Files" projectFiles="true">
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/pic32mx_eth_sk2/harmony.prj</itemPath>
+      <itemPath>../src/config/pic32mx_eth_sk2/pic32mx_eth_sk2.xml</itemPath>
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Source Files" projectFiles="true">
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mx_eth_sk2" projectFiles="true">
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
@@ -336,21 +346,21 @@
             <itemPath>../src/config/pic32mx_eth_sk2/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console.c</itemPath>
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/pic32mx_eth_sk2/system/console/src/sys_console_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/debug/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/pic32mx_eth_sk2/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="int" projectFiles="true">
+            <logicalFolder name="f3" displayName="int" projectFiles="true">
               <itemPath>../src/config/pic32mx_eth_sk2/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
@@ -388,6 +398,8 @@
       <packs>
         <pack name="PIC32MX_DFP" vendor="Microchip" version="1.2.228"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -421,7 +433,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/pic32mx_eth_sk2/library;../src/config/pic32mx_eth_sk2/library/tcpip/src;../src/config/pic32mx_eth_sk2/library/tcpip/src/common;../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP;../src/mips"/>
+                  value="../src/config/pic32mx_eth_sk2/library;../src/config/pic32mx_eth_sk2/library/tcpip/src;../src/config/pic32mx_eth_sk2/library/tcpip/src/common;../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

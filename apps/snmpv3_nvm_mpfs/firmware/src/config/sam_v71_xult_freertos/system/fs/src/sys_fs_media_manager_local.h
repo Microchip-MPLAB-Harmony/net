@@ -30,7 +30,6 @@
 #include "system/int/sys_int.h"
 #include "system/system.h"
 #include "system/fs/sys_fs_media_manager.h"
-#include "system/fs/fat_fs/src/hardware_access/diskio.h"
 
 /* Read entry in geometry table */
 #define SYS_FS_MEDIA_GEOMETRY_READ          (0)
@@ -200,25 +199,5 @@ typedef struct SYS_FS_MEDIA_MANAGER_OBJ
 
 } SYS_FS_MEDIA_MANAGER_OBJ;
 
-/***************************************************************
- * The following structure was added to enable the "multipartition"
- * feature of FAT FS. This strucre is already declared in ff.h and
- * the intention was to make as little change on ff.h
- * To use multipartition on FAT FS, we need to enable "_MULTI_PARTITION".
- * And, when we do that, the FAT FS code expects an array named "VolToPart".
- * The explanation for each element of the array is given below, and
- * this function places the elements of this array.
- *
- * Lets consider a case where 2 media are attached = SD card with 4 partitions
- * and NVM with 1 partition.
- *
- * PARTITION VolToPart[SYS_FS_VOLUME_NUMBER] = {
- *        {0, 1},    // 0th volume # assigned by sys_fs_media_manager (mmcblka1), media # = 0 (SD card), partition # = 1
- *        {0, 2},    // 1st volume # assigned by sys_fs_media_manager (mmcblka2), media # = 0 (SD card), partition # = 2
- *        {0, 3},    // 2nd volume # assigned by sys_fs_media_manager (mmcblka3), media # = 0 (SD card), partition # = 3
- *        {0, 4},    // 3rd volume # assigned by sys_fs_media_manager (mmcblka4), media # = 0 (SD card), partition # = 4
- *        {1, 1}     // 4th volume # assigned by sys_fs_media_manager (nvma1), media # = 1 (NVM), partition # = 1
- *    };
- ***************************************************************/
 #endif
 

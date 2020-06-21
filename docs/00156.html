@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Get_Bulk Operation</title>
+<title>Get Operation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04168.html" target="topic">Third Party</a> &gt; <a href="01100.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00162.html" target="topic">SNMP Operations</a> &gt; <a href="00156.html" target="topic">Get_Bulk Operation</a></div>
+<a href="04181.html" target="topic">Third Party</a> &gt; <a href="01107.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00163.html" target="topic">SNMP Operations</a> &gt; <a href="00156.html" target="topic">Get Operation</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00157.html" target="topic">Previous</a> | <a href="00162.html" target="topic">Up</a> | <a href="00161.html" target="topic">Next</a></div>
+<a href="00163.html" target="topic">Previous</a> | <a href="00163.html" target="topic">Up</a> | <a href="00158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Get_Bulk Operation Topic Title: Get_Bulk Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Get Operation Topic Title: Get Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Get_Bulk Operation</div>
+Get Operation</div>
 </div>
 </div>
 
@@ -49,24 +49,27 @@ Get_Bulk Operation</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This operation is supported in SNMPv2c and SNMPv3. Get_Bulk enables the collection of bulk information from the agent with a single request from the manager.
+
 <ol class="Element635">
-<li value="1" class="Element605">Configure the SNMP version to '2' or '3' in the SNMP browser.</li>
-<li value="2" class="Element605">If version is configured to '2', set the Read Community to 'public' or 'read.'</li>
-<li value="3" class="Element605">If version is configured to '3', configure the appropriate V3 credentials.</li>
-<li value="4" class="Element605">Select the sysDescr variable from the MIB tree.</li>
-<li value="5" class="Element605">Select the Get Bulk operation from the Operations menu.</li>
-</ol>The default Non Repeaters and Max Repeaters values are '0' and '10', respectively, and get bulk configuration profile to change Non Repeaters and Max Repeaters parameters. </p><p class="Element10" style="text-align: center;">
-<img src="APPS SNMP image026.png" border="0" alt="" title=""></p><p class="Element10">
-The result table will display information for 10 MIB variables in a single request (if the Max Repetitions = 10 and Non Repeaters = 0 is configured). These variables are the lexicographical successors of the sysDescr variable. The number of variables that the agent will respond with can be configured in the browser through the menu selections <i><u>Tools &gt; Options &gt; Non-Repeaters</u></i> and <i><u>Tools &gt; Options &gt; Max-Repetitions</u></i>. The Non-Repeaters and Max-Repetitions numbers are extracted by the SNMP agent from the received Get_Bulk request and the number of variables that will be included in the response PDU is calculated. for more information on calculating the number of variables, Non-Repeaters, and Max-Repetitions, refer to RFC 3416. </p><p class="Element10" style="text-align: center;">
-<img src="APPS SNMP image028.png" border="0" alt="" title=""></p></div>
+<li value="1" class="Element605">Select the &quot;Advanced&quot; tab and configure the SNMP version to '1' and the Read community to &quot;public&quot;.</li>
+<li value="2" class="Element605">Select &quot;Get&quot; from the operations menu.</li>
+<li value="3" class="Element605">Select the sysDescr variable from the MIB Tree.</li>
+</ol>The Result Table displays the sysDescr variable information. Repeat this procedure for any MIB variable. For SNMP V2c, repeat the same procedure, substituting '2' in place of '1' in the version configuration.&nbsp;</p>
+<p class="Element10">
+<img src="APPS SNMP image022.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+As explained earlier, the V2c agent is configured with three Read and Write community defaults. Configure the browser to use any of these communities and try accessing the MIB variables. You should be able to access some of the MIB variables even with the Read Community configured as any of the 'write' community defaults. For Get operations, if the Read or Write community matches, the agent processes the request. For Set operations, the received community names must match any of the 'write' community names.&nbsp;</p>
+<p class="Element10">
+For SNMP V3, substitute '3' in place of '1' in the version configuration in the &quot;Advanced&quot; tab. Configure the other user based auth and priv credentials as explained in the &quot;MIB Browsers&quot; section.&nbsp;</p>
+<p class="Element10">
+With appropriate credentials, all the MIB variables are accessible. Select any of the MIB variables in the MIB tree and do a GET operation.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04168.html" target="topic">Third Party</a> &gt; <a href="01100.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00162.html" target="topic">SNMP Operations</a> &gt; <a href="00156.html" target="topic">Get_Bulk Operation</a></div>
+<a href="04181.html" target="topic">Third Party</a> &gt; <a href="01107.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00163.html" target="topic">SNMP Operations</a> &gt; <a href="00156.html" target="topic">Get Operation</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,13 +77,13 @@ The result table will display information for 10 MIB variables in a single reque
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00157.html" target="topic">Previous</a> | <a href="00162.html" target="topic">Up</a> | <a href="00161.html" target="topic">Next</a></div>
+<a href="00163.html" target="topic">Previous</a> | <a href="00163.html" target="topic">Up</a> | <a href="00158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Get_Bulk Operation Topic Title: Get_Bulk Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Get Operation Topic Title: Get Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

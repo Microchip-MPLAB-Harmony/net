@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the SPI Driver</title>
+<title>EAI_SYSTEM Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00746.html" target="topic">How the Library Works</a> &gt; <a href="00742.html" target="topic">Configuring the SPI Driver</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00294.html" target="topic">Berkeley Module</a> &gt; <a href="01511.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00742.html" target="topic">EAI_SYSTEM Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00746.html" target="topic">Previous</a> | <a href="00746.html" target="topic">Up</a> | <a href="00741.html" target="topic">Next</a></div>
+<a href="00741.html" target="topic">Previous</a> | <a href="01511.html" target="topic">Up</a> | <a href="00009.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Configuring the SPI Driver Topic Title: Configuring the SPI Driver)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EAI_SYSTEM Topic Title: EAI_SYSTEM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the SPI Driver</div>
+EAI_SYSTEM Macro</div>
 </div>
 </div>
 
@@ -49,21 +49,17 @@ Configuring the SPI Driver</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The ENC2J60 hardware requires a specific configuration of the SPI driver to work correctly. Inside the MHC SPI Driver configuration be sure to select:&nbsp;</p>
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">Run the SPI at frequencies of at least 8 MHz</li>
-<li class="Element605">Clock mode of <span class="Element146">DRV_SPI_CLOCK_MODE_IDLE_LOW_EDGE_FALL</span></li>
-<li class="Element605">Input phase of <span class="Element146">SPI_INPUT_SAMPLING_PHASE_AT_END</span></li>
-</ul><img src="SPI Configuration.png" border="0" alt="" title="">&nbsp;</p></div>
+System error returned in `errno'.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">EAI_SYSTEM</span></strong> -11   <i><span style="color: #008000">/* System error returned in `errno'.  */</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00746.html" target="topic">How the Library Works</a> &gt; <a href="00742.html" target="topic">Configuring the SPI Driver</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00294.html" target="topic">Berkeley Module</a> &gt; <a href="01511.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00742.html" target="topic">EAI_SYSTEM Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -71,13 +67,13 @@ The ENC2J60 hardware requires a specific configuration of the SPI driver to work
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00746.html" target="topic">Previous</a> | <a href="00746.html" target="topic">Up</a> | <a href="00741.html" target="topic">Next</a></div>
+<a href="00741.html" target="topic">Previous</a> | <a href="01511.html" target="topic">Up</a> | <a href="00009.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Configuring the SPI Driver Topic Title: Configuring the SPI Driver)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EAI_SYSTEM Topic Title: EAI_SYSTEM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

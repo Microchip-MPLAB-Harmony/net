@@ -223,6 +223,8 @@ typedef enum
 
 static TCP_SOCKET   _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address);
 
+static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt);
+
 #if defined (TCPIP_STACK_USE_IPV4)
 static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
 static TCP_V4_PACKET*   _Tcpv4AllocateTxPacketIfQueued(TCB_STUB * pSkt, bool resetOldPkt);
@@ -1923,37 +1925,12 @@ static bool _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
   Function:
 	bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 
-  Summary:
-	Self-clearing semaphore inidicating socket reset.
-
-  Description:
-	This function is a self-clearing semaphore indicating whether or not
-	a socket has been disconnected since the previous call.  This function
-	works for all possible disconnections: a call to TCPIP_TCP_Disconnect, a FIN 
-	from the remote node, or an acknowledgement timeout caused by the loss
-	of a network link.  It also returns true after the first call to TCPIP_TCP_Initialize.
-	Applications should use this function to reset their state machines.
-	
-	This function was added due to the possibility of an error when relying
-	on TCPIP_TCP_IsConnected returing false to check for a condition requiring a
-	state machine reset.  If a socket is closed (due to a FIN ACK) and then
-	immediately reopened (due to a the arrival of a new SYN) in the same
-	cycle of the stack, calls to TCPIP_TCP_IsConnected by the application will 
-	never return false even though the socket has been disconnected.  This 
-	can cause errors for protocols such as HTTP in which a client will 
-	immediately open a new connection upon closing of a prior one.  Relying
-	on this function instead allows applications to trap those conditions 
-	and properly reset their internal state for the new connection.
-
-  Precondition:
-	TCP is initialized.
-
-  Parameters:
-	hTCP - The socket to check.
-
-  Return Values:
-  	true - The socket has been disconnected since the previous call.
-  	false - The socket has not been disconnected since the previous call.
+	This function was added due to the possibility of ambiguity when checking the socket state
+    reported by TCPIP_TCP_IsConnected.
+	If a socket is closed and then immediately reopened and a SYN received,
+	a call to TCPIP_TCP_IsConnected could still return true although the socket has been disconnected.
+    This can cause errors for protocols such as HTTP in which a client will 
+	immediately open a new connection upon closing of a prior one.
   ***************************************************************************/
 bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 {
@@ -1973,6 +1950,18 @@ bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
     return true;
 }
 
+bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
+{
+    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+
+    if(pSkt)
+    {
+        return pSkt->Flags.bRxFin != 0;
+    }
+
+    // no such socket
+    return false;
+}
 
 /*****************************************************************************
   Function:
@@ -2289,9 +2278,47 @@ bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
     remoteInfo->txSize = pSkt->txEnd - pSkt->txStart;
     remoteInfo->rxPending = _TCPIsGetReady(pSkt);
     remoteInfo->txPending = TCPIP_TCP_FifoTxFullGet(hTCP);
+    remoteInfo->flags = _TCP_SktFlagsGet(pSkt);
 
 	return true;
 }
+
+TCP_SOCKET_FLAGS TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP)
+{
+    TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_NONE;
+
+    TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
+	
+    if(pSkt != 0)
+    {
+        flags = _TCP_SktFlagsGet(pSkt);
+    }
+
+    return flags;
+}
+
+static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt)
+{
+    TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_VALID;
+
+    if(_TCP_IsConnected(pSkt))
+    {
+        flags |= TCP_SOCKET_FLAG_CONNECTED;
+    }
+
+    if(pSkt->Flags.bSocketReset)
+    {
+        flags |= TCP_SOCKET_FLAG_RST;
+    }
+
+    if(pSkt->Flags.bRxFin)
+    {
+        flags |= TCP_SOCKET_FLAG_FIN;
+    }
+
+    return flags;
+}
+
 
 int TCPIP_TCP_SocketsNumberGet(void)
 {
@@ -4341,6 +4368,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 	pSkt->Flags.bTXASAPWithoutTimerReset = 0;
 	pSkt->Flags.bTXFIN = 0;
 	pSkt->Flags.bSocketReset = 1;
+	pSkt->Flags.bRxFin = 0;
 
 
 	pSkt->flags.bFINSent = 0;
@@ -4901,6 +4929,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
         if(localHeaderFlags & RST)
         {
             *pSktEvent |= TCPIP_TCP_SIGNAL_RX_RST;
+            pSkt->Flags.bSocketReset = 1;
         }
         _TcpCloseSocket(pSkt, 0);
         return;
@@ -5344,6 +5373,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             pSkt->RemoteSEQ++;
 
             *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN;
+            pSkt->Flags.bRxFin = 1;
             switch(pSkt->smState)
             {
                 case TCPIP_TCP_STATE_SYN_RECEIVED:

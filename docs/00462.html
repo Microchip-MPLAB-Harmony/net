@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ENCX24J600_MDIX_TYPE Type</title>
+<title>DRV_ENCX24J600_EventMaskSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00765.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00766.html" target="topic">Library Interface</a> &gt; <a href="00760.html" target="topic">f) Data Types and Constants</a> &gt; <a href="00462.html" target="topic">DRV_ENCX24J600_MDIX_TYPE Type</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00770.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00771.html" target="topic">Library Interface</a> &gt; <a href="00766.html" target="topic">e) Event Functions</a> &gt; <a href="00462.html" target="topic">DRV_ENCX24J600_EventMaskSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00454.html" target="topic">Previous</a> | <a href="00760.html" target="topic">Up</a> | <a href="00762.html" target="topic">Next</a></div>
+<a href="00461.html" target="topic">Previous</a> | <a href="00766.html" target="topic">Up</a> | <a href="00463.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_MDIX_TYPE Topic Title: DRV_ENCX24J600_MDIX_TYPE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_EventMaskSet@DRV_HANDLE@TCPIP_MAC_EVENT@bool Topic Title: DRV_ENCX24J600_EventMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ENCX24J600_MDIX_TYPE Type</div>
+DRV_ENCX24J600_EventMaskSet Function</div>
 </div>
 </div>
 
@@ -49,26 +49,71 @@ DRV_ENCX24J600_MDIX_TYPE Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-ENCX24J600 Driver MDIX Control type&nbsp;</p>
+ENCX24J600 Set Event Mask&nbsp;</p>
 <p class="Element10">
-This type defines the enumeration for controlling the MDIX select.</p></div>
+Sets the event mask to what is passed in.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> DRV_ENCX24J600_MDIX_TYPE@1 <strong><span style="color: #000000">DRV_ENCX24J600_MDIX_TYPE</span></strong>;</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DRV_ENCX24J600_EventMaskSet</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="03115.html" target="topic">TCPIP_MAC_EVENT</a> <strong><span style="color: #000000">macEvents</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">enable</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The client had to be successfully opened with <a href="00468.html" target="topic">DRV_ENCX24J600_Open</a>.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the successfully opened handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+macEvents&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the mask to enable or disable&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+enable&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+to enable or disable events&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">true - if the mask could be set</li>
+<li class="Element605">false - if the mast could not be set</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00765.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00766.html" target="topic">Library Interface</a> &gt; <a href="00760.html" target="topic">f) Data Types and Constants</a> &gt; <a href="00462.html" target="topic">DRV_ENCX24J600_MDIX_TYPE Type</a></div>
+<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00770.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00771.html" target="topic">Library Interface</a> &gt; <a href="00766.html" target="topic">e) Event Functions</a> &gt; <a href="00462.html" target="topic">DRV_ENCX24J600_EventMaskSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -76,13 +121,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00454.html" target="topic">Previous</a> | <a href="00760.html" target="topic">Up</a> | <a href="00762.html" target="topic">Next</a></div>
+<a href="00461.html" target="topic">Previous</a> | <a href="00766.html" target="topic">Up</a> | <a href="00463.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_MDIX_TYPE Topic Title: DRV_ENCX24J600_MDIX_TYPE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_EventMaskSet@DRV_HANDLE@TCPIP_MAC_EVENT@bool Topic Title: DRV_ENCX24J600_EventMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SNTP_RESULT Enumeration</title>
+<title>TCPIP_SNMP_IsValidLength Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01265.html" target="topic">SNTP Module</a> &gt; <a href="01706.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03630.html" target="topic">TCPIP_SNTP_RESULT Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01321.html" target="topic">SNMP Module</a> &gt; <a href="01791.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03630.html" target="topic">TCPIP_SNMP_IsValidLength Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03622.html" target="topic">Previous</a> | <a href="01706.html" target="topic">Up</a> | <a href="03600.html" target="topic">Next</a></div>
+<a href="03629.html" target="topic">Previous</a> | <a href="01791.html" target="topic">Up</a> | <a href="03634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_RESULT Topic Title: TCPIP_SNTP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_IsValidLength@SNMP_ID@uint8_t@uint8_t Topic Title: TCPIP_SNMP_IsValidLength Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SNTP_RESULT Enumeration</div>
+TCPIP_SNMP_IsValidLength Function</div>
 </div>
 </div>
 
@@ -49,132 +49,71 @@ TCPIP_SNTP_RESULT Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCPIP_SNTP_RESULT Enumeration&nbsp;</p>
-<p class="Element10">
-Provides a list of possible SNTP results.</p></div>
+This function is used to validate the dynamic variable data length to the variable data type. It is called before the SET request is processed. This is a callback function called by module. User application must implement this function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">SNTP_RES_OK</span></strong>,
-  <strong><span style="color: #000000">SNTP_RES_PROGRESS</span></strong>,
-  <strong><span style="color: #000000">SNTP_RES_BUSY</span></strong> = -1,
-  <strong><span style="color: #000000">SNTP_RES_TSTAMP_ERROR</span></strong> = -2,
-  <strong><span style="color: #000000">SNTP_RES_TSTAMP_STALE</span></strong> = -3,
-  <strong><span style="color: #000000">SNTP_RES_SKT_ERR</span></strong> = -4,
-  <strong><span style="color: #000000">SNTP_RES_SKT_BIND_ERR</span></strong> = -5,
-  <strong><span style="color: #000000">SNTP_RES_NTP_SERVER_TMO</span></strong> = -6,
-  <strong><span style="color: #000000">SNTP_RES_NTP_VERSION_ERR</span></strong> = -7,
-  <strong><span style="color: #000000">SNTP_RES_NTP_TSTAMP_ERR</span></strong> = -8,
-  <strong><span style="color: #000000">SNTP_RES_NTP_SYNC_ERR</span></strong> = -9,
-  <strong><span style="color: #000000">SNTP_RES_NTP_KOD_ERR</span></strong> = -10,
-  <strong><span style="color: #000000">SNTP_RES_NTP_DNS_ERR</span></strong> = -11,
-  <strong><span style="color: #000000">SNTP_RES_NTP_IF_ERR</span></strong> = -12,
-  <strong><span style="color: #000000">SNTP_RES_NTP_CONN_ERR</span></strong> = -13
-} TCPIP_SNTP_RESULT;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMP_IsValidLength</span></strong>(
+    <a href="01337.html" target="topic">SNMP_ID</a> <strong><span style="color: #000000">var</span></strong>, 
+    uint8_t <strong><span style="color: #000000">len</span></strong>, 
+    uint8_t <strong><span style="color: #000000">index</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_OK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the operation was successful&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_PROGRESS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-an NTP operation is in progress&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_BUSY = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-module is busy&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_TSTAMP_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no timestamp is available, server not contacted&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_TSTAMP_STALE = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-timestamp is stale, there's no recent timestamp&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_SKT_ERR = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-NTP <a href="01305.html" target="topic">socket</a> could not be opened&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_SKT_BIND_ERR = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-NTP <a href="01305.html" target="topic">socket</a> bind failed&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_SERVER_TMO = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-NTP server could not be accessed&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_VERSION_ERR = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-wrong NTP version received&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_TSTAMP_ERR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-wrong NTP timestamp received&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_SYNC_ERR = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-NTP time synchronization error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_KOD_ERR = -10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-an NTP KissOfDeath code has been received&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_DNS_ERR = -11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-an NTP DNS error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_IF_ERR = -12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-an NTP interface error&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SNTP_RES_NTP_CONN_ERR = -13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-an NTP connection type error&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+TCPIP_SNMP_ProcessSetVar is called.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+var&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Variable id whose value is to be set&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Length value that is to be validated.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">true - if given var can be set to given len</li>
+<li class="Element605">false - if the given var cannot be set to the given len</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+This function will be called for only dynamic variables that are defined as ASCII_STRING and OCTET_STRING.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01265.html" target="topic">SNTP Module</a> &gt; <a href="01706.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03630.html" target="topic">TCPIP_SNTP_RESULT Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01321.html" target="topic">SNMP Module</a> &gt; <a href="01791.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03630.html" target="topic">TCPIP_SNMP_IsValidLength Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -182,13 +121,13 @@ None</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03622.html" target="topic">Previous</a> | <a href="01706.html" target="topic">Up</a> | <a href="03600.html" target="topic">Next</a></div>
+<a href="03629.html" target="topic">Previous</a> | <a href="01791.html" target="topic">Up</a> | <a href="03634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_RESULT Topic Title: TCPIP_SNTP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_IsValidLength@SNMP_ID@uint8_t@uint8_t Topic Title: TCPIP_SNMP_IsValidLength Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

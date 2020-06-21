@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_DYN_PRINT_RES Enumeration</title>
+<title>TCPIP_FTPC_MakeDir Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01526.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02539.html" target="topic">TCPIP_HTTP_DYN_PRINT_RES Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01601.html" target="topic">Library Interface</a> &gt; <a href="01603.html" target="topic">a) Functions</a> &gt; <a href="02539.html" target="topic">TCPIP_FTPC_MakeDir Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02535.html" target="topic">Previous</a> | <a href="01526.html" target="topic">Up</a> | <a href="02544.html" target="topic">Next</a></div>
+<a href="02538.html" target="topic">Previous</a> | <a href="01603.html" target="topic">Up</a> | <a href="02546.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_DYN_PRINT_RES Topic Title: TCPIP_HTTP_DYN_PRINT_RES Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_MakeDir@TCPIP_FTPC_CONN_HANDLE_TYPE@char * Topic Title: TCPIP_FTPC_MakeDir Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_DYN_PRINT_RES Enumeration</div>
+TCPIP_FTPC_MakeDir Function</div>
 </div>
 </div>
 
@@ -49,66 +49,66 @@ TCPIP_HTTP_DYN_PRINT_RES Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCPIP_HTTP_DYN_PRINT_RES&nbsp;</p>
-<p class="Element10">
-This enumeration defines the results associated with the HTTP dynamic variables callbacks (<a href="02631.html" target="topic">TCPIP_HTTP_NET_DynPrint</a>).</p></div>
+This function schedules the process to create a new directory inside current working directory</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_HTTP_DYN_PRINT_RES_DONE</span></strong> = 0,
-  <strong><span style="color: #000000">TCPIP_HTTP_DYN_PRINT_RES_DEFAULT</span></strong>,
-  <strong><span style="color: #000000">TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN</span></strong>,
-  <strong><span style="color: #000000">TCPIP_HTTP_DYN_PRINT_RES_AGAIN</span></strong>
-} TCPIP_HTTP_DYN_PRINT_RES;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02549.html" target="topic">TCPIP_FTPC_RETURN_TYPE</a> <strong><span style="color: #000000">TCPIP_FTPC_MakeDir</span></strong>(
+    <a href="02473.html" target="topic">TCPIP_FTPC_CONN_HANDLE_TYPE</a> <strong><span style="color: #000000">ftpcHandle</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">dirname</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_HTTP_DYN_PRINT_RES_DONE = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-dynamic callback is done&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_HTTP_DYN_PRINT_RES_DEFAULT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no implementation supported for this dynamic variable, call the default action&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-process the action of this call and then call again data written to the HTTP connection but more data is pending&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_HTTP_DYN_PRINT_RES_AGAIN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-do not process any action just call again no data was available to be written to the connection or the written data should be ignored this turn&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+FTPC module should have been initialized, connected and logged-in</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ftpcHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle identifying the control connection&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+dirname&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to string for directory name&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCPIP_FTPC_RET_OK - if successfully scheduled function TCPIP_FTPC_RET_BUSY - could not schedule function as FTP Client is busy TCPIP_FTPC_RET_NOT_CONNECT - Not connected to FTP server TCPIP_FTPC_RET_NOT_LOGIN - Connected, but not Logged in</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Currently the default action for a user defined dynamic variable is &quot;do nothing&quot;. Keywords like &quot;inc&quot; have an internal implementation and don't need to be processed by the user.</p></div>
+This function will execute after the completion of previous FTPC function; otherwise it will return TCPIP_FTPC_RET_BUSY</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01526.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02539.html" target="topic">TCPIP_HTTP_DYN_PRINT_RES Enumeration</a></div>
+<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01601.html" target="topic">Library Interface</a> &gt; <a href="01603.html" target="topic">a) Functions</a> &gt; <a href="02539.html" target="topic">TCPIP_FTPC_MakeDir Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +116,13 @@ Currently the default action for a user defined dynamic variable is &quot;do not
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02535.html" target="topic">Previous</a> | <a href="01526.html" target="topic">Up</a> | <a href="02544.html" target="topic">Next</a></div>
+<a href="02538.html" target="topic">Previous</a> | <a href="01603.html" target="topic">Up</a> | <a href="02546.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_DYN_PRINT_RES Topic Title: TCPIP_HTTP_DYN_PRINT_RES Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_MakeDir@TCPIP_FTPC_CONN_HANDLE_TYPE@char * Topic Title: TCPIP_FTPC_MakeDir Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -106,6 +106,7 @@ TCPIP_MAC_RES macDrvrStatisticsGet(
     {
         macDrvrRxLock( pMacDrvr );
         pMacDrvr->rxStat.packetPoolBuffers =    pMacDrvr->rxMacPacketPool.nNodes;
+        pRxStatistics->nRxOkPackets =           pMacDrvr->rxStat.nRxOkPackets;
         pRxStatistics->nRxPendBuffers =         pMacDrvr->rxStat.macPacketsInStack;
         pRxStatistics->nRxSchedBuffers =        pMacDrvr->rxStat.nRxSchedBuffers;
         pRxStatistics->nRxErrorPackets =        pMacDrvr->rxStat.nRxErrorPackets;

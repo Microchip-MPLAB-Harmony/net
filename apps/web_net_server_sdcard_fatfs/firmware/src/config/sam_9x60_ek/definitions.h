@@ -58,6 +58,7 @@
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/int/sys_int.h"
 #include "osal/osal.h"
+#include "system/debug/sys_debug.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/emac/drv_emac.h"
 #include "driver/miim/drv_miim.h"
@@ -71,13 +72,13 @@
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/aic/plib_aic.h"
-#include "system/debug/sys_debug.h"
 #include "wolfssl/wolfcrypt/port/pic32/crypt_wolfcryptcb.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
-#include "system/fs/fat_fs/src/file_system/ff.h"
-#include "system/fs/fat_fs/src/file_system/ffconf.h"
-#include "system/fs/fat_fs/src/hardware_access/diskio.h"
+#include "system/fs/sys_fs_fat_interface.h"
+#include "system/fs/fat_fs/file_system/ff.h"
+#include "system/fs/fat_fs/file_system/ffconf.h"
+#include "system/fs/fat_fs/hardware_access/diskio.h"
 #include "peripheral/sdmmc/plib_sdmmc0.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
@@ -144,27 +145,27 @@ void SYS_Initialize( void *data );
 // *****************************************************************************
 /* System Tasks Function
 
-  Function:
+Function:
     void SYS_Tasks ( void );
 
-  Summary:
+Summary:
     Function that performs all polled system tasks.
 
-  Description:
+Description:
     This function performs all polled system tasks by calling the state machine
     "tasks" functions for all polled modules in the system, including drivers,
     services, middleware and applications.
 
-  Precondition:
+Precondition:
     The SYS_Initialize function must have been called and completed.
 
-  Parameters:
+Parameters:
     None.
 
-  Returns:
+Returns:
     None.
 
-  Example:
+Example:
     <code>
     SYS_Initialize ( NULL );
 
@@ -174,7 +175,7 @@ void SYS_Initialize( void *data );
     }
     </code>
 
-  Remarks:
+Remarks:
     If the module is interrupt driven, the system will call this routine from
     an interrupt context.
 */
@@ -186,22 +187,22 @@ void SYS_Tasks ( void );
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-
+    
 // *****************************************************************************
 /* System Objects
-
-  Summary:
+        
+Summary:
     Structure holding the system's object handles
-
-  Description:
+        
+Description:
     This structure contains the object handles for all objects in the
     MPLAB Harmony project's system configuration.
-
-  Remarks:
+        
+Remarks:
     These handles are returned from the "Initialize" functions for each module
     and must be passed into the "Tasks" function for each module.
 */
-
+        
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
@@ -220,7 +221,6 @@ typedef struct
 
 
 } SYSTEM_OBJECTS;
-
 
 // *****************************************************************************
 // *****************************************************************************
