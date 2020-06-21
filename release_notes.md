@@ -133,6 +133,18 @@ The current known issues are as follows:
     - The mount of MPFS should be done before the FAT FS mount.
     - This is a known SYS_FS issue which will be solved in a future release.
 
+* The DHCP server module does not handle well the initialization data on multiple interfaces
+    - A run time exception can occur when using the DHCP server on multiple interfaces.
+
+* wolfSSL code using the PIC32MZ crypto engine does not work correctly
+    - PIC32MZ hardware crypto should not be selected in MHC
+    - This is a known issue that is taken care of in a newer wolfSSL release.
+
+* SAM9X60 driver corrupted RX packets may occur:
+    - For RX packets that span more than one descriptor (i.e. packet size > 128 bytes) data corruption may occur.
+    - Some packets may be reported as having wrong checksum and discarded.
+    - This issue is under investigation and will be solved in a future release.
+
 Older known issues:
 
 * For creating an IAR project with MHC for the SAME54 Xplained Pro platform the following steps are needed:
