@@ -249,7 +249,6 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         return false;
     }
         </#if>
-    // Turn off verification, because SNTP is usually blocked by a firewall
 		<#if NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION == false>
     // Turn off verification, because SNTP is usually blocked by a firewall
     wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, SSL_VERIFY_NONE, 0);

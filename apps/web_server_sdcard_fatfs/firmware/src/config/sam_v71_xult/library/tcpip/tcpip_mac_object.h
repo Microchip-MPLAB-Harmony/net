@@ -116,6 +116,7 @@ extern const TCPIP_MAC_OBJECT WDRV_MRF24WN_MACObject;
 extern const TCPIP_MAC_OBJECT WDRV_WINC_MACObject;
 extern const TCPIP_MAC_OBJECT WDRV_WILC1000_MACObject;
 extern const TCPIP_MAC_OBJECT DRV_PIC32WK_MACObject;
+extern const TCPIP_MAC_OBJECT WDRV_PIC32MZW1_MACObject;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
