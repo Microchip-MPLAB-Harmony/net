@@ -596,7 +596,7 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
 
 /*******************************************************************************
   Function:
-      uint8_t DRV_PIC32CGMAC_LibGetPriorityQue(void)
+      uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void)
 
   Summary:
     Return the highest priority queue ready
@@ -616,7 +616,7 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
 
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
-uint8_t DRV_PIC32CGMAC_LibGetPriorityQue(void);
+uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void);
 
 /*******************************************************************************
   Function:

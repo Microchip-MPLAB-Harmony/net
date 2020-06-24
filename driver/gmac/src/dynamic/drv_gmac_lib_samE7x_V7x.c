@@ -242,6 +242,9 @@ void DRV_PIC32CGMAC_LibClose(DRV_GMAC_DRIVER * pMACDrv, DRV_PIC32CGMAC_CLOSE_FLA
 	GMAC_REGS->GMAC_ISR;
 	GMAC_REGS->GMAC_ISRPQ[0];
 	GMAC_REGS->GMAC_ISRPQ[1];
+    GMAC_REGS->GMAC_ISRPQ[2] ;
+    GMAC_REGS->GMAC_ISRPQ[3] ;
+    GMAC_REGS->GMAC_ISRPQ[4] ;
 }
 
 
@@ -1054,10 +1057,10 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
 }
 
 /****************************************************************************
- * Function: DRV_PIC32CGMAC_LibGetPriorityQue
+ * Function: DRV_PIC32CGMAC_LibGetHighPrioReadyQue
  * Summary: Return the highest priority queue ready
  *****************************************************************************/
-uint8_t DRV_PIC32CGMAC_LibGetPriorityQue(void)
+uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void)
 {
     int8_t bitPos;  
     uint32_t queEvMask = drvGmacQueEvents;

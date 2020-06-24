@@ -772,7 +772,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
     static GMAC_QUE_LIST    queueIndex = DRV_GMAC_NO_ACTIVE_QUEUE;    
 
     //get highest priority active queue index
-    queueIndex = DRV_PIC32CGMAC_LibGetPriorityQue();      
+    queueIndex = DRV_PIC32CGMAC_LibGetHighPrioReadyQue();      
     
     //if any any active queue?
     while(queueIndex != DRV_GMAC_NO_ACTIVE_QUEUE)
@@ -793,7 +793,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
             //clear que event status     
             DRV_PIC32CGMAC_LibClearPriorityQue(pMACDrv,queueIndex);
             //get highest priority active queue index
-            queueIndex = DRV_PIC32CGMAC_LibGetPriorityQue(); 
+            queueIndex = DRV_PIC32CGMAC_LibGetHighPrioReadyQue(); 
                            
 
         }
