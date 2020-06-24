@@ -212,6 +212,7 @@ def tcpipNetHostNameUpdate(symbol, event):
         'WINC':         'MCHPBOARD_W',
         'WINC1500':     'MCHPBOARD_W',
         'WILC1000':     'MCHPBOARD_W',
+        'PIC32MZW1':   'MCHPBOARD_W',
     }
     print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -252,12 +253,14 @@ def tcpipNetIpAddrUpdate(symbol, event):
         'WINC':         '192.168.1.2',
         'WINC1500':     '192.168.1.2',
         'WILC1000':     '192.168.1.2',
+        'PIC32MZW1':    '192.168.1.2',
     }
     ipAddress = interfaceToIpAddress.get( tcpipInterfaceName, '0.0.0.0' )
     print "tcpipNetIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     if(     (tcpipInterfaceName == "MRF24WN")
         or  (tcpipInterfaceName == "WINC1500")
         or  (tcpipInterfaceName == "WILC1000")
+        or  (tcpipInterfaceName == "PIC32MZW1")
     ):
         tcpipDhcpc = Database.getSymbolValue( "tcpipDhcp",  "TCPIP_STACK_USE_DHCP_CLIENT" )
         tcpipDhcps = Database.getSymbolValue( "tcpipDhcps", "TCPIP_STACK_USE_DHCP_SERVER" )
@@ -280,6 +283,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
         'WINC':         '192.168.1.1',
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
+        'PIC32MZW1':   '192.168.1.1',
     }
     print "tcpipNetGatewayIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -299,6 +303,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
         'WINC':         '192.168.1.1',
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
+        'PIC32MZW1':   '192.168.1.1',
     }
     print "tcpipNetPrimDnsIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -318,6 +323,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'WINC':         'WDRV_WINC_MACObject',
         'WINC1500':     'WDRV_WINC1500_MACObject',
         'WILC1000':     'WDRV_WILC1000_MACObject',
+        'PIC32MZW1':   'WDRV_PIC32MZW1_MACObject',
     }
     print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
