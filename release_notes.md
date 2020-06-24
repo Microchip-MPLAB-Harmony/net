@@ -1,4 +1,19 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.1 (June, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.1:
+
+- **New features**
+
+The following table provides the list of the new features included in this dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| MAC driver            | Added support for PIC32MZW1 controller|
+| NET_PRES              | Added certification validation option |
+
+- **Release notes for v3.6.0 apply**
+
+
 ## Net Release v3.6.0 (June, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.0:
 
