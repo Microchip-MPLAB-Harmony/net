@@ -41,9 +41,7 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
-<#if TCPIP_USE_HEAP == true>
 /*** TCPIP Heap Configuration ***/
-
 <#if TCPIP_STACK_USE_HEAP_CONFIG == "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP">
 #define TCPIP_STACK_USE_EXTERNAL_HEAP
 <#else>
@@ -84,7 +82,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_STACK_HEAP_USAGE_CONFIG                ${TCPIP_STACK_HEAP_USAGE_CONFIG}
 
 #define TCPIP_STACK_SUPPORTED_HEAPS                  ${TCPIP_STACK_SUPPORTED_HEAPS}
-</#if>
 
 <#--
 /*******************************************************************************

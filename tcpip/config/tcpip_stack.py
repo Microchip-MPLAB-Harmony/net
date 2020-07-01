@@ -27,9 +27,11 @@ TCPIP_STACK_HEAP_USAGE = ["TCPIP_STACK_HEAP_USE_DEFAULT", "TCPIP_STACK_HEAP_USE_
 
 TCIPHEAP_POOL_DFLT_SIZE = [2064, 1616, 1024, 768, 512, 256, 128, 64, 32, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64]
 TCIPHEAP_POOL_EXPBLK_NUM = [2, 2, 2, 2, 2, 4, 4, 8, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+TCIPHEAP_POOL_DFLT_COUNT = 8
+TCIPHEAP_POOL_MAX_COUNT = 20
 
-tcpipStackHeapPoolNumMaximum = 20
-tcpipPoolEntryInstancesNumPrev = 9
+tcpipStackHeapPoolCount = 0
+tcpipPoolEntryInstancesNumPrev = 0
 tcpipStackHeapPoolEntry = []
 tcpipStackHeapPoolBlkSize = []
 tcpipStackHeapPoolPreAllocBlkNum = []
@@ -79,96 +81,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTickRate.setDescription("TCP/IP Stack State Machine Tick Rate")
     tcpipStackTickRate.setDefaultValue(5)
     
-    # Event Notification
-    tcpipStackEventNotify = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EVENT_NOTIFICATION", None)
-    tcpipStackEventNotify.setVisible(False)
-    tcpipStackEventNotify.setDefaultValue(True)
-    
-    # Enable User Notification
-    tcpipStackUserNotify= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_USER_NOTIFICATION", None)
-    tcpipStackUserNotify.setLabel("Enable User Notification")
-    tcpipStackUserNotify.setVisible(True)
-    tcpipStackUserNotify.setDescription("Enable User Notification")
-    tcpipStackUserNotify.setDefaultValue(False)
-    tcpipStackUserNotify.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_EVENT_NOTIFICATION"])
-
-    # Enable Deinitialize of TCP/IP stack
-    tcpipStackDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DOWN_OPERATION", None)
-    tcpipStackDown.setLabel("Enable Stack Deinitialize Operations")
-    tcpipStackDown.setVisible(True)
-    tcpipStackDown.setDescription("Enable Deinitialize of TCP/IP stack")
-    tcpipStackDown.setDefaultValue(True)
-    
-    # Enable stack up/down of TCP/IP stack
-    tcpipStackIfUpDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_IF_UP_DOWN_OPERATION", tcpipStackDown)
-    tcpipStackIfUpDown.setLabel("Enable IF Up/Down Operations")
-    tcpipStackIfUpDown.setVisible(True)
-    tcpipStackIfUpDown.setDescription("Enable interface up/down of TCP/IP stack")
-    tcpipStackIfUpDown.setDefaultValue(True)
-    tcpipStackIfUpDown.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_DOWN_OPERATION"])
-
-    # Enable stack Mac Down
-    tcpipStackMacDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_MAC_DOWN_OPERATION", None)
-    tcpipStackMacDown.setLabel("Enable MAC Down on Failure")
-    tcpipStackMacDown.setVisible(False)
-    tcpipStackMacDown.setDescription("Enable MAC Down on Failure")
-    tcpipStackMacDown.setDefaultValue(True)
-    tcpipStackMacDown.setDependencies(tcpipStackMenuInvisible, ["TCPIP_STACK_DOWN_OPERATION"])
-
-    # Enable Interface Address Change Signaling
-    tcpipStackIfChange= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERFACE_CHANGE_SIGNALING", None)
-    tcpipStackIfChange.setLabel("Enable Interface Address Change Signaling")
-    tcpipStackIfChange.setVisible(True)
-    tcpipStackIfChange.setDescription("Enable Interface Address Change Signaling")
-    tcpipStackIfChange.setDefaultValue(False)
-    tcpipStackIfChange.setDependencies(tcpipStackMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
-
-    # Enable Configuration Save/Restore Functionality
-    tcpipStackConfigSaveRestore= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_CONFIGURATION_SAVE_RESTORE", None)
-    tcpipStackConfigSaveRestore.setLabel("Enable Configuration Save/Restore Functionality")
-    tcpipStackConfigSaveRestore.setVisible(True)
-    tcpipStackConfigSaveRestore.setDescription("Enable Configuration Save/Restore Functionality")
-    tcpipStackConfigSaveRestore.setDefaultValue(True)   
         
-    # Enable File System Wrapper
-    #config TCPIP_SYS_FS_WRAPPER_NEEDED. This logic implemented in tcpip_sysfs_wrapper.py
-
-    # Define number of entries in the secure port table
-    tcpipStackSecPortNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SECURE_PORT_ENTRIES", None)
-    tcpipStackSecPortNum.setLabel("Number of entries in the secure port table")
-    tcpipStackSecPortNum.setVisible(True)
-    tcpipStackSecPortNum.setDescription("Number of entries in the secure port table")
-    tcpipStackSecPortNum.setDefaultValue(10)
-
-    # Enable Alias Interfaces Support
-    tcpipStackAliasInterface= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ALIAS_INTERFACE_SUPPORT", None)
-    tcpipStackAliasInterface.setLabel("Enable Alias Interfaces Support")
-    tcpipStackAliasInterface.setVisible(True)
-    tcpipStackAliasInterface.setDescription("Enable Alias Interfaces Support")
-    tcpipStackAliasInterface.setDefaultValue(False)
-
-    # Enable Packet Logger
-    tcpipStackPktLogEnable= tcpipStackComponent.createBooleanSymbol("TCPIP_PACKET_LOG_ENABLE", None)
-    tcpipStackPktLogEnable.setLabel("Enable Packet Logger")
-    tcpipStackPktLogEnable.setVisible(True)
-    tcpipStackPktLogEnable.setDescription("Enable Packet Logger")
-    tcpipStackPktLogEnable.setDefaultValue(False)
-
-    # Number of Entries in the Packet Logger
-    tcpipStackPktLogSize= tcpipStackComponent.createIntegerSymbol("TCPIP_PKT_LOG_SIZE", tcpipStackPktLogEnable)
-    tcpipStackPktLogSize.setLabel("Number of Entries in the Packet Logger")
-    tcpipStackPktLogSize.setVisible(False)
-    tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
-    tcpipStackPktLogSize.setDefaultValue(40)
-    tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])    
-
-    # Enable External Packet Processing
-    tcpipStackExtPktProcess= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EXTERN_PACKET_PROCESS", None)
-    tcpipStackExtPktProcess.setLabel("Enable External Packet Processing")
-    tcpipStackExtPktProcess.setVisible(True)
-    tcpipStackExtPktProcess.setDescription("Allows External Processing of RX Packets")
-    tcpipStackExtPktProcess.setDefaultValue(False)
-    
     # RTOS Configuration
     tcpipStackRtosMenu = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_RTOS_MENU", None)
     tcpipStackRtosMenu.setLabel("RTOS Configuration")
@@ -237,11 +150,11 @@ def instantiateComponent(tcpipStackComponent):
     print("TCPIP Heap Component")
     configName = Variables.get("__CONFIGURATION_NAME")
     # Select Heap Configuration
-    tcpipStackHeap = tcpipStackComponent.createBooleanSymbol("TCPIP_USE_HEAP", None)
-    tcpipStackHeap.setLabel("Select Heap Configuration")
+    tcpipStackHeap = tcpipStackComponent.createMenuSymbol("TCPIP_USE_HEAP", None)
+    tcpipStackHeap.setLabel("Heap Configuration")
     tcpipStackHeap.setVisible(True)
-    tcpipStackHeap.setDescription("Select Heap Configuration")
-    tcpipStackHeap.setDefaultValue(True)
+    tcpipStackHeap.setDescription("Heap Configuration")
+    # tcpipStackHeap.setDefaultValue(True)
 
     # Use Heap Config
     tcpipStackHeapConfig = tcpipStackComponent.createComboSymbol("TCPIP_STACK_USE_HEAP_CONFIG", tcpipStackHeap, TCPIP_STACK_HEAP_TYPE)
@@ -249,7 +162,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapConfig.setVisible(True)
     tcpipStackHeapConfig.setDescription("Use Heap Config")
     tcpipStackHeapConfig.setDefaultValue("TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP")
-    #tcpipStackHeapConfig.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
 
     # TCP/IP Stack Dynamic RAM Size
     tcpipStackHeapStackDramSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_SIZE", tcpipStackHeap)
@@ -259,6 +171,128 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackDramSize.setDefaultValue(39250)
     tcpipStackHeapStackDramSize.setDependencies(tcpipStackHeapInternMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
 
+    
+    # The Expansion Size for the Internal Heap Pool
+    tcpipStackHeapStackPoolExpnSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_POOL_EXPANSION_SIZE", tcpipStackHeap)
+    tcpipStackHeapStackPoolExpnSize.setLabel("The Expansion Size for the Internal Heap Pool")
+    tcpipStackHeapStackPoolExpnSize.setVisible(False)
+    tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
+    tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
+    tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+    
+    # Number of Heap Pool Entries
+    tcpipStackHeapPoolEntryNum = tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRIES_NUMBER", tcpipStackHeap)
+    tcpipStackHeapPoolEntryNum.setLabel("Number of Heap Pool Entries")
+    tcpipStackHeapPoolEntryNum.setVisible(False)
+    tcpipStackHeapPoolEntryNum.setDescription("Number of Heap Pool Entries")
+    tcpipStackHeapPoolEntryNum.setMin(0)
+    tcpipStackHeapPoolEntryNum.setMax(TCIPHEAP_POOL_MAX_COUNT)
+    tcpipStackHeapPoolEntryNum.setDefaultValue(TCIPHEAP_POOL_DFLT_COUNT)
+    tcpipStackHeapPoolEntryNum.setDependencies(tcpipStackHeapPoolEntryVisible, ["TCPIP_STACK_USE_HEAP_CONFIG", "TCPIP_HEAP_POOL_ENTRIES_NUMBER"])
+
+    #####################################################################################################
+    for index in range(0,TCIPHEAP_POOL_MAX_COUNT): 
+        tcpipStackHeapPoolEntry.append(tcpipStackComponent.createMenuSymbol("TCPIP_HEAP_POOL_ENTRY_MENU_IDX"+str(index),tcpipStackHeapPoolEntryNum))
+        tcpipStackHeapPoolEntry[index].setLabel("Pool Entry "+ str(index))
+        tcpipStackHeapPoolEntry[index].setVisible(index < TCIPHEAP_POOL_DFLT_COUNT)
+
+        # Heap Block Size
+        tcpipStackHeapPoolBlkSize.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_SIZE_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolBlkSize[index].setLabel("Size of the Block, Bytes")
+        tcpipStackHeapPoolBlkSize[index].setVisible(True)
+        tcpipStackHeapPoolBlkSize[index].setDefaultValue(int(TCIPHEAP_POOL_DFLT_SIZE[index]))
+        tcpipStackHeapPoolBlkSize[index].setMin(32)
+        tcpipStackHeapPoolBlkSize[index].setMax(4096)
+
+        # Heap Pre-allocated blocks
+        tcpipStackHeapPoolPreAllocBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolPreAllocBlkNum[index].setLabel("Number of Pre-allocated Blocks with this Size")
+        tcpipStackHeapPoolPreAllocBlkNum[index].setVisible(True)
+        tcpipStackHeapPoolPreAllocBlkNum[index].setDefaultValue(0)
+        tcpipStackHeapPoolPreAllocBlkNum[index].setMin(0)
+        tcpipStackHeapPoolPreAllocBlkNum[index].setMax(4096)
+        
+        # Heap Pre-allocated blocks
+        tcpipStackHeapPoolExpBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolExpBlkNum[index].setLabel("Number of Blocks to Dynamically Expand for this Pool Entry")
+        tcpipStackHeapPoolExpBlkNum[index].setVisible(True)
+        tcpipStackHeapPoolExpBlkNum[index].setDefaultValue(TCIPHEAP_POOL_EXPBLK_NUM[index])
+        tcpipStackHeapPoolExpBlkNum[index].setMin(0)
+        tcpipStackHeapPoolExpBlkNum[index].setMax(4096)
+    #####################################################################################################
+    # Stack allocation function, malloc style
+    tcpipStackHeapStackMalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_MALLOC_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackMalloc.setLabel("Stack allocation function, malloc style")
+    tcpipStackHeapStackMalloc.setVisible(True)
+    tcpipStackHeapStackMalloc.setDescription("Stack allocation function, malloc style")
+    tcpipStackHeapStackMalloc.setDefaultValue("malloc")
+
+    # Stack allocation function, calloc style
+    tcpipStackHeapStackCalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_CALLOC_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackCalloc.setLabel("Stack allocation function, calloc style")
+    tcpipStackHeapStackCalloc.setVisible(True)
+    tcpipStackHeapStackCalloc.setDescription("Stack allocation function, calloc style")
+    tcpipStackHeapStackCalloc.setDefaultValue("calloc")
+
+    # Stack deallocation function, free style
+    tcpipStackHeapStackFree = tcpipStackComponent.createStringSymbol("TCPIP_STACK_FREE_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackFree.setLabel("Stack deallocation function, free style")
+    tcpipStackHeapStackFree.setVisible(True)
+    tcpipStackHeapStackFree.setDescription("Stack deallocation function, free style")
+    tcpipStackHeapStackFree.setDefaultValue("free")
+
+    # Flags supported for heap allocation
+    tcpipStackHeapFlag = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USE_FLAGS", tcpipStackHeap, TCPIP_STACK_HEAP_FLAGS)
+    tcpipStackHeapFlag.setLabel("Flags supported for heap allocation")
+    tcpipStackHeapFlag.setVisible(True)
+    tcpipStackHeapFlag.setDescription("Flags supported for heap allocation")
+    tcpipStackHeapFlag.setDefaultValue("TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED")
+
+    # Heap area usage
+    tcpipStackHeapUsageConfig = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USAGE_CONFIG", tcpipStackHeap, TCPIP_STACK_HEAP_USAGE)
+    tcpipStackHeapUsageConfig.setLabel("Heap area usage")
+    tcpipStackHeapUsageConfig.setVisible(True)
+    tcpipStackHeapUsageConfig.setDescription("Heap area usage")
+    tcpipStackHeapUsageConfig.setDefaultValue("TCPIP_STACK_HEAP_USE_DEFAULT")
+
+    # Maximum heap types
+    tcpipStackHeapStackSupportHeap = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SUPPORTED_HEAPS", tcpipStackHeap)
+    tcpipStackHeapStackSupportHeap.setLabel("Maximum heap types")
+    tcpipStackHeapStackSupportHeap.setVisible(True)
+    tcpipStackHeapStackSupportHeap.setDescription("Maximum heap types")
+    tcpipStackHeapStackSupportHeap.setDefaultValue(1)
+
+    # TCP/IP Stack Dynamic RAM Lower Limit
+    tcpipStackHeapStackDramLim = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_RUN_LIMIT", tcpipStackHeap)
+    tcpipStackHeapStackDramLim.setLabel("TCP/IP Stack Dynamic RAM Lower Limit")
+    tcpipStackHeapStackDramLim.setVisible(True)
+    tcpipStackHeapStackDramLim.setDescription("TCP/IP Stack Dynamic RAM Lower Limit")
+    tcpipStackHeapStackDramLim.setDefaultValue(2048)
+    tcpipStackHeapStackDramLim.setDependencies(tcpipStackHeapExternMenuInvisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+
+    # TCP/IP Stack Dynamic Allocation Debug
+    tcpipStackHeapStackDramDebug = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_DEBUG_ENABLE", tcpipStackHeap)
+    tcpipStackHeapStackDramDebug.setLabel("TCP/IP Stack Dynamic Allocation Debug")
+    tcpipStackHeapStackDramDebug.setVisible(True)
+    tcpipStackHeapStackDramDebug.setDescription("TCP/IP Stack Dynamic Allocation Debug")
+    tcpipStackHeapStackDramDebug.setDefaultValue(False)
+
+    # TCP/IP Stack Dynamic Allocation Trace
+    tcpipStackHeapStackDramTrace = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_TRACE_ENABLE", tcpipStackHeapStackDramDebug)
+    tcpipStackHeapStackDramTrace.setLabel("TCP/IP Stack Dynamic Allocation Trace")
+    tcpipStackHeapStackDramTrace.setVisible(False)
+    tcpipStackHeapStackDramTrace.setDescription("TCP/IP Stack Dynamic Allocation Trace")
+    tcpipStackHeapStackDramTrace.setDefaultValue(False)
+    tcpipStackHeapStackDramTrace.setDependencies(tcpipStackHeapStackDynAllocateTraceVisible, ["TCPIP_STACK_DRAM_DEBUG_ENABLE"])
+
+    # TCP/IP Stack Number of Trace Slots
+    tcpipStackHeapStackDramTraceSlotsNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_TRACE_SLOTS", tcpipStackHeapStackDramDebug)
+    tcpipStackHeapStackDramTraceSlotsNum.setLabel("TCP/IP Stack Number of Trace Slots")
+    tcpipStackHeapStackDramTraceSlotsNum.setVisible(False)
+    tcpipStackHeapStackDramTraceSlotsNum.setDescription("TCP/IP Stack Number of Trace Slots")
+    tcpipStackHeapStackDramTraceSlotsNum.setDefaultValue(16)
+    tcpipStackHeapStackDramTraceSlotsNum.setDependencies(tcpipStackHeapStackTraceSlotsNumVisible, ["TCPIP_STACK_DRAM_TRACE_ENABLE"])
+    
     tcpipHeapRecommendlist = [  "drvGmac.TCPIP_USE_ETH_MAC", "drvGmac.DRV_GMAC_HEAP_SIZE",
                                 "drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvPic32mEthmac.DRV_ETHMAC_HEAP_SIZE",
                                 "drvEmac0.TCPIP_USE_EMAC0", "drvEmac0.DRV_EMAC_HEAP_SIZE",
@@ -284,43 +318,121 @@ def instantiateComponent(tcpipStackComponent):
                                 "tcpipTcp.TCPIP_USE_TCP", "tcpipTcp.TCPIP_TCP_HEAP_SIZE"] 
                                 
     # TCP/IP Stack Recommended Heap Size
-    tcpipStackHeapRecommendSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_HEAP_SIZE_RECOMMEND", None)
+    tcpipStackHeapRecommendSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_HEAP_SIZE_RECOMMEND", tcpipStackHeap)
     tcpipStackHeapRecommendSize.setLabel("TCP/IP Heap Size Estimate(in kilobytes)")
     tcpipStackHeapRecommendSize.setVisible(True)
     tcpipStackHeapRecommendSize.setDescription("TCP/IP Heap Size Estimate(in kilobytes)")
     tcpipStackHeapRecommendSize.setDefaultValue(39250)
     tcpipStackHeapRecommendSize.setReadOnly(True)
     tcpipStackHeapRecommendSize.setDependencies(tcpipStackHeapUpdate, tcpipHeapRecommendlist)
-    
-    tcpipStackHeapRecommendComment = tcpipStackComponent.createCommentSymbol("TCPIP_STACK_HEAP_SIZE_COMMENT",None)
-    tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer to Heap Estimation documentation")
-    tcpipStackHeapRecommendComment.setVisible( True )
-    
+        
     tcpipStackHeapSizeMask = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_HEAP_CALC_MASK", tcpipStackHeapRecommendSize)
     tcpipStackHeapSizeMask.setLabel("Module-wise Heap Estimate(show with each module)")
     tcpipStackHeapSizeMask.setVisible(True)
     tcpipStackHeapSizeMask.setDefaultValue(False)
     
-    # Number of Heap Pool Entries
-    tcpipStackHeapPoolEntryNum = tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRIES_NUMBER", tcpipStackHeap)
-    tcpipStackHeapPoolEntryNum.setLabel("Number of Heap Pool Entries")
-    tcpipStackHeapPoolEntryNum.setVisible(False)
-    tcpipStackHeapPoolEntryNum.setDescription("Number of Heap Pool Entries")
-    tcpipStackHeapPoolEntryNum.setMin(1)
-    tcpipStackHeapPoolEntryNum.setMax(20)
-    tcpipStackHeapPoolEntryNum.setDefaultValue(9)
-    tcpipStackHeapPoolEntryNum.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+    tcpipStackHeapRecommendComment = tcpipStackComponent.createCommentSymbol("TCPIP_STACK_HEAP_SIZE_COMMENT",tcpipStackHeap)
+    tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer to Heap Estimation documentation")
+    tcpipStackHeapRecommendComment.setVisible( True )
     
-    # The Expansion Size for the Internal Heap Pool
-    tcpipStackHeapStackPoolExpnSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_POOL_EXPANSION_SIZE", tcpipStackHeap)
-    tcpipStackHeapStackPoolExpnSize.setLabel("The Expansion Size for the Internal Heap Pool")
-    tcpipStackHeapStackPoolExpnSize.setVisible(False)
-    tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
-    tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
-    tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+    # Advance Settings
+    tcpipStackAdvSettings = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_ADV_SETTING", None)
+    tcpipStackAdvSettings.setLabel("Advance Settings")
+    tcpipStackAdvSettings.setDescription("Advance Settings")
+    tcpipStackAdvSettings.setVisible(True)
+    
+    # Event Notification
+    tcpipStackEventNotify = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EVENT_NOTIFICATION", tcpipStackAdvSettings)
+    tcpipStackEventNotify.setVisible(False)
+    tcpipStackEventNotify.setDefaultValue(True)
+    
+    # Enable User Notification
+    tcpipStackUserNotify= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_USER_NOTIFICATION", tcpipStackAdvSettings)
+    tcpipStackUserNotify.setLabel("Enable User Notification")
+    tcpipStackUserNotify.setVisible(True)
+    tcpipStackUserNotify.setDescription("Enable User Notification")
+    tcpipStackUserNotify.setDefaultValue(False)
+    tcpipStackUserNotify.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_EVENT_NOTIFICATION"])
+
+    # Enable Deinitialize of TCP/IP stack
+    tcpipStackDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DOWN_OPERATION", tcpipStackAdvSettings)
+    tcpipStackDown.setLabel("Enable Stack Deinitialize Operations")
+    tcpipStackDown.setVisible(True)
+    tcpipStackDown.setDescription("Enable Deinitialize of TCP/IP stack")
+    tcpipStackDown.setDefaultValue(True)
+    
+    # Enable stack up/down of TCP/IP stack
+    tcpipStackIfUpDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_IF_UP_DOWN_OPERATION", tcpipStackDown)
+    tcpipStackIfUpDown.setLabel("Enable IF Up/Down Operations")
+    tcpipStackIfUpDown.setVisible(True)
+    tcpipStackIfUpDown.setDescription("Enable interface up/down of TCP/IP stack")
+    tcpipStackIfUpDown.setDefaultValue(True)
+    tcpipStackIfUpDown.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_DOWN_OPERATION"])
+
+    # Enable stack Mac Down
+    tcpipStackMacDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_MAC_DOWN_OPERATION", tcpipStackAdvSettings)
+    tcpipStackMacDown.setLabel("Enable MAC Down on Failure")
+    tcpipStackMacDown.setVisible(False)
+    tcpipStackMacDown.setDescription("Enable MAC Down on Failure")
+    tcpipStackMacDown.setDefaultValue(True)
+    tcpipStackMacDown.setDependencies(tcpipStackMenuInvisible, ["TCPIP_STACK_DOWN_OPERATION"])
+
+    # Enable Interface Address Change Signaling
+    tcpipStackIfChange= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERFACE_CHANGE_SIGNALING", tcpipStackAdvSettings)
+    tcpipStackIfChange.setLabel("Enable Interface Address Change Signaling")
+    tcpipStackIfChange.setVisible(True)
+    tcpipStackIfChange.setDescription("Enable Interface Address Change Signaling")
+    tcpipStackIfChange.setDefaultValue(False)
+    tcpipStackIfChange.setDependencies(tcpipStackMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+
+    # Enable Configuration Save/Restore Functionality
+    tcpipStackConfigSaveRestore= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_CONFIGURATION_SAVE_RESTORE", tcpipStackAdvSettings)
+    tcpipStackConfigSaveRestore.setLabel("Enable Configuration Save/Restore Functionality")
+    tcpipStackConfigSaveRestore.setVisible(True)
+    tcpipStackConfigSaveRestore.setDescription("Enable Configuration Save/Restore Functionality")
+    tcpipStackConfigSaveRestore.setDefaultValue(True)   
+        
+    # Enable File System Wrapper
+    #config TCPIP_SYS_FS_WRAPPER_NEEDED. This logic implemented in tcpip_sysfs_wrapper.py
+
+    # Define number of entries in the secure port table
+    tcpipStackSecPortNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SECURE_PORT_ENTRIES", tcpipStackAdvSettings)
+    tcpipStackSecPortNum.setLabel("Number of entries in the secure port table")
+    tcpipStackSecPortNum.setVisible(True)
+    tcpipStackSecPortNum.setDescription("Number of entries in the secure port table")
+    tcpipStackSecPortNum.setDefaultValue(10)
+
+    # Enable Alias Interfaces Support
+    tcpipStackAliasInterface= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ALIAS_INTERFACE_SUPPORT", tcpipStackAdvSettings)
+    tcpipStackAliasInterface.setLabel("Enable Alias Interfaces Support")
+    tcpipStackAliasInterface.setVisible(True)
+    tcpipStackAliasInterface.setDescription("Enable Alias Interfaces Support")
+    tcpipStackAliasInterface.setDefaultValue(False)
+
+    # Enable Packet Logger
+    tcpipStackPktLogEnable= tcpipStackComponent.createBooleanSymbol("TCPIP_PACKET_LOG_ENABLE", tcpipStackAdvSettings)
+    tcpipStackPktLogEnable.setLabel("Enable Packet Logger")
+    tcpipStackPktLogEnable.setVisible(True)
+    tcpipStackPktLogEnable.setDescription("Enable Packet Logger")
+    tcpipStackPktLogEnable.setDefaultValue(False)
+
+    # Number of Entries in the Packet Logger
+    tcpipStackPktLogSize= tcpipStackComponent.createIntegerSymbol("TCPIP_PKT_LOG_SIZE", tcpipStackPktLogEnable)
+    tcpipStackPktLogSize.setLabel("Number of Entries in the Packet Logger")
+    tcpipStackPktLogSize.setVisible(False)
+    tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
+    tcpipStackPktLogSize.setDefaultValue(40)
+    tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])    
+
+    # Enable External Packet Processing
+    tcpipStackExtPktProcess= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EXTERN_PACKET_PROCESS", tcpipStackAdvSettings)
+    tcpipStackExtPktProcess.setLabel("Enable External Packet Processing")
+    tcpipStackExtPktProcess.setVisible(True)
+    tcpipStackExtPktProcess.setDescription("Allows External Processing of RX Packets")
+    tcpipStackExtPktProcess.setDefaultValue(False)
 
     # Enable TCP/IP stack Initialization callback 
-    tcpipStackEnableInitCback= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ENABLE_INIT_CALLBACK", None)
+    tcpipStackEnableInitCback= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ENABLE_INIT_CALLBACK", tcpipStackAdvSettings)
     tcpipStackEnableInitCback.setLabel("Enable Stack Initialization Callback")
     tcpipStackEnableInitCback.setVisible(True)
     tcpipStackEnableInitCback.setDescription("Enable Stack Initialization Callback")
@@ -333,124 +445,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
     tcpipStackInitCback.setDefaultValue("TCPIP_STACK_InitCallback")
     tcpipStackInitCback.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_ENABLE_INIT_CALLBACK"])
-    
-    
-    
-    # source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_pool_idx.ftl" 20 instances
-    #####################################################################################################
-    for index in range(0,tcpipStackHeapPoolNumMaximum): 
-        tcpipStackHeapPoolEntry.append(tcpipStackComponent.createBooleanSymbol("TCPIP_HEAP_POOL_ENTRY_NUMBERX"+str(index),tcpipStackHeap))
-        tcpipStackHeapPoolEntry[index].setLabel("Pool Entry "+ str(index))
-        tcpipStackHeapPoolEntry[index].setVisible(False)
-        tcpipStackHeapPoolEntry[index].setDefaultValue(True)
-        tcpipStackHeapPoolEntry[index].setDependencies(tcpipStackHeapPoolEntryInstance, ["TCPIP_HEAP_POOL_ENTRIES_NUMBER","TCPIP_STACK_USE_HEAP_CONFIG"])
-
-        # Heap Block Size
-        tcpipStackHeapPoolBlkSize.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_SIZE_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolBlkSize[index].setLabel("Size of the Block, Bytes")
-        tcpipStackHeapPoolBlkSize[index].setVisible(False)
-        tcpipStackHeapPoolBlkSize[index].setDefaultValue(int(TCIPHEAP_POOL_DFLT_SIZE[index]))
-        tcpipStackHeapPoolBlkSize[index].setMin(32)
-        tcpipStackHeapPoolBlkSize[index].setMax(4096)
-        tcpipStackHeapPoolBlkSize[index].setDependencies(tcpipStackHeapPoolInstnBlkSizeMenu, [tcpipStackHeapPoolEntry[index].getID(),"TCPIP_STACK_USE_HEAP_CONFIG"])
-
-        # Heap Pre-allocated blocks
-        tcpipStackHeapPoolPreAllocBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolPreAllocBlkNum[index].setLabel("Number of Pre-allocated Blocks with this Size")
-        tcpipStackHeapPoolPreAllocBlkNum[index].setVisible(False)
-        tcpipStackHeapPoolPreAllocBlkNum[index].setDefaultValue(0)
-        tcpipStackHeapPoolPreAllocBlkNum[index].setMin(0)
-        tcpipStackHeapPoolPreAllocBlkNum[index].setMax(4096)
-        tcpipStackHeapPoolPreAllocBlkNum[index].setDependencies(tcpipStackHeapPoolPreAllocBlkMenu, [tcpipStackHeapPoolEntry[index].getID(),"TCPIP_STACK_USE_HEAP_CONFIG"])
-        
-        # Heap Pre-allocated blocks
-        tcpipStackHeapPoolExpBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolExpBlkNum[index].setLabel("Number of Blocks to Dynamically Expand for this Pool Entry")
-        tcpipStackHeapPoolExpBlkNum[index].setVisible(False)
-        tcpipStackHeapPoolExpBlkNum[index].setDefaultValue(TCIPHEAP_POOL_EXPBLK_NUM[index])
-        tcpipStackHeapPoolExpBlkNum[index].setMin(0)
-        tcpipStackHeapPoolExpBlkNum[index].setMax(4096)
-        tcpipStackHeapPoolExpBlkNum[index].setDependencies(tcpipStackHeapPoolExpBlkMenu, [tcpipStackHeapPoolEntry[index].getID(),"TCPIP_STACK_USE_HEAP_CONFIG"])
-    #####################################################################################################
-    # Stack allocation function, malloc style
-    tcpipStackHeapStackMalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_MALLOC_FUNC", tcpipStackHeap)
-    tcpipStackHeapStackMalloc.setLabel("Stack allocation function, malloc style")
-    tcpipStackHeapStackMalloc.setVisible(True)
-    tcpipStackHeapStackMalloc.setDescription("Stack allocation function, malloc style")
-    tcpipStackHeapStackMalloc.setDefaultValue("malloc")
-    #tcpipStackHeapStackMalloc.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # Stack allocation function, calloc style
-    tcpipStackHeapStackCalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_CALLOC_FUNC", tcpipStackHeap)
-    tcpipStackHeapStackCalloc.setLabel("Stack allocation function, calloc style")
-    tcpipStackHeapStackCalloc.setVisible(True)
-    tcpipStackHeapStackCalloc.setDescription("Stack allocation function, calloc style")
-    tcpipStackHeapStackCalloc.setDefaultValue("calloc")
-    #tcpipStackHeapStackCalloc.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # Stack deallocation function, free style
-    tcpipStackHeapStackFree = tcpipStackComponent.createStringSymbol("TCPIP_STACK_FREE_FUNC", tcpipStackHeap)
-    tcpipStackHeapStackFree.setLabel("Stack deallocation function, free style")
-    tcpipStackHeapStackFree.setVisible(True)
-    tcpipStackHeapStackFree.setDescription("Stack deallocation function, free style")
-    tcpipStackHeapStackFree.setDefaultValue("free")
-    #tcpipStackHeapStackFree.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # Flags supported for heap allocation
-    tcpipStackHeapFlag = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USE_FLAGS", tcpipStackHeap, TCPIP_STACK_HEAP_FLAGS)
-    tcpipStackHeapFlag.setLabel("Flags supported for heap allocation")
-    tcpipStackHeapFlag.setVisible(True)
-    tcpipStackHeapFlag.setDescription("Flags supported for heap allocation")
-    tcpipStackHeapFlag.setDefaultValue("TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED")
-    #tcpipStackHeapFlag.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # Heap area usage
-    tcpipStackHeapUsageConfig = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USAGE_CONFIG", tcpipStackHeap, TCPIP_STACK_HEAP_USAGE)
-    tcpipStackHeapUsageConfig.setLabel("Heap area usage")
-    tcpipStackHeapUsageConfig.setVisible(True)
-    tcpipStackHeapUsageConfig.setDescription("Heap area usage")
-    tcpipStackHeapUsageConfig.setDefaultValue("TCPIP_STACK_HEAP_USE_DEFAULT")
-    #tcpipStackHeapUsageConfig.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # Maximum heap types
-    tcpipStackHeapStackSupportHeap = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SUPPORTED_HEAPS", tcpipStackHeap)
-    tcpipStackHeapStackSupportHeap.setLabel("Maximum heap types")
-    tcpipStackHeapStackSupportHeap.setVisible(True)
-    tcpipStackHeapStackSupportHeap.setDescription("Maximum heap types")
-    tcpipStackHeapStackSupportHeap.setDefaultValue(1)
-    #tcpipStackHeapStackSupportHeap.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # TCP/IP Stack Dynamic RAM Lower Limit
-    tcpipStackHeapStackDramLim = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_RUN_LIMIT", tcpipStackHeap)
-    tcpipStackHeapStackDramLim.setLabel("TCP/IP Stack Dynamic RAM Lower Limit")
-    tcpipStackHeapStackDramLim.setVisible(True)
-    tcpipStackHeapStackDramLim.setDescription("TCP/IP Stack Dynamic RAM Lower Limit")
-    tcpipStackHeapStackDramLim.setDefaultValue(2048)
-    tcpipStackHeapStackDramLim.setDependencies(tcpipStackHeapExternMenuInvisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
-
-    # TCP/IP Stack Dynamic Allocation Debug
-    tcpipStackHeapStackDramDebug = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_DEBUG_ENABLE", tcpipStackHeap)
-    tcpipStackHeapStackDramDebug.setLabel("TCP/IP Stack Dynamic Allocation Debug")
-    tcpipStackHeapStackDramDebug.setVisible(True)
-    tcpipStackHeapStackDramDebug.setDescription("TCP/IP Stack Dynamic Allocation Debug")
-    tcpipStackHeapStackDramDebug.setDefaultValue(False)
-    #tcpipStackHeapStackDramDebug.setDependencies(tcpipStackHeapMenuVisibleSingle, ["TCPIP_USE_HEAP"])
-
-    # TCP/IP Stack Dynamic Allocation Trace
-    tcpipStackHeapStackDramTrace = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_TRACE_ENABLE", tcpipStackHeapStackDramDebug)
-    tcpipStackHeapStackDramTrace.setLabel("TCP/IP Stack Dynamic Allocation Trace")
-    tcpipStackHeapStackDramTrace.setVisible(False)
-    tcpipStackHeapStackDramTrace.setDescription("TCP/IP Stack Dynamic Allocation Trace")
-    tcpipStackHeapStackDramTrace.setDefaultValue(False)
-    tcpipStackHeapStackDramTrace.setDependencies(tcpipStackHeapStackDynAllocateTraceVisible, ["TCPIP_STACK_DRAM_DEBUG_ENABLE"])
-
-    # TCP/IP Stack Number of Trace Slots
-    tcpipStackHeapStackDramTraceSlotsNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_TRACE_SLOTS", tcpipStackHeapStackDramDebug)
-    tcpipStackHeapStackDramTraceSlotsNum.setLabel("TCP/IP Stack Number of Trace Slots")
-    tcpipStackHeapStackDramTraceSlotsNum.setVisible(False)
-    tcpipStackHeapStackDramTraceSlotsNum.setDescription("TCP/IP Stack Number of Trace Slots")
-    tcpipStackHeapStackDramTraceSlotsNum.setDefaultValue(16)
-    tcpipStackHeapStackDramTraceSlotsNum.setDependencies(tcpipStackHeapStackTraceSlotsNumVisible, ["TCPIP_STACK_DRAM_TRACE_ENABLE"])
     
     #Add to system_config.h
     tcpipStackHeapHeaderFtl = tcpipStackComponent.createFileSymbol(None, None)
@@ -468,7 +462,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapAllocSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipStackHeapAllocSourceFile.setType("SOURCE")
     tcpipStackHeapAllocSourceFile.setEnabled(True)
-    #tcpipStackHeapAllocSourceFile.setDependencies(tcpipStackHeapAllocGenSourceFile, ["TCPIP_USE_HEAP"])
 
     # Add tcpip_heap_external.c file
     tcpipStackHeapExterncSourceFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1868,8 +1861,7 @@ def tcpipStackHeapStackDynAllocateTraceVisible(tcpipDependentSymbol, event):
         tcpipDependentSymbol.setVisible(True)
     else:
         tcpipDependentSymbol.setVisible(False)
-        
-
+    
 # make TCP/IP Stack Number of Trace Slots visible
 def tcpipStackHeapStackTraceSlotsNumVisible(tcpipDependentSymbol, event):
     if (event["value"] == True):
@@ -1877,15 +1869,8 @@ def tcpipStackHeapStackTraceSlotsNumVisible(tcpipDependentSymbol, event):
     else:
         tcpipDependentSymbol.setVisible(False)
 
-
-def tcpipStackHeapMenuVisibleSingle(symbol, event):
-    if (event["value"] == True):
-        print("Heap Menu Visible.")     
-        symbol.setVisible(True)
-    else:
-        print("Heap Menu Invisible.")
-        symbol.setVisible(False)
-
+def tcpipStackHeapMenuVisibleSingle(symbol, event):    
+    symbol.setVisible(event["value"] )
         
 def tcpipStackHeapInternMenuVisible(symbol, event):
     if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP"):
@@ -1898,12 +1883,39 @@ def tcpipStackHeapExternMenuInvisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
-def tcpipStackHeapPoolMenuVisible(symbol, event):
-    if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL" ):
+
+def tcpipStackHeapPoolMenuVisible(symbol, event):       
+    if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL"):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+        
+def tcpipStackHeapPoolEntryVisible(symbol, event):
+    global tcpipStackHeapPoolCount
+    
+    if "TCPIP_STACK_USE_HEAP_CONFIG" in event["id"]:
+        if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL"):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        count  = event["value"]       
+        
+        symCom = symbol.getComponent()               
+        
+        if(count > tcpipStackHeapPoolCount):    
+            if (tcpipStackHeapPoolCount < TCIPHEAP_POOL_MAX_COUNT):
+                while (tcpipStackHeapPoolCount < count):         
+                    symId = symCom.getSymbolByID("TCPIP_HEAP_POOL_ENTRY_MENU_IDX"+ str(tcpipStackHeapPoolCount))
+                    symId.setVisible(True)
+                    tcpipStackHeapPoolCount = tcpipStackHeapPoolCount + 1
+        else:
+            if (tcpipStackHeapPoolCount <= TCIPHEAP_POOL_MAX_COUNT):
+                while (tcpipStackHeapPoolCount > count): 
+                    symId = symCom.getSymbolByID("TCPIP_HEAP_POOL_ENTRY_MENU_IDX"+ str(tcpipStackHeapPoolCount - 1))
+                    symId.setVisible(False)
+                    tcpipStackHeapPoolCount = tcpipStackHeapPoolCount - 1
+                    
         
 def tcpipStackHeapAllocGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
@@ -1943,69 +1955,6 @@ def tcpipStackSysFsShellSourceFileEnable(sourceFile, event):
         sourceFile.setEnabled(False)
         
 ###########################################################################################################
-def tcpipStackHeapPoolEntryInstance(tcpipStackHeapSymbol, event):
-    global tcpipPoolEntryInstancesNumPrev
-    print("Start tcpipStackHeapPoolEntryInstance")
-    
-    if(event["id"] == "TCPIP_STACK_USE_HEAP_CONFIG" ):  
-        tcpipStackHeapConfig = Database.getSymbolValue("tcpipStack","TCPIP_STACK_USE_HEAP_CONFIG")
-        tcpipStackHeapPoolIndex = int(tcpipStackHeapSymbol.getID().strip("TCPIP_HEAP_POOL_ENTRY_NUMBERX"))
-        if (tcpipStackHeapConfig == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL" ):
-            if(tcpipStackHeapPoolIndex < tcpipPoolEntryInstancesNumPrev ):
-                tcpipStackHeapSymbol.setVisible(True)
-        else:
-            tcpipStackHeapSymbol.setVisible(False)
-    
-    else:               
-        tcpipStackHeapPoolInstanceNumberValue = event["value"]
-        if(tcpipStackHeapPoolInstanceNumberValue > tcpipPoolEntryInstancesNumPrev ):
-            tcpipStackHeapPoolEntry[tcpipPoolEntryInstancesNumPrev].setVisible(True)
-            tcpipStackHeapPoolEntry[tcpipPoolEntryInstancesNumPrev].setValue(True, 1)
-            print("Set TRUE"+ str(tcpipPoolEntryInstancesNumPrev))
-            tcpipPoolEntryInstancesNumPrev = tcpipPoolEntryInstancesNumPrev + 1
-            #Add more network configurations
-        else:
-            if(tcpipStackHeapPoolInstanceNumberValue < tcpipPoolEntryInstancesNumPrev ):
-                #Reduce network configurations
-                tcpipPoolEntryInstancesNumPrev = tcpipPoolEntryInstancesNumPrev - 1
-                tcpipStackHeapPoolEntry[tcpipPoolEntryInstancesNumPrev].setVisible(False)
-                tcpipStackHeapPoolEntry[tcpipPoolEntryInstancesNumPrev].setValue(False, 1)
-                print("Set FALSE"+ str(tcpipPoolEntryInstancesNumPrev))             
-            #else:
-                #Do Nothing
-    print("END tcpipStackHeapPoolEntryInstance")
-    
-    
-def tcpipStackHeapPoolInstnBlkSizeMenu(symbol, event):  
-    tcpipStackHeapPoolInstnIndex = int(symbol.getID().strip("TCPIP_HEAP_POOL_ENTRY_SIZE_IDX"))  
-    tcpipStackHeapPoolInstnEnable = tcpipStackHeapPoolEntry[tcpipStackHeapPoolInstnIndex].getValue()    
-    tcpipStackHeapConfig = Database.getSymbolValue("tcpipStack","TCPIP_STACK_USE_HEAP_CONFIG")
-    
-    if tcpipStackHeapPoolInstnEnable and (tcpipStackHeapConfig == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL" ):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-        
-def tcpipStackHeapPoolPreAllocBlkMenu(symbol, event):   
-    tcpipStackHeapPoolInstnIndex = int(symbol.getID().strip("TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX"))    
-    tcpipStackHeapPoolInstnEnable = tcpipStackHeapPoolEntry[tcpipStackHeapPoolInstnIndex].getValue()    
-    tcpipStackHeapConfig = Database.getSymbolValue("tcpipStack","TCPIP_STACK_USE_HEAP_CONFIG")  
-    
-    if tcpipStackHeapPoolInstnEnable and (tcpipStackHeapConfig == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL" ):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-        
-def tcpipStackHeapPoolExpBlkMenu(symbol, event):
-    tcpipStackHeapPoolInstnIndex = int(symbol.getID().strip("TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX"))    
-    tcpipStackHeapPoolInstnEnable = tcpipStackHeapPoolEntry[tcpipStackHeapPoolInstnIndex].getValue()
-    tcpipStackHeapConfig = Database.getSymbolValue("tcpipStack","TCPIP_STACK_USE_HEAP_CONFIG")
-    
-    if tcpipStackHeapPoolInstnEnable and (tcpipStackHeapConfig == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL" ):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)        
-
 def tcpipStackshowRTOSMenu(symbol, event):
     if (event["value"] == None):
         symbol.setVisible(False)
