@@ -128,14 +128,15 @@ typedef enum
 #define GMAC_INT_TX_ERR_BITS  \
 	(GMAC_IER_TUR_Msk  | GMAC_IER_RLEX_Msk  | GMAC_IER_TFC_Msk  | GMAC_IER_HRESP_Msk )
 // TX interrupts
-#define GMAC_INT_TX_BITS  \
-	(GMAC_INT_TX_ERR_BITS | GMAC_IER_TCOMP_Msk )
+#define GMAC_INT_TX_BITS  (GMAC_INT_TX_ERR_BITS)
 // Interrupt Status bits
 #define GMAC_INT_RX_STATUS_BITS  \
 	(GMAC_ISR_RCOMP_Msk  | GMAC_ISR_RXUBR_Msk  | GMAC_ISR_ROVR_Msk )
 #define GMAC_INT_TX_STATUS_ERR_BITS  \
 	(GMAC_ISR_TUR_Msk  | GMAC_ISR_RLEX_Msk  | GMAC_ISR_TFC_Msk  | GMAC_ISR_HRESP_Msk )
 
+#define DRV_GMAC_DUMMY_PRIORITY (0xFF)
+#define DRV_GMAC_NO_ACTIVE_QUEUE (0xFF)
 // *****************************************************************************
 /* Ethernet Receive Filter Flags
 
@@ -227,8 +228,8 @@ typedef enum
     DRV_PIC32CGMAC_RES_NO_TX_QUEUE,   
             
     /* Not enough nodes in Rx Queues */
-    DRV_PIC32CGMAC_RES_NO_RX_QUEUE,
-            
+    DRV_PIC32CGMAC_RES_NO_RX_QUEUE,            
+             
     /* Errors: Ethernet buffers, descriptors */
 	DRV_PIC32CGMAC_RES_DESC_CNT_ERR,
     /* Some memory allocation failed */
@@ -415,7 +416,40 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv);
+/*******************************************************************************
+  Function:
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv)
 
+  Summary:
+    GMAC receive side filter initialization
+  Description:
+    This function performs the initialization of Rx Queue filter initialization
+
+  Precondition:
+    None.
+
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+  
+  Returns:
+    DRV_PIC32CGMAC_RES_OK               - success
+ 
+  Example:
+    <code>
+    if(DRV_PIC32CGMAC_LibRxQueFilterInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
+    {
+        // Handle error
+    }
+    </code>
+  Remarks:
+    This function should be called before the DRV_PIC32CGMAC_LibMACOpen()
+    routine.
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv);
 /*******************************************************************************
   Function:
       DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
@@ -485,6 +519,305 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv);
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
 void DRV_PIC32CGMAC_LibTransferEnable (DRV_GMAC_DRIVER* pMACDrv);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSetInterruptSrc (DRV_GMAC_DRIVER* pMACDrv)
+
+  Summary:
+    Update GMAC Queue structure with interrupt source
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSetInterruptSrc(DRV_GMAC_DRIVER* pMACDrv);
+
+/*******************************************************************************
+  Function:
+      bool DRV_PIC32CGMAC_LibSetPriorityToQueueNum(DRV_GMAC_DRIVER* pMACDrv)
+
+  Summary:
+    Assign priority to enabled queues
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+  Returns:
+    True - success
+    False - failure
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+bool DRV_PIC32CGMAC_LibSetPriorityToQueueNum(DRV_GMAC_DRIVER* pMACDrv);
+
+/*******************************************************************************
+  Function:
+      uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx)
+
+  Summary:
+    Retrieve priority number from queue index
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queueIdx - priority Queue index
+  Returns:
+    priority number
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx);
+
+/*******************************************************************************
+  Function:
+      uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void)
+
+  Summary:
+    Return the highest priority queue ready
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    None
+  Returns:
+    priority Queue index
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibClearPriorityQue(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx)
+
+  Summary:
+    Clear the ready status of priority queue
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queueIdx - priority Queue index
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibClearPriorityQue(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSysInt_Disable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
+
+  Summary:
+    Disable GMAC priority Queue interrupts
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queMask - priority Queue mask
+    queStat - pointer to store the interrupt state (to use with DRV_PIC32CGMAC_LibSysInt_Restore())
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Disable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSysIntStatus_Clear(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
+
+  Summary:
+    Clear GMAC priority Queue interrupt status
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queMask - priority Queue mask
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSysIntStatus_Clear(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSysInt_Enable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
+
+  Summary:
+    Enable GMAC priority Queue interrupt
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queMask - priority Queue mask
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Enable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
+
+  Summary:
+    Restore GMAC Queue interrupt sources
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+    queMask - priority Queue mask
+    queStat - state to restore interrupts (to work with DRV_PIC32CGMAC_LibSysInt_Disable())
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat);
+
+/*******************************************************************************
+  Function:
+      uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx)
+
+  Summary:
+    Read GMAC interrupt status
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    queueIdx - queue index
+  Returns:
+    GMAC interrupt status
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+
+  Summary:
+    Enable GMAC interrupt events
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    queueIdx - queue index
+    ethEvents - interrupt events
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibDisableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+
+  Summary:
+    Disable GMAC interrupt events
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    queueIdx - queue index
+    ethEvents - interrupt events
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibDisableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
 
 /*******************************************************************************
   Function:

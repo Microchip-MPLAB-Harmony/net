@@ -333,6 +333,34 @@ extern "C" {
 #define TCPIP_IPV6_EXTERN_PACKET_PROCESS   false
 
 
+/*** IGMP Configuration ***/
+#define TCPIP_STACK_USE_IGMP
+#define TCPIP_IGMP_INTERFACES		        	    1
+#define TCPIP_IGMP_MCAST_GROUPS		    		    7
+#define TCPIP_IGMPV2_SUPPORT_ONLY             		false
+#define TCPIP_IGMP_SOURCES_PER_GROUP			    11
+#define TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE		4
+#define TCPIP_IGMP_ROBUSTNESS_VARIABLE		        2
+#define TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL		1000
+#define TCPIP_IGMP_USER_NOTIFICATION             	false
+#define TCPIP_IGMP_TASK_TICK_RATE		    		33
+
+
+/*** TFTP Server Configuration ***/
+#define TCPIP_STACK_USE_TFTP_SERVER
+#define TCPIP_TFTPS_TASK_TICK_RATE              		60
+#define TCPIP_TFTPS_CMD_PROCESS_TIMEOUT           		10
+#define TCPIP_TFTPS_RETRANSMIT_COUNT					3
+#define TCPIP_TFTPS_CLIENT_NUMBER                		3
+#define TCPIP_TFTPS_DEFAULT_FILESIZE         			64000
+#define TCPIP_TFTPS_DEFAULT_BLOCK_SIZE                  512
+#define TCPIP_TFTPS_DEFAULT_TIMEOUT                 	10
+#define TCPIP_TFTPS_FILENAME_LEN						64
+#define TCPIP_TFTPS_USER_NOTIFICATION					false
+#define TCPIP_TFTPS_MOUNT_POINT							"/mnt/mchpSite1/"
+
+
+
 /*** IPv4 Configuration ***/
 #define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
@@ -550,14 +578,20 @@ extern "C" {
 #define TCPIP_GMAC_RX_BUFF_SIZE_DUMMY				    	64
 #define TCPIP_GMAC_TX_BUFF_SIZE_DUMMY				    	64
 
-/*** QUEUE 0 Configuration ***/
+		/*** QUEUE 0 TX Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0				10
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536			
+#define TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE0				    	1536
+		
+		/*** QUEUE 0 RX Configuration ***/
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
 #define TCPIP_GMAC_RX_BUFF_COUNT_QUE0				   		12
-#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0				1
-#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0					1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0			1
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0				1
+
+
+
 
 
 
@@ -570,7 +604,10 @@ extern "C" {
                                                     TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT |\
                                                     TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT |\
                                                     TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT |\
-                                                    0
+													0
+#define TCPIP_GMAC_SCREEN1_COUNT_QUE							0
+#define TCPIP_GMAC_SCREEN2_COUNT_QUE							0	
+													
 #define TCPIP_GMAC_ETH_OPEN_FLAGS       			\
                                                     TCPIP_ETH_OPEN_AUTO |\
                                                     TCPIP_ETH_OPEN_FDUPLEX |\
@@ -587,14 +624,15 @@ extern "C" {
 #define DRV_GMAC_RX_CHKSM_OFFLOAD				(TCPIP_MAC_CHECKSUM_NONE)			
 #define DRV_GMAC_TX_CHKSM_OFFLOAD				(TCPIP_MAC_CHECKSUM_NONE)		
 
+#define TCPIP_GMAC_TX_PRIO_COUNT				1
+#define TCPIP_GMAC_RX_PRIO_COUNT				1
+
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				1
 #define DRV_GMAC_CLIENTS_NUMBER					1
 #define DRV_GMAC_INDEX	    	    				1
 #define DRV_GMAC_PERIPHERAL_ID					1
-#define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
 
-#define DRV_GMAC_INTERRUPT_MODE        				true
 #define DRV_GMAC_RMII_MODE					0
 
 
@@ -614,6 +652,20 @@ extern "C" {
 #define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
 #define TCPIP_NTP_TASK_TICK_RATE				1100
 #define TCPIP_NTP_RX_QUEUE_LIMIT				2
+
+
+
+/*** TFTP Client Configuration ***/
+#define TCPIP_STACK_USE_TFTP_CLIENT
+#define TCPIP_TFTPC_DEFAULT_IF                  "GMAC"
+#define TCPIP_TFTPC_SERVERADDRESS_LEN           16
+#define TCPIP_TFTPC_FILENAME_LEN                32
+#define TCPIP_TFTPC_USER_NOTIFICATION   false
+#define TCPIP_TFTPC_TASK_TICK_RATE              100
+#define TCPIP_TFTPC_CMD_PROCESS_TIMEOUT         3
+#define TCPIP_TFTPC_ARP_TIMEOUT                 3
+#define TCPIP_TFTPC_MAX_RETRIES                 3
+
 
 
 

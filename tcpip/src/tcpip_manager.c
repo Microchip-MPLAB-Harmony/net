@@ -3522,15 +3522,13 @@ TCPIP_EVENT_HANDLE    TCPIP_STACK_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_E
 
     if(pNetIf && _TCPIPStackNetIsPrimary(pNetIf) && handler)
     {
-        newNode = (TCPIP_EVENT_LIST_NODE*)TCPIP_Notification_Add(&pNetIf->registeredClients, tcpip_stack_ctrl_data.memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->evMask = evMask;
-            newNode->pNetIf = pNetIf;
-        }
-        return newNode;
+        TCPIP_EVENT_LIST_NODE eventNode;
+        eventNode.handler = handler;
+        eventNode.hParam = hParam;
+        eventNode.evMask = evMask;
+        eventNode.pNetIf = pNetIf;
+
+        return (TCPIP_EVENT_LIST_NODE*)TCPIP_Notification_Add(&pNetIf->registeredClients, tcpip_stack_ctrl_data.memH, &eventNode, sizeof(eventNode));
     }
 
     return 0;
@@ -3834,6 +3832,7 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACId(TCPIP_NET_IF* pNetIf)
 
 
 
+// @@@@
 const uint8_t*  TCPIP_STACK_NetMACAddressGet(TCPIP_NET_IF* pNetIf)
 {
     if(TCPIP_STACK_NetworkIsUp(pNetIf))
@@ -3843,6 +3842,17 @@ const uint8_t*  TCPIP_STACK_NetMACAddressGet(TCPIP_NET_IF* pNetIf)
 
     return 0;
 }
+
+const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf)
+{
+    if(TCPIP_STACK_NetworkIsUp(pNetIf))
+    {
+        return pNetIf->netMACAddr.v;
+    }
+
+    return 0;
+}
+
 
 static TCPIP_MAC_ACTION TCPIP_STACK_StackToMacAction(TCPIP_STACK_ACTION action)
 {   // TCPIP_MAC_ACTION and TCPIP_STACK_ACTION should be kept in sync!

@@ -364,7 +364,8 @@ int         TCPIP_STACK_MacToNetIndex(TCPIP_MAC_HANDLE hMac);
 
 
 
-const uint8_t*  TCPIP_STACK_NetMACAddressGet(TCPIP_NET_IF* pNetIf);
+const uint8_t*  TCPIP_STACK_NetMACAddressGet(TCPIP_NET_IF* pNetIf); // @@@@
+const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf);
 
 static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetAddress(TCPIP_NET_IF* pNetIf)
 {

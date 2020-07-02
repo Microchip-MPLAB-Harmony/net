@@ -856,14 +856,12 @@ TCPIP_ARP_HANDLE TCPIP_ARP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_ARP_EVEN
 {
     if(handler && arpMod.memH)
     {
-        ARP_LIST_NODE* newNode = (ARP_LIST_NODE*)TCPIP_Notification_Add(&arpMod.registeredUsers, arpMod.memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        ARP_LIST_NODE arpNode;
+        arpNode.handler = handler;
+        arpNode.hParam = hParam;
+        arpNode.hNet = hNet;
+
+        return (ARP_LIST_NODE*)TCPIP_Notification_Add(&arpMod.registeredUsers, arpMod.memH, &arpNode, sizeof(arpNode));
     }
 
     return 0;

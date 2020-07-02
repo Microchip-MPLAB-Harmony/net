@@ -834,6 +834,10 @@ struct _tag_TCPIP_MAC_PACKET
        It can be used by the packet client. */
     uint16_t                        pktClientData;
 
+    /* Priority associated with the packet.
+       On TX: The MAC driver use this field to transmit packet using priority queues.
+       On RX: The MAC driver inform stack about the priority of the packet received */
+    uint8_t                         pktPriority;
     /* Additional client packet payload, variable packet data.
        Ignored by the MAC driver. */
     uint32_t                        pktClientLoad[];
@@ -1644,6 +1648,10 @@ typedef struct
     /* Tx Checksum offload Enable */
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
     
+    /* number of Tx priorities supported by MAC*/
+    uint8_t macTxPrioNum;
+    /* number of Rx priorities supported by MAC*/
+    uint8_t macRxPrioNum;
 }TCPIP_MAC_PARAMETERS;
 
 

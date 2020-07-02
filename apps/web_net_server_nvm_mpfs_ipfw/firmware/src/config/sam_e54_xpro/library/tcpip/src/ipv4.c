@@ -70,6 +70,8 @@ static TCPIP_ARP_HANDLE     ipv4ArpHandle = 0;          // ARP registration hand
 static uint16_t             ipv4InitCount = 0;
 
 static PROTECTED_SINGLE_LIST ipv4PacketFilters = { {0} };
+static volatile uint32_t    ipv4ActFilterCount = 0;    // counter of active filters
+                                                        // access protected by ipv4PacketFilters 
 
 static TCPIP_IPV4_FILTER_TYPE ipv4FilterType = 0;       // IPv4 current filter
 
@@ -211,6 +213,21 @@ static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
 #endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_RX_CHECK) != 0)
 
 
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FILT_COUNT) != 0)
+static uint32_t ipv4PrevFCount = -1;
+
+static void _IPv4FiltCountDbg(const char* msg)
+{
+    if(ipv4ActFilterCount != ipv4PrevFCount)
+    {
+        ipv4PrevFCount = ipv4ActFilterCount;
+        SYS_CONSOLE_PRINT("IPv4 Filt: %s - count: %d\r\n", msg, ipv4PrevFCount);
+    }
+}
+#else
+#define _IPv4FiltCountDbg(msg)
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FILT_COUNT) != 0)
+
 
 static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* MACAddr, TCPIP_ARP_EVENT_TYPE evType, const void* param);
 
@@ -218,7 +235,7 @@ static bool TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt)
 
 static TCPIP_NET_IF* TCPIP_IPV4_CheckPktTx(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* pPkt);
 
-static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt);
+static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen);
 
 #if (TCPIP_IPV4_FRAGMENTATION != 0)
 static void TCPIP_IPV4_Timeout(void);
@@ -334,6 +351,7 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
             ipv4PktHandler = 0;
 #endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
+            ipv4ActFilterCount = 0;
             break;
         }
         
@@ -406,6 +424,7 @@ static void TCPIP_IPV4_Cleanup(void)
     }
 
     TCPIP_Notification_Deinitialize(&ipv4PacketFilters, ipv4MemH);
+    ipv4ActFilterCount = 0;
     ipv4MemH = 0;
 
     TCPIP_Helper_ProtectedSingleListDeinitialize(&ipv4ArpQueue);
@@ -893,7 +912,7 @@ static void TCPIP_IPV4_Process(void)
             pktAccepted = TCPIP_IPV4_VerifyPkt(pNetIf, pRxPkt);
             if(!pktAccepted)
             {
-                pktAccepted = TCPIP_IPV4_VerifyPktFilters(pRxPkt);
+                pktAccepted = TCPIP_IPV4_VerifyPktFilters(pRxPkt, headerLen);
             }
 
             TCPIP_IPV4_CheckRxPkt(pRxPkt);
@@ -1018,56 +1037,123 @@ static bool TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt)
 
 
 
-static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt)
+static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen)
 {
     // process the registered filters
     IPV4_FILTER_LIST_NODE* fNode;
     bool pktOk = false;
+    
+    uint32_t cnt1, cnt2;
 
-    TCPIP_Notification_Lock(&ipv4PacketFilters);
-    for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+    // get a consistent reading
+    do
     {
-        if((*fNode->handler)(pRxPkt, fNode->hParam))
-        {   // packet accepted
-            pktOk = true;
-            break;
+        cnt1 = ipv4ActFilterCount;
+        cnt2 = ipv4ActFilterCount;
+    }while(cnt1 != cnt2);
+
+
+    _IPv4FiltCountDbg("verify");
+    if(cnt1 != 0)
+    {   // active filters
+        TCPIP_Notification_Lock(&ipv4PacketFilters);
+        for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+        {
+            if(fNode->active != 0)
+            {
+                if((*fNode->handler)(pRxPkt, hdrlen))
+                {   // packet accepted
+                    pktOk = true;
+                    break;
+                }
+            }
         }
+        TCPIP_Notification_Unlock(&ipv4PacketFilters);
     }
-    TCPIP_Notification_Unlock(&ipv4PacketFilters);
         
     return pktOk;
 }
 
-IPV4_FILTER_HANDLE IPv4RegisterFilter(IPV4_FILTER_FUNC handler, const void* hParam)
+IPV4_FILTER_HANDLE IPv4RegisterFilter(IPV4_FILTER_FUNC handler, bool active)
 {
+    IPV4_FILTER_LIST_NODE* newNode = 0;
+
     if(ipv4MemH && handler)
     {
-        IPV4_FILTER_LIST_NODE* newNode = (IPV4_FILTER_LIST_NODE*)TCPIP_Notification_Add(&ipv4PacketFilters, ipv4MemH, sizeof(*newNode));
-        if(newNode)
+        IPV4_FILTER_LIST_NODE filtNode;
+        filtNode.handler = handler;
+        filtNode.active = active;
+
+        newNode = (IPV4_FILTER_LIST_NODE*)TCPIP_Notification_Add(&ipv4PacketFilters, ipv4MemH, &filtNode, sizeof(*newNode));
+        if(newNode && active)
         {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            return newNode;
+            TCPIP_Notification_Lock(&ipv4PacketFilters);
+            ipv4ActFilterCount++;
+            TCPIP_Notification_Unlock(&ipv4PacketFilters);
         }
     }
 
-    return 0;
-
+    return newNode;
 }
 
+// deregister the filter handler
+// returns true or false if no such handler registered
+static void Ipv4DeRegisterCallback(SGL_LIST_NODE* node)
+{
+    IPV4_FILTER_LIST_NODE* filtNode = (IPV4_FILTER_LIST_NODE*)node;
+    if(filtNode->active)
+    {
+        ipv4ActFilterCount--;
+    }
+}
+    
 // deregister the filter handler
 // returns true or false if no such handler registered
 bool Ipv4DeRegisterFilter(IPV4_FILTER_HANDLE hFilter)
 {
     if(hFilter && ipv4MemH)
     {
-        if(TCPIP_Notification_Remove((SGL_LIST_NODE*)hFilter, &ipv4PacketFilters, ipv4MemH))
-        {
+        if(TCPIP_Notification_CbackRemove((SGL_LIST_NODE*)hFilter, &ipv4PacketFilters, ipv4MemH, Ipv4DeRegisterCallback))
+        {   // was valid
             return true;
         }
     }
 
     return false;
+}
+
+// activates/de-activates an IPv4 filter
+bool Ipv4FilterSetActive(IPV4_FILTER_HANDLE hFilter, bool active)
+{
+    IPV4_FILTER_LIST_NODE* fNode;
+    bool activeOk = false;
+
+    TCPIP_Notification_Lock(&ipv4PacketFilters);
+    for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+    {
+        if(fNode == (IPV4_FILTER_LIST_NODE*)hFilter)
+        {
+            if(fNode->active != active)
+            {   // change
+                if(active)
+                {
+                    ipv4ActFilterCount++;
+                }
+                else
+                {
+                    ipv4ActFilterCount--;
+                }
+
+                _IPv4FiltCountDbg("activate");
+                fNode->active = active;
+                activeOk = true;
+            }
+            break;
+        }
+    }
+    TCPIP_Notification_Unlock(&ipv4PacketFilters);
+        
+    return activeOk;
 }
 
 // select destination MAC address

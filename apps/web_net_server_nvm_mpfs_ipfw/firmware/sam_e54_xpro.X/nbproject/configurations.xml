@@ -556,6 +556,8 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/igmp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftps.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
@@ -575,6 +577,7 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftpc.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -792,6 +795,7 @@
       </logicalFolder>
       <itemPath>Makefile</itemPath>
       <itemPath>../src/config/sam_e54_xpro/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_e54_xpro/sam_e54_xpro.xml</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -811,8 +815,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAME54_DFP" vendor="Microchip" version="3.2.56"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -1000,6 +1004,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/isp/git/h3/net/apps/web_net_server_nvm_mpfs_ipfw/firmware/sam_e54_xpro.X/debug/sam_e54_xpro/sam_e54_xpro_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"

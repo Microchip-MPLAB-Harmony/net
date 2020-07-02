@@ -432,6 +432,14 @@ const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
     0
 };
 
+/*** IGMP module Initialization Data ***/
+const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
+{     
+    .lowSsmAddress     = 0,   
+    .highSsmAddress    = 0,
+    .reportInterval    = TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL,
+    .nInterfaces       = TCPIP_IGMP_INTERFACES,
+};
 
 
 
@@ -453,15 +461,18 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 
 };
 
+	
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-		.gmac_queue_config[0].queueEnable	= true,
+	.gmac_queue_config[0].queueTxEnable	= true,
+	.gmac_queue_config[0].queueRxEnable	= true,
 	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
+	.gmac_queue_config[0].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE0,
 	.gmac_queue_config[0].nRxBuffCount	= TCPIP_GMAC_RX_BUFF_COUNT_QUE0,
 	.gmac_queue_config[0].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0,
 	.gmac_queue_config[0].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0,
@@ -475,6 +486,10 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
+	.checksumOffloadRx      = DRV_GMAC_RX_CHKSM_OFFLOAD,
+    .checksumOffloadTx      = DRV_GMAC_TX_CHKSM_OFFLOAD,
+    .macTxPrioNum           = TCPIP_GMAC_TX_PRIO_COUNT,
+    .macRxPrioNum           = TCPIP_GMAC_RX_PRIO_COUNT,
 };
 
 
@@ -482,7 +497,18 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 
 
 
+/*** TFTP Client Initialization Data ***/
+const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
+{
+    .tftpc_interface        = TCPIP_TFTPC_DEFAULT_IF,
+    .tftpc_reply_timeout	= TCPIP_TFTPC_CMD_PROCESS_TIMEOUT,  
+};
 
+/*** TFTP Server Initialization Data ***/
+const TCPIP_TFTPS_MODULE_CONFIG tcpipTFTPSInitData =
+{
+    .mountPath				= TCPIP_TFTPS_MOUNT_POINT,
+};
 
 
 
@@ -559,6 +585,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
     {TCPIP_MODULE_HTTP_NET_SERVER,  &tcpipHTTPNetInitData},         // TCPIP_MODULE_HTTP_NET_SERVER
     {TCPIP_MODULE_SMTPC, &tcpipSMTPCInitData},                                  // TCPIP_MODULE_SMTPC,
+    {TCPIP_MODULE_TFTP_CLIENT,      &tcpipTFTPCInitData},           // TCPIP_MODULE_TFTP_CLIENT
+    {TCPIP_MODULE_TFTP_SERVER,      &tcpipTFTPSInitData},           // TCPIP_MODULE_TFTP_SERVER
+    {TCPIP_MODULE_IGMP, &tcpipIGMPInitData},            // TCPIP_MODULE_IGMP
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 
 // MAC modules

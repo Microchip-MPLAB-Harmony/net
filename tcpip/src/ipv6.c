@@ -3436,15 +3436,12 @@ IPV6_HANDLE TCPIP_IPV6_HandlerRegister(TCPIP_NET_HANDLE hNet, IPV6_EVENT_HANDLER
 {
     if(handler && ipv6MemH)
     {
-        IPV6_LIST_NODE* newNode = (IPV6_LIST_NODE*)TCPIP_Notification_Add(&ipv6RegisteredUsers, ipv6MemH, sizeof(*newNode));
+        IPV6_LIST_NODE ipv6Node;
+        ipv6Node.handler = handler;
+        ipv6Node.hParam = hParam;
+        ipv6Node.hNet = hNet;
 
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        return (IPV6_LIST_NODE*)TCPIP_Notification_Add(&ipv6RegisteredUsers, ipv6MemH, &ipv6Node, sizeof(ipv6Node));
     }
 
     return 0;

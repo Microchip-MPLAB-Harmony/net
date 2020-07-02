@@ -55,6 +55,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_IPV4_DEBUG_MASK_BASIC           (0x0001)
 #define TCPIP_IPV4_DEBUG_MASK_FRAGMENT        (0x0002)
 #define TCPIP_IPV4_DEBUG_MASK_RX_CHECK        (0x0004)
+#define TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE         (0x0008)
+#define TCPIP_IPV4_DEBUG_MASK_PROC_EXT          (0x0010)
+#define TCPIP_IPV4_DEBUG_MASK_FWD               (0x0020)
+#define TCPIP_IPV4_DEBUG_MASK_FWD_MAC_DEST      (0x0040)
+#define TCPIP_IPV4_DEBUG_MASK_FILT_COUNT        (0x0080)
 
 // enable IPV4 debugging levels
 #define TCPIP_IPV4_DEBUG_LEVEL  (0)
@@ -67,7 +72,8 @@ typedef struct  _TAG_IPV4_FILTER_LIST_NODE
 	struct _TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
                                                     // makes it valid SGL_LIST_NODE node
     IPV4_FILTER_FUNC                    handler;    // handler to be called for the filter
-    const void*                         hParam;     // handler parameter
+    uint8_t                             active;     // the filter is active
+    uint8_t                             reserved[3];// not used
 }IPV4_FILTER_LIST_NODE;
 
 
