@@ -1,0 +1,1285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="65">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mz_ef_sk_freertos"
+                       projectFiles="true">
+          <logicalFolder name="f6" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/bsp/bsp.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/crypto/crypto.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+            <logicalFolder name="f2" displayName="ethmac" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/_eth_dcpt_lists.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/drv_ethmac_lib.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/drv_eth_pic32_lib.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/drv_ethmac_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/drv_ethmac.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/src/drv_ethphy_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/drv_ethphy.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="memory" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/src/drv_memory_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/drv_memory.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/drv_memory_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/drv_memory_nvm.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/miim/src/drv_miim_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/miim/drv_miim.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver_common.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f5" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/helpers.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ndp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ndp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv6_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv6_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/udp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/udp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcps_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcps_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/zero_conf_helper.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/zero_conf_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dnss_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dnss_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/nbns_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ddns_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/telnet_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/smtp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/sntp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http_net_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http_net_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/snmp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/snmp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/snmpv3_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_announce_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/smtpc_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/smtpc_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/igmp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/igmp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tftpc_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tftpc_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tftps_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tftps_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/iperf_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_commands_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/hash_fnv.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/link_list.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/oahash.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_helpers_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_manager_control.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_module_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_notify.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_packet.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_types.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/berkeley_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcpv6_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcpv6_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/lldp_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/lldp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/lldp_tlv.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_common_ports.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_mac.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_mac_object.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_manager.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_heap.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_helpers.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ndp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ipv4.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ipv6.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/icmpv6.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dhcpv6.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/arp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/udp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/berkeley_api.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dhcp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dhcps.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/zero_conf_link_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/zero_conf_multicast_dns.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dns.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dnss.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ftpc.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/icmp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/nbns.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ddns.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/telnet.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/smtp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/sntp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/http.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/http_net.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/snmp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/snmpv3.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_announce.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/lldp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/smtpc.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/igmp.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tftpc.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tftps.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_reboot.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/iperf.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_commands.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_enc_glue.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f6" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/cache/plib_cache.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/cache/plib_cache_pic32mz.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/clk/plib_clk.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/coretimer/plib_coretimer.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/evic/plib_evic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/gpio/plib_gpio.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="nvm" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/nvm/plib_nvm.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/uart/plib_uart_common.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/uart/plib_uart2.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
+            <logicalFolder name="f4" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/cache/sys_cache.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="command" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/command/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="console" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/sys_console.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/mpfs/mpfs.h</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/mpfs/mpfs_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/sys_fs.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/src/sys_fs_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/sys_fs_media_manager.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/src/sys_fs_media_manager_local.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/int/sys_int_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="ports" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/ports/sys_ports.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/ports/sys_ports_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/src/sys_time_local.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_common.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_module.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_media.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_reset_h2_adapter.h</itemPath>
+          </logicalFolder>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/user.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/configuration.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_config.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_definitions.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/device_cache.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/definitions.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/config.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/FreeRTOSConfig.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="FreeRTOS" projectFiles="true">
+        <logicalFolder name="f1" displayName="Source" projectFiles="true">
+          <logicalFolder name="f1" displayName="include" projectFiles="true">
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/event_groups.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/FreeRTOS.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/list.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/mpu_wrappers.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/portable.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/projdefs.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/queue.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/semphr.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/stack_macros.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/deprecated_definitions.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/task.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/timers.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/mpu_prototypes.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/stream_buffer.h</itemPath>
+            <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/message_buffer.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="portable" projectFiles="true">
+            <logicalFolder name="f1" displayName="MPLAB" projectFiles="true">
+              <logicalFolder name="f1" displayName="PIC32MZ" projectFiles="true">
+                <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/portmacro.h</itemPath>
+                <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/ISR_Support.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
+        <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal.h</itemPath>
+        <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_definitions.h</itemPath>
+        <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_freertos.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="PIC32MZ2048EFM144_DFP"
+                       projectFiles="true">
+          <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="wolfcrypt" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_cf_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ClearFlags_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Comp_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_CondCopy_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_CRT_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Div_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ExpMod_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_FastCopy_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Fill_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Fmult_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GCD_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GF2NEccAdd_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GF2NEccConv_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GF2NEccDbl_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GF2NEccMul_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_GF2NEcDsa_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Hardware_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Headers_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_JumpTable_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_mapping_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_PrimeGen_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Rc_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_RedMod_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Rng_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_SelfTest_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Services_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Smult_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Square_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_Swap_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_typedef_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccAddSub_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccAdd_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccConv_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccDbl_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccMul_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEccQuickDualMul_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ZpEcDsa_pb.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_hwInt.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_sam6149.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_u2238.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_crya_saml11.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_ecc_ba414e.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_ecc_pukcl.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_pukcl_definitions.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_pukcl_functions.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_rng_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_rsa_pukcl.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha1_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha224_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha256_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha384_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha512_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha_sam11105.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_sha_sam6156.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_tdes_hw.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_tdes_hwInt.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_tdes_sam6150.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_wolfcryptcb.h</itemPath>
+        </logicalFolder>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/arc4.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/asn.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/asn_public.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/blake2-impl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/blake2-int.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/blake2.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/camellia.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/chacha.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/chacha20_poly1305.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/cmac.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/coding.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/compress.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/cpuid.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/cryptocb.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/curve25519.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/des3.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/dh.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/dsa.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ecc.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ed25519.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/error-crypt.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/fe_operations.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/fips_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ge_operations.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/hash.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/hc128.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/hmac.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/idea.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/integer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/logging.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md2.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md4.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md5.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/memory.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/mem_track.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/misc.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/mpi_class.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/mpi_superclass.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/pkcs11.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/pkcs12.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/pkcs7.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/poly1305.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/pwdbased.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/rabbit.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/random.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ripemd.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/rsa.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/selftest.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha3.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/signature.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sp_int.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/srp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/tfm.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/types.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/visibility.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_encrypt.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_pkcs11.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wolfevent.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wolfmath.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/settings.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/aes.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha256.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha512.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_port.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
+      </logicalFolder>
+      <itemPath>../src/http_net_print.h</itemPath>
+      <itemPath>../src/app.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+      <logicalFolder name="f1" displayName="wolfcrypt" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/misc.c</itemPath>
+      </logicalFolder>
+      <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/pic32mz_ef_sk_freertos/harmony.prj</itemPath>
+      <itemPath>../src/config/pic32mz_ef_sk_freertos/pic32mz_ef_sk_freertos.xml</itemPath>
+    </logicalFolder>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mz_ef_sk_freertos"
+                       projectFiles="true">
+          <logicalFolder name="f7" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/crypto/src/crypto.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+            <logicalFolder name="f2" displayName="ethmac" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/drv_ethmac.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/drv_ethmac_lib.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethmac/src/dynamic/drv_eth_pic32_lib.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="memory" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/src/drv_memory.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/src/drv_memory_file_system.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/memory/src/drv_memory_nvm.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/miim/src/dynamic/drv_miim.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/sys_fs_shell.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/helpers.c</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/nbns.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ndp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv6.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/smtpc.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/hash_fnv.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/oahash.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_helpers.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_helper_c32.S</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_manager.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_notify.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/sntp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/udp.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/src/net_pres.c</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/net_pres/pres/net_pres_cert_store.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f6" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/cache/plib_cache_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/cache/plib_cache.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/cache/plib_cache_pic32mz.S</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/clk/plib_clk.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/coretimer/plib_coretimer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/evic/plib_evic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/gpio/plib_gpio.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="nvm" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/nvm/plib_nvm.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/peripheral/uart/plib_uart2.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/stdio/xc32_monitor.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f4" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/cache/sys_cache.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/command/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/console/src/sys_console_local.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/debug/src/sys_debug.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/mpfs/mpfs.c</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/src/sys_fs.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/fs/src/sys_fs_media_manager.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="int" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/int/src/sys_int.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/src/sys_time.c</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_time_h2_adapter.c</itemPath>
+          </logicalFolder>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/tasks.c</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/initialization.c</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/interrupts.c</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/interrupts_a.S</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/exceptions.c</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/freertos_hooks.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="FreeRTOS" projectFiles="true">
+        <logicalFolder name="f1" displayName="Source" projectFiles="true">
+          <logicalFolder name="f1" displayName="portable" projectFiles="true">
+            <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
+              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_3.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="MPLAB" projectFiles="true">
+              <logicalFolder name="f1" displayName="PIC32MZ" projectFiles="true">
+                <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port.c</itemPath>
+                <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port_asm.S</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/list.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/queue.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/timers.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/event_groups.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
+        <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_freertos.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="web_pages" projectFiles="true">
+        <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="protect" projectFiles="true">
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+        </logicalFolder>
+        <itemPath>../src/web_pages/auth.htm</itemPath>
+        <itemPath>../src/web_pages/cookies.htm</itemPath>
+        <itemPath>../src/web_pages/dynvars.htm</itemPath>
+        <itemPath>../src/web_pages/footer.htm</itemPath>
+        <itemPath>../src/web_pages/forms.htm</itemPath>
+        <itemPath>../src/web_pages/harmony.gif</itemPath>
+        <itemPath>../src/web_pages/header.htm</itemPath>
+        <itemPath>../src/web_pages/index.htm</itemPath>
+        <itemPath>../src/web_pages/leds.cgi</itemPath>
+        <itemPath>../src/web_pages/mchp.css</itemPath>
+        <itemPath>../src/web_pages/mchp.gif</itemPath>
+        <itemPath>../src/web_pages/mchp.js</itemPath>
+        <itemPath>../src/web_pages/snmp.bib</itemPath>
+        <itemPath>../src/web_pages/ssi.htm</itemPath>
+        <itemPath>../src/web_pages/status.xml</itemPath>
+        <itemPath>../src/web_pages/upload.htm</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="wolfcrypt" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/pic32mz-crypt.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_sam6149.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_u2238.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_ecc_ba414e.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_ecc_pukcl.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_pukcl_functions.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rng_sam6334.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rng_u2242.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rsa_pukcl.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sam_u2803.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha1_sam11105.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha1_sam6156.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha224_sam11105.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha224_sam6156.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha256_sam11105.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha256_sam6156.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha384_sam6156.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha512_sam6156.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_tdes_sam6150.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_wolfcryptcb.c</itemPath>
+        </logicalFolder>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/arc4.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/asm.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/asn.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/blake2b.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/blake2s.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/camellia.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/chacha.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/chacha20_poly1305.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/cmac.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/coding.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/compress.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/cpuid.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/cryptocb.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/curve25519.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/dh.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/dsa.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ecc.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ecc_fp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ed25519.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/error.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/fe_low_mem.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/fe_operations.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ge_low_mem.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ge_operations.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/hash.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/hc128.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/hmac.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/idea.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/integer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/logging.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md2.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md4.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md5.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/memory.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/pkcs12.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/pkcs7.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/poly1305.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/pwdbased.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/rabbit.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/ripemd.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/rsa.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha3.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/signature.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_arm32.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_arm64.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_armthumb.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_c32.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_c64.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_cortexm.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_int.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sp_x86_64.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/srp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/tfm.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wc_encrypt.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wc_pkcs11.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wc_port.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wolfevent.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wolfmath.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/aes.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/des3.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/random.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha256.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha512.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfssl" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
+      </logicalFolder>
+      <itemPath>../src/http_net_print.c</itemPath>
+      <itemPath>../src/custom_http_net_app.c</itemPath>
+      <itemPath>../src/mpfs_net_img.c</itemPath>
+      <itemPath>../src/app.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="pic32mz_ef_sk_freertos" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <targetDevice>PIC32MZ2048EFM144</targetDevice>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
+        <platformTool>ICD4Tool</platformTool>
+        <languageToolchain>XC32</languageToolchain>
+        <languageToolchainVersion>2.41</languageToolchainVersion>
+        <platform>3</platform>
+      </toolsSet>
+      <packs>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
+      </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+        <archiverTool>
+        </archiverTool>
+        <loading>
+          <useAlternateLoadableFile>false</useAlternateLoadableFile>
+          <parseOnProdLoad>false</parseOnProdLoad>
+          <alternateLoadableFile></alternateLoadableFile>
+        </loading>
+        <subordinates>
+        </subordinates>
+      </compileType>
+      <makeCustomizationType>
+        <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep>java -jar ../../../../utilities/mpfs_generator/mpfs_net.jar /c /z "snmp.bib" "../src/web_pages" "../src" "mpfs_net_img.c"</makeCustomizationPreStep>
+        <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
+        <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
+        <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
+      </makeCustomizationType>
+      <C32>
+        <property key="additional-warnings" value="true"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories"
+                  value="../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_freertos;../src/packs/PIC32MZ2048EFM144_DFP;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl;../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="true"/>
+        <property key="make-warnings-into-errors" value="true"/>
+        <property key="optimization-level" value="-O1"/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros"
+                  value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="support-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32>
+      <C32-AR>
+        <property key="additional-options-chop-files" value="false"/>
+      </C32-AR>
+      <C32-AS>
+        <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="expand-macros" value="false"/>
+        <property key="extra-include-directories-for-assembler"
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
+        <property key="extra-include-directories-for-preprocessor"
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
+        <property key="false-conditionals" value="false"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="keep-locals" value="false"/>
+        <property key="list-assembly" value="false"/>
+        <property key="list-source" value="false"/>
+        <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
+        <property key="omit-debug-dirs" value="false"/>
+        <property key="omit-forms" value="false"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="warning-level" value=""/>
+      </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
+      <C32-LD>
+        <property key="additional-options-use-response-files" value="false"/>
+        <property key="additional-options-write-sla" value="false"/>
+        <property key="allocate-dinit" value="false"/>
+        <property key="code-dinit" value="false"/>
+        <property key="ebase-addr" value=""/>
+        <property key="enable-check-sections" value="false"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="exclude-standard-libraries" value="false"/>
+        <property key="extra-lib-directories" value=""/>
+        <property key="fill-flash-options-addr" value=""/>
+        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-inc-const" value="1"/>
+        <property key="fill-flash-options-increment" value=""/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-cross-reference-file" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="heap-size" value="146976"/>
+        <property key="input-libraries" value=""/>
+        <property key="kseg-length" value=""/>
+        <property key="kseg-origin" value=""/>
+        <property key="linker-symbols" value=""/>
+        <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
+        <property key="no-device-startup-code" value="true"/>
+        <property key="no-startup-files" value="false"/>
+        <property key="oXC32ld-extra-opts" value=""/>
+        <property key="optimization-level" value=""/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="remove-unused-sections" value="true"/>
+        <property key="report-memory-usage" value="false"/>
+        <property key="serial-length" value=""/>
+        <property key="serial-origin" value=""/>
+        <property key="stack-size" value=""/>
+        <property key="symbol-stripping" value=""/>
+        <property key="trace-symbols" value=""/>
+        <property key="warn-section-align" value="false"/>
+      </C32-LD>
+      <C32CPP>
+        <property key="additional-warnings" value="false"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="check-new" value="false"/>
+        <property key="eh-specs" value="true"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exceptions" value="true"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories" value=""/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="true"/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value="-O1"/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="rtti" value="true"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32CPP>
+      <C32Global>
+        <property key="common-include-directories" value=""/>
+        <property key="gp-relative-option" value=""/>
+        <property key="legacy-libc" value="false"/>
+        <property key="mdtcm" value=""/>
+        <property key="mitcm" value=""/>
+        <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
+        <property key="relaxed-math" value="false"/>
+        <property key="save-temps" value="false"/>
+        <property key="wpo-lto" value="false"/>
+      </C32Global>
+      <ICD4Tool>
+        <property key="ADC" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="CAN1" value="true"/>
+        <property key="CAN2" value="true"/>
+        <property key="CHANGE NOTICE A" value="true"/>
+        <property key="CHANGE NOTICE B" value="true"/>
+        <property key="CHANGE NOTICE C" value="true"/>
+        <property key="CHANGE NOTICE D" value="true"/>
+        <property key="CHANGE NOTICE E" value="true"/>
+        <property key="CHANGE NOTICE F" value="true"/>
+        <property key="CHANGE NOTICE G" value="true"/>
+        <property key="CHANGE NOTICE H" value="true"/>
+        <property key="CHANGE NOTICE J" value="true"/>
+        <property key="CHANGE NOTICE K" value="true"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="DMA" value="true"/>
+        <property key="ETHERNET CONTROLLER" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C 1" value="true"/>
+        <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
+        <property key="I2C 4" value="true"/>
+        <property key="I2C 5" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INPUT CAPTURE 6" value="true"/>
+        <property key="INPUT CAPTURE 7" value="true"/>
+        <property key="INPUT CAPTURE 8" value="true"/>
+        <property key="INPUT CAPTURE 9" value="true"/>
+        <property key="INTERRUPT CONTROL" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="OUTPUT COMPARE 6" value="true"/>
+        <property key="OUTPUT COMPARE 7" value="true"/>
+        <property key="OUTPUT COMPARE 8" value="true"/>
+        <property key="OUTPUT COMPARE 9" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="REAL TIME CLOCK" value="true"/>
+        <property key="REFERENCE CLOCK1" value="true"/>
+        <property key="REFERENCE CLOCK2" value="true"/>
+        <property key="REFERENCE CLOCK3" value="true"/>
+        <property key="REFERENCE CLOCK4" value="true"/>
+        <property key="SPI/I2S 1" value="true"/>
+        <property key="SPI/I2S 2" value="true"/>
+        <property key="SPI/I2S 3" value="true"/>
+        <property key="SPI/I2S 4" value="true"/>
+        <property key="SPI/I2S 5" value="true"/>
+        <property key="SPI/I2S 6" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="TIMER6" value="true"/>
+        <property key="TIMER7" value="true"/>
+        <property key="TIMER8" value="true"/>
+        <property key="TIMER9" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UpdateOptions"
+                  value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
+        <property key="UART1" value="true"/>
+        <property key="UART2" value="true"/>
+        <property key="UART3" value="true"/>
+        <property key="UART4" value="true"/>
+        <property key="UART5" value="true"/>
+        <property key="UART6" value="true"/>
+        <property key="communication.interface.jtag" value="2wire"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.ledbrightness" value="5"/>
+        <property key="programoptions.pgcconfig" value="pull down"/>
+        <property key="programoptions.pgcresistor.value" value="4.7"/>
+        <property key="programoptions.pgdconfig" value="pull down"/>
+        <property key="programoptions.pgdresistor.value" value="4.7"/>
+        <property key="programoptions.pgmentry.voltage" value="low"/>
+        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
+        <property key="voltagevalue" value="3.25"/>
+      </ICD4Tool>
+      <PICkit3PlatformTool>
+        <property key="ADC 1" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="CHANGE NOTICE" value="true"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="CTMU" value="true"/>
+        <property key="DMA" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C1" value="true"/>
+        <property key="I2C2" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INTERRUPT CONTROL" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="REAL TIME CLOCK" value="true"/>
+        <property key="SPI/I2S 1" value="true"/>
+        <property key="SPI/I2S 2" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="UART1" value="true"/>
+        <property key="UART2" value="true"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.end" value="0x1d003fff"/>
+        <property key="memories.programmemory.start" value="0x1d000000"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmertogo.imagename" value=""/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.pgmspeed" value="2"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveprogramrange.end" value="0x1d003fff"/>
+        <property key="programoptions.preserveprogramrange.start" value="0x1d000000"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="voltagevalue" value="3.25"/>
+      </PICkit3PlatformTool>
+      <RealICEPlatformTool>
+        <property key="ADC" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="CAN1" value="true"/>
+        <property key="CAN2" value="true"/>
+        <property key="CHANGE NOTICE A" value="true"/>
+        <property key="CHANGE NOTICE B" value="true"/>
+        <property key="CHANGE NOTICE C" value="true"/>
+        <property key="CHANGE NOTICE D" value="true"/>
+        <property key="CHANGE NOTICE E" value="true"/>
+        <property key="CHANGE NOTICE F" value="true"/>
+        <property key="CHANGE NOTICE G" value="true"/>
+        <property key="CHANGE NOTICE H" value="true"/>
+        <property key="CHANGE NOTICE J" value="true"/>
+        <property key="CHANGE NOTICE K" value="true"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="DMA" value="true"/>
+        <property key="ETHERNET CONTROLLER" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C 1" value="true"/>
+        <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
+        <property key="I2C 4" value="true"/>
+        <property key="I2C 5" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INPUT CAPTURE 6" value="true"/>
+        <property key="INPUT CAPTURE 7" value="true"/>
+        <property key="INPUT CAPTURE 8" value="true"/>
+        <property key="INPUT CAPTURE 9" value="true"/>
+        <property key="INTERRUPT CONTROL" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="OUTPUT COMPARE 6" value="true"/>
+        <property key="OUTPUT COMPARE 7" value="true"/>
+        <property key="OUTPUT COMPARE 8" value="true"/>
+        <property key="OUTPUT COMPARE 9" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="REAL TIME CLOCK" value="true"/>
+        <property key="REFERENCE CLOCK1" value="true"/>
+        <property key="REFERENCE CLOCK2" value="true"/>
+        <property key="REFERENCE CLOCK3" value="true"/>
+        <property key="REFERENCE CLOCK4" value="true"/>
+        <property key="RIExTrigs.Five" value="OFF"/>
+        <property key="RIExTrigs.Four" value="OFF"/>
+        <property key="RIExTrigs.One" value="OFF"/>
+        <property key="RIExTrigs.Seven" value="OFF"/>
+        <property key="RIExTrigs.Six" value="OFF"/>
+        <property key="RIExTrigs.Three" value="OFF"/>
+        <property key="RIExTrigs.Two" value="OFF"/>
+        <property key="RIExTrigs.Zero" value="OFF"/>
+        <property key="SPI/I2S 1" value="true"/>
+        <property key="SPI/I2S 2" value="true"/>
+        <property key="SPI/I2S 3" value="true"/>
+        <property key="SPI/I2S 4" value="true"/>
+        <property key="SPI/I2S 5" value="true"/>
+        <property key="SPI/I2S 6" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="TIMER6" value="true"/>
+        <property key="TIMER7" value="true"/>
+        <property key="TIMER8" value="true"/>
+        <property key="TIMER9" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="UART1" value="true"/>
+        <property key="UART2" value="true"/>
+        <property key="UART3" value="true"/>
+        <property key="UART4" value="true"/>
+        <property key="UART5" value="true"/>
+        <property key="UART6" value="true"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="hwtoolclock.instructionspeed" value="4"/>
+        <property key="hwtoolclock.units" value="mips"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges" value=""/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="tracecontrol.include.timestamp" value="summarydataenabled"/>
+        <property key="tracecontrol.select" value="0"/>
+        <property key="tracecontrol.stallontracebufferfull" value="false"/>
+        <property key="tracecontrol.tracebufmax" value="546000"/>
+        <property key="tracecontrol.tracefile" value="defmplabxtrace.log"/>
+        <property key="tracecontrol.tracefilemax" value="10000000"/>
+        <property key="voltagevalue" value="3.25"/>
+      </RealICEPlatformTool>
+    </conf>
+  </confs>
+</configurationDescriptor>
