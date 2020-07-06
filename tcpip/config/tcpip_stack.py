@@ -335,10 +335,10 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer to Heap Estimation documentation")
     tcpipStackHeapRecommendComment.setVisible( True )
     
-    # Advance Settings
+    # Advanced Settings
     tcpipStackAdvSettings = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_ADV_SETTING", None)
-    tcpipStackAdvSettings.setLabel("Advance Settings")
-    tcpipStackAdvSettings.setDescription("Advance Settings")
+    tcpipStackAdvSettings.setLabel("Advanced Settings")
+    tcpipStackAdvSettings.setDescription("Advanced Settings")
     tcpipStackAdvSettings.setVisible(True)
     
     # Event Notification

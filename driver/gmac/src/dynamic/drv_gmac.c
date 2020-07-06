@@ -658,12 +658,7 @@ DRV_HANDLE DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT in
 				pMACDrv->sGmacData._macFlags._open = 1;
 				hMac = (DRV_HANDLE)pMACDrv;
 			}
-#if (DRV_GMAC_CLIENTS_NUMBER > 1)
-			else
-			{   // allow multiple clients
-				hMac = (DRV_HANDLE)pMACDrv;
-			}
-#endif
+
 		}
 	}
 

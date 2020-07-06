@@ -26,21 +26,28 @@ def instantiateComponent(drvExtPhyLan8720Component):
     print("LAN8720 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    # Delay for the Link Initialization in ms
-    drvExtPhyLan8720LinkInitDelay= drvExtPhyLan8720Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", None)
-    drvExtPhyLan8720LinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
-    drvExtPhyLan8720LinkInitDelay.setVisible(True)
-    drvExtPhyLan8720LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
-    drvExtPhyLan8720LinkInitDelay.setDefaultValue(500)
-    #drvExtPhyLan8720LinkInitDelay.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
-
     # PHY Address
     drvExtPhyLan8720Addr= drvExtPhyLan8720Component.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
     drvExtPhyLan8720Addr.setLabel("PHY Address") 
     drvExtPhyLan8720Addr.setVisible(True)
     drvExtPhyLan8720Addr.setDescription("PHY Address")
     drvExtPhyLan8720Addr.setDefaultValue(0)
-
+    
+    # Use a Function to be called at PHY Reset
+    drvExtPhyLan8720ResetCallbackEnable = drvExtPhyLan8720Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
+    drvExtPhyLan8720ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
+    drvExtPhyLan8720ResetCallbackEnable.setVisible(True)
+    drvExtPhyLan8720ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
+    drvExtPhyLan8720ResetCallbackEnable.setDefaultValue(False)
+    
+    # App Function
+    drvExtPhyLan8720ResetCallback = drvExtPhyLan8720Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyLan8720ResetCallbackEnable)
+    drvExtPhyLan8720ResetCallback.setLabel("App Function")
+    drvExtPhyLan8720ResetCallback.setVisible(False)
+    drvExtPhyLan8720ResetCallback.setDescription("App Function")
+    drvExtPhyLan8720ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyLan8720ResetCallback.setDependencies(drvExtPhyLan8720MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
+    
     # External PHY Connection Flags
     drvExtPhyLan8720ConnFlag = drvExtPhyLan8720Component.createMenuSymbol(None, None) 
     drvExtPhyLan8720ConnFlag.setLabel("External PHY Connection Flags")
@@ -70,76 +77,78 @@ def instantiateComponent(drvExtPhyLan8720Component):
         drvExtPhyLan8720ConfigAuto.setVisible(True)
         drvExtPhyLan8720ConfigAuto.setDescription("Use The Fuses Configuration")
         drvExtPhyLan8720ConfigAuto.setDefaultValue(False)
+    
+    # Advanced Settings
+    drvExtPhyLan8720AdvSettings = drvExtPhyLan8720Component.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)
+    drvExtPhyLan8720AdvSettings.setLabel("Advanced Settings")
+    drvExtPhyLan8720AdvSettings.setDescription("Advanced Settings")
+    drvExtPhyLan8720AdvSettings.setVisible(True)
+    
+    # Delay for the Link Initialization in ms
+    drvExtPhyLan8720LinkInitDelay= drvExtPhyLan8720Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", drvExtPhyLan8720AdvSettings)
+    drvExtPhyLan8720LinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
+    drvExtPhyLan8720LinkInitDelay.setVisible(True)
+    drvExtPhyLan8720LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
+    drvExtPhyLan8720LinkInitDelay.setDefaultValue(500)
 
     # External PHY Type
-    drvExtPhyLan8720PhyType = drvExtPhyLan8720Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+    drvExtPhyLan8720PhyType = drvExtPhyLan8720Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyLan8720AdvSettings)
     drvExtPhyLan8720PhyType.setVisible(False)   
     drvExtPhyLan8720PhyType.setDefaultValue("SMSC_LAN8720")
-    
-    # Driver PHY Instances Number
-    drvExtPhyLan8720InstanceNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
-    drvExtPhyLan8720InstanceNum.setLabel("PHY Instances Number") 
-    drvExtPhyLan8720InstanceNum.setVisible(True)
-    drvExtPhyLan8720InstanceNum.setDescription("Driver PHY Instances Number")
-    drvExtPhyLan8720InstanceNum.setDefaultValue(1)
-    
-    # Driver PHY Clients Number
-    drvExtPhyLan8720ClientNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", None)
-    drvExtPhyLan8720ClientNum.setLabel("PHY Clients Number") 
-    drvExtPhyLan8720ClientNum.setVisible(True)
-    drvExtPhyLan8720ClientNum.setDescription("Driver PHY Clients Number")
-    drvExtPhyLan8720ClientNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral Index Number
-    drvExtPhyLan8720IndexNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_INDEX", None)
-    drvExtPhyLan8720IndexNum.setLabel("PHY Peripheral Index Number") 
-    drvExtPhyLan8720IndexNum.setVisible(True)
-    drvExtPhyLan8720IndexNum.setDescription("Driver PHY Peripheral Index Number")
-    drvExtPhyLan8720IndexNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral ID
-    drvExtPhyLan8720PeripheralId= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", None)
-    drvExtPhyLan8720PeripheralId.setLabel("PHY Peripheral ID") 
-    drvExtPhyLan8720PeripheralId.setVisible(True)
-    drvExtPhyLan8720PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyLan8720PeripheralId.setDefaultValue(1)
-    
+        
     # Driver PHY Negotiation Time-out (mSec)
-    drvExtPhyLan8720NegInitTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", None)
+    drvExtPhyLan8720NegInitTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8720AdvSettings)
     drvExtPhyLan8720NegInitTimeout.setLabel("PHY Negotiation Time-out - ms") 
     drvExtPhyLan8720NegInitTimeout.setVisible(True)
     drvExtPhyLan8720NegInitTimeout.setDescription("Driver PHY Negotiation Time-out - ms")
     drvExtPhyLan8720NegInitTimeout.setDefaultValue(1)
     
     # Driver PHY Negotiation Done Time-out (mSec)
-    drvExtPhyLan8720NegDoneTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", None)
+    drvExtPhyLan8720NegDoneTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", drvExtPhyLan8720AdvSettings)
     drvExtPhyLan8720NegDoneTimeout.setLabel("PHY Negotiation Done Time-out - ms") 
     drvExtPhyLan8720NegDoneTimeout.setVisible(True)
     drvExtPhyLan8720NegDoneTimeout.setDescription("Driver PHY Negotiation Done Time-out - ms")
     drvExtPhyLan8720NegDoneTimeout.setDefaultValue(2000)
     
     # Driver PHY Reset Clear Time-out (mSec)
-    drvExtPhyLan8720ResetClearTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", None)
+    drvExtPhyLan8720ResetClearTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", drvExtPhyLan8720AdvSettings)
     drvExtPhyLan8720ResetClearTimeout.setLabel("PHY Reset Clear Time-out - ms") 
     drvExtPhyLan8720ResetClearTimeout.setVisible(True)
     drvExtPhyLan8720ResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out - ms")
     drvExtPhyLan8720ResetClearTimeout.setDefaultValue(500)
     
-    # Use a Function to be called at PHY Reset
-    drvExtPhyLan8720ResetCallbackEnable = drvExtPhyLan8720Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
-    drvExtPhyLan8720ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
-    drvExtPhyLan8720ResetCallbackEnable.setVisible(True)
-    drvExtPhyLan8720ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
-    drvExtPhyLan8720ResetCallbackEnable.setDefaultValue(False)
+    # Driver PHY Instances Number
+    drvExtPhyLan8720InstanceNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyLan8720AdvSettings)
+    drvExtPhyLan8720InstanceNum.setLabel("PHY Instances Number") 
+    drvExtPhyLan8720InstanceNum.setVisible(True)
+    drvExtPhyLan8720InstanceNum.setDescription("Driver PHY Instances Number")
+    drvExtPhyLan8720InstanceNum.setDefaultValue(1)
+    drvExtPhyLan8720InstanceNum.setReadOnly(True)
     
-    # App Function
-    drvExtPhyLan8720ResetCallback = drvExtPhyLan8720Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyLan8720ResetCallbackEnable)
-    drvExtPhyLan8720ResetCallback.setLabel("App Function")
-    drvExtPhyLan8720ResetCallback.setVisible(False)
-    drvExtPhyLan8720ResetCallback.setDescription("App Function")
-    drvExtPhyLan8720ResetCallback.setDefaultValue("AppPhyResetFunction")
-    drvExtPhyLan8720ResetCallback.setDependencies(drvExtPhyLan8720MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
-
+    # Driver PHY Clients Number
+    drvExtPhyLan8720ClientNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyLan8720AdvSettings)
+    drvExtPhyLan8720ClientNum.setLabel("PHY Clients Number") 
+    drvExtPhyLan8720ClientNum.setVisible(True)
+    drvExtPhyLan8720ClientNum.setDescription("Driver PHY Clients Number")
+    drvExtPhyLan8720ClientNum.setDefaultValue(1)
+    drvExtPhyLan8720ClientNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral Index Number
+    drvExtPhyLan8720IndexNum= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyLan8720AdvSettings)
+    drvExtPhyLan8720IndexNum.setLabel("PHY Peripheral Index Number") 
+    drvExtPhyLan8720IndexNum.setVisible(True)
+    drvExtPhyLan8720IndexNum.setDescription("Driver PHY Peripheral Index Number")
+    drvExtPhyLan8720IndexNum.setDefaultValue(1)
+    drvExtPhyLan8720IndexNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral ID
+    drvExtPhyLan8720PeripheralId= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyLan8720AdvSettings)
+    drvExtPhyLan8720PeripheralId.setLabel("PHY Peripheral ID") 
+    drvExtPhyLan8720PeripheralId.setVisible(True)
+    drvExtPhyLan8720PeripheralId.setDescription("Driver PHY Peripheral ID")
+    drvExtPhyLan8720PeripheralId.setDefaultValue(1)
+    drvExtPhyLan8720PeripheralId.setReadOnly(True)
+    
     #Add to system_config.h
     drvExtPhyLan8720HeaderFtl = drvExtPhyLan8720Component.createFileSymbol(None, None)
     drvExtPhyLan8720HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8720.h.ftl")
@@ -157,7 +166,6 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyHeaderFile.setType("HEADER")
     drvExtPhyHeaderFile.setOverwrite(True)
     drvExtPhyHeaderFile.setEnabled(True)
-    #drvEthPhyHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
     # file TCPIP_ETH_PHY_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/drv_ethphy_local.h" to           "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/drv_ethphy_local.h"
     # Add drv_ethphy_local.h file to project
@@ -169,7 +177,6 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyLocalHeaderFile.setType("HEADER")
     drvExtPhyLocalHeaderFile.setOverwrite(True)
     drvExtPhyLocalHeaderFile.setEnabled(True)
-    #drvEthPhyLocalHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
     # file TCPIP_ETH_EXT_PHY_REGS_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h"
     # Add drv_extphy_regs.h file to project
@@ -190,6 +197,7 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyLan8720HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyLan8720HeaderFile.setType("HEADER")
     drvExtPhyLan8720HeaderFile.setOverwrite(True)
+    drvExtPhyLan8720HeaderFile.setEnabled(True)
 
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"

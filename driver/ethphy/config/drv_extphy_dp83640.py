@@ -26,21 +26,27 @@ def instantiateComponent(drvExtPhyDp83640Component):
     print("DP83640 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    # Delay for the Link Initialization in ms
-    drvExtPhyDp83640LinkInitDelay= drvExtPhyDp83640Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", None)
-    drvExtPhyDp83640LinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
-    drvExtPhyDp83640LinkInitDelay.setVisible(True)
-    drvExtPhyDp83640LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
-    drvExtPhyDp83640LinkInitDelay.setDefaultValue(500)
-    #drvExtPhyDp83640LinkInitDelay.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
-
     # PHY Address
     drvExtPhyDp83640Addr= drvExtPhyDp83640Component.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
     drvExtPhyDp83640Addr.setLabel("PHY Address") 
     drvExtPhyDp83640Addr.setVisible(True)
     drvExtPhyDp83640Addr.setDescription("PHY Address")
     drvExtPhyDp83640Addr.setDefaultValue(0)
-
+    
+    # Use a Function to be called at PHY Reset
+    drvExtPhyDp83640ResetCallbackEnable = drvExtPhyDp83640Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
+    drvExtPhyDp83640ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
+    drvExtPhyDp83640ResetCallbackEnable.setVisible(True)
+    drvExtPhyDp83640ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
+    drvExtPhyDp83640ResetCallbackEnable.setDefaultValue(False)
+    
+    # App Function
+    drvExtPhyDp83640ResetCallback = drvExtPhyDp83640Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyDp83640ResetCallbackEnable)
+    drvExtPhyDp83640ResetCallback.setLabel("App Function")
+    drvExtPhyDp83640ResetCallback.setVisible(False)
+    drvExtPhyDp83640ResetCallback.setDescription("App Function")
+    drvExtPhyDp83640ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyDp83640ResetCallback.setDependencies(drvExtPhyDp83640MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
     # External PHY Connection Flags
     drvExtPhyDp83640ConnFlag = drvExtPhyDp83640Component.createMenuSymbol(None, None) 
@@ -58,88 +64,91 @@ def instantiateComponent(drvExtPhyDp83640Component):
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         drvExtPhyDp83640ConfigRmii.setDefaultValue(False)
     
-    # Configuration Fuses Is ALT
-    drvExtPhyDp83640ConfigAlt = drvExtPhyDp83640Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyDp83640ConnFlag)
-    drvExtPhyDp83640ConfigAlt.setLabel("Configuration Fuses Is ALT")
-    drvExtPhyDp83640ConfigAlt.setVisible(True)
-    drvExtPhyDp83640ConfigAlt.setDescription("Configuration Fuses Is ALT")
-    drvExtPhyDp83640ConfigAlt.setDefaultValue(False)
-    
-    # Use The Fuses Configuration
-    drvExtPhyDp83640ConfigAuto = drvExtPhyDp83640Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_AUTO", drvExtPhyDp83640ConnFlag)
-    drvExtPhyDp83640ConfigAuto.setLabel("Use The Fuses Configuration")
-    drvExtPhyDp83640ConfigAuto.setVisible(True)
-    drvExtPhyDp83640ConfigAuto.setDescription("Use The Fuses Configuration")
-    drvExtPhyDp83640ConfigAuto.setDefaultValue(False)
+        # Configuration Fuses Is ALT
+        drvExtPhyDp83640ConfigAlt = drvExtPhyDp83640Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyDp83640ConnFlag)
+        drvExtPhyDp83640ConfigAlt.setLabel("Configuration Fuses Is ALT")
+        drvExtPhyDp83640ConfigAlt.setVisible(True)
+        drvExtPhyDp83640ConfigAlt.setDescription("Configuration Fuses Is ALT")
+        drvExtPhyDp83640ConfigAlt.setDefaultValue(False)
+        
+        # Use The Fuses Configuration
+        drvExtPhyDp83640ConfigAuto = drvExtPhyDp83640Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_AUTO", drvExtPhyDp83640ConnFlag)
+        drvExtPhyDp83640ConfigAuto.setLabel("Use The Fuses Configuration")
+        drvExtPhyDp83640ConfigAuto.setVisible(True)
+        drvExtPhyDp83640ConfigAuto.setDescription("Use The Fuses Configuration")
+        drvExtPhyDp83640ConfigAuto.setDefaultValue(False)
+        
+    # Advanced Settings
+    drvExtPhyDp83640AdvSettings = drvExtPhyDp83640Component.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)
+    drvExtPhyDp83640AdvSettings.setLabel("Advanced Settings")
+    drvExtPhyDp83640AdvSettings.setDescription("Advanced Settings")
+    drvExtPhyDp83640AdvSettings.setVisible(True)
 
+    # Delay for the Link Initialization in ms
+    drvExtPhyDp83640LinkInitDelay= drvExtPhyDp83640Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", drvExtPhyDp83640AdvSettings)
+    drvExtPhyDp83640LinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
+    drvExtPhyDp83640LinkInitDelay.setVisible(True)
+    drvExtPhyDp83640LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
+    drvExtPhyDp83640LinkInitDelay.setDefaultValue(500)
+    
     # External PHY Type
-    drvExtPhyDp83640PhyType = drvExtPhyDp83640Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+    drvExtPhyDp83640PhyType = drvExtPhyDp83640Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyDp83640AdvSettings)
     drvExtPhyDp83640PhyType.setVisible(False)   
     drvExtPhyDp83640PhyType.setDefaultValue("National_DP83640")
-    # Driver PHY Instances Number
-    drvExtPhyDp83640InstanceNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
-    drvExtPhyDp83640InstanceNum.setLabel("PHY Instances Number") 
-    drvExtPhyDp83640InstanceNum.setVisible(True)
-    drvExtPhyDp83640InstanceNum.setDescription("Driver PHY Instances Number")
-    drvExtPhyDp83640InstanceNum.setDefaultValue(1)
-    
-    # Driver PHY Clients Number
-    drvExtPhyDp83640ClientNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", None)
-    drvExtPhyDp83640ClientNum.setLabel("PHY Clients Number") 
-    drvExtPhyDp83640ClientNum.setVisible(True)
-    drvExtPhyDp83640ClientNum.setDescription("Driver PHY Clients Number")
-    drvExtPhyDp83640ClientNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral Index Number
-    drvExtPhyDp83640IndexNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_INDEX", None)
-    drvExtPhyDp83640IndexNum.setLabel("PHY Peripheral Index Number") 
-    drvExtPhyDp83640IndexNum.setVisible(True)
-    drvExtPhyDp83640IndexNum.setDescription("Driver PHY Peripheral Index Number")
-    drvExtPhyDp83640IndexNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral ID
-    drvExtPhyDp83640PeripheralId= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", None)
-    drvExtPhyDp83640PeripheralId.setLabel("PHY Peripheral ID") 
-    drvExtPhyDp83640PeripheralId.setVisible(True)
-    drvExtPhyDp83640PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyDp83640PeripheralId.setDefaultValue(1)
     
     # Driver PHY Negotiation Time-out (mSec)
-    drvExtPhyDp83640NegInitTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", None)
+    drvExtPhyDp83640NegInitTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyDp83640AdvSettings)
     drvExtPhyDp83640NegInitTimeout.setLabel("PHY Negotiation Time-out - ms") 
     drvExtPhyDp83640NegInitTimeout.setVisible(True)
     drvExtPhyDp83640NegInitTimeout.setDescription("Driver PHY Negotiation Time-out - ms")
     drvExtPhyDp83640NegInitTimeout.setDefaultValue(1)
     
     # Driver PHY Negotiation Done Time-out (mSec)
-    drvExtPhyDp83640NegDoneTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", None)
+    drvExtPhyDp83640NegDoneTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", drvExtPhyDp83640AdvSettings)
     drvExtPhyDp83640NegDoneTimeout.setLabel("PHY Negotiation Done Time-out - ms") 
     drvExtPhyDp83640NegDoneTimeout.setVisible(True)
     drvExtPhyDp83640NegDoneTimeout.setDescription("Driver PHY Negotiation Done Time-out - ms")
     drvExtPhyDp83640NegDoneTimeout.setDefaultValue(2000)
     
     # Driver PHY Reset Clear Time-out (mSec)
-    drvExtPhyDp83640ResetClearTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", None)
+    drvExtPhyDp83640ResetClearTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", drvExtPhyDp83640AdvSettings)
     drvExtPhyDp83640ResetClearTimeout.setLabel("PHY Reset Clear Time-out - ms") 
     drvExtPhyDp83640ResetClearTimeout.setVisible(True)
     drvExtPhyDp83640ResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out - ms")
     drvExtPhyDp83640ResetClearTimeout.setDefaultValue(500)
     
-    # Use a Function to be called at PHY Reset
-    drvExtPhyDp83640ResetCallbackEnable = drvExtPhyDp83640Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
-    drvExtPhyDp83640ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
-    drvExtPhyDp83640ResetCallbackEnable.setVisible(True)
-    drvExtPhyDp83640ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
-    drvExtPhyDp83640ResetCallbackEnable.setDefaultValue(False)
+    # Driver PHY Instances Number
+    drvExtPhyDp83640InstanceNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyDp83640AdvSettings)
+    drvExtPhyDp83640InstanceNum.setLabel("PHY Instances Number") 
+    drvExtPhyDp83640InstanceNum.setVisible(True)
+    drvExtPhyDp83640InstanceNum.setDescription("Driver PHY Instances Number")
+    drvExtPhyDp83640InstanceNum.setDefaultValue(1)
+    drvExtPhyDp83640InstanceNum.setReadOnly(True)
     
-    # App Function
-    drvExtPhyDp83640ResetCallback = drvExtPhyDp83640Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyDp83640ResetCallbackEnable)
-    drvExtPhyDp83640ResetCallback.setLabel("App Function")
-    drvExtPhyDp83640ResetCallback.setVisible(False)
-    drvExtPhyDp83640ResetCallback.setDescription("App Function")
-    drvExtPhyDp83640ResetCallback.setDefaultValue("AppPhyResetFunction")
-    drvExtPhyDp83640ResetCallback.setDependencies(drvExtPhyDp83640MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
-
+    # Driver PHY Clients Number
+    drvExtPhyDp83640ClientNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyDp83640AdvSettings)
+    drvExtPhyDp83640ClientNum.setLabel("PHY Clients Number") 
+    drvExtPhyDp83640ClientNum.setVisible(True)
+    drvExtPhyDp83640ClientNum.setDescription("Driver PHY Clients Number")
+    drvExtPhyDp83640ClientNum.setDefaultValue(1)
+    drvExtPhyDp83640ClientNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral Index Number
+    drvExtPhyDp83640IndexNum= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyDp83640AdvSettings)
+    drvExtPhyDp83640IndexNum.setLabel("PHY Peripheral Index Number") 
+    drvExtPhyDp83640IndexNum.setVisible(True)
+    drvExtPhyDp83640IndexNum.setDescription("Driver PHY Peripheral Index Number")
+    drvExtPhyDp83640IndexNum.setDefaultValue(1)
+    drvExtPhyDp83640IndexNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral ID
+    drvExtPhyDp83640PeripheralId= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyDp83640AdvSettings)
+    drvExtPhyDp83640PeripheralId.setLabel("PHY Peripheral ID") 
+    drvExtPhyDp83640PeripheralId.setVisible(True)
+    drvExtPhyDp83640PeripheralId.setDescription("Driver PHY Peripheral ID")
+    drvExtPhyDp83640PeripheralId.setDefaultValue(1)
+    drvExtPhyDp83640PeripheralId.setReadOnly(True)
+    
     #Add to system_config.h
     drvExtPhyDp83640HeaderFtl = drvExtPhyDp83640Component.createFileSymbol(None, None)
     drvExtPhyDp83640HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_dp83640.h.ftl")
@@ -190,7 +199,7 @@ def instantiateComponent(drvExtPhyDp83640Component):
     drvExtPhyDp83640HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyDp83640HeaderFile.setType("HEADER")
     drvExtPhyDp83640HeaderFile.setOverwrite(True)
-
+    drvExtPhyDp83640HeaderFile.setEnabled(True)
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
     # Add drv_ethphy.c file

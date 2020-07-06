@@ -26,20 +26,27 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     print("IP101GR PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    # Delay for the Link Initialization in ms
-    drvExtPhyIp101grLinkInitDelay= drvExtPhyIp101grComponent.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", None)
-    drvExtPhyIp101grLinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
-    drvExtPhyIp101grLinkInitDelay.setVisible(True)
-    drvExtPhyIp101grLinkInitDelay.setDescription("Delay for the Link Initialization in ms")
-    drvExtPhyIp101grLinkInitDelay.setDefaultValue(500)
-    #drvExtPhyIp101grLinkInitDelay.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
-
     # PHY Address
     drvExtPhyIp101grAddr= drvExtPhyIp101grComponent.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
     drvExtPhyIp101grAddr.setLabel("PHY Address") 
     drvExtPhyIp101grAddr.setVisible(True)
     drvExtPhyIp101grAddr.setDescription("PHY Address")
     drvExtPhyIp101grAddr.setDefaultValue(0)
+    
+    # Use a Function to be called at PHY Reset
+    drvExtPhyIp101grResetCallbackEnable = drvExtPhyIp101grComponent.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
+    drvExtPhyIp101grResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
+    drvExtPhyIp101grResetCallbackEnable.setVisible(True)
+    drvExtPhyIp101grResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
+    drvExtPhyIp101grResetCallbackEnable.setDefaultValue(False)
+    
+    # App Function
+    drvExtPhyIp101grResetCallback = drvExtPhyIp101grComponent.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyIp101grResetCallbackEnable)
+    drvExtPhyIp101grResetCallback.setLabel("App Function")
+    drvExtPhyIp101grResetCallback.setVisible(False)
+    drvExtPhyIp101grResetCallback.setDescription("App Function")
+    drvExtPhyIp101grResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyIp101grResetCallback.setDependencies(drvExtPhyIp101grMenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
     # External PHY Connection Flags
     drvExtPhyIp101grConnFlag = drvExtPhyIp101grComponent.createMenuSymbol(None, None) 
@@ -70,76 +77,78 @@ def instantiateComponent(drvExtPhyIp101grComponent):
         drvExtPhyIp101grConfigAuto.setVisible(True)
         drvExtPhyIp101grConfigAuto.setDescription("Use The Fuses Configuration")
         drvExtPhyIp101grConfigAuto.setDefaultValue(False)
+        
+    # Advanced Settings
+    drvExtPhyIp101grAdvSettings = drvExtPhyIp101grComponent.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)
+    drvExtPhyIp101grAdvSettings.setLabel("Advanced Settings")
+    drvExtPhyIp101grAdvSettings.setDescription("Advanced Settings")
+    drvExtPhyIp101grAdvSettings.setVisible(True)
+
+    # Delay for the Link Initialization in ms
+    drvExtPhyIp101grLinkInitDelay= drvExtPhyIp101grComponent.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", drvExtPhyIp101grAdvSettings)
+    drvExtPhyIp101grLinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
+    drvExtPhyIp101grLinkInitDelay.setVisible(True)
+    drvExtPhyIp101grLinkInitDelay.setDescription("Delay for the Link Initialization in ms")
+    drvExtPhyIp101grLinkInitDelay.setDefaultValue(500)
 
     # External PHY Type
-    drvExtPhyIp101grPhyType = drvExtPhyIp101grComponent.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+    drvExtPhyIp101grPhyType = drvExtPhyIp101grComponent.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyIp101grAdvSettings)
     drvExtPhyIp101grPhyType.setVisible(False)   
     drvExtPhyIp101grPhyType.setDefaultValue("IP_IP101GR")
     
-    # Driver PHY Instances Number
-    drvExtPhyIp101grInstanceNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
-    drvExtPhyIp101grInstanceNum.setLabel("PHY Instances Number") 
-    drvExtPhyIp101grInstanceNum.setVisible(True)
-    drvExtPhyIp101grInstanceNum.setDescription("Driver PHY Instances Number")
-    drvExtPhyIp101grInstanceNum.setDefaultValue(1)
-    
-    # Driver PHY Clients Number
-    drvExtPhyIp101grClientNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", None)
-    drvExtPhyIp101grClientNum.setLabel("PHY Clients Number") 
-    drvExtPhyIp101grClientNum.setVisible(True)
-    drvExtPhyIp101grClientNum.setDescription("Driver PHY Clients Number")
-    drvExtPhyIp101grClientNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral Index Number
-    drvExtPhyIp101grIndexNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_INDEX", None)
-    drvExtPhyIp101grIndexNum.setLabel("PHY Peripheral Index Number") 
-    drvExtPhyIp101grIndexNum.setVisible(True)
-    drvExtPhyIp101grIndexNum.setDescription("Driver PHY Peripheral Index Number")
-    drvExtPhyIp101grIndexNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral ID
-    drvExtPhyIp101grPeripheralId= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", None)
-    drvExtPhyIp101grPeripheralId.setLabel("PHY Peripheral ID") 
-    drvExtPhyIp101grPeripheralId.setVisible(True)
-    drvExtPhyIp101grPeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyIp101grPeripheralId.setDefaultValue(1)
-    
     # Driver PHY Negotiation Time-out (mSec)
-    drvExtPhyIp101grNegInitTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", None)
+    drvExtPhyIp101grNegInitTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyIp101grAdvSettings)
     drvExtPhyIp101grNegInitTimeout.setLabel("PHY Negotiation Time-out - ms") 
     drvExtPhyIp101grNegInitTimeout.setVisible(True)
     drvExtPhyIp101grNegInitTimeout.setDescription("Driver PHY Negotiation Time-out - ms")
     drvExtPhyIp101grNegInitTimeout.setDefaultValue(1)
     
     # Driver PHY Negotiation Done Time-out (mSec)
-    drvExtPhyIp101grNegDoneTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", None)
+    drvExtPhyIp101grNegDoneTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", drvExtPhyIp101grAdvSettings)
     drvExtPhyIp101grNegDoneTimeout.setLabel("PHY Negotiation Done Time-out - ms") 
     drvExtPhyIp101grNegDoneTimeout.setVisible(True)
     drvExtPhyIp101grNegDoneTimeout.setDescription("Driver PHY Negotiation Done Time-out - ms")
     drvExtPhyIp101grNegDoneTimeout.setDefaultValue(2000)
     
     # Driver PHY Reset Clear Time-out (mSec)
-    drvExtPhyIp101grResetClearTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", None)
+    drvExtPhyIp101grResetClearTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", drvExtPhyIp101grAdvSettings)
     drvExtPhyIp101grResetClearTimeout.setLabel("PHY Reset Clear Time-out - ms") 
     drvExtPhyIp101grResetClearTimeout.setVisible(True)
     drvExtPhyIp101grResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out - ms")
     drvExtPhyIp101grResetClearTimeout.setDefaultValue(500)
     
-    # Use a Function to be called at PHY Reset
-    drvExtPhyIp101grResetCallbackEnable = drvExtPhyIp101grComponent.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
-    drvExtPhyIp101grResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
-    drvExtPhyIp101grResetCallbackEnable.setVisible(True)
-    drvExtPhyIp101grResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
-    drvExtPhyIp101grResetCallbackEnable.setDefaultValue(False)
+    # Driver PHY Instances Number
+    drvExtPhyIp101grInstanceNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyIp101grAdvSettings)
+    drvExtPhyIp101grInstanceNum.setLabel("PHY Instances Number") 
+    drvExtPhyIp101grInstanceNum.setVisible(True)
+    drvExtPhyIp101grInstanceNum.setDescription("Driver PHY Instances Number")
+    drvExtPhyIp101grInstanceNum.setDefaultValue(1)
+    drvExtPhyIp101grInstanceNum.setReadOnly(True)
     
-    # App Function
-    drvExtPhyIp101grResetCallback = drvExtPhyIp101grComponent.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyIp101grResetCallbackEnable)
-    drvExtPhyIp101grResetCallback.setLabel("App Function")
-    drvExtPhyIp101grResetCallback.setVisible(False)
-    drvExtPhyIp101grResetCallback.setDescription("App Function")
-    drvExtPhyIp101grResetCallback.setDefaultValue("AppPhyResetFunction")
-    drvExtPhyIp101grResetCallback.setDependencies(drvExtPhyIp101grMenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
-
+    # Driver PHY Clients Number
+    drvExtPhyIp101grClientNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyIp101grAdvSettings)
+    drvExtPhyIp101grClientNum.setLabel("PHY Clients Number") 
+    drvExtPhyIp101grClientNum.setVisible(True)
+    drvExtPhyIp101grClientNum.setDescription("Driver PHY Clients Number")
+    drvExtPhyIp101grClientNum.setDefaultValue(1)
+    drvExtPhyIp101grClientNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral Index Number
+    drvExtPhyIp101grIndexNum= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyIp101grAdvSettings)
+    drvExtPhyIp101grIndexNum.setLabel("PHY Peripheral Index Number") 
+    drvExtPhyIp101grIndexNum.setVisible(True)
+    drvExtPhyIp101grIndexNum.setDescription("Driver PHY Peripheral Index Number")
+    drvExtPhyIp101grIndexNum.setDefaultValue(1)
+    drvExtPhyIp101grIndexNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral ID
+    drvExtPhyIp101grPeripheralId= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyIp101grAdvSettings)
+    drvExtPhyIp101grPeripheralId.setLabel("PHY Peripheral ID") 
+    drvExtPhyIp101grPeripheralId.setVisible(True)
+    drvExtPhyIp101grPeripheralId.setDescription("Driver PHY Peripheral ID")
+    drvExtPhyIp101grPeripheralId.setDefaultValue(1)
+    drvExtPhyIp101grPeripheralId.setReadOnly(True)
+    
     #Add to system_config.h
     drvExtPhyIp101grHeaderFtl = drvExtPhyIp101grComponent.createFileSymbol(None, None)
     drvExtPhyIp101grHeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_ip101gr.h.ftl")
@@ -157,7 +166,6 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     drvExtPhyHeaderFile.setType("HEADER")
     drvExtPhyHeaderFile.setOverwrite(True)
     drvExtPhyHeaderFile.setEnabled(True)
-    #drvEthPhyHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
     # file TCPIP_ETH_PHY_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/drv_ethphy_local.h" to           "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/drv_ethphy_local.h"
     # Add drv_ethphy_local.h file to project
@@ -169,7 +177,6 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     drvExtPhyLocalHeaderFile.setType("HEADER")
     drvExtPhyLocalHeaderFile.setOverwrite(True)
     drvExtPhyLocalHeaderFile.setEnabled(True)
-    #drvEthPhyLocalHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
     # file TCPIP_ETH_EXT_PHY_REGS_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h"
     # Add drv_extphy_regs.h file to project
@@ -190,7 +197,7 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     drvExtPhyIp101grHeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyIp101grHeaderFile.setType("HEADER")
     drvExtPhyIp101grHeaderFile.setOverwrite(True)
-
+    drvExtPhyIp101grHeaderFile.setEnabled(True)
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
     # Add drv_ethphy.c file
