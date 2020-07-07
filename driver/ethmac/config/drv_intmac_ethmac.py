@@ -20,9 +20,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
-
-__TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
 def instantiateComponent(drvPic32mEthmacComponent):
     global tcpipEthmacInterruptVector
     global tcpipEthmacInterruptHandlerLock
@@ -59,7 +56,6 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacTxDescCount.setVisible(True)
     tcpipEthmacTxDescCount.setDescription("Number of Tx Descriptors to be created")
     tcpipEthmacTxDescCount.setDefaultValue(8)
-    # tcpipEthmacTxDescCount.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"])
 
     # Number of Rx Descriptors to be created
     tcpipEthmacRxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DESCRIPTORS", None)
@@ -67,7 +63,6 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacRxDescCount.setVisible(True)
     tcpipEthmacRxDescCount.setDescription("Number of Rx Descriptors to be created")
     tcpipEthmacRxDescCount.setDefaultValue(6)
-    # tcpipEthmacRxDescCount.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"])
 
     # Number of Dedicated MAC RX Buffers
     tcpipEthmacRxOwnBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DEDICATED_BUFFERS", None)
@@ -97,22 +92,6 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacRxBufferReFill.setDescription("Number of RX Buffers to Allocate when Below Threshold Condition is Detected")
     tcpipEthmacRxBufferReFill.setDefaultValue(2)
 
-    # Maximum Frame Size - Longer Frames Will Be Discarded
-    tcpipEthmacMaxFrame = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_MAX_FRAME", None)
-    tcpipEthmacMaxFrame.setLabel("Maximum Frame Size - Longer Frames Will Be Discarded")
-    tcpipEthmacMaxFrame.setVisible(True)
-    tcpipEthmacMaxFrame.setDescription("Maximum Frame Size - Longer Frames Will Be Discarded")
-    tcpipEthmacMaxFrame.setDefaultValue(1536)
-
-    # Link Maximum Transmission Unit - (576 - 1500)
-    tcpipEthmacLinkMTU = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_LINK_MTU", None)
-    tcpipEthmacLinkMTU.setLabel("Link Maximum Transmission Unit - (576 - 1500)")
-    tcpipEthmacLinkMTU.setMin(576)
-    tcpipEthmacLinkMTU.setMax(1500)
-    tcpipEthmacLinkMTU.setVisible(True)
-    tcpipEthmacLinkMTU.setDescription("Link Maximum Transmission Unit - (576 - 1500)")
-    tcpipEthmacLinkMTU.setDefaultValue(1500)
-
     # Size of a RX Buffer. Should Be Multiple of 16
     tcpipEthmacRxBuffSize = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_BUFF_SIZE", None)
     tcpipEthmacRxBuffSize.setLabel("Size of a RX Buffer. Should Be Multiple of 16")
@@ -120,14 +99,6 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacRxBuffSize.setDescription("Size of a RX Buffer. Should Be Multiple of 16")
     tcpipEthmacRxBuffSize.setDefaultValue(1536)
 
-    # MAC Maximum Number of Supported RX Fragments
-    tcpipEthmacRxFragMaxNum = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_FRAGMENTS", None)
-    tcpipEthmacRxFragMaxNum.setLabel("MAC Maximum Number of Supported RX Fragments")
-    tcpipEthmacRxFragMaxNum.setMin(1)
-    tcpipEthmacRxFragMaxNum.setMax(6)
-    tcpipEthmacRxFragMaxNum.setVisible(True)
-    tcpipEthmacRxFragMaxNum.setDescription("MAC Maximum Number of Supported RX Fragments")
-    tcpipEthmacRxFragMaxNum.setDefaultValue(1)
     
     # Ethernet RX Filters Selection Settings
     tcpipEthRxFilter = drvPic32mEthmacComponent.createMenuSymbol(None, None) 
@@ -190,49 +161,6 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthFilterCrcErrAccept.setVisible(True)
     tcpipEthmacEthFilterCrcErrAccept.setDescription("Accept Packets with Wrong CRC")
     tcpipEthmacEthFilterCrcErrAccept.setDefaultValue(False)
-    
-    # Ethernet Auto Flow Control
-    tcpipEthAutoFlowCtrl = drvPic32mEthmacComponent.createMenuSymbol(None, None) 
-    tcpipEthAutoFlowCtrl.setLabel("Ethernet Auto Flow Control")
-    tcpipEthAutoFlowCtrl.setVisible(True)
-    tcpipEthAutoFlowCtrl.setDescription("Ethernet Auto Flow Control")
-
-    # Auto Flow Control Enable
-    tcpipEthAutoFlowCtrlEnable = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE", tcpipEthAutoFlowCtrl)
-    tcpipEthAutoFlowCtrlEnable.setLabel("Auto Flow Control Enable")
-    tcpipEthAutoFlowCtrlEnable.setVisible(True)
-    tcpipEthAutoFlowCtrlEnable.setDescription("Auto Flow Control Enable")
-    tcpipEthAutoFlowCtrlEnable.setDefaultValue(True)
-
-    # Pause Time Value for the Auto Flow Control, bytes
-    tcpipEthmacAutoFlowCtrlPauseTime = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES", tcpipEthAutoFlowCtrlEnable)
-    tcpipEthmacAutoFlowCtrlPauseTime.setLabel("Pause Time Value for the Auto Flow Control, bytes")
-    tcpipEthmacAutoFlowCtrlPauseTime.setMin(64)
-    tcpipEthmacAutoFlowCtrlPauseTime.setMax(4194240)
-    tcpipEthmacAutoFlowCtrlPauseTime.setVisible(True)
-    tcpipEthmacAutoFlowCtrlPauseTime.setDescription("Pause Time Value for the Auto Flow Control, bytes")
-    tcpipEthmacAutoFlowCtrlPauseTime.setDefaultValue(3072)
-    tcpipEthmacAutoFlowCtrlPauseTime.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
-
-    # The Full Water Mark, in Number of Packets
-    tcpipEthmacAutoFlowCtrlFullWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK", tcpipEthAutoFlowCtrlEnable)
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setLabel("The Full Water Mark, in Number of Packets")
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setMin(1)
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setMax(255)
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setVisible(True)
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setDescription("The Full Water Mark, in Number of Packets")
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setDefaultValue(2)
-    tcpipEthmacAutoFlowCtrlFullWtrMark.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
-
-    # The Empty Water Mark, in Number of Packets
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK", tcpipEthAutoFlowCtrlEnable)
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setLabel("The Empty Water Mark, in Number of Packets")
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMin(0)
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMax(255)
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setVisible(True)
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDescription("The Empty Water Mark, in Number of Packets")
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDefaultValue(0)
-    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
  
     # Ethernet Connection Flags
     tcpipEthConnFlag = drvPic32mEthmacComponent.createMenuSymbol(None, None) 
@@ -319,8 +247,14 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthRmii.setDefaultValue(True)
     # todo default y if FMIIEN = "OFF" 
     
+    # Advanced Settings
+    tcpipEthmacAdvSettings = drvPic32mEthmacComponent.createMenuSymbol("TCPIP_ETHMAC_ADV_SETTING", None)
+    tcpipEthmacAdvSettings.setLabel("Advanced Settings")
+    tcpipEthmacAdvSettings.setDescription("Advanced Settings")
+    tcpipEthmacAdvSettings.setVisible(True)
+    
     # EMAC Module ID
-    tcpipEmacModuleId = drvPic32mEthmacComponent.createStringSymbol("TCPIP_EMAC_MODULE_ID", None)
+    tcpipEmacModuleId = drvPic32mEthmacComponent.createStringSymbol("TCPIP_EMAC_MODULE_ID", tcpipEthmacAdvSettings)
     tcpipEmacModuleId.setLabel("EMAC Module ID")
     tcpipEmacModuleId.setVisible(True)
     tcpipEmacModuleId.setDescription("EMAC Module ID")
@@ -342,11 +276,11 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     
     #Configures the library for interrupt mode operations
-    tcpipEthmacInterruptEnable = drvPic32mEthmacComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
+    tcpipEthmacInterruptEnable = drvPic32mEthmacComponent.createBooleanSymbol("INTERRUPT_ENABLE", tcpipEthmacAdvSettings)
     tcpipEthmacInterruptEnable.setLabel("Enable Interrupt?")
     tcpipEthmacInterruptEnable.setDefaultValue(True) 
     
-    tcpipEthmacInterruptComment = drvPic32mEthmacComponent.createCommentSymbol("ETHERNET_INTRRUPT_ENABLE_COMMENT", None)
+    tcpipEthmacInterruptComment = drvPic32mEthmacComponent.createCommentSymbol("ETHERNET_INTRRUPT_ENABLE_COMMENT", tcpipEthmacAdvSettings)
     tcpipEthmacInterruptComment.setLabel("Warning!!! Ethernet MAC Interrupt is Disabled in Interrupt Manager")
     tcpipEthmacInterruptComment.setVisible(False)
     tcpipEthmacInterruptComment.setDependencies(updateEthmacInterruptData, ["INTERRUPT_ENABLE", "core." + tcpipEthmacInterruptVectorUpdate])
@@ -376,34 +310,74 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacVectorNum = drvPic32mEthmacComponent.createIntegerSymbol("ETHERNET_VECTOR_NUMBER", None)
     tcpipEthmacVectorNum.setDefaultValue(tcpipEthmacIrq_index)
     tcpipEthmacVectorNum.setVisible(False)
+        
+    # Maximum Frame Size - Longer Frames Will Be Discarded
+    tcpipEthmacMaxFrame = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_MAX_FRAME", tcpipEthmacAdvSettings)
+    tcpipEthmacMaxFrame.setLabel("Maximum Frame Size - Longer Frames Will Be Discarded")
+    tcpipEthmacMaxFrame.setVisible(True)
+    tcpipEthmacMaxFrame.setDescription("Maximum Frame Size - Longer Frames Will Be Discarded")
+    tcpipEthmacMaxFrame.setDefaultValue(1536)
+
+    # Link Maximum Transmission Unit - (576 - 1500)
+    tcpipEthmacLinkMTU = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_LINK_MTU", tcpipEthmacAdvSettings)
+    tcpipEthmacLinkMTU.setLabel("Link Maximum Transmission Unit - (576 - 1500)")
+    tcpipEthmacLinkMTU.setMin(576)
+    tcpipEthmacLinkMTU.setMax(1500)
+    tcpipEthmacLinkMTU.setVisible(True)
+    tcpipEthmacLinkMTU.setDescription("Link Maximum Transmission Unit - (576 - 1500)")
+    tcpipEthmacLinkMTU.setDefaultValue(1500)
+
+    # MAC Maximum Number of Supported RX Fragments
+    tcpipEthmacRxFragMaxNum = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_FRAGMENTS", tcpipEthmacAdvSettings)
+    tcpipEthmacRxFragMaxNum.setLabel("MAC Maximum Number of Supported RX Fragments")
+    tcpipEthmacRxFragMaxNum.setMin(1)
+    tcpipEthmacRxFragMaxNum.setMax(6)
+    tcpipEthmacRxFragMaxNum.setVisible(True)
+    tcpipEthmacRxFragMaxNum.setDescription("MAC Maximum Number of Supported RX Fragments")
+    tcpipEthmacRxFragMaxNum.setDefaultValue(1)
     
-    # ETH MAC Instances Number
-    tcpipEthmacInstanceNum = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_INSTANCES_NUMBER", None)
-    tcpipEthmacInstanceNum.setLabel("ETH MAC Instances Number")
-    tcpipEthmacInstanceNum.setVisible(True)
-    tcpipEthmacInstanceNum.setDescription("ETH MAC Instances Number")
-    tcpipEthmacInstanceNum.setDefaultValue(1)
-    
-    # ETH MAC Clients Number
-    tcpipEthmacClientNum = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_CLIENTS_NUMBER", None)
-    tcpipEthmacClientNum.setLabel("ETH MAC Clients Number")
-    tcpipEthmacClientNum.setVisible(True)
-    tcpipEthmacClientNum.setDescription("ETH MAC Clients Number")
-    tcpipEthmacClientNum.setDefaultValue(1)
-    
-    # Driver ETH MAC Index Number
-    tcpipEthmacIndex = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_INDEX", None)
-    tcpipEthmacIndex.setLabel("ETH MAC Index Number") 
-    tcpipEthmacIndex.setVisible(True)
-    tcpipEthmacIndex.setDescription("ETH MAC Index Number")
-    tcpipEthmacIndex.setDefaultValue(1)
-    
-    # ETH MAC Peripheral ID
-    tcpipEthmacPeripheralId = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_PERIPHERAL_ID", None)
-    tcpipEthmacPeripheralId.setLabel("ETH MAC Peripheral ID") 
-    tcpipEthmacPeripheralId.setVisible(True)
-    tcpipEthmacPeripheralId.setDescription("ETH MAC Peripheral ID")
-    tcpipEthmacPeripheralId.setDefaultValue(1)
+    # Ethernet Auto Flow Control
+    tcpipEthAutoFlowCtrl = drvPic32mEthmacComponent.createMenuSymbol(None, tcpipEthmacAdvSettings) 
+    tcpipEthAutoFlowCtrl.setLabel("Ethernet Auto Flow Control")
+    tcpipEthAutoFlowCtrl.setVisible(True)
+    tcpipEthAutoFlowCtrl.setDescription("Ethernet Auto Flow Control")
+
+    # Auto Flow Control Enable
+    tcpipEthAutoFlowCtrlEnable = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE", tcpipEthAutoFlowCtrl)
+    tcpipEthAutoFlowCtrlEnable.setLabel("Auto Flow Control Enable")
+    tcpipEthAutoFlowCtrlEnable.setVisible(True)
+    tcpipEthAutoFlowCtrlEnable.setDescription("Auto Flow Control Enable")
+    tcpipEthAutoFlowCtrlEnable.setDefaultValue(True)
+
+    # Pause Time Value for the Auto Flow Control, bytes
+    tcpipEthmacAutoFlowCtrlPauseTime = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlPauseTime.setLabel("Pause Time Value for the Auto Flow Control, bytes")
+    tcpipEthmacAutoFlowCtrlPauseTime.setMin(64)
+    tcpipEthmacAutoFlowCtrlPauseTime.setMax(4194240)
+    tcpipEthmacAutoFlowCtrlPauseTime.setVisible(True)
+    tcpipEthmacAutoFlowCtrlPauseTime.setDescription("Pause Time Value for the Auto Flow Control, bytes")
+    tcpipEthmacAutoFlowCtrlPauseTime.setDefaultValue(3072)
+    tcpipEthmacAutoFlowCtrlPauseTime.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
+
+    # The Full Water Mark, in Number of Packets
+    tcpipEthmacAutoFlowCtrlFullWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setLabel("The Full Water Mark, in Number of Packets")
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setMin(1)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setMax(255)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setVisible(True)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setDescription("The Full Water Mark, in Number of Packets")
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setDefaultValue(2)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
+
+    # The Empty Water Mark, in Number of Packets
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setLabel("The Empty Water Mark, in Number of Packets")
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMin(0)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMax(255)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setVisible(True)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDescription("The Empty Water Mark, in Number of Packets")
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDefaultValue(0)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
     
     # PHY Connected to Ethernet MAC
     tcpipEthmacPhyType = drvPic32mEthmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", None)
@@ -540,9 +514,7 @@ def tcpipEthMacMdixSwapVisible(symbol, event):
 def setEthmacInterruptData(status):
 
     Database.setSymbolValue("core", tcpipEthmacInterruptVector, status, 1)
-    Database.setSymbolValue("core", tcpipEthmacInterruptHandlerLock, status, 1)
-    #interruptName = tcpipEthmacInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-    
+    Database.setSymbolValue("core", tcpipEthmacInterruptHandlerLock, status, 1)    
     if status == True:
         Database.setSymbolValue("core", tcpipEthmacInterruptHandler, "ETHERNET_InterruptHandler", 1)
     else:
