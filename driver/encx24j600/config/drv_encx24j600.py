@@ -60,39 +60,6 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600InstnRxBuffSize.setLabel("RX Buffer Size (should be even)")
     drvEncx24j600InstnRxBuffSize.setDefaultValue(16384)
     drvEncx24j600InstnRxBuffSize.setDescription("RX Buffer Size")    
-    
-    drvEncx24j600InstnMaxFrameSize = drvExtMacEncx24j600Component.createIntegerSymbol("DRV_ENCX24J600_MAX_FRAME_SIZE_IDX" + str(index),None)
-    drvEncx24j600InstnMaxFrameSize.setVisible(True)
-    drvEncx24j600InstnMaxFrameSize.setLabel("Maximum Frame Length")
-    drvEncx24j600InstnMaxFrameSize.setDefaultValue(1536)
-    drvEncx24j600InstnMaxFrameSize.setDescription("Maximum Frame Length") 
-
-    drvEncx24j600InstnAutoFlowCtrl = drvExtMacEncx24j600Component.createBooleanSymbol("DRV_ENCX24J600_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),None)
-    drvEncx24j600InstnAutoFlowCtrl.setLabel("Enable Automatic Flow Control")
-    drvEncx24j600InstnAutoFlowCtrl.setVisible(True)
-    drvEncx24j600InstnAutoFlowCtrl.setDefaultValue(True)
-    drvEncx24j600InstnAutoFlowCtrl.setDescription("Use Automatic Flow Control")    
-
-    drvEncx24j600InstnEthType = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_ETHERNET_TYPE_IDX"+str(index),None)
-    drvEncx24j600InstnEthType.setVisible(True)
-    drvEncx24j600InstnEthType.setLabel("Ethernet Type")
-    drvEncx24j600InstnEthType.addKey("Auto Negotiate", "0", "Auto Negotiate")
-    drvEncx24j600InstnEthType.addKey("10base-T", "1", "10base-T")
-    drvEncx24j600InstnEthType.addKey("100base-T", "2", "100base-T")
-    drvEncx24j600InstnEthType.setDisplayMode("Key")
-    drvEncx24j600InstnEthType.setOutputMode("Key")
-    drvEncx24j600InstnEthType.setDefaultValue(0)
-
-    drvEncx24j600InstnDuplexMode = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_DUPLEX_MODE_IDX"+str(index),None)
-    drvEncx24j600InstnDuplexMode.setVisible(True)
-    drvEncx24j600InstnDuplexMode.setLabel("Duplex mode")
-    drvEncx24j600InstnDuplexMode.addKey("Auto Negotiate", "0", "Auto Negotiate")
-    drvEncx24j600InstnDuplexMode.addKey("Half Duplex", "1", "Half Duplex")
-    drvEncx24j600InstnDuplexMode.addKey("Full Duplex", "2", "Full Duplex")
-    drvEncx24j600InstnDuplexMode.setDisplayMode("Key")
-    drvEncx24j600InstnDuplexMode.setOutputMode("Key")
-    drvEncx24j600InstnDuplexMode.setDefaultValue(0)
-    drvEncx24j600InstnDuplexMode.setDependencies(drvEncx24j600InstnDuplexModeSelect, [drvEncx24j600InstnEthType.getID()])
 
     drvEncx24j600SpiChipSelect = drvExtMacEncx24j600Component.createStringSymbol("DRV_ENCX24J600_SPI_CS_IDX" + str(index),None)
     drvEncx24j600SpiChipSelect.setLabel("SPI Chip Select")
@@ -105,8 +72,47 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600SpiChipSelect.setDescription("Chip Select Pin for SPI interface")     
         
     drvEncx24j600SpiComment = drvExtMacEncx24j600Component.createCommentSymbol("DRV_ENCX24J600_SPI_COMMENT_IDX" + str(index),drvEncx24j600SpiChipSelect)
-    drvEncx24j600SpiComment.setLabel("***Configure the pin as GPIO Output using Pin Manager***")
+    drvEncx24j600SpiComment.setLabel"***Configure the Chip-Select pin as GPIO Output in Pin Manager***")
     drvEncx24j600SpiComment.setVisible( True )
+        
+    # Advanced Settings
+    drvEncx24j600AdvSettings = drvExtMacEncx24j600Component.createMenuSymbol("TCPIP_ETHMAC_ADV_SETTING", None)
+    drvEncx24j600AdvSettings.setLabel("Advanced Settings")
+    drvEncx24j600AdvSettings.setDescription("Advanced Settings")
+    drvEncx24j600AdvSettings.setVisible(True)
+    
+    drvEncx24j600InstnMaxFrameSize = drvExtMacEncx24j600Component.createIntegerSymbol("DRV_ENCX24J600_MAX_FRAME_SIZE_IDX" + str(index),drvEncx24j600AdvSettings)
+    drvEncx24j600InstnMaxFrameSize.setVisible(True)
+    drvEncx24j600InstnMaxFrameSize.setLabel("Maximum Frame Length")
+    drvEncx24j600InstnMaxFrameSize.setDefaultValue(1536)
+    drvEncx24j600InstnMaxFrameSize.setDescription("Maximum Frame Length") 
+
+    drvEncx24j600InstnAutoFlowCtrl = drvExtMacEncx24j600Component.createBooleanSymbol("DRV_ENCX24J600_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),drvEncx24j600AdvSettings)
+    drvEncx24j600InstnAutoFlowCtrl.setLabel("Enable Automatic Flow Control")
+    drvEncx24j600InstnAutoFlowCtrl.setVisible(True)
+    drvEncx24j600InstnAutoFlowCtrl.setDefaultValue(True)
+    drvEncx24j600InstnAutoFlowCtrl.setDescription("Use Automatic Flow Control")    
+
+    drvEncx24j600InstnEthType = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_ETHERNET_TYPE_IDX"+str(index),drvEncx24j600AdvSettings)
+    drvEncx24j600InstnEthType.setVisible(True)
+    drvEncx24j600InstnEthType.setLabel("Ethernet Type")
+    drvEncx24j600InstnEthType.addKey("Auto Negotiate", "0", "Auto Negotiate")
+    drvEncx24j600InstnEthType.addKey("10base-T", "1", "10base-T")
+    drvEncx24j600InstnEthType.addKey("100base-T", "2", "100base-T")
+    drvEncx24j600InstnEthType.setDisplayMode("Key")
+    drvEncx24j600InstnEthType.setOutputMode("Key")
+    drvEncx24j600InstnEthType.setDefaultValue(0)
+
+    drvEncx24j600InstnDuplexMode = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_DUPLEX_MODE_IDX"+str(index),drvEncx24j600AdvSettings)
+    drvEncx24j600InstnDuplexMode.setVisible(True)
+    drvEncx24j600InstnDuplexMode.setLabel("Duplex mode")
+    drvEncx24j600InstnDuplexMode.addKey("Auto Negotiate", "0", "Auto Negotiate")
+    drvEncx24j600InstnDuplexMode.addKey("Half Duplex", "1", "Half Duplex")
+    drvEncx24j600InstnDuplexMode.addKey("Full Duplex", "2", "Full Duplex")
+    drvEncx24j600InstnDuplexMode.setDisplayMode("Key")
+    drvEncx24j600InstnDuplexMode.setOutputMode("Key")
+    drvEncx24j600InstnDuplexMode.setDefaultValue(0)
+    drvEncx24j600InstnDuplexMode.setDependencies(drvEncx24j600InstnDuplexModeSelect, [drvEncx24j600InstnEthType.getID()])    
 
 def drvEncx24j600InstnDuplexModeSelect(symbol, event):
 
