@@ -39,7 +39,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6MinAllocBlkSize.setVisible(True)
     tcpipIPv6MinAllocBlkSize.setDescription("Minimum Allocation Unit For The Payload")
     tcpipIPv6MinAllocBlkSize.setDefaultValue(64)
-    #tcpipIPv6MinAllocBlkSize.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Lower Bounds Of The Maximum Transmission Unit
     tcpipIPv6MinLinkMTU = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_MINIMUM_LINK_MTU", None)
@@ -47,7 +46,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6MinLinkMTU.setVisible(True)
     tcpipIPv6MinLinkMTU.setDescription("Lower Bounds Of The Maximum Transmission Unit")
     tcpipIPv6MinLinkMTU.setDefaultValue(1280)
-    #tcpipIPv6MinLinkMTU.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Maximum Transmission Unit
     tcpipIPv6LinkMTU = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_DEFAULT_LINK_MTU", None)
@@ -55,7 +53,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6LinkMTU.setVisible(True)
     tcpipIPv6LinkMTU.setDescription("Maximum Transmission Unit")
     tcpipIPv6LinkMTU.setDefaultValue(1500)
-    #tcpipIPv6LinkMTU.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # IPv6 Default Hop Limit
     tcpipIPv6HopLimit = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_DEFAULT_CUR_HOP_LIMIT", None)
@@ -63,7 +60,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6HopLimit.setVisible(True)
     tcpipIPv6HopLimit.setDescription("IPv6 Default Hop Limit")
     tcpipIPv6HopLimit.setDefaultValue(64)
-    #tcpipIPv6HopLimit.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Router Advertisement Reachable Time in Seconds
     tcpipIPv6RouterAdvReachTime = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_DEFAULT_BASE_REACHABLE_TIME", None)
@@ -71,7 +67,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6RouterAdvReachTime.setVisible(True)
     tcpipIPv6RouterAdvReachTime.setDescription("Router Advertisement Reachable Time in Seconds")
     tcpipIPv6RouterAdvReachTime.setDefaultValue(30)
-    #tcpipIPv6RouterAdvReachTime.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Router Advertisement's Retransmission Time in ms
     tcpipIPv6RouterAdvRetransTime = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_DEFAULT_RETRANSMIT_TIME", None)
@@ -79,7 +74,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6RouterAdvRetransTime.setVisible(True)
     tcpipIPv6RouterAdvRetransTime.setDescription("Router Advertisement's Retransmission Time in ms")
     tcpipIPv6RouterAdvRetransTime.setDefaultValue(1000)
-    #tcpipIPv6RouterAdvRetransTime.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Maximum Number of Queued Packets per Remote
     tcpipIPv6QueNeighbPktMaxNum = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_QUEUE_NEIGHBOR_PACKET_LIMIT", None)
@@ -87,7 +81,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6QueNeighbPktMaxNum.setVisible(True)
     tcpipIPv6QueNeighbPktMaxNum.setDescription("Maximum Number of Queued Packets per Remote")
     tcpipIPv6QueNeighbPktMaxNum.setDefaultValue(1)
-    #tcpipIPv6QueNeighbPktMaxNum.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Stale Neighbor Discovery Packet Time-out
     tcpipIPv6NeighbCacheEntryStaleTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_NEIGHBOR_CACHE_ENTRY_STALE_TIMEOUT", None)
@@ -95,7 +88,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6NeighbCacheEntryStaleTimeout.setVisible(True)
     tcpipIPv6NeighbCacheEntryStaleTimeout.setDescription("Stale Neighbor Discovery Packet Time-out")
     tcpipIPv6NeighbCacheEntryStaleTimeout.setDefaultValue(600)
-    #tcpipIPv6NeighbCacheEntryStaleTimeout.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Maximum Number of Multicast Queued IPv6
     tcpipIPv6QueMcastPktMaxNum = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_QUEUE_MCAST_PACKET_LIMIT", None)
@@ -103,34 +95,21 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6QueMcastPktMaxNum.setVisible(True)
     tcpipIPv6QueMcastPktMaxNum.setDescription("Maximum Number of Multicast Queued IPv6")
     tcpipIPv6QueMcastPktMaxNum.setDefaultValue(4)
-    #tcpipIPv6QueMcastPktMaxNum.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Multicast Packet Time-out in Seconds
     tcpipIPv6QueMcastPktTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT", None)
     tcpipIPv6QueMcastPktTimeout.setLabel("Multicast Packet Time-out - Seconds")
     tcpipIPv6QueMcastPktTimeout.setVisible(True)
     tcpipIPv6QueMcastPktTimeout.setDescription("Multicast Packet Time-out in Seconds")
-    tcpipIPv6QueMcastPktTimeout.setDefaultValue(10)
-    #tcpipIPv6QueMcastPktTimeout.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
-
-    #IPv6 Task Processing Rate in ms
-    tcpipIPv6TaskProcessRate = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_TASK_PROCESS_RATE", None)
-    tcpipIPv6TaskProcessRate.setLabel("IPv6 Task Processing Rate - ms")
-    tcpipIPv6TaskProcessRate.setVisible(True)
-    tcpipIPv6TaskProcessRate.setDescription("IPv6 Task Processing Rate in ms")
-    tcpipIPv6TaskProcessRate.setDefaultValue(1000)
-    #tcpipIPv6TaskProcessRate.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
-
-    #IPv6 Init Task Processing Rate in ms
-    tcpipIPv6InitTaskProcessRate = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_INIT_TASK_PROCESS_RATE", None)
-    tcpipIPv6InitTaskProcessRate.setLabel("IPv6 Init Task Processing Rate - ms")
-    tcpipIPv6InitTaskProcessRate.setVisible(True)
-    tcpipIPv6InitTaskProcessRate.setDescription("IPv6 Init Task Processing Rate in ms")
-    tcpipIPv6InitTaskProcessRate.setDefaultValue(32)
-    #tcpipIPv6InitTaskProcessRate.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
+    
+    # Advanced Settings
+    tcpipIPv6AdvSettings = tcpipIPv6Component.createMenuSymbol("TCPIP_IPV6_ADV_SETTING", None)
+    tcpipIPv6AdvSettings.setLabel("Advanced Settings")
+    tcpipIPv6AdvSettings.setDescription("Advanced Settings")
+    tcpipIPv6AdvSettings.setVisible(True)
     
     # Enable IPv6 ULA Generation
-    tcpipIPv6UlaEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_ULA_GENERATE_ENABLE", None)
+    tcpipIPv6UlaEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_ULA_GENERATE_ENABLE", tcpipIPv6AdvSettings)
     tcpipIPv6UlaEnable.setLabel("Enable ULA Generation")
     tcpipIPv6UlaEnable.setVisible(True)
     tcpipIPv6UlaEnable.setDescription("Enable ULA Generation")
@@ -153,27 +132,40 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6UlaNtpValidWindowTimestamp.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_ULA_GENERATE_ENABLE"])
 
     #Fragmentation Packet Time-out Value
-    tcpipIPv6FragPktTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT", None)
+    tcpipIPv6FragPktTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT", tcpipIPv6AdvSettings)
     tcpipIPv6FragPktTimeout.setLabel("Fragmentation Packet Time-out Value")
     tcpipIPv6FragPktTimeout.setVisible(True)
     tcpipIPv6FragPktTimeout.setDescription("Fragmentation Packet Time-out Value")
     tcpipIPv6FragPktTimeout.setDefaultValue(60)
-    #tcpipIPv6FragPktTimeout.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     #Fragmentation Packet Time-out Value
-    tcpipIPv6RxFragBuffSizeMax = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE", None)
+    tcpipIPv6RxFragBuffSizeMax = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE", tcpipIPv6AdvSettings)
     tcpipIPv6RxFragBuffSizeMax.setLabel("Maximum RX Fragmented Buffer Size")
     tcpipIPv6RxFragBuffSizeMax.setVisible(True)
     tcpipIPv6RxFragBuffSizeMax.setDescription("Maximum RX Fragmented Buffer Size")
     tcpipIPv6RxFragBuffSizeMax.setDefaultValue(1514)
-    #tcpipIPv6RxFragBuffSizeMax.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
     # Enable External Packet Processing
-    tcpipIpv6ExtPktProcess = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_EXTERN_PACKET_PROCESS", None)
+    tcpipIpv6ExtPktProcess = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_EXTERN_PACKET_PROCESS", tcpipIPv6AdvSettings)
     tcpipIpv6ExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipIpv6ExtPktProcess.setVisible(True)
     tcpipIpv6ExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipIpv6ExtPktProcess.setDefaultValue(False)
+    tcpipIPv6QueMcastPktTimeout.setDefaultValue(10)
+
+    #IPv6 Task Processing Rate in ms
+    tcpipIPv6TaskProcessRate = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_TASK_PROCESS_RATE", tcpipIPv6AdvSettings)
+    tcpipIPv6TaskProcessRate.setLabel("IPv6 Task Processing Rate (in msec)")
+    tcpipIPv6TaskProcessRate.setVisible(True)
+    tcpipIPv6TaskProcessRate.setDescription("IPv6 Task Processing Rate in ms")
+    tcpipIPv6TaskProcessRate.setDefaultValue(1000)
+
+    #IPv6 Init Task Processing Rate in ms
+    tcpipIPv6InitTaskProcessRate = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_INIT_TASK_PROCESS_RATE", tcpipIPv6AdvSettings)
+    tcpipIPv6InitTaskProcessRate.setLabel("IPv6 Init Task Processing Rate (in msec)")
+    tcpipIPv6InitTaskProcessRate.setVisible(True)
+    tcpipIPv6InitTaskProcessRate.setDescription("IPv6 Init Task Processing Rate in ms")
+    tcpipIPv6InitTaskProcessRate.setDefaultValue(32)
     
     tcpipIpv6heapdependency = ["tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
@@ -201,7 +193,6 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipIPv6SourceFile.setType("SOURCE")
     tcpipIPv6SourceFile.setEnabled(True)
-    #tcpipIPv6SourceFile.setDependencies(tcpipIpv6GenSourceFile, ["TCPIP_STACK_USE_IPV6"])
 
 def tcpipIPv6MenuVisible(symbol, event):
     if (event["value"] == True):

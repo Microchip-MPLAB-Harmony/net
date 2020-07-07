@@ -35,7 +35,7 @@ def instantiateComponent(tcpipArpComponent):
     
     # Cache Entries for this Interface
     tcpipArpCacheEntries = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_ENTRIES", None)
-    tcpipArpCacheEntries.setLabel("Cache Entries for This Interface")
+    tcpipArpCacheEntries.setLabel("Number of Cache Entries")
     tcpipArpCacheEntries.setVisible(True)
     tcpipArpCacheEntries.setDescription("Cache Entries for this Interface")
     tcpipArpCacheEntries.setDefaultValue(5)
@@ -44,7 +44,7 @@ def instantiateComponent(tcpipArpComponent):
 
     # Delete Old Cache if Still in Place    
     tcpipArpOldCacheDelete = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_CACHE_DELETE_OLD", None)
-    tcpipArpOldCacheDelete.setLabel("Delete Old Cache if Still in Place")
+    tcpipArpOldCacheDelete.setLabel("Delete Old Cache")
     tcpipArpOldCacheDelete.setVisible(True)
     tcpipArpOldCacheDelete.setDescription("Delete Old Cache if Still in Place")
     tcpipArpOldCacheDelete.setDefaultValue(True)
@@ -52,7 +52,7 @@ def instantiateComponent(tcpipArpComponent):
 
     # Time-Out for a Solved Entry to be Removed if not Referenced in Seconds
     tcpipArpCacheSolvedEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO", None)
-    tcpipArpCacheSolvedEntryTimeout.setLabel("Time-Out for a Solved Entry to be Removed if not Referenced in Seconds")
+    tcpipArpCacheSolvedEntryTimeout.setLabel("Time-Out for removal of Solved Entry (in Seconds)")
     tcpipArpCacheSolvedEntryTimeout.setVisible(True)
     tcpipArpCacheSolvedEntryTimeout.setDescription("Time-Out for a Solved Entry to be Removed if not Referenced in Seconds")
     tcpipArpCacheSolvedEntryTimeout.setDefaultValue(1200)
@@ -60,7 +60,7 @@ def instantiateComponent(tcpipArpComponent):
 
     # Time-Out for a Pending Cache Entry to be Solved in Seconds
     tcpipArpCachePendingEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_ENTRY_TMO", None)
-    tcpipArpCachePendingEntryTimeout.setLabel("Time-Out for a Pending Cache Entry to be Solved in Seconds")
+    tcpipArpCachePendingEntryTimeout.setLabel("Time-Out to solve Pending Cache Entry (in Seconds)")
     tcpipArpCachePendingEntryTimeout.setVisible(True)
     tcpipArpCachePendingEntryTimeout.setDescription("Time-Out for a Pending Cache Entry to be Solved in Seconds")
     tcpipArpCachePendingEntryTimeout.setDefaultValue(60)
@@ -68,35 +68,11 @@ def instantiateComponent(tcpipArpComponent):
 
     # Time-Out for Resending an ARP Request for a Pending Entry in Seconds
     tcpipArpCachePendingRetryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_RETRY_TMO", None)
-    tcpipArpCachePendingRetryTimeout.setLabel("Time-Out for Resending an ARP Request for a Pending Entry in Seconds")
+    tcpipArpCachePendingRetryTimeout.setLabel("Time-Out for Resending an ARP Request for Pending Entry (in Seconds)")
     tcpipArpCachePendingRetryTimeout.setVisible(True)
     tcpipArpCachePendingRetryTimeout.setDescription("Time-Out for Resending an ARP Request for a Pending Entry in Seconds")
     tcpipArpCachePendingRetryTimeout.setDefaultValue(2)
     tcpipArpCachePendingRetryTimeout.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-
-    # Maximum Percentage of Permanent Entries Allowed in the Cache
-    tcpipArpCachePermQuota = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PERMANENT_QUOTA", None)
-    tcpipArpCachePermQuota.setLabel("Maximum Percentage of Permanent Entries Allowed in the Cache")
-    tcpipArpCachePermQuota.setVisible(True)
-    tcpipArpCachePermQuota.setDescription("Maximum Percentage of Permanent Entries Allowed in the Cache")
-    tcpipArpCachePermQuota.setDefaultValue(50)
-    tcpipArpCachePermQuota.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-
-    # Purge Threshold Percentage
-    tcpipArpCachePurgeThreshold = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PURGE_THRESHOLD", None)
-    tcpipArpCachePurgeThreshold.setLabel("Purge Threshold Percentage")
-    tcpipArpCachePurgeThreshold.setVisible(True)
-    tcpipArpCachePurgeThreshold.setDescription("Purge Threshold Percentage")
-    tcpipArpCachePurgeThreshold.setDefaultValue(75)
-    tcpipArpCachePurgeThreshold.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-
-    # Number of Entries to Delete Once the Threshold is Reached
-    tcpipArpCachePurgeQuantaNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PURGE_QUANTA", None)
-    tcpipArpCachePurgeQuantaNum.setLabel("Number of Entries to Delete Once the Threshold is Reached")
-    tcpipArpCachePurgeQuantaNum.setVisible(True)
-    tcpipArpCachePurgeQuantaNum.setDescription("Number of Entries to Delete Once the Threshold is Reached")
-    tcpipArpCachePurgeQuantaNum.setDefaultValue(1)
-    tcpipArpCachePurgeQuantaNum.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Number of Retries for Resolving an Entry
     tcpipArpCacheEntryRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_ENTRY_RETRIES", None)
@@ -108,27 +84,57 @@ def instantiateComponent(tcpipArpComponent):
 
     # Number of Retries Done for a Gratuitous ARP Request
     tcpipArpGratuitousRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_GRATUITOUS_PROBE_COUNT", None)
-    tcpipArpGratuitousRetryNum.setLabel("Number of Retries Done for a Gratuitous ARP Request")
+    tcpipArpGratuitousRetryNum.setLabel("Number of Retries for Gratuitous ARP Request")
     tcpipArpGratuitousRetryNum.setVisible(True)
     tcpipArpGratuitousRetryNum.setDescription("Number of Retries Done for a Gratuitous ARP Request")
     tcpipArpGratuitousRetryNum.setDefaultValue(1)
     tcpipArpGratuitousRetryNum.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
+    
+    # Advanced Settings
+    tcpipArpAdvSettings = tcpipArpComponent.createMenuSymbol("TCPIP_ARP_ADV_SETTING", None)
+    tcpipArpAdvSettings.setLabel("Advanced Settings")
+    tcpipArpAdvSettings.setDescription("Advanced Settings")
+    tcpipArpAdvSettings.setVisible(True)
 
-    # ARP Task process Rate in msec
-    tcpipArpTaskProcessRate = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_TASK_PROCESS_RATE", None)
-    tcpipArpTaskProcessRate.setLabel("How Often to Process ARP in msec")
-    tcpipArpTaskProcessRate.setVisible(True)
-    tcpipArpTaskProcessRate.setDescription("ARP Task Process Rate in msec")
-    tcpipArpTaskProcessRate.setDefaultValue(2)
-    tcpipArpTaskProcessRate.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
+    # Purge Threshold Percentage
+    tcpipArpCachePurgeThreshold = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PURGE_THRESHOLD", tcpipArpAdvSettings)
+    tcpipArpCachePurgeThreshold.setLabel("Purge Threshold Percentage")
+    tcpipArpCachePurgeThreshold.setVisible(True)
+    tcpipArpCachePurgeThreshold.setDescription("Purge Threshold Percentage")
+    tcpipArpCachePurgeThreshold.setDefaultValue(75)
+    tcpipArpCachePurgeThreshold.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
+    
+    # Number of Entries to Delete Once the Threshold is Reached
+    tcpipArpCachePurgeQuantaNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PURGE_QUANTA", tcpipArpAdvSettings)
+    tcpipArpCachePurgeQuantaNum.setLabel("Number of Entries to Delete Once the Threshold is Reached")
+    tcpipArpCachePurgeQuantaNum.setVisible(True)
+    tcpipArpCachePurgeQuantaNum.setDescription("Number of Entries to Delete Once the Threshold is Reached")
+    tcpipArpCachePurgeQuantaNum.setDefaultValue(1)
+    tcpipArpCachePurgeQuantaNum.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
+    # Maximum Percentage of Permanent Entries Allowed in the Cache
+    tcpipArpCachePermQuota = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PERMANENT_QUOTA", tcpipArpAdvSettings)
+    tcpipArpCachePermQuota.setLabel("Maximum Percentage of Permanent Entries Allowed in Cache")
+    tcpipArpCachePermQuota.setVisible(True)
+    tcpipArpCachePermQuota.setDescription("Maximum Percentage of Permanent Entries Allowed in the Cache")
+    tcpipArpCachePermQuota.setDefaultValue(50)
+    tcpipArpCachePermQuota.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
+    
     # Alias Interfaces Share One Cache  
-    tcpipArpPrimaryCacheOnly = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_PRIMARY_CACHE_ONLY", None)
+    tcpipArpPrimaryCacheOnly = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_PRIMARY_CACHE_ONLY", tcpipArpAdvSettings)
     tcpipArpPrimaryCacheOnly.setLabel("Alias Interfaces Share One Cache")
     tcpipArpPrimaryCacheOnly.setVisible(True)
     tcpipArpPrimaryCacheOnly.setDescription("Alias Interfaces Share One Cache")
     tcpipArpPrimaryCacheOnly.setDefaultValue(True)
     tcpipArpPrimaryCacheOnly.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
+        
+    # ARP Task process Rate in msec
+    tcpipArpTaskProcessRate = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_TASK_PROCESS_RATE", tcpipArpAdvSettings)
+    tcpipArpTaskProcessRate.setLabel("ARP Task Rate (in msec)")
+    tcpipArpTaskProcessRate.setVisible(True)
+    tcpipArpTaskProcessRate.setDescription("ARP Task Process Rate in msec")
+    tcpipArpTaskProcessRate.setDefaultValue(2)
+    tcpipArpTaskProcessRate.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
     
     tcpipArpheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "TCPIP_ARP_CACHE_ENTRIES", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
