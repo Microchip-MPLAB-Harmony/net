@@ -32,15 +32,13 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTCP.setVisible(False)
     tcpipTCP.setDescription("Enable TCP")
     tcpipTCP.setDefaultValue(True)
-    #tcpipTCP.setDependencies(tcpipTcpMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
     # Maximum TX Segment Size
     tcpipTcpMaxTxSegSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SEG_SIZE_TX", None)
-    tcpipTcpMaxTxSegSize.setLabel("Max TX Segment Size")
+    tcpipTcpMaxTxSegSize.setLabel("Maximum TX Segment Size")
     tcpipTcpMaxTxSegSize.setVisible(True)
     tcpipTcpMaxTxSegSize.setDescription("Maximum TX Segment Size")
     tcpipTcpMaxTxSegSize.setDefaultValue(1460)
-    #tcpipTcpMaxTxSegSize.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Default TX Socket Size
     tcpipTcpSktTxSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", None)
@@ -48,7 +46,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpSktTxSize.setVisible(True)
     tcpipTcpSktTxSize.setDescription("Default TX Socket Size")
     tcpipTcpSktTxSize.setDefaultValue(512)
-    #tcpipTcpSktTxSize.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Default RX Socket Size
     tcpipTcpSktRxSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", None)
@@ -56,7 +53,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpSktRxSize.setVisible(True)
     tcpipTcpSktRxSize.setDescription("Default RX Socket Size")
     tcpipTcpSktRxSize.setDefaultValue(512)
-    #tcpipTcpSktRxSize.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Enable TCP Sockets Dynamic Options
     tcpipTcpDynOptions = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_DYNAMIC_OPTIONS", None)
@@ -64,7 +60,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpDynOptions.setVisible(True)
     tcpipTcpDynOptions.setDescription("Enable TCP Sockets Dynamic Options")
     tcpipTcpDynOptions.setDefaultValue(True)
-    #tcpipTcpDynOptions.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Start Timeout in ms
     tcpipTcpStartTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_START_TIMEOUT_VAL", None)
@@ -72,7 +67,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpStartTimeout.setVisible(True)
     tcpipTcpStartTimeout.setDescription("Start Timeout in ms")
     tcpipTcpStartTimeout.setDefaultValue(1000)
-    #tcpipTcpStartTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Delayed Ack Timeout in ms
     tcpipTcpDelayAckTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_DELAYED_ACK_TIMEOUT", None)
@@ -80,7 +74,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpDelayAckTimeout.setVisible(True)
     tcpipTcpDelayAckTimeout.setDescription("Delayed Ack Timeout in ms")
     tcpipTcpDelayAckTimeout.setDefaultValue(100)
-    #tcpipTcpDelayAckTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Fin Wait 2 Timeout in ms
     tcpipTcpFinWait2Timeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_FIN_WAIT_2_TIMEOUT", None)
@@ -88,7 +81,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpFinWait2Timeout.setVisible(True)
     tcpipTcpFinWait2Timeout.setDescription("Fin Wait 2 Timeout in ms")
     tcpipTcpFinWait2Timeout.setDefaultValue(5000)
-    #tcpipTcpFinWait2Timeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Keep Alive Timeout in ms
     tcpipTcpKeepAliveTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_KEEP_ALIVE_TIMEOUT", None)
@@ -96,98 +88,92 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpKeepAliveTimeout.setVisible(True)
     tcpipTcpKeepAliveTimeout.setDescription("Keep Alive Timeout in ms")
     tcpipTcpKeepAliveTimeout.setDefaultValue(10000)
-    #tcpipTcpKeepAliveTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
-
-    # Close Wait Timeout in ms
-    tcpipTcpCloseWaitTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_CLOSE_WAIT_TIMEOUT", None)
-    tcpipTcpCloseWaitTimeout.setLabel("OBSOLETE! Close Wait Time-out - ms. Should be 0!")
-    tcpipTcpCloseWaitTimeout.setVisible(True)
-    tcpipTcpCloseWaitTimeout.setDescription("OBSOLETE! Close Wait Timeout in ms. Should be 0!")
-    tcpipTcpCloseWaitTimeout.setDefaultValue(0)
-    #tcpipTcpCloseWaitTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Maximum number of retries
     tcpipTcpMaxRetryNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_RETRIES", None)
-    tcpipTcpMaxRetryNum.setLabel("Max Retries")
+    tcpipTcpMaxRetryNum.setLabel("Maximum Retries")
     tcpipTcpMaxRetryNum.setVisible(True)
     tcpipTcpMaxRetryNum.setDescription("Maximum number of retries")
     tcpipTcpMaxRetryNum.setDefaultValue(5)
-    #tcpipTcpMaxRetryNum.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
+    # Advanced Settings
+    tcpipTcpAdvSettings = tcpipTcpComponent.createMenuSymbol("TCPIP_TCP_ADV_SETTING", None)
+    tcpipTcpAdvSettings.setLabel("Advanced Settings")
+    tcpipTcpAdvSettings.setDescription("Advanced Settings")
+    tcpipTcpAdvSettings.setVisible(True)
+    
     # Maximum number of Unacked Keep Alives
-    tcpipTcpMaxUnackKeepAlivesNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES", None)
-    tcpipTcpMaxUnackKeepAlivesNum.setLabel("Max Unacked Keep Alives")
+    tcpipTcpMaxUnackKeepAlivesNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES", tcpipTcpAdvSettings)
+    tcpipTcpMaxUnackKeepAlivesNum.setLabel("Maximum Unacked Keep Alives")
     tcpipTcpMaxUnackKeepAlivesNum.setVisible(True)
     tcpipTcpMaxUnackKeepAlivesNum.setDescription("Maximum number of Unacked Keep Alives")
     tcpipTcpMaxUnackKeepAlivesNum.setDefaultValue(6)
-    #tcpipTcpMaxUnackKeepAlivesNum.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Maximum number of Syn Retries
-    tcpipTcpMaxSynRetryNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SYN_RETRIES", None)
-    tcpipTcpMaxSynRetryNum.setLabel("Max SYN Retries")
+    tcpipTcpMaxSynRetryNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SYN_RETRIES", tcpipTcpAdvSettings)
+    tcpipTcpMaxSynRetryNum.setLabel("Maximum SYN Retries")
     tcpipTcpMaxSynRetryNum.setVisible(True)
     tcpipTcpMaxSynRetryNum.setDescription("Maximum number of Syn Retries")
     tcpipTcpMaxSynRetryNum.setDefaultValue(3)
-    #tcpipTcpMaxSynRetryNum.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
-
+        
     # Auto Transmit Timeout in ms
-    tcpipTcpAutoTxTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL", None)
+    tcpipTcpAutoTxTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL", tcpipTcpAdvSettings)
     tcpipTcpAutoTxTimeout.setLabel("Auto Transmit Time-out - ms")
     tcpipTcpAutoTxTimeout.setVisible(True)
     tcpipTcpAutoTxTimeout.setDescription("Auto Transmit Timeout in ms")
     tcpipTcpAutoTxTimeout.setDefaultValue(40)
-    #tcpipTcpAutoTxTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Window Update Time-out
-    tcpipTcpWindowUpdateTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL", None)
+    tcpipTcpWindowUpdateTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL", tcpipTcpAdvSettings)
     tcpipTcpWindowUpdateTimeout.setLabel("Window Update Time-out")
     tcpipTcpWindowUpdateTimeout.setVisible(True)
     tcpipTcpWindowUpdateTimeout.setDescription("Window Update Time-out")
     tcpipTcpWindowUpdateTimeout.setDefaultValue(200)
-    #tcpipTcpWindowUpdateTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
+
+    # Close Wait Timeout in ms
+    tcpipTcpCloseWaitTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_CLOSE_WAIT_TIMEOUT", tcpipTcpAdvSettings)
+    tcpipTcpCloseWaitTimeout.setLabel("OBSOLETE! Close Wait Time-out - ms. Should be 0!")
+    tcpipTcpCloseWaitTimeout.setVisible(True)
+    tcpipTcpCloseWaitTimeout.setDescription("OBSOLETE! Close Wait Timeout in ms. Should be 0!")
+    tcpipTcpCloseWaitTimeout.setDefaultValue(0)
 
     # Maximum number of sockets
-    tcpipTcpMaxSktNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SOCKETS", None)
-    tcpipTcpMaxSktNum.setLabel("Max Sockets")
+    tcpipTcpMaxSktNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SOCKETS", tcpipTcpAdvSettings)
+    tcpipTcpMaxSktNum.setLabel("Maximum Sockets")
     tcpipTcpMaxSktNum.setVisible(True)
     tcpipTcpMaxSktNum.setDescription("Maximum number of sockets")
     tcpipTcpMaxSktNum.setDefaultValue(10)
-    #tcpipTcpMaxSktNum.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # TCP Task Tick Rate
-    tcpipTcpTaskTickRate = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_TASK_TICK_RATE", None)
+    tcpipTcpTaskTickRate = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_TASK_TICK_RATE", tcpipTcpAdvSettings)
     tcpipTcpTaskTickRate.setLabel("TCP Task Rate")
     tcpipTcpTaskTickRate.setVisible(True)
     tcpipTcpTaskTickRate.setDescription("TCP Task Tick Rate")
     tcpipTcpTaskTickRate.setDefaultValue(5)
-    #tcpipTcpTaskTickRate.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Maximum Segment Length (MSL) Timeout in seconds
-    tcpipTcpMaxSegLenTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MSL_TIMEOUT", None)
+    tcpipTcpMaxSegLenTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MSL_TIMEOUT", tcpipTcpAdvSettings)
     tcpipTcpMaxSegLenTimeout.setLabel("Maximum Segment Length (MSL) Timeout - seconds")
     tcpipTcpMaxSegLenTimeout.setVisible(True)
     tcpipTcpMaxSegLenTimeout.setDescription("Maximum Segment Length (MSL) Timeout in seconds")
     tcpipTcpMaxSegLenTimeout.setDefaultValue(0)
-    #tcpipTcpMaxSegLenTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # TCP quiet time in seconds
-    tcpipTcpQuietTime = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_QUIET_TIME", None)
+    tcpipTcpQuietTime = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_QUIET_TIME", tcpipTcpAdvSettings)
     tcpipTcpQuietTime.setLabel("TCP quiet time - seconds")
     tcpipTcpQuietTime.setVisible(True)
     tcpipTcpQuietTime.setDescription("TCP quiet time in seconds")
     tcpipTcpQuietTime.setDefaultValue(0)
-    #tcpipTcpQuietTime.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Enable TCP Commands
-    tcpipTcpCommands = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_COMMANDS", None)
+    tcpipTcpCommands = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_COMMANDS", tcpipTcpAdvSettings)
     tcpipTcpCommands.setLabel("Enable TCP Commands")
     tcpipTcpCommands.setVisible(True)
     tcpipTcpCommands.setDescription("Enable TCP Commands")
     tcpipTcpCommands.setDefaultValue(False)
-    #tcpipTcpCommands.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Enable External Packet Processing
-    tcpipTcpExtPktProcess = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_EXTERN_PACKET_PROCESS", None)
+    tcpipTcpExtPktProcess = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_EXTERN_PACKET_PROCESS", tcpipTcpAdvSettings)
     tcpipTcpExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipTcpExtPktProcess.setVisible(True)
     tcpipTcpExtPktProcess.setDescription("Allows External Processing of RX Packets")
@@ -232,7 +218,6 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipTcpSourceFile.setType("SOURCE")
     tcpipTcpSourceFile.setEnabled(True)
-    #tcpipTcpSourceFile.setDependencies(tcpipTcpGenSourceFile, ["TCPIP_USE_TCP"])
 
 def tcpipTcpHeapCalc(): 
     nSockets = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_MAX_SOCKETS")
