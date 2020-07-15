@@ -31,15 +31,13 @@ def instantiateComponent(tcpipNbnsComponent):
 	tcpipNbns.setVisible(False)
 	tcpipNbns.setDescription("Use NetBIOS Name Server")
 	tcpipNbns.setDefaultValue(True)
-	#tcpipNbns.setDependencies(tcpipNbnsMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
 	# NetBIOS Task Rate in ms
 	tcpipNbnsTskTickRate = tcpipNbnsComponent.createIntegerSymbol("TCPIP_NBNS_TASK_TICK_RATE", None)
-	tcpipNbnsTskTickRate.setLabel("NetBIOS Task Rate - ms")
+	tcpipNbnsTskTickRate.setLabel("NetBIOS Task Rate (in msec)")
 	tcpipNbnsTskTickRate.setVisible(True)
 	tcpipNbnsTskTickRate.setDescription("NetBIOS Task Rate in ms")
 	tcpipNbnsTskTickRate.setDefaultValue(110)
-	#tcpipNbnsTskTickRate.setDependencies(tcpipNbnsMenuVisibleSingle, ["TCPIP_USE_NBNS"])
 
 	#Add to system_config.h
 	tcpipNbnsHeaderFtl = tcpipNbnsComponent.createFileSymbol(None, None)
@@ -57,7 +55,6 @@ def instantiateComponent(tcpipNbnsComponent):
 	tcpipNbnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipNbnsSourceFile.setType("SOURCE")
 	tcpipNbnsSourceFile.setEnabled(True)
-	#tcpipNbnsSourceFile.setDependencies(tcpipNbnsGenSourceFile, ["TCPIP_USE_NBNS"])
 
 # make Nbns Server option visible
 def tcpipNbnsMenuVisible(symbol, event):

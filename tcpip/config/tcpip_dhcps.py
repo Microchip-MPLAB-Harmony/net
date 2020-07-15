@@ -35,7 +35,6 @@ tcpipDhcpsPoolEn = []
 tcpipNetConfigNumMax = 10  # hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpsComponent):
-
     print(tcpipNetConfigNumMax)
     print("TCPIP DHCP Server Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -46,15 +45,13 @@ def instantiateComponent(tcpipDhcpsComponent):
     tcpipDhcps.setVisible(False)
     tcpipDhcps.setDescription("Enable DHCP Server")
     tcpipDhcps.setDefaultValue(True)
-    #tcpipDhcps.setDependencies(tcpipDhcpsMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
     # DHCP Server Update Rate in msec
     tcpipDhcpsTskProcessRate = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_TASK_PROCESS_RATE", None)
-    tcpipDhcpsTskProcessRate.setLabel("DHCP Server Update Rate in msec")
+    tcpipDhcpsTskProcessRate.setLabel("DHCP Server Task Rate (in msec)")
     tcpipDhcpsTskProcessRate.setVisible(True)
     tcpipDhcpsTskProcessRate.setDescription("DHCP Server Update Rate in msec")
     tcpipDhcpsTskProcessRate.setDefaultValue(200)
-    #tcpipDhcpsTskProcessRate.setDependencies(tcpipDhcpsMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_SERVER"])
 
     # Maximum Number of Entries in the Lease Table
     tcpipDhcpsLeaseEntryMaxNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT", None)
@@ -62,23 +59,20 @@ def instantiateComponent(tcpipDhcpsComponent):
     tcpipDhcpsLeaseEntryMaxNum.setVisible(True)
     tcpipDhcpsLeaseEntryMaxNum.setDescription("Maximum Number of Entries in the Lease Table")
     tcpipDhcpsLeaseEntryMaxNum.setDefaultValue(15)
-    #tcpipDhcpsLeaseEntryMaxNum.setDependencies(tcpipDhcpsMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_SERVER"])
 
     # Time-out for a Solved Entry in the Cache in Seconds.
     tcpipDhcpsLeaseSolvedEntryTimeout = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO", None)
-    tcpipDhcpsLeaseSolvedEntryTimeout.setLabel("Time-out for a Solved Entry in the Cache in Seconds.")
+    tcpipDhcpsLeaseSolvedEntryTimeout.setLabel("Timeout for a Solved Entry in the Cache (in sec)")
     tcpipDhcpsLeaseSolvedEntryTimeout.setVisible(True)
     tcpipDhcpsLeaseSolvedEntryTimeout.setDescription("Time-out for a Solved Entry in the Cache in Seconds.")
     tcpipDhcpsLeaseSolvedEntryTimeout.setDefaultValue(1200)
-    #tcpipDhcpsLeaseSolvedEntryTimeout.setDependencies(tcpipDhcpsMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_SERVER"])
 
     # Time-out for a Solved Entry in the Cache in Seconds.
     tcpipDhcpsLeaseUnsolvedEntryTimeout = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK", None)
-    tcpipDhcpsLeaseUnsolvedEntryTimeout.setLabel("Time-out for an Unsolved Entry in Seconds")
+    tcpipDhcpsLeaseUnsolvedEntryTimeout.setLabel("Timeout for an Unsolved Entry (in sec)")
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setVisible(True)
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setDescription("Time-out for an Unsolved Entry in Seconds")
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setDefaultValue(5)
-    #tcpipDhcpsLeaseUnsolvedEntryTimeout.setDependencies(tcpipDhcpsMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_SERVER"])
 
     # Delete Old Entries
     tcpipDhcpsOldEntryDelete = tcpipDhcpsComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_DELETE_OLD_ENTRIES", None)
@@ -86,7 +80,6 @@ def instantiateComponent(tcpipDhcpsComponent):
     tcpipDhcpsOldEntryDelete.setVisible(True)
     tcpipDhcpsOldEntryDelete.setDescription("Delete Old Entries")
     tcpipDhcpsOldEntryDelete.setDefaultValue(True)
-    #tcpipDhcpsOldEntryDelete.setDependencies(tcpipDhcpsMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_SERVER"])
 
 
     ######################################################################################################################################
@@ -95,7 +88,6 @@ def instantiateComponent(tcpipDhcpsComponent):
     tcpipDhcpsInstancesNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_INSTANCES_NUMBER", None)
     tcpipDhcpsInstancesNum.setLabel("Number of DHCP Server Driver Instances")
     tcpipDhcpsInstancesNum.setMax(tcpipNetConfigNumMax)
-    #tcpipDhcpsInstancesNum.setMax(1)
     tcpipDhcpsInstancesNum.setMin(1)
     tcpipDhcpsInstancesNum.setVisible(True)
     tcpipDhcpsInstancesNum.setDescription("Number of DHCP Server Driver Instances")
@@ -105,14 +97,12 @@ def instantiateComponent(tcpipDhcpsComponent):
     for index in range(0,tcpipNetConfigNumMax): 
         tcpipDhcpsInstance.append(tcpipDhcpsComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_IDX"+str(index),None))
         tcpipDhcpsInstance[index].setLabel("DHCP Server Instance "+ str(index))
-        #tcpipDhcpsInstance[index].setVisible(True)
         if (index < tcpipDhcpsInstancesNum.getValue()):
             tcpipDhcpsInstance[index].setVisible(True)
             tcpipDhcpsInstance[index].setDefaultValue(True)
         else:
             tcpipDhcpsInstance[index].setDefaultValue(False)
             tcpipDhcpsInstance[index].setVisible(False) 
-        #tcpipDhcpsInstance[index].setVisible(True) 
         tcpipDhcpsInstance[index].setDependencies(tcpipDhcpsEnableInstance, ["TCPIP_DHCP_SERVER_INSTANCES_NUMBER", "tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER", "TCPIP_STACK_USE_DHCP_SERVER"])      
         
         # DHCP Server Address Range Start

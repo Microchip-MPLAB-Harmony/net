@@ -106,7 +106,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define ARP_CACHE_DELETE_OLD               1
 
 
-// ARP task processing rate, in seconds.
+// ARP task processing rate, in milliseconds.
 // The ARP module will process a timer event with this rate
 // for maintaining its own queues, processing timeouts, etc.
 // Choose it so that the other ARP_CACHE_xxx_TMO are multiple of this
@@ -114,7 +114,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
-#define TCPIP_ARP_TASK_PROCESS_RATE              (2)
+#define TCPIP_ARP_TASK_PROCESS_RATE              (2000)
 
 
 // ARP caches configuration for aliases.

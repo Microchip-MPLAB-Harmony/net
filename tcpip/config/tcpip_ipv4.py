@@ -50,7 +50,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Initial fragment timeout in seconds
     tcpipIPv4FragTimeout = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FRAGMENT_TIMEOUT", tcpipIPv4FragSetting)
-    tcpipIPv4FragTimeout.setLabel("Initial fragment timeout - seconds")
+    tcpipIPv4FragTimeout.setLabel("Initial fragment timeout (in sec)")
     tcpipIPv4FragTimeout.setVisible(True)
     tcpipIPv4FragTimeout.setDescription("Initial fragment timeout in seconds")
     tcpipIPv4FragTimeout.setDefaultValue(15)
@@ -78,9 +78,9 @@ def instantiateComponent(tcpipIPv4Component):
     
     # IPv4 Task Tick Rate in ms
     tcpipIPv4TaskTickRate = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_TASK_TICK_RATE", tcpipIPv4FragSetting)
-    tcpipIPv4TaskTickRate.setLabel("IPv4 task rate - ms")
+    tcpipIPv4TaskTickRate.setLabel("IPv4 Fragmentation Task Rate (in msec)")
     tcpipIPv4TaskTickRate.setVisible(True)
-    tcpipIPv4TaskTickRate.setDescription("IPv4 task rate in ms")
+    tcpipIPv4TaskTickRate.setDescription("IPv4 task rate (in msec)")
     tcpipIPv4TaskTickRate.setDefaultValue(37)
 
     #Add to system_config.h

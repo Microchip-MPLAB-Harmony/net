@@ -31,7 +31,6 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmp.setVisible(False)
     tcpipIcmp.setDescription("ICMPv4 Client and Server")
     tcpipIcmp.setDefaultValue(True)
-    #tcpipIcmp.setDependencies(tcpipIcmpMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
 
     # Use ICMPv4 Server
     tcpipIcmpv4Server = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_SERVER", None)
@@ -55,25 +54,9 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpv4Client.setDescription("Use ICMPv4 Client")
     tcpipIcmpv4Client.setDefaultValue(False)
 
-    # Enable User Notification
-    tcpipIcmpClientUsrNotify = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_CLIENT_USER_NOTIFICATION", tcpipIcmpv4Client)
-    tcpipIcmpClientUsrNotify.setLabel("Enable User Notification")
-    tcpipIcmpClientUsrNotify.setVisible(False)
-    tcpipIcmpClientUsrNotify.setDescription("Enable User Notification")
-    tcpipIcmpClientUsrNotify.setDefaultValue(True)
-    tcpipIcmpClientUsrNotify.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
-
-    # Echo request timeout in ms
-    tcpipIcmpEchoReqTimeout = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_ECHO_REQUEST_TIMEOUT", tcpipIcmpv4Client)
-    tcpipIcmpEchoReqTimeout.setLabel("Echo request timeout - ms")
-    tcpipIcmpEchoReqTimeout.setVisible(False)
-    tcpipIcmpEchoReqTimeout.setDescription("Echo request timeout in ms")
-    tcpipIcmpEchoReqTimeout.setDefaultValue(500)
-    tcpipIcmpEchoReqTimeout.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
-
     # ICMP task rate in ms
     tcpipIcmpTskTickRate = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_TASK_TICK_RATE", tcpipIcmpv4Client)
-    tcpipIcmpTskTickRate.setLabel("ICMP task rate - ms")
+    tcpipIcmpTskTickRate.setLabel("ICMP Client Task Rate (in msec)")
     tcpipIcmpTskTickRate.setVisible(False)
     tcpipIcmpTskTickRate.setDescription("ICMP task rate in ms")
     tcpipIcmpTskTickRate.setDefaultValue(33)
@@ -81,9 +64,9 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Enable ICMP Commands
     tcpipIcmpCommandEnable = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_COMMAND_ENABLE", tcpipIcmpv4Client)
-    tcpipIcmpCommandEnable.setLabel("Enable ICMP Commands")
+    tcpipIcmpCommandEnable.setLabel("Enable ICMP Client Console Commands")
     tcpipIcmpCommandEnable.setVisible(False)
-    tcpipIcmpCommandEnable.setDescription("Enable User Notification")
+    tcpipIcmpCommandEnable.setDescription("Enable ICMP Client Console Commands")
     tcpipIcmpCommandEnable.setDefaultValue(False)
     tcpipIcmpCommandEnable.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
     
@@ -97,7 +80,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # ICMP Reply Time-out in ms
     tcpipIcmpEchoReqDelay = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY", tcpipIcmpCommandEnable)
-    tcpipIcmpEchoReqDelay.setLabel("ICMP Reply Time-out, ms")
+    tcpipIcmpEchoReqDelay.setLabel("ICMP Reply Time-out (in msec)")
     tcpipIcmpEchoReqDelay.setVisible(False)
     tcpipIcmpEchoReqDelay.setDescription("ICMP Reply Time-out in ms")
     tcpipIcmpEchoReqDelay.setDefaultValue(1000)
@@ -105,7 +88,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # ICMP Give Up Time-out in ms
     tcpipIcmpEchoTimeout= tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT", tcpipIcmpCommandEnable)
-    tcpipIcmpEchoTimeout.setLabel("ICMP Give Up Time-out, ms")
+    tcpipIcmpEchoTimeout.setLabel("ICMP Give Up Time-out (in msec)")
     tcpipIcmpEchoTimeout.setVisible(False)
     tcpipIcmpEchoTimeout.setDescription("ICMP Give Up Time-out in ms")
     tcpipIcmpEchoTimeout.setDefaultValue(5000)
@@ -126,6 +109,22 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpEchoReqDataSize.setDescription("Echo request Default Data Size - bytes")
     tcpipIcmpEchoReqDataSize.setDefaultValue(100)
     tcpipIcmpEchoReqDataSize.setDependencies(tcpipIcmpTCPEnable, ["tcpipTcp.TCPIP_USE_TCP", "TCPIP_ICMP_COMMAND_ENABLE"])
+
+    # Enable User Notification
+    tcpipIcmpClientUsrNotify = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_CLIENT_USER_NOTIFICATION", tcpipIcmpv4Client)
+    tcpipIcmpClientUsrNotify.setLabel("Enable User Notification")
+    tcpipIcmpClientUsrNotify.setVisible(False)
+    tcpipIcmpClientUsrNotify.setDescription("Enable User Notification")
+    tcpipIcmpClientUsrNotify.setDefaultValue(True)
+    tcpipIcmpClientUsrNotify.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
+
+    # Echo request timeout in ms
+    tcpipIcmpEchoReqTimeout = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_ECHO_REQUEST_TIMEOUT", tcpipIcmpv4Client)
+    tcpipIcmpEchoReqTimeout.setLabel("Echo request timeout (in msec)")
+    tcpipIcmpEchoReqTimeout.setVisible(False)
+    tcpipIcmpEchoReqTimeout.setDescription("Echo request timeout in ms")
+    tcpipIcmpEchoReqTimeout.setDefaultValue(500)
+    tcpipIcmpEchoReqTimeout.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
     
     #Add to system_config.h
     tcpipIcmpHeaderFtl = tcpipIcmpComponent.createFileSymbol(None, None)

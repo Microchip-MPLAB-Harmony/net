@@ -39,7 +39,57 @@ def instantiateComponent(drvMiimComponent):
     drvMiimMaxNumClientsInstn.setVisible(True)
     drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
     drvMiimMaxNumClientsInstn.setDefaultValue(2)
+
+    # RTOS Configuration
+    drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
+    drvMiimRtosMenu.setLabel("RTOS Configuration")
+    drvMiimRtosMenu.setDescription("RTOS Configuration")
+    drvMiimRtosMenu.setVisible(False)
+    drvMiimRtosMenu.setVisible((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None))
+    drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
     
+    # MIIM Driver Execution mode
+    drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, ["Standalone"]) 
+    drvMiimInstnExecMode.setLabel("Run this driver instance as")
+    drvMiimInstnExecMode.setVisible(False)
+    drvMiimInstnExecMode.setDescription("MIIM Driver Execution mode")
+    drvMiimInstnExecMode.setDefaultValue("Standalone")
+
+    # MIIM Driver Task Stack Size
+    drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
+    drvMiimDrvTaskSize.setLabel("Stack Size (in bytes)")
+    drvMiimDrvTaskSize.setVisible(True)
+    drvMiimDrvTaskSize.setDescription("MIIM Driver Task Stack Size")
+    drvMiimDrvTaskSize.setDefaultValue(4096)
+    drvMiimDrvTaskSize.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+    
+
+    # MIIM Driver Task Priority
+    drvMiimDrvTaskPriority = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_PRIORITY", drvMiimRtosMenu)
+    drvMiimDrvTaskPriority.setLabel("Task Priority")
+    drvMiimDrvTaskPriority.setVisible(True)
+    drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
+    drvMiimDrvTaskPriority.setDefaultValue(1)
+    drvMiimDrvTaskPriority.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+    
+
+    # MIIM Use Task Delay?
+    drvMiimUseTaskDelay = drvMiimComponent.createBooleanSymbol("DRV_MIIM_RTOS_USE_DELAY", drvMiimRtosMenu)
+    drvMiimUseTaskDelay.setLabel("Use Task Delay?")
+    drvMiimUseTaskDelay.setVisible(True)
+    drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
+    drvMiimUseTaskDelay.setDefaultValue(True)
+    drvMiimUseTaskDelay.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+    
+
+    # MIIM Driver Task Delay
+    drvMiimDrvTaskDelay = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_DELAY", drvMiimRtosMenu)
+    drvMiimDrvTaskDelay.setLabel("Task Delay")
+    drvMiimDrvTaskDelay.setVisible(True)
+    drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
+    drvMiimDrvTaskDelay.setDefaultValue(1)
+    drvMiimDrvTaskDelay.setDependencies(drvMiimRTOSTaskDelayMenu, ["DRV_MIIM_RTOS", "DRV_MIIM_RTOS_USE_DELAY"])
+            
     # Advanced Settings
     drvMiimAdvSettings = drvMiimComponent.createMenuSymbol("DRV_MIIM_ADV_SETTING", None)
     drvMiimAdvSettings.setLabel("Advanced Settings")
@@ -103,58 +153,8 @@ def instantiateComponent(drvMiimComponent):
     drvMiimDrvIndex.setVisible(True)
     drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
     drvMiimDrvIndex.setDefaultValue(0)
+    drvMiimDrvIndex.setReadOnly(True)
     
-    # RTOS Configuration
-    drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
-    drvMiimRtosMenu.setLabel("RTOS Configuration")
-    drvMiimRtosMenu.setDescription("RTOS Configuration")
-    drvMiimRtosMenu.setVisible(False)
-    drvMiimRtosMenu.setVisible((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None))
-    drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
-    
-    # MIIM Driver Execution mode
-    drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, ["Standalone"]) 
-    drvMiimInstnExecMode.setLabel("Run this driver instance as")
-    drvMiimInstnExecMode.setVisible(False)
-    drvMiimInstnExecMode.setDescription("MIIM Driver Execution mode")
-    drvMiimInstnExecMode.setDefaultValue("Standalone")
-    #drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-
-    # MIIM Driver Task Stack Size
-    drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
-    drvMiimDrvTaskSize.setLabel("Stack Size (in bytes)")
-    drvMiimDrvTaskSize.setVisible(True)
-    drvMiimDrvTaskSize.setDescription("MIIM Driver Task Stack Size")
-    drvMiimDrvTaskSize.setDefaultValue(4096)
-    drvMiimDrvTaskSize.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
-    
-
-    # MIIM Driver Task Priority
-    drvMiimDrvTaskPriority = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_PRIORITY", drvMiimRtosMenu)
-    drvMiimDrvTaskPriority.setLabel("Task Priority")
-    drvMiimDrvTaskPriority.setVisible(True)
-    drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
-    drvMiimDrvTaskPriority.setDefaultValue(1)
-    drvMiimDrvTaskPriority.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
-    
-
-    # MIIM Use Task Delay?
-    drvMiimUseTaskDelay = drvMiimComponent.createBooleanSymbol("DRV_MIIM_RTOS_USE_DELAY", drvMiimRtosMenu)
-    drvMiimUseTaskDelay.setLabel("Use Task Delay?")
-    drvMiimUseTaskDelay.setVisible(True)
-    drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
-    drvMiimUseTaskDelay.setDefaultValue(True)
-    drvMiimUseTaskDelay.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
-    
-
-    # MIIM Driver Task Delay
-    drvMiimDrvTaskDelay = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_DELAY", drvMiimRtosMenu)
-    drvMiimDrvTaskDelay.setLabel("Task Delay")
-    drvMiimDrvTaskDelay.setVisible(True)
-    drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
-    drvMiimDrvTaskDelay.setDefaultValue(1)
-    drvMiimDrvTaskDelay.setDependencies(drvMiimRTOSTaskDelayMenu, ["DRV_MIIM_RTOS", "DRV_MIIM_RTOS_USE_DELAY"])
-        
     # Add drv_miim.h file to project
     #file DRV_MIIM_H "$HARMONY_VERSION_PATH/framework/driver/miim/drv_miim.h" to "$PROJECT_HEADER_FILES/framework/driver/miim/drv_miim.h"
     drvMiimHeaderFile = drvMiimComponent.createFileSymbol(None, None)

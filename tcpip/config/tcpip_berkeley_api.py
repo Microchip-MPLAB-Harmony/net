@@ -35,7 +35,7 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 
     # Maximum Number of Simultaneous Sockets Supported
     tcpipBerkeleyBsdSktsMaxNum = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_MAX_BSD_SOCKETS", None)
-    tcpipBerkeleyBsdSktsMaxNum.setLabel("Max Number of Simultaneous Sockets Supported")
+    tcpipBerkeleyBsdSktsMaxNum.setLabel("Maximum Number of Simultaneous Sockets")
     tcpipBerkeleyBsdSktsMaxNum.setVisible(True)
     tcpipBerkeleyBsdSktsMaxNum.setDescription("Maximum Number of Simultaneous Sockets Supported")
     tcpipBerkeleyBsdSktsMaxNum.setDefaultValue(4)

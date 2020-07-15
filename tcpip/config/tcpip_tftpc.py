@@ -31,8 +31,6 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpc.setVisible(False)
     tcpipTftpc.setDescription("Use TFTP Client Module")
     tcpipTftpc.setDefaultValue(True)
-    # select USE_SYS_FS_NEEDED 
-    #tcpipTftpc.setDependencies(tcpipTftpcModuleVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
     # Default Interface
     tcpipTftpcDefault = tcpipTftpcComponent.createStringSymbol("TCPIP_TFTPC_DEFAULT_IF", None)  
@@ -44,63 +42,62 @@ def instantiateComponent(tcpipTftpcComponent):
         tcpipTftpcDefault.setDefaultValue("GMAC")
     else:
         tcpipTftpcDefault.setDefaultValue("PIC32INT")
+
+    # TFTP Client Maximum retries
+    tcpipTftpcRetryMax= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_MAX_RETRIES", None)
+    tcpipTftpcRetryMax.setLabel("TFTP Client Maximum Retries")
+    tcpipTftpcRetryMax.setVisible(True)
+    tcpipTftpcRetryMax.setDescription("TFTP Client Maximum retries")
+    tcpipTftpcRetryMax.setDefaultValue(3)
     
-    # Maximum Length for Server Address
-    tcpipTftpcSrvrAddrLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_SERVERADDRESS_LEN", None)
-    tcpipTftpcSrvrAddrLen.setLabel("Maximum Length for Server Address")
-    tcpipTftpcSrvrAddrLen.setVisible(True)
-    tcpipTftpcSrvrAddrLen.setDescription("Maximum Length for Server Address")
-    tcpipTftpcSrvrAddrLen.setDefaultValue(16)
-    #tcpipTftpcSrvrAddrLen.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
+    # Advanced Settings
+    tcpipTftpcAdvSettings = tcpipTftpcComponent.createMenuSymbol("TCPIP_TFTPC_ADV_SETTING", None)
+    tcpipTftpcAdvSettings.setLabel("Advanced Settings")
+    tcpipTftpcAdvSettings.setDescription("Advanced Settings")
+    tcpipTftpcAdvSettings.setVisible(True)
 
-    # Maximum Length for a file name
-    tcpipTftpcFilenameLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_FILENAME_LEN", None)
-    tcpipTftpcFilenameLen.setLabel("Maximum Length for a file name")
-    tcpipTftpcFilenameLen.setVisible(True)
-    tcpipTftpcFilenameLen.setDescription("Maximum Length for a file name")
-    tcpipTftpcFilenameLen.setDefaultValue(32)
-    #tcpipTftpcFilenameLen.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
-
+    # TFTP Client Task Rate in msec
+    tcpipTftpcTskTickRate= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_TASK_TICK_RATE", tcpipTftpcAdvSettings)
+    tcpipTftpcTskTickRate.setLabel("TFTP Client Task Rate (in msec)")
+    tcpipTftpcTskTickRate.setVisible(True)
+    tcpipTftpcTskTickRate.setDescription("TFTP Client Task Rate in msec")
+    tcpipTftpcTskTickRate.setDefaultValue(100)
+    
     # Enable User Notification
-    tcpipTftpcUsrNotify = tcpipTftpcComponent.createBooleanSymbol("TCPIP_TFTPC_USER_NOTIFICATION", None)
+    tcpipTftpcUsrNotify = tcpipTftpcComponent.createBooleanSymbol("TCPIP_TFTPC_USER_NOTIFICATION", tcpipTftpcAdvSettings)
     tcpipTftpcUsrNotify.setLabel("Enable User Notification")
     tcpipTftpcUsrNotify.setVisible(True)
     tcpipTftpcUsrNotify.setDescription("Enable User Notification")
     tcpipTftpcUsrNotify.setDefaultValue(False) 
-    #tcpipTftpcUsrNotify.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
 
-    # TFTP Client Task Rate in msec
-    tcpipTftpcTskTickRate= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_TASK_TICK_RATE", None)
-    tcpipTftpcTskTickRate.setLabel("TFTP Client Task Rate in msec")
-    tcpipTftpcTskTickRate.setVisible(True)
-    tcpipTftpcTskTickRate.setDescription("TFTP Client Task Rate in msec")
-    tcpipTftpcTskTickRate.setDefaultValue(100)
-    #tcpipTftpcTskTickRate.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
+    # Maximum Length for Server Address
+    tcpipTftpcSrvrAddrLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_SERVERADDRESS_LEN", tcpipTftpcAdvSettings)
+    tcpipTftpcSrvrAddrLen.setLabel("Maximum Length for Server Address")
+    tcpipTftpcSrvrAddrLen.setVisible(True)
+    tcpipTftpcSrvrAddrLen.setDescription("Maximum Length for Server Address")
+    tcpipTftpcSrvrAddrLen.setDefaultValue(16)
+
+    # Maximum Length for a file name
+    tcpipTftpcFilenameLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_FILENAME_LEN", tcpipTftpcAdvSettings)
+    tcpipTftpcFilenameLen.setLabel("Maximum Length for File name")
+    tcpipTftpcFilenameLen.setVisible(True)
+    tcpipTftpcFilenameLen.setDescription("Maximum Length for a file name")
+    tcpipTftpcFilenameLen.setDefaultValue(32)
 
     # TFTP Client Socket connection timeout in sec
-    tcpipTftpcArpTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_ARP_TIMEOUT", None)
-    tcpipTftpcArpTimeout.setLabel("TFTP Client Socket connection timeout in sec")
+    tcpipTftpcArpTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_ARP_TIMEOUT", tcpipTftpcAdvSettings)
+    tcpipTftpcArpTimeout.setLabel("TFTP Client Socket Connection Timeout (in sec)")
     tcpipTftpcArpTimeout.setVisible(True)
     tcpipTftpcArpTimeout.setDescription("TFTP Client Socket connection timeout in sec")
     tcpipTftpcArpTimeout.setDefaultValue(3)
-    #tcpipTftpcArpTimeout.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
 
     # TFTP Client command process timeout in sec
-    tcpipTftpcCmdProcessTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_CMD_PROCESS_TIMEOUT", None)
-    tcpipTftpcCmdProcessTimeout.setLabel("TFTP Client command process timeout in sec")
+    tcpipTftpcCmdProcessTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_CMD_PROCESS_TIMEOUT", tcpipTftpcAdvSettings)
+    tcpipTftpcCmdProcessTimeout.setLabel("TFTP Client Command Process Timeout (in sec)")
     tcpipTftpcCmdProcessTimeout.setVisible(True)
     tcpipTftpcCmdProcessTimeout.setDescription("TFTP Client command process timeout in sec")
     tcpipTftpcCmdProcessTimeout.setDefaultValue(3)
-    #tcpipTftpcCmdProcessTimeout.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
-
-    # TFTP Client Maximum retries
-    tcpipTftpcRetryMax= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_MAX_RETRIES", None)
-    tcpipTftpcRetryMax.setLabel("TFTP Client Maximum retries")
-    tcpipTftpcRetryMax.setVisible(True)
-    tcpipTftpcRetryMax.setDescription("TFTP Client Maximum retries")
-    tcpipTftpcRetryMax.setDefaultValue(3)
-    #tcpipTftpcRetryMax.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
-
+    
     tcpipTftpcheapdependency = ["TCPIP_TFTPC_FILENAME_LEN", "tcpipUdp.TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", 
                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"] 
     
@@ -128,7 +125,6 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipTftpcSourceFile.setType("SOURCE")
     tcpipTftpcSourceFile.setEnabled(True)
-    #tcpipTftpcSourceFile.setDependencies(tcpipTftpcGenSourceFile, ["TCPIP_USE_TFTPC_MODULE"])
 
 def tcpipTftpcHeapCalc():   
     

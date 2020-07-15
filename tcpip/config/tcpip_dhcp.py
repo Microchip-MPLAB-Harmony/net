@@ -32,73 +32,69 @@ def instantiateComponent(tcpipDhcpComponent):
     tcpipDhcpc.setVisible(False)
     tcpipDhcpc.setDescription("Enable DHCP Client")
     tcpipDhcpc.setDefaultValue(True)
-    #tcpipDhcpc.setDependencies(tcpipDhcpcMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
     # DHCP Client Request Time-out in seconds
     tcpipDhcpcReqTimeout = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TIMEOUT", None)
-    tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (seconds)")
+    tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (in sec)")
     tcpipDhcpcReqTimeout.setVisible(True)
     tcpipDhcpcReqTimeout.setDescription("DHCP Request Time-out in seconds")
     tcpipDhcpcReqTimeout.setDefaultValue(2)
-    #tcpipDhcpcReqTimeout.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
-    # DHCP Client Tick Rate in msec
-    tcpipDhcpcTickRate = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TASK_TICK_RATE", None)
-    tcpipDhcpcTickRate.setLabel("DHCP Tick Rate (msec)")
-    tcpipDhcpcTickRate.setVisible(True)
-    tcpipDhcpcTickRate.setDescription("DHCP Tick Rate in msec")
-    tcpipDhcpcTickRate.setDefaultValue(5)
-    #tcpipDhcpcTickRate.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
-
-    # Enable DHCP Client by default at Stack Start-up
-    tcpipDhcpcEnable = tcpipDhcpComponent.createBooleanSymbol("TCPIP_DHCP_CLIENT_ENABLED", None)
-    tcpipDhcpcEnable.setLabel("DHCP Client enabled by default at Stack Start-up")
-    tcpipDhcpcEnable.setVisible(True)
-    tcpipDhcpcEnable.setDescription("Enable DHCP Client by default at Stack Start-up")
-    tcpipDhcpcEnable.setDefaultValue(True)
-    #tcpipDhcpcEnable.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
+    
     # DHCP Client Host name maximum size
     tcpipDhcpcHostNameSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HOST_NAME_SIZE", None)
-    tcpipDhcpcHostNameSize.setLabel("DHCP Host name maximum size")
+    tcpipDhcpcHostNameSize.setLabel("DHCP Host Name Maximum Size")
     tcpipDhcpcHostNameSize.setVisible(True)
     tcpipDhcpcHostNameSize.setDescription("DHCP Client Host name maximum size")
     tcpipDhcpcHostNameSize.setDefaultValue(20)
-    #tcpipDhcpcHostNameSize.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
+    
+    # Enable DHCP Client Console Command
+    tcpipDhcpcCmdEnable = tcpipDhcpComponent.createBooleanSymbol("TCPIP_DHCP_CLIENT_CONSOLE_CMD", None)
+    tcpipDhcpcCmdEnable.setLabel("Enable Console Commands")
+    tcpipDhcpcCmdEnable.setVisible(True)
+    tcpipDhcpcCmdEnable.setDescription("Enable DHCP Client Console Commands")
+    tcpipDhcpcCmdEnable.setDefaultValue(True)
+    
+    # Advanced Settings
+    tcpipDhcpcAdvSettings = tcpipDhcpComponent.createMenuSymbol("TCPIP_DHCP_ADV_SETTING", None)
+    tcpipDhcpcAdvSettings.setLabel("Advanced Settings")
+    tcpipDhcpcAdvSettings.setDescription("Advanced Settings")
+    tcpipDhcpcAdvSettings.setVisible(True)
+    
+    # DHCP Client Tick Rate in msec
+    tcpipDhcpcTickRate = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TASK_TICK_RATE", tcpipDhcpcAdvSettings)
+    tcpipDhcpcTickRate.setLabel("DHCP Client Task Rate (in msec)")
+    tcpipDhcpcTickRate.setVisible(True)
+    tcpipDhcpcTickRate.setDescription("DHCP Tick Rate in msec")
+    tcpipDhcpcTickRate.setDefaultValue(5)
+    
     # DHCP Client port
-    tcpipDhcpcConnectPort = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_CLIENT_CONNECT_PORT", None)
+    tcpipDhcpcConnectPort = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_CLIENT_CONNECT_PORT", tcpipDhcpcAdvSettings)
     tcpipDhcpcConnectPort.setLabel("Client Port for DHCP Client Transactions")
     tcpipDhcpcConnectPort.setVisible(True)
     tcpipDhcpcConnectPort.setDescription("Client Port for DHCP Client Transactions")
     tcpipDhcpcConnectPort.setDefaultValue(68)
-    #tcpipDhcpcConnectPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
     # Remote Server Port for DHCP Server Messages
-    tcpipDhcpcServerListenPort= tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_LISTEN_PORT", None)
+    tcpipDhcpcServerListenPort= tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_LISTEN_PORT", tcpipDhcpcAdvSettings)
     tcpipDhcpcServerListenPort.setLabel("Remote Server Port for DHCP Server Messages")
     tcpipDhcpcServerListenPort.setVisible(True)
     tcpipDhcpcServerListenPort.setDescription("Remote Server Port for DHCP Server Messages")
     tcpipDhcpcServerListenPort.setDefaultValue(67)
-    #tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
     
     # Time Server Options + Maximum Number Time Servers to Store
-    tcpipDhcpcTimeServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_TIME_SERVER_MAX", None)
+    tcpipDhcpcTimeServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_TIME_SERVER_MAX", tcpipDhcpcAdvSettings)
     tcpipDhcpcTimeServerMax.setLabel("Maximum Number of Time Servers to Store")
     tcpipDhcpcTimeServerMax.setVisible(True)
     tcpipDhcpcTimeServerMax.setDescription("Maximum Number of Time Server Addresses that Can Be Stored")
     tcpipDhcpcTimeServerMax.setDefaultValue(0)
-    #tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
     # NTP Server Options + Maximum Number NTP Servers to Store
-    tcpipDhcpcNtpServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_NTP_SERVER_MAX", None)
+    tcpipDhcpcNtpServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_NTP_SERVER_MAX", tcpipDhcpcAdvSettings)
     tcpipDhcpcNtpServerMax.setLabel("Maximum Number of NTP Servers to Store")
     tcpipDhcpcNtpServerMax.setVisible(True)
     tcpipDhcpcNtpServerMax.setDescription("Maximum Number of NTP Server Addresses that Can Be Stored")
     tcpipDhcpcNtpServerMax.setDefaultValue(0)
-    #tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
+    
     tcpipDhcpcheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
     # DHCPC Heap Size

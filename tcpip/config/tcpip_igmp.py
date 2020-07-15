@@ -47,13 +47,6 @@ def instantiateComponent(tcpipIgmpComponent):
     tcpipIgmpMcastGrpNum.setDescription("Number of Multicast Groups")
     tcpipIgmpMcastGrpNum.setDefaultValue(7)
 
-    # IGMPv2 Support Only
-    tcpipIgmpv2Support = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMPV2_SUPPORT_ONLY", None)
-    tcpipIgmpv2Support.setLabel("IGMPv2 Support Only")
-    tcpipIgmpv2Support.setVisible(True)
-    tcpipIgmpv2Support.setDescription("IGMPv2 Support Only")
-    tcpipIgmpv2Support.setDefaultValue(False)   
-
     # Number of Sources in Each Group
     tcpipIgmpSourceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOURCES_PER_GROUP", None)
     tcpipIgmpSourceNum.setLabel("Number of Sources in Each Group")
@@ -63,9 +56,9 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Number of Sockets per Source
     tcpipIgmpSktNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE", None)
-    tcpipIgmpSktNum.setLabel("Number of Sockets per Source")
+    tcpipIgmpSktNum.setLabel("Number of Socket Records per Source")
     tcpipIgmpSktNum.setVisible(True)
-    tcpipIgmpSktNum.setDescription("Number of Sockets per Source")
+    tcpipIgmpSktNum.setDescription("Number of Socket Records per Source")
     tcpipIgmpSktNum.setDefaultValue(4)
     
     # Advanced Settings
@@ -73,7 +66,14 @@ def instantiateComponent(tcpipIgmpComponent):
     tcpipIgmpAdvSettings.setLabel("Advanced Settings")
     tcpipIgmpAdvSettings.setDescription("Advanced Settings")
     tcpipIgmpAdvSettings.setVisible(True)
-    
+
+    # IGMP Task Rate
+    tcpipIgmpTskTickRate = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_TASK_TICK_RATE", tcpipIgmpAdvSettings)
+    tcpipIgmpTskTickRate.setLabel("IGMP Task Rate (in msec)")
+    tcpipIgmpTskTickRate.setVisible(True)
+    tcpipIgmpTskTickRate.setDescription("IGMP Task Rate")
+    tcpipIgmpTskTickRate.setDefaultValue(33)
+        
     # Default Robustness Variable Value
     tcpipIgmpRobustVarValue = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_ROBUSTNESS_VARIABLE", tcpipIgmpAdvSettings)
     tcpipIgmpRobustVarValue.setLabel("Default Robustness Variable Value")
@@ -83,10 +83,17 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Default Unsolicited Report Interval in ms
     tcpipIgmpUnsoilicitReportInterval = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL", tcpipIgmpAdvSettings)
-    tcpipIgmpUnsoilicitReportInterval.setLabel("Default Unsolicited Report Interval - ms")
+    tcpipIgmpUnsoilicitReportInterval.setLabel("Default Unsolicited Report Interval (in msec)")
     tcpipIgmpUnsoilicitReportInterval.setVisible(True)
     tcpipIgmpUnsoilicitReportInterval.setDescription("Default Unsolicited Report Interval in ms")
     tcpipIgmpUnsoilicitReportInterval.setDefaultValue(1000)
+
+    # IGMPv2 Support Only
+    tcpipIgmpv2Support = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMPV2_SUPPORT_ONLY", tcpipIgmpAdvSettings)
+    tcpipIgmpv2Support.setLabel("IGMPv2 Support Only")
+    tcpipIgmpv2Support.setVisible(True)
+    tcpipIgmpv2Support.setDescription("IGMPv2 Support Only")
+    tcpipIgmpv2Support.setDefaultValue(False)   
 
     # Enable User Notification Functions"
     tcpipIgmpUsrNotify = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMP_USER_NOTIFICATION", tcpipIgmpAdvSettings)
@@ -95,13 +102,6 @@ def instantiateComponent(tcpipIgmpComponent):
     tcpipIgmpUsrNotify.setDescription("Enable User Notification Functions")
     tcpipIgmpUsrNotify.setDefaultValue(False)   
 
-    # IGMP Task Rate
-    tcpipIgmpTskTickRate = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_TASK_TICK_RATE", tcpipIgmpAdvSettings)
-    tcpipIgmpTskTickRate.setLabel("IGMP Task Rate (in msec)")
-    tcpipIgmpTskTickRate.setVisible(True)
-    tcpipIgmpTskTickRate.setDescription("IGMP Task Rate")
-    tcpipIgmpTskTickRate.setDefaultValue(33)
-    
     #Add to system_config.h
     tcpipIgmpHeaderFtl = tcpipIgmpComponent.createFileSymbol(None, None)
     tcpipIgmpHeaderFtl.setSourcePath("tcpip/config/igmp.h.ftl")

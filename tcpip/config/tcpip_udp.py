@@ -47,40 +47,47 @@ def instantiateComponent(tcpipUdpComponent):
     tcpipUdpSktTxSize.setDescription("Default TX Socket Buffer Size")
     tcpipUdpSktTxSize.setDefaultValue(512)
 
-    # Enable Calculate TX Checksum
-    tcpipUdpTxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_TX_CHECKSUM", None)
-    tcpipUdpTxUseCheckSum.setLabel("Calculate TX Checksum")
-    tcpipUdpTxUseCheckSum.setVisible(True)
-    tcpipUdpTxUseCheckSum.setDescription("Enable Calculate TX Checksum")
-    tcpipUdpTxUseCheckSum.setDefaultValue(True)
+    # Enable UDP Commands
+    tcpipUdpCommands = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_COMMANDS", None)
+    tcpipUdpCommands.setLabel("Enable UDP Console Commands")
+    tcpipUdpCommands.setVisible(True)
+    tcpipUdpCommands.setDescription("Enable UDP Commands")
+    tcpipUdpCommands.setDefaultValue(False)
 
-    # Enable Calculate RX Checksum
-    tcpipUdpRxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_RX_CHECKSUM", None)
-    tcpipUdpRxUseCheckSum.setLabel("Calculate RX Checksum")
-    tcpipUdpRxUseCheckSum.setVisible(True)
-    tcpipUdpRxUseCheckSum.setDescription("Enable Calculate RX Checksum")
-    tcpipUdpRxUseCheckSum.setDefaultValue(True)
-
-    # Default TX Socket Queue limit
-    tcpipUdpSktTxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT", None)
-    tcpipUdpSktTxQueueLimit.setLabel("TX Queue Limit")
-    tcpipUdpSktTxQueueLimit.setVisible(True)
-    tcpipUdpSktTxQueueLimit.setDescription("Default TX Socket Queue limit")
-    tcpipUdpSktTxQueueLimit.setDefaultValue(3)
-
-    # Default RX Socket Queue limit
-    tcpipUdpSktRxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT", None)
-    tcpipUdpSktRxQueueLimit.setLabel("RX Queue Limit")
-    tcpipUdpSktRxQueueLimit.setVisible(True)
-    tcpipUdpSktRxQueueLimit.setDescription("Default RX Socket Queue limit")
-    tcpipUdpSktRxQueueLimit.setDefaultValue(3)
-    
     # Advanced Settings
     tcpipUdpAdvSettings = tcpipUdpComponent.createMenuSymbol("TCPIP_UDP_ADV_SETTING", None)
     tcpipUdpAdvSettings.setLabel("Advanced Settings")
     tcpipUdpAdvSettings.setDescription("Advanced Settings")
     tcpipUdpAdvSettings.setVisible(True)
     
+    # Enable Calculate TX Checksum
+    tcpipUdpTxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_TX_CHECKSUM", tcpipUdpAdvSettings)
+    tcpipUdpTxUseCheckSum.setLabel("Calculate TX Checksum")
+    tcpipUdpTxUseCheckSum.setVisible(True)
+    tcpipUdpTxUseCheckSum.setDescription("Enable Calculate TX Checksum")
+    tcpipUdpTxUseCheckSum.setDefaultValue(True)
+
+    # Enable Calculate RX Checksum
+    tcpipUdpRxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_RX_CHECKSUM", tcpipUdpAdvSettings)
+    tcpipUdpRxUseCheckSum.setLabel("Calculate RX Checksum")
+    tcpipUdpRxUseCheckSum.setVisible(True)
+    tcpipUdpRxUseCheckSum.setDescription("Enable Calculate RX Checksum")
+    tcpipUdpRxUseCheckSum.setDefaultValue(True)
+
+    # Default TX Socket Queue limit
+    tcpipUdpSktTxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT", tcpipUdpAdvSettings)
+    tcpipUdpSktTxQueueLimit.setLabel("TX Queue Limit")
+    tcpipUdpSktTxQueueLimit.setVisible(True)
+    tcpipUdpSktTxQueueLimit.setDescription("Default TX Socket Queue limit")
+    tcpipUdpSktTxQueueLimit.setDefaultValue(3)
+
+    # Default RX Socket Queue limit
+    tcpipUdpSktRxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT", tcpipUdpAdvSettings)
+    tcpipUdpSktRxQueueLimit.setLabel("RX Queue Limit")
+    tcpipUdpSktRxQueueLimit.setVisible(True)
+    tcpipUdpSktRxQueueLimit.setDescription("Default RX Socket Queue limit")
+    tcpipUdpSktRxQueueLimit.setDefaultValue(3)
+        
     # Enable UDP Pool Buffers
     tcpipUdpPoolBuffers = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_POOL_BUFFERS", tcpipUdpAdvSettings)
     tcpipUdpPoolBuffers.setLabel("Enable Pool Buffers")
@@ -104,13 +111,6 @@ def instantiateComponent(tcpipUdpComponent):
     tcpipUdpSktPoolBufferSize.setDescription("UDP Socket Pool Buffer Size")
     tcpipUdpSktPoolBufferSize.setDefaultValue(512)
     tcpipUdpSktPoolBufferSize.setDependencies(tcpipUdpMenuVisibleSingle, ["TCPIP_UDP_USE_POOL_BUFFERS"])
-
-    # Enable UDP Commands
-    tcpipUdpCommands = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_COMMANDS", tcpipUdpAdvSettings)
-    tcpipUdpCommands.setLabel("Enable UDP Commands")
-    tcpipUdpCommands.setVisible(True)
-    tcpipUdpCommands.setDescription("Enable UDP Commands")
-    tcpipUdpCommands.setDefaultValue(False)
 
     # Enable External Packet Processing
     tcpipUdpExtPktProcess = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_EXTERN_PACKET_PROCESS", tcpipUdpAdvSettings)

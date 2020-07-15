@@ -40,10 +40,15 @@ def instantiateComponent(tcpipArpComponent):
     tcpipArpCacheEntries.setDescription("Cache Entries for this Interface")
     tcpipArpCacheEntries.setDefaultValue(5)
     tcpipArpCacheEntries.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-
+    
+    # Advanced Settings
+    tcpipArpAdvSettings = tcpipArpComponent.createMenuSymbol("TCPIP_ARP_ADV_SETTING", None)
+    tcpipArpAdvSettings.setLabel("Advanced Settings")
+    tcpipArpAdvSettings.setDescription("Advanced Settings")
+    tcpipArpAdvSettings.setVisible(True)
 
     # Delete Old Cache if Still in Place    
-    tcpipArpOldCacheDelete = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_CACHE_DELETE_OLD", None)
+    tcpipArpOldCacheDelete = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_CACHE_DELETE_OLD", tcpipArpAdvSettings)
     tcpipArpOldCacheDelete.setLabel("Delete Old Cache")
     tcpipArpOldCacheDelete.setVisible(True)
     tcpipArpOldCacheDelete.setDescription("Delete Old Cache if Still in Place")
@@ -51,31 +56,31 @@ def instantiateComponent(tcpipArpComponent):
     tcpipArpOldCacheDelete.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Time-Out for a Solved Entry to be Removed if not Referenced in Seconds
-    tcpipArpCacheSolvedEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO", None)
-    tcpipArpCacheSolvedEntryTimeout.setLabel("Time-Out for removal of Solved Entry (in Seconds)")
+    tcpipArpCacheSolvedEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO", tcpipArpAdvSettings)
+    tcpipArpCacheSolvedEntryTimeout.setLabel("Time-Out for removal of Solved Entry (in sec)")
     tcpipArpCacheSolvedEntryTimeout.setVisible(True)
     tcpipArpCacheSolvedEntryTimeout.setDescription("Time-Out for a Solved Entry to be Removed if not Referenced in Seconds")
     tcpipArpCacheSolvedEntryTimeout.setDefaultValue(1200)
     tcpipArpCacheSolvedEntryTimeout.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Time-Out for a Pending Cache Entry to be Solved in Seconds
-    tcpipArpCachePendingEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_ENTRY_TMO", None)
-    tcpipArpCachePendingEntryTimeout.setLabel("Time-Out to solve Pending Cache Entry (in Seconds)")
+    tcpipArpCachePendingEntryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_ENTRY_TMO", tcpipArpAdvSettings)
+    tcpipArpCachePendingEntryTimeout.setLabel("Time-Out to solve Pending Cache Entry (in sec)")
     tcpipArpCachePendingEntryTimeout.setVisible(True)
     tcpipArpCachePendingEntryTimeout.setDescription("Time-Out for a Pending Cache Entry to be Solved in Seconds")
     tcpipArpCachePendingEntryTimeout.setDefaultValue(60)
     tcpipArpCachePendingEntryTimeout.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Time-Out for Resending an ARP Request for a Pending Entry in Seconds
-    tcpipArpCachePendingRetryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_RETRY_TMO", None)
-    tcpipArpCachePendingRetryTimeout.setLabel("Time-Out for Resending an ARP Request for Pending Entry (in Seconds)")
+    tcpipArpCachePendingRetryTimeout = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PENDING_RETRY_TMO", tcpipArpAdvSettings)
+    tcpipArpCachePendingRetryTimeout.setLabel("Time-Out for Resending an ARP Request for Pending Entry (in sec)")
     tcpipArpCachePendingRetryTimeout.setVisible(True)
     tcpipArpCachePendingRetryTimeout.setDescription("Time-Out for Resending an ARP Request for a Pending Entry in Seconds")
     tcpipArpCachePendingRetryTimeout.setDefaultValue(2)
     tcpipArpCachePendingRetryTimeout.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Number of Retries for Resolving an Entry
-    tcpipArpCacheEntryRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_ENTRY_RETRIES", None)
+    tcpipArpCacheEntryRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_ENTRY_RETRIES", tcpipArpAdvSettings)
     tcpipArpCacheEntryRetryNum.setLabel("Number of Retries for Resolving an Entry")
     tcpipArpCacheEntryRetryNum.setVisible(True)
     tcpipArpCacheEntryRetryNum.setDescription("Number of Retries for Resolving an Entry")
@@ -83,18 +88,12 @@ def instantiateComponent(tcpipArpComponent):
     tcpipArpCacheEntryRetryNum.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
 
     # Number of Retries Done for a Gratuitous ARP Request
-    tcpipArpGratuitousRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_GRATUITOUS_PROBE_COUNT", None)
+    tcpipArpGratuitousRetryNum = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_GRATUITOUS_PROBE_COUNT", tcpipArpAdvSettings)
     tcpipArpGratuitousRetryNum.setLabel("Number of Retries for Gratuitous ARP Request")
     tcpipArpGratuitousRetryNum.setVisible(True)
     tcpipArpGratuitousRetryNum.setDescription("Number of Retries Done for a Gratuitous ARP Request")
     tcpipArpGratuitousRetryNum.setDefaultValue(1)
     tcpipArpGratuitousRetryNum.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-    
-    # Advanced Settings
-    tcpipArpAdvSettings = tcpipArpComponent.createMenuSymbol("TCPIP_ARP_ADV_SETTING", None)
-    tcpipArpAdvSettings.setLabel("Advanced Settings")
-    tcpipArpAdvSettings.setDescription("Advanced Settings")
-    tcpipArpAdvSettings.setVisible(True)
 
     # Purge Threshold Percentage
     tcpipArpCachePurgeThreshold = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_PURGE_THRESHOLD", tcpipArpAdvSettings)
@@ -133,7 +132,7 @@ def instantiateComponent(tcpipArpComponent):
     tcpipArpTaskProcessRate.setLabel("ARP Task Rate (in msec)")
     tcpipArpTaskProcessRate.setVisible(True)
     tcpipArpTaskProcessRate.setDescription("ARP Task Process Rate in msec")
-    tcpipArpTaskProcessRate.setDefaultValue(2)
+    tcpipArpTaskProcessRate.setDefaultValue(2000)
     tcpipArpTaskProcessRate.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
     
     tcpipArpheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "TCPIP_ARP_CACHE_ENTRIES", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    

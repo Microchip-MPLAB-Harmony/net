@@ -33,7 +33,6 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnss.setVisible(False)
     tcpipDnss.setDescription("Enable DNS Server")
     tcpipDnss.setDefaultValue(True)
-    #tcpipDnss.setDependencies(tcpipDnssMenuVisible, ["tcpipUdp.TCPIP_USE_UDP"])
 
     # Default DNS Host Name Length
     tcpipDnssHostNameLen = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_HOST_NAME_LEN", None)
@@ -41,7 +40,6 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssHostNameLen.setVisible(True)
     tcpipDnssHostNameLen.setDescription("Default DNS Host Name Length")
     tcpipDnssHostNameLen.setDefaultValue(64)
-    #tcpipDnssHostNameLen.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
     # Reply DNS Info with Board Info
     tcpipDnssReplyBoardAddr = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_REPLY_BOARD_ADDR", None)
@@ -49,19 +47,17 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssReplyBoardAddr.setVisible(True)
     tcpipDnssReplyBoardAddr.setDescription("Reply DNS Info with Board Info")
     tcpipDnssReplyBoardAddr.setDefaultValue(True)
-    #tcpipDnssReplyBoardAddr.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
     # Maximum Number of IPv4 Entries
     tcpipDnssIpv4EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", None)
-    tcpipDnssIpv4EntryMaxNum.setLabel("Maximum Number of IPv4 Entries")
+    tcpipDnssIpv4EntryMaxNum.setLabel("Maximum Number of IPv4 Cache Entries")
     tcpipDnssIpv4EntryMaxNum.setVisible(True)
     tcpipDnssIpv4EntryMaxNum.setDescription("Maximum Number of IPv4 Entries")
     tcpipDnssIpv4EntryMaxNum.setDefaultValue(2)
-    #tcpipDnssIpv4EntryMaxNum.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
     # Maximum Number of IPv6 Entries
     tcpipDnssIpv6EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", None)
-    tcpipDnssIpv6EntryMaxNum.setLabel("Maximum Number of IPv6 Entries")
+    tcpipDnssIpv6EntryMaxNum.setLabel("Maximum Number of IPv6 Cache Entries")
     tcpipDnssIpv6EntryMaxNum.setVisible(False)
     tcpipDnssIpv6EntryMaxNum.setDescription("Maximum Number of IPv6 Entries")
     tcpipDnssIpv6EntryMaxNum.setDefaultValue(1)
@@ -69,19 +65,17 @@ def instantiateComponent(tcpipDnssComponent):
     
     # Default TTL Time for an IP Address in Seconds
     tcpipDnssTtlTime = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TTL_TIME", None)
-    tcpipDnssTtlTime.setLabel("Default TTL Time for an IP Address in Seconds")
+    tcpipDnssTtlTime.setLabel("Default TTL Time for an IP Address (in sec) ")
     tcpipDnssTtlTime.setVisible(True)
     tcpipDnssTtlTime.setDescription("Default TTL Time for an IP Address in Seconds")
     tcpipDnssTtlTime.setDefaultValue(600)
-    #tcpipDnssTtlTime.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
     # DNS Server Time-Out Task Processing Rate in Milliseconds
     tcpipDnssTskProcessRate = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TASK_PROCESS_RATE", None)
-    tcpipDnssTskProcessRate.setLabel("DNS Server Time-Out Task Processing Rate in Milliseconds")
+    tcpipDnssTskProcessRate.setLabel("DNS Server Time-Out Task Processing Rate (in msec)")
     tcpipDnssTskProcessRate.setVisible(True)
     tcpipDnssTskProcessRate.setDescription("DNS Server Time-Out Task Processing Rate in Milliseconds")
     tcpipDnssTskProcessRate.setDefaultValue(33)
-    #tcpipDnssTskProcessRate.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
 
     # Delete Old Cache if Still in Place
@@ -90,7 +84,6 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssDeleteOldLease.setVisible(True)
     tcpipDnssDeleteOldLease.setDescription("Delete Old Cache if Still in Place")
     tcpipDnssDeleteOldLease.setDefaultValue(True)
-    #tcpipDnssDeleteOldLease.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
     tcpipDnssheapdependency = [ "tcpipIPv6.TCPIP_STACK_USE_IPV6", "TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", 
                                 "TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", "TCPIP_DNSS_HOST_NAME_LEN", 
@@ -119,9 +112,7 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssSourceFile.setDestPath("library/tcpip/src/")
     tcpipDnssSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipDnssSourceFile.setType("SOURCE")
-    tcpipDnssSourceFile.setEnabled(True)
-    #tcpipDnssSourceFile.setDependencies(tcpipDnssGenSourceFile, ["TCPIP_USE_DNSS"])
-    
+    tcpipDnssSourceFile.setEnabled(True)    
     
 
 def tcpipDnssHeapCalc(): 

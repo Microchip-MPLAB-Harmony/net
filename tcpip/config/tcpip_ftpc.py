@@ -35,7 +35,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # FTP Client Tick Rate in msec
     tcpipFtpcTickRate = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_TASK_TICK_RATE", None)
-    tcpipFtpcTickRate.setLabel("FTPC Tick Rate (msec)")
+    tcpipFtpcTickRate.setLabel("FTPC Tick Rate (in msec)")
     tcpipFtpcTickRate.setVisible(True)
     tcpipFtpcTickRate.setDescription("FTPC Tick Rate in msec")
     tcpipFtpcTickRate.setDefaultValue(5)
@@ -56,7 +56,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # FTP Client request Time-Out
     tcpipFtpcReqTimeout = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_TMO", None)
-    tcpipFtpcReqTimeout.setLabel("FTP Request Time-out (seconds)")
+    tcpipFtpcReqTimeout.setLabel("FTP Request Time-out (in sec)")
     tcpipFtpcReqTimeout.setVisible(True)
     tcpipFtpcReqTimeout.setDescription("FTP Request Time-out in seconds")
     tcpipFtpcReqTimeout.setDefaultValue(2)
