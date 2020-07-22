@@ -69,9 +69,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Indicate what HTTP file to serve when no specific one is requested
 #define TCPIP_HTTP_DEFAULT_FILE       "index.htm"
 
-// Indicate what HTTPS file to serve when no specific one is requested
-#define TCPIP_HTTPS_DEFAULT_FILE      "index.htm"
-
 // For buffer overrun protection.
 // Set to longest length of above two strings.
 #define TCPIP_HTTP_DEFAULT_LEN        (10u)

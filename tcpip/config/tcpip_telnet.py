@@ -74,26 +74,6 @@ def instantiateComponent(tcpipTelnetComponent):
     tcpipTelnetListenPort.setDescription("Telnet Server Listening Port")
     tcpipTelnetListenPort.setDefaultValue(23)
 
-    # telnet Configuration Flags Settings
-    tcpipTelnetConfigFlag = tcpipTelnetComponent.createMenuSymbol(None, None)
-    tcpipTelnetConfigFlag.setLabel("Configuration Flags")
-    tcpipTelnetConfigFlag.setVisible(True)
-    tcpipTelnetConfigFlag.setDescription("telnet Configuration Flags Settings")
-
-    # telnet sockets created with NO-DELAY option
-    tcpipTelnetConfigFlagNoDly = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_FLAG_NO_DELAY", tcpipTelnetConfigFlag)
-    tcpipTelnetConfigFlagNoDly.setLabel("Create Telnet Sockets with NO-DELAY option")
-    tcpipTelnetConfigFlagNoDly.setVisible(True)
-    tcpipTelnetConfigFlagNoDly.setDescription("telnet sockets created with NO-DELAY option")
-    tcpipTelnetConfigFlagNoDly.setDefaultValue(False)
-
-    # Pass control characters
-    tcpipTelnetConfigPassControl = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_PASS_CONTROL_CHARS", tcpipTelnetConfigFlag)
-    tcpipTelnetConfigPassControl.setLabel("Pass Control Characters to Console")
-    tcpipTelnetConfigPassControl.setVisible(True)
-    tcpipTelnetConfigPassControl.setDescription("Do not Process Control Characters but Pass them to the Console")
-    tcpipTelnetConfigPassControl.setDefaultValue(False)
-    
     # Advanced Settings
     tcpipTelnetAdvSettings = tcpipTelnetComponent.createMenuSymbol("TCPIP_TELNET_ADV_SETTING", None)
     tcpipTelnetAdvSettings.setLabel("Advanced Settings")
@@ -128,6 +108,26 @@ def instantiateComponent(tcpipTelnetComponent):
     tcpipTelnetUserBuffSize.setDescription("Size of the Internal User Name Buffer")
     tcpipTelnetUserBuffSize.setDefaultValue(15)
 
+    # telnet Configuration Flags Settings
+    tcpipTelnetConfigFlag = tcpipTelnetComponent.createMenuSymbol(None, tcpipTelnetAdvSettings)
+    tcpipTelnetConfigFlag.setLabel("Configuration Flags")
+    tcpipTelnetConfigFlag.setVisible(True)
+    tcpipTelnetConfigFlag.setDescription("telnet Configuration Flags Settings")
+
+    # telnet sockets created with NO-DELAY option
+    tcpipTelnetConfigFlagNoDly = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_FLAG_NO_DELAY", tcpipTelnetConfigFlag)
+    tcpipTelnetConfigFlagNoDly.setLabel("Create Telnet Sockets with NO-DELAY option")
+    tcpipTelnetConfigFlagNoDly.setVisible(True)
+    tcpipTelnetConfigFlagNoDly.setDescription("telnet sockets created with NO-DELAY option")
+    tcpipTelnetConfigFlagNoDly.setDefaultValue(False)
+
+    # Pass control characters
+    tcpipTelnetConfigPassControl = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_PASS_CONTROL_CHARS", tcpipTelnetConfigFlag)
+    tcpipTelnetConfigPassControl.setLabel("Pass Control Characters to Console")
+    tcpipTelnetConfigPassControl.setVisible(True)
+    tcpipTelnetConfigPassControl.setDescription("Do not Process Control Characters but Pass them to the Console")
+    tcpipTelnetConfigPassControl.setDefaultValue(False)
+    
     # telnet Authentication Selection
     tcpipTelnetAuth= tcpipTelnetComponent.createComboSymbol("TCPIP_TELNET_AUTH_CONFIG", tcpipTelnetAdvSettings, TCPIP_TELNET_AUTH_TYPES)
     tcpipTelnetAuth.setLabel("Select telnet Authentication")

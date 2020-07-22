@@ -61,9 +61,16 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcMailRetryNum.setDescription("Number of Retries for Sending a Mail Message")
     tcpipSmtpcMailRetryNum.setDefaultValue(3)
     
+    # String that Identifies the SMTPC Client Mail Date
+    tcpipSmtpcClientMsgDate = tcpipSmtpcComponent.createStringSymbol("TCPIP_SMTPC_CLIENT_MESSAGE_DATE", None)
+    tcpipSmtpcClientMsgDate.setLabel("SMTPC Client Mail Date String")
+    tcpipSmtpcClientMsgDate.setVisible(True)
+    tcpipSmtpcClientMsgDate.setDescription("String that Identifies the SMTPC Client Mail Date")
+    tcpipSmtpcClientMsgDate.setDefaultValue("Wed, 20 July 2016 14:55:06 -0600")
+    
     # Use the Sample TCP/IP Console mail Command
     tcpipSmtpcMailCommand = tcpipSmtpcComponent.createBooleanSymbol("TCPIP_SMTPC_USE_MAIL_COMMAND", None)
-    tcpipSmtpcMailCommand.setLabel("SMTP Client Console Command")
+    tcpipSmtpcMailCommand.setLabel("Enable SMTP Client Console Command")
     tcpipSmtpcMailCommand.setVisible(True)
     tcpipSmtpcMailCommand.setDescription("Use the Sample TCP/IP Console mail Command")
     tcpipSmtpcMailCommand.setDefaultValue(False)
@@ -80,13 +87,6 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcTskTickRate.setVisible(True)
     tcpipSmtpcTskTickRate.setDescription("SMTPC Task Tick Rate in ms")
     tcpipSmtpcTskTickRate.setDefaultValue(55)
-    
-    # String that Identifies the SMTPC Client Mail Date
-    tcpipSmtpcClientMsgDate = tcpipSmtpcComponent.createStringSymbol("TCPIP_SMTPC_CLIENT_MESSAGE_DATE", tcpipSmtpcAdvSettings)
-    tcpipSmtpcClientMsgDate.setLabel("SMTPC Client Mail Date String")
-    tcpipSmtpcClientMsgDate.setVisible(True)
-    tcpipSmtpcClientMsgDate.setDescription("String that Identifies the SMTPC Client Mail Date")
-    tcpipSmtpcClientMsgDate.setDefaultValue("Wed, 20 July 2016 14:55:06 -0600")
 
     # General Server Response Timeout in seconds
     tcpipSmtpcServerReplyTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_REPLY_TIMEOUT", tcpipSmtpcAdvSettings)

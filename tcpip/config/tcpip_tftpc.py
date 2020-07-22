@@ -37,11 +37,10 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcDefault.setLabel("Default Interface")
     tcpipTftpcDefault.setVisible(True)
     tcpipTftpcDefault.setDescription("Default Interface")
-    
-    if Peripheral.moduleExists("GMAC"):
-        tcpipTftpcDefault.setDefaultValue("GMAC")
-    else:
-        tcpipTftpcDefault.setDefaultValue("PIC32INT")
+    # Set Interafce 0 as default interface
+    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
+        tcpipTftpcDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
+    tcpipTftpcDefault.setDependencies(tcpipTftpcInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
 
     # TFTP Client Maximum retries
     tcpipTftpcRetryMax= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_MAX_RETRIES", None)
@@ -49,7 +48,21 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcRetryMax.setVisible(True)
     tcpipTftpcRetryMax.setDescription("TFTP Client Maximum retries")
     tcpipTftpcRetryMax.setDefaultValue(3)
+
+    # Maximum Length for a file name
+    tcpipTftpcFilenameLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_FILENAME_LEN", None)
+    tcpipTftpcFilenameLen.setLabel("Maximum Length for File name")
+    tcpipTftpcFilenameLen.setVisible(True)
+    tcpipTftpcFilenameLen.setDescription("Maximum Length for a file name")
+    tcpipTftpcFilenameLen.setDefaultValue(32)
     
+    # Enable TFTP Client Console Commands
+    tcpipTftpcCmdEnable = tcpipTftpcComponent.createBooleanSymbol("TCPIP_TFTPC_CONSOLE_CMD", None) 
+    tcpipTftpcCmdEnable.setLabel("Enable Console Commands")
+    tcpipTftpcCmdEnable.setVisible(True)
+    tcpipTftpcCmdEnable.setDescription("Enable TFTP Client Console Commands")
+    tcpipTftpcCmdEnable.setDefaultValue(False)
+            
     # Advanced Settings
     tcpipTftpcAdvSettings = tcpipTftpcComponent.createMenuSymbol("TCPIP_TFTPC_ADV_SETTING", None)
     tcpipTftpcAdvSettings.setLabel("Advanced Settings")
@@ -76,13 +89,6 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcSrvrAddrLen.setVisible(True)
     tcpipTftpcSrvrAddrLen.setDescription("Maximum Length for Server Address")
     tcpipTftpcSrvrAddrLen.setDefaultValue(16)
-
-    # Maximum Length for a file name
-    tcpipTftpcFilenameLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_FILENAME_LEN", tcpipTftpcAdvSettings)
-    tcpipTftpcFilenameLen.setLabel("Maximum Length for File name")
-    tcpipTftpcFilenameLen.setVisible(True)
-    tcpipTftpcFilenameLen.setDescription("Maximum Length for a file name")
-    tcpipTftpcFilenameLen.setDefaultValue(32)
 
     # TFTP Client Socket connection timeout in sec
     tcpipTftpcArpTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_ARP_TIMEOUT", tcpipTftpcAdvSettings)
@@ -159,6 +165,11 @@ def tcpipTftpcMenuVisibleSingle(symbol, event):
     else:
         print("TFTPC Menu Invisible.")
         symbol.setVisible(False)
+
+
+def tcpipTftpcInterface(symbol, event):    
+    symbol.setValue(event["value"])
+
 
 def tcpipTftpcGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])

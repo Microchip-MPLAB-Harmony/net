@@ -47,12 +47,10 @@ def instantiateComponent(tcpipSntpComponent):
     tcpipSntpDefault.setLabel("Default Interface")
     tcpipSntpDefault.setVisible(True)
     tcpipSntpDefault.setDescription("Default Interface")
-    
-    if Peripheral.moduleExists("GMAC"):
-        tcpipSntpDefault.setDefaultValue("GMAC")
-    else:
-        tcpipSntpDefault.setDefaultValue("PIC32INT")
-    tcpipSntpDefault.setReadOnly(True)
+    # Set Interafce 0 as default interface
+    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
+        tcpipSntpDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
+    tcpipSntpDefault.setDependencies(tcpipSntpInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
 
     # SNTP Version
     tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", None, TCPIP_SNTP_PROTOCOL_TYPE)
@@ -172,6 +170,9 @@ def tcpipSntpMenuVisibleSingle(symbol, event):
         print("SNTP Menu Invisible.")
         symbol.setVisible(False)
 
+def tcpipSntpInterface(symbol, event):    
+    symbol.setValue(event["value"])
+    
 def tcpipSntpGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 

@@ -34,20 +34,6 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnss.setDescription("Enable DNS Server")
     tcpipDnss.setDefaultValue(True)
 
-    # Default DNS Host Name Length
-    tcpipDnssHostNameLen = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_HOST_NAME_LEN", None)
-    tcpipDnssHostNameLen.setLabel("Default DNS Host Name Length")
-    tcpipDnssHostNameLen.setVisible(True)
-    tcpipDnssHostNameLen.setDescription("Default DNS Host Name Length")
-    tcpipDnssHostNameLen.setDefaultValue(64)
-
-    # Reply DNS Info with Board Info
-    tcpipDnssReplyBoardAddr = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_REPLY_BOARD_ADDR", None)
-    tcpipDnssReplyBoardAddr.setLabel("Reply DNS Info with Board Info")
-    tcpipDnssReplyBoardAddr.setVisible(True)
-    tcpipDnssReplyBoardAddr.setDescription("Reply DNS Info with Board Info")
-    tcpipDnssReplyBoardAddr.setDefaultValue(True)
-
     # Maximum Number of IPv4 Entries
     tcpipDnssIpv4EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", None)
     tcpipDnssIpv4EntryMaxNum.setLabel("Maximum Number of IPv4 Cache Entries")
@@ -63,28 +49,54 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssIpv6EntryMaxNum.setDefaultValue(1)
     tcpipDnssIpv6EntryMaxNum.setDependencies(tcpipDnssIpv6EntryVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
     
+    # Default DNS Host Name Length
+    tcpipDnssHostNameLen = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_HOST_NAME_LEN", None)
+    tcpipDnssHostNameLen.setLabel("Default DNS Host Name Length")
+    tcpipDnssHostNameLen.setVisible(True)
+    tcpipDnssHostNameLen.setDescription("Default DNS Host Name Length")
+    tcpipDnssHostNameLen.setDefaultValue(64)
+    
+    # Enable DNS Server Console Commands
+    tcpipDnssCmdEnable = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_CONSOLE_CMD", None)
+    tcpipDnssCmdEnable.setLabel("Enable Console Commands")
+    tcpipDnssCmdEnable.setVisible(True)
+    tcpipDnssCmdEnable.setDescription("Enable DNS Server Console Commands")
+    tcpipDnssCmdEnable.setDefaultValue(False)
+        
+    # Advanced Settings
+    tcpipDnssAdvSettings = tcpipDnssComponent.createMenuSymbol("TCPIP_DNSS_ADV_SETTING", None)
+    tcpipDnssAdvSettings.setLabel("Advanced Settings")
+    tcpipDnssAdvSettings.setDescription("Advanced Settings")
+    tcpipDnssAdvSettings.setVisible(True)
+
+    # DNS Server Time-Out Task Processing Rate in Milliseconds
+    tcpipDnssTskProcessRate = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TASK_PROCESS_RATE", tcpipDnssAdvSettings)
+    tcpipDnssTskProcessRate.setLabel("DNS Server Task Rate (in msec)")
+    tcpipDnssTskProcessRate.setVisible(True)
+    tcpipDnssTskProcessRate.setDescription("DNS Server Time-Out Task Processing Rate in Milliseconds")
+    tcpipDnssTskProcessRate.setDefaultValue(33)
+    
     # Default TTL Time for an IP Address in Seconds
-    tcpipDnssTtlTime = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TTL_TIME", None)
-    tcpipDnssTtlTime.setLabel("Default TTL Time for an IP Address (in sec) ")
+    tcpipDnssTtlTime = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TTL_TIME", tcpipDnssAdvSettings)
+    tcpipDnssTtlTime.setLabel("Default DNS Server Time-To-Live(in sec) ")
     tcpipDnssTtlTime.setVisible(True)
     tcpipDnssTtlTime.setDescription("Default TTL Time for an IP Address in Seconds")
     tcpipDnssTtlTime.setDefaultValue(600)
 
-    # DNS Server Time-Out Task Processing Rate in Milliseconds
-    tcpipDnssTskProcessRate = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TASK_PROCESS_RATE", None)
-    tcpipDnssTskProcessRate.setLabel("DNS Server Time-Out Task Processing Rate (in msec)")
-    tcpipDnssTskProcessRate.setVisible(True)
-    tcpipDnssTskProcessRate.setDescription("DNS Server Time-Out Task Processing Rate in Milliseconds")
-    tcpipDnssTskProcessRate.setDefaultValue(33)
-
-
     # Delete Old Cache if Still in Place
-    tcpipDnssDeleteOldLease = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_DELETE_OLD_LEASE", None)
+    tcpipDnssDeleteOldLease = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_DELETE_OLD_LEASE", tcpipDnssAdvSettings)
     tcpipDnssDeleteOldLease.setLabel("Delete Old Cache if Still in Place")
     tcpipDnssDeleteOldLease.setVisible(True)
     tcpipDnssDeleteOldLease.setDescription("Delete Old Cache if Still in Place")
     tcpipDnssDeleteOldLease.setDefaultValue(True)
 
+    # Reply DNS Info with Board Info
+    tcpipDnssReplyBoardAddr = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_REPLY_BOARD_ADDR", tcpipDnssAdvSettings)
+    tcpipDnssReplyBoardAddr.setLabel("Reply to Client Request with Board Info")
+    tcpipDnssReplyBoardAddr.setVisible(True)
+    tcpipDnssReplyBoardAddr.setDescription("Reply to DNS Client Request with Board Info")
+    tcpipDnssReplyBoardAddr.setDefaultValue(True)
+    
     tcpipDnssheapdependency = [ "tcpipIPv6.TCPIP_STACK_USE_IPV6", "TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", 
                                 "TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", "TCPIP_DNSS_HOST_NAME_LEN", 
                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]

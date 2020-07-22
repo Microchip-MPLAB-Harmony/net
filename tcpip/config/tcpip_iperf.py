@@ -22,91 +22,97 @@
 *****************************************************************************"""
 
 def instantiateComponent(tcpipIperfComponent):
-	print("TCPIP IPERF Component")
-	configName = Variables.get("__CONFIGURATION_NAME")
-	# Use iperf Benchmark Tool
-	tcpipIperf = tcpipIperfComponent.createBooleanSymbol("TCPIP_USE_IPERF", None)
-	tcpipIperf.setLabel("Use iperf Benchmark Tool")
-	tcpipIperf.setVisible(False)
-	tcpipIperf.setDescription("Use iperf Benchmark Tool")
-	tcpipIperf.setDefaultValue(True) 
+    print("TCPIP IPERF Component")
+    configName = Variables.get("__CONFIGURATION_NAME")
+    # Use iperf Benchmark Tool
+    tcpipIperf = tcpipIperfComponent.createBooleanSymbol("TCPIP_USE_IPERF", None)
+    tcpipIperf.setLabel("Use iperf Benchmark Tool")
+    tcpipIperf.setVisible(False)
+    tcpipIperf.setDescription("Use iperf Benchmark Tool")
+    tcpipIperf.setDefaultValue(True) 
 
-	# Socket TX Buffer Size
-	tcpipIperfTxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BUFFER_SIZE", None)
-	tcpipIperfTxBuffSize.setLabel("Socket TX Buffer Size")
-	tcpipIperfTxBuffSize.setVisible(True)
-	tcpipIperfTxBuffSize.setDescription("Socket TX Buffer Size")
-	tcpipIperfTxBuffSize.setDefaultValue(4096)
+    # Number of Iperf Instances
+    tcpipIperfInstancesMax = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_MAX_INSTANCES", None)
+    tcpipIperfInstancesMax.setLabel("Number of Iperf Instances")
+    tcpipIperfInstancesMax.setVisible(True)
+    tcpipIperfInstancesMax.setDescription("Number of Iperf Instances")
+    tcpipIperfInstancesMax.setDefaultValue(1)
+    
+    # Socket TX Buffer Size
+    tcpipIperfTxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BUFFER_SIZE", None)
+    tcpipIperfTxBuffSize.setLabel("Socket TX Buffer Size")
+    tcpipIperfTxBuffSize.setVisible(True)
+    tcpipIperfTxBuffSize.setDescription("Socket TX Buffer Size")
+    tcpipIperfTxBuffSize.setDefaultValue(4096)
 
-	# Socket RX Buffer Size
-	tcpipIperfRxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_RX_BUFFER_SIZE", None)
-	tcpipIperfRxBuffSize.setLabel("Socket RX Buffer Size")
-	tcpipIperfRxBuffSize.setVisible(True)
-	tcpipIperfRxBuffSize.setDescription("Socket RX Buffer Size")
-	tcpipIperfRxBuffSize.setDefaultValue(4096)
+    # Socket RX Buffer Size
+    tcpipIperfRxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_RX_BUFFER_SIZE", None)
+    tcpipIperfRxBuffSize.setLabel("Socket RX Buffer Size")
+    tcpipIperfRxBuffSize.setVisible(True)
+    tcpipIperfRxBuffSize.setDescription("Socket RX Buffer Size")
+    tcpipIperfRxBuffSize.setDefaultValue(4096)
+            
+    # Advanced Settings
+    tcpipIperfAdvSettings = tcpipIperfComponent.createMenuSymbol("TCPIP_IPERF_ADV_SETTING", None)
+    tcpipIperfAdvSettings.setLabel("Advanced Settings")
+    tcpipIperfAdvSettings.setDescription("Advanced Settings")
+    tcpipIperfAdvSettings.setVisible(True)
 
-	# Time-out for TX Channel to Become Ready in ms
-	tcpipIperfTxWaitTimeout = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_WAIT_TMO", None)
-	tcpipIperfTxWaitTimeout.setLabel("Timeout for TX Channel to Become Ready (in msec)")
-	tcpipIperfTxWaitTimeout.setVisible(True)
-	tcpipIperfTxWaitTimeout.setDescription("Time-out for TX Channel to Become Ready in ms")
-	tcpipIperfTxWaitTimeout.setDefaultValue(100)
+    # Time-out for TX Channel to Become Ready in ms
+    tcpipIperfTxWaitTimeout = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_WAIT_TMO", tcpipIperfAdvSettings)
+    tcpipIperfTxWaitTimeout.setLabel("Timeout for TX Channel to Become Ready (in msec)")
+    tcpipIperfTxWaitTimeout.setVisible(True)
+    tcpipIperfTxWaitTimeout.setDescription("Time-out for TX Channel to Become Ready in ms")
+    tcpipIperfTxWaitTimeout.setDefaultValue(100)
 
-	# Maximum Number of UDP TX Packet Queue
-	tcpipIperfTxQueueLimit = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_QUEUE_LIMIT", None)
-	tcpipIperfTxQueueLimit.setLabel("Maximum Number of UDP TX Packet Queue")
-	tcpipIperfTxQueueLimit.setVisible(True)
-	tcpipIperfTxQueueLimit.setDescription("Maximum Number of UDP TX Packet Queue")
-	tcpipIperfTxQueueLimit.setDefaultValue(2)
+    # Maximum Number of UDP TX Packet Queue
+    tcpipIperfTxQueueLimit = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_QUEUE_LIMIT", tcpipIperfAdvSettings)
+    tcpipIperfTxQueueLimit.setLabel("Maximum Number of UDP TX Packet Queue")
+    tcpipIperfTxQueueLimit.setVisible(True)
+    tcpipIperfTxQueueLimit.setDescription("Maximum Number of UDP TX Packet Queue")
+    tcpipIperfTxQueueLimit.setDefaultValue(2)
 
-	# Iperf timing error in ms
-	tcpipIperfTimingError = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TIMING_ERROR_MARGIN", None)
-	tcpipIperfTimingError.setLabel("Iperf Timing Error (in msec)")
-	tcpipIperfTimingError.setVisible(True)
-	tcpipIperfTimingError.setDescription("Iperf timing error in ms")
-	tcpipIperfTimingError.setDefaultValue(0)
+    # Iperf timing error in ms
+    tcpipIperfTimingError = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TIMING_ERROR_MARGIN", tcpipIperfAdvSettings)
+    tcpipIperfTimingError.setLabel("Iperf Timing Error (in msec)")
+    tcpipIperfTimingError.setVisible(True)
+    tcpipIperfTimingError.setDescription("Iperf timing error in ms")
+    tcpipIperfTimingError.setDefaultValue(0)
 
-	# Number of Iperf Instances
-	tcpipIperfInstancesMax = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_MAX_INSTANCES", None)
-	tcpipIperfInstancesMax.setLabel("Number of Iperf Instances")
-	tcpipIperfInstancesMax.setVisible(True)
-	tcpipIperfInstancesMax.setDescription("Number of Iperf Instances")
-	tcpipIperfInstancesMax.setDefaultValue(1)
+    # TX Default Bandwidth in Mbps
+    tcpipIperfTxBwLimit= tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BW_LIMIT", tcpipIperfAdvSettings)
+    tcpipIperfTxBwLimit.setLabel("Default TX Bandwidth(in Mbps)")
+    tcpipIperfTxBwLimit.setVisible(True)
+    tcpipIperfTxBwLimit.setDescription("TX Default Bandwidth in Mbps")
+    tcpipIperfTxBwLimit.setDefaultValue(1)
 
-	# TX Default Bandwidth in Mbps
-	tcpipIperfTxBwLimit= tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BW_LIMIT", None)
-	tcpipIperfTxBwLimit.setLabel("Default TX Bandwidth(in Mbps)")
-	tcpipIperfTxBwLimit.setVisible(True)
-	tcpipIperfTxBwLimit.setDescription("TX Default Bandwidth in Mbps")
-	tcpipIperfTxBwLimit.setDefaultValue(1)
+    #Add to system_config.h
+    tcpipIperfHeaderFtl = tcpipIperfComponent.createFileSymbol(None, None)
+    tcpipIperfHeaderFtl.setSourcePath("tcpip/config/iperf.h.ftl")
+    tcpipIperfHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+    tcpipIperfHeaderFtl.setMarkup(True)
+    tcpipIperfHeaderFtl.setType("STRING")
 
-	#Add to system_config.h
-	tcpipIperfHeaderFtl = tcpipIperfComponent.createFileSymbol(None, None)
-	tcpipIperfHeaderFtl.setSourcePath("tcpip/config/iperf.h.ftl")
-	tcpipIperfHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-	tcpipIperfHeaderFtl.setMarkup(True)
-	tcpipIperfHeaderFtl.setType("STRING")
-
-	# Add iperf.c file
-	tcpipIperfSourceFile = tcpipIperfComponent.createFileSymbol(None, None)
-	tcpipIperfSourceFile.setSourcePath("tcpip/src/iperf.c")
-	tcpipIperfSourceFile.setOutputName("iperf.c")
-	tcpipIperfSourceFile.setOverwrite(True)
-	tcpipIperfSourceFile.setDestPath("library/tcpip/src/")
-	tcpipIperfSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipIperfSourceFile.setType("SOURCE")
-	tcpipIperfSourceFile.setEnabled(True)
-	
+    # Add iperf.c file
+    tcpipIperfSourceFile = tcpipIperfComponent.createFileSymbol(None, None)
+    tcpipIperfSourceFile.setSourcePath("tcpip/src/iperf.c")
+    tcpipIperfSourceFile.setOutputName("iperf.c")
+    tcpipIperfSourceFile.setOverwrite(True)
+    tcpipIperfSourceFile.setDestPath("library/tcpip/src/")
+    tcpipIperfSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipIperfSourceFile.setType("SOURCE")
+    tcpipIperfSourceFile.setEnabled(True)
+    
 def tcpipIperfMenuVisible(symbol, event):
-	if (event["value"] == True):
-		print("Telnet Menu Visible.")		
-		symbol.setVisible(True)
-	else:
-		print("Telnet Menu Invisible.")
-		symbol.setVisible(False)
-		
+    if (event["value"] == True):
+        print("Telnet Menu Visible.")       
+        symbol.setVisible(True)
+    else:
+        print("Telnet Menu Invisible.")
+        symbol.setVisible(False)
+        
 def tcpipIperfGenSourceFile(sourceFile, event):
-	sourceFile.setEnabled(event["value"])
+    sourceFile.setEnabled(event["value"])
 
 #Set symbols of other components
 def setVal(component, symbol, value):
@@ -129,4 +135,4 @@ def handleMessage(messageID, args):
     return retDict
     
 def destroyComponent(component):
-	Database.setSymbolValue("tcpipIperf", "TCPIP_USE_IPERF", False, 2)
+    Database.setSymbolValue("tcpipIperf", "TCPIP_USE_IPERF", False, 2)

@@ -47,19 +47,19 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsModule.setDescription("Use FTP Module")
     tcpipFtpsModule.setDefaultValue(True)
 
-    # FTPs Command Listening Port
-    tcpipFtpsCmdPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_COMMAND_LISTEN_PORT", None)
-    tcpipFtpsCmdPort.setLabel("Command Listening Port")
-    tcpipFtpsCmdPort.setVisible(True)
-    tcpipFtpsCmdPort.setDescription("FTP Server Command Listening Port")
-    tcpipFtpsCmdPort.setDefaultValue(21)
+    # Maximum Number of FTP Connections Allowed per Interface
+    tcpipFtpsConnMaxNum = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_MAX_CONNECTIONS", None)
+    tcpipFtpsConnMaxNum.setLabel("Maximum Number of FTP Connections Allowed per Interface")
+    tcpipFtpsConnMaxNum.setVisible(True)
+    tcpipFtpsConnMaxNum.setDescription("Maximum Number of FTP Connections Allowed per Interface")
+    tcpipFtpsConnMaxNum.setDefaultValue(1)
 
-    # FTPs Data Listening Port
-    tcpipFtpsDataPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_DATA_LISTEN_PORT", None)
-    tcpipFtpsDataPort.setLabel("Data Listening Port")
-    tcpipFtpsDataPort.setVisible(True)
-    tcpipFtpsDataPort.setDescription("FTP Server Data Listening Port")
-    tcpipFtpsDataPort.setDefaultValue(20)
+    # Maximum Length for User Name
+    tcpipFtpsUsrNameMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_USER_NAME_LEN", None)
+    tcpipFtpsUsrNameMaxLen.setLabel("Maximum Length for User Name")
+    tcpipFtpsUsrNameMaxLen.setVisible(True)
+    tcpipFtpsUsrNameMaxLen.setDescription("Maximum Length for User Name")
+    tcpipFtpsUsrNameMaxLen.setDefaultValue(10)
 
     # Transmit Buffer Size for the FTP Data Socket
     tcpipFtpsDataSktTxBuffSize = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE", None)
@@ -74,6 +74,13 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsDataSktRxBuffSize.setVisible(True)
     tcpipFtpsDataSktRxBuffSize.setDescription("Receive Buffer Size for the FTP Data Socket")
     tcpipFtpsDataSktRxBuffSize.setDefaultValue(0)
+
+    # Default FTP Mount point directory
+    tcpipFtpRootDir = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_MOUNT_POINT", None)
+    tcpipFtpRootDir.setLabel("FTP Server Root Directory Path")
+    tcpipFtpRootDir.setVisible(True)
+    tcpipFtpRootDir.setDescription("FTP Server Root Directory Path")
+    tcpipFtpRootDir.setDefaultValue("/mnt/mchpSite1/")
     
     # Advanced Settings
     tcpipFtpsAdvSettings = tcpipFtpsComponent.createMenuSymbol("TCPIP_FTPS_ADV_SETTING", None)
@@ -88,20 +95,20 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsTskTickRate.setDescription("FTP Server Task Rate in msec")
     tcpipFtpsTskTickRate.setDefaultValue(33)
 
-    # Maximum Length for User Name
-    tcpipFtpsUsrNameMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_USER_NAME_LEN", tcpipFtpsAdvSettings)
-    tcpipFtpsUsrNameMaxLen.setLabel("Maximum Length for User Name")
-    tcpipFtpsUsrNameMaxLen.setVisible(True)
-    tcpipFtpsUsrNameMaxLen.setDescription("Maximum Length for User Name")
-    tcpipFtpsUsrNameMaxLen.setDefaultValue(10)
+    # FTPs Command Listening Port
+    tcpipFtpsCmdPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_COMMAND_LISTEN_PORT", tcpipFtpsAdvSettings)
+    tcpipFtpsCmdPort.setLabel("Command Listening Port")
+    tcpipFtpsCmdPort.setVisible(True)
+    tcpipFtpsCmdPort.setDescription("FTP Server Command Listening Port")
+    tcpipFtpsCmdPort.setDefaultValue(21)
 
-    # Maximum Number of FTP Connections Allowed per Interface
-    tcpipFtpsConnMaxNum = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_MAX_CONNECTIONS", tcpipFtpsAdvSettings)
-    tcpipFtpsConnMaxNum.setLabel("Maximum Number of FTP Connections Allowed per Interface")
-    tcpipFtpsConnMaxNum.setVisible(True)
-    tcpipFtpsConnMaxNum.setDescription("Maximum Number of FTP Connections Allowed per Interface")
-    tcpipFtpsConnMaxNum.setDefaultValue(1)
-
+    # FTPs Data Listening Port
+    tcpipFtpsDataPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_DATA_LISTEN_PORT", tcpipFtpsAdvSettings)
+    tcpipFtpsDataPort.setLabel("Data Listening Port")
+    tcpipFtpsDataPort.setVisible(True)
+    tcpipFtpsDataPort.setDescription("FTP Server Data Listening Port")
+    tcpipFtpsDataPort.setDefaultValue(20)
+    
     # FTP Server timeout in seconds
     tcpipFtpsTimeout = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_TIMEOUT", tcpipFtpsAdvSettings)
     tcpipFtpsTimeout.setLabel("FTP Server timeout (in sec)")
@@ -115,13 +122,6 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsFilePut.setVisible(True)
     tcpipFtpsFilePut.setDescription("Enable FTP File PUT Command")
     tcpipFtpsFilePut.setDefaultValue(True) 
-
-    # Default FTP Mount point directory
-    tcpipFtpRootDir = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_MOUNT_POINT", tcpipFtpsAdvSettings)
-    tcpipFtpRootDir.setLabel("FTP Server Root Directory Path")
-    tcpipFtpRootDir.setVisible(True)
-    tcpipFtpRootDir.setDescription("FTP Server Root Directory Path")
-    tcpipFtpRootDir.setDefaultValue("/mnt/mchpSite1/")
     
     # FTP Authentication Selection
     tcpipFtpsAuth= tcpipFtpsComponent.createComboSymbol("TCPIP_FTPS_AUTH_CONFIG", tcpipFtpsAdvSettings, TCPIP_FTPS_AUTH_TYPES)

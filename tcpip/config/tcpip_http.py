@@ -42,26 +42,26 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpConnMaxNum.setDescription("Maximum Number of Simultaneous Connections")
     tcpipHttpConnMaxNum.setDefaultValue(4)
 
-    # Default HTTP File
-    tcpipHttpDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_DEFAULT_FILE", None)
-    tcpipHttpDefaultFile.setLabel("Default HTTP File")
-    tcpipHttpDefaultFile.setVisible(True)
-    tcpipHttpDefaultFile.setDescription("Default HTTP File")
-    tcpipHttpDefaultFile.setDefaultValue("index.htm")
-
-    # Default HTTPS File
-    tcpipHttpsDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTPS_DEFAULT_FILE", None)
-    tcpipHttpsDefaultFile.setLabel("Default HTTPS File")
-    tcpipHttpsDefaultFile.setVisible(True)
-    tcpipHttpsDefaultFile.setDescription("Default HTTPS File")
-    tcpipHttpsDefaultFile.setDefaultValue("index.htm")
-
     # Maximum Default File String Length
     tcpipHttpDefaultLenMax= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_DEFAULT_LEN", None)
     tcpipHttpDefaultLenMax.setLabel("Maximum File String Length")
     tcpipHttpDefaultLenMax.setVisible(True)
     tcpipHttpDefaultLenMax.setDescription("Default Maximum File String Length")
     tcpipHttpDefaultLenMax.setDefaultValue(10)
+
+    # HTTP Socket Transmit Buffer Size
+    tcpipHttpSktTxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_TX_BUFF_SIZE", None)
+    tcpipHttpSktTxBuffSize.setLabel("HTTP Socket TX Buffer Size")
+    tcpipHttpSktTxBuffSize.setVisible(True)
+    tcpipHttpSktTxBuffSize.setDescription("HTTP Socket Transmit Buffer Size")
+    tcpipHttpSktTxBuffSize.setDefaultValue(0)
+
+    # HTTP Socket Receive Buffer Size
+    tcpipHttpSktRxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_RX_BUFF_SIZE", None)
+    tcpipHttpSktRxBuffSize.setLabel("HTTP Socket RX Buffer Size")
+    tcpipHttpSktRxBuffSize.setVisible(True)
+    tcpipHttpSktRxBuffSize.setDescription("HTTP Socket Receive Buffer Size")
+    tcpipHttpSktRxBuffSize.setDefaultValue(0)
 
     # Default Web pages directory
     tcpipHttpWebDir = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_WEB_DIR", None)
@@ -70,6 +70,18 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpWebDir.setDescription("Web Pages Directory")
     tcpipHttpWebDir.setDefaultValue("/mnt/mchpSite1/")
 
+    # Include HTTP Custom Template
+    tcpipHttpCustomTemplate = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE", None)
+    tcpipHttpCustomTemplate.setLabel("Include HTTP Custom Template")
+    tcpipHttpCustomTemplate.setVisible(True)
+    tcpipHttpCustomTemplate.setDescription("Include HTTP Custom Template")
+    tcpipHttpCustomTemplate.setDefaultValue(True)
+
+    tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", None)
+    tcpipHttpCustomTemplateSl.setVisible(False) 
+    tcpipHttpCustomTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
+    tcpipHttpCustomTemplateSl.setDependencies(tcpipHttpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
+    
     
     # Advanced Settings
     tcpipHttpAdvSettings = tcpipHttpComponent.createMenuSymbol("TCPIP_HTTP_ADV_SETTING", None)
@@ -119,20 +131,13 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpCallbackFreeMin.setDescription("Minimum Number of Bytes Free in TX FIFO Before Executing Callbacks")
     tcpipHttpCallbackFreeMin.setDefaultValue(16)
 
-    # HTTP Socket Transmit Buffer Size
-    tcpipHttpSktTxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_TX_BUFF_SIZE", tcpipHttpAdvSettings)
-    tcpipHttpSktTxBuffSize.setLabel("HTTP Socket TX Buffer Size")
-    tcpipHttpSktTxBuffSize.setVisible(True)
-    tcpipHttpSktTxBuffSize.setDescription("HTTP Socket Transmit Buffer Size")
-    tcpipHttpSktTxBuffSize.setDefaultValue(0)
-
-    # HTTP Socket Receive Buffer Size
-    tcpipHttpSktRxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_RX_BUFF_SIZE", tcpipHttpAdvSettings)
-    tcpipHttpSktRxBuffSize.setLabel("HTTP Socket RX Buffer Size")
-    tcpipHttpSktRxBuffSize.setVisible(True)
-    tcpipHttpSktRxBuffSize.setDescription("HTTP Socket Receive Buffer Size")
-    tcpipHttpSktRxBuffSize.setDefaultValue(0)
-
+    # Default HTTP File
+    tcpipHttpDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_DEFAULT_FILE", tcpipHttpAdvSettings)
+    tcpipHttpDefaultFile.setLabel("Default HTTP File")
+    tcpipHttpDefaultFile.setVisible(True)
+    tcpipHttpDefaultFile.setDescription("Default HTTP File")
+    tcpipHttpDefaultFile.setDefaultValue("index.htm")
+    
     # HTTP Module Configuration Flags
     tcpipHttpConfigFlags = tcpipHttpComponent.createComboSymbol("TCPIP_HTTP_CFG_FLAGS", tcpipHttpAdvSettings, TCPIP_HTTP_MODULE_FLAGS)
     tcpipHttpConfigFlags.setLabel("HTTP Module Configuration Flags")
@@ -226,25 +231,15 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpMallocFunction.setLabel("HTTP allocation function, malloc style")
     tcpipHttpMallocFunction.setVisible(True)
     tcpipHttpMallocFunction.setDescription("HTTP allocation function, malloc style")
+    tcpipHttpMallocFunction.setDefaultValue("malloc")
 
     # HTTP deallocation function, free style
     tcpipHttpFreeFunction = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_FREE_FUNC", tcpipHttpAdvSettings)
     tcpipHttpFreeFunction.setLabel("HTTP deallocation function, free style")
     tcpipHttpFreeFunction.setVisible(True)
     tcpipHttpFreeFunction.setDescription("HTTP deallocation function, free style")
+    tcpipHttpFreeFunction.setDefaultValue("free")
 
-    # Include HTTP Custom Template
-    tcpipHttpCustomTemplate = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE", tcpipHttpAdvSettings)
-    tcpipHttpCustomTemplate.setLabel("Include HTTP Custom Template")
-    tcpipHttpCustomTemplate.setVisible(True)
-    tcpipHttpCustomTemplate.setDescription("Include HTTP Custom Template")
-    tcpipHttpCustomTemplate.setDefaultValue(True)
-
-    tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", tcpipHttpAdvSettings)
-    tcpipHttpCustomTemplateSl.setVisible(False) 
-    tcpipHttpCustomTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
-    tcpipHttpCustomTemplateSl.setDependencies(tcpipHttpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
-    
     
     tcpipHttpheapdependency = ["TCPIP_HTTP_MAX_CONNECTIONS", "TCPIP_HTTP_MAX_DATA_LEN", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         

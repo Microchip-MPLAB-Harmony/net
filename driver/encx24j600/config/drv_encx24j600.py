@@ -72,7 +72,7 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600SpiChipSelect.setDescription("Chip Select Pin for SPI interface")     
         
     drvEncx24j600SpiComment = drvExtMacEncx24j600Component.createCommentSymbol("DRV_ENCX24J600_SPI_COMMENT_IDX" + str(index),drvEncx24j600SpiChipSelect)
-    drvEncx24j600SpiComment.setLabel"***Configure the Chip-Select pin as GPIO Output in Pin Manager***")
+    drvEncx24j600SpiComment.setLabel("***Configure the Chip-Select pin as GPIO Output in Pin Manager***")
     drvEncx24j600SpiComment.setVisible( True )
         
     # Advanced Settings
