@@ -63,7 +63,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 */
 
-#if defined(TCPIP_IF_PIC32WK)
+#if defined(TCPIP_IF_PIC32WK) || defined(TCPIP_IF_PIC32MZW1)
     #define TCPIP_MAC_FRAME_OFFSET      (34+4)  // bytes to store the packet pointer
 #elif defined( TCPIP_IF_EMAC0 ) || defined( TCPIP_IF_EMAC1)
     #define TCPIP_MAC_FRAME_OFFSET      (4+2)       // 4 bytes above segment to indicate parent packet, 2 for alignment
