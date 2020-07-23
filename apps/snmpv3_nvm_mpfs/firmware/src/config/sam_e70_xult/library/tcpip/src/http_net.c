@@ -5622,7 +5622,7 @@ static TCPIP_HTTP_DYN_ARG_TYPE _HTTP_ArgType(char* argStr, int32_t* pIntArg)
     // int arg
     if(incAdj)
     {
-        argInt--;
+        argInt += argInt >= 0 ? -1 : 1;
     }
     *pIntArg = argInt;
     return TCPIP_HTTP_DYN_ARG_TYPE_INT32;
