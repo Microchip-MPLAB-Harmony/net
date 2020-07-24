@@ -39,6 +39,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "http_net_print.h"
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
+#include "crypto/crypto.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
@@ -104,6 +105,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
+#if !defined( NO_MD5 )        // no MD5 if crypto_config.h says NO_MD5   
+// Use the MD5 Demo web page (~5kb ROM, ~160b RAM)
+#define HTTP_APP_USE_MD5
+#endif
 
 // Use the e-mail demo web page
 #if defined(TCPIP_STACK_USE_SMTPC)
@@ -1460,10 +1465,14 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_led(TCPIP_HTTP_NET_CONN_HANDLE connHan
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ledSelected(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     // Determine which LED to check
-    if(vDcpt->nArgs >= 2 && vDcpt->dynArgs->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32 && (vDcpt->dynArgs + 1)->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32)
+    if(vDcpt->nArgs >= 2 && vDcpt->dynArgs->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32 && (vDcpt->dynArgs + 1)->argType == TCPIP_HTTP_DYN_ARG_TYPE_STRING)
     {
         int nLed = vDcpt->dynArgs->argInt32;
-        int state = (vDcpt->dynArgs + 1)->argInt32;
+        int state = 0;
+        if(strcmp((vDcpt->dynArgs + 1)->argStr, "true") == 0)
+        {
+            state = 1;
+        }
 
         switch(nLed)
         {
