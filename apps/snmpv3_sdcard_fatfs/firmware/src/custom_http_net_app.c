@@ -1465,10 +1465,14 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_led(TCPIP_HTTP_NET_CONN_HANDLE connHan
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ledSelected(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     // Determine which LED to check
-    if(vDcpt->nArgs >= 2 && vDcpt->dynArgs->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32 && (vDcpt->dynArgs + 1)->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32)
+    if(vDcpt->nArgs >= 2 && vDcpt->dynArgs->argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32 && (vDcpt->dynArgs + 1)->argType == TCPIP_HTTP_DYN_ARG_TYPE_STRING)
     {
         int nLed = vDcpt->dynArgs->argInt32;
-        int state = (vDcpt->dynArgs + 1)->argInt32;
+        int state = 0;
+        if(strcmp((vDcpt->dynArgs + 1)->argStr, "true") == 0)
+        {
+            state = 1;
+        }
 
         switch(nLed)
         {
