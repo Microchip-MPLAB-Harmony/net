@@ -38,14 +38,7 @@ def instantiateComponent(tcpipTftpsComponent):
     tcpipTftpsClientCnt.setVisible(True)
     tcpipTftpsClientCnt.setDescription("TFTP Server can access number of Clients")
     tcpipTftpsClientCnt.setDefaultValue(3)    
-    
-    # Maximum Length for a file size
-    tcpipTftpsFileSizeLen= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_DEFAULT_FILESIZE", None)
-    tcpipTftpsFileSizeLen.setLabel("Maximum File Size (bytes)")
-    tcpipTftpsFileSizeLen.setVisible(True)
-    tcpipTftpsFileSizeLen.setDescription("Maximum Length for a file transmission")
-    tcpipTftpsFileSizeLen.setDefaultValue(64000)
-        
+
     # TFTP Server command source file name length
     tcpipTftpsFileNameLength= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_FILENAME_LEN", None)
     tcpipTftpsFileNameLength.setLabel("Default file name length")
@@ -59,7 +52,14 @@ def instantiateComponent(tcpipTftpsComponent):
     tcpipTftpsRootDir.setVisible(True)
     tcpipTftpsRootDir.setDescription("TFTP Server Root Directory Path")
     tcpipTftpsRootDir.setDefaultValue("/mnt/mchpSite1/")
-    
+
+    # Enable TFTP Server Console Command
+    tcpipTftpsCmdEnable = tcpipTftpsComponent.createBooleanSymbol("TCPIP_TFTPS_CLIENT_CONSOLE_CMD", None)
+    tcpipTftpsCmdEnable.setLabel("Enable Console Commands")
+    tcpipTftpsCmdEnable.setVisible(True)
+    tcpipTftpsCmdEnable.setDescription("Enable TFTP Server Console Commands")
+    tcpipTftpsCmdEnable.setDefaultValue(False)
+            
     # Advanced Settings
     tcpipTftpsAdvSettings = tcpipTftpsComponent.createMenuSymbol("TCPIP_TFTPS_ADV_SETTING", None)
     tcpipTftpsAdvSettings.setLabel("Advanced Settings")
@@ -75,21 +75,28 @@ def instantiateComponent(tcpipTftpsComponent):
     
     # TFTP Server Retransmit count value to retransmit the last packet sent
     tcpipTftpsRetransmitCnt= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_RETRANSMIT_COUNT", tcpipTftpsAdvSettings)
-    tcpipTftpsRetransmitCnt.setLabel("Maximum number of retransmission")
+    tcpipTftpsRetransmitCnt.setLabel("Maximum Number of Retransmissions")
     tcpipTftpsRetransmitCnt.setVisible(True)
     tcpipTftpsRetransmitCnt.setDescription("TFTP Server retransmit count")
     tcpipTftpsRetransmitCnt.setDefaultValue(3)
-
+    
+    # Maximum Length for a file size
+    tcpipTftpsFileSizeLen= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_DEFAULT_FILESIZE", tcpipTftpsAdvSettings)
+    tcpipTftpsFileSizeLen.setLabel("Maximum File Size (bytes)")
+    tcpipTftpsFileSizeLen.setVisible(True)
+    tcpipTftpsFileSizeLen.setDescription("Maximum Length for a file transmission")
+    tcpipTftpsFileSizeLen.setDefaultValue(64000)
+        
     # Maximum Length for block size configuration
     tcpipTftpsDefBockSizeLen= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_DEFAULT_BLOCK_SIZE", tcpipTftpsAdvSettings)
-    tcpipTftpsDefBockSizeLen.setLabel("Maximum block size Length for a file name")
+    tcpipTftpsDefBockSizeLen.setLabel("Maximum Block Size (bytes)")
     tcpipTftpsDefBockSizeLen.setVisible(True)
     tcpipTftpsDefBockSizeLen.setDescription("Maximum block size Length for a file name")
     tcpipTftpsDefBockSizeLen.setDefaultValue(512)
     
     # TFTP Server default timeout in sec
     tcpipTftpsDefTimeout= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_DEFAULT_TIMEOUT", tcpipTftpsAdvSettings)
-    tcpipTftpsDefTimeout.setLabel("Default timeout (in sec)")
+    tcpipTftpsDefTimeout.setLabel("Default Retransmission timeout (in sec)")
     tcpipTftpsDefTimeout.setVisible(True)
     tcpipTftpsDefTimeout.setDescription("TFTP Server default timeout option")
     tcpipTftpsDefTimeout.setDefaultValue(10)

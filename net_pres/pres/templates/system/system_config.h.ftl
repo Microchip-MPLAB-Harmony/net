@@ -24,7 +24,7 @@
 <#--include "/framework/net_pres/pres/tls/templates/system_config.h.ftl"-->
 <#if NET_PRES_USE>
 /* MPLAB Harmony Net Presentation Layer Definitions*/
-#define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}
+#define NET_PRES_NUM_INSTANCE 1
 #define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}
 
 <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
@@ -36,10 +36,10 @@
     </#if>
     <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}
 	
-	<#assign numInstance= __INSTANCE_COUNT?number>
+	<#assign numInstance= 1>
 	<#assign freertos_present= false/>
     <#list 0..(numInstance-1) as idx>
-		<#assign netPresEncProviderIdx = "netPres_${idx}.NET_PRES_ENC_PROVIDE_IDX${idx}"?eval>		
+		<#assign netPresEncProviderIdx = "NET_PRES_ENC_PROVIDE"?eval>		
 		<#if netPresEncProviderIdx == "WolfSSL" && (HarmonyCore.SELECT_RTOS) == "FreeRTOS">
 			<#assign freertos_present=true/>
         </#if>

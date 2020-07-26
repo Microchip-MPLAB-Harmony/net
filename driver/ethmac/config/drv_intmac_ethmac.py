@@ -50,54 +50,66 @@ def instantiateComponent(drvPic32mEthmacComponent):
         # Enable Default Pins for Ethernet MAC
         Database.setSymbolValue("core", "CONFIG_FETHIO", "OFF", 1)
 
+    tcpipEthmacTraffic = drvPic32mEthmacComponent.createComboSymbol("TCPIP_EMAC_TRAFFIC",None,["Low", "Medium", "High"])
+    tcpipEthmacTraffic.setVisible(True)
+    tcpipEthmacTraffic.setLabel("MAC Default Configuration for Network Traffic")
+    tcpipEthmacTraffic.setDefaultValue("Medium")
+    
     # Number of Tx Descriptors to be created
-    tcpipEthmacTxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_TX_DESCRIPTORS", None)
+    tcpipEthmacTxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_TX_DESCRIPTORS", tcpipEthmacTraffic)
     tcpipEthmacTxDescCount.setLabel("Number of Tx Descriptors to be created")
     tcpipEthmacTxDescCount.setVisible(True)
     tcpipEthmacTxDescCount.setDescription("Number of Tx Descriptors to be created")
     tcpipEthmacTxDescCount.setDefaultValue(8)
+    tcpipEthmacTxDescCount.setDependencies(tcpipEthMacTxDescCountCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Number of Rx Descriptors to be created
-    tcpipEthmacRxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DESCRIPTORS", None)
+    tcpipEthmacRxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DESCRIPTORS", tcpipEthmacTraffic)
     tcpipEthmacRxDescCount.setLabel("Number of Rx Descriptors to be created")
     tcpipEthmacRxDescCount.setVisible(True)
     tcpipEthmacRxDescCount.setDescription("Number of Rx Descriptors to be created")
-    tcpipEthmacRxDescCount.setDefaultValue(6)
+    tcpipEthmacRxDescCount.setDefaultValue(8)
+    tcpipEthmacRxDescCount.setDependencies(tcpipEthMacRxDescCountCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Number of Dedicated MAC RX Buffers
-    tcpipEthmacRxOwnBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DEDICATED_BUFFERS", None)
+    tcpipEthmacRxOwnBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DEDICATED_BUFFERS", tcpipEthmacTraffic)
     tcpipEthmacRxOwnBuffer.setLabel("Number of Dedicated MAC RX Buffers")
     tcpipEthmacRxOwnBuffer.setVisible(True)
     tcpipEthmacRxOwnBuffer.setDescription("Number of Dedicated MAC RX Buffers")
     tcpipEthmacRxOwnBuffer.setDefaultValue(4)
+    tcpipEthmacRxOwnBuffer.setDependencies(tcpipEthmacRxOwnBufferCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Number of Non_Dedicated RX Buffers for MAC Initialization
-    tcpipEthmacRxDynBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_INIT_BUFFERS", None)
+    tcpipEthmacRxDynBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_INIT_BUFFERS", tcpipEthmacTraffic)
     tcpipEthmacRxDynBuffer.setLabel("Number of Non_Dedicated RX Buffers")
     tcpipEthmacRxDynBuffer.setVisible(True)
     tcpipEthmacRxDynBuffer.setDescription("Number of Non_Dedicated RX Buffers for MAC Initialization")
     tcpipEthmacRxDynBuffer.setDefaultValue(0)
+    tcpipEthmacRxDynBuffer.setDependencies(tcpipEthmacRxDynBufferCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Minimum Threshold for the Buffer Replenish Process
-    tcpipEthmacRxBufferThres = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_THRESHOLD", None)
+    tcpipEthmacRxBufferThres = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_THRESHOLD", tcpipEthmacTraffic)
     tcpipEthmacRxBufferThres.setLabel("Minimum Threshold for the Buffer Replenish Process")
     tcpipEthmacRxBufferThres.setVisible(True)
     tcpipEthmacRxBufferThres.setDescription("Minimum Threshold for the Buffer Replenish Process")
     tcpipEthmacRxBufferThres.setDefaultValue(1)
+    tcpipEthmacRxBufferThres.setDependencies(tcpipEthmacRxBufferThresCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Number of RX Buffers to Allocate when Below Threshold Condition is Detected
-    tcpipEthmacRxBufferReFill = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_FILL", None)
-    tcpipEthmacRxBufferReFill.setLabel("Number of RX Buffers to Allocate when Below Threshold Condition is Detected")
+    tcpipEthmacRxBufferReFill = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_FILL", tcpipEthmacTraffic)
+    tcpipEthmacRxBufferReFill.setLabel("Rx Buffer Allocate Count during  Replenish Process")
     tcpipEthmacRxBufferReFill.setVisible(True)
     tcpipEthmacRxBufferReFill.setDescription("Number of RX Buffers to Allocate when Below Threshold Condition is Detected")
     tcpipEthmacRxBufferReFill.setDefaultValue(2)
+    tcpipEthmacRxBufferReFill.setDependencies(tcpipEthmacRxBufferReFillCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     # Size of a RX Buffer. Should Be Multiple of 16
-    tcpipEthmacRxBuffSize = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_BUFF_SIZE", None)
+    tcpipEthmacRxBuffSize = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_BUFF_SIZE", tcpipEthmacTraffic)
     tcpipEthmacRxBuffSize.setLabel("Size of a RX Buffer. Should Be Multiple of 16")
     tcpipEthmacRxBuffSize.setVisible(True)
     tcpipEthmacRxBuffSize.setDescription("Size of a RX Buffer. Should Be Multiple of 16")
     tcpipEthmacRxBuffSize.setDefaultValue(1536)
+    tcpipEthmacRxBuffSize.setDependencies(tcpipEthmacRxBuffSizeCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     
     # Ethernet RX Filters Selection Settings
@@ -494,7 +506,70 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacPic32LibSourceFile.setProjectPath("config/" + configName + "/driver/ethmac/src/dynamic/")
     tcpipEthmacPic32LibSourceFile.setType("SOURCE")
     tcpipEthmacPic32LibSourceFile.setEnabled(True)
-    
+
+def tcpipEthMacTxDescCountCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(5)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(8)
+    else:
+        symbol.setValue(16)
+
+def tcpipEthMacRxDescCountCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(5)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(8)
+    else:
+        symbol.setValue(16)
+
+def tcpipEthmacRxOwnBufferCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(2)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(4)
+    else:
+        symbol.setValue(10)
+
+def tcpipEthmacRxDynBufferCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(0)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(0)
+    else:
+        symbol.setValue(2)
+
+def tcpipEthmacRxBufferThresCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(1)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(1)
+    else:
+        symbol.setValue(2)
+
+def tcpipEthmacRxBufferReFillCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(1)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(2)
+    else:
+        symbol.setValue(3)
+
+def tcpipEthmacRxBuffSizeCallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(1536)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(1536)
+    else:
+        symbol.setValue(1536)
+                            
 def tcpipEthMacMenuVisibleSingle(symbol, event):
     if (event["value"] == True):
         print("EthMac Menu Visible.")       
@@ -502,8 +577,7 @@ def tcpipEthMacMenuVisibleSingle(symbol, event):
     else:
         print("EthMac Menu Invisible.")
         symbol.setVisible(False)
-
-        
+            
 def tcpipEthMacMdixSwapVisible(symbol, event):
     tcpipEthMacAutoMdix = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_ETH_OF_MDIX_AUTO")
     if (event["value"] == True):

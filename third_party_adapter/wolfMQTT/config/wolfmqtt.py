@@ -396,6 +396,10 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttDummyTaskAppHeaderFile.setEnabled(True)   
     wolfMqttDummyTaskAppHeaderFile.setDependencies(wolfMqttDummyApp, ["WMQTT_CSTM_APP_TEMPLATE","WMQTT_NET_GLUE"])
     
+def finalizeComponent(wolfmqttComponent):  
+    Database.setActiveGroup("__ROOTVIEW")
+    Database.selectComponent("lib_wolfmqtt")
+    
 def wolfMqttLibMenuVisible(symbol, event): 
     symbol.setVisible(event["value"])
     

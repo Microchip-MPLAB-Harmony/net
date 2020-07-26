@@ -41,30 +41,6 @@ def instantiateComponent(tcpipSntpComponent):
     tcpipSntpClient.setVisible(False)
     tcpipSntpClient.setDescription("Use SNTP Client")
     tcpipSntpClient.setDefaultValue(True) 
-    
-    # Default Interface
-    tcpipSntpDefault = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_DEFAULT_IF", None)  
-    tcpipSntpDefault.setLabel("Default Interface")
-    tcpipSntpDefault.setVisible(True)
-    tcpipSntpDefault.setDescription("Default Interface")
-    # Set Interafce 0 as default interface
-    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
-        tcpipSntpDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
-    tcpipSntpDefault.setDependencies(tcpipSntpInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
-
-    # SNTP Version
-    tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", None, TCPIP_SNTP_PROTOCOL_TYPE)
-    tcpipSntpVersion.setLabel("SNTP Version")
-    tcpipSntpVersion.setVisible(True)
-    tcpipSntpVersion.setDescription("SNTP Version")
-    tcpipSntpVersion.setDefaultValue("SNTP_VERSION_4")
-
-    # Default Connection Type
-    tcpipSntpConnType = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_CONNECTION_TYPE", None, TCPIP_ADDRESS_TYPE_STRICT)
-    tcpipSntpConnType.setLabel("Default Connection Type")
-    tcpipSntpConnType.setVisible(True)
-    tcpipSntpConnType.setDescription("Default Connection Type")
-    tcpipSntpConnType.setDefaultValue("IP_ADDRESS_TYPE_IPV4")
 
     # SNTP Server Name
     tcpipSntpSrvrName = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER", None)
@@ -72,6 +48,13 @@ def instantiateComponent(tcpipSntpComponent):
     tcpipSntpSrvrName.setVisible(True)
     tcpipSntpSrvrName.setDescription("SNTP Server Name")
     tcpipSntpSrvrName.setDefaultValue("pool.ntp.org")
+    
+    # Default Connection Type
+    tcpipSntpConnType = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_CONNECTION_TYPE", None, TCPIP_ADDRESS_TYPE_STRICT)
+    tcpipSntpConnType.setLabel("Default Connection Type")
+    tcpipSntpConnType.setVisible(True)
+    tcpipSntpConnType.setDescription("Default Connection Type")
+    tcpipSntpConnType.setDefaultValue("IP_ADDRESS_TYPE_IPV4")
         
     # Advanced Settings
     tcpipSntpAdvSettings = tcpipSntpComponent.createMenuSymbol("TCPIP_NTP_ADV_SETTING", None)
@@ -142,6 +125,23 @@ def instantiateComponent(tcpipSntpComponent):
     tcpipSntpTimestampTimeout.setVisible(True)
     tcpipSntpTimestampTimeout.setDescription("Time Stamp Time-Out")
     tcpipSntpTimestampTimeout.setDefaultValue(660)
+
+    # SNTP Version
+    tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", tcpipSntpAdvSettings, TCPIP_SNTP_PROTOCOL_TYPE)
+    tcpipSntpVersion.setLabel("SNTP Version")
+    tcpipSntpVersion.setVisible(True)
+    tcpipSntpVersion.setDescription("SNTP Version")
+    tcpipSntpVersion.setDefaultValue("SNTP_VERSION_4")
+        
+    # Default Interface
+    tcpipSntpDefault = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_DEFAULT_IF", tcpipSntpAdvSettings)  
+    tcpipSntpDefault.setLabel("Default Interface")
+    tcpipSntpDefault.setVisible(True)
+    tcpipSntpDefault.setDescription("Default Interface")
+    # Set Interafce 0 as default interface
+    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
+        tcpipSntpDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
+    tcpipSntpDefault.setDependencies(tcpipSntpInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
     
     #Add to system_config.h
     tcpipSntpHeaderFtl = tcpipSntpComponent.createFileSymbol(None, None)

@@ -76,11 +76,11 @@
         INST_NUMBER>
 /* Net Presentation Layer Data Definitions */
 #include "net_pres/pres/net_pres_enc_glue.h"
-        <#assign useStream= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"?eval>
-        <#assign useDataGram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"?eval> 
-        <#assign useServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"?eval> 
-        <#assign useClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_IDX${INST_NUMBER}"?eval> 
-        <#assign useHarmonyTcp= "netPres_${INST_NUMBER}.NET_PRES_TRANSPORT_AS_TCPIP_IDX${INST_NUMBER}"?eval> 
+        <#assign useStream= "NET_PRES_SUPPORT_STREAM"?eval>
+        <#assign useDataGram= "NET_PRES_SUPPORT_DATAGRAM"?eval> 
+        <#assign useServer= "NET_PRES_SUPPORT_SERVER"?eval> 
+        <#assign useClient= "NET_PRES_SUPPORT_CLIENT"?eval> 
+        <#assign useHarmonyTcp= "NET_PRES_TRANSPORT_AS_TCPIP"?eval> 
 
         <#if useHarmonyTcp && useStream && useServer && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}SS = {
@@ -103,35 +103,28 @@ static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}DC = {
 };
         </#if>
     </#macro>
-    <#assign numInstance= __INSTANCE_COUNT?number>
-    <#list 0..(numInstance-1) as idx>
-	<#assign netPresIdx = "netPres_${idx}.NET_PRES_IDX${idx}"?eval>
-		<#if netPresIdx??>
-		<#if netPresIdx == true>
-            <@NET_PRES_TRANS_DATA 
-                INST_NUMBER=idx
-            />
-			<#assign supportEncryption= "netPres_${idx}.NET_PRES_SUPPORT_ENCRYPTION${idx}"?eval> 
-            <#assign supportStream= "netPres_${idx}.NET_PRES_SUPPORT_STREAM_ENC_IDX${idx}"?eval> 
-            <#assign supportDataGram= "netPres_${idx}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${idx}"?eval>
-            <#assign supportServer=  "netPres_${idx}.NET_PRES_SUPPORT_SERVER_ENC_IDX${idx}"?eval>
-            <#assign supportClient=  "netPres_${idx}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${idx}"?eval>
-        </#if>
-		</#if>
+    <#assign numInstance= 1>
+    <#list 0..(numInstance-1) as idx>	
+		<@NET_PRES_TRANS_DATA 
+			INST_NUMBER=idx
+		/>
+		<#assign supportEncryption= "NET_PRES_SUPPORT_ENCRYPTION"?eval> 
+		<#assign supportStream= "NET_PRES_SUPPORT_STREAM_ENC"?eval> 
+		<#assign supportDataGram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
+		<#assign supportServer=  "NET_PRES_SUPPORT_SERVER_ENC"?eval>
+		<#assign supportClient=  "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
     </#list>
 
 static const NET_PRES_INST_DATA netPresCfgs[] = 
 {  
     <#list 0..(numInstance-1) as idx>
-        <#assign netPresIdx = "netPres_${idx}.NET_PRES_IDX${idx}"?eval>
-		<#if netPresIdx??>
-		<#if netPresIdx == true>
+        
     {
-            <#assign useStream=  "netPres_${idx}.NET_PRES_SUPPORT_STREAM_IDX${idx}"?eval> 
-            <#assign useDataGram= "netPres_${idx}.NET_PRES_SUPPORT_DATAGRAM_IDX${idx}"?eval>
-            <#assign useServer= "netPres_${idx}.NET_PRES_SUPPORT_SERVER_IDX${idx}"?eval>
-            <#assign useClient=  "netPres_${idx}.NET_PRES_SUPPORT_CLIENT_IDX${idx}"?eval>
-            <#assign useHarmonyTcp= "netPres_${idx}.NET_PRES_TRANSPORT_AS_TCPIP_IDX${idx}"?eval>
+            <#assign useStream=  "NET_PRES_SUPPORT_STREAM"?eval> 
+            <#assign useDataGram= "NET_PRES_SUPPORT_DATAGRAM"?eval>
+            <#assign useServer= "NET_PRES_SUPPORT_SERVER"?eval>
+            <#assign useClient=  "NET_PRES_SUPPORT_CLIENT"?eval>
+            <#assign useHarmonyTcp= "NET_PRES_TRANSPORT_AS_TCPIP"?eval>
             <#if useHarmonyTcp && useStream && useServer && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
         .pTransObject_ss = &netPresTransObject${idx}SS,
             </#if>
@@ -165,8 +158,7 @@ static const NET_PRES_INST_DATA netPresCfgs[] =
         .pProvObject_dc = NULL,
             </#if>
     },
-        </#if>     
-		</#if>
+        
      </#list>
 };
 

@@ -32,16 +32,6 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpc.setDescription("Use TFTP Client Module")
     tcpipTftpc.setDefaultValue(True)
 
-    # Default Interface
-    tcpipTftpcDefault = tcpipTftpcComponent.createStringSymbol("TCPIP_TFTPC_DEFAULT_IF", None)  
-    tcpipTftpcDefault.setLabel("Default Interface")
-    tcpipTftpcDefault.setVisible(True)
-    tcpipTftpcDefault.setDescription("Default Interface")
-    # Set Interafce 0 as default interface
-    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
-        tcpipTftpcDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
-    tcpipTftpcDefault.setDependencies(tcpipTftpcInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
-
     # TFTP Client Maximum retries
     tcpipTftpcRetryMax= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_MAX_RETRIES", None)
     tcpipTftpcRetryMax.setLabel("TFTP Client Maximum Retries")
@@ -103,6 +93,16 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcCmdProcessTimeout.setVisible(True)
     tcpipTftpcCmdProcessTimeout.setDescription("TFTP Client command process timeout in sec")
     tcpipTftpcCmdProcessTimeout.setDefaultValue(3)
+
+    # Default Interface
+    tcpipTftpcDefault = tcpipTftpcComponent.createStringSymbol("TCPIP_TFTPC_DEFAULT_IF", tcpipTftpcAdvSettings)  
+    tcpipTftpcDefault.setLabel("Default Interface")
+    tcpipTftpcDefault.setVisible(True)
+    tcpipTftpcDefault.setDescription("Default Interface")
+    # Set Interafce 0 as default interface
+    if(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0") != None):
+        tcpipTftpcDefault.setDefaultValue(Database.getSymbolValue("tcpipNetConfig_0", "TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"))    
+    tcpipTftpcDefault.setDependencies(tcpipTftpcInterface, ["tcpipNetConfig_0.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0"])
     
     tcpipTftpcheapdependency = ["TCPIP_TFTPC_FILENAME_LEN", "tcpipUdp.TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", 
                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"] 

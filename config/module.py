@@ -79,7 +79,7 @@ def loadModule():
     tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ndp.py")
     tcpipNdpComponent.addCapability("libtcpipNdp","NDP",True)
     tcpipNdpComponent.setDisplayType("TCP/IP Library")
-
+    
     ###########  TCP/IP LIBRARY Transport Layer Configurations  ###########
     tcpipTcpComponent = Module.CreateSharedComponent("tcpipTcp", "TCP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_tcp.py")
     tcpipTcpComponent.addCapability("libtcpipTcp","TCP",True)
@@ -90,7 +90,12 @@ def loadModule():
     tcpipUdpComponent.addCapability("libtcpipUdp","UDP",True)
     tcpipUdpComponent.addDependency("Udp_IP_Dependency", "IP", None, True, True)
     tcpipUdpComponent.setDisplayType("TCP/IP Library")
-
+    
+    ########################## TCP/IP LIBRARY Presentation Layer Configurations #################################    
+    netPresComponent = Module.CreateComponent("netPres", "Presentation Layer", "/Libraries/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/netPres.py")
+    netPresComponent.addCapability("libNetPres","net_pres",True)    
+    netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
+    
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   
     tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")
     tcpipAnnounceComponent.addCapability("libtcpipAnnounce","ANNOUNCE",True)
@@ -324,10 +329,6 @@ def loadModule():
     drvExtMacEnc28j60Component.addCapability("libdrvExtMacEnc28j60","MAC",None, False)  
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
         
-    ########################## Harmony Network Presentation Module #################################    
-    netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
-    netPresComponent.addCapability("libNetPres","net_pres",True)    
-    netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
     
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
