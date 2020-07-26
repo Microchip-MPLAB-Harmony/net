@@ -54,7 +54,7 @@ def instantiateComponent(tcpipTftpsComponent):
     tcpipTftpsRootDir.setDefaultValue("/mnt/mchpSite1/")
 
     # Enable TFTP Server Console Command
-    tcpipTftpsCmdEnable = tcpipTftpsComponent.createBooleanSymbol("TCPIP_TFTPS_CLIENT_CONSOLE_CMD", None)
+    tcpipTftpsCmdEnable = tcpipTftpsComponent.createBooleanSymbol("TCPIP_TFTPS_CONSOLE_CMD", None)
     tcpipTftpsCmdEnable.setLabel("Enable Console Commands")
     tcpipTftpsCmdEnable.setVisible(True)
     tcpipTftpsCmdEnable.setDescription("Enable TFTP Server Console Commands")
