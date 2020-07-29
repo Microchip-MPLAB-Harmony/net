@@ -222,7 +222,7 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttNetGlueHeaderFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueHeaderFile.setType("HEADER")
     wolfMqttNetGlueHeaderFile.setOverwrite(True)
-    wolfMqttNetGlueHeaderFile.setEnabled(False)
+    wolfMqttNetGlueHeaderFile.setEnabled(True)
     wolfMqttNetGlueHeaderFile.setDependencies(wolfMqttNetGlueEnabled, ["WMQTT_NET_GLUE"])
 
     # third_party_adapter/wolfMQTT/src/mqtt_net_glue.c to config/<configName>/third_party_adapter/wolfMQTT/src/mqtt_net_glue.c
@@ -233,7 +233,7 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttNetGlueSourceFile.setDestPath("third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueSourceFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueSourceFile.setType("SOURCE")
-    wolfMqttNetGlueSourceFile.setEnabled(False)
+    wolfMqttNetGlueSourceFile.setEnabled(True)
     wolfMqttNetGlueSourceFile.setDependencies(wolfMqttNetGlueEnabled, ["WMQTT_NET_GLUE"])
 
     # wolfMQTT/src/mqtt_client.c to third_party/wolfMQTT/src/mqtt_client.c
