@@ -21,33 +21,15 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ---------------------------------------------------------------------------->
 
-<#--include "/framework/net_pres/pres/tls/templates/system_config.h.ftl"-->
-<#if NET_PRES_USE>
-/* MPLAB Harmony Net Presentation Layer Definitions*/
-#define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}
-#define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}
-
-<#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
-    <#lt>/* Net Pres RTOS Configurations*/
-    <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
-        <#lt>#define NET_PRES_RTOS_STACK_SIZE                ${NET_PRES_RTOS_STACK_SIZE / 4}
-    <#else>
-        <#lt>#define NET_PRES_RTOS_STACK_SIZE                ${NET_PRES_RTOS_STACK_SIZE}
-    </#if>
-    <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}
-	
-	<#assign numInstance= __INSTANCE_COUNT?number>
-	<#assign freertos_present= false/>
-    <#list 0..(numInstance-1) as idx>
-		<#assign netPresEncProviderIdx = "netPres_${idx}.NET_PRES_ENC_PROVIDE_IDX${idx}"?eval>		
-		<#if netPresEncProviderIdx == "WolfSSL" && (HarmonyCore.SELECT_RTOS) == "FreeRTOS">
-			<#assign freertos_present=true/>
-        </#if>
-    </#list>
-	<#if freertos_present == true>	
-		<#lt>#define FREERTOS
-	</#if>
+<#if HarmonyCore.SELECT_RTOS == "FreeRTOS">
+    <#lt>void _NET_PRES_Tasks(  void *pvParameters  )
+    <#lt>{
+    <#lt>    while(1)
+    <#lt>    {
+    <#lt>        NET_PRES_Tasks(sysObj.netPres);
+             <#if NET_PRES_RTOS_USE_DELAY >
+    <#lt>        vTaskDelay(${NET_PRES_RTOS_DELAY} / portTICK_PERIOD_MS);
+             </#if>
+    <#lt>    }
+    <#lt>}
 </#if>
-</#if>
-
-	

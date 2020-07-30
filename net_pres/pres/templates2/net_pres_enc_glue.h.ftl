@@ -46,40 +46,40 @@ extern "C" {
 #endif
 <#macro netPresEncGlueHeader
     INST_NUMBER>
-	<#assign netPresSuppEnc = "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_ENCRYPTION${INST_NUMBER}"?eval>
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
 	<#if netPresSuppEnc?has_content && netPresSuppEnc == true>
-		<#assign netPresSuppStream = "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"?eval>
+		<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
-			<#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>           
 extern NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER};
             </#if>
-			<#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>            
 extern NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER};
             </#if>
         </#if>
-		<#assign netPresSuppDatagram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST_NUMBER}"?eval>
+		<#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
-            <#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>          
 extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER};
             </#if>
-            <#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>            
 extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER};
             </#if>
         </#if>
-        <#assign netPresSuppStream = "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"?eval>
+        <#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
-            <#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>            
 bool NET_PRES_EncProviderStreamServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER}();
 bool NET_PRES_EncProviderStreamServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER}();
             </#if>
-            <#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
 bool NET_PRES_EncProviderStreamClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER}();
@@ -87,16 +87,16 @@ bool NET_PRES_EncProviderStreamClientOpen${INST_NUMBER}(uintptr_t transHandle, v
 bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}();
             </#if>
         </#if>
-        <#assign netPresSuppDatagram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST_NUMBER}"?eval>
+        <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
-            <#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>           
 bool NET_PRES_EncProviderDataGramServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderDataGramServerDeinit${INST_NUMBER}();
 bool NET_PRES_EncProviderDataGramServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER}();
             </#if>
-            <#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+            <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
 bool NET_PRES_EncProviderDataGramClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER}();
@@ -104,11 +104,11 @@ bool NET_PRES_EncProviderDataGramClientOpen${INST_NUMBER}(uintptr_t transHandle,
 bool NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER}();
             </#if>
         </#if>
-        <#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+        <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 		<#if netPresSuppServer?has_content && netPresSuppServer == true>            
 NET_PRES_EncSessionStatus NET_PRES_EncProviderServerAccept${INST_NUMBER}(void * providerData);
         </#if>
-        <#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+        <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 		<#if netPresSuppClient?has_content && netPresSuppClient == true>          
 NET_PRES_EncSessionStatus NET_PRES_EncProviderClientConnect${INST_NUMBER}(void * providerData);
         </#if>
@@ -122,7 +122,9 @@ int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_
 int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
     </#if>
 </#macro>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
+
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>	
     <@netPresEncGlueHeader idx/>
 </#list>
 #ifdef __CPLUSPLUS

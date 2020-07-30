@@ -1,5 +1,5 @@
 <#----------------------------------------------------------------------------
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -23,18 +23,16 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
-<#--
-// tcpip_stack_init.c.ftl: TCP/IP module Initialization Calls
--->
-
-<#if USE_TCPIP_STACK == true>
-<#if (((netPres2.NET_PRES_USE)?has_content) && ((netPres2.NET_PRES_USE)  == true))>
-	/* Network Presentation Layer Initialization */
-	sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
-</#if>
-    /* TCPIP Stack Initialization */
-    sysObj.tcpip = TCPIP_STACK_Init();
-    SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
+<#if HarmonyCore.SELECT_RTOS == "BareMetal">
+    <#lt>NET_PRES_Tasks(sysObj.netPres);
+<#elseif HarmonyCore.SELECT_RTOS == "FreeRTOS">
+    <#lt>    xTaskCreate( _NET_PRES_Tasks,
+    <#lt>        "NET_PRES_Tasks",
+    <#lt>        NET_PRES_RTOS_STACK_SIZE,
+    <#lt>        (void*)NULL,
+    <#lt>        NET_PRES_RTOS_TASK_PRIORITY,
+    <#lt>        (TaskHandle_t*)NULL
+    <#lt>    );
 </#if>
 
 <#--
@@ -42,4 +40,3 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  End of File
 */
 -->
-

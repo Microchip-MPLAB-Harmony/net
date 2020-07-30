@@ -282,8 +282,8 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipBerkeleyApi"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "libtcpipBerkeleyApi")
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+        if(Database.getComponentByID("netPres2") == None):
+            res = Database.activateComponents(["netPres2"])  
             if(res == True):
                 Database.setActiveGroup("APPLICATION LAYER")
                 Database.selectComponent("tcpip_apps_config")
@@ -386,8 +386,8 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
         res = Database.activateComponents(["tcpipFtpc"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtpc", "libtcpipFtpc")
             
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+        if(Database.getComponentByID("netPres2") == None):
+            res = Database.activateComponents(["netPres2"])  
             if(res == True):
                 Database.setActiveGroup("APPLICATION LAYER")
                 Database.selectComponent("tcpip_apps_config")
@@ -409,8 +409,8 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
         res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
             
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+        if(Database.getComponentByID("netPres2") == None):
+            res = Database.activateComponents(["netPres2"])  
             if(res == True):
                 Database.setActiveGroup("APPLICATION LAYER")
                 Database.selectComponent("tcpip_apps_config") 
@@ -488,8 +488,8 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
         res = Database.activateComponents(["tcpipSmtpc"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "libtcpipSmtpc")
         
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+        if(Database.getComponentByID("netPres2") == None):
+            res = Database.activateComponents(["netPres2"])  
             if(res == True):
                 Database.setActiveGroup("APPLICATION LAYER")
                 Database.selectComponent("tcpip_apps_config")
@@ -553,8 +553,8 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
         res = Database.activateComponents(["tcpipTelnet"],"APPLICATION LAYER", False)   
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "libtcpipTelnet")
         
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+        if(Database.getComponentByID("netPres2") == None):
+            res = Database.activateComponents(["netPres2"])  
             if(res == True):
                 Database.setActiveGroup("APPLICATION LAYER")
                 Database.selectComponent("tcpip_apps_config")

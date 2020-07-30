@@ -46,8 +46,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/random.h"
 
 <#assign needSysConsole=false/>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
-	<#assign netPresUseWolfSSLDebug = "netPres_${idx}.NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${idx}"?eval>
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>	
+	<#assign netPresUseWolfSSLDebug = "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 	<#if netPresUseWolfSSLDebug?has_content && netPresUseWolfSSLDebug == true>
 		<#assign needSysConsole=true/>
     </#if>
@@ -59,11 +60,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 </#if>
 <#macro NET_PRES_ENC_PROV_INFOS
     INST_NUMBER>
-	<#assign netPresSuppEnc = "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_ENCRYPTION${INST_NUMBER}"?eval>
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
     <#if netPresSuppEnc?has_content && netPresSuppEnc == true>
-		<#assign netPresSuppStream = "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"?eval>
+		<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
-			<#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>
 NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
 {
@@ -83,7 +84,7 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
 
 };
             </#if>
-			<#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>          
 NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} = 
 {
@@ -103,9 +104,9 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} =
 };
             </#if>
         </#if>
-		<#assign netPresSuppDatagram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST_NUMBER}"?eval>
+		<#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
-			<#assign netPresSuppServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>         
 NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
 {
@@ -124,7 +125,7 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
     .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
 };
             </#if>
-			<#assign netPresSuppClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"?eval>
+			<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
             <#if netPresSuppClient?has_content && netPresSuppClient == true>             
 NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
 {
@@ -151,11 +152,11 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
         CONNECTION
         TYPE>
 
-<#assign netPresUseWolfSSLDebugLog= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"?eval>
+<#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 <#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
 void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
 {
-	<#assign num = "netPres_${INST}.NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS_IDX${INST}"?eval>
+	<#assign num = "NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS"?eval>
 	static char buffer[${num}][120];
 	static int bufNum = 0;
 	if (level > 2)
@@ -174,7 +175,7 @@ void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * 
 		
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObject * transObject)
 {
-	<#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
         <#if CONNECTION="Client">
     const uint8_t * caCertsPtr;
@@ -194,7 +195,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     if (_net_pres_wolfsslUsers == 0)
     {
         wolfSSL_Init();
-		<#assign netPresUseWolfSSLDebugLog= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"?eval>
+		<#assign netPresUseWolfSSLDebugLog= "NET_PRES_USE_WOLF_SSL_DEBUG_LOG"?eval>
 		<#if netPresUseWolfSSLDebugLog?has_content && netPresUseWolfSSLDebugLog == true>
 		wolfSSL_SetLoggingCb(NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST});
 		wolfSSL_Debugging_ON();
@@ -269,7 +270,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited = false;
@@ -291,7 +292,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(uintptr_t transHandle, void * providerData)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
         WOLFSSL* ssl = wolfSSL_new(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         if (ssl == NULL)
@@ -321,7 +322,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(uintptr_t transHandle, 
     </#if>
 NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void * providerData)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -361,7 +362,7 @@ NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void
         INST>
 NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * providerData)
 {
-	<#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -377,7 +378,7 @@ NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * prov
         INST>
 int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * buffer, uint16_t size)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -398,7 +399,7 @@ int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * bu
         INST>
 uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t reqSize, uint16_t minSize)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
     char buffer;
@@ -437,7 +438,7 @@ uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t req
         INST>
 int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, uint16_t size)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -459,7 +460,7 @@ int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, u
 
 int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -486,7 +487,7 @@ int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
         INST>
 int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, uint16_t size)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -507,7 +508,7 @@ int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, u
         INST>
 int32_t NET_PRES_EncProviderOutputSize${INST}(void * providerData, int32_t inSize)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -528,7 +529,7 @@ int32_t NET_PRES_EncProviderOutputSize${INST}(void * providerData, int32_t inSiz
         INST>
 int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -551,7 +552,7 @@ int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
 {
-    <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     return net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited;
     <#else>
@@ -562,28 +563,28 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
 </#macro> 
 <#macro NET_PRES_ENC_GLUE_WOLF_INFO
     INST>
-	<#assign netPresSuppEnc = "netPres_${INST}.NET_PRES_SUPPORT_ENCRYPTION${INST}"?eval>
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
     <#if netPresSuppEnc?has_content && netPresSuppEnc == true>
-        <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+        <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 		<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-			<#assign netPresSuppStream = "netPres_${INST}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"?eval>
+			<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 			<#if netPresSuppStream?has_content && netPresSuppStream == true>
-				<#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
+				<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 				<#if netPresSuppServer?has_content && netPresSuppServer == true>         
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamServer${INST};
                 </#if>
-				<#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
+				<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 				<#if netPresSuppClient?has_content && netPresSuppClient == true>           
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamClient${INST};
                 </#if>
             </#if>
-            <#assign netPresSuppDatagram= "netPres_${INST}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"?eval>
+            <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 			<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
-                <#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
+                <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 				<#if netPresSuppServer?has_content && netPresSuppServer == true>             
 net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramServer${INST};
                 </#if>
-                <#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
+                <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 				<#if netPresSuppClient?has_content && netPresSuppClient == true>           
 net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
                 </#if>
@@ -593,22 +594,22 @@ net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
 </#macro>
 <#macro NET_PRES_ENC_GLUE_FUNCTIONS
     INST>
-	<#assign netPresSuppEnc = "netPres_${INST}.NET_PRES_SUPPORT_ENCRYPTION${INST}"?eval>
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
     <#if netPresSuppEnc?has_content && netPresSuppEnc == true>
-	<#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
 static uint8_t _net_pres_wolfsslUsers = 0;
 	</#if>
-        <#assign netPresSuppStream = "netPres_${INST}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"?eval>
+        <#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
-            <#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
+            <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true> 
                 <@NET_PRES_ENC_GLUE_INIT INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Server" "Stream"/>                
             </#if>
-            <#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
+            <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>            
                 <@NET_PRES_ENC_GLUE_INIT INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "Stream"/>
@@ -616,16 +617,16 @@ static uint8_t _net_pres_wolfsslUsers = 0;
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "Stream"/>                
             </#if>
         </#if>
-        <#assign netPresSuppDatagram= "netPres_${INST}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"?eval>
+        <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
 		<#if netPresSuppDatagram?has_content && netPresSuppDatagram == true>
-            <#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
+            <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>            
                 <@NET_PRES_ENC_GLUE_INIT INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Server" "DataGram"/>                
             </#if>
-            <#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
+            <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>           
                 <@NET_PRES_ENC_GLUE_INIT INST "Client" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "DataGram"/>
@@ -633,11 +634,11 @@ static uint8_t _net_pres_wolfsslUsers = 0;
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "DataGram"/>                
             </#if>
         </#if>
-        <#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
+        <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 		<#if netPresSuppServer?has_content && netPresSuppServer == true>
             <@NET_PRES_ENC_GLUE_CONNECT INST "Server"/>
         </#if>
-        <#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
+        <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 		<#if netPresSuppClient?has_content && netPresSuppClient == true>            
             <@NET_PRES_ENC_GLUE_CONNECT INST "Client"/>
         </#if>
@@ -655,7 +656,7 @@ static uint8_t _net_pres_wolfsslUsers = 0;
     INST
     CONNECTION
     TYPE>
-	<#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
 int NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST}(void *sslin, char *buf, int sz, void *ctx)
 {
@@ -689,11 +690,11 @@ int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, i
 </#macro>
 <#macro NET_PRES_WOLF_CBS
     INST>
-	<#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
-	<#assign netPresSuppStream = "netPres_${INST}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"?eval>
-	<#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
-	<#assign netPresSuppDatagram= "netPres_${INST}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"?eval>
-	<#assign netPresSuppEnc = "netPres_${INST}.NET_PRES_SUPPORT_ENCRYPTION${INST}"?eval>
+	<#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
+	<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
+	<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
+	<#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
 	<#if netPresSuppEnc?has_content && netPresSuppEnc == true>
     <#if netPresSuppServer?has_content && (netPresSuppServer == true) && netPresSuppStream?has_content && (netPresSuppStream == true)>
         <@NET_PRES_WOLF_CB INST "Server" "Stream"/>
@@ -724,28 +725,32 @@ int  InitRng(RNG* rng)
 }
 
 </#if>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>	
     <@NET_PRES_ENC_PROV_INFOS idx/>
 </#list>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>	
-	<#assign netPresUseWolfSSL= "netPres_${idx}.NET_PRES_USE_WOLF_SSL_IDX${idx}"?eval>
-	<#assign netPresGenEncStub= "netPres_${idx}.NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"?eval>
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>		
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
+	<#assign netPresGenEncStub= "NET_PRES_GENERATE_ENC_STUBS"?eval>
 	
     <#if (netPresUseWolfSSL?has_content && (netPresUseWolfSSL == true)) || (netPresGenEncStub?has_content && (netPresGenEncStub == true))>
         <@NET_PRES_ENC_GLUE_WOLF_INFO idx/>
     </#if>
 </#list>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
-    <#assign netPresUseWolfSSL= "netPres_${idx}.NET_PRES_USE_WOLF_SSL_IDX${idx}"?eval>
-	<#assign netPresGenEncStub= "netPres_${idx}.NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"?eval>
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>	
+    <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
+	<#assign netPresGenEncStub= "NET_PRES_GENERATE_ENC_STUBS"?eval>
 	
     <#if (netPresUseWolfSSL?has_content && (netPresUseWolfSSL == true)) || (netPresGenEncStub?has_content && (netPresGenEncStub == true))>
         <@NET_PRES_WOLF_CBS idx/>
     </#if>
 </#list>
-<#list 0..(__INSTANCE_COUNT?number-1) as idx>
-	<#assign netPresUseWolfSSL= "netPres_${idx}.NET_PRES_USE_WOLF_SSL_IDX${idx}"?eval>
-	<#assign netPresGenEncStub= "netPres_${idx}.NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"?eval>
+<#assign numInstance= 1>
+<#list 0..(numInstance-1) as idx>	
+	<#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
+	<#assign netPresGenEncStub= "NET_PRES_GENERATE_ENC_STUBS"?eval>
 	
     <#if (netPresUseWolfSSL?has_content && (netPresUseWolfSSL == true)) || (netPresGenEncStub?has_content && (netPresGenEncStub == true))>
         <@NET_PRES_ENC_GLUE_FUNCTIONS idx/>
