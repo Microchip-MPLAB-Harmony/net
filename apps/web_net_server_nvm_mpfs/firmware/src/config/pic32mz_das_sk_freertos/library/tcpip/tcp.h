@@ -561,6 +561,21 @@ typedef struct
   Returns:
     - INVALID_SOCKET - No sockets of the specified type were available to be opened
     - TCP_SOCKET handle - Save this handle and use it when calling all other TCP APIs
+
+  Remarks:
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
+
+
  */
 TCP_SOCKET  TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  
                                  IP_MULTI_ADDRESS* localAddress);
@@ -595,7 +610,7 @@ TCP_SOCKET  TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,
     - INVALID_SOCKET - No sockets of the specified type were available to be opened
     - TCP_SOCKET handle - Save this handle and use it when calling all other TCP APIs
 
- Remarks:
+  Remarks:
     IP_ADDRESS_TYPE_ANY is not supported (not a valid type for client open)!
 
     If the remoteAddress != 0 (and the address pointed by remoteAddress != 0)
@@ -604,6 +619,18 @@ TCP_SOCKET  TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,
     If the remoteAddress is unspecified, no connection is initiated.
     Client socket parameters can be set using TCPIP_TCP_Bind, TCPIP_TCP_RemoteBind, etc.
     calls and then connection initiated by calling TCPIP_TCP_Connect.
+ 
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
 
  */
 TCP_SOCKET  TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, 

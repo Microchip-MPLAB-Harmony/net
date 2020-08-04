@@ -1,387 +1,1939 @@
-/**
- * \brief Component description for UDP
- *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
- *
- * Subject to your compliance with these terms, you may use Microchip software and any derivatives
- * exclusively with Microchip products. It is your responsibility to comply with third party license
- * terms applicable to your use of third party software (including open source software) that may
- * accompany Microchip software.
- *
- * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY,
- * APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND
- * FITNESS FOR A PARTICULAR PURPOSE.
- *
- * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL
- * LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
- * MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT
- * ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT
- * EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *
- */
+/*******************************************************************************
+  UDP Module Definitions for the Microchip TCP/IP Stack
 
-/* file generated from device description version 2019-12-16T02:54:59Z */
-#ifndef _SAMG55_UDP_COMPONENT_H_
-#define _SAMG55_UDP_COMPONENT_H_
+  Company:
+    Microchip Technology Inc.
+    
+  File Name:
+    udp.h
 
-/* ************************************************************************** */
-/*   SOFTWARE API DEFINITION FOR UDP                                          */
-/* ************************************************************************** */
+  Summary:
+    UDP is a standard transport layer protocol described in RFC 768. It provides 
+    fast but unreliable data-gram based transfers over networks, and forms the 
+    foundation SNTP, SNMP, DNS, and many other protocol standards
+    
+  Description:
+    UDP is a standard transport layer protocol described in RFC 768.
+*******************************************************************************/
 
-/* -------- UDP_FRM_NUM : (UDP Offset: 0x00) ( R/ 32) Frame Number Register -------- */
-#define UDP_FRM_NUM_FRM_NUM_Pos               _U_(0)                                               /**< (UDP_FRM_NUM) Frame Number as Defined in the Packet Field Formats Position */
-#define UDP_FRM_NUM_FRM_NUM_Msk               (_U_(0x7FF) << UDP_FRM_NUM_FRM_NUM_Pos)              /**< (UDP_FRM_NUM) Frame Number as Defined in the Packet Field Formats Mask */
-#define UDP_FRM_NUM_FRM_NUM(value)            (UDP_FRM_NUM_FRM_NUM_Msk & ((value) << UDP_FRM_NUM_FRM_NUM_Pos))
-#define UDP_FRM_NUM_FRM_ERR_Pos               _U_(16)                                              /**< (UDP_FRM_NUM) Frame Error Position */
-#define UDP_FRM_NUM_FRM_ERR_Msk               (_U_(0x1) << UDP_FRM_NUM_FRM_ERR_Pos)                /**< (UDP_FRM_NUM) Frame Error Mask */
-#define UDP_FRM_NUM_FRM_ERR(value)            (UDP_FRM_NUM_FRM_ERR_Msk & ((value) << UDP_FRM_NUM_FRM_ERR_Pos))
-#define UDP_FRM_NUM_FRM_OK_Pos                _U_(17)                                              /**< (UDP_FRM_NUM) Frame OK Position */
-#define UDP_FRM_NUM_FRM_OK_Msk                (_U_(0x1) << UDP_FRM_NUM_FRM_OK_Pos)                 /**< (UDP_FRM_NUM) Frame OK Mask */
-#define UDP_FRM_NUM_FRM_OK(value)             (UDP_FRM_NUM_FRM_OK_Msk & ((value) << UDP_FRM_NUM_FRM_OK_Pos))
-#define UDP_FRM_NUM_Msk                       _U_(0x000307FF)                                      /**< (UDP_FRM_NUM) Register Mask  */
+//DOM-IGNORE-BEGIN
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
+Microchip Technology Inc. and its subsidiaries.
 
-/* -------- UDP_GLB_STAT : (UDP Offset: 0x04) (R/W 32) Global State Register -------- */
-#define UDP_GLB_STAT_FADDEN_Pos               _U_(0)                                               /**< (UDP_GLB_STAT) Function Address Enable Position */
-#define UDP_GLB_STAT_FADDEN_Msk               (_U_(0x1) << UDP_GLB_STAT_FADDEN_Pos)                /**< (UDP_GLB_STAT) Function Address Enable Mask */
-#define UDP_GLB_STAT_FADDEN(value)            (UDP_GLB_STAT_FADDEN_Msk & ((value) << UDP_GLB_STAT_FADDEN_Pos))
-#define UDP_GLB_STAT_CONFG_Pos                _U_(1)                                               /**< (UDP_GLB_STAT) Configured Position */
-#define UDP_GLB_STAT_CONFG_Msk                (_U_(0x1) << UDP_GLB_STAT_CONFG_Pos)                 /**< (UDP_GLB_STAT) Configured Mask */
-#define UDP_GLB_STAT_CONFG(value)             (UDP_GLB_STAT_CONFG_Msk & ((value) << UDP_GLB_STAT_CONFG_Pos))
-#define UDP_GLB_STAT_ESR_Pos                  _U_(2)                                               /**< (UDP_GLB_STAT) Enable Send Resume Position */
-#define UDP_GLB_STAT_ESR_Msk                  (_U_(0x1) << UDP_GLB_STAT_ESR_Pos)                   /**< (UDP_GLB_STAT) Enable Send Resume Mask */
-#define UDP_GLB_STAT_ESR(value)               (UDP_GLB_STAT_ESR_Msk & ((value) << UDP_GLB_STAT_ESR_Pos))
-#define UDP_GLB_STAT_RSMINPR_Pos              _U_(3)                                               /**< (UDP_GLB_STAT)  Position */
-#define UDP_GLB_STAT_RSMINPR_Msk              (_U_(0x1) << UDP_GLB_STAT_RSMINPR_Pos)               /**< (UDP_GLB_STAT)  Mask */
-#define UDP_GLB_STAT_RSMINPR(value)           (UDP_GLB_STAT_RSMINPR_Msk & ((value) << UDP_GLB_STAT_RSMINPR_Pos))
-#define UDP_GLB_STAT_RMWUPE_Pos               _U_(4)                                               /**< (UDP_GLB_STAT) Remote Wakeup Enable Position */
-#define UDP_GLB_STAT_RMWUPE_Msk               (_U_(0x1) << UDP_GLB_STAT_RMWUPE_Pos)                /**< (UDP_GLB_STAT) Remote Wakeup Enable Mask */
-#define UDP_GLB_STAT_RMWUPE(value)            (UDP_GLB_STAT_RMWUPE_Msk & ((value) << UDP_GLB_STAT_RMWUPE_Pos))
-#define UDP_GLB_STAT_Msk                      _U_(0x0000001F)                                      /**< (UDP_GLB_STAT) Register Mask  */
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
+
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
 
 
-/* -------- UDP_FADDR : (UDP Offset: 0x08) (R/W 32) Function Address Register -------- */
-#define UDP_FADDR_FADD_Pos                    _U_(0)                                               /**< (UDP_FADDR) Function Address Value Position */
-#define UDP_FADDR_FADD_Msk                    (_U_(0x7F) << UDP_FADDR_FADD_Pos)                    /**< (UDP_FADDR) Function Address Value Mask */
-#define UDP_FADDR_FADD(value)                 (UDP_FADDR_FADD_Msk & ((value) << UDP_FADDR_FADD_Pos))
-#define UDP_FADDR_FEN_Pos                     _U_(8)                                               /**< (UDP_FADDR) Function Enable Position */
-#define UDP_FADDR_FEN_Msk                     (_U_(0x1) << UDP_FADDR_FEN_Pos)                      /**< (UDP_FADDR) Function Enable Mask */
-#define UDP_FADDR_FEN(value)                  (UDP_FADDR_FEN_Msk & ((value) << UDP_FADDR_FEN_Pos))
-#define UDP_FADDR_Msk                         _U_(0x0000017F)                                      /**< (UDP_FADDR) Register Mask  */
 
 
-/* -------- UDP_IER : (UDP Offset: 0x10) ( /W 32) Interrupt Enable Register -------- */
-#define UDP_IER_EP0INT_Pos                    _U_(0)                                               /**< (UDP_IER) Enable Endpoint 0 Interrupt Position */
-#define UDP_IER_EP0INT_Msk                    (_U_(0x1) << UDP_IER_EP0INT_Pos)                     /**< (UDP_IER) Enable Endpoint 0 Interrupt Mask */
-#define UDP_IER_EP0INT(value)                 (UDP_IER_EP0INT_Msk & ((value) << UDP_IER_EP0INT_Pos))
-#define UDP_IER_EP1INT_Pos                    _U_(1)                                               /**< (UDP_IER) Enable Endpoint 1 Interrupt Position */
-#define UDP_IER_EP1INT_Msk                    (_U_(0x1) << UDP_IER_EP1INT_Pos)                     /**< (UDP_IER) Enable Endpoint 1 Interrupt Mask */
-#define UDP_IER_EP1INT(value)                 (UDP_IER_EP1INT_Msk & ((value) << UDP_IER_EP1INT_Pos))
-#define UDP_IER_EP2INT_Pos                    _U_(2)                                               /**< (UDP_IER) Enable Endpoint 2Interrupt Position */
-#define UDP_IER_EP2INT_Msk                    (_U_(0x1) << UDP_IER_EP2INT_Pos)                     /**< (UDP_IER) Enable Endpoint 2Interrupt Mask */
-#define UDP_IER_EP2INT(value)                 (UDP_IER_EP2INT_Msk & ((value) << UDP_IER_EP2INT_Pos))
-#define UDP_IER_EP3INT_Pos                    _U_(3)                                               /**< (UDP_IER) Enable Endpoint 3 Interrupt Position */
-#define UDP_IER_EP3INT_Msk                    (_U_(0x1) << UDP_IER_EP3INT_Pos)                     /**< (UDP_IER) Enable Endpoint 3 Interrupt Mask */
-#define UDP_IER_EP3INT(value)                 (UDP_IER_EP3INT_Msk & ((value) << UDP_IER_EP3INT_Pos))
-#define UDP_IER_EP4INT_Pos                    _U_(4)                                               /**< (UDP_IER) Enable Endpoint 4 Interrupt Position */
-#define UDP_IER_EP4INT_Msk                    (_U_(0x1) << UDP_IER_EP4INT_Pos)                     /**< (UDP_IER) Enable Endpoint 4 Interrupt Mask */
-#define UDP_IER_EP4INT(value)                 (UDP_IER_EP4INT_Msk & ((value) << UDP_IER_EP4INT_Pos))
-#define UDP_IER_EP5INT_Pos                    _U_(5)                                               /**< (UDP_IER) Enable Endpoint 5 Interrupt Position */
-#define UDP_IER_EP5INT_Msk                    (_U_(0x1) << UDP_IER_EP5INT_Pos)                     /**< (UDP_IER) Enable Endpoint 5 Interrupt Mask */
-#define UDP_IER_EP5INT(value)                 (UDP_IER_EP5INT_Msk & ((value) << UDP_IER_EP5INT_Pos))
-#define UDP_IER_RXSUSP_Pos                    _U_(8)                                               /**< (UDP_IER) Enable UDP Suspend Interrupt Position */
-#define UDP_IER_RXSUSP_Msk                    (_U_(0x1) << UDP_IER_RXSUSP_Pos)                     /**< (UDP_IER) Enable UDP Suspend Interrupt Mask */
-#define UDP_IER_RXSUSP(value)                 (UDP_IER_RXSUSP_Msk & ((value) << UDP_IER_RXSUSP_Pos))
-#define UDP_IER_RXRSM_Pos                     _U_(9)                                               /**< (UDP_IER) Enable UDP Resume Interrupt Position */
-#define UDP_IER_RXRSM_Msk                     (_U_(0x1) << UDP_IER_RXRSM_Pos)                      /**< (UDP_IER) Enable UDP Resume Interrupt Mask */
-#define UDP_IER_RXRSM(value)                  (UDP_IER_RXRSM_Msk & ((value) << UDP_IER_RXRSM_Pos))
-#define UDP_IER_EXTRSM_Pos                    _U_(10)                                              /**< (UDP_IER)  Position */
-#define UDP_IER_EXTRSM_Msk                    (_U_(0x1) << UDP_IER_EXTRSM_Pos)                     /**< (UDP_IER)  Mask */
-#define UDP_IER_EXTRSM(value)                 (UDP_IER_EXTRSM_Msk & ((value) << UDP_IER_EXTRSM_Pos))
-#define UDP_IER_SOFINT_Pos                    _U_(11)                                              /**< (UDP_IER) Enable Start Of Frame Interrupt Position */
-#define UDP_IER_SOFINT_Msk                    (_U_(0x1) << UDP_IER_SOFINT_Pos)                     /**< (UDP_IER) Enable Start Of Frame Interrupt Mask */
-#define UDP_IER_SOFINT(value)                 (UDP_IER_SOFINT_Msk & ((value) << UDP_IER_SOFINT_Pos))
-#define UDP_IER_WAKEUP_Pos                    _U_(13)                                              /**< (UDP_IER) Enable UDP Bus Wakeup Interrupt Position */
-#define UDP_IER_WAKEUP_Msk                    (_U_(0x1) << UDP_IER_WAKEUP_Pos)                     /**< (UDP_IER) Enable UDP Bus Wakeup Interrupt Mask */
-#define UDP_IER_WAKEUP(value)                 (UDP_IER_WAKEUP_Msk & ((value) << UDP_IER_WAKEUP_Pos))
-#define UDP_IER_Msk                           _U_(0x00002F3F)                                      /**< (UDP_IER) Register Mask  */
 
 
-/* -------- UDP_IDR : (UDP Offset: 0x14) ( /W 32) Interrupt Disable Register -------- */
-#define UDP_IDR_EP0INT_Pos                    _U_(0)                                               /**< (UDP_IDR) Disable Endpoint 0 Interrupt Position */
-#define UDP_IDR_EP0INT_Msk                    (_U_(0x1) << UDP_IDR_EP0INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 0 Interrupt Mask */
-#define UDP_IDR_EP0INT(value)                 (UDP_IDR_EP0INT_Msk & ((value) << UDP_IDR_EP0INT_Pos))
-#define UDP_IDR_EP1INT_Pos                    _U_(1)                                               /**< (UDP_IDR) Disable Endpoint 1 Interrupt Position */
-#define UDP_IDR_EP1INT_Msk                    (_U_(0x1) << UDP_IDR_EP1INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 1 Interrupt Mask */
-#define UDP_IDR_EP1INT(value)                 (UDP_IDR_EP1INT_Msk & ((value) << UDP_IDR_EP1INT_Pos))
-#define UDP_IDR_EP2INT_Pos                    _U_(2)                                               /**< (UDP_IDR) Disable Endpoint 2 Interrupt Position */
-#define UDP_IDR_EP2INT_Msk                    (_U_(0x1) << UDP_IDR_EP2INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 2 Interrupt Mask */
-#define UDP_IDR_EP2INT(value)                 (UDP_IDR_EP2INT_Msk & ((value) << UDP_IDR_EP2INT_Pos))
-#define UDP_IDR_EP3INT_Pos                    _U_(3)                                               /**< (UDP_IDR) Disable Endpoint 3 Interrupt Position */
-#define UDP_IDR_EP3INT_Msk                    (_U_(0x1) << UDP_IDR_EP3INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 3 Interrupt Mask */
-#define UDP_IDR_EP3INT(value)                 (UDP_IDR_EP3INT_Msk & ((value) << UDP_IDR_EP3INT_Pos))
-#define UDP_IDR_EP4INT_Pos                    _U_(4)                                               /**< (UDP_IDR) Disable Endpoint 4 Interrupt Position */
-#define UDP_IDR_EP4INT_Msk                    (_U_(0x1) << UDP_IDR_EP4INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 4 Interrupt Mask */
-#define UDP_IDR_EP4INT(value)                 (UDP_IDR_EP4INT_Msk & ((value) << UDP_IDR_EP4INT_Pos))
-#define UDP_IDR_EP5INT_Pos                    _U_(5)                                               /**< (UDP_IDR) Disable Endpoint 5 Interrupt Position */
-#define UDP_IDR_EP5INT_Msk                    (_U_(0x1) << UDP_IDR_EP5INT_Pos)                     /**< (UDP_IDR) Disable Endpoint 5 Interrupt Mask */
-#define UDP_IDR_EP5INT(value)                 (UDP_IDR_EP5INT_Msk & ((value) << UDP_IDR_EP5INT_Pos))
-#define UDP_IDR_RXSUSP_Pos                    _U_(8)                                               /**< (UDP_IDR) Disable UDP Suspend Interrupt Position */
-#define UDP_IDR_RXSUSP_Msk                    (_U_(0x1) << UDP_IDR_RXSUSP_Pos)                     /**< (UDP_IDR) Disable UDP Suspend Interrupt Mask */
-#define UDP_IDR_RXSUSP(value)                 (UDP_IDR_RXSUSP_Msk & ((value) << UDP_IDR_RXSUSP_Pos))
-#define UDP_IDR_RXRSM_Pos                     _U_(9)                                               /**< (UDP_IDR) Disable UDP Resume Interrupt Position */
-#define UDP_IDR_RXRSM_Msk                     (_U_(0x1) << UDP_IDR_RXRSM_Pos)                      /**< (UDP_IDR) Disable UDP Resume Interrupt Mask */
-#define UDP_IDR_RXRSM(value)                  (UDP_IDR_RXRSM_Msk & ((value) << UDP_IDR_RXRSM_Pos))
-#define UDP_IDR_EXTRSM_Pos                    _U_(10)                                              /**< (UDP_IDR)  Position */
-#define UDP_IDR_EXTRSM_Msk                    (_U_(0x1) << UDP_IDR_EXTRSM_Pos)                     /**< (UDP_IDR)  Mask */
-#define UDP_IDR_EXTRSM(value)                 (UDP_IDR_EXTRSM_Msk & ((value) << UDP_IDR_EXTRSM_Pos))
-#define UDP_IDR_SOFINT_Pos                    _U_(11)                                              /**< (UDP_IDR) Disable Start Of Frame Interrupt Position */
-#define UDP_IDR_SOFINT_Msk                    (_U_(0x1) << UDP_IDR_SOFINT_Pos)                     /**< (UDP_IDR) Disable Start Of Frame Interrupt Mask */
-#define UDP_IDR_SOFINT(value)                 (UDP_IDR_SOFINT_Msk & ((value) << UDP_IDR_SOFINT_Pos))
-#define UDP_IDR_WAKEUP_Pos                    _U_(13)                                              /**< (UDP_IDR) Disable USB Bus Interrupt Position */
-#define UDP_IDR_WAKEUP_Msk                    (_U_(0x1) << UDP_IDR_WAKEUP_Pos)                     /**< (UDP_IDR) Disable USB Bus Interrupt Mask */
-#define UDP_IDR_WAKEUP(value)                 (UDP_IDR_WAKEUP_Msk & ((value) << UDP_IDR_WAKEUP_Pos))
-#define UDP_IDR_Msk                           _U_(0x00002F3F)                                      /**< (UDP_IDR) Register Mask  */
 
 
-/* -------- UDP_IMR : (UDP Offset: 0x18) ( R/ 32) Interrupt Mask Register -------- */
-#define UDP_IMR_EP0INT_Pos                    _U_(0)                                               /**< (UDP_IMR) Mask Endpoint 0 Interrupt Position */
-#define UDP_IMR_EP0INT_Msk                    (_U_(0x1) << UDP_IMR_EP0INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 0 Interrupt Mask */
-#define UDP_IMR_EP0INT(value)                 (UDP_IMR_EP0INT_Msk & ((value) << UDP_IMR_EP0INT_Pos))
-#define UDP_IMR_EP1INT_Pos                    _U_(1)                                               /**< (UDP_IMR) Mask Endpoint 1 Interrupt Position */
-#define UDP_IMR_EP1INT_Msk                    (_U_(0x1) << UDP_IMR_EP1INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 1 Interrupt Mask */
-#define UDP_IMR_EP1INT(value)                 (UDP_IMR_EP1INT_Msk & ((value) << UDP_IMR_EP1INT_Pos))
-#define UDP_IMR_EP2INT_Pos                    _U_(2)                                               /**< (UDP_IMR) Mask Endpoint 2 Interrupt Position */
-#define UDP_IMR_EP2INT_Msk                    (_U_(0x1) << UDP_IMR_EP2INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 2 Interrupt Mask */
-#define UDP_IMR_EP2INT(value)                 (UDP_IMR_EP2INT_Msk & ((value) << UDP_IMR_EP2INT_Pos))
-#define UDP_IMR_EP3INT_Pos                    _U_(3)                                               /**< (UDP_IMR) Mask Endpoint 3 Interrupt Position */
-#define UDP_IMR_EP3INT_Msk                    (_U_(0x1) << UDP_IMR_EP3INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 3 Interrupt Mask */
-#define UDP_IMR_EP3INT(value)                 (UDP_IMR_EP3INT_Msk & ((value) << UDP_IMR_EP3INT_Pos))
-#define UDP_IMR_EP4INT_Pos                    _U_(4)                                               /**< (UDP_IMR) Mask Endpoint 4 Interrupt Position */
-#define UDP_IMR_EP4INT_Msk                    (_U_(0x1) << UDP_IMR_EP4INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 4 Interrupt Mask */
-#define UDP_IMR_EP4INT(value)                 (UDP_IMR_EP4INT_Msk & ((value) << UDP_IMR_EP4INT_Pos))
-#define UDP_IMR_EP5INT_Pos                    _U_(5)                                               /**< (UDP_IMR) Mask Endpoint 5 Interrupt Position */
-#define UDP_IMR_EP5INT_Msk                    (_U_(0x1) << UDP_IMR_EP5INT_Pos)                     /**< (UDP_IMR) Mask Endpoint 5 Interrupt Mask */
-#define UDP_IMR_EP5INT(value)                 (UDP_IMR_EP5INT_Msk & ((value) << UDP_IMR_EP5INT_Pos))
-#define UDP_IMR_RXSUSP_Pos                    _U_(8)                                               /**< (UDP_IMR) Mask UDP Suspend Interrupt Position */
-#define UDP_IMR_RXSUSP_Msk                    (_U_(0x1) << UDP_IMR_RXSUSP_Pos)                     /**< (UDP_IMR) Mask UDP Suspend Interrupt Mask */
-#define UDP_IMR_RXSUSP(value)                 (UDP_IMR_RXSUSP_Msk & ((value) << UDP_IMR_RXSUSP_Pos))
-#define UDP_IMR_RXRSM_Pos                     _U_(9)                                               /**< (UDP_IMR) Mask UDP Resume Interrupt. Position */
-#define UDP_IMR_RXRSM_Msk                     (_U_(0x1) << UDP_IMR_RXRSM_Pos)                      /**< (UDP_IMR) Mask UDP Resume Interrupt. Mask */
-#define UDP_IMR_RXRSM(value)                  (UDP_IMR_RXRSM_Msk & ((value) << UDP_IMR_RXRSM_Pos))
-#define UDP_IMR_EXTRSM_Pos                    _U_(10)                                              /**< (UDP_IMR)  Position */
-#define UDP_IMR_EXTRSM_Msk                    (_U_(0x1) << UDP_IMR_EXTRSM_Pos)                     /**< (UDP_IMR)  Mask */
-#define UDP_IMR_EXTRSM(value)                 (UDP_IMR_EXTRSM_Msk & ((value) << UDP_IMR_EXTRSM_Pos))
-#define UDP_IMR_SOFINT_Pos                    _U_(11)                                              /**< (UDP_IMR) Mask Start Of Frame Interrupt Position */
-#define UDP_IMR_SOFINT_Msk                    (_U_(0x1) << UDP_IMR_SOFINT_Pos)                     /**< (UDP_IMR) Mask Start Of Frame Interrupt Mask */
-#define UDP_IMR_SOFINT(value)                 (UDP_IMR_SOFINT_Msk & ((value) << UDP_IMR_SOFINT_Pos))
-#define UDP_IMR_BIT12_Pos                     _U_(12)                                              /**< (UDP_IMR) UDP_IMR Bit 12 Position */
-#define UDP_IMR_BIT12_Msk                     (_U_(0x1) << UDP_IMR_BIT12_Pos)                      /**< (UDP_IMR) UDP_IMR Bit 12 Mask */
-#define UDP_IMR_BIT12(value)                  (UDP_IMR_BIT12_Msk & ((value) << UDP_IMR_BIT12_Pos))
-#define UDP_IMR_WAKEUP_Pos                    _U_(13)                                              /**< (UDP_IMR) USB Bus Wakeup Interrupt Position */
-#define UDP_IMR_WAKEUP_Msk                    (_U_(0x1) << UDP_IMR_WAKEUP_Pos)                     /**< (UDP_IMR) USB Bus Wakeup Interrupt Mask */
-#define UDP_IMR_WAKEUP(value)                 (UDP_IMR_WAKEUP_Msk & ((value) << UDP_IMR_WAKEUP_Pos))
-#define UDP_IMR_Msk                           _U_(0x00003F3F)                                      /**< (UDP_IMR) Register Mask  */
+//DOM-IGNORE-END
 
-#define UDP_IMR_BIT_Pos                       _U_(12)                                              /**< (UDP_IMR Position) UDP_IMR Bit x2 */
-#define UDP_IMR_BIT_Msk                       (_U_(0x1) << UDP_IMR_BIT_Pos)                        /**< (UDP_IMR Mask) BIT */
-#define UDP_IMR_BIT(value)                    (UDP_IMR_BIT_Msk & ((value) << UDP_IMR_BIT_Pos))     
+#ifndef __UDP_H_
+#define __UDP_H_
 
-/* -------- UDP_ISR : (UDP Offset: 0x1C) ( R/ 32) Interrupt Status Register -------- */
-#define UDP_ISR_EP0INT_Pos                    _U_(0)                                               /**< (UDP_ISR) Endpoint 0 Interrupt Status Position */
-#define UDP_ISR_EP0INT_Msk                    (_U_(0x1) << UDP_ISR_EP0INT_Pos)                     /**< (UDP_ISR) Endpoint 0 Interrupt Status Mask */
-#define UDP_ISR_EP0INT(value)                 (UDP_ISR_EP0INT_Msk & ((value) << UDP_ISR_EP0INT_Pos))
-#define UDP_ISR_EP1INT_Pos                    _U_(1)                                               /**< (UDP_ISR) Endpoint 1 Interrupt Status Position */
-#define UDP_ISR_EP1INT_Msk                    (_U_(0x1) << UDP_ISR_EP1INT_Pos)                     /**< (UDP_ISR) Endpoint 1 Interrupt Status Mask */
-#define UDP_ISR_EP1INT(value)                 (UDP_ISR_EP1INT_Msk & ((value) << UDP_ISR_EP1INT_Pos))
-#define UDP_ISR_EP2INT_Pos                    _U_(2)                                               /**< (UDP_ISR) Endpoint 2 Interrupt Status Position */
-#define UDP_ISR_EP2INT_Msk                    (_U_(0x1) << UDP_ISR_EP2INT_Pos)                     /**< (UDP_ISR) Endpoint 2 Interrupt Status Mask */
-#define UDP_ISR_EP2INT(value)                 (UDP_ISR_EP2INT_Msk & ((value) << UDP_ISR_EP2INT_Pos))
-#define UDP_ISR_EP3INT_Pos                    _U_(3)                                               /**< (UDP_ISR) Endpoint 3 Interrupt Status Position */
-#define UDP_ISR_EP3INT_Msk                    (_U_(0x1) << UDP_ISR_EP3INT_Pos)                     /**< (UDP_ISR) Endpoint 3 Interrupt Status Mask */
-#define UDP_ISR_EP3INT(value)                 (UDP_ISR_EP3INT_Msk & ((value) << UDP_ISR_EP3INT_Pos))
-#define UDP_ISR_EP4INT_Pos                    _U_(4)                                               /**< (UDP_ISR) Endpoint 4 Interrupt Status Position */
-#define UDP_ISR_EP4INT_Msk                    (_U_(0x1) << UDP_ISR_EP4INT_Pos)                     /**< (UDP_ISR) Endpoint 4 Interrupt Status Mask */
-#define UDP_ISR_EP4INT(value)                 (UDP_ISR_EP4INT_Msk & ((value) << UDP_ISR_EP4INT_Pos))
-#define UDP_ISR_EP5INT_Pos                    _U_(5)                                               /**< (UDP_ISR) Endpoint 5 Interrupt Status Position */
-#define UDP_ISR_EP5INT_Msk                    (_U_(0x1) << UDP_ISR_EP5INT_Pos)                     /**< (UDP_ISR) Endpoint 5 Interrupt Status Mask */
-#define UDP_ISR_EP5INT(value)                 (UDP_ISR_EP5INT_Msk & ((value) << UDP_ISR_EP5INT_Pos))
-#define UDP_ISR_RXSUSP_Pos                    _U_(8)                                               /**< (UDP_ISR) UDP Suspend Interrupt Status Position */
-#define UDP_ISR_RXSUSP_Msk                    (_U_(0x1) << UDP_ISR_RXSUSP_Pos)                     /**< (UDP_ISR) UDP Suspend Interrupt Status Mask */
-#define UDP_ISR_RXSUSP(value)                 (UDP_ISR_RXSUSP_Msk & ((value) << UDP_ISR_RXSUSP_Pos))
-#define UDP_ISR_RXRSM_Pos                     _U_(9)                                               /**< (UDP_ISR) UDP Resume Interrupt Status Position */
-#define UDP_ISR_RXRSM_Msk                     (_U_(0x1) << UDP_ISR_RXRSM_Pos)                      /**< (UDP_ISR) UDP Resume Interrupt Status Mask */
-#define UDP_ISR_RXRSM(value)                  (UDP_ISR_RXRSM_Msk & ((value) << UDP_ISR_RXRSM_Pos))
-#define UDP_ISR_EXTRSM_Pos                    _U_(10)                                              /**< (UDP_ISR)  Position */
-#define UDP_ISR_EXTRSM_Msk                    (_U_(0x1) << UDP_ISR_EXTRSM_Pos)                     /**< (UDP_ISR)  Mask */
-#define UDP_ISR_EXTRSM(value)                 (UDP_ISR_EXTRSM_Msk & ((value) << UDP_ISR_EXTRSM_Pos))
-#define UDP_ISR_SOFINT_Pos                    _U_(11)                                              /**< (UDP_ISR) Start of Frame Interrupt Status Position */
-#define UDP_ISR_SOFINT_Msk                    (_U_(0x1) << UDP_ISR_SOFINT_Pos)                     /**< (UDP_ISR) Start of Frame Interrupt Status Mask */
-#define UDP_ISR_SOFINT(value)                 (UDP_ISR_SOFINT_Msk & ((value) << UDP_ISR_SOFINT_Pos))
-#define UDP_ISR_ENDBUSRES_Pos                 _U_(12)                                              /**< (UDP_ISR) End of BUS Reset Interrupt Status Position */
-#define UDP_ISR_ENDBUSRES_Msk                 (_U_(0x1) << UDP_ISR_ENDBUSRES_Pos)                  /**< (UDP_ISR) End of BUS Reset Interrupt Status Mask */
-#define UDP_ISR_ENDBUSRES(value)              (UDP_ISR_ENDBUSRES_Msk & ((value) << UDP_ISR_ENDBUSRES_Pos))
-#define UDP_ISR_WAKEUP_Pos                    _U_(13)                                              /**< (UDP_ISR) UDP Resume Interrupt Status Position */
-#define UDP_ISR_WAKEUP_Msk                    (_U_(0x1) << UDP_ISR_WAKEUP_Pos)                     /**< (UDP_ISR) UDP Resume Interrupt Status Mask */
-#define UDP_ISR_WAKEUP(value)                 (UDP_ISR_WAKEUP_Msk & ((value) << UDP_ISR_WAKEUP_Pos))
-#define UDP_ISR_Msk                           _U_(0x00003F3F)                                      /**< (UDP_ISR) Register Mask  */
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END  
 
 
-/* -------- UDP_ICR : (UDP Offset: 0x20) ( /W 32) Interrupt Clear Register -------- */
-#define UDP_ICR_RXSUSP_Pos                    _U_(8)                                               /**< (UDP_ICR) Clear UDP Suspend Interrupt Position */
-#define UDP_ICR_RXSUSP_Msk                    (_U_(0x1) << UDP_ICR_RXSUSP_Pos)                     /**< (UDP_ICR) Clear UDP Suspend Interrupt Mask */
-#define UDP_ICR_RXSUSP(value)                 (UDP_ICR_RXSUSP_Msk & ((value) << UDP_ICR_RXSUSP_Pos))
-#define UDP_ICR_RXRSM_Pos                     _U_(9)                                               /**< (UDP_ICR) Clear UDP Resume Interrupt Position */
-#define UDP_ICR_RXRSM_Msk                     (_U_(0x1) << UDP_ICR_RXRSM_Pos)                      /**< (UDP_ICR) Clear UDP Resume Interrupt Mask */
-#define UDP_ICR_RXRSM(value)                  (UDP_ICR_RXRSM_Msk & ((value) << UDP_ICR_RXRSM_Pos))
-#define UDP_ICR_EXTRSM_Pos                    _U_(10)                                              /**< (UDP_ICR)  Position */
-#define UDP_ICR_EXTRSM_Msk                    (_U_(0x1) << UDP_ICR_EXTRSM_Pos)                     /**< (UDP_ICR)  Mask */
-#define UDP_ICR_EXTRSM(value)                 (UDP_ICR_EXTRSM_Msk & ((value) << UDP_ICR_EXTRSM_Pos))
-#define UDP_ICR_SOFINT_Pos                    _U_(11)                                              /**< (UDP_ICR) Clear Start Of Frame Interrupt Position */
-#define UDP_ICR_SOFINT_Msk                    (_U_(0x1) << UDP_ICR_SOFINT_Pos)                     /**< (UDP_ICR) Clear Start Of Frame Interrupt Mask */
-#define UDP_ICR_SOFINT(value)                 (UDP_ICR_SOFINT_Msk & ((value) << UDP_ICR_SOFINT_Pos))
-#define UDP_ICR_ENDBUSRES_Pos                 _U_(12)                                              /**< (UDP_ICR) Clear End of Bus Reset Interrupt Position */
-#define UDP_ICR_ENDBUSRES_Msk                 (_U_(0x1) << UDP_ICR_ENDBUSRES_Pos)                  /**< (UDP_ICR) Clear End of Bus Reset Interrupt Mask */
-#define UDP_ICR_ENDBUSRES(value)              (UDP_ICR_ENDBUSRES_Msk & ((value) << UDP_ICR_ENDBUSRES_Pos))
-#define UDP_ICR_WAKEUP_Pos                    _U_(13)                                              /**< (UDP_ICR) Clear Wakeup Interrupt Position */
-#define UDP_ICR_WAKEUP_Msk                    (_U_(0x1) << UDP_ICR_WAKEUP_Pos)                     /**< (UDP_ICR) Clear Wakeup Interrupt Mask */
-#define UDP_ICR_WAKEUP(value)                 (UDP_ICR_WAKEUP_Msk & ((value) << UDP_ICR_WAKEUP_Pos))
-#define UDP_ICR_Msk                           _U_(0x00003F00)                                      /**< (UDP_ICR) Register Mask  */
+// *****************************************************************************
+/*
+  Type:
+    UDP_PORT
+
+  Summary:
+    Defines a type for a UDP port number
+
+  Description:
+    Type describing a UDP port
+
+  Remarks:
+    None
+
+*/
+typedef uint16_t UDP_PORT;
+
+// *****************************************************************************
+/*
+  Type:
+    UDP_SOCKET
+
+  Summary:
+    Provides a handle to a UDP Socket
+
+  Description:
+    Type describing a UDP socket
+
+  Remarks:
+    None
+
+*/
+typedef int16_t UDP_SOCKET;
 
 
-/* -------- UDP_RST_EP : (UDP Offset: 0x28) (R/W 32) Reset Endpoint Register -------- */
-#define UDP_RST_EP_EP0_Pos                    _U_(0)                                               /**< (UDP_RST_EP) Reset Endpoint 0 Position */
-#define UDP_RST_EP_EP0_Msk                    (_U_(0x1) << UDP_RST_EP_EP0_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 0 Mask */
-#define UDP_RST_EP_EP0(value)                 (UDP_RST_EP_EP0_Msk & ((value) << UDP_RST_EP_EP0_Pos))
-#define UDP_RST_EP_EP1_Pos                    _U_(1)                                               /**< (UDP_RST_EP) Reset Endpoint 1 Position */
-#define UDP_RST_EP_EP1_Msk                    (_U_(0x1) << UDP_RST_EP_EP1_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 1 Mask */
-#define UDP_RST_EP_EP1(value)                 (UDP_RST_EP_EP1_Msk & ((value) << UDP_RST_EP_EP1_Pos))
-#define UDP_RST_EP_EP2_Pos                    _U_(2)                                               /**< (UDP_RST_EP) Reset Endpoint 2 Position */
-#define UDP_RST_EP_EP2_Msk                    (_U_(0x1) << UDP_RST_EP_EP2_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 2 Mask */
-#define UDP_RST_EP_EP2(value)                 (UDP_RST_EP_EP2_Msk & ((value) << UDP_RST_EP_EP2_Pos))
-#define UDP_RST_EP_EP3_Pos                    _U_(3)                                               /**< (UDP_RST_EP) Reset Endpoint 3 Position */
-#define UDP_RST_EP_EP3_Msk                    (_U_(0x1) << UDP_RST_EP_EP3_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 3 Mask */
-#define UDP_RST_EP_EP3(value)                 (UDP_RST_EP_EP3_Msk & ((value) << UDP_RST_EP_EP3_Pos))
-#define UDP_RST_EP_EP4_Pos                    _U_(4)                                               /**< (UDP_RST_EP) Reset Endpoint 4 Position */
-#define UDP_RST_EP_EP4_Msk                    (_U_(0x1) << UDP_RST_EP_EP4_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 4 Mask */
-#define UDP_RST_EP_EP4(value)                 (UDP_RST_EP_EP4_Msk & ((value) << UDP_RST_EP_EP4_Pos))
-#define UDP_RST_EP_EP5_Pos                    _U_(5)                                               /**< (UDP_RST_EP) Reset Endpoint 5 Position */
-#define UDP_RST_EP_EP5_Msk                    (_U_(0x1) << UDP_RST_EP_EP5_Pos)                     /**< (UDP_RST_EP) Reset Endpoint 5 Mask */
-#define UDP_RST_EP_EP5(value)                 (UDP_RST_EP_EP5_Msk & ((value) << UDP_RST_EP_EP5_Pos))
-#define UDP_RST_EP_Msk                        _U_(0x0000003F)                                      /**< (UDP_RST_EP) Register Mask  */
+#define INVALID_UDP_SOCKET      (-1)		// Indicates a UDP socket that is not valid
+ 
+// *****************************************************************************
+/*
+  Structure:
+    UDP_SOCKET_INFO
 
-#define UDP_RST_EP_EP_Pos                     _U_(0)                                               /**< (UDP_RST_EP Position) Reset Endpoint 5 */
-#define UDP_RST_EP_EP_Msk                     (_U_(0x3F) << UDP_RST_EP_EP_Pos)                     /**< (UDP_RST_EP Mask) EP */
-#define UDP_RST_EP_EP(value)                  (UDP_RST_EP_EP_Msk & ((value) << UDP_RST_EP_EP_Pos)) 
+  Summary:
+    Information about a UDP socket
 
-/* -------- UDP_CSR : (UDP Offset: 0x30) (R/W 32) Endpoint Control and Status Register 0 -------- */
-#define UDP_CSR_TXCOMP_Pos                    _U_(0)                                               /**< (UDP_CSR) Generates an IN Packet with Data Previously Written in the DPR Position */
-#define UDP_CSR_TXCOMP_Msk                    (_U_(0x1) << UDP_CSR_TXCOMP_Pos)                     /**< (UDP_CSR) Generates an IN Packet with Data Previously Written in the DPR Mask */
-#define UDP_CSR_TXCOMP(value)                 (UDP_CSR_TXCOMP_Msk & ((value) << UDP_CSR_TXCOMP_Pos))
-#define UDP_CSR_RX_DATA_BK0_Pos               _U_(1)                                               /**< (UDP_CSR) Receive Data Bank 0 Position */
-#define UDP_CSR_RX_DATA_BK0_Msk               (_U_(0x1) << UDP_CSR_RX_DATA_BK0_Pos)                /**< (UDP_CSR) Receive Data Bank 0 Mask */
-#define UDP_CSR_RX_DATA_BK0(value)            (UDP_CSR_RX_DATA_BK0_Msk & ((value) << UDP_CSR_RX_DATA_BK0_Pos))
-#define UDP_CSR_RXSETUP_Pos                   _U_(2)                                               /**< (UDP_CSR) Received Setup Position */
-#define UDP_CSR_RXSETUP_Msk                   (_U_(0x1) << UDP_CSR_RXSETUP_Pos)                    /**< (UDP_CSR) Received Setup Mask */
-#define UDP_CSR_RXSETUP(value)                (UDP_CSR_RXSETUP_Msk & ((value) << UDP_CSR_RXSETUP_Pos))
-#define UDP_CSR_STALLSENT_Pos                 _U_(3)                                               /**< (UDP_CSR) Stall Sent Position */
-#define UDP_CSR_STALLSENT_Msk                 (_U_(0x1) << UDP_CSR_STALLSENT_Pos)                  /**< (UDP_CSR) Stall Sent Mask */
-#define UDP_CSR_STALLSENT(value)              (UDP_CSR_STALLSENT_Msk & ((value) << UDP_CSR_STALLSENT_Pos))
-#define UDP_CSR_TXPKTRDY_Pos                  _U_(4)                                               /**< (UDP_CSR) Transmit Packet Ready Position */
-#define UDP_CSR_TXPKTRDY_Msk                  (_U_(0x1) << UDP_CSR_TXPKTRDY_Pos)                   /**< (UDP_CSR) Transmit Packet Ready Mask */
-#define UDP_CSR_TXPKTRDY(value)               (UDP_CSR_TXPKTRDY_Msk & ((value) << UDP_CSR_TXPKTRDY_Pos))
-#define UDP_CSR_FORCESTALL_Pos                _U_(5)                                               /**< (UDP_CSR) Force Stall (used by Control, Bulk and Isochronous Endpoints) Position */
-#define UDP_CSR_FORCESTALL_Msk                (_U_(0x1) << UDP_CSR_FORCESTALL_Pos)                 /**< (UDP_CSR) Force Stall (used by Control, Bulk and Isochronous Endpoints) Mask */
-#define UDP_CSR_FORCESTALL(value)             (UDP_CSR_FORCESTALL_Msk & ((value) << UDP_CSR_FORCESTALL_Pos))
-#define UDP_CSR_RX_DATA_BK1_Pos               _U_(6)                                               /**< (UDP_CSR) Receive Data Bank 1 (only used by endpoints with ping-pong attributes) Position */
-#define UDP_CSR_RX_DATA_BK1_Msk               (_U_(0x1) << UDP_CSR_RX_DATA_BK1_Pos)                /**< (UDP_CSR) Receive Data Bank 1 (only used by endpoints with ping-pong attributes) Mask */
-#define UDP_CSR_RX_DATA_BK1(value)            (UDP_CSR_RX_DATA_BK1_Msk & ((value) << UDP_CSR_RX_DATA_BK1_Pos))
-#define UDP_CSR_DIR_Pos                       _U_(7)                                               /**< (UDP_CSR) Transfer Direction (only available for control endpoints) (Read/Write) Position */
-#define UDP_CSR_DIR_Msk                       (_U_(0x1) << UDP_CSR_DIR_Pos)                        /**< (UDP_CSR) Transfer Direction (only available for control endpoints) (Read/Write) Mask */
-#define UDP_CSR_DIR(value)                    (UDP_CSR_DIR_Msk & ((value) << UDP_CSR_DIR_Pos))    
-#define UDP_CSR_EPTYPE_Pos                    _U_(8)                                               /**< (UDP_CSR) Endpoint Type (Read/Write) Position */
-#define UDP_CSR_EPTYPE_Msk                    (_U_(0x7) << UDP_CSR_EPTYPE_Pos)                     /**< (UDP_CSR) Endpoint Type (Read/Write) Mask */
-#define UDP_CSR_EPTYPE(value)                 (UDP_CSR_EPTYPE_Msk & ((value) << UDP_CSR_EPTYPE_Pos))
-#define   UDP_CSR_EPTYPE_CTRL_Val             _U_(0x0)                                             /**< (UDP_CSR) Control  */
-#define   UDP_CSR_EPTYPE_ISO_OUT_Val          _U_(0x1)                                             /**< (UDP_CSR) Isochronous OUT  */
-#define   UDP_CSR_EPTYPE_BULK_OUT_Val         _U_(0x2)                                             /**< (UDP_CSR) Bulk OUT  */
-#define   UDP_CSR_EPTYPE_INT_OUT_Val          _U_(0x3)                                             /**< (UDP_CSR) Interrupt OUT  */
-#define   UDP_CSR_EPTYPE_ISO_IN_Val           _U_(0x5)                                             /**< (UDP_CSR) Isochronous IN  */
-#define   UDP_CSR_EPTYPE_BULK_IN_Val          _U_(0x6)                                             /**< (UDP_CSR) Bulk IN  */
-#define   UDP_CSR_EPTYPE_INT_IN_Val           _U_(0x7)                                             /**< (UDP_CSR) Interrupt IN  */
-#define UDP_CSR_EPTYPE_CTRL                   (UDP_CSR_EPTYPE_CTRL_Val << UDP_CSR_EPTYPE_Pos)      /**< (UDP_CSR) Control Position  */
-#define UDP_CSR_EPTYPE_ISO_OUT                (UDP_CSR_EPTYPE_ISO_OUT_Val << UDP_CSR_EPTYPE_Pos)   /**< (UDP_CSR) Isochronous OUT Position  */
-#define UDP_CSR_EPTYPE_BULK_OUT               (UDP_CSR_EPTYPE_BULK_OUT_Val << UDP_CSR_EPTYPE_Pos)  /**< (UDP_CSR) Bulk OUT Position  */
-#define UDP_CSR_EPTYPE_INT_OUT                (UDP_CSR_EPTYPE_INT_OUT_Val << UDP_CSR_EPTYPE_Pos)   /**< (UDP_CSR) Interrupt OUT Position  */
-#define UDP_CSR_EPTYPE_ISO_IN                 (UDP_CSR_EPTYPE_ISO_IN_Val << UDP_CSR_EPTYPE_Pos)    /**< (UDP_CSR) Isochronous IN Position  */
-#define UDP_CSR_EPTYPE_BULK_IN                (UDP_CSR_EPTYPE_BULK_IN_Val << UDP_CSR_EPTYPE_Pos)   /**< (UDP_CSR) Bulk IN Position  */
-#define UDP_CSR_EPTYPE_INT_IN                 (UDP_CSR_EPTYPE_INT_IN_Val << UDP_CSR_EPTYPE_Pos)    /**< (UDP_CSR) Interrupt IN Position  */
-#define UDP_CSR_DTGLE_Pos                     _U_(11)                                              /**< (UDP_CSR) Data Toggle (Read-only) Position */
-#define UDP_CSR_DTGLE_Msk                     (_U_(0x1) << UDP_CSR_DTGLE_Pos)                      /**< (UDP_CSR) Data Toggle (Read-only) Mask */
-#define UDP_CSR_DTGLE(value)                  (UDP_CSR_DTGLE_Msk & ((value) << UDP_CSR_DTGLE_Pos))
-#define UDP_CSR_EPEDS_Pos                     _U_(15)                                              /**< (UDP_CSR) Endpoint Enable Disable Position */
-#define UDP_CSR_EPEDS_Msk                     (_U_(0x1) << UDP_CSR_EPEDS_Pos)                      /**< (UDP_CSR) Endpoint Enable Disable Mask */
-#define UDP_CSR_EPEDS(value)                  (UDP_CSR_EPEDS_Msk & ((value) << UDP_CSR_EPEDS_Pos))
-#define UDP_CSR_RXBYTECNT_Pos                 _U_(16)                                              /**< (UDP_CSR) Number of Bytes Available in the FIFO (Read-only) Position */
-#define UDP_CSR_RXBYTECNT_Msk                 (_U_(0x7FF) << UDP_CSR_RXBYTECNT_Pos)                /**< (UDP_CSR) Number of Bytes Available in the FIFO (Read-only) Mask */
-#define UDP_CSR_RXBYTECNT(value)              (UDP_CSR_RXBYTECNT_Msk & ((value) << UDP_CSR_RXBYTECNT_Pos))
-#define UDP_CSR_Msk                           _U_(0x07FF8FFF)                                      /**< (UDP_CSR) Register Mask  */
+  Description:
+    Structure containing the information about a UDP socket
 
+  Remarks:
+    The information in this structure will be updated based on the current packet received by the socket.
+    For example, members like:
+        hNet
+        remotePort
+        remoteIPaddress
+    could change from one packet to another.
+    This depends on how the socket is configured (allowed to receive on all interfaces, from all ports, etc.).
+    See UDP_SOCKET_OPTION for details.
 
-/* -------- UDP_FDR : (UDP Offset: 0x50) (R/W 32) Endpoint FIFO Data Register 0 -------- */
-#define UDP_FDR_FIFO_DATA_Pos                 _U_(0)                                               /**< (UDP_FDR) FIFO Data Value Position */
-#define UDP_FDR_FIFO_DATA_Msk                 (_U_(0xFF) << UDP_FDR_FIFO_DATA_Pos)                 /**< (UDP_FDR) FIFO Data Value Mask */
-#define UDP_FDR_FIFO_DATA(value)              (UDP_FDR_FIFO_DATA_Msk & ((value) << UDP_FDR_FIFO_DATA_Pos))
-#define UDP_FDR_Msk                           _U_(0x000000FF)                                      /**< (UDP_FDR) Register Mask  */
-
-
-/* -------- UDP_TXVC : (UDP Offset: 0x74) (R/W 32) Transceiver Control Register -------- */
-#define UDP_TXVC_TXVDIS_Pos                   _U_(8)                                               /**< (UDP_TXVC) Transceiver Disable Position */
-#define UDP_TXVC_TXVDIS_Msk                   (_U_(0x1) << UDP_TXVC_TXVDIS_Pos)                    /**< (UDP_TXVC) Transceiver Disable Mask */
-#define UDP_TXVC_TXVDIS(value)                (UDP_TXVC_TXVDIS_Msk & ((value) << UDP_TXVC_TXVDIS_Pos))
-#define UDP_TXVC_PUON_Pos                     _U_(9)                                               /**< (UDP_TXVC) Pull-up On Position */
-#define UDP_TXVC_PUON_Msk                     (_U_(0x1) << UDP_TXVC_PUON_Pos)                      /**< (UDP_TXVC) Pull-up On Mask */
-#define UDP_TXVC_PUON(value)                  (UDP_TXVC_PUON_Msk & ((value) << UDP_TXVC_PUON_Pos))
-#define UDP_TXVC_Msk                          _U_(0x00000300)                                      /**< (UDP_TXVC) Register Mask  */
-
-
-/** \brief UDP register offsets definitions */
-#define UDP_FRM_NUM_REG_OFST           (0x00)              /**< (UDP_FRM_NUM) Frame Number Register Offset */
-#define UDP_GLB_STAT_REG_OFST          (0x04)              /**< (UDP_GLB_STAT) Global State Register Offset */
-#define UDP_FADDR_REG_OFST             (0x08)              /**< (UDP_FADDR) Function Address Register Offset */
-#define UDP_IER_REG_OFST               (0x10)              /**< (UDP_IER) Interrupt Enable Register Offset */
-#define UDP_IDR_REG_OFST               (0x14)              /**< (UDP_IDR) Interrupt Disable Register Offset */
-#define UDP_IMR_REG_OFST               (0x18)              /**< (UDP_IMR) Interrupt Mask Register Offset */
-#define UDP_ISR_REG_OFST               (0x1C)              /**< (UDP_ISR) Interrupt Status Register Offset */
-#define UDP_ICR_REG_OFST               (0x20)              /**< (UDP_ICR) Interrupt Clear Register Offset */
-#define UDP_RST_EP_REG_OFST            (0x28)              /**< (UDP_RST_EP) Reset Endpoint Register Offset */
-#define UDP_CSR_REG_OFST               (0x30)              /**< (UDP_CSR) Endpoint Control and Status Register 0 Offset */
-#define UDP_FDR_REG_OFST               (0x50)              /**< (UDP_FDR) Endpoint FIFO Data Register 0 Offset */
-#define UDP_TXVC_REG_OFST              (0x74)              /**< (UDP_TXVC) Transceiver Control Register Offset */
-
-#if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
-/** \brief UDP register API structure */
+*/
 typedef struct
 {
-  __I   uint32_t                       UDP_FRM_NUM;        /**< Offset: 0x00 (R/   32) Frame Number Register */
-  __IO  uint32_t                       UDP_GLB_STAT;       /**< Offset: 0x04 (R/W  32) Global State Register */
-  __IO  uint32_t                       UDP_FADDR;          /**< Offset: 0x08 (R/W  32) Function Address Register */
-  __I   uint8_t                        Reserved1[0x04];
-  __O   uint32_t                       UDP_IER;            /**< Offset: 0x10 ( /W  32) Interrupt Enable Register */
-  __O   uint32_t                       UDP_IDR;            /**< Offset: 0x14 ( /W  32) Interrupt Disable Register */
-  __I   uint32_t                       UDP_IMR;            /**< Offset: 0x18 (R/   32) Interrupt Mask Register */
-  __I   uint32_t                       UDP_ISR;            /**< Offset: 0x1C (R/   32) Interrupt Status Register */
-  __O   uint32_t                       UDP_ICR;            /**< Offset: 0x20 ( /W  32) Interrupt Clear Register */
-  __I   uint8_t                        Reserved2[0x04];
-  __IO  uint32_t                       UDP_RST_EP;         /**< Offset: 0x28 (R/W  32) Reset Endpoint Register */
-  __I   uint8_t                        Reserved3[0x04];
-  __IO  uint32_t                       UDP_CSR[6];         /**< Offset: 0x30 (R/W  32) Endpoint Control and Status Register 0 */
-  __I   uint8_t                        Reserved4[0x08];
-  __IO  uint32_t                       UDP_FDR[6];         /**< Offset: 0x50 (R/W  32) Endpoint FIFO Data Register 0 */
-  __I   uint8_t                        Reserved5[0x0C];
-  __IO  uint32_t                       UDP_TXVC;           /**< Offset: 0x74 (R/W  32) Transceiver Control Register */
-} udp_registers_t;
+    IP_ADDRESS_TYPE     addressType;        // address type of the socket
+    IP_MULTI_ADDRESS    remoteIPaddress;    // current socket destination address
+    IP_MULTI_ADDRESS    localIPaddress;     // current socket source address
+    IP_MULTI_ADDRESS    sourceIPaddress;    // source address of the last packet 
+    IP_MULTI_ADDRESS    destIPaddress;      // destination address of the last packet 
+	UDP_PORT            remotePort;         // Port number associated with remote node
+    UDP_PORT            localPort;          // local port number
+    TCPIP_NET_HANDLE    hNet;               // associated interface
+    uint16_t            rxQueueSize;        // packets waiting in the rx queue
+    uint16_t            txSize;             // tx buffer size
+} UDP_SOCKET_INFO;
 
 
-#endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
-#endif /* _SAMG55_UDP_COMPONENT_H_ */
+// *****************************************************************************
+/*
+  Enumeration:
+    UDP_SOCKET_OPTION
+
+  Summary:
+    UDP socket options
+
+  Description:
+    List of options to be set for a UDP socket
+
+  Remarks:
+    None
+
+*/
+typedef enum
+{
+    UDP_OPTION_STRICT_PORT,         // When connection is done the socket stores the remote host local port.
+                                    // If option is enabled the remote host local port is always checked to match the initial one.
+                                    // If disabled the remote host local port is not checked. 
+                                    // Disabled by default on a socket server. Enabled by default on a client socket.
+    UDP_OPTION_STRICT_NET,          // When connection is done the socket stores the network interface the connection occurred on.
+                                    // If option is enabled the socket accepts data only from the interface that matches the initial connection.
+                                    // If disabled the socket receives data from any remote host regardless of the 
+                                    // interface on which the packet arrived.
+                                    // Disabled by default on a socket server. Enabled by default on a client socket.
+    UDP_OPTION_STRICT_ADDRESS,      // When connection is done the socket stores the address of the remote host.
+                                    // If option is enabled the socket accepts data only from the host with address that matches the initial connection.
+                                    // If disabled the socket receives data from any remote host regardless of the 
+                                    // address of that host.
+                                    // Disabled by default on a socket server. Enabled by default on a client socket.
+    UDP_OPTION_BROADCAST,           // Enables the Broadcast transmission by the socket
+    UDP_OPTION_BUFFER_POOL,         // Enables the socket to use the private UDP buffers pool.
+                                    // The size of the TX buffer has to be less than the size of the buffers in the pool.
+    UDP_OPTION_TX_BUFF,             // Request different TX buffer size. Has to call TCPIP_UDP_OptionsGet to see the exact space
+                                    // allocated.
+    UDP_OPTION_TX_QUEUE_LIMIT,      // Sets the maximum number of packets that can be queued/allocated by an UDP socket
+                                    // at a certain time.
+                                    // For sockets that need to transmit a lot of data (Iperf client, for example),
+                                    // especially on slow connections this limit prevents running out of memory
+                                    // because the MAC transfer cannot keep up with the UDP packet allocation rate
+                                    // imposed by the application.
+                                    // Adjust depending on the size of the UDP TX buffer, the connection speed
+                                    // and the amount of memory available to the stack.
+    UDP_OPTION_RX_QUEUE_LIMIT,      // Sets the maximum number of RX packets that can be queued by an UDP socket
+                                    // at a certain time.
+                                    // Setting this value to 0 will disable the socket receive functionality
+    UDP_OPTION_RX_AUTO_ADVANCE,     // Sets the RX auto advance option for a socket. The option is off by default
+                                    // If set, the option will automatically advance the socket to the
+                                    // next awaiting RX packet when a call to TCPIP_UDP_ArrayGet is made and 
+                                    // no more data is available from the current packet.
+                                    // Setting this option forces the socket user to correctly monitor the number of bytes
+                                    // available and issue a TCPIP_UDP_Discard only when there's bytes left in the current packet.
+                                    // However sequential calls to TCPIP_UDP_ArrayGet can be made without the need
+                                    // to insert calls to TCPIP_UDP_Discard
+                                    //
+                                    // If cleared (default case) the socket user can safely issue a TCPIP_UDP_Discard
+                                    // even after calling TCPIP_UDP_ArrayGet to read all the bytes from the current RX packet
+                                    // Note that TCPIP_UDP_GetIsReady will always advance the current RX packet when no more data is
+                                    // available in the current packet.
+                                    // Even when the option is cleared a call to TCPIP_UDP_Discard
+                                    // is still not needed if all bytes are retrieved with
+                                    // TCPIP_UDP_ArrayGet and then TCPIP_UDP_GetIsReady is called. 
+    UDP_OPTION_TX_TTL,              // Specifies the Time To Live for packets sent by the socket.
+                                    // If 0, the socket will use the default global IPv4 TTL setting.
+                                    // This option allows the user to specify a different TTL value.
+                                    // Could be used to adjust the TTL value for multicast traffic
+                                    // (the default TTL for multicast traffic is 1).
+    UDP_OPTION_MULTICAST,           // Sets the multicast options for a socket by using UDP_OPTION_MULTICAST_DATA value
+    UDP_OPTION_TOS,     			// Sets the Type of Service (TOS) for IPv4 packets sent by the socket
+    UDP_OPTION_DF,     			    // Sets the Don't Fragment (DF) option for IPv4 packets sent by the socket
+}UDP_SOCKET_OPTION;
+
+
+// *****************************************************************************
+/*
+  Enumeration:
+    UDP_SOCKET_BCAST_TYPE
+
+  Summary:
+    UDP broadcast types.
+
+  Description:
+    List of options to be set for a broadcast socket
+
+  Remarks:
+    These options are meant for sockets carrying broadcast traffic.
+
+*/
+typedef enum
+{
+    UDP_BCAST_NONE,                    // no broadcast
+    UDP_BCAST_NETWORK_LIMITED,         // network limited broadcast
+    UDP_BCAST_NETWORK_DIRECTED,        // network directed broadcast
+
+}UDP_SOCKET_BCAST_TYPE;
+
+// *****************************************************************************
+/*
+  Enumeration:
+    UDP_SOCKET_MULTICAST_FLAGS
+
+  Summary:
+    UDP multicast options/flags.
+
+  Description:
+    List of options to be set for a multicast socket
+
+  Remarks:
+    These options are meant for sockets carrying multicast traffic.
+
+    Multiple flags can be set.
+
+
+    16 bits only supported.
+*/
+typedef enum
+{
+    UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT    = 0x0001,   // Union of the !UDP_OPTION_STRICT_NET, !UDP_OPTION_STRICT_ADDRESS and !UDP_OPTION_STRICT_PORT  
+                                                        // This is the default behavior for a multicast socket.
+                                                        // The same bahvior can be obtained by setting individual options.
+                                                        // It is the default behavior of a newly created server socket but not for a client socket.
+    UDP_MCAST_FLAG_IGNORE_SOURCE_ADD        = 0x0002,   // Ignore the source address of a packet and reply to the currently set (multicast)
+                                                        // destination address.
+                                                        // Normally a socket would reply to the sender of the packet.
+                                                        // But probably this is not what you want for multicast.
+                                                        // This option allows the socket to reply to the multicast group instead, no matter
+                                                        // from what source it received the multicast traffic.
+                                                        // This option is disabled by default when a socket is created and should be enforced when needed.
+    UDP_MCAST_FLAG_IGNORE_SOURCE_PORT       = 0x0004,   // Ignore the source port of a packet and reply to the currently set destination port.
+                                                        // Normally a socket would reply to the sender of the packet using the source port of the sender.
+                                                        // This option allows the socket to reply using the current destination/remote port
+                                                        // no matter the source port of the received multicast traffic - which would be the expected
+                                                        // behavior from a multicast socket. 
+                                                        // This option is disabled by default when a socket is created and should be enforced when needed.
+    UDP_MCAST_FLAG_IGNORE_UNICAST           = 0x0008,   // Ignore a packet if its destination is not multicast
+    UDP_MCAST_FLAG_LOOP                     = 0x0010,   // When set, the multicast packets sent by the UDP socket will be routed on the internal multicast interface as well.
+                                                        // Default is cleared.
+                                                        // Applies only to sockets sending multicast traffic
+    UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK     = 0x0020,   // Disables/enables the checking of the source of multicast traffic that reaches a socket.
+                                                        // The IGMPv3 mandates that the multicast traffic should be passed to a socket only if that socked subscribed
+                                                        // for multicast from that source. 
+                                                        // However, for high rate data streams that may place an overhead and consume additional CPU power for doing
+                                                        // this check for each and every incoming packet.
+                                                        // This option allows the user to bypass this run time check.
+                                                        // By default the source check is enabled - recommended setting! 
+                                                        // Applies only to sockets receiving multicast traffic
+
+
+
+
+    //
+    UDP_MCAST_FLAG_DEFAULT                  = (UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_UNICAST)
+                                                        // the default flags intended for the multicast sockets
+                                                        // note that these flags are different from the defaults for a regular socket, client or server.
+
+}UDP_MULTICAST_FLAGS;
+
+// *****************************************************************************
+/*
+  Structure:
+    UDP_OPTION_MULTICAST_DATA
+
+  Summary:
+    Data structure used to set a socket multicast options.
+
+  Description:
+    Allows the multicast options configuration of a socket.
+
+  Remarks:
+    Using the mask and value members, multiple flags can be set and cleared in one single operations.
+    The TCPIP_UDP_OptionsSet() operation for UDP_OPTION_MULTICAST will apply the folowing to the socket flags:
+    flags &= ~flagsMask;    // clear all flags touched by mask
+    flags |= (flagsValue & flagsMask);  // set the corresponding flags that are set in flagsValue. All others will remain cleared.
+    
+
+  Example:
+    <code>
+    // set the flag UDP_MCAST_FLAG_LOOP:
+    UDP_OPTION_MULTICAST_DATA mcastData;
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP;     // new value for the flag:
+                                                    // any value with the bit set for the UDP_MCAST_FLAG_LOOP bit
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+
+    // clear the flag UDP_MCAST_FLAG_LOOP:
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
+    mcastData.flagsValue = 0;                       // new value for the flag:
+                                                    // any value with the bit cleared for the UDP_MCAST_FLAG_LOOP bit
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+
+    // set UDP_MCAST_FLAG_LOOP and UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
+    // clear  UDP_MCAST_FLAG_IGNORE_SOURCE_ADD and UDP_MCAST_FLAG_IGNORE_SOURCE_PORT
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT; // flags to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK ;  // value with bits set for the first 2 flags, cleared for the others
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+    </code>
+*/
+//
+typedef struct
+{
+    UDP_MULTICAST_FLAGS     flagsMask;      // mask of flags to be touched (changed) by the operation
+    UDP_MULTICAST_FLAGS     flagsValue;     // new value of flags to be changed to,
+                                            // for the flags that are touched, according to the mask 
+}UDP_OPTION_MULTICAST_DATA;
+
+// *****************************************************************************
+/*
+  Enumeration:
+    TCPIP_UDP_SIGNAL_TYPE
+
+  Summary:
+    UDP run-time signal types.
+
+  Description:
+    Description of the signals/events that a UDP socket can generate.
+
+  Remarks:
+    These signals are used in the socket event handling notification functions.
+    Currently a UDP notification doesn't set multiple flags as the TX and RX events are 
+    handled separately.
+
+    The signals are 16 bits wide.
+*/
+typedef enum
+{
+    // TX related signals
+    TCPIP_UDP_SIGNAL_TX_DONE    = 0x0001,   // A data packet was successfully transmitted on the interface
+                                            // There may be available buffer space to send new data
+                                            // Notes:
+                                            //  - other buffer(s) may have been already allocated by the user
+                                            //    so the transmitted packet won't be used again as socket writing space
+                                            //  - since UDP transmissions are triggered by an explicit call to TCPIP_UDP_Flush,
+                                            //    this notification is the result of an user action 
+                                               
+    // RX related signals
+    TCPIP_UDP_SIGNAL_RX_DATA    = 0x0100,   // A data packet was successfully received and there is data available for this socket
+
+    // interface related signals
+    TCPIP_UDP_SIGNAL_IF_DOWN    = 0x2000,   // associated interface is going down;
+                                            // sockets connected on this interface will be disconnected, but still alive
+    TCPIP_UDP_SIGNAL_IF_CHANGE  = 0x4000,   // associated interface has changed address
+                                            // sockets connected on this interface will be disconnected, but still alive
+
+}TCPIP_UDP_SIGNAL_TYPE;
+
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_UDP_SIGNAL_FUNCTION
+
+  Summary:
+    UDP Signal Handler.
+
+  Description:
+    Prototype of a UDP signal handler. Socket user can register a handler for the
+    UDP socket. Once an UDP signals occurs the registered handler will be called.
+
+  Parameters:
+    hUDP        - UDP socket to be used
+    hNet        - the network interface on which the event has occurred
+    sigType     - type of UDP signal that has occurred
+    param       - additional parameter that can has been specified at the handler registration call
+                  Currently not used and it will be null.
+
+
+  Remarks:
+    The handler has to be short and fast. It is meant for
+    setting an event flag, not for lengthy processing!
+
+ */
+
+typedef void    (*TCPIP_UDP_SIGNAL_FUNCTION)(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
+
+
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_UDP_SIGNAL_HANDLE
+
+  Summary:
+    UDP socket handle.
+
+  Description:
+    A handle that a socket client can use after the signal handler has been registered.
+ */
+
+typedef const void* TCPIP_UDP_SIGNAL_HANDLE;
+
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_UDP_PROCESS_HANDLE
+
+  Summary:
+    Defines a UDP packet processing handle.
+
+  Description:
+    Definition of an packet processing handle used for
+    packet processing registration by the UDP clients.
+
+*/
+typedef const void* TCPIP_UDP_PROCESS_HANDLE;
+
+// *****************************************************************************
+/* UDP packet handler Pointer
+
+  Function:
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+
+  Summary:
+    Pointer to a function(handler) that will get called to process an incoming UDP packet.
+
+  Description:
+    Pointer to a function that will be called by the UDP module
+    when a RX packet is available.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet        - network handle on which the packet has arrived
+    rxPkt       - pointer to incoming packet
+    hParam      - user passed parameter when handler was registered
+
+  Returns:
+    true - if the packet is processed by the external handler.
+           In this case the UDP module will no longer process the packet
+    false - the packet needs to be processed internally by the UDP as usual           
+
+  Remarks:
+    The packet handler is called in the UDP context.
+    The handler should be kept as short as possible as it affects the processing of all the other
+    UDP RX traffic.
+
+    Before calling the external packet handler 
+    - the rxPkt->pktFlags has the bit 9 (value 0x0200) set for an IPv6 packet, cleared for IPv4
+    - the rxPkt->pTransportLayer points to an UDP_HEADER data structure.
+    - the rxPkt->pNetLayer points to an IPV4_HEADER/IPV6_HEADER data structure.
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - the first data segment segLen is adjusted to store the size of the UDP data 
+
+    Important!
+    When the packet handler returns true, once it's done processing the packet,
+    it needs to acknowledge it, i.e. return to the owner,
+    which is the MAC driver serving the network interface!
+    This means that the packet acknowledge function needs to be called,
+    with a proper acknowledge parameter and the QUEUED flag needs to be cleared, if needed:
+    if((*rxPkt->ackFunc)(rxPkt, rxPkt->ackParam))
+    {
+           rxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
+    Failure to do that will result in memory leaks and starvation of the MAC driver.
+    See the tcpip_mac.h for details.
+    
+ */
+typedef bool(*TCPIP_UDP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+
+
+// *****************************************************************************
+/*
+  Structure:
+    TCPIP_UDP_MODULE_CONFIG
+
+  Summary:
+    UDP module run time configuration/initialization data.
+
+  Description:
+    UDP module configuration/initialization
+*/
+//
+typedef struct
+{
+    uint16_t        nSockets;       // number of sockets to be created
+    uint16_t        sktTxBuffSize;  // default size of the socket TX buffer
+    uint16_t        poolBuffers;    // number of buffers in the pool; 0 if none
+    uint16_t        poolBufferSize; // size of the buffers in the pool; all equal    
+}TCPIP_UDP_MODULE_CONFIG;
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Function Prototypes
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+
+/*
+  Function:
+	 UDP_SOCKET TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE addType, UDP_PORT localPort,  
+	                                 IP_MULTI_ADDRESS* localAddress)
+
+  Summary:
+	Opens a UDP socket as a server.
+	
+  Description:
+	Provides a unified method for opening UDP server sockets. 
+
+  Precondition:
+    UDP is initialized.
+
+  Parameters:
+    IP_ADDRESS_TYPE addType			-	The type of address being used. 
+	                                    Example: IP_ADDRESS_TYPE_IPV4 or IP_ADDRESS_TYPE_IPV6.
+                                        It can be IP_ADDRESS_TYPE_ANY and the server socket will accept any incoming
+                                        type of connection.
+    
+    UDP_PORT localPort				-	UDP port on which to listen for connections
+    
+    IP_MULTI_ADDRESS* localAddress	-	Pointer to a local IP address to use.
+                                        This needs to be the valid IP address of a local interface
+                                        the server is to listen on
+                                        or NULL if any incoming interface will do.
+	
+  Returns:
+ 	- INVALID_SOCKET -  No sockets of the specified type were available to be
+                      opened or parameter error.
+
+    - A UDP_SOCKET handle - Save this handle and use it when calling all other UDP APIs. 
+
+  Remarks:
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
+
+ */
+UDP_SOCKET          TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE addType, UDP_PORT localPort,  
+                    IP_MULTI_ADDRESS* localAddress);
+
+// *****************************************************************************
+
+/*
+  Function:
+	 UDP_SOCKET TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE addType, UDP_PORT remotePort, 
+	                      IP_MULTI_ADDRESS* remoteAddress)
+
+  Summary:
+	Opens a UDP socket as a client.
+	
+  Description:
+	Provides a unified method for opening UDP client sockets. 
+
+  Precondition:
+    UDP is initialized.
+
+  Parameters:
+    IP_ADDRESS_TYPE addType - The type of address being used. Example: IP_ADDRESS_TYPE_IPV4 or IP_ADDRESS_TYPE_IPV6.
+                              It can also be IP_ADDRESS_TYPE_ANY if the type of the socket will be specified later
+                              (using TCPIP_UDP_Bind, TCPIP_UDP_RemoteBind).
+    UDP_PORT remotePort		- The remote UDP port to which a connection should be made.
+                              The local port for client sockets will be automatically picked
+                              by the UDP module.                        
+    IP_MULTI_ADDRESS* remoteAddress	-	The remote address to connect to.
+                              Not used if addType == IP_ADDRESS_TYPE_ANY.
+                              Can be NULL if later set by a call to TCPIP_UDP_RemoteBind.
+                              
+	
+  Returns:
+ 	- INVALID_SOCKET -  No sockets of the specified type were available to be opened.
+
+    - A UDP_SOCKET handle - Save this handle and use it when calling all other UDP APIs. 
+
+  Remarks:
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
+
+
+ */
+UDP_SOCKET          TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE addType, UDP_PORT remotePort, 
+                   IP_MULTI_ADDRESS* remoteAddress);
+
+// *****************************************************************************
+
+/*
+  Function:
+    bool TCPIP_UDP_Bind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT localPort,  
+	                    IP_MULTI_ADDRESS* localAddress);
+
+  Summary:
+    Bind a socket to an address type, local port and address.
+    This function is meant primarily for client sockets.
+
+  Description:
+    Sockets don't need specific binding, it is done automatically by the stack
+    However, specific binding can be requested using this function.
+    Works for both client and server sockets.
+    For a server socket it will restrict accepting connections of a specific type
+    on a specific interface only.
+    For a client socket it will force a specific address type and a local
+    port and interface.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP - valid socket
+
+  Parameters:
+	hUDP			-	The socket to bind.
+	addType			-	The type of address being used.
+                        Valid values are IP_ADDRESS_TYPE_ANY/IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6.
+	localPort		-	The local port to bind to.
+	localAddress	-   Local address to use.
+	
+  Returns:
+	- true  - Indicates success
+	- false - Indicates failure
+
+  Remarks:
+    If address type IP_ADDRESS_TYPE_ANY is used, the localAddress parameter won't be used
+    and the socket won't change the local address.
+    However, for the call to succeed, socket must have been created with
+    IP_ADDRESS_TYPE_ANY type and must not be currently bound to a IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 type.
+
+    If address type IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 is used,
+    then the socket type will be changed accordingly, and the localAddress will be used,
+    if provided.
+    The socket will be bound to this type of address.
+    For the call to succeed the socket must currently have the type IP_ADDRESS_TYPE_ANY or to
+    match the addType parameter.
+
+    If localAddress is the valid address of a network interface,
+    and addType != IP_ADDRESS_TYPE_ANY,
+    then the call will enforce UDP_OPTION_STRICT_NET on the socket.
+
+    If localPort is 0, the stack will assign a unique local port
+    (if the socket doesn't already have a unique local port)
+
+
+    In order to change dynamically the type of address,
+    the socket must have been created with a IP_ADDRESS_TYPE_ANY type
+    and not currently bound to a different address type.
+    TCPIP_UDP_Disconnect could be issued to remove a previous IP type binding.
+  */
+bool   TCPIP_UDP_Bind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT localPort,  
+                      IP_MULTI_ADDRESS* localAddress);
+
+// *****************************************************************************
+
+/*
+  Function:
+    bool TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
+	                    UDP_PORT remotePort,  IP_MULTI_ADDRESS* remoteAddress);
+
+  Summary:
+    Bind a socket to an address type, remote port and address.
+    This function is meant primarily for server sockets.
+
+  Description:
+    Sockets don't need specific remote binding, they should accept connections on 
+	any incoming interface. Therefore, the binding is done automatically by the stack.
+    However, specific remote binding can be requested using this function.
+    For a server socket it can be used to restrict accepting connections from  a 
+	specific remote host.
+    For a client socket it will just change the default binding done when the socket was opened.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP			-	The socket to bind.
+	addType			-	The type of address being used.
+                        Valid values are IP_ADDRESS_TYPE_ANY/IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6.
+	remotePort		-	The remote port to bind to.
+	remoteAddress	-   Remote address to use.
+	
+  Returns:
+	- true  - Indicates success
+	- false - Indicates failure
+
+  Remarks:
+    If address type IP_ADDRESS_TYPE_ANY is used, the remoteAddress parameter won't be used
+    and the socket won't change the remote destination address.
+    However, for the call to succeed, socket must have been created with
+    IP_ADDRESS_TYPE_ANY type and must not be currently bound to a IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 type.
+
+    If address type IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 is used,
+    then the socket type will be changed accordingly, and the remoteAddress will be used,
+    if provided.
+    The socket will be bound to this type of address.
+    For the call to succeed the socket must currently have the type IP_ADDRESS_TYPE_ANY or to
+    match the addType parameter.
+
+    If the remoteAddress != 0 and addType != IP_ADDRESS_TYPE_ANY,
+    the call will enforce UDP_OPTION_STRICT_ADDRESS on the socket.
+    
+    The remote port is always changed, even if remotePort == 0.
+    It will enforce UDP_OPTION_STRICT_PORT on the socket.
+    
+    In order to change dynamically the type of address,
+    the socket must have been created with a IP_ADDRESS_TYPE_ANY type
+    and not currently bound to a different address type.
+    TCPIP_UDP_Disconnect could be issued to remove a previous IP type binding.
+
+    If the socket is a server socket and is bound to a remote port,
+    the TCPIP_UDP_Disconnect won't remove the port binding.
+
+  */
+bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT remotePort,  
+                            IP_MULTI_ADDRESS* remoteAddress);
+
+// *****************************************************************************
+/*
+  Function:
+	bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
+
+  Summary:
+    Allows setting options to a socket like adjust RX/TX buffer size, etc
+
+  Description:
+    Various options can be set at the socket level.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP - valid socket
+
+
+  Parameters:
+    hUDP		    - socket to set options for	
+	option			- specific option to be set	
+	optParam		- the option value; this is option dependent:	
+                      - UDP_OPTION_STRICT_PORT      - boolean enable/disable
+                      - UDP_OPTION_STRICT_NET       - boolean enable/disable
+                      - UDP_OPTION_STRICT_ADDRESS   - boolean enable/disable
+                      - UDP_OPTION_BROADCAST        - UDP_SOCKET_BCAST_TYPE
+                      - UDP_OPTION_BUFFER_POOL      - boolean enable/disable
+                                                      Note: Changing the UDP_OPTION_BUFFER_POOL will discard
+                                                            the data in the current socket buffer 
+                      - UDP_OPTION_TX_BUFF          - 16-bit value in bytes of the TX buffer
+                                                      Note: the UDP_OPTION_TX_BUFF will discard
+                                                         the data in the current socket buffer 
+                      - UDP_OPTION_TX_QUEUE_LIMIT   - 8-bit value of the TX queue limit
+                      - UDP_OPTION_RX_QUEUE_LIMIT   - 8-bit value of the RX queue limit
+                      - UDP_OPTION_RX_AUTO_ADVANCE  - boolean enable/disable
+                      - UDP_OPTION_TX_TTL           - 8-bit value of TTL
+                      - UDP_OPTION_MULTICAST        - pointer to a UDP_OPTION_MULTICAST_DATA structure
+					  - UDP_OPTION_TOS				- 8-bit value of the TOS
+					  - UDP_OPTION_DF				- boolean - true: no fragmentation allowed; false: fragmentation allowed
+
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure
+
+  Remarks:  
+    This function provides the run-time functionality
+    required to implement some of the standard BSD socket options API.
+
+  */	
+bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
+
+
+// *****************************************************************************
+/*
+  Function:
+	bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
+
+  Summary:
+    Allows getting the options for a socket such as current RX/TX buffer size, etc.
+
+  Description:
+    Various options can be retrieved at the socket level.
+    This function provides compatibility with BSD implementations.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP - valid socket
+
+
+  Parameters:
+    hUDP		    - socket to get options for	
+	option			- specific option to get	
+	optParam		- pointer to an area that will receive the option value; this is option dependent
+                      the size of the area has to be large enough to accommodate the specific option:    
+                      - UDP_OPTION_STRICT_PORT      - pointer to boolean
+                      - UDP_OPTION_STRICT_NET       - pointer to boolean
+                      - UDP_OPTION_STRICT_ADDRESS   - pointer to boolean
+                      - UDP_OPTION_BROADCAST        - pointer to UDP_SOCKET_BCAST_TYPE
+                      - UDP_OPTION_BUFFER_POOL      - pointer to boolean
+                      - UDP_OPTION_TX_BUFF          - pointer to a 16 bit value to receive bytes of the TX buffer
+                      - UDP_OPTION_TX_QUEUE_LIMIT   - pointer to an 8 bit value to receive the TX queue limit
+                      - UDP_OPTION_RX_QUEUE_LIMIT   - pointer to an 8 bit value to receive the RX queue limit
+                      - UDP_OPTION_RX_AUTO_ADVANCE  - pointer to boolean
+                      - UDP_OPTION_TX_TTL           - pointer to an 8 bit value to receive the TTL value
+                      - UDP_OPTION_MULTICAST        - pointer to a UDP_MULTICAST_FLAGS value to receive the current socket settings
+			 		  - UDP_OPTION_TOS				- pointer to an 8 bit value to receive the TOS
+					  - UDP_OPTION_DF				- pointer to boolean - true: no fragmentation allowed; false: fragmentation allowed
+
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure
+  */	
+bool                TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
+
+
+// *****************************************************************************
+
+/*
+  Function:
+	  bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP)
+  
+ Summary:
+	  Determines if a socket has an established connection.
+
+ Description:
+	This function determines if a socket has an established connection to a remote node.  
+	Call this function after calling TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen
+    to determine when the connection is set up and ready for use.  
+
+ Precondition:
+    None.
+
+ Parameters:
+	hUDP - The socket to check.
+
+ Return Values:
+	- true  - The socket has been opened.
+	- false - The socket is not currently opened.
+
+ Remarks:
+	An UDP server or client socket can always send data,
+    as long as it has a valid destination address,
+    even if there's no remote socket connected to it.
+    This function will return true if the socket is opened
+    and currently has a valid destination.
+    Note that this is true if a client socket was opened with a
+    remote host address, a socket received data from a remote host,
+    or a explicit remote bind was done.
+ */
+bool                TCPIP_UDP_IsConnected(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_IsOpened(UDP_SOCKET hUDP)
+  
+ Summary:
+	Determines if a socket was opened.
+
+ Description:
+	This function determines if a socket was opened.  
+
+ Precondition:
+    None.
+
+ Parameters:
+	hUDP - The socket to check.
+
+ Return Values:
+	- true  - The socket has been opened.
+	- false - The socket is not currently opened.
+
+ Remarks:
+	This is a backward compatibility call.
+
+ */
+#define             TCPIP_UDP_IsOpened(hUDP)      TCPIP_UDP_IsConnected(hUDP)       
+
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_Close(UDP_SOCKET hUDP)
+
+  Summary:
+	Closes a UDP socket and frees the handle.
+	
+  Description:
+	Closes a UDP socket and frees the handle.  Call this function to release
+	a socket and return it to the pool for use by future communications.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP - The socket handle to be released.
+
+  Returns:
+    - true  - If the call succeeded
+    - false - If the call failed (no such socket)
+  	
+  Remarks:
+    Always close the socket when no longer in use.
+    This will free the allocated resources, including the TX buffers.
+
+  */
+bool                TCPIP_UDP_Close(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_Disconnect(UDP_SOCKET hUDP, bool flushRxQueue)
+
+  Summary:
+	Disconnects a UDP socket and re-initializes it.
+	
+  Description:
+	Disconnects a UDP socket and re-initializes it.
+    Call this function to return the socket to its initial open state
+    and to use it for future communication.
+
+    This function is meant especially for server sockets that could listen
+    on multiple interfaces and on both IPv4 and IPv6 networks.
+
+    When a server socket received an inbound IPv4 connection it will be
+    bound to IPv4 connections until it's closed or disconnected.
+    Same is true for IPv6 connections.
+
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP - valid socket
+
+  Parameters:
+	hUDP            - The socket handle to be disconnected.
+    flushRxQueue    - boolean to flush the pending RX queue
+
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure
+  	
+  Remarks:
+    The call will try to maintain as much as possible from the socket state.
+   
+    For a server socket the remote port will be cleared unless a TCPIP_UDP_RemoteBind() was performed.
+    If the remote port is cleared, a new TCPIP_UDP_RemoteBind or TCPIP_UDP_DestinationPortSet operation
+    will be needed if the remote port needs to be maintained.
+
+    For a client socket the remote port is maintained.
+
+    This will free the allocated TX buffers if the socket was opened with IP_ADDRESS_TYPE_ANY.
+
+    All the pending RX packets will be cleared when flushRxQueue is set.
+    Otherwise the packets will be kept and will be available for next read operations.
+
+    Note that if the RX pending packets exist and are not flushed,
+    the socket will be bound immediately to the connection corresponding
+    to the pending packet in the queue.
+    
+  */
+bool                TCPIP_UDP_Disconnect(UDP_SOCKET hUDP, bool flushRxQueue);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_SocketInfoGet(UDP_SOCKET hUDP, UDP_SOCKET_INFO* pInfo)
+
+  Summary:
+	Returns information about a selected UDP socket.
+	
+  Description:
+    This function will fill a user passed UDP_SOCKET_INFO structure
+    with current status of the selected socket.
+    
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP - valid socket
+    pInfo - valid address of a UDP_SOCKET_INFO structure
+
+  Parameters:
+  	UDP_SOCKET hUDP - Socket for which information is to be obtained
+	UDP_SOCKET_INFO* pInfo - pointer to UDP_SOCKET_INFO to receive socket information
+
+  Returns:
+    - true  - if the call succeeded
+    - false - if no such socket or invalid pInfo
+
+  */
+bool                TCPIP_UDP_SocketInfoGet(UDP_SOCKET hUDP, UDP_SOCKET_INFO* pInfo);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_TxOffsetSet(UDP_SOCKET hUDP, uint16_t wOffset, bool relative)
+
+  Summary:
+	Moves the pointer within the TX buffer.
+	
+  Description:
+	This function allows the write location within the TX buffer to be 
+	specified. Future calls to TCPIP_UDP_Put, TCPIP_UDP_ArrayPut, TCPIP_UDP_StringPut, etc
+    will write data from the indicated location.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP    - UDP socket handle 
+	wOffset - Offset in the UDP packet data payload to move the write pointer.
+    relative- if true, the wOffset is added to the current write pointer.
+              else the wOffset is from the beginning of the UDP buffer
+
+  Returns:
+  	- true  - if the offset was valid and the write pointer has been moved
+    - false - if the offset was not valid
+  */
+bool                TCPIP_UDP_TxOffsetSet(UDP_SOCKET hUDP, uint16_t wOffset, bool relative);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_TxPutIsReady(UDP_SOCKET hUDP, unsigned short count)
+
+  Summary:
+	Determines how many bytes can be written to the UDP socket.
+	
+  Description:
+	This function returns the number of bytes that can be written to the specified UDP
+	socket.
+  
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP  - UDP socket handle
+    count - Number of bytes requested
+
+  Returns:
+  	The number of bytes that can be written to this socket.
+
+  Remarks:
+    The function won't increase the size of the UDP TX buffer.
+    If this is needed use TCPIP_UDP_OptionsSet.
+    The count variable is not used.
+
+    This function is deprecated and it will be eventually removed.
+    The function is identical to the TCPIP_UDP_PutIsReady and maintained for backward compatibility only.
+
+  */
+uint16_t            TCPIP_UDP_TxPutIsReady(UDP_SOCKET hUDP, unsigned short count);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_PutIsReady(UDP_SOCKET hUDP)
+
+  Summary:
+	Determines how many bytes can be written to the UDP socket.
+	
+  Description:
+	This function determines how many bytes can be written to the specified UDP
+	socket.
+    This function performs TX buffer allocation for the socket.
+  
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP  - UDP socket handle
+
+  Returns:
+  	The number of bytes that can be written to this socket.
+
+  Remarks:
+    If the current socket TX buffer is in use (in traffic), this function will allocate 
+	a new TX buffer.
+    Otherwise the current TX buffer will be used.
+
+    The function SHOULD be called before using TCPIP_UDP_ArrayPut
+    for the first time or after any TCPIP_UDP_Flush.
+    There is no harm in calling it everytime before any TCPIP_UDP_ArrayPut
+    (except the overhead).
+
+  */
+uint16_t            TCPIP_UDP_PutIsReady(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_ArrayPut(UDP_SOCKET hUDP, const uint8_t *cData, uint16_t wDataLen)
+
+  Summary:
+	Writes an array of bytes to the UDP socket.
+	
+  Description:
+	This function writes an array of bytes to the UDP socket, 
+	while incrementing the socket write pointer.
+
+    TCPIP_UDP_PutIsReady should be used before calling this function
+    to verify that there is room in the socket buffer.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+    cData - valid pointer
+
+  Parameters:
+	hUDP  - UDP socket handle
+	cData - The array to write to the socket.
+	wDataLen - Number of bytes from cData to be written.
+	
+  Returns:
+  	The number of bytes successfully placed in the UDP transmit buffer.
+    If this value is less than wDataLen, then the buffer became full and the
+  	input was truncated.
+
+  Remarks:
+    The return value could be 0 if there is no TX buffer available
+    (for example the socket has TX data queued and the TCPIP_UDP_PutIsReady
+    has not been called or the TX buffer allocation failed).
+
+    The return value could be < than wDataLen depending on the size and the available space
+    of the socket TX buffer
+
+  */
+uint16_t            TCPIP_UDP_ArrayPut(UDP_SOCKET hUDP, const uint8_t *cData, uint16_t wDataLen);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint8_t* TCPIP_UDP_StringPut(UDP_SOCKET hUDP, const uint8_t *strData)
+
+  Summary:
+	Writes a null-terminated string to the UDP socket.
+	
+  Description:
+	This function writes a null-terminated string to the UDP socket
+    while incrementing the socket write pointer.
+    TCPIP_UDP_PutIsReady could be used before
+    calling this function to verify that there is room in the socket buffer.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP    - valid socket
+    strData - valid pointer
+
+  Parameters:
+    hUDP     - UDP socket handle
+	strData  - Pointer to the string to be written to the socket.
+	
+  Returns:
+  	A pointer to the byte following the last byte written.
+    Note that this is different than the TCPIP_UDP_ArrayPut functions.
+    If this pointer does not dereference to a NULL byte,
+    then the buffer became full and the input data was truncated.
+
+  */
+const uint8_t*      TCPIP_UDP_StringPut(UDP_SOCKET hUDP, const uint8_t *strData);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_TxCountGet(UDP_SOCKET hUDP)
+
+  Summary:
+	Returns the amount of bytes written into the UDP socket.
+	
+  Description:
+	This function returns the amount of bytes written into the UDP socket,
+    i.e. the current position of the write pointer. 
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP   - UDP socket handle
+
+  Return Values:
+  	The number of bytes in the socket TX buffer; otherwise, 0 if the socket is invalid.
+
+  */
+uint16_t            TCPIP_UDP_TxCountGet(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_Flush(UDP_SOCKET hUDP)
+
+  Summary:
+	Transmits all pending data in a UDP socket.
+	
+  Description:
+	This function builds a UDP packet with the pending TX data and marks it 
+	for transmission over the network interface.
+    There is no UDP state machine to send the socket data automatically.
+    The UDP socket client must call this function to actually send the data over
+    the network.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP   - UDP socket handle
+	
+  Returns:
+  	The number of bytes that currently were in the socket TX buffer
+    and have been flushed. Otherwise, 0 if the packet could not be transmitted:
+    - invalid socket
+    - invalid remote address
+    - no route to the remote host could be found
+
+  Remarks:
+	Note that a UDP socket must be flushed to send data over the network.
+    There is no UDP state machine (auto transmit) for UDP sockets.
+
+  */
+uint16_t            TCPIP_UDP_Flush(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_Put(UDP_SOCKET hUDP, uint8_t v)
+
+  Summary:
+	Writes a byte to the UDP socket.
+	
+  Description:
+	This function writes a single byte to the UDP socket, 
+	while incrementing the socket write pointer.
+    TCPIP_UDP_PutIsReady could be used before calling this function
+    to verify that there is room in the socket buffer.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP   - UDP socket handle
+	v - The byte to be loaded into the transmit buffer.
+
+  Return Values: The number of bytes successfully written to the socket
+  	- 1 - The byte was successfully written to the socket.
+  	- 0 - The transmit buffer is already full and so the write failed
+          or the socket is invalid.
+    
+  Remarks:
+    This function is very inefficient and its use is discouraged.
+    A buffered approach (TCPIP_UDP_ArrayPut) is preferred.
+
+  */
+uint16_t                TCPIP_UDP_Put(UDP_SOCKET hUDP, uint8_t v);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_GetIsReady(UDP_SOCKET hUDP)
+
+  Summary:
+	Determines how many bytes can be read from the UDP socket.
+	
+  Description:
+	This function will return the number of bytes that are available
+    in the specified UDP socket RX buffer.
+  
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP   - UDP socket handle
+
+  Returns:
+  	The number of bytes that can be read from this socket.
+
+  Remarks:
+    The UDP socket queues incoming RX packets in an internal queue.
+
+    If currently there is no RX packet processed (as a result of retrieving
+    all available bytes with TCPIP_UDP_ArrayGet, for example),
+    this call will advance the RX packet to be processed to the next
+    queued packet.
+
+    If a RX packet is currently processed, the call will return the number of bytes
+    left to be read from this packet.
+
+  */
+uint16_t            TCPIP_UDP_GetIsReady(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	void TCPIP_UDP_RxOffsetSet(UDP_SOCKET hUDP, uint16_t wOffset)
+
+  Summary:
+	Moves the read pointer within the socket RX buffer.
+	
+  Description:
+	This function allows the user to specify the read location within the socket RX buffer.
+    Future calls to TCPIP_UDP_Get and TCPIP_UDP_ArrayGet will read data from
+	the indicated location forward.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP    - UDP socket handle
+	wOffset - Offset from beginning of UDP packet data payload to place the
+		      read pointer.
+
+  Returns:
+  	None.
+
+  */
+void                TCPIP_UDP_RxOffsetSet(UDP_SOCKET hUDP, uint16_t rOffset);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET hUDP, uint8_t *cData, uint16_t wDataLen)
+
+  Summary:
+	Reads an array of bytes from the UDP socket.
+	
+  Description:
+	This function reads an array of bytes from the UDP socket, 
+	while adjusting the current read pointer and decrementing
+    the remaining bytes available.
+    TCPIP_UDP_GetIsReady should be used before calling this function
+    to get the number of the available bytes in the socket.
+
+    
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP     - UDP socket handle
+	cData    - The buffer to receive the bytes being read.
+               If NULL, the bytes are simply discarded 
+	wDataLen - Number of bytes to be read from the socket.
+	
+  Returns:
+  	The number of bytes successfully read from the UDP buffer.
+    If this value is less than wDataLen, then the buffer was emptied
+    and no more data is available.
+
+  Remarks:
+    For discarding a number of bytes in the RX buffer the TCPIP_UDP_RxOffsetSet()
+    can also be used.
+
+    The UDP socket queues incoming RX packets in an internal queue.
+    This call will try to retrieve the bytes from the current processing packet
+    but it won't advance the processed packet.
+    TCPIP_UDP_GetIsReady should be called to advance the processed RX packet.
+
+    TCPIP_UDP_Discard should be called when done processing the current RX packet.
+
+  */
+uint16_t            TCPIP_UDP_ArrayGet(UDP_SOCKET hUDP, uint8_t *cData, uint16_t wDataLen);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_Get(UDP_SOCKET hUDP, uint8_t *v)
+
+  Summary:
+	Reads a byte from the UDP socket.
+	
+  Description:
+	This function reads a single byte from the UDP socket, 
+	while decrementing the remaining RX buffer length.
+    TCPIP_UDP_GetIsReady should be used before calling this function
+    to get the number of bytes available in the socket.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP   - socket handle
+	v - The buffer to receive the data being read.
+
+  Return Values: The number of bytes successfully read
+  	- 1 - A byte was successfully read
+  	- 0 - No data available in the read buffer or invalid socket
+
+  Remarks:
+    This function is very inefficient and its usage is discouraged.
+    A buffered approach (TCPIP_UDP_ArrayGet) is preferred.
+
+    See the previous notes for TCPIP_UDP_ArrayGet function.
+ */
+uint16_t                TCPIP_UDP_Get(UDP_SOCKET hUDP, uint8_t *v);
+
+// *****************************************************************************
+
+/*
+  Function:
+	uint16_t TCPIP_UDP_Discard(UDP_SOCKET hUDP)
+
+  Summary:
+	Discards any remaining RX data from a UDP socket.
+	
+  Description:
+	This function discards any remaining received data in the UDP socket.
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+    hUDP   - socket handle
+	
+  Returns:
+  	Number of discarded bytes, if any.
+
+  Remarks:
+    The UDP socket queues incoming RX packets in an internal queue.
+
+    This call will discard the remaining bytes (if any) in the current RX packet
+    and will advance the RX packet to be processed to the next
+    queued packet.
+
+    This function should be normally called after retrieving the available bytes
+    with TCPIP_UDP_ArrayGet.
+
+    When data available, calling it repeatedly will discard
+    one pending RX packet at a time.
+
+    Note that a call to TCPIP_UDP_Discard is not needed if all bytes
+    are retrieved with  TCPIP_UDP_ArrayGet and then TCPIP_UDP_GetIsReady
+    is called. 
+
+  */
+uint16_t               TCPIP_UDP_Discard(UDP_SOCKET hUDP);
+
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_SocketNetSet(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet)
+
+  Summary:
+	Sets the network interface for an UDP socket
+	
+  Description:
+	This function sets the network interface for an UDP socket
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP - The UDP socket
+   	hNet - interface handle
+	
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure
+
+  Remarks:
+    A NULL hNet can be passed (0) so that the current
+    socket network interface selection will be cleared
+
+    If the hNet != 0, it will enforce UDP_OPTION_STRICT_NET on the socket.
+
+  */
+bool                TCPIP_UDP_SocketNetSet(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet);
+
+// *****************************************************************************
+
+/*
+  Function:
+	TCPIP_NET_HANDLE TCPIP_UDP_SocketNetGet(UDP_SOCKET hUDP)
+
+  Summary:
+	Gets the network interface of an UDP socket
+	
+  Description:
+	This function returns the interface handle of an UDP socket
+
+  Precondition:
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP - valid socket
+
+  Parameters:
+	hUDP - The UDP socket
+	
+  Returns:
+    Handle of the interface that socket currently uses.
+
+  */
+TCPIP_NET_HANDLE    TCPIP_UDP_SocketNetGet(UDP_SOCKET hUDP);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_BcastIPV4AddressSet(UDP_SOCKET hUDP, UDP_SOCKET_BCAST_TYPE bcastType, 
+	                                   TCPIP_NET_HANDLE hNet)
+
+  Summary:
+	Sets the broadcast IP address of a socket
+	Allows an UDP socket to send broadcasts.
+	
+  Description:
+      It sets the broadcast address for the socket
+
+
+  Precondition:
+	UDP initialized
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP  - valid socket
+
+  Parameters:
+	hUDP			-	the UDP socket
+	bcastType   	-	Type of broadcast
+	hNet        	- 	handle of an interface to use for the network directed broadcast
+                        Not used for network limited broadcast
+	
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure:
+      - invalid socket
+      - invalid socket address type
+      - a broadcast for the specified interface could not be obtained
+      - invalid broadcast type specified
+
+  Remarks:
+    This function allows changing of the destination IPv4 address dynamically.
+
+    However, the call will fail if the socket was previously set to broadcast
+    using the TCPIP_UDP_OptionsSet call.
+    TCPIP_UDP_OptionsSet takes precedence.
+
+  */
+bool   TCPIP_UDP_BcastIPV4AddressSet(UDP_SOCKET hUDP, UDP_SOCKET_BCAST_TYPE bcastType, 
+                                    TCPIP_NET_HANDLE hNet);
+
+// *****************************************************************************
+
+/*
+  Function:
+	bool TCPIP_UDP_DestinationIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
+	                                IP_MULTI_ADDRESS* remoteAddress)
+
+  Summary:
+	Sets the destination IP address of a socket
+	
+  Description:
+      - It sets the IP destination address
+        This allows changing the IP destination address dynamically.
+
+
+  Precondition:
+	UDP initialized
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
+    hUDP  - valid socket
+    remoteAddress - valid address pointer
+
+  Parameters:
+	hUDP			-	the UDP socket
+	addType        	-	Type of address: IPv4/IPv6
+	remoteAddress   - 	pointer to an address to use 
+	
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure:
+      - invalid socket
+      - invalid socket address type
+      - socket is of broadcast type
+
+  Remarks:
+    The call will fail if the socket was previously set to broadcast
+    using the TCPIP_UDP_OptionsSet call.
+    TCPIP_UDP_OptionsSet takes precedence.
+
+    The call will fail if remoteAddress is 0.
+    The destination IP address will not be changed.
+    
+  */
+bool    TCPIP_UDP_DestinationIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
+                                           IP_MULTI_ADDRESS* remoteAddress);
+
+// *****************************************************************************
+
+/*
+  Function:
+    bool TCPIP_UDP_SourceIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
+	                                  IP_MULTI_ADDRESS* localAddress)
+
+  Summary:
+	Sets the source IP address of a socket
+	
+  Description:
+    This function sets the IP source address, which allows changing the source 
+	P address dynamically.
+
+
+  Precondition:
+	UDP initialized
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP  - valid socket
+    localAddress - valid address pointer
+
+  Parameters:
+	hUDP			- the UDP socket
+	addType        	- Type of address: IPv4/IPv6
+	localAddress    - pointer to an address to use 
+	
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates failure:
+      - invalid socket
+      - invalid socket address type
+      - unspecified localAddress
+
+
+  Remarks:
+    The call will fail if localAddress is 0.
+    The source IP address will not be changed.
+    
+  */
+bool TCPIP_UDP_SourceIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
+                                  IP_MULTI_ADDRESS* localAddress);
+
+
+// *****************************************************************************
+
+/*
+  Function:
+    bool TCPIP_UDP_DestinationPortSet(UDP_SOCKET s, UDP_PORT remotePort)
+
+  Summary:
+	Sets the destination port of a socket
+	
+  Description:
+    This function sets the destination port, which allows changing the destination 
+	port dynamically.
+
+
+  Precondition:
+	UDP initialized
+	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
+    hUDP  - valid socket
+
+  Parameters:
+	hUDP		-	the UDP socket
+	remotePort  - 	destination port to use 
+	
+  Returns:
+ 	- true  - Indicates success
+    - false - Indicates an invalid socket
+
+  Remarks:
+    The destination remote port will always be changed, even if remotePort == 0.
+
+    It will not change the UDP_OPTION_STRICT_PORT on the socket.
+    
+  */
+bool    TCPIP_UDP_DestinationPortSet(UDP_SOCKET s, UDP_PORT remotePort);
+
+
+// *****************************************************************************
+/* Function:
+    TCPIP_UDP_SignalHandlerRegister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_TYPE sigMask, 
+	                   TCPIP_UDP_SIGNAL_FUNCTION handler, const void* hParam)
+
+  Summary:
+    Registers a UDP socket signal handler.
+
+  Description:
+    This function registers a UDP socket signal handler.
+    The UDP module will call the registered handler when a
+    UDP signal (TCPIP_UDP_SIGNAL_TYPE) occurs.
+
+  Precondition:
+    UDP valid socket.
+
+  Parameters:
+	s		    - The UDP socket
+    sigMask      - mask of signals to be reported
+    handler     - signal handler to be called when a UDP signal occurs.
+    hParam      - Parameter to be used in the handler call.
+                  This is user supplied and is not used by the UDP module.
+                  Currently not used and it should be null.
+
+
+  Returns:
+    Returns a valid handle if the call succeeds, or a null handle if
+    the call failed (null handler, no such socket, existent handler).
+
+  Remarks:
+
+    Only one signal handler per socket is supported.
+    A new handler does not override the existent one.
+    Instead TCPIP_UDP_SignalHandlerDeregister has to be explicitly called.
+
+    The handler has to be short and fast. It is meant for
+    setting an event flag, not for lengthy processing!
+
+    The hParam is passed by the client but is currently not used and should be 0.
+
+    For multi-threaded systems the TCP/IP packet dispatch does not occur on the user thread.
+    The signal handler will be called on a different thread context.
+    It is essential that this handler is non blocking and really fast.
+    
+
+    For multi-threaded systems, once set, it is not recommended to change the signal handler at run time.
+    Synchronization between user threads and packet dispatch threads could be difficult.
+    If really need to be changed, make sure that the old handler could still be called
+    and it should be valid until the new one is taken into account.
+    TCPIP_UDP_SignalHandlerDeregister needs to be called before registering another handler.
+
+
+ */
+
+TCPIP_UDP_SIGNAL_HANDLE  TCPIP_UDP_SignalHandlerRegister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_TYPE sigMask, 
+                                 TCPIP_UDP_SIGNAL_FUNCTION handler, const void* hParam);
+
+// *****************************************************************************
+/* Function:
+    TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE hSig)
+
+  Summary:
+    Deregisters a previously registered UDP socket signal handler.
+    
+  Description:
+    Deregisters the UDP socket signal handler.
+
+  Precondition:
+    hSig valid UDP signal handle.
+
+  Parameters:
+	s       - The UDP socket
+    hSig    - A handle returned by a previous call to TCPIP_UDP_SignalHandlerRegister.
+
+  Returns:
+    - true	- if the call succeeds
+    - false - if no such handler is registered
+ */
+
+bool   TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE hSig);
+
+// *****************************************************************************
+/* Function:
+    int TCPIP_UDP_SocketsNumberGet(void)
+
+  Summary:
+    Returns the number of existent UDP sockets.
+    
+  Description:
+    This function returns the number of created UDP sockets.
+    This is the maximum number of sockets that can be opened at any moment
+    as it's been passed as parameter when UDP module was created.
+
+  Precondition:
+    UDP module properly initialized
+
+  Parameters:
+	None
+
+  Returns:
+    The number of UDP sockets
+ */
+
+int     TCPIP_UDP_SocketsNumberGet(void);
+
+//*******************************************************************************
+/*
+  Function:
+    TCPIP_UDP_PROCESS_HANDLE    TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HANDLER pktHandler, const void* handlerParam)
+
+  Summary:
+    Sets a new packet processing handler.
+
+  Description:
+    This function registers a new packet processing handler.
+    The caller can use the handler to be notified of incoming packets
+    and given a chance to examine/process them.
+
+  Precondition:
+    UDP properly initialized
+
+  Parameters:
+    pktHandler      - the packet handler which will be called for an incoming packet
+    handlerParam    - packet handler parameter
+
+  Returns:
+    - a valid TCPIP_UDP_PROCESS_HANDLE - if the operation succeeded
+    - NULL - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_UDP_PROCESS_HANDLE pktHandle = TCPIP_UDP_PacketHandlerRegister( myPktHandler, myParam );
+    </code>
+
+  Remarks:
+    Currently only one packet handler is supported for the UDP module.
+    The call will fail if a handler is already registered.
+    Use TCPIP_UDP_PacketHandlerDeregister first
+
+    Exists only if TCPIP_UDP_EXTERN_PACKET_PROCESS is true 
+
+  */
+TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HANDLER pktHandler, const void* handlerParam);
+
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+
+  Summary:
+    Deregisters a previously registered packet handler.
+
+  Description:
+    This function removes a packet processing handler.
+
+  Precondition:
+    UDP properly initialized
+
+  Parameters:
+    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_UDP_PacketHandlerRegister
+
+
+  Returns:
+    - true  - if the operation succeeded
+    - false - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_UDP_PROCESS_HANDLE myHandle = TCPIP_UDP_PacketHandlerRegister(myPacketHandler, myParam );
+    // process incoming packets
+    // now we're done with it
+    TCPIP_UDP_PacketHandlerDeregister(myHandle);
+    </code>
+
+  Remarks:
+    Exists only if TCPIP_UDP_EXTERN_PACKET_PROCESS is true 
+
+  */
+bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+
+
+
+// *****************************************************************************
+/*
+  Function:
+    void  TCPIP_UDP_Task(void)
+
+  Summary:
+    Standard TCP/IP stack module task function.
+
+  Description:
+    This function performs UDP module tasks in the TCP/IP stack.
+
+  Precondition:
+    The UDP module should have been initialized.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Remarks:
+    None.
+*/
+void  TCPIP_UDP_Task(void);
+
+
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+//DOM-IGNORE-END
+
+#endif  // __UDP_H_
