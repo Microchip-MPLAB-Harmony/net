@@ -38,7 +38,7 @@ def instantiateComponent(tcpipDhcpComponent):
     tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (in sec)")
     tcpipDhcpcReqTimeout.setVisible(True)
     tcpipDhcpcReqTimeout.setDescription("DHCP Request Time-out in seconds")
-    tcpipDhcpcReqTimeout.setDefaultValue(2)
+    tcpipDhcpcReqTimeout.setDefaultValue(10)
     
     # DHCP Client Host name maximum size
     tcpipDhcpcHostNameSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HOST_NAME_SIZE", None)
