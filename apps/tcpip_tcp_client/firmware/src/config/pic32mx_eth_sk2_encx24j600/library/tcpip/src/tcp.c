@@ -441,7 +441,11 @@ bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 /*static __inline__*/static  void /*__attribute__((always_inline))*/ _TcpSocketKill(TCB_STUB* pSkt)
 {
     _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_KILLED);       // trace purpose only
+    
+    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     TCBStubs[pSkt->sktIx] = 0;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+
     TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->rxStart);
     TCPIP_HEAP_Free(tcpHeapH, (void*)pSkt->txStart);
     TCPIP_HEAP_Free(tcpHeapH, pSkt);

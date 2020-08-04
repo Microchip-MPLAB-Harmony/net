@@ -112,7 +112,14 @@ typedef int16_t UDP_SOCKET;
     Structure containing the information about a UDP socket
 
   Remarks:
-    None
+    The information in this structure will be updated based on the current packet received by the socket.
+    For example, members like:
+        hNet
+        remotePort
+        remoteIPaddress
+    could change from one packet to another.
+    This depends on how the socket is configured (allowed to receive on all interfaces, from all ports, etc.).
+    See UDP_SOCKET_OPTION for details.
 
 */
 typedef struct
@@ -550,6 +557,20 @@ typedef struct
                       opened or parameter error.
 
     - A UDP_SOCKET handle - Save this handle and use it when calling all other UDP APIs. 
+
+  Remarks:
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
+
  */
 UDP_SOCKET          TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE addType, UDP_PORT localPort,  
                     IP_MULTI_ADDRESS* localAddress);
@@ -558,7 +579,7 @@ UDP_SOCKET          TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE addType, UDP_PORT local
 
 /*
   Function:
-	 TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE addType, UDP_PORT remotePort, 
+	 UDP_SOCKET TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE addType, UDP_PORT remotePort, 
 	                      IP_MULTI_ADDRESS* remoteAddress)
 
   Summary:
@@ -587,8 +608,19 @@ UDP_SOCKET          TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE addType, UDP_PORT local
 
     - A UDP_SOCKET handle - Save this handle and use it when calling all other UDP APIs. 
 
- Remarks:
-     None.
+  Remarks:
+    Sockets and user threads protection
+        For efficiency reasons, there is NO PROTECTION for each individual API call
+        except to Open and Close sockets!
+        What it means is that:
+            - the user application should close all its sockets before issuing
+              a stack/if down command
+              The stack manager takes care of the internally used sockets
+
+            - A socket can NOT be used concurrently from multiple threads!
+              It's ok to pass a socket from one thread to another as long as
+              there's is no access from more than one thread at a time
+
 
  */
 UDP_SOCKET          TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE addType, UDP_PORT remotePort, 
@@ -978,7 +1010,7 @@ bool                TCPIP_UDP_Disconnect(UDP_SOCKET hUDP, bool flushRxQueue);
 	
   Description:
     This function will fill a user passed UDP_SOCKET_INFO structure
-    with status of the selected socket.
+    with current status of the selected socket.
     
 
   Precondition:
