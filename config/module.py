@@ -92,9 +92,9 @@ def loadModule():
     tcpipUdpComponent.setDisplayType("TCP/IP Library")
     
     ########################## TCP/IP LIBRARY Presentation Layer Configurations #################################    
-    netPres2Component = Module.CreateComponent("netPres2", "Presentation Layer", "/Libraries/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/netPres2.py")
-    netPres2Component.addCapability("libNetPres2","net_pres",True)    
-    netPres2Component.addDependency("NetPres2_Crypto_Dependency", "TLS Provider", None, False, False)
+    net_PresComponent = Module.CreateComponent("net_Pres", "Presentation Layer", "/Libraries/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/net_pres.py")
+    net_PresComponent.addCapability("libNet_Pres","net_pres",True)    
+    net_PresComponent.addDependency("Net_Pres_Crypto_Dependency", "TLS Provider", None, False, False)
     
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   
     tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")

@@ -31,8 +31,12 @@ def instantiateComponent(wolfmqttComponent):
     # Enable "Generate Harmony System Service Common Files" option in MHC
     if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
         Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
+        
+    # Activate new net_Pres component if obsolete netPres Component is not added in project
     if(Database.getComponentByID("netPres") == None):
-        res = Database.activateComponents(["netPres"])
+        if(Database.getComponentByID("net_Pres") == None):
+            res = Database.activateComponents(["net_Pres"]) 
+                
     # wolfMQTT Library Configuration
     wolfMqttLibMenu = wolfmqttComponent.createMenuSymbol(None, None) 
     wolfMqttLibMenu.setLabel("wolfMQTT Library Configuration")
@@ -461,6 +465,8 @@ def handleMessage(messageID, args):
       
 def wolfMqttNetPresEnableFnc(symbol, event): 
     if (event["value"] == True):
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
   

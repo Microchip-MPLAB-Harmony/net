@@ -21,25 +21,25 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-def instantiateComponent(netPres2Component):
+def instantiateComponent(net_PresComponent):
 
     print("Network Presentation Component")
     configName = Variables.get("__CONFIGURATION_NAME")
         
     # Network Presentation Layer
-    netPresNeeded = netPres2Component.createBooleanSymbol("NET_PRES_NEEDED", None)
+    netPresNeeded = net_PresComponent.createBooleanSymbol("NET_PRES_NEEDED", None)
     netPresNeeded.setLabel("Use Network Presentation Layer")
     netPresNeeded.setVisible(False)
     netPresNeeded.setDefaultValue(True)
 
     # Use MPLAB Harmony Networking Presentation Layer
-    netPresUse = netPres2Component.createBooleanSymbol("NET_PRES_USE", None)
+    netPresUse = net_PresComponent.createBooleanSymbol("NET_PRES_USE", None)
     netPresUse.setLabel("Use MPLAB Harmony Networking Presentation Layer")
     netPresUse.setVisible(False)
     netPresUse.setDefaultValue(True)
     
     # RTOS Configuration
-    netPresRtosMenu = netPres2Component.createMenuSymbol("NET_PRES_RTOS_MENU", None)
+    netPresRtosMenu = net_PresComponent.createMenuSymbol("NET_PRES_RTOS_MENU", None)
     netPresRtosMenu.setLabel("RTOS Configuration")
     netPresRtosMenu.setDescription("RTOS Configuration")
     netPresRtosMenu.setVisible(False)
@@ -47,14 +47,14 @@ def instantiateComponent(netPres2Component):
     netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
     
     # Net Pres Execution mode
-    netPresExecMode = netPres2Component.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, ["Standalone"]) 
+    netPresExecMode = net_PresComponent.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, ["Standalone"]) 
     netPresExecMode.setLabel("Run this driver instance as")
     netPresExecMode.setVisible(False)
     netPresExecMode.setDescription("Net Pres Execution mode")
     netPresExecMode.setDefaultValue("Standalone")
     
     # Net Pres Task Stack Size
-    netPresTaskSize = netPres2Component.createIntegerSymbol("NET_PRES_RTOS_STACK_SIZE", netPresRtosMenu)
+    netPresTaskSize = net_PresComponent.createIntegerSymbol("NET_PRES_RTOS_STACK_SIZE", netPresRtosMenu)
     netPresTaskSize.setLabel("Stack Size (in bytes)")
     netPresTaskSize.setVisible(True)
     netPresTaskSize.setDescription("Net Pres Task Stack Size")
@@ -62,7 +62,7 @@ def instantiateComponent(netPres2Component):
     netPresTaskSize.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
     
     # Net Pres Task Priority
-    netPresTaskPriority = netPres2Component.createIntegerSymbol("NET_PRES_RTOS_TASK_PRIORITY", netPresRtosMenu)
+    netPresTaskPriority = net_PresComponent.createIntegerSymbol("NET_PRES_RTOS_TASK_PRIORITY", netPresRtosMenu)
     netPresTaskPriority.setLabel("Task Priority")
     netPresTaskPriority.setVisible(True)
     netPresTaskPriority.setDescription("Net Pres Task Priority")
@@ -70,7 +70,7 @@ def instantiateComponent(netPres2Component):
     netPresTaskPriority.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
     
     # Net Pres Task Delay?
-    netPresUseTaskDelay = netPres2Component.createBooleanSymbol("NET_PRES_RTOS_USE_DELAY", netPresRtosMenu)
+    netPresUseTaskDelay = net_PresComponent.createBooleanSymbol("NET_PRES_RTOS_USE_DELAY", netPresRtosMenu)
     netPresUseTaskDelay.setLabel("Use Task Delay?")
     netPresUseTaskDelay.setVisible(True)
     netPresUseTaskDelay.setDescription("Net Pres Use Task Delay?")
@@ -78,7 +78,7 @@ def instantiateComponent(netPres2Component):
     netPresUseTaskDelay.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
     
     # Net Pres Task Delay
-    netPresTaskDelay = netPres2Component.createIntegerSymbol("NET_PRES_RTOS_DELAY", netPresRtosMenu)
+    netPresTaskDelay = net_PresComponent.createIntegerSymbol("NET_PRES_RTOS_DELAY", netPresRtosMenu)
     netPresTaskDelay.setLabel("Task Delay")
     netPresTaskDelay.setVisible(True)
     netPresTaskDelay.setDescription("Net Pres Task Delay")
@@ -86,52 +86,52 @@ def instantiateComponent(netPres2Component):
     netPresTaskDelay.setDependencies(netPresRTOSTaskDelayMenu, ["NET_PRES_RTOS","NET_PRES_RTOS_USE_DELAY"])
         
     # Number of Presentation Sockets
-    netPresSocketCnt = netPres2Component.createIntegerSymbol("NET_PRES_SOCKETS", None)
+    netPresSocketCnt = net_PresComponent.createIntegerSymbol("NET_PRES_SOCKETS", None)
     netPresSocketCnt.setLabel("Number of Presentation Sockets")
     netPresSocketCnt.setVisible(True)
     netPresSocketCnt.setDescription("Number of Presentation Sockets")
     netPresSocketCnt.setDefaultValue(10)    
  
     # Enable MPLAB Harmony TCP/IP as Transport Layer
-    netPresTcpipTransLayer = netPres2Component.createBooleanSymbol("NET_PRES_TRANSPORT_AS_TCPIP", None)
+    netPresTcpipTransLayer = net_PresComponent.createBooleanSymbol("NET_PRES_TRANSPORT_AS_TCPIP", None)
     netPresTcpipTransLayer.setLabel("Use MPLAB Harmony TCP/IP as Transport Layer?")
     netPresTcpipTransLayer.setVisible(True)
     netPresTcpipTransLayer.setDefaultValue(True)   
     netPresTcpipTransLayer.setReadOnly(True)
 
     # Enable Stream Connections?
-    netPresStreamConn = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_STREAM", None)
+    netPresStreamConn = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_STREAM", None)
     netPresStreamConn.setLabel("Support Stream Connections?")
     netPresStreamConn.setVisible(True)
     netPresStreamConn.setDefaultValue((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True))
     netPresStreamConn.setDependencies(netPresStreamEnable, ["tcpipTcp.TCPIP_USE_TCP","NET_PRES_TRANSPORT_AS_TCPIP"])
 
     # Enable Data-gram Connections?
-    netPresDatagramConn = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM",None)
+    netPresDatagramConn = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM",None)
     netPresDatagramConn.setLabel("Support Datagram Connections?")
     netPresDatagramConn.setVisible(True)
     netPresDatagramConn.setDefaultValue((Database.getSymbolValue("tcpipUdp", "TCPIP_USE_UDP") == True))
     netPresDatagramConn.setDependencies(netPresDatagramEnable, ["tcpipUdp.TCPIP_USE_UDP", "NET_PRES_TRANSPORT_AS_TCPIP"])
 
     # Enable Server Connections?
-    netPresSrvrConn = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_SERVER", None)
+    netPresSrvrConn = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SERVER", None)
     netPresSrvrConn.setLabel("Support Server Connections?")
     netPresSrvrConn.setVisible(True)
     netPresSrvrConn.setDefaultValue(True)
 
     # Enable Client Connections?
-    netPresClientConn = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_CLIENT", None)
+    netPresClientConn = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_CLIENT", None)
     netPresClientConn.setLabel("Support Client Connections?")
     netPresClientConn.setVisible(True)
     netPresClientConn.setDefaultValue(True)
 
     # Enable Encryption?
-    netPresEncryptEnable = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_ENCRYPTION", None)
+    netPresEncryptEnable = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_ENCRYPTION", None)
     netPresEncryptEnable.setLabel("Support Encryption?")
     netPresEncryptEnable.setVisible(True)
     netPresEncryptEnable.setDefaultValue(False)
 
-    netPresEncryptionProvider = netPres2Component.createKeyValueSetSymbol("NET_PRES_ENC_PROVIDE", netPresEncryptEnable)
+    netPresEncryptionProvider = net_PresComponent.createKeyValueSetSymbol("NET_PRES_ENC_PROVIDE", netPresEncryptEnable)
     netPresEncryptionProvider.setVisible(False)
     netPresEncryptionProvider.setLabel("Encryption Provider")
     netPresEncryptionProvider.addKey("WolfSSL", "0", "Enable WolfSSL")
@@ -141,59 +141,59 @@ def instantiateComponent(netPres2Component):
     netPresEncryptionProvider.setDefaultValue(1)
     netPresEncryptionProvider.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
     
-    netPresUseWolfSSL = netPres2Component.createBooleanSymbol("NET_PRES_USE_WOLF_SSL", netPresEncryptEnable)
+    netPresUseWolfSSL = net_PresComponent.createBooleanSymbol("NET_PRES_USE_WOLF_SSL", netPresEncryptEnable)
     netPresUseWolfSSL.setLabel("Use wolfSSL as Encryption Provider?")
     netPresUseWolfSSL.setVisible(False)
     netPresUseWolfSSL.setDefaultValue((netPresEncryptionProvider.getSelectedKey() == "WolfSSL"))
     netPresUseWolfSSL.setDependencies(netPresEncProviderMenu, ["NET_PRES_ENC_PROVIDE"])     
     
     # Generate Encryption Provider Stub Code?
-    netPresGenEncryptStub = netPres2Component.createBooleanSymbol("NET_PRES_GENERATE_ENC_STUBS", netPresEncryptEnable)
+    netPresGenEncryptStub = net_PresComponent.createBooleanSymbol("NET_PRES_GENERATE_ENC_STUBS", netPresEncryptEnable)
     netPresGenEncryptStub.setLabel("Generate Encryption Provider Stub Code?")
     netPresGenEncryptStub.setVisible(False)
     netPresGenEncryptStub.setDefaultValue((netPresEncryptionProvider.getSelectedKey() == "Generate Stub"))
 
-    netPresUseWolfSSLDebug = netPres2Component.createBooleanSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG", netPresEncryptEnable)
+    netPresUseWolfSSLDebug = net_PresComponent.createBooleanSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG", netPresEncryptEnable)
     netPresUseWolfSSLDebug.setLabel("Add system console logging for wolf ssl?")
     netPresUseWolfSSLDebug.setVisible(False)
     netPresUseWolfSSLDebug.setDefaultValue(False)
     netPresUseWolfSSLDebug.setDependencies(netPresWolfSSLDebugEnable, ["NET_PRES_USE_WOLF_SSL", "lib_wolfssl.wolfssl_debug"])  
 
-    netPresWolfSSLLogBuffNum = netPres2Component.createIntegerSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS", netPresUseWolfSSLDebug)
+    netPresWolfSSLLogBuffNum = net_PresComponent.createIntegerSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS", netPresUseWolfSSLDebug)
     netPresWolfSSLLogBuffNum.setVisible(False)
     netPresWolfSSLLogBuffNum.setLabel("Number of log message buffers")
     netPresWolfSSLLogBuffNum.setDefaultValue(80)
     netPresWolfSSLLogBuffNum.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_USE_WOLF_SSL_DEBUG_LOG"])  
     
     # Support Stream Encryption?
-    netPresStreamEncrypt = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_STREAM_ENC", netPresEncryptEnable)
+    netPresStreamEncrypt = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_STREAM_ENC", netPresEncryptEnable)
     netPresStreamEncrypt.setLabel("Support Stream Encryption?")
     netPresStreamEncrypt.setVisible(False)
     netPresStreamEncrypt.setDefaultValue(True)
     netPresStreamEncrypt.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
     
     # Support Data-gram Encryption?
-    netPresDataGramEncrypt = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM_ENC", netPresEncryptEnable)
+    netPresDataGramEncrypt = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM_ENC", netPresEncryptEnable)
     netPresDataGramEncrypt.setLabel("Support Data-gram Encryption?")
     netPresDataGramEncrypt.setVisible(False)
     netPresDataGramEncrypt.setDefaultValue(False)
     netPresDataGramEncrypt.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
         
     # Support Server Encryption?
-    netPresServerEncrypt = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_SERVER_ENC", netPresEncryptEnable)
+    netPresServerEncrypt = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SERVER_ENC", netPresEncryptEnable)
     netPresServerEncrypt.setLabel("Support Server Encryption?")
     netPresServerEncrypt.setVisible(False)
     netPresServerEncrypt.setDefaultValue(False)
     netPresServerEncrypt.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
             
     # Support Client Encryption?
-    netPresClientEncrypt = netPres2Component.createBooleanSymbol("NET_PRES_SUPPORT_CLIENT_ENC",netPresEncryptEnable)
+    netPresClientEncrypt = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_CLIENT_ENC",netPresEncryptEnable)
     netPresClientEncrypt.setLabel("Support Client Encryption?")
     netPresClientEncrypt.setVisible(False)
     netPresClientEncrypt.setDefaultValue(True)
     netPresClientEncrypt.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
     
-    netPresBlobCert = netPres2Component.createKeyValueSetSymbol("NET_PRES_BLOB_CERT",netPresEncryptEnable)
+    netPresBlobCert = net_PresComponent.createKeyValueSetSymbol("NET_PRES_BLOB_CERT",netPresEncryptEnable)
     netPresBlobCert.setVisible(False)
     netPresBlobCert.setLabel("Encryption Certificate Store")
     netPresBlobCert.addKey("Fixed Flash Based Certificate Repo", "0", "Use Fixed Flash Based Certificate Repository for Encryption")
@@ -204,7 +204,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobCert.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
     
     # Use Fixed Flash Based Certificate Repository for Encryption?
-    netPresBlobCertRepo = netPres2Component.createBooleanSymbol("NET_PRES_BLOB_CERT_REPO", None)
+    netPresBlobCertRepo = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CERT_REPO", None)
     netPresBlobCertRepo.setLabel("Use Fixed Flash Based Certificate Repository for Encryption?")
     netPresBlobCertRepo.setVisible(False)
     netPresBlobCertRepo.setDescription("Use Fixed Flash Based Certificate Repository for Encryption?")
@@ -212,7 +212,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobCertRepo.setDependencies(netPresBlobCertMenu, ["NET_PRES_BLOB_CERT"])
     
     # Generate Certificate Store Stubs?
-    netPresGenCertStub = netPres2Component.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS", None)
+    netPresGenCertStub = net_PresComponent.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS", None)
     netPresGenCertStub.setLabel("Generate Certificate Store Stubs?")
     netPresGenCertStub.setVisible(False)
     netPresGenCertStub.setDescription("Generate Certificate Store Stubs?")
@@ -220,7 +220,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobCertRepo.setDependencies(netPresBlobCertMenu, ["NET_PRES_BLOB_CERT"])
     
     # Enable Peer Certificates Verification?
-    netPresBlobClientSupport = netPres2Component.createBooleanSymbol("NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION", netPresBlobCert)
+    netPresBlobClientSupport = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION", netPresBlobCert)
     netPresBlobClientSupport.setLabel("Enable Peer Certificates Verification")
     netPresBlobClientSupport.setVisible(False)
     netPresBlobClientSupport.setDescription("Enable Peer Certificates Verification")
@@ -228,7 +228,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobClientSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
 
     # Support Client Certificates?
-    netPresBlobClientSupport = netPres2Component.createBooleanSymbol("NET_PRES_BLOB_CLIENT_SUPPORT", netPresBlobCert)
+    netPresBlobClientSupport = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_SUPPORT", netPresBlobCert)
     netPresBlobClientSupport.setLabel("Support Client Certificates?")
     netPresBlobClientSupport.setVisible(False)
     netPresBlobClientSupport.setDescription("Support Client Certificates?")
@@ -236,7 +236,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobClientSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
 
     # File name containing definitions for Client Certificates?
-    netPresBlobClientCertFileName = netPres2Component.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_FILENAME", netPresBlobClientSupport) 
+    netPresBlobClientCertFileName = net_PresComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_FILENAME", netPresBlobClientSupport) 
     netPresBlobClientCertFileName.setLabel("Client Certificates Definitions File Name")
     netPresBlobClientCertFileName.setVisible(True)
     netPresBlobClientCertFileName.setDescription("File name containing definitions for Client Certificates?")
@@ -244,7 +244,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobClientCertFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"]) 
 
     # Variable Name Containing Data for Client Certificates?
-    netPresBlobClientCertVar = netPres2Component.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_VARIABLE", netPresBlobClientSupport) 
+    netPresBlobClientCertVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_VARIABLE", netPresBlobClientSupport) 
     netPresBlobClientCertVar.setLabel("Client Certificates Data Variable Name")
     netPresBlobClientCertVar.setVisible(True)
     netPresBlobClientCertVar.setDescription("Variable Name Containing Data for Client Certificates?")
@@ -252,7 +252,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobClientCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])  
 
     # Variable Name Containing Size of Client Certificates?
-    netPresBlobClientCertLenVar = netPres2Component.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE", netPresBlobClientSupport) 
+    netPresBlobClientCertLenVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE", netPresBlobClientSupport) 
     netPresBlobClientCertLenVar.setLabel("Client Certificates Size Variable Name")
     netPresBlobClientCertLenVar.setVisible(True)
     netPresBlobClientCertLenVar.setDescription("Variable Name Containing Size of Client Certificates?")
@@ -260,7 +260,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobClientCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
 
     # Support Server Certificate?"
-    netPresBlobServerSupport = netPres2Component.createBooleanSymbol("NET_PRES_BLOB_SERVER_SUPPORT", netPresBlobCert)
+    netPresBlobServerSupport = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_SERVER_SUPPORT", netPresBlobCert)
     netPresBlobServerSupport.setLabel("Support Server Certificate?")
     netPresBlobServerSupport.setVisible(False)
     netPresBlobServerSupport.setDescription("Support Server Certificate?")
@@ -268,7 +268,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
 
     # File name containing definitions for Server Certificates?
-    netPresBlobServerCertFileName = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_FILENAME", netPresBlobServerSupport) 
+    netPresBlobServerCertFileName = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_FILENAME", netPresBlobServerSupport) 
     netPresBlobServerCertFileName.setLabel("Server Certificates Definitions File Name")
     netPresBlobServerCertFileName.setVisible(True)
     netPresBlobServerCertFileName.setDescription("File name containing definitions for Server Certificates?")
@@ -276,7 +276,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerCertFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"]) 
 
     # Variable Name Containing Data for Server Certificates?
-    netPresBlobServerCertVar = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_VARIABLE", netPresBlobServerSupport) 
+    netPresBlobServerCertVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_VARIABLE", netPresBlobServerSupport) 
     netPresBlobServerCertVar.setLabel("Server Certificates Data Variable Name")
     netPresBlobServerCertVar.setVisible(True)
     netPresBlobServerCertVar.setDescription("Variable Name Containing Data for Server Certificates?")
@@ -284,7 +284,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])  
 
     # Variable Name Containing Size of Server Certificates?
-    netPresBlobServerCertLenVar = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE", netPresBlobServerSupport) 
+    netPresBlobServerCertLenVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE", netPresBlobServerSupport) 
     netPresBlobServerCertLenVar.setLabel("Server Certificates Size Variable Name")
     netPresBlobServerCertLenVar.setVisible(True)
     netPresBlobServerCertLenVar.setDescription("Variable Name Containing Size of Server Certificates?")
@@ -292,7 +292,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])
 
     # File name containing definitions for Server Private Key?
-    netPresBlobServerKeyFileName = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_FILENAME", netPresBlobServerSupport) 
+    netPresBlobServerKeyFileName = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_FILENAME", netPresBlobServerSupport) 
     netPresBlobServerKeyFileName.setLabel("Server Private Key Definitions File Name")
     netPresBlobServerKeyFileName.setVisible(True)
     netPresBlobServerKeyFileName.setDescription("File name containing definitions for Server Private Key?")
@@ -300,7 +300,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerKeyFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])
     
     # Variable Name Containing Data for Server Private Key?
-    netPresBlobServerKeyVar = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_VARIABLE", netPresBlobServerSupport) 
+    netPresBlobServerKeyVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_VARIABLE", netPresBlobServerSupport) 
     netPresBlobServerKeyVar.setLabel("Server Private Key Data Variable Name")
     netPresBlobServerKeyVar.setVisible(True)
     netPresBlobServerKeyVar.setDescription("Variable Name Containing Data for Server Private Key?")
@@ -308,7 +308,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerKeyVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])
     
     # Variable Name Containing Size of Server Private Key?
-    netPresBlobServerKeyLen = netPres2Component.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE", netPresBlobServerSupport) 
+    netPresBlobServerKeyLen = net_PresComponent.createStringSymbol("NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE", netPresBlobServerSupport) 
     netPresBlobServerKeyLen.setLabel("Server Private Key Size Variable Name")
     netPresBlobServerKeyLen.setVisible(True)
     netPresBlobServerKeyLen.setDescription("Variable Name Containing Size of Server Private Key?")
@@ -316,7 +316,7 @@ def instantiateComponent(netPres2Component):
     netPresBlobServerKeyLen.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])
     
     # Generate Client Certificate Stubs?
-    netPresCertStoreStubClient = netPres2Component.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS_CLIENT", netPresBlobCert)
+    netPresCertStoreStubClient = net_PresComponent.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS_CLIENT", netPresBlobCert)
     netPresCertStoreStubClient.setLabel("Generate Client Certificate Stubs?")
     netPresCertStoreStubClient.setVisible(True)
     netPresCertStoreStubClient.setDescription("Generate Client Certificate Stubs?")
@@ -324,7 +324,7 @@ def instantiateComponent(netPres2Component):
     netPresCertStoreStubClient.setDependencies(netPresMenuVisible, ["NET_PRES_CERT_STORE_STUBS"])   
     
     # Generate Server Certificate Stubs?
-    netPresCertStoreStubServer = netPres2Component.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS_SERVER", netPresBlobCert)
+    netPresCertStoreStubServer = net_PresComponent.createBooleanSymbol("NET_PRES_CERT_STORE_STUBS_SERVER", netPresBlobCert)
     netPresCertStoreStubServer.setLabel("Generate Server Certificate Stubs?")
     netPresCertStoreStubServer.setVisible(True)
     netPresCertStoreStubServer.setDescription("Generate Server Certificate Stubs?")
@@ -332,7 +332,7 @@ def instantiateComponent(netPres2Component):
     netPresCertStoreStubServer.setDependencies(netPresMenuVisible, ["NET_PRES_CERT_STORE_STUBS"])           
 
     # file NET_PRES1_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
-    netPresHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresHeaderFile.setSourcePath("net_pres/pres/net_pres.h")
     netPresHeaderFile.setOutputName("net_pres.h")
     netPresHeaderFile.setDestPath("net_pres/pres/")
@@ -341,7 +341,7 @@ def instantiateComponent(netPres2Component):
     netPresHeaderFile.setOverwrite(True)
     
     # file NET_PRES2_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_certstore.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_certstore.h"
-    netPresCertStoreHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresCertStoreHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresCertStoreHeaderFile.setSourcePath("net_pres/pres/net_pres_certstore.h")
     netPresCertStoreHeaderFile.setOutputName("net_pres_certstore.h")
     netPresCertStoreHeaderFile.setDestPath("net_pres/pres/")
@@ -350,7 +350,7 @@ def instantiateComponent(netPres2Component):
     netPresCertStoreHeaderFile.setOverwrite(True)   
     
     # file NET_PRES3_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_encryptionproviderapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_encryptionproviderapi.h"
-    netPresEncryptApiHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresEncryptApiHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresEncryptApiHeaderFile.setSourcePath("net_pres/pres/net_pres_encryptionproviderapi.h")
     netPresEncryptApiHeaderFile.setOutputName("net_pres_encryptionproviderapi.h")
     netPresEncryptApiHeaderFile.setDestPath("net_pres/pres/")
@@ -359,7 +359,7 @@ def instantiateComponent(netPres2Component):
     netPresEncryptApiHeaderFile.setOverwrite(True)      
     
     # file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapi.h"
-    netPresSocketApiHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresSocketApiHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresSocketApiHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapi.h")
     netPresSocketApiHeaderFile.setOutputName("net_pres_socketapi.h")
     netPresSocketApiHeaderFile.setDestPath("net_pres/pres/")
@@ -368,7 +368,7 @@ def instantiateComponent(netPres2Component):
     netPresSocketApiHeaderFile.setOverwrite(True)       
     
     # file NET_PRES5_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_transportapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_transportapi.h"
-    netPresTransApiHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresTransApiHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresTransApiHeaderFile.setSourcePath("net_pres/pres/net_pres_transportapi.h")
     netPresTransApiHeaderFile.setOutputName("net_pres_transportapi.h")
     netPresTransApiHeaderFile.setDestPath("net_pres/pres/")
@@ -377,7 +377,7 @@ def instantiateComponent(netPres2Component):
     netPresTransApiHeaderFile.setOverwrite(True)        
     
     # file NET_PRES_LOCAL_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/src/net_pres_local.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/src/net_pres_local.h"
-    netPresLocalHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresLocalHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresLocalHeaderFile.setSourcePath("net_pres/pres/src/net_pres_local.h")
     netPresLocalHeaderFile.setOutputName("net_pres_local.h")
     netPresLocalHeaderFile.setDestPath("net_pres/pres/src/")
@@ -386,7 +386,7 @@ def instantiateComponent(netPres2Component):
     netPresLocalHeaderFile.setOverwrite(True)       
         
     # file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapiconversion.h"
-    netPresSktApiConvHeaderFile = netPres2Component.createFileSymbol(None, None)
+    netPresSktApiConvHeaderFile = net_PresComponent.createFileSymbol(None, None)
     netPresSktApiConvHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapiconversion.h")
     netPresSktApiConvHeaderFile.setOutputName("net_pres_socketapiconversion.h")
     netPresSktApiConvHeaderFile.setDestPath("net_pres/pres/")
@@ -395,47 +395,47 @@ def instantiateComponent(netPres2Component):
     netPresSktApiConvHeaderFile.setOverwrite(True)  
 
     # add "<#include \"/framework/net/templates/system_init.c.data.ftl\">"  to list SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA
-    netPresSysInitDataSourceFtl = netPres2Component.createFileSymbol(None, None)
+    netPresSysInitDataSourceFtl = net_PresComponent.createFileSymbol(None, None)
     netPresSysInitDataSourceFtl.setType("STRING")
     netPresSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-    netPresSysInitDataSourceFtl.setSourcePath("net_pres/pres/templates2/system/system_data_initialize.c.ftl")
+    netPresSysInitDataSourceFtl.setSourcePath("net_pres/pres/templates_net_pres/system/system_data_initialize.c.ftl")
     netPresSysInitDataSourceFtl.setMarkup(True)
 
-    netPresSystemDefFile = netPres2Component.createFileSymbol(None, None)
+    netPresSystemDefFile = net_PresComponent.createFileSymbol(None, None)
     netPresSystemDefFile.setType("STRING")
     netPresSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    netPresSystemDefFile.setSourcePath("net_pres/pres/templates2/system/system_definitions.h.ftl")
+    netPresSystemDefFile.setSourcePath("net_pres/pres/templates_net_pres/system/system_definitions.h.ftl")
     netPresSystemDefFile.setMarkup(True)
     
-    netPresSystemDefObjFile = netPres2Component.createFileSymbol(None, None)
+    netPresSystemDefObjFile = net_PresComponent.createFileSymbol(None, None)
     netPresSystemDefObjFile.setType("STRING")
     netPresSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
-    netPresSystemDefObjFile.setSourcePath("net_pres/pres/templates2/system/system_definitions_object.h.ftl")
+    netPresSystemDefObjFile.setSourcePath("net_pres/pres/templates_net_pres/system/system_definitions_object.h.ftl")
     netPresSystemDefObjFile.setMarkup(True)
     
-    netPresSystemConfigFtl = netPres2Component.createFileSymbol(None, None)
-    netPresSystemConfigFtl.setSourcePath("net_pres/pres/templates2/system/system_config.h.ftl")
+    netPresSystemConfigFtl = net_PresComponent.createFileSymbol(None, None)
+    netPresSystemConfigFtl.setSourcePath("net_pres/pres/templates_net_pres/system/system_config.h.ftl")
     netPresSystemConfigFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
     netPresSystemConfigFtl.setMarkup(True)
     netPresSystemConfigFtl.setType("STRING")
     
     # add "<#include \"/framework/net/templates/system_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_LIB_TASKS
-    netPresSysTaskSourceFtl = netPres2Component.createFileSymbol(None, None)
+    netPresSysTaskSourceFtl = net_PresComponent.createFileSymbol(None, None)
     netPresSysTaskSourceFtl.setType("STRING")
     netPresSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
-    netPresSysTaskSourceFtl.setSourcePath("net_pres/pres/templates2/system/system_tasks.c.ftl")
+    netPresSysTaskSourceFtl.setSourcePath("net_pres/pres/templates_net_pres/system/system_tasks.c.ftl")
     netPresSysTaskSourceFtl.setMarkup(True)
 
-    netPresSystemRtosTasksFile = netPres2Component.createFileSymbol("NET_PRES_SYS_RTOS_TASK", None)
+    netPresSystemRtosTasksFile = net_PresComponent.createFileSymbol("NET_PRES_SYS_RTOS_TASK", None)
     netPresSystemRtosTasksFile.setType("STRING")
     netPresSystemRtosTasksFile.setOutputName("core.LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS")
-    netPresSystemRtosTasksFile.setSourcePath("net_pres/pres/templates2/system/system_rtos_tasks.c.ftl")
+    netPresSystemRtosTasksFile.setSourcePath("net_pres/pres/templates_net_pres/system/system_rtos_tasks.c.ftl")
     netPresSystemRtosTasksFile.setMarkup(True)
     netPresSystemRtosTasksFile.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
     netPresSystemRtosTasksFile.setDependencies(genRtosTask, ["HarmonyCore.SELECT_RTOS"])
     
     # file NET_PRES_C "$HARMONY_VERSION_PATH/framework/net_pres/pres/src/net_pres.c" to "$PROJECT_SOURCE_FILES/framework/net_pres/pres/src/net_pres.c"
-    netPresSourceFile = netPres2Component.createFileSymbol(None, None)
+    netPresSourceFile = net_PresComponent.createFileSymbol(None, None)
     netPresSourceFile.setSourcePath("net_pres/pres/src/net_pres.c")
     netPresSourceFile.setOutputName("net_pres.c")
     netPresSourceFile.setOverwrite(True)
@@ -445,8 +445,8 @@ def instantiateComponent(netPres2Component):
     netPresSourceFile.setEnabled(True)
         
     # template NET_PRES_ENC_GLUE_H_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_enc_glue.h.ftl" to "$PROJECT_HEADER_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_enc_glue.h"
-    netPresEncGlueHeaderFile = netPres2Component.createFileSymbol(None, None)
-    netPresEncGlueHeaderFile.setSourcePath("net_pres/pres/templates2/net_pres_enc_glue.h.ftl")
+    netPresEncGlueHeaderFile = net_PresComponent.createFileSymbol(None, None)
+    netPresEncGlueHeaderFile.setSourcePath("net_pres/pres/templates_net_pres/net_pres_enc_glue.h.ftl")
     netPresEncGlueHeaderFile.setOutputName("net_pres_enc_glue.h")
     netPresEncGlueHeaderFile.setMarkup(True)
     netPresEncGlueHeaderFile.setDestPath("net_pres/pres/")
@@ -455,8 +455,8 @@ def instantiateComponent(netPres2Component):
     netPresEncGlueHeaderFile.setOverwrite(True)
     
     # template NET_PRES_ENC_GLUE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_enc_glue.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_enc_glue.c"   
-    netPresEncGlueSourceFile = netPres2Component.createFileSymbol(None, None)
-    netPresEncGlueSourceFile.setSourcePath("net_pres/pres/templates2/net_pres_enc_glue.c.ftl")
+    netPresEncGlueSourceFile = net_PresComponent.createFileSymbol(None, None)
+    netPresEncGlueSourceFile.setSourcePath("net_pres/pres/templates_net_pres/net_pres_enc_glue.c.ftl")
     netPresEncGlueSourceFile.setOutputName("net_pres_enc_glue.c")
     netPresEncGlueSourceFile.setDestPath("net_pres/pres/")
     netPresEncGlueSourceFile.setProjectPath("config/" + configName + "/net_pres/pres/")
@@ -466,8 +466,8 @@ def instantiateComponent(netPres2Component):
     # ifblock NET_PRES_BLOB_CERT_REPO || NET_PRES_CERT_STORE_STUBS
     # template NET_PRES_ENC_CERT_STORE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_cert_store.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_cert_store.c"
     # endif 
-    netPresCertStoreSourceFile = netPres2Component.createFileSymbol(None, None)
-    netPresCertStoreSourceFile.setSourcePath("net_pres/pres/templates2/net_pres_cert_store.c.ftl")
+    netPresCertStoreSourceFile = net_PresComponent.createFileSymbol(None, None)
+    netPresCertStoreSourceFile.setSourcePath("net_pres/pres/templates_net_pres/net_pres_cert_store.c.ftl")
     netPresCertStoreSourceFile.setOutputName("net_pres_cert_store.c")
     netPresCertStoreSourceFile.setDestPath("net_pres/pres/")
     netPresCertStoreSourceFile.setProjectPath("config/" + configName + "/net_pres/pres/")
@@ -483,15 +483,15 @@ def finalizeComponent(tcpipNetPresComponent):
             tcpipNetPresGroup = Database.createGroup("TCP/IP STACK", "PRESENTATION LAYER") 
         tcpipNetPresGroup.addComponent(tcpipNetPresComponent.getID())
         Database.setActiveGroup("PRESENTATION LAYER")
-        tcpipNetPresGroup.setAttachmentVisible("netPres2", "NetPres2_Crypto_Dependency")
-        tcpipAutoConfigStackGroup.setAttachmentVisible("PRESENTATION LAYER", "netPres2:NetPres2_Crypto_Dependency")
+        tcpipNetPresGroup.setAttachmentVisible("net_Pres", "Net_Pres_Crypto_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("PRESENTATION LAYER", "net_Pres:Net_Pres_Crypto_Dependency")
         
 
 
         
 def netPresRTOSTaskDelayMenu(symbol, event):
-    netPresRtos = Database.getSymbolValue("netPres2","NET_PRES_RTOS")
-    netPresRtosUseDelay = Database.getSymbolValue("netPres2","NET_PRES_RTOS_USE_DELAY")
+    netPresRtos = Database.getSymbolValue("net_Pres","NET_PRES_RTOS")
+    netPresRtosUseDelay = Database.getSymbolValue("net_Pres","NET_PRES_RTOS_USE_DELAY")
     if((netPresRtos == 'Standalone') and netPresRtosUseDelay):      
         symbol.setVisible(True)
     else:

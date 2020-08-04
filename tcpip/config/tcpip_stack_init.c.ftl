@@ -28,7 +28,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 -->
 
 <#if USE_TCPIP_STACK == true>
-<#if (((netPres2.NET_PRES_USE)?has_content) && ((netPres2.NET_PRES_USE)  == true))>
+<#if (((net_Pres.NET_PRES_USE)?has_content) && ((net_Pres.NET_PRES_USE)  == true))>
 	/* Network Presentation Layer Initialization */
 	sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 </#if>
