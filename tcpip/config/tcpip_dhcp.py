@@ -39,7 +39,7 @@ def instantiateComponent(tcpipDhcpComponent):
     tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (seconds)")
     tcpipDhcpcReqTimeout.setVisible(True)
     tcpipDhcpcReqTimeout.setDescription("DHCP Request Time-out in seconds")
-    tcpipDhcpcReqTimeout.setDefaultValue(2)
+    tcpipDhcpcReqTimeout.setDefaultValue(10)
     #tcpipDhcpcReqTimeout.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
     # DHCP Client Tick Rate in msec
