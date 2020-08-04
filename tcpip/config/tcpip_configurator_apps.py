@@ -408,8 +408,10 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
 def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    httpserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
+        httpserver.setReadOnly(True)
         res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
         
@@ -427,13 +429,18 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
-        res = Database.deactivateComponents(["tcpipHttpNet"])
+        if(httpserver.getReadOnly() == True):
+            httpserver.setReadOnly(False)
+        if(Database.getComponentByID("tcpipHttpNet") != None):  
+            res = Database.deactivateComponents(["tcpipHttpNet"])
     
 def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    httpnetserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_NET_SERVER")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
+        httpnetserver.setReadOnly(True)
         res = Database.activateComponents(["tcpipHttp"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "libtcpipHttp")
         
@@ -444,7 +451,10 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
-        res = Database.deactivateComponents(["tcpipHttp"])
+        if(httpnetserver.getReadOnly() == True):
+            httpnetserver.setReadOnly(False)
+        if(Database.getComponentByID("tcpipHttp") != None):  
+            res = Database.deactivateComponents(["tcpipHttp"])
     
 def tcpipAutoConfigIPERFEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
