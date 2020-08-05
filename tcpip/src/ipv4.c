@@ -596,7 +596,7 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
     // get the payload w/o the MAC frame
     pktPayload = TCPIP_PKT_PayloadLen(&pPkt->macPkt);
     pNetIf = (TCPIP_NET_IF*)pPkt->netIfH;   // re-read; could have changed
-    if(!TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetMACAddressGet(pNetIf), TCPIP_ETHER_TYPE_IPV4))
+    if(!TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetUpMACAddressGet(pNetIf), TCPIP_ETHER_TYPE_IPV4))
     {   // discard, cannot send
         return false;
     }
@@ -1167,12 +1167,12 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, cons
 
     if(TCPIP_STACK_AddressIsOfNet(pNetIf, pIpAdd))
     {   // localhost address
-        memcpy(pMacDst, TCPIP_STACK_NetMACAddressGet(pNetIf), sizeof(*pMacDst));
+        memcpy(pMacDst, TCPIP_STACK_NetUpMACAddressGet(pNetIf), sizeof(*pMacDst));
         return TCPIP_IPV4_DEST_SELF; 
     }
     else if((pHostIf = TCPIP_STACK_NetByAddress(pIpAdd)))
     {   // localhost address
-        memcpy(pMacDst, TCPIP_STACK_NetMACAddressGet(pHostIf), sizeof(*pMacDst));
+        memcpy(pMacDst, TCPIP_STACK_NetUpMACAddressGet(pHostIf), sizeof(*pMacDst));
         pPkt->netIfH = pHostIf;
         return TCPIP_IPV4_DEST_SELF; 
     }

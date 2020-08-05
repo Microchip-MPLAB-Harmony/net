@@ -2766,7 +2766,7 @@ const uint8_t* TCPIP_STACK_NetAddressMac(TCPIP_NET_HANDLE netH)
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
     if(pNetIf)
     {
-        return TCPIP_STACK_NetMACAddressGet(pNetIf);
+        return TCPIP_STACK_NetUpMACAddressGet(pNetIf);
     }
 
     return 0;
@@ -3828,19 +3828,6 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACId(TCPIP_NET_IF* pNetIf)
  TCPIP_MAC_HANDLE  TCPIP_STACK_NetToMAC(TCPIP_NET_IF* pNetIf)
 {
     return pNetIf ? pNetIf->hIfMac : 0;
-}
-
-
-
-// @@@@
-const uint8_t*  TCPIP_STACK_NetMACAddressGet(TCPIP_NET_IF* pNetIf)
-{
-    if(TCPIP_STACK_NetworkIsUp(pNetIf))
-    {
-        return pNetIf->netMACAddr.v;
-    }
-
-    return 0;
 }
 
 const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf)

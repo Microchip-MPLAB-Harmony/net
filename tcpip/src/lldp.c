@@ -715,7 +715,7 @@ static bool txFrame(void)
 
     pDestMac = TCPIP_LLDP_MacDestAddressGet(); 
 
-    if(TCPIP_PKT_PacketMACFormat(pTxPkt, pDestMac, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetMACAddressGet(pLldpIf), TCPIP_ETHER_TYPE_LLDP))
+    if(TCPIP_PKT_PacketMACFormat(pTxPkt, pDestMac, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetUpMACAddressGet(pLldpIf), TCPIP_ETHER_TYPE_LLDP))
     {
         pTxPkt->pktIf = pLldpIf;
         TCPIP_PKT_FlightLogTx(pTxPkt, TCPIP_THIS_MODULE_ID);

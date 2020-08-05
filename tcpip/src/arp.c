@@ -414,7 +414,7 @@ static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint
 
     // format the MAC packet
     pMacPkt->pDSeg->segLen = sizeof(ARP_PACKET);
-    if(TCPIP_PKT_PacketMACFormat(pMacPkt, dstMAC, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetMACAddressGet(pIf), TCPIP_ETHER_TYPE_ARP))
+    if(TCPIP_PKT_PacketMACFormat(pMacPkt, dstMAC, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetUpMACAddressGet(pIf), TCPIP_ETHER_TYPE_ARP))
     {
         pMacPkt->next = 0;  // send single packet
         pMacPkt->pktIf = pIf;
