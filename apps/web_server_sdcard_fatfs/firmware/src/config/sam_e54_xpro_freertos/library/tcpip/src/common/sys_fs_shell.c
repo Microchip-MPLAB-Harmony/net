@@ -437,7 +437,7 @@ static SYS_FS_RESULT Shell_FileStat(const SYS_FS_SHELL_OBJ* pObj, const char *fn
 
 static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *fname)
 {
-    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
+    SYS_FS_RESULT fsRes = SYS_FS_RES_FAILURE;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
@@ -448,10 +448,10 @@ static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *
 
         if(absRes == SYS_FS_SHELL_RES_OK)
         {
-            fsHandle = SYS_FS_FileDirectoryRemove(absBuff);
+            fsRes = SYS_FS_FileDirectoryRemove(absBuff);
         }
     }
-    return fsHandle;
+    return fsRes;
 }
 
 static SYS_FS_HANDLE Shell_DirMake(const SYS_FS_SHELL_OBJ* pObj, const char *fname)
