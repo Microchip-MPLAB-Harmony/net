@@ -602,9 +602,9 @@ typedef struct _IPV6_PACKET
     void * neighbor;                            // The neighbor that the message was received from    
     unsigned short offsetInSegment;             // Offset used for storing fragment transmission information
     uint32_t queuedPacketTimeout;				// Time out for IPv6 packets which are queued
-    IPV6_DATA_SEGMENT_HEADER payload;			// IPv6 data segment payload
     TCPIP_NET_HANDLE netIfH;                    // packet network interface
     IPV6_HEADER ipv6Header;						// IPv6 header definition
+    IPV6_DATA_SEGMENT_HEADER payload;			// IPv6 data segment payload
 } IPV6_PACKET;
 
 // *****************************************************************************

@@ -95,14 +95,6 @@ typedef struct
     TCPIP_MAC_DATA_SEGMENT  tcpSeg[2];  // always zero copy data for TCP state machine
 }TCP_V4_PACKET;
 
-
-typedef struct
-{
-    IPV6_PACKET             v6Pkt;      // safe cast to IPV6_PACKET
-    TCPIP_MAC_DATA_SEGMENT  tcp6Seg;     
-}TCP_V6_PACKET;
-
-
 /****************************************************************************
   Section:
 	TCB Definitions
@@ -151,7 +143,7 @@ typedef struct
     union
     {
         IPV4_PACKET*  pV4Pkt;                       // IPv4 use; TCP_V4_PACKET type
-        IPV6_PACKET*  pV6Pkt;                       // IPv6 use; TCP_V6_PACKET type
+        IPV6_PACKET*  pV6Pkt;                       // IPv6 use;
         void*         pTxPkt;                       // generic
     };
     // 
