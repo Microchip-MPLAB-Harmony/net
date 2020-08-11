@@ -43,6 +43,8 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     if (tcpipAutoConfigDriverGroup == None):
         tcpipAutoConfigDriverGroup = Database.createGroup("TCP/IP STACK", "DRIVER LAYER")
 
+    seriesNode = ATDF.getNode('/avr-tools-device-file/devices')
+    deviceSeries = seriesNode.getChildren()[0].getAttribute("series")
     # Enable Driver Configurator
     tcpipAutoConfigDrvEnable = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_DRV_ENABLE", None)
     tcpipAutoConfigDrvEnable.setVisible(False)
@@ -54,11 +56,15 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
         tcpipAutoConfigGMAC.setVisible(True)
         tcpipAutoConfigGMAC.setDescription("Enable GMAC")
         tcpipAutoConfigGMAC.setDependencies(tcpipAutoConfigGMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_GMAC"])    
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    elif ("PIC32M" in Variables.get("__PROCESSOR")):
         # Enable Ethernet MAC
         tcpipAutoConfigEthmac = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ETHMAC", None)
         tcpipAutoConfigEthmac.setLabel("ETHMAC")
-        tcpipAutoConfigEthmac.setVisible(True)
+        if (deviceSeries != "PIC32MZW"):
+            tcpipAutoConfigEthmac.setVisible(True)
+        else:
+            tcpipAutoConfigEthmac.setVisible(False)
+        
         tcpipAutoConfigEthmac.setDescription("Enable ETHMAC")
         tcpipAutoConfigEthmac.setDependencies(tcpipAutoConfigETHMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_ETHMAC"])  
     elif Peripheral.moduleExists( "EMAC" ):
@@ -193,7 +199,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     # Enable WINC MAC
     tcpipAutoConfigWINC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_WINC", None)
     tcpipAutoConfigWINC.setLabel("WINC")
-    tcpipAutoConfigWINC.setVisible(True)
+    tcpipAutoConfigWINC.setVisible(False)
     tcpipAutoConfigWINC.setDescription("Enable WINC")
     tcpipAutoConfigWINC.setDependencies(tcpipAutoConfigWINCEnable, ["TCPIP_AUTOCONFIG_ENABLE_WINC"])    
 ########################################################################################################

@@ -25,6 +25,8 @@
 def loadModule():
     print("Load Module: Harmony TCP/IP Stack")
     processor = Variables.get("__PROCESSOR")
+    seriesNode = ATDF.getNode('/avr-tools-device-file/devices')
+    deviceSeries = seriesNode.getChildren()[0].getAttribute("series")
     ###########  TCP/IP LIBRARY General Configurations  ########### 
     tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
     tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE",True)
@@ -244,7 +246,7 @@ def loadModule():
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
         aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, True, True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
         drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
