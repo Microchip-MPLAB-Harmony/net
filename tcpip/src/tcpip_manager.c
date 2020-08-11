@@ -714,14 +714,14 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         tcpipNetIf = (TCPIP_NET_IF*)TCPIP_HEAP_Calloc(heapH, nNets, sizeof(TCPIP_NET_IF)); // allocate for each network interface
         if(tcpipNetIf == 0)
         {   // failed
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Network configuration allocation failed: %d\r\n", nNets * sizeof(TCPIP_NET_IF));
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Network configuration allocation failed: %lu\r\n", nNets * sizeof(TCPIP_NET_IF));
             initFail = 2;
             break;
         }
 
         if(TCPIP_PKT_Initialize(heapH, pUsrConfig, nNets) == false)
         {
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Packet initialization failed: 0x%x\r\n", heapH);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Packet initialization failed: 0x%x\r\n", (uint32_t)heapH);
             initFail = 3;
             break;
         }
@@ -905,7 +905,7 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         heapLeft = TCPIP_HEAP_FreeSize(heapH);
         if(heapLeft < TCPIP_STACK_DRAM_RUN_LIMIT)
         {
-            SYS_ERROR_PRINT(SYS_ERROR_WARNING, TCPIP_STACK_HDR_MESSAGE "Dynamic memory is low: %d\r\n", heapLeft);
+            SYS_ERROR_PRINT(SYS_ERROR_WARNING, TCPIP_STACK_HDR_MESSAGE "Dynamic memory is low: %lu\r\n", heapLeft);
         }
 #endif  // !defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
         return true;
