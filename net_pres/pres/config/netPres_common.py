@@ -31,7 +31,7 @@ def instantiateComponent(netPresCommonComponent):
     netPresNeeded.setLabel("Use Network Presentation Layer")
     netPresNeeded.setVisible(False)
     netPresNeeded.setDefaultValue(True)
-
+    
     # Use MPLAB Harmony Networking Presentation Layer
     netPresUse = netPresCommonComponent.createBooleanSymbol("NET_PRES_USE", None)
     netPresUse.setLabel("Use MPLAB Harmony Networking Presentation Layer")
@@ -115,15 +115,15 @@ def instantiateComponent(netPresCommonComponent):
     netPresGenCertStub.setVisible(False)
     netPresGenCertStub.setDescription("Generate Certificate Store Stubs?")
     netPresGenCertStub.setDefaultValue(False)
-    netPresBlobCertRepo.setDependencies(netPresBlobCertMenu, ["NET_PRES_BLOB_CERT"])
+    # netPresGenCertStub.setDependencies(netPresBlobCertMenu, ["NET_PRES_BLOB_CERT"])
     
     # Enable Peer Certificates Verification?
-    netPresBlobClientSupport = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION", netPresBlobCert)
-    netPresBlobClientSupport.setLabel("Enable Peer Certificates Verification")
-    netPresBlobClientSupport.setVisible(False)
-    netPresBlobClientSupport.setDescription("Enable Peer Certificates Verification")
-    netPresBlobClientSupport.setDefaultValue(False)  
-    netPresBlobClientSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
+    netPresBlobPeerCertVerify = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION", netPresBlobCert)
+    netPresBlobPeerCertVerify.setLabel("Enable Peer Certificates Verification")
+    netPresBlobPeerCertVerify.setVisible(False)
+    netPresBlobPeerCertVerify.setDescription("Enable Peer Certificates Verification")
+    netPresBlobPeerCertVerify.setDefaultValue(False)  
+    netPresBlobPeerCertVerify.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
 
     # Support Client Certificates?
     netPresBlobClientSupport = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_SUPPORT", netPresBlobCert)
