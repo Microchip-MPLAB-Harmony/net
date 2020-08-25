@@ -67,6 +67,7 @@ typedef struct
     bool                deleteOld;           // if 0 and old cache still in place don't re-initialize it
 
     uint32_t            timeSeconds;         // coarse ARP time keeping, seconds
+    uint32_t            timeMs;              // coarse ARP time keeping, milliseconds
     tcpipSignalHandle   timerHandle;
 
     PROTECTED_SINGLE_LIST registeredUsers;     // notification users
@@ -595,6 +596,10 @@ bool TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
 
     if(arpMod.initCount == 0)
     {   // first time we're run
+        // check we have a consistent task rate
+#if !defined(TCPIP_ARP_TASK_PROCESS_RATE) || (TCPIP_ARP_TASK_PROCESS_RATE == 0)
+        return false;
+#endif // !defined(TCPIP_ARP_TASK_PROCESS_RATE) || (TCPIP_ARP_TASK_PROCESS_RATE == 0)
         // check initialization data is provided
         if(arpData == 0)
         {
@@ -703,7 +708,7 @@ bool TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
                 return false;
             }
 
-            arpMod.timeSeconds = 0;
+            arpMod.timeSeconds = arpMod.timeMs = 0;
         }
     }
 
@@ -956,7 +961,8 @@ static void TCPIP_ARP_Timeout(void)
     uint16_t    maxRetries;
 
 
-    arpMod.timeSeconds += (uint32_t)((TCPIP_ARP_TASK_PROCESS_RATE + 500)/1000);
+    arpMod.timeMs += TCPIP_ARP_TASK_PROCESS_RATE;
+    arpMod.timeSeconds = arpMod.timeMs / 1000;
 
     nArpIfs = TCPIP_STACK_NumberOfNetworksGet();
     pArpDcpt = arpMod.arpCacheDcpt;

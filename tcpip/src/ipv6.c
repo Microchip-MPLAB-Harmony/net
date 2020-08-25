@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -1701,10 +1701,10 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     return true;
 }
 
-bool TCPIP_IPV6_AddressesGet(TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr)
+bool TCPIP_IPV6_AddressesGet(const TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr)
 {
-    IPV6_HEADER *pHeader;
-    uint8_t     *pMacLayer, *pNetLayer;
+    const IPV6_HEADER *pHeader;
+    const uint8_t     *pMacLayer, *pNetLayer;
 
     // restore the packet MAC and NET pointers
     pMacLayer = pRxPkt->pDSeg->segLoad;
@@ -3137,7 +3137,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
     constRemoteIPv6Addr = &tempRemoteIPv6Addr;
 
     // set a valid ack result; could be overridden by processing tasks
-    pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_RX_OK;
+    pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_RX_OK;
     
     currentOffset += sizeof (IPV6_HEADER);
 
@@ -3233,7 +3233,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 // set up the packet fields used by TCP
                 pRxPkt->pDSeg->segLen = dataCount;
                 pRxPkt->totTransportLen = dataCount;
-                pRxPkt->pktClientData = extensionHeaderLen;
+                pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
                 _TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true);
                 return;
@@ -3254,7 +3254,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 // set up the packet fields used by UDP
                 pRxPkt->pDSeg->segLen = dataCount;
                 pRxPkt->totTransportLen = dataCount;
-                pRxPkt->pktClientData = extensionHeaderLen;
+                pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
                 _TCPIPStackModuleRxInsert(TCPIP_MODULE_UDP, pRxPkt, true);
                 return;
@@ -3336,7 +3336,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
         }
     }
 
-    TCPIP_PKT_PacketAcknowledge(pRxPkt, pRxPkt->pktClientData); 
+    TCPIP_PKT_PacketAcknowledge(pRxPkt, pRxPkt->ipv6PktData); 
  }
 
 

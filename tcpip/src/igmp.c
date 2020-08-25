@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2016-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -557,7 +557,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList
     {
         if((rFlag & TCPIP_IGMP_ROUTE_INTERNAL) != 0)
         {   // route both int and ext
-            pTxPkt->macPkt.pktClientData = 1;
+            pTxPkt->macPkt.modPktData = 1;
         }
         if(!TCPIP_IPV4_PacketTransmit(pTxPkt))
         {
@@ -569,7 +569,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList
     }
 
     // route internally only
-    pTxPkt->macPkt.pktClientData = 0;
+    pTxPkt->macPkt.modPktData = 0;
     pTxPkt->macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
     _TCPIPStackInsertRxPacket(pNetIf, &pTxPkt->macPkt, true);
 
@@ -1932,9 +1932,9 @@ static void _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evTy
 // packet was transmitted by the IP layer
 static bool _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
 {
-    if(pTxPkt->pktClientData != 0)
+    if(pTxPkt->modPktData != 0)
     {   // redirect internally. once!
-        pTxPkt->pktClientData = 0;
+        pTxPkt->modPktData = 0;
         pTxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
         TCPIP_PKT_FlightLogTx(pTxPkt, TCPIP_THIS_MODULE_ID);
         _TCPIPStackInsertRxPacket((TCPIP_NET_IF*)pTxPkt->pktIf, pTxPkt, true);

@@ -541,6 +541,61 @@ const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData =
 };
 </#if>
 
+<#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
+/*** IPv4 Initialization Data ***/
+
+<#if (tcpipIPv4.TCPIP_IPV4_FORWARD) == true>
+TCPIP_IPV4_FORWARD_ENTRY_ASCII tcpipIPv4AsciiForwardTbl[TCPIP_IPV4_FORWARDING_TABLE_ENTRIES] =
+{
+    // destination     mask    gateway   in interface   out interface   metric        
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX0)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX0) == true>
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX0)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX0)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX0)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX0)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX0)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX0)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX1)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX1) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX1)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX1)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX1)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX1)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX1)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX1)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX2)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX2) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX2)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX2)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX2)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX2)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX2)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX2)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX3)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX3) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX3)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX3)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX3)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX3)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX3)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX3)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX4)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX4) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX4)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX4)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX4)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX4)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX4)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX4)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX5)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX5) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX5)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX5)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX5)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX5)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX5)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX5)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX6)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX6) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX6)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX6)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX6)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX6)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX6)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX6)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX7)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX7) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX7)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX7)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX7)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX7)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX7)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX7)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX8)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX8) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX8)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX8)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX8)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX8)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX8)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX8)} },
+</#if>                                                                                                                                                                                                                      
+<#if (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX9)?has_content && (tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_BOOLX9) == true>                                                                                                                
+    {  "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX9)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX9)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX9)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX9)}", "${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX9)}", ${(tcpipIPv4.TCPIP_IPV4_FWD_ENTRY_METRIC_IDX9)} },
+</#if>
+};
+</#if>
+
+const TCPIP_IPV4_MODULE_CONFIG  tcpipIPv4InitData = 
+{
+    .arpEntries = TCPIP_IPV4_ARP_SLOTS, 
+<#if (tcpipIPv4.TCPIP_IPV4_FORWARD)?has_content && (tcpipIPv4.TCPIP_IPV4_FORWARD) == true>
+    // forwarding values
+    .forwardFlags = TCPIP_IPV4_FWD_FLAGS,
+    .forwardTxQueueSize = TCPIP_IPV4_FWD_TX_SLOTS,
+    .forwardTableMaxEntries = TCPIP_IPV4_FORWARDING_TABLE_MAX_SIZE,
+    .forwardTableSize = TCPIP_IPV4_FORWARDING_TABLE_ENTRIES,
+    .forwardTable = (const TCPIP_IPV4_FORWARD_ENTRY*)tcpipIPv4AsciiForwardTbl,
+
+</#if>
+};
+</#if>
+
 <#if (tcpipSnmp.TCPIP_USE_SNMP)?has_content && (tcpipSnmp.TCPIP_USE_SNMP) == true>
 TCPIP_SNMP_COMMUNITY_CONFIG tcpipSNMPInitReadcommunity[] =
 {
@@ -787,7 +842,7 @@ const size_t TCPIP_HOSTS_CONFIGURATION_SIZE = sizeof (TCPIP_HOSTS_CONFIGURATION)
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
 <#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content &&(tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
-    {TCPIP_MODULE_IPV4,             0},
+    {TCPIP_MODULE_IPV4,             &tcpipIPv4InitData},
 </#if>
 
 <#if (tcpipIcmp.TCPIP_STACK_USE_ICMP_CLIENT)?has_content >

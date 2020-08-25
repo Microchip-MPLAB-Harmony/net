@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -323,6 +323,10 @@ static __inline__ bool __attribute__((always_inline)) _TCPIPStackIpAddFromLAN(TC
 
 int  TCPIP_STACK_NetIxGet(TCPIP_NET_IF* pNetIf);
 
+static __inline__ int __attribute__((always_inline)) _TCPIPStackNetIxGet(TCPIP_NET_IF* pIf)
+{
+    return pIf->netIfIx;
+}
 
 uint32_t  TCPIP_STACK_NetAddressGet(TCPIP_NET_IF* pNetIf);
 
@@ -338,8 +342,9 @@ void  TCPIP_STACK_PrimaryDNSAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddres
 
 void  TCPIP_STACK_SecondaryDNSAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddress);
 
-TCPIP_NET_IF*         TCPIP_STACK_NetByAddress(const IPV4_ADDR* pIpAddress);
+TCPIP_NET_IF*   TCPIP_STACK_NetByAddress(const IPV4_ADDR* pIpAddress);
 
+TCPIP_NET_IF*   TCPIP_STACK_MatchNetAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
 bool  TCPIP_STACK_AddressIsOfNetUp( TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
@@ -348,6 +353,36 @@ bool  TCPIP_STACK_NetIsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAd
 
 // detects limited or net-directed bcast
 bool  TCPIP_STACK_IsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
+
+// detects limited or net-directed bcast
+// assumes valid pNetIf
+static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+{
+    return (pIpAdd->Val == 0xFFFFFFFF) ||  (pIpAdd->Val == (pNetIf->netIPAddr.Val | ~pNetIf->netMask.Val));
+}
+
+// detects limited bcast
+static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsLimitedBcast(const IPV4_ADDR* pIpAdd)
+{
+    return (pIpAdd->Val == 0xFFFFFFFF);
+}
+
+// detects net_directed bcast
+// assumes valid pNetIf
+static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsDirectedBcast(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+{
+    return (pIpAdd->Val == (pNetIf->netIPAddr.Val | ~pNetIf->netMask.Val));
+}
+
+// local/non forwardable multicast address (in range [224.0.0.0, 224.0.0.255])
+// return true if local, i.e. non-forwardable
+// false otherwise
+// assumes the address is a multicast address (starts with 0b1110 prefix)!
+static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsLocalMcast(const IPV4_ADDR* pIpAdd)
+{
+    return ((pIpAdd->Val & 0x00ffffe0) == 0x000000e0);
+}
+
 
 
 bool  TCPIP_STACK_NetworkIsLinked(TCPIP_NET_IF* pNetIf);
@@ -362,14 +397,36 @@ TCPIP_MAC_HANDLE  TCPIP_STACK_NetToMAC(TCPIP_NET_IF* pNetIf);
 
 int         TCPIP_STACK_MacToNetIndex(TCPIP_MAC_HANDLE hMac);
 
+
+
 const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf);
+
+static __inline__ const uint8_t*  __attribute__((always_inline)) _TCPIPStackNetMACAddress(TCPIP_NET_IF* pNetIf)
+{
+    return pNetIf->netMACAddr.v;
+}
 
 static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetAddress(TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->netIPAddr.Val;
 }
 
+static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetMask(TCPIP_NET_IF* pNetIf)
+{
+    return pNetIf->netMask.Val;
+}
 
+// returns the host part of an IPv4 address
+static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackHostPartAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+{
+    return pIpAdd->Val & (~pNetIf->netMask.Val);
+}
+
+// returns the network part of an IPv4 address
+static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetPartAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+{
+    return pIpAdd->Val & pNetIf->netMask.Val;
+}
 
 static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_AddressIsOfNet(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
@@ -420,6 +477,12 @@ TCPIP_NET_IF* _TCPIPStackHandleToNetLinked(TCPIP_NET_HANDLE hNet);
 // returns a valid, linked interface, if any
 // can start search with the default one
 TCPIP_NET_IF* _TCPIPStackAnyNetLinked(bool useDefault);
+
+// returns the interface for which this address is a net_directed address
+// 0 in not found
+// does NOT check network up, linked, etc.
+// does NOT check primary/virtual interface!
+TCPIP_NET_IF* _TCPIPStackAnyNetDirected(const IPV4_ADDR* pIpAdd);
 
 // converts between an interface name and a MAC (TCPIP_STACK_MODULE) ID 
 // TCPIP_MODULE_MAC_NONE - no MAC id could be found

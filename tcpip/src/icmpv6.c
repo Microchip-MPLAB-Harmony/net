@@ -9,7 +9,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -773,7 +773,7 @@ static void _ICMPv6_SwapHeader(ICMPV6_HEADER_TYPES * header)
     None
 
   Remarks:
-    Packet discard is done at the IPv6 layer with the acknowledge code in the pRxPkt->pktClientData !
+    Packet discard is done at the IPv6 layer with the acknowledge code in the pRxPkt->ipv6PktData !
   ***************************************************************************/
 void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR_STRUCT * localIPStruct, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint16_t dataLen, uint16_t headerLen, uint8_t hopLimit, uint8_t addrType)
 {
@@ -797,7 +797,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
     const IPV6_ADDR* pLclAdd;
     IPV6_ADDR* pTargetAdd, *pDestAdd;
 
-    pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_RX_OK;
+    pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_RX_OK;
     
     if (pNetIf == NULL)
         return;
@@ -820,7 +820,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
     if(checksums.w[0] != checksums.w[1])
     {
-        pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+        pRxPkt->ipv6PktData = (uint16_t) TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
         return;
     }
 
@@ -957,7 +957,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
                 if (TCPIP_IPV6_TxIsPutReady(pkt, dataLen - 8) < (dataLen - 8))
                 {
-                    pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
+                    pRxPkt->ipv6PktData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
                     TCPIP_IPV6_PacketFree (pkt);
                     return;
                 }
@@ -978,7 +978,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
                 if (TCPIP_IPV6_TxIsPutReady(pkt, dataLen - 8) < (dataLen - 8))
                 {
-                    pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
+                    pRxPkt->ipv6PktData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
                     TCPIP_IPV6_PacketFree (pkt);
                     return;
                 }

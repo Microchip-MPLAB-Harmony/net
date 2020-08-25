@@ -80,6 +80,28 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // If false, the functionality does not exist and the generated code is slightly smaller 
 #define TCPIP_IPV4_EXTERN_PACKET_PROCESS true
 
+// enable IPv4 related commands
+#define TCPIP_IPV4_COMMANDS                 0
+
+// Enable traffic forwarding at the IPv4 layer
+#define TCPIP_IPV4_FORWARDING_ENABLE        1
+
+// Maximum number of entries in the routing table
+#define TCPIP_IPV4_FORWARDING_TABLE_MAX_SIZE    10
+
+// Number of entries in the routing table as part of the initialization
+#define TCPIP_IPV4_FORWARDING_TABLE_ENTRIES    5
+
+// Enable support for forwarding table initialization using ASCII strings 
+#define TCPIP_IPV4_FORWARDING_TABLE_ASCII   1
+
+// Enable support for forwarding table initialization using binary values
+#define TCPIP_IPV4_FORWARDING_TABLE_BIN     1
+
+// Number of slots in the IPv4 ARP queue
+// The number of entries that IPv4 can queue up for ARP resolution.
+// Usually it should match the number of total ARP cache entries for all interfaces
+#define TCPIP_IPV4_ARP_SLOTS                10
 
 // The IP task processing rate: number of milliseconds to generate an IP tick.
 // This is the tick that advances the IP state machine.

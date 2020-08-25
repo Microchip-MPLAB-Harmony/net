@@ -3,7 +3,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2017-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2017-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -151,33 +151,34 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
 // the embedded PIC32 MAC object
 /*static*/ const TCPIP_MAC_OBJECT DRV_GMAC_Object =  
 {
-    TCPIP_MODULE_MAC_PIC32C,
-    "GMAC",   
-	DRV_GMAC_Initialize,
+    .macId                                  = TCPIP_MODULE_MAC_PIC32C,
+    .macType                                = TCPIP_MAC_TYPE_ETH,    
+    .macName                                = "GMAC",   
+    .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-    DRV_GMAC_Deinitialize,
-    DRV_GMAC_Reinitialize, 
+    .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
+    .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
 #else
-    0,
-    0,
-#endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    DRV_GMAC_Status,
-    DRV_GMAC_Tasks,
-    DRV_GMAC_Open,
-    DRV_GMAC_Close,
-    DRV_GMAC_LinkCheck,
-    DRV_GMAC_RxFilterHashTableEntrySet,
-    DRV_GMAC_PowerMode,
-    DRV_GMAC_PacketTx,
-    DRV_GMAC_PacketRx,
-    DRV_GMAC_Process,
-    DRV_GMAC_StatisticsGet,
-    DRV_GMAC_ParametersGet,
-    DRV_GMAC_RegisterStatisticsGet,
-    DRV_GMAC_ConfigGet,
-    DRV_GMAC_EventMaskSet,
-    DRV_GMAC_EventAcknowledge,
-    DRV_GMAC_EventPendingGet,
+    .TCPIP_MAC_Deinitialize                 = 0,
+    .TCPIP_MAC_Reinitialize                 = 0,
+#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
+    .TCPIP_MAC_Status                       = DRV_GMAC_Status,
+    .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
+    .TCPIP_MAC_Open                         = DRV_GMAC_Open,
+    .TCPIP_MAC_Close                        = DRV_GMAC_Close,
+    .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
+    .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
+    .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
+    .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
+    .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
+    .TCPIP_MAC_Process                      = DRV_GMAC_Process,
+    .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
+    .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
+    .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
+    .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
+    .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
+    .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
+    .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
 };
 
 // the embedded PIC32 MAC descriptor

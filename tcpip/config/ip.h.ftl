@@ -43,6 +43,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 <#if TCPIP_STACK_USE_IPV4 == true>
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_ARP_SLOTS                        ${TCPIP_IPV4_ARP_QUEUE_SLOTS}
 <#if TCPIP_IPV4_FRAGMENTATION == true>
 /*** IPv4 Fragmentation Configuration ***/
 #define TCPIP_IPV4_FRAGMENTATION		        	true
@@ -56,6 +57,45 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 </#if>
+
+<#if TCPIP_IPV4_COMMANDS_ENABLE == true>
+#define TCPIP_IPV4_COMMANDS true
+<#else>
+#define TCPIP_IPV4_COMMANDS false
+</#if>
+
+<#if TCPIP_IPV4_FORWARD == true>
+#define TCPIP_IPV4_FORWARDING_ENABLE    true 
+
+#define TCPIP_IPV4_FWD_TX_SLOTS                        ${TCPIP_IPV4_FWD_QUEUE_SLOTS}
+<#if TCPIP_IPV4_FORWARD_ASCII_ENABLE == true>
+#define TCPIP_IPV4_FORWARDING_TABLE_ASCII     true
+<#else>
+#define TCPIP_IPV4_FORWARDING_TABLE_ASCII     false
+</#if>
+<#if TCPIP_IPV4_FORWARD_BIN_ENABLE == true>
+#define TCPIP_IPV4_FORWARDING_TABLE_BIN     true
+<#else>
+#define TCPIP_IPV4_FORWARDING_TABLE_BIN     false
+</#if>
+
+#define TCPIP_IPV4_FWD_FLAGS                        \
+<#if TCPIP_IPV4_FORWARD_ASCII_SELECT == true>
+                                                    TCPIP_IPV4_FWD_FLAG_ASCII_TABLE |\
+</#if>
+<#if TCPIP_IPV4_FORWARD_BCAST_ENABLE == true>
+                                                    TCPIP_IPV4_FWD_FLAG_BCAST_ENABLED |\
+</#if>
+                                                    TCPIP_IPV4_FWD_FLAG_ENABLED
+
+#define TCPIP_IPV4_FORWARDING_TABLE_MAX_SIZE        ${TCPIP_IPV4_FORWARD_TABLE_MAX_SIZE}
+#define TCPIP_IPV4_FORWARDING_TABLE_ENTRIES         ${TCPIP_IPV4_FORWARD_TABLE_CNT}
+
+<#else>
+#define TCPIP_IPV4_FORWARDING_ENABLE    false 
+</#if>
+
+
 </#if>
 
 <#--

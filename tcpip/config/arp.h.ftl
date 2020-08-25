@@ -63,6 +63,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_ARP_PRIMARY_CACHE_ONLY              		false
 </#if>
+<#if TCPIP_ARP_COMMANDS_ENABLE == true>
+#define TCPIP_ARP_COMMANDS true
+<#else>
+#define TCPIP_ARP_COMMANDS false
+</#if>
 </#if>
 
 <#--

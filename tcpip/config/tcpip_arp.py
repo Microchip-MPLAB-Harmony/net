@@ -41,6 +41,13 @@ def instantiateComponent(tcpipArpComponent):
     tcpipArpCacheEntries.setDefaultValue(5)
     tcpipArpCacheEntries.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
     
+    # Enable ARP Commands
+    tcpipArpCommands = tcpipArpComponent.createBooleanSymbol("TCPIP_ARP_COMMANDS_ENABLE", None)
+    tcpipArpCommands.setLabel("Enable ARP Commands")
+    tcpipArpCommands.setVisible(True)
+    tcpipArpCommands.setDescription("Enable the ARP TCP/IP Commands")
+    tcpipArpCommands.setDefaultValue(False)
+
     # Advanced Settings
     tcpipArpAdvSettings = tcpipArpComponent.createMenuSymbol("TCPIP_ARP_ADV_SETTING", None)
     tcpipArpAdvSettings.setLabel("Advanced Settings")

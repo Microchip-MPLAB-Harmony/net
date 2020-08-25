@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2014-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2014-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -44,10 +44,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 const TCPIP_MAC_OBJECT DRV_ENCX24J600_MACObject =
 {
     .macId = TCPIP_MODULE_MAC_ENCJ600,
+    .macType = TCPIP_MAC_TYPE_ETH,    
     .macName = "ENCX24J600",
     .TCPIP_MAC_Initialize = DRV_ENCX24J600_StackInitialize,
+#if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
     .TCPIP_MAC_Deinitialize = DRV_ENCX24J600_Deinitialize,
     .TCPIP_MAC_Reinitialize = DRV_ENCX24J600_Reinitialize,
+#else
+    .TCPIP_MAC_Deinitialize = 0,
+    .TCPIP_MAC_Reinitialize = 0,
+#endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
     .TCPIP_MAC_Status = DRV_ENCX24J600_Status,
     .TCPIP_MAC_Tasks = DRV_ENCX24J600_Tasks,
     .TCPIP_MAC_Open = DRV_ENCX24J600_Open,

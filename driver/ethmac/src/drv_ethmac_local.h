@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -155,8 +155,8 @@ typedef enum
 
 typedef struct
 {
-    unsigned int        _macIx;             // index of the MAC, for multiple MAC's support
-    unsigned int        _phyIx;             // index of the associated PHY
+    uint16_t            _macIx;             // index of the MAC, for multiple MAC's support
+    uint16_t            _phyIx;             // index of the associated PHY
     SYS_MODULE_OBJ      hPhySysObject;      // PHY object handle
     SYS_MODULE_OBJ      hPhyClient;         // PHY handle
     SYS_STATUS          sysStat;            // driver status
@@ -174,6 +174,7 @@ typedef struct
             // add another flags here
         };
     }                   _macFlags;          // corresponding MAC flags
+    uint16_t            _segLoadOffset;     // segment allocation offset
 
     TCPIP_MODULE_MAC_PIC32INT_CONFIG    macConfig;  // configuration parameters
     DRV_ETHERNET_REGISTERS*             pEthReg;    // pointer to Ethernet registers describing the peripheral

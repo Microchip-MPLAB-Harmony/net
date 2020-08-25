@@ -11,7 +11,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2015-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2015-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -1608,8 +1608,8 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    if(pSeg == 0 || pSeg->segLoadOffset < 2)
-    {   // cannot send this packet
+    if(pSeg == 0 || pSeg->segLoadOffset < sizeof(TCPIP_MAC_PACKET*) + 2)
+    {   // cannot send this packet; 2 bytes gap needed to store the command
         return TCPIP_MAC_RES_PACKET_ERR;
     }
 
