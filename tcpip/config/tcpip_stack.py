@@ -1712,9 +1712,7 @@ def instantiateComponent(tcpipStackComponent):
     # ifblock !DSTBDPIC32CZ
     # file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
     # endif
-    if(     not Peripheral.moduleExists("GMAC")
-        and not Peripheral.moduleExists("EMAC")
-    ):
+    if "PIC32M" in Variables.get("__PROCESSOR"):
         tcpipStackTcpipHelpersC32SourceFile = tcpipStackComponent.createFileSymbol(None, None)
         tcpipStackTcpipHelpersC32SourceFile.setSourcePath("tcpip/src/tcpip_helper_c32.S")
         tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")
