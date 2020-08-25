@@ -158,7 +158,7 @@ def tcpipIcmpTCPEnable(symbol, event):
 def tcpipIcmpGenSourceFile(sourceFile, event):
     tcpipIcmpClient = Database.getSymbolValue("tcpipIcmp","TCPIP_STACK_USE_ICMP_CLIENT")
     tcpipIcmpServer = Database.getSymbolValue("tcpipIcmp","TCPIP_STACK_USE_ICMP_SERVER")
-    if(tcpipIcmpClient or tcpipIcmpServer ):
+    if((tcpipIcmpClient == True) or (tcpipIcmpServer == True)):
         sourceFile.setEnabled(True)
     else:
         sourceFile.setEnabled(False)
