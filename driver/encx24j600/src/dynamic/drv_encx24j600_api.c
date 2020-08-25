@@ -778,7 +778,7 @@ TCPIP_MAC_RES DRV_ENCX24J600_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATIST
         uint8_t count = 0;
         for (count = 0; count < MAX_TX_DESCRIPTORS; count++)
         {
-            if (pDrvInst->txDescriptors[count].state != DRV_ENCX24J600_TP_NO_PKT_STATE);
+            if (pDrvInst->txDescriptors[count].state != DRV_ENCX24J600_TP_NO_PKT_STATE)
             {
                 pTxStatistics->nTxPendBuffers++;
             }
