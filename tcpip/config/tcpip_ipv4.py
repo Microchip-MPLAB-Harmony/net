@@ -44,16 +44,29 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4.setVisible(False)
     tcpipIPv4.setDescription("Enable IPv4")
     tcpipIPv4.setDefaultValue(True)
-
+    
+    # Enable IPv4 Commands
+    tcpipIpv4Commands = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_COMMANDS_ENABLE", None)
+    tcpipIpv4Commands.setLabel("Enable IPv4 Commands")
+    tcpipIpv4Commands.setVisible(True)
+    tcpipIpv4Commands.setDescription("Enable the IPv4 TCP/IP Commands")
+    tcpipIpv4Commands.setDefaultValue(False)
+    
+    # Advanced Settings
+    tcpipIPv4AdvSettings = tcpipIPv4Component.createMenuSymbol("TCPIP_IPV4_ADV_SETTING", None)
+    tcpipIPv4AdvSettings.setLabel("Advanced Settings")
+    tcpipIPv4AdvSettings.setDescription("Advanced Settings")
+    tcpipIPv4AdvSettings.setVisible(True)
+    
     # ARP queue slots
-    tcpipIPv4ArpSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_ARP_QUEUE_SLOTS", None)
-    tcpipIPv4ArpSlots.setLabel("ARP Queue Slots")
+    tcpipIPv4ArpSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_ARP_QUEUE_SLOTS", tcpipIPv4AdvSettings)
+    tcpipIPv4ArpSlots.setLabel("Number of ARP Requests IPv4 can queue")
     tcpipIPv4ArpSlots.setVisible(True)
     tcpipIPv4ArpSlots.setDescription("Number of ARP requests that IPv4 Can Queue Up")
     tcpipIPv4ArpSlots.setDefaultValue(10)
 
     # Load IPv4 Configurations
-    tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", None)
+    tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", tcpipIPv4AdvSettings)
     tcpipIPv4Frag.setLabel("Enable IPv4 Fragmentation Support")
     tcpipIPv4Frag.setVisible(True)
     tcpipIPv4Frag.setDescription("Enable IPv4 fragmentation support")
@@ -89,18 +102,11 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4FragMaxNum.setDefaultValue(4)
 
     # Enable External Packet Processing
-    tcpipIpv4ExtPktProcess = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_EXTERN_PACKET_PROCESS", None)
+    tcpipIpv4ExtPktProcess = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_EXTERN_PACKET_PROCESS", tcpipIPv4AdvSettings)
     tcpipIpv4ExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipIpv4ExtPktProcess.setVisible(True)
     tcpipIpv4ExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipIpv4ExtPktProcess.setDefaultValue(False)
-    
-    # Enable IPv4 Commands
-    tcpipIpv4Commands = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_COMMANDS_ENABLE", None)
-    tcpipIpv4Commands.setLabel("Enable IPv4 Commands")
-    tcpipIpv4Commands.setVisible(True)
-    tcpipIpv4Commands.setDescription("Enable the IPv4 TCP/IP Commands")
-    tcpipIpv4Commands.setDefaultValue(False)
     
     # IPv4 Task Tick Rate in ms
     tcpipIPv4TaskTickRate = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_TASK_TICK_RATE", tcpipIPv4FragSetting)
@@ -110,7 +116,7 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4TaskTickRate.setDefaultValue(37)
 
     # IPv4 Forwarding Support
-    tcpipIPv4Forward = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD", None)
+    tcpipIPv4Forward = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD", tcpipIPv4AdvSettings)
     tcpipIPv4Forward.setLabel("Enable IPv4 Forwarding Support")
     tcpipIPv4Forward.setVisible(True)
     tcpipIPv4Forward.setDescription("Enable IPv4 Forwarding Support")
