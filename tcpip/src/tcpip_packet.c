@@ -38,13 +38,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip_packet.h"
 #include "tcpip/tcpip_mac.h"
 
-#if defined(__PIC32MZ__) || defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
-#define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
-#elif defined(__PIC32MX__)
-#define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 4
-#else
-#error "tcpip_packet.c: Unsupported architecture. Abort build!"
-#endif
+#define TCPIP_SEGMENT_CACHE_ALIGN_SIZE (CACHE_LINE_SIZE)
 
 // Segment payload gap:
 // sizeof the TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap

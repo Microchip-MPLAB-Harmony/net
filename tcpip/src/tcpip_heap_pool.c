@@ -35,7 +35,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-#if !defined(__PIC32C__) && !defined(__SAMA5D2__)  && !defined(__SAM9X60__)
+#if defined(__mips__)
 #include <sys/kmem.h>
 #endif
 
@@ -52,20 +52,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // min heap alignment
 // always power of 2
-#if defined(__PIC32MZ__) || defined(__PIC32WK__)
-typedef struct __attribute__((aligned(16)))
+#if (CACHE_LINE_SIZE >= 8u)
+typedef struct __attribute__((aligned(CACHE_LINE_SIZE)))
 {
-    uint64_t     pad[2];
+    uint64_t     pad[CACHE_LINE_SIZE / 8];
 }_TCPIP_POOL_ALIGN;
-#elif defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
-typedef struct __attribute__((aligned(32)))
-{
-    uint32_t     pad[8];
-}_TCPIP_POOL_ALIGN;
-#else   // PIC32MX, PIC32MK
+#elif (CACHE_LINE_SIZE >= 4u)
 typedef uint32_t _TCPIP_POOL_ALIGN;
-#endif  // defined(__PIC32MZ__) || defined(__PIC32WK__)
-
+#else
+#error "TCP/IP Heap: incorrect CACHE_LINE_SIZE!"
+#endif // (CACHE_LINE_SIZE >= 8u)
 
 typedef union _tag_TCPIP_POOL_DATA_BLK
 {
