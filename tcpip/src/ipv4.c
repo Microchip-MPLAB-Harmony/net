@@ -313,7 +313,7 @@ bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear)
 }
 #endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0) && ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
 
 static uint32_t _ipv4DbgExtTbl[] = {0xf002a8c0};   // table with addresses (src, dest) to be matched against
 static uint32_t* _ipv4DbgExt = _ipv4DbgExtTbl;
@@ -354,7 +354,7 @@ static void _IPv4ProcessExtPktDbg(TCPIP_MAC_PACKET* pRxPkt)
 }
 #else
 #define _IPv4ProcessExtPktDbg(pRxPkt)
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0) && ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
 
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
 
