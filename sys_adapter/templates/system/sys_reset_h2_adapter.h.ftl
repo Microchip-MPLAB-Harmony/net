@@ -78,7 +78,30 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 // *****************************************************************************
 
-#define SYS_RESET_SoftwareReset() (RSTC_REGS->RSTC_CR |= RSTC_CR_PROCRST_Msk | RSTC_CR_KEY_PASSWD)
+<#if core.CoreArchitecture?contains("MIPS")>
+#define SYS_RESET_SoftwareReset()	\
+	__builtin_disable_interrupts();	\
+	/* Unlock System */				\
+	SYSKEY = 0x00000000;			\
+	SYSKEY = 0xAA996655;			\
+	SYSKEY = 0x556699AA;			\
+	RSWRSTSET = _RSWRST_SWRST_MASK;	\
+	/* Read RSWRST register to trigger reset */	\
+	(void) RSWRST;					\
+	/* Prevent any unwanted code execution until reset occurs */	\
+	while(1)						
+<#elseif core.CoreArchitecture?contains("ARM") || core.CoreArchitecture?contains("CORTEX-A")>	
+#define SYS_RESET_SoftwareReset()	\
+	(RSTC_REGS->RSTC_CR |= RSTC_CR_PROCRST_Msk | RSTC_CR_KEY_PASSWD);	\
+	/* Wait for command processing */									\
+	while( RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk );			\
+	/* Prevent any unwanted code execution until reset occurs */		\
+	while(1)															
+<#else> <#-- it will be Cortex M Architecture -->
+#define SYS_RESET_SoftwareReset()	\
+    NVIC_SystemReset()
+</#if>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
