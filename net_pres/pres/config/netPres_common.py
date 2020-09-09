@@ -31,7 +31,7 @@ def instantiateComponent(netPresCommonComponent):
     netPresNeeded.setLabel("Use Network Presentation Layer")
     netPresNeeded.setVisible(False)
     netPresNeeded.setDefaultValue(True)
-    
+
     # Use MPLAB Harmony Networking Presentation Layer
     netPresUse = netPresCommonComponent.createBooleanSymbol("NET_PRES_USE", None)
     netPresUse.setLabel("Use MPLAB Harmony Networking Presentation Layer")
@@ -133,29 +133,99 @@ def instantiateComponent(netPresCommonComponent):
     netPresBlobClientSupport.setDefaultValue(True)  
     netPresBlobClientSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
 
+    # File Type for Client CA Certificate?
+    netPresBlobClientCertFormat = netPresCommonComponent.createKeyValueSetSymbol("NET_PRES_BLOB_CLIENT_CERT_FORMAT",netPresBlobClientSupport)
+    netPresBlobClientCertFormat.setVisible(True)
+    netPresBlobClientCertFormat.setLabel("CA Certificate Format")
+    netPresBlobClientCertFormat.addKey("PEM", "0", "PEM")
+    netPresBlobClientCertFormat.addKey("ASN1", "1", "ASN1")
+    netPresBlobClientCertFormat.setDisplayMode("Key")
+    netPresBlobClientCertFormat.setOutputMode("Key")
+    netPresBlobClientCertFormat.setDefaultValue(0)
+    netPresBlobClientCertFormat.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"]) 
+
     # File name containing definitions for Client Certificates?
     netPresBlobClientCertFileName = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_FILENAME", netPresBlobClientSupport) 
-    netPresBlobClientCertFileName.setLabel("File name containing definitions for Client Certificates?")
+    netPresBlobClientCertFileName.setLabel("File name containing definitions for CA Certificate?")
     netPresBlobClientCertFileName.setVisible(True)
-    netPresBlobClientCertFileName.setDescription("File name containing definitions for Client Certificates?")
+    netPresBlobClientCertFileName.setDescription("File name containing definitions for CA Certificate?")
     netPresBlobClientCertFileName.setDefaultValue("ca-certs.h")
     netPresBlobClientCertFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"]) 
 
     # Variable Name Containing Data for Client Certificates?
     netPresBlobClientCertVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_VARIABLE", netPresBlobClientSupport) 
-    netPresBlobClientCertVar.setLabel("Variable Name Containing Data for Client Certificates?")
+    netPresBlobClientCertVar.setLabel("Variable Name Containing Data for CA Certificate?")
     netPresBlobClientCertVar.setVisible(True)
-    netPresBlobClientCertVar.setDescription("Variable Name Containing Data for Client Certificates?")
+    netPresBlobClientCertVar.setDescription("Variable Name Containing Data for CA Certificate?")
     netPresBlobClientCertVar.setDefaultValue("caCert")
     netPresBlobClientCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])  
 
     # Variable Name Containing Size of Client Certificates?
     netPresBlobClientCertLenVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE", netPresBlobClientSupport) 
-    netPresBlobClientCertLenVar.setLabel("Variable Name Containing Size of Client Certificates?")
+    netPresBlobClientCertLenVar.setLabel("Variable Name Containing Size of CA Certificate?")
     netPresBlobClientCertLenVar.setVisible(True)
-    netPresBlobClientCertLenVar.setDescription("Variable Name Containing Size of Client Certificates?")
+    netPresBlobClientCertLenVar.setDescription("Variable Name Containing Size of CA Certificate?")
     netPresBlobClientCertLenVar.setDefaultValue("caCert_len")
     netPresBlobClientCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
+
+    # Support X509 TLS Mutual Authentication?
+    netPresBlobClientMutualAuthSupport = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT", netPresBlobClientSupport)
+    netPresBlobClientMutualAuthSupport.setLabel("Support X509 TLS Mutual Authentication?")
+    netPresBlobClientMutualAuthSupport.setVisible(True)
+    netPresBlobClientMutualAuthSupport.setDescription("Support X509 TLS Mutual Authentication?")
+    netPresBlobClientMutualAuthSupport.setDefaultValue(False)
+    netPresBlobClientMutualAuthSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
+
+    # File Type for X509 TLS Credentials
+    netPresBlobClientMutualAuthFormat = netPresCommonComponent.createKeyValueSetSymbol("NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT",netPresBlobClientMutualAuthSupport)
+    netPresBlobClientMutualAuthFormat.setVisible(False)
+    netPresBlobClientMutualAuthFormat.setLabel("Device Certificate and Private Key Format")
+    netPresBlobClientMutualAuthFormat.addKey("PEM", "0", "PEM")
+    netPresBlobClientMutualAuthFormat.addKey("ASN1", "1", "ASN1")
+    netPresBlobClientMutualAuthFormat.setDisplayMode("Key")
+    netPresBlobClientMutualAuthFormat.setOutputMode("Key")
+    netPresBlobClientMutualAuthFormat.setDefaultValue(0)
+    netPresBlobClientMutualAuthFormat.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+    # File name containing definitions for TLS Mutual Authnetication Credentials?
+    netPresBlobClientMutualAuthFileName = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FILENAME", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientMutualAuthFileName.setLabel("File name containing definitions for TLS Credentials?")
+    netPresBlobClientMutualAuthFileName.setVisible(False)
+    netPresBlobClientMutualAuthFileName.setDescription("File name containing definitions for TLS Credentials?")
+    netPresBlobClientMutualAuthFileName.setDefaultValue("device-certs.h")
+    netPresBlobClientMutualAuthFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+    # Variable Name Containing Data for TLS Device Certificate?
+    netPresBlobClientDeviceCertVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDeviceCertVar.setLabel("Variable Name Containing Data for Device Certificate?")
+    netPresBlobClientDeviceCertVar.setVisible(False)
+    netPresBlobClientDeviceCertVar.setDescription("Variable Name Containing Data for Device Certificate?")
+    netPresBlobClientDeviceCertVar.setDefaultValue("deviceCert")
+    netPresBlobClientDeviceCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+    # Variable Name Containing Size of TLS Device Certificate?
+    netPresBlobClientDeviceCertLenVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_CERT_LEN_VARIABLE", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDeviceCertLenVar.setLabel("Variable Name Containing Size of Device Certificate?")
+    netPresBlobClientDeviceCertLenVar.setVisible(False)
+    netPresBlobClientDeviceCertLenVar.setDescription("Variable Name Containing Size of Device Certificate?")
+    netPresBlobClientDeviceCertLenVar.setDefaultValue("deviceCert_len")
+    netPresBlobClientDeviceCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+    # Variable Name Containing Data for TLS Device Private Key?
+    netPresBlobClientDevicePvtKeyVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDevicePvtKeyVar.setLabel("Variable Name Containing Data for Device Private Key?")
+    netPresBlobClientDevicePvtKeyVar.setVisible(False)
+    netPresBlobClientDevicePvtKeyVar.setDescription("Variable Name Containing Data for Device Private Key?")
+    netPresBlobClientDevicePvtKeyVar.setDefaultValue("devicePvtKey")
+    netPresBlobClientDevicePvtKeyVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+    # Variable Name Containing Size of TLS Device Private Key?
+    netPresBlobClientDevicePvtKeyLenVar = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_LEN_VARIABLE", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDevicePvtKeyLenVar.setLabel("Variable Name Containing Size of Device Private Key?")
+    netPresBlobClientDevicePvtKeyLenVar.setVisible(False)
+    netPresBlobClientDevicePvtKeyLenVar.setDescription("Variable Name Containing Size of Device Private Key?")
+    netPresBlobClientDevicePvtKeyLenVar.setDefaultValue("devicePvtKey_len")
+    netPresBlobClientDevicePvtKeyLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
 
     # Support Server Certificate?"
     netPresBlobServerSupport = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_SERVER_SUPPORT", netPresBlobCert)
@@ -164,6 +234,17 @@ def instantiateComponent(netPresCommonComponent):
     netPresBlobServerSupport.setDescription("Support Server Certificate?")
     netPresBlobServerSupport.setDefaultValue(True)  
     netPresBlobServerSupport.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CERT_REPO"])
+
+    # File Type for Server Credentials
+    netPresBlobServerCertFormat = netPresCommonComponent.createKeyValueSetSymbol("NET_PRES_BLOB_SERVER_CERT_FORMAT",netPresBlobServerSupport)
+    netPresBlobServerCertFormat.setVisible(False)
+    netPresBlobServerCertFormat.setLabel("Server Certificate and Private Key Format")
+    netPresBlobServerCertFormat.addKey("PEM", "0", "PEM")
+    netPresBlobServerCertFormat.addKey("ASN1", "1", "ASN1")
+    netPresBlobServerCertFormat.setDisplayMode("Key")
+    netPresBlobServerCertFormat.setOutputMode("Key")
+    netPresBlobServerCertFormat.setDefaultValue(0)
+    netPresBlobServerCertFormat.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_SERVER_SUPPORT"])
 
     # File name containing definitions for Server Certificates?
     netPresBlobServerCertFileName = netPresCommonComponent.createStringSymbol("NET_PRES_BLOB_SERVER_CERT_FILENAME", netPresBlobServerSupport) 

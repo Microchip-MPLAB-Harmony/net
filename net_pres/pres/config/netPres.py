@@ -162,9 +162,11 @@ def netPresInstnEncProviderMenu(symbol, event):
         #Todo: change to Database.sendMessage(); but need handleMessage() in lib_wolfssl
         Database.setSymbolValue("lib_wolfssl","wolfssl", True) 
         setVal("netPres", "NET_PRES_BLOB_CERT", 0)
+        setVal("netPres", "NET_PRES_BLOB_CLIENT_CERT_FORMAT", 1)
         setVal("netPres", "NET_PRES_BLOB_CLIENT_CERT_FILENAME", "wolfssl/certs_test.h")
         setVal("netPres", "NET_PRES_BLOB_CLIENT_CERT_VARIABLE", "client_cert_der_2048")
         setVal("netPres", "NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE", "sizeof_client_cert_der_2048")
+        setVal("netPres", "NET_PRES_BLOB_SERVER_CERT_FORMAT", 1)
         setVal("netPres", "NET_PRES_BLOB_SERVER_CERT_FILENAME", "wolfssl/certs_test.h")
         setVal("netPres", "NET_PRES_BLOB_SERVER_CERT_VARIABLE", "server_cert_der_2048")
         setVal("netPres", "NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE", "sizeof_server_cert_der_2048")
