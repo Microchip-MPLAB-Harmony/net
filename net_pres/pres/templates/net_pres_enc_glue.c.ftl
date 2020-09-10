@@ -213,25 +213,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject = transObject;
         <#if TYPE="Stream">
             <#if CONNECTION="Client">
-                <#if lib_wolfssl.wolfsslTLSDowngrade?has_content && lib_wolfssl.wolfsslTLSDowngrade == true >
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
-				<#elseif lib_wolfssl.wolfsslTLS13?has_content && lib_wolfssl.wolfsslTLS13 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
-				<#elseif lib_wolfssl.wolfsslTLS12?has_content && lib_wolfssl.wolfsslTLS12 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_2_client_method());
-				<#else>
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
-				</#if>
             <#else>
-                <#if lib_wolfssl.wolfsslTLSDowngrade?has_content && lib_wolfssl.wolfsslTLSDowngrade == true >
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
-				<#elseif lib_wolfssl.wolfsslTLS13?has_content && lib_wolfssl.wolfsslTLS13 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_server_method());
-				<#elseif lib_wolfssl.wolfsslTLS12?has_content && lib_wolfssl.wolfsslTLS12 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_2_server_method());
-				<#else>
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
-				</#if>
             </#if>
         <#else>
             <#if CONNECTION="Client">
