@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-16T13:49:13Z */
+/* file generated from device description version 2020-05-19T13:57:46Z */
 #ifndef _SAM9X_OTPC_COMPONENT_H_
 #define _SAM9X_OTPC_COMPONENT_H_
 

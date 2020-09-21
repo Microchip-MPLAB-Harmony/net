@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-16T13:49:08Z */
+/* file generated from device description version 2020-05-19T13:57:46Z */
 #ifndef _SAM9X60_H_
 #define _SAM9X60_H_
 
@@ -136,6 +136,65 @@ typedef enum IRQn
 
   PERIPH_MAX_IRQn           =  49  /**< Max peripheral ID */
 } IRQn_Type;
+#endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
+#if !defined DONT_USE_PREDEFINED_CORE_HANDLERS
+/* ARM926EJS exception handlers */
+#endif /* DONT_USE_PREDEFINED_CORE_HANDLERS */
+
+#if !defined DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
+/* Peripherals interrupt handlers */
+void EXT_FIQ_Handler               ( void );
+void SYSC_Handler                  ( void );
+void PIOA_Handler                  ( void );
+void PIOB_Handler                  ( void );
+void PIOC_Handler                  ( void );
+void FLEXCOM0_Handler              ( void );
+void FLEXCOM1_Handler              ( void );
+void FLEXCOM2_Handler              ( void );
+void FLEXCOM3_Handler              ( void );
+void FLEXCOM6_Handler              ( void );
+void FLEXCOM7_Handler              ( void );
+void FLEXCOM8_Handler              ( void );
+void SDMMC0_Handler                ( void );
+void FLEXCOM4_Handler              ( void );
+void FLEXCOM5_Handler              ( void );
+void FLEXCOM9_Handler              ( void );
+void FLEXCOM10_Handler             ( void );
+void TC0_Handler                   ( void );
+void PWM_Handler                   ( void );
+void ADC_Handler                   ( void );
+void XDMAC_Handler                 ( void );
+void MATRIX_Handler                ( void );
+void UDPHS_Handler                 ( void );
+void EMAC0_Handler                 ( void );
+void LCDC_Handler                  ( void );
+void SDMMC1_Handler                ( void );
+void EMAC1_Handler                 ( void );
+void SSC_Handler                   ( void );
+void CAN0_Handler                  ( void );
+void CAN1_Handler                  ( void );
+void EXT_IRQ_Handler               ( void );
+void FLEXCOM11_Handler             ( void );
+void FLEXCOM12_Handler             ( void );
+void I2SMCC_Handler                ( void );
+void QSPI_Handler                  ( void );
+void GFX2D_Handler                 ( void );
+void PIT64B_Handler                ( void );
+void TRNG_Handler                  ( void );
+void AES_Handler                   ( void );
+void TDES_Handler                  ( void );
+void SHA_Handler                   ( void );
+void CLASSD_Handler                ( void );
+void ISI_Handler                   ( void );
+void PIOD_Handler                  ( void );
+void TC1_Handler                   ( void );
+void OTPC_Handler                  ( void );
+void DBGU_Handler                  ( void );
+void ECC_Handler                   ( void );
+void MC_Handler                    ( void );
+#endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /*
@@ -445,6 +504,7 @@ typedef enum IRQn
 #define SDMMC0_SIZE                    _UL_(0x00100000)    /* 1024kB Memory segment type: other */
 #define SDMMC1_SIZE                    _UL_(0x00100000)    /* 1024kB Memory segment type: other */
 #define OTPC_SIZE                      _UL_(0x00001000)    /*    4kB Memory segment type: other */
+#define PERIPHERALS_SIZE               _UL_(0x10000000)    /* 262144kB Memory segment type: io */
 
 #define ECC_ROM_ADDR                   _UL_(0x00100000)    /**< ECC_ROM base address (type: other)*/
 #define SRAM0_ADDR                     _UL_(0x00300000)    /**< SRAM0 base address (type: other)*/
@@ -465,6 +525,7 @@ typedef enum IRQn
 #define SDMMC0_ADDR                    _UL_(0x80000000)    /**< SDMMC0 base address (type: other)*/
 #define SDMMC1_ADDR                    _UL_(0x90000000)    /**< SDMMC1 base address (type: other)*/
 #define OTPC_ADDR                      _UL_(0xeff00000)    /**< OTPC base address (type: other)*/
+#define PERIPHERALS_ADDR               _UL_(0xf0000000)    /**< PERIPHERALS base address (type: io)*/
 
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAM9X60                                            */
