@@ -1,4 +1,50 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.2 (September, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.2:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.6.2 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| NET_PRES              |Added MHC support for TLS mutual auth for NET PRES Client | 
+|                       |Added function to retrieve Client TLS parameters to certificate store files |
+|                       |Added new dropdown options to select X509 file formats for certificates and Private key (i.e. PEM or ASN1) |
+|                       |Added mutual auth empty function definition to certificate stub section for uniformity |
+|                       |CA cert format and Server cert format set to ASN1 in netPres.py to maintain backward compatibility |
+|                       |Changed MHC GUI field names for Client Certificate to Client CA Certififace |
+| sys_adapter           |Added sys_reset_h2_adapter handling of PIC32M devices|
+
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.6.2 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| Demo apps         | Added missing atsame54p20a_compat.h file: web_net_server_nvm_mpfs, web_server_nvm_mpfs, wolfmqtt_demo|
+|                   | Removed from manifest.yml the files not in package.xml|
+| PHY driver        | Removed PHY hardware configuration dependency of xc32 version |
+| MHC               | Fixed ICMP file not included in project when ICMP Server/Client unchecked |
+|                   | Fixed tcpip_helper_c32.S added by MH3 configurator for non MIPS projects |
+|                   | Fixed netPresBlobClientSupport name used for 2 different symbols|
+|                   | Fixed wolfMQTT NET Glue script not generating proper code | 
+| NET_PRES          | Updated the NET_PRES glue code to use sys_debug service |
+| TCP/IP Manager    | Updated the SYS_ERROR_PRINT format parameters |
+| SYS_FS shell      | Updated the Shell_FileDelete return type |
+| IPv6              | Moved the flexible array IPV6_DATA_SEGMENT_HEADER structure to the end of the IPV6_PACKET definition |
+| UDP, TCP          | Added comments for sockets multi-threaded usage |
+| DHCPv4            | Updated the default DHCP client timeout to 10 seconds|
+| HTTP_NET          | Updated the ledSelected custom code to properly use the dynamic STRING type|
+|                   | Fixed the decrement of negative numbers |
+|                   | Updated the html pages copyright date|
+
+
+- **Release notes for v3.6.1 apply**
+
+
+
 ## Net Release v3.6.1 (June, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.1:
 
