@@ -30,6 +30,8 @@ autoConnectTableWINC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_
 #### Business Logic ####
 ################################################################################
 
+import os
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -49,6 +51,11 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigDrvEnable = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_DRV_ENABLE", None)
     tcpipAutoConfigDrvEnable.setVisible(False)
     tcpipAutoConfigDrvEnable.setDefaultValue(True)
+    # Check if Wireless Module are present to show respective Drivers
+    harmonyFrameworkPath = Variables.get("__FRAMEWORK_DIR")     
+    wirelessWincPresent = os.path.isdir(harmonyFrameworkPath + "/wireless/driver/winc")
+    wirelessEthmacPresent = os.path.isdir(harmonyFrameworkPath + "/wireless/driver/ethmac")
+    
     if Peripheral.moduleExists("GMAC"): 
         # Enable GMAC
         tcpipAutoConfigGMAC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_GMAC", None)
@@ -63,7 +70,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
         if (deviceSeries != "PIC32MZW"):
             tcpipAutoConfigEthmac.setVisible(True)
         else:
-            tcpipAutoConfigEthmac.setVisible(False)
+            tcpipAutoConfigEthmac.setVisible(wirelessEthmacPresent)
         
         tcpipAutoConfigEthmac.setDescription("Enable ETHMAC")
         tcpipAutoConfigEthmac.setDependencies(tcpipAutoConfigETHMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_ETHMAC"])  
@@ -199,7 +206,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     # Enable WINC MAC
     tcpipAutoConfigWINC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_WINC", None)
     tcpipAutoConfigWINC.setLabel("WINC")
-    tcpipAutoConfigWINC.setVisible(False)
+    tcpipAutoConfigWINC.setVisible(wirelessWincPresent)
     tcpipAutoConfigWINC.setDescription("Enable WINC")
     tcpipAutoConfigWINC.setDependencies(tcpipAutoConfigWINCEnable, ["TCPIP_AUTOCONFIG_ENABLE_WINC"])    
 ########################################################################################################
