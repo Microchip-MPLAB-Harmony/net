@@ -78,7 +78,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 // *****************************************************************************
 
-#define SYS_RESET_SoftwareReset() (RSTC_REGS->RSTC_CR |= RSTC_CR_PROCRST_Msk | RSTC_CR_KEY_PASSWD)
+#define SYS_RESET_SoftwareReset()	\
+	(RSTC_REGS->RSTC_CR |= RSTC_CR_PROCRST_Msk | RSTC_CR_KEY_PASSWD);	\
+	/* Wait for command processing */									\
+	while( RSTC_REGS->RSTC_SR & (uint32_t)RSTC_SR_SRCMP_Msk );			\
+	/* Prevent any unwanted code execution until reset occurs */		\
+	while(1)															
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

@@ -51,7 +51,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // ICMP Packet Structure
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
 	uint8_t vType;
 	uint8_t vCode;
@@ -225,12 +225,10 @@ ICMP_HANDLE TCPIP_ICMP_CallbackRegister (void (*callback)(TCPIP_NET_HANDLE hNetI
 {
     if(callback && icmpMemH)
     {
-        ICMP_LIST_NODE* newNode = (ICMP_LIST_NODE*)TCPIP_Notification_Add(&icmpRegisteredUsers, icmpMemH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->callback = callback;
-            return newNode;
-        }
+        ICMP_LIST_NODE icmpNode;
+        icmpNode.callback = callback;
+
+        return (ICMP_LIST_NODE*)TCPIP_Notification_Add(&icmpRegisteredUsers, icmpMemH, &icmpNode, sizeof(icmpNode));
     }
 
     return 0;

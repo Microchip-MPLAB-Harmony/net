@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -52,9 +52,14 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // internal
 
 // debugging
-#define TCPIP_IPV4_DEBUG_MASK_BASIC           (0x0001)
-#define TCPIP_IPV4_DEBUG_MASK_FRAGMENT        (0x0002)
-#define TCPIP_IPV4_DEBUG_MASK_RX_CHECK        (0x0004)
+#define TCPIP_IPV4_DEBUG_MASK_BASIC             (0x0001)
+#define TCPIP_IPV4_DEBUG_MASK_FRAGMENT          (0x0002)
+#define TCPIP_IPV4_DEBUG_MASK_RX_CHECK          (0x0004)
+#define TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE         (0x0008)
+#define TCPIP_IPV4_DEBUG_MASK_PROC_EXT          (0x0010)
+#define TCPIP_IPV4_DEBUG_MASK_FWD               (0x0020)
+#define TCPIP_IPV4_DEBUG_MASK_FWD_MAC_DEST      (0x0040)
+#define TCPIP_IPV4_DEBUG_MASK_FILT_COUNT        (0x0080)
 
 // enable IPV4 debugging levels
 #define TCPIP_IPV4_DEBUG_LEVEL  (0)
@@ -67,7 +72,8 @@ typedef struct  _TAG_IPV4_FILTER_LIST_NODE
 	struct _TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
                                                     // makes it valid SGL_LIST_NODE node
     IPV4_FILTER_FUNC                    handler;    // handler to be called for the filter
-    const void*                         hParam;     // handler parameter
+    uint8_t                             active;     // the filter is active
+    uint8_t                             reserved[3];// not used
 }IPV4_FILTER_LIST_NODE;
 
 
@@ -139,6 +145,99 @@ typedef struct
 
 // maximum size ofIPv4 header
 #define IPV4_HEADER_MAXIMUM_SIZE            60  // 20 bytes header + 40 bytes max options
+
+// ARP support
+typedef enum
+{
+    IPV4_ARP_PKT_TYPE_NONE, // invalid
+    IPV4_ARP_PKT_TYPE_TX,   // IPv4 TX packet: IPV4_PACKET*
+    IPV4_ARP_PKT_TYPE_FWD,  // IPv4 forwarding packet: TCPIP_MAC_PACKET*
+}IPV4_ARP_PKT_TYPE;
+
+
+// entry queued for an ARP operation
+typedef struct _tag_IPV4_ARP_ENTRY
+{
+    struct _tag_IPV4_ARP_ENTRY* next;   // SGL_LIST_NODE safe cast
+    uint8_t                 type;       // IPV4_ARP_PKT_TYPE: packet type
+    uint8_t                 arpIfIx;    // index of the interface for which ARP is queued
+    uint16_t                reserved;   // not used    
+    union
+    {
+        IPV4_PACKET*        pTxPkt;     // packet to be transmitted
+        TCPIP_MAC_PACKET*   pFwdPkt;    // packet to be forwarded 
+        void*               pPkt;       // generic   
+    };
+    IPV4_ADDR               arpTarget;  // ARP resolution target
+}IPV4_ARP_ENTRY;
+
+
+// routing
+
+// type of processed packet: processed on this host or routed
+// NOTE: 16 bits only!
+typedef enum
+{
+    IPV4_PKT_TYPE_UNK       = 0x00,     // packet of unknown type
+    IPV4_PKT_TYPE_UNICAST   = 0x01,     // unicast packet for this host
+    IPV4_PKT_TYPE_BCAST     = 0x02,     // broadcast packet
+    IPV4_PKT_TYPE_MCAST     = 0x04,     // multicast packet
+    // ...
+    // flags for packet destination
+        // packets are processed internally and/or externally
+    IPV4_PKT_DEST_FWD       = 0x0100,   // packet destination is external, to be forwarded
+    IPV4_PKT_DEST_HOST      = 0x0200,   // packet destination is the internal host 
+
+}IPV4_PKT_PROC_TYPE;
+
+// internal forwarding entry
+// NOTE: same structure as TCPIP_IPV4_FORWARD_ENTRY_BIN! 
+typedef struct
+{
+    uint32_t    netAdd;     // network destination address
+    uint32_t    mask;       // associated mask for this route entry
+    uint32_t    gwAdd;      // gw destination address
+    uint8_t     inIfIx;     // input interface
+    uint8_t     outIfIx;    // interface to go out on
+    uint8_t     metric;     // path efficiency
+    uint8_t     nOnes;      // number of leading ones in the mask
+
+}IPV4_ROUTE_TABLE_ENTRY;
+
+// run time forwarding flags
+typedef enum
+{
+    IPV4_FWD_FLAG_NONE          = 0x00,
+    IPV4_FWD_FLAG_FWD_ENABLE    = 0x01,   // forwarding is enabled
+    IPV4_FWD_FLAG_BCAST_ENABLE  = 0x02,   // forwarding of broadcasts is enabled
+    IPV4_FWD_FLAG_MCAST_ENABLE  = 0x04,   // forwarding of multicasts is enabled
+
+
+}IPV4_FORWARD_RUN_FLAGS;
+
+// IP forwarding descriptor per interface
+typedef struct
+{
+    IPV4_ROUTE_TABLE_ENTRY* fwdTable;       // forwarding table itself
+    size_t                  usedEntries;    // number of entries that are used
+    size_t                  totEntries;     // total number of entries
+    uint16_t                iniFlags;       // TCPIP_IPV4_FORWARD_FLAGS: initialization flags
+    uint16_t                runFlags;       // IPV4_FORWARD_RUN_FLAGS: initialization flags
+}IPV4_FORWARD_DESCRIPTOR;
+
+// forwarded packets that need to also be processed locally
+// these are bcast/mcast packets
+typedef struct _tag_IPV4_FORWARD_NODE
+{
+    struct _tag_IPV4_FORWARD_NODE*  next;           // DBL_LIST_NODE safe cast
+    struct _tag_IPV4_FORWARD_NODE*  prev;           // DBL_LIST_NODE safe cast
+    TCPIP_MAC_PACKET*               pFwdPkt;        // packet that's being forwarded
+    TCPIP_MAC_PACKET_ACK_FUNC       ownerAckFunc;   // the acknowledge function of the packet owner
+                                                    // that's the original ackFnc in the packet before being forwarded
+    const void*                     ownerAckParam;  // the original ackParam in the packet
+    TCPIP_MAC_ADDR                  sourceMacAdd;   // original source MAC address the packet came from
+    TCPIP_MAC_ADDR                  destMacAdd;     // original destination MAC address
+}IPV4_FORWARD_NODE;
 
 #endif // _IPV4_PRIVATE_H_
 

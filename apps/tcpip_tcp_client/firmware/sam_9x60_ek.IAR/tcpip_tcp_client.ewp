@@ -260,7 +260,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state>Pe188, Pe186, Pe1029</state>
+                    <state>Pe188, Pe186, Pe1029,Pa039</state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -2158,12 +2158,6 @@
             <data />
         </settings>
     </configuration>
-    <file>
-        <name>$PROJ_DIR$\..\src\app_commands.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\..\src\app_commands.h</name>
-    </file>
     <group>
         <name>Harmony3</name>
         <group>
@@ -3175,4 +3169,10 @@
             </file>
         </group>
     </group>
-    </project>
+    <file>
+        <name>$PROJ_DIR$\..\src\app_commands.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\..\src\app_commands.h</name>
+    </file>
+</project>

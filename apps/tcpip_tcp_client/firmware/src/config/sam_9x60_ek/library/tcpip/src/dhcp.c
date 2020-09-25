@@ -75,6 +75,7 @@ typedef struct
 #endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     TCPIP_UINT32_VAL        transactionID;  // current transaction ID
     TCPIP_DHCP_HOST_NAME_CALLBACK   nameCallback;   // get host name callback
+    IPV4_FILTER_HANDLE      dhcpFilterHandle;   // IPv4 packet filter    
     // unaligned data
     uint16_t                dhcpTmo;        // current DHCP timeout        
     uint16_t                dhcpTmoBase;    // DHCP base timeout
@@ -139,7 +140,7 @@ static bool     _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int m
 static void     _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType);
 static bool     _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ opReq, uint32_t reqAddress);
 
-static bool     _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, const void* param);
+static bool     _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen);
 static UDP_SOCKET _DHCPOpenSocket(void);
 
 static void     _DHCPSetRunFail(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_STATUS newState, bool expBackoff);
@@ -199,8 +200,6 @@ static UDP_PORT             dhcpClientPort;
 static UDP_PORT             dhcpServerPort;
 
 static tcpipSignalHandle     dhcpSignalHandle = 0;
-
-static IPV4_FILTER_HANDLE   dhcpFilterHandle = 0;       // IPv4 packet filter
 
 static const uint8_t    dhcpMagicCookie[4] = {0x63, 0x82, 0x53, 0x63};      // DHCP cookie, network order
 // DHCP event registration
@@ -515,6 +514,14 @@ static void _DHCPDebugTxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType,
 #endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE) != 0
 
 
+static __inline__ void __attribute__((always_inline)) _DHCPSetIPv4Filter(DHCP_CLIENT_VARS* pClient, bool active)
+{
+    if(pClient->dhcpFilterHandle != 0)
+    {
+        Ipv4FilterSetActive(pClient->dhcpFilterHandle, active);
+    }
+}
+
 static void _DHCPClientClose(TCPIP_NET_IF* pNetIf, bool disable, bool release)
 {
     DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
@@ -531,6 +538,7 @@ static void _DHCPClientClose(TCPIP_NET_IF* pNetIf, bool disable, bool release)
         pClient->flags.bReportFail = 1;	
         pClient->tOpStart = 0; 
         pClient->dhcpTmo = pClient->dhcpTmoBase;
+        _DHCPSetIPv4Filter(pClient, false);
         
         if(disable)
         {
@@ -565,10 +573,10 @@ static void _DHCPEnable(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_TYPE opType)
     pNetIf->Flags.bIsDHCPEnabled = true;
 
 
-    if(dhcpFilterHandle == 0)
+    if(pClient->dhcpFilterHandle == 0)
     {
-        dhcpFilterHandle = IPv4RegisterFilter(_DHCPPacketFilter, 0);
-        if(dhcpFilterHandle == 0)
+        pClient->dhcpFilterHandle = IPv4RegisterFilter(_DHCPPacketFilter, true);
+        if(pClient->dhcpFilterHandle == 0)
         {
             SYS_ERROR(SYS_ERROR_WARNING, "DHCP: Failed to register IPv4 filter! \r\n");
         }
@@ -603,23 +611,31 @@ static void _DHCPEnable(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_TYPE opType)
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void _DHCPCleanup(void)
 {
+    int ix;
+
     if(dhcpClientSocket != INVALID_UDP_SOCKET)
     {
         TCPIP_UDP_Close(dhcpClientSocket);
         dhcpClientSocket = INVALID_UDP_SOCKET;
     }
 
-    TCPIP_HEAP_Free(dhcpMemH, DHCPClients);
-    DHCPClients = 0;
+    if(DHCPClients != 0)
+    {
+        DHCP_CLIENT_VARS* pClient = DHCPClients; 
+        for(ix = 0; ix < dhcpInterfaces; ix++, pClient++)
+        {
+            if(pClient->dhcpFilterHandle != 0)
+            {
+                Ipv4DeRegisterFilter(pClient->dhcpFilterHandle);
+            }
+        }
+
+        TCPIP_HEAP_Free(dhcpMemH, DHCPClients);
+        DHCPClients = 0;
+    }
 
     TCPIP_Notification_Deinitialize(&dhcpRegisteredUsers, dhcpMemH);
         
-    if(dhcpFilterHandle != 0)
-    {
-        Ipv4DeRegisterFilter(dhcpFilterHandle);
-        dhcpFilterHandle = 0;
-    }
-
     if(dhcpSignalHandle)
     {
         _TCPIPStackSignalHandlerDeregister(dhcpSignalHandle);
@@ -717,8 +733,6 @@ bool TCPIP_DHCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         {   // failed
             return false;
         }
-
-        dhcpFilterHandle = 0;
 
         // create the DHCP timer
         dhcpSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DHCP_Task, TCPIP_DHCP_TASK_TICK_RATE);
@@ -819,6 +833,7 @@ void TCPIP_DHCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         //  the registered users for this interface are not removed
         //  since this interface is closed there won't be any event generated on it anyway
         //  deallocation will wait for the whole stack to deinit 
+        //  same for IPv4 filters
 
         if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
@@ -1179,6 +1194,8 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     _DHCPClientStateSet(pClient, TCPIP_DHCP_SEND_DISCOVERY);
                 }
 
+                // activate the IPv4 filter
+                _DHCPSetIPv4Filter(pClient, true);
                 break;
               
 
@@ -2061,6 +2078,7 @@ static void _DHCPSetBoundState(DHCP_CLIENT_VARS* pClient)
     pClient->flags.bIsBound = true;	
     pClient->flags.bWasBound = true;	
     pClient->flags.bReportFail = true; 
+    _DHCPSetIPv4Filter(pClient, false);
 }
 
 
@@ -2589,14 +2607,12 @@ TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_E
 {
     if(handler && dhcpMemH)
     {
-        TCPIP_DHCP_LIST_NODE* newNode = (TCPIP_DHCP_LIST_NODE*)TCPIP_Notification_Add(&dhcpRegisteredUsers, dhcpMemH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        TCPIP_DHCP_LIST_NODE dhcpNode;
+        dhcpNode.handler = handler;
+        dhcpNode.hParam = hParam;
+        dhcpNode.hNet = hNet;
+
+        return (TCPIP_DHCP_LIST_NODE*)TCPIP_Notification_Add(&dhcpRegisteredUsers, dhcpMemH, &dhcpNode, sizeof(dhcpNode));
     }
 
     return 0;
@@ -2716,11 +2732,11 @@ static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evTyp
 
 // enable unicast DHCP packets
 // this should be an IPv4 packet
-static bool _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, const void* param)
+static bool _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen)
 {
     TCPIP_MAC_ADDR bcastAdd = { {0xff, 0xff, 0xff, 0xff, 0xff, 0xff} };
     TCPIP_MAC_ETHERNET_HEADER* macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
-    const uint8_t* netMacAddr = TCPIP_STACK_NetMACAddressGet((TCPIP_NET_IF*)pRxPkt->pktIf);
+    const uint8_t* netMacAddr = TCPIP_STACK_NetUpMACAddressGet((TCPIP_NET_IF*)pRxPkt->pktIf);
 
     if(netMacAddr)
     {
@@ -2731,7 +2747,7 @@ static bool _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, const void* param)
             IPV4_HEADER* pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
             if(pHeader->Protocol == IP_PROT_UDP)
             {   // UDP packet
-                UDP_HEADER* pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
+                UDP_HEADER* pUDPHdr = (UDP_HEADER*)(pRxPkt->pNetLayer + hdrlen);
                 UDP_PORT destPort = TCPIP_Helper_ntohs(pUDPHdr->DestinationPort);
                 UDP_PORT srcPort = TCPIP_Helper_ntohs(pUDPHdr->SourcePort);
                 if(destPort == dhcpClientPort && srcPort == dhcpServerPort)

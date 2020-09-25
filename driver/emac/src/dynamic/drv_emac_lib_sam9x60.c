@@ -66,7 +66,11 @@ typedef struct
 } EMAC0_DRVR_HW_DCPT_SPACE;
 
 // place the descriptors in an uncached memory region
+#if defined(__XC32)
+__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
+#elif defined(__IAR_SYSTEMS_ICC__)
 __attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
+#endif
 #endif
 
 #ifdef DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0
@@ -76,7 +80,11 @@ typedef struct
     MAC_DRVR_HW_TXDCPT txDescQueue0[ DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0 ];
 } EMAC1_DRVR_HW_DCPT_SPACE;
 // place the descriptors in an uncached memory region
-__attribute__((__aligned__(4))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray @".region_nocache";
+#if defined(__XC32)
+__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
+#elif defined(__IAR_SYSTEMS_ICC__)
+__attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
+#endif
 #endif
 
 
@@ -228,7 +236,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     // Clear TX Status
     pMacRegs->EMAC_TSR = EMAC_TSR_Msk;
 
-    if( pMacDrvr->config.macRxFilters & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT )
+    if( (pMacDrvr->config.macRxFilters & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) )
     {   // Receive All Multi-cast packets, so set 64-bit hash value to all ones.
         // check against DRV_EMACx_RX_FILTERS
         MAC_DRVR_HASH hash;
@@ -236,7 +244,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
         hash.calculate = false;             // No hash calculation; directly set hash register
         macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
     }
-    if( (TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII )
+    if( ((TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII) )
     {
         pMacRegs->EMAC_USRIO = EMAC_USRIO_RMII( 1 ); // initial mode set as RMII
     }
@@ -303,7 +311,7 @@ void macDrvrLibMacOpen(
                             ;
     uint32_t ncfgrDesired = ncfgrActual & ~negotiateMask;
 
-    if( oFlags & TCPIP_ETH_OPEN_RMII )
+    if( (oFlags & TCPIP_ETH_OPEN_RMII) )
     {
         pMacRegs->EMAC_USRIO |= EMAC_USRIO_RMII_Msk;
     }
@@ -623,7 +631,7 @@ static bool rxUpdateBnaStatistics( MAC_DRIVER * pMacDrvr )
     emac_registers_t *  pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     bool                retval = false;
 
-    if( pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk ) // check for BNA error due to shortage of Rx Buffers
+    if( (pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk) ) // check for BNA error due to shortage of Rx Buffers
     {
         pMacRegs->EMAC_RSR = EMAC_RSR_BNA_Msk;  // clear 'Buffer Not Available'
         pMacDrvr->rxStat.nRxBuffNotAvailable++;
@@ -691,13 +699,13 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
             // look for the first descriptor of data frame
             if( MAC_RX_NO_FRAME_STATE == frameState )
             {
-                if( EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
                 {   // Start of Frame bit set
                     // transition the state to SOF detected
                     frameState = MAC_RX_SOF_DETECTED_STATE;
                     pFrameInfo->startIndex = ii;
                     pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
-                    if( EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val )
+                    if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
                     {   // End of Frame in same descriptor
                         // SOF and EOF in same descriptor; transition to EOF detected
                         frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
@@ -719,7 +727,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
             else if( MAC_RX_SOF_DETECTED_STATE == frameState )
             {
                 ++pFrameInfo->bufferCount;
-                if( EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
                 {   // SOF detected again; must be an error, clear the preceding descriptors
                     // and use this as the new start
                     pFrameInfo->endIndex = moduloDecrement( ii, rxDescCount );    // end of group we're expunging is one back
@@ -728,7 +736,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
                     pFrameInfo->startIndex = ii;    // new beginning
                     pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
                 }
-                if( EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
                 {
                     frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
                     pFrameInfo->endIndex = ii;
@@ -847,7 +855,7 @@ static bool rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
             pMacPacket->pDSeg->next = 0;
             // recycle the packet
             if(     pMacDrvr->rxDynamicRelease
-                &&  !pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY
+                &&  !(pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY)
             )
             {
                 --pMacDrvr->rxDynamicRelease;

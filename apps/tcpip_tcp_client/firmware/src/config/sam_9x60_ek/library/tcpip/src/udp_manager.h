@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -67,7 +67,7 @@ typedef enum
 }UDP_OPEN_TYPE;
 
 // Stores the header of a UDP packet
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     UDP_PORT    SourcePort;				// Source UDP port
     UDP_PORT    DestinationPort;		// Destination UDP port

@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -1108,15 +1108,20 @@ static void TCPIP_UDP_Process(void)
 #endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
 
         ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
+        if(pRxPkt->totTransportLen < sizeof(UDP_HEADER))
+        {
+            ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+        }
+
 #if defined (TCPIP_STACK_USE_IPV4)
-        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
+        else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
         {
             ackRes = TCPIP_UDP_ProcessIPv4(pRxPkt);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
+        else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
         {
             ackRes = TCPIP_UDP_ProcessIPv6(pRxPkt);
         }
@@ -1238,9 +1243,9 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
             break;
         }
 
-        if(pPkt->pktClientData != 0)
+        if(pPkt->modPktData != 0)
         {   // redirect internally. once!
-            pPkt->pktClientData = 0;
+            pPkt->modPktData = 0;
             loopPkt = true;
             freePkt = false;
             break;
@@ -1442,13 +1447,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
     udpTotLength = TCPIP_Helper_ntohs(pUDPHdr->Length);
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
-    if(pRxPkt->totTransportLen < sizeof(UDP_HEADER))
-    {   // 1st fragment should have the UDP header, at least
-        return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
-    }
-#else
-    if(udpTotLength < sizeof(UDP_HEADER) || udpTotLength != pRxPkt->totTransportLen)
+#if (TCPIP_IPV4_FRAGMENTATION == 0)
+    if(udpTotLength != pRxPkt->totTransportLen)
     {   // discard suspect packet
         return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
     }
@@ -1664,11 +1664,11 @@ static uint16_t _UDPv4Flush(UDP_SOCKET_DCPT* pSkt)
 
     if(isMcastDest && pSkt->extFlags.mcastLoop)
     {
-        pv4Pkt->macPkt.pktClientData = 1;
+        pv4Pkt->macPkt.modPktData = 1;
     }
     else
     {
-        pv4Pkt->macPkt.pktClientData = 0;
+        pv4Pkt->macPkt.modPktData = 0;
     }
 
     TCPIP_PKT_FlightLogTxSkt(&pv4Pkt->macPkt, TCPIP_THIS_MODULE_ID,  ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort, pSkt->sktIx);
@@ -1953,7 +1953,6 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 {
     UDP_HEADER*         h;
     uint16_t            udpTotLength;
-    uint16_t            dataLen;
     UDP_SOCKET_DCPT*    pSkt;
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
@@ -1969,9 +1968,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     // Retrieve UDP header.
     h = (UDP_HEADER*)pRxPkt->pTransportLayer;
     udpTotLength = TCPIP_Helper_ntohs(h->Length);
-    dataLen = pRxPkt->totTransportLen;
 
-    if(dataLen < sizeof(UDP_HEADER) || udpTotLength != dataLen)
+    if(udpTotLength != pRxPkt->totTransportLen)
     {   // discard suspect packet
         return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
     }
@@ -2020,8 +2018,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         pSkt = _UDPFindMatchingSocket(pRxPkt, h, IP_ADDRESS_TYPE_IPV6);
         if(pSkt == 0)
         {   // Send ICMP Destination Unreachable Code 4 (Port unreachable) and discard packet
-            uint16_t headerLen = pRxPkt->pktClientData;
-            TCPIP_IPV6_ErrorSend ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_DU_PORT_UNREACHABLE, ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, dataLen + headerLen + sizeof (IPV6_HEADER));
+            uint16_t headerLen = pRxPkt->ipv6PktData;
+            TCPIP_IPV6_ErrorSend ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_DU_PORT_UNREACHABLE, ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, udpTotLength + headerLen + sizeof (IPV6_HEADER));
 
             // If there is no matching socket, There is no one to handle
             // this data.  Discard it.

@@ -787,7 +787,7 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
     {
         segmentsReady = 0;
         extract = pMacDrvr->txExtractPt;
-        if( EMAC_TX_ERR_BITS & pMacDrvr->pTxDesc[ extract ].status.val )
+        if( (EMAC_TX_ERR_BITS & pMacDrvr->pTxDesc[ extract ].status.val) )
         {   // transmit error: emac has restarted at base, descriptors should be reset
             macDrvrTxAckAllPending( pMacDrvr, TCPIP_MAC_PKT_ACK_BUFFER_ERR );
             macDrvrLibTxInit( pMacDrvr );
@@ -871,7 +871,7 @@ static MAC_DRVR_RESULT macDrvrRemoveDynamicsFromPacketPool( MAC_DRIVER * pMacDrv
         pMacPacket = macDrvrPacketListHeadRemove( &pMacDrvr->rxMacPacketPool );
         if( pMacPacket )
         {
-            if( pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY )
+            if( (pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY) )
             {
                 macDrvrPacketListTailAdd( &pMacDrvr->rxMacPacketPool,
                                           pMacPacket
@@ -1196,7 +1196,7 @@ bool macDrvrEventMaskSet(
 
     macEvents &= ~pEventDescription->macEventsPending;      // keep un-ack events
     (void) pMacRegs->EMAC_ISR;                              // clear the interrupt status
-    pMacRegs->EMAC_IDR = ~macEvents & EMAC_IDR_Msk;
+    pMacRegs->EMAC_IDR = (~macEvents) & EMAC_IDR_Msk;
     pMacRegs->EMAC_IER =  macEvents & EMAC_IER_Msk;
     SYS_INT_SourceRestore( pMacDrvr->config.macIntSrc, previouslyActive );
     if( previouslyActive )
@@ -1483,7 +1483,7 @@ static void macDrvrLinkStateGetLink( MAC_DRIVER * pMacDrvr )
         {   // some error occurred
             macDrvrLinkStateDown( pMacDrvr );
         }
-        else if( !pMacDrvr->linkInfo.negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP )
+        else if( !(pMacDrvr->linkInfo.negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) )
         {   // down
             macDrvrLinkStateDown( pMacDrvr );
         }
@@ -1569,7 +1569,7 @@ static void macDrvrLinkStateNegResult( MAC_DRIVER * pMacDrvr )
         {   // some error occurred
             macDrvrLinkStateDown( pMacDrvr );
         }
-        else if( pMacDrvr->linkInfo.negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP )
+        else if( (pMacDrvr->linkInfo.negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) )
         {   // negotiation succeeded; properly update the MAC
             pPhyBase->DRV_ETHPHY_HWConfigFlagsGet( pMacDrvr->hPhyClient, &phyCfgFlags );
             pMacDrvr->linkInfo.negResult.linkFlags |= (phyCfgFlags & DRV_ETHPHY_CFG_RMII) ? TCPIP_ETH_OPEN_RMII : TCPIP_ETH_OPEN_MII;

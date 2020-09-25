@@ -70,10 +70,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // TCP/IP stack version
-#define TCPIP_STACK_VERSION_MAJOR         7
-#define TCPIP_STACK_VERSION_MINOR         32
+#define TCPIP_STACK_VERSION_MAJOR         8
+#define TCPIP_STACK_VERSION_MINOR         0
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.32 - H3.2"
+#define TCPIP_STACK_VERSION_STR           "8.00 - H3"
 
 
 // *****************************************************************************
@@ -97,7 +97,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     None.
 */
 
-typedef union
+typedef union __attribute__((aligned(2), packed))
 {
     uint32_t Val;
     uint16_t w[2];
@@ -133,7 +133,7 @@ typedef IPV4_ADDR   IP_ADDR;
     None.
 */
 
-typedef union
+typedef union __attribute__((aligned(2), packed))
 {
     uint8_t  v[16];
     uint16_t w[8];
@@ -177,7 +177,7 @@ typedef enum
     None.
 */
 
-typedef union
+typedef union __attribute__((aligned(2), packed))
 {
     IPV4_ADDR v4Add;
     IPV6_ADDR v6Add;

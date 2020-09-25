@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -314,7 +314,7 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIP, IPV6_AD
     This function doesn't change any the internal MAC packet data structure members.
 
   ***************************************************************************/
-bool TCPIP_IPV6_AddressesGet(TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr);
+bool TCPIP_IPV6_AddressesGet(const TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr);
 
 
 /*****************************************************************************

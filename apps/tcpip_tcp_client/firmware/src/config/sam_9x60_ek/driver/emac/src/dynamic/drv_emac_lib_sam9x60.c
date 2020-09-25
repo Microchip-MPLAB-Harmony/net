@@ -12,7 +12,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
-Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -66,7 +66,11 @@ typedef struct
 } EMAC0_DRVR_HW_DCPT_SPACE;
 
 // place the descriptors in an uncached memory region
+#if defined(__XC32)
+__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
+#elif defined(__IAR_SYSTEMS_ICC__)
 __attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
+#endif
 #endif
 
 #ifdef DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0
@@ -76,8 +80,31 @@ typedef struct
     MAC_DRVR_HW_TXDCPT txDescQueue0[ DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0 ];
 } EMAC1_DRVR_HW_DCPT_SPACE;
 // place the descriptors in an uncached memory region
-__attribute__((__aligned__(4))) EMAC1_DRVR_HW_DCPT_SPACE EMAC1_DcptArray @".region_nocache";
+#if defined(__XC32)
+__attribute__((__aligned__(32))) __attribute__((space(data),section(".region_nocache"))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray;
+#elif defined(__IAR_SYSTEMS_ICC__)
+__attribute__((__aligned__(4))) EMAC0_DRVR_HW_DCPT_SPACE EMAC0_DcptArray @".region_nocache";
 #endif
+#endif
+
+
+// basic level  debugging
+#if ((EMAC_DRV_DEBUG_LEVEL & EMAC_DRV_DEBUG_MASK_BASIC) != 0)
+volatile int _EMACDrvStayAssertLoop = 0;
+static void _EMACAssertCond(bool cond, const char* message, int lineNo)
+{
+    if(cond == false)
+    {
+        SYS_CONSOLE_PRINT("EMAC Drv Assert: %s, in line: %d, \r\n", message, lineNo);
+        while(_EMACDrvStayAssertLoop != 0);
+    }
+}
+#else
+#define _EMACAssertCond(cond, message, lineNo)
+#endif  // (EMAC_DRV_DEBUG_LEVEL)
+
+
+
 
 void macDrvrLibDescriptorsPoolClear( void )
 {
@@ -209,7 +236,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     // Clear TX Status
     pMacRegs->EMAC_TSR = EMAC_TSR_Msk;
 
-    if( pMacDrvr->config.macRxFilters & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT )
+    if( (pMacDrvr->config.macRxFilters & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) )
     {   // Receive All Multi-cast packets, so set 64-bit hash value to all ones.
         // check against DRV_EMACx_RX_FILTERS
         MAC_DRVR_HASH hash;
@@ -217,7 +244,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
         hash.calculate = false;             // No hash calculation; directly set hash register
         macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
     }
-    if( (TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII )
+    if( ((TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII) )
     {
         pMacRegs->EMAC_USRIO = EMAC_USRIO_RMII( 1 ); // initial mode set as RMII
     }
@@ -235,7 +262,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
                             | EMAC_NCFGR_DRFCS_Msk
                             | ncfgrPreserved
                             | macRxFilt
-                            | EMAC_NCFGR_RBOF( 2 )
+                            | EMAC_NCFGR_RBOF( 0 )
                             | EMAC_NCFGR_SPD_Msk
                             ;
     // Set MAC address
@@ -284,7 +311,7 @@ void macDrvrLibMacOpen(
                             ;
     uint32_t ncfgrDesired = ncfgrActual & ~negotiateMask;
 
-    if( oFlags & TCPIP_ETH_OPEN_RMII )
+    if( (oFlags & TCPIP_ETH_OPEN_RMII) )
     {
         pMacRegs->EMAC_USRIO |= EMAC_USRIO_RMII_Msk;
     }
@@ -436,16 +463,8 @@ MAC_DRVR_RESULT macDrvrLibRxAllocate(
         }
         pMacPacket->next = 0;
         /////
-        // The first rx segments have a FRAME_HEADER_OFFSET, other segments do not
-        // we update the first segment offset when handing a packet to the emac or to the stack
-        // This is eliminated now, since the future use of the packet space is not known
-        // -- e.g. The SOF segment or not
-        // RX should not have offset defined by alloc because the mac RBOF field will handle the offset
-        pMacPacket->pDSeg->segLoadOffset = 0;
-        pMacPacket->pDSeg->segLoad = (uint8_t *)( (uint32_t) pMacPacket->pDSeg->segLoad & ~FRAME_HEADER_OFFSET_MASK );
-        // fill in the a back reference: place the
-        // packet pointer in the magic memory located at pDseg->segLoad - 4
-        *(TCPIP_MAC_PACKET **) (pMacPacket->pDSeg->segLoad - 4) = pMacPacket;
+        // assert seg load is properly aligned by the allocator function !
+        _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segLoad & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
         // setup the packet acknowledgment for later use;
         pMacPacket->ackFunc = (TCPIP_MAC_PACKET_ACK_FUNC) rxMacPacketAck;
         pMacPacket->ackParam = pMacDrvr;
@@ -483,7 +502,9 @@ MAC_DRVR_RESULT macDrvrLibRxPopulateDescriptors( MAC_DRIVER * pMacDrvr )
         }
         //
         pMacDrvr->pRxDesc[ pMacDrvr->rxHardStop ].status.val = 0; // reset status value
-        dataAddress = ((uint32_t) pMacPacket->pDSeg->segLoad) & EMAC_RX_ADDRESS_MASK;
+        // assert seg load is properly aligned
+        _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segLoad & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
+        dataAddress = (uint32_t) pMacPacket->pDSeg->segLoad;
         if( pMacDrvr->rxHardStop == (pMacDrvr->config.nRxDescCnt - 1) )
         {
             dataAddress |= EMAC_RX_WRAP_BIT;
@@ -610,7 +631,7 @@ static bool rxUpdateBnaStatistics( MAC_DRIVER * pMacDrvr )
     emac_registers_t *  pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     bool                retval = false;
 
-    if( pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk ) // check for BNA error due to shortage of Rx Buffers
+    if( (pMacRegs->EMAC_RSR & EMAC_RSR_BNA_Msk) ) // check for BNA error due to shortage of Rx Buffers
     {
         pMacRegs->EMAC_RSR = EMAC_RSR_BNA_Msk;  // clear 'Buffer Not Available'
         pMacDrvr->rxStat.nRxBuffNotAvailable++;
@@ -678,13 +699,13 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
             // look for the first descriptor of data frame
             if( MAC_RX_NO_FRAME_STATE == frameState )
             {
-                if( EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
                 {   // Start of Frame bit set
                     // transition the state to SOF detected
                     frameState = MAC_RX_SOF_DETECTED_STATE;
                     pFrameInfo->startIndex = ii;
                     pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
-                    if( EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val )
+                    if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
                     {   // End of Frame in same descriptor
                         // SOF and EOF in same descriptor; transition to EOF detected
                         frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
@@ -706,7 +727,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
             else if( MAC_RX_SOF_DETECTED_STATE == frameState )
             {
                 ++pFrameInfo->bufferCount;
-                if( EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_SOF_BIT & pRxDesc[ ii ].status.val) )
                 {   // SOF detected again; must be an error, clear the preceding descriptors
                     // and use this as the new start
                     pFrameInfo->endIndex = moduloDecrement( ii, rxDescCount );    // end of group we're expunging is one back
@@ -715,7 +736,7 @@ static MAC_RXFRAME_STATE rxFindValidPacket(
                     pFrameInfo->startIndex = ii;    // new beginning
                     pFrameInfo->bufferCount = 1;    // start counting number of frames from 1
                 }
-                if( EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val )
+                if( (EMAC_RX_EOF_BIT & pRxDesc[ ii ].status.val) )
                 {
                     frameState = MAC_RX_VALID_FRAME_DETECTED_STATE;
                     pFrameInfo->endIndex = ii;
@@ -750,8 +771,8 @@ static MAC_DRVR_RESULT rxExtractPacket(
     uint16_t                    ii = pFrameInfo->startIndex;
     MAC_DRVR_RESULT             retval = MAC_DRVR_RES_NO_PACKET;
 
-    // assign pMacPacket using the magic memory
-    pMacPacket = *(TCPIP_MAC_PACKET **) ((EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) - 4);
+    // extract pMacPacket using the segLoad buffer
+    pMacPacket = *(TCPIP_MAC_PACKET **) ((EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) - pMacDrvr->_segLoadOffset);
     if( pMacPacket )
     {
         if( ++pMacDrvr->rxStat.macPacketsInStack > pMacDrvr->rxStat.macPacketsInStackHighPoint )
@@ -763,7 +784,7 @@ static MAC_DRVR_RESULT rxExtractPacket(
         bytesRemaining = EMAC_RX_FRAME_LENGTH_MASK & pMacDrvr->pRxDesc[ pFrameInfo->endIndex ].status.val;
         // process all the frame segments
         pDSeg = pMacPacket->pDSeg;
-        DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg, sizeof( TCPIP_MAC_PACKET ) );
+        DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segSize );
         pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_ACK_REQUIRED; // allow rxMacPacketAck entry
         while( bufferCount-- )
         {
@@ -773,12 +794,6 @@ static MAC_DRVR_RESULT rxExtractPacket(
             pMacDrvr->pRxDesc[ ii ].status.val = 0;
             //
             extractSize = pMacDrvr->config.rxBufferSize;
-            if( ii == pFrameInfo->startIndex )
-            {   // RBOF is two so we must make adjustments so the stack gets a consistent segment description
-                pDSeg->segLoad += FRAME_HEADER_OFFSET;
-                pDSeg->segLoadOffset = FRAME_HEADER_OFFSET;
-                extractSize -= FRAME_HEADER_OFFSET;
-            }
             if( extractSize > bytesRemaining )
             {
                 extractSize = bytesRemaining;
@@ -793,11 +808,11 @@ static MAC_DRVR_RESULT rxExtractPacket(
 
                 pMacPacket->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
                 ii = moduloIncrement( ii, pMacDrvr->config.nRxDescCnt );
-                // assign pMacPacket using the magic memory
-                pTemp = *(TCPIP_MAC_PACKET **) ((EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) - 4);
+                // extract pMacPacket using the segLoad buffer
+                pTemp = *(TCPIP_MAC_PACKET **) ((EMAC_RX_ADDRESS_MASK & pMacDrvr->pRxDesc[ ii ].bufferAddress.val) - pMacDrvr->_segLoadOffset);
                 pDSeg->next = pTemp->pDSeg;
                 pDSeg = pDSeg->next;
-                DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg, sizeof( TCPIP_MAC_PACKET ) );
+                DCACHE_CLEAN_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segSize );
             }
         }
         pFrameInfo->endIndex = moduloIncrement( pFrameInfo->endIndex,
@@ -835,12 +850,12 @@ static bool rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
             pMacDrvr->rxStat.macSegmentsInStack--;
             pDSegNext = pMacPacket->pDSeg->next;
             // prep to recycle packet into rxMacPacketPool; buffer offset
-            // adjustment should be restored, next cleared...
-            pMacPacket->pDSeg->segLoad = (uint8_t *)((uint32_t) pMacPacket->pDSeg->segLoad & ~FRAME_HEADER_OFFSET_MASK);
+            // assert seg load is properly aligned
+            _EMACAssertCond(((uint32_t)pMacPacket->pDSeg->segLoad & ~(EMAC_RX_ADDRESS_MASK)) == 0, __func__, __LINE__);
             pMacPacket->pDSeg->next = 0;
             // recycle the packet
             if(     pMacDrvr->rxDynamicRelease
-                &&  !pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY
+                &&  !(pMacPacket->pDSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY)
             )
             {
                 --pMacDrvr->rxDynamicRelease;
@@ -856,9 +871,9 @@ static bool rxMacPacketAck( TCPIP_MAC_PACKET * pMacPacket, const void * param )
                 break;
             }
             // Ethernet packet stored in multiple MAC descriptors, each segment
-            // is allocated as a complete mac packet; so, use pointer in magic memory
-            // to assign the containing packet address
-            pMacPacket = *(TCPIP_MAC_PACKET **) (pDSegNext->segLoad - 4);
+            // is allocated as a complete mac packet
+            // extract the packet pointer using the segment load buffer
+            pMacPacket = *(TCPIP_MAC_PACKET **) (pDSegNext->segLoad - pMacDrvr->_segLoadOffset);
         }
     }
     else

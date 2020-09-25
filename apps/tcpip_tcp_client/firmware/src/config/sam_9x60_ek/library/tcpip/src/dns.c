@@ -1799,14 +1799,12 @@ TCPIP_DNS_HANDLE TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVEN
 
     if(pDnsDcpt && handler && pDnsDcpt->memH)
     {
-        TCPIP_DNS_LIST_NODE* newNode = (TCPIP_DNS_LIST_NODE*)TCPIP_Notification_Add(&pDnsDcpt->dnsRegisteredUsers, pDnsDcpt->memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        TCPIP_DNS_LIST_NODE dnsNode;
+        dnsNode.handler = handler;
+        dnsNode.hParam = hParam;
+        dnsNode.hNet = hNet;
+
+        return (TCPIP_DNS_LIST_NODE*)TCPIP_Notification_Add(&pDnsDcpt->dnsRegisteredUsers, pDnsDcpt->memH, &dnsNode, sizeof(dnsNode));
     }
     return 0;
 }
