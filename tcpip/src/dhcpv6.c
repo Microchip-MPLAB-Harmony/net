@@ -656,11 +656,7 @@ static void         _DHCPV6Client_LinkUp(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
 static bool         _DHCPV6Client_CheckConnEvent(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 static void         _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNotify);
-#else
-#define             _DHCPV6Client_Notify(pClient, pIa, iaSubNotify)
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static void         _DHCPV6Client_SetState(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_CLIENT_STATE cliState);
 
@@ -1142,7 +1138,7 @@ typedef struct
 {
     TCPIP_DHCPV6_MSG_BUFFER* pBuffer;
     int                      stateIx;   // current slot
-    _DHCPV6_BUFF_TRACE_STATE      traceState[_DHCPV6_BUFF_STATE_TRACE_SIZE];
+    _DHCPV6_BUFF_TRACE_STATE traceState[_DHCPV6_BUFF_STATE_TRACE_SIZE];
 }_DHCPV6_BUFF_TRACE_DCPT;
 
 _DHCPV6_BUFF_TRACE_DCPT _dhcpv6BuffTrace[_DHCPV6_BUFFERS_TO_TRACE];
@@ -2148,13 +2144,12 @@ bool TCPIP_DHCPV6_HandlerDeRegister(TCPIP_DHCPV6_HANDLE hDhcp)
 
     return false;
 }
+#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNotify)
 {
-    TCPIP_DHCPV6_LIST_NODE* dNode;
-    TCPIP_NET_IF* pNetIf;
-    TCPIP_DHCPV6_CLIENT_STATE clientState;
-    const TCPIP_DHCPV6_IA_EVENT* pDhcpIaEv = 0;
+    (void)pClient;
+    (void)pIa;
 
     // call with both pClient and pIa == 0 is invalid
     _DHCPV6AssertCond(pClient != 0 || pIa != 0 , __func__, __LINE__);
@@ -2164,8 +2159,12 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         pClient = pIa->pParent;
     }
 
-    clientState = pClient->state;
-    pNetIf = pClient->pDhcpIf;
+#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+    const TCPIP_DHCPV6_IA_EVENT* pDhcpIaEv = 0;
+    TCPIP_DHCPV6_LIST_NODE* dNode;
+
+    TCPIP_DHCPV6_CLIENT_STATE clientState = pClient->state;
+    TCPIP_NET_IF* pNetIf = pClient->pDhcpIf;
 
     if(pIa != 0)
     {
@@ -2179,7 +2178,6 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         pDhcpIaEv = &iaEvent;
     }
 
-
     TCPIP_Notification_Lock(&dhcpv6RegisteredUsers);
     for(dNode = (TCPIP_DHCPV6_LIST_NODE*)dhcpv6RegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
     {
@@ -2189,12 +2187,11 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         }
     }
     TCPIP_Notification_Unlock(&dhcpv6RegisteredUsers);
+#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
     _DHCPV6DbgStatePrint_Client(pClient, true);
     _DHCPV6DbgStatePrint_Ia(pIa, iaSubNotify);
 }
-
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_NET_IF* pNetIf)
 {
