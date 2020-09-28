@@ -96,6 +96,39 @@ extern "C" {
 
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
                                   uint8_t certIndex);
+								  
+// *****************************************************************************
+/* Get Device X509 TLS Parameters function
+
+  Summary:
+    This function gets the Device X09 TLS Parameters from the store,
+  <p><b>Implementation:</b> Dynamic</p>
+    
+  Description:
+    This function is used by client connections to retrieve TLS parameters   
+  (Device Certificate and Device Private Key) that are used for mutual 
+  authentication.
+    
+  Preconditions:
+    None.
+
+  Parameters:
+    certPtr    - A pointer to the device certificates
+    certSize   - The size of the device certificates
+    pvtKeyPtr  - A pointer to the device's private key
+    pvtKeySize - The size of the device's private key
+    certIndex  - Most likely '0', but this parameter is provided to select 
+                 a different set of TLS parameters
+    
+    Returns:
+    - true  - Indicates success
+    - false - Indicates failure
+  
+*/    
+
+bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr, 
+          int32_t * certSize, const uint8_t ** pvtKeyPtr, int32_t * pvtKeySize, 
+          uint8_t certIndex);
 
 // *****************************************************************************
 /* Get Server Certificate and Key function

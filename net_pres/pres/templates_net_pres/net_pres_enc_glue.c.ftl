@@ -180,6 +180,15 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         <#if CONNECTION="Client">
     const uint8_t * caCertsPtr;
     int32_t caCertsLen;
+	            <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+    const uint8_t * deviceCertPtr;
+    const uint8_t * pvtKeyPtr;
+    int32_t deviceCertLen, pvtKeyLen;
+    if (!NET_PRES_CertStoreGetDeviceTlsParams(&deviceCertPtr, &deviceCertLen, &pvtKeyPtr, &pvtKeyLen, ${INST}))
+    {
+        return false;
+    }
+            </#if>
     if (!NET_PRES_CertStoreGetCACerts(&caCertsPtr, &caCertsLen, ${INST}))
     {
         return false;
@@ -205,17 +214,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject = transObject;
         <#if TYPE="Stream">
             <#if CONNECTION="Client">
-				<#if lib_wolfssl.wolfsslTLS13?has_content && lib_wolfssl.wolfsslTLS13 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
-				<#else>
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
-				</#if>
+	net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
             <#else>
-				<#if lib_wolfssl.wolfsslTLS13?has_content && lib_wolfssl.wolfsslTLS13 == true >
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_server_method());
-				<#else>
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
-				</#if>
+	net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
             </#if>
         <#else>
             <#if CONNECTION="Client">
@@ -231,20 +232,38 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     wolfSSL_SetIORecv(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIORecv)&NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST});
     wolfSSL_SetIOSend(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIOSend)&NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST});
         <#if CONNECTION="Client">
-    if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, caCertsPtr, caCertsLen, SSL_FILETYPE_ASN1) != SSL_SUCCESS)
+    if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, caCertsPtr, caCertsLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_CERT_FORMAT}) != SSL_SUCCESS)
     {
-        // Couldn't load the certificates
-        //SYS_CONSOLE_MESSAGE("Something went wrong loading the certificates\r\n");
+        // Couldn't load the CA certificates
+        //SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
+			<#if NET_PRES_BLOB_CERT_REPO>
+                <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+    if (wolfSSL_CTX_use_certificate_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
+    {
+        // Couldn't load the device certificates
+        //SYS_CONSOLE_MESSAGE("Something went wrong loading the device certificates\r\n");
+        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        return false;
+    }
+    if (wolfSSL_CTX_use_PrivateKey_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, pvtKeyPtr, pvtKeyLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
+    {
+        // Couldn't load the device private key
+        //SYS_CONSOLE_MESSAGE("Something went wrong loading the device private key\r\n");
+        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        return false;
+    }
+                </#if>
+            </#if>
         <#else>
-    if (wolfSSL_CTX_use_certificate_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, serverCertPtr, serverCertLen, SSL_FILETYPE_ASN1) != SSL_SUCCESS)
+    if (wolfSSL_CTX_use_certificate_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, serverCertPtr, serverCertLen, SSL_FILETYPE_${NET_PRES_BLOB_SERVER_CERT_FORMAT}) != SSL_SUCCESS)
     {
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
-    if (wolfSSL_CTX_use_PrivateKey_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, serverKeyPtr, serverKeyLen, SSL_FILETYPE_ASN1) != SSL_SUCCESS)
+    if (wolfSSL_CTX_use_PrivateKey_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, serverKeyPtr, serverKeyLen, SSL_FILETYPE_${NET_PRES_BLOB_SERVER_CERT_FORMAT}) != SSL_SUCCESS)
     {
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
