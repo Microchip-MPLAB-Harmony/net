@@ -43,7 +43,7 @@ def instantiateComponent(tcpipZeroConfComponent):
     tcpipZcTskTickRate.setLabel("Link Local Task Rate (in msec)")
     tcpipZcTskTickRate.setVisible(True)
     tcpipZcTskTickRate.setDescription("Link Local Task Rate in ms")
-    tcpipZcTskTickRate.setDefaultValue(333)
+    tcpipZcTskTickRate.setDefaultValue(113)
 # Enable Link Local Warning Messages
     tcpipZcWarnZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_WARN_ZCLL", tcpipZcMdnsAdvSettings)
     tcpipZcWarnZcll.setLabel("Enable Link Local Warning Messages")

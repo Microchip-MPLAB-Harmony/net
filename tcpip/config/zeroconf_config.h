@@ -75,11 +75,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_ZC_LL_IPV4_LLBASE_MASK    0x0000FFFF /* corresponding network mask */
 
 // ZCLL task processing rate in milliseconds.
-// The default value is 333 milliseconds.
+// The default value is 113 milliseconds.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
-#define TCPIP_ZC_LL_TASK_TICK_RATE 333
+#define TCPIP_ZC_LL_TASK_TICK_RATE 113
 
 // MDNS/Bonjour task processing rate in milliseconds.
 // The default value is 63 milliseconds.

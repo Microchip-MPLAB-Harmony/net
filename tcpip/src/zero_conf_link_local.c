@@ -5,10 +5,12 @@
   Summary:
 
   Description:
+    Zeroconf implementation: RFC 3927:
+    Dynamic Configuration of IPv4 Link-Local Addresses
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -108,10 +110,41 @@ static struct arp_app_callbacks callbacks =
 };
 
 
-
-static uint32_t _zcll_rand(void)
+static void _ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, TCPIP_NET_IF *pNetIf)
 {
-   return SYS_TMR_TickCountGet();
+    if(hZcll->rand_state == 0)
+    {   // Seed the pseudo-rng with the interface's MAC address as recommended by RFC3927, Section 2.1.
+        // Different hosts will generate unique values
+        const uint8_t *mac_addr = TCPIP_STACK_NetMACAddressGet(pNetIf);
+        uint32_t rand_val = 0;
+        if(mac_addr != 0)
+        {
+            rand_val =  (((uint32_t)mac_addr[2] << 24)  | ((uint32_t)mac_addr[3] << 16) |
+                        ((uint32_t)mac_addr[4] << 8)    | ((uint32_t)mac_addr[5]));
+        }
+
+        // The MAC address should never be zero.
+        // But here's a way to recover just in case.
+        if(rand_val == 0)
+        {
+            rand_val = SYS_RANDOM_PseudoGet();
+        }
+
+        hZcll->rand_state = rand_val;
+    }
+}
+
+
+// returns a pseudo-random number in the range [min, max].
+// Use a LCG modulo p, with p=2^32
+// simplest case to implement, since the modulo arithmetic is made automatically
+#define ZCLL_LCG32_A    (2147001325ul)
+#define ZCLL_LCG32_B    (715136305ul)
+static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
+{
+    hZcll->rand_state = ZCLL_LCG32_A * hZcll->rand_state + ZCLL_LCG32_B;
+
+   return min + hZcll->rand_state % (max - min + 1);
 }
 
 /***************************************************************
@@ -612,18 +645,14 @@ static void TCPIP_ZCLL_Process(void)
         {   // lost connection; re-start
             hZcll->zcll_state = SM_ADDR_INIT;
             TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_ZCLL, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST);
+            return;
         }
 
         switch(hZcll->zcll_state)
         {
             case SM_ADDR_INIT:
-                /* Not yet seeded in init routine */
-                /* setup random number generator
-                 * we key this off the MAC-48 HW identifier
-                 * the first 3 octets are the manufacturer
-                 * the next 3 the serial number
-                 * we'll use the last four for the largest variety
-                 */
+                // Setup random number generator
+                _ZCLL_RandInit(hZcll, pNetIf);
 
                 hZcll->conflict_count = 0;
                 _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
@@ -645,7 +674,7 @@ static void TCPIP_ZCLL_Process(void)
                     {
                         // First probe. Wait for [0 ~ PROBE_WAIT] seconds before sending the probe.
 
-                        hZcll->random_delay = (_zcll_rand() % (PROBE_WAIT * SYS_TMR_TickCounterFrequencyGet()));
+                        hZcll->random_delay = _zcll_rand(hZcll, 0, PROBE_WAIT * SYS_TMR_TickCounterFrequencyGet());
                         DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"PROBE_WAIT Random Delay [%d]: %lu secs \r\n",
                                 hZcll->probe_count,
                                 (unsigned long)hZcll->random_delay);
@@ -654,8 +683,8 @@ static void TCPIP_ZCLL_Process(void)
                     {
                         // Subsequent probes. Wait for [PROBE_MIN ~ PROBE_MAX] seconds before sending the probe.
 
-                        hZcll->random_delay = ( (_zcll_rand() % ((PROBE_MAX-PROBE_MIN) * SYS_TMR_TickCounterFrequencyGet()) ) +
-                                (PROBE_MIN * SYS_TMR_TickCounterFrequencyGet()) );
+                        hZcll->random_delay = _zcll_rand(hZcll, PROBE_MIN * SYS_TMR_TickCounterFrequencyGet(),
+                                                          PROBE_MAX * SYS_TMR_TickCounterFrequencyGet());
 
                         DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"PROBE Random Delay [%d]: %lu ticks \r\n",
                                 hZcll->probe_count,
@@ -675,7 +704,7 @@ static void TCPIP_ZCLL_Process(void)
                     DEBUG0_ZCLL_PRINT((char*)zeroconf_dbg_msg);
                     break;
                 }
-                else if(zgzc_action == ZGZC_STARTED_WAITING)
+                else if(zgzc_action == ZGZC_KEEP_WAITING)
                 {   // Not Completed the delay proposed
                     break;
                 }
@@ -726,19 +755,17 @@ static void TCPIP_ZCLL_Process(void)
                      * which removes 512 address from our 65535 candidates.
                      * That leaves us with 65023 (0xfdff).
                      * The link-local address must start with 169.254.#.#
-                     * If it does not then assign it the default value of
-                     169.254.1.2 and send out probe.
+                     * If it does not then pick a random link-local address.
                      */
                     hZcll->probe_count = 0;
 
                     if(!hZcll->bDefaultIPTried)
                     {
                         // First probe, and the default IP is a valid IPV4_SOFTAP_LLBASE address.
-                        if (((!hZcll->bDefaultIPTried)          &&
-                                    (pNetIf->DefaultIPAddr.v[0] != 169)) ||
-                                ((pNetIf->DefaultIPAddr.v[1] != 254) &&
-                                 (pNetIf->DefaultIPAddr.v[2] != 0)   &&
-                                 (pNetIf->DefaultIPAddr.v[3] != 255)))
+                        if(pNetIf->DefaultIPAddr.v[0] != 169 ||
+                           pNetIf->DefaultIPAddr.v[1] != 254 ||
+                           pNetIf->DefaultIPAddr.v[2] == 0   ||
+                           pNetIf->DefaultIPAddr.v[2] == 255)
                         {
 
                             WARN_ZCLL_MESG(zeroconf_dbg_msg,"\r\n%d.%d.%d.%d not a valid link local addess. "
@@ -747,8 +774,7 @@ static void TCPIP_ZCLL_Process(void)
                                     ,pNetIf->DefaultIPAddr.v[2],pNetIf->DefaultIPAddr.v[3]);
                             WARN_ZCLL_PRINT((char *)zeroconf_dbg_msg);
                             // First probe, if the default IP is a valid IPv4 LL then use it.
-                            hZcll->temp_IP_addr.Val = (IPV4_LLBASE | ((abs(_zcll_rand()) % 0xfdff) ));
-                            hZcll->bDefaultIPTried = 1;
+                            hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
                         }
                         else
                         {
@@ -759,7 +785,7 @@ static void TCPIP_ZCLL_Process(void)
                     }
                     else
                     {
-                        hZcll->temp_IP_addr.Val = (IPV4_LLBASE | ((abs(_zcll_rand()) % 0xfdff) ));
+                        hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
                     }
 
                     INFO_ZCLL_MESG(zeroconf_dbg_msg,"Picked IP-Addr [%d]: %d.%d.%d.%d \r\n",
@@ -779,7 +805,7 @@ static void TCPIP_ZCLL_Process(void)
                     TCPIP_ZCLL_ARPAction( pNetIf
                             , &pNetIf->netIPAddr
                             , &hZcll->temp_IP_addr
-                            , ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE
+                            , ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY
                             , ZCLL_ARP_PROBE);
                     hZcll->probe_count++;
 
@@ -802,7 +828,6 @@ static void TCPIP_ZCLL_Process(void)
                 break;
 
             case SM_ADDR_CLAIM:
-
                 zgzc_action = zgzc_wait_for( &hZcll->random_delay, &hZcll->event_time, &hZcll->time_recorded);
 
                 if(zgzc_action == ZGZC_STARTED_WAITING)
@@ -835,7 +860,7 @@ static void TCPIP_ZCLL_Process(void)
 
                 if ( hZcll->bDefaultIPTried < ANNOUNCE_NUM )
                 {
-                    TCPIP_ZCLL_ARPAction(pNetIf,&hZcll->temp_IP_addr,&hZcll->temp_IP_addr, ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE, ZCLL_ARP_CLAIM);
+                    TCPIP_ZCLL_ARPAction(pNetIf,&hZcll->temp_IP_addr,&hZcll->temp_IP_addr, ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY, ZCLL_ARP_CLAIM);
                     (hZcll->bDefaultIPTried)++;
 
                     DEBUG0_ZCLL_MESG(zeroconf_dbg_msg, "Sending ANNOUNCEMENT [%d]\r\n", hZcll->bDefaultIPTried);
@@ -871,7 +896,7 @@ static void TCPIP_ZCLL_Process(void)
                         TCPIP_ZCLL_ARPAction( pNetIf
                                 ,&pNetIf->netIPAddr
                                 ,&pNetIf->netIPAddr
-                                ,ARP_OPERATION_RESP | ARP_OPERATION_CONFIGURE
+                                ,ARP_OPERATION_RESP | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY
                                 ,ZCLL_ARP_DEFEND);
 
                         hZcll->zcll_flags.defended = true;
@@ -929,7 +954,7 @@ static void TCPIP_ZCLL_Process(void)
                 _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
 
                 // Need New Addr
-                hZcll->temp_IP_addr.Val = (IPV4_LLBASE | ((abs(_zcll_rand()) % 0xfdff) ));
+                hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
                 hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl((uint32_t) hZcll->temp_IP_addr.Val);
 
                 hZcll->zcll_state = SM_ADDR_INIT;
