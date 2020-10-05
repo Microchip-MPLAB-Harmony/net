@@ -206,7 +206,6 @@ SYS_MODULE_OBJ macDrvrInitialize(
     }
 
     pMacDrvr = macDrvrDescription + macIndex;
-    pMacDrvr->pObj = macDrvrObjects[macIndex];
 
     if( SYS_STATUS_UNINITIALIZED != pMacDrvr->sysStat )
     {   // already initialized
@@ -249,6 +248,7 @@ SYS_MODULE_OBJ macDrvrInitialize(
     // initialize the MAC object
     memset( pMacDrvr, 0x0, sizeof( *pMacDrvr ) );
 
+    pMacDrvr->pObj = macDrvrObjects[macIndex];
     pMacDrvr->hPhyClient = DRV_HANDLE_INVALID;
     pMacDrvr->hPhySysObject = SYS_MODULE_OBJ_INVALID;
     pMacDrvr->sysStat = SYS_STATUS_UNINITIALIZED;
