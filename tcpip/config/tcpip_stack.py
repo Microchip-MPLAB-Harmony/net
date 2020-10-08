@@ -1761,14 +1761,6 @@ def instantiateComponent(tcpipStackComponent):
     
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
-    tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysClkAdapterHeaderFile.setSourcePath("sys_adapter/templates/system/sys_clk_h2_adapter.h.ftl")
-    tcpipStackSysClkAdapterHeaderFile.setOutputName("sys_clk_h2_adapter.h")
-    tcpipStackSysClkAdapterHeaderFile.setDestPath("system/")
-    tcpipStackSysClkAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-    tcpipStackSysClkAdapterHeaderFile.setType("HEADER")
-    tcpipStackSysClkAdapterHeaderFile.setOverwrite(True)    
-    tcpipStackSysClkAdapterHeaderFile.setMarkup(True)
 
     tcpipStackSysTimeAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/sys_time_h2_adapter.h")
