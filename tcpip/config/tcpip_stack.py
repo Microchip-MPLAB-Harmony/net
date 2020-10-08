@@ -1787,14 +1787,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysTimeAdapterSourceFile.setType("SOURCE")
     tcpipStackSysTimeAdapterSourceFile.setEnabled(True)
     
-    # tcpipStackSysIntAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    # tcpipStackSysIntAdapterHeaderFile.setSourcePath("sys_adapter/sys_int_h2_adapter.h")
-    # tcpipStackSysIntAdapterHeaderFile.setOutputName("sys_int_h2_adapter.h")
-    # tcpipStackSysIntAdapterHeaderFile.setDestPath("system/")
-    # tcpipStackSysIntAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-    # tcpipStackSysIntAdapterHeaderFile.setType("HEADER")
-    # tcpipStackSysIntAdapterHeaderFile.setOverwrite(True)  
-    
     tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
     tcpipStackSysRandomAdapterHeaderFile.setOutputName("sys_random_h2_adapter.h")
@@ -1803,15 +1795,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysRandomAdapterHeaderFile.setType("HEADER")
     tcpipStackSysRandomAdapterHeaderFile.setOverwrite(True)     
 
-    tcpipStackSysResetAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysResetAdapterHeaderFile.setSourcePath("sys_adapter/templates/system/sys_reset_h2_adapter.h.ftl")
-    tcpipStackSysResetAdapterHeaderFile.setOutputName("sys_reset_h2_adapter.h")
-    tcpipStackSysResetAdapterHeaderFile.setDestPath("system/")
-    tcpipStackSysResetAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-    tcpipStackSysResetAdapterHeaderFile.setType("HEADER")
-    tcpipStackSysResetAdapterHeaderFile.setOverwrite(True)  
-    tcpipStackSysResetAdapterHeaderFile.setMarkup(True)
-    
     tcpipStackSysConfigHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysConfigHeaderFile.setSourcePath("sys_adapter/system_config.h")
     tcpipStackSysConfigHeaderFile.setOutputName("system_config.h")
