@@ -663,7 +663,7 @@ static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
                 connInfo.state = TCPIP_TELNET_GET_PASSWORD;
                 connInfo.presSkt = tSkt;
                 connInfo.tcpSkt = NET_PRES_SocketGetTransportHandle(tSkt);
-                TCPIP_TCP_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
+                NET_PRES_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
                 authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, &connInfo, telnetAuthHParam);
 #else
                 authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, 0, telnetAuthHParam);
@@ -690,7 +690,7 @@ static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
 
     if(sktOverflow)
     {
-        TCPIP_TCP_StringPut(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG);
+        NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG, strlen(TELNET_BUFFER_OVFLOW_MSG));
     }
 
     if(sktOverflow || sktDisconnect)
@@ -854,7 +854,7 @@ bool TCPIP_TELNET_ConnectionInfoGet(uint16_t connIx, TCPIP_TELNET_CONN_INFO* pIn
             pInfo->state = pDcpt->telnetState;
             pInfo->presSkt = pDcpt->telnetSkt;
             pInfo->tcpSkt = NET_PRES_SocketGetTransportHandle(pDcpt->telnetSkt);
-            TCPIP_TCP_SocketInfoGet(pInfo->tcpSkt, &pInfo->tcpInfo);
+            NET_PRES_SocketInfoGet(pInfo->tcpSkt, &pInfo->tcpInfo);
         }
         return true;
     }
