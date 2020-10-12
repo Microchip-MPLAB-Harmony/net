@@ -13,6 +13,7 @@
 **/*.IAR/settings
 **/*.IAR/*.dep
 **/*.IAR/*.custom_argvars
+**/*.X/.generated_files
 /utilities/mpfs_generator/src/MPFS2_Java/nbproject/private/
 /utilities/tcpip_discoverer/src/nbproject/private/
 /utilities/tcpip_discoverer/src/build/
