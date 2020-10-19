@@ -1,4 +1,19 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.3 (October, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.3:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.6.2 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| sys_adapter           |Removed the sys_reset_h2_adapter from net repo. This is handled by the core system services|
+
+
+- **Release notes for v3.6.1 apply**
+
+
 ## Net Release v3.6.2 (September, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.2:
 
