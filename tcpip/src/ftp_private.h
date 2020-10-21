@@ -201,8 +201,8 @@ typedef struct _TCPIP_FTP_DCPT
 {
     SYS_FS_SHELL_OBJ    *ftp_shell_obj;     // FTP wrapper object
 
-    TCP_SOCKET          ftpCmdskt;          // associated FTP command socket
-    TCP_SOCKET          ftpDataskt;         // associated FTP Data port socket
+    NET_PRES_SKT_HANDLE_T          ftpCmdskt;          // associated FTP command socket
+    NET_PRES_SKT_HANDLE_T          ftpDataskt;         // associated FTP Data port socket
     uint16_t            ftpDataPort;
     uint16_t            adressFamilyProtocol;   // AF_NUMBER used for EPRT command
 
@@ -216,8 +216,8 @@ typedef struct _TCPIP_FTP_DCPT
     uint32_t            ftpSysTicklastActivity;         // Timeout keeper.
     uint32_t            callbackPos;                    // Callback position indicator
     SYS_FS_HANDLE       fileDescr;
-    TCPIP_TCP_SIGNAL_HANDLE ftpTcpCmdSocketSignal;
-    TCPIP_TCP_SIGNAL_HANDLE ftpTcpDataSocketSignal;
+    NET_PRES_SIGNAL_HANDLE ftpTcpCmdSocketSignal;
+    NET_PRES_SIGNAL_HANDLE ftpTcpDataSocketSignal;
 
     uint8_t             ftpStringLen;
     uint8_t             ftp_argc;       // Total number of params for a FTP command

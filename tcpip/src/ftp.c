@@ -42,6 +42,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/common/sys_fs_shell.h"
 #include "system/fs/src/sys_fs_local.h"
 
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_FTP_SERVER)
 #include "tcpip/src/ftp_private.h"
@@ -198,7 +199,7 @@ static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t* login, uint8_t* 
         connInfo.connIx = pFTPDcpt - sTCPIPFTPDcpt;
         connInfo.presSkt = -1;
         connInfo.tcpSkt = pFTPDcpt->ftpCmdskt;
-        TCPIP_TCP_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
+        NET_PRES_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
         authRes = (*FTPAuthHandler)((const char*)login, (const char*)password, &connInfo, FTPAuthHParam);
 #else
         authRes = (*FTPAuthHandler)((const char*)login, (const char*)password, 0, FTPAuthHParam);
@@ -239,14 +240,14 @@ static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt)
     }
     
     sprintf(ftpMsg,"250 %s is directory is added\r\n",pFTPDcpt->ftp_argv[1]);
-    if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+    if(!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
     {
         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
         pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
         return true;
     }
-    TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-    TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+    NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+    NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
     pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
     return true;
@@ -315,14 +316,15 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pDcpt = sTCPIPFTPDcpt;
         for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++, pDcpt++)
         {
-            pDcpt->ftpCmdskt = TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE_IPV4, ftpConfigData.cmdPort, 0);
-            if(pDcpt->ftpCmdskt == INVALID_SOCKET)
+            pDcpt->ftpCmdskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, ftpConfigData.cmdPort, 0, 0);
+            if(pDcpt->ftpCmdskt == NET_PRES_INVALID_SOCKET)
             {   // failed
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: Socket creation failed");
                 initFail = true;
                 break;
             }
-            pDcpt->ftpTcpCmdSocketSignal = TCPIP_TCP_SignalHandlerRegister(pDcpt->ftpCmdskt, TCPIP_TCP_SIGNAL_RX_DATA, _FTPSocketRxSignalHandler, 0);
+            // alert of incoming traffic
+            pDcpt->ftpTcpCmdSocketSignal = NET_PRES_SocketSignalHandlerRegister(pDcpt->ftpCmdskt, TCPIP_TCP_SIGNAL_RX_DATA, _FTPSocketRxSignalHandler, 0);  
             if(pDcpt->ftpTcpCmdSocketSignal == 0)
             {
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: TCP Signal creation failed");
@@ -332,7 +334,7 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             pDcpt->ftpFlag.val = 0;
             pDcpt->ftpDataPort = 0;
             pDcpt->ftpStringLen = 0;
-            pDcpt->ftpDataskt = INVALID_SOCKET;
+            pDcpt->ftpDataskt = NET_PRES_INVALID_SOCKET ;
             pDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
             pDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
             pDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
@@ -400,13 +402,13 @@ static void TCPIP_FTP_Cleanup(void)
         {
             if(pFTPDcpt->ftpTcpCmdSocketSignal != 0)
             {
-                TCPIP_TCP_SignalHandlerDeregister(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpTcpCmdSocketSignal);
+                NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpTcpCmdSocketSignal);
                 pFTPDcpt->ftpTcpCmdSocketSignal = 0;
             }
-            if(pFTPDcpt->ftpCmdskt != INVALID_SOCKET)
+            if(pFTPDcpt->ftpCmdskt != NET_PRES_INVALID_SOCKET )
             {
-                TCPIP_TCP_Close(pFTPDcpt->ftpCmdskt);
-                pFTPDcpt->ftpCmdskt = INVALID_SOCKET;
+                NET_PRES_SocketClose(pFTPDcpt->ftpCmdskt);
+                pFTPDcpt->ftpCmdskt = NET_PRES_INVALID_SOCKET ;
             }
             // Wrapper object cleanup
             if(pFTPDcpt->ftp_shell_obj != 0)
@@ -433,14 +435,14 @@ static void TCPIP_FTP_Cleanup(void)
 static bool _FTP_Send_ErrorResponse(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     // Make sure there is enough TCP TX FIFO space to put our response
-    if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]))
+    if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0))
     {
         return false;
     }
-    TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]);
-    TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+    NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
+    NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
 
-    if(pFTPDcpt->ftpDataskt != INVALID_SOCKET)
+    if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
     {
         _FTP_ReleaseDataSocket(pFTPDcpt);  
     }
@@ -497,18 +499,18 @@ static void TCPIP_FTP_ServerProcess(void)
     for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
     {
         pFTPDcpt = sTCPIPFTPDcpt + nServers;
-        if(pFTPDcpt->ftpCmdskt == INVALID_SOCKET)
+        if(pFTPDcpt->ftpCmdskt == NET_PRES_INVALID_SOCKET )
         {
             continue;
         }
 
-        if(!TCPIP_TCP_IsConnected(pFTPDcpt->ftpCmdskt) )
+        if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpCmdskt) )
         {
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
             pFTPDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
             pFTPDcpt->ftpFlag.val = 0;
             pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
-            if(pFTPDcpt->ftpDataskt != INVALID_SOCKET)
+            if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
             {
                 _FTP_ReleaseDataSocket(pFTPDcpt);  
             }
@@ -523,10 +525,10 @@ static void TCPIP_FTP_ServerProcess(void)
         }
 
 
-        if(TCPIP_TCP_GetIsReady(pFTPDcpt->ftpCmdskt) )
+        if (NET_PRES_SocketReadIsReady(pFTPDcpt->ftpCmdskt))
         {
             pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
-            pFTPDcpt->ftpStringLen = TCPIP_TCP_ArrayGet(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpCmdString, TCPIP_FTP_CMD_MAX_STRING_LEN);
+            pFTPDcpt->ftpStringLen = NET_PRES_SocketRead(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpCmdString, TCPIP_FTP_CMD_MAX_STRING_LEN);
             if(pFTPDcpt->ftpStringLen == TCPIP_FTP_CMD_MAX_STRING_LEN)
             {
                 pFTPDcpt->ftpStringLen = 0;
@@ -566,12 +568,12 @@ static void TCPIP_FTP_ServerProcess(void)
 
             case TCPIP_FTP_SM_RESPOND:
                 // Make sure there is enough TCP TX FIFO space to put our response
-                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]))
+                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0))
                 {
                     break;
                 }
-                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]);
-                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
+                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 // No break - this will speed up little bit
@@ -686,37 +688,37 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                 char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
                 memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"211-features:\r\n");
-                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
                 {
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                     pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                     return true;
                 }
-                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
                 // send SIZE
                 memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"SIZE\r\n");
-                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
                 {
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                     pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                     return true;
                 }
-                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
 
                 // End of FEAT fetures support
                 memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"211 End\r\n");
-                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
                 {
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                     pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                     return true;
                 }
-                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
 
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
@@ -758,14 +760,14 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             }
             memset(ftpMsg,0,sizeof(ftpMsg));
             sprintf(ftpMsg,"257 \"%s\" is cwd\r\n",cwd);
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
         }
@@ -793,14 +795,14 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             }
 
             sprintf(ftpMsg,"250 %s is new cwd\r\n",cwd);
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
         }
@@ -816,7 +818,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 
         case TCPIP_FTP_CMD_ABORT:
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
-            if (pFTPDcpt->ftpDataskt!= INVALID_SOCKET)
+            if (pFTPDcpt->ftpDataskt!= NET_PRES_INVALID_SOCKET )
             {
                 _FTP_ReleaseDataSocket(pFTPDcpt);  
             }
@@ -852,15 +854,16 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             strcpy(tempMsg,"");
             sprintf(tempMsg,"213 %u\r\n",(int)fileSize);
 
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(tempMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(tempMsg), 0))
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)tempMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)tempMsg, strlen(tempMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
             pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
@@ -868,30 +871,28 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 
         case TCPIP_FTP_CMD_PASV:
             // create a server socket with a available port number and send this port number to the client with Response string.
-            pFTPDcpt->ftpDataskt = TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE_IPV4, 0, 0);
+            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, 0, 0, 0);
             // Make sure that a valid socket was available and returned
             // If not, return with an error
-            if(pFTPDcpt->ftpDataskt == INVALID_SOCKET)
+            if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
                 return true;
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = 
-                    TCPIP_TCP_SignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
             if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
             {
-                TCPIP_TCP_Close(pFTPDcpt->ftpDataskt);
+                NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
                 return true;
             }
             // modify the response string.
             //response string should have server ip address and the new data port number.
 
-            TCPIP_TCP_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-
-            TCPIP_TCP_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
+            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+            NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
             //prepare additional message IPaddress + Port
             strcpy(passiveMsg,"");
             // add IPv4 address
@@ -903,21 +904,22 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                                                             dataSockInfo.localPort & 0xFF);
             pFTPDcpt->ftpDataPort = dataSockInfo.localPort;
 
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(passiveMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(passiveMsg), 0))
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, strlen(passiveMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
             if(ftpConfigData.dataSktTxBuffSize != 0)
             {
                 void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
-                if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
+                if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
                 {
                     return false;
                 }
@@ -926,7 +928,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             if(ftpConfigData.dataSktRxBuffSize != 0)
             {
                 void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
-                if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
+                if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
                 {
                     return false;
                 }
@@ -944,31 +946,29 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                 return true;
             }
             // create a server socket with a available port number and send this port number to the client with Response string.
-            pFTPDcpt->ftpDataskt = TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE_IPV4, 0, 0);
+            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, 0, 0, 0);
             // Make sure that a valid socket was available and returned
             // If not, return with an error
-            if(pFTPDcpt->ftpDataskt == INVALID_SOCKET)
+            if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
                 return true;
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = 
-                    TCPIP_TCP_SignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
             
             if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
             {
-                TCPIP_TCP_Close(pFTPDcpt->ftpDataskt);
+                NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
                 return true;
             }
             // modify the response string.
             //response string should have server ip address and the new data port number.
 
-            TCPIP_TCP_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-
-            TCPIP_TCP_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
+            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+            NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
             //prepare additional message IPaddress + Port
             strcpy(passiveMsg,"");
 
@@ -976,21 +976,21 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             sprintf(passiveMsg,"229 Extended passive mode entered (|||%u|)\r\n",dataSockInfo.localPort);
             pFTPDcpt->ftpDataPort = dataSockInfo.localPort;
 
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(passiveMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(passiveMsg), 0))
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, strlen(passiveMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
             pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
             pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
             if(ftpConfigData.dataSktTxBuffSize != 0)
             {
                 void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
-                if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
+                if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
                 {
                     return false;
                 }
@@ -999,7 +999,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             if(ftpConfigData.dataSktRxBuffSize != 0)
             {
                 void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
-                if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
+                if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
                 {
                     return false;
                 }
@@ -1065,14 +1065,14 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
                 pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
             }
 
-            if(pFTPDcpt->ftpDataskt != INVALID_SOCKET)
+            if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
             {
                 if(pFTPDcpt->ftpTcpDataSocketSignal != 0)
                 {
-                    TCPIP_TCP_SignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
+                    NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
                 }
                 pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
-                TCPIP_TCP_Close(pFTPDcpt->ftpDataskt);
+                NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
                 pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
             }
             else
@@ -1083,7 +1083,7 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
             break;
 
         case TCPIP_FTP_CMD_SM_WAIT:
-            if(!TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt))
+            if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) )
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_QUIT_OK;
                 pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
@@ -1091,10 +1091,12 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
             break;
 
         case TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt))
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, 1, 0))
             {
-                if(TCPIP_TCP_IsConnected(pFTPDcpt->ftpCmdskt))
-                    TCPIP_TCP_Disconnect(pFTPDcpt->ftpCmdskt);
+                if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpCmdskt) )
+                {
+                    NET_PRES_SocketDisconnect(pFTPDcpt->ftpCmdskt);
+                }
             }
             break;
         default:
@@ -1110,14 +1112,14 @@ static void _FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     if(pFTPDcpt->ftpTcpDataSocketSignal != 0)
     {
-        TCPIP_TCP_SignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
+        NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
         pFTPDcpt->ftpTcpDataSocketSignal = 0;
     }
-    if(pFTPDcpt->ftpDataskt != INVALID_SOCKET)
+    if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
     {
-        TCPIP_TCP_Close(pFTPDcpt->ftpDataskt);
+        NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
     }
-    pFTPDcpt->ftpDataskt = INVALID_SOCKET;
+    pFTPDcpt->ftpDataskt = NET_PRES_INVALID_SOCKET ;
 }
 
 static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
@@ -1125,30 +1127,30 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     TCP_SOCKET_INFO remoteSockInfo;
     bool releaseDataSkt=false;
 
-    TCPIP_TCP_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-    pFTPDcpt->ftpDataskt   =
-        TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE_IPV4,pFTPDcpt->ftpDataPort,0);
+    NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+    pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV4, pFTPDcpt->ftpDataPort, 0, 0);
 
     // Make sure that a valid socket was available and returned
     // If not, return with an error
-    if(pFTPDcpt->ftpDataskt == INVALID_SOCKET)
+    if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
     {
         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
         return false;
     }
     // catch the RX/TX signals
-    pFTPDcpt->ftpTcpDataSocketSignal = 
-            TCPIP_TCP_SignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
+    pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);    if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
     if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
     {
-        releaseDataSkt = true;               
+        releaseDataSkt = true;
     }
     
-    if(TCPIP_TCP_Bind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, ftpConfigData.dataPort, 0) == false)
+        
+    if(NET_PRES_SocketBind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, ftpConfigData.dataPort, 0) == false)
     {
         releaseDataSkt = true;       
     }
-    if(TCPIP_TCP_RemoteBind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, 0, &remoteSockInfo.remoteIPaddress)== false)
+    
+    if(NET_PRES_SocketRemoteBind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, 0, (NET_PRES_ADDRESS*)&remoteSockInfo.remoteIPaddress)== false)
     {
         releaseDataSkt = true;        
     }    
@@ -1161,7 +1163,7 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     }
     
     // Establish a connection
-    if(TCPIP_TCP_Connect(pFTPDcpt->ftpDataskt) == false)
+    if(NET_PRES_SocketConnect(pFTPDcpt->ftpDataskt) == false)
     {
         return false;
     }
@@ -1169,7 +1171,7 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     if(ftpConfigData.dataSktTxBuffSize != 0)
     {
         void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
-        if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
+        if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
         {
             return false;
         }
@@ -1178,7 +1180,7 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     if(ftpConfigData.dataSktRxBuffSize != 0)
     {
         void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
-        if(TCPIP_TCP_OptionsSet(pFTPDcpt->ftpDataskt, TCP_OPTION_RX_BUFF, tcpBuffSize)== false)
+        if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
         {
             return false;
         }
@@ -1218,7 +1220,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
             break;
 
         case TCPIP_FTP_CMD_SM_WAIT:
-            if ( TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
             {
                 fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1], SYS_FS_FILE_OPEN_WRITE);
                 if(fp == (int32_t) SYS_FS_HANDLE_INVALID)
@@ -1235,7 +1237,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                 break;
             }
         case TCPIP_FTP_CMD_SM_RECEIVE:
-            if(TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) && pFTPDcpt->callbackPos != 0x00u)
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
             {// The file was already opened, so load up its ID and seek
                 if(fp == SYS_FS_HANDLE_INVALID)
                 {// No file handles available, so wait for now
@@ -1246,7 +1248,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                 }
                 pFTPDcpt->ftp_shell_obj->fileSeek(pFTPDcpt->ftp_shell_obj,fp,(int32_t)pFTPDcpt->callbackPos,SYS_FS_SEEK_SET);
             }
-            else if(!TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt))
+            else if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
             // If no bytes were read, an EOF was reached
                 pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
@@ -1266,7 +1268,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
             // Get/put as many bytes as possible
             while(1)
             {
-                wCount = TCPIP_TCP_GetIsReady(pFTPDcpt->ftpDataskt);
+                wCount = NET_PRES_SocketReadIsReady(pFTPDcpt->ftpDataskt);
                 if(wCount == 0)
                 {
                     if(pFTPDcpt->ftpFlag.Bits.endCommunication == 1)
@@ -1284,7 +1286,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                     break;
                 }
                 memset(data,'\0',sizeof(data));
-                wLen = TCPIP_TCP_ArrayGet(pFTPDcpt->ftpDataskt, data, mMIN(wCount, sizeof(data)));
+                wLen = NET_PRES_SocketRead(pFTPDcpt->ftpDataskt, data, mMIN(wCount, sizeof(data)));
                 if(wLen == 0)
                 {// If no bytes were read, an EOF was reached
                     pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
@@ -1370,7 +1372,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
             pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
             break;
         case TCPIP_FTP_CMD_SM_WAIT:
-            if ( TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) )
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
                 pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_DIR;
             }
@@ -1389,18 +1391,18 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
             pFTPDcpt->callbackPos = 0;
             pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
         case TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
-            wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
              // send the Header details of the table
             if(pFTPDcpt->callbackPos != 0)
             {
                 if(wCount < remainingBytes)
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
                 }
                 else
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
@@ -1418,7 +1420,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                     remainingBytes = strlen((char *)fileNameList)- wCount;
                     break;
                 }
@@ -1511,7 +1513,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
             wCount = 0;
             newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-            wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
             while(newNode != 0)
             {
                 if(wCount == 0)
@@ -1523,14 +1525,14 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 {                    
                     if(wCount < remainingBytes)
                     {
-                        TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                         remainingBytes = remainingBytes - wCount;
                         wCount=0;
                         continue;
                     }
                     else
                     {
-                        TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                         wCount = wCount - remainingBytes;
                         remainingBytes =0;
                         pFTPDcpt->callbackPos = 0;
@@ -1584,8 +1586,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 lfNameLen = strlen((char *)fileNameList);
                 if(wCount > lfNameLen)
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList,
-                                                      mMIN(wCount, lfNameLen));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, lfNameLen));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                     wCount = wCount - lfNameLen;
@@ -1601,7 +1602,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, wCount);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
                     remainingBytes = lfNameLen - wCount;
                     wCount=0;
                     continue;
@@ -1646,7 +1647,7 @@ static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
             break;
 
         case TCPIP_FTP_CMD_SM_WAIT:
-            if ( TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) )
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
                 pFTPDcpt->ftpCommandSm    = TCPIP_FTP_CMD_SM_SEND;
             }
@@ -1794,7 +1795,7 @@ static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
     }
 
     // Get/put as many bytes as possible
-    wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+    wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, sizeof(data), 1);
     while(wCount > 0u)
     {
         wLen = pFTPDcpt->ftp_shell_obj->fileRead(pFTPDcpt->ftp_shell_obj,fp,data,mMIN(wCount, sizeof(data)));
@@ -1807,7 +1808,7 @@ static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
         }
         else
         {// Write the bytes to the socket
-            TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, data, wLen);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, data, wLen);
             wCount -= wLen;
             pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
         }
@@ -1867,7 +1868,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
             break;
         case TCPIP_FTP_CMD_SM_WAIT:
-            if ( TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) )
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
                 pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_SEND;
             }
@@ -1962,7 +1963,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
 
             break;
         case TCPIP_FTP_CMD_SM_SEND_FILE:
-            wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
             memset(fileNameList,0,sizeof(fileNameList));
             // If there is no argument
             if((gFTPNLSTArgIndex == 0xFF)&& (pFTPDcpt->callbackPos==0))
@@ -1974,14 +1975,13 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 {
                     while(bytestoBeSent>0)
                     {
-                        TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                         bytestoBeSent = bytestoBeSent - wCount;
                     }
                 }
                 else
                 {
-                     TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList,
-                                            strlen((char *)fileNameList));
+                     NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
                 }
                 pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
                 break;
@@ -1993,13 +1993,13 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             {
                 if(wCount < remainingBytes)
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
                     wCount = 0;
                 }
                 else
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
@@ -2011,14 +2011,14 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
                 if(wCount > strlen((char *)fileNameList))
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                     remainingBytes = strlen((char *)fileNameList)- wCount;
                     break;
                 }
@@ -2041,8 +2041,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
 
             if(wCount > strlen((char *)fileNameList))
             {
-                TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList,
-                                    mMIN(wCount, strlen((char *)fileNameList)));
+                NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                 remainingBytes =0;
                 pFTPDcpt->callbackPos = 0;
                 pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
@@ -2050,7 +2049,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             else
             {
                 pFTPDcpt->callbackPos = 1;
-                TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                 remainingBytes = strlen((char *)fileNameList)- wCount;
                 break;
             }
@@ -2085,18 +2084,18 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             pFTPDcpt->callbackPos = 0;
             pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
          case TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
-             wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+             wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
              // send the Header details of the table
             if(pFTPDcpt->callbackPos != 0)
             {
                 if(wCount < remainingBytes)
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
                 }
                 else
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
@@ -2108,14 +2107,14 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
                 if(wCount > strlen((char *)fileNameList))
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
                     remainingBytes = strlen((char *)fileNameList)- wCount;
                     break;
                 }
@@ -2207,7 +2206,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
             wCount = 0;
             newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-            wCount = TCPIP_TCP_PutIsReady(pFTPDcpt->ftpDataskt);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
             while(newNode != 0)
             {
                 if(wCount == 0)
@@ -2219,14 +2218,14 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 {
                     if(wCount < remainingBytes)
                     {
-                        TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
                         remainingBytes = remainingBytes - wCount;
                         wCount=0;
                         continue;
                     }
                     else
                     {
-                        TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
                         wCount = wCount - remainingBytes;
                         remainingBytes =0;
                         pFTPDcpt->callbackPos = 0;
@@ -2277,8 +2276,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 lfNameLen = strlen((char *)fileNameList);
                 if(wCount > lfNameLen)
                 {
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList,
-                                        mMIN(wCount, lfNameLen));
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, lfNameLen));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                     wCount = wCount - lfNameLen;
@@ -2295,7 +2293,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, wCount);
+                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
                     remainingBytes = lfNameLen - wCount;
                     wCount=0;
                     continue;
@@ -2334,14 +2332,14 @@ static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt)
         {
             memset(ftpMsg,0,sizeof(ftpMsg));
             sprintf(ftpMsg,"550 \"%s\" Directory is not empty! \r\n",pFTPDcpt->ftp_argv[1]);
-            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0)) 
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
                 pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
                 return true;
             }
-            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
         }
     }
     return result;
