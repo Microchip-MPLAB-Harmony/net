@@ -138,7 +138,7 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             }
             pkt->operation = ret;
             pkt->state = DRV_ENCX24J600_RX_WAIT_FOR_READ;
-            pkt->pkt->pDSeg->segLen = pkt->rsv.rxByteCount;
+            pkt->pkt->pDSeg->segLen = pkt->rsv.rxByteCount - 4 - sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
         }
         case DRV_ENCX24J600_RX_WAIT_FOR_READ:
         {
