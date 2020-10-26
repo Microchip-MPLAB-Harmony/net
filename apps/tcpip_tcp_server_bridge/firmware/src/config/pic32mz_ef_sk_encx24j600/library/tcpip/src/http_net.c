@@ -1031,8 +1031,7 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         for(connIx = 0; connIx < nConns; connIx++)
         {
             pHttpCon->connState = TCPIP_HTTP_CONN_STATE_IDLE;
-            // @@@@ pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, httpInitData->listenPort, 0, 0);
-            pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, 80, 0, 0);
+            pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, httpInitData->listenPort, 0, 0);
             if(pHttpCon->socket == NET_PRES_INVALID_SOCKET)
             {   // failed to open the socket
                 SYS_ERROR(SYS_ERROR_ERROR, " HTTP: Socket creation failed\r\n");
@@ -5623,7 +5622,7 @@ static TCPIP_HTTP_DYN_ARG_TYPE _HTTP_ArgType(char* argStr, int32_t* pIntArg)
     // int arg
     if(incAdj)
     {
-        argInt--;
+        argInt += argInt >= 0 ? -1 : 1;
     }
     *pIntArg = argInt;
     return TCPIP_HTTP_DYN_ARG_TYPE_INT32;

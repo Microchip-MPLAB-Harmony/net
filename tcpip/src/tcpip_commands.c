@@ -397,6 +397,10 @@ static void _CommandIpv4(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_PKT_ALLOC_COMMANDS != 0)
 
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -491,6 +495,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if (TCPIP_PKT_ALLOC_COMMANDS != 0)
     {"pkt", _CommandPacket,   ": IPv4"},
 #endif  // (TCPIP_PKT_ALLOC_COMMANDS != 0)
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+    {"bridge", _CommandBridge,   ": Bridge"},
+#endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -6011,6 +6018,359 @@ static void _CommandPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: pkt list\r\n");
 }
 #endif  // (TCPIP_PKT_ALLOC_COMMANDS != 0)
+
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+
+static void _CommandBridgeShowStats(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_MAC_BRIDGE_HANDLE brH, bool clearStat)
+{
+    int ix;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    TCPIP_MAC_BRIDGE_STAT stat;
+    TCPIP_MAC_BRIDGE_PORT_STAT* pPort;
+    bool res = TCPIP_MAC_Bridge_StatisticsGet(brH, &stat, clearStat);
+
+    if(res == false)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "failed to get stats!%d\r\n");
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "stats returned: %d\r\n", res);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t failPktAlloc: %d, failDcptAlloc: %d, failLocks: %d, fdbFull: %d\r\n", stat.failPktAlloc, stat.failDcptAlloc, stat.failLocks, stat.fdbFull);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t failMac: %d, failMtu: %d, failSize: %d\r\n", stat.failMac, stat.failMtu, stat.failSize);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t allocPackets: %d, freedPackets: %d, ackPackets: %d, delayPackets: %d\r\n", stat.allocPackets, stat.freedPackets, stat.ackPackets, stat.delayPackets);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t pktPoolSize: %d, pktPoolLowSize: %d, pktPoolEmpty: %d\r\n", stat.pktPoolSize, stat.pktPoolLowSize, stat.pktPoolEmpty);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t dcptPoolSize: %d, dcptPoolLowSize: %d, dcptPoolEmpty: %d\r\n", stat.dcptPoolSize, stat.dcptPoolLowSize, stat.dcptPoolEmpty);
+
+    pPort = stat.portStat;
+    for(ix = 0; ix < TCPIP_MAC_BRIDGE_MAX_PORTS_NO; ix++, pPort++)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t port %d stats:\r\n", ix);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t pkts received: %d, dest me-ucast: %d, dest notme-ucast: %d, dest mcast: %d\r\n", pPort->rxPackets, pPort->rxDestMeUcast, pPort->rxDestNotMeUcast, pPort->rxDestMcast);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t pkts reserved: %d, fwd ucast: %d, fwd mcast: %d, fwd direct: %d\r\n", pPort->reservedPackets, pPort->fwdUcastPackets, pPort->fwdMcastPackets, pPort->fwdDirectPackets);
+    }
+}
+
+static void _CommandBridgeShowFDB(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_MAC_BRIDGE_HANDLE brH)
+{
+    // list the FDB
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    int nEntries = TCPIP_MAC_Bridge_FDBEntries(brH);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "FDB entries: %d\r\n", nEntries);
+
+    TCPIP_MAC_FDB_ENTRY fdbEntry;
+    int ix;
+    for(ix = 0; ix < nEntries; ix++)
+    {
+        if(TCPIP_MAC_Bridge_FDBIndexRead(brH, ix, &fdbEntry) == TCPIP_MAC_BRIDGE_RES_OK)
+        {   // display it
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n\tEntry number: %d\r\n", ix);
+            char addrBuff[20];
+            TCPIP_Helper_MACAddressToString(&fdbEntry.destAdd, addrBuff, sizeof(addrBuff));
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry destAdd: %s\r\n", addrBuff);
+
+            char flagsBuff[40];
+            if(fdbEntry.flags == 0)
+            {   // this should NOT happen
+                sprintf(flagsBuff, "%s\r\n", "none");
+            }
+            else
+            {
+                int nChars = sprintf(flagsBuff, "%s", (fdbEntry.flags & TCPIP_MAC_FDB_FLAG_STATIC) != 0 ? "static" : "dynamic");
+                nChars += sprintf(flagsBuff + nChars, ", %s", (fdbEntry.flags & TCPIP_MAC_FDB_FLAG_HOST) != 0 ? "host" : "ext");
+                nChars += sprintf(flagsBuff + nChars, ", port %s", (fdbEntry.flags & TCPIP_MAC_FDB_FLAG_PORT_VALID) != 0 ? "valid" : "invalid");
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry flags: 0x%02x: %s\r\n", fdbEntry.flags, flagsBuff);
+
+            if((fdbEntry.flags & TCPIP_MAC_FDB_FLAG_PORT_VALID) != 0) 
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry learn port: %d\r\n", fdbEntry.learnPort);
+            }
+
+            if((fdbEntry.flags & TCPIP_MAC_FDB_FLAG_STATIC) != 0) 
+            {   // display the outPortMap 
+                int jx, kx;
+                const char* controlStr[TCPIP_MAC_BRIDGE_CONTROL_TYPES] = {"def", "fwd", "filt"};
+                int mapEntries = sizeof(fdbEntry.outPortMap[0]) / sizeof(*fdbEntry.outPortMap[0]); 
+                uint8_t* portMap = fdbEntry.outPortMap[0]; 
+                for(jx = 0; jx < mapEntries; jx++)
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry outPortMap[%d]: ", jx);
+                    for(kx = 0; kx < mapEntries; kx++)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s ", controlStr[*portMap++]);
+                    }
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\r\n");
+                }
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry tExpire: 0x%08x\r\n", fdbEntry.tExpire);
+            }
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tEntry fwdPackets: %lu\r\n", fdbEntry.fwdPackets);
+        }
+    }
+
+}
+
+#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+static void _CommandBridgeResetFDB(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_MAC_BRIDGE_HANDLE brH)
+{
+    // reset the FDB
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    TCPIP_MAC_BRIDGE_RESULT res = TCPIP_MAC_Bridge_FDBReset(brH);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "fdb reset %s: %d\r\n", res == TCPIP_MAC_BRIDGE_RES_OK ? "success" : "failed", res);
+}
+
+
+// data for
+// TCPIP_MAC_BRIDGE_RESULT TCPIP_MAC_Bridge_FDBAddEntry(TCPIP_MAC_BRIDGE_HANDLE brHandle, const TCPIP_MAC_BRIDGE_PERMANENT_ENTRY* pPermEntry);
+// 
+
+static TCPIP_MAC_BRIDGE_CONTROL_DCPT dcptCtrl1[] =
+{
+    {0, TCPIP_MAC_BRIDGE_CONTROL_TYPE_FORWARD},
+    {1, TCPIP_MAC_BRIDGE_CONTROL_TYPE_FORWARD},
+};
+
+static TCPIP_MAC_BRIDGE_CONTROL_DCPT dcptCtrl2[] =
+{
+    {0, TCPIP_MAC_BRIDGE_CONTROL_TYPE_FILTER},
+    {1, TCPIP_MAC_BRIDGE_CONTROL_TYPE_FILTER},
+};
+
+static TCPIP_MAC_BRIDGE_CONTROL_ENTRY ctrlEntry[] =
+{
+    {
+    .inIx = 0,
+    .dcptMapEntries = sizeof(dcptCtrl1) / sizeof(*dcptCtrl1),
+    .pDcptMap = dcptCtrl1,
+    },
+    {
+    .inIx = 1,
+    .dcptMapEntries = sizeof(dcptCtrl2) / sizeof(*dcptCtrl2),
+    .pDcptMap = dcptCtrl2,
+    },
+};
+
+
+static TCPIP_MAC_BRIDGE_PERMANENT_ENTRY permEntry = 
+{
+    //.destAdd = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},    // filled by the command
+    .controlEntries = sizeof(ctrlEntry) / sizeof(*ctrlEntry), 
+    .pControlEntry = ctrlEntry,
+};
+
+
+#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+
+#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+uint32_t bridgeEvents = 0;
+TCPIP_MAC_BRIDGE_EVENT_HANDLE bridgeEventHandle = 0;
+
+
+static void _CommandBridgeEventHandler(TCPIP_MAC_BRIDGE_EVENT evType, const void* param)
+{
+    const TCPIP_MAC_ADDR* pMacAdd;
+    char addBuff[20];
+    char evBuff[100];
+
+    switch(evType)
+    {
+        case TCPIP_MAC_BRIDGE_EVENT_FDB_FULL:
+            pMacAdd = (const TCPIP_MAC_ADDR*)param;
+            TCPIP_Helper_MACAddressToString(pMacAdd, addBuff, sizeof(addBuff));
+            sprintf(evBuff, "%s, address: %s\r\n", "fdb full", addBuff);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_FAIL_PKT_ALLOC:
+            sprintf(evBuff, "%s, packets: %lu\r\n", "fail alloc", (size_t)param);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_FAIL_DCPT_ALLOC:
+            sprintf(evBuff, "%s, descriptors: %lu\r\n", "fail alloc", (size_t)param);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_FAIL_MTU:
+            sprintf(evBuff, "%s, size: %lu\r\n", "fail MTU", (size_t)param);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_FAIL_SIZE:
+            sprintf(evBuff, "%s, size: %lu\r\n", "fail Size", (size_t)param);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_PKT_POOL_EMPTY:
+            sprintf(evBuff, "%s\r\n", "pkt pool empty");
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_DCPT_POOL_EMPTY:
+            sprintf(evBuff, "%s\r\n", "dcpt pool empty");
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_FAIL_LOCK:
+            sprintf(evBuff, "%s\r\n", "fail lock");
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_ENTRY_ADDED:
+            pMacAdd = (const TCPIP_MAC_ADDR*)param;
+            TCPIP_Helper_MACAddressToString(pMacAdd, addBuff, sizeof(addBuff));
+            sprintf(evBuff, "%s, address: %s\r\n", "entry added", addBuff);
+            break;
+
+        case TCPIP_MAC_BRIDGE_EVENT_ENTRY_EXPIRED:
+            pMacAdd = (const TCPIP_MAC_ADDR*)param;
+            TCPIP_Helper_MACAddressToString(pMacAdd, addBuff, sizeof(addBuff));
+            sprintf(evBuff, "%s, address: %s\r\n", "entry expired", addBuff);
+            break;
+
+        default:
+            sprintf(evBuff, "unknown!\r\n");
+            break;
+    }
+
+    bridgeEvents++;
+    SYS_CONSOLE_PRINT("Bridge event: %s, total events: %d\r\n", evBuff, bridgeEvents);
+}
+#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+
+
+
+static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // bridge stats <clr>
+    // bridge status
+    // bridge fdb show/reset/add/delete
+    // bridge register <param>
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    TCPIP_MAC_BRIDGE_HANDLE brH = TCPIP_MAC_Bridge_Open(0);
+    
+    while(argc > 1)
+    {
+
+        if(strcmp(argv[1], "status") == 0)
+        {
+            SYS_STATUS brStat = TCPIP_MAC_Bridge_Status(brH);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "status: %d\r\n", brStat);
+            return;
+        }
+
+        if(strcmp(argv[1], "stats") == 0)
+        {
+            bool clearStat = false;
+            if(argc > 2)
+            {
+                if(strcmp(argv[2], "clr") == 0)
+                {
+                    clearStat = true;
+                }
+            }
+
+            _CommandBridgeShowStats(pCmdIO, brH, clearStat);
+            return;
+        }
+
+#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+        if(strcmp(argv[1], "register") == 0)
+        {
+            if(bridgeEventHandle == 0)
+            {
+                bridgeEventHandle = TCPIP_MAC_Bridge_EventHandlerRegister(brH, _CommandBridgeEventHandler);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "register result: 0x%08x\r\n", bridgeEventHandle);
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "registered already: 0x%08x\r\n", bridgeEventHandle);
+            }
+
+            return;
+        }
+#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+
+        if(strcmp(argv[1], "deregister") == 0)
+        {
+            if(bridgeEventHandle != 0)
+            {
+                bool derRes = TCPIP_MAC_Bridge_EventHandlerDeregister(brH, bridgeEventHandle);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "de-register result: %d\r\n", derRes);
+                if(derRes)
+                {
+                    bridgeEventHandle = 0;
+                }
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "not registered!\r\n");
+            }
+
+            return;
+        }
+
+
+        if(strcmp(argv[1], "fdb") == 0)
+        {   
+            if(argc > 2)
+            {
+                if(strcmp(argv[2], "show") == 0)
+                {
+                    _CommandBridgeShowFDB(pCmdIO, brH);
+                    return;
+                }
+
+#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+                if(strcmp(argv[2], "reset") == 0)
+                {
+                    _CommandBridgeResetFDB(pCmdIO, brH);
+                    return;
+                }
+
+                if(strcmp(argv[2], "delete") == 0 || strcmp(argv[2], "add") == 0)
+                {
+                    if(argc > 3)
+                    {
+                        if(TCPIP_Helper_StringToMACAddress(argv[3], permEntry.destAdd.v))
+                        {
+                            TCPIP_MAC_BRIDGE_RESULT res;
+                            if(strcmp(argv[2], "delete") == 0)
+                            {
+                                res = TCPIP_MAC_Bridge_FDBDeleteEntry(brH, &permEntry.destAdd);
+                            }
+                            else
+                            {
+                                res = TCPIP_MAC_Bridge_FDBAddEntry(brH, &permEntry);
+                            }
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "fdb %s returned: %d\r\n", argv[2], res);
+                            return;
+                        }
+                    }
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "fdb %s needs valid MAC address\r\n", argv[2]);
+                    return;
+                }
+#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+            }
+        }
+
+        break;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: bridge status\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: bridge stats <clr>\r\n");
+#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: bridge register <param>\r\n");
+#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: bridge fdb show/reset/add/delete\r\n");
+#else
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: bridge fdb show\r\n");
+#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+}
+#endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 

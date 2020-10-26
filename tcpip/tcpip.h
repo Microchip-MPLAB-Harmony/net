@@ -360,6 +360,7 @@ typedef enum
 	TCPIP_MODULE_FTP_CLIENT,        /* FTP client */
 
     /* add other modules here */
+	TCPIP_MODULE_MAC_BRIDGE,        /* MAC layer 2 bridge */
     //
     /*  */
     TCPIP_MODULES_NUMBER,       /* number of modules in the TCP/IP stack itself */

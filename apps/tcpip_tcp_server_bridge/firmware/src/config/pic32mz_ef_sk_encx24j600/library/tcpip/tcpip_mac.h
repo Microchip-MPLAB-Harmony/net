@@ -340,6 +340,7 @@ typedef struct _tag_MAC_DATA_SEGMENT
     /*  Segment payload size;
         TX: Number of bytes from this segment that has to be transmitted.
             This is the total number of bytes including the Ethernet header
+            but not the FCS (that should be added by the driver)
         RX: Number of payload bytes in the segment.
             The MAC driver subtracts the FCS and Ethernet header length before
             handing over the packet to the stack

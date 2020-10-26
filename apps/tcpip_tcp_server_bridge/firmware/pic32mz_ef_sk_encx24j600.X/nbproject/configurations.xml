@@ -854,6 +854,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/isp/git/h3/net/apps/tcpip_tcp_server_bridge/firmware/pic32mz_ef_sk_encx24j600.X/debug/pic32mz_ef_sk_encx24j600/pic32mz_ef_sk_encx24j600_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>

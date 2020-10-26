@@ -246,12 +246,14 @@ typedef struct _tag_TCPIP_NET_IF
             uint16_t linkPrev       : 1;        // previous status of the link
             uint16_t connEvent      : 1;        // when set indicates a connection event
             uint16_t connEventType  : 1;        // 0: TCPIP_MAC_EV_CONN_LOST; 1: TCPIP_MAC_EV_CONN_ESTABLISHED
-            uint16_t reserved       : 13;       // available
+            uint16_t bridged        : 1;        // 1: interface is part of a bridge
+            uint16_t reserved       : 12;       // available
         };
         uint16_t        v;
     }exFlags;                               // additional extended flags      
     char                ifName[7];          // native interface name + \0
     uint8_t             macType;            // a TCPIP_MAC_TYPE value: ETH, Wi-Fi, etc; 
+    uint8_t             bridgePort;         // bridge port this interface belongs to; < 256
 } TCPIP_NET_IF;
 
 
@@ -652,6 +654,33 @@ static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackMapAl
 
 
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+
+// marks an interface as bridged
+static __inline__ void __attribute__((always_inline))  _TCPIPStack_BridgeSetIf(TCPIP_NET_IF* pNetIf, uint8_t portNo)
+{
+    pNetIf->exFlags.bridged = 1;
+    pNetIf->bridgePort = portNo;
+}
+
+// marks an interface as unbridged
+static __inline__ void __attribute__((always_inline))  _TCPIPStack_BridgeClearIf(TCPIP_NET_IF* pNetIf)
+{
+    pNetIf->exFlags.bridged = 0;
+}
+
+// returns true if an interface is bridged
+static __inline__ bool __attribute__((always_inline))  _TCPIPStack_BridgeCheckIf(TCPIP_NET_IF* pNetIf)
+{
+    return pNetIf->exFlags.bridged != 0;
+}
+
+// returns the bridge port corresponding to this interface
+static __inline__ uint8_t __attribute__((always_inline))  _TCPIPStack_BridgeGetIfPort(TCPIP_NET_IF* pNetIf)
+{
+    return pNetIf->bridgePort;
+}
+
+
 // debugging, tracing, etc.
 
 // enables the measurement of the CPU time taken by the TCPIP_STACK_Task() processing

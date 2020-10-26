@@ -483,6 +483,9 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)
     {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
 #endif 
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE)
+    {TCPIP_MODULE_MAC_BRIDGE,   (tcpipModuleInitFunc)TCPIP_MAC_Bridge_Initialize,  TCPIP_MAC_Bridge_Deinitialize},      // TCPIP_MODULE_MAC_BRIDGE
+#endif 
     // Add other stack modules here
      
 };
@@ -1854,6 +1857,17 @@ static uint32_t _TCPIPProcessMacPackets(bool signal)
         }
             
 #endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE)
+        TCPIP_MAC_BRIDGE_PKT_RES brRes = TCPIP_MAC_Bridge_ProcessPacket( pRxPkt);
+        if(brRes != TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS)
+        {
+            continue;
+        } 
+        
+#endif  // defined(TCPIP_STACK_USE_MAC_BRIDGE)
+
+
         frameFound = false;
         pFrameEntry = TCPIP_FRAME_PROCESS_TBL;
         for(frameIx = 0; frameIx < sizeof(TCPIP_FRAME_PROCESS_TBL) / sizeof(*TCPIP_FRAME_PROCESS_TBL); frameIx++, pFrameEntry++)
@@ -2299,7 +2313,7 @@ int TCPIP_STACK_NumberOfNetworksGet(void)
  ********************************************************************/
 TCPIP_NET_HANDLE TCPIP_STACK_IndexToNet(int netIx)
 {
-    if(netIx < tcpip_stack_ctrl_data.nIfs)
+    if(0 <= netIx && netIx < tcpip_stack_ctrl_data.nIfs)
     {
         return tcpipNetIf + netIx;
     }

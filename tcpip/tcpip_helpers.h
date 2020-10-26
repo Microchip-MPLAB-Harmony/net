@@ -340,6 +340,36 @@ bool      TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6]);
 
 bool     TCPIP_Helper_MACAddressToString(const TCPIP_MAC_ADDR* macAddr, char* buff, size_t buffSize);
 
+// *****************************************************************************
+/*
+  Function:
+    bool    TCPIP_Helper_IsMcastMACAddress(const TCPIP_MAC_ADDR* pMacAddress);
+
+  Summary:
+	Checks if a MAC address is a multicast address
+
+  Description:
+	This function verifies if the supplied MAC address is a multicast address.
+	
+  Precondition:
+    pMacAddress - a valid pointer to a TCPIP_MAC_ADDR
+
+  Parameters:
+	pMacAddress - Pointer to TCPIP_MAC_ADDR to check
+	
+  Returns:
+  	- true  - if the MAC address is a multicast address
+  	- false - if the MAC address is not a multicast address
+
+ Remarks:
+    None.
+ */
+static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAddress(const TCPIP_MAC_ADDR* pMacAddress)
+{
+    return (pMacAddress->v[0] & 0x01) != 0;
+}
+
+
 // helpers to convert a host long to a network long
 // and reverse
 //

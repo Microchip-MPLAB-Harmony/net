@@ -668,6 +668,12 @@ typedef enum
 
     /* RX: packet was dropped because it was processed externally */
     TCPIP_MAC_PKT_ACK_EXTERN            = -20,
+
+    /* RX: packet was directly processed successfuly by the bridge */
+    TCPIP_MAC_PKT_ACK_BRIDGE_DONE       = -21,
+
+    /* RX: packet was dropped by the bridge */
+    TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD    = -22,
 }TCPIP_MAC_PKT_ACK_RES;
 
 
