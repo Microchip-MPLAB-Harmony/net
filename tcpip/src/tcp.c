@@ -5991,20 +5991,20 @@ TCPIP_NET_HANDLE  TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
 // returns 0 on error
 static TCP_PORT _TCP_EphemeralPortAllocate(void)
 {
-    int      num_ephemeral;
-    int      count;
-    TCP_PORT next_ephemeral;
+    uint32_t    num_ephemeral;
+    uint32_t    count;
+    TCP_PORT    next_ephemeral;
 
 
     count = num_ephemeral = TCPIP_TCP_LOCAL_PORT_END_NUMBER - TCPIP_TCP_LOCAL_PORT_START_NUMBER + 1;
 
-    next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_PseudoGet() % num_ephemeral);
+    next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_CryptoGet() % num_ephemeral);
 
     while(count--)
     {
         if(_TCP_PortIsAvailable(next_ephemeral))
         {
-            return next_ephemeral;
+            return (TCP_PORT)next_ephemeral;
         }
 
         if (next_ephemeral == TCPIP_TCP_LOCAL_PORT_END_NUMBER)
