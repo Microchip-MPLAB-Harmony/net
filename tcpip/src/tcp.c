@@ -49,6 +49,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TCP)
 
+#include "crypto/crypto.h"
+
 
 /****************************************************************************
   Section:
@@ -225,6 +227,8 @@ static TCP_SOCKET   _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP
 
 static TCP_SOCKET_FLAGS _TCP_SktFlagsGet(TCB_STUB* pSkt);
 
+static uint32_t         _TCP_SktSetSequenceNo(const TCB_STUB* pSkt);
+
 #if defined (TCPIP_STACK_USE_IPV4)
 static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
 static TCP_V4_PACKET*   _Tcpv4AllocateTxPacketIfQueued(TCB_STUB * pSkt, bool resetOldPkt);
@@ -235,7 +239,6 @@ static bool             _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16
 static TCP_V4_PACKET*   _TxSktGetLockedV4Pkt(TCB_STUB* pSkt);
 static TCPIP_MAC_PACKET *_TxSktFreeLockedV4Pkt(TCB_STUB* pSkt);
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt);
-
 
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
@@ -338,7 +341,7 @@ static bool _TCP_TxPktValid(TCB_STUB * pSkt)
 }
 
 
-static  void        _TcpSocketBind(TCB_STUB* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_ADDRESS* srcAddress)
+static void _TcpSocketBind(TCB_STUB* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_ADDRESS* srcAddress)
 {
     pSkt->pSktNet = pNet;
 #if defined (TCPIP_STACK_USE_IPV6)
@@ -561,9 +564,8 @@ static TCPIP_MAC_PACKET* _TxSktFreeLockedV4Pkt(TCB_STUB* pSkt)
 
     return toFreePkt;
 }
+
 #endif  // defined (TCPIP_STACK_USE_IPV4)
-
-
 
 
 /*****************************************************************************
@@ -2329,6 +2331,92 @@ int TCPIP_TCP_SocketsNumberGet(void)
     return TcpSockets;
 }
 
+// sets the TCP sequence number based on RFC 6528
+// The socket identity: local and remote IP addresses + ports should be known
+static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
+{
+    CRYPT_MD5_CTX md5Ctx;
+    uint32_t secretKey[16 / 4];   // 128 bits secret key
+
+    size_t dataSize;    // actual data size
+
+    union
+    {
+        uint8_t     data8[16];              // hash data size should be >= MD5_DIGEST_SIZE == 16 bytes
+        uint32_t    data32[16 / 4];         // same in 32 bit words
+#if defined (TCPIP_STACK_USE_IPV6)
+        uint32_t    ipv6HashData[52 / 4];   // 16B srcAdd, 16B destAdd, 4B ports, 16B secret key
+#endif
+
+#if defined (TCPIP_STACK_USE_IPV4)
+        uint32_t    ipv4HashData[28 / 4];   // 4B srcAdd, 4B destAdd, 4B ports, 16B secret key
+#endif    
+    }hashData;
+        
+    // get secret key
+    SYS_RANDOM_CryptoBlockGet(secretKey, sizeof(secretKey));
+
+    // calculate the hash
+    CRYPT_MD5_Initialize(&md5Ctx);
+
+#if defined (TCPIP_STACK_USE_IPV4)
+    if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+    {
+        // start adding the socket local and remote connection identity
+        hashData.ipv4HashData[0] = pSkt->srcAddress.Val;
+        hashData.ipv4HashData[1] = pSkt->destAddress.Val;
+        hashData.ipv4HashData[2] = ((uint32_t)pSkt->localPort << 16) + (uint32_t)pSkt->remotePort;
+        memcpy(hashData.ipv4HashData + 3, secretKey, sizeof(secretKey));
+        dataSize = sizeof(hashData.ipv4HashData);
+    }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+
+#if defined (TCPIP_STACK_USE_IPV6)
+    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+    {
+        memcpy(hashData.ipv6HashData + 0, TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
+        memcpy(hashData.ipv6HashData + 4, TCPIP_IPV6_DestAddressGet(pSkt->pV6Pkt), sizeof(IPV6_ADDR));
+        hashData.ipv6HashData[8] = ((uint32_t)pSkt->localPort << 16) + (uint32_t)pSkt->remotePort;
+        memcpy(hashData.ipv6HashData + 9, secretKey, sizeof(secretKey));
+        dataSize = sizeof(hashData.ipv6HashData);
+    }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
+
+    CRYPT_MD5_DataAdd(&md5Ctx, hashData.data8, dataSize);
+    CRYPT_MD5_Finalize(&md5Ctx, hashData.data8);
+    uint32_t m = (SYS_TIME_Counter64Get() * 1000000 / 64 ) / SYS_TIME_FrequencyGet();   // 274 seconds period > MSL = 120 seconds
+    uint32_t seq = hashData.data32[0] + m;
+
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SEQ) != 0)
+    SYS_CONSOLE_PRINT("TCP IPv4 seq - m: 0x%08x, hash: 0x%08x, seq: 0x%08x\r\n", m, hashData.data32[0], seq); 
+
+#if defined (TCPIP_STACK_USE_IPV6)
+    char srcAddBuff[40], dstAddBuff[40];
+#else
+    char srcAddBuff[20], dstAddBuff[20];
+#endif
+
+#if defined (TCPIP_STACK_USE_IPV4)
+    if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+    {
+        TCPIP_Helper_IPAddressToString(&pSkt->srcAddress, srcAddBuff, sizeof(srcAddBuff));
+        TCPIP_Helper_IPAddressToString(&pSkt->destAddress, dstAddBuff, sizeof(dstAddBuff));
+    }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+
+#if defined (TCPIP_STACK_USE_IPV6)
+    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+    {
+        TCPIP_Helper_IPv6AddressToString(TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), srcAddBuff, sizeof(srcAddBuff));
+        TCPIP_Helper_IPv6AddressToString(TCPIP_IPV6_SourceAddressGet(pSkt->pV6Pkt), dstAddBuff, sizeof(dstAddBuff));
+    }
+#endif // defined (TCPIP_STACK_USE_IPV6)
+    SYS_CONSOLE_PRINT("\tseq - src: %s, dest: %s, lport: %d, rport: %d\r\n", srcAddBuff, dstAddBuff, pSkt->localPort, pSkt->remotePort); 
+
+#endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SEQ) != 0)
+        return seq;
+}
+
 /****************************************************************************
   Section:
 	Transmit Functions
@@ -3449,7 +3537,6 @@ static void TCPIP_TCP_Tick(void)
                     vFlags = SYN;
                     bRetransmit = true;
 
-                    // NOTE : This if statement was only in 5.36
                     // Exponentially increase timeout until we reach TCPIP_TCP_MAX_RETRIES attempts then stay constant
                     if(pSkt->retryCount >= (TCPIP_TCP_MAX_RETRIES - 1))
                     {
@@ -3856,6 +3943,11 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
                     memcpy(header + 1, &options, sizeof(options));
                 }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
+
+                if(pSkt->MySEQ == 0)
+                {   // Set Initial Sequence Number (ISN)
+                    pSkt->MySEQ = _TCP_SktSetSequenceNo(pSkt);
+                }
             }
         }
         else
@@ -4380,7 +4472,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 	pSkt->flags.bSYNSent = 0;
 	pSkt->flags.bRXNoneACKed1 = 0;
 	pSkt->flags.bRXNoneACKed2 = 0;
-    pSkt->MySEQ = (SYS_RANDOM_PseudoGet() << 16) | (uint16_t)SYS_RANDOM_PseudoGet();
+    pSkt->MySEQ = 0;
 	pSkt->sHoleSize = -1;
 	pSkt->remoteWindow = 1;
     pSkt->maxRemoteWindow = 1;
@@ -4746,9 +4838,6 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 // Set MSS option
                 pSkt->wRemoteMSS = _GetMaxSegSizeOption(h);
                 _TCPSetHalfFlushFlag(pSkt);
-
-                // Set Initial Send Sequence (ISS) number
-                // Nothing to do on this step... ISS already set in _TcpCloseSocket()
 
                 // Respond with SYN + ACK
                 _TcpSend(pSkt, SYN | ACK, SENDTCP_RESET_TIMERS);
