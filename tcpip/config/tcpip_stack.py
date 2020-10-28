@@ -1794,6 +1794,15 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysTimeAdapterSourceFile.setType("SOURCE")
     tcpipStackSysTimeAdapterSourceFile.setEnabled(True)
     
+    tcpipStackSysRandomAdapterSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackSysRandomAdapterSourceFile.setSourcePath("sys_adapter/sys_random_h2_adapter.c")
+    tcpipStackSysRandomAdapterSourceFile.setOutputName("sys_random_h2_adapter.c")
+    tcpipStackSysRandomAdapterSourceFile.setOverwrite(True)
+    tcpipStackSysRandomAdapterSourceFile.setDestPath("system/")
+    tcpipStackSysRandomAdapterSourceFile.setProjectPath("config/" + configName + "/system/")
+    tcpipStackSysRandomAdapterSourceFile.setType("SOURCE")
+    tcpipStackSysRandomAdapterSourceFile.setEnabled(True)
+    
     tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
     tcpipStackSysRandomAdapterHeaderFile.setOutputName("sys_random_h2_adapter.h")
