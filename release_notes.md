@@ -1,10 +1,43 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.4 (October, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.4:
+
+- **Updated functionality**
+
+The following table provides the list of the updates included in the 3.6.4 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| sys_adapter           | The sys_random_h2_adapter has been updated to include the cryptographically secure random number generators. The sys_random_h2_adapter.c has been added to the net repo.|
+| TCP                   | The calculation of the Initial Sequence Number (ISN) has been updated to include a strong random key |
+
+
+
+### KNOWN ISSUES
+
+The updates in this release affect the way in which the TCP sockets calculate the ISN.
+The calculation has been updated to include the crypto library in order to make the guessing of the ISN very diffcult.
+
+* The updates have been applied to the NET TCP/IP core TCP files.
+
+* The demos that are part of the release and contain the TCP module have **NOT** been updated! The demos need to be regenerated in order to apply this update
+
+* For proper regeneration of the demos, run the MPLAB Harmony Configurator (MHC) for the selected demo and configuration
+    - Select the *TCP/IP STACK* component and go to the *TRANSPORT LAYER*
+    - In the *TCP/IP Transport Layer Configurator* uncheck the *TCP* module checkbox and then add it back
+    - If the *Crypto Library* was not part of the project it will be added. Accept all the requested changes when prompted
+    - The *Crypto Library* and *wolfCrypt Library* components will be now part of the root project graph
+    - Regenerate the demo and the updates will be included
+
+- **Release notes for v3.6.1 apply**
+
+
 ## Net Release v3.6.3 (October, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.3:
 
 - **New features**
 
-The following table provides the list of the new features included in the 3.6.2 dot release:
+The following table provides the list of the new features included in the 3.6.3 dot release:
 
 | Module                | Description                          |
 | ------ | ------ |
