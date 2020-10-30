@@ -1620,7 +1620,7 @@ static int  _MAC_Bridge_SetPorts(MAC_BRIDGE_DCPT* pBDcpt, const TCPIP_MAC_BRIDGE
 
     for(ix = 0; ix < pConfig->bridgeTableSize; ix++, pAscEntry++, pBinEntry++)
     {
-        if((pConfig->bridgeFlags & TCPIP_MAC_BRIDGE_FLAG_ASCII_TABLE) != 0) 
+        if((pConfig->bridgeFlags & TCPIP_MAC_BRIDGE_FLAG_IF_NAME_TABLE) != 0) 
         {
             if(pAscEntry->ifName == 0)
             {

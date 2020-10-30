@@ -239,8 +239,8 @@ typedef enum
                                                         // Forwarding is still done using the destination address
                                                         // useful for testing or restricting traffic to few addresses only  
 
-    TCPIP_MAC_BRIDGE_FLAG_BINARY_TABLE      = 0x00,     // The initialization bridge table is in binary format, not strings - default setting
-    TCPIP_MAC_BRIDGE_FLAG_ASCII_TABLE       = 0x80,     // The initialization bridge table is in ASCII format, using strings
+    TCPIP_MAC_BRIDGE_FLAG_IF_IX_TABLE       = 0x00,     // The initialization bridge table contains the interface indexes - default setting
+    TCPIP_MAC_BRIDGE_FLAG_IF_NAME_TABLE     = 0x80,     // The initialization bridge table contains the interface names, ASCII strings
 
 }TCPIP_MAC_BRIDGE_FLAGS;
 
@@ -433,7 +433,7 @@ typedef struct
     size_t                                  bridgeTableSize;
     
     /* the interfaces that are part of the bridge
-     * The type of the table is given by the flag TCPIP_MAC_BRIDGE_FLAG_BINARY_TABLE/TCPIP_MAC_BRIDGE_FLAG_ASCII_TABLE
+     * The type of the table is given by the flag TCPIP_MAC_BRIDGE_FLAG_IF_IX_TABLE/TCPIP_MAC_BRIDGE_FLAG_IF_NAME_TABLE
      * This table gives the nPorts - the actual number of ports that are part of the bridge */
     const TCPIP_MAC_BRIDGE_ENTRY*           bridgeTable;   
 

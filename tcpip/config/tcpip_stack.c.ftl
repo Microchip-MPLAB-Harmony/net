@@ -743,6 +743,31 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 };
 </#if>
 
+
+<#if (tcpipMacBridge.TCPIP_STACK_USE_IPV4)?has_content && (tcpipMacBridge.TCPIP_STACK_USE_IPV4) == true>
+/*** TCPIP MAC Bridge Initialization Data ***/
+const TCPIP_MAC_BRIDGE_CONFIG  tcpipBridgeInitData = 
+{
+    .fdbEntries = TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES,
+    .pktPoolSize = TCPIP_MAC_BRIDGE_PACKET_POOL_SIZE,
+    .pktSize = TCPIP_MAC_BRIDGE_PACKET_SIZE,
+    .dcptPoolSize = TCPIP_MAC_BRIDGE_DCPT_POOL_SIZE,
+    .pktReplenish = TCPIP_MAC_BRIDGE_PACKET_POOL_REPLENISH,
+    .dcptReplenish = TCPIP_MAC_BRIDGE_DCPT_POOL_REPLENISH,
+    .bridgeFlags = TCPIP_MC_BRIDGE_INIT_FLAGS,
+    // todo
+    .bridgeTableSize = 0,
+    .bridgeTable = 0,
+    .bridgePermTableSize = 0,
+    .bridgePermTable = 0,
+    // advanced
+    .purgeTimeout = TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT,
+    .transitDelay = TCPIP_MAC_BRIDGE_MAX_TRANSIT_DELAY,
+};
+</#if>
+
+
+
 <#if (TCPIP_STACK_USE_HEAP_CONFIG)?has_content>
 <#if (TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP">
 TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
