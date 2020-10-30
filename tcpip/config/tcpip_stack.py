@@ -1556,6 +1556,33 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackLldpTlvHeaderFile.setType("HEADER")
     tcpipStackLldpTlvHeaderFile.setOverwrite(True)
 
+    # Add tcpip_mac_bridge.h file to project
+    tcpipStackBridgeHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackBridgeHeaderFile.setSourcePath("tcpip/tcpip_mac_bridge.h")
+    tcpipStackBridgeHeaderFile.setOutputName("tcpip_mac_bridge.h")
+    tcpipStackBridgeHeaderFile.setDestPath("library/tcpip/")
+    tcpipStackBridgeHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+    tcpipStackBridgeHeaderFile.setType("HEADER")
+    tcpipStackBridgeHeaderFile.setOverwrite(True)
+
+    # Add tcpip_mac_bridge_manager.h file to project
+    tcpipStackBridgeManagerFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackBridgeManagerFile.setSourcePath("tcpip/src/tcpip_mac_bridge_manager.h")
+    tcpipStackBridgeManagerFile.setOutputName("tcpip_mac_bridge_manager.h")
+    tcpipStackBridgeManagerFile.setDestPath("library/tcpip/src/")
+    tcpipStackBridgeManagerFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackBridgeManagerFile.setType("HEADER")
+    tcpipStackBridgeManagerFile.setOverwrite(True)
+
+    # Add tcpip_mac_bridge_private.h file to project
+    tcpipStackBridgePrivateFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackBridgePrivateFile.setSourcePath("tcpip/src/tcpip_mac_bridge_private.h")
+    tcpipStackBridgePrivateFile.setOutputName("tcpip_mac_bridge_private.h")
+    tcpipStackBridgePrivateFile.setDestPath("library/tcpip/src/")
+    tcpipStackBridgePrivateFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackBridgePrivateFile.setType("HEADER")
+    tcpipStackBridgePrivateFile.setOverwrite(True)
+    
     # file TCPIP_ETHERNET_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip_ethernet.h" to                           "$PROJECT_HEADER_FILES/framework/tcpip/tcpip_ethernet.h"
     tcpipStackTcpipEthernetHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackTcpipEthernetHeaderFile.setSourcePath("tcpip/tcpip_ethernet.h")
