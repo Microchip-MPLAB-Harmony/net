@@ -83,13 +83,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 */
 typedef struct
 {
-     int       interfaceIndex;     // Interface Index
-     char*     serverIPAddress;    // Server IP address
-     char*     startIPAddRange;    // Start IP address 
-     char*     ipMaskAddress;      // Netmask
-     char*     priDNS;             // Primary DNS server Address
-     char*     secondDNS;          // Secondary DNS server Address
-     bool      poolEnabled;        // true if pool is valid , false if pool is invalid
+     int            interfaceIndex;     // Interface Index
+     const char*    serverIPAddress;    // Server IP address
+     const char*    startIPAddRange;    // Start IP address 
+     const char*    ipMaskAddress;      // Netmask
+     const char*    priDNS;             // Primary DNS server Address
+     const char*    secondDNS;          // Secondary DNS server Address
+     bool           poolEnabled;        // true if pool is valid , false if pool is invalid
 }TCPIP_DHCPS_ADDRESS_CONFIG;
 
 // *****************************************************************************

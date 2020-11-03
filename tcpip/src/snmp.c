@@ -674,9 +674,9 @@ static void _SNMPv3_CreatePasswordLocalizationKey(TCPIP_NET_IF* pNetIf)
 static bool _SNMPV3_Stack_parameterInit(const TCPIP_SNMP_MODULE_CONFIG *snmpDataConfig)
 {
     uint8_t userDBIndex=0;
-    char *usmSecName=NULL;
-    char *userAuthPasswd=NULL;
-    char *userPrivPasswd=NULL;
+    const char *usmSecName=NULL;
+    const char *userAuthPasswd=NULL;
+    const char *userPrivPasswd=NULL;
     uint8_t userAuthType;
     uint8_t userPrivType;
     uint8_t userSecLevel;
@@ -3463,18 +3463,16 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
         (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&idLen,1);
         if(idLen == 1)
         {
-            uint8_t temp;
-            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&temp,1);
-            indexRec.id = temp & 0xFF;
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr, &temp.v[0], 1);
+            indexRec.id = temp.v[0] & 0xFF;
         }
         else if(idLen == 2)
         {
-            uint8_t temp[2];
-            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,temp,2);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr, temp.v ,2);
             indexRec.id = 0;
-            indexRec.id = temp[0] & 0xFF;
+            indexRec.id = temp.v[0] & 0xFF;
             indexRec.id <<= 8;
-            indexRec.id |= temp[1] & 0xFF;
+            indexRec.id |= temp.v[1] & 0xFF;
         }
         indexRec.dataType = 0;
         (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
@@ -3812,18 +3810,16 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
         (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&idLen,1);
         if(idLen == 1)
         {
-            uint8_t temp;
-            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&temp,1);
-    	    indexRec.id = temp & 0xFF;
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr, &temp.v[0], 1);
+    	    indexRec.id = temp.v[0] & 0xFF;
         }
         else if(idLen == 2)
         {
-            uint8_t temp[2];
-            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,temp,2);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr, temp.v, 2);
             indexRec.id = 0;
-            indexRec.id = temp[0] & 0xFF;
+            indexRec.id = temp.v[0] & 0xFF;
             indexRec.id <<= 8;
-            indexRec.id |= temp[1] & 0xFF;
+            indexRec.id |= temp.v[1] & 0xFF;
         }
         indexRec.dataType = 0;
         (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
@@ -4338,18 +4334,16 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
             (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&idLen,1);
             if(idLen == 1)
             {
-                uint8_t temp;
-                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&temp,1);
-                rec->id = temp & 0xFF;
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr, &temp.v[0], 1);
+                rec->id = temp.v[0] & 0xFF;
             }
             else if(idLen == 2)
             {
-                uint8_t temp[2];
-                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,temp,2);
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr, temp.v, 2);
                 rec->id = 0;
-                rec->id = temp[0] & 0xFF;
+                rec->id = temp.v[0] & 0xFF;
                 rec->id <<= 8;
-                rec->id |= temp[1] & 0xFF;
+                rec->id |= temp.v[1] & 0xFF;
             }
         }
         if ( rec->nodeInfo.Flags.bIsSibling ||

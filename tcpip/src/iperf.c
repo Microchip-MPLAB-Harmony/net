@@ -728,6 +728,7 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
 	uint32_t msec = 0;
     const void* cmdIoParam = NULL;
 
+    uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet(); 
     currentTime = SYS_TMR_TickCountGet();
 
     cmdIoParam = pIState->pCmdIO->cmdIoParam;
@@ -742,8 +743,8 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
 
 
 
-            sec = (currentTime- pIState->lastCheckTime)/SYS_TMR_TickCounterFrequencyGet();
-			msec = (uint32_t)(((double) (currentTime - pIState->lastCheckTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000));
+            sec = (currentTime- pIState->lastCheckTime) / tickFreq;
+			msec = (uint32_t)(((double) (currentTime - pIState->lastCheckTime)) / (((double)(tickFreq))/1000));
 
             if ( pIState->state == (uint8_t)IPERF_UDP_TX_DONE_STATE )
             {
@@ -763,11 +764,11 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
 				kbps = ((pIState->totalLen - pIState->lastCheckTotalLen)*((double) 8)) / msec;
             }
 
-            sec = (pIState->lastCheckTime - pIState->startTime)/SYS_TMR_TickCounterFrequencyGet();
+            sec = (pIState->lastCheckTime - pIState->startTime) / tickFreq;
 
             (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "    - [%2lu- %2lu sec] %3lu/ %3lu (%2lu%%)    %4lu Kbps\r\n",
                       (unsigned long)sec, 
-                      (unsigned long)sec + ( (unsigned long) (pIState->mInterval/SYS_TMR_TickCounterFrequencyGet()) ),
+                      (unsigned long)sec + ( (unsigned long) (pIState->mInterval / tickFreq) ),
                       (unsigned long)nDropped,
                       (unsigned long)nAttempted,
                       (nAttempted == 0u) ? 0 : ((unsigned long)nDropped*100/(unsigned long)nAttempted),
@@ -790,7 +791,7 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
                 nAttempted = pIState->lastPktId;
             }
 
-			msec = (uint32_t)(((double) (pIState->stopTime - pIState->startTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000));
+			msec = (uint32_t)(((double) (pIState->stopTime - pIState->startTime)) / (((double)(tickFreq))/1000));
 
 
 			if ( msec == 0u )
@@ -973,7 +974,7 @@ static void StateMachineTxArpResolve(tIperfState* pIState)
     if(!TCPIP_ARP_IsResolved(pIState->pNetIf, &pIState->remoteSide.remoteIPaddress.v4Add, &pIState->remoteMACAddr))
     {
         /* every 3 seconds print a warning */
-        if( SYS_TMR_TickCountGet() - pIState->timer > 5*SYS_TMR_TickCounterFrequencyGet() )
+        if( SYS_TMR_TickCountGet() - pIState->timer > 5 * SYS_TMR_TickCounterFrequencyGet() )
         {
             (pIState->pCmdIO->pCmdApi->msg)(cmdIoParam, "iperf: ARP unable to resolve the MAC address of remote side.\r\n");
             pIState->timer = SYS_TMR_TickCountGet();
@@ -1005,12 +1006,6 @@ static void StateMachineTxArpResolve(tIperfState* pIState)
 #endif  // defined(TCPIP_STACK_USE_TCP)
 
 }
-
-
-
-
-
-
 
 static void GenericTxHeaderPreparation(tIperfState* pIState, uint8_t *pData, bool isTheLastTransmit)
 {
@@ -1095,13 +1090,14 @@ static void GenericTxHeaderPreparation(tIperfState* pIState, uint8_t *pData, boo
 
     currentTime = SYS_TMR_TickCountGet();
 
-    pPktInfo->tv_sec = TCPIP_Helper_htonl(currentTime / SYS_TMR_TickCounterFrequencyGet());
+    uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet(); 
+    pPktInfo->tv_sec = TCPIP_Helper_htonl(currentTime / tickFreq);
 
     /* get the remainder of the ticks using modulus */
-    tmp2 = ((pIState->stopTime - pIState->startTime)%SYS_TMR_TickCounterFrequencyGet());
+    tmp2 = ((pIState->stopTime - pIState->startTime) % tickFreq);
 
     /* normalize  to uSecs */
-    tmp2 =  tmp2*1000/SYS_TMR_TickCounterFrequencyGet(); /* Convert to mSec */
+    tmp2 =  tmp2 * 1000 / tickFreq; /* Convert to mSec */
     tmp2 *= 1000;   /* 1000 uSecs per mSec */
 
 
@@ -1868,13 +1864,14 @@ static void StateMachineUdpRxDone(tIperfState* pIState)
       pServer_hdr->total_len1 = 0;
       pServer_hdr->total_len2 = TCPIP_Helper_htonl( (uint32_t) pIState->totalLen);
 
-      pServer_hdr->stop_sec =  TCPIP_Helper_htonl( (uint32_t) (pIState->stopTime - pIState->startTime)/SYS_TMR_TickCounterFrequencyGet());
+      uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet(); 
+      pServer_hdr->stop_sec =  TCPIP_Helper_htonl( (uint32_t) (pIState->stopTime - pIState->startTime) / tickFreq);
 
       /* get the remainder of the ticks using modulus */
-      tmp2 = ((pIState->stopTime - pIState->startTime)%SYS_TMR_TickCounterFrequencyGet());
+      tmp2 = ((pIState->stopTime - pIState->startTime) % tickFreq);
 
       /* normalize  to uSecs */
-      tmp2 =  tmp2*1000/SYS_TMR_TickCounterFrequencyGet(); /* Convert to mSec */
+      tmp2 =  tmp2 * 1000 / tickFreq; /* Convert to mSec */
       tmp2 *= 1000;   /* 1000 uSecs per mSec */
 
 
@@ -2107,6 +2104,7 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
 {
     uint8_t i, tos, len;
     char *ptr;
+    uint32_t tickFreq;
     uint32_t values[4], bw=0;
     
     float pktRate;
@@ -2137,9 +2135,10 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     pIState->mTxRate = ((uint32_t) TCPIP_IPERF_TX_BW_LIMIT*1000)*((uint32_t) 1000);		// -b or -x. Target tx rate.
     // KS: default tx rate for iperf is actually 1Mbps.
 
+    tickFreq = SYS_TMR_TickCounterFrequencyGet(); 
     pIState->mAmount = 0;			// -n: default 0.
-    pIState->mDuration = ((uint32_t) 10)*((uint32_t) SYS_TMR_TickCounterFrequencyGet()); // -t: default 10 sec.
-    pIState->mInterval =  SYS_TMR_TickCounterFrequencyGet(); 	// -i: default 1 sec.
+    pIState->mDuration = ((uint32_t) 10)*(tickFreq); // -t: default 10 sec.
+    pIState->mInterval =  tickFreq; 	// -i: default 1 sec.
 
     pIState->mTypeOfService = 0;       //-S, --tos (Type Of Service): default 0: BestEffort
     // remember the console we've been invoked from
@@ -2224,7 +2223,7 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
             ptr = argv[i];
             ascii_to_u32s(ptr, values, 1);
 
-            pIState->mDuration = values[0]*SYS_TMR_TickCounterFrequencyGet();
+            pIState->mDuration = values[0] * tickFreq;
             pIState->mAmount = 0;
         }
         else if ((memcmp(argv[i], "-n", 2) == 0) || (memcmp(argv[i], "--num", 5) == 0) )
@@ -2298,7 +2297,7 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
             ptr = argv[i];
             ascii_to_u32s(ptr, values, 1);
 
-            pIState->mInterval = values[0]*SYS_TMR_TickCounterFrequencyGet(); // Convert to msec
+            pIState->mInterval = values[0] * tickFreq; // Convert to msec
         }
         else if ((memcmp(argv[i], "-p", 2) == 0) || (memcmp(argv[i], "--port", 6) == 0) )
         {
@@ -2356,7 +2355,7 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
 #endif  // defined(TCPIP_STACK_USE_UDP)
 
             pktRate =  (float) (pIState->mTxRate / 8) / (float) payloadSize;
-            pIState->mPktPeriod =  (uint32_t) ( (float) SYS_TMR_TickCounterFrequencyGet() / pktRate );
+            pIState->mPktPeriod =  (uint32_t) ( (float) tickFreq / pktRate );
 
             IperfSetState(pIState, IPERF_TX_START_STATE);
             break;

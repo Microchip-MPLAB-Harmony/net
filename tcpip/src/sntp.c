@@ -338,7 +338,8 @@ static __inline__ void __attribute__((always_inline)) TCPIP_SNTP_SetError(TCPIP_
 {
     _SNTP_DbgNewError(newError);
     ntpLastError = newError;
-    TCPIP_SNTP_Event(evType, (const void*)SYS_TMR_TickCountGet());
+    uint32_t tickCount = SYS_TMR_TickCountGet();
+    TCPIP_SNTP_Event(evType, (const void*)tickCount);
 }
 
 
@@ -941,7 +942,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_TimeStampGet(TCPIP_SNTP_TIME_STAMP* pTStamp, uint32
 
     if(pTStamp)
     {
-        pTStamp->llStamp = res == SNTP_RES_TSTAMP_ERROR ? 0ull : ntpData.tStamp.llStamp;
+        pTStamp->llStamp = res == SNTP_RES_TSTAMP_ERROR ? 0 : ntpData.tStamp.llStamp;
     }
     if(pLastUpdate)
     {

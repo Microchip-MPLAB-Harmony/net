@@ -115,7 +115,7 @@ static void _ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, TCPIP_NET_IF *pNetIf)
     if(hZcll->rand_state == 0)
     {   // Seed the pseudo-rng with the interface's MAC address as recommended by RFC3927, Section 2.1.
         // Different hosts will generate unique values
-        const uint8_t *mac_addr = TCPIP_STACK_NetMACAddressGet(pNetIf);
+        const uint8_t *mac_addr = TCPIP_STACK_NetUpMACAddressGet(pNetIf);
         uint32_t rand_val = 0;
         if(mac_addr != 0)
         {

@@ -113,7 +113,7 @@ static const char * const sTCPIPFTPRespStr[] =
     "",  // TCPIP_FTP_RESP_NONE
 };
 
-static char *month[]= {"Jan\0","Feb\0","Mar\0","Apr\0","May\0","Jun\0","Jul\0","Aug\0","Sep\0","Oct\0","Nov\0","Dec\0"};
+static const char *month[]= {"Jan\0","Feb\0","Mar\0","Apr\0","May\0","Jun\0","Jul\0","Aug\0","Sep\0","Oct\0","Nov\0","Dec\0"};
 
 // NLST arguments
 #define TCPIP_FTP_MAX_NLST_ARGS  3
@@ -1337,7 +1337,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
     char FileRecordsDateTime[TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN];
     char fileRecrdTime[13];
     char FileRecordssize[TCPIP_FTP_MAX_FILE_SIZE_STR_LEN];
-    char    *fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
+    const char* fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
     uint8_t FileRecordInformation;
     FTP_LIST_NODE* newNode=NULL;
     uint16_t    lfNameLen=0;
@@ -1346,9 +1346,9 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
     SYS_FS_FSTAT fs_stat={0};
     int32_t fp;
     char filePermission[2][11]={"-rwx------\0","drwx------\0"};
-    char *link = "0\0";
-    char *owner = "0\0";
-    char *group = "0\0";
+    const char *link = "0\0";
+    const char *owner = "0\0";
+    const char *group = "0\0";
 
     switch(pFTPDcpt->ftpCommandSm)
     {
@@ -1836,7 +1836,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
     static uint16_t  remainingBytes=0;
     SYS_FS_FSTAT fs_stat;
     memset(&fs_stat, 0, sizeof(SYS_FS_FSTAT));
-    char    *fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
+    const char* fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
     uint8_t FileRecordInformation;
     char FileRecordsDateTime[TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN];
     char FileRecordssize[TCPIP_FTP_MAX_FILE_SIZE_STR_LEN];

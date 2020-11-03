@@ -223,7 +223,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon);
 
 static int8_t fileErr = 0;
 
-static void _HTTP_FileRdCheck(int condt, char *file, int32_t line)
+static void _HTTP_FileRdCheck(int condt, const char *file, int32_t line)
 {
     if (condt == 0) {
         #if defined(HTTP_FILE_ERR_DEBUG)

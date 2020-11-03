@@ -115,7 +115,7 @@ typedef enum
 }DNS_SERVICE_COMD_TYPE;
 typedef struct 
 {
-	char *command;
+	const char *command;
 	DNS_SERVICE_COMD_TYPE  val;
 }DNSS_COMMAND_MAP;
 

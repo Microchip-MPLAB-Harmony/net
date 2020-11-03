@@ -84,7 +84,6 @@ static void _SNMPv3_ComputeShaHmacCode(uint8_t xx_bits,
 static void _SNMPv3_AuthKeyZeroingToHmacBufLen64(uint8_t* authKey, uint8_t authKeyLen,    uint8_t hashType);
 static uint8_t* _SNMPv3_ComputeHmacMD5Digest(uint8_t * inData, uint32_t dataLen,uint8_t* userExtendedLclzdKeyIpad,uint8_t* userExtendedLclzdKeyOpad);
 static uint8_t* _SNMPv3_ComputeHmacShaDigest(uint8_t * inData, uint32_t dataLen,uint8_t* userExtendedLclzdKeyIpad,uint8_t* userExtendedLclzdKeyOpad);
-void SNMPv3USMAuthPrivPswdLocalization(uint8_t userDBIndex);
 
 /****************************************************************************
   Function:

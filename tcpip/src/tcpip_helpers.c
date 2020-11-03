@@ -1020,13 +1020,13 @@ uint16_t TCPIP_Helper_PacketChecksum(TCPIP_MAC_PACKET* pPkt, uint8_t* startAdd, 
         {
             pChkBuff = pSeg->segLoad;
         }
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
         else if((pPkt = pPkt->pkt_next) != 0)
         {
             pSeg = pPkt->pDSeg;
             pChkBuff = pPkt->pNetLayer;
         }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
     }
 
     return ~TCPIP_Helper_ChecksumFold(calcChkSum);
