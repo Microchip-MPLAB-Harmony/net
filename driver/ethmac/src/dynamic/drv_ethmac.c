@@ -101,32 +101,6 @@ static void             _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCP
 
 static bool             _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 
-// MAC interface functions
-SYS_MODULE_OBJ          DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
-#if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-void                    DRV_ETHMAC_PIC32MACDeinitialize(SYS_MODULE_OBJ object);
-void                    DRV_ETHMAC_PIC32MACReinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
-#endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-SYS_STATUS              DRV_ETHMAC_PIC32MACStatus( SYS_MODULE_OBJ object );
-void                    DRV_ETHMAC_PIC32MACTasks( SYS_MODULE_OBJ object );
-DRV_HANDLE              DRV_ETHMAC_PIC32MACOpen(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent);
-void                    DRV_ETHMAC_PIC32MACClose( DRV_HANDLE hMac );
-bool                    DRV_ETHMAC_PIC32MACLinkCheck(DRV_HANDLE hMac);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP_MAC_ADDR* DestMACAddr);
-bool                    DRV_ETHMAC_PIC32MACPowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
-TCPIP_MAC_PACKET*       DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACProcess(DRV_HANDLE hMac);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams);
-TCPIP_MAC_RES           DRV_ETHMAC_PIC32MACRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
-size_t                  DRV_ETHMAC_PIC32MACConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize, size_t* pConfigSize);
-
-
-bool                    DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
-bool                    DRV_ETHMAC_PIC32MACEventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
-TCPIP_MAC_EVENT         DRV_ETHMAC_PIC32MACEventPendingGet(DRV_HANDLE hMac);
-
 static TCPIP_MAC_RES    DRV_ETHMAC_PIC32MACEventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF, const void* eventParam);
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 static TCPIP_MAC_RES    DRV_ETHMAC_PIC32MACEventDeInit(DRV_HANDLE hMac);
@@ -820,7 +794,7 @@ DRV_HANDLE DRV_ETHMAC_PIC32MACOpen(const SYS_MODULE_INDEX drvIndex, const DRV_IO
                 pMacD->mData._macFlags._open = 1;
                 hMac = (DRV_HANDLE)pMacD;
             }
-#if (DRV_ETHMAC_CLIENTS_NUMBER > 1)
+#if defined(DRV_ETHMAC_CLIENTS_NUMBER) && (DRV_ETHMAC_CLIENTS_NUMBER > 1)
             else
             {   // allow multiple clients
                 hMac = (DRV_HANDLE)pMacD;
@@ -1321,7 +1295,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, cons
       {
           // Disable the Hash Table receive filter and clear the hash table
           DRV_ETH_RxFiltersClr(ethId, DRV_ETH_FILT_HTBL_ACCEPT);
-          DRV_ETH_RxFiltersHTSet(ethId, 0ull);
+          DRV_ETH_RxFiltersHTSet(ethId, 0);
           return TCPIP_MAC_RES_OK;
       }
 
@@ -1863,8 +1837,6 @@ static DRV_HANDLE         _hEventMac;     // the MAC we belong to
 /*********************************
  *  local proto 
  ******************************************/
-
-void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ object );
 
 /****************************************************************************
  * Function:        _XtlEventsTcp2Eth
