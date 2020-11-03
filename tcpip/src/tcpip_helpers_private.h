@@ -65,8 +65,6 @@ uint16_t        TCPIP_Helper_ChecksumFold(uint32_t checksum);
 
 uint16_t        TCPIP_Helper_PacketCopy(TCPIP_MAC_PACKET* pSrcPkt, uint8_t* pDest, uint8_t** pStartAdd, uint16_t len, bool srchTransport);
 
-void            TCPIP_Helper_FormatNetBIOSName(uint8_t Name[16]);
-
 
 // Protocols understood by the TCPIP_Helper_ExtractURLFields() function.  IMPORTANT: If you 
 // need to reorder these (change their constant values), you must also reorder 

@@ -89,7 +89,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint3
 static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes_received);
 static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con);
 static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received);
-static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, char *err_string);
+static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, const char *err_string);
 static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t bytes_received, 
                            uint16_t count, uint8_t* rx_buf);
 static TFTPS_CB  *_TFTPS_GetClientCB(uint8_t client_cnt);
@@ -1709,7 +1709,7 @@ static uint32_t _TFTPS_Retransmit(TFTPS_CB *tftp_con)
 * Return                                                               
 *       The Number of bytes sent on success.                             
 ************************************************************************/
-static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, char *err_string)
+static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt, uint16_t error_code, const char *err_string)
 {
     uint16_t   send_size=0;
     uint8_t    *p = NULL;

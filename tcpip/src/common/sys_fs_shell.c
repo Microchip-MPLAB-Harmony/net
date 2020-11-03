@@ -65,9 +65,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "./sys_fs_shell.h"
 #include "configuration.h"
 
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if defined(SYS_FS_SHELL_MTHREAD_PROTECTION) && (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#define _SYS_FS_SHELL_MTHREAD_PROTECTION 1
 #include "osal/osal.h"
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#else
+#define _SYS_FS_SHELL_MTHREAD_PROTECTION 0
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
 
 // local prototypes
@@ -133,9 +136,9 @@ typedef struct _tag_SHELL_OBJ_INSTANCE
     SYS_FS_SHELL_RES     opError;
     uint16_t             rootLen;                   // length of the root path
     uint16_t             cwdLen;                    // length of the cwd
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     OSAL_SEM_HANDLE_TYPE mtSem;
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     uint8_t              createFlags;               // SYS_FS_SHELL_CREATE_FLAGS
     // root path; can never go higher than this
     char                root[SYS_FS_FILE_NAME_LEN + 1];  // formatted as "/srv/ftp", or "" : no trailing /
@@ -150,7 +153,7 @@ typedef struct _tag_SHELL_OBJ_INSTANCE
 // inlines
 // protection
 
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 static __inline__ bool  __attribute__((always_inline)) _InstanceLockCreate(OSAL_SEM_HANDLE_TYPE* pSem)
 {
     // create the shell Lock
@@ -176,7 +179,7 @@ static __inline__ void  __attribute__((always_inline)) _InstanceUnlock(SHELL_OBJ
     OSAL_SEM_Post(&pShell->mtSem);
 }
 
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
 // locks a shell for usage
 // all (mutable) operations should happen on a locked object
@@ -186,12 +189,12 @@ static SHELL_OBJ_INSTANCE* _Shell_ObjectLock(const SYS_FS_SHELL_OBJ* pObj)
     SHELL_OBJ_INSTANCE *pShell = (SHELL_OBJ_INSTANCE*)pObj;
     if(pShell != 0 && pShell->self == pShell)
     {
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
         if((pShell->createFlags & SYS_FS_SHELL_FLAG_MTHREAD) != 0)
         {
             _InstanceLock(pShell);
         }
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
         return pShell;
     } 
@@ -208,12 +211,12 @@ static SYS_FS_SHELL_RES _Shell_ObjectUnlock(SHELL_OBJ_INSTANCE* pShell, SYS_FS_S
     {
         pShell->opError = error;
     }
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     if((pShell->createFlags & SYS_FS_SHELL_FLAG_MTHREAD) != 0)
     {
         _InstanceUnlock(pShell);
     }
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
     return error;
 }
@@ -227,9 +230,9 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
     bool needsRoot = false;
     SYS_FS_SHELL_RES res = SYS_FS_SHELL_RES_OK;
     SHELL_OBJ_INSTANCE* newObj = 0;
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     OSAL_SEM_HANDLE_TYPE shellSem = 0;
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
     while(true)
     {
@@ -252,7 +255,7 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
         }
 
         // create the synchronization object
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
         if((flags & SYS_FS_SHELL_FLAG_MTHREAD) != 0)
         { 
             if(!_InstanceLockCreate(&shellSem))
@@ -261,16 +264,16 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
                 break;
             }
         }
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
         // create the object
         if(shell_malloc_fnc == 0)
         {
-#if (SYS_FS_SHELL_MALLOC != 0)
+#if defined(SYS_FS_SHELL_MALLOC)
             shell_malloc_fnc = SYS_FS_SHELL_MALLOC;
 #else
             shell_malloc_fnc = malloc;
-#endif  // (SYS_FS_SHELL_MALLOC != 0)
+#endif  //  defined(SYS_FS_SHELL_MALLOC)
         }
 
         newObj = (SHELL_OBJ_INSTANCE*)(*shell_malloc_fnc)(sizeof(*newObj));
@@ -299,18 +302,18 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
         newObj->rootLen = rootLen;
         newObj->cwd[0] = '/';
         newObj->cwdLen = 1;
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
         newObj->mtSem = shellSem;
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
         newObj->createFlags = flags;
 
         if(shell_free_fnc == 0)
         {
-#if (SYS_FS_SHELL_FREE != 0)
+#if defined(SYS_FS_SHELL_FREE)
             shell_free_fnc = SYS_FS_SHELL_FREE;
 #else
             shell_free_fnc = free;
-#endif  // (SYS_FS_SHELL_FREE != 0)
+#endif  // defined(SYS_FS_SHELL_FREE)
         }
         newObj->freeFnc = shell_free_fnc; 
 
@@ -513,7 +516,7 @@ static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj)
     }
     
     void(*shell_free_fnc)(void*) = pShell->freeFnc;
-#if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#if (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     OSAL_SEM_HANDLE_TYPE sem = pShell->mtSem;
     uint8_t flags = pShell->createFlags;
     memset(pShell, 0, sizeof(*pShell));
@@ -523,7 +526,7 @@ static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj)
     }
 #else
     memset(pShell, 0, sizeof(*pShell));
-#endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+#endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
 
     (*shell_free_fnc)(pShell);

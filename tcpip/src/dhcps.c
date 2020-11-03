@@ -155,7 +155,7 @@ static void dhcpServPoolAddressValidation(const TCPIP_DHCPS_MODULE_CONFIG* pDhcp
 {
     int ix=0;
     int tempPoolCnt=0;    
-    char *tempStr={"0.0.0.0"};
+    const char *tempStr = {"0.0.0.0"};
     IPV4_ADDR	serverIPAddress;
     IPV4_ADDR	startIPv4PoolAddress;
     IPV4_ADDR   netMask;

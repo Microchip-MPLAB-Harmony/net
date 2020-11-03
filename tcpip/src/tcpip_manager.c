@@ -4334,7 +4334,7 @@ unsigned int TCPIP_STACK_VersionGet ( const SYS_MODULE_INDEX index )
 }
 
 
-char * TCPIP_STACK_VersionStrGet ( const SYS_MODULE_INDEX index )
+const char * TCPIP_STACK_VersionStrGet ( const SYS_MODULE_INDEX index )
 {
     return TCPIP_STACK_VERSION_STR;
 }

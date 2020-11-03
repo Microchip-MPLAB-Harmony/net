@@ -169,9 +169,6 @@ static const void* ipv6PktHandlerParam;
 /****************               Prototypes               ****************/
 /************************************************************************/
 
-// Free all of the dynamically linked lists in an IPv6 net configuration
-void TCPIP_IPV6_FreeConfigLists (IPV6_INTERFACE_CONFIG * pNetIf);
-
 // performs resources cleanup
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void _TCPIP_IPV6_Cleanup(const void* memH);
@@ -1861,7 +1858,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd (TCPIP_NET_HANDLE hNet, IPV6_
             IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
             memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
             entryLocation->flags.type = IPV6_ADDR_TYPE_MULTICAST;
-            addressType = TCPIP_IPV6_AddressTypeGet(pNetIf, address);
+            addressType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, address);
             entryLocation->flags.scope = addressType.bits.scope;
             TCPIP_NDP_LinkedListEntryInsert (pNetIf, entryLocation, IPV6_HEAP_ADDR_MULTICAST_ID);
             TCPIP_IPV6_ClientsNotify(pNetIf, IPV6_EVENT_ADDRESS_ADDED, entryLocation);
@@ -1954,7 +1951,7 @@ static void _TCPIP_IPV6_PacketEnqueue(IPV6_PACKET * pkt, SINGLE_LIST* pList, int
 
 
 // ipv6_manager.h
-IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address)
+uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address)
 {
     uint8_t b;
     IPV6_ADDRESS_TYPE returnVal;
@@ -2004,7 +2001,7 @@ IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_A
         }
     }
 
-    return returnVal;
+    return returnVal.byte;
 }
 
 
@@ -2066,7 +2063,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, IPV6_ADD
             {
                 IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
                 memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
-                i = TCPIP_IPV6_AddressTypeGet (pNetIf, address);
+                i.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, address);
                 entryLocation->flags.type = i.bits.type;
                 entryLocation->flags.scope = i.bits.scope;
                 if (TCPIP_IPV6_DASPolicyGet(address, &label, &precedence, &prefixLen))
@@ -2874,7 +2871,7 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
         case ADDR_SEL_RULE_2:
             if (addressOne->flags.scope != addressTwo->flags.scope)
             {
-                destScope = TCPIP_IPV6_AddressTypeGet (pNetIf, dest);
+                destScope.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, dest);
                 destPolicy = destScope.bits.scope;
 
                 if (addressOne->flags.scope < addressTwo->flags.scope)

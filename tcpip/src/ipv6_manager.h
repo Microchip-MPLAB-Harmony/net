@@ -92,32 +92,6 @@ typedef struct
 // stack private API
 //
 
-
-/*****************************************************************************
-  Function:
-    void TCPIP_IPV6_Task (void)
-
-  Summary:
-    IPv6 task function
-
-  Description:
-    IPv6 task function
-
-  Precondition:
-    None
-
-  Parameters:
-    None
-
-  Returns:
-    None
-
-  Remarks:
-    None
-  ***************************************************************************/
-void TCPIP_IPV6_Task (void);
-
-
 /*****************************************************************************
   Function:
     bool TCPIP_IPV6_Initialize(
@@ -595,9 +569,6 @@ void * TCPIP_IPV6_UpperLayerHeaderPtrGet(IPV6_PACKET * pkt);
 unsigned short TCPIP_IPV6_PayloadChecksumCalculate (IPV6_PACKET * pkt);
 
 
-unsigned short TCPIP_IPV6_ArrayPutHelper (IPV6_PACKET * pkt, const void * dataSource, uint8_t dataType, unsigned short len);
-
-
 /*****************************************************************************
   Function:
     void TCPIP_IPV6_TransmitPacketStateReset (IPV6_PACKET * pkt)
@@ -792,7 +763,7 @@ bool  TCPIP_IPV6_AddressIsSolicitedNodeMulticast (const IPV6_ADDR * address);
 
 /*****************************************************************************
   Function:
-    IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, IPV6_ADDR * address)
+    uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, IPV6_ADDR * address)
 
   Summary:
     Gets the scope and type of an IPv6 address.
@@ -813,7 +784,7 @@ bool  TCPIP_IPV6_AddressIsSolicitedNodeMulticast (const IPV6_ADDR * address);
   Remarks:
     None
   ***************************************************************************/
-IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
+uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
 
 
 /*****************************************************************************

@@ -1866,7 +1866,6 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                     {
                         if (neighborPointer->unansweredProbes < TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT)
                         {
-                            IPV6_PACKET * pkt;
                             IPV6_ADDR_STRUCT * sourceAddress = NULL;
 
                             if (neighborPointer->preferredSource != NULL)
@@ -1947,7 +1946,6 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                                                                         neighborPointer->remoteIPAddress.v[13],
                                                                         neighborPointer->remoteIPAddress.v[14],
                                                                         neighborPointer->remoteIPAddress.v[15]}};
-                            IPV6_PACKET * pkt;
 
                             if (neighborPointer->preferredSource != NULL)
                             {
