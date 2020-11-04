@@ -64,7 +64,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _TCPIP_COMMAND_PING6
 #endif
 
-#if (DRV_MIIM_COMMANDS != 0)
+#if defined(DRV_MIIM_COMMANDS) && (DRV_MIIM_COMMANDS != 0)
 #include "driver/miim/drv_miim.h"
 #define _TCPIP_COMMANDS_MIIM
 #endif

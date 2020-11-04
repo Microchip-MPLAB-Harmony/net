@@ -498,12 +498,12 @@ DRV_HANDLE macDrvrOpen(
                     pMacDrvr->macFlags._open = 1;
                     hMac = (DRV_HANDLE) pMacDrvr;
                 }
-#if (macDrvrCLIENTS_NUMBER > 1)
+#if defined(macDrvrCLIENTS_NUMBER) && (macDrvrCLIENTS_NUMBER > 1)
                 else
                 {   // allow multiple clients
                     hMac = (DRV_HANDLE) pMacDrvr;
                 }
-#endif
+#endif  // defined(macDrvrCLIENTS_NUMBER) && (macDrvrCLIENTS_NUMBER > 1)
                 break;
             case SYS_STATUS_ERROR_EXTENDED:
             case SYS_STATUS_ERROR:

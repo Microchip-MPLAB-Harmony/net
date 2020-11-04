@@ -55,32 +55,6 @@ static void             _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE
 static TCPIP_MAC_RES    _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx );
 static void             _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
 
-// MAC interface functions
-SYS_MODULE_OBJ          DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
-#if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-void                    DRV_GMAC_Deinitialize(SYS_MODULE_OBJ object);
-void                    DRV_GMAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
-#endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-SYS_STATUS              DRV_GMAC_Status( SYS_MODULE_OBJ object );
-void                    DRV_GMAC_Tasks( SYS_MODULE_OBJ object );
-DRV_HANDLE              DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent);
-void                    DRV_GMAC_Close( DRV_HANDLE hMac );
-bool                    DRV_GMAC_LinkCheck(DRV_HANDLE hMac);
-TCPIP_MAC_RES           DRV_GMAC_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP_MAC_ADDR* DestMACAddr);
-bool                    DRV_GMAC_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode);
-TCPIP_MAC_RES           DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
-TCPIP_MAC_PACKET*       DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
-TCPIP_MAC_RES           DRV_GMAC_Process(DRV_HANDLE hMac);
-TCPIP_MAC_RES           DRV_GMAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
-TCPIP_MAC_RES           DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams);
-TCPIP_MAC_RES           DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
-size_t                  DRV_GMAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize, size_t* pConfigSize);
-
-
-bool                    DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
-bool                    DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
-TCPIP_MAC_EVENT         DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
-
 static TCPIP_MAC_RES    DRV_GMAC_EventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF, const void* eventParam);
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 static TCPIP_MAC_RES    DRV_GMAC_EventDeInit(DRV_HANDLE hMac);
@@ -419,7 +393,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
         {
             DRV_GMAC_HASH hash; 
             
-            hash.hash_value = 0xffffffffffffffff; //Set 64-bit Hash value to all 1s, to receive all multi-cast
+            hash.hash_value = -1; //Set 64-bit Hash value to all 1s, to receive all multi-cast
             hash.calculate_hash = false; // No hash calculation; directly set hash register
             
             DRV_PIC32CGMAC_LibRxFilterHash_Calculate(pMACDrv, &hash);
