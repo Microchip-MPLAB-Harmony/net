@@ -872,9 +872,9 @@ void TCPIP_DDNS_ServiceSet(DDNS_SERVICES svc)
 
 
 // ddns.h
-IPV4_ADDR TCPIP_DDNS_LastIPGet(void)
+uint32_t TCPIP_DDNS_LastIPGet(void)
 {
-    return lastKnownIP;
+    return lastKnownIP.Val;
 }
 
 

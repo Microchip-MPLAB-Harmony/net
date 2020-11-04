@@ -64,6 +64,25 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // to minimize the run time allocated resources 
 #define MAC_BRIDGE_MAX_SUPPORTED_PORTS      32
 
+// local define symbols
+#if defined(TCPIP_MAC_BRIDGE_STATISTICS) && (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#define _TCPIP_MAC_BRIDGE_STATISTICS 1
+#else
+#define _TCPIP_MAC_BRIDGE_STATISTICS 0
+#endif
+
+#if defined(TCPIP_MAC_BRIDGE_EVENT_NOTIFY) && (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#define _TCPIP_MAC_BRIDGE_EVENT_NOTIFY   1
+#else
+#define _TCPIP_MAC_BRIDGE_EVENT_NOTIFY   0
+#endif
+
+#if defined(TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS) &&(TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#define _TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 1
+#else
+#define _TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 0
+#endif
+
 
 // enumeration for statistics function
 // specify the statistics index (type)
@@ -232,17 +251,17 @@ typedef struct
                                         // each packet to be processed by the bridge has an associated descriptor
                                         // no protection enforced on access to the descriptor pool 
     // statistics
-#if (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
     union
     {
         TCPIP_MAC_BRIDGE_STAT   stat;    
         uint32_t                stat_array[sizeof(TCPIP_MAC_BRIDGE_STAT)];
     };
-#endif  // (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
     
-#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#if (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
     TCPIP_MAC_BRIDGE_EVENT_HANDLER  evHandler;
-#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#endif  // (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 
     uint8_t             bridgeFlags;        // TCPIP_MAC_BRIDGE_FLAGS value
     uint8_t             dcptReplenish;      // Number of descriptors to replenish the pool, when it becomes empty
