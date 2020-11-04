@@ -240,7 +240,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
     {   // Receive All Multi-cast packets, so set 64-bit hash value to all ones.
         // check against DRV_EMACx_RX_FILTERS
         MAC_DRVR_HASH hash;
-        hash.value = 0xffffffffffffffff;    // Set 64-bit Hash value to all 1s, to receive all multi-cast
+        hash.value = -1;    // Set 64-bit Hash value to all 1s, to receive all multi-cast
         hash.calculate = false;             // No hash calculation; directly set hash register
         macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
     }
@@ -546,7 +546,7 @@ macDrvrHashValueSet(
 static __inline__ uint64_t __attribute__((always_inline))
 macDrvrHashValueGet( emac_registers_t * pToMacRegs )
 {
-    uint64_t value = 0LL;
+    uint64_t value = 0;
     value = pToMacRegs->EMAC_HRT;
     value = (value << 32) | pToMacRegs->EMAC_HRB;
     return value;

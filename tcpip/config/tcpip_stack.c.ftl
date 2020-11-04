@@ -1026,7 +1026,7 @@ const size_t TCPIP_STACK_MODULE_CONFIG_TBL_SIZE = sizeof (TCPIP_STACK_MODULE_CON
 extern int ${TCPIP_STACK_INIT_CALLBACK}( const struct TCPIP_STACK_INIT** ppStackInit );
 </#if>
 
-SYS_MODULE_OBJ TCPIP_STACK_Init()
+SYS_MODULE_OBJ TCPIP_STACK_Init(void)
 {
     TCPIP_STACK_INIT    tcpipInit;
 
