@@ -56,6 +56,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //
 
 
+// local defines
+#if defined(TCPIP_DHCPV6_USER_NOTIFICATION) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#define _TCPIP_DHCPV6_USER_NOTIFICATION  1
+#else
+#define _TCPIP_DHCPV6_USER_NOTIFICATION  0
+#endif
 
 
 // the run substate functions return a result:

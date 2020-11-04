@@ -276,7 +276,7 @@ void APP_Tasks ( void );
 
 // HTTP application processing
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-extern void HTTP_APP_Initialize(void);
+#include "http_net_print.h"
 #endif // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #endif /* _APP_H */

@@ -2147,13 +2147,8 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
     switch(var)
     {
         case SYS_UP_TIME:
-        {
-            uint32_t dw10msTicks;
-            dw10msTicks = (SYS_TMR_TickCountGet()*100ull)/SYS_TMR_TickCounterFrequencyGet();
-
-            val->dword = dw10msTicks;
+            val->dword = SNMPGetTimeStamp();
             return true;
-        }
 
         case LED_D5:
             val->byte = APP_LED_3StateGet();//BSP_LEDStateGet(APP_LED_3);
@@ -2639,9 +2634,9 @@ bool TCPIP_SNMP_RecordIDValidation(uint8_t snmpVersion,bool idPresent,uint16_t v
  */
 static uint32_t SNMPGetTimeStamp(void)
 {
-    uint32_t timeStamp=0;
-    timeStamp =(SYS_TMR_TickCountGet()*100ull)/SYS_TMR_TickCounterFrequencyGet();
-
+    uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet();
+    uint32_t tickCount = SYS_TMR_TickCountGet(); 
+    uint32_t timeStamp = ((uint64_t)tickCount * 100) / tickFreq;
     return timeStamp;
 
 }

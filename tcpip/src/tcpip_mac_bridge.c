@@ -82,19 +82,19 @@ static MAC_BRIDGE_FWD_DCPT* _MAC_Bridge_GetFwdDcpt(MAC_BRIDGE_DCPT* pBDcpt);
 
 static int      _MAC_Bridge_IfBridged(MAC_BRIDGE_DCPT* pDcpt, int netIx);
 
-#if (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 static void     _MAC_Bridge_StatUpdate(MAC_BRIDGE_DCPT* bDcpt, MAC_BRIDGE_STAT_TYPE statType, uint32_t incUpdate);
 static void     _MAC_Bridge_StatPortUpdate(MAC_BRIDGE_DCPT* bDcpt, int port, MAC_BRIDGE_STAT_TYPE statType, uint32_t incUpdate);
 #else
 #define         _MAC_Bridge_StatUpdate(bDcpt, statType, incUpdate)
 #define         _MAC_Bridge_StatPortUpdate(bDcpt, port, statType, incUpdate)
-#endif  // (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 
-#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#if (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 static void     _MAC_Bridge_NotifyEvent(MAC_BRIDGE_DCPT* pBDcpt, TCPIP_MAC_BRIDGE_EVENT event, const void* evParam);
 #else
 #define         _MAC_Bridge_NotifyEvent(pBDcpt, event, evParam)
-#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0)
 
 
 #if defined (__PIC32MX__) || defined(__PIC32MZ__)
@@ -362,14 +362,14 @@ static __inline__ MAC_BRIDGE_FWD_DCPT* __attribute__((always_inline)) _MAC_Bridg
 }
 
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0) 
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0) 
 static __inline__ MAC_BRIDGE_DCPT* __attribute__((always_inline)) _MAC_Bridge_DcptFromHandle(TCPIP_MAC_BRIDGE_HANDLE brHandle)
 {
     return (MAC_BRIDGE_DCPT*)brHandle;
 }
 static TCPIP_MAC_BRIDGE_RESULT _MAC_Bridge_FDBLock(TCPIP_MAC_BRIDGE_HANDLE brHandle, bool validate);
 static void _MAC_Bridge_FDBUnlock(MAC_BRIDGE_DCPT* pDcpt);
-#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0) 
+#endif  // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0) 
 
 
 
@@ -670,7 +670,7 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
         return TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS;
     }
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     TCPIP_MAC_BRIDGE_RESULT res = _MAC_Bridge_FDBLock(gBridgeDcpt, false);
     if(res != TCPIP_MAC_BRIDGE_RES_OK)
     {   // couldn't get a lock
@@ -678,7 +678,7 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
         _MAC_Bridge_StatUpdate(gBridgeDcpt, MAC_BRIDGE_STAT_TYPE_FAIL_LOCK, 1);
         return TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS;
     }
-#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 
 
 
@@ -737,9 +737,9 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
         if((pMacHdr->DestMACAddr.v[5] & 0xf0) == 0x00)
         {   // reserved address
             _MAC_Bridge_StatPortUpdate(gBridgeDcpt, inPort, MAC_BRIDGE_STAT_TYPE_RESERVED_PKTS, 1);
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
             _MAC_Bridge_FDBUnlock(gBridgeDcpt);
-#endif // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
             TCPIP_PKT_PacketAcknowledge(pRxPkt, TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD); 
             return TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_DISCARD;
         }
@@ -824,9 +824,9 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
         }
     }
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     _MAC_Bridge_FDBUnlock(gBridgeDcpt);
-#endif // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 
     return pktRes;
 }
@@ -867,7 +867,7 @@ void TCPIP_MAC_Bridge_Task(void)
         gBridgeDcpt->status = SYS_STATUS_READY;
     }
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     TCPIP_MAC_BRIDGE_RESULT res = _MAC_Bridge_FDBLock(gBridgeDcpt, false);
 
     if(res != TCPIP_MAC_BRIDGE_RES_OK)
@@ -876,7 +876,7 @@ void TCPIP_MAC_Bridge_Task(void)
         _MAC_Bridge_StatUpdate(gBridgeDcpt, MAC_BRIDGE_STAT_TYPE_FAIL_LOCK, 1);
         return;
     }
-#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 
     // traverse the FDB for periodic maintenance
     int ix;
@@ -899,9 +899,9 @@ void TCPIP_MAC_Bridge_Task(void)
     }
     _MAC_Bridge_CheckFDB(gBridgeDcpt);
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     _MAC_Bridge_FDBUnlock(gBridgeDcpt);
-#endif // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 }
 
 SYS_STATUS TCPIP_MAC_Bridge_Status(TCPIP_MAC_BRIDGE_HANDLE brHandle)
@@ -977,13 +977,13 @@ static TCPIP_MAC_PACKET* _MAC_Bridge_GetFwdPkt(MAC_BRIDGE_DCPT* pBDcpt, uint16_t
             }
 
             pPkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_SingleListHeadRemove(&pBDcpt->pktPool);
-#if (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
             uint32_t lowSize = TCPIP_Helper_SingleListCount(&pBDcpt->pktPool);
             if(lowSize < pBDcpt->stat.pktPoolLowSize)
             {
                 pBDcpt->stat.pktPoolLowSize = lowSize;
             }
-#endif  // (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 
             if(pPkt != 0)
             {   // done
@@ -1048,13 +1048,13 @@ static MAC_BRIDGE_FWD_DCPT* _MAC_Bridge_GetFwdDcpt(MAC_BRIDGE_DCPT* pBDcpt)
 
     // grab a descriptor from the pool
     pFwdDcpt = (MAC_BRIDGE_FWD_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pBDcpt->dcptPool);
-#if (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
     uint32_t lowSize = TCPIP_Helper_SingleListCount(&pBDcpt->dcptPool);
     if(lowSize < pBDcpt->stat.dcptPoolLowSize)
     {
         pBDcpt->stat.dcptPoolLowSize = lowSize;
     }
-#endif  // (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 
     if(pFwdDcpt == 0)
     {   // pFwdDcpt == 0; descriptor pool was empty
@@ -1090,12 +1090,13 @@ static MAC_BRIDGE_FWD_DCPT* _MAC_Bridge_GetFwdDcpt(MAC_BRIDGE_DCPT* pBDcpt)
 // Note: the pFDcpt bit for the inPort shows the forward/filter for the internal host! 
 static void _MAC_Bridge_SetPacketForward(MAC_BRIDGE_DCPT* pBDcpt, MAC_BRIDGE_HASH_ENTRY* hDest, uint8_t inPort, MAC_BRIDGE_FWD_DCPT* pFDcpt)
 {
-    int portIx, startPort, endPort, learnPort;
+    int portIx, startPort, endPort;
     int outIfIx;
     uint8_t* pOutMap;
     TCPIP_NET_IF* pOutIf;
     TCPIP_MAC_BRIDGE_CONTROL_TYPE portControl, defOutControl, defHostControl;
     uint16_t linkMtu;
+    int learnPort = 0;
 
     if(hDest == 0 || ((hDest->hEntry.flags.value & (MAC_BRIDGE_HFLAG_STATIC | MAC_BRIDGE_HFLAG_PORT_VALID)) == 0) )
     {   // no such entry in our FDB or invalid dynamic entry; forward an all other ports;
@@ -1212,7 +1213,7 @@ static void _MAC_Bridge_SetPacketForward(MAC_BRIDGE_DCPT* pBDcpt, MAC_BRIDGE_HAS
         
 }
 
-#if (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#if (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 static void _MAC_Bridge_NotifyEvent(MAC_BRIDGE_DCPT* pBDcpt, TCPIP_MAC_BRIDGE_EVENT event, const void* evParam)
 {
     if(pBDcpt->evHandler != 0)
@@ -1253,7 +1254,7 @@ bool TCPIP_MAC_Bridge_EventHandlerDeregister(TCPIP_MAC_BRIDGE_HANDLE brHandle, T
     return false;
 }
 
-#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#endif  // (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 
 size_t TCPIP_MAC_Bridge_FDBEntries(TCPIP_MAC_BRIDGE_HANDLE brHandle)
 {
@@ -1313,7 +1314,7 @@ TCPIP_MAC_BRIDGE_RESULT TCPIP_MAC_Bridge_FDBIndexRead(TCPIP_MAC_BRIDGE_HANDLE br
     return TCPIP_MAC_BRIDGE_RES_INDEX_NO_ENTRY;
 }
 
-#if (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 static TCPIP_MAC_BRIDGE_RESULT _MAC_Bridge_FDBLock(TCPIP_MAC_BRIDGE_HANDLE brHandle, bool validate)
 {
     MAC_BRIDGE_DCPT* pDcpt;
@@ -1458,7 +1459,7 @@ TCPIP_MAC_BRIDGE_RESULT TCPIP_MAC_Bridge_FDBAddEntry(TCPIP_MAC_BRIDGE_HANDLE brH
     return res;
 }
 
-#endif  // (TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
 
 static void _MAC_Bridge_SetHashDynamicEntry(MAC_BRIDGE_HASH_ENTRY* hE, uint8_t port, MAC_BRIDGE_HASH_FLAGS clrFlags, MAC_BRIDGE_HASH_FLAGS setFlags) 
 {
@@ -1879,7 +1880,7 @@ void _MAC_BridgeHashKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const vo
     memcpy(((MAC_BRIDGE_HASH_ENTRY*)dstEntry)->destAdd.v, key, MAC_BRIDGE_HASH_KEY_SIZE);
 }
 
-#if (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 static void _MAC_Bridge_StatUpdate(MAC_BRIDGE_DCPT* bDcpt, MAC_BRIDGE_STAT_TYPE statType, uint32_t incUpdate)
 {
     bDcpt->stat_array[statType] += incUpdate;
@@ -1921,7 +1922,7 @@ bool TCPIP_MAC_Bridge_StatisticsGet(TCPIP_MAC_BRIDGE_HANDLE brHandle, TCPIP_MAC_
 }
 
 
-#endif  // (TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 
 #endif  //if defined(TCPIP_STACK_USE_MAC_BRIDGE)
 
