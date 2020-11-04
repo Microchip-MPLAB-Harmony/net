@@ -44,7 +44,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "app.h"
 #include "tcpip/tcpip.h"
 
-#if SMSC_9303_CMD_PROCESSOR
+#if defined(SMSC_9303_CMD_PROCESSOR) && (SMSC_9303_CMD_PROCESSOR != 0)
 int32_t DRV_ETHPHY_SMSC9303_InitCmdProcessor();
 #endif
 
@@ -69,7 +69,7 @@ bool APP_Commands_Init()
         return false;
     }
     memset(APP_URL_Buffer, 0, MAX_URL_SIZE);
-#if SMSC_9303_CMD_PROCESSOR
+#if defined(SMSC_9303_CMD_PROCESSOR) && (SMSC_9303_CMD_PROCESSOR != 0)
     DRV_ETHPHY_SMSC9303_InitCmdProcessor();
 #endif
     return true;
