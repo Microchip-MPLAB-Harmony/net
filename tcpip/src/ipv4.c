@@ -1711,7 +1711,6 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 
 
     pPkt->macPkt.pktIf = pNetIf;
-    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
 
     if(destType != TCPIP_IPV4_DEST_SELF)
     {   // get the payload w/o the MAC frame
@@ -1734,6 +1733,7 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 
     TCPIP_PKT_FlightLogTx(&pPkt->macPkt, TCPIP_THIS_MODULE_ID);
 
+    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
     if(destType == TCPIP_IPV4_DEST_SELF)
     {
         TCPIP_IPV4_FragmentTxInsertToRx(pNetIf, &pPkt->macPkt, TCPIP_MAC_PKT_FLAG_UNICAST, true);
