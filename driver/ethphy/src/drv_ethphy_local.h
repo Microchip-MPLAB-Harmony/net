@@ -264,8 +264,12 @@ typedef enum
 {
     DRV_ETHPHY_SMI_TXFER_OP_NONE = 0,      // operation not started
     DRV_ETHPHY_SMI_TXFER_OP_START,         // command to start the operation
-    DRV_ETHPHY_SMI_TXFER_OP_BUSY_COMPLETE, // operation waiting to complete
+    DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE, // operation waiting to complete
     DRV_ETHPHY_SMI_TXFER_OP_DONE,          // operation completed successfully
+    // errors
+    DRV_ETHPHY_SMI_TXFER_OP_BUSY        = -1,   // operation failed - another operation in progress; retry
+    DRV_ETHPHY_SMI_TXFER_OP_MIIM_FAILED = -2,   // MIIM operation failed - MIIM couldn't start operation 
+    
 } DRV_ETHPHY_SMI_TXFER_OP_STATUS;
 
 // *****************************************************************************
