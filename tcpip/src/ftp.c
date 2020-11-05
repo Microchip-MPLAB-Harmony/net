@@ -324,7 +324,7 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                 break;
             }
             // alert of incoming traffic
-            pDcpt->ftpTcpCmdSocketSignal = NET_PRES_SocketSignalHandlerRegister(pDcpt->ftpCmdskt, TCPIP_TCP_SIGNAL_RX_DATA, _FTPSocketRxSignalHandler, 0);  
+            pDcpt->ftpTcpCmdSocketSignal = NET_PRES_SocketSignalHandlerRegister(pDcpt->ftpCmdskt, TCPIP_TCP_SIGNAL_RX_DATA, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);  
             if(pDcpt->ftpTcpCmdSocketSignal == 0)
             {
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: TCP Signal creation failed");
@@ -881,7 +881,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);
             if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
             {
                 NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
@@ -956,7 +956,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);
             
             if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
             {
@@ -1138,7 +1138,8 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
         return false;
     }
     // catch the RX/TX signals
-    pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, _FTPSocketRxSignalHandler, 0);    if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
+    pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);    
+    
     if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
     {
         releaseDataSkt = true;
