@@ -75,16 +75,16 @@ extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBE
             <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>            
 bool NET_PRES_EncProviderStreamServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER}();
+bool NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER}(void);
 bool NET_PRES_EncProviderStreamServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER}();
+bool NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER}(void);
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
 bool NET_PRES_EncProviderStreamClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER}();
+bool NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER}(void);
 bool NET_PRES_EncProviderStreamClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}();
+bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}(void);
             </#if>
         </#if>
         <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
@@ -92,16 +92,16 @@ bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}();
             <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>           
 bool NET_PRES_EncProviderDataGramServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderDataGramServerDeinit${INST_NUMBER}();
+bool NET_PRES_EncProviderDataGramServerDeinit${INST_NUMBER}(void);
 bool NET_PRES_EncProviderDataGramServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER}();
+bool NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER}(void);
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
 bool NET_PRES_EncProviderDataGramClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
-bool NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER}();
+bool NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER}(void);
 bool NET_PRES_EncProviderDataGramClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
-bool NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER}();
+bool NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER}(void);
             </#if>
         </#if>
         <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
