@@ -45,6 +45,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/logging.h"
 #include "wolfssl/wolfcrypt/random.h"
 
+extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+
 <#assign needSysConsole=false/>
 <#assign numInstance= 1>
 <#list 0..(numInstance-1) as idx>	
@@ -54,7 +56,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     </#if>
 </#list>
 <#if needSysConsole == true>
-#include "system/command/sys_command.h"
+#include "system/debug/sys_debug.h"
 </#if>
 
 </#if>
@@ -287,7 +289,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
+bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
@@ -420,7 +422,7 @@ uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t req
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-    extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+    
     char buffer;
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -569,7 +571,7 @@ int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
+bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}(void)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
