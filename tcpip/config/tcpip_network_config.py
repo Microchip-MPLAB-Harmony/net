@@ -180,6 +180,23 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetMacDrvObj.setDefaultValue("")
     tcpipNetMacDrvObj.setDependencies(tcpipNetMACDrvObjUpdate, [tcpipNetIfName.getID()])
     
+    # Add this interface to MAC Bridge
+    tcpipAddMacBridge = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_MACBRIDGE_ADD_IDX"+str(index),tcpipNetAdvSettings)
+    tcpipAddMacBridge.setLabel("Add Interface to MAC Bridge")
+    if( Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT") > 1):
+        tcpipAddMacBridge.setVisible(True)
+    else: 
+        tcpipAddMacBridge.setVisible(False)
+    tcpipAddMacBridge.setDefaultValue(False)  
+    tcpipAddMacBridge.setDependencies(tcpipNetConfigAddMACBridge, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])    
+
+    # Enable MAC Global Config
+    tcpipEnableMacBridgeGlobalConfig = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_MACBRIDGE_GLOBAL_CONFIG_IDX"+str(index),tcpipNetAdvSettings)
+    tcpipEnableMacBridgeGlobalConfig.setLabel("MAC Bridge GLobal")
+    tcpipEnableMacBridgeGlobalConfig.setVisible(False)
+    tcpipEnableMacBridgeGlobalConfig.setDefaultValue(False)  
+    tcpipEnableMacBridgeGlobalConfig.setDependencies(tcpipNetConfigMACBridgeGlobal, [tcpipAddMacBridge.getID()]) 
+    
     # Network Interface Power Mode
     tcpipNetPwrMode = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),tcpipNetAdvSettings)
     tcpipNetPwrMode.setLabel("Power Mode")
@@ -198,8 +215,21 @@ def tcpipNetConfigMenuVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-
         
+def tcpipNetConfigAddMACBridge(symbol, event):
+    if (event["value"] > 1):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipNetConfigMACBridgeGlobal(symbol, event):
+    macbridge_global_config_dict = {}
+    if (event["value"] == True):
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_ENABLE", macbridge_global_config_dict)
+    else:
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_DISABLE", macbridge_global_config_dict)
+    
+      
 def tcpipNetHostNameUpdate(symbol, event):
     interfaceToHostName = {
         'ETHMAC':       'MCHPBOARD_E',
@@ -368,4 +398,8 @@ def handleMessage(messageID, args):
     
 def destroyComponent(tcpipNetConfigComponent):
     netconfig_interface_counter_dict = {}
-    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_DEC", netconfig_interface_counter_dict)
+    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_DEC", netconfig_interface_counter_dict)    
+    tcpipNetConfigIndex = int(tcpipNetConfigComponent.getID().strip("tcpipNetConfig_"))       
+    if(Database.getSymbolValue("tcpipNetConfig_" + str(tcpipNetConfigIndex), "TCPIP_NETWORK_MACBRIDGE_ADD_IDX" + str(tcpipNetConfigIndex)) == True):
+        macbridge_global_config_dict = {}   
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_DISABLE", macbridge_global_config_dict) 
