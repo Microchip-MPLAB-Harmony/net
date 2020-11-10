@@ -40,7 +40,7 @@ def instantiateComponent(tcpipNetConfigComponent):
     tcpipNetConfigMacBridgeCount = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", None)
     tcpipNetConfigMacBridgeCount.setLabel("Number of Bridge Enabled")
     tcpipNetConfigMacBridgeCount.setDefaultValue(0)
-    tcpipNetConfigMacBridgeCount.setVisible(True)
+    tcpipNetConfigMacBridgeCount.setVisible(False)
     
     # MAC Bridge Configuration Menu
     tcpipNetConfigMacBridgeMenu = tcpipNetConfigComponent.createMenuSymbol("TCPIP_STACK_NETWORK_MAC_BRIDGE_CONFIG",None)
