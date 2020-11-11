@@ -108,9 +108,6 @@ static void _DRV_ETHPHY_ClientOpNegComplete(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_ClientOpNegResult(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_ClientOpNegRestart(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_ClientOpReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 static const _DRV_PHY_OperPhaseF _DRV_PHY_ClientOpTbl[] =
 {
@@ -121,9 +118,6 @@ static const _DRV_PHY_OperPhaseF _DRV_PHY_ClientOpTbl[] =
     _DRV_ETHPHY_ClientOpNegResult,      // DRV_ETHPHY_CLIENT_OP_TYPE_NEG_RESULT
     _DRV_ETHPHY_ClientOpNegRestart,     // DRV_ETHPHY_CLIENT_OP_TYPE_NEG_RESTART
     _DRV_ETHPHY_ClientOpReset,          // DRV_ETHPHY_CLIENT_OP_TYPE_RESET
-    _DRV_ETHPHY_ClientOpSmiRead,        // DRV_ETHPHY_CLIENT_OP_SMI_READ
-    _DRV_ETHPHY_ClientOpSmiWrite,       // DRV_ETHPHY_CLIENT_OP_SMI_WRITE
-    _DRV_ETHPHY_ClientOpSmiScan,        // DRV_ETHPHY_CLIENT_OP_SMI_SCAN
 };
 
 
@@ -236,109 +230,151 @@ static DRV_ETHPHY_LINK_STATUS _Phy2LinkStat(__BMSTATbits_t phyStat)
 
 }
 
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+// starts a read/write transfer
+// returns:
+//      - < 0 an error occurred
+//      - DRV_ETHPHY_SMI_TXFER_RES_BUSY: transaction needs to be retried
+//      - DRV_ETHPHY_SMI_TXFER_RES_SCHEDULED: transaction started (read)
+//      - DRV_ETHPHY_SMI_TXFER_RES_DONE: transaction done (simple write)
+static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMITransferStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_MIIM_OPERATION_HANDLE miimOpHandle;
     DRV_MIIM_RESULT miimRes;
     DRV_ETHPHY_SMI_TXFER_OP_STATUS newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
+    DRV_ETHPHY_SMI_TXFER_RES txferRes;
     DRV_MIIM_OPERATION_FLAGS opFlags;
-    uint16_t  opData;
     DRV_ETHPHY_SMI_XFER_TYPE txType = hClientObj->smiTxferType;
 
-    switch(hClientObj->smiTxferStatus)
-    {
-        case DRV_ETHPHY_SMI_TXFER_OP_START:
-
-            if(hClientObj->miimOpHandle != 0)
-            {   // no operations queued, need to wait the end of the previous one
-                return DRV_ETHPHY_SMI_TXFER_OP_BUSY;
-            }
-
-            if(txType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
-            {   // start read
-                miimOpHandle = hClientObj->pMiimBase->DRV_MIIM_Read(hClientObj->miimHandle, hClientObj->smiRIx, hClientObj->smiPhyAddress, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
-                newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE;
-            }
-            else if(txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE || txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE_COMPLETE)
-            {   // start write
-                if(txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE)
-                {
-                    opFlags = DRV_MIIM_OPERATION_FLAG_DISCARD;
-                    newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_DONE;
-                }
-                else
-                {
-                    opFlags = DRV_MIIM_OPERATION_FLAG_NONE;
-                    newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE;
-                }
-
-                miimOpHandle = hClientObj->pMiimBase->DRV_MIIM_Write(hClientObj->miimHandle, hClientObj->smiRIx, hClientObj->smiPhyAddress, hClientObj->smiData, opFlags, &miimRes);
-            }
-            else
-            {   // no scan operations allowed that take complete control of DRV_MIIM!
-                _PhyAssertCond(false, __func__, __LINE__);
-                miimOpHandle = 0;
-            }
-
-            if(miimOpHandle == 0)
-            {   // operation failed
-                _PhyDebugCond(false, __func__, __LINE__);
-                hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;   // so we can restart
-                return DRV_ETHPHY_SMI_TXFER_OP_MIIM_FAILED;
-            }
-
-            if(newTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_DONE) 
-            {
-                hClientObj->miimOpHandle = miimOpHandle;
-            }
-
-            return (hClientObj->smiTxferStatus = newTxferStatus);
-
-
-        case DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE:
-            miimRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, hClientObj->miimOpHandle, &opData);
-            if(miimRes == DRV_MIIM_RES_PENDING)
-            {   // wait op to complete
-                return DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE;
-            }
-
-            if(miimRes < 0)
-            {   // some error has occurred
-                _PhyDebugCond(false, __func__, __LINE__);
-            }
-            else if(txType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
-            {
-                hClientObj->smiData = opData; // set the read result
-            }
-
-            hClientObj->miimOpHandle = 0;  // operation done
-            return (hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_DONE);
-
-        default :   // DRV_ETHPHY_SMI_TXFER_OP_NONE, DRV_ETHPHY_SMI_TXFER_OP_DONE
-            return hClientObj->smiTxferStatus;
+    if(hClientObj->miimOpHandle != 0)
+    {   // no operations queued, need to wait the end of the previous one
+        return DRV_ETHPHY_SMI_TXFER_RES_BUSY;
     }
+
+    if(txType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
+    {   // start read
+        miimOpHandle = hClientObj->pMiimBase->DRV_MIIM_Read(hClientObj->miimHandle, hClientObj->smiRIx, hClientObj->smiPhyAddress, DRV_MIIM_OPERATION_FLAG_NONE, &miimRes);
+        newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE;
+    }
+    else if(txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE || txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE_COMPLETE)
+    {   // start write
+        if(txType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE)
+        {
+            opFlags = DRV_MIIM_OPERATION_FLAG_DISCARD;
+            newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
+        }
+        else
+        {
+            opFlags = DRV_MIIM_OPERATION_FLAG_NONE;
+            newTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE;
+        }
+
+        miimOpHandle = hClientObj->pMiimBase->DRV_MIIM_Write(hClientObj->miimHandle, hClientObj->smiRIx, hClientObj->smiPhyAddress, hClientObj->smiData, opFlags, &miimRes);
+    }
+    else
+    {   // no other/scan operations allowed that take complete control of DRV_MIIM!
+        _PhyAssertCond(false, __func__, __LINE__);
+        return DRV_ETHPHY_SMI_TXFER_RES_ILLEGAL;
+    }
+
+    if(miimOpHandle == 0)
+    {   // MIIM operation failed or needs to be retried
+        if(miimRes == DRV_MIIM_RES_BUSY)
+        {
+            return DRV_ETHPHY_SMI_TXFER_RES_BUSY;   // retry
+        }
+        else 
+        {   // some real error
+            _PhyDebugCond(false, __func__, __LINE__);
+            return DRV_ETHPHY_SMI_TXFER_RES_MIIM_ERROR;
+        }
+    }
+
+    if(newTxferStatus == DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE) 
+    {
+        hClientObj->miimOpHandle = miimOpHandle;
+        txferRes = DRV_ETHPHY_SMI_TXFER_RES_SCHEDULED; 
+    }
+    else
+    {
+        txferRes = DRV_ETHPHY_SMI_TXFER_RES_DONE; 
+    }
+
+    hClientObj->smiTxferStatus = newTxferStatus;
+    return txferRes;
+
 }
 
-// progresses the SMI transfer
+// waits for a read/write transfer to complete
+// returns:
+//      - < 0 an error occurred
+//      - DRV_ETHPHY_SMI_TXFER_RES_WAIT: not yet complete, call again
+//      - DRV_ETHPHY_SMI_TXFER_RES_DONE: transaction completed succesfully
+static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMITransferWaitComplete(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+{
+    DRV_ETHPHY_SMI_TXFER_RES txferRes;
+    DRV_MIIM_RESULT miimRes;
+    uint16_t  opData;
+
+    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE)
+    {   // nothing to wait for; but some functions may call this if a write operation was failed by MIIM and needs retry
+        _PhyDebugCond(false, __func__, __LINE__);
+        return DRV_ETHPHY_SMI_TXFER_RES_DONE;
+    } 
+
+    if(hClientObj->miimHandle == 0)
+    {   // shouldn't happen
+        _PhyAssertCond(false, __func__, __LINE__);
+        return DRV_ETHPHY_SMI_TXFER_RES_ILLEGAL;
+    } 
+
+    miimRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, hClientObj->miimOpHandle, &opData);
+    if(miimRes == DRV_MIIM_RES_PENDING)
+    {   // wait op to complete
+        return DRV_ETHPHY_SMI_TXFER_RES_WAIT;
+    }
+
+    if(miimRes < 0)
+    {   // some error has occurred
+        _PhyDebugCond(false, __func__, __LINE__);
+        txferRes = DRV_ETHPHY_SMI_TXFER_RES_MIIM_ERROR; 
+    }
+    else
+    {
+        txferRes = DRV_ETHPHY_SMI_TXFER_RES_DONE; 
+        if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
+        {
+            hClientObj->smiData = opData; // set the read result
+        }
+    }
+
+    hClientObj->miimOpHandle = 0;  // operation done
+    hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
+    return txferRes;
+}
+
+// waits for a SMI transfer to complete
 // returns true if it is done and can move on
 // false if it failed or need to wait
-static bool _DRV_PHY_SMITransfer_Pogress(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static bool _DRV_PHY_SMITransfer_Wait(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStat = _DRV_PHY_SMITransferDo(hClientObj);
+    DRV_ETHPHY_SMI_TXFER_RES opRes = _DRV_PHY_SMITransferWaitComplete(hClientObj);
 
-    if(opStat < 0)
+    if(opRes < 0)
     {   // error
         _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
         return false;
     }
-    else if(opStat != DRV_ETHPHY_SMI_TXFER_OP_DONE)
-    {   // wait some more
+    else if(opRes == DRV_ETHPHY_SMI_TXFER_RES_WAIT)
+    {   // retry
         return false;
     }
 
     return true;
 }
 
+// starts an SMI read transfer
+// returns true if went through
+// false if need to wait or there was an error
 static bool _DRV_PHY_SMIReadStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx)
 {
     hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
@@ -346,27 +382,35 @@ static bool _DRV_PHY_SMIReadStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t r
     hClientObj->smiTxferType = DRV_ETHPHY_SMI_XFER_TYPE_READ;
     hClientObj->smiPhyAddress = hClientObj->hDriver->phyAddress;
 
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStat = _DRV_PHY_SMITransferDo(hClientObj);
+    DRV_ETHPHY_SMI_TXFER_RES opRes = _DRV_PHY_SMITransferStart(hClientObj);
 
-    if(opStat < 0)
+    if(opRes < 0)
     {   // error
         _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
         return false;
     }
+    else if(opRes == DRV_ETHPHY_SMI_TXFER_RES_BUSY)
+    {   // retry
+        return false;
+    }
 
+    // went through
     return true;
 }
 
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIReadStartEx(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, int phyAdd)
+static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMIReadStartEx(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, int phyAdd)
 {
     hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
     hClientObj->smiRIx = rIx;
     hClientObj->smiTxferType = DRV_ETHPHY_SMI_XFER_TYPE_READ;
     hClientObj->smiPhyAddress = phyAdd;
 
-    return _DRV_PHY_SMITransferDo(hClientObj);
+    return _DRV_PHY_SMITransferStart(hClientObj);
 }
 
+// starts an SMI write transfer
+// returns true if went through
+// false if need to retry or there was an error
 static bool _DRV_PHY_SMIWriteStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, uint16_t wData)
 {
     hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
@@ -375,18 +419,23 @@ static bool _DRV_PHY_SMIWriteStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t 
     hClientObj->smiData =  wData;
     hClientObj->smiPhyAddress = hClientObj->hDriver->phyAddress;
 
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStat = _DRV_PHY_SMITransferDo(hClientObj);
+    DRV_ETHPHY_SMI_TXFER_RES opRes = _DRV_PHY_SMITransferStart(hClientObj);
 
-    if(opStat < 0)
+    if(opRes < 0)
     {   // error
         _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
         return false;
     }
+    else if(opRes == DRV_ETHPHY_SMI_TXFER_RES_BUSY)
+    {   // retry
+        return false;
+    }
 
+    // went through
     return true;
 }
 
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIWriteStartEx(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, uint16_t wData, int phyAdd)
+static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMIWriteStartEx(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, uint16_t wData, int phyAdd)
 {
     hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
     hClientObj->smiRIx = rIx;
@@ -394,7 +443,7 @@ static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIWriteStartEx(DRV_ETHPHY_CLIENT
     hClientObj->smiData =  wData;
     hClientObj->smiPhyAddress = phyAdd;
 
-   return  _DRV_PHY_SMITransferDo(hClientObj);
+   return  _DRV_PHY_SMITransferStart(hClientObj);
 }
 
 static void _DRV_PHY_SetOperPhase(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t operPhase, uint16_t operSubPhase)
@@ -895,25 +944,23 @@ static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     // try to detect the PHY and reset it
     __BMCONbits_t bmcon;
 
-    // all phases except 0 wait for the completion of an SMI transaction
-
-    if(hClientObj->operSubPhase == 0)
-    {   // initiate a read of the BMCON register
-        if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
-        {
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 1);
-        }
-    }
-
-    // wait the BMCON read/write to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
     switch (hClientObj->operSubPhase)
     {
+        case 0:
+            // initiate a read of the BMCON register
+            if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 1);
+            }
+            break;
+
         case 1:
+            // wait the BMCON read/write to complete
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
+            {
+                break;
+            }
+
             bmcon.w = hClientObj->smiData;
             if(bmcon.RESET)
             {   // that is suspicios...but give it a chance to clear itself
@@ -947,6 +994,12 @@ static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             break;
 
         case 3:
+            // wait the BMCON read/write to complete
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
+            {
+                break;
+            }
+
             bmcon.w = hClientObj->smiData;
             if( (bmcon.LOOPBACK == 0) || (bmcon.DUPLEX == 0) )
             {   // failed to set
@@ -969,6 +1022,12 @@ static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             break;
 
         case 5:
+            // wait the BMCON read/write to complete
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
+            {
+                break;
+            }
+
             bmcon.w = hClientObj->smiData;
             if(bmcon.LOOPBACK || bmcon.DUPLEX)
             {   // failed to clear
@@ -993,24 +1052,16 @@ static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     __BMCONbits_t bmcon;
 
-    if(hClientObj->operSubPhase == 0)
-    {   // initiate Soft Reset the PHY
-        if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, _BMCON_RESET_MASK))
-        {
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_RESET, 1);
-        }
-        return;
-    }
-
-    // all other phases wait for some transaction to finish
-    // wait the BMCON write/read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
     switch(hClientObj->operSubPhase)
     {
+        case 0:
+            // initiate Soft Reset the PHY
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, _BMCON_RESET_MASK))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_RESET, 1);
+            }
+            break;
+
         case 1:
             // read the BMCON
             if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
@@ -1021,6 +1072,12 @@ static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             break;
 
         case 2:
+            // wait the BMCON write/read to complete
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
+            {
+                break;
+            }
+
             bmcon.w = hClientObj->smiData;
             if(bmcon.RESET)
             {   // wait to clear itself
@@ -1054,6 +1111,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hC
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 
 
@@ -1067,6 +1125,7 @@ static const _DRV_PHY_OperPhaseF _DRV_PHY_SetupPhaseNegotiateSubPhaseTbl[] =
     _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4,
     _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5,
     _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7,
 
 
 };
@@ -1153,7 +1212,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0(DRV_ETHPHY_CLIENT_OBJ * hC
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the BMCON PHY_REG_BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1202,28 +1261,32 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2(DRV_ETHPHY_CLIENT_OBJ * hC
 // MDIX configure
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    DRV_ETHPHY_RESULT res = DRV_ETHPHY_RES_PENDING;
+    DRV_ETHPHY_RESULT res;
     DRV_ETHPHY_OBJ *hDriver = hClientObj->hDriver;
 
     res = (*hDriver->pPhyObj->mdixConfigure)(gDrvEthBaseObj, (DRV_HANDLE)hClientObj, hClientObj->hDriver->openFlags);
 
-    while(true)
-    {
-        if(res == DRV_ETHPHY_RES_OK)
-        {   // success, advance;
-            break;
-        }
-        else
-        {
-            if(res != DRV_ETHPHY_RES_PENDING)
-            {   // some error occurred
-                _DRV_PHY_SetOperDoneResult(hClientObj, res);
-            }
-            return;
-        }
+    if(res < 0)
+    {   // some error occurred
+        _DRV_PHY_SetOperDoneResult(hClientObj, res);
+        return;
+    }
+    else if(res != DRV_ETHPHY_RES_OK)
+    {   // still waiting
+        return;
     }
 
 
+    // success, advance;
+    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 4);
+}
+
+
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+{
+    DRV_ETHPHY_OBJ *hDriver = hClientObj->hDriver;
+
+    // restore match capabilities
     uint16_t  matchCpbl = hClientObj->operReg[1];
 
     if(matchCpbl &_BMSTAT_AN_ABLE_MASK)
@@ -1243,7 +1306,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hC
 
         if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_ANAD, anadReg))
         {   // advertise our capabilities
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 4);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 5);
         }
     }
     else
@@ -1268,32 +1331,26 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hC
 
         if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, ctrlReg))
         {   // update the configuration
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 6);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 7);
         }
     }
 
 }
 
 // advertise, negotiation restart phase
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    // wait the PHY_REG_ANAD write to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
     if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMSTAT))
     {   // read capabilities initiate
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 5);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 6);
     }
 }
     
 // auto-negotiation perform
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the PHY_REG_BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1307,7 +1364,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hC
         // restart negotiation and we'll have to wait
         if(_DRV_PHY_SMIWriteStart( hClientObj, PHY_REG_BMCON, _BMCON_AN_ENABLE_MASK | _BMCON_AN_RESTART_MASK ))
         {
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 6);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 7);
         }
     }
     else
@@ -1317,15 +1374,10 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hC
 }
 
 // final update stage
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS openFlags = TCPIP_ETH_OPEN_DEFAULT;
     uint16_t    matchCpbl = 0 ;
-    // wait the BMCON write/read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
 
     // now update the open flags
     // the upper layer needs to know the PHY set-up to further set-up the MAC.
@@ -1418,52 +1470,6 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_ClientOperationAbort( DRV_HANDLE handle)
 // *****************************************************************************
 // *****************************************************************************
 
-
-static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
-{
-    uint16_t* pSmiRes = NULL;
-    // wait for read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
-    pSmiRes = (uint16_t*)hClientObj->operParam;
-    if(pSmiRes != 0)
-    {
-        *pSmiRes = hClientObj->smiData;
-    }
-
-    // done
-    _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
-}
-
-
-static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
-{
-    // wait for write transfer to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
-    // done
-    _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
-}
-
-
-static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
-{
-    // wait for scan transfer to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
-    // done; remain busy as to not start another SMI operation before aborting this one
-
-}
-
 DRV_ETHPHY_RESULT DRV_ETHPHY_PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
 {
     (void)portIndex;
@@ -1534,7 +1540,7 @@ static void _DRV_ETHPHY_NegRestartPhaseRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     __BMSTATbits_t  phyCpbl;
 
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1556,13 +1562,6 @@ static void _DRV_ETHPHY_NegRestartPhaseRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
 static void _DRV_ETHPHY_NegRestartPhaseWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    // all other phases wait for some transaction to finish
-    // wait the BMCON write to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
     _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
 }
 
@@ -1654,7 +1653,7 @@ static void _DRV_ETHPHY_NegCompletePhaseRead1(DRV_ETHPHY_CLIENT_OBJ * hClientObj
 {
     __BMCONbits_t   phyBMCon;
     // wait the BMCON read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1676,7 +1675,7 @@ static void _DRV_ETHPHY_NegCompletePhaseRead1(DRV_ETHPHY_CLIENT_OBJ * hClientObj
 static void _DRV_ETHPHY_NegCompletePhaseRead2(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the BMCON read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1708,7 +1707,7 @@ static void _DRV_ETHPHY_NegCompletePhaseAN_Restart(DRV_ETHPHY_CLIENT_OBJ * hClie
     __BMCONbits_t   phyBMCon;
 
     // wait the BMCON read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1743,7 +1742,7 @@ static void _DRV_ETHPHY_NegCompletePhaseAN_Complete(DRV_ETHPHY_CLIENT_OBJ * hCli
     __BMSTATbits_t  phyStat;
 
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1775,7 +1774,7 @@ static void _DRV_ETHPHY_NegCompletePhaseResultNoWait(DRV_ETHPHY_CLIENT_OBJ * hCl
     __BMSTATbits_t  phyStat;
 
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1867,7 +1866,7 @@ static void _DRV_ETHPHY_NegResultPhase_BMSTAT(DRV_ETHPHY_CLIENT_OBJ * hClientObj
 {
     __BMSTATbits_t   phyStat;
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1895,7 +1894,7 @@ static void _DRV_ETHPHY_NegResultPhase_BMSTAT(DRV_ETHPHY_CLIENT_OBJ * hClientObj
 static void _DRV_ETHPHY_NegResultPhase_ANEXP(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the ANEXP read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1914,7 +1913,7 @@ static void _DRV_ETHPHY_NegResultPhase_ANEXP(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 static void _DRV_ETHPHY_NegResultPhase_ANLPAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the ANLPAD read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -1940,7 +1939,7 @@ static void _DRV_ETHPHY_NegResultPhase_ANAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     TCPIP_ETH_PAUSE_TYPE   pauseType;
 
     // wait the ANAD read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -2108,7 +2107,7 @@ static void _DRV_ETHPHY_LinkStatPhaseRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     __BMSTATbits_t  phyStat;
 
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -2139,7 +2138,7 @@ static void _DRV_ETHPHY_LinkStatPhaseRefresh(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     __BMSTATbits_t  phyStat;
 
     // wait the BMSTAT read to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+    if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
@@ -2203,12 +2202,6 @@ static void _DRV_ETHPHY_ResetPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
 static void _DRV_ETHPHY_ResetPhaseWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    // wait the BMCON write to complete
-    if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
-    {
-        return;
-    }
-
     if( hClientObj->operParam == 0)
     {   // no need to wait, we're done
         _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
@@ -2236,7 +2229,7 @@ static void _DRV_ETHPHY_ResetPhaseRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
         case 1:
             // wait the BMCON read to complete
-            if(!_DRV_PHY_SMITransfer_Pogress(hClientObj))
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
             {
                 break;
             }
@@ -2309,7 +2302,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorDataSet( DRV_HANDLE handle, uint32_t vendorDa
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadStart( DRV_HANDLE handle, uint16_t rIx,  int phyAddress )
 {
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStatus;
+    DRV_ETHPHY_SMI_TXFER_RES opRes;
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 
     if(hClientObj == 0)
@@ -2325,19 +2318,22 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadStart( DRV_HANDLE handle, uint16_t rIx
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
 
-    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_DONE && hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_NONE)
+    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_NONE)
     {   // calling this before the previous SMI done?
         return DRV_ETHPHY_RES_OPERATION_ERR;
     }
 
 
-    opStatus = _DRV_PHY_SMIReadStartEx(hClientObj, rIx, phyAddress);
-    if(opStatus < 0)
-    {   // error occurred but can be retried
-        // reset SMI transfer status so we can retry operation
+    opRes = _DRV_PHY_SMIReadStartEx(hClientObj, rIx, phyAddress);
+    if(opRes < 0)
+    {   // error occurred 
+        return DRV_ETHPHY_RES_OPERATION_ERR;
+    }
+    else if(opRes == DRV_ETHPHY_SMI_TXFER_RES_BUSY)
+    {
         hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
         return DRV_ETHPHY_RES_PENDING;
-    }
+    } 
 
     // went through
     return DRV_ETHPHY_RES_OK;
@@ -2359,12 +2355,17 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadResultGet( DRV_HANDLE handle, uint16_t
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
 
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStat = _DRV_PHY_SMITransferDo(hClientObj);
-    if(opStat < 0)
+    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE)
+    {   // not called as a result of a previous read?
+        return DRV_ETHPHY_RES_OPERATION_ERR;
+    }
+
+    DRV_ETHPHY_SMI_TXFER_RES opRes = _DRV_PHY_SMITransferWaitComplete(hClientObj);
+    if(opRes < 0)
     {   // error
         return DRV_ETHPHY_RES_OPERATION_ERR;
     }
-    else if(opStat != DRV_ETHPHY_SMI_TXFER_OP_DONE)
+    else if(opRes == DRV_ETHPHY_SMI_TXFER_RES_WAIT)
     {   // wait some more
         return DRV_ETHPHY_RES_PENDING;
     }
@@ -2381,7 +2382,8 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadResultGet( DRV_HANDLE handle, uint16_t
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress )
 {
-    DRV_ETHPHY_SMI_TXFER_OP_STATUS opStatus;
+    DRV_ETHPHY_RESULT phyRes;
+    DRV_ETHPHY_SMI_TXFER_RES opRes;
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 
     if(hClientObj == 0)
@@ -2397,22 +2399,30 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
 
-    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_DONE && hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_NONE)
+    if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_NONE)
     {   // calling this before the previous SMI done?
         return DRV_ETHPHY_RES_OPERATION_ERR;
     }
 
-
-    opStatus = _DRV_PHY_SMIWriteStartEx(hClientObj, rIx, wData, phyAddress);
-    if(opStatus < 0)
-    {   // error occurred but can be retried
-        // reset SMI transfer status so we can retry operation
-        hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
-        return DRV_ETHPHY_RES_PENDING;
+    opRes = _DRV_PHY_SMIWriteStartEx(hClientObj, rIx, wData, phyAddress);
+    if(opRes < 0)
+    {   // error
+        return DRV_ETHPHY_RES_OPERATION_ERR;
     }
 
-    // went through
-    return DRV_ETHPHY_RES_OK;
+    if(opRes == DRV_ETHPHY_SMI_TXFER_RES_BUSY)
+    {   // retry
+        phyRes = DRV_ETHPHY_RES_PENDING;
+    }
+    else
+    {   // went through
+        phyRes = DRV_ETHPHY_RES_OK;
+    }
+
+    hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
+
+
+    return phyRes;
 
 }
 
