@@ -1977,11 +1977,13 @@ static void _mDNSResponder(DNSDesc_t *pDNSdesc)
 
          // Do nothing if no data is waiting
          if(!TCPIP_UDP_GetIsReady(pDNSdesc->mDNS_socket))
-            return;
+         {
+             return;
+         }
 
-            /* Reset the Remote-node information in UDP-socket */
-            TCPIP_UDP_RemoteBind(pDNSdesc->mDNS_socket, IP_ADDRESS_TYPE_ANY, MDNS_PORT, 0); 
-            TCPIP_UDP_Bind(pDNSdesc->mDNS_socket, IP_ADDRESS_TYPE_ANY, MDNS_PORT, 0); 
+         /* Reset the Remote-node information in UDP-socket */
+         TCPIP_UDP_RemoteBind(pDNSdesc->mDNS_socket, IP_ADDRESS_TYPE_ANY, MDNS_PORT, 0); 
+         TCPIP_UDP_Bind(pDNSdesc->mDNS_socket, IP_ADDRESS_TYPE_ANY, MDNS_PORT, 0); 
 
          // Retrieve the mDNS header
          len = _mDNSFetch(0, sizeof(mDNS_header), (uint8_t *) &mDNS_header,pDNSdesc);
