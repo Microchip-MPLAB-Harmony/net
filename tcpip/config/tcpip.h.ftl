@@ -786,6 +786,8 @@ typedef struct TCPIP_STACK_INIT
 <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content &&  (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true>
 #include "tcpip/tcpip_commands.h"
 </#if>
-
+<#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
+#include "tcpip/tcpip_mac_bridge.h"
+</#if>
 #endif  // __TCPIP_H__
 

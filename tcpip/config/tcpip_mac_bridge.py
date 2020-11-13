@@ -68,7 +68,7 @@ tcpipBridgePktSize.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC
 
 # pool replenish
 tcpipBridgePoolRepl = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_PACKET_POOL_REPLENISH", tcpipNetConfigMacBridgeMenu)
-tcpipBridgePoolRepl.setLabel(" Number of packets to Replenish the pool")
+tcpipBridgePoolRepl.setLabel("Number of packets to Replenish the pool")
 tcpipBridgePoolRepl.setVisible(False)
 tcpipBridgePoolRepl.setDescription(" Number of Packets to Replenish the Pool if Empty")
 tcpipBridgePoolRepl.setDefaultValue(2)
@@ -84,7 +84,7 @@ tcpipBridgeDcptPool.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # descriptor replenish
 tcpipBridgeDcptRepl = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_DCPT_POOL_REPLENISH", tcpipNetConfigMacBridgeMenu)
-tcpipBridgeDcptRepl.setLabel(" Number of Descriptors to Replenish the pool")
+tcpipBridgeDcptRepl.setLabel("Number of Descriptors to Replenish the pool")
 tcpipBridgeDcptRepl.setVisible(False)
 tcpipBridgeDcptRepl.setDescription(" Number of Descriptors to Replenish the Pool if Empty")
 tcpipBridgeDcptRepl.setDefaultValue(4)

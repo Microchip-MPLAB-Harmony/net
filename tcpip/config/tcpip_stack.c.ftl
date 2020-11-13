@@ -743,26 +743,47 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 };
 </#if>
 
+<#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
+TCPIP_MAC_BRIDGE_ENTRY_BIN tcpipMacbridgeTable[${tcpipNetConfig.TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT}] = 
+{
+<#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX)?has_content>
+<#list 0..(tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX - 1) as i>
+<#assign netConfigEnabled = "tcpipNetConfig_${i}">
+<#if .vars[netConfigEnabled]?has_content>
+<#assign network_config_idx = "tcpipNetConfig_${i}.TCPIP_STACK_NETWORK_CONFIG_IDX${i}"?eval>
+<#assign mac_bridge_enable = "tcpipNetConfig_${i}.TCPIP_NETWORK_MACBRIDGE_ADD_IDX${i}"?eval>
+<#if network_config_idx??>
+<#if network_config_idx == true>
+<#if mac_bridge_enable == true>
+	{${i}},
+</#if>
+</#if>
+</#if>
+</#if>
+</#list>
+</#if>
+};
+</#if>
 
-<#if (tcpipMacBridge.TCPIP_STACK_USE_IPV4)?has_content && (tcpipMacBridge.TCPIP_STACK_USE_IPV4) == true>
+<#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
 /*** TCPIP MAC Bridge Initialization Data ***/
 const TCPIP_MAC_BRIDGE_CONFIG  tcpipBridgeInitData = 
 {
-    .fdbEntries = TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES,
+	.purgeTimeout = TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT,
+    .transitDelay = TCPIP_MAC_BRIDGE_MAX_TRANSIT_DELAY,
+	.fdbEntries = TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES,
     .pktPoolSize = TCPIP_MAC_BRIDGE_PACKET_POOL_SIZE,
     .pktSize = TCPIP_MAC_BRIDGE_PACKET_SIZE,
     .dcptPoolSize = TCPIP_MAC_BRIDGE_DCPT_POOL_SIZE,
     .pktReplenish = TCPIP_MAC_BRIDGE_PACKET_POOL_REPLENISH,
     .dcptReplenish = TCPIP_MAC_BRIDGE_DCPT_POOL_REPLENISH,
     .bridgeFlags = TCPIP_MC_BRIDGE_INIT_FLAGS,
-    // todo
-    .bridgeTableSize = 0,
-    .bridgeTable = 0,
-    .bridgePermTableSize = 0,
-    .bridgePermTable = 0,
+    .bridgeTableSize = ${tcpipNetConfig.TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT},
+    .bridgeTable = (const TCPIP_MAC_BRIDGE_ENTRY*)tcpipMacbridgeTable,
     // advanced
-    .purgeTimeout = TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT,
-    .transitDelay = TCPIP_MAC_BRIDGE_MAX_TRANSIT_DELAY,
+	.bridgePermTableSize = 0,
+    .bridgePermTable = 0,
+
 };
 </#if>
 
@@ -997,6 +1018,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("ENC28J60")>
     {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitData},      // TCPIP_MODULE_MAC_ENCJ60
 </#if>
+</#if>
+<#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
+    {TCPIP_MODULE_MAC_BRIDGE,       &tcpipBridgeInitData},      // TCPIP_MODULE_MAC_BRIDGE 
 </#if>
 };
 
