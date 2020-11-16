@@ -55,6 +55,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
   ***************************************************************************/
 #define TCPIP_TCP_DEBUG_MASK_BASIC          (0x0001)
 #define TCPIP_TCP_DEBUG_MASK_TRACE_STATE    (0x0002)
+#define TCPIP_TCP_DEBUG_MASK_SEQ            (0x0004)
 
 // enable TCP debugging levels
 #define TCPIP_TCP_DEBUG_LEVEL               (0)
@@ -83,6 +84,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // the minimum MTU value that needs to be supported
 #define TCP_MIN_DEFAULT_MTU     (536)
 
+// the min value of the data offset field, in 32 bit words
+#define TCP_DATA_OFFSET_VAL_MIN    5       // 20 bytes
+
 /****************************************************************************
   Section:
 	State Machine Variables
@@ -94,14 +98,6 @@ typedef struct
     IPV4_PACKET             v4Pkt;      // safe cast to IPV4_PACKET
     TCPIP_MAC_DATA_SEGMENT  tcpSeg[2];  // always zero copy data for TCP state machine
 }TCP_V4_PACKET;
-
-
-typedef struct
-{
-    IPV6_PACKET             v6Pkt;      // safe cast to IPV6_PACKET
-    TCPIP_MAC_DATA_SEGMENT  tcp6Seg;     
-}TCP_V6_PACKET;
-
 
 /****************************************************************************
   Section:
@@ -151,7 +147,7 @@ typedef struct
     union
     {
         IPV4_PACKET*  pV4Pkt;                       // IPv4 use; TCP_V4_PACKET type
-        IPV6_PACKET*  pV6Pkt;                       // IPv6 use; TCP_V6_PACKET type
+        IPV6_PACKET*  pV6Pkt;                       // IPv6 use;
         void*         pTxPkt;                       // generic
     };
     // 

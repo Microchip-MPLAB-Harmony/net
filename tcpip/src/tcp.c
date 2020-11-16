@@ -225,6 +225,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt);
 
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
+static bool         _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt);
 
 static bool         _TCP_TxPktValid(TCB_STUB * pSkt);
 
@@ -1242,7 +1243,6 @@ static void TCPIP_TCP_Process(void)
 {
     TCPIP_MAC_PACKET*   pRxPkt;
     TCPIP_MAC_PKT_ACK_RES ackRes;
-    uint16_t            tcpTotLength;
 
     // extract queued TCP packets
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
@@ -1265,8 +1265,7 @@ static void TCPIP_TCP_Process(void)
         if(tcpQuietDone)
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
         {
-            tcpTotLength = pRxPkt->totTransportLen;
-            if(tcpTotLength < sizeof(TCP_HEADER))
+            if(!_TCP_RxPktValidate(pRxPkt))
             {   // discard packet
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
             }
@@ -1290,6 +1289,38 @@ static void TCPIP_TCP_Process(void)
             TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes);
         }
     }
+}
+
+// validates a rx-ed TCP packet
+// returns true if OK, false if packet should be discarded
+static bool _TCP_RxPktValidate(TCPIP_MAC_PACKET* pRxPkt)
+{
+    while(true)
+    {
+        uint16_t tcpTotLength = pRxPkt->totTransportLen;
+        if(tcpTotLength < sizeof(TCP_HEADER))
+        {   // discard packet
+            break;
+        }
+
+        // check options validity
+        TCP_HEADER* pHdr = (TCP_HEADER*)pRxPkt->pTransportLayer;
+        uint8_t optionsField = pHdr->DataOffset.Val;
+        if(optionsField < TCP_DATA_OFFSET_VAL_MIN)
+        {
+           break;
+        }
+
+        if(tcpTotLength < optionsField << 2)
+        {   // no payload?
+            break;
+        }
+        
+        // OK
+        return true;
+    }
+
+    return false;
 }
 
 #if defined (TCPIP_STACK_USE_IPV4)
@@ -4620,7 +4651,7 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
     uint8_t vOptionsBytes;
     uint8_t vOption;
     uint16_t wMSS;
-    uint8_t* pOption;
+    uint8_t* pOption, *pEnd;
 
 
 	vOptionsBytes = (h->DataOffset.Val << 2) - sizeof(*h);
@@ -4630,9 +4661,10 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
 
     // Seek to beginning of options
     pOption = (uint8_t*)(h + 1);
+    pEnd = pOption + vOptionsBytes;
 
     // Search for the Maximum Segment Size option	
-    while(vOptionsBytes--)
+    while(vOptionsBytes-- && pOption < pEnd)
     {
         vOption = *pOption++;
 

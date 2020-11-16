@@ -84,6 +84,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // the minimum MTU value that needs to be supported
 #define TCP_MIN_DEFAULT_MTU     (536)
 
+// the min value of the data offset field, in 32 bit words
+#define TCP_DATA_OFFSET_VAL_MIN    5       // 20 bytes
+
 /****************************************************************************
   Section:
 	State Machine Variables
