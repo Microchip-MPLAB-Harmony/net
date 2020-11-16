@@ -2012,7 +2012,7 @@ static void TCPIP_IPV4_Process(void)
     TCPIP_NET_IF* pNetIf;
     TCPIP_MAC_PACKET* pRxPkt;
     uint8_t      headerLen;
-    uint16_t     headerChecksum;
+    uint16_t     headerChecksum, totalLength, payloadLen;
     IPV4_HEADER  *pHeader;
     IPV4_HEADER  cIpv4Hdr, *pCHeader;
     IPV4_PKT_PROC_TYPE procType;
@@ -2058,7 +2058,19 @@ static void TCPIP_IPV4_Process(void)
 
             // make sure the header length is within packet limits
             headerLen = pHeader->IHL << 2;
-            if(headerLen < sizeof(IPV4_HEADER) || headerLen > pRxPkt->pDSeg->segLen)
+            if(headerLen < sizeof(IPV4_HEADER) || (uint16_t)headerLen > pRxPkt->pDSeg->segLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            totalLength = TCPIP_Helper_ntohs(pHeader->TotalLength);
+            if(totalLength < (uint16_t)headerLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            payloadLen = TCPIP_PKT_PayloadLen(pRxPkt);
+            if(totalLength > payloadLen)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
@@ -2105,7 +2117,7 @@ static void TCPIP_IPV4_Process(void)
             // Make a copy of the header for the network to host conversion
             cIpv4Hdr = *pHeader;
             pCHeader = &cIpv4Hdr;
-            pCHeader->TotalLength = TCPIP_Helper_ntohs(pCHeader->TotalLength);
+            pCHeader->TotalLength = totalLength;
             pCHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pCHeader->FragmentInfo.val);
 
 #if (_TCPIP_IPV4_FRAGMENTATION == 0)
@@ -3028,8 +3040,16 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
 {
     IPV4_FRAGMENT_NODE *pF, *pParent, *pPrevParent;
     IPV4_HEADER *pFHdr, *pRxHdr;
+    uint16_t rxMin, rxMax, nextMin;   
 
+    // minimal check 
     pRxHdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
+    rxMax = rxMin + pRxPkt->totTransportLen;
+    if(rxMax < rxMin)
+    {   // overflow, fragOffset is too big?
+        return TCPIP_MAC_PKT_ACK_FRAGMENT_ERR;
+    } 
 
     *ppFrag = 0;
     pParent = pPrevParent = 0;
@@ -3088,12 +3108,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // old overlapping fragments need to be discarded/adjusted
     TCPIP_MAC_PACKET* pPrevPkt, *pCurrPkt, *pNextPkt;
     IPV4_HEADER *pCurrHdr;
-    uint16_t rxMin, rxMax, nextMin;   
     uint16_t currMin, currMax;   
     bool fragOverlap = false;
-
-    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
-    rxMax = rxMin + pRxPkt->totTransportLen;
 
     // insert in proper place
     pPrevPkt = 0;
@@ -3177,7 +3193,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
                 pDestSeg->segLen += le;
                 pRxPkt->totTransportLen += le;
             }
-            pNextPkt = pCurrPkt;    // reeveluate
+            pNextPkt = pCurrPkt;    // reevaluate
             continue;
         }
         

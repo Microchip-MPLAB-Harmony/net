@@ -78,9 +78,15 @@ static volatile uint32_t    ipv4ActFilterCount = 0;    // counter of active filt
 
 static TCPIP_IPV4_FILTER_TYPE ipv4FilterType = 0;       // IPv4 current filter
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
+#define _TCPIP_IPV4_FRAGMENTATION    1
+#else
+#define _TCPIP_IPV4_FRAGMENTATION    0
+#endif
+
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static SINGLE_LIST          ipv4FragmentQueue = {0};  // IPv4 fragments to be processed
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 typedef enum
 {
@@ -122,7 +128,7 @@ static void _IPv4AssertCond(bool cond, const char* message, int lineNo)
 #define _IPv4AssertCond(cond, message, lineNo)
 #endif  // (TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_BASIC)
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FRAGMENT) != 0)
 
 typedef enum
@@ -199,7 +205,7 @@ static void _IPv4FragmentDbg(IPV4_FRAGMENT_NODE* pFragNode, TCPIP_MAC_PACKET* pF
 #else
 #define _IPv4FragmentDbg(pFrag, pFragPkt, evType)
 #endif  // (TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FRAGMENT)
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_RX_CHECK) != 0)
 static uint16_t checkRxUdpSrcPort = 67; 
@@ -415,7 +421,7 @@ static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen
 
 static TCPIP_STACK_MODULE TCPIP_IPV4_FrameDestination(IPV4_HEADER* pHeader);
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static void TCPIP_IPV4_Timeout(void);
 
 // RX fragmentation
@@ -451,7 +457,7 @@ static __inline__ void __attribute__((always_inline)) TCPIP_IPV4_FragmentTxInser
     pTxPkt->pktFlags |= flags;
     _TCPIPStackInsertRxPacket(pNetIf, pTxPkt, signal);
 }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, const IPV4_ADDR* pIpAdd, TCPIP_MAC_ADDR** ppMacAdd, IPV4_ADDR* arpTarget);
 
@@ -556,12 +562,12 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
                 iniRes = TCPIP_IPV4_RES_INIT_VAL_ERR;
                 break;
             }
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
             TCPIP_Helper_SingleListInitialize(&ipv4FragmentQueue);
             signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, TCPIP_IPV4_TASK_TICK_RATE);
 #else
             signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, 0);
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
             if(signalHandle == 0)
             {
                 iniRes = TCPIP_IPV4_RES_SIGNAL_ERR;
@@ -663,9 +669,9 @@ void TCPIP_IPV4_DeInitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     if(ipv4InitCount > 0)
     {   // up and running
         // one way or another this interface is going down
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
         TCPIP_IPV4_RxFragmentListPurge(&ipv4FragmentQueue);
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
         TCPIP_IPV4_ArpListPurge(stackCtrl->pNetIf);
 
@@ -1705,7 +1711,6 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 
 
     pPkt->macPkt.pktIf = pNetIf;
-    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
 
     if(destType != TCPIP_IPV4_DEST_SELF)
     {   // get the payload w/o the MAC frame
@@ -1713,7 +1718,7 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
         linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
         if(pktPayload > linkMtu)
         {
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
             IPV4_HEADER* pHdr = (IPV4_HEADER*)pPkt->macPkt.pNetLayer;
             if(pHdr->FragmentInfo.DF != 0 || !TCPIP_IPV4_FragmentTxPkt(pPkt, linkMtu, pktPayload))
             {   // no fragments or failed to build the fragments; out of memory
@@ -1722,12 +1727,13 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 #else
             // MAC transmit will fail anyway
             return false;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
         }
     }
 
     TCPIP_PKT_FlightLogTx(&pPkt->macPkt, TCPIP_THIS_MODULE_ID);
 
+    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
     if(destType == TCPIP_IPV4_DEST_SELF)
     {
         TCPIP_IPV4_FragmentTxInsertToRx(pNetIf, &pPkt->macPkt, TCPIP_MAC_PKT_FLAG_UNICAST, true);
@@ -1991,12 +1997,12 @@ void  TCPIP_IPV4_Task(void)
         TCPIP_IPV4_Process();
     }
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
     { // regular TMO occurred
         TCPIP_IPV4_Timeout();
     }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 }
 
@@ -2006,7 +2012,7 @@ static void TCPIP_IPV4_Process(void)
     TCPIP_NET_IF* pNetIf;
     TCPIP_MAC_PACKET* pRxPkt;
     uint8_t      headerLen;
-    uint16_t     headerChecksum;
+    uint16_t     headerChecksum, totalLength, payloadLen;
     IPV4_HEADER  *pHeader;
     IPV4_HEADER  cIpv4Hdr, *pCHeader;
     IPV4_PKT_PROC_TYPE procType;
@@ -2052,7 +2058,19 @@ static void TCPIP_IPV4_Process(void)
 
             // make sure the header length is within packet limits
             headerLen = pHeader->IHL << 2;
-            if(headerLen < sizeof(IPV4_HEADER) || headerLen > pRxPkt->pDSeg->segLen)
+            if(headerLen < sizeof(IPV4_HEADER) || (uint16_t)headerLen > pRxPkt->pDSeg->segLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            totalLength = TCPIP_Helper_ntohs(pHeader->TotalLength);
+            if(totalLength < (uint16_t)headerLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            payloadLen = TCPIP_PKT_PayloadLen(pRxPkt);
+            if(totalLength > payloadLen)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
@@ -2099,10 +2117,10 @@ static void TCPIP_IPV4_Process(void)
             // Make a copy of the header for the network to host conversion
             cIpv4Hdr = *pHeader;
             pCHeader = &cIpv4Hdr;
-            pCHeader->TotalLength = TCPIP_Helper_ntohs(pCHeader->TotalLength);
+            pCHeader->TotalLength = totalLength;
             pCHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pCHeader->FragmentInfo.val);
 
-#if (TCPIP_IPV4_FRAGMENTATION == 0)
+#if (_TCPIP_IPV4_FRAGMENTATION == 0)
             // Throw this packet away if it is a fragment.  
             // We don't support IPv4 fragment reconstruction.
             if(pCHeader->FragmentInfo.MF != 0 || pCHeader->FragmentInfo.fragOffset != 0)
@@ -2110,7 +2128,7 @@ static void TCPIP_IPV4_Process(void)
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
             }
-#endif  // (TCPIP_IPV4_FRAGMENTATION == 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION == 0)
 
             TCPIP_IPV4_CheckRxPkt(pRxPkt);
 
@@ -2183,7 +2201,7 @@ static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
     destId = TCPIP_IPV4_FrameDestination(pHeader);
     _IPv4AssertCond(destId != TCPIP_MODULE_NONE, __func__, __LINE__);
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     pRxPkt->pkt_next = 0;       // make sure it's not linked
     if(isFragment)
     {
@@ -2204,7 +2222,7 @@ static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
     }
 #else
     _IPv4AssertCond(isFragment == false, __func__, __LINE__);
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
     if(!isFragment)
     {   // forward this packet and signal
@@ -2968,16 +2986,16 @@ int TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH)
 
 bool TCPIP_IPV4_IsFragmentationEnabled(void)
 {
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     return true;
 #else
     return false;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 }
 
 // fragmentation functionality
 //
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 // fragments reassembly
 
@@ -3022,8 +3040,16 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
 {
     IPV4_FRAGMENT_NODE *pF, *pParent, *pPrevParent;
     IPV4_HEADER *pFHdr, *pRxHdr;
+    uint16_t rxMin, rxMax, nextMin;   
 
+    // minimal check 
     pRxHdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
+    rxMax = rxMin + pRxPkt->totTransportLen;
+    if(rxMax < rxMin)
+    {   // overflow, fragOffset is too big?
+        return TCPIP_MAC_PKT_ACK_FRAGMENT_ERR;
+    } 
 
     *ppFrag = 0;
     pParent = pPrevParent = 0;
@@ -3082,12 +3108,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // old overlapping fragments need to be discarded/adjusted
     TCPIP_MAC_PACKET* pPrevPkt, *pCurrPkt, *pNextPkt;
     IPV4_HEADER *pCurrHdr;
-    uint16_t rxMin, rxMax, nextMin;   
     uint16_t currMin, currMax;   
     bool fragOverlap = false;
-
-    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
-    rxMax = rxMin + pRxPkt->totTransportLen;
 
     // insert in proper place
     pPrevPkt = 0;
@@ -3171,7 +3193,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
                 pDestSeg->segLen += le;
                 pRxPkt->totTransportLen += le;
             }
-            pNextPkt = pCurrPkt;    // reeveluate
+            pNextPkt = pCurrPkt;    // reevaluate
             continue;
         }
         
@@ -3429,7 +3451,7 @@ static void TCPIP_IPV4_FragmentTxInsertToRx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACK
 }
 
 
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 // external packet processing
 #if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
