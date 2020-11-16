@@ -1685,9 +1685,17 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     if ((header.V_T_F & 0x000000F0) != IPv6_VERSION)
         return false;
 
+    uint16_t pktLen = TCPIP_PKT_PayloadLen(pRxPkt);
+    uint16_t payloadLen = TCPIP_Helper_ntohs(header.PayloadLength);
+
+    if(payloadLen > pktLen)
+    {
+        return false;
+    }
+
     *hopLimit = header.HopLimit;
 
-    *len = TCPIP_Helper_ntohs(header.PayloadLength);
+    *len = payloadLen;
 
     *protocol = header.NextHeader;
 
