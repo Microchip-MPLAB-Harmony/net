@@ -816,7 +816,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
     checksums.w[0] = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader,
                                     sizeof(pseudoHeader), 0);
 
-    checksums.w[1] = TCPIP_Helper_CalcIPChecksum(pRxPkt->pNetLayer, dataLen, 0);    //  MACCalcIPBufferChecksum(hMac, dataLen);
+    checksums.w[1] = TCPIP_Helper_CalcIPChecksum(pRxPkt->pNetLayer, dataLen, 0); 
 
     if(checksums.w[0] != checksums.w[1])
     {
@@ -870,11 +870,12 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             _ICMPV6_NotifyClients(pNetIf, ICMPV6_ERROR_DEST_UNREACHABLE, localIP, remoteIP, &h.header_Error);
             break;
         case ICMPV6_ERROR_PACKET_TOO_BIG:
-            tempDataLen = dataLen - sizeof (h.header_Error);
+            if(dataLen < sizeof(h.header_Error) || (tempDataLen = dataLen - sizeof (h.header_Error)) < sizeof(IPV6_HEADER));
             // If the received packet doesn't contain the IPv6 header of the packet that caused the
             // error, we can't extract the destination address and update the destination cache entry's MTU
-            if (tempDataLen < sizeof (IPV6_HEADER))
+            {
                 break;
+            }
 
             // Use the pseudo-header to store the extracted destination address
             TCPIP_IPV6_SetReadPtr(pRxPkt, (uint8_t *)TCPIP_IPV6_GetReadPtrInRx(pRxPkt) + IPV6_HEADER_OFFSET_DEST_ADDR);
@@ -937,6 +938,12 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             break;
 #if defined TCPIP_STACK_USE_ICMPV6_SERVER
         case ICMPV6_INFO_ECHO_REQUEST:
+            if(dataLen < 8)
+            {   // ill formed?
+                pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                return;
+            }
+
             _ICMPV6_NotifyClients(pNetIf, ICMPV6_INFO_ECHO_REQUEST, localIP, remoteIP, &h.header_Echo);
 
             TCPIP_IPV6_RxBufferSet (pRxPkt, sizeof (ICMPV6_HEADER_ECHO) + headerLen);

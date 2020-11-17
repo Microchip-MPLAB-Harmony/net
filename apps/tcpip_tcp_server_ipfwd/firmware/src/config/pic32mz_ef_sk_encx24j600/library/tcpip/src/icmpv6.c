@@ -9,7 +9,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -816,7 +816,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
     checksums.w[0] = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader,
                                     sizeof(pseudoHeader), 0);
 
-    checksums.w[1] = TCPIP_Helper_CalcIPChecksum(pRxPkt->pNetLayer, dataLen, 0);    //  MACCalcIPBufferChecksum(hMac, dataLen);
+    checksums.w[1] = TCPIP_Helper_CalcIPChecksum(pRxPkt->pNetLayer, dataLen, 0); 
 
     if(checksums.w[0] != checksums.w[1])
     {
@@ -870,11 +870,12 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             _ICMPV6_NotifyClients(pNetIf, ICMPV6_ERROR_DEST_UNREACHABLE, localIP, remoteIP, &h.header_Error);
             break;
         case ICMPV6_ERROR_PACKET_TOO_BIG:
-            tempDataLen = dataLen - sizeof (h.header_Error);
+            if(dataLen < sizeof(h.header_Error) || (tempDataLen = dataLen - sizeof (h.header_Error)) < sizeof(IPV6_HEADER));
             // If the received packet doesn't contain the IPv6 header of the packet that caused the
             // error, we can't extract the destination address and update the destination cache entry's MTU
-            if (tempDataLen < sizeof (IPV6_HEADER))
+            {
                 break;
+            }
 
             // Use the pseudo-header to store the extracted destination address
             TCPIP_IPV6_SetReadPtr(pRxPkt, (uint8_t *)TCPIP_IPV6_GetReadPtrInRx(pRxPkt) + IPV6_HEADER_OFFSET_DEST_ADDR);
@@ -937,6 +938,12 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             break;
 #if defined TCPIP_STACK_USE_ICMPV6_SERVER
         case ICMPV6_INFO_ECHO_REQUEST:
+            if(dataLen < 8)
+            {   // ill formed?
+                pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                return;
+            }
+
             _ICMPV6_NotifyClients(pNetIf, ICMPV6_INFO_ECHO_REQUEST, localIP, remoteIP, &h.header_Echo);
 
             TCPIP_IPV6_RxBufferSet (pRxPkt, sizeof (ICMPV6_HEADER_ECHO) + headerLen);
@@ -992,7 +999,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
         case ICMPV6_INFO_ECHO_REPLY:
             _ICMPV6_NotifyClients(pNetIf, ICMPV6_INFO_ECHO_REPLY, localIP, remoteIP, &h.header_Echo);
 
-            // The Echo Request/Reply indicates successfult round-trip communication.
+            // The Echo Request/Reply indicates successful round-trip communication.
             // Indicate to the NDP module that this remote node is reachable.
             TCPIP_NDP_NborReachConfirm (pNetIf, remoteIP);
             break;
@@ -1000,7 +1007,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
             break;
         case ICMPV6_INFO_ROUTER_ADVERTISEMENT:
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);
+            tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);
             if ((tempAddressType.bits.scope != IPV6_ADDR_SCOPE_LINK_LOCAL) ||
                 (hopLimit != 255) || (h.header_RA.vCode != 0) || (dataLen <= 16))
                 return;
@@ -1242,7 +1249,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
         case ICMPV6_INFO_NEIGHBOR_SOLICITATION:
             // Check for packet validity
             pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NS + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
+            tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
             if ((tempAddressType.bits.type == IPV6_ADDR_TYPE_MULTICAST) ||
                 (hopLimit != 255) || (h.header_NS.vCode != 0) || (dataLen < 24))
                 return;
@@ -1392,7 +1399,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
         case ICMPV6_INFO_NEIGHBOR_ADVERTISEMENT:
             // Check packet for validity
             pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NA + offsetof(ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress));
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
+            tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
             if ((tempAddressType.bits.type == IPV6_ADDR_TYPE_MULTICAST) ||
                 (hopLimit != 255) || (h.header_NA.vCode != 0) || (dataLen < 24))
                 return;
@@ -1535,7 +1542,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             break;
         case ICMPV6_INFO_REDIRECT:
             // Check for packet validity
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);
+            tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);
             if (tempAddressType.bits.scope != IPV6_ADDR_SCOPE_LINK_LOCAL)
                 return;
             if ((hopLimit != 255) || (h.header_Rd.vCode != 0) || (dataLen < 40))
@@ -1554,7 +1561,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             pDestAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aDestinationAddress));
             if (memcmp (pTargetAdd, pDestAdd, sizeof (IPV6_ADDR)) != 0)
             {
-                tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
+                tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
                 if (tempAddressType.bits.type != IPV6_ADDR_TYPE_UNICAST)
                     return;
                 // Don't check the scope - we must assume that the target address is link-local
