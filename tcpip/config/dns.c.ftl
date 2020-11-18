@@ -1622,7 +1622,15 @@ static int _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc,
         }
 
         // all good
-        if(rrType != TCPIP_DNS_RR_TYPE_QUESTION)
+        if(rrType == TCPIP_DNS_RR_TYPE_QUESTION)
+        {   // skip the Question Type and Class
+            if(!_DNSGetData(pProc->dnsRxData, 0, 4))
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR;
+                break;
+            }
+        }
+        else
         {
             bool entryUpdate = _DNS_RESPONSE_HashEntryUpdate(pProc->dnsRxData, pDnsDcpt, dnsHE);
             if(entryUpdate == false)
@@ -1637,7 +1645,11 @@ static int _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc,
 
     if(nRecords == 0 && evDbgType == TCPIP_DNS_DBG_EVENT_NONE)
     {
-        evDbgType = TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS; 
+        if(rrType == TCPIP_DNS_RR_TYPE_QUESTION)
+        {
+            evDbgType = TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS; 
+        }
+        // other RR types is probably OK to miss 
     } 
 
     pProc->evDbgType = evDbgType;
@@ -1657,7 +1669,7 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
     int                     dnsPacketSize;
     TCPIP_DNS_RX_DATA       dnsRxData;
     uint8_t                 dnsRxBuffer[TCPIP_DNS_RX_BUFFER_SIZE];
-    bool                    procRes;
+    bool                    procFail;
     TCPIP_DNS_EVENT_TYPE    evType = TCPIP_DNS_EVENT_NONE;
     TCPIP_DNS_DBG_EVENT_TYPE evDbgType = TCPIP_DNS_DBG_EVENT_NONE;
     TCPIP_DNS_RR_PROCESS    procRR;
@@ -1687,74 +1699,45 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
     while(true)
     {
         dnsHE = 0;
+        procFail = false;
 
         if((DNSHeader.Flags.v[0] & 0x03) != 0)
         {   
             evType = TCPIP_DNS_EVENT_NAME_ERROR;
-            procRes = false;
+            procFail = true;
             break;
         }
 
-        // Process questions (queries)
-        _DNS_ProcessRR(pDnsDcpt, &procRR, TCPIP_DNS_RR_TYPE_QUESTION);
-        if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE)
-        {   // some issue occurred
-            evDbgType = procRR.evDbgType;
-            procRes = false;
-            break;
-        } 
-        
-        // All good. Ignore Question Type and Question class
-        if(!_DNSGetData(&dnsRxData, 0, 4))
+        // process queries and all types of RRs
+        int ix;
+        for(ix = TCPIP_DNS_RR_TYPE_QUESTION; ix < TCPIP_DNS_RR_TYPES; ix++) 
         {
-            evDbgType = TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR;
-            procRes = false;
+            _DNS_ProcessRR(pDnsDcpt, &procRR, (TCPIP_DNS_RR_TYPE)ix);
+            if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE)
+            {   // some issue occurred
+                evDbgType = procRR.evDbgType;
+                procFail = true;
+                break;
+            } 
+        }
+
+        if(procFail)
+        {   // failed
             break;
         }
         
         // save the entry
         dnsHE = procRR.dnsHE;
 
-        // Scan through answers
-        _DNS_ProcessRR(pDnsDcpt, &procRR, TCPIP_DNS_RR_TYPE_ANSWER);
-        if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE && procRR.evDbgType != TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS)
-        {   // some issue occurred
-            evDbgType = procRR.evDbgType;
-            procRes = false;
-            break;
-        } 
-        // it's OK to not have answers (?)
-
-        // scan Authoritative Records
-        _DNS_ProcessRR(pDnsDcpt, &procRR, TCPIP_DNS_RR_TYPE_AUTHORITATIVE);
-        if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE && procRR.evDbgType != TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS)
-        {   // some issue occurred
-            evDbgType = procRR.evDbgType;
-            procRes = false;
-            break;
-        }
-        // it's OK to not have Authoritative records
-
-        // scan Additional Records
-        _DNS_ProcessRR(pDnsDcpt, &procRR, TCPIP_DNS_RR_TYPE_ADDITIONAL);
-        if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE && procRR.evDbgType != TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS)
-        {   // some issue occurred
-            evDbgType = procRR.evDbgType;
-            procRes = false;
-            break;
-        }
-        // it's OK to not have Additional records
-
         // finally
         if(dnsHE != 0 && (dnsHE->nIPv4Entries > 0 || dnsHE->nIPv6Entries > 0))
         {
             evType = TCPIP_DNS_EVENT_NAME_RESOLVED;
-            procRes = true;
         }           
         else
         {
             evDbgType = TCPIP_DNS_DBG_EVENT_NO_IP_ERROR;
-            procRes = false;
+            procFail = true;
         }
 
         break;
@@ -1778,7 +1761,7 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
         _DNS_DbgEvent(pDnsDcpt, dnsHE, evDbgType);
     }
 
-    return procRes;
+    return !procFail;
 }
 // This function writes a string to a buffer, ensuring that it is
 // properly formatted.
@@ -2182,8 +2165,6 @@ bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache)
 
     return true;    
 }
-
-    
 
 <#else>
 bool TCPIP_DNS_IsEnabled(TCPIP_NET_HANDLE hNet){return false;}
