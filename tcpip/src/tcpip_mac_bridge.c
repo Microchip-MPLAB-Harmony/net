@@ -493,8 +493,9 @@ bool TCPIP_MAC_Bridge_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
                 return false;
             }
         }
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
         bridgeDcpt.stat.pktPoolLowSize = bridgeDcpt.pktPoolSize; 
-        
+#endif    
         // allocate descriptors
         int nAllocDcpts = _MAC_Bridge_AllocateDescriptors(&bridgeDcpt, pBConfig->dcptPoolSize, &bridgeDcpt.dcptPool);
 
@@ -504,9 +505,9 @@ bool TCPIP_MAC_Bridge_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
             _MAC_Bridge_Cleanup();
             return false;
         }
-
+#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
         bridgeDcpt.stat.dcptPoolLowSize = pBConfig->dcptPoolSize; 
-
+#endif   
         bridgeDcpt.tmrSigHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_MAC_Bridge_Task, TCPIP_MAC_BRIDGE_TASK_RATE);
         if(bridgeDcpt.tmrSigHandle == 0)
         {
