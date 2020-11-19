@@ -1428,7 +1428,8 @@ static void TCPIP_DNS_ClientProcess(bool isTmo)
 
 }
 
-// extracts the IPv4/IPv6 addresses and updates the hash entry
+// extracts the IPv4/IPv6 addresses and updates the hash entry if dnsHE != 0
+// if dnsHE == 0, than it just discards
 // returns true if processing was successful
 // false if some error occurred
 static bool _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* dnsHE)
@@ -1448,7 +1449,7 @@ static bool _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DN
     // Check if this is Type A, MX, or AAAA
     discardData = true;
 
-    while( DNSAnswerHeader.ResponseClass.Val == 0x0001u) // Internet class
+    while( dnsHE != 0 && (DNSAnswerHeader.ResponseClass.Val == 1)) // Internet class
     {
         if (DNSAnswerHeader.ResponseType.Val == TCPIP_DNS_TYPE_A && DNSAnswerHeader.ResponseLen.Val == 4)
         {            
@@ -1609,24 +1610,38 @@ static int _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc,
         dnsHE = _DNSHashEntryFromTransactionId(pDnsDcpt, nameBuffer, pProc->dnsHeader->TransactionID.Val);
         if(dnsHE == 0)
         {   // not ours?
-            evDbgType = TCPIP_DNS_DBG_EVENT_RR_ID_ERROR;
-            break;
+            if(rrType == TCPIP_DNS_RR_TYPE_ADDITIONAL)
+            {   // it's OK for additional RR could carry different names
+                if(pProc->dnsHE != 0)
+                {   // if already have proper names for this, we could use the data
+                    dnsHE = pProc->dnsHE;
+                }
+                // else leave dnsHE == 0
+            }
+            else
+            {   // error if not ours
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_ID_ERROR;
+                break;
+            }
         }
 
-        if((dnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_COMPLETE) != 0)
+        if(dnsHE != 0)
         {
-            evDbgType = TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR;
-            break;
-        }
+            if((dnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_COMPLETE) != 0)
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR;
+                break;
+            }
 
-        if(pProc->dnsHE == 0)
-        {
-            pProc->dnsHE = dnsHE;
-        }
-        else if(pProc->dnsHE != dnsHE)
-        {
-            evDbgType = TCPIP_DNS_DBG_EVENT_RR_MISMATCH;
-            break;
+            if(pProc->dnsHE == 0)
+            {
+                pProc->dnsHE = dnsHE;
+            }
+            else if(pProc->dnsHE != dnsHE)
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_MISMATCH;
+                break;
+            }
         }
 
         // all good
@@ -1759,7 +1774,7 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
         {   // mark entry as solved
             _DNSCompleteHashEntry(pDnsDcpt, dnsHE);
         }
-        else if(evType == TCPIP_DNS_EVENT_NAME_ERROR)
+        else if(evType == TCPIP_DNS_EVENT_NAME_ERROR && dnsHE != 0)
         {   // Remove name if "No Such name"
             TCPIP_DNS_RemoveEntry(dnsHE->pHostName);
         }
