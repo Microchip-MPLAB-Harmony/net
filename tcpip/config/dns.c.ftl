@@ -1918,7 +1918,10 @@ static int _DNS_ReadName(TCPIP_DNS_RX_DATA* srcBuff, TCPIP_DNS_RX_DATA* pktBuff,
                 break;
             }
             wPtr += copyLen;
-            *wPtr++ = '.';
+            if(wPtr < ePtr)
+            {
+                *wPtr++ = '.';
+            }
         }
         if(discardLen != 0)
         {
@@ -1937,14 +1940,21 @@ static int _DNS_ReadName(TCPIP_DNS_RX_DATA* srcBuff, TCPIP_DNS_RX_DATA* pktBuff,
         return -1;
     }
 
-    if(wPtr != 0 && wPtr != nameBuff)
+    if(wPtr != 0)
     {
-        *--wPtr = 0;  // remove the last '.' and end the nameBuff properly
+        if(wPtr != nameBuff && *(wPtr - 1) == '.')
+        {
+            *(wPtr - 1) = 0;  // remove the last '.' 
+        }
+        else
+        {
+            *wPtr = 0;  // end the nameBuff properly
+        }
     }
+
 
     return nameLen;
 }
-
 
 static size_t TCPIP_DNS_OAHASH_KeyHash(OA_HASH_DCPT* pOH, const void* key)
 {
