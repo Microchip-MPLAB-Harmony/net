@@ -43,6 +43,16 @@ typedef enum
 	GMAC_QUE_5 = 5
 } GMAC_QUE_LIST;
 
+#define GMAC_QUE0_MASK      (1<<GMAC_QUE_0)
+#define GMAC_QUE1_MASK      (1<<GMAC_QUE_1)
+#define GMAC_QUE2_MASK      (1<<GMAC_QUE_2)
+#define GMAC_QUE3_MASK      (1<<GMAC_QUE_3)
+#define GMAC_QUE4_MASK      (1<<GMAC_QUE_4)
+#define GMAC_QUE5_MASK      (1<<GMAC_QUE_5)
+
+#define GMAC_ALL_QUE_MASK (GMAC_QUE0_MASK | GMAC_QUE1_MASK | GMAC_QUE2_MASK     \
+                            | GMAC_QUE3_MASK | GMAC_QUE4_MASK | GMAC_QUE5_MASK)
+
 // *****************************************************************************
 /*  TX Packet Descriptor Status Word
 

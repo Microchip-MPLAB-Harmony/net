@@ -1,0 +1,6 @@
+format_version: v1.0
+type: GroupComponent
+attributes: {displayName: NETWORK LAYER, id: NETWORK LAYER}
+children:
+- type: ElementPosition
+  attributes: {x: '380', y: '19', id: NETWORK LAYER}

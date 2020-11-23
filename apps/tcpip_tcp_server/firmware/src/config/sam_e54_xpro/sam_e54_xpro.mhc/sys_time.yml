@@ -1,0 +1,37 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: sys_time}
+children:
+- type: Symbols
+  children:
+  - type: String
+    attributes: {id: SYS_TIME_PLIB}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sys_time, value: TC0}
+  - type: String
+    attributes: {id: SYS_TIME_REMOTE_COMPONENT_ID}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sys_time, value: tc0}
+- type: Attachments
+  children:
+  - type: DirectDependency
+    attributes: {id: sys_time_TMR_dependency}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: tc0}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: TC0_TMR}
+- type: ElementPosition
+  attributes: {x: '316', y: '69', id: sys_time}

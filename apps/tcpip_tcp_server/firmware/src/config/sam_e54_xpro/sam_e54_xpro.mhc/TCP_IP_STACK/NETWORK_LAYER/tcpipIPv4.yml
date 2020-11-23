@@ -1,0 +1,6 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tcpipIPv4}
+children:
+- type: ElementPosition
+  attributes: {x: '300', y: '20', id: tcpipIPv4}

@@ -1,0 +1,29 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tcpip_driver_config}
+children:
+- type: Symbols
+  children:
+  - type: Boolean
+    attributes: {id: TCPIP_AUTOCONFIG_ENABLE_GMAC}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: TCPIP_AUTOCONFIG_ENABLE_KSZ8091}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tcpip_driver_config, value: 'true'}
+- type: ElementPosition
+  attributes: {x: '20', y: '20', id: tcpip_driver_config}

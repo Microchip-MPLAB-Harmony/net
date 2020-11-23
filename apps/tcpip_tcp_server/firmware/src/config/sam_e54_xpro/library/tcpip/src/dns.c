@@ -14,7 +14,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -44,7 +44,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/dns_private.h"
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_DNS_CLIENT
 
-    
 /****************************************************************************
   Section:
     Constants and Global Variables
@@ -62,8 +61,10 @@ static int          dnsInitCount = 0;       // module initialization count
 
 static void                 _DNSNotifyClients(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE, TCPIP_DNS_EVENT_TYPE evType);
 static void                 _DNSPutString(uint8_t **putbuf, const char* string);
-static void                 _DNSDiscardName(TCPIP_DNS_RX_DATA* srcBuff);
-static int                  _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, uint8_t *destBuff, int bytes);
+static int                  _DNS_ReadName(TCPIP_DNS_RX_DATA* srcBuff, TCPIP_DNS_RX_DATA* pktBuff, char* nameBuff, int buffSize);
+static int                  _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc, TCPIP_DNS_RR_TYPE rrType);
+static void                 _DNSInitRxData(TCPIP_DNS_RX_DATA* rxData, uint8_t* buffer, int bufferSize);
+static bool                 _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, int bytes);
 static bool                 _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE);
 static bool                 _DNS_Enable(TCPIP_NET_HANDLE hNet, bool checkIfUp, TCPIP_DNS_ENABLE_FLAGS flags);
 static void                 _DNS_DeleteHash(TCPIP_DNS_DCPT* pDnsDcpt);
@@ -87,7 +88,7 @@ static void                 _DNSClientCleanup(TCPIP_DNS_DCPT* pDnsDcpt);
 #else
 #define _DNSClientCleanup(pDnsDcpt)
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-static TCPIP_DNS_HASH_ENTRY *_DNSHashEntryFromTransactionId(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_UINT16_VAL transactionId);
+static TCPIP_DNS_HASH_ENTRY *_DNSHashEntryFromTransactionId(TCPIP_DNS_DCPT* pDnsDcpt, const char* hostName, uint16_t transactionId);
 static bool                 _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* dnsHE);
 static int                  _DNS_GetAddresses(const char* hostName, int startIndex, IP_MULTI_ADDRESS* pIPAddr, int nIPAddresses, TCPIP_DNS_ADDRESS_REC_MASK recMask);
 
@@ -128,21 +129,36 @@ static const char* _DNSDbg_EvNameTbl[] =
     "solved",       // TCPIP_DNS_DBG_EVENT_NAME_RESOLVED
     "expired",      // TCPIP_DNS_DBG_EVENT_NAME_EXPIRED
     "removed",      // TCPIP_DNS_DBG_EVENT_NAME_REMOVED
-    "noname",       // TCPIP_DNS_DBG_EVENT_NAME_ERROR
+    "name error",   // TCPIP_DNS_DBG_EVENT_NAME_ERROR
     "skt error",    // TCPIP_DNS_DBG_EVENT_SOCKET_ERROR
     "no if",        // TCPIP_DNS_DBG_EVENT_NO_INTERFACE
     // debug events
-    "id error",     // TCPIP_DNS_DBG_EVENT_ID_ERROR 
-    "solved error", // TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR 
-    "ip error",     // TCPIP_DNS_DBG_EVENT_NO_IP_ERROR 
-    "unsolicited packet",   // TCPIP_DNS_DBG_EVENT_UNSOLICITED_ERROR 
+    "xtraxt error",     // TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR 
+    "id error",         // TCPIP_DNS_DBG_EVENT_RR_ID_ERROR 
+    "no RRs",           // TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS 
+    "rr miss",          // TCPIP_DNS_DBG_EVENT_RR_MISMATCH
+    "rr data err",      // TCPIP_DNS_DBG_EVENT_RR_DATA_ERROR
+    "rr complete err",  // TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR
+    "ip error",         // TCPIP_DNS_DBG_EVENT_NO_IP_ERROR 
+    "unsolicited pkt",  // TCPIP_DNS_DBG_EVENT_UNSOLICITED_ERROR 
 };
 
 static void _DNS_DbgEvent(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE, TCPIP_DNS_DBG_EVENT_TYPE evType)
 {
     _DNSAssertCond(0 <= evType && evType <= TCPIP_DNS_DBG_EVENT_UNSOLICITED_ERROR, __func__, __LINE__);
-    const char* hostName = (pDnsHE != 0) ? pDnsHE->pHostName : "no host";
-    const char* ifName = (pDnsHE != 0 && pDnsHE->currNet != 0) ? TCPIP_STACK_NetNameGet(pDnsHE->currNet) : "no if";
+    const char* hostName;
+    const char* ifName;
+
+    if(pDnsHE == 0)
+    {
+       hostName = "no host";
+       ifName = "no if";
+    }
+    else
+    {
+        hostName = pDnsHE->pHostName;
+        ifName = TCPIP_STACK_NetNameGet(pDnsHE->currNet);
+    }
 
     const char* evName = _DNSDbg_EvNameTbl[evType];
     SYS_CONSOLE_PRINT("DNS Event: %s, IF: %s, host: %s, time: %d\r\n", evName, ifName, hostName, pDnsDcpt->dnsTime);
@@ -151,6 +167,38 @@ static void _DNS_DbgEvent(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE
 #define _DNS_DbgEvent(pDnsDcpt, pDnsHE, evType)
 #endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_EVENTS) != 0)
 
+#if ((TCPIP_DNS_DEBUG_LEVEL & (TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES | TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES)) != 0)
+static const char* rrNamesTbl[] = 
+{
+    "quest", "answer", "auth", "addit",
+};
+
+static void _DNS_DbgRRName(char* nameBuffer, TCPIP_DNS_RR_TYPE rrType)
+{
+    bool doPrint = false;
+    if(rrType == TCPIP_DNS_RR_TYPE_QUESTION)
+    {
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES) != 0)
+        doPrint = true;
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES) != 0)
+    }
+    else
+    {
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES) != 0)
+        doPrint = true;
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES) != 0)
+    }
+
+    if(doPrint)
+    {
+        const char* msg = rrNamesTbl[rrType];
+
+        SYS_CONSOLE_PRINT("DNS RR name: %s, -%s-\r\n", msg, nameBuffer);
+    }
+}
+#else
+#define _DNS_DbgRRName(buffer, rrType)
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & (TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES | TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES)) != 0)
 
 /*****************************************************************************
  swap DNS Header content packet . This API is used when we recive
@@ -296,7 +344,7 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         TCPIP_DNS_DCPT* pDnsDcpt = &gDnsDcpt;
         memset(pDnsDcpt, 0, sizeof(*pDnsDcpt));
 
-        if(dnsData == 0)
+        if(dnsData == 0 || TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN == 0)
         {
             return false;
         }
@@ -367,11 +415,9 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                 pE->pip6Address = (IPV6_ADDR *)pMemoryBlock;
                 pMemoryBlock += pDnsDcpt->nIPv6Entries * (sizeof(IPV6_ADDR));
             }
+
             // allocate Hostname
-            if(TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN != 0)
-            {
-                pE->pHostName = (char*)pMemoryBlock;
-            }
+            pE->pHostName = (char*)pMemoryBlock;
         }
 
         iniRes = false;
@@ -1373,39 +1419,43 @@ static void TCPIP_DNS_ClientProcess(bool isTmo)
 
 }
 
-// extracts the IPv4/IPv6 addresses and updates the hash entry
-// returns true if processing could continue
-// false otherwise (already have the number of required addresses, etc.)
+// extracts the IPv4/IPv6 addresses and updates the hash entry if dnsHE != 0
+// if dnsHE == 0, than it just discards
+// returns true if processing was successful
+// false if some error occurred
 static bool _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* dnsHE)
 {
     TCPIP_DNS_ANSWER_HEADER DNSAnswerHeader;    
     IP_MULTI_ADDRESS        ipAddr;
-    bool                    canContinue;
     bool                    discardData;
 
+    if(!_DNSGetData(dnsRxData, (uint8_t *)&DNSAnswerHeader, sizeof(TCPIP_DNS_ANSWER_HEADER)))
+    {   // failed to read the RR header
+        return false;
+    }
 
-    _DNSDiscardName(dnsRxData); // Throw away response name
-
-    _DNSGetData(dnsRxData, (uint8_t *)&DNSAnswerHeader, sizeof(TCPIP_DNS_ANSWER_HEADER));
     _SwapDNSAnswerPacket(&DNSAnswerHeader);
 
     // Make sure that this is a 4 byte IP address, response type A or MX, class 1
     // Check if this is Type A, MX, or AAAA
-    canContinue = true;
     discardData = true;
 
-    while( DNSAnswerHeader.ResponseClass.Val == 0x0001u) // Internet class
+    while( dnsHE != 0 && (DNSAnswerHeader.ResponseClass.Val == 1)) // Internet class
     {
         if (DNSAnswerHeader.ResponseType.Val == TCPIP_DNS_TYPE_A && DNSAnswerHeader.ResponseLen.Val == 4)
         {            
-            // read the buffer
-            _DNSGetData(dnsRxData, ipAddr.v4Add.v, sizeof(IPV4_ADDR));
-            discardData = false;
             if(dnsHE->nIPv4Entries >= pDnsDcpt->nIPv4Entries)
-            {   // have enough entries
-                canContinue = false;
+            {   // we have enough IPv4 entries
                 break;
             }
+
+            // read the buffer
+            if(!_DNSGetData(dnsRxData, ipAddr.v4Add.v, sizeof(IPV4_ADDR)))
+            {
+                return false;
+            }
+
+            discardData = false;
             // update the Hash entry for IPv4 address
             dnsHE->pip4Address[dnsHE->nIPv4Entries].Val = ipAddr.v4Add.Val;
             if((DNSAnswerHeader.ResponseTTL.Val < dnsHE->ipTTL.Val) || (dnsHE->ipTTL.Val == 0))
@@ -1413,24 +1463,24 @@ static bool _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DN
                 dnsHE->ipTTL.Val = DNSAnswerHeader.ResponseTTL.Val;
             }
             dnsHE->nIPv4Entries++;
+            // done
             break;
         }
 
         if (DNSAnswerHeader.ResponseType.Val == TCPIP_DNS_TYPE_AAAA && DNSAnswerHeader.ResponseLen.Val == 16)
         {
-            if((dnsHE->recordMask & TCPIP_DNS_ADDRESS_REC_IPV6) == 0)
-            {
+            if((dnsHE->recordMask & TCPIP_DNS_ADDRESS_REC_IPV6) == 0 || (dnsHE->nIPv6Entries >= pDnsDcpt->nIPv6Entries))
+            {   // not needed or enough IPvr entries
                 break;
             }           
 
             // read the buffer
-            _DNSGetData(dnsRxData, ipAddr.v6Add.v, sizeof (IPV6_ADDR));
-            discardData = false;
-            if(dnsHE->nIPv6Entries >= pDnsDcpt->nIPv6Entries)
-            {   // have enough entries
-                canContinue = false;
-                break;
+            if(!_DNSGetData(dnsRxData, ipAddr.v6Add.v, sizeof (IPV6_ADDR)))
+            {
+                return false;
             }
+
+            discardData = false;
             // update the Hash entry for IPv6 address
             memcpy( &dnsHE->pip6Address[dnsHE->nIPv6Entries], ipAddr.v6Add.v, sizeof(IPV6_ADDR));
             if((DNSAnswerHeader.ResponseTTL.Val < dnsHE->ipTTL.Val) || (dnsHE->ipTTL.Val == 0))
@@ -1447,54 +1497,181 @@ static bool _DNS_RESPONSE_HashEntryUpdate(TCPIP_DNS_RX_DATA* dnsRxData, TCPIP_DN
 
     if(discardData)
     {
-        _DNSGetData(dnsRxData, 0, DNSAnswerHeader.ResponseLen.Val);
+        if(!_DNSGetData(dnsRxData, 0, DNSAnswerHeader.ResponseLen.Val))
+        {
+            return false;
+        }
     }
-    return canContinue;
+
+    return true;
 }
 
-static TCPIP_DNS_HASH_ENTRY* _DNSHashEntryFromTransactionId(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_UINT16_VAL transactionId)
+static TCPIP_DNS_HASH_ENTRY* _DNSHashEntryFromTransactionId(TCPIP_DNS_DCPT* pDnsDcpt, const char* hostName, uint16_t transactionId)
 {
-    TCPIP_DNS_HASH_ENTRY    *pDnsHE;
-    int                     bktIx;
-    OA_HASH_DCPT            *pOH;
-    
-    pOH = pDnsDcpt->hashDcpt;
-
-    for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
+    TCPIP_DNS_HASH_ENTRY* pDnsHE;
+    pDnsHE = (TCPIP_DNS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookup(pDnsDcpt->hashDcpt, hostName);
+    if(pDnsHE != 0)
     {
-        pDnsHE = (TCPIP_DNS_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(pOH, bktIx);
-        if(pDnsHE->hEntry.flags.busy != 0)
+        if(pDnsHE->transactionId.Val == transactionId)
         {
-            if(pDnsHE->transactionId.Val == transactionId.Val)
-            {
-                return pDnsHE;
-            }
+            return pDnsHE;
         }
     }
     return 0;
 }
 
 // retrieves a number of bytes from a source buffer and copies the data into the supplied destination buffer (if !0)
-// returns the number of bytes removed from the source data buffer
-// upodates the source buffer descriptor
-static int _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, uint8_t *destBuff, int bytes)
+// returns true if the specified number of bytes could be removed from the source data buffer
+// false otherwise
+// updates the source buffer descriptor
+static bool _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, int getBytes)
 {
-    int nBytes = srcBuff->endPtr - srcBuff->wrPtr;
+    int avlblBytes = srcBuff->endPtr - srcBuff->rdPtr;
+    int copyBytes = getBytes;
 
-    if(bytes < nBytes)
+    if(copyBytes > avlblBytes)
     {
-        nBytes =  bytes;
+        copyBytes = avlblBytes;
     }
 
-    if(destBuff && nBytes)
+    if(destBuff && copyBytes)
     {
-        memcpy(destBuff, srcBuff->wrPtr, nBytes);
+        memcpy(destBuff, srcBuff->rdPtr, copyBytes);
     }
 
-    srcBuff->wrPtr += nBytes;
+    srcBuff->rdPtr += copyBytes;
 
-    return nBytes;
+    return copyBytes == getBytes;
 }
+
+static void _DNSInitRxData(TCPIP_DNS_RX_DATA* rxData, uint8_t* buffer, int bufferSize)
+{
+    rxData->head = rxData->rdPtr = buffer;
+    rxData->endPtr = buffer + bufferSize;
+}
+
+static int _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc, TCPIP_DNS_RR_TYPE rrType)
+{
+    TCPIP_DNS_RX_DATA pktData;   // used for compressed searches
+    TCPIP_DNS_HASH_ENTRY* dnsHE;
+    int nameLen;
+    TCPIP_DNS_DBG_EVENT_TYPE evDbgType = TCPIP_DNS_DBG_EVENT_NONE;
+    char    nameBuffer[TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN + 1];               // holds the RR name             
+
+    int nRecords = 0;
+    int nRR;
+    switch(rrType)
+    {
+        case TCPIP_DNS_RR_TYPE_QUESTION:
+           nRR = pProc->dnsHeader->Questions.Val;
+           break;
+
+        case TCPIP_DNS_RR_TYPE_ANSWER:
+           nRR = pProc->dnsHeader->Answers.Val;
+           break;
+
+        case TCPIP_DNS_RR_TYPE_AUTHORITATIVE:
+           nRR = pProc->dnsHeader->AuthoritativeRecords.Val;
+           break;
+
+        case TCPIP_DNS_RR_TYPE_ADDITIONAL:
+           nRR = pProc->dnsHeader->AdditionalRecords.Val;
+           break;
+
+        default:
+           nRR = 0;
+           _DNSAssertCond(false, __func__, __LINE__);
+           break;
+    }
+
+
+    while(nRR--)
+    {
+        _DNSInitRxData(&pktData, pProc->dnsPacket, pProc->dnsPacketSize);
+        nameLen = _DNS_ReadName(pProc->dnsRxData, &pktData, nameBuffer, sizeof(nameBuffer) - 1);
+        if(nameLen <= 0)
+        {   // error retrieveing the question name ?
+            evDbgType = TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR; 
+            break;
+        }
+
+        _DNS_DbgRRName(nameBuffer, rrType);
+
+        // make sure it's our query
+        dnsHE = _DNSHashEntryFromTransactionId(pDnsDcpt, nameBuffer, pProc->dnsHeader->TransactionID.Val);
+        if(dnsHE == 0)
+        {   // not ours?
+            if(rrType == TCPIP_DNS_RR_TYPE_ADDITIONAL)
+            {   // it's OK for additional RR could carry different names
+                if(pProc->dnsHE != 0)
+                {   // if already have proper names for this, we could use the data
+                    dnsHE = pProc->dnsHE;
+                }
+                // else leave dnsHE == 0
+            }
+            else
+            {   // error if not ours
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_ID_ERROR;
+                break;
+            }
+        }
+
+        if(dnsHE != 0)
+        {
+            if((dnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_COMPLETE) != 0)
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR;
+                break;
+            }
+
+            if(pProc->dnsHE == 0)
+            {
+                pProc->dnsHE = dnsHE;
+            }
+            else if(pProc->dnsHE != dnsHE)
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_MISMATCH;
+                break;
+            }
+        }
+
+        // all good
+        if(rrType == TCPIP_DNS_RR_TYPE_QUESTION)
+        {   // skip the Question Type and Class
+            if(!_DNSGetData(pProc->dnsRxData, 0, 4))
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR;
+                break;
+            }
+        }
+        else
+        {
+            bool entryUpdate = _DNS_RESPONSE_HashEntryUpdate(pProc->dnsRxData, pDnsDcpt, dnsHE);
+            if(entryUpdate == false)
+            {
+                evDbgType = TCPIP_DNS_DBG_EVENT_RR_DATA_ERROR;
+                break;
+            }
+        }
+
+        nRecords++;
+    }
+
+    if(nRecords == 0 && evDbgType == TCPIP_DNS_DBG_EVENT_NONE)
+    {
+        if(rrType == TCPIP_DNS_RR_TYPE_QUESTION)
+        {
+            evDbgType = TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS; 
+        }
+        // other RR types is probably OK to miss 
+    } 
+
+    pProc->evDbgType = evDbgType;
+
+    return nRecords;
+}
+
+
 
 // process a DNS packet
 // returns true if info updated
@@ -1502,100 +1679,79 @@ static int _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, uint8_t *destBuff, int bytes)
 static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
 {
     TCPIP_DNS_HEADER        DNSHeader;
-    TCPIP_DNS_HASH_ENTRY*   dnsHE;
+    TCPIP_DNS_HASH_ENTRY    *dnsHE;
     int                     dnsPacketSize;
     TCPIP_DNS_RX_DATA       dnsRxData;
     uint8_t                 dnsRxBuffer[TCPIP_DNS_RX_BUFFER_SIZE];
-    bool                    procRes;
+    bool                    procFail;
     TCPIP_DNS_EVENT_TYPE    evType = TCPIP_DNS_EVENT_NONE;
     TCPIP_DNS_DBG_EVENT_TYPE evDbgType = TCPIP_DNS_DBG_EVENT_NONE;
+    TCPIP_DNS_RR_PROCESS    procRR;
 
 
     // Get DNS Reply packet
     dnsPacketSize = TCPIP_UDP_ArrayGet(pDnsDcpt->dnsSocket, dnsRxBuffer, sizeof(dnsRxBuffer));
 
-    dnsRxData.head = dnsRxBuffer;
-    dnsRxData.wrPtr = dnsRxData.head;
-    dnsRxData.endPtr = dnsRxData.head + dnsPacketSize;
+    _DNSInitRxData(&dnsRxData, dnsRxBuffer, dnsPacketSize);
 
     // Retrieve the DNS header and de-big-endian it
-    memcpy((void*)&DNSHeader, dnsRxData.wrPtr, sizeof(DNSHeader));
-    // Shift get pointer to the next poniter to get the new value
-    dnsRxData.wrPtr = dnsRxData.wrPtr + sizeof(DNSHeader);
+    if(!_DNSGetData(&dnsRxData, &DNSHeader, sizeof(DNSHeader)))
+    {   // incomplete packet?
+        return false;
+    }
+
     // Swap DNS Header received packet
     _SwapDNSPacket(&DNSHeader);
 
+    // populate the RR process structure
+    procRR.dnsHeader = &DNSHeader;
+    procRR.dnsPacket = dnsRxBuffer;
+    procRR.dnsRxData = &dnsRxData;
+    procRR.dnsPacketSize = dnsPacketSize;
+    procRR.dnsHE = 0;
+
     while(true)
     {
-        // find DNS HASH entry from transaction ID
-        dnsHE = _DNSHashEntryFromTransactionId(pDnsDcpt, DNSHeader.TransactionID);
-
-        // Throw this packet away if no response to our query or name already exists
-        if(dnsHE == 0)
-        {
-            evDbgType = TCPIP_DNS_DBG_EVENT_ID_ERROR;
-            procRes = false;
-            break;
-        }
-
-        if((dnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_COMPLETE) != 0)
-        {
-            evDbgType = TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR;
-            procRes = false;
-            break;
-        }
+        dnsHE = 0;
+        procFail = false;
 
         if((DNSHeader.Flags.v[0] & 0x03) != 0)
         {   
             evType = TCPIP_DNS_EVENT_NAME_ERROR;
-            procRes = false;
+            procFail = true;
             break;
         }
 
-        // Remove all questions (queries)
-        while(DNSHeader.Questions.Val--)
+        // process queries and all types of RRs
+        int ix;
+        for(ix = TCPIP_DNS_RR_TYPE_QUESTION; ix < TCPIP_DNS_RR_TYPES; ix++) 
         {
-            _DNSDiscardName(&dnsRxData);
-            // Ignore Question Type and Question class
-            _DNSGetData(&dnsRxData, 0, 4); // Question type class
-        }
-
-        // Scan through answers
-        while(DNSHeader.Answers.Val--)
-        {
-            if(!_DNS_RESPONSE_HashEntryUpdate(&dnsRxData, pDnsDcpt, dnsHE))
-            {
+            _DNS_ProcessRR(pDnsDcpt, &procRR, (TCPIP_DNS_RR_TYPE)ix);
+            if(procRR.evDbgType != TCPIP_DNS_DBG_EVENT_NONE)
+            {   // some issue occurred
+                evDbgType = procRR.evDbgType;
+                procFail = true;
                 break;
-            }
+            } 
         }
 
-        // Remove all Authoritative Records
-        while(DNSHeader.AuthoritativeRecords.Val--)
-        {
-            if(!_DNS_RESPONSE_HashEntryUpdate(&dnsRxData, pDnsDcpt, dnsHE))
-            {
-                break;
-            }
+        if(procFail)
+        {   // failed
+            break;
         }
+        
+        // save the entry
+        dnsHE = procRR.dnsHE;
 
-        // Remove all Additional Records
-        while(DNSHeader.AdditionalRecords.Val--)
-        {
-            if(!_DNS_RESPONSE_HashEntryUpdate(&dnsRxData, pDnsDcpt, dnsHE))
-            {
-                break;
-            }
-        }
-
-        if(dnsHE->nIPv4Entries > 0 || dnsHE->nIPv6Entries > 0)
+        // finally
+        if(dnsHE != 0 && (dnsHE->nIPv4Entries > 0 || dnsHE->nIPv6Entries > 0))
         {
             evType = TCPIP_DNS_EVENT_NAME_RESOLVED;
-            procRes = true;
         }           
         else
         {
             evDbgType = TCPIP_DNS_DBG_EVENT_NO_IP_ERROR;
-            procRes = false;
+            procFail = true;
         }
 
         break;
@@ -1609,7 +1765,7 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
         {   // mark entry as solved
             _DNSCompleteHashEntry(pDnsDcpt, dnsHE);
         }
-        else if(evType == TCPIP_DNS_EVENT_NAME_ERROR)
+        else if(evType == TCPIP_DNS_EVENT_NAME_ERROR && dnsHE != 0)
         {   // Remove name if "No Such name"
             TCPIP_DNS_RemoveEntry(dnsHE->pHostName);
         }
@@ -1619,7 +1775,7 @@ static bool _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt)
         _DNS_DbgEvent(pDnsDcpt, dnsHE, evDbgType);
     }
 
-    return procRes;
+    return !procFail;
 }
 // This function writes a string to a buffer, ensuring that it is
 // properly formatted.
@@ -1660,35 +1816,143 @@ static void _DNSPutString(uint8_t** wrPtr, const char* string)
     *wrPtr = pPutDnsStr;
 }
 
-// Reads a name string or string pointer from the DNS socket and discards it.
+// Reads a name string or string pointer from the DNS buffer
+// Saves the name in the supplied buffer
+// nameBuff should be buffSize + 1 characters in size!
 // Each string consists of a series of labels.
 // Each label consists of a length prefix byte, followed by the label bytes.
 // At the end of the string, a zero length label is found as termination.
-// If name compression is used, this function will automatically detect the pointer and discard it.
-static void _DNSDiscardName(TCPIP_DNS_RX_DATA* srcBuff)
+// If name compression is used, this function will automatically detect the pointer
+// pktBuff is pointing to the initial DNS packet for assembling compressed names
+// 
+// returns the size of the assembled name or -1 if error
+static int _DNS_ReadName(TCPIP_DNS_RX_DATA* srcBuff, TCPIP_DNS_RX_DATA* pktBuff, char* nameBuff, int buffSize)
 {
-    uint8_t labelLen;
+    uint8_t labelLen, offset;
+    uint16_t labelOffset;
+    int     copyLen, discardLen, avlblLen, nameLen;
+    char    *wPtr, *ePtr;
+
+    if(nameBuff != 0 && buffSize != 0)
+    {
+        wPtr = nameBuff;
+        ePtr = nameBuff + buffSize;
+        *wPtr = 0;
+    }
+    else
+    {
+        wPtr = 0;
+    }
+
+    TCPIP_DNS_RX_DATA* xtractBuff = srcBuff;
+    bool nameFail = false;
+    nameLen = 0;
+
 
     while(1)
     {
         // Get first byte which will tell us if this is a 16-bit pointer or the
         // length of the first of a series of labels
-        labelLen = *srcBuff->wrPtr++;
-        if(labelLen == 0)
-        {
-            return;
-        }
-        
-        // Check if this is a pointer, if so, get the remaining 8 bits and return
-        if((labelLen & 0xc0) == 0xc0)
-        {
-            srcBuff->wrPtr++;
-            return;
+        if(!_DNSGetData(xtractBuff, &labelLen, sizeof(labelLen)))
+        {   // failed to get label
+            nameFail = true;
+            break;
         }
 
-        // Ignore these bytes
-        _DNSGetData(srcBuff, 0, labelLen);
+        if(labelLen == 0)
+        {   // no more data or done
+            break;
+        }
+
+        // Check if this is a pointer, if so, jump to the offset
+        if((labelLen & 0xc0) == 0xc0)
+        {   // get the offset
+            labelOffset = (uint16_t)(labelLen & 0x3f) << 8;
+            if(!_DNSGetData(xtractBuff, &offset, sizeof(offset)))
+            {   // failed to get the offset
+                nameFail = true;
+                break;
+            }
+
+            labelOffset += offset; 
+            if(pktBuff->rdPtr + labelOffset > pktBuff->endPtr)
+            {   // overflow ?
+                nameFail = true;
+                break;
+            }
+            else
+            {
+                pktBuff->rdPtr += labelOffset;
+                xtractBuff = pktBuff;
+                // jump to the offset
+                continue;
+            }
+        }
+
+        if(wPtr != 0)
+        {
+            avlblLen = ePtr - wPtr;
+            if(labelLen > avlblLen)
+            {
+                copyLen = avlblLen;
+                discardLen = labelLen - avlblLen;
+            }
+            else
+            {
+                copyLen = labelLen;
+                discardLen = 0;
+            }
+        }
+        else
+        {
+            copyLen = 0;
+            discardLen = labelLen;
+        }
+
+        if(copyLen != 0)
+        {
+            if(!_DNSGetData(xtractBuff, wPtr, copyLen))
+            {
+                nameFail = true;
+                break;
+            }
+            wPtr += copyLen;
+            if(wPtr < ePtr)
+            {
+                *wPtr++ = '.';
+            }
+        }
+        if(discardLen != 0)
+        {
+            if(!_DNSGetData(xtractBuff, 0, discardLen))
+            {
+                nameFail = true;
+                break;
+            }
+        }
+
+        nameLen += copyLen + discardLen;
     }
+
+    if(nameFail)
+    {
+        return -1;
+    }
+
+    if(wPtr != 0)
+    {
+        if(wPtr != nameBuff && *(wPtr - 1) == '.')
+        {
+            *(wPtr - 1) = 0;  // remove the last '.' 
+        }
+        else
+        {
+            *wPtr = 0;  // end the nameBuff properly
+        }
+    }
+
+
+    return nameLen;
 }
 
 static size_t TCPIP_DNS_OAHASH_KeyHash(OA_HASH_DCPT* pOH, const void* key)
@@ -1747,29 +2011,23 @@ static int TCPIP_DNS_OAHASH_KeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry,
 
 static void TCPIP_DNS_OAHASH_KeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
 {
-    uint8_t    *dnsHostNameKey;
-    TCPIP_DNS_HASH_ENTRY  *pDnsHE;
-    size_t          hostnameLen=0;
-
-    if(key==NULL) 
+    if(key == 0) 
     {
         return;
     }
     
-    pDnsHE =(TCPIP_DNS_HASH_ENTRY  *)dstEntry;
-    dnsHostNameKey = (uint8_t *)key;
-    hostnameLen = strlen((const char*)dnsHostNameKey);
-    if(hostnameLen>TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN) 
-    {
-        return;
+
+    TCPIP_DNS_HASH_ENTRY* pDnsHE =(TCPIP_DNS_HASH_ENTRY  *)dstEntry;
+    const char* dnsHostNameKey = (const char*)key;
+
+    size_t hostnameLen = strlen(dnsHostNameKey);
+    if(hostnameLen > TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN) 
+    {  
+        hostnameLen = TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN;
     }
 
-    if(dnsHostNameKey && pDnsHE->pHostName != 0)
-    {
-        memset(pDnsHE->pHostName, 0, TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN);
-        memcpy(pDnsHE->pHostName, dnsHostNameKey, hostnameLen);
-        pDnsHE->pHostName[hostnameLen]='\0';
-    }
+    memcpy(pDnsHE->pHostName, dnsHostNameKey, hostnameLen);
+    pDnsHE->pHostName[hostnameLen] = '\0';
 }
 
 #if defined(OA_DOUBLE_HASH_PROBING)
@@ -1799,14 +2057,12 @@ TCPIP_DNS_HANDLE TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVEN
 
     if(pDnsDcpt && handler && pDnsDcpt->memH)
     {
-        TCPIP_DNS_LIST_NODE* newNode = (TCPIP_DNS_LIST_NODE*)TCPIP_Notification_Add(&pDnsDcpt->dnsRegisteredUsers, pDnsDcpt->memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        TCPIP_DNS_LIST_NODE dnsNode;
+        dnsNode.handler = handler;
+        dnsNode.hParam = hParam;
+        dnsNode.hNet = hNet;
+
+        return (TCPIP_DNS_LIST_NODE*)TCPIP_Notification_Add(&pDnsDcpt->dnsRegisteredUsers, pDnsDcpt->memH, &dnsNode, sizeof(dnsNode));
     }
     return 0;
 }
@@ -1831,22 +2087,25 @@ static void _DNSNotifyClients(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pD
     _DNS_DbgEvent(pDnsDcpt, pDnsHE, (TCPIP_DNS_DBG_EVENT_TYPE)evType);
 
 #if (TCPIP_DNS_CLIENT_USER_NOTIFICATION != 0)
-    TCPIP_DNS_LIST_NODE* dNode;
-    bool     triggerNotify;
-
-    TCPIP_Notification_Lock(&pDnsDcpt->dnsRegisteredUsers);
-    for(dNode = (TCPIP_DNS_LIST_NODE*)pDnsDcpt->dnsRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
+    if(pDnsHE != 0)
     {
-        if(dNode->hNet == 0 || dNode->hNet == pDnsHE->currNet)
-        {   // trigger event
-            triggerNotify = dNode->hParam == 0 ? true : strcmp(dNode->hParam, pDnsHE->pHostName) == 0;
-            if(triggerNotify)
-            {
-                (*dNode->handler)(pDnsHE->currNet, evType, pDnsHE->pHostName, dNode->hParam);
+        TCPIP_DNS_LIST_NODE* dNode;
+        bool     triggerNotify;
+
+        TCPIP_Notification_Lock(&pDnsDcpt->dnsRegisteredUsers);
+        for(dNode = (TCPIP_DNS_LIST_NODE*)pDnsDcpt->dnsRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
+        {
+            if(dNode->hNet == 0 || dNode->hNet == pDnsHE->currNet)
+            {   // trigger event
+                triggerNotify = dNode->hParam == 0 ? true : strcmp(dNode->hParam, pDnsHE->pHostName) == 0;
+                if(triggerNotify)
+                {
+                    (*dNode->handler)(pDnsHE->currNet, evType, pDnsHE->pHostName, dNode->hParam);
+                }
             }
-        }
-    }    
-    TCPIP_Notification_Unlock(&pDnsDcpt->dnsRegisteredUsers);
+        }    
+        TCPIP_Notification_Unlock(&pDnsDcpt->dnsRegisteredUsers);
+    }
 #endif  // (TCPIP_DNS_CLIENT_USER_NOTIFICATION != 0)
 }
 

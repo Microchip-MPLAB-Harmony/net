@@ -1,0 +1,177 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tc0}
+children:
+- type: Symbols
+  children:
+  - type: String
+    attributes: {id: COMPARE_SET_API_NAME}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: TC0_Timer32bitCompareSet}
+  - type: String
+    attributes: {id: COUNTER_GET_API_NAME}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: TC0_Timer32bitCounterGet}
+  - type: String
+    attributes: {id: PERIOD_SET_API_NAME}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: TC0_Timer32bitPeriodSet}
+  - type: String
+    attributes: {id: SYS_TIME_COMPONENT_ID}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: sys_time}
+  - type: String
+    attributes: {id: SYS_TIME_PLIB_OPERATION_MODE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: SYS_TIME_PLIB_MODE_COMPARE}
+  - type: Long
+    attributes: {id: TC_COMPARE_CC0}
+    children:
+    - type: Attributes
+      children:
+      - type: Long
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '4294967295'}
+  - type: Long
+    attributes: {id: TC_COMPARE_CC1}
+    children:
+    - type: Attributes
+      children:
+      - type: Long
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '24'}
+  - type: Long
+    attributes: {id: TC_COMPARE_PERIOD}
+    children:
+    - type: Attributes
+      children:
+      - type: Long
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '4294967295'}
+  - type: Comment
+    attributes: {id: TC_COMPARE_PERIOD_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '**** Compare Period is 51.2 us ****'}
+  - type: KeyValueSet
+    attributes: {id: TC_CTRLA_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '2'}
+  - type: KeyValueSet
+    attributes: {id: TC_CTRLA_PRESCALER}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '6'}
+  - type: Integer
+    attributes: {id: TC_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: '468750'}
+  - type: Comment
+    attributes: {id: TC_Resolution}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '****Timer resolution is 2133.33333333 nS****'}
+  - type: Boolean
+    attributes: {id: TC_SYS_TIME_CONNECTED}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: 'true'}
+  - type: Boolean
+    attributes: {id: TC_TIMER_INTENSET_MC1}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: 'true'}
+  - type: Boolean
+    attributes: {id: TC_TIMER_INTENSET_OVF}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: 'false'}
+      - type: User
+        attributes: {value: 'true'}
+  - type: Long
+    attributes: {id: TC_TIMER_PERIOD}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: '468'}
+  - type: Float
+    attributes: {id: TC_TIMER_TIME_MS}
+    children:
+    - type: Attributes
+      children:
+      - type: Float
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '9162597.0'}
+  - type: String
+    attributes: {id: TIMER_PERIOD_MAX}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: '4294967295'}
+  - type: Integer
+    attributes: {id: TIMER_WIDTH}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tc0, value: '32'}
+- type: Attachments
+  children:
+  - type: DirectCapability
+    attributes: {id: TC0_TMR}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: sys_time}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: sys_time_TMR_dependency}
+- type: ElementPosition
+  attributes: {x: '117', y: '115', id: tc0}

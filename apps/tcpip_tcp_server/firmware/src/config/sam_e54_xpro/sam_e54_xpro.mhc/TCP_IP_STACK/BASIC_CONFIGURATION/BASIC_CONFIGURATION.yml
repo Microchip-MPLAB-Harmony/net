@@ -1,0 +1,14 @@
+format_version: v1.0
+type: GroupComponent
+attributes: {displayName: BASIC CONFIGURATION, id: BASIC CONFIGURATION}
+children:
+- type: ElementPosition
+  attributes: {x: '423', y: '145', id: BASIC CONFIGURATION}
+- type: Attachments
+  children:
+  - type: Attachment
+    attributes: {targetComponentID: TCP/IP STACK, namespace: tcpipStack, id: Core_SysConsole_Dependency,
+      targetAttachmentID: 'TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency'}
+  - type: Attachment
+    attributes: {targetComponentID: DRIVER LAYER, namespace: tcpipNetConfig_0, id: NETCONFIG_MAC_Dependency,
+      targetAttachmentID: 'drvGmac:libdrvGmac'}

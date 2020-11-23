@@ -51,7 +51,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // ICMP Packet Structure
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
 	uint8_t vType;
 	uint8_t vCode;
@@ -81,9 +81,15 @@ static tcpipSignalHandle    signalHandle = 0;   // registered signal handler
 // Callback function for informing the upper-layer protocols about ICMP events
 typedef void (*icmpCallback) (TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);
 
-#if (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if defined(TCPIP_ICMP_CLIENT_USER_NOTIFICATION) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#define _TCPIP_ICMP_CLIENT_USER_NOTIFICATION 1
+#else
+#define _TCPIP_ICMP_CLIENT_USER_NOTIFICATION 0
+#endif
+
+#if (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 static PROTECTED_SINGLE_LIST      icmpRegisteredUsers = { {0} };
-#endif  // (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 //
 // ICMP callback registration
 typedef struct  _TAG_ICMP_LIST_NODE
@@ -117,22 +123,28 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
 static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen);
 static bool _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pkt, const void* ackParam);
 static void  TCPIP_ICMP_Timeout(void);
-#if (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 static void _ICMPNotifyClients(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);
 #else
 #define _ICMPNotifyClients(hNetIf, remoteIP, data)
-#endif  // (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
-#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+
+#if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
+#define _TCPIP_IPV4_FRAGMENTATION 1
+#else
+#define _TCPIP_IPV4_FRAGMENTATION 0
+#endif
 
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static void     _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes);
 #else
 static __inline__ void __attribute__((always_inline)) _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes);
 }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 
 
@@ -164,9 +176,9 @@ bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
             pIcmpEchoRequest = 0;        // one and only request (for now)
             icmpEchoTmo = 0;
-#if (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
             iniRes = TCPIP_Notification_Initialize(&icmpRegisteredUsers);
-#endif  // (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 #endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT)
             break;
         }
@@ -208,9 +220,9 @@ void TCPIP_ICMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
 static void TCPIP_ICMP_Cleanup(void)
 {
-#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
     TCPIP_Notification_Deinitialize(&icmpRegisteredUsers, icmpMemH);
-#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
     if(signalHandle)
     {
         _TCPIPStackSignalHandlerDeregister(signalHandle);
@@ -220,17 +232,15 @@ static void TCPIP_ICMP_Cleanup(void)
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 ICMP_HANDLE TCPIP_ICMP_CallbackRegister (void (*callback)(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data))
 {
     if(callback && icmpMemH)
     {
-        ICMP_LIST_NODE* newNode = (ICMP_LIST_NODE*)TCPIP_Notification_Add(&icmpRegisteredUsers, icmpMemH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->callback = callback;
-            return newNode;
-        }
+        ICMP_LIST_NODE icmpNode;
+        icmpNode.callback = callback;
+
+        return (ICMP_LIST_NODE*)TCPIP_Notification_Add(&icmpRegisteredUsers, icmpMemH, &icmpNode, sizeof(icmpNode));
     }
 
     return 0;
@@ -251,7 +261,7 @@ bool TCPIP_ICMP_CallbackDeregister(ICMP_HANDLE hIcmp)
 
 
 }
-#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 
 
 #if defined (TCPIP_STACK_USE_ICMP_CLIENT)
@@ -495,7 +505,7 @@ static void  TCPIP_ICMP_Process(void)
             // The checksum data includes the precomputed checksum in the header
             // so a valid packet will always have a checksum of 0x0000
             // do it across all fragment segments
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
             TCPIP_MAC_PACKET* pFragPkt;
             checksum = 0;
             for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
@@ -505,7 +515,7 @@ static void  TCPIP_ICMP_Process(void)
             checksum = ~checksum;
 #else
             checksum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pRxHdr, icmpTotLength, 0);
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
             if(checksum != 0)
             {
@@ -550,7 +560,7 @@ static void  TCPIP_ICMP_Process(void)
                 }
                 else
                 {   // it must be a non-extended query 
-#if (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
                     TCPIP_UINT32_VAL userData;
                     IPV4_ADDR remoteIPAddr;
 
@@ -560,7 +570,7 @@ static void  TCPIP_ICMP_Process(void)
 
                     // Send a message to the application-level Ping driver that we've received an Echo Reply
                     _ICMPNotifyClients((TCPIP_NET_IF*)pRxPkt->pktIf, &remoteIPAddr, (void *)userData.v);
-#endif  // (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
                     ackRes = TCPIP_MAC_PKT_ACK_RX_OK;
                     break;
                 }
@@ -630,7 +640,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     pTxHdr->wChecksum = checksum.Val;
     pRxPkt->next = 0; // single packet
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     TCPIP_MAC_PACKET* pFragPkt;
     for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
     {
@@ -658,7 +668,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
         TCPIP_PKT_PacketAcknowledge(pRxPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR);
         return false;
     }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
     // went through
     return true;
@@ -666,7 +676,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
 #endif // defined(TCPIP_STACK_USE_ICMP_SERVER)
 
 
-#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#if defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 
 static void _ICMPNotifyClients(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data)
 {
@@ -681,9 +691,9 @@ static void _ICMPNotifyClients(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, vo
 
 }
 
-#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT) && (_TCPIP_ICMP_CLIENT_USER_NOTIFICATION != 0)
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 static void _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
@@ -696,7 +706,7 @@ static void _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RE
     }
 }
 
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 #endif //#if defined(TCPIP_STACK_USE_ICMP_SERVER) || defined(TCPIP_STACK_USE_ICMP_CLIENT)
 #endif  // defined(TCPIP_STACK_USE_IPV4)

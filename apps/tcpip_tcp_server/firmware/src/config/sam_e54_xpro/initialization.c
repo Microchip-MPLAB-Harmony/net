@@ -147,7 +147,7 @@ const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
 /*** DHCP client Initialization Data ***/
 const TCPIP_DHCP_MODULE_CONFIG tcpipDHCPInitData =
 {     
-    .dhcpEnable     = TCPIP_DHCP_CLIENT_ENABLED,   
+    .dhcpEnable     = false,   
     .dhcpTmo        = TCPIP_DHCP_TIMEOUT,
     .dhcpCliPort    = TCPIP_DHCP_CLIENT_CONNECT_PORT,
     .dhcpSrvPort    = TCPIP_DHCP_SERVER_LISTEN_PORT,
@@ -183,15 +183,18 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 
 };
 
+	
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-		.gmac_queue_config[0].queueEnable	= true,
+	.gmac_queue_config[0].queueTxEnable	= true,
+	.gmac_queue_config[0].queueRxEnable	= true,
 	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
+	.gmac_queue_config[0].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE0,
 	.gmac_queue_config[0].nRxBuffCount	= TCPIP_GMAC_RX_BUFF_COUNT_QUE0,
 	.gmac_queue_config[0].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0,
 	.gmac_queue_config[0].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0,
@@ -205,6 +208,10 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
+	.checksumOffloadRx      = DRV_GMAC_RX_CHKSM_OFFLOAD,
+    .checksumOffloadTx      = DRV_GMAC_TX_CHKSM_OFFLOAD,
+    .macTxPrioNum           = TCPIP_GMAC_TX_PRIO_COUNT,
+    .macRxPrioNum           = TCPIP_GMAC_RX_PRIO_COUNT,
 };
 
 
@@ -230,6 +237,18 @@ const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 
 
 
+/*** IPv4 Initialization Data ***/
+
+
+const TCPIP_IPV4_MODULE_CONFIG  tcpipIPv4InitData = 
+{
+    .arpEntries = TCPIP_IPV4_ARP_SLOTS, 
+};
+
+
+
+
+
 
 TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 {
@@ -245,7 +264,7 @@ TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 
 const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] =
 {
-	/*** Network Configuration Index 0 ***/
+    /*** Network Configuration Index 0 ***/
     {
         TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0,       // interface
         TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0,            // hostName
@@ -265,7 +284,7 @@ const size_t TCPIP_HOSTS_CONFIGURATION_SIZE = sizeof (TCPIP_HOSTS_CONFIGURATION)
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
-    {TCPIP_MODULE_IPV4,             0},
+    {TCPIP_MODULE_IPV4,             &tcpipIPv4InitData},
 
     {TCPIP_MODULE_ICMP,             0},                             // TCPIP_MODULE_ICMP
 
@@ -305,7 +324,7 @@ const size_t TCPIP_STACK_MODULE_CONFIG_TBL_SIZE = sizeof (TCPIP_STACK_MODULE_CON
  ********************************************************************/
 
 
-SYS_MODULE_OBJ TCPIP_STACK_Init()
+SYS_MODULE_OBJ TCPIP_STACK_Init(void)
 {
     TCPIP_STACK_INIT    tcpipInit;
 
@@ -417,6 +436,7 @@ const SYS_DEBUG_INIT debugInit =
 
 void SYS_Initialize ( void* data )
 {
+
     NVMCTRL_Initialize( );
 
   
@@ -454,6 +474,7 @@ void SYS_Initialize ( void* data )
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
 
+    CRYPT_WCCB_Initialize();
 
     APP_Initialize();
 

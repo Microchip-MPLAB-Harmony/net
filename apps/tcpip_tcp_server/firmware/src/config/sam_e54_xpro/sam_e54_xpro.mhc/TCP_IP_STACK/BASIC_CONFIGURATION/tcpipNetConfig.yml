@@ -1,0 +1,76 @@
+format_version: v1.0
+type: GeneratorComponent
+attributes: {id: tcpipNetConfig}
+children:
+- type: Instances
+  children:
+  - type: InstanceComponent
+    attributes: {instance: '0', id: tcpipNetConfig}
+    children:
+    - type: Symbols
+      children:
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_DNS_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: 192.168.100.1}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: 192.168.100.1}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: MCHPBOARD_C}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: GMAC}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: 192.168.100.11}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: '00:04:25:1C:A0:02'}
+      - type: String
+        attributes: {id: TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: DRV_GMAC_Object}
+      - type: Boolean
+        attributes: {id: TCPIP_STACK_NETWORK_CONFIG_IDX0}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: 'true'}
+      - type: Integer
+        attributes: {id: TCPIP_STACK_NETWORK_CONFIG_NUMBER}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: tcpipNetConfig_0, value: '0'}
+- type: ElementPosition
+  attributes: {x: '420', y: '20', id: tcpipNetConfig}

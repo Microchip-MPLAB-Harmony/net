@@ -129,6 +129,15 @@ uint32_t TC0_TimerFrequencyGet( void )
     return (uint32_t)(468750UL);
 }
 
+void TC0_TimerCommandSet(TC_COMMAND command)
+{
+    TC0_REGS->COUNT32.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
+    while((TC0_REGS->COUNT32.TC_SYNCBUSY))
+    {
+        /* Wait for Write Synchronization */
+    }    
+}
+
 /* Get the current timer counter value */
 uint32_t TC0_Timer32bitCounterGet( void )
 {

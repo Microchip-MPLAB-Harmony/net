@@ -68,16 +68,19 @@ void TCPIP_Notification_Deinitialize(PROTECTED_SINGLE_LIST* notifyList, TCPIP_ST
 
 
 
-SGL_LIST_NODE* TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
+SGL_LIST_NODE* TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void* pContent, size_t nBytes)
 {
     SGL_LIST_NODE* newNode = TCPIP_HEAP_Malloc(heapH, nBytes);
 
     if(newNode)
     {
+        if(pContent)
+        {
+            memcpy(newNode, pContent, nBytes);
+        }
         TCPIP_Helper_ProtectedSingleListTailAdd(notifyList, newNode);
     }
     return newNode;
-
 }
 
 
@@ -94,6 +97,26 @@ bool TCPIP_Notification_Remove(SGL_LIST_NODE* node, PROTECTED_SINGLE_LIST* notif
 
 }
 
+bool TCPIP_Notification_CbackRemove(SGL_LIST_NODE* node, PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void (*pCback)(SGL_LIST_NODE* node))
+{
+    if(TCPIP_Helper_ProtectedSingleListLock(notifyList))
+    {
+        SGL_LIST_NODE* ret = TCPIP_Helper_SingleListNodeRemove(&notifyList->list, node);
+        if(ret && pCback)
+        {
+            (*pCback)(ret);
+        }
+
+        TCPIP_Helper_ProtectedSingleListUnlock(notifyList);
+
+        if(ret)
+        {
+            TCPIP_HEAP_Free(heapH, node);
+            return true;
+        }
+    }
+    return false;
+}
 
 void TCPIP_Notification_RemoveAll(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH)
 {

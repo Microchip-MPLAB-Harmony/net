@@ -1,0 +1,15 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tcpipDns}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: TCPIP_DNS_CLIENT_HEAP_SIZE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tcpipDns, value: '504'}
+- type: ElementPosition
+  attributes: {x: '460', y: '20', id: tcpipDns}

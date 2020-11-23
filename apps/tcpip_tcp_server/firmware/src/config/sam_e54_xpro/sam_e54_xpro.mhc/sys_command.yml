@@ -1,0 +1,44 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: sys_command}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: SYS_COMMAND_PRINT_BUFFER_SIZE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '2560'}
+  - type: String
+    attributes: {id: SYS_CONSOLE_DEVICE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sys_command, value: SYS_CONSOLE_0}
+  - type: String
+    attributes: {id: SYS_CONSOLE_INDEX}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sys_command, value: '0'}
+- type: Attachments
+  children:
+  - type: DirectDependency
+    attributes: {id: sys_command_SYS_CONSOLE_dependency}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: sys_console_0}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: sys_console}
+- type: ElementPosition
+  attributes: {x: '549', y: '181', id: sys_command}

@@ -1,0 +1,6 @@
+format_version: v1.0
+type: GroupComponent
+attributes: {displayName: TRANSPORT LAYER, id: TRANSPORT LAYER}
+children:
+- type: ElementPosition
+  attributes: {x: '200', y: '20', id: TRANSPORT LAYER}

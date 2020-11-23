@@ -42,7 +42,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <string.h>
 #include <stdlib.h>
 
-#if !defined(__PIC32C__) && !defined(__SAMA5D2__) && !defined(__SAM9X60__)
+#if defined(__mips__)
 #include <sys/kmem.h>
 #endif
 

@@ -1,0 +1,11 @@
+format_version: v1.0
+type: GroupComponent
+attributes: {displayName: DRIVER LAYER, id: DRIVER LAYER}
+children:
+- type: ElementPosition
+  attributes: {x: '250', y: '145', id: DRIVER LAYER}
+- type: Attachments
+  children:
+  - type: Attachment
+    attributes: {targetComponentID: BASIC CONFIGURATION, namespace: drvGmac, id: libdrvGmac,
+      targetAttachmentID: 'tcpipNetConfig_0:NETCONFIG_MAC_Dependency'}

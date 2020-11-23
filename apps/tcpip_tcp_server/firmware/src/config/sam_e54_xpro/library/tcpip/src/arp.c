@@ -67,6 +67,7 @@ typedef struct
     bool                deleteOld;           // if 0 and old cache still in place don't re-initialize it
 
     uint32_t            timeSeconds;         // coarse ARP time keeping, seconds
+    uint32_t            timeMs;              // coarse ARP time keeping, milliseconds
     tcpipSignalHandle   timerHandle;
 
     PROTECTED_SINGLE_LIST registeredUsers;     // notification users
@@ -414,7 +415,7 @@ static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint
 
     // format the MAC packet
     pMacPkt->pDSeg->segLen = sizeof(ARP_PACKET);
-    if(TCPIP_PKT_PacketMACFormat(pMacPkt, dstMAC, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetMACAddressGet(pIf), TCPIP_ETHER_TYPE_ARP))
+    if(TCPIP_PKT_PacketMACFormat(pMacPkt, dstMAC, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetUpMACAddressGet(pIf), TCPIP_ETHER_TYPE_ARP))
     {
         pMacPkt->next = 0;  // send single packet
         pMacPkt->pktIf = pIf;
@@ -595,6 +596,10 @@ bool TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
 
     if(arpMod.initCount == 0)
     {   // first time we're run
+        // check we have a consistent task rate
+#if !defined(TCPIP_ARP_TASK_PROCESS_RATE) || (TCPIP_ARP_TASK_PROCESS_RATE == 0)
+        return false;
+#endif // !defined(TCPIP_ARP_TASK_PROCESS_RATE) || (TCPIP_ARP_TASK_PROCESS_RATE == 0)
         // check initialization data is provided
         if(arpData == 0)
         {
@@ -694,7 +699,7 @@ bool TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
             }
 
             arpMod.pMacPkt = _ARPAllocateTxPacket();
-            arpMod.timerHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ARP_Task, TCPIP_ARP_TASK_PROCESS_RATE * 1000);
+            arpMod.timerHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ARP_Task, TCPIP_ARP_TASK_PROCESS_RATE);
             iniRes = TCPIP_Notification_Initialize(&arpMod.registeredUsers);
 
             if(arpMod.pMacPkt == 0 || arpMod.timerHandle == 0 || iniRes == false)
@@ -703,7 +708,7 @@ bool TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
                 return false;
             }
 
-            arpMod.timeSeconds = 0;
+            arpMod.timeSeconds = arpMod.timeMs = 0;
         }
     }
 
@@ -856,14 +861,12 @@ TCPIP_ARP_HANDLE TCPIP_ARP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_ARP_EVEN
 {
     if(handler && arpMod.memH)
     {
-        ARP_LIST_NODE* newNode = (ARP_LIST_NODE*)TCPIP_Notification_Add(&arpMod.registeredUsers, arpMod.memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        ARP_LIST_NODE arpNode;
+        arpNode.handler = handler;
+        arpNode.hParam = hParam;
+        arpNode.hNet = hNet;
+
+        return (ARP_LIST_NODE*)TCPIP_Notification_Add(&arpMod.registeredUsers, arpMod.memH, &arpNode, sizeof(arpNode));
     }
 
     return 0;
@@ -958,7 +961,8 @@ static void TCPIP_ARP_Timeout(void)
     uint16_t    maxRetries;
 
 
-    arpMod.timeSeconds += TCPIP_ARP_TASK_PROCESS_RATE;
+    arpMod.timeMs += TCPIP_ARP_TASK_PROCESS_RATE;
+    arpMod.timeSeconds = arpMod.timeMs / 1000;
 
     nArpIfs = TCPIP_STACK_NumberOfNetworksGet();
     pArpDcpt = arpMod.arpCacheDcpt;
