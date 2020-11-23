@@ -1952,12 +1952,10 @@ static int _DNS_ReadName(TCPIP_DNS_RX_DATA* srcBuff, TCPIP_DNS_RX_DATA* pktBuff,
     {
         if(wPtr != nameBuff && *(wPtr - 1) == '.')
         {
-            *(wPtr - 1) = 0;  // remove the last '.' 
+            wPtr--; // remove the last '.' 
         }
-        else
-        {
-            *wPtr = 0;  // end the nameBuff properly
-        }
+
+        *wPtr = 0;  // end the nameBuff properly
     }
 
 
