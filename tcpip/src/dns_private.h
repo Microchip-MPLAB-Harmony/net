@@ -77,7 +77,7 @@ typedef enum
 
     // additional debug events
     TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR,    // failed to extract the name from the received DNS RR
-    TCPIP_DNS_DBG_EVENT_RR_ID_ERROR,        // received DNS RR didn't match transaction ID or name
+    TCPIP_DNS_DBG_EVENT_RR_STRUCT_ERROR,    // failed to skip fields in the RR structure
     TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS,      // the received DNS RR didn't have records
     TCPIP_DNS_DBG_EVENT_RR_MISMATCH,        // the received DNS RR doesn't match the query
     TCPIP_DNS_DBG_EVENT_RR_DATA_ERROR,      // error when trying to retrieve the DNS RR data
