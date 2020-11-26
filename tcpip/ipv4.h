@@ -279,7 +279,7 @@ typedef enum
     TCPIP_IPV4_FWD_FLAG_ENABLED          = 0x0001,  // when the stack/IPv4 module starts, enable the IPv4 forwarding
                                                     // This should be set by default
                                                     // Otherwise the IPv4 forwarding can be eventually enabled at run time using an API
-                                                    // Note: this API is not currently supported! TODO aa
+                                                    // Note: this API is not currently supported.
     TCPIP_IPV4_FWD_FLAG_BCAST_ENABLED    = 0x0002,  // enable the forwarding of the broadcast packets
                                                     // the default should be disabled
     TCPIP_IPV4_FWD_FLAG_MCAST_ENABLED    = 0x0004,  // enable the forwarding of the multicast packets
