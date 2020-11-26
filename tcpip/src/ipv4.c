@@ -463,7 +463,7 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, cons
 
 static void TCPIP_IPV4_Process(void);
 
-static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt);
+static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt);
 
 static IPV4_OPTION_FIELD* _IPv4CheckPacketOption(TCPIP_MAC_PACKET* pRxPkt, int* pOptLen);
 
@@ -2025,7 +2025,8 @@ static void TCPIP_IPV4_Process(void)
         if(pRxPkt->ipv4PktData != 0)
         {   // re-visited packet; forwarded first; now processed
             pRxPkt->ipv4PktData = 0;
-            TCPIP_IPV4_DispatchPacket(pRxPkt);
+            ackRes = TCPIP_IPV4_DispatchPacket(pRxPkt);
+            _IPv4AssertCond(ackRes == TCPIP_MAC_PKT_ACK_NONE, __func__, __LINE__);
             continue;
         }
 #endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
@@ -2160,7 +2161,7 @@ static void TCPIP_IPV4_Process(void)
             }
 
             // valid IPv4 packet
-            TCPIP_IPV4_DispatchPacket(pRxPkt);
+            ackRes = TCPIP_IPV4_DispatchPacket(pRxPkt);
             break;
         }
 
@@ -2174,7 +2175,9 @@ static void TCPIP_IPV4_Process(void)
 
 // dispatch an IPv4 packet to its module
 // packet is assumed to be valid!
-static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
+// returns TCPIP_MAC_PKT_ACK_NONE if packet dispatched OK
+// an error code  (< 0) otherwise 
+static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
 {
     IPV4_HEADER  *pHeader;
     bool        isFragment;
@@ -2199,7 +2202,10 @@ static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
 
     // check where it needs to go
     destId = TCPIP_IPV4_FrameDestination(pHeader);
-    _IPv4AssertCond(destId != TCPIP_MODULE_NONE, __func__, __LINE__);
+    if(destId == TCPIP_MODULE_NONE)
+    {
+        return TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
+    }
 
 #if (_TCPIP_IPV4_FRAGMENTATION != 0)
     pRxPkt->pkt_next = 0;       // make sure it's not linked
@@ -2210,8 +2216,7 @@ static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
 
         if(ackRes != TCPIP_MAC_PKT_ACK_NONE)
         {   // failed; discard
-            TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes); 
-            return;
+            return ackRes;
         }
 
         if(fragNode != 0)
@@ -2228,6 +2233,8 @@ static void TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
     {   // forward this packet and signal
         _TCPIPStackModuleRxInsert(destId, pRxPkt, true);
     }
+
+    return TCPIP_MAC_PKT_ACK_NONE;
 } 
 
 /*
