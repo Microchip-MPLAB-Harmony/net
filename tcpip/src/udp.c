@@ -1700,7 +1700,9 @@ static IPV6_PACKET * _UDPv6AllocateTxPacketStruct (TCPIP_NET_IF * pNetIf, UDP_SO
     pkt = TCPIP_IPV6_TxPacketAllocate (pNetIf, _UDPv6TxAckFnc, pSkt);
 
     if (pkt == 0)
+    {
         return 0;
+    }
 
     if (TCPIP_IPV6_UpperLayerHeaderPut (pkt, NULL, sizeof (UDP_HEADER), IP_PROT_UDP, UDP_CHECKSUM_OFFSET) == NULL)
     {
@@ -1895,20 +1897,20 @@ static uint16_t _UDPv6IsTxPutReady(UDP_SOCKET_DCPT* pSkt, unsigned short count)
     bool    newPkt;
     IPV6_PACKET * pkt;
 
-    if (pSkt->pV6Pkt == NULL)
+    bool queued = false;
+    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    if((pkt = pSkt->pV6Pkt) != 0)
     {
-        // This should only happen if the user has made an inappropriate call to an 
-        // unopened socket.
-        return 0;
+        queued = pkt->flags.queued != 0;
     }
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
 
-    pkt = (IPV6_PACKET*)_TxSktGetLockedV6Pkt(pSkt, false);
-
-    if (pkt)
+    if (pkt && !queued)
     {   // packet available
         return pSkt->txEnd - pSkt->txWrite;
     }
 
+    // either no packet or already queued
     // Try to allocate a new transmit packet
     IPV6_PACKET * tempPtr = _UDPv6AllocateTxPacketStruct(pSkt->pSktNet, pSkt, false);
     if (tempPtr == 0)
@@ -1918,15 +1920,16 @@ static uint16_t _UDPv6IsTxPutReady(UDP_SOCKET_DCPT* pSkt, unsigned short count)
         return 0;
     }
 
-    if (!TCPIP_IPV6_TxPacketStructCopy (tempPtr, pkt))
+    // copy the old packet info
+    if (pkt != 0 && !TCPIP_IPV6_TxPacketStructCopy (tempPtr, pkt))
     {   // failed; leave the old one in place
         _UDPv6FreePacket(tempPtr);
         return 0;
     }
 
     // now store changes if original packet not yet available
-    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-    if (pkt->flags.queued == 0)
+    status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    if(pkt != 0 && pkt->flags.queued == 0)
     {   // TX thread just cleared it
         newPkt = false;
     }
