@@ -23,6 +23,9 @@
 
 <#--include "/framework/net_pres/pres/tls/templates/system_config.h.ftl"-->
 <#if NET_PRES_USE>
+<#if NET_PRES_BLOB_ENABLE_ATECC_TNGTLS == true>
+#define HAVE_SUPPORTED_CURVES
+</#if>
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}
 #define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}
