@@ -257,9 +257,6 @@ SYS_MODULE_OBJ macDrvrInitialize(
     pMacDrvr->phyIx = macIndex;     // use the same index for the associated PHY
     pMacDrvr->macFlags._linkPrev = 0;
 
-    memset( &pMacDrvr->rxStat, 0, sizeof( pMacDrvr->rxStat ) );
-    memset( &pMacDrvr->txStat, 0, sizeof( pMacDrvr->txStat ) );
-
     // use initialization data
     pMacDrvr->allocH = macControl->memH;
     pMacDrvr->callBack.callocF = macControl->callocF;
