@@ -3568,7 +3568,6 @@ TCPIP_EVENT TCPIP_STACK_EventsPendingGet(const void* h)
 #if (TCPIP_STACK_USER_NOTIFICATION != 0)
 TCPIP_EVENT_HANDLE    TCPIP_STACK_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_EVENT evMask, TCPIP_STACK_EVENT_HANDLER handler, const void* hParam)
 {
-    TCPIP_EVENT_LIST_NODE* newNode;
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
 
     if(pNetIf && _TCPIPStackNetIsPrimary(pNetIf) && handler)
