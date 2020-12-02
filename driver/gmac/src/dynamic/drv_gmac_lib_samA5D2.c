@@ -551,6 +551,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
     while(pPkt_temp != 0)
     {
         nTotalDesc_count += _Calculate_Descriptor_Count(pPkt_temp->segLen,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
+        // perform cache maintenance
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)pPkt_temp->segLoad, pPkt_temp->segLen);
         pPkt_temp = pPkt_temp->next;
     }
 
@@ -563,11 +565,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
     {
         wTxIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead;
         wNewTxHead = fixed_mod((wTxIndex + nTotalDesc_count),wTxDescCount);
-
-        // perform cache maintenance
-        // L1_ICACHE_INVALIDATE_ALL();
-        L1_DCACHE_CLEAN_ALL();
-        L2_DCACHE_CLEAN_ALL();
 
         while (pPkt)
         {
@@ -1506,9 +1503,6 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(	DRV_GMAC_DRIVER * pMACDrv,
 											GMAC_QUE_LIST queueIdx)  
 {
 	TCPIP_MAC_DATA_SEGMENT *    pPkt;
-#if L2_DCACHE_IN_USE
-    TCPIP_MAC_PACKET *          pRxTempPkt;
-#endif
     DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc;
 	DRV_PIC32CGMAC_RESULT   res = DRV_PIC32CGMAC_RES_NO_PACKET;
 	uint32_t frameSize = 0;
@@ -1517,9 +1511,6 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(	DRV_GMAC_DRIVER * pMACDrv,
 	
 	
 	*pRxPkt = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_state->startIndex]; 
-#if L2_DCACHE_IN_USE
-    pRxTempPkt = *pRxPkt;
-#endif
 	nRx_buffer = rx_state->buffer_count;		
 	rx_index = rx_state->startIndex;
 	
@@ -1554,9 +1545,7 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(	DRV_GMAC_DRIVER * pMACDrv,
 			_DRV_GMAC_RxUnlock(pMACDrv);
 			
 			// perform cache maintenance
-			L2_DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) (pRxTempPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen );
-			// L1_ICACHE_INVALIDATE_ALL();
-			L1_DCACHE_CLEAN_INVALIDATE_ALL();
+			DCACHE_INVALIDATE_BY_ADDR( (uint32_t *)(*pRxPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen );
 			
 			if(frameSize)
 			{
