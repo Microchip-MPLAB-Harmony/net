@@ -31,7 +31,17 @@ def instantiateComponent(netPresCommonComponent):
     netPresNeeded.setLabel("Use Network Presentation Layer")
     netPresNeeded.setVisible(False)
     netPresNeeded.setDefaultValue(True)
-
+    
+    # Obsolete Network Presentation Layer
+    netPresObsComment1 = netPresCommonComponent.createCommentSymbol("NET_PRES_OBS_COMMENT1", None)
+    netPresObsComment1.setLabel("!!! This Module is Deprecated. New Module available")
+    netPresObsComment1.setVisible(True)
+    
+    # Obsolete Network Presentation Layer
+    netPresObsComment2 = netPresCommonComponent.createCommentSymbol("NET_PRES_OBS_COMMENT2", None)
+    netPresObsComment2.setLabel("!!! at /Libraries/TCPIP/Layer6-PRESENTATION/")
+    netPresObsComment2.setVisible(True)
+        
     # Use MPLAB Harmony Networking Presentation Layer
     netPresUse = netPresCommonComponent.createBooleanSymbol("NET_PRES_USE", None)
     netPresUse.setLabel("Use MPLAB Harmony Networking Presentation Layer")
@@ -244,7 +254,7 @@ def instantiateComponent(netPresCommonComponent):
 
     # File Type for Server Credentials
     netPresBlobServerCertFormat = netPresCommonComponent.createKeyValueSetSymbol("NET_PRES_BLOB_SERVER_CERT_FORMAT",netPresBlobServerSupport)
-    netPresBlobServerCertFormat.setVisible(False)
+    netPresBlobServerCertFormat.setVisible(True)
     netPresBlobServerCertFormat.setLabel("Server Certificate and Private Key Format")
     netPresBlobServerCertFormat.addKey("PEM", "0", "PEM")
     netPresBlobServerCertFormat.addKey("ASN1", "1", "ASN1")
