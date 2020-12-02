@@ -723,7 +723,7 @@ static bool _TFTPS_CreateClientSocket(TFTPS_CB   *tftp_con,UDP_SOCKET_INFO *sktI
     uint8_t     *wrPtr=NULL;
     uint16_t    txBufSize=0;
     // create a client socket for further communication
-    tftp_con->cSkt = TCPIP_UDP_ClientOpen(pTftpDcpt->ipAddrType, sktInfo->remotePort,&sktInfo->sourceIPaddress);
+    tftp_con->cSkt = TCPIP_UDP_ClientOpen(sktInfo->addressType, sktInfo->remotePort,&sktInfo->sourceIPaddress);
     if(tftp_con->cSkt == INVALID_UDP_SOCKET)
     {
         return false;
