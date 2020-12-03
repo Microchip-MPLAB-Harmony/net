@@ -23,15 +23,6 @@
 
 <#--include "/framework/net_pres/pres/tls/templates/system_config.h.ftl"-->
 <#if NET_PRES_USE>
-<#if NET_PRES_BLOB_ENABLE_ATECC_TNGTLS == true>
-/*Additional defines to enable TNGTLS certificate loading*/
-#define HAVE_SUPPORTED_CURVES
-#define WOLFSSL_ATECC608A
-#define WOLFSSL_ATECC_TNGTLS
-#define WOLFSSL_ATECC_ECDH_IOENC
-#define HAVE_PK_CALLBACKS
-#define WOLFSSL_ATECC508A_NOIDLE
-</#if>
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}
 #define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}

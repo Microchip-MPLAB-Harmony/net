@@ -108,6 +108,7 @@ def instantiateComponent(netPresCommonComponent):
     netPresTNGTLScert.setVisible(True)
     netPresTNGTLScert.setDescription("Auto load device certificate from Trust&Go TNGTLS? Cryptoauth lib should be configured seperately")
     netPresTNGTLScert.setDefaultValue(False)
+    netPresTNGTLScert.setDependencies(netPresWolfsslTngtls,["NET_PRES_BLOB_ENABLE_ATECC_TNGTLS"])
 
     netPresBlobCert = netPresCommonComponent.createKeyValueSetSymbol("NET_PRES_BLOB_CERT",None)
     netPresBlobCert.setVisible(True)
@@ -547,3 +548,6 @@ def handleMessage(messageID, args):
     else:
         retDict= {"Return": "UnImplemented Command"}
     return retDict
+
+def netPresWolfsslTngtls(symbol, event):
+        Database.setSymbolValue("lib_wolfssl","wolfsslLoadTNGTLSCert",event["value"])
