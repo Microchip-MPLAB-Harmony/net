@@ -1,4 +1,98 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.6.4 (October, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.4:
+
+- **Updated functionality**
+
+The following table provides the list of the updates included in the 3.6.4 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| sys_adapter           | The sys_random_h2_adapter has been updated to include the cryptographically secure random number generators. The sys_random_h2_adapter.c has been added to the net repo.|
+| TCP                   | The calculation of the Initial Sequence Number (ISN) has been updated to include a strong random key |
+
+
+
+### KNOWN ISSUES
+
+The updates in this release affect the way in which the TCP sockets calculate the ISN.
+The calculation has been updated to include the crypto library in order to make the guessing of the ISN very diffcult.
+
+* The updates have been applied to the NET TCP/IP core TCP files.
+
+* The demos that are part of the release and contain the TCP module have **NOT** been updated! The demos need to be regenerated in order to apply this update
+
+* For proper regeneration of the demos, run the MPLAB Harmony Configurator (MHC) for the selected demo and configuration
+    - Select the *TCP/IP STACK* component and go to the *TRANSPORT LAYER*
+    - In the *TCP/IP Transport Layer Configurator* uncheck the *TCP* module checkbox and then add it back
+    - If the *Crypto Library* was not part of the project it will be added. Accept all the requested changes when prompted
+    - The *Crypto Library* and *wolfCrypt Library* components will be now part of the root project graph
+    - Regenerate the demo and the updates will be included
+
+- **Release notes for v3.6.1 apply**
+
+
+## Net Release v3.6.3 (October, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.3:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.6.3 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| sys_adapter           |Removed the sys_reset_h2_adapter from net repo. This is handled by the core system services|
+
+
+- **Release notes for v3.6.1 apply**
+
+
+## Net Release v3.6.2 (September, 2020)
+### ADDITIONS AND UPDATES FOR  3.6.2:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.6.2 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| NET_PRES              |Added MHC support for TLS mutual auth for NET PRES Client | 
+|                       |Added function to retrieve Client TLS parameters to certificate store files |
+|                       |Added new dropdown options to select X509 file formats for certificates and Private key (i.e. PEM or ASN1) |
+|                       |Added mutual auth empty function definition to certificate stub section for uniformity |
+|                       |CA cert format and Server cert format set to ASN1 in netPres.py to maintain backward compatibility |
+|                       |Changed MHC GUI field names for Client Certificate to Client CA Certififace |
+| sys_adapter           |Added sys_reset_h2_adapter handling of PIC32M devices|
+
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.6.2 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| Demo apps         | Added missing atsame54p20a_compat.h file: web_net_server_nvm_mpfs, web_server_nvm_mpfs, wolfmqtt_demo|
+|                   | Removed from manifest.yml the files not in package.xml|
+| PHY driver        | Removed PHY hardware configuration dependency of xc32 version |
+| MHC               | Fixed ICMP file not included in project when ICMP Server/Client unchecked |
+|                   | Fixed tcpip_helper_c32.S added by MH3 configurator for non MIPS projects |
+|                   | Fixed netPresBlobClientSupport name used for 2 different symbols|
+|                   | Fixed wolfMQTT NET Glue script not generating proper code | 
+| NET_PRES          | Updated the NET_PRES glue code to use sys_debug service |
+| TCP/IP Manager    | Updated the SYS_ERROR_PRINT format parameters |
+| SYS_FS shell      | Updated the Shell_FileDelete return type |
+| IPv6              | Moved the flexible array IPV6_DATA_SEGMENT_HEADER structure to the end of the IPV6_PACKET definition |
+| UDP, TCP          | Added comments for sockets multi-threaded usage |
+| DHCPv4            | Updated the default DHCP client timeout to 10 seconds|
+| HTTP_NET          | Updated the ledSelected custom code to properly use the dynamic STRING type|
+|                   | Fixed the decrement of negative numbers |
+|                   | Updated the html pages copyright date|
+
+
+- **Release notes for v3.6.1 apply**
+
+
+
 ## Net Release v3.6.1 (June, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.1:
 
