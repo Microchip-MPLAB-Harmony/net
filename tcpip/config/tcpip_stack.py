@@ -346,6 +346,11 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackEventNotify.setVisible(False)
     tcpipStackEventNotify.setDefaultValue(True)
     
+    # Enable Sys_Random H2 adapter
+    tcpipStackSysRndAdaptr = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", tcpipStackAdvSettings)
+    tcpipStackSysRndAdaptr.setVisible(False)
+    tcpipStackSysRndAdaptr.setDefaultValue(False)
+    
     # Enable User Notification
     tcpipStackUserNotify= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_USER_NOTIFICATION", tcpipStackAdvSettings)
     tcpipStackUserNotify.setLabel("Enable User Notification")
@@ -1813,7 +1818,8 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysRandomAdapterSourceFile.setDestPath("system/")
     tcpipStackSysRandomAdapterSourceFile.setProjectPath("config/" + configName + "/system/")
     tcpipStackSysRandomAdapterSourceFile.setType("SOURCE")
-    tcpipStackSysRandomAdapterSourceFile.setEnabled(True)
+    tcpipStackSysRandomAdapterSourceFile.setEnabled(False)
+    tcpipStackSysRandomAdapterSourceFile.setDependencies(tcpipStackSysRndH2AdptrSourceFile, ["TCPIP_STACK_SYS_RANDOM_H2_ADAPTER"])
     
     tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
@@ -1935,7 +1941,11 @@ def tcpipStackHeapExternSourceFile(sourceFile, event):
         sourceFile.setEnabled(True)
     else:
         sourceFile.setEnabled(False)
-        
+
+    
+def tcpipStackSysRndH2AdptrSourceFile(sourceFile, event):  
+    sourceFile.setEnabled(event["value"])
+      
     
 def tcpipStackHeapInternSourceFile(sourceFile, event):  
     if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP" ):
