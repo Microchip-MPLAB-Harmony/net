@@ -36,7 +36,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define TCPIP_TFTP_CLIENT_MAX_HOSTNAME_LEN  32
 #define TCPIP_TFTP_CLIENT_FILE_NAME_LEN     32
-#define TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE   (512+5)
+#define TCPIP_TFTP_BLOCK_SIZE_SUPPORTED     512
+#define TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE   (TCPIP_TFTP_BLOCK_SIZE_SUPPORTED+5)
 #define TCPIP_TFTP_CLIENT_OPCODE            2
 #define TCPIP_TFTP_CLIENT_OCTET             6
 
@@ -66,13 +67,21 @@ typedef enum
     SM_TFTP_GET_COMMAND,
     SM_TFTP_WAIT,
     SM_TFTP_READY,
-    SM_TFTP_WAIT_FOR_DATA,
-    SM_TFTP_WAIT_FOR_ACK,
-    SM_TFTP_DUPLICATE_ACK,
-    SM_TFTP_SEND_ACK,
-    SM_TFTP_SEND_LAST_ACK,
     SM_TFTP_END,
 } TFTP_STATE;
+
+// The TFTP Communication state machine
+typedef enum
+{
+    SM_TFTP_COMM_HOME=0,
+    SM_TFTP_COMM_WAIT_FOR_DATA,
+    SM_TFTP_COMM_WAIT_FOR_ACK,
+    SM_TFTP_COMM_DUPLICATE_ACK,
+    SM_TFTP_COMM_SEND_ACK,
+    SM_TFTP_COMM_SEND_LAST_ACK,
+    SM_TFTP_COMM_SEND_NEXT_DATA_PKT,
+    SM_TFTP_COMM_END,
+} TFTP_COMM_STATE;
 
 // Enumeration of TFTP opcodes
 typedef enum
@@ -97,6 +106,7 @@ typedef struct
 {
     UDP_SOCKET	hSocket; // Handle to TFTP client socket
     TFTP_STATE	smState;  // TFTP client state machine variable
+    TFTP_COMM_STATE smCommSate; // TFTP Client Communication state
     TCPIP_NET_HANDLE    netH;   // interface handled
     IP_MULTI_ADDRESS tftpServerAddr;  // TFTP Server IP address
     IP_ADDRESS_TYPE  ipAddrType;
