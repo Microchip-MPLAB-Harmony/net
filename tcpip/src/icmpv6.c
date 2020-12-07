@@ -940,7 +940,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
         case ICMPV6_INFO_ECHO_REQUEST:
             if(dataLen < 8)
             {   // ill formed?
-                pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                pRxPkt->ipv6PktData = (uint16_t) TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 return;
             }
 
