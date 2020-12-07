@@ -2787,7 +2787,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendLst(TCPIP_FTPC_DCPT_TYPE* pDcpt)
         //time out
         ftpcSetDcptTmo(pDcpt, ftpcGlobalConfig.ftpcTmo);
     }     
-    return pDcpt->ftpcState;    
+    return res;  
 }
 
 
