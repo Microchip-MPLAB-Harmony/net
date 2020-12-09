@@ -93,7 +93,7 @@ def instantiateComponent(tcpipSnmpComponent):
         tcpipSnmpReadCommName[index].setLabel("Read Community Name")
         tcpipSnmpReadCommName[index].setVisible(True)
         if(index == 0):
-            tcpipSnmpReadCommName[index].setDefaultValue("public")
+            tcpipSnmpReadCommName[index].setDefaultValue("harmony")
         else:
             if(index == 1):
                 tcpipSnmpReadCommName[index].setDefaultValue("read")
@@ -108,13 +108,13 @@ def instantiateComponent(tcpipSnmpComponent):
         tcpipSnmpWriteCommName[index].setLabel("Write Community Name")
         tcpipSnmpWriteCommName[index].setVisible(True)
         if(index == 0):
-            tcpipSnmpWriteCommName[index].setDefaultValue("private")
+            tcpipSnmpWriteCommName[index].setDefaultValue("unicorn")
         else:
             if(index == 1):
                 tcpipSnmpWriteCommName[index].setDefaultValue("write")
             else:
                 if(index == 2):
-                    tcpipSnmpWriteCommName[index].setDefaultValue("public")
+                    tcpipSnmpWriteCommName[index].setDefaultValue("harmony")
                     
         tcpipSnmpWriteCommName[index].setDependencies(tcpipSnmpMenuVisibleSingle, [tcpipSnmpStackConfigIdx[index].getID()])
 ####-----------------------------------------------------------------------------------------##########    
