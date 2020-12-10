@@ -342,6 +342,15 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttConfigHeaderFile.setOverwrite(True)
     wolfMqttConfigHeaderFile.setEnabled(True)   
         
+    wolfMqttSettingsHeaderFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttSettingsHeaderFile.setProjectPath("config/" + configName)
+    wolfMqttSettingsHeaderFile.setSourcePath("third_party_adapter/wolfMQTT/config/user_settings.h")
+    wolfMqttSettingsHeaderFile.setDestPath("")
+    wolfMqttSettingsHeaderFile.setOutputName("user_settings.h")
+    wolfMqttSettingsHeaderFile.setType("HEADER")
+    wolfMqttSettingsHeaderFile.setOverwrite(True)
+    wolfMqttSettingsHeaderFile.setEnabled(True)   
+        
     # Generate Custom MQTT Application Template
     wolfMqttCstmAppTmplt = wolfmqttComponent.createBooleanSymbol("WMQTT_CSTM_APP_TEMPLATE", wolfMqttNetGlue)
     wolfMqttCstmAppTmplt.setLabel("Generate Custom MQTT Application Template")
