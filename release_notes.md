@@ -67,6 +67,48 @@ The following table provides the list of bug fixes in the 3.7.0 release:
 | DNS client         | Added RR checks for DNS to match the query name with the answers. Fixed bug when extracting the RR name |
 
 
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v5.45](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v2.50](https://www.microchip.com/mplab/compilers) or later
+- [IAR Embedded Workbench for ARM - version 8.50.1](https://www.iar.com/iar-embedded-workbench/) or later for SAMA5D2, SAM9X60 projects
+- Harmony net repository, 3.7.0
+- Harmony net demo apps repositories, 3.7.0
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, 3.8.1
+- Harmony csp repository, 3.8.2
+- Harmony bsp repository, 3.8.2
+- Harmony dev_packs repository, 3.8.0
+- Harmony crypto repository, 3.6.1
+- Harmony usb repository, 3.7.0 for demos requiring USB
+- wolfSSL  v4.5.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v4.5.0-stable) for demos requiring wolfSSL encryption
+- wolfMQTT v1.2 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.2) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS 10.3.1 (https://github.com/Microchip-MPLAB-Harmony/CMSIS-FreeRTOS/tree/v10.3.1) for demos requiring FreeRTOS support
+- MPLAB Harmony Configurator (MHC) v.3.6.2
+- MPLAB® Harmony Configurator (MHC) plug-in, v3.6.2
+
+
+#### Development Kit Support
+
+This release supports applications for the following development kits
+
+| Development Kits |
+| --- |
+| [PIC32MZEF Embedded Connectivity with FPU Starter Kit](https://www.microchip.com/DevelopmentTools/ProductDetails/DM320007-C) |
+| [PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit](https://www.microchip.com/developmenttools/ProductDetails/DM320010-C) |
+| [SAM A5D2 Xplained Ultra Evaluation Kit](https://www.microchip.com/Developmenttools/ProductDetails/ATSAMA5D2C-XULT) |
+| [SAM E54 Xplained Pro Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/ATSAME54-XPRO) |
+| [SAM E70 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAME70-XULT) |
+| [SAM V71 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAMV71-XULT) |
+| [PIC32MX Ethernet Starter Kit II](http://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=DM320004-2) |
+| [SAM9X60-EK Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/DT100126) |
+
 ### KNOWN ISSUES
 
 The current known issues are as follows:
