@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SMTPC_MESSAGE_CALLBACK Type</title>
+<title>TCPIP_SNMP_TrapSendFlagSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01318.html" target="topic">SMTPC Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03530.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK Type</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01180.html" target="topic">SNMP Module</a> &gt; <a href="01648.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03530.html" target="topic">TCPIP_SNMP_TrapSendFlagSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03507.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03531.html" target="topic">Next</a></div>
+<a href="03529.html" target="topic">Previous</a> | <a href="01648.html" target="topic">Up</a> | <a href="03531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MESSAGE_CALLBACK Topic Title: TCPIP_SMTPC_MESSAGE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_TrapSendFlagSet@bool Topic Title: TCPIP_SNMP_TrapSendFlagSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SMTPC_MESSAGE_CALLBACK Type</div>
+TCPIP_SNMP_TrapSendFlagSet Function</div>
 </div>
 </div>
 
@@ -49,77 +49,64 @@ TCPIP_SMTPC_MESSAGE_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Type: TCPIP_SMTPC_MESSAGE_CALLBACK&nbsp;</p>
-<p class="Element10">
-Data type describing a function that will be called by the SMTPC module upon completion of the mail message.</p></div>
+This function is used to set the trap <a href="01168.html" target="topic">send</a> flag details and this is used only when user is trying to <a href="01168.html" target="topic">send</a> more than one varbind in a single PDU. That is more than one notification details are required to be part of a single PDU. By default TRAP <a href="01168.html" target="topic">send</a> flag is set to false. If there is only varbind need to be part of Notification PDU, then this function should be called with boolean false. Please find the usage of this flag in this following example.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCPIP_SMTPC_MESSAGE_CALLBACK</span></strong>)(<a href="03531.html" target="topic">TCPIP_SMTPC_MESSAGE_HANDLE</a> messageHandle, <strong><span style="color: #000080">const</span></strong> <a href="03537.html" target="topic">TCPIP_SMTPC_MESSAGE_REPORT</a>* pMailReport);</pre></div></div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_SNMP_TrapSendFlagSet</span></strong>(
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">trapNotify</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-messageHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-handle identifying the message. This handle was obtained with a call to <a href="03529.html" target="topic">TCPIP_SMTPC_MailMessage</a>().<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pMailReport&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to a <a href="03537.html" target="topic">TCPIP_SMTPC_MESSAGE_REPORT</a> data structure containing the&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-result of the message delivery&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-messageRes - the result of the message&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-errorStat&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-error status&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-messageWarn&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-warnings&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-leftRetries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-number of times the delivery will be re-attempted.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+TCPIP_SNMP_Initialize is already called.</p></div>
 </div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A message handle is used rather than the user's <a href="03507.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a>. This allows sending multiple copies of the message without waiting for a previous copy to be done.&nbsp;</p>
-<p class="Element10">
-This notification can be called multiple times if the delivery attempt failed for a transient reson. The number of left retries tells if another attempt will be retried.&nbsp;</p>
-<p class="Element10">
-Once this final notification function is called (left retries == 0), the SMTPC no longer uses the <a href="03507.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a> data (unless there are other copies of this message in transit). This messageHandle is no longer valid and should not be used again.&nbsp;</p>
-<p class="Element10">
-The pMailReport points to a SMTPC owned read only data structure. It should be used only to inspect the message delivery result.</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> SNMPv2TrapDemo(<strong><span style="color: #000080">void</span></strong>)
+{
+    <i><span style="color: #008000">//set TRAP send flag to true , it signifies that there are more than one</span></i>
+    <i><span style="color: #008000">// variable need to be the part of SNMP v2 TRAP.</span></i>
+    TCPIP_SNMP_TrapSendFlagSet(<strong><span style="color: #000080">true</span></strong>);
+    
+    <i><span style="color: #008000">// PUSH button varbind </span></i>
+    TCPIP_SNMP_Notify(PUSH_BUTTON,analogPotVal,0);
+    
+    <i><span style="color: #008000">// Before adding the last varbind to the TRAP PDU, TRAP send flag should </span></i>
+    <i><span style="color: #008000">// be set to  false. That it indicates it is the last varbind to the </span></i>
+    <i><span style="color: #008000">// Notification PDU.</span></i>
+    TCPIP_SNMP_TrapSendFlagSet(<strong><span style="color: #000080">false</span></strong>);
+    
+    <i><span style="color: #008000">// Last varbind LED0_IO </span></i>
+    TCPIP_SNMP_Notify(LED0_IO,analogPotVal,0);      
+    
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01318.html" target="topic">SMTPC Module</a> &gt; <a href="01783.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03530.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK Type</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01180.html" target="topic">SNMP Module</a> &gt; <a href="01648.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03530.html" target="topic">TCPIP_SNMP_TrapSendFlagSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -127,13 +114,13 @@ The pMailReport points to a SMTPC owned read only data structure. It should be u
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03507.html" target="topic">Previous</a> | <a href="01783.html" target="topic">Up</a> | <a href="03531.html" target="topic">Next</a></div>
+<a href="03529.html" target="topic">Previous</a> | <a href="01648.html" target="topic">Up</a> | <a href="03531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MESSAGE_CALLBACK Topic Title: TCPIP_SMTPC_MESSAGE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_TrapSendFlagSet@bool Topic Title: TCPIP_SNMP_TrapSendFlagSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

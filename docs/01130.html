@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPFS Utility</title>
+<title>NET_PRES_SocketOptionsSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01873.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01130.html" target="topic">MPFS Utility</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01130.html" target="topic">NET_PRES_SocketOptionsSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01121.html" target="topic">Previous</a> | <a href="01873.html" target="topic">Up</a> | <a href="01126.html" target="topic">Next</a></div>
+<a href="01129.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01131.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Utility Topic Title: MPFS Utility)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsSet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPFS Utility</div>
+NET_PRES_SocketOptionsSet Function</div>
 </div>
 </div>
 
@@ -46,57 +46,72 @@ MPFS Utility</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Various options can be set at the <a href="01268.html" target="topic">socket</a> level. This function calls directly to the transport layer's OptionSet function, if it exists.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_SocketOptionsSet</span></strong>(
+    <a href="01090.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    <a href="01091.html" target="topic">NET_PRES_SKT_OPTION_TYPE</a> <strong><span style="color: #000000">option</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">optParam</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01126.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<strong>TCP/IP Library MPFS Utility for Microchip Devices</strong><br>This topic provides an overview of the MPFS Utility in MPLAB Harmony.<br>The tool packages web pages for storage in the embedded system.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01125.html" target="topic">Building MPFS Images</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information for building MPFS images.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01129.html" target="topic">Uploading Prebuilt MPFS Images</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on uploading pre-built MPFS images.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01124.html" target="topic">Advanced MPFS Settings</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on advanced MPFS settings.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01127.html" target="topic">MPFS Command Line Options</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides a description of the MPFS command line options.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01128.html" target="topic">MPFS Upload Settings</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides a description of the MPFS upload settings.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+A <a href="01268.html" target="topic">socket</a> needs to have been opened by <a href="01128.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The <a href="01268.html" target="topic">socket</a> to set options for.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+option&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The specific option to be set, this is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+optParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The option value, this is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">true - Indicates success</li>
+<li class="Element601">false - Indicates failure</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01873.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01130.html" target="topic">MPFS Utility</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01130.html" target="topic">NET_PRES_SocketOptionsSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +119,13 @@ This topic provides a description of the MPFS upload settings.&nbsp;</div></td><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01121.html" target="topic">Previous</a> | <a href="01873.html" target="topic">Up</a> | <a href="01126.html" target="topic">Next</a></div>
+<a href="01129.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01131.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Utility Topic Title: MPFS Utility)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsSet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

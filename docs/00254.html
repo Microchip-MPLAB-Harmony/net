@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Application</title>
+<title>dhcp_config.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00253.html" target="topic">tcpip_udp_client</a> &gt; <a href="00254.html" target="topic">Building the Application</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00252.html" target="topic">DHCP Client Module</a> &gt; <a href="01388.html" target="topic">Files</a> &gt; <a href="00254.html" target="topic">dhcp_config.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00253.html" target="topic">Previous</a> | <a href="00253.html" target="topic">Up</a> | <a href="00255.html" target="topic">Next</a></div>
+<a href="00253.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="04116.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP UDP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dhcp_config.h Topic Title: dhcp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Application</div>
+dhcp_config.h</div>
 </div>
 </div>
 
@@ -46,198 +46,94 @@ Building the Application</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/tcpip_udp_client/firmware</span>.&nbsp;</p>
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.&nbsp;</p>
+dhcp_config.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p><div class="Element15">
-MPLAB X IDE Project</div>
+Dynamic Host Configuration Protocol (DCHP) Configuration file&nbsp;</p>
 <p class="Element10">
-This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
+This file contains the DCHP module configuration options&nbsp;</p>
 <p class="Element10">
-&nbsp;</p><div class="Element63">
+This file is not part of the project, it is a configuration template file only.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="9%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="14%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<div class="Element15">
-IAR Embeded Workbench IDE Project</div>
-<p class="Element10">
-This table lists the name and location of the IAR IDE project folder for the demonstration.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="12%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="6%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="12%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="12%">
-<div class="Element68">
-sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="6%">
-<div class="Element68">
-ATSAMA5D27&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-SAM A5D2 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAMA5D27 device. This is a bare-metal (non-RTOS) implementation&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="12%">
-<div class="Element68">
-sam_a5d2_xult_freertos.IAR&nbsp;</div></td><td class="Element67" valign="top" width="6%">
-<div class="Element68">
-ATSAMA5D27&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-SAM A5D2 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with ATSAMA5D27 device. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="12%">
-<div class="Element68">
-sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="6%">
-<div class="Element68">
-SAM 9X60&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-SAM 9X60-EK&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with SAM9X60 device and an on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="12%">
-<div class="Element68">
-sam_9x60_ek _freertos.IAR&nbsp;</div></td><td class="Element67" valign="top" width="6%">
-<div class="Element68">
-SAM 9X60&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-SAM 9X60-EK&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the TCP/IP UDP Client on development board with SAM9X60 device and an on-board KSZ8061 PHY. This implementation is based on FreeRTOS&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following Project Graph diagram shows the Harmony components included in the bare-metal TCP/IP UDP Client demonstration application.&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_root_2.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_layer_2.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_app_layer_2.png" border="0" alt="" title="">&nbsp;</p></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01866.html" target="topic">TCPIP_DHCP_BOOT_FILE_NAME_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of the storage for the Boot file name should always be &lt;= 128 default value is 128&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01867.html" target="topic">TCPIP_DHCP_CLIENT_ENABLED</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default value for the enable/disable the DHCP client at stack start-up.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01890.html" target="topic">TCPIP_DHCP_HOST_NAME_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum size of a host name to be advertised to the DHCP server default value is 20&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01934.html" target="topic">TCPIP_DHCP_STORE_BOOT_FILE_NAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable the usage of the Boot file name received from the DHCP server&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01936.html" target="topic">TCPIP_DHCP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The DHCP task processing rate: number of milliseconds to generate an DHCP tick. Used by the DHCP state machine The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03783.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01937.html" target="topic">TCPIP_DHCP_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines how long to wait before a DHCP lease is acquired when the DHCP module is enabled, seconds&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00253.html" target="topic">tcpip_udp_client</a> &gt; <a href="00254.html" target="topic">Building the Application</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00252.html" target="topic">DHCP Client Module</a> &gt; <a href="01388.html" target="topic">Files</a> &gt; <a href="00254.html" target="topic">dhcp_config.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -245,13 +141,13 @@ The following Project Graph diagram shows the Harmony components included in the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00253.html" target="topic">Previous</a> | <a href="00253.html" target="topic">Up</a> | <a href="00255.html" target="topic">Next</a></div>
+<a href="00253.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="04116.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP UDP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dhcp_config.h Topic Title: dhcp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

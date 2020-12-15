@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running the Demonstration</title>
+<title>AF_INET6 Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00284.html" target="topic">web_ftp_server_mpfs_fatfs</a> &gt; <a href="00183.html" target="topic">Running the Demonstration</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00189.html" target="topic">Berkeley Module</a> &gt; <a href="01368.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00183.html" target="topic">AF_INET6 Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00182.html" target="topic">Previous</a> | <a href="00284.html" target="topic">Up</a> | <a href="00192.html" target="topic">Next</a></div>
+<a href="01257.html" target="topic">Previous</a> | <a href="01368.html" target="topic">Up</a> | <a href="00701.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APP WEB FTP Demo Run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AF_INET6 Topic Title: AF_INET6 Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running the Demonstration</div>
+AF_INET6 Macro</div>
 </div>
 </div>
 
@@ -49,70 +49,17 @@ Running the Demonstration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
- &nbsp;</p>
-<p class="Element10">
-For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits&nbsp;</p>
-<p class="Element10">
-1. Ensure a microSD/SD card is formatted and insert the card microSD/SD card slot on the backside of the hardware board.&nbsp;</p>
-<p class="Element10">
-2. Configure the Development Board as given <a href="00181.html" target="topic">here</a>. For SAM E70 Xplained Ultra make sure jumper J805 has been removed.&nbsp;</p>
-<p class="Element10">
-3. Make the demonstration setup as shown <a href="00356.html" target="topic">here</a>.&nbsp;</p>
-<p class="Element10">
-4. Build and download the demonstration project on the target board.&nbsp;</p>
-<p class="Element10">
-5. A virtual COM port will be detected on the computer, when the USB cable is connected.&nbsp;</p>
-<p class="Element10">
-6. Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.&nbsp;</p>
-<p class="Element10">
-7. Set the serial baud rate to 115200 baud in the terminal application.&nbsp;</p>
-<p class="Element10">
-8. Restart the demonstration by pressing the 'RESET' button on the board.&nbsp;</p>
-<p class="Element10">
-9. See that the initialization prints on the serial port terminal.&nbsp;</p>
-<p class="Element10">
-10. When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the&nbsp;</p>
-<p class="Element10">
-development board. This will be printed on the serial port terminal.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-For PIC32MZ Starter Kits&nbsp;</p>
-<p class="Element10">
-1. Ensure a microSD/SD card is formatted and insert the card microSD/SD card slot on the backside of the hardware board.&nbsp;</p>
-<p class="Element10">
-2. Configure the Development Board as given <a href="00181.html" target="topic">here</a>.&nbsp;</p>
-<p class="Element10">
-3. Make the demonstration setup as shown <a href="00356.html" target="topic">here</a>.&nbsp;</p>
-<p class="Element10">
-4. Build and download the demonstration project on the target board.&nbsp;</p>
-<p class="Element10">
-5. A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.&nbsp;</p>
-<p class="Element10">
-6. Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.&nbsp;</p>
-<p class="Element10">
-7. Set the serial baud rate to 115200 baud in the terminal application.&nbsp;</p>
-<p class="Element10">
-8. See that the initialization prints on the serial port terminal.&nbsp;</p>
-<p class="Element10">
-9. When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the&nbsp;</p>
-<p class="Element10">
-development board. This will be printed on the serial port terminal.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-At this moment both the HTTP and the FTP servers should be up and running, waiting for connections.&nbsp;</p>
-<p class="Element10">
-For HTTP server details, see <a href="00273.html" target="topic">HTTP Demonstration</a>&nbsp;</p>
-<p class="Element10">
-For FTP server transactions see <a href="00781.html" target="topic">FTP Server Module</a></p></div>
+Internet Address Family - IPv6</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">AF_INET6</span></strong> 10          <i><span style="color: #008000">// Internet Address Family - IPv6</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00284.html" target="topic">web_ftp_server_mpfs_fatfs</a> &gt; <a href="00183.html" target="topic">Running the Demonstration</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00189.html" target="topic">Berkeley Module</a> &gt; <a href="01368.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00183.html" target="topic">AF_INET6 Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -120,13 +67,13 @@ For FTP server transactions see <a href="00781.html" target="topic">FTP Server M
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00182.html" target="topic">Previous</a> | <a href="00284.html" target="topic">Up</a> | <a href="00192.html" target="topic">Next</a></div>
+<a href="01257.html" target="topic">Previous</a> | <a href="01368.html" target="topic">Up</a> | <a href="00701.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APP WEB FTP Demo Run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AF_INET6 Topic Title: AF_INET6 Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

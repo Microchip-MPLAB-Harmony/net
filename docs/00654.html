@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_GMAC_Open Function</title>
+<title>Building the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Library Interface</a> &gt; a) Client Level Functions &gt; <a href="00654.html" target="topic">DRV_GMAC_Open Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00654.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00645.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00647.html" target="topic">Next</a></div>
+<a href="00349.html" target="topic">Previous</a> | <a href="00663.html" target="topic">Up</a> | <a href="00664.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_Open@SYS_MODULE_INDEX@DRV_IO_INTENT Topic Title: DRV_GMAC_Open Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENCx24J600 Driver Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_GMAC_Open Function</div>
+Building the Library</div>
 </div>
 </div>
 
@@ -49,52 +49,165 @@ DRV_GMAC_Open Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function opens a client instance of the PIC32 MAC Driver. Used by tcpip_module_manager.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">DRV_HANDLE <strong><span style="color: #000000">DRV_GMAC_Open</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">drvIndex</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> DRV_IO_INTENT <strong><span style="color: #000000">intent</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The following three tables list and describe the header (.h) and source (.c) files that implement this library. The parent folder for these files is &lt;install-dir&gt;/framework/driver/encx24j600.&nbsp;</p>
 <p class="Element10">
-<a href="00652.html" target="topic">DRV_GMAC_Initialize</a>() should have been called.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">DRV_HANDLE - handle (pointer) to MAC client</li>
-<li class="Element605">0 if call failed</li>
+<strong>Interface File(s)</strong>&nbsp;</p>
+<p class="Element10">
+This table lists and describes the header files that must be included (i.e., using #include) by any code that uses this library. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="28%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="72%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+/<a href="00348.html" target="topic">drv_encx24j600.h</a>&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+This file provides the interface definitions of the ENCx24J600 Driver.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Required File(s)</strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="55%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="45%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/drv_drv_encx24J600_api.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the API function implementations.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/drv_encx24J600_main_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the main state machine functions.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/drv_encx24J600_utils.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains functions that are used throughout the driver.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/bus/spi/drv_encx24J600_spi_bus.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions to interface with the SPI bus.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/closed_state/drv_encx24J600_closed_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for handling the driver closed state.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/initialization_state/drv_encx24J600_configure_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for configuring the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/initialization_state/drv_encx24J600_detect_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for detecting the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/initialization_state/drv_encx24J600_initialization_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for the initialization state machine.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/initialization_state/drv_encx24J600_reset_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for resetting the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/packet/drv_encx24J600_rx_packet.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for receiving a packet from the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/packet/drv_encx24J600_tx_packet.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for sending a packet to the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/running_state/drv_encx24J600_change_duplex_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for configuring the duplex mode of the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/running_state/drv_encx24J600_check_int_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for checking and processing the ENC hardware interrupts.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/running_state/drv_encx24J600_check_status_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for checking the status of the ENC hardware.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/running_state/drv_encx24J600_check_tx_status_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for checking the status of a transmitted packet.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+/src/dynamic/running_state/drv_encx24J600_running_state.c&nbsp;</div></td><td class="Element67" valign="top" width="45%">
+<div class="Element68">
+This file contains the functions for managing the running state machine.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Optional File(s)</strong>&nbsp;</p>
+<p class="Element10">
+This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="24%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="24%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
+<div class="Element68">
+No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Module Dependencies</strong>&nbsp;</p>
+<p class="Element10">
+The ENCx24J600 Driver Library depends on the following modules:
+<ul class="Element631">
+<li class="Element601">SPI Driver Library</li>
+<li class="Element601">TCP/IP Stack Library</li>
+<li class="Element601">TCP/IP Stack MAC Driver Module</li>
 </ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The intent parameter is not used in the current implementation and is maintained only for compatibility with the generic driver Open function signature.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
-</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Library Interface</a> &gt; a) Client Level Functions &gt; <a href="00654.html" target="topic">DRV_GMAC_Open Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00654.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -102,13 +215,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00645.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00647.html" target="topic">Next</a></div>
+<a href="00349.html" target="topic">Previous</a> | <a href="00663.html" target="topic">Up</a> | <a href="00664.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_Open@SYS_MODULE_INDEX@DRV_IO_INTENT Topic Title: DRV_GMAC_Open Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENCx24J600 Driver Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

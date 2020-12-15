@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_TCP_SignalHandlerRegister Function</title>
+<title>TCPIP_TFTPS_HandlerRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01822.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04020.html" target="topic">TCPIP_TCP_SignalHandlerRegister Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04123.html" target="topic">TFTP Server Module</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; <a href="01711.html" target="topic">a) Functions</a> &gt; <a href="04020.html" target="topic">TCPIP_TFTPS_HandlerRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04019.html" target="topic">Previous</a> | <a href="01822.html" target="topic">Up</a> | <a href="03981.html" target="topic">Next</a></div>
+<a href="04019.html" target="topic">Previous</a> | <a href="01711.html" target="topic">Up</a> | <a href="04021.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SignalHandlerRegister@TCP_SOCKET@TCPIP_TCP_SIGNAL_TYPE@TCPIP_TCP_SIGNAL_FUNCTION@void* Topic Title: TCPIP_TCP_SignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPS_HandlerRegister@TCPIP_NET_HANDLE@TCPIP_TFTPS_EVENT_HANDLER@void* Topic Title: TCPIP_TFTPS_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_TCP_SignalHandlerRegister Function</div>
+TCPIP_TFTPS_HandlerRegister Function</div>
 </div>
 </div>
 
@@ -49,14 +49,13 @@ TCPIP_TCP_SignalHandlerRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function registers a TCP <a href="01409.html" target="topic">socket</a> signal handler. The TCP module will call the registered handler when a TCP signal (<a href="04007.html" target="topic">TCPIP_TCP_SIGNAL_TYPE</a>) occurs.</p></div>
+This function registers a TFTP Server event handler. The TFTP Server module will call the registered handler when a TFTP Server event (<a href="04009.html" target="topic">TCPIP_TFTPS_EVENT_TYPE</a>) occurs during the File transfer process.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04006.html" target="topic">TCPIP_TCP_SIGNAL_HANDLE</a> <strong><span style="color: #000000">TCPIP_TCP_SignalHandlerRegister</span></strong>(
-    <a href="01455.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    <a href="04007.html" target="topic">TCPIP_TCP_SIGNAL_TYPE</a> <strong><span style="color: #000000">sigMask</span></strong>, 
-    <a href="04005.html" target="topic">TCPIP_TCP_SIGNAL_FUNCTION</a> <strong><span style="color: #000000">handler</span></strong>, 
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04018.html" target="topic">TCPIP_TFTPS_HANDLE</a> <strong><span style="color: #000000">TCPIP_TFTPS_HandlerRegister</span></strong>(
+    <a href="03279.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    <a href="04008.html" target="topic">TCPIP_TFTPS_EVENT_HANDLER</a> <strong><span style="color: #000000">handler</span></strong>, 
     <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">hParam</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -64,7 +63,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCP valid <a href="01409.html" target="topic">socket</a>.</p></div>
+The TFTP Server module must be initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,24 +80,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The TCP <a href="01409.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-sigMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-mask of signals to be reported&nbsp;</div></td></tr><tr>
+Interface handle. Use hNet == 0 to register on all interfaces available.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 handler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-signal handler to be called when a TCP event occurs.&nbsp;</div></td></tr><tr>
+Handler to be called when a DNS client event occurs.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 hParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Parameter to be used in the handler call. This is user supplied and is not used by the TCP module.&nbsp;</div></td></tr></table></div></div>
+Pointer to non-volatile ASCIIZ string to be used in the handler call. It is used as a domain/host name. If not NULL, a TFTP Server module notification will be delivered only for a file name resolution that matches the hParam. If the hParam == 0, then the notification is triggered for any host name resolution.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -106,29 +100,25 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns a valid handle if the call succeeds, or a null handle if the call failed (null handler, no such <a href="01409.html" target="topic">socket</a>, existent handler).</p></div>
+
+<ul class="Element631">
+<li class="Element601">Returns a valid handle if the call succeeds </li>
+<li class="Element601">Returns null handle if the call failed (out of memory, for example)</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Only one signal handler per <a href="01409.html" target="topic">socket</a> is supported. A new handler does not override the existent one. Instead <a href="04019.html" target="topic">TCPIP_TCP_SignalHandlerDeregister</a> has to be explicitly called.&nbsp;</p>
-<p class="Element10">
-The handler has to be short and fast. It is meant for setting an event flag, not for lengthy processing!&nbsp;</p>
-<p class="Element10">
-The hParam is passed by the client.&nbsp;</p>
-<p class="Element10">
-For multi-threaded systems the TCP/IP packet dispatch does not occur on the user thread. The signal handler will be called on a different thread context. It is essential that this handler is non blocking and really fast.&nbsp;</p>
-<p class="Element10">
-For multi-threaded systems, once set, it is not recommended to change the signal handler at run time. Synchronization between user threads and packet dispatch threads could be difficult. If really need to be changed, make sure that the old handler could still be called and it should be valid until the new one is taken into account. <a href="04019.html" target="topic">TCPIP_TCP_SignalHandlerDeregister</a> needs to be called before registering another handler.</p></div>
+The handler has to be short and fast. It is meant for setting an event flag, <i>not</i> for lengthy processing!</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01822.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04020.html" target="topic">TCPIP_TCP_SignalHandlerRegister Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04123.html" target="topic">TFTP Server Module</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; <a href="01711.html" target="topic">a) Functions</a> &gt; <a href="04020.html" target="topic">TCPIP_TFTPS_HandlerRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +126,13 @@ For multi-threaded systems, once set, it is not recommended to change the signal
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04019.html" target="topic">Previous</a> | <a href="01822.html" target="topic">Up</a> | <a href="03981.html" target="topic">Next</a></div>
+<a href="04019.html" target="topic">Previous</a> | <a href="01711.html" target="topic">Up</a> | <a href="04021.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SignalHandlerRegister@TCP_SOCKET@TCPIP_TCP_SIGNAL_TYPE@TCPIP_TCP_SIGNAL_FUNCTION@void* Topic Title: TCPIP_TCP_SignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPS_HandlerRegister@TCPIP_NET_HANDLE@TCPIP_TFTPS_EVENT_HANDLER@void* Topic Title: TCPIP_TFTPS_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

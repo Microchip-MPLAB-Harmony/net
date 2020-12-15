@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_MAC_DOWN_OPERATION Macro</title>
+<title>TCPIP_TCP_ServerOpen Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a> &gt; <a href="03870.html" target="topic">TCPIP_STACK_MAC_DOWN_OPERATION Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03870.html" target="topic">TCPIP_TCP_ServerOpen Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03869.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03872.html" target="topic">Next</a></div>
+<a href="01679.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="03826.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_MAC_DOWN_OPERATION Topic Title: TCPIP_STACK_MAC_DOWN_OPERATION Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ServerOpen@IP_ADDRESS_TYPE@TCP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_TCP_ServerOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_MAC_DOWN_OPERATION Macro</div>
+TCPIP_TCP_ServerOpen Function</div>
 </div>
 </div>
 
@@ -49,24 +49,86 @@ TCPIP_STACK_MAC_DOWN_OPERATION Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This setting specifies the behavior of stack regarding the MAC and PHY drivers when the <a href="03778.html" target="topic">TCPIP_STACK_DOWN_OPERATION</a> == false in the situation where the stack initialization failed and the stack cannot be started. If true, the MAC (and the corresponding PHY) <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> will be called. This operation is supposed to exist and this setting will conserve power. If false, the <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> waon't be called and the code footprint could be smaller. The <a href="03114.html" target="topic">TCPIP_MAC_Deinitialize</a> operation, which is expensive, could be unimplemented.</p></div>
+Provides a unified method for opening TCP server sockets.&nbsp;</p>
+<p class="Element10">
+Sockets are created at the TCP module initialization, and can be claimed with this function and freed using <a href="03827.html" target="topic">TCPIP_TCP_Close</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_STACK_MAC_DOWN_OPERATION</span></strong> <strong><span style="color: #000080">true</span></strong></pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01312.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">TCPIP_TCP_ServerOpen</span></strong>(
+    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
+    <a href="01311.html" target="topic">TCP_PORT</a> <strong><span style="color: #000000">localPort</span></strong>, 
+    IP_MULTI_ADDRESS* <strong><span style="color: #000000">localAddress</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCP is initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+IP_ADDRESS_TYPE addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+TCP_PORT localPort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+TCP port to <a href="00984.html" target="topic">listen</a> on for connections.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+IP_MULTI_ADDRESS* localAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Local address to use. Use 0 if listening on any network interface.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601"><a href="00825.html" target="topic">INVALID_SOCKET</a> - No sockets of the specified type were available to be opened</li>
+<li class="Element601"><a href="01312.html" target="topic">TCP_SOCKET</a> handle - Save this handle and use it when calling all other TCP APIs</li>
+</ul></p></div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-the TCPIP_STACK_MAC_DOWN_OPERATION == false could be set only when <a href="03778.html" target="topic">TCPIP_STACK_DOWN_OPERATION</a> == false! Otherwise the behavior is undefined!</p></div>
+Sockets and user threads protection For efficiency reasons, there is NO PROTECTION for each individual API call except to Open and Close sockets! What it means is that:
+<ul class="Element631">
+<li class="Element601">the user application should close all its sockets before issuing a stack/if down command The stack manager takes care of the internally used sockets</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">A <a href="01268.html" target="topic">socket</a> can NOT be used concurrently from multiple threads! It's ok to pass a <a href="01268.html" target="topic">socket</a> from one thread to another as long as there's is no access from more than one thread at a time</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a> &gt; <a href="03870.html" target="topic">TCPIP_STACK_MAC_DOWN_OPERATION Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03870.html" target="topic">TCPIP_TCP_ServerOpen Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,13 +136,13 @@ the TCPIP_STACK_MAC_DOWN_OPERATION == false could be set only when <a href="0377
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03869.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03872.html" target="topic">Next</a></div>
+<a href="01679.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="03826.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_MAC_DOWN_OPERATION Topic Title: TCPIP_STACK_MAC_DOWN_OPERATION Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ServerOpen@IP_ADDRESS_TYPE@TCP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_TCP_ServerOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

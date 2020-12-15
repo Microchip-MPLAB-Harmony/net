@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_HEAP_POOL_CONFIG Structure</title>
+<title>TCPIP_TCP_ArrayPut Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03823.html" target="topic">TCPIP_STACK_HEAP_POOL_CONFIG Structure</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; b) Transmit Data Transfer Functions &gt; <a href="03823.html" target="topic">TCPIP_TCP_ArrayPut Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03813.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03833.html" target="topic">Next</a></div>
+<a href="03867.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="03909.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_POOL_CONFIG Topic Title: TCPIP_STACK_HEAP_POOL_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayPut@TCP_SOCKET@uint8_t*@uint16_t Topic Title: TCPIP_TCP_ArrayPut Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_HEAP_POOL_CONFIG Structure</div>
+TCPIP_TCP_ArrayPut Function</div>
 </div>
 </div>
 
@@ -49,87 +49,82 @@ TCPIP_STACK_HEAP_POOL_CONFIG Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This is type TCPIP_STACK_HEAP_POOL_CONFIG.</p></div>
+Writes an array from a buffer to a TCP <a href="01268.html" target="topic">socket</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <a href="03850.html" target="topic">TCPIP_STACK_HEAP_TYPE</a> <strong><span style="color: #000000">heapType</span></strong>;
-  <a href="03803.html" target="topic">TCPIP_STACK_HEAP_FLAGS</a> <strong><span style="color: #000000">heapFlags</span></strong>;
-  <a href="03856.html" target="topic">TCPIP_STACK_HEAP_USAGE</a> <strong><span style="color: #000000">heapUsage</span></strong>;
-  <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">malloc_fnc</span></strong>)(size_t bytes);
-  <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">calloc_fnc</span></strong>)(size_t nElems, size_t elemSize);
-  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">free_fnc</span></strong>)(<strong><span style="color: #000080">void</span></strong>* ptr);
-  uint16_t <strong><span style="color: #000000">nPoolEntries</span></strong>;
-  <a href="03833.html" target="topic">TCPIP_STACK_HEAP_POOL_ENTRY</a> * <strong><span style="color: #000000">pEntries</span></strong>;
-  uint16_t <strong><span style="color: #000000">expansionHeapSize</span></strong>;
-} TCPIP_STACK_HEAP_POOL_CONFIG;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_TCP_ArrayPut</span></strong>(
+    <a href="01312.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">Data</span></strong>, 
+    uint16_t <strong><span style="color: #000000">Len</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_TYPE heapType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_FLAGS heapFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-heap creation flags TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED will be always internally set&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USAGE heapUsage;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-not used&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void* (* malloc_fnc)(size_t bytes);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-malloc style function for allocating the pool heap itself&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void* (* calloc_fnc)(size_t nElems, size_t elemSize);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-calloc style function for allocating the pool heap itself&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void (* free_fnc)(void* ptr);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-free style function for releasing the allocated pool heap&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t nPoolEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-number of pool entries that the pool will contain (this cannot be changed after the creation)&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_POOL_ENTRY * pEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-pointer to array of <a href="03833.html" target="topic">TCPIP_STACK_HEAP_POOL_ENTRY</a> specifying each entry size and blocks&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t expansionHeapSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-size of the heap to be allocated separately and used at run time for allocation of new blocks - in bytes This is heap space besides the size resulting from the pEntries array This expansionHeapSize block will be used for allocations on new blocks when an entry runs out of blocks and nExpBlks != 0.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+TCP is initialized.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The <a href="01268.html" target="topic">socket</a> to which data is to be written.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the array to be written.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be written.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The number of bytes written to the <a href="01268.html" target="topic">socket</a>. If less than len, the buffer became full or the <a href="01268.html" target="topic">socket</a> is not connected.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This operation can cause a TCP packet to be transmitted over the network (i.e., a <a href="03843.html" target="topic">TCPIP_TCP_Flush</a> operation to be performed) when there is data in the TCP TX buffer that can be sent and any of the following occurs:
+<ul class="Element631">
+<li class="Element601">There is no more space available in the TCP buffer.</li>
+<li class="Element601">The TCP_OPTION_THRES_FLUSH_ON is set and the TX buffer is at least half full</li>
+<li class="Element601">The amount of data that can be sent is bigger than the remote host MSS or than half of the maximum advertised window size.</li>
+<li class="Element601">The Nagle algorithm is disabled and there is no unacknowledged data. </li>
+</ul>&nbsp;</p>
+<p class="Element10">
+If none of these occur and the <a href="01268.html" target="topic">socket</a> user does not add data to the TX <a href="01268.html" target="topic">socket</a> buffer, the TCP state machine will automatically flush the buffer when the TCP_AUTO_TRANSMIT_TIMEOUT_VAL time-out elapsed.&nbsp;</p>
+<p class="Element10">
+The default TCP_AUTO_TRANSMIT_TIMEOUT_VAL is 40 ms.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01724.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03823.html" target="topic">TCPIP_STACK_HEAP_POOL_CONFIG Structure</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; b) Transmit Data Transfer Functions &gt; <a href="03823.html" target="topic">TCPIP_TCP_ArrayPut Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -137,13 +132,13 @@ size of the heap to be allocated separately and used at run time for allocation 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03813.html" target="topic">Previous</a> | <a href="01724.html" target="topic">Up</a> | <a href="03833.html" target="topic">Next</a></div>
+<a href="03867.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="03909.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_POOL_CONFIG Topic Title: TCPIP_STACK_HEAP_POOL_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayPut@TCP_SOCKET@uint8_t*@uint16_t Topic Title: TCPIP_TCP_ArrayPut Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

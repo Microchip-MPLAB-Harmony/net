@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>tcpip_announce.h</title>
+<title>TCPIP_DHCP_HostNameCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00179.html" target="topic">Announce Module</a> &gt; <a href="01487.html" target="topic">Files</a> &gt; <a href="01891.html" target="topic">tcpip_announce.h</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00252.html" target="topic">DHCP Client Module</a> &gt; <a href="01391.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="01891.html" target="topic">TCPIP_DHCP_HostNameCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01897.html" target="topic">Previous</a> | <a href="01487.html" target="topic">Up</a> | <a href="01761.html" target="topic">Next</a></div>
+<a href="01887.html" target="topic">Previous</a> | <a href="01391.html" target="topic">Up</a> | <a href="01919.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_announce.h Topic Title: tcpip_announce.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_HostNameCallbackRegister@TCPIP_NET_HANDLE@TCPIP_DHCP_HOST_NAME_CALLBACK@bool Topic Title: TCPIP_DHCP_HostNameCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-tcpip_announce.h</div>
+TCPIP_DHCP_HostNameCallbackRegister Function</div>
 </div>
 </div>
 
@@ -46,150 +46,99 @@ tcpip_announce.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+This function registers a DHCP host name callback function. The DHCP module will call the registered callback when a host name needs to be presented to the DHCP server.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_DHCP_HostNameCallbackRegister</span></strong>(
+    <a href="03279.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    <a href="01889.html" target="topic">TCPIP_DHCP_HOST_NAME_CALLBACK</a> <strong><span style="color: #000000">nameCallback</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">writeBack</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-tcpip_announce.h</p></div>
+The DHCP module must be initialized.</p></div>
 </div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interface handle. Use hNet == 0 to register on all interfaces available.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+nameCallback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Callback to be called to get a DHCP host name&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+writeBack&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+if true, the resulting name will be written to the address returned by the nameCallback (it shouldn't be const!)&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Announce Service Module API Definitions Header File&nbsp;</p>
+
+<ul class="Element631">
+<li class="Element601">true - if the call succeeds</li>
+<li class="Element601">false - if error (no such interface, etc.)</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Announce Service Module for Microchip TCP/IP Stack. It is a simple, proprietary discovery mechanism for Microchip TCP/IP hosts. It works in conjunction with a GUI tool running on a PC.</p></div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01892.html" target="topic">TCPIP_ANNOUNCE_BROADCAST_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce message type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01898.html" target="topic">TCPIP_ANNOUNCE_FIELD_PAYLOAD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce payload types&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01896.html" target="topic">TCPIP_ANNOUNCE_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Allows the registration of a user callback.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01911.html" target="topic">TCPIP_ANNOUNCE_MessageRequest</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01915.html" target="topic">TCPIP_ANNOUNCE_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01912.html" target="topic">TCPIP_ANNOUNCE_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce Configuration structure placeholder&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01910.html" target="topic">TCPIP_ANNOUNCE_MESSAGE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce message callback function.&nbsp;</div></td></tr></table></div></div>
-</div>
+The nameCallback function has to be valid for the length of DHCP client communication with the server, i.e. when the reported status is bound or some error.&nbsp;</p>
+<p class="Element10">
+There is no corresponding deregister function. Simply call TCPIP_DHCP_HostNameCallbackRegister with the nameCallback set to 0.&nbsp;</p>
+<p class="Element10">
+If such a callback is not registered, then the NetBios name will be used for the DHCP host name.&nbsp;</p>
+<p class="Element10">
+The callback function has to return a character string that's compatible with the rules imposed for the host names:
+<ul class="Element631">
+<li class="Element601">Host names may contain only alphanumeric characters, minus signs (&quot;-&quot;), and periods (&quot;.&quot;)</li>
+<li class="Element601">They must begin with an alphabetic character and end with an alphanumeric character</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+To enforce these rules the extra processing is performed internally (on either user supplied host name or NetBios name):
+<ul class="Element631">
+<li class="Element601">spaces, if present, will be stripped from the string</li>
+<li class="Element601">illegal characters will be replaced by TCPIP_DHCP_HOST_REPLACE_CHAR character (default is lower case 'x')</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+If after processing the resulting string is null, the DHCP host name option is skipped.&nbsp;</p>
+<p class="Element10">
+The callback function has to return a character string that's at least 2 characters in size;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00179.html" target="topic">Announce Module</a> &gt; <a href="01487.html" target="topic">Files</a> &gt; <a href="01891.html" target="topic">tcpip_announce.h</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00252.html" target="topic">DHCP Client Module</a> &gt; <a href="01391.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="01891.html" target="topic">TCPIP_DHCP_HostNameCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -197,13 +146,13 @@ Announce message callback function.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01897.html" target="topic">Previous</a> | <a href="01487.html" target="topic">Up</a> | <a href="01761.html" target="topic">Next</a></div>
+<a href="01887.html" target="topic">Previous</a> | <a href="01391.html" target="topic">Up</a> | <a href="01919.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_announce.h Topic Title: tcpip_announce.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_HostNameCallbackRegister@TCPIP_NET_HANDLE@TCPIP_DHCP_HOST_NAME_CALLBACK@bool Topic Title: TCPIP_DHCP_HostNameCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

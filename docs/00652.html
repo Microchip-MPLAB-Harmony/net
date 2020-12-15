@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_GMAC_Initialize Function</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Library Interface</a> &gt; a) Client Level Functions &gt; <a href="00652.html" target="topic">DRV_GMAC_Initialize Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00645.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00652.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00647.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00661.html" target="topic">Next</a></div>
+<a href="00645.html" target="topic">Previous</a> | <a href="00645.html" target="topic">Up</a> | <a href="00651.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_GMAC_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_GMAC_Initialize Function</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,52 +49,38 @@ DRV_GMAC_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function supports the initialization of the PIC32 Ethernet MAC. Used by tcpip_module_manager.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">SYS_MODULE_OBJ <strong><span style="color: #000000">DRV_GMAC_Initialize</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">index</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The ENC28J60 External MAC and PHY is an external module connected through a Serial Peripheral Interface (SPI) to host microcontroller. This driver interfaces with the SPI driver to communicate with the external device to implement a complete Ethernet node in a system.&nbsp;</p>
 <p class="Element10">
-None</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following are some of the key features of this module:&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element635">
-<li class="Element605">a valid handle to a driver object, if successful.</li>
-<li class="Element605">SYS_MODULE_OBJ_INVALID if initialization failed.</li>
-</ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function initializes the Ethernet controller, the MAC and the associated PHY. It should be called to be able to schedule any Ethernet transmit or receive operation.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
-</div>
+<ul class="Element631">
+<li class="Element601">Supports 10 Mbps physical-to-physical layer Ethernet data transfer
+<ul class="Element632">
+<li class="Element602">Full-Duplex and Half-Duplex operation</li>
+<li class="Element602">Broadcast, Multicast and Unicast packets</li>
+<li class="Element602">Hardware flow control for both Full and Half-Duplex mode</li>
+</ul></li>
+<li class="Element601">Fully configurable interrupts</li>
+<li class="Element601">Configurable receive packet filtering using:
+<ul class="Element632">
+<li class="Element602">64-bit Hash Table</li>
+<li class="Element602">64-byte Pattern Match</li>
+<li class="Element602">Magic Packet™ Filtering</li>
+</ul></li>
+<li class="Element601">Supports Packet Payload Checksum calculation</li>
+<li class="Element601">CRC Check</li>
+<li class="Element601">Supports SPI interface</li>
+</ul>&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00777.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00409.html" target="topic">Library Interface</a> &gt; a) Client Level Functions &gt; <a href="00652.html" target="topic">DRV_GMAC_Initialize Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00645.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00652.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -102,13 +88,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00647.html" target="topic">Previous</a> | <a href="00409.html" target="topic">Up</a> | <a href="00661.html" target="topic">Next</a></div>
+<a href="00645.html" target="topic">Previous</a> | <a href="00645.html" target="topic">Up</a> | <a href="00651.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_GMAC_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

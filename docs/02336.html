@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02336.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01457.html" target="topic">FTP Client Module</a> &gt; <a href="01458.html" target="topic">Library Interface</a> &gt; <a href="01453.html" target="topic">d) Data Types and Constants</a> &gt; <a href="02336.html" target="topic">TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02332.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02337.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Topic Title: TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Type: TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE&nbsp;</p>
+<p class="Element10">
+Data type describing a function that will be called by the FTPC module upon control <a href="01268.html" target="topic">socket</a> events FTPC will parse and process the FTP client-server control messages anyway but it can optionally pass the information to the user.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE</span></strong>)(<a href="02330.html" target="topic">TCPIP_FTPC_CONN_HANDLE_TYPE</a> ftpcHandle, <a href="02337.html" target="topic">TCPIP_FTPC_CTRL_EVENT_TYPE</a> ftpcEvent, <a href="02308.html" target="topic">TCPIP_FTPC_CMD</a> cmd, <strong><span style="color: #000080">char</span></strong> * ctrlbuff, uint16_t ctrllen);</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ftpcHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle identifying the connection.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ftpcEvent&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the control <a href="01268.html" target="topic">socket</a> event&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cmd&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+FTP Command&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ctrlbuff&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to control <a href="01268.html" target="topic">socket</a> data buffer&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ctrllen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+receive data length&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01457.html" target="topic">FTP Client Module</a> &gt; <a href="01458.html" target="topic">Library Interface</a> &gt; <a href="01453.html" target="topic">d) Data Types and Constants</a> &gt; <a href="02336.html" target="topic">TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02332.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02337.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Topic Title: TCPIP_FTPC_CTRL_EVENT_CALLBACK_TYPE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

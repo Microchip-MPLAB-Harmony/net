@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>smtp.h</title>
+<title>TCP_SOCKET_INFO Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01312.html" target="topic">SMTP Module</a> &gt; <a href="01767.html" target="topic">Files</a> &gt; <a href="01313.html" target="topic">smtp.h</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01313.html" target="topic">TCP_SOCKET_INFO Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01767.html" target="topic">Previous</a> | <a href="01767.html" target="topic">Up</a> | <a href="01314.html" target="topic">Next</a></div>
+<a href="01312.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="01326.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: smtp.h Topic Title: smtp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_SOCKET_INFO Topic Title: TCP_SOCKET_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-smtp.h</div>
+TCP_SOCKET_INFO Structure</div>
 </div>
 </div>
 
@@ -46,188 +46,102 @@ smtp.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+Structure: TCP_SOCKET_INFO&nbsp;</p>
+<p class="Element10">
+Gets information about a <a href="01268.html" target="topic">socket</a>.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  IP_ADDRESS_TYPE <strong><span style="color: #000000">addressType</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">remoteIPaddress</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">localIPaddress</span></strong>;
+  <a href="01311.html" target="topic">TCP_PORT</a> <strong><span style="color: #000000">remotePort</span></strong>;
+  <a href="01311.html" target="topic">TCP_PORT</a> <strong><span style="color: #000000">localPort</span></strong>;
+  <a href="03279.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>;
+  <a href="03895.html" target="topic">TCPIP_TCP_STATE</a> <strong><span style="color: #000000">state</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">txSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxPending</span></strong>;
+  uint16_t <strong><span style="color: #000000">txPending</span></strong>;
+  TCP_SOCKET_FLAGS <strong><span style="color: #000000">flags</span></strong>;
+} TCP_SOCKET_INFO;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-smtp.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Simple Mail Transfer Protocol (SMTP) Client&nbsp;</p>
-<p class="Element10">
-The SMTP client module in the TCP/IP Stack lets applications <a href="01309.html" target="topic">send</a> e-mails to any recipient worldwide. These message could include status information or important alerts. Using the e-mail to SMS gateways provided by most cell phone carriers, these messages can also be delivered directly to cell phone handsets.</p></div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03443.html" target="topic">TCPIP_SMTP_ArrayPut</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes a series of bytes to the SMTP client.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03459.html" target="topic">TCPIP_SMTP_ClientTask</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03460.html" target="topic">TCPIP_SMTP_Flush</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Flushes the SMTP <a href="01409.html" target="topic">socket</a> and forces all data to be sent.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03461.html" target="topic">TCPIP_SMTP_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Determines if the SMTP client is busy.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03462.html" target="topic">TCPIP_SMTP_IsPutReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Determines how much data can be written to the SMTP client.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03463.html" target="topic">TCPIP_SMTP_MailSend</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the message sending process.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03465.html" target="topic">TCPIP_SMTP_Put</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes a single byte to the SMTP client.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03466.html" target="topic">TCPIP_SMTP_PutIsDone</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates that the on-the-fly message is complete.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03468.html" target="topic">TCPIP_SMTP_StringPut</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes a string to the SMTP client.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03470.html" target="topic">TCPIP_SMTP_UsageBegin</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Requests control of the SMTP client module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03471.html" target="topic">TCPIP_SMTP_UsageEnd</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Releases control of the SMTP client module.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01315.html" target="topic">SMTP_CONNECT_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Connection to SMTP server failed&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01316.html" target="topic">SMTP_RESOLVE_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS lookup for SMTP server failed&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01317.html" target="topic">SMTP_SUCCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Message was successfully sent&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03444.html" target="topic">TCPIP_SMTP_CLIENT_MESSAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Configures the SMTP client to <a href="01309.html" target="topic">send</a> a message.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03457.html" target="topic">TCPIP_SMTP_CLIENT_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type TCPIP_SMTP_CLIENT_MODULE_CONFIG.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_ADDRESS_TYPE addressType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Address type of the <a href="01268.html" target="topic">socket</a> IPv4 or IPv6&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS remoteIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Remote address to which the <a href="01268.html" target="topic">socket</a> is connected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS localIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Local address <a href="01268.html" target="topic">socket</a> is bound to&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_PORT remotePort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Port number associated with remote node&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_PORT localPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Local port number&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_NET_HANDLE hNet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Associated interface&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_STATE state;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Current <a href="01268.html" target="topic">socket</a> state&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of the RX buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t txSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of the TX buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxPending;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+bytes pending in RX buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t txPending;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+bytes pending in TX buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_SOCKET_FLAGS flags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="01268.html" target="topic">socket</a> flags&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -235,7 +149,7 @@ This is type TCPIP_SMTP_CLIENT_MODULE_CONFIG.&nbsp;</div></td></tr></table></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01312.html" target="topic">SMTP Module</a> &gt; <a href="01767.html" target="topic">Files</a> &gt; <a href="01313.html" target="topic">smtp.h</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01287.html" target="topic">TCP Module</a> &gt; <a href="01679.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01313.html" target="topic">TCP_SOCKET_INFO Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -243,13 +157,13 @@ This is type TCPIP_SMTP_CLIENT_MODULE_CONFIG.&nbsp;</div></td></tr></table></div
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01767.html" target="topic">Previous</a> | <a href="01767.html" target="topic">Up</a> | <a href="01314.html" target="topic">Next</a></div>
+<a href="01312.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="01326.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: smtp.h Topic Title: smtp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_SOCKET_INFO Topic Title: TCP_SOCKET_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

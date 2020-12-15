@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_EncSessionStatus Enumeration</title>
+<title>smtpc.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01138.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01152.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01178.html" target="topic">NET_PRES_EncSessionStatus Enumeration</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01177.html" target="topic">SMTPC Module</a> &gt; <a href="01637.html" target="topic">Files</a> &gt; <a href="01178.html" target="topic">smtpc.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01175.html" target="topic">Previous</a> | <a href="01152.html" target="topic">Up</a> | <a href="01205.html" target="topic">Next</a></div>
+<a href="01637.html" target="topic">Previous</a> | <a href="01637.html" target="topic">Up</a> | <a href="01179.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncSessionStatus Topic Title: NET_PRES_EncSessionStatus Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: smtpc.h Topic Title: smtpc.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_EncSessionStatus Enumeration</div>
+smtpc.h</div>
 </div>
 </div>
 
@@ -46,93 +46,251 @@ NET_PRES_EncSessionStatus Enumeration</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MPLAB Harmony Networking Presentation Layer Encryption status type&nbsp;</p>
-<p class="Element10">
-This enumeration defines the enumeration for the state and status of the encrypted portion of a connection.</p></div>
+Microchip Technology Inc.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_UNKNOWN</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_CLIENT_NEGOTIATING</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_SERVER_NEGOTIATING</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_OPEN</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_FAILED</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_CLOSING</span></strong>,
-  <strong><span style="color: #000000">NET_PRES_ENC_SS_CLOSED</span></strong>
-} NET_PRES_EncSessionStatus;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<p class="Element10">
+smtpc.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Simple Mail Transfer Protocol Client - SMTPC&nbsp;</p>
+<p class="Element10">
+The SMTPC client module in the TCP/IP Stack lets applications <a href="01168.html" target="topic">send</a> e-mails to any recipient worldwide. These message could include status information or important alerts. Using the e-mail to SMS gateways provided by most cell phone carriers, these messages can also be delivered directly to cell phone handsets.</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_UNKNOWN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption is in an unknown/default state&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption has not started negotiation&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_CLIENT_NEGOTIATING&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption client negotiation is in progress&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_SERVER_NEGOTIATING&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption server negotiation is in progress&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_OPEN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption negotiation is complete and data can be sent/received&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_FAILED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption negotiation failed or some other failure&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_CLOSING&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption is closing, but connection needs to be pumped for final packets&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-NET_PRES_ENC_SS_CLOSED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Presentation encryption is closed, provider data has been freed&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03349.html" target="topic">TCPIP_SMTPC_ATTACH_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC attachment type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03357.html" target="topic">TCPIP_SMTPC_ENCODE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC encoding type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03363.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Mail message flags&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03408.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC result code&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03442.html" target="topic">TCPIP_SMTPC_MESSAGE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC message status&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03457.html" target="topic">TCPIP_SMTPC_MESSAGE_WARNING</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC warning type&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03395.html" target="topic">TCPIP_SMTPC_MailMessage</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC mail message function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03463.html" target="topic">TCPIP_SMTPC_MessageQuery</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC mail message query function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03482.html" target="topic">TCPIP_SMTPC_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00004.html" target="topic">__SMTPC_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro __SMTPC_H.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03339.html" target="topic">TCPIP_SMTPC_ATTACH_BUFFER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Buffer attachment to the mail.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03345.html" target="topic">TCPIP_SMTPC_ATTACH_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+File attachment to the mail.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03373.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Mail message descriptor.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03398.html" target="topic">TCPIP_SMTPC_MESSAGE_QUERY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Structure defining a run time query for a mail message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03403.html" target="topic">TCPIP_SMTPC_MESSAGE_REPORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Structure defining a mail message report&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03464.html" target="topic">TCPIP_SMTPC_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC configuration data.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03396.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a mail message callback&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03397.html" target="topic">TCPIP_SMTPC_MESSAGE_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a handle to a mail message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03477.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a mail server reply callback&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01138.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01152.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01178.html" target="topic">NET_PRES_EncSessionStatus Enumeration</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01177.html" target="topic">SMTPC Module</a> &gt; <a href="01637.html" target="topic">Files</a> &gt; <a href="01178.html" target="topic">smtpc.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +298,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01175.html" target="topic">Previous</a> | <a href="01152.html" target="topic">Up</a> | <a href="01205.html" target="topic">Next</a></div>
+<a href="01637.html" target="topic">Previous</a> | <a href="01637.html" target="topic">Up</a> | <a href="01179.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncSessionStatus Topic Title: NET_PRES_EncSessionStatus Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: smtpc.h Topic Title: smtpc.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

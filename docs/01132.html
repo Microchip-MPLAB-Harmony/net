@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building MPFS2 Images</title>
+<title>NET_PRES_SocketRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01873.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01137.html" target="topic">MPFS2 Utility</a> &gt; <a href="01132.html" target="topic">Building MPFS2 Images</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01132.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01133.html" target="topic">Previous</a> | <a href="01137.html" target="topic">Up</a> | <a href="01136.html" target="topic">Next</a></div>
+<a href="01131.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Building MPFS2 Images Topic Title: Building MPFS2 Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building MPFS2 Images</div>
+NET_PRES_SocketRead Function</div>
 </div>
 </div>
 
@@ -49,34 +49,72 @@ Building MPFS2 Images</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The MPFS2 Utility has four steps, which are denoted on the left hand side of the dialog.&nbsp;</p>
+This function reads an array of data bytes from a <a href="01268.html" target="topic">socket</a>'s RX buffer/FIFO. The data is removed from the FIFO in the process. If the connection is encrypted this function calls the encryption provider's read function, otherwise it calls the transport layer's read function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">NET_PRES_SocketRead</span></strong>(
+    <a href="01090.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    uint16_t <strong><span style="color: #000000">size</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-To build an MPFS image, select <strong>Start With: Webpage Directory</strong> in Step 1 and choose the directory in which the web pages are stored.&nbsp;</p>
+A <a href="01268.html" target="topic">socket</a> needs to have been opened by <a href="01128.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The presentation layer <a href="01268.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The pointer to the array to store data that was read.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The number of bytes to be read.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Users need to provide the web page directory path from the &lt;install-dir&gt;/net/apps/ demonstration project.&nbsp;</p>
+The number of bytes read from the <a href="01268.html" target="topic">socket</a>. If less than len, the RX FIFO buffer became empty or the <a href="01268.html" target="topic">socket</a> is not connected.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The Source Directory path is stored in <span class="Element146">MPFS2SettingDetails.xml</span> for future access. </p><p class="Element10" style="text-align: center;">
-<img src="TCPIP OVERVIEW MPFS2 Step 1.png" border="0" alt="" title=""></p><p class="Element10">
-Step 2 selects the output format. If storing the web pages in external EEPROM or serial Flash, choose the <strong>BIN Image</strong> output format. If internal program memory will be used, select <strong>PIC32</strong> <strong>Image</strong> for use with 32-bit devices. To store the web pages on a device formatted with the FAT file system select <strong>MDD</strong>. Refer to <a href="01131.html" target="topic">Advanced MPFS2 Settings</a> for more information.&nbsp;</p>
-<p class="Element10">
-The configurable parameters of Output file format and Advance Settings are stored in <span class="Element146">MPFS2SettingDetails.xml</span>. </p><p class="Element10" style="text-align: center;">
-<img src="TCPIP OVERVIEW MPFS2 Step 2.png" border="0" alt="" title=""></p><p class="Element10">
-Step 3 asks for the TCP/IP MPLAB X IDE project directory. The MPFS utility will write the image file to the project directory, and will also update the <span class="Element146">http_print.h</span> file there if needed. Select the correct directory so that the right files are modified.&nbsp;</p>
-<p class="Element10">
-By default, the project directory path is one path behind the source directory. Both the Project Directory and Image Name are configurable parameters, which are stored in <span class="Element146">MPFS2SettingDetails.xml</span>. </p><p class="Element10" style="text-align: center;">
-<img src="TCPIP OVERVIEW MPFS2 Step 3.png" border="0" alt="" title=""></p><p class="Element10">
-Step 4 controls the upload settings. When external EEPROM or serial Flash is used for storage, the option to upload the newly created image to the board is available. Check the box next to <strong>Upload Image</strong> <strong>To</strong> to enable this feature. The target host name (or IP address), upload protocol, and upload path may need to be changed to the one chosen when the board was first configured. You may also need to modify the user name and password used to access the secured functionality in your application, like web page upload. Use the <strong>Settings</strong> button to edit these values (see <a href="01135.html" target="topic">MPFS2 Upload Settings</a> for more information).&nbsp;</p>
-<p class="Element10">
-If internal program memory is being used, the image will be compiled in with the project and so direct uploads are not available. Make sure to include the output source file indicated in Step 3 as part of the project. </p><p class="Element10" style="text-align: center;">
-<img src="generate_upload.png" border="0" alt="" title=""></p><p class="Element10">
-Once all the correct settings have been chosen, click the <strong>Generate</strong> button to create the image. If uploads are enabled, this will also attempt to upload the file to the device.</p></div>
+For encrypted connections, a null buffer is an invalid parameter. For non encrypted connections if the supplied buffer is null, the data is simply discarded.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01873.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01137.html" target="topic">MPFS2 Utility</a> &gt; <a href="01132.html" target="topic">Building MPFS2 Images</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01132.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +122,13 @@ Once all the correct settings have been chosen, click the <strong>Generate</stro
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01133.html" target="topic">Previous</a> | <a href="01137.html" target="topic">Up</a> | <a href="01136.html" target="topic">Next</a></div>
+<a href="01131.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Building MPFS2 Images Topic Title: Building MPFS2 Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

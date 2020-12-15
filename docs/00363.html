@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DHCPv6 Module</title>
+<title>DRV_ENCX24J600_PacketRx Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00363.html" target="topic">DHCPv6 Module</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00664.html" target="topic">Library Interface</a> &gt; <a href="00666.html" target="topic">c) Receive Functions</a> &gt; <a href="00363.html" target="topic">DRV_ENCX24J600_PacketRx Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04252.html" target="topic">Previous</a> | <a href="01108.html" target="topic">Up</a> | <a href="01557.html" target="topic">Next</a></div>
+<a href="00666.html" target="topic">Previous</a> | <a href="00666.html" target="topic">Up</a> | <a href="00370.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DHCPv6 TCP/IP Stack Library Topic Title: DHCPv6 Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_PacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: DRV_ENCX24J600_PacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DHCPv6 Module</div>
+DRV_ENCX24J600_PacketRx Function</div>
 </div>
 </div>
 
@@ -46,57 +46,81 @@ DHCPv6 Module</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ENCX24J600 Receive Packet&nbsp;</p>
+<p class="Element10">
+This function retrieves a packet from the driver. The packet needs to be acknowledged with the linked acknowledge function so it can be reused.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03028.html" target="topic">TCPIP_MAC_PACKET</a>* <strong><span style="color: #000000">DRV_ENCX24J600_PacketRx</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="03119.html" target="topic">TCPIP_MAC_RES</a>* <strong><span style="color: #000000">pRes</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <a href="03041.html" target="topic">TCPIP_MAC_PACKET_RX_STAT</a>** <strong><span style="color: #000000">ppPktStat</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01557.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<strong>TCP/IP Stack Library IPv6 Dynamic Host Configuration Protocol (DHCPv6) Module for Microchip Devices</strong><br>This library provides the API of the DHCPv6 module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP Stack<span style="color: #0000FF">.</span><br><span style="color: #000000">The module implements the</span> Dynamic Host Configuration <span style="color: #000000">Protocol version 6, client side.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01561.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic describes the basic architecture of the DHCPv6<span style="color: #0000FF"> </span>TCP/IP Stack Library and provides information and examples on its use.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01553.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The configuration of the DHCPv6 TCP/IP Stack is based on the file <span class="Element146"><a href="00365.html" target="topic">dhcpv6_config.h</a></span> with the actual symbols generated in the configuration.h.<br>This header file contains the configuration parameters for the DHCPv6 TCP/IP Stack. Based on the selections made, the DHCPv6 TCP/IP Stack will adjust its behavior.<br>This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01431.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01551.html" target="topic">Building the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the files that are available in the DHCPv6 module of the TCP/IP Stack Library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01558.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the DHCPv6 module.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01555.html" target="topic">Files</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the source and header files used by the library.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The client had to be successfully opened with <a href="00362.html" target="topic">DRV_ENCX24J600_Open</a>.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the successfully opened handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pRes&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the result of the operation&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ppPktStat&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to the receive statistics&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Pointer to a valid packet - if successful</li>
+<li class="Element601">NULL - if unsuccessful</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ppPktStat is ignored in the first release.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00363.html" target="topic">DHCPv6 Module</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00664.html" target="topic">Library Interface</a> &gt; <a href="00666.html" target="topic">c) Receive Functions</a> &gt; <a href="00363.html" target="topic">DRV_ENCX24J600_PacketRx Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +128,13 @@ This section lists the source and header files used by the library.&nbsp;</div><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04252.html" target="topic">Previous</a> | <a href="01108.html" target="topic">Up</a> | <a href="01557.html" target="topic">Next</a></div>
+<a href="00666.html" target="topic">Previous</a> | <a href="00666.html" target="topic">Up</a> | <a href="00370.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DHCPv6 TCP/IP Stack Library Topic Title: DHCPv6 Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_PacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: DRV_ENCX24J600_PacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

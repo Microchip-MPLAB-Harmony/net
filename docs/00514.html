@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_ClientOperationResult Function</title>
+<title>DRV_ETHPHY_Reinitialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00779.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00393.html" target="topic">Library Interface</a> &gt; b) Client Level Functions &gt; <a href="00514.html" target="topic">DRV_ETHPHY_ClientOperationResult Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00514.html" target="topic">DRV_ETHPHY_Reinitialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00513.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00639.html" target="topic">Next</a></div>
+<a href="00419.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00527.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_ClientOperationResult@DRV_HANDLE Topic Title: DRV_ETHPHY_ClientOperationResult Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: DRV_ETHPHY_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_ClientOperationResult Function</div>
+DRV_ETHPHY_Reinitialize Function</div>
 </div>
 </div>
 
@@ -49,49 +49,61 @@ DRV_ETHPHY_ClientOperationResult Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns the result of a client operation initiated by the Ethernet PHY driver.</p></div>
+This function reinitializes the driver and refreshes any associated hardware settings using the initialization data given, but it will not interrupt any ongoing operations.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00625.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_ClientOperationResult</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">DRV_ETHPHY_Reinitialize</span></strong>(
+    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">The <a href="00541.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element605"><a href="00617.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid opened device handle.</li>
-<li class="Element605">A driver operation was started and completed</li>
-</ul></p></div>
+The <a href="00435.html" target="topic">DRV_ETHPHY_Initialize</a> function must have been called before calling this routine and a valid SYS_MODULE_OBJ must have been returned.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element635">
-<li class="Element605"><a href="00625.html" target="topic">DRV_ETHPHY_RESULT</a> value describing the current operation result: DRV_ETHPHY_RES_OK for success; operation has been completed successfully DRV_ETHPHY_RES_PENDING operation is in progress an <a href="00625.html" target="topic">DRV_ETHPHY_RESULT</a> error code if the operation failed.</li>
-</ul></p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will not block for hardware access and will immediately return the current status.&nbsp;</p>
-<p class="Element10">
-This function returns the result of the last driver operation. It will return DRV_ETHPHY_RES_PENDING if an operation is still in progress. Otherwise a <a href="00625.html" target="topic">DRV_ETHPHY_RESULT</a> describing the operation outcome.</p></div>
+
+<ul class="Element631">
+<li class="Element601">This function can be called multiple times to reinitialize the module.</li>
+<li class="Element601">This operation can be used to refresh any supported hardware registers as specified by the initialization data or to change the power state of the module.</li>
+</ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="00425.html" target="topic">DRV_ETHPHY_INIT</a>    init;
+SYS_MODULE_OBJ  objectHandle;
+
+<i><span style="color: #008000">// Populate the Ethernet PHY initialization structure</span></i>
+init.phyId  = ETHPHY_ID_2;
+init.pPhyObject  = &amp;<a href="00508.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN8720</a>;
+
+DRV_ETHPHY_Reinitialize(objectHandle, (SYS_MODULE_INIT*)&amp;init);
+
+phyStatus = <a href="00527.html" target="topic">DRV_ETHPHY_Status</a>(objectHandle);
+<strong><span style="color: #000080">if</span></strong> (SYS_STATUS_BUSY == phyStatus)
+{
+    <i><span style="color: #008000">// Check again later to ensure the driver is ready</span></i>
+}
+<strong><span style="color: #000080">else</span></strong> <strong><span style="color: #000080">if</span></strong> (SYS_STATUS_ERROR &gt;= phyStatus)
+{
+    <i><span style="color: #008000">// Handle error</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -99,7 +111,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00779.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00393.html" target="topic">Library Interface</a> &gt; b) Client Level Functions &gt; <a href="00514.html" target="topic">DRV_ETHPHY_ClientOperationResult Function</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00514.html" target="topic">DRV_ETHPHY_Reinitialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +119,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00513.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00639.html" target="topic">Next</a></div>
+<a href="00419.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00527.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_ClientOperationResult@DRV_HANDLE Topic Title: DRV_ETHPHY_ClientOperationResult Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: DRV_ETHPHY_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

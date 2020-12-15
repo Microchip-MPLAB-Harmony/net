@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>TCPIP_ARP_Probe Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01834.html" target="topic">Introduction</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00185.html" target="topic">ARP Module</a> &gt; <a href="01358.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01834.html" target="topic">TCPIP_ARP_Probe Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04250.html" target="topic">Previous</a> | <a href="04250.html" target="topic">Up</a> | <a href="01837.html" target="topic">Next</a></div>
+<a href="01814.html" target="topic">Previous</a> | <a href="01358.html" target="topic">Up</a> | <a href="01835.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_Probe@TCPIP_NET_HANDLE@IPV4_ADDR*@IPV4_ADDR*@TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_Probe Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+TCPIP_ARP_Probe Function</div>
 </div>
 </div>
 
@@ -49,42 +49,90 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Telnet, which runs over a TCP connection, provides bidirectional, interactive communication between two nodes on the Internet or on a Local Area Network. The Telnet code included with Harmony TCP/IP stack is a demonstration of the possible utilization of a Telnet server module. The server listens for a Telnet connection. When a client attempts to make one, the server will prompt the client for a username and password, and if the correct one is provided, it will<span style="color: #FFFFFF">_</span><a href="00301.html" target="topic">connect</a><span style="color: #FFFFFF">_</span>the client.&nbsp;</p>
-<p class="Element10">
-The server registers itself with the system command processor and acts as a communication channel capable of issuing commands and receiving replies.&nbsp;</p>
-<p class="Element10">
-From this moment on, the Telnet connection can be used for various system and TCP/IP related commands, just as the regular system console is used.&nbsp;</p>
-<p class="Element10">
-The commands currently implemented and processed by the command processor can be dynamically updated, new commands can be added, etc. See the <span class="Element146">tcpip_commands.c</span> file for the list of TCP/IP-related commands.&nbsp;</p>
-<p class="Element10">
-Based on this skeleton Telnet code, completely new behavior can be implemented for the Telnet server.</p></div>
+This function transmits and ARP probe to determine the hardware address of a given IP address. The packet will use the type of operation and the source address specified as parameters.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01836.html" target="topic">TCPIP_ARP_RESULT</a> <strong><span style="color: #000000">TCPIP_ARP_Probe</span></strong>(
+    <a href="03279.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">IPAddr</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">srcAddr</span></strong>, 
+    <a href="01826.html" target="topic">TCPIP_ARP_OPERATION_TYPE</a> <strong><span style="color: #000000">opType</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01837.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic describes the basic architecture of the Telnet<span style="color: #0000FF"> </span>TCP/IP Stack Library and provides information and examples on its use.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The ARP module should have been initialized.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+interface to use&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+IPAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The IP address to be resolved. The address must be specified in network byte order (big endian).&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The source address to be used in the ARP packet&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+opType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Operation code to be set in the outgoing ARP packet&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">ARP_RES_ENTRY_SOLVED - if the required entry is already solved</li>
+<li class="Element601">ARP_RES_ENTRY_QUEUED - if the required entry was already queued</li>
+<li class="Element601">ARP_RES_ENTRY_NEW - if the operation succeeded and a new entry was added (and queued for resolving)</li>
+<li class="Element601">ARP_RES_CACHE_FULL - if new entry could not be inserted, the cache was full</li>
+<li class="Element601">ARP_RES_BAD_ADDRESS - bad address specified</li>
+<li class="Element601">ARP_RES_NO_INTERFACE - no such interface</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function is a more advanced version of <a href="01835.html" target="topic">TCPIP_ARP_Resolve</a>. It allows the caller to specify the operation type and the source address of the outgoing ARP packet. It also supports the ARP flags defined in <a href="01826.html" target="topic">TCPIP_ARP_OPERATION_TYPE</a>.&nbsp;</p>
+<p class="Element10">
+No check is done for IPAddr to be valid.&nbsp;</p>
+<p class="Element10">
+To retrieve the ARP query result, call the <a href="01814.html" target="topic">TCPIP_ARP_IsResolved</a> function.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04250.html" target="topic">Telnet Module</a> &gt; <a href="01834.html" target="topic">Introduction</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00185.html" target="topic">ARP Module</a> &gt; <a href="01358.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01834.html" target="topic">TCPIP_ARP_Probe Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -92,13 +140,13 @@ This topic describes the basic architecture of the Telnet<span style="color: #00
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04250.html" target="topic">Previous</a> | <a href="04250.html" target="topic">Up</a> | <a href="01837.html" target="topic">Next</a></div>
+<a href="01814.html" target="topic">Previous</a> | <a href="01358.html" target="topic">Up</a> | <a href="01835.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_Probe@TCPIP_NET_HANDLE@IPV4_ADDR*@IPV4_ADDR*@TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_Probe Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro</title>
+<title>TCPIP_STACK_PacketHandlerDeregister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a> &gt; <a href="03776.html" target="topic">TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00986.html" target="topic">Manager Module</a> &gt; <a href="01581.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03776.html" target="topic">TCPIP_STACK_PacketHandlerDeregister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03775.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03778.html" target="topic">Next</a></div>
+<a href="03737.html" target="topic">Previous</a> | <a href="01581.html" target="topic">Up</a> | <a href="03777.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Topic Title: TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_PacketHandlerDeregister@TCPIP_NET_HANDLE@TCPIP_STACK_PROCESS_HANDLE Topic Title: TCPIP_STACK_PacketHandlerDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro</div>
+TCPIP_STACK_PacketHandlerDeregister Function</div>
 </div>
 </div>
 
@@ -49,17 +49,79 @@ TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This setting enables the configuration get/set operations: <a href="03873.html" target="topic">TCPIP_STACK_ModuleConfigGet</a>, <a href="03888.html" target="topic">TCPIP_STACK_NetConfigGet</a>, <a href="03889.html" target="topic">TCPIP_STACK_NetConfigSet</a> If true, the functionality is built in and could be used by the application If false, these functions do not exist and the generated code is smaller</p></div>
+This function removes a packet processing handler.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_STACK_CONFIGURATION_SAVE_RESTORE</span></strong> <strong><span style="color: #000080">true</span></strong></pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_STACK_PacketHandlerDeregister</span></strong>(
+    <a href="03279.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    <a href="03778.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a> <strong><span style="color: #000000">pktHandle</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP stack should have been initialized by <a href="03732.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03780.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+network handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pktHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+TCPIP packet handle obtained by a call to <a href="03777.html" target="topic">TCPIP_STACK_PacketHandlerRegister</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - if the operation succeeded</li>
+<li class="Element600">false - if the operation failed</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Exists only if <a href="03651.html" target="topic">TCPIP_STACK_EXTERN_PACKET_PROCESS</a> is true</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="03778.html" target="topic">TCPIP_STACK_PROCESS_HANDLE</a> myHandle = <a href="03777.html" target="topic">TCPIP_STACK_PacketHandlerRegister</a>( hNet, myPacketHandler, myParam );
+<i><span style="color: #008000">// process incoming packets</span></i>
+<i><span style="color: #008000">// now we're done with it</span></i>
+TCPIP_STACK_PacketHandlerDeregister(hNet, myHandle);</pre></div></div>
+</div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01114.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Configuring the Library</a> &gt; <a href="03776.html" target="topic">TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00986.html" target="topic">Manager Module</a> &gt; <a href="01581.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03776.html" target="topic">TCPIP_STACK_PacketHandlerDeregister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +129,13 @@ C</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03775.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="03778.html" target="topic">Next</a></div>
+<a href="03737.html" target="topic">Previous</a> | <a href="01581.html" target="topic">Up</a> | <a href="03777.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Topic Title: TCPIP_STACK_CONFIGURATION_SAVE_RESTORE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_PacketHandlerDeregister@TCPIP_NET_HANDLE@TCPIP_STACK_PROCESS_HANDLE Topic Title: TCPIP_STACK_PacketHandlerDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

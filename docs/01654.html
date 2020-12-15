@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00878.html" target="topic">ICMPv6 Module</a> &gt; <a href="01654.html" target="topic">Library Interface</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01180.html" target="topic">SNMP Module</a> &gt; <a href="01652.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01654.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01648.html" target="topic">Previous</a> | <a href="00878.html" target="topic">Up</a> | <a href="02929.html" target="topic">Next</a></div>
+<a href="01652.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01656.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMPv6 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,140 +49,38 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the ICMPv6 module.&nbsp;</p>
+SNMP is an Internet protocol that was originally designed to manage different network devices, such as file servers, hubs, routers, and so on. It can also be used to manage and control an ever increasing number of small embedded systems connected to one another over any IP network. Systems can communicate with each other using SNMP to transfer control and status information, creating a truly distributed system. </p><p class="Element10" style="text-align: center;">
+<strong>Location of the SNMP Stack in the TCP/IP Protocol Stack</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="tcpip_stack_diagram.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<strong>Overview of the SNMP Model</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="TCPIP SNMP Abstraction Model.png" border="0" alt="" title=""></p><p class="Element10">
+The Microchip SNMP Server is a multi-lingual implementation, which supports SNMPv1, V2c, and V3 server features simultaneously. The SNMP Server is implemented to address the requirements of embedded applications and works with both IPv4 and IPv6 addresses. SNMPv1 and V2c are enabled by <a href="03807.html" target="topic">TCPIP_STACK_USE_SNMP_SERVER</a>. SNMPv3 support is enabled by <a href="03808.html" target="topic">TCPIP_STACK_USE_SNMPV3_SERVER</a>. Since the SNMPv3 stack requires the support of SNMPv1 and SNMPv2c, <a href="03808.html" target="topic">TCPIP_STACK_USE_SNMPV3_SERVER</a> should be enabled with <a href="03807.html" target="topic">TCPIP_STACK_USE_SNMP_SERVER</a>. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+Currently, the SNMP agent will be able to communicate with one manager at a time, and it will be connected to either an IPv4 address or an IPv6 address.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+V2c</div>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
-</div>
-<a name="61292046756E6374696F6E73"></a><div class="Element14">
-a) Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+V2c is implemented with support for the configuration of multiple community names and the community names can be configured through the HTTP web interface. An access-restricted web page is provided with the demonstration application to allow dynamic configuration of SNMP communities.</p><div class="Element15">
+SNMPv3</div>
+<p class="Element10">
+SNMPv3 RFC specifies different types of access mechanisms, user security model (USM), authentication and privacy protocols. The Microchip SNMPv3 Server is implemented with support for the AES 128 CFB 128 and DES-CBC privacy protocols, and the MD5 and SHA1 message authentication protocols. The demonstration implementation of the server is configured with three types of user names with respective authentication and privacy credentials and authentication types. These credentials and other user information are stored in the global array. The user of the SNMPv3 stack can decide on the number of user names in the User’s database to be stored with the SNMPv3 Server. According to the SNMPv3 recommendation, the SNMPv3 Server should not be configured with the authentication and privacy passwords. Instead, it could be configured with the respective localized keys of the password. The Microchip SNMPv3 agent is provided with the password information in the database for &quot;Getting Started&quot; and for understanding purposes only. It is recommended that the SNMPv3 stack be modified to restrict access to the password OIDs declared in the user database. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02929.html" target="topic">TCPIP_ICMPV6_CallbackDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters an upper-layer function from ICMPv6 callback.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02933.html" target="topic">TCPIP_ICMPV6_Flush</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Flushes a ICMPv6 packet.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02934.html" target="topic">TCPIP_ICMPV6_HeaderEchoRequestPut</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Allocates a packet, IPv6 Header, and Upper-layer header for an ICMPv6 echo request.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02930.html" target="topic">TCPIP_ICMPV6_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Registers an upper-layer function for ICMPv6 callback.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02932.html" target="topic">TCPIP_ICMPV6_EchoRequestSend</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sends an ICMPv6 echo request to a remote node.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6229204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-b) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00881.html" target="topic">ICMPV6_ERR_DU_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Destination Unreachable error code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00889.html" target="topic">ICMPV6_ERR_PP_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Parameter Problem error code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00894.html" target="topic">ICMPV6_ERR_TE_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Time Exceeded error code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00897.html" target="topic">ICMPV6_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 handle.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00900.html" target="topic">ICMPV6_PACKET_TYPES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 packet types.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00893.html" target="topic">ICMPV6_ERR_PTB_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Packet Too Big error code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00898.html" target="topic">ICMPV6_INFO_EREQ_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Packet Echo Request information code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00899.html" target="topic">ICMPV6_INFO_ERPL_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ICMPv6 Packet Echo Reply information code.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02935.html" target="topic">TCPIP_ICMPV6_PutHeaderEchoReply</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro TCPIP_ICMPV6_PutHeaderEchoReply.&nbsp;</div></td></tr></table></div></div>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in the SNMP Stack will prevent access to the variables that should be secured by SNMPv3. SNMP variables are structures in a tree in the MIB. Access to parts of this tree is determined by version. For example, SYSTEM-type variables can be accessed regardless of the SNMP version, while SNMPv2c requests can access part of the tree, and authenticated SNMPv3 requests can access the complete tree.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -190,7 +88,7 @@ This is macro TCPIP_ICMPV6_PutHeaderEchoReply.&nbsp;</div></td></tr></table></di
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00878.html" target="topic">ICMPv6 Module</a> &gt; <a href="01654.html" target="topic">Library Interface</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01180.html" target="topic">SNMP Module</a> &gt; <a href="01652.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01654.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -198,13 +96,13 @@ This is macro TCPIP_ICMPV6_PutHeaderEchoReply.&nbsp;</div></td></tr></table></di
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01648.html" target="topic">Previous</a> | <a href="00878.html" target="topic">Up</a> | <a href="02929.html" target="topic">Next</a></div>
+<a href="01652.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01656.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMPv6 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

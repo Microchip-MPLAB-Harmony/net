@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro</title>
+<title>TCPIP_TFTPS_IsEnabled Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01816.html" target="topic">Configuring the Library</a> &gt; <a href="04021.html" target="topic">TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04123.html" target="topic">TFTP Server Module</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; <a href="01711.html" target="topic">a) Functions</a> &gt; <a href="04021.html" target="topic">TCPIP_TFTPS_IsEnabled Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03987.html" target="topic">Previous</a> | <a href="01816.html" target="topic">Up</a> | <a href="04022.html" target="topic">Next</a></div>
+<a href="04020.html" target="topic">Previous</a> | <a href="01711.html" target="topic">Up</a> | <a href="04044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Topic Title: TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPS_IsEnabled Topic Title: TCPIP_TFTPS_IsEnabled Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro</div>
+TCPIP_TFTPS_IsEnabled Function</div>
 </div>
 </div>
 
@@ -49,17 +49,38 @@ TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Default <a href="01409.html" target="topic">socket</a> RX buffer size Note that this setting affects all TCP sockets that are created and, together with <a href="03985.html" target="topic">TCPIP_TCP_MAX_SOCKETS</a>, has a great impact on the heap size that's used by the stack (see <a href="03781.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting). When large RX bufferrs are needed, probably a dynamic, per <a href="01409.html" target="topic">socket</a> approach, is a better choice (see <a href="03994.html" target="topic">TCPIP_TCP_OptionsSet</a> function). The performance of a <a href="01409.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Note that some modules (like HTTP) use their own settings to specify the buffer size for their TCP sockets.</p></div>
+This function determines if a TFTP server <a href="01268.html" target="topic">socket</a> connection is established and ready to receive packet from the different client.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE</span></strong> 512</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_TFTPS_IsEnabled</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TFTPS module should have been initialized.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+true : if connection is established false: if server open fails.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01428.html" target="topic">TCP Module</a> &gt; <a href="01816.html" target="topic">Configuring the Library</a> &gt; <a href="04021.html" target="topic">TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04123.html" target="topic">TFTP Server Module</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; <a href="01711.html" target="topic">a) Functions</a> &gt; <a href="04021.html" target="topic">TCPIP_TFTPS_IsEnabled Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +88,13 @@ C</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03987.html" target="topic">Previous</a> | <a href="01816.html" target="topic">Up</a> | <a href="04022.html" target="topic">Next</a></div>
+<a href="04020.html" target="topic">Previous</a> | <a href="01711.html" target="topic">Up</a> | <a href="04044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Topic Title: TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPS_IsEnabled Topic Title: TCPIP_TFTPS_IsEnabled Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

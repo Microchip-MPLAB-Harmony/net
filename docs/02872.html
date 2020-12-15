@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_IPV4_MODULE_CONFIG Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02872.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00846.html" target="topic">IPv4 Module</a> &gt; <a href="01541.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02872.html" target="topic">TCPIP_IPV4_MODULE_CONFIG Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02860.html" target="topic">Previous</a> | <a href="01541.html" target="topic">Up</a> | <a href="00848.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_MODULE_CONFIG Topic Title: TCPIP_IPV4_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_IPV4_MODULE_CONFIG Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+IPv4 configuration&nbsp;</p>
+<p class="Element10">
+The parameters needed for the Pv4 module initialization</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  size_t <strong><span style="color: #000000">arpEntries</span></strong>;
+  TCPIP_IPV4_FORWARD_FLAGS <strong><span style="color: #000000">forwardFlags</span></strong>;
+  size_t <strong><span style="color: #000000">forwardTxQueueSize</span></strong>;
+  size_t <strong><span style="color: #000000">forwardTableMaxEntries</span></strong>;
+  size_t <strong><span style="color: #000000">forwardTableSize</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> TCPIP_IPV4_FORWARD_ENTRY* <strong><span style="color: #000000">forwardTable</span></strong>;
+} TCPIP_IPV4_MODULE_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+size_t arpEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The number of entries that IPv4 can queue up for ARP resolution. Usually it should be &lt;= the number of total ARP cache entries for all interfaces&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IPV4_FORWARD_FLAGS forwardFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Forwarding flags. See the definition of TCPIP_IPV4_FORWARD_FLAGS&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+size_t forwardTxQueueSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The maximum number of broadcast and multicast packets that can be queued</p>
+<ul class="Element630">
+<li class="Element600">waiting for the output interface to transmit them.</li>
+<li class="Element600">This applies only for packets that have to be both forwarded and processed internally</li>
+<li class="Element600">which is only broadcast or multicast</li>
+<li class="Element600">Adjust depending on your traffic</li>
+<li class="Element600">Note that if this limit is exceeded, the packets won't be forwarded</li>
+<li class="Element600">but still processed internally</li>
+<li class="Element600">If 0, packets won't be forwarded, just processed internally.</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+size_t forwardTableMaxEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The maximum number of entries in the forwarding table for each interface&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+size_t forwardTableSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The number of entries in the initialization forwarding table</p>
+<ul class="Element630">
+<li class="Element600">The number of entries per interface cannot exceed the 'forwardTableMaxEntries' value</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const TCPIP_IPV4_FORWARD_ENTRY* forwardTable;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the forwarding table entries to start with</p>
+<ul class="Element630">
+<li class="Element600">It contains the entries for all interfaces involved in forwarding</li>
+<li class="Element600">The type of the table is given by the flag TCPIP_IPV4_FWD_FLAG_BINARY_TABLE/TCPIP_IPV4_FWD_FLAG_ASCII_TABLE</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00846.html" target="topic">IPv4 Module</a> &gt; <a href="01541.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02872.html" target="topic">TCPIP_IPV4_MODULE_CONFIG Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02860.html" target="topic">Previous</a> | <a href="01541.html" target="topic">Up</a> | <a href="00848.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_MODULE_CONFIG Topic Title: TCPIP_IPV4_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Abstraction Model</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00363.html" target="topic">DHCPv6 Module</a> &gt; <a href="01561.html" target="topic">Using the Library</a> &gt; <a href="01550.html" target="topic">Abstraction Model</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00880.html" target="topic">IPv6 Module</a> &gt; <a href="01550.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01561.html" target="topic">Previous</a> | <a href="01561.html" target="topic">Up</a> | <a href="01559.html" target="topic">Next</a></div>
+<a href="00880.html" target="topic">Previous</a> | <a href="00880.html" target="topic">Up</a> | <a href="01553.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Abstraction Model</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,25 +49,18 @@ Abstraction Model</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">This module provides software abstraction of the </span>DHCPv6<span style="color: #000000"> module existent in the TCP/IP Stack implementation. The DHCPv6 module works together with the IPv6 Stateless Address Auto-configuration protocol and provides stateful temporary/non-temporary (IATA, IANA) global addresses for the IPv6 host.</span> </p><p class="Element10" style="text-align: center;">
-<strong>DHCPv6<span style="color: #000000"> Software Abstraction Block Diagram</strong></span></p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element75" valign="top" width="100%" style="border:none;">
-<div class="Element76">
-Typical DCHPv6 Usage&nbsp;</div></td></tr><tr>
-<td class="Element77" valign="top" width="100%" style="border:none;">
-<div class="Element78">
-<img src="dhcpv6_diagram1.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-</div>
+IPv6 is the workhorse protocol of the TCP/IP protocol suite. All TCP, UDP, ICMP, and IGMP data gets transmitted as IP datagrams. IP provides an unreliable, connectionless datagram delivery service.&nbsp;</p>
+<p class="Element10">
+IPv6 provides a best effort service. When something goes wrong, such as a router temporarily running out of buffers, IPv6 has a simple error handling algorithm: throw away the datagram and try to <a href="01168.html" target="topic">send</a> an ICMP message back to the source. Any required reliability must be provided by the upper layers (e.g., TCP).&nbsp;</p>
+<p class="Element10">
+The term connectionless means that IPv6 does not maintain any state information about successive datagrams. Each datagram is handled independently from all other datagrams. This also means that IPv6 datagrams can get delivered out of order. If a source sends two consecutive datagrams (first A, and then B) to the same destination, each is routed independently and can take different routes, with B arriving before A.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00363.html" target="topic">DHCPv6 Module</a> &gt; <a href="01561.html" target="topic">Using the Library</a> &gt; <a href="01550.html" target="topic">Abstraction Model</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00880.html" target="topic">IPv6 Module</a> &gt; <a href="01550.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -75,13 +68,13 @@ Typical DCHPv6 Usage&nbsp;</div></td></tr><tr>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01561.html" target="topic">Previous</a> | <a href="01561.html" target="topic">Up</a> | <a href="01559.html" target="topic">Next</a></div>
+<a href="00880.html" target="topic">Previous</a> | <a href="00880.html" target="topic">Up</a> | <a href="01553.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

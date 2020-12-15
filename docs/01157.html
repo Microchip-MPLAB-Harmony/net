@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>net_pres.h</title>
+<title>net_pres_transportapi.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01138.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01150.html" target="topic">Files</a> &gt; <a href="01157.html" target="topic">net_pres.h</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01022.html" target="topic">Files</a> &gt; <a href="01157.html" target="topic">net_pres_transportapi.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01150.html" target="topic">Previous</a> | <a href="01150.html" target="topic">Up</a> | <a href="01160.html" target="topic">Next</a></div>
+<a href="01113.html" target="topic">Previous</a> | <a href="01022.html" target="topic">Up</a> | <a href="04047.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: net_pres.h Topic Title: net_pres.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: net_pres_transportapi.h Topic Title: net_pres_transportapi.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-net_pres.h</div>
+net_pres_transportapi.h</div>
 </div>
 </div>
 
@@ -51,7 +51,7 @@ net_pres.h</div>
 <p class="Element10">
 Microchip Technology Inc.&nbsp;</p>
 <p class="Element10">
-Filename: net_pres.h</p></div>
+Filename: net_pres_transportapi.h</p></div>
 </div>
 <a name="4465736372697074696F6E"></a><div class="Element14">
 Description</div>
@@ -60,10 +60,10 @@ Description</div>
 <p class="Element10">
 MPLAB Harmony Networking Presentation Layer Header File&nbsp;</p>
 <p class="Element10">
-This file describes the system interface and common definitions to the MPLAB Harmony Networking Presentation Layer.</p></div>
+This file describes the API that transport layers follow for to integrate with MPLAB Harmony's Networking Presentation Layer.</p></div>
 </div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -79,39 +79,18 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01163.html" target="topic">NET_PRES_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01144.html" target="topic">NET_PRES_TRANS_ADDRESS_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Deinitializes the Network Presentation Layer Instance. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
+Defines the enumeration for the type of address.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01191.html" target="topic">NET_PRES_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01146.html" target="topic">NET_PRES_TRANS_OPTION_T</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes the Network Presentation Layer sub-system with the configuration data. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01202.html" target="topic">NET_PRES_Reinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reinitializes the instance of the presentation layer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01268.html" target="topic">NET_PRES_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the current status of the MPLAB Harmony Networking Presentation Layer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01269.html" target="topic">NET_PRES_Tasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-MPLAB Harmony tasks function used for general presentation layer tasks. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
+Defines the enumeration for the type of options.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="4D6163726F73"></a><div class="Element14">
@@ -133,16 +112,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="00079.html" target="topic">_NET_PRES_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00081.html" target="topic">_NET_PRES_TRANSPORT_API_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro _NET_PRES_H_.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01201.html" target="topic">NET_PRES_INVALID_SOCKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Invalid <a href="01409.html" target="topic">socket</a> indicator macro.&nbsp;</div></td></tr></table></div></div>
+This is macro _NET_PRES_TRANSPORT_API_H_.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="53747275637475726573"></a><div class="Element14">
@@ -164,16 +136,23 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01188.html" target="topic">NET_PRES_INIT_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01158.html" target="topic">_NET_PRES_TransportObject</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes a Presentation layer.&nbsp;</div></td></tr><tr>
+Defines the data that the transport layer needs to provide to the Networking Presentation Layer.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01192.html" target="topic">NET_PRES_INST_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01142.html" target="topic">NET_PRES_TRANS_ADDR_T</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes a Presentation layer.&nbsp;</div></td></tr></table></div></div>
+Defines a generic address structure to pass to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01158.html" target="topic">NET_PRES_TransportObject</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data that the transport layer needs to provide to the Networking Presentation Layer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="5479706573"></a><div class="Element14">
@@ -195,37 +174,100 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01187.html" target="topic">NET_PRES_INDEX</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01148.html" target="topic">NET_PRES_TransBind</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the type for the presentation layer index.&nbsp;</div></td></tr><tr>
+Binds a <a href="01268.html" target="topic">socket</a> to a local address.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01203.html" target="topic">NET_PRES_SIGNAL_FUNCTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01149.html" target="topic">NET_PRES_TransBool</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-MPLAB Harmony Networking Presentation Layer Signal function.&nbsp;</div></td></tr><tr>
+Generic function prototype for functions that return a bool.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01204.html" target="topic">NET_PRES_SIGNAL_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01150.html" target="topic">NET_PRES_TransClose</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the type for the presentation layer signal handle.&nbsp;</div></td></tr><tr>
+Function prototype for functions that closes a <a href="01268.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01218.html" target="topic">NET_PRES_SKT_HANDLE_T</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01151.html" target="topic">NET_PRES_TransDiscard</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the type for the presentation layer <a href="01409.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
+Function prototype for functions that clears a <a href="01268.html" target="topic">socket</a>'s RX buffer.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01221.html" target="topic">NET_PRES_SKT_PORT_T</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01152.html" target="topic">NET_PRES_TransHandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the type for the presentation layer port.&nbsp;</div></td></tr></table></div></div>
+Function prototype that registers a handler with a <a href="01268.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01153.html" target="topic">NET_PRES_TransIsPortDefaultSecured</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Checks to see if a port is encrypted by default. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01154.html" target="topic">NET_PRES_TransOpen</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Opens a presentation <a href="01268.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01155.html" target="topic">NET_PRES_TransOption</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets of gets a <a href="01268.html" target="topic">socket</a>'s options.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01156.html" target="topic">NET_PRES_TransPeek</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Function prototype for functions that peeks on the <a href="01268.html" target="topic">socket</a>'s buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01159.html" target="topic">NET_PRES_TransRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the read function provided by the transport layer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01160.html" target="topic">NET_PRES_TransReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the ready function provided by the transport layer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01161.html" target="topic">NET_PRES_TransSignalHandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Function prototype that deregisters a handler with a <a href="01268.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01162.html" target="topic">NET_PRES_TransSocketInfoGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Function prototype for functions that gets the information on a <a href="01268.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01163.html" target="topic">NET_PRES_TransWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the write function provided by the transport layer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -233,7 +275,7 @@ Sets the type for the presentation layer port.&nbsp;</div></td></tr></table></di
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01138.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01150.html" target="topic">Files</a> &gt; <a href="01157.html" target="topic">net_pres.h</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01022.html" target="topic">Files</a> &gt; <a href="01157.html" target="topic">net_pres_transportapi.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -241,13 +283,13 @@ Sets the type for the presentation layer port.&nbsp;</div></td></tr></table></di
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01150.html" target="topic">Previous</a> | <a href="01150.html" target="topic">Up</a> | <a href="01160.html" target="topic">Next</a></div>
+<a href="01113.html" target="topic">Previous</a> | <a href="01022.html" target="topic">Up</a> | <a href="04047.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: net_pres.h Topic Title: net_pres.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: net_pres_transportapi.h Topic Title: net_pres_transportapi.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

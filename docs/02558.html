@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_FTPC_SetStruct Function</title>
+<title>TCPIP_HTTP_NET_ConnectionByteCountGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01601.html" target="topic">Library Interface</a> &gt; <a href="01603.html" target="topic">a) Functions</a> &gt; <a href="02558.html" target="topic">TCPIP_FTPC_SetStruct Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">HTTP Net Module</a> &gt; <a href="01488.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02558.html" target="topic">TCPIP_HTTP_NET_ConnectionByteCountGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02557.html" target="topic">Previous</a> | <a href="01603.html" target="topic">Up</a> | <a href="02559.html" target="topic">Next</a></div>
+<a href="02550.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_SetStruct@TCPIP_FTPC_CONN_HANDLE_TYPE@TCPIP_FTPC_DATA_STRUCT_TYPE Topic Title: TCPIP_FTPC_SetStruct Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionByteCountGet@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionByteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_FTPC_SetStruct Function</div>
+TCPIP_HTTP_NET_ConnectionByteCountGet Function</div>
 </div>
 </div>
 
@@ -49,20 +49,19 @@ TCPIP_FTPC_SetStruct Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function schedules the process to set the file structure</p></div>
+This function returns the current value of the counter showing the number of bytes available to be read on the connection.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02549.html" target="topic">TCPIP_FTPC_RETURN_TYPE</a> <strong><span style="color: #000000">TCPIP_FTPC_SetStruct</span></strong>(
-    <a href="02473.html" target="topic">TCPIP_FTPC_CONN_HANDLE_TYPE</a> <strong><span style="color: #000000">ftpcHandle</span></strong>, 
-    <a href="02509.html" target="topic">TCPIP_FTPC_DATA_STRUCT_TYPE</a> <strong><span style="color: #000000">file_struct</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionByteCountGet</span></strong>(
+    <a href="02555.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FTPC module should have been initialized, connected and logged-in</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-ftpcHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-handle identifying the control connection&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-file_struct&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-File Structure to be set&nbsp;</div></td></tr></table></div></div>
+HTTP connection handle&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,21 +88,39 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCPIP_FTPC_RET_OK - if successfully scheduled function TCPIP_FTPC_RET_BUSY - could not schedule function as FTP Client is busy TCPIP_FTPC_RET_NOT_CONNECT - Not connected to FTP server TCPIP_FTPC_RET_NOT_LOGIN - Connected, but not Logged in</p></div>
+Current connection byte count, how many bytes have been read so far.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will execute after the completion of previous FTPC function; otherwise it will return TCPIP_FTPC_RET_BUSY</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">switch</span></strong>(<a href="02578.html" target="topic">TCPIP_HTTP_NET_ConnectionPostSmGet</a>(connHandle))
+  {
+      <strong><span style="color: #000080">case</span></strong> SM_CFG_SNMP_READ_NAME:
+          <i><span style="color: #008000">// If all parameters have been read, end</span></i>
+          <strong><span style="color: #000080">if</span></strong>(TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle) == 0u)
+          {
+              <strong><span style="color: #000080">return</span></strong> TCPIP_HTTP_NET_IO_RES_DONE;
+          }
+       .
+       .
+       .
+  }</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01600.html" target="topic">FTP Client Module</a> &gt; <a href="01601.html" target="topic">Library Interface</a> &gt; <a href="01603.html" target="topic">a) Functions</a> &gt; <a href="02558.html" target="topic">TCPIP_FTPC_SetStruct Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">HTTP Net Module</a> &gt; <a href="01488.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02558.html" target="topic">TCPIP_HTTP_NET_ConnectionByteCountGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +128,13 @@ This function will execute after the completion of previous FTPC function; other
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02557.html" target="topic">Previous</a> | <a href="01603.html" target="topic">Up</a> | <a href="02559.html" target="topic">Next</a></div>
+<a href="02550.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_SetStruct@TCPIP_FTPC_CONN_HANDLE_TYPE@TCPIP_FTPC_DATA_STRUCT_TYPE Topic Title: TCPIP_FTPC_SetStruct Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionByteCountGet@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionByteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

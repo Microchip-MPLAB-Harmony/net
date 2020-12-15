@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>a) Functions</title>
+<title>DRV_ETHPHY_HWConfigFlagsGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00422.html" target="topic">Library Interface</a> &gt; <a href="00420.html" target="topic">a) Functions</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00420.html" target="topic">DRV_ETHPHY_HWConfigFlagsGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00422.html" target="topic">Previous</a> | <a href="00422.html" target="topic">Up</a> | <a href="00671.html" target="topic">Next</a></div>
+<a href="00513.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00518.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Functions Topic Title: a) Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_HWConfigFlagsGet@DRV_HANDLE@DRV_ETHPHY_CONFIG_FLAGS* Topic Title: DRV_ETHPHY_HWConfigFlagsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-a) Functions</div>
+DRV_ETHPHY_HWConfigFlagsGet Function</div>
 </div>
 </div>
 
@@ -48,135 +48,71 @@ a) Functions</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+This function returns the current Ethernet PHY hardware MII/RMII and ALTERNATE/DEFAULT configuration flags from the Device Configuration Fuse bits.</p></div>
 </div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00519.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_HWConfigFlagsGet</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
+    <a href="00413.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a>* <strong><span style="color: #000000">pFlags</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">The <a href="00435.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
+<li class="Element601"><a href="00511.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
+<li class="Element601"><a href="00526.html" target="topic">DRV_ETHPHY_Setup</a> must have been called to properly configure the PHY</li>
+</ul></p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00671.html" target="topic">DRV_MIIM_ClientStatus</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current client-specific status the MIIM driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00672.html" target="topic">DRV_MIIM_Close</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Closes an opened instance of the MIIM driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00675.html" target="topic">DRV_MIIM_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deinitializes the specified instance of the MIIM driver module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00676.html" target="topic">DRV_MIIM_DeregisterCallback</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters an notification callback function for the client operations.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00682.html" target="topic">DRV_MIIM_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the MIIM driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00704.html" target="topic">DRV_MIIM_Open</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Opens the specified MIIM driver instance and returns a handle to it.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00710.html" target="topic">DRV_MIIM_OperationAbort</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Aborts a current client operation initiated by the MIIM driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00711.html" target="topic">DRV_MIIM_OperationResult</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the result of a client operation initiated by the MIIM driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00712.html" target="topic">DRV_MIIM_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates a SMI/MIIM read transaction.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00713.html" target="topic">DRV_MIIM_RegisterCallback</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Registers an notification callback function for the client operations.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00714.html" target="topic">DRV_MIIM_Reinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reinitializes the driver and refreshes any associated hardware settings.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00717.html" target="topic">DRV_MIIM_Scan</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates a SMI/MIIM scan (periodic read)transaction.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00722.html" target="topic">DRV_MIIM_Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets up a MIIM client.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00729.html" target="topic">DRV_MIIM_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the current status of the MIIM driver module.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00730.html" target="topic">DRV_MIIM_Tasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maintains the driver's state machine.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00731.html" target="topic">DRV_MIIM_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates a SMI/MIIM write transaction.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Client's driver handle (returned from <a href="00511.html" target="topic">DRV_ETHPHY_Open</a>)&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pFlags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+address to store the hardware configuration&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+DRV_ETHPHY_RES_OK - if the configuration flags successfully stored at pFlags <a href="00519.html" target="topic">DRV_ETHPHY_RESULT</a> error code otherwise</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
 </div>
 </div>
 </div>
@@ -184,7 +120,7 @@ Initiates a SMI/MIIM write transaction.&nbsp;</div></td></tr></table></div></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01123.html" target="topic">MIIM Driver Library</a> &gt; <a href="00422.html" target="topic">Library Interface</a> &gt; <a href="00420.html" target="topic">a) Functions</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00420.html" target="topic">DRV_ETHPHY_HWConfigFlagsGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -192,13 +128,13 @@ Initiates a SMI/MIIM write transaction.&nbsp;</div></td></tr></table></div></div
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00422.html" target="topic">Previous</a> | <a href="00422.html" target="topic">Up</a> | <a href="00671.html" target="topic">Next</a></div>
+<a href="00513.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00518.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Functions Topic Title: a) Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_HWConfigFlagsGet@DRV_HANDLE@DRV_ETHPHY_CONFIG_FLAGS* Topic Title: DRV_ETHPHY_HWConfigFlagsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

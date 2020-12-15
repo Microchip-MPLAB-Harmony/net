@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>IPV6_ADDRESS_POLICY Structure</title>
+<title>Networking Presentation Layer Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01010.html" target="topic">IPV6_ADDRESS_POLICY Structure</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01015.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01003.html" target="topic">Next</a></div>
+<a href="00351.html" target="topic">Previous</a> | <a href="01023.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_ADDRESS_POLICY Topic Title: IPV6_ADDRESS_POLICY Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPLAB Harmony Networking Presentation Layer Topic Title: Networking Presentation Layer Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-IPV6_ADDRESS_POLICY Structure</div>
+Networking Presentation Layer Help</div>
 </div>
 </div>
 
@@ -46,78 +46,57 @@ IPV6_ADDRESS_POLICY Structure</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Type: IPV6_ADDRESS_POLICY&nbsp;</p>
-<p class="Element10">
-The policy table is the longest matching prefix lookup table and is used to select the destination IPv6 Address.&nbsp;</p>
-<p class="Element10">
-If Precedence(A) &gt; Precedence(B), address A has higher precedence than address B. The label value Label(A) allows for policies that prefer a particular source address prefix for use with a destination address prefix. Default Policy table - Prefix Precedence Label ::1/128 50 0 ::/0 40 1 2002::/16 30 2 ::/96 20 3 ::ffff:0.0.0.0/96 10 4</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  IPV6_ADDR <strong><span style="color: #000000">address</span></strong>;
-  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">prefixLength</span></strong>;
-  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">precedence</span></strong>;
-  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">label</span></strong>;
-} IPV6_ADDRESS_POLICY;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-IPV6_ADDR address;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-IPv6 address&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-unsigned char prefixLength;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-IPv6 prefix length&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-unsigned char precedence;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-IPv6 address precedence&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-unsigned char label;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-IPv6 label type&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01023.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+<strong>TCP/IP Library Network Presentation Layer for Microchip Devices</strong><br>This library provides a Networking Presentation Layer that is available on the Microchip family of devices with a convenient C language interface.<br>The module provides encryption support for the TCP/IP stack.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01028.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic describes the basic architecture of the Networking Presentation Layer and provides information and examples on its use.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01020.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The configuration of the Networking Presentation Layer is done as part of the MPLAB Harmony TCP/IP Stack configuration <span class="Element146">and specific NET_PRES parameters are generated in the configuration.h.</span><br>This header file contains the configuration selection for the Networking Presentation Layer. Based on the selections made, the Networking Presentation Layer may support the selected features. These configuration settings will apply to all instances of the Networking Presentation Layer.<br>This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <span class="Element145">TCP/IP Demonstrations Help</span> section for more... <a href="01020.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01018.html" target="topic">Building the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section lists the files that are available in the Networking Presentation Layer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01024.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes the Application Programming Interface (API) functions of the Networking Presentation Layer.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01022.html" target="topic">Files</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section lists the source and header files used by the Network Presentation Layer.&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-const IPV6_ADDRESS_POLICY gPolicyTable[] = { {{{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01}}, 128, 50, 0}, // Loopback address {{{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}, 0, 40, 1}, // Unspecified address {{{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00}}, 96, 35, 4}, // IPv4-mapped address {{{0x20, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}, 16, 30, 2}, // 2002::/15 - 6to4 {{{0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}, 32, 5, 5}, // 2001::/32 - Teredo tunneling {{{0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}, 7, 3, 13}, // ULA };</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01001.html" target="topic">IPv6 Module</a> &gt; <a href="01694.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01010.html" target="topic">IPV6_ADDRESS_POLICY Structure</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +104,13 @@ const IPV6_ADDRESS_POLICY gPolicyTable[] = { {{{0x00, 0x00, 0x00, 0x00, 0x00, 0x
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01015.html" target="topic">Previous</a> | <a href="01694.html" target="topic">Up</a> | <a href="01003.html" target="topic">Next</a></div>
+<a href="00351.html" target="topic">Previous</a> | <a href="01023.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_ADDRESS_POLICY Topic Title: IPV6_ADDRESS_POLICY Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPLAB Harmony Networking Presentation Layer Topic Title: Networking Presentation Layer Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

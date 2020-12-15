@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NBNS Module</title>
+<title>NET_PRES_SocketWriteIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01139.html" target="topic">NBNS Module</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01139.html" target="topic">NET_PRES_SocketWriteIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04255.html" target="topic">Previous</a> | <a href="01108.html" target="topic">Up</a> | <a href="01738.html" target="topic">Next</a></div>
+<a href="01138.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01033.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NBNS TCP/IP Stack Library Topic Title: NBNS Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketWriteIsReady@NET_PRES_SKT_HANDLE_T@uint16_t@uint16_t Topic Title: NET_PRES_SocketWriteIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NBNS Module</div>
+NET_PRES_SocketWriteIsReady Function</div>
 </div>
 </div>
 
@@ -46,57 +46,73 @@ NBNS Module</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function calls the transport or the encryption layer's WriteIsReady, if it exists.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">NET_PRES_SocketWriteIsReady</span></strong>(
+    <a href="01090.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    uint16_t <strong><span style="color: #000000">reqSize</span></strong>, 
+    uint16_t <strong><span style="color: #000000">minSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01738.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<strong>TCP/IP Stack Library NetBIOS (NBNS) Module for Microchip Devices</strong><br>This library provides the API of the NBNS module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP Stack<span style="color: #0000FF">.</span><br><span style="color: #000000">The module implements the</span> NetBIOS Name Service<span style="color: #000000"> Protocol.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01741.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic describes the basic architecture of the NBNS<span style="color: #0000FF"> </span>TCP/IP Stack Library and provides information and examples on its use.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01734.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The configuration of the NBNS TCP/IP Stack is based on the <span class="Element146">file <a href="01141.html" target="topic">nbns_config.h</a> with the actual symbols generated in the configuration.h.</span><br>This header file contains the configuration selection for the NBNS TCP/IP Stack. Based on the selections made, the NBNS TCP/IP Stack may support the selected features. These configuration settings will apply to all instances of the NBNS TCP/IP Stack.<br>This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01431.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01733.html" target="topic">Building the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the files that are available in the NBNS module of the TCP/IP Stack Library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01739.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the NBNS module.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01736.html" target="topic">Files</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the source and header files used by the library.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+A <a href="01268.html" target="topic">socket</a> needs to have been opened by <a href="01128.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Presentation layer <a href="01268.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+reqSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Write size to check for.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+minSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Minimum size that could be guaranteed. Could be '0' if not needed.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The number of bytes available in the TX buffer:
+<ul class="Element631">
+<li class="Element601">&gt;= reqSize - If the requested space is available in the output buffer</li>
+<li class="Element601">&gt;= minSize - I there's at least this minimum space (minSize != 0)</li>
+<li class="Element601">0 - Requested (minimum) space cannot be granted</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01139.html" target="topic">NBNS Module</a></div>
+<a href="01010.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01024.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01139.html" target="topic">NET_PRES_SocketWriteIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +120,13 @@ This section lists the source and header files used by the library.&nbsp;</div><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04255.html" target="topic">Previous</a> | <a href="01108.html" target="topic">Up</a> | <a href="01738.html" target="topic">Next</a></div>
+<a href="01138.html" target="topic">Previous</a> | <a href="01024.html" target="topic">Up</a> | <a href="01033.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NBNS TCP/IP Stack Library Topic Title: NBNS Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketWriteIsReady@NET_PRES_SKT_HANDLE_T@uint16_t@uint16_t Topic Title: NET_PRES_SocketWriteIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

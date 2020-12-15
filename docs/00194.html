@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Application</title>
+<title>bind Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00193.html" target="topic">berkeley_tcp_client</a> &gt; <a href="00194.html" target="topic">Building the Application</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00189.html" target="topic">Berkeley Module</a> &gt; <a href="01368.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00194.html" target="topic">bind Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00193.html" target="topic">Previous</a> | <a href="00193.html" target="topic">Up</a> | <a href="00195.html" target="topic">Next</a></div>
+<a href="00172.html" target="topic">Previous</a> | <a href="01368.html" target="topic">Up</a> | <a href="00195.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley TCP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: bind@SOCKET@struct sockaddr*@int Topic Title: bind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Application</div>
+bind Function</div>
 </div>
 </div>
 
@@ -49,168 +49,72 @@ Building the Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/berkeley_tcp_client/firmware</span>.&nbsp;</p>
+The bind function assigns a name to an unnamed <a href="01268.html" target="topic">socket</a>. The name represents the local address of the communication endpoint. For sockets of type <a href="01245.html" target="topic">SOCK_STREAM</a>, the name of the remote endpoint is assigned when a <a href="00196.html" target="topic">connect</a> or accept function is executed.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">bind</span></strong>(
+    <a href="01267.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="01246.html" target="topic">sockaddr</a>* <strong><span style="color: #000000">name</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">namelen</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element15">
-MPLAB X IDE Project</div>
-<p class="Element10">
-This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
+The <a href="01268.html" target="topic">socket</a> function should be called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element65" valign="top" width="9%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="14%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Socket descriptor returned from a previous call to <a href="01268.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+name&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to the <a href="01246.html" target="topic">sockaddr</a> structure containing the local address of the <a href="01268.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+namelen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+length of the <a href="01246.html" target="topic">sockaddr</a> structure&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+If bind is successful, a value of 0 is returned. A return value of <a href="01271.html" target="topic">SOCKET_ERROR</a> indicates an error (and errno is set accordingly).</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<div class="Element15">
-IAR Embeded Workbench IDE Project</div>
-<p class="Element10">
-This table lists the name and location of the IAR IDE project folder for the demonstration.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="9%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="60%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="24%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="24%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Demonstrates the Berkeley TCP Client on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following Project Graph diagram shows the Harmony components included in the bare-metal Berkeley TCP Client demonstration application.&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_root_1.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_layer_1.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_app_layer_1.png" border="0" alt="" title="">&nbsp;</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01431.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00193.html" target="topic">berkeley_tcp_client</a> &gt; <a href="00194.html" target="topic">Building the Application</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00189.html" target="topic">Berkeley Module</a> &gt; <a href="01368.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00194.html" target="topic">bind Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -218,13 +122,13 @@ The following Project Graph diagram shows the Harmony components included in the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00193.html" target="topic">Previous</a> | <a href="00193.html" target="topic">Up</a> | <a href="00195.html" target="topic">Next</a></div>
+<a href="00172.html" target="topic">Previous</a> | <a href="01368.html" target="topic">Up</a> | <a href="00195.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Berkeley TCP Client pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: bind@SOCKET@struct sockaddr*@int Topic Title: bind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

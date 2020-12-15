@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ARP_EntryGet Function</title>
+<title>TCPIP_DHCPS_ADDRESS_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00290.html" target="topic">ARP Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01938.html" target="topic">TCPIP_ARP_EntryGet Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">DHCP Server Module</a> &gt; <a href="01403.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01938.html" target="topic">TCPIP_DHCPS_ADDRESS_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01956.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="01940.html" target="topic">Next</a></div>
+<a href="01972.html" target="topic">Previous</a> | <a href="01403.html" target="topic">Up</a> | <a href="01966.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_EntryGet@TCPIP_NET_HANDLE@IPV4_ADDR*@TCPIP_MAC_ADDR*@bool Topic Title: TCPIP_ARP_EntryGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_ADDRESS_CONFIG Topic Title: TCPIP_DHCPS_ADDRESS_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ARP_EntryGet Function</div>
+TCPIP_DHCPS_ADDRESS_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,94 +49,77 @@ TCPIP_ARP_EntryGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If probe == false The function behaves identical to <a href="01957.html" target="topic">TCPIP_ARP_IsResolved</a>(): If the corresponding MAC address exists in the cache it is copied to the user supplied pHwAdd&nbsp;</p>
+Structure: TCPIP_DHCPS_ADDRESS_CONFIG&nbsp;</p>
 <p class="Element10">
-If probe == true The function behaves identical to <a href="01978.html" target="topic">TCPIP_ARP_Resolve</a>():
-<ul class="Element635">
-<li class="Element605">If the corresponding MAC address does not exist in the cache</li>
-</ul>this function transmits and ARP request. Upon the address resolution it calls the registered handler (if available) with the supplied notification parameter (if != 0)
-<ul class="Element635">
-<li class="Element605">If the hardware address exists in the cache, the result is written to pHwAdd</li>
-</ul>and no network ARP request is sent</p></div>
+DHCP server configuration and network initialization data. Configuration is part of tcpip_stack_init.c.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01979.html" target="topic">TCPIP_ARP_RESULT</a> <strong><span style="color: #000000">TCPIP_ARP_EntryGet</span></strong>(
-    <a href="03413.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
-    IPV4_ADDR* <strong><span style="color: #000000">ipAdd</span></strong>, 
-    TCPIP_MAC_ADDR* <strong><span style="color: #000000">pHwAdd</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">probe</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">interfaceIndex</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">serverIPAddress</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">startIPAddRange</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">ipMaskAddress</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">priDNS</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">secondDNS</span></strong>;
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">poolEnabled</span></strong>;
+} TCPIP_DHCPS_ADDRESS_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The ARP module should have been initialized.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Interface to use&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-ipAdd&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The IP address to get entries from&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pHwAdd&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to store the hardware address&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-probe&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-boolean to specify if ARP probing is initiated or not&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int interfaceIndex;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Interface Index&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* serverIPAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Server IP address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* startIPAddRange;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Start IP address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* ipMaskAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Netmask&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* priDNS;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Primary DNS server Address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* secondDNS;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Secondary DNS server Address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+bool poolEnabled;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+true if pool is valid , false if pool is invalid&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">ARP_RES_ENTRY_SOLVED - if the required entry is already solved</li>
-<li class="Element605">ARP_RES_ENTRY_QUEUED - if the required entry was already queued</li>
-<li class="Element605">ARP_RES_ENTRY_NEW - if the operation succeeded and a new entry was added (and queued for resolving)</li>
-<li class="Element605">ARP_RES_CACHE_FULL - if new entry could not be inserted, the cache was full</li>
-<li class="Element605">ARP_RES_BAD_ADDRESS - bad address specified</li>
-<li class="Element605">ARP_RES_NO_INTERFACE - no such interface</li>
-</ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Similar to <a href="01978.html" target="topic">TCPIP_ARP_Resolve</a> + <a href="01957.html" target="topic">TCPIP_ARP_IsResolved</a>, it avoids a double hash search when the mapping exists.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00290.html" target="topic">ARP Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01938.html" target="topic">TCPIP_ARP_EntryGet Function</a></div>
+<a href="00980.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">DHCP Server Module</a> &gt; <a href="01403.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01938.html" target="topic">TCPIP_DHCPS_ADDRESS_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -144,13 +127,13 @@ Similar to <a href="01978.html" target="topic">TCPIP_ARP_Resolve</a> + <a href="
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01956.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="01940.html" target="topic">Next</a></div>
+<a href="01972.html" target="topic">Previous</a> | <a href="01403.html" target="topic">Up</a> | <a href="01966.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_EntryGet@TCPIP_NET_HANDLE@IPV4_ADDR*@TCPIP_MAC_ADDR*@bool Topic Title: TCPIP_ARP_EntryGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_ADDRESS_CONFIG Topic Title: TCPIP_DHCPS_ADDRESS_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

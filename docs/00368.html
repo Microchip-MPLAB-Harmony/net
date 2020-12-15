@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>dns.h</title>
+<title>DRV_ENCX24J600_RegisterStatisticsGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00367.html" target="topic">DNS Module</a> &gt; <a href="01566.html" target="topic">Files</a> &gt; <a href="00368.html" target="topic">dns.h</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00664.html" target="topic">Library Interface</a> &gt; <a href="00655.html" target="topic">b) Client Level Functions</a> &gt; <a href="00368.html" target="topic">DRV_ENCX24J600_RegisterStatisticsGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01566.html" target="topic">Previous</a> | <a href="01566.html" target="topic">Up</a> | <a href="00369.html" target="topic">Next</a></div>
+<a href="00366.html" target="topic">Previous</a> | <a href="00655.html" target="topic">Up</a> | <a href="00373.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dns.h Topic Title: dns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_RegisterStatisticsGet@DRV_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: DRV_ENCX24J600_RegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-dns.h</div>
+DRV_ENCX24J600_RegisterStatisticsGet Function</div>
 </div>
 </div>
 
@@ -46,283 +46,87 @@ dns.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+ENCX24J600 Get Register Statistics&nbsp;</p>
+<p class="Element10">
+Get the device specific statistics.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03119.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_ENCX24J600_RegisterStatisticsGet</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="03166.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a>* <strong><span style="color: #000000">pRegEntries</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nEntries</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong>* <strong><span style="color: #000000">pHwEntries</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-dns.h</p></div>
+The client had to be successfully opened with <a href="00362.html" target="topic">DRV_ENCX24J600_Open</a>.</p></div>
 </div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the successfully opened handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pRegEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+nEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pHwEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Domain Name System (DNS) Client API Header file&nbsp;</p>
+
+<ul class="Element631">
+<li class="Element601">TCPIP_MAC_RES_TYPE_ERR - if the hMac is invalid</li>
+<li class="Element601">TCPIP_MAC_RES_OP_ERR - if the hMac is valid</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This source file contains the DNS client module API.</p></div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02292.html" target="topic">TCPIP_DNS_ENABLE_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Flags for enabling the DNS service on an interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02311.html" target="topic">TCPIP_DNS_EVENT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This enumeration is used to notify DNS client applications.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02332.html" target="topic">TCPIP_DNS_RESOLVE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS query record type.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02337.html" target="topic">TCPIP_DNS_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS client result codes.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02288.html" target="topic">TCPIP_DNS_ClientInfoGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the current DNS client parameters.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02289.html" target="topic">TCPIP_DNS_ClientTask</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02290.html" target="topic">TCPIP_DNS_Disable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Disables the DNS Client for the specified interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02291.html" target="topic">TCPIP_DNS_Enable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Enables the DNS Client for the specified interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02309.html" target="topic">TCPIP_DNS_EntryQuery</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Queries a DNS Resolver specific entry.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02320.html" target="topic">TCPIP_DNS_GetIPAddressesNumber</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the count of resolved IPv4 and/or IPv6 address for a host name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02321.html" target="topic">TCPIP_DNS_GetIPv4Addresses</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get IPV4 addresses for a DNS resolved name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02322.html" target="topic">TCPIP_DNS_GetIPv6Addresses</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get IPV6 addresses for a DNS resolved name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02324.html" target="topic">TCPIP_DNS_HandlerDeRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deregisters a previously registered DNS client handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02325.html" target="topic">TCPIP_DNS_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Registers a DNS client Handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02326.html" target="topic">TCPIP_DNS_IsEnabled</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Determines if the DNS client is enabled on that specified interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02327.html" target="topic">TCPIP_DNS_IsNameResolved</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Determines if the DNS resolution is complete and provides the host IP address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02328.html" target="topic">TCPIP_DNS_IsResolved</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Determines if the DNS resolution is complete and provides the host IP address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02329.html" target="topic">TCPIP_DNS_RemoveAll</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Removes all the cached entries from DNS resolver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02330.html" target="topic">TCPIP_DNS_RemoveEntry</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Remove a hostname from the DNS Hash entry.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02331.html" target="topic">TCPIP_DNS_Resolve</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Begins resolution of an address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02351.html" target="topic">TCPIP_DNS_Send_Query</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Forces resolution of an address.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02268.html" target="topic">TCPIP_DNS_CLIENT_INFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-General DNS client info.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02278.html" target="topic">TCPIP_DNS_CLIENT_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides a place holder for DNS client configuration.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02296.html" target="topic">TCPIP_DNS_ENTRY_QUERY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS module query data for both IPv4 and IPv6 .&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02310.html" target="topic">TCPIP_DNS_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Notification handler that can be called when a specific entry is resolved and entry is timed out.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02323.html" target="topic">TCPIP_DNS_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS client handle.&nbsp;</div></td></tr></table></div></div>
-</div>
+Statistics are not planned for the first release</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01108.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00367.html" target="topic">DNS Module</a> &gt; <a href="01566.html" target="topic">Files</a> &gt; <a href="00368.html" target="topic">dns.h</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00663.html" target="topic">ENCx24J600 Driver Library</a> &gt; <a href="00664.html" target="topic">Library Interface</a> &gt; <a href="00655.html" target="topic">b) Client Level Functions</a> &gt; <a href="00368.html" target="topic">DRV_ENCX24J600_RegisterStatisticsGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -330,13 +134,13 @@ DNS client handle.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01566.html" target="topic">Previous</a> | <a href="01566.html" target="topic">Up</a> | <a href="00369.html" target="topic">Next</a></div>
+<a href="00366.html" target="topic">Previous</a> | <a href="00655.html" target="topic">Up</a> | <a href="00373.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dns.h Topic Title: dns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENCX24J600_RegisterStatisticsGet@DRV_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: DRV_ENCX24J600_RegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>drv_enc28j60.h</title>
+<title>DRV_ETHPHY_INIT Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00752.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00750.html" target="topic">Files</a> &gt; <a href="00425.html" target="topic">drv_enc28j60.h</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00425.html" target="topic">DRV_ETHPHY_INIT Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00750.html" target="topic">Previous</a> | <a href="00750.html" target="topic">Up</a> | <a href="00428.html" target="topic">Next</a></div>
+<a href="00402.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00422.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_enc28j60.h Topic Title: drv_enc28j60.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_INIT Topic Title: DRV_ETHPHY_INIT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-drv_enc28j60.h</div>
+DRV_ETHPHY_INIT Structure</div>
 </div>
 </div>
 
@@ -46,259 +46,99 @@ drv_enc28j60.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+Ethernet PHY Device Driver Initialization Data&nbsp;</p>
+<p class="Element10">
+This data structure contains all the data necessary to initialize the Ethernet PHY device.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">DRV_ETHPHY_INIT</span></strong> {
+  SYS_MODULE_INIT <strong><span style="color: #000000">moduleInit</span></strong>;
+  uintptr_t <strong><span style="color: #000000">ethphyId</span></strong>;
+  uint16_t <strong><span style="color: #000000">phyAddress</span></strong>;
+  <a href="00413.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a> <strong><span style="color: #000000">phyFlags</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <a href="00468.html" target="topic">DRV_ETHPHY_OBJECT</a>* <strong><span style="color: #000000">pPhyObject</span></strong>;
+  <a href="00517.html" target="topic">DRV_ETHPHY_RESET_FUNCTION</a> <strong><span style="color: #000000">resetFunction</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00579.html" target="topic">DRV_MIIM_OBJECT_BASE</a>* <strong><span style="color: #000000">pMiimObject</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00572.html" target="topic">DRV_MIIM_INIT</a>* <strong><span style="color: #000000">pMiimInit</span></strong>;
+  SYS_MODULE_INDEX <strong><span style="color: #000000">miimIndex</span></strong>;
+};</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-drv_enc28j60.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-ENC28J60 Driver Public Interface&nbsp;</p>
-<p class="Element10">
-This file defines the interface definition for the ENC28J60 Driver.</p></div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00427.html" target="topic">DRV_ENC28J60_Close</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Closes a client handle to the driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00429.html" target="topic">DRV_ENC28J60_ConfigGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current configuration. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00431.html" target="topic">DRV_ENC28J60_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deinitializes the ENC28J60 Driver Instance. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00432.html" target="topic">DRV_ENC28J60_EventAcknowledge</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Acknowledges an event. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00433.html" target="topic">DRV_ENC28J60_EventMaskSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the event mask. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00434.html" target="topic">DRV_ENC28J60_EventPendingGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current events. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00435.html" target="topic">DRV_ENC28J60_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the ENC28J60 Driver Instance, with the configuration data. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00437.html" target="topic">DRV_ENC28J60_LinkCheck</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function returns the status of the link. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00440.html" target="topic">DRV_ENC28J60_Open</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function is called by the client to open a handle to a driver instance. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00441.html" target="topic">DRV_ENC28J60_PacketRx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Receive a packet from the driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00442.html" target="topic">DRV_ENC28J60_PacketTx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function queues a packet for transmission. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00443.html" target="topic">DRV_ENC28J60_ParametersGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the parameters of the device. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00444.html" target="topic">DRV_ENC28J60_PowerMode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function sets the power mode of the device. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00445.html" target="topic">DRV_ENC28J60_Process</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Additional processing that happens outside the tasks function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00446.html" target="topic">DRV_ENC28J60_RegisterStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the register statistics. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00447.html" target="topic">DRV_ENC28J60_Reinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reinitializes the instance of the ENC28J60 driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00448.html" target="topic">DRV_ENC28J60_RxFilterHashTableEntrySet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function adds an entry to the hash table. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00449.html" target="topic">DRV_ENC28J60_SetMacCtrlInfo</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function sets the MAC control information for the driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00450.html" target="topic">DRV_ENC28J60_StackInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function initializes the driver with a <a href="03146.html" target="topic">TCPIP_MAC_INIT</a> object. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00451.html" target="topic">DRV_ENC28J60_StatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Retrieve the devices statistics. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00452.html" target="topic">DRV_ENC28J60_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current status of the driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00453.html" target="topic">DRV_ENC28J60_Tasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Main task function for the driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SYS_MODULE_INIT moduleInit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+System module initialization&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uintptr_t ethphyId;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Identifies peripheral (PLIB-level) ID&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t phyAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+PHY address, as configured on the board. All PHYs respond to address 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_ETHPHY_CONFIG_FLAGS phyFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+PHY configuration&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const DRV_ETHPHY_OBJECT* pPhyObject;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Non-volatile pointer to the PHY object providing vendor functions for this PHY&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_ETHPHY_RESET_FUNCTION resetFunction;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function to be called when the PHY is reset/initialized. Could be NULL if no special reset functionality needed - default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const struct DRV_MIIM_OBJECT_BASE* pMiimObject;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Non-volatile pointer to the DRV_MIIM object providing MIIM access for this PHY Could be NULL if the MIIM driver is not used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const struct DRV_MIIM_INIT* pMiimInit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Non-volatile pointer to the DRV_MIIM initialization data Could be NULL if the MIIM driver is not used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SYS_MODULE_INDEX miimIndex;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+MIIM module index to be used Not needed if the MIIM driver is not used&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00430.html" target="topic">DRV_ENC28J60_Configuration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data required to initialize or reinitialize the ENC28J60 Driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00439.html" target="topic">DRV_ENC28J60_MDIX_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the enumeration for controlling the MDIX select.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="5661726961626C6573"></a><div class="Element14">
-Variables</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00438.html" target="topic">DRV_ENC28J60_MACObject</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ENC28J60 External MAC Virtualization Table&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+A pointer to a structure of this format containing the desired initialization data must be passed into the <a href="00435.html" target="topic">DRV_ETHPHY_Initialize</a> routine.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01582.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00752.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00750.html" target="topic">Files</a> &gt; <a href="00425.html" target="topic">drv_enc28j60.h</a></div>
+<a href="01439.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00672.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00287.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00425.html" target="topic">DRV_ETHPHY_INIT Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -306,13 +146,13 @@ ENC28J60 External MAC Virtualization Table&nbsp;</div></td></tr></table></div></
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01697.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01554.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00750.html" target="topic">Previous</a> | <a href="00750.html" target="topic">Up</a> | <a href="00428.html" target="topic">Next</a></div>
+<a href="00402.html" target="topic">Previous</a> | <a href="00287.html" target="topic">Up</a> | <a href="00422.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_enc28j60.h Topic Title: drv_enc28j60.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_INIT Topic Title: DRV_ETHPHY_INIT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
