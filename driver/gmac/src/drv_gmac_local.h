@@ -147,8 +147,13 @@ typedef enum{
 	/*DOM-IGNORE-BEGIN*/= (	GMAC_EV_MGMTFRAMESENT | GMAC_EV_RXCOMPLETE |  GMAC_EV_RXUSEDBITREAD |
 	GMAC_EV_TXUNDERRUN | GMAC_EV_RETRYLIMITEXCEED |	GMAC_EV_TXFRAMECORRUPT |
 	GMAC_EV_TXCOMPLETE | GMAC_EV_RXOVERRUN | GMAC_EV_HRESPNOTOK |
-	GMAC_EV_PAUSEFRAMENZRECV | GMAC_EV_PAUSETIMEZERO | GMAC_EV_PAUSEFRAMETX ) /*DOM-IGNORE-END*/
-            
+	GMAC_EV_PAUSEFRAMENZRECV | GMAC_EV_PAUSETIMEZERO | GMAC_EV_PAUSEFRAMETX ) /*DOM-IGNORE-END*/,
+    // RX events
+	GMAC_EV_RX_ALL
+	/*DOM-IGNORE-BEGIN*/= (GMAC_EV_RXCOMPLETE | GMAC_EV_RXUSEDBITREAD | GMAC_EV_RXOVERRUN) /*DOM-IGNORE-END*/, 
+    // TX events
+	GMAC_EV_TX_ALL
+	/*DOM-IGNORE-BEGIN*/= (GMAC_EV_TXCOMPLETE | GMAC_EV_TXFRAMECORRUPT | GMAC_EV_TXUNDERRUN) /*DOM-IGNORE-END*/ 
 } GMAC_EVENTS;
 /* TCPIP Stack Event Descriptor
 
@@ -218,9 +223,9 @@ typedef enum
  */
 typedef struct
 {	
-	/** Pointer to allocated RX buffer */
-	TCPIP_MAC_PACKET *pRxPckt[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0]; //normally QUE0 will have maximum RX descriptors
-                                                                  // So that many number of Rx packet pointers for all Queues
+	/** Pointer to allocated RX buffer */    
+    TCPIP_MAC_PACKET **pRxPckt;
+    // So that many number of Rx packet pointers for all Queues
 	/** Pointer to Rx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc;
     // Rx queues for RX packet buffers
@@ -241,7 +246,9 @@ typedef struct
 	uint16_t nTxDescHead;
 	/** Circular buffer tail pointer incremented by handlers (buffer sent) */
 	uint16_t nTxDescTail;	
-
+    
+    /** interrupt source for GMAC queues */
+    INT_SOURCE   _queIntSrc;
 } DRV_GMAC_QUEUE;
 // *****************************************************************************
 /* GMAC driver data.
@@ -292,17 +299,17 @@ typedef struct {
 	DRV_GMAC_LINK_CHECK_STATE       _linkCheckState;    // link state machine current status
 	INT_SOURCE                      _macIntSrc;							// this MAC interrupt source
 	
-	DRV_GMAC_EVENT_DCPT             _pic32c_ev_group_dcpt;
+	DRV_GMAC_EVENT_DCPT             _gmac_event_group_dcpt;
 	uintptr_t                       _syncRxH;          // synch object handle for RX operations
 	uintptr_t                       _syncTxH;          // synch object handle for TX operations
 	
 	// debug: run time statistics
 	TCPIP_MAC_RX_STATISTICS         _rxStat;
 	TCPIP_MAC_TX_STATISTICS         _txStat;
-	
+               
     // GMAC queues
-	DRV_GMAC_QUEUE                      gmac_queue[DRV_GMAC_NUMBER_OF_QUEUES];	
-	TCPIP_MODULE_MAC_PIC32C_CONFIG    gmacConfig;  // configuration parameters
+	DRV_GMAC_QUEUE                  gmac_queue[DRV_GMAC_NUMBER_OF_QUEUES];	
+	TCPIP_MODULE_MAC_PIC32C_CONFIG  gmacConfig;  // configuration parameters
 	
 } DRV_GMAC_INSTANCE;
 

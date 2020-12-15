@@ -9,7 +9,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -135,17 +135,22 @@ static TCPIP_HELPER_PORT_ENTRY*    _TCPIP_Helper_SecurePortEntry(uint16_t port, 
 bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 {
 	TCPIP_UINT32_VAL dwVal;
+    IPV4_ADDR   convAddr;
 	uint8_t i, charLen, currentOctet;
 
-	charLen = 0;
-	currentOctet = 0;
-	dwVal.Val = 0;
-    addr->Val = 0;
+    if(addr)
+    {
+        addr->Val = 0;
+    }
 
     if(str == 0 || strlen(str) == 0)
     {
         return true;
     }
+
+	charLen = 0;
+	currentOctet = 0;
+	dwVal.Val = 0;
 
 	while((i = *str++))
 	{
@@ -169,7 +174,7 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 			if(dwVal.Val > 0x00020505ul)
 				return false;
 
-			addr->v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+			convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
 			charLen = 0;
 			dwVal.Val = 0;
 			continue;
@@ -181,7 +186,7 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 				if(dwVal.Val > 0x00020505ul)
 					return false;
 
-				addr->v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+				convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
 				charLen = 0;
 				dwVal.Val = 0;
 				continue;
@@ -205,7 +210,12 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 	if(dwVal.Val > 0x00020505ul)
 		return false;
 
-	addr->v[3] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+	convAddr.v[3] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+    
+    if(addr)
+    {
+        addr->Val = convAddr.Val;
+    }
 
 	return true;
 }
@@ -232,7 +242,7 @@ bool TCPIP_Helper_IPAddressToString(const IPV4_ADDR* ipAdd, char* buff, size_t b
 //#if defined TCPIP_STACK_USE_IPV6
 /*****************************************************************************
   Function:
-	bool StringToIPV6Address(uint8_t* str, IPV6_ADDR* addr)
+    bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
 
   Summary:
 	Converts a string to an IPv6 address
@@ -246,7 +256,7 @@ bool TCPIP_Helper_IPAddressToString(const IPV4_ADDR* ipAdd, char* buff, size_t b
 
   Parameters:
 	addr - Pointer to IPV6_ADDR in which to store the result
-	str - Pointer to an RFC3513, Section 2.2 text representation of
+	addStr - Pointer to an RFC3513, Section 2.2 text representation of
         an IPv6 address
         Example:    1111:2222:3333:4444:5555:6666:AAAA:FFFF
                     1111:2222::FFFF
@@ -269,11 +279,16 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
     uint8_t currentWord;
     char * endPtr;
     char*  str;
+    IPV6_ADDR   convAddr;
     char   str_buff[64 + 1];     // enough space for longest address: 1111:2222:3333:4444:5555:6666:192.250.250.250
+
+    if(addr)
+    {
+        memset(addr, 0, sizeof(*addr));
+    }
 
     if(addStr == 0 || (len = strlen(addStr)) == 0)
     {
-        memset(addr, 0, sizeof(*addr));
         return true;
     }
 
@@ -365,7 +380,7 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
             return false;
         }
         
-        addr->w[currentWord++] = TCPIP_Helper_htons(convertedValue);
+        convAddr.w[currentWord++] = TCPIP_Helper_htons(convertedValue);
         
         if(i == 0)
         {   // end of stream
@@ -407,12 +422,17 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
     {
         for (i = 7, j = currentWord - 1; (int8_t)j >= (int8_t)shiftIndex; i--, j--)
         {
-            addr->w[i] = addr->w[j];
+            convAddr.w[i] = convAddr.w[j];
         }
         for (i = shiftIndex; i <= 7 - (currentWord - shiftIndex); i++)
         {
-            addr->w[i] = 0x0000;
+            convAddr.w[i] = 0x0000;
         }
+    }
+
+    if(addr)
+    {
+        memcpy(addr, convAddr.v, sizeof(*addr));
     }
 
     return true;
@@ -524,15 +544,22 @@ bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
 {
     const char  *beg;
     TCPIP_UINT16_VAL    hexDigit;
+    uint8_t     convAddr[6];
+    uint8_t*    pAdd;
     int         ix;
     
+    if(macAddr)
+    {
+        memset(macAddr, 0, sizeof(convAddr));
+    }
+
     if(str == 0 || strlen(str) == 0)
     {
-        memset(macAddr, 0, sizeof(TCPIP_MAC_ADDR));
         return true;
     }
 
     beg = str;
+    pAdd = convAddr;
     for(ix=0; ix<6; ix++)
     {
         if(!isxdigit(beg[0]) || !isxdigit(beg[1]))
@@ -543,7 +570,7 @@ bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
         // found valid byte
         hexDigit.v[0] = beg[1];
         hexDigit.v[1] = beg[0];
-        *macAddr++ = hexatob(hexDigit.Val);
+        *pAdd++ = hexatob(hexDigit.Val);
 
         // next colon number
         beg += 2;
@@ -557,8 +584,13 @@ bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
         }
         beg++; // next digit
     }
+
+    if(macAddr)
+    {
+        memcpy(macAddr, convAddr, sizeof(convAddr));
+    }
     
-    return ix==5?true:false;    // false if not enough digits    
+    return ix == 5 ? true : false;    // false if not enough digits    
     
 }
 
@@ -681,6 +713,11 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 	bool bPad;
 	uint16_t wBytesOutput;
 
+    if(cSourceData == 0 || cDestData == 0)
+    {
+        return 0;
+    }
+
 	vByteNumber = 0;
 	wBytesOutput = 0;
 
@@ -786,6 +823,11 @@ uint16_t TCPIP_Helper_Base64Encode(const uint8_t* cSourceData, uint16_t wSourceL
 	uint8_t vOutput[4];
 	uint16_t wOutputLen;
 
+    if(cSourceData == 0 || cDestData == 0)
+    {
+        return 0;
+    }
+
 	wOutputLen = 0;
 	while(wDestLen >= 4u)
 	{
@@ -849,7 +891,7 @@ uint16_t TCPIP_Helper_Base64Encode(const uint8_t* cSourceData, uint16_t wSourceL
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_Helper_CalcIPChecksum(uint8_t* buffer, uint16_t count, uint16_t seed)
+	uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint16_t seed)
 
   Summary:
 	Calculates an IP checksum value.
@@ -875,7 +917,7 @@ uint16_t TCPIP_Helper_Base64Encode(const uint8_t* cSourceData, uint16_t wSourceL
 	The checksum is implemented as a fast assembly function on PIC32M platforms.
   ***************************************************************************/
 #if !defined(__mips__)
-uint16_t TCPIP_Helper_CalcIPChecksum(uint8_t* buffer, uint16_t count, uint16_t seed)
+uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint16_t seed)
 {
 	uint16_t i;
 	uint16_t *val;
@@ -885,6 +927,11 @@ uint16_t TCPIP_Helper_CalcIPChecksum(uint8_t* buffer, uint16_t count, uint16_t s
 		uint16_t w[2];
 		uint32_t dw;
 	} sum;
+
+    if(buffer == 0)
+    {
+        return 0;
+    }
 
 	val = (uint16_t*)buffer;
 
@@ -973,13 +1020,13 @@ uint16_t TCPIP_Helper_PacketChecksum(TCPIP_MAC_PACKET* pPkt, uint8_t* startAdd, 
         {
             pChkBuff = pSeg->segLoad;
         }
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
         else if((pPkt = pPkt->pkt_next) != 0)
         {
             pSeg = pPkt->pDSeg;
             pChkBuff = pPkt->pNetLayer;
         }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
     }
 
     return ~TCPIP_Helper_ChecksumFold(calcChkSum);

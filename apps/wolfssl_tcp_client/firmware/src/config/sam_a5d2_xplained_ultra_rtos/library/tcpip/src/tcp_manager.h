@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -54,6 +54,39 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
   Section:
     Type Definitions
   ***************************************************************************/
+// TCP Header Data Structure
+typedef struct __attribute__((aligned(2), packed))
+{
+	uint16_t    SourcePort;		// Local port number
+	uint16_t    DestPort;		// Remote port number
+	uint32_t    SeqNumber;		// Local sequence number
+	uint32_t    AckNumber;		// Acknowledging remote sequence number
+
+	struct
+	{
+		unsigned char Reserved3      : 4;
+		unsigned char Val            : 4;
+	} DataOffset;			// Data offset flags nibble
+
+	union
+	{
+		struct
+		{
+			unsigned char flagFIN    : 1;
+			unsigned char flagSYN    : 1;
+			unsigned char flagRST    : 1;
+			unsigned char flagPSH    : 1;
+			unsigned char flagACK    : 1;
+			unsigned char flagURG    : 1;
+			unsigned char Reserved2  : 2;
+		} bits;
+		uint8_t byte;
+	} Flags;				// TCP Flags as defined in RFC
+
+	uint16_t    Window;			// Local free RX buffer window
+	uint16_t    Checksum;		// Data payload checksum
+	uint16_t    UrgentPointer;	// Urgent pointer
+} TCP_HEADER;
 
 
 /****************************************************************************

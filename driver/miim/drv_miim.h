@@ -133,49 +133,49 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef enum
 {
     /* Everything ok */
-    DRV_MIIM_RES_OK                     /*DOM-IGNORE-BEGIN*/ =  0, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_OK                     /*DOM-IGNORE-BEGIN*/    =  0, /*DOM-IGNORE-END*/
 
     /* Operation pending, in progress */
-    DRV_MIIM_RES_PENDING                /*DOM-IGNORE-BEGIN*/ =  1, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_PENDING                /*DOM-IGNORE-BEGIN*/    =  1, /*DOM-IGNORE-END*/
+
+    /* All MIIM operations are in use. A new one could not be started. Retry */
+    DRV_MIIM_RES_BUSY     /*DOM-IGNORE-BEGIN*/                  =  2, /*DOM-IGNORE-END*/
 
     /* When Init Operation was performed the ETH module was not enabled */
-    DRV_MIIM_RES_INIT_WARNING           /*DOM-IGNORE-BEGIN*/ =  2, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_INIT_WARNING           /*DOM-IGNORE-BEGIN*/    =  3, /*DOM-IGNORE-END*/
 
     /* Error codes < 0 */
 
     /* Passed handle is invalid */
-    DRV_MIIM_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/ =  -1, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/    =  -1, /*DOM-IGNORE-END*/
 
     /* Passed operation handle is invalid */
-    DRV_MIIM_RES_OP_HANDLE_ERR          /*DOM-IGNORE-BEGIN*/ =  -2, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_OP_HANDLE_ERR          /*DOM-IGNORE-BEGIN*/    =  -2, /*DOM-IGNORE-END*/
 
     /* Passed callback handle is invalid */
-    DRV_MIIM_RES_CALLBACK_HANDLE_ERR    /*DOM-IGNORE-BEGIN*/ =  -3, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_CALLBACK_HANDLE_ERR    /*DOM-IGNORE-BEGIN*/    =  -3, /*DOM-IGNORE-END*/
 
     /* The MIIM object hasn't been properly setup. Cannot start an operation */
-    DRV_MIIM_RES_SETUP_ERR              /*DOM-IGNORE-BEGIN*/ =  -4, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_SETUP_ERR              /*DOM-IGNORE-BEGIN*/    =  -4, /*DOM-IGNORE-END*/
     
     /* Register value not supported */
-    DRV_MIIM_RES_REGISTER_ERR           /*DOM-IGNORE-BEGIN*/ =  -5, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_REGISTER_ERR           /*DOM-IGNORE-BEGIN*/    =  -5, /*DOM-IGNORE-END*/
     
     /* PHY address value not supported */
-    DRV_MIIM_RES_ADDRESS_ERR            /*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_ADDRESS_ERR            /*DOM-IGNORE-BEGIN*/    =  -6, /*DOM-IGNORE-END*/
     
     /* Wrong parameter value */
-    DRV_MIIM_RES_PARAMETER_ERR          /*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_PARAMETER_ERR          /*DOM-IGNORE-BEGIN*/    =  -7, /*DOM-IGNORE-END*/
     
-    /* All MIIM operations are in use. A new one could not be started */
-    DRV_MIIM_RES_OP_UNAVAILABLE_ERR     /*DOM-IGNORE-BEGIN*/ =  -8, /*DOM-IGNORE-END*/
-
     /* A MIIM scan operation is ongoing. A new operation could not be started */
-    DRV_MIIM_RES_OP_SCAN_ERR            /*DOM-IGNORE-BEGIN*/ =  -9, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_OP_SCAN_ERR            /*DOM-IGNORE-BEGIN*/    =  -8, /*DOM-IGNORE-END*/
 
     /* A MIIM operation has timed out and it's going to be discarded */
-    DRV_MIIM_RES_OP_TIMEOUT_ERR         /*DOM-IGNORE-BEGIN*/ =  -10, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_OP_TIMEOUT_ERR         /*DOM-IGNORE-BEGIN*/    =  -9, /*DOM-IGNORE-END*/
 
 
     /* Internal MIIM driver error has occurred. Should not happen */
-    DRV_MIIM_RES_OP_INTERNAL_ERR        /*DOM-IGNORE-BEGIN*/ =  -20, /*DOM-IGNORE-END*/
+    DRV_MIIM_RES_OP_INTERNAL_ERR        /*DOM-IGNORE-BEGIN*/    =  -20, /*DOM-IGNORE-END*/
 
 } DRV_MIIM_RESULT; 
 
@@ -907,7 +907,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
 
   Remarks:
 
-    If operation was scheduled successfully, the result will be DRV_MIIM_RES_PENDING.
+    If operation was scheduled successfully, the result will be DRV_MIIM_RES_OK.
     Otherwise an error code will be returned.
 
     Upon the operation completion:
@@ -965,7 +965,7 @@ DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, unsigned int rIx, uns
 
   Remarks:
 
-    If operation was scheduled successfully, the result will be DRV_MIIM_RES_PENDING.
+    If operation was scheduled successfully, the result will be DRV_MIIM_RES_OK.
     Otherwise an error code will be returned.
 
     Upon the operation completion:
@@ -1024,7 +1024,7 @@ DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, unsigned int rIx, un
 
   Remarks:
 
-    If operation was scheduled successfully, the result will be DRV_MIIM_RES_PENDING.
+    If operation was scheduled successfully, the result will be DRV_MIIM_RES_OK.
     Otherwise an error code will be returned.
 
     When a new scan result is available:

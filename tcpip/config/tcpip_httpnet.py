@@ -32,61 +32,34 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetSrv.setVisible(False)
     tcpipHttpNetSrv.setDescription("Enable HTTP NET Server")
     tcpipHttpNetSrv.setDefaultValue(True)
-    # H3_ToDo  
-        # select USE_SYS_FS_NEEDED
-        # select NET_PRES_NEEDED
-        # select USE_CRYPTO_LIB_NEEDED
-        # select USE_CRYPTO_MD5_NEEDED
-        # select USE_CRYPTO_RANDOM_NEEDED
-    #tcpipHttpNetSrv.setDependencies(tcpipHttpNetSrvVisible, ["tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # H3_ToDo to verify the dependency function
 
-    # Maximum Header Length
-    tcpipHttpNetHdrLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_HEADER_LEN", None)
-    tcpipHttpNetHdrLenMax.setLabel("Max Header Length")
-    tcpipHttpNetHdrLenMax.setVisible(True)
-    tcpipHttpNetHdrLenMax.setDescription("Maximum Header Length")
-    tcpipHttpNetHdrLenMax.setDefaultValue(15)
-    #tcpipHttpNetHdrLenMax.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    # HTTP NET Socket TX Buffer Size
+    tcpipHttpNetSktTxBuffsize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE", None)
+    tcpipHttpNetSktTxBuffsize.setLabel("HTTP NET Socket TX Buffer Size")
+    tcpipHttpNetSktTxBuffsize.setVisible(True)
+    tcpipHttpNetSktTxBuffsize.setDescription("HTTP NET Socket TX Buffer Size")
+    tcpipHttpNetSktTxBuffsize.setDefaultValue(1024)
 
-    # Maximum Lifetime of Static Responses in Seconds
-    tcpipHttpNetCacheLen = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_CACHE_LEN", None)
-    tcpipHttpNetCacheLen.setLabel("Max Lifetime of Static Responses in Seconds")
-    tcpipHttpNetCacheLen.setVisible(True)
-    tcpipHttpNetCacheLen.setDescription("Maximum Lifetime of Static Responses in Seconds")
-    tcpipHttpNetCacheLen.setDefaultValue("600")
-    #tcpipHttpNetCacheLen.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Socket Disconnect Time-out
-    tcpipHttpNetTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_TIMEOUT", None)
-    tcpipHttpNetTimeout.setLabel("Socket Disconnect Time-out")
-    tcpipHttpNetTimeout.setVisible(True)
-    tcpipHttpNetTimeout.setDescription("Socket Disconnect Time-out")
-    tcpipHttpNetTimeout.setDefaultValue(45)
-    #tcpipHttpNetTimeout.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    # HTTP NET Socket RX Buffer Size
+    tcpipHttpNetSktRxBuffsize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE", None)
+    tcpipHttpNetSktRxBuffsize.setLabel("HTTP NET Socket RX Buffer Size")
+    tcpipHttpNetSktRxBuffsize.setVisible(True)
+    tcpipHttpNetSktRxBuffsize.setDescription("HTTP NET Socket RX Buffer Size")
+    tcpipHttpNetSktRxBuffsize.setDefaultValue(1024)
 
     # Maximum Number of Simultaneous Connections
     tcpipHttpNetConnMaxNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_CONNECTIONS", None)
-    tcpipHttpNetConnMaxNum.setLabel("Max Number of Simultaneous Connections")
+    tcpipHttpNetConnMaxNum.setLabel("Maximum Number of Simultaneous Connections")
     tcpipHttpNetConnMaxNum.setVisible(True)
     tcpipHttpNetConnMaxNum.setDescription("Maximum Number of Simultaneous Connections")
     tcpipHttpNetConnMaxNum.setDefaultValue(4)
-    #tcpipHttpNetConnMaxNum.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Default HTTP NET File
-    tcpipHttpNetDefaultFile = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_DEFAULT_FILE", None)
-    tcpipHttpNetDefaultFile.setLabel("Default HTTP NET File")
-    tcpipHttpNetDefaultFile.setVisible(True)
-    tcpipHttpNetDefaultFile.setDescription("Default HTTP NET File")
-    tcpipHttpNetDefaultFile.setDefaultValue("index.htm")
-    #tcpipHttpNetDefaultFile.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Maximum Size of a HTTP File Name
-    tcpipHttpNetFilenameLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILENAME_MAX_LEN", None)
-    tcpipHttpNetFilenameLenMax.setLabel("Maximum Size of a HTTP File Name")
-    tcpipHttpNetFilenameLenMax.setVisible(True)
-    tcpipHttpNetFilenameLenMax.setDescription("Maximum Size of a HTTP File Name")
-    tcpipHttpNetFilenameLenMax.setDefaultValue(25)
-    #tcpipHttpNetFilenameLenMax.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    
+    # HTTP NET Listening Port
+    tcpipHttpNetListenPort = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_LISTEN_PORT", None)
+    tcpipHttpNetListenPort.setLabel("HTTP NET Listening Port")
+    tcpipHttpNetListenPort.setVisible(True)
+    tcpipHttpNetListenPort.setDescription("HTTP NET Listening Port")
+    tcpipHttpNetListenPort.setDefaultValue(80)
 
     # Default Web pages directory
     tcpipHttpNetWebDir = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEB_DIR", None)
@@ -94,15 +67,173 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetWebDir.setVisible(True)
     tcpipHttpNetWebDir.setDescription("Web Pages Directory")
     tcpipHttpNetWebDir.setDefaultValue("/mnt/mchpSite1/")
-    #tcpipHttpNetWebDir.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    
+    # Enable HTTPNET Console Commands
+    tcpipHttpNetCmdEnable = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CONSOLE_CMD", None) 
+    tcpipHttpNetCmdEnable.setLabel("Enable Console Commands")
+    tcpipHttpNetCmdEnable.setVisible(True)
+    tcpipHttpNetCmdEnable.setDescription("Enable HTTPNET Console Commands")
+    tcpipHttpNetCmdEnable.setDefaultValue(False)
+        
+    # Include HTTP NET Custom Template
+    tcpipHttpNetCustTemplate = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE", None)
+    tcpipHttpNetCustTemplate.setLabel("Include HTTP NET Custom Template")
+    tcpipHttpNetCustTemplate.setVisible(True)
+    tcpipHttpNetCustTemplate.setDescription("Include HTTP NET Custom Template")
+    tcpipHttpNetCustTemplate.setDefaultValue(True)
+
+
+    # Message to provide the source web page path which will be used for the webpage.py
+    tcpipHttpNetWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
+    tcpipHttpNetWebPageDirPath.setLabel("Web pages source directory path")
+    tcpipHttpNetWebPageDirPath.setVisible(True)
+    tcpipHttpNetWebPageDirPath.setDescription("Configure Webpage directory path")
+    tcpipHttpNetWebPageDirPath.setDefaultValue(Module.getPath() + "web_pages")
+    tcpipHttpNetWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+
+    tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createKeyValueSetSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH",tcpipHttpNetCustTemplate)
+    tcpipHttpNetDestWebPageDirPath.setLabel("Web pages destination directory path")
+    tcpipHttpNetDestWebPageDirPath.setVisible(True)
+    # tcpipHttpNetDestWebPageDirPath.addKey("DESTINATION PATH", "0", Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
+    tcpipHttpNetDestWebPageDirPath.addKey("DESTINATION PATH", "0", "<project_path>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
+    tcpipHttpNetDestWebPageDirPath.setDisplayMode("Description")
+    tcpipHttpNetDestWebPageDirPath.setOutputMode("Key")
+    tcpipHttpNetDestWebPageDirPath.setDefaultValue(0)
+    tcpipHttpNetDestWebPageDirPath.setReadOnly(True)
+    tcpipHttpNetDestWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+
+    # Message that Number of webpage files accepted
+    tcpipHttpNetWebPageFileCount = tcpipHttpNetComponent.createCommentSymbol("TCPIP_WEBPAGE_FILES_COUNT_COMMENT", tcpipHttpNetCustTemplate)
+    tcpipHttpNetWebPageFileCount.setVisible(True)
+    tcpipHttpNetWebPageFileCount.setLabel("*** Maximum 100 web page files currently supported ***")
+    tcpipHttpNetWebPageFileCount.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+
+    # Advanced Settings
+    tcpipHttpNetAdvSettings = tcpipHttpNetComponent.createMenuSymbol("TCPIP_HTTP_NET_ADV_SETTING", None)
+    tcpipHttpNetAdvSettings.setLabel("Advanced Settings")
+    tcpipHttpNetAdvSettings.setDescription("Advanced Settings")
+    tcpipHttpNetAdvSettings.setVisible(True)
+
+    # HTTP NET Task Rate - ms
+    tcpipHttpNetTskRate = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_TASK_RATE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetTskRate.setLabel("HTTP NET Task Rate (in msec)")
+    tcpipHttpNetTskRate.setVisible(True)
+    tcpipHttpNetTskRate.setDescription("HTTP NET Task Rate - ms")
+    tcpipHttpNetTskRate.setDefaultValue(33)
+    
+    # Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments
+    tcpipHttpNetDataLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_DATA_LEN", tcpipHttpNetAdvSettings)
+    tcpipHttpNetDataLenMax.setLabel("Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments")
+    tcpipHttpNetDataLenMax.setVisible(True)
+    tcpipHttpNetDataLenMax.setDescription("Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments")
+    tcpipHttpNetDataLenMax.setDefaultValue(100)
+
+    # Size of the Buffer Used for Sending Response Messages to the Client
+    tcpipHttpNetRespBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetRespBuffSize.setLabel("Buffer Size for Sending Response Messages to the Client")
+    tcpipHttpNetRespBuffSize.setVisible(True)
+    tcpipHttpNetRespBuffSize.setDescription("Size of the Buffer Used for Sending Response Messages to the Client")
+    tcpipHttpNetRespBuffSize.setDefaultValue(300)
+
+    # Size of the Buffer Used for Sending Cookies to the Client
+    tcpipHttpNetCookieBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetCookieBuffSize.setLabel("Buffer Size for Sending Cookies to the Client")
+    tcpipHttpNetCookieBuffSize.setVisible(True)
+    tcpipHttpNetCookieBuffSize.setDescription("Size of the Buffer Used for Sending Cookies to the Client")
+    tcpipHttpNetCookieBuffSize.setDefaultValue(200)
+
+    # Size of the Peek Buffer for Performing Searches
+    tcpipHttpNetFindPeekBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetFindPeekBuffSize.setLabel("Peek Buffer Size for Performing Searches")
+    tcpipHttpNetFindPeekBuffSize.setVisible(True)
+    tcpipHttpNetFindPeekBuffSize.setDescription("Size of the Peek Buffer for Performing Searches")
+    tcpipHttpNetFindPeekBuffSize.setDefaultValue(512)
+
+    # Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files
+    tcpipHttpNetFileProcessBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetFileProcessBuffSize.setLabel("File Processing Buffer Size")
+    tcpipHttpNetFileProcessBuffSize.setVisible(True)
+    tcpipHttpNetFileProcessBuffSize.setDescription("Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files")
+    tcpipHttpNetFileProcessBuffSize.setDefaultValue(512)
+
+    # Number of File Buffers to be Created
+    tcpipHttpNetFileProcessBuffNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER", tcpipHttpNetAdvSettings)
+    tcpipHttpNetFileProcessBuffNum.setLabel("Number of File Buffers to be Created")
+    tcpipHttpNetFileProcessBuffNum.setVisible(True)
+    tcpipHttpNetFileProcessBuffNum.setDescription("Number of File Buffers to be Created")
+    tcpipHttpNetFileProcessBuffNum.setDefaultValue(4)
+
+    # Retry Limit for Allocating a File Buffer from the Pool
+    tcpipHttpNetFileProcessBuffRetry = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES", tcpipHttpNetAdvSettings)
+    tcpipHttpNetFileProcessBuffRetry.setLabel("Retry Limit for Allocating a File Buffer from the Pool")
+    tcpipHttpNetFileProcessBuffRetry.setVisible(True)
+    tcpipHttpNetFileProcessBuffRetry.setDescription("Retry Limit for Allocating a File Buffer from the Pool")
+    tcpipHttpNetFileProcessBuffRetry.setDefaultValue(10)
+
+    # Retry Limit for Allocating a File Buffer from the Pool
+    tcpipHttpNetChunksNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CHUNKS_NUMBER", tcpipHttpNetAdvSettings)
+    tcpipHttpNetChunksNum.setLabel("Number of Chunks to be Created")
+    tcpipHttpNetChunksNum.setVisible(True)
+    tcpipHttpNetChunksNum.setDescription("Number of Chunks to be Created")
+    tcpipHttpNetChunksNum.setDefaultValue(10)
+
+    # Retry Limit for Allocating a Chunk from the Pool
+    tcpipHttpNetChunkRetry = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CHUNK_RETRIES", tcpipHttpNetAdvSettings)
+    tcpipHttpNetChunkRetry.setLabel("Retry Limit for Allocating a Chunk from the Pool")
+    tcpipHttpNetChunkRetry.setVisible(True)
+    tcpipHttpNetChunkRetry.setDescription("Retry Limit for Allocating a Chunk from the Pool")
+    tcpipHttpNetChunkRetry.setDefaultValue(10)
+
+    # The Maximum Depth of Recursive Calls for Serving a Web Page
+    tcpipHttpNetRecursiveLvl = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_RECURSE_LEVEL", tcpipHttpNetAdvSettings)
+    tcpipHttpNetRecursiveLvl.setLabel("Maximum Depth of Recursive Calls for Serving a Web Page")
+    tcpipHttpNetRecursiveLvl.setVisible(True)
+    tcpipHttpNetRecursiveLvl.setDescription("The Maximum Depth of Recursive Calls for Serving a Web Page")
+    tcpipHttpNetRecursiveLvl.setDefaultValue(3)
+    
+    # Maximum Header Length
+    tcpipHttpNetHdrLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_HEADER_LEN", tcpipHttpNetAdvSettings)
+    tcpipHttpNetHdrLenMax.setLabel("Maximum Header Length")
+    tcpipHttpNetHdrLenMax.setVisible(True)
+    tcpipHttpNetHdrLenMax.setDescription("Maximum Header Length")
+    tcpipHttpNetHdrLenMax.setDefaultValue(15)
+
+    # Maximum Lifetime of Static Responses in Seconds
+    tcpipHttpNetCacheLen = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CACHE_LEN", tcpipHttpNetAdvSettings)
+    tcpipHttpNetCacheLen.setLabel("Maximum Lifetime of Static Responses (in sec)")
+    tcpipHttpNetCacheLen.setVisible(True)
+    tcpipHttpNetCacheLen.setDescription("Maximum Lifetime of Static Responses in Seconds")
+    tcpipHttpNetCacheLen.setDefaultValue(600)
+
+    # Socket Disconnect Time-out
+    tcpipHttpNetTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_TIMEOUT", tcpipHttpNetAdvSettings)
+    tcpipHttpNetTimeout.setLabel("Socket Disconnect Timeout (in sec)")
+    tcpipHttpNetTimeout.setVisible(True)
+    tcpipHttpNetTimeout.setDescription("Socket Disconnect Time-out")
+    tcpipHttpNetTimeout.setDefaultValue(45)
+
+
+    # Default HTTP NET File
+    tcpipHttpNetDefaultFile = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_DEFAULT_FILE", tcpipHttpNetAdvSettings)
+    tcpipHttpNetDefaultFile.setLabel("Default HTTP NET File")
+    tcpipHttpNetDefaultFile.setVisible(True)
+    tcpipHttpNetDefaultFile.setDescription("Default HTTP NET File")
+    tcpipHttpNetDefaultFile.setDefaultValue("index.htm")
+
+    # Maximum Size of a HTTP File Name
+    tcpipHttpNetFilenameLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILENAME_MAX_LEN", tcpipHttpNetAdvSettings)
+    tcpipHttpNetFilenameLenMax.setLabel("Maximum Size of a HTTP File Name")
+    tcpipHttpNetFilenameLenMax.setVisible(True)
+    tcpipHttpNetFilenameLenMax.setDescription("Maximum Size of a HTTP File Name")
+    tcpipHttpNetFilenameLenMax.setDefaultValue(25)
+
 
     # Enable MPFS Update via HTTP NET
-    tcpipHttpNetFileUpload = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE", None)
+    tcpipHttpNetFileUpload = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE", tcpipHttpNetAdvSettings)
     tcpipHttpNetFileUpload.setLabel("Enable MPFS Update via HTTP NET")
     tcpipHttpNetFileUpload.setVisible(True)
     tcpipHttpNetFileUpload.setDescription("Enable MPFS Update via HTTP NET")
     tcpipHttpNetFileUpload.setDefaultValue(False)
-    #tcpipHttpNetFileUpload.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # MPFS Upload Page Name
     tcpipHttpNetFileUploadName = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_FILE_UPLOAD_NAME", tcpipHttpNetFileUpload)
@@ -137,23 +268,21 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetMpfsNvmDiskNum.setDependencies(tcpipHttpNetFileUploadVisible, ["TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE"])   
     
     # Enable POST Support
-    tcpipHttpNetPostSupport = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_POST", None)
+    tcpipHttpNetPostSupport = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_POST", tcpipHttpNetAdvSettings)
     tcpipHttpNetPostSupport.setLabel("Enable POST Support")
     tcpipHttpNetPostSupport.setVisible(True)
     tcpipHttpNetPostSupport.setDescription("Enable POST Support")
     tcpipHttpNetPostSupport.setDefaultValue(True)
-    #tcpipHttpNetPostSupport.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # Enable Cookie Support
-    tcpipHttpNetCookieSupport = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_COOKIES", None)
+    tcpipHttpNetCookieSupport = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_COOKIES", tcpipHttpNetAdvSettings)
     tcpipHttpNetCookieSupport.setLabel("Enable Cookie Support")
     tcpipHttpNetCookieSupport.setVisible(True)
     tcpipHttpNetCookieSupport.setDescription("Enable Cookie Support")
     tcpipHttpNetCookieSupport.setDefaultValue(True)
-    #tcpipHttpNetCookieSupport.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # Use Base 64 Decode
-    tcpipHttpNetBase64Decode = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_BASE64_DECODE", None)
+    tcpipHttpNetBase64Decode = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_BASE64_DECODE", tcpipHttpNetAdvSettings)
     tcpipHttpNetBase64Decode.setLabel("Use Base 64 Decode")
     tcpipHttpNetBase64Decode.setVisible(True)
     tcpipHttpNetBase64Decode.setDescription("Use Base 64 Decode")
@@ -161,7 +290,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 
 
     # Enable Basic Authentication Support
-    tcpipHttpNetAuth = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_AUTHENTICATION", None)
+    tcpipHttpNetAuth = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_AUTHENTICATION", tcpipHttpNetAdvSettings)
     tcpipHttpNetAuth.setLabel("Enable Basic Authentication Support")
     tcpipHttpNetAuth.setVisible(True)
     tcpipHttpNetAuth.setDescription("Enable Basic Authentication Support")
@@ -169,44 +298,11 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetBase64Decode.setDependencies(tcpipHttpNetBase64DecodeOpt, ["TCPIP_HTTP_NET_USE_AUTHENTICATION"])
 
 
-    # Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments
-    tcpipHttpNetDataLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_DATA_LEN", None)
-    tcpipHttpNetDataLenMax.setLabel("Max Data Length (bytes) for Reading Cookie and GET/POST Arguments")
-    tcpipHttpNetDataLenMax.setVisible(True)
-    tcpipHttpNetDataLenMax.setDescription("Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments")
-    tcpipHttpNetDataLenMax.setDefaultValue(100)
-    #tcpipHttpNetDataLenMax.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # HTTP NET Socket TX Buffer Size
-    tcpipHttpNetSktTxBuffsize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE", None)
-    tcpipHttpNetSktTxBuffsize.setLabel("HTTP NET Socket TX Buffer Size")
-    tcpipHttpNetSktTxBuffsize.setVisible(True)
-    tcpipHttpNetSktTxBuffsize.setDescription("HTTP NET Socket TX Buffer Size")
-    tcpipHttpNetSktTxBuffsize.setDefaultValue(1024)
-    #tcpipHttpNetSktTxBuffsize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # HTTP NET Socket RX Buffer Size
-    tcpipHttpNetSktRxBuffsize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE", None)
-    tcpipHttpNetSktRxBuffsize.setLabel("HTTP NET Socket RX Buffer Size")
-    tcpipHttpNetSktRxBuffsize.setVisible(True)
-    tcpipHttpNetSktRxBuffsize.setDescription("HTTP NET Socket RX Buffer Size")
-    tcpipHttpNetSktRxBuffsize.setDefaultValue(1024)
-    #tcpipHttpNetSktRxBuffsize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # HTTP NET Listening Port
-    tcpipHttpNetListenPort = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_LISTEN_PORT", None)
-    tcpipHttpNetListenPort.setLabel("HTTP NET Listening Port")
-    tcpipHttpNetListenPort.setVisible(True)
-    tcpipHttpNetListenPort.setDescription("HTTP NET Listening Port")
-    tcpipHttpNetListenPort.setDefaultValue(80)
-    #tcpipHttpNetListenPort.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
     # HTTP NET Configuration Flags Settings
-    tcpipHttpNetConfigFlag = tcpipHttpNetComponent.createMenuSymbol(None, None)
+    tcpipHttpNetConfigFlag = tcpipHttpNetComponent.createMenuSymbol(None, tcpipHttpNetAdvSettings)
     tcpipHttpNetConfigFlag.setLabel("HTTP NET Configuration Flags")
     tcpipHttpNetConfigFlag.setVisible(True)
     tcpipHttpNetConfigFlag.setDescription("HTTP NET Configuration Flags Settings")
-    #tcpipHttpNetConfigFlag.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # Use non-persistent connections
     tcpipHttpNetConfigFlagNonpersistent = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CONFIG_FLAG_NON_PERSISTENT", tcpipHttpNetConfigFlag)
@@ -214,7 +310,6 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetConfigFlagNonpersistent.setVisible(True)
     tcpipHttpNetConfigFlagNonpersistent.setDescription("Use non-persistent connections")
     tcpipHttpNetConfigFlagNonpersistent.setDefaultValue(False)
-    #tcpipHttpNetConfigFlagNonpersistent.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # HTTP sockets created with NO-DELAY option
     tcpipHttpNetConfigFlagNoDly = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CONFIG_FLAG_NO_DELAY", tcpipHttpNetConfigFlag)
@@ -222,7 +317,6 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetConfigFlagNoDly.setVisible(True)
     tcpipHttpNetConfigFlagNoDly.setDescription("HTTP sockets created with NO-DELAY option")
     tcpipHttpNetConfigFlagNoDly.setDefaultValue(False)
-    #tcpipHttpNetConfigFlagNoDly.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # All HTTP connections have to be secure
     tcpipHttpNetConfigFlagSecureOn = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", tcpipHttpNetConfigFlag)
@@ -249,93 +343,12 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetConfigFlagSecureOn.setDependencies(tcpipHttpNetSrvConfigFlagSecureOnEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
     tcpipHttpNetConfigFlagSecureOff.setDependencies(tcpipHttpNetSrvConfigFlagSecureOffEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 
-    # HTTP NET Task Rate - ms
-    tcpipHttpNetTskRate = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_TASK_RATE", None)
-    tcpipHttpNetTskRate.setLabel("HTTP NET Task Rate - ms")
-    tcpipHttpNetTskRate.setVisible(True)
-    tcpipHttpNetTskRate.setDescription("HTTP NET Task Rate - ms")
-    tcpipHttpNetTskRate.setDefaultValue(33)
-    #tcpipHttpNetTskRate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Size of the Buffer Used for Sending Response Messages to the Client
-    tcpipHttpNetRespBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE", None)
-    tcpipHttpNetRespBuffSize.setLabel("Size of the Buffer Used for Sending Response Messages to the Client")
-    tcpipHttpNetRespBuffSize.setVisible(True)
-    tcpipHttpNetRespBuffSize.setDescription("Size of the Buffer Used for Sending Response Messages to the Client")
-    tcpipHttpNetRespBuffSize.setDefaultValue(300)
-    #tcpipHttpNetRespBuffSize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Size of the Buffer Used for Sending Cookies to the Client
-    tcpipHttpNetCookieBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE", None)
-    tcpipHttpNetCookieBuffSize.setLabel("Size of the Buffer Used for Sending Cookies to the Client")
-    tcpipHttpNetCookieBuffSize.setVisible(True)
-    tcpipHttpNetCookieBuffSize.setDescription("Size of the Buffer Used for Sending Cookies to the Client")
-    tcpipHttpNetCookieBuffSize.setDefaultValue(200)
-    #tcpipHttpNetCookieBuffSize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Size of the Peek Buffer for Performing Searches
-    tcpipHttpNetFindPeekBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE", None)
-    tcpipHttpNetFindPeekBuffSize.setLabel("Size of the Peek Buffer for Performing Searches")
-    tcpipHttpNetFindPeekBuffSize.setVisible(True)
-    tcpipHttpNetFindPeekBuffSize.setDescription("Size of the Peek Buffer for Performing Searches")
-    tcpipHttpNetFindPeekBuffSize.setDefaultValue(512)
-    #tcpipHttpNetFindPeekBuffSize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files
-    tcpipHttpNetFileProcessBuffSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE", None)
-    tcpipHttpNetFileProcessBuffSize.setLabel("Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files")
-    tcpipHttpNetFileProcessBuffSize.setVisible(True)
-    tcpipHttpNetFileProcessBuffSize.setDescription("Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files")
-    tcpipHttpNetFileProcessBuffSize.setDefaultValue(512)
-    #tcpipHttpNetFileProcessBuffSize.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Number of File Buffers to be Created
-    tcpipHttpNetFileProcessBuffNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER", None)
-    tcpipHttpNetFileProcessBuffNum.setLabel("Number of File Buffers to be Created")
-    tcpipHttpNetFileProcessBuffNum.setVisible(True)
-    tcpipHttpNetFileProcessBuffNum.setDescription("Number of File Buffers to be Created")
-    tcpipHttpNetFileProcessBuffNum.setDefaultValue(4)
-    #tcpipHttpNetFileProcessBuffNum.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Retry Limit for Allocating a File Buffer from the Pool
-    tcpipHttpNetFileProcessBuffRetry = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES", None)
-    tcpipHttpNetFileProcessBuffRetry.setLabel("Retry Limit for Allocating a File Buffer from the Pool")
-    tcpipHttpNetFileProcessBuffRetry.setVisible(True)
-    tcpipHttpNetFileProcessBuffRetry.setDescription("Retry Limit for Allocating a File Buffer from the Pool")
-    tcpipHttpNetFileProcessBuffRetry.setDefaultValue(10)
-    #tcpipHttpNetFileProcessBuffRetry.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Retry Limit for Allocating a File Buffer from the Pool
-    tcpipHttpNetChunksNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CHUNKS_NUMBER", None)
-    tcpipHttpNetChunksNum.setLabel("Number of Chunks to be Created")
-    tcpipHttpNetChunksNum.setVisible(True)
-    tcpipHttpNetChunksNum.setDescription("Number of Chunks to be Created")
-    tcpipHttpNetChunksNum.setDefaultValue(10)
-    #tcpipHttpNetChunksNum.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # Retry Limit for Allocating a Chunk from the Pool
-    tcpipHttpNetChunkRetry = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CHUNK_RETRIES", None)
-    tcpipHttpNetChunkRetry.setLabel("Retry Limit for Allocating a Chunk from the Pool")
-    tcpipHttpNetChunkRetry.setVisible(True)
-    tcpipHttpNetChunkRetry.setDescription("Retry Limit for Allocating a Chunk from the Pool")
-    tcpipHttpNetChunkRetry.setDefaultValue(10)
-    #tcpipHttpNetChunkRetry.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-    # The Maximum Depth of Recursive Calls for Serving a Web Page
-    tcpipHttpNetRecursiveLvl = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_RECURSE_LEVEL", None)
-    tcpipHttpNetRecursiveLvl.setLabel("The Maximum Depth of Recursive Calls for Serving a Web Page")
-    tcpipHttpNetRecursiveLvl.setVisible(True)
-    tcpipHttpNetRecursiveLvl.setDescription("The Maximum Depth of Recursive Calls for Serving a Web Page")
-    tcpipHttpNetRecursiveLvl.setDefaultValue(3)
-    #tcpipHttpNetRecursiveLvl.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
     # Enable the Processing of Dynamic Variables
-    tcpipHttpNetDynVarProc = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_DYNVAR_PROCESS", None)
+    tcpipHttpNetDynVarProc = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_DYNVAR_PROCESS", tcpipHttpNetAdvSettings)
     tcpipHttpNetDynVarProc.setLabel("Enable the Processing of Dynamic Variables")
     tcpipHttpNetDynVarProc.setVisible(True)
     tcpipHttpNetDynVarProc.setDescription("Enable the Processing of Dynamic Variables")
     tcpipHttpNetDynVarProc.setDefaultValue(True)
-    #tcpipHttpNetDynVarProc.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # Number of the Descriptors for Dynamic Variables Processing
     tcpipHttpNetDynVarDescNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER", tcpipHttpNetDynVarProc)
@@ -370,12 +383,11 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetDynVarProcRetry.setDependencies(tcpipHttpNetDynVarVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_DYNVAR_PROCESS"])
 
     # Enable the Processing of SSI Commands
-    tcpipHttpNetSsiProc = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_SSI_PROCESS", None)
+    tcpipHttpNetSsiProc = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_SSI_PROCESS", tcpipHttpNetAdvSettings)
     tcpipHttpNetSsiProc.setLabel("Enable the Processing of SSI Commands")
     tcpipHttpNetSsiProc.setVisible(True)
     tcpipHttpNetSsiProc.setDescription("Enable the Processing of SSI Commands")
     tcpipHttpNetSsiProc.setDefaultValue(True)
-    #tcpipHttpNetSsiProc.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # Maximum Number of Attributes for a SSI Command
     tcpipHttpNetSsiAttrNumMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER", tcpipHttpNetSsiProc)
@@ -403,13 +415,13 @@ def instantiateComponent(tcpipHttpNetComponent):
 
     # Maximum Number of SSI Variables that Can Be Created at Run Time
     tcpipHttpNetSsiVarNum = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER", tcpipHttpNetSsiProc)
-    tcpipHttpNetSsiVarNum.setLabel("Maximum Number of SSI Variables that Can Be Created at Run Time")
+    tcpipHttpNetSsiVarNum.setLabel("Maximum Number of SSI Variables that Can Be Created at Runtime")
     tcpipHttpNetSsiVarNum.setVisible(True)
     tcpipHttpNetSsiVarNum.setDescription("Maximum Number of SSI Variables that Can Be Created at Run Time")
     tcpipHttpNetSsiVarNum.setDefaultValue(13)
     tcpipHttpNetSsiVarNum.setDependencies(tcpipHttpNetSsiAttrVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_SSI_PROCESS"])
 
-    # Maximum Number of SSI Variables that Can Be Created at Run Time
+    # Maximum Length of a SSI Variable Name
     tcpipHttpNetSsiVarNameLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH", tcpipHttpNetSsiProc)
     tcpipHttpNetSsiVarNameLenMax.setLabel("Maximum Length of a SSI Variable Name")
     tcpipHttpNetSsiVarNameLenMax.setVisible(True)
@@ -432,38 +444,6 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetSsiEchoNotFoundMsg.setDescription("Message to Echo when Echoing a Not Found Variable")
     tcpipHttpNetSsiEchoNotFoundMsg.setDefaultValue("SSI Echo - Not Found: ")
     tcpipHttpNetSsiEchoNotFoundMsg.setDependencies(tcpipHttpNetSsiAttrVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_SSI_PROCESS"])
-
-    # Include HTTP NET Custom Template
-    tcpipHttpNetCustTemplate = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE", None)
-    tcpipHttpNetCustTemplate.setLabel("Include HTTP NET Custom Template")
-    tcpipHttpNetCustTemplate.setVisible(True)
-    tcpipHttpNetCustTemplate.setDescription("Include HTTP NET Custom Template")
-    tcpipHttpNetCustTemplate.setDefaultValue(True)
-    #tcpipHttpNetCustTemplate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-
-    # Message to provide the source web page path which will be used for the webpage.py
-    tcpipHttpNetWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
-    tcpipHttpNetWebPageDirPath.setLabel("Web pages source directory path")
-    tcpipHttpNetWebPageDirPath.setVisible(True)
-    tcpipHttpNetWebPageDirPath.setDescription("Configure Webpage directory path")
-    tcpipHttpNetWebPageDirPath.setDefaultValue(Module.getPath() + "web_pages")
-    tcpipHttpNetWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
-
-    tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createKeyValueSetSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH",tcpipHttpNetCustTemplate)
-    tcpipHttpNetDestWebPageDirPath.setLabel("Web pages destination directory path")
-    tcpipHttpNetDestWebPageDirPath.setVisible(True)
-    tcpipHttpNetDestWebPageDirPath.addKey("DESTINATION PATH", "0", Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
-    tcpipHttpNetDestWebPageDirPath.setDisplayMode("Description")
-    tcpipHttpNetDestWebPageDirPath.setOutputMode("Key")
-    tcpipHttpNetDestWebPageDirPath.setDefaultValue(0)
-    tcpipHttpNetDestWebPageDirPath.setReadOnly(True)
-    tcpipHttpNetDestWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
-
-    # Message that Number of webpage files accepted
-    tcpipHttpNetWebPageFileCount = tcpipHttpNetComponent.createCommentSymbol("TCPIP_WEBPAGE_FILES_COUNT_COMMENT", tcpipHttpNetCustTemplate)
-    tcpipHttpNetWebPageFileCount.setVisible(True)
-    tcpipHttpNetWebPageFileCount.setLabel("*** Maximum 100 web page files currently supported ***")
     
     # Include HTTP NET Custom Template SL
     tcpipHttpNetCustTemplateSl = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL", None)
@@ -473,28 +453,25 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetCustTemplateSl.setDependencies(tcpipHttpNetCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
 
     # Persistent Connection Idle Time-out
-    tcpipHttpNetConnTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CONNECTION_TIMEOUT", None)
-    tcpipHttpNetConnTimeout.setLabel("Persistent Connection Idle Time-out")
+    tcpipHttpNetConnTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CONNECTION_TIMEOUT", tcpipHttpNetAdvSettings)
+    tcpipHttpNetConnTimeout.setLabel("Persistent Connection Idle Timeout (in sec)")
     tcpipHttpNetConnTimeout.setVisible(True)
     tcpipHttpNetConnTimeout.setDescription("Persistent Connection Idle Time-out")
     tcpipHttpNetConnTimeout.setDefaultValue(0)
-    #tcpipHttpNetConnTimeout.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
     # HTTP NET allocation function, malloc style
-    tcpipHttpNetMallocFunct = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_MALLOC_FUNC", None)
+    tcpipHttpNetMallocFunct = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_MALLOC_FUNC", tcpipHttpNetAdvSettings)
     tcpipHttpNetMallocFunct.setLabel("HTTP NET allocation function, malloc style")
     tcpipHttpNetMallocFunct.setVisible(True)
     tcpipHttpNetMallocFunct.setDescription("HTTP NET allocation function, malloc style")
-    #tcpipHttpNetMallocFunct.setDefaultValue("")
-    #tcpipHttpNetMallocFunct.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    tcpipHttpNetMallocFunct.setDefaultValue("malloc")
 
     # HTTP NET deallocation function, free style
-    tcpipHttpNetFreeFunct = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_FREE_FUNC", None)
+    tcpipHttpNetFreeFunct = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_FREE_FUNC", tcpipHttpNetAdvSettings)
     tcpipHttpNetFreeFunct.setLabel("HTTP NET deallocation function, free style")
     tcpipHttpNetFreeFunct.setVisible(True)
     tcpipHttpNetFreeFunct.setDescription("HTTP NET deallocation function, free style")
-    #tcpipHttpNetFreeFunct.setDefaultValue("")
-    #tcpipHttpNetFreeFunct.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+    tcpipHttpNetFreeFunct.setDefaultValue("free")
 
 
     tcpipHttpNetheapdependency = [  "TCPIP_HTTP_NET_MAX_CONNECTIONS", "TCPIP_HTTP_NET_MAX_DATA_LEN", 
@@ -591,15 +568,6 @@ def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):
     else:
         tcpipDependentSymbol.setVisible(False)
 
-# # make Http Net Module file upload name option visible
-# def tcpipHttpNetFileUploadVisible(tcpipDependentSymbol, tcpipIPSymbol):   
-    # tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
-    # tcpipHttpNetFileUpload = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE")
-
-    # if(tcpipHttpNet and tcpipHttpNetFileUpload):
-        # tcpipDependentSymbol.setVisible(True)
-    # else:
-        # tcpipDependentSymbol.setVisible(False)
 
 # make Http Net Module file upload name option visible
 def tcpipHttpNetFileUploadVisible(symbol, event):

@@ -31,8 +31,12 @@ def instantiateComponent(wolfmqttComponent):
     # Enable "Generate Harmony System Service Common Files" option in MHC
     if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
         Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
+        
+    # Activate new net_Pres component if obsolete netPres Component is not added in project
     if(Database.getComponentByID("netPres") == None):
-        res = Database.activateComponents(["netPres"])
+        if(Database.getComponentByID("net_Pres") == None):
+            res = Database.activateComponents(["net_Pres"]) 
+                
     # wolfMQTT Library Configuration
     wolfMqttLibMenu = wolfmqttComponent.createMenuSymbol(None, None) 
     wolfMqttLibMenu.setLabel("wolfMQTT Library Configuration")
@@ -338,6 +342,15 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttConfigHeaderFile.setOverwrite(True)
     wolfMqttConfigHeaderFile.setEnabled(True)   
         
+    wolfMqttSettingsHeaderFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttSettingsHeaderFile.setProjectPath("config/" + configName)
+    wolfMqttSettingsHeaderFile.setSourcePath("third_party_adapter/wolfMQTT/config/user_settings.h")
+    wolfMqttSettingsHeaderFile.setDestPath("")
+    wolfMqttSettingsHeaderFile.setOutputName("user_settings.h")
+    wolfMqttSettingsHeaderFile.setType("HEADER")
+    wolfMqttSettingsHeaderFile.setOverwrite(True)
+    wolfMqttSettingsHeaderFile.setEnabled(True)   
+        
     # Generate Custom MQTT Application Template
     wolfMqttCstmAppTmplt = wolfmqttComponent.createBooleanSymbol("WMQTT_CSTM_APP_TEMPLATE", wolfMqttNetGlue)
     wolfMqttCstmAppTmplt.setLabel("Generate Custom MQTT Application Template")
@@ -395,6 +408,10 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttDummyTaskAppHeaderFile.setOverwrite(True)
     wolfMqttDummyTaskAppHeaderFile.setEnabled(True)   
     wolfMqttDummyTaskAppHeaderFile.setDependencies(wolfMqttDummyApp, ["WMQTT_CSTM_APP_TEMPLATE","WMQTT_NET_GLUE"])
+    
+def finalizeComponent(wolfmqttComponent):  
+    Database.setActiveGroup("__ROOTVIEW")
+    Database.selectComponent("lib_wolfmqtt")
     
 def wolfMqttLibMenuVisible(symbol, event): 
     symbol.setVisible(event["value"])
@@ -457,6 +474,8 @@ def handleMessage(messageID, args):
       
 def wolfMqttNetPresEnableFnc(symbol, event): 
     if (event["value"] == True):
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
   

@@ -89,7 +89,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint3
 static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes_received);
 static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con);
 static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received);
-static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, char *err_string);
+static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, const char *err_string);
 static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t bytes_received, 
                            uint16_t count, uint8_t* rx_buf);
 static TFTPS_CB  *_TFTPS_GetClientCB(uint8_t client_cnt);
@@ -723,7 +723,7 @@ static bool _TFTPS_CreateClientSocket(TFTPS_CB   *tftp_con,UDP_SOCKET_INFO *sktI
     uint8_t     *wrPtr=NULL;
     uint16_t    txBufSize=0;
     // create a client socket for further communication
-    tftp_con->cSkt = TCPIP_UDP_ClientOpen(pTftpDcpt->ipAddrType, sktInfo->remotePort,&sktInfo->sourceIPaddress);
+    tftp_con->cSkt = TCPIP_UDP_ClientOpen(sktInfo->addressType, sktInfo->remotePort,&sktInfo->sourceIPaddress);
     if(tftp_con->cSkt == INVALID_UDP_SOCKET)
     {
         return false;
@@ -1709,7 +1709,7 @@ static uint32_t _TFTPS_Retransmit(TFTPS_CB *tftp_con)
 * Return                                                               
 *       The Number of bytes sent on success.                             
 ************************************************************************/
-static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, char *err_string)
+static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt, uint16_t error_code, const char *err_string)
 {
     uint16_t   send_size=0;
     uint8_t    *p = NULL;
@@ -1987,14 +1987,12 @@ TCPIP_TFTPS_HANDLE TCPIP_TFTPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTP
     pTftpsDcpt = &gTftpsDcpt;
     if(pTftpsDcpt && handler && pTftpsDcpt->memH)
     {
-        TCPIP_TFTPS_LIST_NODE* newNode = (TCPIP_TFTPS_LIST_NODE*)TCPIP_Notification_Add(&pTftpsDcpt->tftpsRegisteredUsers, pTftpsDcpt->memH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        TCPIP_TFTPS_LIST_NODE tftpNode;
+        tftpNode.handler = handler;
+        tftpNode.hParam = hParam;
+        tftpNode.hNet = hNet;
+
+        return (TCPIP_TFTPS_LIST_NODE*)TCPIP_Notification_Add(&pTftpsDcpt->tftpsRegisteredUsers, pTftpsDcpt->memH, &tftpNode, sizeof(tftpNode));
     }
     return 0;
 }

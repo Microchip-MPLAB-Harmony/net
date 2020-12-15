@@ -62,6 +62,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			false
 </#if>
+<#if TCPIP_DNS_CLIENT_CONSOLE_CMD == true>
+#define TCPIP_DNS_CLIENT_CONSOLE_CMD               	true
+<#else>
+#define TCPIP_DNS_CLIENT_CONSOLE_CMD              	false
+</#if>
 <#if TCPIP_DNS_CLIENT_USER_NOTIFICATION == true>
 #define TCPIP_DNS_CLIENT_USER_NOTIFICATION   true
 <#else>

@@ -60,33 +60,58 @@ def instantiateComponent(drvExtMacEnc28j60Component, index):
     drvEnc28j60InstnRxBuffSize.setLabel("RX Buffer Size (should be even)")
     drvEnc28j60InstnRxBuffSize.setDefaultValue(16384)
     drvEnc28j60InstnRxBuffSize.setDescription("RX Buffer Size")    
+            
+    drvEnc28j60SpiChipSelect = drvExtMacEnc28j60Component.createKeyValueSetSymbol("DRV_ENC28J60_SPI_CS_IDX" + str(index),None)
+    drvEnc28j60SpiChipSelect.setLabel("SPI Chip Select Pin")
+    drvEnc28j60SpiChipSelect.setOutputMode("Key")
+    drvEnc28j60SpiChipSelect.setDisplayMode("Key")
+    drvEnc28j60SpiChipSelect.setVisible( True )
+
+    # Send message to core to get available pins
+    chipSelectavailablePinDictionary = {}
+    chipSelectavailablePinDictionary = Database.sendMessage("core", "PIN_LIST", chipSelectavailablePinDictionary)
     
-    drvEnc28j60InstnMaxFrameSize = drvExtMacEnc28j60Component.createIntegerSymbol("DRV_ENC28J60_MAX_FRAME_SIZE_IDX" + str(index),None)
+    drvEnc28j60SpiChipSelect.addKey("SYS_PORT_PIN_NONE", "0", "No Pin Selected")
+    for pad in sort_alphanumeric(chipSelectavailablePinDictionary.values()):
+        key = "SYS_PORT_PIN_" + pad
+        value = list(chipSelectavailablePinDictionary.keys())[list(chipSelectavailablePinDictionary.values()).index(pad)]
+        description = pad
+        drvEnc28j60SpiChipSelect.addKey(key, value, description)
+        
+    if "PIC32MX" in Variables.get("__PROCESSOR"):
+        drvEnc28j60SpiChipSelect.setSelectedKey("SYS_PORT_PIN_RD9")
+    elif "PIC32MZ" in Variables.get("__PROCESSOR"):
+        drvEnc28j60SpiChipSelect.setSelectedKey("SYS_PORT_PIN_RE9")
+    else:
+        drvEnc28j60SpiChipSelect.setSelectedKey("SYS_PORT_PIN_NONE")
+        
+    drvEnc28j60SpiComment = drvExtMacEnc28j60Component.createCommentSymbol("DRV_ENC28J60_SPI_COMMENT_IDX" + str(index),drvEnc28j60SpiChipSelect)
+    drvEnc28j60SpiComment.setLabel("***Configure the Chip-Select pin as GPIO Output in Pin Manager***")
+    drvEnc28j60SpiComment.setVisible( True )
+        
+    # Advanced Settings
+    drvEnc28j60AdvSettings = drvExtMacEnc28j60Component.createMenuSymbol("TCPIP_ETHMAC_ADV_SETTING", None)
+    drvEnc28j60AdvSettings.setLabel("Advanced Settings")
+    drvEnc28j60AdvSettings.setDescription("Advanced Settings")
+    drvEnc28j60AdvSettings.setVisible(True)    
+        
+    drvEnc28j60InstnMaxFrameSize = drvExtMacEnc28j60Component.createIntegerSymbol("DRV_ENC28J60_MAX_FRAME_SIZE_IDX" + str(index),drvEnc28j60AdvSettings)
     drvEnc28j60InstnMaxFrameSize.setVisible(True)
     drvEnc28j60InstnMaxFrameSize.setLabel("Maximum Frame Length")
     drvEnc28j60InstnMaxFrameSize.setDefaultValue(1536)
     drvEnc28j60InstnMaxFrameSize.setDescription("Maximum Frame Length") 
 
-    drvEnc28j60InstnAutoFlowCtrl = drvExtMacEnc28j60Component.createBooleanSymbol("DRV_ENC28J60_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),None)
+    drvEnc28j60InstnAutoFlowCtrl = drvExtMacEnc28j60Component.createBooleanSymbol("DRV_ENC28J60_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),drvEnc28j60AdvSettings)
     drvEnc28j60InstnAutoFlowCtrl.setLabel("Enable Automatic Flow Control")
     drvEnc28j60InstnAutoFlowCtrl.setVisible(True)
     drvEnc28j60InstnAutoFlowCtrl.setDefaultValue(True)
-    drvEnc28j60InstnAutoFlowCtrl.setDescription("Use Automatic Flow Control")        
-    
-    drvEnc28j60SpiChipSelect = drvExtMacEnc28j60Component.createStringSymbol("DRV_ENC28J60_SPI_CS_IDX" + str(index),None)
-    drvEnc28j60SpiChipSelect.setLabel("SPI Chip Select")
-    if "PIC32MX" in Variables.get("__PROCESSOR"):
-        drvEnc28j60SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RD9")
-    elif "PIC32MZ" in Variables.get("__PROCESSOR"):
-        drvEnc28j60SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RE9")
-        
-    drvEnc28j60SpiChipSelect.setVisible( True )
-    drvEnc28j60SpiChipSelect.setDescription("Chip Select Pin for SPI interface")     
-        
-    drvEnc28j60SpiComment = drvExtMacEnc28j60Component.createCommentSymbol("DRV_ENC28J60_SPI_COMMENT_IDX" + str(index),drvEnc28j60SpiChipSelect)
-    drvEnc28j60SpiComment.setLabel("***Configure the pin as GPIO Output using Pin Manager***")
-    drvEnc28j60SpiComment.setVisible( True )
-    
+    drvEnc28j60InstnAutoFlowCtrl.setDescription("Use Automatic Flow Control")  
+
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
 
 #Set symbols of other components
 def setVal(component, symbol, value):

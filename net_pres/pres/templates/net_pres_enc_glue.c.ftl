@@ -45,6 +45,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/logging.h"
 #include "wolfssl/wolfcrypt/random.h"
 
+extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+#include "wolfssl/wolfcrypt/port/atmel/atmel.h"
+</#if>
+
 <#assign needSysConsole=false/>
 <#list 0..(__INSTANCE_COUNT?number-1) as idx>
 	<#assign netPresUseWolfSSLDebug = "netPres_${idx}.NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${idx}"?eval>
@@ -179,7 +184,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         <#if CONNECTION="Client">
     const uint8_t * caCertsPtr;
     int32_t caCertsLen;
-            <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+	            <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
     const uint8_t * deviceCertPtr;
     const uint8_t * pvtKeyPtr;
     int32_t deviceCertLen, pvtKeyLen;
@@ -213,9 +218,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject = transObject;
         <#if TYPE="Stream">
             <#if CONNECTION="Client">
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
+	net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
             <#else>
-    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
+	net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
             </#if>
         <#else>
             <#if CONNECTION="Client">
@@ -238,7 +243,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
-            <#if NET_PRES_BLOB_CERT_REPO>
+			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
     if (wolfSSL_CTX_use_certificate_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
     {
@@ -274,6 +279,14 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		<#else>
 	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, 0);
 		</#if>
+		<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+    /*initialize Trust*Go and load device certificate into the context*/
+    atcatls_set_callbacks(net_pres_wolfSSLInfoStreamClient0.context);
+    /*Use TLS extension since we support only P256R1 with ECC608 Trust&Go*/
+    if (WOLFSSL_SUCCESS != wolfSSL_CTX_UseSupportedCurve(net_pres_wolfSSLInfoStreamClient0.context, WOLFSSL_ECC_SECP256R1)) {
+        return false;
+    }
+        </#if>
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited = true;
     return true;
     <#else>
@@ -286,8 +299,11 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
-{
+bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
+{	
+	<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+    atmel_finish();
+    </#if>
     <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
@@ -419,7 +435,7 @@ uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t req
 {
     <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-    extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+    
     char buffer;
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
@@ -568,7 +584,7 @@ int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
+bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}(void)
 {
     <#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>

@@ -450,7 +450,7 @@ void MMU_Initialize(void)
     mmu_configure(trns_tbl);
     icache_Enable();
     mmu_enable();
-    dcache_Enable();
+    //dcache_Enable();
 
     // disable the processor alignment fault testing
     uint32_t sctlrValue = cp15_read_sctlr();

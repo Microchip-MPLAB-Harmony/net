@@ -130,7 +130,7 @@ void        TCPIP_Notification_Deinitialize(PROTECTED_SINGLE_LIST* notifyList, T
 // *****************************************************************************
 /*
 Function:
-    SGL_LIST_NODE*      TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
+    SGL_LIST_NODE*      TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void* pContent, size_t nBytes)
 
   Summary:
     Adds a new notification
@@ -145,6 +145,9 @@ Function:
     notifyList  - address of the list where the new entry is to be added    
     heapH       - Heap to be used for adding the new node.
                   This could be module specific.
+    pContent    - the contents to be copied in the new entry, if allocation is successful
+                  exactly nBytes will be copied
+                  Could be NULL if not needed 
     nBytes      - size of the entry - module specific
 
   Returns:
@@ -158,8 +161,12 @@ Function:
   Remarks:
     It is up to each module to set the specific data associated with this entry.
     This function only creates a new node and inserts it properly in the notification list.
+
+    pContent refers to the whole node size, including the 'next' field.
+    However, the 'next' field will be overwritten when the node is interted into the list.
+    
 */
-SGL_LIST_NODE*      TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
+SGL_LIST_NODE*      TCPIP_Notification_Add(PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void* pContent, size_t nBytes);
 
 
 // *****************************************************************************
@@ -178,9 +185,9 @@ Function:
 
   Parameters:
     node        - node to be deregistered
+    notifyList  - address of the list from where the new entry is to be removed    
     heapH       - Heap to be used for freeing up memory
                   This could be module specific.
-    notifyList  - address of the list from where the new entry is to be removed    
 
   Returns:
         true  - for success
@@ -194,6 +201,46 @@ Function:
     This function only removes the node from the notification list and then frees the associated memory
 */
 bool      TCPIP_Notification_Remove(SGL_LIST_NODE* node, PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH);
+
+// *****************************************************************************
+
+/*
+Function:
+    bool      TCPIP_Notification_CbackRemove(SGL_LIST_NODE* node, PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void (*pCback)(SGL_LIST_NODE* node));
+
+  Summary:
+    Removes a notification and calls a user function
+
+  Description:
+    Tries to remove a SGL_LIST_NODE from the notifyList.
+    If needed, it will call a user function with the list safely locked
+
+  Precondition:
+    the node should have been added to the notifyList with TCPIP_Notification_Add()
+
+  Parameters:
+    node        - node to be deregistered
+    notifyList  - address of the list from where the new entry is to be removed    
+    heapH       - Heap to be used for freeing up memory
+                  This could be module specific.
+    pCback      - function to be called in safe context if the node was successfuly removed from the list
+                  Node contents is still valid at that time.
+                  Should be a quick function
+                  Could be NULL if not needed 
+                
+
+  Returns:
+        true  - for success
+        false - if failure
+
+  Example:
+     None
+
+  Remarks:
+    It is up to each module to remove/free the specific data associated with this entry.
+    This function only removes the node from the notification list and then frees the associated memory
+*/
+bool      TCPIP_Notification_CbackRemove(SGL_LIST_NODE* node, PROTECTED_SINGLE_LIST* notifyList, TCPIP_STACK_HEAP_HANDLE heapH, void (*pCback)(SGL_LIST_NODE* node));
 
 // *****************************************************************************
 /*

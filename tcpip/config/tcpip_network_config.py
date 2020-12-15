@@ -65,7 +65,6 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetHostName.setLabel("Host Name")
     tcpipNetHostName.setVisible(True)
     tcpipNetHostName.setDefaultValue("")
-    #tcpipNetHostName.setDependencies(tcpipNetHostNameUpdate, ["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"]) 
     tcpipNetHostName.setDependencies(tcpipNetHostNameUpdate, [tcpipNetIfName.getID()])
 
     # Network Interface MAC address
@@ -87,7 +86,6 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetIpAddrMask.setLabel("IPv4 SubNet Mask")
     tcpipNetIpAddrMask.setVisible(True)
     tcpipNetIpAddrMask.setDefaultValue("255.255.255.0")
-    #tcpipNetIpAddrMask.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIfName.getID()])
 
     # Network Interface Gateway IP address
     tcpipNetGatewayIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_GATEWAY_IDX" + str(index),None)
@@ -102,26 +100,11 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetPrimDnsIpAddr.setVisible(True)
     tcpipNetPrimDnsIpAddr.setDefaultValue("")
     tcpipNetPrimDnsIpAddr.setDependencies(tcpipNetPrimDnsIpAddrUpdate, [tcpipNetIfName.getID()])    
-
-    # Network Interface Secondary DNS IP address
-    tcpipNetSecDnsIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX" + str(index),None)
-    tcpipNetSecDnsIpAddr.setLabel("IPv4 Secondary DNS")
-    tcpipNetSecDnsIpAddr.setVisible(True)
-    tcpipNetSecDnsIpAddr.setDefaultValue("0.0.0.0")
-    #tcpipNetSecDnsIpAddr[index].setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])        
-
-    # Network Interface Power Mode
-    tcpipNetPwrMode = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),None)
-    tcpipNetPwrMode.setLabel("Power Mode")
-    tcpipNetPwrMode.setVisible(True)
-    tcpipNetPwrMode.setDefaultValue("full")
-    #tcpipNetPwrMode.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])
     
     # Network Configuration Start-up Flags Menu
     tcpipNetStartupFlag = tcpipNetConfigComponent.createMenuSymbol("TCPIP_NETWORK_STARTUP_FLAG_IDX" + str(index),None)
     tcpipNetStartupFlag.setLabel("Network Configuration Start-up Flags")
     tcpipNetStartupFlag.setVisible(True)    
-    #tcpipNetStartupFlag[index].setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])
 
     tcpipNetDhcpFlag = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_IDX"+str(index),tcpipNetStartupFlag)
     tcpipNetDhcpFlag.setVisible(True)
@@ -149,7 +132,6 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetMcastEnable.setLabel("Multicast Enabled on this Interface")
     tcpipNetMcastEnable.setVisible(True)
     tcpipNetMcastEnable.setDefaultValue(False)
-    #tcpipNetMcastEnable.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])
 
     # Input IPv6 Static Address and Subnet Prefix Length
     tcpipNetIpv6AddrSubnetInput = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX"+str(index),tcpipNetStartupFlag)
@@ -177,15 +159,50 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetIpv6GatewayAddr.setLabel("IPv6 Default Gateway Address")
     tcpipNetIpv6GatewayAddr.setVisible(False)
     tcpipNetIpv6GatewayAddr.setDefaultValue("")
-    tcpipNetIpv6GatewayAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])
+    tcpipNetIpv6GatewayAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])     
+
+    # Advanced Settings
+    tcpipNetAdvSettings = tcpipNetConfigComponent.createMenuSymbol("TCPIP_NETWORK_ADV_SETTING_IDX" + str(index), None)
+    tcpipNetAdvSettings.setLabel("Advanced Settings")
+    tcpipNetAdvSettings.setDescription("Advanced Settings")
+    tcpipNetAdvSettings.setVisible(True)
+
+    # Network Interface Secondary DNS IP address
+    tcpipNetSecDnsIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetSecDnsIpAddr.setLabel("IPv4 Secondary DNS")
+    tcpipNetSecDnsIpAddr.setVisible(True)
+    tcpipNetSecDnsIpAddr.setDefaultValue("0.0.0.0")  
     
     # Network Interface MAC Driver Object
-    tcpipNetMacDrvObj = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX" + str(index),None)
+    tcpipNetMacDrvObj = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX" + str(index),tcpipNetAdvSettings)
     tcpipNetMacDrvObj.setLabel("Network MAC Driver")
     tcpipNetMacDrvObj.setVisible(True)
     tcpipNetMacDrvObj.setDefaultValue("")
     tcpipNetMacDrvObj.setDependencies(tcpipNetMACDrvObjUpdate, [tcpipNetIfName.getID()])
+    
+    # Add this interface to MAC Bridge
+    tcpipAddMacBridge = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_MACBRIDGE_ADD_IDX"+str(index),tcpipNetAdvSettings)
+    tcpipAddMacBridge.setLabel("Add Interface to MAC Bridge")
+    if( Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT") > 1):
+        tcpipAddMacBridge.setVisible(True)
+    else: 
+        tcpipAddMacBridge.setVisible(False)
+    tcpipAddMacBridge.setDefaultValue(False)  
+    tcpipAddMacBridge.setDependencies(tcpipNetConfigAddMACBridge, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])    
 
+    # Enable MAC Global Config
+    tcpipEnableMacBridgeGlobalConfig = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_MACBRIDGE_GLOBAL_CONFIG_IDX"+str(index),tcpipNetAdvSettings)
+    tcpipEnableMacBridgeGlobalConfig.setLabel("MAC Bridge GLobal")
+    tcpipEnableMacBridgeGlobalConfig.setVisible(False)
+    tcpipEnableMacBridgeGlobalConfig.setDefaultValue(False)  
+    tcpipEnableMacBridgeGlobalConfig.setDependencies(tcpipNetConfigMACBridgeGlobal, [tcpipAddMacBridge.getID()]) 
+    
+    # Network Interface Power Mode
+    tcpipNetPwrMode = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetPwrMode.setLabel("Power Mode")
+    tcpipNetPwrMode.setVisible(True)
+    tcpipNetPwrMode.setDefaultValue("full")
+    tcpipNetPwrMode.setReadOnly(True)
 
     tcpipNetConfigSysConfigFile = tcpipNetConfigComponent.createFileSymbol("TCPIP_NETWORK_CONFIG", None)
     tcpipNetConfigSysConfigFile.setType("STRING")
@@ -198,8 +215,21 @@ def tcpipNetConfigMenuVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-
         
+def tcpipNetConfigAddMACBridge(symbol, event):
+    if (event["value"] > 1):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipNetConfigMACBridgeGlobal(symbol, event):
+    macbridge_global_config_dict = {}
+    if (event["value"] == True):
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_ENABLE", macbridge_global_config_dict)
+    else:
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_DISABLE", macbridge_global_config_dict)
+    
+      
 def tcpipNetHostNameUpdate(symbol, event):
     interfaceToHostName = {
         'ETHMAC':       'MCHPBOARD_E',
@@ -368,4 +398,8 @@ def handleMessage(messageID, args):
     
 def destroyComponent(tcpipNetConfigComponent):
     netconfig_interface_counter_dict = {}
-    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_DEC", netconfig_interface_counter_dict)
+    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_DEC", netconfig_interface_counter_dict)    
+    tcpipNetConfigIndex = int(tcpipNetConfigComponent.getID().strip("tcpipNetConfig_"))       
+    if(Database.getSymbolValue("tcpipNetConfig_" + str(tcpipNetConfigIndex), "TCPIP_NETWORK_MACBRIDGE_ADD_IDX" + str(tcpipNetConfigIndex)) == True):
+        macbridge_global_config_dict = {}   
+        macbridge_global_config_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_MAC_BRIDGE_DISABLE", macbridge_global_config_dict) 

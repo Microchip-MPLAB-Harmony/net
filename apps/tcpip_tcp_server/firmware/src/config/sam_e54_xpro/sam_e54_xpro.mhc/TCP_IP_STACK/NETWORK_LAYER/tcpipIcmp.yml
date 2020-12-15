@@ -1,0 +1,6 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tcpipIcmp}
+children:
+- type: ElementPosition
+  attributes: {x: '580', y: '20', id: tcpipIcmp}

@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -32,44 +32,39 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
-// 32-byte cache alignment for PIC32C
-#define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
-#endif
-
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_MANAGER
 
 #include "tcpip_private.h"
 #include "tcpip_packet.h"
+#include "tcpip/tcpip_mac.h"
 
+#define TCPIP_SEGMENT_CACHE_ALIGN_SIZE (CACHE_LINE_SIZE)
 
-/*  TCPIP MAC Frame Offset
-
-  Summary:
-    An offset from a 4 byte aligned address where the MAC frame should start
-
-  Description:
-    Offset used on 32 bit machines that allows alignment of the network layer data.
-    This allows improved efficiency for checksum calculations, etc.
-  
-  Remarks:
-    Usual value is 2.
-
-    See notes for the TCPIP_MAC_DATA_SEGMENT.segLoadOffset member.
-
-    It makes sense to have this value as a #define (or global variable) instead of a parameter to the packet allocation function.
-    In a system whith different MAC drivers the value may be different from MAC to MAC and then the stack would be forced
-    to keep track of what packet could be forwarded on what interface.
-
-*/
-
+// Segment payload gap:
+// sizeof the TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap
 #if defined(TCPIP_IF_PIC32WK) || defined(TCPIP_IF_PIC32MZW1)
-    #define TCPIP_MAC_FRAME_OFFSET      (34+4)  // bytes to store the packet pointer
-#elif defined( TCPIP_IF_EMAC0 ) || defined( TCPIP_IF_EMAC1)
-    #define TCPIP_MAC_FRAME_OFFSET      (4+2)       // 4 bytes above segment to indicate parent packet, 2 for alignment
-#else // including interfaces such as MRF24WN, WINC1500 and WILC1000
-    #define TCPIP_MAC_FRAME_OFFSET      2
+    #define TCPIP_MAC_DATA_SEGMENT_GAP      34   
+#else
+    #define TCPIP_MAC_DATA_SEGMENT_GAP      4   
 #endif
+
+// the TCPIP_MAC_DATA_SEGMENT.segLoadOffset value
+// Allocation test
+// Note: enabling this in a real app will lead to run time exceptions!
+// The segment data gap cannot change at run time!
+// Enable for testing purposes only!
+#define TCPIP_MAC_SEGMENT_GAP_TEST      0
+
+
+#if (TCPIP_MAC_SEGMENT_GAP_TEST != 0)
+uint32_t    _tcpip_mac_segment_gap = 17;
+#define TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET  (sizeof(((TCPIP_MAC_SEGMENT_PAYLOAD*)0)->segmentPktPtr) + _tcpip_mac_segment_gap) 
+#else
+#define TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET  (sizeof(((TCPIP_MAC_SEGMENT_PAYLOAD*)0)->segmentPktPtr) + TCPIP_MAC_DATA_SEGMENT_GAP) 
+#endif  // (TCPIP_MAC_SEGMENT_GAP_TEST != 0)
+
+// should be uintptr_t aligned, for storing the segmentPktPtr
+#define _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET  (((TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET + sizeof(uintptr_t) - 1) / sizeof(uintptr_t)) * sizeof(uintptr_t))
 
 static TCPIP_STACK_HEAP_HANDLE    pktMemH = 0;
 
@@ -191,6 +186,7 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Packet Ack: orphan packet! \r\n");
     }
+    pPkt->pktPriority = 0; //clear the packet priority to default
 }
 
 void TCPIP_PKT_SegmentAppend(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_DATA_SEGMENT* pSeg)
@@ -298,13 +294,18 @@ uint16_t TCPIP_PKT_PayloadLen(TCPIP_MAC_PACKET* pPkt)
     return payloadSize;
 }
 
+uint16_t TCPIP_PKT_SegLoadOffset(void)
+{
+    return _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET; 
+}
+
 // repeated debug versions; they store the original moduleId
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_PacketAllocInt(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId)
 {
     TCPIP_MAC_PACKET* pPkt;
     TCPIP_MAC_DATA_SEGMENT  *pSeg;
-    uint16_t        pktUpLen, allocLen;
+    uint16_t        pktUpLen, allocLen, segAlignSize, segAllocSize;
 
     if(pktLen < sizeof(TCPIP_MAC_PACKET))
     {
@@ -312,13 +313,13 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_Pa
     }
 
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
+    // segment size, multiple of cache line size
+    segAlignSize = ((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+    // segment allocation size, extra cache line so that the segLoad can start on a cache line boundary
+    segAllocSize = segAlignSize + _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET + TCPIP_SEGMENT_CACHE_ALIGN_SIZE; 
+    // total allocation size
+    allocLen = pktUpLen + sizeof(*pSeg) + segAllocSize;
 
-    allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
-
-#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
-    // Allocation length should be cache aligned and add extra cache line size for the segLoad to be cache aligned
-    allocLen = ((allocLen + (2 * TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
-#endif  // defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
     pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_MallocDebug(pktMemH, allocLen, moduleId, __LINE__);
 #else
@@ -332,20 +333,15 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_Pa
         memset(pPkt, 0, pktUpLen + sizeof(*pSeg));
         pSeg = (TCPIP_MAC_DATA_SEGMENT*)((uint8_t*)pPkt + pktUpLen);
 
-        pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
-        pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
-#if defined(__PIC32C__) || defined(__SAMA5D2__)
-        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-        // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
-#elif defined(__SAM9X60__)
-        pSeg->segLoad = (uint8_t *)(pSeg + 1);
-        // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
-        pSeg->segLoad += TCPIP_MAC_FRAME_OFFSET;
-#else
-        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-#endif        
+        pSeg->segSize = segAlignSize;
+        pSeg->segAllocSize = segAllocSize;
+        pSeg->segLoadOffset = _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET;
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET;
+        // cache-align the data segment
+        pSeg->segLoad = (uint8_t*)((((uint32_t)pSeg->segLoad + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+        // set the pointer to the packet that segment belongs to
+        *(TCPIP_MAC_PACKET**)(pSeg->segLoad - _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET) = pPkt;
+
         pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
 
@@ -418,24 +414,26 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_So
     return pPkt;
 }
 
+// the segment size is allocated following the rules:
+//  - payload size is multiple of cache line size
+//  - load starts at a cache aligned address
 static __inline__ TCPIP_MAC_DATA_SEGMENT* __attribute__((always_inline)) _TCPIP_PKT_SegmentAllocInt(uint16_t loadLen, uint16_t loadOffset, TCPIP_MAC_SEGMENT_FLAGS flags, int moduleId)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg;
-    uint16_t allocSize;
+    uint16_t allocLen, segAlignSize, segAllocSize;
 
-    if(loadLen != 0)
-    {
-        allocSize = sizeof(*pSeg) + loadLen + loadOffset;
-    }
-    else
-    {
-        allocSize = sizeof(*pSeg);
-    }
+    segAlignSize = ((loadLen + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+    // segment allocation size, extra cache line so that the segLoad can start on a cache line boundary
+    segAllocSize = segAlignSize + loadOffset + TCPIP_SEGMENT_CACHE_ALIGN_SIZE; 
+
+    // total allocation size
+    allocLen = sizeof(*pSeg) + segAllocSize;
+
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_MallocDebug(pktMemH, allocSize, moduleId, __LINE__);
+    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_MallocDebug(pktMemH, allocLen, moduleId, __LINE__);
 #else
-    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocSize);
+    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 
 
@@ -444,12 +442,12 @@ static __inline__ TCPIP_MAC_DATA_SEGMENT* __attribute__((always_inline)) _TCPIP_
         memset(pSeg, 0, sizeof(*pSeg));
 
         pSeg->segFlags = flags & (~TCPIP_MAC_SEG_FLAG_STATIC);
-        if(loadLen != 0)
-        {
-            pSeg->segSize = loadLen;
-            pSeg->segLoadOffset = loadOffset;
-            pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
-        }
+        pSeg->segSize = segAlignSize;
+        pSeg->segAllocSize = segAllocSize;
+        pSeg->segLoadOffset = loadOffset;
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
+        // cache-align the data segment
+        pSeg->segLoad = (uint8_t*)((((uint32_t)pSeg->segLoad + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
     }
 
     return pSeg;
@@ -582,13 +580,13 @@ static TCPIP_PKT_TRACE_ENTRY* _TCPIP_PKT_TraceFindEntry(int moduleId, bool addNe
 static uint32_t _TCPIP_PKT_TracePktSize(TCPIP_MAC_PACKET* pPkt)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg = pPkt->pDSeg;
-    uint32_t pktSize = ((uint8_t*)pSeg - (uint8_t*)pPkt) + TCPIP_MAC_FRAME_OFFSET + sizeof(*pSeg) + pSeg->segSize;
+    uint32_t pktSize = ((uint8_t*)pSeg - (uint8_t*)pPkt) + sizeof(*pSeg) + pSeg->segAllocSize;
 
     while((pSeg = pSeg->next) != 0)
     {
         if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
         {
-            pktSize += sizeof(*pSeg) + pSeg->segSize;
+            pktSize += sizeof(*pSeg) + pSeg->segAllocSize;
         }
     }
 
@@ -664,7 +662,7 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
 {
     TCPIP_MAC_PACKET* pPkt;
     TCPIP_MAC_DATA_SEGMENT  *pSeg;
-    uint16_t        pktUpLen, allocLen;
+    uint16_t        pktUpLen, allocLen, segAlignSize, segAllocSize;
 
     if(pktLen < sizeof(TCPIP_MAC_PACKET))
     {
@@ -672,13 +670,13 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
     }
 
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
+    // segment size, multiple of cache line size
+    segAlignSize = ((segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+    // segment allocation size, extra cache line so that the segLoad can start on a cache line boundary
+    segAllocSize = segAlignSize + _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET + TCPIP_SEGMENT_CACHE_ALIGN_SIZE; 
+    // total allocation size
+    allocLen = pktUpLen + sizeof(*pSeg) + segAllocSize;
 
-    allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
-
-#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
-    // Allocation length should be cache aligned and add extra cache line size for the segLoad to be cache aligned
-    allocLen = ((allocLen + (2 * TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
-#endif  // defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
     pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
 
     if(pPkt)
@@ -688,20 +686,15 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
         memset(pPkt, 0, pktUpLen + sizeof(*pSeg));
         pSeg = (TCPIP_MAC_DATA_SEGMENT*)((uint8_t*)pPkt + pktUpLen);
 
-        pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
-        pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
-#if defined(__PIC32C__) || defined(__SAMA5D2__)
-        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-        // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
-#elif defined(__SAM9X60__)
-        pSeg->segLoad = (uint8_t *)(pSeg + 1);
-        // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
-        pSeg->segLoad += TCPIP_MAC_FRAME_OFFSET;
-#else
-        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-#endif        
+        pSeg->segSize = segAlignSize;
+        pSeg->segAllocSize = segAllocSize;
+        pSeg->segLoadOffset = _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET;
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET;
+        // cache-align the data segment
+        pSeg->segLoad = (uint8_t*)((((uint32_t)pSeg->segLoad + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
+        // set the pointer to the packet that segment belongs to
+        *(TCPIP_MAC_PACKET**)(pSeg->segLoad - _TCPIP_MAC_DATA_SEGMENT_LOAD_OFFSET) = pPkt;
+
         pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
 
@@ -711,6 +704,7 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
         {
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
+        pPkt->pktPriority = 0; // set the default priority
 
     }
 
@@ -767,33 +761,34 @@ void _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt)
     }
 }
 
+// the segment size is allocated following the rules:
+//  - payload size is multiple of cache line size
+//  - load starts at a cache aligned address
 TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAlloc(uint16_t loadLen, uint16_t loadOffset, TCPIP_MAC_SEGMENT_FLAGS flags)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg;
-    uint16_t allocSize;
+    uint16_t allocLen, segAlignSize, segAllocSize;
 
-    if(loadLen != 0)
-    {
-        allocSize = sizeof(*pSeg) + loadLen + loadOffset;
-    }
-    else
-    {
-        allocSize = sizeof(*pSeg);
-    }
+    segAlignSize = ((loadLen + TCPIP_SEGMENT_CACHE_ALIGN_SIZE  - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+    // segment allocation size, extra cache line so that the segLoad can start on a cache line boundary
+    segAllocSize = segAlignSize + loadOffset + TCPIP_SEGMENT_CACHE_ALIGN_SIZE; 
 
-    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocSize);
+    // total allocation size
+    allocLen = sizeof(*pSeg) + segAllocSize;
+
+    pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
 
     if(pSeg)
     {
         memset(pSeg, 0, sizeof(*pSeg));
 
         pSeg->segFlags = flags & (~TCPIP_MAC_SEG_FLAG_STATIC);
-        if(loadLen != 0)
-        {
-            pSeg->segSize = loadLen;
-            pSeg->segLoadOffset = loadOffset;
-            pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
-        }
+        pSeg->segSize = segAlignSize;
+        pSeg->segAllocSize = segAllocSize;
+        pSeg->segLoadOffset = loadOffset;
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
+        // cache-align the data segment
+        pSeg->segLoad = (uint8_t*)((((uint32_t)pSeg->segLoad + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
     }
 
     return pSeg;

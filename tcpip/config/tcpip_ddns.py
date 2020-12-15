@@ -23,64 +23,66 @@
 
     
 def instantiateComponent(tcpipDdnsComponent):
-	print("TCPIP DNS Client Component")
-	configName = Variables.get("__CONFIGURATION_NAME")
-	
-	# Enable Dynamis DNS Module
-	tcpipDdns = tcpipDdnsComponent.createBooleanSymbol("TCPIP_USE_DDNS", None)
-	tcpipDdns.setLabel("Dynamic DNS Module")
-	tcpipDdns.setVisible(False)
-	tcpipDdns.setDescription("Enable Dynamic DNS Module")
-	tcpipDdns.setDefaultValue(True)
-	#tcpipDdns.setDependencies(tcpipDdnsMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
+    print("TCPIP DNS Client Component")
+    configName = Variables.get("__CONFIGURATION_NAME")
+    
+    # Enable Dynamis DNS Module
+    tcpipDdns = tcpipDdnsComponent.createBooleanSymbol("TCPIP_USE_DDNS", None)
+    tcpipDdns.setLabel("Dynamic DNS Module")
+    tcpipDdns.setVisible(False)
+    tcpipDdns.setDescription("Enable Dynamic DNS Module")
+    tcpipDdns.setDefaultValue(True)
 
-	# Default CheckIP server for Determining Current IP Address
-	tcpipDdnsChkIpServer = tcpipDdnsComponent.createStringSymbol("TCPIP_DDNS_CHECKIP_SERVER", None)
-	tcpipDdnsChkIpServer.setLabel("Default CheckIP server for Determining Current IP Address")
-	tcpipDdnsChkIpServer.setVisible(True)
-	tcpipDdnsChkIpServer.setDescription("Default CheckIP server for Determining Current IP Address")
-	tcpipDdnsChkIpServer.setDefaultValue("checkip.dyndns.com")
-	#tcpipDdnsChkIpServer.setDependencies(tcpipDdnsMenuVisible, ["TCPIP_USE_DDNS"])
+    # Default CheckIP server for Determining Current IP Address
+    tcpipDdnsChkIpServer = tcpipDdnsComponent.createStringSymbol("TCPIP_DDNS_CHECKIP_SERVER", None)
+    tcpipDdnsChkIpServer.setLabel("Default CheckIP Server")
+    tcpipDdnsChkIpServer.setVisible(True)
+    tcpipDdnsChkIpServer.setDescription("Default CheckIP server for Determining Current IP Address")
+    tcpipDdnsChkIpServer.setDefaultValue("checkip.dyndns.com")
+    
+    # Advanced Settings
+    tcpipDdnsAdvSettings = tcpipDdnsComponent.createMenuSymbol("TCPIP_DDNS_ADV_SETTING", None)
+    tcpipDdnsAdvSettings.setLabel("Advanced Settings")
+    tcpipDdnsAdvSettings.setDescription("Advanced Settings")
+    tcpipDdnsAdvSettings.setVisible(True)
+    
+    # Dynamic DNS Task Rate in msec
+    tcpipDdnsTskRate = tcpipDdnsComponent.createIntegerSymbol("TCPIP_DDNS_TASK_TICK_RATE", tcpipDdnsAdvSettings)
+    tcpipDdnsTskRate.setLabel("dynDNS Task Rate (in msec)")
+    tcpipDdnsTskRate.setVisible(True)
+    tcpipDdnsTskRate.setDescription("Dynamic DNS Task Rate in msec")
+    tcpipDdnsTskRate.setDefaultValue(777)
+    
+    # Add to system_config.h
+    tcpipDdnsHeaderFtl = tcpipDdnsComponent.createFileSymbol(None, None)
+    tcpipDdnsHeaderFtl.setSourcePath("tcpip/config/ddns.h.ftl")
+    tcpipDdnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+    tcpipDdnsHeaderFtl.setMarkup(True)
+    tcpipDdnsHeaderFtl.setType("STRING")
 
-	# Dynamic DNS Task Rate in msec
-	tcpipDdnsTskRate = tcpipDdnsComponent.createIntegerSymbol("TCPIP_DDNS_TASK_TICK_RATE", None)
-	tcpipDdnsTskRate.setLabel("dynDNS Task Rate in msec")
-	tcpipDdnsTskRate.setVisible(True)
-	tcpipDdnsTskRate.setDescription("Dynamic DNS Task Rate in msec")
-	tcpipDdnsTskRate.setDefaultValue(777)
-	#tcpipDdnsTskRate.setDependencies(tcpipDdnsMenuVisible, ["TCPIP_USE_DDNS"])
-	
-	# Add to system_config.h
-	tcpipDdnsHeaderFtl = tcpipDdnsComponent.createFileSymbol(None, None)
-	tcpipDdnsHeaderFtl.setSourcePath("tcpip/config/ddns.h.ftl")
-	tcpipDdnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-	tcpipDdnsHeaderFtl.setMarkup(True)
-	tcpipDdnsHeaderFtl.setType("STRING")
-
-	# Add ddns.c file
-	tcpipDdnsSourceFile = tcpipDdnsComponent.createFileSymbol(None, None)
-	tcpipDdnsSourceFile.setSourcePath("tcpip/src/ddns.c")
-	tcpipDdnsSourceFile.setOutputName("ddns.c")
-	tcpipDdnsSourceFile.setOverwrite(True)
-	tcpipDdnsSourceFile.setDestPath("library/tcpip/src/")
-	tcpipDdnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipDdnsSourceFile.setType("SOURCE")
-	tcpipDdnsSourceFile.setEnabled(True)
-	#tcpipDdnsSourceFile.setDependencies(tcpipDdnsGenSourceFile, ["TCPIP_USE_DDNS"])
+    # Add ddns.c file
+    tcpipDdnsSourceFile = tcpipDdnsComponent.createFileSymbol(None, None)
+    tcpipDdnsSourceFile.setSourcePath("tcpip/src/ddns.c")
+    tcpipDdnsSourceFile.setOutputName("ddns.c")
+    tcpipDdnsSourceFile.setOverwrite(True)
+    tcpipDdnsSourceFile.setDestPath("library/tcpip/src/")
+    tcpipDdnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipDdnsSourceFile.setType("SOURCE")
+    tcpipDdnsSourceFile.setEnabled(True)
 
 # make Dynamic DNS module option visible
 
 def tcpipDdnsMenuVisible(symbol, event):
-	if (event["value"] == True):
-		print("DDNS Menu Visible.")		
-		symbol.setVisible(True)
-	else:
-		print("DDNS Menu Invisible.")
-		symbol.setVisible(False)	
+    if (event["value"] == True):
+        print("DDNS Menu Visible.")     
+        symbol.setVisible(True)
+    else:
+        print("DDNS Menu Invisible.")
+        symbol.setVisible(False)    
 
-		
+        
 def tcpipDdnsGenSourceFile(sourceFile, event):
-	sourceFile.setEnabled(event["value"])
+    sourceFile.setEnabled(event["value"])
 
 #Set symbols of other components
 def setVal(component, symbol, value):
@@ -103,4 +105,4 @@ def handleMessage(messageID, args):
     return retDict
     
 def destroyComponent(component):
-	Database.setSymbolValue("tcpipDdns", "TCPIP_USE_DDNS", False, 2)
+    Database.setSymbolValue("tcpipDdns", "TCPIP_USE_DDNS", False, 2)

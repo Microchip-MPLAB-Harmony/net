@@ -18,7 +18,7 @@ IPv4 Header File
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -70,6 +70,279 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 // *****************************************************************************
+/* IPv4 Fowarding Support
+ *
+ *  The IPv4 module contains support for packet forwarding/routing using a forwarding table
+ *
+ * Note that this is NOT an implementation of a full router machine!
+ * There are features requested by the RFC 1812 that are not supported.
+ * Some of the missing features will be eventually added.
+ * This is work in progress.
+ *
+ *  Some of the known issues and implementation limitations:
+ *  - the forwarding table is strictly static. There are no routing protocols running
+ *    to allow the dynamic update of the table
+ *  - the forwarding table is populated when the IPv4 module is initialized:
+ *    the table is part of the configuration data
+ *  - API will be added to add/remove table entries at run time
+ *    Currently this is not supported
+ *  - When forwarding a packet from one interface to another, packet fragmentation is not yet supported
+ *  - Forwading  of multicast packets is not currently supported
+ *  - A packet can be both processed on the host and forwarded
+ *    (which should be possible for mcast or directed broadcast, for example)
+ *    Supported for broadcast only.
+ *  - Virtual IPv4 interfaces are not yet supported
+ *  - Currently the search of the forwarding table is purely sequential!
+ *    A better algorithm will be eventually provided.
+ *  - There is no provision to update the table at run time when the host obtains
+ *    an IP address from a DHCP server, for example.
+ *    As a router, probably the address should be static and not received
+ *    from another DHCP server
+ *  - Source Route Option is not examined/processed in the incoming packets
+ *  - Source Route Option is not supported in the forwarded packets
+ *  - ICMP messages are not generated
+ *  - TOS field is not considered in the packet forwarding
+ *  - Source Address Validation is not (yet) supported 
+ */
+
+// *****************************************************************************
+/* IPv4 fowarding entry
+
+  Summary:
+    Defines an entry in the IPv4 forwarding table 
+    using ASCII strings for the network addresses
+
+  Description:
+    Describes an IPV4 forwarding table entry.
+    The forwading table contains multiple forwarding entries.
+    Usually the router machine refers to the information in the
+    forwarding table as the Forwarding Information Base (FIB)
+    The IPv4 module constructs a forwarding table for each interface.
+    The initial contents of the forwarding table is specified
+    using the IPv4 configuration data.
+
+
+    The forwarding table is used as follows:
+
+    Internally the forwarding table is ordered based on the number of bits set to 1 in the network mask:
+    the higher the number of bits set in the mask, the higher the priority of the forwarding entry.
+    If two entries have the same number of set mask bits, then the entry with a lower metric
+    has the higher priority.
+    For example, the entry with the mask '255.255.255.255' has higher priority
+    than the entry with the mask '255.255.255.0'.
+    The entry with mask '0.0.0.0' has the lowest priority and is the default entry that will match everything.
+
+    For an incoming IPv4 packet on a specific interface, with a destination address destAddr
+    - if the destAddr is the address of a local interface on the current host
+      the packet will be processed internally and not forwarded
+    - else the forwarding table entries for the input interface are traversed from the highest priority to the lowest
+      and a match is searched for, such that:
+            destAddr & entry->netMask == entry->netAddress
+       When the match occurred, the packet will be forwarded on the output interface
+       specified by the entry->outIfName, following the rules:
+            - if entry->gwAddress != 0, the packet will be sent to that gateway address
+            - else if the destination is on that LAN
+                the packet will be forwarded to that destination 
+            - Otherwise the packet is not routable and it will be discarded.
+    
+    Example - we have a dual Ethernat interface host:
+        if0 == 192.168.1.136/24 on LAN0
+        if1 == 192.168.2.29/24 on LAN1
+    The networks are on different LANs and we want to be able to forward some IPv4 traffic
+    from one LAN segment to the other.
+
+    Forwarding table example:
+    forwardTable[] = 
+    {
+        Network         Mask             Gateway        inputInterface  outInterface
+        // interface 0 entries    
+        {192.168.2.240, 255.255.255.255, 0,             eth0,           eth1},       // traffic received on LAN0 for host 192.168.2.240 goes directly to it on LAN1
+        {192.168.2.0,   255.255.255.0,   0,             eth0,           eth1},       // traffic received on LAN0 for hosts on LAN1 goes to LAN1 over interface eth1 directly to that host
+                                                                                     // Note that this entry makes the previous one unncecessary
+        {192.168.3.0,   255.255.255.0,   192.168.2.1,   eth0,           eth1},       // traffic received for hosts on network 192.168.3.0/24 goes to LAN1 over interface eth1 using router 192.168.2.1
+        // default entry; will match everything
+        {0.0.0.0,       0.0.0.0,         192.168.1.100, eth0,           eth0},       // default entry; will match everything:
+                                                                                     // all other traffic on LAN0  will be sent on eth0 to router 192.168.1.100 
+        // interface 1 entries    
+        {192.168.1.147, 255.255.255.255, 0,             eth1,           eth0},       // traffic received on LAN1 for host 192.168.1.147 goes directly to it on LAN0
+        {192.168.1.0,   255.255.255.0,   192.168.1.100, eth1,           eth0},       // traffic received on LAN1 for hosts on LAN0 goes to LAN0 over interface eth0 using router 192.168.1.100
+    }
+
+
+  Remarks:
+    A default route is usually provided as part of the IPv4 initialization.
+    Note that if no match is found in the forwarding table
+    the packet will be discarded and not forwarded
+
+    RFC 1812 specifies that the packets that have as destination one of the LANs 
+    directly connected to the router should be delivered without consulting the forwarding table.
+    This implementation uses the forwarding table even in this case, as it is believed that this adds
+    more flexibility, allowing the user to configure more specific rules for the forwarding.
+
+ */
+
+typedef struct
+{
+    /* Network destination address.
+     * This address is used for matching the IPv4 packet destination address 
+     * For ex: "192.168.2.0" */ 
+    const char*     netAddress;
+    /* Associated mask for this destination address. For ex: "255.255.255.0"
+     * The value needs to be a valid network mask, with contiguous ones in its binary representation
+     * followed by contiguous zeros */ 
+    const char*     netMask;
+    /* Gateway destination address. For ex: "192.168.2.1"
+     * Used as packets destination */ 
+    const char*     gwAddress;
+    /* The name of the input interface that this entry applies to.
+     * The forwarding tables are built per interface
+     * For ex: "eth0", wlan0", etc. */
+    const char*     inIfName;
+    /* The name of the interface to go out on if this entry is selected.
+     * For ex: "eth0", wlan0", etc. */
+    const char*     outIfName;
+    /* The path efficiency. The smaller the value, the higher priority for the path.
+     * Note that this value is useful only when there are multiple entries in the 
+     * forwarding table that have the same number of mask bits set */
+    uint8_t         metric;
+}TCPIP_IPV4_FORWARD_ENTRY_ASCII;
+
+
+// *****************************************************************************
+/* IPv4 fowarding entry
+
+  Summary:
+    Defines an entry in the IPv4 forwarding table 
+    using binary values for the network addresses
+
+  Description:
+    Describes an IPV4 forwarding table entry.
+    See the TCPIP_IPV4_FORWARD_ENTRY_ASCII description
+
+  Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* Network destination address, network order */
+    uint32_t        netAddress;
+    /* Network mask, network order */
+    uint32_t        netMask;
+    /* Gateway destination address, network order */
+    uint32_t        gwAddress;
+    /* The number of the input interface this entry applies to.
+     * The forwarding tables are built per interface */
+    uint8_t         inIfIx;
+    /* The number of the interface to go out on if this entry is selected. */
+    uint8_t         outIfIx;
+    /* The path efficiency */
+    uint8_t         metric;
+}TCPIP_IPV4_FORWARD_ENTRY_BIN;
+
+// *****************************************************************************
+/* IPv4 fowarding entry
+
+  Summary:
+    Reunion of the 2 types: ASCII or binary
+
+  Description:
+    Union consisting of the 2 different table entry types
+
+  Remarks:
+    None.
+*/
+typedef union
+{
+    TCPIP_IPV4_FORWARD_ENTRY_ASCII   entryAscii;
+    TCPIP_IPV4_FORWARD_ENTRY_BIN     entryBin;
+}TCPIP_IPV4_FORWARD_ENTRY;
+
+
+
+// *****************************************************************************
+/* IPv4 forwarding flags
+
+  Summary:
+    Flags for the configuration of the IPv4 forwarding
+
+  Description:
+    These are flags used to configure the run time operation of the
+    IPv4 forwarding module
+
+  Remarks:
+    None.
+ */
+typedef enum
+{
+    TCPIP_IPV4_FWD_FLAG_NONE             = 0x0000,  // no flag set, the default
+    TCPIP_IPV4_FWD_FLAG_ENABLED          = 0x0001,  // when the stack/IPv4 module starts, enable the IPv4 forwarding
+                                                    // This should be set by default
+                                                    // Otherwise the IPv4 forwarding can be eventually enabled at run time using an API
+                                                    // Note: this API is not currently supported.
+    TCPIP_IPV4_FWD_FLAG_BCAST_ENABLED    = 0x0002,  // enable the forwarding of the broadcast packets
+                                                    // the default should be disabled
+    TCPIP_IPV4_FWD_FLAG_MCAST_ENABLED    = 0x0004,  // enable the forwarding of the multicast packets
+                                                    // the default should be disabled
+
+    TCPIP_IPV4_FWD_FLAG_BINARY_TABLE     = 0x0000,  // The initialization forwarding table is in binary format, not strings - default setting
+    TCPIP_IPV4_FWD_FLAG_ASCII_TABLE      = 0x0100,  // The initialization forwarding table is in ASCII format, using strings
+
+}TCPIP_IPV4_FORWARD_FLAGS;
+
+// *****************************************************************************
+/* IPv4 fowarding statistics entry
+
+  Summary:
+    Structure describing the forward statistics maintained by the IPv4 module
+
+  Description:
+    Data structure updated by the IPv4 forwarding process when debug is enabled
+
+  Remarks:
+    None
+*/
+typedef struct
+{
+    unsigned int failNoRoute;       // failures due to no route found
+    unsigned int failNetDown;       // failures due to net down
+    unsigned int failMacDest;       // failures due to MAC destination error
+    unsigned int failMtu;           // failures due to MTU
+    unsigned int failArpQueue;      // failures due to ARP pool empty
+    unsigned int failFwdQueue;      // failures due to forward TX Queue full 
+    unsigned int failMac;           // failures due to MAC rejecting the packet
+    unsigned int arpQueued;         // ARP queued MAC addresses
+    unsigned int ucastPackets;      // unicast packets to the router address
+    unsigned int bcastPackets;      // broadcast packets 
+    unsigned int mcastPackets;      // multicast packets 
+    unsigned int fwdPackets;        // total should be forwarded packets
+    unsigned int fwdQueuedPackets;  // queued packets (forwarded and then processed internally)
+    unsigned int macPackets;        // packets actually forwarded to MAC
+}TCPIP_IPV4_FORWARD_STAT;
+
+// *****************************************************************************
+/* IPv4 ARP statistics data
+
+  Summary:
+    Structure describing the ARP statistics maintained by the IPv4 module
+
+  Description:
+    Data structure updated by the IPv4 ARP process when ARP debugging is enabled
+
+  Remarks:
+    None
+*/
+typedef struct
+{
+    size_t nPool;       // entries in the pool
+    size_t nPend;       // entries pending to be resolved
+    size_t txSubmit;    // submitted for TX
+    size_t fwdSubmit;   // submitted for FWD
+    size_t txSolved;    // solved for TX
+    size_t fwdSolved;   // solved for FWD
+    size_t totSolved;   // total solved
+    size_t totFailed;   // total failed 
+}TCPIP_IPV4_ARP_QUEUE_STAT;
 
 // *****************************************************************************
 /* IPv4 configuration
@@ -78,15 +351,78 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     Initialization parameters supported by IPv4
 
   Description:
-    Currently the IPv4 modules does not support any initialization parameters.
+    The parameters needed for the Pv4 module initialization
 
   Remarks:
     None.
  */
 typedef struct
 {
-    void*   reserved;
+    /* The number of entries that IPv4 can queue up for ARP resolution.
+       Usually it should be <= the number of total ARP cache entries for all interfaces */
+    size_t                  arpEntries;
+
+
+    /* the following members are valid/used only if the IP forwarding is enabled
+     * They are valid only when the stack is initialized with multiple network interfaces */
+    
+    /* Forwarding flags. See the definition of TCPIP_IPV4_FORWARD_FLAGS */
+    TCPIP_IPV4_FORWARD_FLAGS forwardFlags;
+
+    /* The maximum number of broadcast and multicast packets that can be queued
+     * waiting for the output interface to transmit them.
+     * This applies only for packets that have to be both forwarded and processed internally
+     * which is only broadcast or multicast
+     * Adjust depending on your traffic
+     * Note that if this limit is exceeded, the packets won't be forwarded
+     * but still processed internally
+     * If 0, packets won't be forwarded, just processed internally. */
+    size_t                  forwardTxQueueSize;
+
+    /* The maximum number of entries in the forwarding table for each interface */
+    size_t                  forwardTableMaxEntries;
+
+    /* The number of entries in the initialization forwarding table
+     * The number of entries per interface cannot exceed the 'forwardTableMaxEntries' value */
+    size_t                  forwardTableSize;
+
+    /* the forwarding table entries to start with
+     * It contains the entries for all interfaces involved in forwarding
+     * The type of the table is given by the flag TCPIP_IPV4_FWD_FLAG_BINARY_TABLE/TCPIP_IPV4_FWD_FLAG_ASCII_TABLE */
+    const TCPIP_IPV4_FORWARD_ENTRY* forwardTable;   
+
 }TCPIP_IPV4_MODULE_CONFIG;
+
+// *****************************************************************************
+/* IPv4 initialization result
+
+  Summary:
+    List of initialization result codes
+
+  Description:
+    This is the list of results occurring in the IPv4 module initialization 
+
+  Remarks:
+    Negative codes represent errors.
+*/
+typedef enum
+{
+    TCPIP_IPV4_RES_OK       = 0,        // everything OK
+
+    // errors
+    TCPIP_IPV4_RES_INIT_VAL_ERR = -1,       // initialization value error
+    TCPIP_IPV4_RES_SIGNAL_ERR   = -2,       // failed to create a signal handler
+    TCPIP_IPV4_RES_ARP_ERR      = -3,       // failed to initialize ARP queue
+    TCPIP_IPV4_RES_NOTIFY_ERR   = -4,       // failed to initialize notifications
+    TCPIP_IPV4_RES_MEM_ERR      = -5,       // failed to allocate memory
+    TCPIP_IPV4_RES_ENTRIES_ERR  = -6,       // invalid forward table entries
+    TCPIP_IPV4_RES_FORMAT_ERR   = -7,       // not supported forward table format 
+    TCPIP_IPV4_RES_ADDRESS_ERR  = -8,       // invalid IP address 
+    TCPIP_IPV4_RES_MASK_ERR     = -9,       // invalid IP mask 
+    TCPIP_IPV4_RES_IF_ERR       = -10,      // invalid interface
+
+
+}TCPIP_IPV4_RES;
 
 // *****************************************************************************
 /* IPv4 supported protocols
@@ -195,7 +531,7 @@ typedef union
   Remarks:
     None.
  */
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     struct
     {
@@ -236,7 +572,6 @@ typedef struct
     IPV4_ADDR           srcAddress;     // packet source
     IPV4_ADDR           destAddress;    // packet destination
     TCPIP_NET_HANDLE    netIfH;         // packet interface
-    IPV4_ADDR           arpTarget;      // ARP resolution target
     uint8_t             optionLen;      // length of the options in the IPV4 packet; usually 0
     uint8_t             optionOffset;   // offset of the current option; when multiple options are supported
     uint16_t            optionMask;     // internal options to be embedded in the packet
@@ -522,7 +857,6 @@ void    TCPIP_IPV4_PacketFormatTx(IPV4_PACKET* pPkt, uint8_t protocol, uint16_t 
  */
 bool    TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt);
 
-
 // *****************************************************************************
 /*
   Function:
@@ -557,7 +891,34 @@ bool    TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt);
     None.
  */
 TCPIP_NET_HANDLE   TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, 
-                 IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet);
+                 const IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet);
+
+
+// *****************************************************************************
+/*
+  Function:
+    TCPIP_NET_HANDLE TCPIP_IPV4_SelectDestInterface(IPV4_ADDR* pDestAddress)
+
+  Summary:
+    Selects an interface based on the IPv4 destination address
+
+  Description:
+    Updates the pSrcAddress and returns the needed interface, if successful:
+
+  Precondition:
+    None
+
+  Parameters:
+    pDestAddress    - pointer to destination address
+
+  Returns:
+    - A valid interface - if it succeeds and a valid interface selected
+    - 0 - interface selection failed
+      
+  Remarks:
+    None.
+ */
+TCPIP_NET_HANDLE    TCPIP_IPV4_SelectDestInterface(const IPV4_ADDR* pDestAddress);
 
 // *****************************************************************************
 /*
@@ -1027,6 +1388,140 @@ TCPIP_IPV4_PROCESS_HANDLE     TCPIP_IPV4_PacketHandlerRegister(TCPIP_IPV4_PACKET
 
   */
 bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
+
+// *****************************************************************************
+/*
+  Function:
+    size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH);
+
+  Summary:
+    Helper to get the current number of entries in the forwarding table
+    for the required interface
+   
+  Description:
+    The function is a helper that returns the current number of entries in the 
+    interface forwarding table
+   
+  Precondition:
+    IPv4 properly initialized
+    IPv4 forwarding enabled
+        
+
+  Parameters:
+    netH    - network interface handle
+
+  Returns:
+    - the number of entries currently used in the forwarding table
+      for the exiting interface
+    - 0 if not a valid interface or forwarding table does not exist
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled
+
+ */
+size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH);
+
+// *****************************************************************************
+/*
+  Function:
+    bool TCPIP_IPV4_ForwadTableEntryGet(TCPIP_NET_HANDLE netH, size_t index, TCPIP_IPV4_FORWARD_ENTRY_BIN* pFwdEntry);
+
+  Summary:
+    Helper to get the contents of a forwarding table
+   
+  Description:
+    The function is a helper that returns the contents of the specified
+    entry in the forwarding table for the selected interface
+   
+  Precondition:
+    IPv4 properly initialized
+    IPv4 forwarding enabled
+        
+
+  Parameters:
+    netH        - network interface handle
+    index       - index of the entry to get
+    pFwdEntry   - pointer to a structure to store the table entry
+
+  Returns:
+    - true if a valid index, valid interface and forwarding table exists
+    - false otherwise
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled
+
+ */
+bool TCPIP_IPV4_ForwadTableEntryGet(TCPIP_NET_HANDLE netH, size_t index, TCPIP_IPV4_FORWARD_ENTRY_BIN* pFwdEntry);
+
+// *****************************************************************************
+/*
+  Function:
+    bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, bool clear);
+
+  Summary:
+    Helper to get the forwarding statistics
+   
+  Description:
+    The function is a helper that returns the contents of the specified
+    entry in the forwarding statistics
+   
+  Precondition:
+    IPv4 properly initialized
+    IPv4 forwarding enabled
+    IPv4 forwarding debugging enabled
+        
+
+  Parameters:
+    index       - index of the entry to get
+    pFwdEntry   - pointer to a structure to store the table entry
+    clear   - if true, the statistics are cleared
+
+  Returns:
+    - true if a valid index
+    - false otherwise
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled
+
+    Currently the forwarding statistics is maintained in 3 different slots:
+    - index 0: for interface 0
+    - index 1: for interface 1
+    - index 2: for all other interfaces
+
+ */
+bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, bool clear);
+
+// *****************************************************************************
+/*
+  Function:
+    bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear);
+
+  Summary:
+    Helper to get the ARP statistics
+   
+  Description:
+    The function is a helper that returns the contents of the ARP statistics
+    maintained by the IPv4 module
+   
+  Precondition:
+    IPv4 properly initialized
+    IPv4 ARP debugging enabled
+        
+
+  Parameters:
+    pStat   - pointer to a structure to store the ARP statistics
+    clear   - if true, the statistics are cleared
+
+  Returns:
+    - true if success - ARP statistics exist
+    - false otherwise
+      
+  Remarks:
+    Function exists only if IPv4 ARP debugging is enabled
+
+ */
+bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear);
 
 
 // *****************************************************************************

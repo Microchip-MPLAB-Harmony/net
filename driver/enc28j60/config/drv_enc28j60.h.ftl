@@ -61,7 +61,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 	<#assign frameSize= "drvExtMacEnc28j60_"+idx+".DRV_ENC28J60_MAX_FRAME_SIZE_IDX" + idx>
 	<#lt>#define DRV_ENC28J60_MAX_FRAME_SIZE_IDX${idx}		${frameSize?eval}
 	<#assign chipSelectPin= "drvExtMacEnc28j60_"+idx+".DRV_ENC28J60_SPI_CS_IDX" + idx>
-	<#lt>#define DRV_ENC28J60_SPI_CS_IDX${idx}		${chipSelectPin?eval}
+	<#if (chipSelectPin?eval == "SYS_PORT_PIN_NONE")>
+		<#lt>#error Configure SPI Chip-Select pin for interfacing ENC28J60 (in ENC28J60 Driver)
+	<#else>
+		<#lt>#define DRV_ENC28J60_SPI_CS_IDX${idx}		${chipSelectPin?eval}
+	</#if>
 </#list>
 </#if>
 

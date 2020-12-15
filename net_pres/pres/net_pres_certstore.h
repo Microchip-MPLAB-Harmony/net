@@ -96,7 +96,7 @@ extern "C" {
 
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
                                   uint8_t certIndex);
-
+								  
 // *****************************************************************************
 /* Get Device X509 TLS Parameters function
 

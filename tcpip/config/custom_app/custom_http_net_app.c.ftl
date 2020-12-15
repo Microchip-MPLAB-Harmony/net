@@ -196,7 +196,7 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const 
 // processing the HTTP reported events
 void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, const void *evInfo, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack)
 {
-    char *evMsg = (char *)evInfo;
+    const char *evMsg = (const char *)evInfo;
 
     if(evType < 0)
     {   // display errors only

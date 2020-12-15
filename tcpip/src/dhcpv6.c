@@ -114,9 +114,9 @@ static tcpipSignalHandle            dhcpv6SignalHandle = 0;
 
 static const void*                  dhcpv6MemH = 0;        // memory handle
 
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 static PROTECTED_SINGLE_LIST        dhcpv6RegisteredUsers = { {0} };
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 
 static uint32_t                     dhcpv6SecondCount = 0;    // DHCP time keeping, in seconds
@@ -656,11 +656,7 @@ static void         _DHCPV6Client_LinkUp(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
 static bool         _DHCPV6Client_CheckConnEvent(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 static void         _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNotify);
-#else
-#define             _DHCPV6Client_Notify(pClient, pIa, iaSubNotify)
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static void         _DHCPV6Client_SetState(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_CLIENT_STATE cliState);
 
@@ -1008,7 +1004,7 @@ static void _DHCPV6DbgMsgOut_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFF
 
 
 // client state debugging
-#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE) != 0) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE) != 0) || (((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE) != 0) && (_TCPIP_DHCPV6_USER_NOTIFICATION != 0))
 static const char* _DHCPV6_CLIENT_STATE_NAME[TCPIP_DHCPV6_CLIENT_STATE_NUMBER] = 
 {
     "init",         // TCPIP_DHCPV6_CLIENT_STATE_INIT
@@ -1017,35 +1013,40 @@ static const char* _DHCPV6_CLIENT_STATE_NAME[TCPIP_DHCPV6_CLIENT_STATE_NUMBER] =
     "wlink"         // TCPIP_DHCPV6_CLIENT_STATE_WAIT_LINK
 };
 
-static void     _DHCPV6DbgStatePrint_Client(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
+static void     _DHCPV6DbgStatePrint_Client(TCPIP_DHCPV6_CLIENT_DCPT* pClient, bool ignoreCurrent)
 {
-    char dhcpBuff[80];
-    uint32_t currTime = _DHCPV6SecondCountGet();
-    sprintf(dhcpBuff, "DHCPV6 Client - state: %s, time: %d\r\n", _DHCPV6_CLIENT_STATE_NAME[pClient->state], currTime);
-    SYS_CONSOLE_PRINT("%s", dhcpBuff);
-    
-#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATS) != 0)
-    int nFree = TCPIP_Helper_SingleListCount(&pClient->buffFreeList);
-    int nRx = TCPIP_Helper_SingleListCount(&pClient->rxMsgList);
-    int nTx = TCPIP_Helper_SingleListCount(&pClient->txMsgList);
-    int nAdv = TCPIP_Helper_SingleListCount(&pClient->advertiseList);
-    int nReply = TCPIP_Helper_SingleListCount(&pClient->replyList);
-    sprintf(dhcpBuff, "DHCPV6 buffers: %d, free: %d, rx: %d, tx: %d, adv: %d, reply: %d\r\n", pClient->nMsgBuffers, nFree, nRx, nTx, nAdv, nReply);
-    SYS_CONSOLE_PRINT("%s", dhcpBuff);
+    if(ignoreCurrent || pClient->state != pClient->prevState)
+    {
+        char dhcpBuff[80];
+        uint32_t currTime = _DHCPV6SecondCountGet();
+        sprintf(dhcpBuff, "DHCPV6 Client - state: %s, time: %d\r\n", _DHCPV6_CLIENT_STATE_NAME[pClient->state], currTime);
+        SYS_CONSOLE_PRINT("%s", dhcpBuff);
 
-    sprintf(dhcpBuff, "DHCPV6 stats - tx Fail: %d, tx Space: %d, tx Flush: %d, rx Fail: %d, rx Small: %d\r\n", pClient->txBuffFailCnt, pClient->txSktSpaceCnt, pClient->txSktFlushFailCnt, pClient->rxBuffFailCnt, pClient->rxBuffSmallCnt);    
-    SYS_CONSOLE_PRINT("%s", dhcpBuff);
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATS) != 0)
+        int nFree = TCPIP_Helper_SingleListCount(&pClient->buffFreeList);
+        int nRx = TCPIP_Helper_SingleListCount(&pClient->rxMsgList);
+        int nTx = TCPIP_Helper_SingleListCount(&pClient->txMsgList);
+        int nAdv = TCPIP_Helper_SingleListCount(&pClient->advertiseList);
+        int nReply = TCPIP_Helper_SingleListCount(&pClient->replyList);
+        sprintf(dhcpBuff, "DHCPV6 buffers: %d, free: %d, rx: %d, tx: %d, adv: %d, reply: %d\r\n", pClient->nMsgBuffers, nFree, nRx, nTx, nAdv, nReply);
+        SYS_CONSOLE_PRINT("%s", dhcpBuff);
+
+        sprintf(dhcpBuff, "DHCPV6 stats - tx Fail: %d, tx Space: %d, tx Flush: %d, rx Fail: %d, rx Small: %d\r\n", pClient->txBuffFailCnt, pClient->txSktSpaceCnt, pClient->txSktFlushFailCnt, pClient->rxBuffFailCnt, pClient->rxBuffSmallCnt);    
+        SYS_CONSOLE_PRINT("%s", dhcpBuff);
 #endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATS) != 0)
+
+        pClient->prevState = pClient->state;
+    }
     
 }
 
 #else
-#define         _DHCPV6DbgStatePrint_Client(pClient)
-#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE) != 0) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#define         _DHCPV6DbgStatePrint_Client(pClient, ignoreCurrent)
+#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE) != 0) || (((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE) != 0) && (_TCPIP_DHCPV6_USER_NOTIFICATION != 0))
 
 
 // IA state debugging
-#if ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE)) != 0) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE)) != 0) && (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 static const char* _DHCPV6_IA_STATE_NAME[TCPIP_DHCPV6_IA_STATE_NUMBER] = 
 {
     "solicit",      // TCPIP_DHCPV6_IA_STATE_SOLICIT,         
@@ -1098,7 +1099,7 @@ static void     _DHCPV6DbgStatePrint_Ia(TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNot
 
 #else
 #define         _DHCPV6DbgStatePrint_Ia(pIa, iaSubNotify)
-#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE)) != 0) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE)) != 0) && (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 // additional status prints
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE) != 0)
@@ -1137,7 +1138,7 @@ typedef struct
 {
     TCPIP_DHCPV6_MSG_BUFFER* pBuffer;
     int                      stateIx;   // current slot
-    _DHCPV6_BUFF_TRACE_STATE      traceState[_DHCPV6_BUFF_STATE_TRACE_SIZE];
+    _DHCPV6_BUFF_TRACE_STATE traceState[_DHCPV6_BUFF_STATE_TRACE_SIZE];
 }_DHCPV6_BUFF_TRACE_DCPT;
 
 _DHCPV6_BUFF_TRACE_DCPT _dhcpv6BuffTrace[_DHCPV6_BUFFERS_TO_TRACE];
@@ -1208,9 +1209,9 @@ static void _DHCPV6Cleanup(int nClients)
         dhcpv6ClientDcpt = 0;
     }
 
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
     TCPIP_Notification_Deinitialize(&dhcpv6RegisteredUsers, dhcpv6MemH);
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
     if(dhcpv6SignalHandle)
     {
@@ -1345,17 +1346,19 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
             pClient->iaArray = (TCPIP_DHCPV6_IA_DCPT*)TCPIP_HEAP_Calloc(dhcpv6MemH, pClient->nIaDcpts, sizeof(TCPIP_DHCPV6_IA_DCPT));
             // allocate the message buffers
             pClient->msgBuffers = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_HEAP_Calloc(dhcpv6MemH, pClient->nMsgBuffers, sizeof(TCPIP_DHCPV6_MSG_BUFFER) + pClient->msgBufferSize);
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
             // initialize the registration
             bool iniRes = TCPIP_Notification_Initialize(&dhcpv6RegisteredUsers);
             if(pClient->iaArray == 0 || pClient->msgBuffers == 0 || iniRes == false)
 #else
             if(pClient->iaArray == 0 || pClient->msgBuffers == 0)
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
             {
                 _DHCPV6Cleanup(stackCtrl->nIfs);
                 return false;
             }
+
+            pClient->prevState = -1;
         }
     }
             
@@ -1456,6 +1459,7 @@ static void TCPIP_DHCPV6_Process(bool isTmo)
         pClient = dhcpv6ClientDcpt + netIx; 
 
         (*_DHCPV6Client_StateFncTbl[pClient->state])(pClient);
+        _DHCPV6DbgStatePrint_Client(pClient, false);
     }
 }
 
@@ -2101,7 +2105,7 @@ static void _DHCPV6Enable(TCPIP_NET_IF* pNetIf, int opType)
         if(TCPIP_IPV6_InterfaceIsReady(pNetIf))
         {
             TCPIP_DHCPV6_CLIENT_DCPT* pClient = dhcpv6ClientDcpt + TCPIP_STACK_NetIxGet(pNetIf);
-            if(pClient->flags.dhcpEnabled == 0)
+            if((pClient->configFlags & TCPIP_DHCPV6_FLAG_START_ENABLE) != 0 && pClient->flags.dhcpEnabled == 0)
             {
                 pClient->flags.connLost = 1;
                 pClient->flags.dhcpEnabled = 1;
@@ -2111,19 +2115,17 @@ static void _DHCPV6Enable(TCPIP_NET_IF* pNetIf, int opType)
     }
 }
 
-#if (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 TCPIP_DHCPV6_HANDLE TCPIP_DHCPV6_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_EVENT_HANDLER handler, const void* hParam)
 {
     if(handler && dhcpv6MemH)
     {
-        TCPIP_DHCPV6_LIST_NODE* newNode = (TCPIP_DHCPV6_LIST_NODE*)TCPIP_Notification_Add(&dhcpv6RegisteredUsers, dhcpv6MemH, sizeof(*newNode));
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        TCPIP_DHCPV6_LIST_NODE dhcpNode;
+        dhcpNode.handler = handler;
+        dhcpNode.hParam = hParam;
+        dhcpNode.hNet = hNet;
+
+        return (TCPIP_DHCPV6_LIST_NODE*)TCPIP_Notification_Add(&dhcpv6RegisteredUsers, dhcpv6MemH, &dhcpNode, sizeof(dhcpNode));
     }
 
     return 0;
@@ -2142,13 +2144,12 @@ bool TCPIP_DHCPV6_HandlerDeRegister(TCPIP_DHCPV6_HANDLE hDhcp)
 
     return false;
 }
+#endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNotify)
 {
-    TCPIP_DHCPV6_LIST_NODE* dNode;
-    TCPIP_NET_IF* pNetIf;
-    TCPIP_DHCPV6_CLIENT_STATE clientState;
-    const TCPIP_DHCPV6_IA_EVENT* pDhcpIaEv = 0;
+    (void)pClient;
+    (void)pIa;
 
     // call with both pClient and pIa == 0 is invalid
     _DHCPV6AssertCond(pClient != 0 || pIa != 0 , __func__, __LINE__);
@@ -2158,8 +2159,12 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         pClient = pIa->pParent;
     }
 
-    clientState = pClient->state;
-    pNetIf = pClient->pDhcpIf;
+#if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+    const TCPIP_DHCPV6_IA_EVENT* pDhcpIaEv = 0;
+    TCPIP_DHCPV6_LIST_NODE* dNode;
+
+    TCPIP_DHCPV6_CLIENT_STATE clientState = pClient->state;
+    TCPIP_NET_IF* pNetIf = pClient->pDhcpIf;
 
     if(pIa != 0)
     {
@@ -2173,7 +2178,6 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         pDhcpIaEv = &iaEvent;
     }
 
-
     TCPIP_Notification_Lock(&dhcpv6RegisteredUsers);
     for(dNode = (TCPIP_DHCPV6_LIST_NODE*)dhcpv6RegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
     {
@@ -2183,12 +2187,11 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
         }
     }
     TCPIP_Notification_Unlock(&dhcpv6RegisteredUsers);
+#endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
-    _DHCPV6DbgStatePrint_Client(pClient);
+    _DHCPV6DbgStatePrint_Client(pClient, true);
     _DHCPV6DbgStatePrint_Ia(pIa, iaSubNotify);
 }
-
-#endif  // (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_NET_IF* pNetIf)
 {
@@ -3750,7 +3753,7 @@ static bool _DHCPV6OptionGet_Duid(TCPIP_DHCPV6_DUID_DCPT* pDstDuidDcpt, TCPIP_DH
     int duidLen;
     TCPIP_DHCPV6_DUID_TYPE duidType;
 
-    duidType = (TCPIP_DHCPV6_DUID_TYPE)TCPIP_Helper_ntohs(pSrcOptId->duid[0]);
+    duidType = (TCPIP_DHCPV6_DUID_TYPE)(int)TCPIP_Helper_ntohs(pSrcOptId->duid[0]);
     duidLen = TCPIP_Helper_ntohs(pSrcOptId->optLen);
     // the TCPIP_DHCPV6_DUID_EN has variable size
     // make sure we have enough space for it
@@ -4303,7 +4306,7 @@ static TCPIP_DHCPV6_SERVER_STATUS_CODE _DHCPV6MsgGet_StatusCode(uint8_t* statusB
     if(pOptStat)
     {
         uint16_t optLen = TCPIP_Helper_ntohs(pOptStat->optLen);
-        TCPIP_DHCPV6_SERVER_STATUS_CODE statusCode = (TCPIP_DHCPV6_SERVER_STATUS_CODE)TCPIP_Helper_ntohs(pOptStat->statusCode);
+        TCPIP_DHCPV6_SERVER_STATUS_CODE statusCode = (TCPIP_DHCPV6_SERVER_STATUS_CODE)(int)TCPIP_Helper_ntohs(pOptStat->statusCode);
         if(optLen >= sizeof(pOptStat->statusCode) && 0 <= statusCode && statusCode <= TCPIP_DHCPV6_SERVER_STAT_MAX_CODE)
         {   // valid
             uint16_t msgLen = optLen - sizeof(pOptStat->statusCode);
@@ -4476,7 +4479,7 @@ static TCPIP_DHCPV6_OPTION_GENERIC* _DHCPV6OptionFind_OptCode(TCPIP_DHCPV6_MSG_B
         pOptG = (TCPIP_DHCPV6_OPTION_GENERIC*)pOptBuff;
         while(optBuffLen > 0)
         {
-            optCode = (TCPIP_DHCPV6_OPTION_CODE)TCPIP_Helper_ntohs(pOptG->optCode);
+            optCode = (TCPIP_DHCPV6_OPTION_CODE)(int)TCPIP_Helper_ntohs(pOptG->optCode);
             optDataLen = TCPIP_Helper_ntohs(pOptG->optLen);
             optGenLen =  sizeof(*pOptG) + optDataLen;
 
@@ -4551,7 +4554,7 @@ static TCPIP_DHCPV6_OPTION_GENERIC* _DHCPV6OptionFind_OptCode_Iter(TCPIP_DHCPV6_
     pOptG = (TCPIP_DHCPV6_OPTION_GENERIC*)pOptBuff;
     while(optBuffLen > 0)
     {
-        optCode = (TCPIP_DHCPV6_OPTION_CODE)TCPIP_Helper_ntohs(pOptG->optCode);
+        optCode = (TCPIP_DHCPV6_OPTION_CODE)(int)TCPIP_Helper_ntohs(pOptG->optCode);
         optDataLen = TCPIP_Helper_ntohs(pOptG->optLen);
         optGenLen =  sizeof(*pOptG) + optDataLen;
 

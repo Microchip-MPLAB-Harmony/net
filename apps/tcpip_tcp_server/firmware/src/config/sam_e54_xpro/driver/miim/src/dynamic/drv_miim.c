@@ -65,7 +65,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //
 static DRV_MIIM_OBJ              gDrvMIIMObj[DRV_MIIM_INSTANCES_NUMBER];
 
-
 // local prototypes
 // debug
 #if ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_BASIC) != 0)
@@ -552,7 +551,6 @@ static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(DRV_HANDLE handle, unsigned i
     if(opRes == DRV_MIIM_RES_OK)
     {   // success
         opHandle = schedData.opHandle;
-        opRes = DRV_MIIM_RES_PENDING;
     }
     else
     {
@@ -808,7 +806,7 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
 
         if(pOpDcpt == 0)
         {
-            res = DRV_MIIM_RES_OP_UNAVAILABLE_ERR;
+            res = DRV_MIIM_RES_BUSY;
             break;
         }
 
@@ -819,7 +817,7 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         {   // should not happen - stamps should be in sync with operations!; release
             _MIIMAssertCond(pCliStamp != 0, __func__, __LINE__);
             Helper_SingleListTailAdd(&pMiimObj->freeOpList, (SGL_LIST_NODE*)pOpDcpt);
-            res = DRV_MIIM_RES_OP_UNAVAILABLE_ERR;
+            res = DRV_MIIM_RES_BUSY;
             break;
         }
 #endif  // (DRV_MIIM_CLIENT_OP_PROTECTION)
@@ -859,7 +857,7 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         pSchedData->pObj = pMiimObj;
         pSchedData->pOpDcpt = pOpDcpt;
         pSchedData->opHandle = opHandle;
-
+        
         break;
     }
 
@@ -1150,7 +1148,6 @@ static void _DRV_MIIM_SMIClockSet(uintptr_t ethphyId, uint32_t hostClock, uint32
 {
     _DRV_MIIM_SMI_CLOCK_SET(ethphyId, hostClock, maxMIIMClock );
 } 
-
 
 
 // search the busy and complete lists and remove

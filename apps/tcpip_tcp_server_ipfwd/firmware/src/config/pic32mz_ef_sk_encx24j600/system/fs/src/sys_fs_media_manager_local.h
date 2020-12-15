@@ -1,0 +1,203 @@
+//DOM-IGNORE-BEGIN
+/*******************************************************************************
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ *******************************************************************************/
+//DOM-IGNORE-END
+
+#ifndef _SYS_FS_MEDIA_MANAGER_LOCAL_H_
+#define _SYS_FS_MEDIA_MANAGER_LOCAL_H_
+
+#include "configuration.h"
+#include "system/int/sys_int.h"
+#include "system/system.h"
+#include "system/fs/sys_fs_media_manager.h"
+
+/* Read entry in geometry table */
+#define SYS_FS_MEDIA_GEOMETRY_READ          (0)
+
+/* Write entry in geometry table */
+#define SYS_FS_MEDIA_GEOMETRY_WRITE         (1)
+
+/* Erase entry in geometry table */
+#define SYS_FS_MEDIA_GEOMETRY_ERASE         (2)
+
+/* Shift Value for multiply or divide by a sector of size 512 bytes*/
+#define SYS_FS_MEDIA_SHIFT_SECTOR_VALUE     (9)
+
+#define _SYS_FS_MEDIA_MANAGER_UPDATE_MEDIA_INDEX(token) \
+{ \
+    (token)++; \
+    (token) = ((token) == SYS_FS_MEDIA_NUMBER) ? 0: (token); \
+}
+
+// *****************************************************************************
+/* Media object
+
+  Summary:
+    Defines the media object.
+
+  Description:
+    This structure defines the object that defines a media. Whenever a media is
+ * connected, the media calls the function "SYS_FS_MEDIA_MANAGER_Register" to
+ * register itself to the media manager. This object holds the property of media.
+
+  Remarks:
+    None.
+*/
+typedef struct _SYS_FS_MEDIA
+{
+    /* Indicates if the media object is in use. */
+    bool inUse;
+
+    /* Number of partitions available in the media */
+    uint8_t numPartitions;
+
+    /* Number identifying the media. This is a alphabet name for each media. It
+       starts with a, b etc. */
+    uint8_t mediaId;
+
+    /* This is a count for media. For every new media (any type) registered,
+     * this counter is assigned a new value */
+    uint8_t mediaIndex;
+
+    /* Number of volumes that can be assigned in the present media. This
+     * reflects the number of valid partitions available on the media */
+    uint8_t numVolumes;
+
+    /* Flag tracking the media de-register state */
+    uint8_t isMediaDisconnected;
+
+    /* Media driver index used to open the media driver. */
+    SYS_MODULE_INDEX driverIndex;
+
+    /* Pointer to Media driver functions. */
+    const SYS_FS_MEDIA_FUNCTIONS *driverFunctions;
+
+    /* State of the media (Registered,  opened, attached, analyzed) */
+    SYS_FS_MEDIA_STATE mediaState;
+
+    /* Media driver object. This object is used to run the media task routine
+     * */
+    SYS_MODULE_OBJ driverObj;
+
+    /* Handle received after the media driver is opened */
+    DRV_HANDLE driverHandle;
+
+    /* Type of the media */
+    SYS_FS_MEDIA_TYPE mediaType;
+
+    /* Handle received when trying to read or write a sector from the media */
+    SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE commandHandle;
+
+    /* Media attach/detach status */
+    SYS_FS_MEDIA_STATUS attachStatus;
+
+    /* Command status of Media */
+    SYS_FS_MEDIA_COMMAND_STATUS commandStatus;
+
+    /* Pointer to the media geometry */
+    SYS_FS_MEDIA_GEOMETRY *mediaGeometry;
+
+} SYS_FS_MEDIA;
+
+// *****************************************************************************
+/* Volume object
+
+  Summary:
+    Defines the volume object.
+
+  Description:
+    This structure defines the object that defines a volume. A volume is assigned
+    for a media, if there is only 1 partition. If there are multipartitions, then,
+    each volume is assigned to each partition.
+
+  Remarks:
+    None.
+*/
+typedef struct _SYS_FS_VOLUME
+{
+    /* Indicates if the volume object is being used. */
+    bool inUse;
+
+    /* Type of file system associated with this volume */
+    uint8_t fsType;
+
+    /* Name of volume (nvma1 or mmcblka1 etc..) */
+    char volumeName[13];
+
+    /* Padding byte */
+    uint8_t pad1;
+
+    /* Starting sector number for the volume */
+    uint32_t startSector;
+
+    /* Number of sectors in the volume */
+    uint32_t numSectors;
+
+    /* Pointer to the media object to which this volume belongs. */
+    SYS_FS_MEDIA *obj;
+
+} SYS_FS_VOLUME;
+
+// *****************************************************************************
+/* Media manager task object
+
+  Summary:
+    Defines the object required for the operation and control of media manger task.
+
+  Description:
+    This structure defines the object required for the opeation of the media
+    manager task.
+
+  Remarks:
+    None.
+*/
+typedef struct SYS_FS_MEDIA_MANAGER_OBJ
+{
+    /* Pointer to the media object array */
+    SYS_FS_MEDIA *mediaObj;
+
+    /* Pointer to the volume object array */
+    SYS_FS_VOLUME *volumeObj;
+
+    /* Pointer to the FS mount table */
+    const SYS_FS_MEDIA_MOUNT_DATA *fsMountTable;
+
+    /* Media Manager event handler */
+    SYS_FS_EVENT_HANDLER eventHandler;
+
+    /* Pointer to the buffer used for media sector reads */
+    uint8_t *mediaBuffer;
+
+    /* Media index */
+    uint8_t mediaIndex;
+
+    /* Flag to track the usage of the mediaBuffer */
+    uint8_t bufferInUse;
+
+    /* Flag used to mute/unmute event notifications */
+    bool muteEventNotification;
+
+} SYS_FS_MEDIA_MANAGER_OBJ;
+
+#endif
+

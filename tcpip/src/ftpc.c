@@ -1843,7 +1843,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendType(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     uint16_t nBytes = 0;    
-    char * type = 0;
+    const char * type = 0;
     
     if(pDcpt->ftpcDataConnection.ftpcDataType == TCPIP_FTPC_DATA_REP_ASCII)
         type = "A";
@@ -1962,7 +1962,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendStru(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     uint16_t nBytes = 0;    
-    char * file_struct = 0;
+    const char * file_struct = 0;
     
     if(pDcpt->ftpcDataConnection.ftpcDataStructure == TCPIP_FTPC_STRUCT_FILE)
         file_struct = "F";
@@ -2032,7 +2032,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendMode(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     uint16_t nBytes = 0;    
-    char * mode = 0;
+    const char * mode = 0;
     
     if(pDcpt->ftpcDataConnection.ftpcTransferMode == TCPIP_FTPC_TRANS_STREAM_MODE)
         mode = "S";
@@ -2787,7 +2787,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendLst(TCPIP_FTPC_DCPT_TYPE* pDcpt)
         //time out
         ftpcSetDcptTmo(pDcpt, ftpcGlobalConfig.ftpcTmo);
     }     
-    return pDcpt->ftpcState;    
+    return res;  
 }
 
 

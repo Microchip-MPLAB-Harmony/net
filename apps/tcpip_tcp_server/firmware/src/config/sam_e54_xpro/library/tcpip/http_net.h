@@ -469,7 +469,7 @@ uint8_t*  TCPIP_HTTP_NET_URLDecode(uint8_t* cData);
 
   Example:
   <code>
-    TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* 
+    template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* 
                             varDcpt, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
     {
         const uint8_t *ptr;
@@ -539,7 +539,7 @@ int TCPIP_HTTP_NET_ConnectionDynamicDescriptors(void);
 
   Description:
     This function reads a name from a URL encoded string in the network transport 
-    buffer. This function is meant to be called from an TCPIP_HTTP_NET_ConnectionPostExecute 
+    buffer. This function is meant to be called from an template_ConnectionPostExecute 
     callback to facilitate easier parsing of incoming data.
     This function also prevents buffer overflows by forcing the programmer
     to indicate how many bytes are expected.
@@ -590,7 +590,7 @@ TCPIP_HTTP_NET_READ_STATUS    TCPIP_HTTP_NET_ConnectionPostNameRead (TCPIP_HTTP_
   Description:
     This function reads a value from a URL encoded string in the network transport 
     buffer.
-    This function is meant to be called from an TCPIP_HTTP_NET_ConnectionPostExecute 
+    This function is meant to be called from an template_ConnectionPostExecute 
     callback to facilitate easier parsing of incoming data.  This function also 
     prevents buffer overflows by forcing the programmer to indicate how many bytes 
     are expected.  At least two extra bytes are needed in cData above the maximum
@@ -800,7 +800,7 @@ void  TCPIP_HTTP_NET_ConnectionPostSmSet(TCPIP_HTTP_NET_CONN_HANDLE
 
   Example:
   <code>
-    TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+    template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
        const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
        const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
     {
@@ -1188,7 +1188,7 @@ void  TCPIP_HTTP_NET_ConnectionByteCountDec(TCPIP_HTTP_NET_CONN_HANDLE connHandl
 
   Description:
     This function returns the authorization status for the current HTTP connection.
-    This is one of the values returned by the TCPIP_HTTP_NET_ConnectionFileAuthenticate 
+    This is one of the values returned by the template_ConnectionFileAuthenticate 
     function.
 
   Precondition:
@@ -1225,7 +1225,7 @@ uint8_t   TCPIP_HTTP_NET_ConnectionIsAuthorizedGet(TCPIP_HTTP_NET_CONN_HANDLE co
   Description:
     This function sets the authorization status for the current HTTP connection.
     This has to be one of the values in the set returned by the 
-    TCPIP_HTTP_NET_ConnectionFileAuthenticate function.
+    template_ConnectionFileAuthenticate function.
 
   Precondition:
     None.
@@ -1440,7 +1440,7 @@ int    TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount);
   Description:
     Reads a name and value pair from a URL encoded string in the network transport 
     buffer.
-    This function is meant to be called from an TCPIP_HTTP_NET_ConnectionPostExecute 
+    This function is meant to be called from an template_ConnectionPostExecute 
     callback to facilitate easier parsing of incoming data.  This function also prevents
     buffer overflows by forcing the programmer to indicate how many bytes are
     expected.  At least 2 extra bytes are needed in cData over the maximum
@@ -1600,7 +1600,7 @@ typedef enum
 
   Description:
     This enumeration defines the results associated with the HTTP dynamic variables
-    callbacks (TCPIP_HTTP_NET_DynPrint).
+    callbacks (template_DynPrint).
    
   Remarks:
     Currently the default action for a user defined dynamic variable is "do nothing".
@@ -1641,7 +1641,7 @@ typedef enum
 
   Description:
     This data type defines the structure of a HTTP dynamic variable descriptor.
-    When the user registers a TCPIP_HTTP_NET_DynPrint function
+    When the user registers a template_DynPrint function
     for dynamic variable processing, this callback will receive
     the dynamic variable descriptor as a parameter.
 
@@ -1676,7 +1676,7 @@ typedef struct
 
   Description:
     This data type defines the structure of a SSI command attribute descriptor.
-    When the user registers a TCPIP_HTTP_NET_SSINotification function
+    When the user registers a template_SSINotification function
     for SSI processing, this callback will receive info about the SSI attribute
     descriptors.
 
@@ -1708,7 +1708,7 @@ typedef struct
 
   Description:
     This data type defines the structure of a SSI notification descriptor.
-    When the user registers a TCPIP_HTTP_NET_SSINotification function
+    When the user registers a template_SSINotification function
     for SSI processing, this callback will receive a SSI descriptor as a parameter.
 
   Remarks:
@@ -1746,29 +1746,29 @@ typedef struct
 */
 typedef struct _tag_TCPIP_HTTP_NET_USER_CALLBACK
 {
-    /*  TCPIP_HTTP_NET_ConnectionGetExecute GET process function */ 
+    /*  template_ConnectionGetExecute GET process function */ 
     TCPIP_HTTP_NET_IO_RESULT (*getExecute)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                          const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /*  TCPIP_HTTP_NET_ConnectionPostExecute POST process function */ 
+    /*  template_ConnectionPostExecute POST process function */ 
     TCPIP_HTTP_NET_IO_RESULT (*postExecute)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                           const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /*  TCPIP_HTTP_NET_ConnectionFileAuthenticate File Authenticate function */ 
+    /*  template_ConnectionFileAuthenticate File Authenticate function */ 
     uint8_t (*fileAuthenticate)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cFile, 
               const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /*  TCPIP_HTTP_NET_ConnectionUserAuthenticate User Authenticate function */ 
+    /*  template_ConnectionUserAuthenticate User Authenticate function */ 
     uint8_t (*userAuthenticate)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cUser, 
              const char* cPass, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /*  TCPIP_HTTP_NET_DynPrint Dynamic variable process function */ 
+    /*  template_DynPrint Dynamic variable process function */ 
     TCPIP_HTTP_DYN_PRINT_RES (*dynamicPrint)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                               const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
                               const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /*  TCPIP_HTTP_NET_DynAcknowledge Dynamic variable acknowledge function */ 
+    /*  template_DynAcknowledge Dynamic variable acknowledge function */ 
     void (*dynamicAck)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void* buffer, 
           const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /* TCPIP_HTTP_NET_EventReport run-time HTTP processing report */
+    /* template_EventReport run-time HTTP processing report */
     void (*eventReport)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, 
           const void* evInfo, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
-    /* TCPIP_HTTP_NET_SSINotification run-time HTTP SSI processing */
+    /* template_SSINotification run-time HTTP SSI processing */
     bool (*ssiNotify)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 }TCPIP_HTTP_NET_USER_CALLBACK;
@@ -1860,7 +1860,7 @@ bool             TCPIP_HTTP_NET_UserHandlerDeregister(TCPIP_HTTP_NET_USER_HANDLE
 //*****************************************************************************
 /*
   Function:
-    TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute 
+    TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute 
                           (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                           const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
 
@@ -1921,14 +1921,14 @@ bool             TCPIP_HTTP_NET_UserHandlerDeregister(TCPIP_HTTP_NET_USER_HANDLE
     Use the connection callbackPos (TCPIP_HTTP_NET_ConnectionCallbackPosGet)
     or the connection data buffer for storage associated with individual requests.
  */
-TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute 
+TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute 
                       (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                       const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute 
+    TCPIP_HTTP_NET_IO_RESULT template_ConnectionPostExecute 
                       (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                       const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
 
@@ -1960,7 +1960,7 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute
     (see TCPIP_HTTP_NET_ConnectionDataBufferGet) may be
     overwritten here once the application is done with the values.
     Any data placed there will be available to future callbacks for
-    this connection,  including TCPIP_HTTP_NET_ConnectionPostExecute and any
+    this connection,  including template_ConnectionPostExecute and any
     TCPIP_HTTP_NET_Print_varname dynamic substitutions.
 
     Whenever a POST form is processed it is recommended to issue a
@@ -2006,14 +2006,14 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute
     Use the connection callbackPos (TCPIP_HTTP_NET_ConnectionCallbackPosGet)
     or connection data buffer for storage associated with individual requests.
  */
-TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute 
+TCPIP_HTTP_NET_IO_RESULT template_ConnectionPostExecute 
                             (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                             const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate 
+    uint8_t template_ConnectionFileAuthenticate 
                        (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                         const char* cFile, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
 
@@ -2037,8 +2037,8 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute
     The return value of this function is saved for the current connection
     and can be read using TCPIP_HTTP_NET_ConnectionIsAuthorizedGet.
     It will be available to future callbacks, including 
-    TCPIP_HTTP_NET_ConnectionUserAuthenticate and any of the 
-    TCPIP_HTTP_NET_ConnectionGetExecute, TCPIP_HTTP_NET_ConnectionPostExecute, 
+    template_ConnectionUserAuthenticate and any of the 
+    template_ConnectionGetExecute, template_ConnectionPostExecute, 
     or TCPIP_HTTP_NET_Print_varname callbacks.
 
   Precondition:
@@ -2056,13 +2056,13 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute
   Remarks:
     This function may NOT write to the network transport buffer.
  */
-uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                      const char* cFile, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE 
+    uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE 
                           connHandle, const char* cUser, const char* cPass, 
                           const TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
 
@@ -2085,7 +2085,7 @@ uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
     The value returned by this function is stored in the corresponding 
     connection data and will be available with 
     TCPIP_HTTP_NET_ConnectionIsAuthorizedGet in any of the 
-    TCPIP_HTTP_NET_ConnectionGetExecute, TCPIP_HTTP_NET_ConnectionPostExecute, or 
+    template_ConnectionGetExecute, template_ConnectionPostExecute, or 
 	TCPIP_HTTP_NET_Print_varname callbacks.
 
   Precondition:
@@ -2107,14 +2107,14 @@ uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
 
     This function may NOT write to the network transport buffer.
  */
-uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                           const char* cUser, const char* cPass, 
                                           const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+    TCPIP_HTTP_DYN_PRINT_RES template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                            const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
                                            const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
@@ -2208,31 +2208,31 @@ uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
     is an alternative mechanism to manipulation the connection status with
     TCPIP_HTTP_NET_ConnectionCallbackPosSet/TCPIP_HTTP_NET_ConnectionCallbackPosGet 
     functions (which mechanism is still valid).
-    - If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN, 
+    - If the template_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN, 
       the HTTP server will start sending the dynamic variable buffer
       (invoked by TCPIP_HTTP_NET_DynamicWrite/TCPIP_HTTP_NET_DynamicWriteString).
-      Once sending is done, the HTTP server will again call TCPIP_HTTP_NET_DynPrint 
+      Once sending is done, the HTTP server will again call template_DynPrint 
       regardless of the value set with the callback position.
-    - If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_AGAIN, 
+    - If the template_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_AGAIN, 
       there will be no processing of dynamic variable data (potentially written to 
-      the connection) but the TCPIP_HTTP_NET_DynPrint will be invoked again.
+      the connection) but the template_DynPrint will be invoked again.
       Returning TCPIP_HTTP_DYN_PRINT_RES_AGAIN is needed when 
       TCPIP_HTTP_NET_DynamicWrite failed or some condition is not satisfied and the 
-      TCPIP_HTTP_NET_DynPrint needs to be called again.
+      template_DynPrint needs to be called again.
 
-    The callback position mechanism will be evaluated after the TCPIP_HTTP_NET_DynPrint
+    The callback position mechanism will be evaluated after the template_DynPrint
     returns TCPIP_HTTP_DYN_PRINT_RES_DONE.
 
 
  */
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+TCPIP_HTTP_DYN_PRINT_RES template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                       const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
                                       const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+    void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                   const void* buffer, 
                                   const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
@@ -2266,14 +2266,14 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE conn
     It should be kept as short as possible.
 
  */
-void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                           const void* buffer, 
                           const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+    void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                            TCPIP_HTTP_NET_EVENT_TYPE evType, const void* evInfo, 
                            const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
@@ -2353,14 +2353,14 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
     This function may NOT write to the network transport buffer.
 
  */
-void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
+void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                  TCPIP_HTTP_NET_EVENT_TYPE evType, const void* evInfo, 
                                  const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    bool TCPIP_HTTP_NET_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+    bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
   Summary:
     Reports an SSI processing event that occurs in the processing of a HTTP web page
@@ -2409,7 +2409,7 @@ void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
 
  */
    
- bool TCPIP_HTTP_NET_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+ bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2454,10 +2454,10 @@ void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
     connection.
 
     If the function returns true but an error occurs during the file processing
-    an event will be reported using the TCPIP_HTTP_NET_EventReport callback.
+    an event will be reported using the template_EventReport callback.
 
     If the function returns false an event will be reported using the
-    TCPIP_HTTP_NET_EventReport callback with additional info.
+    template_EventReport callback with additional info.
 
     Please note that the processing of HTTP dynamic keywords in the HTML code
     such as <c>~inc:filename.ext~</c> is processed internally by the HTTP module!
@@ -2494,12 +2494,12 @@ bool  TCPIP_HTTP_NET_DynamicFileInclude(TCPIP_HTTP_NET_CONN_HANDLE connHandle, c
 
   Parameters:
     varDcpt    - dynamic variable descriptor as passed in the 
-                 TCPIP_HTTP_NET_DynPrint function
+                 template_DynPrint function
     buffer     - The pointer to the persistent buffer to be written to the HTTP 
                  connection as part of this dynamic variable callback
     size       - The number of bytes to be written
     needAck    - if true, once the buffer is processed internally,  
-                 TCPIP_HTTP_NET_DynAcknowledge will be called  
+                 template_DynAcknowledge will be called  
 
   Returns:
     True if the data buffer has been queued for output.
@@ -2519,9 +2519,9 @@ bool  TCPIP_HTTP_NET_DynamicFileInclude(TCPIP_HTTP_NET_CONN_HANDLE connHandle, c
     in queuing the requests and the call may fail.
     If the call failed, because the buffer could not be queued,
     it may be retried using by returning
-    TCPIP_HTTP_DYN_PRINT_RES_AGAIN in the TCPIP_HTTP_NET_DynPrint callback.
+    TCPIP_HTTP_DYN_PRINT_RES_AGAIN in the template_DynPrint callback.
 
-    If sequential write calls are done from within the same TCPIP_HTTP_NET_DynPrint 
+    If sequential write calls are done from within the same template_DynPrint 
     call the HTTP module will try to append the new dynamic data to the existent one.
 
     The number of internal HTTP dynamic variables buffer descriptors is controlled by
@@ -2552,10 +2552,10 @@ bool TCPIP_HTTP_NET_DynamicWrite(const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt,
 
   Parameters:
     varDcpt    - dynamic variable descriptor as passed in the 
-                 TCPIP_HTTP_NET_DynPrint function
+                 template_DynPrint function
     str        - The string to be written
     needAck    - if true, once the buffer is processed internally,  
-                 TCPIP_HTTP_NET_DynAcknowledge will be called  
+                 template_DynAcknowledge will be called  
 
   Returns:
     True if the data buffer has been queued for output.

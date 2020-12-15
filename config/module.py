@@ -93,6 +93,11 @@ def loadModule():
     tcpipUdpComponent.addDependency("Udp_IP_Dependency", "IP", None, True, True)
     tcpipUdpComponent.setDisplayType("TCP/IP Library")
 
+    ########################## TCP/IP LIBRARY Presentation Layer Configurations #################################    
+    net_PresComponent = Module.CreateComponent("net_Pres", "Presentation Layer", "/Libraries/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/net_pres.py")
+    net_PresComponent.addCapability("libNet_Pres","net_pres",True)    
+    net_PresComponent.addDependency("Net_Pres_Crypto_Dependency", "TLS Provider", None, False, False)
+    
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   
     tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")
     tcpipAnnounceComponent.addCapability("libtcpipAnnounce","ANNOUNCE",True)
@@ -327,7 +332,8 @@ def loadModule():
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
         
     ########################## Harmony Network Presentation Module #################################    
-    netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
+    # OBSOLETE Module - Do not use this module for new demos#
+    netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer(Obsolete)", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    
     netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
     

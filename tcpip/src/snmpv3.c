@@ -326,11 +326,11 @@ uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void)
     uint32_t    timeStamp;
 
     // convert the current system tick to 10 ms units
-    timeStamp = (SYS_TMR_TickCountGet() * 100ull)/SYS_TMR_TickCounterFrequencyGet();
-
+    uint32_t tickCount = SYS_TMR_TickCountGet();
+    uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet();
+    timeStamp = ((uint64_t)tickCount * 100) / tickFreq;
 
     return timeStamp;
-
 }
 
 

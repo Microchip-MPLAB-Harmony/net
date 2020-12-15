@@ -1,0 +1,15 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tcpipDhcp}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: TCPIP_DHCP_HEAP_SIZE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tcpipDhcp, value: '88'}
+- type: ElementPosition
+  attributes: {x: '320', y: '20', id: tcpipDhcp}

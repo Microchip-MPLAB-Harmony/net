@@ -81,10 +81,101 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     interface and should be considered part it.
 */
 
+static __inline__ void __attribute__((always_inline)) SYS_RANDOM_PseudoSeedSet( uint32_t seed )
+{
+    srand(seed);
+}
+
 static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( void )
 {
     return (uint32_t)rand();
 }
+
+
+// *****************************************************************************
+/* Function:
+    uint32_t SYS_RANDOM_CryptoGet( void );
+
+  Summary:
+    Returns a random 32 bit value from the cryptographic quality Random Number 
+	Generator. 
+
+  Description:
+	This function returns a 32-bit random number from the Cryptographic-
+	quality Random Number Generator.
+
+  Precondition:
+    None
+
+  Parameters:
+    None.
+
+  Returns:
+    32-bit random number.
+    
+  Remarks:
+    None
+*/
+
+uint32_t SYS_RANDOM_CryptoGet( void );
+
+
+// *****************************************************************************
+/* Function:
+    void SYS_RANDOM_CryptoBlockGet( uint8_t buffer, size_t bufferSize );
+
+  Summary:
+    Generates a sequence of random bytes using the cryptographic quality Random
+	Number Generator. 
+
+  Description:
+	This function uses the Cryptographic-quality Random Number Generator to fill
+	a block of data with random numbers.
+
+  Precondition:
+    None
+
+  Parameters:
+    buffer - Pointer to the memory location to fill with random data.
+    size - The amount of random data, in bytes, to put in memory.
+
+  Returns:
+    None.
+    
+  Remarks:
+    None
+*/
+
+void SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size );
+
+// *****************************************************************************
+/* Function:
+    uint8_t SYS_RANDOM_CryptoByteGet( void );
+
+  Summary:
+    Returns a random byte from the cryptographic quality Random Number Generator. 
+
+  Description:
+	This function returns a single byte from the Cryptographic-quality Random
+	Number Generator.
+
+  Precondition:
+    None
+
+  Parameters:
+    None.
+
+  Returns:
+    Returns one byte of cryptographic-quality random data.
+    
+  Remarks:
+    None.
+*/
+
+uint8_t SYS_RANDOM_CryptoByteGet( void );
+
+
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

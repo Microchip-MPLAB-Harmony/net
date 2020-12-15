@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -63,25 +63,37 @@ static const void*          ipv4MemH = 0;                 // memory handle
 
 static tcpipSignalHandle    signalHandle = 0;
 
-static PROTECTED_SINGLE_LIST ipv4ArpQueue = { {0} };       // queue of packets waiting for ARP resolution
+static PROTECTED_SINGLE_LIST ipv4ArpQueue = { {0} };    // queue of packets waiting for ARP resolution
+static SINGLE_LIST          ipv4ArpPool = {0};          // pool of ARP entries
+                                                        // access protected by ipv4ArpQueue!
+static IPV4_ARP_ENTRY*      ipv4ArpEntries = 0;         // allocated nodes for ipv4ArpPool 
 
 static TCPIP_ARP_HANDLE     ipv4ArpHandle = 0;          // ARP registration handle
 
 static uint16_t             ipv4InitCount = 0;
 
 static PROTECTED_SINGLE_LIST ipv4PacketFilters = { {0} };
+static volatile uint32_t    ipv4ActFilterCount = 0;    // counter of active filters
+                                                        // access protected by ipv4PacketFilters 
 
 static TCPIP_IPV4_FILTER_TYPE ipv4FilterType = 0;       // IPv4 current filter
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
+#define _TCPIP_IPV4_FRAGMENTATION    1
+#else
+#define _TCPIP_IPV4_FRAGMENTATION    0
+#endif
+
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static SINGLE_LIST          ipv4FragmentQueue = {0};  // IPv4 fragments to be processed
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 typedef enum
 {
-    TCPIP_IPV4_DEST_FAIL    = 0,    // cannot find a destination
-    TCPIP_IPV4_DEST_SELF    = 1,    // route it internally
-    TCPIP_IPV4_DEST_NETWORK = 2,    // route it externally
+    TCPIP_IPV4_DEST_FAIL    = -1,   // cannot find a destination
+    TCPIP_IPV4_DEST_SELF    = 0,    // route it internally
+    TCPIP_IPV4_DEST_NETWORK = 1,    // send on the net segment
+    TCPIP_IPV4_DEST_GW      = 2,    // pass it to the router
 
 }TCPIP_IPV4_DEST_TYPE;
 
@@ -90,6 +102,13 @@ typedef enum
 static TCPIP_IPV4_PACKET_HANDLER ipv4PktHandler = 0;
 static const void* ipv4PktHandlerParam;
 #endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+static IPV4_FORWARD_DESCRIPTOR* ipv4ForwardDcpt = 0;    // the forward descriptor, for all interfaces
+static IPV4_FORWARD_NODE*       ipv4ForwardNodes;
+static DOUBLE_LIST              ipv4ForwardPool;        // pool of Forward Node entries
+static DOUBLE_LIST              ipv4ForwardQueue;       // list of forward nodes waiting to be transmitted
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
 
 /************************************************************************/
 /****************               Prototypes               ****************/
@@ -109,7 +128,7 @@ static void _IPv4AssertCond(bool cond, const char* message, int lineNo)
 #define _IPv4AssertCond(cond, message, lineNo)
 #endif  // (TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_BASIC)
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FRAGMENT) != 0)
 
 typedef enum
@@ -186,23 +205,45 @@ static void _IPv4FragmentDbg(IPV4_FRAGMENT_NODE* pFragNode, TCPIP_MAC_PACKET* pF
 #else
 #define _IPv4FragmentDbg(pFrag, pFragPkt, evType)
 #endif  // (TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FRAGMENT)
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_RX_CHECK) != 0)
+static uint16_t checkRxUdpSrcPort = 67; 
+static uint16_t checkRxUdpDstPort = 68; 
+
+static uint16_t checkRxTcpSrcPort = 9760; 
+static uint16_t checkRxTcpDstPort = 9760; 
+
+static uint32_t checkRxUdpBkptCnt = 0;
+static uint32_t checkRxIcmpBkptCnt = 0;
+static uint32_t checkRxTcpBkptCnt = 0;
 static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
 {
     IPV4_HEADER* pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
-    if(pHeader->Protocol == IP_PROT_UDP)
+    if(pHeader->Protocol == IP_PROT_ICMP)
+    {
+        checkRxIcmpBkptCnt++;
+    }
+    else if(pHeader->Protocol == IP_PROT_UDP)
     {   // UDP packet
-        UDP_HEADER* pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
+        uint8_t headerLen = pHeader->IHL << 2;
+        UDP_HEADER* pUDPHdr = (UDP_HEADER*)(pRxPkt->pNetLayer + headerLen);
         UDP_PORT destPort = TCPIP_Helper_ntohs(pUDPHdr->DestinationPort);
         UDP_PORT srcPort = TCPIP_Helper_ntohs(pUDPHdr->SourcePort);
-        if(srcPort == destPort)
+        if(srcPort == checkRxUdpSrcPort || destPort == checkRxUdpDstPort)
         {
+            checkRxUdpBkptCnt++;
         }
     }
     else if(pHeader->Protocol == IP_PROT_TCP)
     {   
+        TCP_HEADER* pTcpHdr = (TCP_HEADER*)(pRxPkt->pNetLayer + sizeof(TCP_HEADER));
+        TCP_PORT destPort = TCPIP_Helper_ntohs(pTcpHdr->DestPort);
+        TCP_PORT srcPort = TCPIP_Helper_ntohs(pTcpHdr->SourcePort);
+        if(srcPort == checkRxTcpSrcPort || destPort == checkRxTcpDstPort)
+        {
+            checkRxTcpBkptCnt++;
+        }
     }
 
 }
@@ -211,16 +252,176 @@ static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
 #endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_RX_CHECK) != 0)
 
 
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD_MAC_DEST) != 0)
+static uint32_t _ipv4DbgDestTbl[] = {0xf502a8c0, 0x9301a8c0};   // table with destinations to be matched against
+static uint32_t* _ipv4DbgDest = _ipv4DbgDestTbl;
+
+static void _IPv4FwdMacDestDebug(const IPV4_ADDR* pDestAdd, const IPV4_ADDR* arpTarget, TCPIP_NET_IF* pNetIf, TCPIP_IPV4_DEST_TYPE destType, bool solved)
+{
+    int ix;
+    char destBuff[20];
+    char targetBuff[20];
+
+    TCPIP_Helper_IPAddressToString(pDestAdd, destBuff, sizeof(destBuff));
+    TCPIP_Helper_IPAddressToString(arpTarget, targetBuff, sizeof(targetBuff));
+
+    bool doPrint = false;
+
+    if(_ipv4DbgDest != 0)
+    {   // search for a matching destination address
+        for(ix = 0; ix < sizeof(_ipv4DbgDestTbl) / sizeof(*_ipv4DbgDestTbl); ix++)
+        {
+            if(pDestAdd->Val == _ipv4DbgDestTbl[ix])
+            {
+                doPrint = true;
+                break;
+            }
+        }
+    }
+    else
+    {   // print everything 
+        doPrint = true;
+    }
+
+    if(doPrint)
+    {
+        SYS_CONSOLE_PRINT("IPv4 Fwd MAC Dest - fwd if: %d, dest: %s, target: %s, res: %d, found: %d\r\n", pNetIf->netIfIx, destBuff, targetBuff, destType, solved);
+    }
+} 
+#else
+#define _IPv4FwdMacDestDebug(pDestAdd, arpTarget, pNetIf, destType, solved)
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD_MAC_DEST) != 0)
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+
+static TCPIP_IPV4_ARP_QUEUE_STAT _ipv4_arp_stat = {0};
+
+bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear)
+{
+    if(pStat)
+    {
+        _ipv4_arp_stat.nPool = TCPIP_Helper_SingleListCount(&ipv4ArpPool); 
+        _ipv4_arp_stat.nPend = TCPIP_Helper_SingleListCount(&ipv4ArpQueue.list); 
+
+        *pStat = _ipv4_arp_stat;
+    }
+    if(clear)
+    {
+        memset(&_ipv4_arp_stat, 0, sizeof(_ipv4_arp_stat));
+    }
+    return true;
+}
+
+#else
+bool TCPIP_IPv4_ArpStatGet(TCPIP_IPV4_ARP_QUEUE_STAT* pStat, bool clear)
+{
+    return false;
+}
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0) && ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
+
+static uint32_t _ipv4DbgExtTbl[] = {0xf002a8c0};   // table with addresses (src, dest) to be matched against
+static uint32_t* _ipv4DbgExt = _ipv4DbgExtTbl;
+
+static void _IPv4ProcessExtPktDbg(TCPIP_MAC_PACKET* pRxPkt)
+{
+    int ix;
+    char destBuff[20];
+    char srcBuff[20];
+
+    TCPIP_NET_IF* pInIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
+    const IPV4_ADDR* dstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
+    const IPV4_ADDR* srcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt);
+    TCPIP_Helper_IPAddressToString(dstAdd, destBuff, sizeof(destBuff));
+    TCPIP_Helper_IPAddressToString(srcAdd, srcBuff, sizeof(srcBuff));
+
+    bool doPrint = false;
+    if(_ipv4DbgExt != 0)
+    {
+        for(ix = 0; ix < sizeof(_ipv4DbgExtTbl) / sizeof(*_ipv4DbgExtTbl); ix++)
+        {
+            if(_ipv4DbgExtTbl[ix] == dstAdd->Val || _ipv4DbgExtTbl[ix] == srcAdd->Val)
+            {   // match
+                doPrint = true;
+                break;
+            }
+        } 
+    }
+    else
+    {
+        doPrint = true;
+    }
+
+    if(doPrint)
+    {
+        SYS_CONSOLE_PRINT("IPv4 Proc Ext - in if: %d, dest: %s, source: %s\r\n", pInIf->netIfIx, destBuff, srcBuff);
+    }
+}
+#else
+#define _IPv4ProcessExtPktDbg(pRxPkt)
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0) && ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+
+static TCPIP_IPV4_FORWARD_STAT _ipv4_fwd_stat[3] = {{0}};  // FWD stats on if 0, 1, all else
+
+bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, bool clear)
+{
+    if(index < sizeof(_ipv4_fwd_stat) / sizeof*(_ipv4_fwd_stat))
+    {
+        TCPIP_IPV4_FORWARD_STAT* pFwdStat = _ipv4_fwd_stat + index;
+
+        if(pStat)
+        {
+            *pStat = *pFwdStat;
+        }
+
+        if(clear)
+        {
+            memset(pFwdStat, 0, sizeof(*pFwdStat));
+        }
+        return true;
+    }
+
+    return false;
+}
+
+#else
+bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, bool clear)
+{
+    return false;
+}
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FILT_COUNT) != 0)
+static uint32_t ipv4PrevFCount = -1;
+
+static void _IPv4FiltCountDbg(const char* msg)
+{
+    if(ipv4ActFilterCount != ipv4PrevFCount)
+    {
+        ipv4PrevFCount = ipv4ActFilterCount;
+        SYS_CONSOLE_PRINT("IPv4 Filt: %s - count: %d\r\n", msg, ipv4PrevFCount);
+    }
+}
+#else
+#define _IPv4FiltCountDbg(msg)
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FILT_COUNT) != 0)
+
+static bool TCPIP_IPV4_QueueArpPacket(void* pPkt, int arpIfIx, IPV4_ARP_PKT_TYPE type, IPV4_ADDR* arpTarget);
 
 static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* MACAddr, TCPIP_ARP_EVENT_TYPE evType, const void* param);
 
-static bool TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt);
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktHost(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt);
 
 static TCPIP_NET_IF* TCPIP_IPV4_CheckPktTx(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* pPkt);
 
-static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt);
+static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen);
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+static TCPIP_STACK_MODULE TCPIP_IPV4_FrameDestination(IPV4_HEADER* pHeader);
+
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static void TCPIP_IPV4_Timeout(void);
 
 // RX fragmentation
@@ -256,20 +457,47 @@ static __inline__ void __attribute__((always_inline)) TCPIP_IPV4_FragmentTxInser
     pTxPkt->pktFlags |= flags;
     _TCPIPStackInsertRxPacket(pNetIf, pTxPkt, signal);
 }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
-static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, const IPV4_ADDR* pIpAdd, TCPIP_MAC_ADDR** ppMacAdd);
+static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, const IPV4_ADDR* pIpAdd, TCPIP_MAC_ADDR** ppMacAdd, IPV4_ADDR* arpTarget);
 
 static void TCPIP_IPV4_Process(void);
+
+static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt);
 
 static IPV4_OPTION_FIELD* _IPv4CheckPacketOption(TCPIP_MAC_PACKET* pRxPkt, int* pOptLen);
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void TCPIP_IPV4_Cleanup(void);
-static void TCPIP_IPV4_ListPurge(PROTECTED_SINGLE_LIST* pList, TCPIP_NET_IF* pNetIf);
+static void TCPIP_IPV4_ArpListPurge(TCPIP_NET_IF* pNetIf);
 #else
 #define TCPIP_IPV4_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+static TCPIP_IPV4_RES IPV4_BuildForwardTables(const TCPIP_IPV4_MODULE_CONFIG* pIpInit, const void* memH, int nIfs);
+static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_FwdPktMacDestination(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TABLE_ENTRY* pEntry, TCPIP_MAC_ADDR** ppMacAdd, IPV4_ADDR* arpTarget);
+static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TABLE_ENTRY* pEntry, IPV4_PKT_PROC_TYPE procType);
+static bool TCPIP_IPV4_ProcessExtPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV4_PKT_PROC_TYPE procType);
+static const IPV4_ROUTE_TABLE_ENTRY* TCPIP_IPV4_FindFwdRoute(IPV4_FORWARD_DESCRIPTOR* pFDcpt, TCPIP_MAC_PACKET* pRxPkt);
+static TCPIP_UINT32_VAL IPV4_32LeadingOnes(uint32_t value);
+#if (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+static TCPIP_IPV4_RES IPv4_BuildAsciiTable(IPV4_FORWARD_DESCRIPTOR* pFDcpt, const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pAEntry, size_t nEntries);
+#endif  // (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+#if (TCPIP_IPV4_FORWARDING_TABLE_BIN != 0)
+static TCPIP_IPV4_RES IPv4_BuildBinaryTable(IPV4_FORWARD_DESCRIPTOR* pFDcpt, const TCPIP_IPV4_FORWARD_ENTRY_BIN* pBEntry, size_t nEntries);
+#endif  // (TCPIP_IPV4_FORWARDING_TABLE_BIN != 0)
+static void IPv4_SortFwdTable(IPV4_ROUTE_TABLE_ENTRY* pTable, size_t tableEntries);
+static IPV4_FORWARD_NODE* TCPIP_IPV4_Forward_QueuePacket(TCPIP_MAC_PACKET* pFwdPkt, IPV4_PKT_PROC_TYPE procType);
+static bool TCPIP_IPV4_Forward_DequeuePacket(IPV4_FORWARD_NODE* pFwdNode, bool aliveCheck);
+static bool TCPIP_IPV4_ForwardAckFunc(TCPIP_MAC_PACKET* pkt,  const void* param);
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt);
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt);
+#else
+
+#define TCPIP_IPV4_VerifyPkt(pNetIf, pHeader, pRxPkt)   TCPIP_IPV4_VerifyPktHost(pNetIf, pHeader, pRxPkt)  
+
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
 
 /*****************************************************************************
   Function:
@@ -297,7 +525,9 @@ static void TCPIP_IPV4_ListPurge(PROTECTED_SINGLE_LIST* pList, TCPIP_NET_IF* pNe
   ***************************************************************************/
 bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_IPV4_MODULE_CONFIG* pIpInit)
 {
-    bool iniRes;
+    int ix;
+    TCPIP_IPV4_RES iniRes;
+    IPV4_ARP_ENTRY* pEntry;
 
     if(stackInit->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
@@ -307,38 +537,97 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
     if(ipv4InitCount == 0)
     {
         _IPv4AssertCond(true, 0, 0);        // hush compiler warning - unused
+
         while(true)
         {
+            iniRes = TCPIP_IPV4_RES_OK;
             ipv4MemH = stackInit->memH;
             ipv4ArpHandle = 0;
+            signalHandle = 0;
+            memset(&ipv4ArpQueue, 0, sizeof(ipv4ArpQueue));
+            memset(&ipv4ArpPool, 0, sizeof(ipv4ArpPool));
+            ipv4ArpEntries = 0;
+            memset(&ipv4PacketFilters, 0, sizeof(ipv4PacketFilters));
+            ipv4ActFilterCount = 0;
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+            ipv4ForwardDcpt = 0;
+            ipv4ForwardNodes = 0;
+            TCPIP_Helper_DoubleListInitialize(&ipv4ForwardPool); 
+            TCPIP_Helper_DoubleListInitialize(&ipv4ForwardQueue); 
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+            // check initialization data is provided and minimal sanity check
+            if(pIpInit == 0 || pIpInit->arpEntries == 0)
+            {
+                iniRes = TCPIP_IPV4_RES_INIT_VAL_ERR;
+                break;
+            }
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
             TCPIP_Helper_SingleListInitialize(&ipv4FragmentQueue);
-            iniRes = (signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, TCPIP_IPV4_TASK_TICK_RATE)) != 0;
+            signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, TCPIP_IPV4_TASK_TICK_RATE);
 #else
-            iniRes = (signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, 0)) != 0;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
-            if(iniRes == false)
+            signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IPV4_Task, 0);
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+            if(signalHandle == 0)
             {
+                iniRes = TCPIP_IPV4_RES_SIGNAL_ERR;
                 break;
             }
 
-            if((iniRes = TCPIP_Helper_ProtectedSingleListInitialize (&ipv4ArpQueue)) == false)
+            if(!TCPIP_Helper_ProtectedSingleListInitialize (&ipv4ArpQueue))
             {
+                iniRes = TCPIP_IPV4_RES_ARP_ERR;
                 break;
             }
 
-            iniRes = TCPIP_Notification_Initialize(&ipv4PacketFilters);
+            if(!TCPIP_Notification_Initialize(&ipv4PacketFilters))
+            {
+                iniRes = TCPIP_IPV4_RES_NOTIFY_ERR;
+                break;
+            }
+
+            ipv4ArpEntries = (IPV4_ARP_ENTRY*)TCPIP_HEAP_Calloc(ipv4MemH, pIpInit->arpEntries , sizeof(*ipv4ArpEntries));
+            if(ipv4ArpEntries == 0)
+            {   // allocation failed
+                iniRes = TCPIP_IPV4_RES_MEM_ERR;
+                break;
+            }
+            // build the ARP pool
+            TCPIP_Helper_SingleListInitialize(&ipv4ArpPool);
+            pEntry = ipv4ArpEntries;
+            for(ix = 0; ix < pIpInit->arpEntries; ix++, pEntry++)
+            {
+                TCPIP_Helper_SingleListTailAdd(&ipv4ArpPool, (SGL_LIST_NODE*)pEntry); 
+            }
+
 
 #if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
             ipv4PktHandler = 0;
 #endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+            if(stackInit->nIfs > 1)
+            {   // forwarding enabled only for multiple interfaces
+                if(pIpInit->forwardTableMaxEntries == 0)
+                {
+                    iniRes = TCPIP_IPV4_RES_INIT_VAL_ERR;
+                    break;
+                }
+
+                // build the forwarding table
+                if((iniRes = IPV4_BuildForwardTables(pIpInit, ipv4MemH, stackInit->nIfs)) < 0)
+                {   // failed
+                    break;
+                }
+            }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+
             break;
         }
         
-        if(iniRes == false)
+        if(iniRes < 0)
         {
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, "IPv4 Init: Failed to initalize: %d! \r\n", iniRes);
             TCPIP_IPV4_Cleanup();
             return false;
         }
@@ -380,11 +669,11 @@ void TCPIP_IPV4_DeInitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     if(ipv4InitCount > 0)
     {   // up and running
         // one way or another this interface is going down
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
         TCPIP_IPV4_RxFragmentListPurge(&ipv4FragmentQueue);
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
-        TCPIP_IPV4_ListPurge(&ipv4ArpQueue, stackCtrl->pNetIf);
+        TCPIP_IPV4_ArpListPurge(stackCtrl->pNetIf);
 
         if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
         {   // stack shut down
@@ -406,44 +695,95 @@ static void TCPIP_IPV4_Cleanup(void)
     }
 
     TCPIP_Notification_Deinitialize(&ipv4PacketFilters, ipv4MemH);
-    ipv4MemH = 0;
+    ipv4ActFilterCount = 0;
 
     TCPIP_Helper_ProtectedSingleListDeinitialize(&ipv4ArpQueue);
+
     if(signalHandle)
     {
         _TCPIPStackSignalHandlerDeregister(signalHandle);
         signalHandle = 0;
     }
 
+    if(ipv4ArpEntries != 0)
+    {
+        TCPIP_HEAP_Free(ipv4MemH, ipv4ArpEntries);
+        ipv4ArpEntries = 0;
+    }
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+    if(ipv4ForwardDcpt != 0)
+    {
+        TCPIP_HEAP_Free(ipv4MemH, ipv4ForwardDcpt);
+        ipv4ForwardDcpt = 0;
+    }
+
+    if(ipv4ForwardNodes)
+    {
+        TCPIP_HEAP_Free(ipv4MemH, ipv4ForwardNodes);
+        ipv4ForwardNodes = 0;
+    }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+
+    ipv4MemH = 0;
 }
 
-// purges a list of IPV4_PACKET packets
+// purges the ARP pending list of IPV4_PACKET packets
 // searches for pNetIf match
 // if pNetIf == 0 everything matches
-static void TCPIP_IPV4_ListPurge(PROTECTED_SINGLE_LIST* pList, TCPIP_NET_IF* pNetIf)
+static void TCPIP_IPV4_ArpListPurge(TCPIP_NET_IF* pNetIf)
 {
-    SINGLE_LIST newList;
-    IPV4_PACKET *pPkt, *pNext;
+    SINGLE_LIST         newList;
+    IPV4_ARP_ENTRY*     pEntry;
+    TCPIP_MAC_PACKET*   pMacPkt;
+    TCPIP_NET_IF*       pPktIf;
+    
 
     TCPIP_Helper_SingleListInitialize (&newList);
 
+    PROTECTED_SINGLE_LIST* pList = &ipv4ArpQueue;
     TCPIP_Helper_ProtectedSingleListLock(pList);
     // traverse the list
     // and find all the packets matching the pNetIf
 
-    pNext = (IPV4_PACKET*)pList->list.head;
-
-    while((pPkt = pNext) != 0)
+    while((pEntry = (IPV4_ARP_ENTRY*)TCPIP_Helper_SingleListHeadRemove(&pList->list)) != 0)
     {
-        pNext = (IPV4_PACKET*)pPkt->macPkt.next;
-            
-        if(pNetIf == 0 || pNetIf == (TCPIP_NET_IF*)pPkt->netIfH)
+        if(pEntry->type == IPV4_ARP_PKT_TYPE_TX)
+        {   // IPV4_PACKET*
+            pMacPkt = &pEntry->pTxPkt->macPkt;
+        }
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        else if(pEntry->type == IPV4_ARP_PKT_TYPE_FWD)
+        {   // TCPIP_MAC_PACKET*
+            pMacPkt = pEntry->pFwdPkt; 
+        }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        else
+        {   // should not happen!
+            _IPv4AssertCond(false, __func__, __LINE__);
+            return;
+        }
+
+        pPktIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pEntry->arpIfIx);
+
+        if(pNetIf == 0 || pNetIf == pPktIf)
         {   // match
-            TCPIP_IPV4_FragmentTxAcknowledge(&pPkt->macPkt, TCPIP_MAC_PKT_ACK_ARP_NET_ERR, IPV4_FRAG_TX_ACK_HEAD | IPV4_FRAG_TX_ACK_FRAGS);
+            if(pEntry->type == IPV4_ARP_PKT_TYPE_TX)
+            {   // IPV4_PACKET TX packet 
+                TCPIP_IPV4_FragmentTxAcknowledge(pMacPkt, TCPIP_MAC_PKT_ACK_ARP_NET_ERR, IPV4_FRAG_TX_ACK_HEAD | IPV4_FRAG_TX_ACK_FRAGS);
+            }
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+            else if(pEntry->type == IPV4_ARP_PKT_TYPE_FWD)
+            {   // FWD Packet
+                TCPIP_PKT_PacketAcknowledge(pMacPkt, TCPIP_MAC_PKT_ACK_ARP_NET_ERR);
+            }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+            // back to pool
+            TCPIP_Helper_SingleListTailAdd(&ipv4ArpPool, (SGL_LIST_NODE*)pEntry); 
         }
         else
         {
-            TCPIP_Helper_SingleListTailAdd(&newList, (SGL_LIST_NODE*)pPkt);
+            TCPIP_Helper_SingleListTailAdd(&newList, (SGL_LIST_NODE*)pEntry);
         }
     }
 
@@ -451,8 +791,779 @@ static void TCPIP_IPV4_ListPurge(PROTECTED_SINGLE_LIST* pList, TCPIP_NET_IF* pNe
     pList->list = newList;
     TCPIP_Helper_ProtectedSingleListUnlock(pList);
 }
-
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+
+// checks if this packet needs forwarding
+// returns true if forwarded,
+// false if forwarding failed
+static bool TCPIP_IPV4_ProcessExtPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV4_PKT_PROC_TYPE procType)
+{
+    if(ipv4ForwardDcpt == 0)
+    {   // no forwarding tables
+        return false;
+    }
+
+    int netIx = _TCPIPStackNetIxGet(pNetIf);
+
+    IPV4_FORWARD_DESCRIPTOR* pFDcpt = ipv4ForwardDcpt + netIx;
+
+    while((pFDcpt->runFlags & IPV4_FWD_FLAG_FWD_ENABLE) != 0)
+    {   // forwarding enabled
+        IPV4_HEADER* pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
+        if(pHeader->TimeToLive == 0)
+        {   // TTL expired
+            return false;
+        }
+
+        _IPv4ProcessExtPktDbg(pRxPkt);
+
+        // find route
+        const IPV4_ROUTE_TABLE_ENTRY* pEntry = TCPIP_IPV4_FindFwdRoute(pFDcpt, pRxPkt);
+        if(pEntry)
+        {   // found it
+            return TCPIP_IPV4_ForwardPkt(pRxPkt, pEntry, procType);
+        }
+
+        // no route
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (netIx < 2 ? netIx : 2);
+        pFwdDbg->failNoRoute++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        break;
+    }
+
+    return false;
+}
+
+// Finds the entry in the routing table that routes this packet
+// Select the entry from the table, based on the number of leading ones
+// For now, simple linear search...
+static const IPV4_ROUTE_TABLE_ENTRY* TCPIP_IPV4_FindFwdRoute(IPV4_FORWARD_DESCRIPTOR* pFDcpt, TCPIP_MAC_PACKET* pRxPkt)
+{
+    int ix;
+    const IPV4_ROUTE_TABLE_ENTRY* pEntry = pFDcpt->fwdTable;
+    // packet destination
+    const IPV4_ADDR* dstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
+
+    for(ix = 0; ix < pFDcpt->usedEntries; ix++, pEntry++)
+    {
+        if((dstAdd->Val & pEntry->mask) == pEntry->netAdd)
+        {   // found it
+            return pEntry;
+        }
+    }
+
+    // no route
+    return 0;
+} 
+
+// select destination MAC address
+// for an externally forwarded packet
+// ppMacAdd is set to 0 if the MAC address is not available yet (ARP)
+static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_FwdPktMacDestination(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TABLE_ENTRY* pEntry, TCPIP_MAC_ADDR** ppMacAdd, IPV4_ADDR* arpTarget)
+{
+    TCPIP_ARP_RESULT    arpRes;
+    TCPIP_MAC_ADDR*     pMacDst = *ppMacAdd;
+    TCPIP_IPV4_DEST_TYPE destType;
+
+    // destination interface
+    TCPIP_NET_IF* pDestIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pEntry->outIfIx);
+
+    // packet destination
+    const IPV4_ADDR* pDestAdd = TCPIP_IPV4_PacketGetDestAddress(pFwdPkt);
+
+    while(true)
+    {
+        // check dest is not host 0
+        if(_TCPIPStackHostPartAddress(pDestIf, pDestAdd) == 0)
+        {   // invalid, discard
+            destType = TCPIP_IPV4_DEST_FAIL;
+            break;
+        }
+
+        // check if it's a net-directed broadcasts
+        if(_TCPIPStack_IsDirectedBcast(pDestIf, pDestAdd))
+        {   
+            memset(pMacDst, 0xff, sizeof(*pMacDst));
+            destType = TCPIP_IPV4_DEST_NETWORK; 
+            break;
+        }
+
+        // check IP multicast address range from 224.0.0.0 to 239.255.255.255
+        // can be done locally; No need for an ARP request.
+        else if ((pDestAdd->v[0] >= 224) && (pDestAdd->v[0] <= 239))
+        {
+            pMacDst->v[0] = 0x01;
+            pMacDst->v[1] = 0x00;
+            pMacDst->v[2] = 0x5E;
+            pMacDst->v[3] = 0x7f & pDestAdd->v[1];
+            pMacDst->v[4] = pDestAdd->v[2];
+            pMacDst->v[5] = pDestAdd->v[3];
+            destType = TCPIP_IPV4_DEST_NETWORK; 
+            break;
+        }
+        else
+        {   
+            if(pEntry->gwAdd != 0)
+            {   
+                arpTarget->Val  = pEntry->gwAdd;
+                destType = TCPIP_IPV4_DEST_GW;
+            }
+            else if(_TCPIPStackIpAddFromLAN(pDestIf, pDestAdd))
+            {   // this LAN
+                arpTarget->Val = pDestAdd->Val;
+                destType = TCPIP_IPV4_DEST_NETWORK;
+            }
+            else
+            {   // cannot send
+                destType = TCPIP_IPV4_DEST_FAIL;
+                break;
+            }
+
+            arpRes = TCPIP_ARP_EntryGet(pDestIf, arpTarget, pMacDst, true);
+            if(arpRes == ARP_RES_ENTRY_SOLVED)
+            {   // good to transmit
+            }
+            else if(arpRes == ARP_RES_ENTRY_QUEUED || arpRes == ARP_RES_ENTRY_NEW)
+            {   // will have to be queued
+                *ppMacAdd = 0;    // not known yet
+            }
+            else
+            {   // discard, cannot send
+                destType = TCPIP_IPV4_DEST_FAIL;
+            }
+        }
+        break;
+    }
+
+    _IPv4FwdMacDestDebug(pDestAdd, arpTarget, pDestIf, destType, ppMacAdd != 0);
+
+    return destType;
+}
+// forwards a packet over a network
+// returns true if success
+// false otherwise
+static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TABLE_ENTRY* pEntry, IPV4_PKT_PROC_TYPE procType)
+{
+    TCPIP_MAC_ADDR   destMacAdd, *pMacDst;
+    TCPIP_IPV4_DEST_TYPE destType;
+    TCPIP_NET_IF*   pFwdIf;
+    TCPIP_MAC_ETHERNET_HEADER* macHdr;
+    IPV4_FORWARD_NODE* pFwdNode;
+    IPV4_ADDR       arpTarget;
+    bool            macRes;
+    uint16_t        pktPayload, linkMtu;
+    uint8_t         headerLen;
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (pEntry->outIfIx < 2 ? pEntry->outIfIx : 2);
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+    
+    // the forward interface
+    // do NOT set the packet interface, as this could be redirected internally too...
+    pFwdIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pEntry->outIfIx);
+
+    // check for proper packet source address:
+    const IPV4_ADDR* pSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pFwdPkt);
+    if(_TCPIPStackNetPartAddress(pFwdIf, pSrcAdd) == 0)
+    {   // RFC 1812: source address {0, host} is not forwarded
+        return false;
+    }
+
+    // select packet's destination MAC address
+    pMacDst = &destMacAdd;
+    // select packet's external destination MAC address
+    destType = TCPIP_IPV4_FwdPktMacDestination(pFwdPkt, pEntry, &pMacDst, &arpTarget);
+    if(destType == TCPIP_IPV4_DEST_FAIL) 
+    {   // discard, cannot send
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        pFwdDbg->failMacDest++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        return false;
+    }
+
+    if(!TCPIP_STACK_NetworkIsUp(pFwdIf))
+    {   // don't send over dead interface
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        pFwdDbg->failNetDown++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        return false;
+    }
+
+    if(destType != TCPIP_IPV4_DEST_SELF) 
+    {   // check the MTU
+        // get the payload w/o the MAC frame
+        pktPayload = TCPIP_PKT_PayloadLen(pFwdPkt);
+        linkMtu = _TCPIPStackNetLinkMtu(pFwdIf);
+        if(pktPayload > linkMtu)
+        {
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->failMtu++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            return false;
+        }
+    }
+
+    if((procType & IPV4_PKT_DEST_HOST) != 0)
+    {   // after forwarding need to be processed locally  
+        // save packet MAC address before changing anything
+        pFwdNode = TCPIP_IPV4_Forward_QueuePacket(pFwdPkt, procType);
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        if(pFwdNode == 0)
+        {   // no more packets could be queued up
+            pFwdDbg->failFwdQueue++;
+        }
+        else
+        {
+            pFwdDbg->fwdQueuedPackets++;
+        }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        if(pFwdNode == 0)
+        {   // no more packets could be queued up
+            return false;
+        }
+    }
+    else
+    {
+        pFwdNode = 0;
+    }
+
+    // set the proper source and destination MAC addresses
+    macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pFwdPkt->pMacLayer;
+    if(pMacDst != 0)
+    {
+        memcpy(&macHdr->DestMACAddr, pMacDst, sizeof(macHdr->DestMACAddr));
+    }
+    memcpy(&macHdr->SourceMACAddr, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pFwdIf), sizeof(macHdr->SourceMACAddr));
+    pFwdPkt->pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_HEADER);
+    pFwdPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_TX; 
+
+    // adjust the TTL and recalculate the IP checksum
+    IPV4_HEADER* pHeader = (IPV4_HEADER*)pFwdPkt->pNetLayer;
+    pHeader->TimeToLive -= 1;
+    pHeader->HeaderChecksum = 0;
+    headerLen = pHeader->IHL << 2;
+    pHeader->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHeader, headerLen, 0);
+
+    if(pMacDst == 0)
+    {   // ARP target not known yet; queue it
+        // cannot have both IPV4_PKT_DEST_FWD and IPV4_PKT_DEST_HOST and not know the ARP!
+        _IPv4AssertCond((procType & IPV4_PKT_DEST_HOST) == 0, __func__, __LINE__);
+
+        if(ipv4ArpHandle == 0)
+        {
+            if((ipv4ArpHandle = TCPIP_ARP_HandlerRegister(0, TCPIP_IPV4_ArpHandler, 0)) == 0)
+            {
+                SYS_ERROR(SYS_ERROR_WARNING, "IPv4 Fw: Failed to register ARP notification! \r\n");
+                return false;
+            }
+        }
+
+        if(!TCPIP_IPV4_QueueArpPacket(pFwdPkt, pEntry->outIfIx, IPV4_ARP_PKT_TYPE_FWD, &arpTarget))
+        {
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->failArpQueue++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            return false;
+        }
+
+        // ARP notification will be received: either TMO or resolved
+        // mark packet as queued 
+        pFwdPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        pFwdDbg->arpQueued++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        return true;
+    }
+
+    TCPIP_PKT_FlightLogTx(pFwdPkt, TCPIP_THIS_MODULE_ID);
+
+
+    // TCPIP_IPV4_DEST_NETWORK/TCPIP_IPV4_DEST_GW and pMacDst != 0
+    if(pFwdNode != 0)
+    {   // after forwarding need to be processed locally  
+        macRes = TCPIP_IPV4_TxMacPkt(pFwdIf, pFwdPkt);
+        if(macRes == false)
+        {   // failed and need to dequeue...
+            pFwdPkt->ipv4PktData = 0;   // clear the 'forward first process later' flag
+            TCPIP_IPV4_Forward_DequeuePacket(pFwdNode, false);
+        }
+    }
+    else
+    {   // normal - unicast probably - forwarding
+        macRes = TCPIP_IPV4_TxMacPkt(pFwdIf, pFwdPkt);
+    }
+
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+    if(macRes)
+    {
+        pFwdDbg->macPackets++;
+    }
+    else
+    {
+        pFwdDbg->failMac++;
+    }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+
+    return macRes;
+}
+
+// simplistic implementation of count leading ones in a network order 32 bit value
+// It returns the number of contiguous leading ones - in the hi part
+// followed by contiguous zeroes - in the low part
+// Counting stops if after detecting zeroes, a one is found again
+static TCPIP_UINT32_VAL IPV4_32LeadingOnes(uint32_t value)
+{
+    int ix;
+    TCPIP_UINT32_VAL count;
+    uint32_t mask;
+    uint16_t nOnes, nZeroes;
+    bool countZeroes;      // true: counting zeroes
+
+    nOnes = nZeroes = 0;
+    countZeroes = false;
+    mask = 1 << 0;  // network order; start from LSB
+
+    for(ix = 0; ix < 32; ix++)
+    {
+        if((value & mask) != 0)
+        {   // 1 detected
+            if(countZeroes)
+            {   // already counting zeroes
+                break;
+            }
+            nOnes++;
+        }
+        else
+        {   // 0 detected
+            countZeroes = true;
+            nZeroes++;
+        }
+        mask <<= 1;
+    }
+
+    count.word.HW = nOnes;
+    count.word.LW = nZeroes;
+
+    return count;
+}
+
+static TCPIP_IPV4_RES IPV4_BuildForwardTables(const TCPIP_IPV4_MODULE_CONFIG* pIpInit, const void* memH, int nIfs)
+{
+    TCPIP_IPV4_RES buildRes;
+    bool    knownFmt;
+    int     netIx;
+    size_t  usedEntries;
+    IPV4_FORWARD_DESCRIPTOR* pFDcpt;
+    IPV4_ROUTE_TABLE_ENTRY* pFwdTbl;
+    IPV4_FORWARD_NODE*      pFwdNode;
+
+    // allocate the descriptors
+    ipv4ForwardDcpt = (IPV4_FORWARD_DESCRIPTOR*)TCPIP_HEAP_Calloc(memH, nIfs, sizeof(*pFDcpt) + pIpInit->forwardTableMaxEntries * sizeof(*pFwdTbl));
+    if(ipv4ForwardDcpt == 0)
+    {   // out of memory
+        return TCPIP_IPV4_RES_MEM_ERR;
+    }
+
+    if(pIpInit->forwardTxQueueSize != 0)
+    {
+        ipv4ForwardNodes = (IPV4_FORWARD_NODE*)TCPIP_HEAP_Calloc(memH, pIpInit->forwardTxQueueSize, sizeof(*ipv4ForwardNodes));
+        if(ipv4ForwardNodes == 0)
+        {   // out of memory
+            return TCPIP_IPV4_RES_MEM_ERR;
+        }
+    }
+
+    // set the forward tables
+    pFDcpt = ipv4ForwardDcpt;
+    // keep the forwarding tables at the end of allocated descriptor
+    pFwdTbl = (IPV4_ROUTE_TABLE_ENTRY*)(ipv4ForwardDcpt + nIfs);
+    for(netIx = 0; netIx < nIfs; netIx++, pFDcpt++)
+    {
+        pFDcpt->totEntries = pIpInit->forwardTableMaxEntries;
+        pFDcpt->iniFlags = pIpInit->forwardFlags;
+        pFDcpt->fwdTable = pFwdTbl; 
+        if((pFDcpt->iniFlags & TCPIP_IPV4_FWD_FLAG_ENABLED) != 0)
+        {
+            pFDcpt->runFlags = IPV4_FWD_FLAG_FWD_ENABLE;
+        }
+        if((pFDcpt->iniFlags & TCPIP_IPV4_FWD_FLAG_BCAST_ENABLED) != 0)
+        {
+            pFDcpt->runFlags |= IPV4_FWD_FLAG_BCAST_ENABLE;
+        }
+        if((pFDcpt->iniFlags & TCPIP_IPV4_FWD_FLAG_MCAST_ENABLED) != 0)
+        {
+            pFDcpt->runFlags |= IPV4_FWD_FLAG_MCAST_ENABLE;
+        }
+        pFwdTbl = pFwdTbl + pIpInit->forwardTableMaxEntries;  
+    }
+
+
+    if(pIpInit->forwardTable == 0)
+    {
+        usedEntries = 0;
+    }
+    else
+    {
+        usedEntries = pIpInit->forwardTableSize;
+    }
+
+    buildRes = TCPIP_IPV4_RES_OK;
+    while(usedEntries != 0)
+    {
+        knownFmt = false;
+#if (TCPIP_IPV4_FORWARDING_TABLE_BIN != 0)
+        if((pIpInit->forwardFlags & TCPIP_IPV4_FWD_FLAG_ASCII_TABLE) == 0) 
+        {
+            buildRes = IPv4_BuildBinaryTable(ipv4ForwardDcpt, &pIpInit->forwardTable->entryBin, usedEntries);
+            knownFmt = true;
+        }
+#endif
+
+#if (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+        if((pIpInit->forwardFlags & TCPIP_IPV4_FWD_FLAG_ASCII_TABLE) != 0) 
+        {
+            buildRes = IPv4_BuildAsciiTable(ipv4ForwardDcpt, &pIpInit->forwardTable->entryAscii, usedEntries);
+            knownFmt = true;
+        }
+#endif
+        if(knownFmt ==  false)
+        {   // cannot do
+            buildRes = TCPIP_IPV4_RES_FORMAT_ERR;
+            break;
+        }
+
+        if(buildRes < 0)
+        {
+            break;
+        }
+
+        // sort the tables for proper operation
+        pFDcpt = ipv4ForwardDcpt;
+        for(netIx = 0; netIx < nIfs; netIx++, pFDcpt++)
+        {
+            if(pFDcpt->usedEntries)
+            {
+                IPv4_SortFwdTable(pFDcpt->fwdTable, pFDcpt->usedEntries);
+            }
+        }
+
+        // build the tx pool
+        if(ipv4ForwardNodes != 0)
+        {   // if no bcast/mcast packets need to be forwarded AND processed internally
+            // it's ok to have ipv4ForwardNodes == 0, so process only internally!
+            pFwdNode = ipv4ForwardNodes;
+            for(netIx = 0; netIx < pIpInit->forwardTxQueueSize; netIx++, pFwdNode++)
+            {
+                TCPIP_Helper_DoubleListTailAdd(&ipv4ForwardPool, (DBL_LIST_NODE*)pFwdNode); 
+            } 
+        }
+
+        break;
+    }
+
+    return buildRes;
+}
+
+#if (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+// builds the forward table from ASCII input
+// table size needs to be > than nEntries!
+static TCPIP_IPV4_RES IPv4_BuildAsciiTable(IPV4_FORWARD_DESCRIPTOR* pFwdDcpt, const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pAEntry, size_t nEntries)
+{
+    int ix;
+    TCPIP_NET_HANDLE inNetH, outNetH;
+    IPV4_ADDR netAdd, netMask, gwAdd;
+    TCPIP_UINT32_VAL onesCount;
+    IPV4_FORWARD_DESCRIPTOR* pFDcpt;
+    IPV4_ROUTE_TABLE_ENTRY* pTable;
+
+    for(ix = 0; ix < nEntries; ix++, pAEntry++)
+    {
+        if(pAEntry->inIfName == 0 || (inNetH = TCPIP_STACK_NetHandleGet(pAEntry->inIfName)) == 0)
+        {
+            return TCPIP_IPV4_RES_IF_ERR;
+        }
+        pFDcpt = pFwdDcpt + TCPIP_STACK_NetIxGet(_TCPIPStackHandleToNet(inNetH));
+
+        if(pFDcpt->usedEntries == pFDcpt->totEntries)
+        {   // cannot have this
+            return TCPIP_IPV4_RES_ENTRIES_ERR;
+        }
+
+        if(pAEntry->netAddress == 0 || strlen(pAEntry->netAddress) == 0)
+        {
+            netAdd.Val = 0;
+        }
+        else if(!TCPIP_Helper_StringToIPAddress(pAEntry->netAddress, &netAdd))
+        {
+            return TCPIP_IPV4_RES_ADDRESS_ERR; 
+        }
+
+        if(pAEntry->netMask == 0 || strlen(pAEntry->netMask) == 0)
+        {
+            netMask.Val = 0;
+        }
+        else if(!TCPIP_Helper_StringToIPAddress(pAEntry->netMask, &netMask))
+        {
+            return TCPIP_IPV4_RES_ADDRESS_ERR; 
+        }
+
+        if(pAEntry->gwAddress == 0 || strlen(pAEntry->gwAddress) == 0)
+        {
+            gwAdd.Val = 0;
+        }
+        else if(!TCPIP_Helper_StringToIPAddress(pAEntry->gwAddress, &gwAdd))
+        {
+            return TCPIP_IPV4_RES_ADDRESS_ERR; 
+        }
+
+        if(pAEntry->outIfName == 0 || (outNetH = TCPIP_STACK_NetHandleGet(pAEntry->outIfName)) == 0)
+        {
+            return TCPIP_IPV4_RES_IF_ERR;
+        }
+
+        // check for the proper mask format
+        onesCount = IPV4_32LeadingOnes(netMask.Val);
+        if(onesCount.word.HW + onesCount.word.LW != 32)
+        {   // ill formatted mask
+            return TCPIP_IPV4_RES_MASK_ERR;
+        }
+
+        // OK
+        pTable = pFDcpt->fwdTable + pFDcpt->usedEntries;
+        pTable->mask = netMask.Val;
+        pTable->netAdd = netAdd.Val;
+        pTable->gwAdd = gwAdd.Val;
+        pTable->outIfIx = TCPIP_STACK_NetIxGet(_TCPIPStackHandleToNet(outNetH));
+        pTable->inIfIx = TCPIP_STACK_NetIxGet(_TCPIPStackHandleToNet(inNetH));
+        pTable->metric = pAEntry->metric;
+        pTable->nOnes = (uint8_t)onesCount.word.HW;
+
+        pFDcpt->usedEntries++;
+    }
+
+    return TCPIP_IPV4_RES_OK;
+}
+#endif  // (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+
+#if (TCPIP_IPV4_FORWARDING_TABLE_BIN != 0)
+// builds the forward table from binary input
+// table size needs to be > than nEntries!
+static TCPIP_IPV4_RES IPv4_BuildBinaryTable(IPV4_FORWARD_DESCRIPTOR* pFwdDcpt, const TCPIP_IPV4_FORWARD_ENTRY_BIN* pBEntry, size_t nEntries)
+{
+    int ix;
+    TCPIP_NET_HANDLE netH;
+    TCPIP_UINT32_VAL onesCount;
+    IPV4_FORWARD_DESCRIPTOR* pFDcpt;
+    IPV4_ROUTE_TABLE_ENTRY* pTable;
+
+    for(ix = 0; ix < nEntries; ix++, pBEntry++)
+    {
+        netH = TCPIP_STACK_IndexToNet(pBEntry->inIfIx);
+        if(netH == 0)
+        {
+            return TCPIP_IPV4_RES_IF_ERR;
+        }
+
+        pFDcpt = pFwdDcpt + pBEntry->inIfIx;
+
+        if(pFDcpt->usedEntries == pFDcpt->totEntries)
+        {   // cannot have this
+            return TCPIP_IPV4_RES_ENTRIES_ERR;
+        }
+
+        netH = TCPIP_STACK_IndexToNet(pBEntry->outIfIx);
+        if(netH == 0)
+        {
+            return TCPIP_IPV4_RES_IF_ERR;
+        }
+
+        // check for the proper mask format
+        onesCount = IPV4_32LeadingOnes(pBEntry->netMask);
+        if(onesCount.word.HW + onesCount.word.LW != 32)
+        {   // ill formatted mask
+            return TCPIP_IPV4_RES_MASK_ERR;
+        }
+
+        // OK
+        pTable = pFDcpt->fwdTable + pFDcpt->usedEntries;
+        // TCPIP_IPV4_FORWARD_ENTRY_BIN == IPV4_ROUTE_TABLE_ENTRY 
+        memcpy(pTable, pBEntry, sizeof(*pBEntry));
+        pTable->nOnes = (uint8_t)onesCount.word.HW;
+
+        pFDcpt->usedEntries++;
+    }
+
+    return TCPIP_IPV4_RES_OK;
+}
+#endif  // (TCPIP_IPV4_FORWARDING_TABLE_BIN != 0)
+
+// sort the forwarding table by the largest number of leading ones in the network mask
+// sorting function
+static int _RouteEntryCompare(const void* p1, const void* p2)
+{
+    IPV4_ROUTE_TABLE_ENTRY* pE1 = (IPV4_ROUTE_TABLE_ENTRY*)p1;
+    IPV4_ROUTE_TABLE_ENTRY* pE2 = (IPV4_ROUTE_TABLE_ENTRY*)p2;
+   
+
+    if(pE1->nOnes < pE2->nOnes)
+    {
+        return 1;
+    }
+    else if(pE1->nOnes > pE2->nOnes)
+    {
+        return -1;
+    }
+
+    // match; use the metric
+    if(pE1->metric < pE2->metric)
+    {
+        return -1;
+    }
+    else if(pE1->metric > pE2->metric)
+    {
+        return 1;
+    }
+
+    // equal
+    return 0;    
+}
+
+
+static void IPv4_SortFwdTable(IPV4_ROUTE_TABLE_ENTRY* pTable, size_t tableEntries)
+{
+    // sort the table ascending
+    qsort(pTable, tableEntries, sizeof(*pTable), _RouteEntryCompare);
+}
+
+size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH)
+{
+    if(ipv4ForwardDcpt != 0)
+    {   
+        TCPIP_NET_IF* pIf = _TCPIPStackHandleToNetUp(netH);
+        if(pIf)
+        {
+            IPV4_FORWARD_DESCRIPTOR* pFDcpt = ipv4ForwardDcpt + _TCPIPStackNetIxGet(pIf);
+            return pFDcpt->usedEntries; 
+        }
+    }
+
+    // no forwarding tables or invalid interface
+    return 0;
+}
+
+bool TCPIP_IPV4_ForwadTableEntryGet(TCPIP_NET_HANDLE netH, size_t index, TCPIP_IPV4_FORWARD_ENTRY_BIN* pFwdEntry)
+{
+    if(ipv4ForwardDcpt != 0)
+    {   
+        TCPIP_NET_IF* pIf = _TCPIPStackHandleToNetUp(netH);
+        if(pIf)
+        {
+            IPV4_FORWARD_DESCRIPTOR* pFDcpt = ipv4ForwardDcpt + _TCPIPStackNetIxGet(pIf);
+            if(index < pFDcpt->usedEntries)
+            {
+                if(pFwdEntry)
+                {
+                    IPV4_ROUTE_TABLE_ENTRY* pEntry = pFDcpt->fwdTable + index;
+                    memcpy(pFwdEntry, pEntry, sizeof(*pFwdEntry));
+                }
+
+                return true;
+            }
+        }
+    }
+
+    // no forwarding tables, invalid interface or index
+    return false; 
+}
+
+// function that adds a new packet to the forwarding queue
+// protection needed because the IPv4 thread could be different from the 
+// stack or MAC driver (the packet ack function can be called asynchronously)
+static IPV4_FORWARD_NODE* TCPIP_IPV4_Forward_QueuePacket(TCPIP_MAC_PACKET* pFwdPkt, IPV4_PKT_PROC_TYPE procType)
+{
+    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    IPV4_FORWARD_NODE* pFwdNode = (IPV4_FORWARD_NODE*)TCPIP_Helper_DoubleListHeadRemove(&ipv4ForwardPool);
+    if(pFwdNode != 0)
+    {  
+        pFwdNode->pFwdPkt = pFwdPkt;
+        pFwdNode->ownerAckFunc = pFwdPkt->ackFunc;
+        pFwdNode->ownerAckParam = pFwdPkt->ackParam;
+        pFwdPkt->ackFunc = TCPIP_IPV4_ForwardAckFunc;
+        pFwdPkt->ackParam = pFwdNode;
+
+        TCPIP_MAC_ETHERNET_HEADER* fwdMacHdr = (TCPIP_MAC_ETHERNET_HEADER*)pFwdPkt->pMacLayer;
+        memcpy(pFwdNode->destMacAdd.v, fwdMacHdr->DestMACAddr.v, sizeof(pFwdNode->destMacAdd));
+        memcpy(pFwdNode->sourceMacAdd.v, fwdMacHdr->SourceMACAddr.v, sizeof(pFwdNode->sourceMacAdd));
+
+        pFwdPkt->ipv4PktData = (uint16_t)procType;  // set the 'forward first process later' flag
+        TCPIP_Helper_DoubleListTailAdd(&ipv4ForwardQueue, (DBL_LIST_NODE*)pFwdNode);
+    }
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+
+    return pFwdNode;
+}
+
+// de-queues a previously packet queued for forwarding
+// checks that IPv4 forwarding is still alive
+// returns true if alive and packet de-queued
+static bool TCPIP_IPV4_Forward_DequeuePacket(IPV4_FORWARD_NODE* pFwdNode, bool aliveCheck)
+{
+    bool dequeueRes = false;
+    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv4ForwardNodes != 0 || aliveCheck == false)
+    {
+        TCPIP_Helper_DoubleListNodeRemove(&ipv4ForwardQueue, (DBL_LIST_NODE*)pFwdNode);
+        // restore the packet
+        TCPIP_MAC_PACKET* pFwdPkt = pFwdNode->pFwdPkt;
+        pFwdPkt->ackFunc = pFwdNode->ownerAckFunc;
+        pFwdPkt->ackParam = pFwdNode->ownerAckParam;
+
+        TCPIP_MAC_ETHERNET_HEADER* fwdMacHdr = (TCPIP_MAC_ETHERNET_HEADER*)pFwdPkt->pMacLayer;
+        memcpy(fwdMacHdr->DestMACAddr.v, pFwdNode->destMacAdd.v, sizeof(fwdMacHdr->DestMACAddr));
+        memcpy(fwdMacHdr->SourceMACAddr.v, pFwdNode->sourceMacAdd.v, sizeof(fwdMacHdr->SourceMACAddr));
+
+        TCPIP_Helper_DoubleListTailAdd(&ipv4ForwardPool, (DBL_LIST_NODE*)pFwdNode);
+        dequeueRes = true;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+
+    return dequeueRes;
+}
+
+// packet acknowledge function for a packet that's been forwarded
+// and needs to be sent for internal processing
+static bool TCPIP_IPV4_ForwardAckFunc(TCPIP_MAC_PACKET* pkt,  const void* param)
+{
+    bool isReinsert;
+
+    IPV4_FORWARD_NODE* pFwdNode = (IPV4_FORWARD_NODE*)param;
+    // simple sanity check
+    _IPv4AssertCond(pFwdNode->pFwdPkt == pkt, __func__, __LINE__);
+    // the 'forward first process later' flag should be set
+    _IPv4AssertCond((pkt->ipv4PktData & (IPV4_PKT_DEST_FWD | IPV4_PKT_DEST_HOST)) == (IPV4_PKT_DEST_FWD | IPV4_PKT_DEST_HOST) , __func__, __LINE__);
+
+    // check we're still up and running
+    isReinsert = TCPIP_IPV4_Forward_DequeuePacket(pFwdNode, true);
+
+    if(isReinsert)
+    {   // re-insert for process...
+        _TCPIPStackModuleRxInsert(TCPIP_MODULE_IPV4, pkt, true);
+    }
+    else
+    {   // gone; simply acknowledge the packet
+        TCPIP_PKT_PacketAcknowledge(pkt, TCPIP_MAC_PKT_ACK_IP_REJECT_ERR);
+    }
+
+    return false;
+}
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
 
 // selects a source address and an interface based on the IPv4 destination address
 // updates the pSrcAddress and returns the needed interface, if successful
@@ -466,14 +1577,9 @@ static void TCPIP_IPV4_ListPurge(PROTECTED_SINGLE_LIST* pList, TCPIP_NET_IF* pNe
 // returns a valid interface if it succeeds, 0 otherwise
 // Condition: netH has to be valid (if non 0)
 // The interface is checked to be valid, up and linked
-TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet)
+TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, const IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet)
 {
-    int netIx;
-    int avlblInterfaces;
-    uint32_t    ifAdd, ifMask;
-    TCPIP_NET_IF  *pIf;
-
-    pIf = _TCPIPStackHandleToNetUp(netH);
+    TCPIP_NET_IF  *pIf = _TCPIPStackHandleToNetUp(netH);
 
     if(srcSet)
     {   // address in pSrcAddress is valid, no matter what
@@ -481,18 +1587,33 @@ TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, IPV4_AD
         {   // try to see if it belongs to some interface
             pIf = _TCPIPStackIpAddFromAnyNet(0, pSrcAddress);
             if(pIf == 0)
-            {
-                pIf = _TCPIPStackAnyNetLinked(true);
+            {   // pSrcAddress is not the address of an interface!
+                // use the destination address
+                pIf = (TCPIP_NET_IF*)TCPIP_IPV4_SelectDestInterface(pDestAddress);
             }
         }
         return pIf;
     }
 
-    if(pIf != 0)
-    {   // interface is forced
-        pSrcAddress->Val = TCPIP_STACK_NetAddressGet(pIf);
-        return pIf;
+    if(pIf == 0)
+    {   // use the destination address to decide which interface is this packet going out on
+        pIf = (TCPIP_NET_IF*)TCPIP_IPV4_SelectDestInterface(pDestAddress);
     }
+    // else interface is forced
+
+    if(pIf)
+    {
+        pSrcAddress->Val = TCPIP_STACK_NetAddressGet(pIf);
+    }
+    return pIf;
+}
+
+TCPIP_NET_HANDLE TCPIP_IPV4_SelectDestInterface(const IPV4_ADDR* pDestAddress)
+{
+    int netIx;
+    int avlblInterfaces;
+    uint32_t    ifAdd, ifMask;
+    TCPIP_NET_IF  *pIf;
 
     // use the destination address to decide which interface is this packet going out on
 
@@ -508,12 +1629,11 @@ TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, IPV4_AD
             pIf = _TCPIPStackHandleToNetLinked(TCPIP_STACK_IndexToNet(netIx));
             if(pIf)
             {
-                ifAdd = TCPIP_STACK_NetAddressGet(pIf);
-                ifMask = TCPIP_STACK_NetMaskGet(pIf);
+                ifAdd = _TCPIPStackNetAddress(pIf);
+                ifMask = _TCPIPStackNetMask(pIf);
 
                 if((ifAdd & ifMask) == (pDestAddress->Val & ifMask))
                 {   // destination address is on this interface
-                    pSrcAddress->Val = ifAdd;
                     return pIf;
                 }
             }
@@ -521,12 +1641,7 @@ TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, IPV4_AD
     }
 
     // use the default/any interface
-    pIf = _TCPIPStackAnyNetLinked(true);
-    if(pIf)
-    {
-        pSrcAddress->Val = TCPIP_STACK_NetAddressGet(pIf);
-    }
-    return pIf;
+    return _TCPIPStackAnyNetLinked(true);
 }
 
 
@@ -554,52 +1669,67 @@ static TCPIP_NET_IF* TCPIP_IPV4_CheckPktTx(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACK
 bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 {
     TCPIP_MAC_ADDR   destMacAdd, *pMacDst;
-    TCPIP_NET_IF*    pNetIf;
+    TCPIP_NET_IF*    pNetIf, *pHostIf;
     TCPIP_IPV4_DEST_TYPE destType;
+    IPV4_ADDR       arpTarget;
     uint16_t        pktPayload, linkMtu;
     bool            txRes;
     
-    pNetIf = TCPIP_IPV4_CheckPktTx(pPkt->netIfH, &pPkt->macPkt);
+    pNetIf = _TCPIPStackHandleToNet(pPkt->netIfH);
+    if(pNetIf == 0)
+    {
+        return false;
+    }
 
+    // if the destination is internal, and need to change the network, solve it here
+    pMacDst = &destMacAdd;
+    if((pHostIf = TCPIP_STACK_MatchNetAddress(pNetIf, &pPkt->destAddress)))
+    {   // localhost address
+        memcpy(pMacDst, _TCPIPStackNetMACAddress(pHostIf), sizeof(*pMacDst));
+        pPkt->netIfH = pHostIf;
+        destType = TCPIP_IPV4_DEST_SELF; 
+    }
+    else
+    {   // select packet's external destination MAC address
+        destType = TCPIP_IPV4_PktMacDestination(pPkt, &pPkt->destAddress, &pMacDst, &arpTarget);
+        if(destType == TCPIP_IPV4_DEST_FAIL) 
+        {   // discard, cannot send
+            return false;
+        }
+    }
+
+    // check valid interface
+    pNetIf = TCPIP_IPV4_CheckPktTx(pPkt->netIfH, &pPkt->macPkt);
     if(pNetIf == 0)
     {   // cannot transmit over invalid interface
         return false;
     }
 
-    // now select packet's destination MAC address
-    pMacDst = &destMacAdd;
-    destType = TCPIP_IPV4_PktMacDestination(pPkt, &pPkt->destAddress, &pMacDst);
-    if(destType == TCPIP_IPV4_DEST_FAIL) 
-    {   // discard, cannot send
-        return false;
-    }
 
-    // get the payload w/o the MAC frame
-    pktPayload = TCPIP_PKT_PayloadLen(&pPkt->macPkt);
-    pNetIf = (TCPIP_NET_IF*)pPkt->netIfH;   // re-read; could have changed
-    if(!TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetMACAddressGet(pNetIf), TCPIP_ETHER_TYPE_IPV4))
-    {   // discard, cannot send
-        return false;
-    }
+    pPkt->macPkt.pktIf = pNetIf;
 
-    linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
-    if(pktPayload > linkMtu)
-    {
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
-        IPV4_HEADER* pHdr = (IPV4_HEADER*)pPkt->macPkt.pNetLayer;
-        if(pHdr->FragmentInfo.DF != 0 || !TCPIP_IPV4_FragmentTxPkt(pPkt, linkMtu, pktPayload))
-        {   // no fragments or failed to build the fragments; out of memory
-            return false;
-        }
+    if(destType != TCPIP_IPV4_DEST_SELF)
+    {   // get the payload w/o the MAC frame
+        pktPayload = TCPIP_PKT_PayloadLen(&pPkt->macPkt);
+        linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
+        if(pktPayload > linkMtu)
+        {
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+            IPV4_HEADER* pHdr = (IPV4_HEADER*)pPkt->macPkt.pNetLayer;
+            if(pHdr->FragmentInfo.DF != 0 || !TCPIP_IPV4_FragmentTxPkt(pPkt, linkMtu, pktPayload))
+            {   // no fragments or failed to build the fragments; out of memory
+                return false;
+            }
 #else
-        // MAC transmit will fail anyway
-        return false;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
-
+            // MAC transmit will fail anyway
+            return false;
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+        }
     }
 
     TCPIP_PKT_FlightLogTx(&pPkt->macPkt, TCPIP_THIS_MODULE_ID);
 
+    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
     if(destType == TCPIP_IPV4_DEST_SELF)
     {
         TCPIP_IPV4_FragmentTxInsertToRx(pNetIf, &pPkt->macPkt, TCPIP_MAC_PKT_FLAG_UNICAST, true);
@@ -607,7 +1737,7 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
     }
 
 
-    // TCPIP_IPV4_DEST_NETWORK 
+    // TCPIP_IPV4_DEST_NETWORK/TCPIP_IPV4_DEST_GW 
     if(pMacDst == 0)
     {   // queue it
         if(ipv4ArpHandle == 0)
@@ -619,7 +1749,11 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
             }
         }
 
-        TCPIP_Helper_ProtectedSingleListTailAdd(&ipv4ArpQueue, (SGL_LIST_NODE*)pPkt);
+        if(!TCPIP_IPV4_QueueArpPacket(pPkt, _TCPIPStackNetIxGet(pNetIf), IPV4_ARP_PKT_TYPE_TX, &arpTarget))
+        {
+            return false;
+        }
+
         // ARP notification will be received: either TMO or resolved
         // mark packet as queued 
         pPkt->macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
@@ -636,7 +1770,6 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 
     return txRes;
 }
-
 
 
 // IPv4 formats a IPV4_PACKET and calculates the header checksum
@@ -711,13 +1844,52 @@ void TCPIP_IPV4_PacketFormatTx(IPV4_PACKET* pPkt, uint8_t protocol, uint16_t ipL
     pPkt->macPkt.pTransportLayer = pPkt->macPkt.pNetLayer + hdrLen;
     pPkt->macPkt.pktIf = pPkt->netIfH;
 }
-	
+
+// queues a packet waiting for ARP resolution
+static bool TCPIP_IPV4_QueueArpPacket(void* pPkt, int arpIfIx, IPV4_ARP_PKT_TYPE type, IPV4_ADDR* arpTarget)
+{
+    PROTECTED_SINGLE_LIST* pList = &ipv4ArpQueue;
+    TCPIP_Helper_ProtectedSingleListLock(pList);
+    IPV4_ARP_ENTRY* pEntry = (IPV4_ARP_ENTRY*)TCPIP_Helper_SingleListHeadRemove(&ipv4ArpPool);
+    if(pEntry == 0)
+    {   // out of ARP entries in the pool
+        SYS_ERROR(SYS_ERROR_WARNING, "IPv4: ARP entries pool empty!\r\n");
+        TCPIP_Helper_ProtectedSingleListUnlock(pList);
+        return false;
+    }
+
+    pEntry->type = (uint8_t)type;
+    pEntry->arpIfIx = (uint8_t)arpIfIx;
+    pEntry->pPkt = pPkt;     
+    pEntry->arpTarget.Val = arpTarget->Val;
+    TCPIP_Helper_SingleListTailAdd(&pList->list, (SGL_LIST_NODE*)pEntry);
+    TCPIP_Helper_ProtectedSingleListUnlock(pList);
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+    if(type == IPV4_ARP_PKT_TYPE_TX)
+    {
+        _ipv4_arp_stat.txSubmit++;
+    }
+    else if(type == IPV4_ARP_PKT_TYPE_FWD)
+    {
+        _ipv4_arp_stat.fwdSubmit++;
+    }
+    else
+    {
+        _IPv4AssertCond(false, __func__, __LINE__);
+    }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+    return true;
+}
+
+
+
 // ARP resolution done
 static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* MACAddr, TCPIP_ARP_EVENT_TYPE evType, const void* param)
 {
     TCPIP_NET_IF* pPktIf;
-    SINGLE_LIST newList;
-    IPV4_PACKET *pPkt, *pNext;
+    SINGLE_LIST newList, *arpList;
+    IPV4_ARP_ENTRY *pEntry;
+    TCPIP_MAC_PACKET*   pMacPkt = 0;
     TCPIP_MAC_PKT_ACK_RES   pktAckFail;
     TCPIP_MAC_ETHERNET_HEADER* macHdr;
     
@@ -728,22 +1900,59 @@ static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd,
     // traverse the ipv4ArpQueue list
     // and find all the packets waiting for the solved address
 
-    pNext = (IPV4_PACKET*)ipv4ArpQueue.list.head;
-
-    while((pPkt = pNext) != 0)
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+    if(evType >= 0)
     {
-        pNext = (IPV4_PACKET*)pPkt->macPkt.next;
-        pPkt->macPkt.next = 0;  // send single packet
+        _ipv4_arp_stat.totSolved++;
+    }
+    else
+    {
+        _ipv4_arp_stat.totFailed++;
+    }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+    arpList = &ipv4ArpQueue.list;
+
+    while((pEntry = (IPV4_ARP_ENTRY*)TCPIP_Helper_SingleListHeadRemove(arpList)) != 0)
+    {
+        if(pEntry->type == IPV4_ARP_PKT_TYPE_TX)
+        {   // IPV4_PACKET*
+            pMacPkt = &pEntry->pTxPkt->macPkt;
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+            if(evType >= 0)
+            {
+                _ipv4_arp_stat.txSolved++;
+            }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+        }
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        else if(pEntry->type == IPV4_ARP_PKT_TYPE_FWD)
+        {   // TCPIP_MAC_PACKET*
+            pMacPkt = pEntry->pFwdPkt; 
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+            if(evType >= 0)
+            {
+                _ipv4_arp_stat.fwdSolved++;
+            }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+        }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        else
+        {   // should not happen!
+            _IPv4AssertCond(false, __func__, __LINE__);
+            return;
+        }
+
+        pPktIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pEntry->arpIfIx);
             
         pktAckFail = TCPIP_MAC_PKT_ACK_NONE; 
-        if(pPkt->arpTarget.Val == ipAdd->Val)
+        if(pEntry->arpTarget.Val == ipAdd->Val)
         {   // match
             if(evType >= 0)
             {   // successfully resolved the ARP; update the packet destination
-                macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pPkt->macPkt.pMacLayer;
+                macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pMacPkt->pMacLayer;
                 memcpy(&macHdr->DestMACAddr, MACAddr, sizeof(*MACAddr));
-                pPktIf = _TCPIPStackHandleToNet(pPkt->netIfH);
-                if(pPktIf == 0 || !TCPIP_IPV4_TxMacPkt(pPktIf, &pPkt->macPkt))
+                pMacPkt->next = 0;  // send single packet
+                if(pPktIf == 0 || !TCPIP_IPV4_TxMacPkt(pPktIf, pMacPkt))
                 {
                     pktAckFail = TCPIP_MAC_PKT_ACK_ARP_NET_ERR; 
                 }
@@ -755,12 +1964,15 @@ static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd,
 
             if(pktAckFail != TCPIP_MAC_PKT_ACK_NONE)
             {   // some error; discard the packet
-                TCPIP_IPV4_FragmentTxAcknowledge(&pPkt->macPkt, pktAckFail, IPV4_FRAG_TX_ACK_HEAD | IPV4_FRAG_TX_ACK_FRAGS);
+                TCPIP_IPV4_FragmentTxAcknowledge(pMacPkt, pktAckFail, IPV4_FRAG_TX_ACK_HEAD | IPV4_FRAG_TX_ACK_FRAGS);
             }
+
+            // back to pool
+            TCPIP_Helper_SingleListTailAdd(&ipv4ArpPool, (SGL_LIST_NODE*)pEntry); 
         }
         else
         {
-            TCPIP_Helper_SingleListTailAdd(&newList, (SGL_LIST_NODE*)pPkt);
+            TCPIP_Helper_SingleListTailAdd(&newList, (SGL_LIST_NODE*)pEntry);
         }
     }
 
@@ -781,15 +1993,14 @@ void  TCPIP_IPV4_Task(void)
         TCPIP_IPV4_Process();
     }
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
     { // regular TMO occurred
         TCPIP_IPV4_Timeout();
     }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 }
-
 
 // processes an incoming IPV4 packet
 static void TCPIP_IPV4_Process(void)
@@ -797,18 +2008,26 @@ static void TCPIP_IPV4_Process(void)
     TCPIP_NET_IF* pNetIf;
     TCPIP_MAC_PACKET* pRxPkt;
     uint8_t      headerLen;
-    uint16_t     headerChecksum;
-    IPV4_HEADER* pHeader;
-    uint8_t      ipFrameType;
-    bool         pktAccepted;
+    uint16_t     headerChecksum, totalLength, payloadLen;
+    IPV4_HEADER  *pHeader;
+    IPV4_HEADER  cIpv4Hdr, *pCHeader;
+    IPV4_PKT_PROC_TYPE procType;
     TCPIP_MAC_PKT_ACK_RES ackRes;
-    TCPIP_STACK_MODULE destId;
-    bool        isFragment;
 
     // extract queued IPv4 packets
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
     {
-        // log the packet
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        if(pRxPkt->ipv4PktData != 0)
+        {   // re-visited packet; forwarded first; now processed
+            pRxPkt->ipv4PktData = 0;
+            ackRes = TCPIP_IPV4_DispatchPacket(pRxPkt);
+            _IPv4AssertCond(ackRes == TCPIP_MAC_PKT_ACK_NONE, __func__, __LINE__);
+            continue;
+        }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+
+        // processing 1st time. log the packet
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
 #if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
         if(ipv4PktHandler != 0)
@@ -824,10 +2043,7 @@ static void TCPIP_IPV4_Process(void)
 
         while(true)
         {
-            isFragment = 0;
-            destId = TCPIP_MODULE_NONE;
             ackRes = TCPIP_MAC_PKT_ACK_NONE;
-
 
             pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
             // Make sure that this is an IPv4 packet.
@@ -839,7 +2055,19 @@ static void TCPIP_IPV4_Process(void)
 
             // make sure the header length is within packet limits
             headerLen = pHeader->IHL << 2;
-            if(headerLen < sizeof(IPV4_HEADER) || headerLen > pRxPkt->pDSeg->segLen)
+            if(headerLen < sizeof(IPV4_HEADER) || (uint16_t)headerLen > pRxPkt->pDSeg->segLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            totalLength = TCPIP_Helper_ntohs(pHeader->TotalLength);
+            if(totalLength < (uint16_t)headerLen)
+            {
+                ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+                break;
+            }
+            payloadLen = TCPIP_PKT_PayloadLen(pRxPkt);
+            if(totalLength > payloadLen)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
@@ -849,10 +2077,23 @@ static void TCPIP_IPV4_Process(void)
             pNetIf = _TCPIPStackMapAliasInterface((TCPIP_NET_IF*)pRxPkt->pktIf, &pHeader->DestAddress);
             pRxPkt->pktIf = pNetIf;
 
+            if(!TCPIP_STACK_NetworkIsUp(pNetIf))
+            {   // discard the packet
+                ackRes = TCPIP_MAC_PKT_ACK_IP_REJECT_ERR;
+                break;
+            }
+
             // discard wrong source address
-            if(TCPIP_STACK_IsBcastAddress(pNetIf, &pHeader->SourceAddress))
+            if(_TCPIPStack_IsBcastAddress(pNetIf, &pHeader->SourceAddress))
             {   // net or limited bcast
                 ackRes = TCPIP_MAC_PKT_ACK_SOURCE_ERR;
+                break;
+            }
+
+            // discard wrong destination address
+            if(pHeader->DestAddress.Val == 0)
+            {   // invalid destination
+                ackRes = TCPIP_MAC_PKT_ACK_DEST_ERR;
                 break;
             }
 
@@ -870,199 +2111,487 @@ static void TCPIP_IPV4_Process(void)
                 break;
             }
 
-            // Network to host conversion.
-            pHeader->TotalLength = TCPIP_Helper_ntohs(pHeader->TotalLength);
-            pHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pHeader->FragmentInfo.val);
+            // Make a copy of the header for the network to host conversion
+            cIpv4Hdr = *pHeader;
+            pCHeader = &cIpv4Hdr;
+            pCHeader->TotalLength = totalLength;
+            pCHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pCHeader->FragmentInfo.val);
 
-            isFragment = pHeader->FragmentInfo.MF != 0 || pHeader->FragmentInfo.fragOffset != 0;
-#if (TCPIP_IPV4_FRAGMENTATION == 0)
+#if (_TCPIP_IPV4_FRAGMENTATION == 0)
             // Throw this packet away if it is a fragment.  
             // We don't support IPv4 fragment reconstruction.
-
-            if(isFragment)
+            if(pCHeader->FragmentInfo.MF != 0 || pCHeader->FragmentInfo.fragOffset != 0)
             {   // discard the fragment
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
             }
-#endif  // (TCPIP_IPV4_FRAGMENTATION == 0)
-
-            pRxPkt->pTransportLayer = pRxPkt->pNetLayer + headerLen;
-            pRxPkt->pDSeg->segLen -= headerLen;
-
-            // Check the packet arrived on the proper interface and passes the filters
-            pktAccepted = TCPIP_IPV4_VerifyPkt(pNetIf, pRxPkt);
-            if(!pktAccepted)
-            {
-                pktAccepted = TCPIP_IPV4_VerifyPktFilters(pRxPkt);
-            }
+#endif  // (_TCPIP_IPV4_FRAGMENTATION == 0)
 
             TCPIP_IPV4_CheckRxPkt(pRxPkt);
 
-            if(!pktAccepted)
+            // Check the packet arrived on the proper interface and passes the filters
+            procType = TCPIP_IPV4_VerifyPkt(pNetIf, pCHeader, pRxPkt);
+
+            if((procType & IPV4_PKT_DEST_HOST) == 0)
+            {   // not processed internally; but some oter module may still need it; check the filters
+                if(TCPIP_IPV4_VerifyPktFilters(pRxPkt, headerLen))
+                {
+                    procType = IPV4_PKT_DEST_HOST;
+                }
+            }
+
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+            if((procType & IPV4_PKT_DEST_FWD) != 0)
+            {   // packet to be forwarded
+                if(TCPIP_IPV4_ProcessExtPkt(pNetIf, pRxPkt, procType))
+                {   // we're done
+                    break;
+                }
+            }
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+
+            if((procType & (IPV4_PKT_DEST_HOST)) == 0)
             {   // discard
-                ackRes = TCPIP_MAC_PKT_ACK_SOURCE_ERR;
+                ackRes = TCPIP_MAC_PKT_ACK_IP_REJECT_ERR;
                 break;
             }
 
             // valid IPv4 packet
-            // check where it needs to go
-            pRxPkt->totTransportLen = pHeader->TotalLength - headerLen;
-            ipFrameType = pHeader->Protocol;
-
-            switch(ipFrameType)
-            {
-#if defined(TCPIP_STACK_USE_ICMP_SERVER) || defined(TCPIP_STACK_USE_ICMP_CLIENT)
-                case IP_PROT_ICMP:
-                    destId = TCPIP_MODULE_ICMP;
-                    break;
-#endif
-
-#if defined(TCPIP_STACK_USE_IGMP)
-                case IP_PROT_IGMP:
-                    destId = TCPIP_MODULE_IGMP;
-                    break;
-#endif
-                    
-#if defined(TCPIP_STACK_USE_TCP)
-                case IP_PROT_TCP:
-                    destId = TCPIP_MODULE_TCP;
-                    break;
-#endif
-
-#if defined(TCPIP_STACK_USE_UDP)
-                case IP_PROT_UDP:
-                    destId = TCPIP_MODULE_UDP;
-                    break;
-#endif
-
-                default:
-                    // unknown/unsupported; discard
-                    ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR; 
-                    break;
-            }
-
+            ackRes = TCPIP_IPV4_DispatchPacket(pRxPkt);
             break;
         }
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
-        pRxPkt->pkt_next = 0;       // make sure it's not linked
-        if(ackRes == TCPIP_MAC_PKT_ACK_NONE)
-        {   // valid so far
-            if(isFragment)
-            {
-                IPV4_FRAGMENT_NODE *fragNode;
-                ackRes = TCPIP_IPV4_RxFragmentInsert(pRxPkt, &fragNode);
-
-                if(ackRes == TCPIP_MAC_PKT_ACK_NONE && fragNode != 0)
-                {
-                    pRxPkt = fragNode->fragHead; // this list is already ordered by pkt_next!
-                    isFragment = 0; // let it through
-                }
-            }
-        }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
-
         if(ackRes != TCPIP_MAC_PKT_ACK_NONE)
-        {   // unknown/unsupported; discard
+        {   // something wrong; discard
             TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes); 
-        }
-        else if(!isFragment && destId != TCPIP_MODULE_NONE) 
-        {   // forward this packet and signal
-            _TCPIPStackModuleRxInsert(destId, pRxPkt, true);
         }
     }
 
 }
 
-/*
- Discard packets that are received on the wrong interface
- (have an IP address that doesn't match the interface we
- received the packet on) or are rejected by the current IPv4 packet filters.
- Returns: true if valid packet
-          false otherwise.
-*/                  
-static bool TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt)
+// dispatch an IPv4 packet to its module
+// packet is assumed to be valid!
+// returns TCPIP_MAC_PKT_ACK_NONE if packet dispatched OK
+// an error code  (< 0) otherwise 
+static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
 {
-    // process first the registered filters
-    IPV4_HEADER* pHeader;
-    IPV4_ADDR* pktDestIP;
-    TCPIP_IPV4_FILTER_TYPE currFilter; // current filter
+    IPV4_HEADER  *pHeader;
+    bool        isFragment;
+    TCPIP_STACK_MODULE destId;
+    uint8_t      headerLen;
 
-    if(TCPIP_STACK_NetworkIsUp(pNetIf))
-    {   // standard IPv4 filtering
-        pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
-        pktDestIP = &pHeader->DestAddress;
-        currFilter = ipv4FilterType;
+    pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    headerLen = pHeader->IHL << 2;
 
-        if(TCPIP_STACK_AddressIsOfNet(pNetIf, pktDestIP))
-        {   // unicast to me
-            return (currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0 ? true : false;
+    // for internal processed packets, change to host order
+    pRxPkt->pTransportLayer = pRxPkt->pNetLayer + headerLen;
+    pRxPkt->pDSeg->segLen -= headerLen;
+    pHeader->TotalLength = TCPIP_Helper_ntohs(pHeader->TotalLength);
+    pRxPkt->totTransportLen = pHeader->TotalLength - headerLen;
+    pHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pHeader->FragmentInfo.val);
+
+    isFragment = pHeader->FragmentInfo.MF != 0 || pHeader->FragmentInfo.fragOffset != 0;
+
+    // check where it needs to go
+    destId = TCPIP_IPV4_FrameDestination(pHeader);
+    if(destId == TCPIP_MODULE_NONE)
+    {
+        return TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
+    }
+
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+    pRxPkt->pkt_next = 0;       // make sure it's not linked
+    if(isFragment)
+    {
+        IPV4_FRAGMENT_NODE *fragNode;
+        TCPIP_MAC_PKT_ACK_RES ackRes = TCPIP_IPV4_RxFragmentInsert(pRxPkt, &fragNode);
+
+        if(ackRes != TCPIP_MAC_PKT_ACK_NONE)
+        {   // failed; discard
+            return ackRes;
         }
 
-        if(TCPIP_STACK_IsBcastAddress(pNetIf, pktDestIP))
+        if(fragNode != 0)
+        {
+            pRxPkt = fragNode->fragHead; // this list is already ordered by pkt_next!
+            isFragment = 0; // let it through
+        }
+    }
+#else
+    _IPv4AssertCond(isFragment == false, __func__, __LINE__);
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+
+    if(!isFragment)
+    {   // forward this packet and signal
+        _TCPIPStackModuleRxInsert(destId, pRxPkt, true);
+    }
+
+    return TCPIP_MAC_PKT_ACK_NONE;
+} 
+
+/*
+ Checks packets that are received on the wrong interface
+ (have an IP address that doesn't match the interface we
+ received the packet on) or are rejected by the current IPv4 packet filters.
+ Returns: IPV4_PKT_PROC_TYPE value containing:
+    - type of packet
+    - destination of packet: local or forwarded
+    - if packet processing is enabled
+*/                  
+#if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+// packet verification when the forwarding is enabled
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt)
+{
+    if(ipv4ForwardDcpt == 0)
+    {   // no forwarding tables
+        return TCPIP_IPV4_VerifyPktHost(pNetIf, pHeader, pRxPkt);
+    }
+
+    return TCPIP_IPV4_VerifyPktFwd(pNetIf, pHeader, pRxPkt);
+}
+
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt)
+{
+    // process first the registered filters
+    IPV4_ADDR* pktDestIP, *pktSrcIP;
+    TCPIP_IPV4_FILTER_TYPE currFilter; // current filter
+    IPV4_PKT_PROC_TYPE procType;
+    IPV4_FORWARD_DESCRIPTOR* pFDcpt;
+    bool    isMcast, isBcast;
+    int ifIx = _TCPIPStackNetIxGet(pNetIf);
+    TCPIP_MAC_ETHERNET_HEADER* macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+    TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (ifIx < 2 ? ifIx : 2);
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+
+    while(true)
+    {
+        procType = IPV4_PKT_TYPE_UNK;
+        isMcast = isBcast = false;
+        pktDestIP = &pHeader->DestAddress;
+        // standard IPv4 filtering
+        currFilter = ipv4FilterType;
+
+        // first few sanity checks
+        if(_TCPIPStackIpAddFromLAN(pNetIf, pktDestIP))
+        {   // check dest is not host 0
+            if(_TCPIPStackHostPartAddress(pNetIf, pktDestIP) == 0)
+            {   // invalid, discard
+                break;
+            }
+        }
+
+        pktSrcIP = &pHeader->SourceAddress;
+        if(pktSrcIP->Val == 0 || pktSrcIP->v[0] == 0x7f)
+        {   // RFC 1812: discard if the source address is: {0, 0} or { 127, <any> }
+            // {0, host} not known yet!
+            break;
+        }
+
+        // start the Local Delivery Decision (5.2.3)
+
+        // check is for any of our interfaces
+        if(TCPIP_STACK_MatchNetAddress(pNetIf, pktDestIP) != 0)
+        {   // unicast to one of my networks
+            procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->ucastPackets++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            break;
+        }
+
+        // check limited broadcast
+        if(_TCPIPStack_IsLimitedBcast(pktDestIP))
+        {   // limited bcast, never forwarded
+            procType = ((currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_BCAST) : (IPV4_PKT_TYPE_BCAST);
+            break;
+        }
+
+        if((isMcast = TCPIP_Helper_IsMcastAddress(pktDestIP)))
+        {   // multicast
+            if(_TCPIPStack_IsLocalMcast(pktDestIP))
+            {   // local, never forwarded
+                procType = ((currFilter & TCPIP_IPV4_FILTER_MULTICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_MCAST) : (IPV4_PKT_TYPE_MCAST);
+            }
+            else
+            {   // can be forwarded
+                procType = IPV4_PKT_TYPE_MCAST | IPV4_PKT_DEST_FWD;
+                if((currFilter & TCPIP_IPV4_FILTER_MULTICAST) == 0)
+                {
+                    procType |= IPV4_PKT_DEST_HOST;
+                }
+            }
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->mcastPackets++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+
+            break;
+        }
+
+        // check net-directed IP address
+        TCPIP_NET_IF* pRIf = _TCPIPStackAnyNetDirected(pktDestIP);
+
+        if(pRIf != 0)
+        {   // net-directed for one of the router's interfaces
+            isBcast = true;
+            if(_TCPIPStackNetGetPrimary(pRIf) == _TCPIPStackNetGetPrimary(pNetIf))
+            {   // net-directed to one of the receiving interfaces
+                // packet delivered locally
+                procType = ((currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_BCAST) : (IPV4_PKT_TYPE_BCAST);
+                if((macHdr->DestMACAddr.v[0] & 0x01) == 0)
+                {   // link layer unicast; the packet should also be forwarded
+                    procType |= IPV4_PKT_DEST_FWD;
+                }
+            }
+            else
+            {   // net-directed to another router interface, not the receiving one
+                // packet delivered locally and forwarded
+                procType = IPV4_PKT_TYPE_BCAST | IPV4_PKT_DEST_FWD;
+                if((currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0)
+                {
+                    procType |= IPV4_PKT_DEST_HOST;
+                }
+            }
+
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->bcastPackets++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            break;
+        }
+
+        // some other type of packet
+        // should be forwarded
+        procType = IPV4_PKT_DEST_FWD;
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+            pFwdDbg->fwdPackets++;
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+        
+        break;
+    }
+
+    // for local packets check that we actually handle it
+    if((procType & IPV4_PKT_DEST_HOST) != 0 && (TCPIP_IPV4_FrameDestination(pHeader) == TCPIP_MODULE_NONE))
+    {   // unknown; discard
+        procType &= ~IPV4_PKT_DEST_HOST;
+    }
+
+    // few more rules to check for forwarding
+    // 5.3.4
+    while((procType & IPV4_PKT_DEST_FWD) != 0)
+    {
+        pFDcpt = ipv4ForwardDcpt + ifIx;
+        if(isBcast)
+        {   // check if we forward broadcast traffic
+            if((pFDcpt->runFlags & IPV4_FWD_FLAG_BCAST_ENABLE) == 0)
+            {
+                procType &= ~IPV4_PKT_DEST_FWD;
+                break;
+            }
+        }
+        if(isMcast)
+        {   // check if we forward multicast traffic
+            if((pFDcpt->runFlags & IPV4_FWD_FLAG_MCAST_ENABLE) == 0)
+            {
+                procType &= ~IPV4_PKT_DEST_FWD;
+                break;
+            }
+        }
+
+        TCPIP_MAC_ADDR bcastAdd = { {0xff, 0xff, 0xff, 0xff, 0xff, 0xff} };
+
+        if(memcmp(macHdr->DestMACAddr.v, bcastAdd.v, sizeof(bcastAdd)) == 0)
+        {   // link layer broadcast 
+            if(!isMcast && !isBcast)
+            {   // forward only if mcast or bcast
+                procType &= ~IPV4_PKT_DEST_FWD;
+            }
+            break;
+        }
+
+        if((macHdr->DestMACAddr.v[0] & 0x01) != 0)
+        {   // link layer multicast
+            if(!isMcast)
+            {   // no forward if it's not mcast
+                procType &= ~IPV4_PKT_DEST_FWD;
+            }
+            break;
+        }
+
+        break;
+    }
+
+    return procType;
+}
+#endif  // (TCPIP_IPV4_FORWARDING_ENABLE == 0)
+
+// packet verification when the forwarding is disabled
+static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktHost(TCPIP_NET_IF* pNetIf, IPV4_HEADER* pHeader, TCPIP_MAC_PACKET* pRxPkt)
+{
+    // process first the registered filters
+    IPV4_ADDR* pktDestIP;
+    TCPIP_IPV4_FILTER_TYPE currFilter; // current filter
+    IPV4_PKT_PROC_TYPE procType;
+
+    while(true)
+    {
+        procType = IPV4_PKT_TYPE_UNK;
+        pktDestIP = &pHeader->DestAddress;
+        // standard IPv4 filtering
+        currFilter = ipv4FilterType;
+
+        if(_TCPIPStackIpAddFromLAN(pNetIf, pktDestIP))
+        {   // check dest is not host 0
+            if(_TCPIPStackHostPartAddress(pNetIf, pktDestIP) == 0)
+            {   // invalid, discard
+                break;
+            }
+        }
+
+        // check is for the arriving interface
+        if(TCPIP_STACK_AddressIsOfNet(pNetIf, pktDestIP))
+        {   // unicast to me
+            procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
+            break;
+        }
+
+        if(_TCPIPStack_IsBcastAddress(pNetIf, pktDestIP))
         {   // net or limited bcast
-            return (currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0 ? true : false;
+            procType = ((currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_BCAST) : (IPV4_PKT_TYPE_BCAST);
+            break;
         }
 
         if(TCPIP_Helper_IsMcastAddress(pktDestIP))
         {   // multicast
-            return (currFilter & TCPIP_IPV4_FILTER_MULTICAST) == 0 ? true : false;
+            procType = ((currFilter & TCPIP_IPV4_FILTER_MULTICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_MCAST) : (IPV4_PKT_TYPE_MCAST);
+            break;
         }
 
-        // else: unknown packet type
+        // some other type of packet
+        
+        break;
     }
 
-    return false;
-
+    return procType;
 }
 
+static TCPIP_STACK_MODULE TCPIP_IPV4_FrameDestination(IPV4_HEADER* pHeader)
+{
+    TCPIP_STACK_MODULE destId;
 
+    switch(pHeader->Protocol)
+    {
+#if defined(TCPIP_STACK_USE_ICMP_SERVER) || defined(TCPIP_STACK_USE_ICMP_CLIENT)
+        case IP_PROT_ICMP:
+            destId = TCPIP_MODULE_ICMP;
+            break;
+#endif
 
-static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt)
+#if defined(TCPIP_STACK_USE_IGMP)
+        case IP_PROT_IGMP:
+            destId = TCPIP_MODULE_IGMP;
+            break;
+#endif
+
+#if defined(TCPIP_STACK_USE_TCP)
+        case IP_PROT_TCP:
+            destId = TCPIP_MODULE_TCP;
+            break;
+#endif
+
+#if defined(TCPIP_STACK_USE_UDP)
+        case IP_PROT_UDP:
+            destId = TCPIP_MODULE_UDP;
+            break;
+#endif
+
+        default:
+            // unknown/unsupported; 
+            destId = TCPIP_MODULE_NONE; 
+            break;
+    }
+
+    return destId;
+}
+
+static bool TCPIP_IPV4_VerifyPktFilters(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen)
 {
     // process the registered filters
     IPV4_FILTER_LIST_NODE* fNode;
     bool pktOk = false;
+    
+    uint32_t cnt1, cnt2;
 
-    TCPIP_Notification_Lock(&ipv4PacketFilters);
-    for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+    // get a consistent reading
+    do
     {
-        if((*fNode->handler)(pRxPkt, fNode->hParam))
-        {   // packet accepted
-            pktOk = true;
-            break;
+        cnt1 = ipv4ActFilterCount;
+        cnt2 = ipv4ActFilterCount;
+    }while(cnt1 != cnt2);
+
+
+    _IPv4FiltCountDbg("verify");
+    if(cnt1 != 0)
+    {   // active filters
+        TCPIP_Notification_Lock(&ipv4PacketFilters);
+        for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+        {
+            if(fNode->active != 0)
+            {
+                if((*fNode->handler)(pRxPkt, hdrlen))
+                {   // packet accepted
+                    pktOk = true;
+                    break;
+                }
+            }
         }
+        TCPIP_Notification_Unlock(&ipv4PacketFilters);
     }
-    TCPIP_Notification_Unlock(&ipv4PacketFilters);
         
     return pktOk;
 }
 
-IPV4_FILTER_HANDLE IPv4RegisterFilter(IPV4_FILTER_FUNC handler, const void* hParam)
+IPV4_FILTER_HANDLE IPv4RegisterFilter(IPV4_FILTER_FUNC handler, bool active)
 {
+    IPV4_FILTER_LIST_NODE* newNode = 0;
+
     if(ipv4MemH && handler)
     {
-        IPV4_FILTER_LIST_NODE* newNode = (IPV4_FILTER_LIST_NODE*)TCPIP_Notification_Add(&ipv4PacketFilters, ipv4MemH, sizeof(*newNode));
-        if(newNode)
+        IPV4_FILTER_LIST_NODE filtNode;
+        filtNode.handler = handler;
+        filtNode.active = active;
+
+        newNode = (IPV4_FILTER_LIST_NODE*)TCPIP_Notification_Add(&ipv4PacketFilters, ipv4MemH, &filtNode, sizeof(*newNode));
+        if(newNode && active)
         {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            return newNode;
+            TCPIP_Notification_Lock(&ipv4PacketFilters);
+            ipv4ActFilterCount++;
+            TCPIP_Notification_Unlock(&ipv4PacketFilters);
         }
     }
 
-    return 0;
-
+    return newNode;
 }
 
+// deregister the filter handler
+// returns true or false if no such handler registered
+static void Ipv4DeRegisterCallback(SGL_LIST_NODE* node)
+{
+    IPV4_FILTER_LIST_NODE* filtNode = (IPV4_FILTER_LIST_NODE*)node;
+    if(filtNode->active)
+    {
+        ipv4ActFilterCount--;
+    }
+}
+    
 // deregister the filter handler
 // returns true or false if no such handler registered
 bool Ipv4DeRegisterFilter(IPV4_FILTER_HANDLE hFilter)
 {
     if(hFilter && ipv4MemH)
     {
-        if(TCPIP_Notification_Remove((SGL_LIST_NODE*)hFilter, &ipv4PacketFilters, ipv4MemH))
-        {
+        if(TCPIP_Notification_CbackRemove((SGL_LIST_NODE*)hFilter, &ipv4PacketFilters, ipv4MemH, Ipv4DeRegisterCallback))
+        {   // was valid
             return true;
         }
     }
@@ -1070,34 +2599,58 @@ bool Ipv4DeRegisterFilter(IPV4_FILTER_HANDLE hFilter)
     return false;
 }
 
+// activates/de-activates an IPv4 filter
+bool Ipv4FilterSetActive(IPV4_FILTER_HANDLE hFilter, bool active)
+{
+    IPV4_FILTER_LIST_NODE* fNode;
+    bool activeOk = false;
+
+    TCPIP_Notification_Lock(&ipv4PacketFilters);
+    for(fNode = (IPV4_FILTER_LIST_NODE*)ipv4PacketFilters.list.head; fNode != 0; fNode = fNode->next)
+    {
+        if(fNode == (IPV4_FILTER_LIST_NODE*)hFilter)
+        {
+            if(fNode->active != active)
+            {   // change
+                if(active)
+                {
+                    ipv4ActFilterCount++;
+                }
+                else
+                {
+                    ipv4ActFilterCount--;
+                }
+
+                _IPv4FiltCountDbg("activate");
+                fNode->active = active;
+                activeOk = true;
+            }
+            break;
+        }
+    }
+    TCPIP_Notification_Unlock(&ipv4PacketFilters);
+        
+    return activeOk;
+}
+
 // select destination MAC address
+// for an external destination packet
 // ppMacAdd is set to 0 if the MAC address is not available yet
-static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, const IPV4_ADDR* pIpAdd, TCPIP_MAC_ADDR** ppMacAdd)
+static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, const IPV4_ADDR* pIpAdd, TCPIP_MAC_ADDR** ppMacAdd, IPV4_ADDR* arpTarget)
 {
     TCPIP_ARP_RESULT  arpRes;
-    TCPIP_NET_IF*     pHostIf;
     TCPIP_MAC_ADDR*   pMacDst = *ppMacAdd;
     TCPIP_NET_IF* pNetIf = (TCPIP_NET_IF*)pPkt->netIfH;
-
-    if(TCPIP_STACK_AddressIsOfNet(pNetIf, pIpAdd))
-    {   // localhost address
-        memcpy(pMacDst, TCPIP_STACK_NetMACAddressGet(pNetIf), sizeof(*pMacDst));
-        return TCPIP_IPV4_DEST_SELF; 
-    }
-    else if((pHostIf = TCPIP_STACK_NetByAddress(pIpAdd)))
-    {   // localhost address
-        memcpy(pMacDst, TCPIP_STACK_NetMACAddressGet(pHostIf), sizeof(*pMacDst));
-        pPkt->netIfH = pHostIf;
-        return TCPIP_IPV4_DEST_SELF; 
-    }
 
     if(pIpAdd->Val == 0xffffffff || pIpAdd->Val == TCPIP_STACK_NetAddressBcast(pNetIf))
     {
         memset(pMacDst, 0xff, sizeof(*pMacDst));
+        return TCPIP_IPV4_DEST_NETWORK;
     }
+
     // check IP multicast address range from 224.0.0.0 to 239.255.255.255
     // can be done locally; No need for an ARP request.
-    else if ((pIpAdd->v[0] >= 224) && (pIpAdd->v[0] <= 239))
+    if ((pIpAdd->v[0] >= 224) && (pIpAdd->v[0] <= 239))
     {
         pMacDst->v[0] = 0x01;
         pMacDst->v[1] = 0x00;
@@ -1105,33 +2658,36 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, cons
         pMacDst->v[3] = 0x7f & pIpAdd->v[1];
         pMacDst->v[4] = pIpAdd->v[2];
         pMacDst->v[5] = pIpAdd->v[3];
+        return TCPIP_IPV4_DEST_NETWORK;
+    }
+
+    TCPIP_IPV4_DEST_TYPE destType;
+
+    if(_TCPIPStackIpAddFromLAN(pNetIf, pIpAdd))
+    {
+        arpTarget->Val  = pIpAdd->Val;
+        destType = TCPIP_IPV4_DEST_NETWORK;
     }
     else
-    {   
-        if(_TCPIPStackIpAddFromLAN(pNetIf, pIpAdd))
-        {
-            pPkt->arpTarget.Val  = pIpAdd->Val;
-        }
-        else
-        {   // not this LAN
-            pPkt->arpTarget.Val  = pNetIf->netGateway.Val;
-        }
-
-        arpRes = TCPIP_ARP_EntryGet(pNetIf, &pPkt->arpTarget, pMacDst, true);
-        if(arpRes == ARP_RES_ENTRY_SOLVED)
-        {   // good to transmit
-        }
-        else if(arpRes == ARP_RES_ENTRY_QUEUED || arpRes == ARP_RES_ENTRY_NEW)
-        {   // will have to be queued
-            *ppMacAdd = 0;    // not known yet
-        }
-        else
-        {   // discard, cannot send
-            return TCPIP_IPV4_DEST_FAIL;
-        }
+    {   // not this LAN
+        arpTarget->Val  = pNetIf->netGateway.Val;
+        destType = TCPIP_IPV4_DEST_GW;
     }
 
-    return TCPIP_IPV4_DEST_NETWORK;
+    arpRes = TCPIP_ARP_EntryGet(pNetIf, arpTarget, pMacDst, true);
+    if(arpRes == ARP_RES_ENTRY_SOLVED)
+    {   // good to transmit
+    }
+    else if(arpRes == ARP_RES_ENTRY_QUEUED || arpRes == ARP_RES_ENTRY_NEW)
+    {   // will have to be queued
+        *ppMacAdd = 0;    // not known yet
+    }
+    else
+    {   // discard, cannot send
+        destType = TCPIP_IPV4_DEST_FAIL;
+    }
+
+    return destType;
 }
 
 TCPIP_IPV4_FILTER_TYPE TCPIP_IPV4_PacketFilterSet(TCPIP_IPV4_FILTER_TYPE filtType)
@@ -1204,20 +2760,17 @@ void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum
 
 bool  TCPIP_IPV4_MacPacketTransmit(TCPIP_MAC_PACKET* pPkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR* pDestAddress)
 {
-    TCPIP_NET_IF* pHostIf;
+    TCPIP_NET_IF* pNetIf, *pHostIf;
     TCPIP_IPV4_DEST_TYPE destType;
-    TCPIP_NET_IF* pNetIf = TCPIP_IPV4_CheckPktTx(hNet, pPkt);
 
+    pNetIf = _TCPIPStackHandleToNet(hNet);
     if(pNetIf == 0)
-    {   // cannot transmit over invalid interface
+    {
         return false;
     }
 
-    if(TCPIP_STACK_AddressIsOfNet(pNetIf, pDestAddress))
-    {   // localhost address
-        destType = TCPIP_IPV4_DEST_SELF; 
-    }
-    else if((pHostIf = TCPIP_STACK_NetByAddress(pDestAddress)) != 0)
+    // if the destination is internal, and need to change the network, solve it here
+    if((pHostIf = TCPIP_STACK_MatchNetAddress(pNetIf, pDestAddress)) != 0)
     {   // localhost address
         pNetIf = pHostIf;
         destType = TCPIP_IPV4_DEST_SELF; 
@@ -1225,6 +2778,13 @@ bool  TCPIP_IPV4_MacPacketTransmit(TCPIP_MAC_PACKET* pPkt, TCPIP_NET_HANDLE hNet
     else
     {
         destType = TCPIP_IPV4_DEST_NETWORK;
+    }
+
+    // check valid interface
+    pNetIf = TCPIP_IPV4_CheckPktTx(pNetIf, pPkt);
+    if(pNetIf == 0)
+    {   // cannot transmit over invalid interface
+        return false;
     }
 
     pPkt->pktIf = pNetIf;
@@ -1420,16 +2980,16 @@ int TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH)
 
 bool TCPIP_IPV4_IsFragmentationEnabled(void)
 {
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
     return true;
 #else
     return false;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 }
 
 // fragmentation functionality
 //
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 // fragments reassembly
 
@@ -1474,8 +3034,16 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
 {
     IPV4_FRAGMENT_NODE *pF, *pParent, *pPrevParent;
     IPV4_HEADER *pFHdr, *pRxHdr;
+    uint16_t rxMin, rxMax, nextMin;   
 
+    // minimal check 
     pRxHdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
+    rxMax = rxMin + pRxPkt->totTransportLen;
+    if(rxMax < rxMin)
+    {   // overflow, fragOffset is too big?
+        return TCPIP_MAC_PKT_ACK_FRAGMENT_ERR;
+    } 
 
     *ppFrag = 0;
     pParent = pPrevParent = 0;
@@ -1534,12 +3102,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // old overlapping fragments need to be discarded/adjusted
     TCPIP_MAC_PACKET* pPrevPkt, *pCurrPkt, *pNextPkt;
     IPV4_HEADER *pCurrHdr;
-    uint16_t rxMin, rxMax, nextMin;   
     uint16_t currMin, currMax;   
     bool fragOverlap = false;
-
-    rxMin = pRxHdr->FragmentInfo.fragOffset * 8;
-    rxMax = rxMin + pRxPkt->totTransportLen;
 
     // insert in proper place
     pPrevPkt = 0;
@@ -1623,7 +3187,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
                 pDestSeg->segLen += le;
                 pRxPkt->totTransportLen += le;
             }
-            pNextPkt = pCurrPkt;    // reeveluate
+            pNextPkt = pCurrPkt;    // reevaluate
             continue;
         }
         
@@ -1881,7 +3445,7 @@ static void TCPIP_IPV4_FragmentTxInsertToRx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACK
 }
 
 
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 // external packet processing
 #if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
@@ -1917,7 +3481,6 @@ bool TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle)
 }
 
 #endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
-
 
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 

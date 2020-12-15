@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -231,6 +231,76 @@ typedef enum
 
 
 // *****************************************************************************
+/*  TCPIP MAC Segment Payload
+
+  Summary:
+    Payload data carried by a MAC data segment.
+
+  Description:
+    Structure of a segment payload buffer in a MAC data segment.
+
+    The actual layout of the memory allocated for segment payload:
+    | ... alignment space, if needed                                |
+    | 4 bytes for storing the packet pointer this buffer belongs to |
+    | n bytes gap for MAC use. NOT  PRESERVED across calls!         |
+    | Cache aligned payload buffer (segSize bytes)                  |
+
+  
+  Remarks:
+    See also the notes for the segLoadOffset member.
+    TCPIP_MAC_DATA_SEGMENT::segLoadOffset ==  sizeof(segmentPktPtr) + sizeof(segmentDataGap)
+
+    On 32-bit machines, the segment payload is allocated so that it is always
+    cache line size aligned and its size is 32-bits multiple.
+
+    Normally only the 1st segment of a packet needs 
+    this extra gap at the beginning of the segment buffer.
+
+    The MAC driver may make use of the remaining space in the segmentDataGap,
+    except the 4 bytes for segmentPktPtr, which is reserved.
+
+    This segmentDataGap space is reserved for the MAC purposes.
+    However, it is not guaranteed to be saved when packets are sent across multiple MACs!
+
+    The actual layout of the memory allocated for a segment segLoad:
+    | ... alignment space, if needed                                |
+    | 4 bytes for storing the packet pointer this buffer belongs to |
+    | x bytes segmentDataGap for MAC use. NOT  PRESERVED across calls!     |
+    | Cache aligned payload buffer (segSize bytes)                  |
+    The segLoad points to this address, containing the 1st byte to be transmitted.
+
+    The packet allocator in the TCP/IP stack will set the packet pointer
+    the data buffer belongs in the segmentPktPtr member.
+        
+*/
+typedef struct
+{
+    /* Packet pointer. This is the packet the segment belongs to.
+     * Could be used by the MAC driver to restore the packet to which
+     * a payload belongs to. */
+    struct _tag_TCPIP_MAC_PACKET*   segmentPktPtr;
+
+    /* Extra space allocated before the actual segment payload begins.
+     * This space is used by the MAC driver.
+     * The size of the gap is variable:
+     *      - usually 4 bytes when only Ethernet drivers are used
+     *      - 34 bytes when Wi-Fi drivers are present 
+    */
+    uint32_t                        segmentDataGap[];
+
+    /* The segment payload itself.
+       TCPIP_MAC_DATA_SEGMENT::segLoad points to this address!!!
+
+       It specifies the address of the 1st byte of the segment payload.
+       It is cache line size aligned.
+       For processors with no cache it is 32 bits aligned
+       Size is 32-bits multiple */
+    // uint32_t                        segmentPayload[];
+}TCPIP_MAC_SEGMENT_PAYLOAD;
+
+
+
+// *****************************************************************************
 /*  TCPIP MAC Data Segment
 
   Summary:
@@ -249,23 +319,33 @@ typedef enum
   Remarks:
     See notes for the segLoadOffset member.
     On 32-bit machines, the segment payload is allocated so that it is always
-    32-bit aligned and its size is 32-bits multiple.
-    The segLoadOffset adds to the payload address and insures that the network layer data
-    is 32-bit aligned.
+    cache line size aligned and its size is 32-bits multiple.
 
 */
+
 
 typedef struct _tag_MAC_DATA_SEGMENT
 {
     /*  Multi-segment support, next segment in the chain. */
     struct _tag_MAC_DATA_SEGMENT* next;      
 
-    /*  Pointer to segment data payload.
-        It specifies the address of the 1st byte to be transmitted. */
+    /*  Pointer to segment data payload
+        Points to TCPIP_MAC_SEGMENT_PAYLOAD::segmentPayload
+        
+        It specifies the address of the 1st payload byte.
+        If the processor has cache, then it is always cache line size aligned.
+        Otherwise is 32 bits aligned */
     uint8_t*                 segLoad;        
 
-    /*  Segment payload size; Number of bytes from this segment
-        that has to be transmitted. */
+    /*  Segment payload size;
+        TX: Number of bytes from this segment that has to be transmitted.
+            This is the total number of bytes including the Ethernet header
+            but not the FCS (that should be added by the driver)
+        RX: Number of payload bytes in the segment.
+            The MAC driver subtracts the FCS and Ethernet header length before
+            handing over the packet to the stack
+            
+            Then the segLen field is updated by each stack layer in turn */
     uint16_t                 segLen;         
 
     /*  Segment allocated total usable size.
@@ -281,31 +361,24 @@ typedef struct _tag_MAC_DATA_SEGMENT
 
     /*  Offset in bytes between the address pointed by segLoad 
         and the address where the segment buffer starts/was allocated.
-        It specifies some available space at the beginning of the
-        segment buffer. */
+        It specifies the gap space at the beginning of the TCPIP_MAC_SEGMENT_PAYLOAD
+        before the segmentPayload begins.
+        segLoadOffset ==  sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentPktPtr) + sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap)
+        
+        This currently is greater or equal than 8 bytes depending on the MAC drivers
+        that are part of the build!
+        See TCPIP_MAC_DATA_SEGMENT.
 
-    /*  Note 1: This offset is used as a performance improvement. 
-        It allows for the MAC frame to start on an unaligned address 
-        but enforces the alignment of the network layer data and 
-        improves the IP checksum calculation. 
-        The value of this offset is MAC dependent. 
-        A typical value for an Ethernet MAC should be 2 bytes 
-        (size of the MAC frame is 14 bytes).
-        Note 2: Normally only the 1st segment of a packet needs 
-        this extra room at the beginning of the segment buffer.
-        Note 3: The MAC may make use of this space at the beginning of the
-        segment buffer. This is a space reserved for the MAC purposes. 
-        Note 4: It is up to the MAC to check that the value of this offset is enforced. */
-    /*  PIC32 MAC specific notes: 
-        Note 1. The MAC will reject the packet if the load offset is not at least 2 bytes.
-             2. The PIC32 MAC uses these 2 bytes to calculate the offset between the segLoad
-                and the TCPIP_MAC_PACKET packet it belongs to.
-                That means that the TCPIP_MAC_PACKET* and the segLoad cannot be
-                more than 64 KB apart! */
+        For implementations that may work outside the Harmony TCP/IP stack
+        it is up to the MAC to check that the value of this offset is enforced.
+        */
     uint16_t                 segLoadOffset;  
 
+    /* The size this segment payload allocation. Debug/trace purposes */
+    uint16_t                 segAllocSize;  
+
     /*  Additional client segment data. Ignored by the MAC driver. */
-    uint8_t                  segClientData[4];
+    uint8_t                  segClientData[2];
 
     /*  Additional client segment payload; Ignored by the MAC driver. */
     /*  uint8_t                  segClientLoad[]; */
@@ -569,29 +642,38 @@ typedef enum
     /* RX: packet was dropped because of wrong interface source address */
     TCPIP_MAC_PKT_ACK_SOURCE_ERR        = -11,
 
+    /* RX: packet was dropped because of wrong destination address */
+    TCPIP_MAC_PKT_ACK_DEST_ERR          = -12,
+
     /* RX: packet was dropped because the type was unknown  */
-    TCPIP_MAC_PKT_ACK_TYPE_ERR          = -12,
+    TCPIP_MAC_PKT_ACK_TYPE_ERR          = -13,
 
     /* RX: internal packet structure error  */
-    TCPIP_MAC_PKT_ACK_STRUCT_ERR        = -13,  
+    TCPIP_MAC_PKT_ACK_STRUCT_ERR        = -14,  
 
     /* RX: the packet protocol couldn't find a destination for it */
-    TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR    = -14,
+    TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR    = -15,
 
     /* RX: the packet too fragmented  */
-    TCPIP_MAC_PKT_ACK_FRAGMENT_ERR      = -15, 
+    TCPIP_MAC_PKT_ACK_FRAGMENT_ERR      = -16, 
 
     /* RX: the packet destination is closing */
-    TCPIP_MAC_PKT_ACK_PROTO_DEST_CLOSE  = -16,
+    TCPIP_MAC_PKT_ACK_PROTO_DEST_CLOSE  = -17,
 
     /* RX: memory allocation error */
-    TCPIP_MAC_PKT_ACK_ALLOC_ERR         = -17,  
+    TCPIP_MAC_PKT_ACK_ALLOC_ERR         = -18,  
 
-    /* TX: Packet was rejected by the IP layer */
-    TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -18,  
+    /* RX/TX: Packet was rejected by the IP layer */
+    TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -19,  
 
     /* RX: packet was dropped because it was processed externally */
-    TCPIP_MAC_PKT_ACK_EXTERN           = -19,
+    TCPIP_MAC_PKT_ACK_EXTERN            = -20,
+
+    /* RX: packet was directly processed successfuly by the bridge */
+    TCPIP_MAC_PKT_ACK_BRIDGE_DONE       = -21,
+
+    /* RX: packet was dropped by the bridge */
+    TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD    = -22,
 }TCPIP_MAC_PKT_ACK_RES;
 
 
@@ -789,10 +871,7 @@ struct _tag_TCPIP_MAC_PACKET
     uint8_t*                        pNetLayer;
 
     /* Pointer to the transport layer.
-       On TX: the sending higher layer protocol updates this field.
-            The MAC driver shouldn't need this field.
-       On RX: the MAC driver updates this field before handing over the packet.
-       (MCHP TCP/IP stack note: The packet allocation function updates this field automatically. But not for IPv6!). */
+       The MAC driver does not use this field. */
     uint8_t*                        pTransportLayer;
 
     /* Total length of the transport layer.
@@ -830,10 +909,27 @@ struct _tag_TCPIP_MAC_PACKET
              sets this field when calling the packet ackFunc. */
     int16_t                         ackRes;
 
-    /* Client/padding data; ignored by the MAC driver.
-       It can be used by the packet client. */
-    uint16_t                        pktClientData;
+    /* Packet client data; ignored by the MAC driver.
+       It can be used by the packet client modules
+       (MCHP TCP/IP stack note: the use of this field is assigned as follows:
+            - pktClientData[0] reserved for IPv4 module use 
+            - pktClientData[1] reserved for IPv6 module use 
+            - pktClientData[2] can be used by higher layer modules (IGMP, UDP, etc.) */
+    union
+    {
+        uint16_t            pktClientData[3];
+        struct
+        {
+            uint16_t        ipv4PktData;
+            uint16_t        ipv6PktData;
+            uint16_t        modPktData;
+        };
+    };
 
+    /* Priority associated with the packet.
+       On TX: The MAC driver use this field to transmit packet using priority queues.
+       On RX: The MAC driver inform stack about the priority of the packet received */
+    uint8_t                         pktPriority;
     /* Additional client packet payload, variable packet data.
        Ignored by the MAC driver. */
     uint32_t                        pktClientLoad[];
@@ -1527,9 +1623,6 @@ typedef enum
 */
 typedef struct
 {
-    /*  number of the interfaces supported in this session */
-    int     nIfs;         
-
     /*  malloc type allocation function */
     TCPIP_MAC_HEAP_MallocF  mallocF;
 
@@ -1561,25 +1654,38 @@ typedef struct
     /*  Parameter to be used when the event function is called. */
     const void*             eventParam;    
 
+    /*  number of the interfaces supported in this session */
+    uint16_t                nIfs;         
+
     /*  Module identifier. 
         Allows multiple channels/ports, etc. MAC support. */
-    unsigned int            moduleId;
+    uint16_t                moduleId;
 
     /*  index of the current interface */
-    int                     netIx;
+    uint16_t                netIx;
 
-    /*  current action for the MAC/stack */
-    TCPIP_MAC_ACTION        macAction;
+    /* The extra space allocated at the beginning of the 
+    segment data buffer: TCPIP_MAC_DATA_SEGMENT.segLoad
+    segLoadOffset ==  sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentPktPtr) + sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap)
+
+    It can be different based on the MAC type included in the build
+    MAC driver uses it to have the layout of the data segment */
+    uint16_t                segLoadOffset;
+
+    /*  current action for the MAC/stack: TCPIP_MAC_ACTION value*/
+    uint8_t                 macAction;
 
     /*  The power mode for this interface to go to. 
         Valid only if stackAction == init/reinit. 
-        Ignored for deinitialize operation. */
-    TCPIP_MAC_POWER_MODE    powerMode;
+        Ignored for deinitialize operation.
+        TCPIP_MAC_POWER_MODE value */
+    uint8_t                 powerMode;
+
 
     /*  Physical address of the interface. 
         MAC sets this field as part of the initialization function. 
         The stack will use this data as the interface address. */
-    TCPIP_MAC_ADDR                ifPhyAddress;
+    TCPIP_MAC_ADDR          ifPhyAddress;
 
 }TCPIP_MAC_MODULE_CTRL;
 
@@ -1644,6 +1750,10 @@ typedef struct
     /* Tx Checksum offload Enable */
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
     
+    /* number of Tx priorities supported by MAC*/
+    uint8_t macTxPrioNum;
+    /* number of Rx priorities supported by MAC*/
+    uint8_t macRxPrioNum;
 }TCPIP_MAC_PARAMETERS;
 
 
@@ -2070,12 +2180,10 @@ void       TCPIP_MAC_Close(DRV_HANDLE hMac);
       part of the ackFunc itself or as discrete steps.
 	  
      On 32-bit machines, the 1st segment payload of a packet is allocated so
-      that it is always 32-bit aligned and its size is 32 bits multiple. The
-      segLoadOffset adds to the payload address and insures that the network
-      layer data is 32-bit aligned.
+      that it is always cache line size aligned and its size is a cache line multiple.
 	  
-     PIC32 MAC driver specific : the driver checks that the
-      segLoadOffset >= 2. See notes for the segLoadOffset member.
+     Harmony MAC driver specific : the driver checks that the
+      segLoadOffset >= 8. See notes for the segLoadOffset member.
 	  
      The packet is not required to contain the Frame Check Sequence
       (FCS/CRC32) field. The MAC driver/controller will insert that field

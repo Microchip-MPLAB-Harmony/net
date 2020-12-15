@@ -144,10 +144,11 @@ def tcpipAutoConfigNetConfigEnable(symbol, event):
     if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
         Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
         
-    if (event["value"] == True) and (Database.getComponentByID("tcpipNetConfig") == None):
-        res = Database.activateComponents(["tcpipNetConfig"], "BASIC CONFIGURATION", False)
-        tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig_0", "NETCONFIG_MAC_Dependency")
-        tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig", "libtcpipNetConfig")   
+    if (event["value"] == True):
+        if (Database.getComponentByID("tcpipNetConfig") == None):
+            res = Database.activateComponents(["tcpipNetConfig"], "BASIC CONFIGURATION", False)
+            tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig_0", "NETCONFIG_MAC_Dependency")
+            tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig", "libtcpipNetConfig")   
     else:
         res = Database.deactivateComponents(["tcpipNetConfig"])
     

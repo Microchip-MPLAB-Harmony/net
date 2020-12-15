@@ -117,7 +117,17 @@ IP_ADDRESS_TYPE_ANY is not supported (not a valid type for client open)!&nbsp;</
 <p class="Element10">
 If the remoteAddress != 0 (and the address pointed by remoteAddress != 0) then the <a href="01409.html" target="topic">socket</a> will immediately initiate a connection to the remote host&nbsp;</p>
 <p class="Element10">
-If the remoteAddress is unspecified, no connection is initiated. Client <a href="01409.html" target="topic">socket</a> parameters can be set using <a href="03959.html" target="topic">TCPIP_TCP_Bind</a>, <a href="04003.html" target="topic">TCPIP_TCP_RemoteBind</a>, etc. calls and then connection initiated by calling <a href="03964.html" target="topic">TCPIP_TCP_Connect</a>.</p></div>
+If the remoteAddress is unspecified, no connection is initiated. Client <a href="01409.html" target="topic">socket</a> parameters can be set using <a href="03959.html" target="topic">TCPIP_TCP_Bind</a>, <a href="04003.html" target="topic">TCPIP_TCP_RemoteBind</a>, etc. calls and then connection initiated by calling <a href="03964.html" target="topic">TCPIP_TCP_Connect</a>.&nbsp;</p>
+<p class="Element10">
+Sockets and user threads protection For efficiency reasons, there is NO PROTECTION for each individual API call except to Open and Close sockets! What it means is that:
+<ul class="Element635">
+<li class="Element605">the user application should close all its sockets before issuing a stack/if down command The stack manager takes care of the internally used sockets</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">A <a href="01409.html" target="topic">socket</a> can NOT be used concurrently from multiple threads! It's ok to pass a <a href="01409.html" target="topic">socket</a> from one thread to another as long as there's is no access from more than one thread at a time</li>
+</ul>&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->

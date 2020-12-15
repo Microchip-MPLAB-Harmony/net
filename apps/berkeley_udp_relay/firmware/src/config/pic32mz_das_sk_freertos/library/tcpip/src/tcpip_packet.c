@@ -191,6 +191,7 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Packet Ack: orphan packet! \r\n");
     }
+    pPkt->pktPriority = 0; //clear the packet priority to default
 }
 
 void TCPIP_PKT_SegmentAppend(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_DATA_SEGMENT* pSeg)
@@ -711,6 +712,7 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
         {
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
+        pPkt->pktPriority = 0; // set the default priority
 
     }
 

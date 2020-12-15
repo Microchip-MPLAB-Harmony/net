@@ -20,7 +20,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -56,6 +56,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "driver/emac/src/dynamic/drv_emac_dcpt_lists.h"
 #include "driver/emac/src/drv_emac_local.h"
 #include "device.h"
+
+// EMAC debugging levels/masks
+// basic debugging
+#define EMAC_DRV_DEBUG_MASK_BASIC           (0x0001)
+
+#define EMAC_DRV_DEBUG_LEVEL                EMAC_DRV_DEBUG_MASK_BASIC
 
 // *****************************************************************************
 /* Ethernet Receive Filter Flags

@@ -135,7 +135,7 @@ typedef enum
 
 // Default MQTT broker to use
 #define APP_MQTT_MAX_BROKER_SIZE    32
-#define APP_MQTT_DEFAULT_BROKER     "mqtt.eclipse.org"
+#define APP_MQTT_DEFAULT_BROKER     "mqtt.eclipseprojects.io"
 #define APP_MQTT_DEFAULT_BROKER_PORT 1883
 
 #define APP_MQTT_MAX_CLIENT_SIZE    32

@@ -79,7 +79,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 		<#lt>#define DRV_ENCX24J600_DUPLEX_MODE_IDX${idx} TCPIP_ETH_OPEN_AUTO
 	</#if>
 	<#assign chipSelectPin= "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_SPI_CS_IDX" + idx>
-	<#lt>#define DRV_ENCX24J600_SPI_CS_IDX${idx}		${chipSelectPin?eval}
+	<#if (chipSelectPin?eval == "SYS_PORT_PIN_NONE")>
+		<#lt>#error Configure SPI Chip-Select pin for interfacing ENCX24J600 (in ENCX24J600 Driver)
+	<#else>
+		<#lt>#define DRV_ENCX24J600_SPI_CS_IDX${idx}		${chipSelectPin?eval}
+	</#if>
 
 </#list>
 </#if>

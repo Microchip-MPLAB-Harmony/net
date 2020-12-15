@@ -1,0 +1,15 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: drvGmac}
+children:
+- type: Symbols
+  children:
+  - type: String
+    attributes: {id: DRV_INTMAC_PHY_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: drvGmac, value: KSZ8091}
+- type: ElementPosition
+  attributes: {x: '280', y: '20', id: drvGmac}

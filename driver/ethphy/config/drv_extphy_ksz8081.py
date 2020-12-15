@@ -26,20 +26,27 @@ def instantiateComponent(drvExtPhyKsz8081Component):
     print("KSZ8081 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    # Delay for the Link Initialization in ms
-    drvExtPhyKsz8081LinkInitDelay= drvExtPhyKsz8081Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", None)
-    drvExtPhyKsz8081LinkInitDelay.setLabel("Delay for the Link Initialization (mSec)") 
-    drvExtPhyKsz8081LinkInitDelay.setVisible(True)
-    drvExtPhyKsz8081LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
-    drvExtPhyKsz8081LinkInitDelay.setDefaultValue(500)
-    #drvExtPhyKsz8081LinkInitDelay.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
-
     # PHY Address
     drvExtPhyKsz8081Addr= drvExtPhyKsz8081Component.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
     drvExtPhyKsz8081Addr.setLabel("PHY Address") 
     drvExtPhyKsz8081Addr.setVisible(True)
     drvExtPhyKsz8081Addr.setDescription("PHY Address")
-    drvExtPhyKsz8081Addr.setDefaultValue(1)
+    drvExtPhyKsz8081Addr.setDefaultValue(1)    
+        
+    # Use a Function to be called at PHY Reset
+    drvExtPhyKsz8081ResetCallbackEnable = drvExtPhyKsz8081Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
+    drvExtPhyKsz8081ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
+    drvExtPhyKsz8081ResetCallbackEnable.setVisible(True)
+    drvExtPhyKsz8081ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
+    drvExtPhyKsz8081ResetCallbackEnable.setDefaultValue(False)
+    
+    # App Function
+    drvExtPhyKsz8081ResetCallback = drvExtPhyKsz8081Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyKsz8081ResetCallbackEnable)
+    drvExtPhyKsz8081ResetCallback.setLabel("App Function")
+    drvExtPhyKsz8081ResetCallback.setVisible(False)
+    drvExtPhyKsz8081ResetCallback.setDescription("App Function")
+    drvExtPhyKsz8081ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyKsz8081ResetCallback.setDependencies(drvExtPhyKsz8081MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
     # External PHY Connection Flags
     drvExtPhyKsz8081ConnFlag = drvExtPhyKsz8081Component.createMenuSymbol(None, None) 
@@ -71,77 +78,78 @@ def instantiateComponent(drvExtPhyKsz8081Component):
         drvExtPhyKsz8081ConfigAuto.setVisible(True)
         drvExtPhyKsz8081ConfigAuto.setDescription("Use The Fuses Configuration")
         drvExtPhyKsz8081ConfigAuto.setDefaultValue(True)    
-    
+            
+    # Advanced Settings
+    drvExtPhyKsz8081AdvSettings = drvExtPhyKsz8081Component.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)
+    drvExtPhyKsz8081AdvSettings.setLabel("Advanced Settings")
+    drvExtPhyKsz8081AdvSettings.setDescription("Advanced Settings")
+    drvExtPhyKsz8081AdvSettings.setVisible(True)
+
+    # Delay for the Link Initialization in ms
+    drvExtPhyKsz8081LinkInitDelay= drvExtPhyKsz8081Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081LinkInitDelay.setLabel("Delay for the Link Initialization (mSec)") 
+    drvExtPhyKsz8081LinkInitDelay.setVisible(True)
+    drvExtPhyKsz8081LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
+    drvExtPhyKsz8081LinkInitDelay.setDefaultValue(500)
     
     # External PHY Type
-    drvExtPhyKsz8081PhyType = drvExtPhyKsz8081Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+    drvExtPhyKsz8081PhyType = drvExtPhyKsz8081Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyKsz8081AdvSettings)
     drvExtPhyKsz8081PhyType.setVisible(False)   
     drvExtPhyKsz8081PhyType.setDefaultValue("KSZ8081")
-    
-    # Driver PHY Instances Number
-    drvExtPhyKsz8081InstanceNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
-    drvExtPhyKsz8081InstanceNum.setLabel("PHY Instances Number") 
-    drvExtPhyKsz8081InstanceNum.setVisible(True)
-    drvExtPhyKsz8081InstanceNum.setDescription("Driver PHY Instances Number")
-    drvExtPhyKsz8081InstanceNum.setDefaultValue(1)
-    
-    # Driver PHY Clients Number
-    drvExtPhyKsz8081ClientNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", None)
-    drvExtPhyKsz8081ClientNum.setLabel("PHY Clients Number") 
-    drvExtPhyKsz8081ClientNum.setVisible(True)
-    drvExtPhyKsz8081ClientNum.setDescription("Driver PHY Clients Number")
-    drvExtPhyKsz8081ClientNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral Index Number
-    drvExtPhyKsz8081IndexNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INDEX", None)
-    drvExtPhyKsz8081IndexNum.setLabel("PHY Peripheral Index Number") 
-    drvExtPhyKsz8081IndexNum.setVisible(True)
-    drvExtPhyKsz8081IndexNum.setDescription("Driver PHY Peripheral Index Number")
-    drvExtPhyKsz8081IndexNum.setDefaultValue(1)
-    
-    # Driver PHY Peripheral ID
-    drvExtPhyKsz8081PeripheralId= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", None)
-    drvExtPhyKsz8081PeripheralId.setLabel("PHY Peripheral ID") 
-    drvExtPhyKsz8081PeripheralId.setVisible(True)
-    drvExtPhyKsz8081PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyKsz8081PeripheralId.setDefaultValue(1)
-    
+
     # Driver PHY Negotiation Time-out (mSec)
-    drvExtPhyKsz8081NegInitTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", None)
+    drvExtPhyKsz8081NegInitTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyKsz8081AdvSettings)
     drvExtPhyKsz8081NegInitTimeout.setLabel("PHY Negotiation Time-out (mSec)") 
     drvExtPhyKsz8081NegInitTimeout.setVisible(True)
     drvExtPhyKsz8081NegInitTimeout.setDescription("Driver PHY Negotiation Time-out (mSec)")
     drvExtPhyKsz8081NegInitTimeout.setDefaultValue(1)
     
     # Driver PHY Negotiation Done Time-out (mSec)
-    drvExtPhyKsz8081NegDoneTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", None)
+    drvExtPhyKsz8081NegDoneTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", drvExtPhyKsz8081AdvSettings)
     drvExtPhyKsz8081NegDoneTimeout.setLabel("PHY Negotiation Done Time-out (mSec)") 
     drvExtPhyKsz8081NegDoneTimeout.setVisible(True)
     drvExtPhyKsz8081NegDoneTimeout.setDescription("Driver PHY Negotiation Done Time-out (mSec)")
     drvExtPhyKsz8081NegDoneTimeout.setDefaultValue(2000)
     
     # Driver PHY Reset Clear Time-out (mSec)
-    drvExtPhyKsz8081ResetClearTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", None)
+    drvExtPhyKsz8081ResetClearTimeout= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", drvExtPhyKsz8081AdvSettings)
     drvExtPhyKsz8081ResetClearTimeout.setLabel("PHY Reset Clear Time-out (mSec)") 
     drvExtPhyKsz8081ResetClearTimeout.setVisible(True)
     drvExtPhyKsz8081ResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out (mSec)")
     drvExtPhyKsz8081ResetClearTimeout.setDefaultValue(500)
     
-    # Use a Function to be called at PHY Reset
-    drvExtPhyKsz8081ResetCallbackEnable = drvExtPhyKsz8081Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
-    drvExtPhyKsz8081ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
-    drvExtPhyKsz8081ResetCallbackEnable.setVisible(True)
-    drvExtPhyKsz8081ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
-    drvExtPhyKsz8081ResetCallbackEnable.setDefaultValue(False)
+    # Driver PHY Instances Number
+    drvExtPhyKsz8081InstanceNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081InstanceNum.setLabel("PHY Instances Number") 
+    drvExtPhyKsz8081InstanceNum.setVisible(True)
+    drvExtPhyKsz8081InstanceNum.setDescription("Driver PHY Instances Number")
+    drvExtPhyKsz8081InstanceNum.setDefaultValue(1)
+    drvExtPhyKsz8081InstanceNum.setReadOnly(True)
     
-    # App Function
-    drvExtPhyKsz8081ResetCallback = drvExtPhyKsz8081Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyKsz8081ResetCallbackEnable)
-    drvExtPhyKsz8081ResetCallback.setLabel("App Function")
-    drvExtPhyKsz8081ResetCallback.setVisible(False)
-    drvExtPhyKsz8081ResetCallback.setDescription("App Function")
-    drvExtPhyKsz8081ResetCallback.setDefaultValue("AppPhyResetFunction")
-    drvExtPhyKsz8081ResetCallback.setDependencies(drvExtPhyKsz8081MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
-
+    # Driver PHY Clients Number
+    drvExtPhyKsz8081ClientNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081ClientNum.setLabel("PHY Clients Number") 
+    drvExtPhyKsz8081ClientNum.setVisible(True)
+    drvExtPhyKsz8081ClientNum.setDescription("Driver PHY Clients Number")
+    drvExtPhyKsz8081ClientNum.setDefaultValue(1)
+    drvExtPhyKsz8081ClientNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral Index Number
+    drvExtPhyKsz8081IndexNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081IndexNum.setLabel("PHY Peripheral Index Number") 
+    drvExtPhyKsz8081IndexNum.setVisible(True)
+    drvExtPhyKsz8081IndexNum.setDescription("Driver PHY Peripheral Index Number")
+    drvExtPhyKsz8081IndexNum.setDefaultValue(1)
+    drvExtPhyKsz8081IndexNum.setReadOnly(True)
+    
+    # Driver PHY Peripheral ID
+    drvExtPhyKsz8081PeripheralId= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081PeripheralId.setLabel("PHY Peripheral ID") 
+    drvExtPhyKsz8081PeripheralId.setVisible(True)
+    drvExtPhyKsz8081PeripheralId.setDescription("Driver PHY Peripheral ID")
+    drvExtPhyKsz8081PeripheralId.setDefaultValue(1)
+    drvExtPhyKsz8081PeripheralId.setReadOnly(True)
+    
     #Add to system_config.h
     drvExtPhyKsz8081HeaderFtl = drvExtPhyKsz8081Component.createFileSymbol(None, None)
     drvExtPhyKsz8081HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_ksz8081.h.ftl")

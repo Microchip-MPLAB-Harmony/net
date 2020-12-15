@@ -31,137 +31,126 @@ def instantiateComponent(tcpipZeroConfComponent):
     tcpipZc.setVisible(False)
     tcpipZc.setDescription("Use Link Local Zero Config")
     tcpipZc.setDefaultValue(True)
+    
+    # Advanced Settings
+    tcpipZcMdnsAdvSettings = tcpipZeroConfComponent.createMenuSymbol("TCPIP_ZC_MDNS_ADV_SETTING", None)
+    tcpipZcMdnsAdvSettings.setLabel("Advanced Settings")
+    tcpipZcMdnsAdvSettings.setDescription("Advanced Settings")
+    tcpipZcMdnsAdvSettings.setVisible(True)
 
-    # Enable Link Local Warning Messages
-    tcpipZcWarnZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_WARN_ZCLL", None)
+    # Link Local Task Rate in ms
+    tcpipZcTskTickRate = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_TASK_TICK_RATE", tcpipZcMdnsAdvSettings)
+    tcpipZcTskTickRate.setLabel("Link Local Task Rate (in msec)")
+    tcpipZcTskTickRate.setVisible(True)
+    tcpipZcTskTickRate.setDescription("Link Local Task Rate in ms")
+    tcpipZcTskTickRate.setDefaultValue(113)
+# Enable Link Local Warning Messages
+    tcpipZcWarnZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_WARN_ZCLL", tcpipZcMdnsAdvSettings)
     tcpipZcWarnZcll.setLabel("Enable Link Local Warning Messages")
     tcpipZcWarnZcll.setVisible(True)
     tcpipZcWarnZcll.setDescription("Enable Link Local Warning Messages")
     tcpipZcWarnZcll.setDefaultValue(False) 
-    #tcpipZcWarnZcll.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Enable Link Local Information Messages
-    tcpipZcInfoZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_INFO_ZCLL", None)
+    tcpipZcInfoZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_INFO_ZCLL", tcpipZcMdnsAdvSettings)
     tcpipZcInfoZcll.setLabel("Enable Link Local Information Messages")
     tcpipZcInfoZcll.setVisible(True)
     tcpipZcInfoZcll.setDescription("Enable Link Local Information Messages")
     tcpipZcInfoZcll.setDefaultValue(False) 
-    #tcpipZcInfoZcll.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Enable Link Local Debug Messages
-    tcpipZcDebugZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_DEBUG_ZCLL", None)
+    tcpipZcDebugZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_DEBUG_ZCLL", tcpipZcMdnsAdvSettings)
     tcpipZcDebugZcll.setLabel("Enable Link Local Debug Messages")
     tcpipZcDebugZcll.setVisible(True)
     tcpipZcDebugZcll.setDescription("Enable Link Local Debug Messages")
     tcpipZcDebugZcll.setDefaultValue(False) 
-    #tcpipZcDebugZcll.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Probe Wait in seconds
-    tcpipZcProbeWait = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_WAIT", None)
-    tcpipZcProbeWait.setLabel("Probe Wait (seconds)")
+    tcpipZcProbeWait = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_WAIT", tcpipZcMdnsAdvSettings)
+    tcpipZcProbeWait.setLabel("Probe Wait (in sec)")
     tcpipZcProbeWait.setVisible(True)
     tcpipZcProbeWait.setDescription("Probe Wait in seconds")
     tcpipZcProbeWait.setDefaultValue(1)
-    #tcpipZcProbeWait.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Minimum Time Between Probes in seconds
-    tcpipZcProbeMin = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_MIN", None)
-    tcpipZcProbeMin.setLabel("Minimum Time Between Probes (seconds)")
+    tcpipZcProbeMin = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_MIN", tcpipZcMdnsAdvSettings)
+    tcpipZcProbeMin.setLabel("Minimum Time Between Probes (in sec)")
     tcpipZcProbeMin.setVisible(True)
     tcpipZcProbeMin.setDescription("Minimum Time Between Probes in seconds")
     tcpipZcProbeMin.setDefaultValue(1)
-    #tcpipZcProbeMin.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Maxiumum Time Between Probes in seconds
-    tcpipZcProbeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_MAX", None)
-    tcpipZcProbeMax.setLabel("Maxiumum Time Between Probes (seconds)")
+    tcpipZcProbeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_MAX", tcpipZcMdnsAdvSettings)
+    tcpipZcProbeMax.setLabel("Maxiumum Time Between Probes (in sec)")
     tcpipZcProbeMax.setVisible(True)
     tcpipZcProbeMax.setDescription("Maxiumum Time Between Probes in seconds")
     tcpipZcProbeMax.setDefaultValue(2)
-    #tcpipZcProbeMax.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Number of Probes
-    tcpipZcProbeNum = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_NUM", None)
+    tcpipZcProbeNum = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_PROBE_NUM", tcpipZcMdnsAdvSettings)
     tcpipZcProbeNum.setLabel("Number of Probes")
     tcpipZcProbeNum.setVisible(True)
     tcpipZcProbeNum.setDescription("Number of Probes")
     tcpipZcProbeNum.setDefaultValue(3)
-    #tcpipZcProbeNum.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Delay Before Announcing
-    tcpipZcAnnounceWait = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_WAIT", None)
+    tcpipZcAnnounceWait = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_WAIT", tcpipZcMdnsAdvSettings)
     tcpipZcAnnounceWait.setLabel("Delay Before Announcing")
     tcpipZcAnnounceWait.setVisible(True)
     tcpipZcAnnounceWait.setDescription("Delay Before Announcing")
     tcpipZcAnnounceWait.setDefaultValue(2)
-    #tcpipZcAnnounceWait.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Number of Announcement Packets
-    tcpipZcAnnounceNum = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_NUM", None)
+    tcpipZcAnnounceNum = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_NUM", tcpipZcMdnsAdvSettings)
     tcpipZcAnnounceNum.setLabel("Number of Announcement Packets")
     tcpipZcAnnounceNum.setVisible(True)
     tcpipZcAnnounceNum.setDescription("Number of Announcement Packets")
     tcpipZcAnnounceNum.setDefaultValue(2)
-    #tcpipZcAnnounceNum.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Time Between Announcement Packets in seconds
-    tcpipZcAnnounceInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_INTERVAL", None)
-    tcpipZcAnnounceInterval.setLabel("Time Between Announcement Packets (seconds)")
+    tcpipZcAnnounceInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_ANNOUNCE_INTERVAL", tcpipZcMdnsAdvSettings)
+    tcpipZcAnnounceInterval.setLabel("Time Between Announcement Packets (in sec)")
     tcpipZcAnnounceInterval.setVisible(True)
     tcpipZcAnnounceInterval.setDescription("Time Between Announcement Packets in seconds")
     tcpipZcAnnounceInterval.setDefaultValue(2)
-    #tcpipZcAnnounceInterval.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Maximum Conflicts Before Rate Limiting
-    tcpipZcConflictMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_MAX_CONFLICTS", None)
+    tcpipZcConflictMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_MAX_CONFLICTS", tcpipZcMdnsAdvSettings)
     tcpipZcConflictMax.setLabel("Maximum Conflicts Before Rate Limiting")
     tcpipZcConflictMax.setVisible(True)
     tcpipZcConflictMax.setDescription("Maximum Conflicts Before Rate Limiting")
     tcpipZcConflictMax.setDefaultValue(10)
-    #tcpipZcConflictMax.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Delay Between Attempts in seconds
-    tcpipZcRateLimitInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_RATE_LIMIT_INTERVAL", None)
-    tcpipZcRateLimitInterval.setLabel("Delay Between Attempts (seconds)")
+    tcpipZcRateLimitInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_RATE_LIMIT_INTERVAL", tcpipZcMdnsAdvSettings)
+    tcpipZcRateLimitInterval.setLabel("Delay Between Attempts (in sec)")
     tcpipZcRateLimitInterval.setVisible(True)
     tcpipZcRateLimitInterval.setDescription("Delay Between Attempts in seconds")
     tcpipZcRateLimitInterval.setDefaultValue(60)
-    #tcpipZcRateLimitInterval.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Rate Between Defensive ARPs in seconds
-    tcpipZcDefendInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_DEFEND_INTERVAL", None)
-    tcpipZcDefendInterval.setLabel("Rate Between Defensive ARPs (seconds)")
+    tcpipZcDefendInterval = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_DEFEND_INTERVAL", tcpipZcMdnsAdvSettings)
+    tcpipZcDefendInterval.setLabel("Rate Between Defensive ARPs (in sec)")
     tcpipZcDefendInterval.setVisible(True)
     tcpipZcDefendInterval.setDescription("Rate Between Defensive ARPs in seconds")
     tcpipZcDefendInterval.setDefaultValue(10)
-    #tcpipZcDefendInterval.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Base IP
-    tcpipZcBaseIp = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE", None) 
+    tcpipZcBaseIp = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE", tcpipZcMdnsAdvSettings) 
     tcpipZcBaseIp.setLabel("Base IP")
     tcpipZcBaseIp.setVisible(True)
     tcpipZcBaseIp.setDescription("Base IP")
     tcpipZcBaseIp.setDefaultValue(0xa9fe0100)
-    #tcpipZcBaseIp.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Base Netmask
-    tcpipZcBaseNetmask = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", None)
+    tcpipZcBaseNetmask = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", tcpipZcMdnsAdvSettings)
     tcpipZcBaseNetmask.setLabel("Base Netmask")
     tcpipZcBaseNetmask.setVisible(True)
     tcpipZcBaseNetmask.setDescription("Base Netmask")
     tcpipZcBaseNetmask.setDefaultValue(0x0000FFFF)
-    #tcpipZcBaseNetmask.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
-
-    # Link Local Task Rate in ms
-    tcpipZcTskTickRate = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_LL_TASK_TICK_RATE", None)
-    tcpipZcTskTickRate.setLabel("Link Local Task Rate (ms)")
-    tcpipZcTskTickRate.setVisible(True)
-    tcpipZcTskTickRate.setDescription("Link Local Task Rate in ms")
-    tcpipZcTskTickRate.setDefaultValue(333)
-    #tcpipZcTskTickRate.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
     # Use Multicast DNS Zero Config (Bonjour)
-    tcpipZcMulticastDns = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG", None)
+    tcpipZcMulticastDns = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG", tcpipZcMdnsAdvSettings)
     tcpipZcMulticastDns.setLabel("Use Multicast DNS Zero Config (Bonjour)")
     tcpipZcMulticastDns.setVisible(False)
     tcpipZcMulticastDns.setDescription("Use Multicast DNS Zero Config (Bonjour)")
@@ -169,10 +158,18 @@ def instantiateComponent(tcpipZeroConfComponent):
     #tcpipZcMulticastDns.setDependencies(tcpipMulticastDnsZcMenuVisible, ["tcpipUdp.TCPIP_USE_UDP"])
     #tcpipZcMulticastDns.setDependencies(tcpipMulticastDnsZcMenuVisible, ["tcpipUdp.TCPIP_USE_UDP", "TCPIP_USE_LINK_ZERO_CONFIG"])
 
+    # Task Tick Rate
+    tcpipZcMdnsTskTickRate = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_TASK_TICK_RATE", tcpipZcMulticastDns)
+    tcpipZcMdnsTskTickRate.setLabel("MDNS Task Rate (in msec)")
+    tcpipZcMdnsTskTickRate.setVisible(False)
+    tcpipZcMdnsTskTickRate.setDescription("Task Tick Rate in milliseconds")
+    tcpipZcMdnsTskTickRate.setDefaultValue(63)
+    tcpipZcMdnsTskTickRate.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
+    
     # Enable Multicast DNS Information Messages
     tcpipZcMdnsInfo = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_INFO_MDNS", tcpipZcMulticastDns)
     tcpipZcMdnsInfo.setLabel("Enable Multicast DNS Information Messages")
-    tcpipZcMdnsInfo.setVisible(True)
+    tcpipZcMdnsInfo.setVisible(False)
     tcpipZcMdnsInfo.setDescription("Enable Multicast DNS Information Messages")
     tcpipZcMdnsInfo.setDefaultValue(False) 
     tcpipZcMdnsInfo.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
@@ -180,7 +177,7 @@ def instantiateComponent(tcpipZeroConfComponent):
     # Enable Multicast DNS Warning Messages
     tcpipZcMdnsWarn = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_WARN_MDNS", tcpipZcMulticastDns)
     tcpipZcMdnsWarn.setLabel("Enable Multicast DNS Warning Messages")
-    tcpipZcMdnsWarn.setVisible(True)
+    tcpipZcMdnsWarn.setVisible(False)
     tcpipZcMdnsWarn.setDescription("Enable Multicast DNS Warning Messages")
     tcpipZcMdnsWarn.setDefaultValue(False) 
     tcpipZcMdnsWarn.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
@@ -193,14 +190,6 @@ def instantiateComponent(tcpipZeroConfComponent):
     tcpipZcMdnsDebug.setDefaultValue(False) 
     tcpipZcMdnsDebug.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
 
-    # Task Tick Rate
-    tcpipZcMdnsTskTickRate = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_TASK_TICK_RATE", tcpipZcMulticastDns)
-    tcpipZcMdnsTskTickRate.setLabel("Task Rate")
-    tcpipZcMdnsTskTickRate.setVisible(False)
-    tcpipZcMdnsTskTickRate.setDescription("Task Tick Rate")
-    tcpipZcMdnsTskTickRate.setDefaultValue(63)
-    tcpipZcMdnsTskTickRate.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
-
     # Port Number
     tcpipZcMdnsPort = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_PORT", tcpipZcMulticastDns)
     tcpipZcMdnsPort.setLabel("Port")
@@ -211,7 +200,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Host Name Size
     tcpipZcMdnsHostNameSizeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_HOST_NAME_SIZE", tcpipZcMulticastDns)
-    tcpipZcMdnsHostNameSizeMax.setLabel("Max Host Name Size")
+    tcpipZcMdnsHostNameSizeMax.setLabel("Maximum Host Name Size")
     tcpipZcMdnsHostNameSizeMax.setVisible(False)
     tcpipZcMdnsHostNameSizeMax.setDescription("Maximum Host Name Size")
     tcpipZcMdnsHostNameSizeMax.setDefaultValue(32)
@@ -227,7 +216,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Resource Record Name Size
     tcpipZcMdnsRrNameSizeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_RR_NAME_SIZE", tcpipZcMulticastDns)
-    tcpipZcMdnsRrNameSizeMax.setLabel("Max Resource Record Name Size")
+    tcpipZcMdnsRrNameSizeMax.setLabel("Maximum Resource Record Name Size")
     tcpipZcMdnsRrNameSizeMax.setVisible(False)
     tcpipZcMdnsRrNameSizeMax.setDescription("Maximum Resource Record Name Size")
     tcpipZcMdnsRrNameSizeMax.setDefaultValue(256)
@@ -235,7 +224,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Server Type Size
     tcpipZcMdnsSrvTypeSizeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_SRV_TYPE_SIZE", tcpipZcMulticastDns)
-    tcpipZcMdnsSrvTypeSizeMax.setLabel("Max Server Type Size")
+    tcpipZcMdnsSrvTypeSizeMax.setLabel("Maximum Server Type Size")
     tcpipZcMdnsSrvTypeSizeMax.setVisible(False)
     tcpipZcMdnsSrvTypeSizeMax.setDescription("Maximum Server Type Size")
     tcpipZcMdnsSrvTypeSizeMax.setDefaultValue(32)
@@ -243,7 +232,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Server Name Size
     tcpipZcMdnsSrvNameSizeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_SRV_NAME_SIZE", tcpipZcMulticastDns)
-    tcpipZcMdnsSrvNameSizeMax.setLabel("Max Server Name Size")
+    tcpipZcMdnsSrvNameSizeMax.setLabel("Maximum Server Name Size")
     tcpipZcMdnsSrvNameSizeMax.setVisible(False)
     tcpipZcMdnsSrvNameSizeMax.setDescription("Maximum Server Name Size")
     tcpipZcMdnsSrvNameSizeMax.setDefaultValue(64)
@@ -251,7 +240,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Text Data Size
     tcpipZcMdnsTxtDataSizeMax = tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_TXT_DATA_SIZE", tcpipZcMulticastDns)
-    tcpipZcMdnsTxtDataSizeMax.setLabel("Max Text Data Size")
+    tcpipZcMdnsTxtDataSizeMax.setLabel("Maximum Text Data Size")
     tcpipZcMdnsTxtDataSizeMax.setVisible(False)
     tcpipZcMdnsTxtDataSizeMax.setDescription("Maximum Text Data Size")
     tcpipZcMdnsTxtDataSizeMax.setDefaultValue(128)
@@ -259,7 +248,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Time-To-Live for a Resource-Record in seconds
     tcpipZcMdnsRrTtlVal= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_RESOURCE_RECORD_TTL_VAL", tcpipZcMulticastDns)
-    tcpipZcMdnsRrTtlVal.setLabel("Time-To-Live for a Resource-Record (seconds)")
+    tcpipZcMdnsRrTtlVal.setLabel("Time-To-Live for a Resource-Record (in sec)")
     tcpipZcMdnsRrTtlVal.setVisible(False)
     tcpipZcMdnsRrTtlVal.setDescription("Time-To-Live for a Resource-Record in seconds")
     tcpipZcMdnsRrTtlVal.setDefaultValue(3600)
@@ -267,7 +256,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Number of Resource-Records/Service
     tcpipZcMdnsRrNumMax= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_RR_NUM", tcpipZcMulticastDns)
-    tcpipZcMdnsRrNumMax.setLabel("Max Number of Resource-Records/Service")
+    tcpipZcMdnsRrNumMax.setLabel("Maximum Number of Resource-Records/Service")
     tcpipZcMdnsRrNumMax.setVisible(False)
     tcpipZcMdnsRrNumMax.setDescription("Maximum Number of Resource-Records/Service")
     tcpipZcMdnsRrNumMax.setDefaultValue(4)
@@ -275,7 +264,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Initial Random Delay in ms
     tcpipZcMdnsProbeWait= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_PROBE_WAIT", tcpipZcMulticastDns)
-    tcpipZcMdnsProbeWait.setLabel("Initial Random Delay (ms)")
+    tcpipZcMdnsProbeWait.setLabel("Initial Random Delay (in msec)")
     tcpipZcMdnsProbeWait.setVisible(False)
     tcpipZcMdnsProbeWait.setDescription("Initial Random Delay in ms")
     tcpipZcMdnsProbeWait.setDefaultValue(750)
@@ -283,7 +272,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Delay Till Repeated Probe in ms
     tcpipZcMdnsProbeInterval= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_PROBE_INTERVAL", tcpipZcMulticastDns)
-    tcpipZcMdnsProbeInterval.setLabel("Maximum Delay Till Repeated Probe (ms)")
+    tcpipZcMdnsProbeInterval.setLabel("Maximum Delay Till Repeated Probe (in msec)")
     tcpipZcMdnsProbeInterval.setVisible(False)
     tcpipZcMdnsProbeInterval.setDescription("Maximum Delay Till Repeated Probe in ms")
     tcpipZcMdnsProbeInterval.setDefaultValue(250)
@@ -299,7 +288,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Maximum Number of Conflicts
     tcpipZcMdnsProbeConflictNumMax= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_MAX_PROBE_CONFLICT_NUM", tcpipZcMulticastDns)
-    tcpipZcMdnsProbeConflictNumMax.setLabel("Max Num of Conflicts")
+    tcpipZcMdnsProbeConflictNumMax.setLabel("Maximum Number of Conflicts")
     tcpipZcMdnsProbeConflictNumMax.setVisible(False)
     tcpipZcMdnsProbeConflictNumMax.setDescription("Maximum Number of Conflicts")
     tcpipZcMdnsProbeConflictNumMax.setDefaultValue(30)
@@ -315,7 +304,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Time Between Announcement Packets in ms
     tcpipZcMdnsAnnounceInterval= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_ANNOUNCE_INTERVAL", tcpipZcMulticastDns)
-    tcpipZcMdnsAnnounceInterval.setLabel("Time Between Announcement Packets (ms)")
+    tcpipZcMdnsAnnounceInterval.setLabel("Time Between Announcement Packets (in msec)")
     tcpipZcMdnsAnnounceInterval.setVisible(False)
     tcpipZcMdnsAnnounceInterval.setDescription("Time Between Announcement Packets in ms")
     tcpipZcMdnsAnnounceInterval.setDefaultValue(250)
@@ -323,12 +312,12 @@ def instantiateComponent(tcpipZeroConfComponent):
 
     # Delay Before Announcing in ms
     tcpipZcMdnsAnnounceWait= tcpipZeroConfComponent.createIntegerSymbol("TCPIP_ZC_MDNS_ANNOUNCE_WAIT", tcpipZcMulticastDns)
-    tcpipZcMdnsAnnounceWait.setLabel("Delay Before Announcing (ms)")
+    tcpipZcMdnsAnnounceWait.setLabel("Delay Before Announcing (in msec)")
     tcpipZcMdnsAnnounceWait.setVisible(False)
     tcpipZcMdnsAnnounceWait.setDescription("Delay Before Announcing in ms")
     tcpipZcMdnsAnnounceWait.setDefaultValue(250)
     tcpipZcMdnsAnnounceWait.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
-
+    
     tcpipZcMdnsheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG", 
                                     "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]     
     # ZCLL-MDNS Heap Size
@@ -378,16 +367,6 @@ def instantiateComponent(tcpipZeroConfComponent):
     tcpipZcMdnsSourceFile.setType("SOURCE")
     tcpipZcMdnsSourceFile.setEnabled(True)
     tcpipZcMdnsSourceFile.setDependencies(tcpipZeroConfGenSourceFile, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
-
-# make Multicast DNS Zero Config option visible
-# def tcpipMulticastDnsZcMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):  
-    # tcpipUdp = Database.getSymbolValue("tcpipUdp","TCPIP_USE_UDP")
-    # tcpipZc = Database.getSymbolValue("tcpipZeroConf","TCPIP_USE_LINK_ZERO_CONFIG")
-
-    # if(tcpipUdp and tcpipZc):
-        # tcpipDependentSymbol.setVisible(True)
-    # else:
-        # tcpipDependentSymbol.setVisible(False)
         
 def tcpipMulticastDnsZcMenuVisible(symbol, event):  
     if (event["value"] == True):                

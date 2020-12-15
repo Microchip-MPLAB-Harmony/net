@@ -21,6 +21,18 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+tcpipIPv4FwdEntriesMax = 10
+tcpipIPv4FwdEntriesMin = 1
+tcpipIPv4FwdPrev_cnt  = 0
+
+tcpipIPv4FwdEntry = []
+tcpipIPv4FwdBool = []
+tcpipIPv4FwdEntryNetAdd = []
+tcpipIPv4FwdEntryNetMask = []
+tcpipIPv4FwdEntryGwAdd = []
+tcpipIPv4FwdEntrySrcIfName = []
+tcpipIPv4FwdEntryDestIfName = []
+tcpipIPv4FwdEntryMetric = []
     
 def instantiateComponent(tcpipIPv4Component):
     print("TCPIP IPv4 Component")
@@ -32,9 +44,29 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4.setVisible(False)
     tcpipIPv4.setDescription("Enable IPv4")
     tcpipIPv4.setDefaultValue(True)
+    
+    # Enable IPv4 Commands
+    tcpipIpv4Commands = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_COMMANDS_ENABLE", None)
+    tcpipIpv4Commands.setLabel("Enable IPv4 Commands")
+    tcpipIpv4Commands.setVisible(True)
+    tcpipIpv4Commands.setDescription("Enable the IPv4 TCP/IP Commands")
+    tcpipIpv4Commands.setDefaultValue(False)
+    
+    # Advanced Settings
+    tcpipIPv4AdvSettings = tcpipIPv4Component.createMenuSymbol("TCPIP_IPV4_ADV_SETTING", None)
+    tcpipIPv4AdvSettings.setLabel("Advanced Settings")
+    tcpipIPv4AdvSettings.setDescription("Advanced Settings")
+    tcpipIPv4AdvSettings.setVisible(True)
+    
+    # ARP queue slots
+    tcpipIPv4ArpSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_ARP_QUEUE_SLOTS", tcpipIPv4AdvSettings)
+    tcpipIPv4ArpSlots.setLabel("Number of ARP Requests IPv4 can queue")
+    tcpipIPv4ArpSlots.setVisible(True)
+    tcpipIPv4ArpSlots.setDescription("Number of ARP requests that IPv4 Can Queue Up")
+    tcpipIPv4ArpSlots.setDefaultValue(10)
 
     # Load IPv4 Configurations
-    tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", None)
+    tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", tcpipIPv4AdvSettings)
     tcpipIPv4Frag.setLabel("Enable IPv4 Fragmentation Support")
     tcpipIPv4Frag.setVisible(True)
     tcpipIPv4Frag.setDescription("Enable IPv4 fragmentation support")
@@ -50,7 +82,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Initial fragment timeout in seconds
     tcpipIPv4FragTimeout = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FRAGMENT_TIMEOUT", tcpipIPv4FragSetting)
-    tcpipIPv4FragTimeout.setLabel("Initial fragment timeout - seconds")
+    tcpipIPv4FragTimeout.setLabel("Initial fragment timeout (in sec)")
     tcpipIPv4FragTimeout.setVisible(True)
     tcpipIPv4FragTimeout.setDescription("Initial fragment timeout in seconds")
     tcpipIPv4FragTimeout.setDefaultValue(15)
@@ -70,7 +102,7 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4FragMaxNum.setDefaultValue(4)
 
     # Enable External Packet Processing
-    tcpipIpv4ExtPktProcess = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_EXTERN_PACKET_PROCESS", None)
+    tcpipIpv4ExtPktProcess = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_EXTERN_PACKET_PROCESS", tcpipIPv4AdvSettings)
     tcpipIpv4ExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipIpv4ExtPktProcess.setVisible(True)
     tcpipIpv4ExtPktProcess.setDescription("Allows External Processing of RX Packets")
@@ -78,11 +110,138 @@ def instantiateComponent(tcpipIPv4Component):
     
     # IPv4 Task Tick Rate in ms
     tcpipIPv4TaskTickRate = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_TASK_TICK_RATE", tcpipIPv4FragSetting)
-    tcpipIPv4TaskTickRate.setLabel("IPv4 task rate - ms")
+    tcpipIPv4TaskTickRate.setLabel("IPv4 Fragmentation Task Rate (in msec)")
     tcpipIPv4TaskTickRate.setVisible(True)
-    tcpipIPv4TaskTickRate.setDescription("IPv4 task rate in ms")
+    tcpipIPv4TaskTickRate.setDescription("IPv4 task rate (in msec)")
     tcpipIPv4TaskTickRate.setDefaultValue(37)
 
+    # IPv4 Forwarding Support
+    tcpipIPv4Forward = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD", tcpipIPv4AdvSettings)
+    tcpipIPv4Forward.setLabel("Enable IPv4 Forwarding Support")
+    tcpipIPv4Forward.setVisible(True)
+    tcpipIPv4Forward.setDescription("Enable IPv4 Forwarding Support")
+    tcpipIPv4Forward.setDefaultValue(False)
+    #tcpipIPv4Frag.setDependencies(tcpipIPv4MenuVisible, ["TCPIP_STACK_USE_IPV4"])
+
+    # Settings for IPv4 Forwarding
+    tcpipIPv4FwdSetting = tcpipIPv4Component.createMenuSymbol("TCPIP_IPV4_FORWARD_SETTING", tcpipIPv4Forward)
+    tcpipIPv4FwdSetting.setLabel("IPv4 Forwarding Settings")
+    tcpipIPv4FwdSetting.setVisible(False)
+    tcpipIPv4FwdSetting.setDescription("IPv4 Forwarding Settings")
+    tcpipIPv4FwdSetting.setDependencies(tcpipIPv4MenuVisible, ["TCPIP_IPV4_FORWARD"])
+
+    # Enable initialization with ASCII strings
+    tcpipIPv4FwdAsciiEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_ASCII_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdAsciiEnable.setLabel("Support Forwarding Table with ASCII strings")
+    tcpipIPv4FwdAsciiEnable.setVisible(True)
+    tcpipIPv4FwdAsciiEnable.setDescription("Support Forwarding Table initialization with ASCII strings")
+    tcpipIPv4FwdAsciiEnable.setDefaultValue(True)
+
+    # Enable initialization with Binary values
+    tcpipIPv4FwdBinEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_BIN_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdBinEnable.setLabel("Support Forwarding Table with Binary Values")
+    tcpipIPv4FwdBinEnable.setVisible(True)
+    tcpipIPv4FwdBinEnable.setDescription("Support Forwarding Table initialization with Binary Values")
+    tcpipIPv4FwdBinEnable.setDefaultValue(True)
+
+    # Enable forwarding of bcast packets
+    tcpipIPv4FwdBcastEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_BCAST_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdBcastEnable.setLabel("Enable Broadcast Traffic Forwarding")
+    tcpipIPv4FwdBcastEnable.setVisible(True)
+    tcpipIPv4FwdBcastEnable.setDescription("Enable Forwarding Broadcast Packets on the Forwarding Interface")
+    tcpipIPv4FwdBcastEnable.setDefaultValue(False)
+
+    # Forwarding queue slots
+    tcpipIPv4FwdSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_QUEUE_SLOTS", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdSlots.setLabel("Forwarding TX Queue Slots")
+    tcpipIPv4FwdSlots.setVisible(True)
+    tcpipIPv4FwdSlots.setDescription("Number of Multicast and Broadcast Packets that IPv4 Forwarding Can Queue Up")
+    tcpipIPv4FwdSlots.setDefaultValue(0)
+
+    # Max number of entries in the forwarding table
+    tcpipIPv4FwdTblMaxSize = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FORWARD_TABLE_MAX_SIZE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdTblMaxSize.setLabel("Forwarding Table Maximum Size")
+    tcpipIPv4FwdTblMaxSize.setVisible(True)
+    tcpipIPv4FwdTblMaxSize.setDescription("Maximum Number of Entries in the Forwarding Table")
+    tcpipIPv4FwdTblMaxSize.setMin(tcpipIPv4FwdEntriesMin)
+    tcpipIPv4FwdTblMaxSize.setMax(tcpipIPv4FwdEntriesMax)
+    tcpipIPv4FwdTblMaxSize.setDefaultValue(tcpipIPv4FwdEntriesMax)
+    tcpipIPv4FwdTblMaxSize.setReadOnly(True)
+
+    # Select ASCII/Binary entries
+    tcpipIPv4FwdAsciiSelect = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_ASCII_SELECT", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdAsciiSelect.setLabel("Use ASCII Init Forwarding Table")
+    tcpipIPv4FwdAsciiSelect.setVisible(True)
+    tcpipIPv4FwdAsciiSelect.setDescription("Use ASCII Values for the Initialization Forwarding Table")
+    tcpipIPv4FwdAsciiSelect.setDefaultValue(True)
+    tcpipIPv4FwdAsciiSelect.setReadOnly(True)
+    
+    # Number of forwarding table entries
+    tcpipIPv4FwdTableNum = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FORWARD_TABLE_CNT", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdTableNum.setLabel("Number of Entries in the Init Forwarding table")
+    tcpipIPv4FwdTableNum.setVisible(True)
+    tcpipIPv4FwdTableNum.setDescription("Current Entries in the Initialization Forwarding table")
+    tcpipIPv4FwdTableNum.setDefaultValue(0)
+    tcpipIPv4FwdTableNum.setMax(tcpipIPv4FwdEntriesMax)
+    tcpipIPv4FwdTableNum.setMin(0)
+    tcpipIPv4FwdTableNum.setDependencies(tcpipIPv4FwdTableEn, ["TCPIP_IPV4_FORWARD_TABLE_CNT"]) 
+    #####################################################################################################
+    for index in range(0, tcpipIPv4FwdEntriesMax): 
+        tcpipIPv4FwdEntry.append(tcpipIPv4Component.createMenuSymbol("TCPIP_IPV4_FWD_ENTRY_NUMBERX" + str(index), tcpipIPv4FwdSetting))
+        tcpipIPv4FwdEntry[index].setLabel("Forwarding Entry " + str(index))
+        tcpipIPv4FwdEntry[index].setVisible(False)
+        
+        tcpipIPv4FwdBool.append(tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FWD_ENTRY_BOOLX" + str(index), tcpipIPv4FwdSetting))
+        tcpipIPv4FwdBool[index].setLabel("Forwarding Entry " + str(index))
+        tcpipIPv4FwdBool[index].setVisible(False)
+        tcpipIPv4FwdBool[index].setDefaultValue(False)
+        
+        # Net Address
+        tcpipIPv4FwdEntryNetAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryNetAdd[index].setLabel("Network Destination Address")
+        tcpipIPv4FwdEntryNetAdd[index].setVisible(False)
+        tcpipIPv4FwdEntryNetAdd[index].setDefaultValue("0.0.0.0")
+        tcpipIPv4FwdEntryNetAdd[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+        # Net Mask
+        tcpipIPv4FwdEntryNetMask.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryNetMask[index].setLabel("Network Mask")
+        tcpipIPv4FwdEntryNetMask[index].setVisible(False)
+        tcpipIPv4FwdEntryNetMask[index].setDefaultValue("0.0.0.0")
+        tcpipIPv4FwdEntryNetMask[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+        # Gw Address
+        tcpipIPv4FwdEntryGwAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryGwAdd[index].setLabel("Gateway Destination Address")
+        tcpipIPv4FwdEntryGwAdd[index].setVisible(False)
+        tcpipIPv4FwdEntryGwAdd[index].setDefaultValue("0.0.0.0")
+        tcpipIPv4FwdEntryGwAdd[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+        # Source Interface name
+        tcpipIPv4FwdEntrySrcIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntrySrcIfName[index].setLabel("Source Interface Name")
+        tcpipIPv4FwdEntrySrcIfName[index].setVisible(False)
+        tcpipIPv4FwdEntrySrcIfName[index].setDefaultValue("")
+        tcpipIPv4FwdEntrySrcIfName[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+        # Destination Interface name
+        tcpipIPv4FwdEntryDestIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryDestIfName[index].setLabel("Destination Interface Name")
+        tcpipIPv4FwdEntryDestIfName[index].setVisible(False)
+        tcpipIPv4FwdEntryDestIfName[index].setDefaultValue("")
+        tcpipIPv4FwdEntryDestIfName[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+
+        # Metric
+        tcpipIPv4FwdEntryMetric.append(tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_ENTRY_METRIC_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryMetric[index].setLabel("Entry Metric Value")
+        tcpipIPv4FwdEntryMetric[index].setVisible(False)
+        tcpipIPv4FwdEntryMetric[index].setDefaultValue(10)
+        tcpipIPv4FwdEntryMetric[index].setMin(0)
+        tcpipIPv4FwdEntryMetric[index].setMax(255)
+        tcpipIPv4FwdEntryMetric[index].setDependencies(tcpipIPv4MenuVisible, [tcpipIPv4FwdBool[index].getID()])
+
+    #####################################################################################################
     #Add to system_config.h
     tcpipIPv4HeaderFtl = tcpipIPv4Component.createFileSymbol(None, None)
     tcpipIPv4HeaderFtl.setSourcePath("tcpip/config/ip.h.ftl")
@@ -136,3 +295,30 @@ def handleMessage(messageID, args):
     
 def destroyComponent(component):
     Database.setSymbolValue("tcpipIPv4", "TCPIP_STACK_USE_IPV4", False, 2)
+
+def tcpipIPv4FwdEntryInstance(symbol, event):
+    print("In tcpipIPv4FwdEntryInstance")
+    print("symbol", symbol)
+    print("event:", event)
+
+
+def tcpipIPv4FwdTableEn(symbol, event):
+    global tcpipIPv4FwdPrev_cnt
+    count  = event["value"]
+    symCom = symbol.getComponent()
+
+    if(count > tcpipIPv4FwdPrev_cnt):
+        while (tcpipIPv4FwdPrev_cnt < count):            
+            symId = symCom.getSymbolByID("TCPIP_IPV4_FWD_ENTRY_NUMBERX" + str(tcpipIPv4FwdPrev_cnt))             
+            symId.setVisible(True)            
+            symId = symCom.getSymbolByID("TCPIP_IPV4_FWD_ENTRY_BOOLX" + str(tcpipIPv4FwdPrev_cnt))             
+            symId.setValue(True)
+            tcpipIPv4FwdPrev_cnt = tcpipIPv4FwdPrev_cnt + 1
+    else:
+        while (tcpipIPv4FwdPrev_cnt > count):
+            symId = symCom.getSymbolByID("TCPIP_IPV4_FWD_ENTRY_NUMBERX" + str(tcpipIPv4FwdPrev_cnt - 1))
+            symId.setVisible(False)        
+            symId = symCom.getSymbolByID("TCPIP_IPV4_FWD_ENTRY_BOOLX" + str(tcpipIPv4FwdPrev_cnt - 1)) 
+            symId.setValue(False)
+            tcpipIPv4FwdPrev_cnt = tcpipIPv4FwdPrev_cnt - 1
+

@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -168,9 +168,6 @@ static const void* ipv6PktHandlerParam;
 /************************************************************************/
 /****************               Prototypes               ****************/
 /************************************************************************/
-
-// Free all of the dynamically linked lists in an IPv6 net configuration
-void TCPIP_IPV6_FreeConfigLists (IPV6_INTERFACE_CONFIG * pNetIf);
 
 // performs resources cleanup
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -1688,9 +1685,17 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     if ((header.V_T_F & 0x000000F0) != IPv6_VERSION)
         return false;
 
+    uint16_t pktLen = TCPIP_PKT_PayloadLen(pRxPkt);
+    uint16_t payloadLen = TCPIP_Helper_ntohs(header.PayloadLength);
+
+    if(payloadLen > pktLen)
+    {
+        return false;
+    }
+
     *hopLimit = header.HopLimit;
 
-    *len = TCPIP_Helper_ntohs(header.PayloadLength);
+    *len = payloadLen;
 
     *protocol = header.NextHeader;
 
@@ -1701,10 +1706,10 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     return true;
 }
 
-bool TCPIP_IPV6_AddressesGet(TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr)
+bool TCPIP_IPV6_AddressesGet(const TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr)
 {
-    IPV6_HEADER *pHeader;
-    uint8_t     *pMacLayer, *pNetLayer;
+    const IPV6_HEADER *pHeader;
+    const uint8_t     *pMacLayer, *pNetLayer;
 
     // restore the packet MAC and NET pointers
     pMacLayer = pRxPkt->pDSeg->segLoad;
@@ -1861,7 +1866,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd (TCPIP_NET_HANDLE hNet, IPV6_
             IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
             memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
             entryLocation->flags.type = IPV6_ADDR_TYPE_MULTICAST;
-            addressType = TCPIP_IPV6_AddressTypeGet(pNetIf, address);
+            addressType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, address);
             entryLocation->flags.scope = addressType.bits.scope;
             TCPIP_NDP_LinkedListEntryInsert (pNetIf, entryLocation, IPV6_HEAP_ADDR_MULTICAST_ID);
             TCPIP_IPV6_ClientsNotify(pNetIf, IPV6_EVENT_ADDRESS_ADDED, entryLocation);
@@ -1954,7 +1959,7 @@ static void _TCPIP_IPV6_PacketEnqueue(IPV6_PACKET * pkt, SINGLE_LIST* pList, int
 
 
 // ipv6_manager.h
-IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address)
+uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address)
 {
     uint8_t b;
     IPV6_ADDRESS_TYPE returnVal;
@@ -2004,7 +2009,7 @@ IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_A
         }
     }
 
-    return returnVal;
+    return returnVal.byte;
 }
 
 
@@ -2066,7 +2071,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, IPV6_ADD
             {
                 IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
                 memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
-                i = TCPIP_IPV6_AddressTypeGet (pNetIf, address);
+                i.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, address);
                 entryLocation->flags.type = i.bits.type;
                 entryLocation->flags.scope = i.bits.scope;
                 if (TCPIP_IPV6_DASPolicyGet(address, &label, &precedence, &prefixLen))
@@ -2874,7 +2879,7 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
         case ADDR_SEL_RULE_2:
             if (addressOne->flags.scope != addressTwo->flags.scope)
             {
-                destScope = TCPIP_IPV6_AddressTypeGet (pNetIf, dest);
+                destScope.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, dest);
                 destPolicy = destScope.bits.scope;
 
                 if (addressOne->flags.scope < addressTwo->flags.scope)
@@ -3137,7 +3142,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
     constRemoteIPv6Addr = &tempRemoteIPv6Addr;
 
     // set a valid ack result; could be overridden by processing tasks
-    pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_RX_OK;
+    pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_RX_OK;
     
     currentOffset += sizeof (IPV6_HEADER);
 
@@ -3233,7 +3238,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 // set up the packet fields used by TCP
                 pRxPkt->pDSeg->segLen = dataCount;
                 pRxPkt->totTransportLen = dataCount;
-                pRxPkt->pktClientData = extensionHeaderLen;
+                pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
                 _TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true);
                 return;
@@ -3254,7 +3259,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 // set up the packet fields used by UDP
                 pRxPkt->pDSeg->segLen = dataCount;
                 pRxPkt->totTransportLen = dataCount;
-                pRxPkt->pktClientData = extensionHeaderLen;
+                pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
                 _TCPIPStackModuleRxInsert(TCPIP_MODULE_UDP, pRxPkt, true);
                 return;
@@ -3336,7 +3341,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
         }
     }
 
-    TCPIP_PKT_PacketAcknowledge(pRxPkt, pRxPkt->pktClientData); 
+    TCPIP_PKT_PacketAcknowledge(pRxPkt, pRxPkt->ipv6PktData); 
  }
 
 
@@ -3436,15 +3441,12 @@ IPV6_HANDLE TCPIP_IPV6_HandlerRegister(TCPIP_NET_HANDLE hNet, IPV6_EVENT_HANDLER
 {
     if(handler && ipv6MemH)
     {
-        IPV6_LIST_NODE* newNode = (IPV6_LIST_NODE*)TCPIP_Notification_Add(&ipv6RegisteredUsers, ipv6MemH, sizeof(*newNode));
+        IPV6_LIST_NODE ipv6Node;
+        ipv6Node.handler = handler;
+        ipv6Node.hParam = hParam;
+        ipv6Node.hNet = hNet;
 
-        if(newNode)
-        {
-            newNode->handler = handler;
-            newNode->hParam = hParam;
-            newNode->hNet = hNet;
-            return newNode;
-        }
+        return (IPV6_LIST_NODE*)TCPIP_Notification_Add(&ipv6RegisteredUsers, ipv6MemH, &ipv6Node, sizeof(ipv6Node));
     }
 
     return 0;

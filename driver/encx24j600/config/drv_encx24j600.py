@@ -60,20 +60,54 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600InstnRxBuffSize.setLabel("RX Buffer Size (should be even)")
     drvEncx24j600InstnRxBuffSize.setDefaultValue(16384)
     drvEncx24j600InstnRxBuffSize.setDescription("RX Buffer Size")    
+            
+    drvEncx24j600SpiChipSelect = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_SPI_CS_IDX" + str(index),None)
+    drvEncx24j600SpiChipSelect.setLabel("SPI Chip Select Pin")
+    drvEncx24j600SpiChipSelect.setOutputMode("Key")
+    drvEncx24j600SpiChipSelect.setDisplayMode("Key")
+    drvEncx24j600SpiChipSelect.setVisible( True )
+
+    # Send message to core to get available pins
+    chipSelectavailablePinDictionary = {}
+    chipSelectavailablePinDictionary = Database.sendMessage("core", "PIN_LIST", chipSelectavailablePinDictionary)
     
-    drvEncx24j600InstnMaxFrameSize = drvExtMacEncx24j600Component.createIntegerSymbol("DRV_ENCX24J600_MAX_FRAME_SIZE_IDX" + str(index),None)
+    drvEncx24j600SpiChipSelect.addKey("SYS_PORT_PIN_NONE", "0", "No Pin Selected")
+    for pad in sort_alphanumeric(chipSelectavailablePinDictionary.values()):
+        key = "SYS_PORT_PIN_" + pad
+        value = list(chipSelectavailablePinDictionary.keys())[list(chipSelectavailablePinDictionary.values()).index(pad)]
+        description = pad
+        drvEncx24j600SpiChipSelect.addKey(key, value, description)
+        
+    if "PIC32MX" in Variables.get("__PROCESSOR"):
+        drvEncx24j600SpiChipSelect.setSelectedKey("SYS_PORT_PIN_RD9")
+    elif "PIC32MZ" in Variables.get("__PROCESSOR"):
+        drvEncx24j600SpiChipSelect.setSelectedKey("SYS_PORT_PIN_RE9")
+    else:
+        drvEncx24j600SpiChipSelect.setSelectedKey("SYS_PORT_PIN_NONE")    
+        
+    drvEncx24j600SpiComment = drvExtMacEncx24j600Component.createCommentSymbol("DRV_ENCX24J600_SPI_COMMENT_IDX" + str(index),drvEncx24j600SpiChipSelect)
+    drvEncx24j600SpiComment.setLabel("***Configure the Chip-Select pin as GPIO Output in Pin Manager***")
+    drvEncx24j600SpiComment.setVisible( True )
+        
+    # Advanced Settings
+    drvEncx24j600AdvSettings = drvExtMacEncx24j600Component.createMenuSymbol("TCPIP_ETHMAC_ADV_SETTING", None)
+    drvEncx24j600AdvSettings.setLabel("Advanced Settings")
+    drvEncx24j600AdvSettings.setDescription("Advanced Settings")
+    drvEncx24j600AdvSettings.setVisible(True)
+    
+    drvEncx24j600InstnMaxFrameSize = drvExtMacEncx24j600Component.createIntegerSymbol("DRV_ENCX24J600_MAX_FRAME_SIZE_IDX" + str(index),drvEncx24j600AdvSettings)
     drvEncx24j600InstnMaxFrameSize.setVisible(True)
     drvEncx24j600InstnMaxFrameSize.setLabel("Maximum Frame Length")
     drvEncx24j600InstnMaxFrameSize.setDefaultValue(1536)
     drvEncx24j600InstnMaxFrameSize.setDescription("Maximum Frame Length") 
 
-    drvEncx24j600InstnAutoFlowCtrl = drvExtMacEncx24j600Component.createBooleanSymbol("DRV_ENCX24J600_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),None)
+    drvEncx24j600InstnAutoFlowCtrl = drvExtMacEncx24j600Component.createBooleanSymbol("DRV_ENCX24J600_MAX_USE_AUTOMATIC_FLOW_CONTROL_IDX" + str(index),drvEncx24j600AdvSettings)
     drvEncx24j600InstnAutoFlowCtrl.setLabel("Enable Automatic Flow Control")
     drvEncx24j600InstnAutoFlowCtrl.setVisible(True)
     drvEncx24j600InstnAutoFlowCtrl.setDefaultValue(True)
     drvEncx24j600InstnAutoFlowCtrl.setDescription("Use Automatic Flow Control")    
 
-    drvEncx24j600InstnEthType = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_ETHERNET_TYPE_IDX"+str(index),None)
+    drvEncx24j600InstnEthType = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_ETHERNET_TYPE_IDX"+str(index),drvEncx24j600AdvSettings)
     drvEncx24j600InstnEthType.setVisible(True)
     drvEncx24j600InstnEthType.setLabel("Ethernet Type")
     drvEncx24j600InstnEthType.addKey("Auto Negotiate", "0", "Auto Negotiate")
@@ -83,7 +117,7 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600InstnEthType.setOutputMode("Key")
     drvEncx24j600InstnEthType.setDefaultValue(0)
 
-    drvEncx24j600InstnDuplexMode = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_DUPLEX_MODE_IDX"+str(index),None)
+    drvEncx24j600InstnDuplexMode = drvExtMacEncx24j600Component.createKeyValueSetSymbol("DRV_ENCX24J600_DUPLEX_MODE_IDX"+str(index),drvEncx24j600AdvSettings)
     drvEncx24j600InstnDuplexMode.setVisible(True)
     drvEncx24j600InstnDuplexMode.setLabel("Duplex mode")
     drvEncx24j600InstnDuplexMode.addKey("Auto Negotiate", "0", "Auto Negotiate")
@@ -92,32 +126,20 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600InstnDuplexMode.setDisplayMode("Key")
     drvEncx24j600InstnDuplexMode.setOutputMode("Key")
     drvEncx24j600InstnDuplexMode.setDefaultValue(0)
-    drvEncx24j600InstnDuplexMode.setDependencies(drvEncx24j600InstnDuplexModeSelect, [drvEncx24j600InstnEthType.getID()])
-
-    drvEncx24j600SpiChipSelect = drvExtMacEncx24j600Component.createStringSymbol("DRV_ENCX24J600_SPI_CS_IDX" + str(index),None)
-    drvEncx24j600SpiChipSelect.setLabel("SPI Chip Select")
-    if "PIC32MX" in Variables.get("__PROCESSOR"):
-        drvEncx24j600SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RD9")
-    elif "PIC32MZ" in Variables.get("__PROCESSOR"):
-        drvEncx24j600SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RE9")
-        
-    drvEncx24j600SpiChipSelect.setVisible( True )
-    drvEncx24j600SpiChipSelect.setDescription("Chip Select Pin for SPI interface")     
-        
-    drvEncx24j600SpiComment = drvExtMacEncx24j600Component.createCommentSymbol("DRV_ENCX24J600_SPI_COMMENT_IDX" + str(index),drvEncx24j600SpiChipSelect)
-    drvEncx24j600SpiComment.setLabel("***Configure the pin as GPIO Output using Pin Manager***")
-    drvEncx24j600SpiComment.setVisible( True )
+    drvEncx24j600InstnDuplexMode.setDependencies(drvEncx24j600InstnDuplexModeSelect, [drvEncx24j600InstnEthType.getID()])    
 
 def drvEncx24j600InstnDuplexModeSelect(symbol, event):
 
     print symbol.getID()
     print event["value"]
-    # if (event["value"] == 1):
     symbol.setValue(event["value"])
-    # else if(event["value"] == 1):
-        # symbol.setVisible(False)
 
-
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
+    
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}

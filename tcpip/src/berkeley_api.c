@@ -45,7 +45,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
-extern __attribute__((section(".bss.errno"))) int errno;
 #ifdef __ICCARM__
 __attribute__((section(".bss.errno"))) int errno = 0;           // initialization required to provide definition
 #include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
@@ -2449,7 +2448,7 @@ static struct hostent sHostEnt = {
     (char**)&sHostArray
 };
 
-struct hostent * gethostent()
+struct hostent * gethostent(void)
 {
     return &sHostEnt;
 }
@@ -2784,8 +2783,8 @@ int getaddrinfo(const char *node, const char *service,
         case TCPIP_BERKELEY_GAI_WAIT_IPV6:
         {
             IPV6_ADDR tmp;
-            TCPIP_DNS_RESULT res = TCPIP_DNS_IsNameResolved(node, 0, &tmp);
-            switch (res)
+            TCPIP_DNS_RESULT dnsRes = TCPIP_DNS_IsNameResolved(node, 0, &tmp);
+            switch (dnsRes)
             {
                 case TCPIP_DNS_RES_NO_SERVICE:
                 case TCPIP_DNS_RES_SERVER_TMO:

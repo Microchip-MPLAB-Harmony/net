@@ -1,5 +1,5 @@
 /*****************************************************************************
-Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -155,8 +155,6 @@ typedef union
 // peripheral and cannot be used as part of the address.
 #define EMAC_RX_ADDRESS_MASK        ((unsigned int)0xFFFFFFFC)
 #define EMAC_RX_FRAME_LENGTH_MASK   ((unsigned int)0x0FFF)
-#define FRAME_HEADER_OFFSET         2
-#define FRAME_HEADER_OFFSET_MASK    0x0003
 
 // Receive buffer descriptor bits
 #define DRVRnEMAC_RX_OWNER_BIT      (1u <<  0)

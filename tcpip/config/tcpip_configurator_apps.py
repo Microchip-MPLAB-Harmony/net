@@ -282,8 +282,13 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipBerkeleyApi"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "libtcpipBerkeleyApi")
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
+                if(res == True):
+                    Database.setActiveGroup("APPLICATION LAYER")
+                    Database.selectComponent("tcpip_apps_config")
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
@@ -382,8 +387,14 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipFtpc"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtpc", "libtcpipFtpc")
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])
+        
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
+        if(Database.getComponentByID("netPres") == None):    
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
+                if(res == True):
+                    Database.setActiveGroup("APPLICATION LAYER")
+                    Database.selectComponent("tcpip_apps_config")
         
         if(Database.getComponentByID("sys_fs") == None):    
             res = Database.activateComponents(["sys_fs"])
@@ -397,13 +408,20 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
 def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    httpserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
+        httpserver.setReadOnly(True)
         res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
-            
+        
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
+                if(res == True):
+                    Database.setActiveGroup("APPLICATION LAYER")
+                    Database.selectComponent("tcpip_apps_config") 
             
         if(Database.getComponentByID("sys_fs") == None):    
             res = Database.activateComponents(["sys_fs"])
@@ -411,13 +429,18 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
-        res = Database.deactivateComponents(["tcpipHttpNet"])
+        if(httpserver.getReadOnly() == True):
+            httpserver.setReadOnly(False)
+        if(Database.getComponentByID("tcpipHttpNet") != None):  
+            res = Database.deactivateComponents(["tcpipHttpNet"])
     
 def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    httpnetserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_NET_SERVER")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
+        httpnetserver.setReadOnly(True)
         res = Database.activateComponents(["tcpipHttp"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "libtcpipHttp")
         
@@ -428,7 +451,10 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
-        res = Database.deactivateComponents(["tcpipHttp"])
+        if(httpnetserver.getReadOnly() == True):
+            httpnetserver.setReadOnly(False)
+        if(Database.getComponentByID("tcpipHttp") != None):  
+            res = Database.deactivateComponents(["tcpipHttp"])
     
 def tcpipAutoConfigIPERFEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
@@ -478,8 +504,13 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
         res = Database.activateComponents(["tcpipSmtpc"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "libtcpipSmtpc")
         
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])  
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
+                if(res == True):
+                    Database.setActiveGroup("APPLICATION LAYER")
+                    Database.selectComponent("tcpip_apps_config")
         
         if(Database.getComponentByID("sys_fs") == None):    
             res = Database.activateComponents(["sys_fs"])
@@ -540,8 +571,13 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
         res = Database.activateComponents(["tcpipTelnet"],"APPLICATION LAYER", False)   
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "libtcpipTelnet")
         
+        # Activate new net_Pres component if obsolete netPres Component is not added in project
         if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])
+            if(Database.getComponentByID("net_Pres") == None):
+                res = Database.activateComponents(["net_Pres"])  
+                if(res == True):
+                    Database.setActiveGroup("APPLICATION LAYER")
+                    Database.selectComponent("tcpip_apps_config")
             
         if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD") != True):
             setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD", True)

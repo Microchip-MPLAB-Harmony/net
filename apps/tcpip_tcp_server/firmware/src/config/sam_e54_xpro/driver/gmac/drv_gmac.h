@@ -110,11 +110,85 @@ typedef struct
 	uint16_t nTxDescCnt;	
 	/** TX buffer size */
 	uint16_t txBufferSize;
+    /** Max TX Packet size */
+    uint16_t txMaxPktSize;
 	/** RX buffer size */
 	uint16_t rxBufferSize;
-	/** Queue Enable status */
-	uint8_t queueEnable;
+    /** Queue Tx Enable status */
+	uint8_t queueTxEnable;
+    /** Queue Rx Enable status */
+	uint8_t queueRxEnable;
 } TCPIP_MODULE_GMAC_QUEUE_CONFIG;
+
+
+/**
+ * Configuration structure for GMAC Rx Queue Filter Type1
+ */
+typedef struct
+{
+    uint8_t   queueIndex; 
+    uint8_t dstcEnable;
+    uint8_t dstcValue;
+    uint8_t udpEnable;
+    uint16_t udpPortNum;    
+}DRV_GMAC_TYPE1_FILTER_INIT;
+
+typedef enum  
+{
+	TYPE2_START_OF_FRAME = 0,
+	TYPE2_ETHERTYPE = 1,
+	TYPE2_IP_HEADER = 2,
+    TYPE2_TCP_UDP_HEADER = 3,
+} GMAC_TYPE2_OFFSET_START_LIST;
+
+/**
+ * Configuration structure for GMAC Rx Queue Filter Type2
+ */
+typedef struct
+{
+    uint8_t   queueIndex; 
+    
+    uint8_t vlanPrioEnable;
+    uint8_t vlanPrio;
+    
+    uint8_t ethTypeEnable;
+    uint16_t ethType;
+    
+    uint8_t compAEnable;
+    uint16_t compAValue;
+    uint16_t compAMask;
+    uint8_t compAOffset;
+    GMAC_TYPE2_OFFSET_START_LIST   compAOffsetStart;
+    
+    uint8_t compBEnable;
+    uint16_t compBValue;
+    uint16_t compBMask;
+    uint8_t compBOffset;
+    GMAC_TYPE2_OFFSET_START_LIST   compBOffsetStart;
+    
+    uint8_t compCEnable;
+    uint16_t compCValue;
+    uint16_t compCMask;
+    uint8_t compCOffset;
+    GMAC_TYPE2_OFFSET_START_LIST   compCOffsetStart;    
+}DRV_GMAC_TYPE2_FILTER_INIT;
+
+/**
+ * Initialization structure for GMAC Rx Queue Filters.
+ */
+typedef struct DRV_GMAC_RXQUE_FILTER_INIT
+{
+    uint8_t type1FiltCount;
+#if (TCPIP_GMAC_SCREEN1_COUNT_QUE)
+    /* Configuration for GMAC Rx Queue Type 1 Filter*/
+    DRV_GMAC_TYPE1_FILTER_INIT   type1FiltInit[TCPIP_GMAC_SCREEN1_COUNT_QUE]; 
+#endif
+    uint8_t type2FiltCount;
+#if (TCPIP_GMAC_SCREEN2_COUNT_QUE)
+    /* Configuration for GMAC Rx Queue Type 2 Filter*/
+    DRV_GMAC_TYPE2_FILTER_INIT   type2FiltInit[TCPIP_GMAC_SCREEN2_COUNT_QUE];
+#endif    
+}DRV_GMAC_RXQUE_FILTER_INIT;
 
 /*  GMAC Initialization Data
 
@@ -153,6 +227,20 @@ typedef struct
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadRx;
     /* Tx Checksum offload Enable */
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
+        
+    /* number of Tx priorities supported by MAC*/
+    uint8_t macTxPrioNum;
+    /* array to translate Transmit priority to  queue index */
+    uint8_t txPrioNumToQueIndx[DRV_GMAC_NUMBER_OF_QUEUES];
+    
+    /* number of Rx priorities supported by MAC*/
+    uint8_t macRxPrioNum;
+    /* array to translate receive priority to  queue index */
+    uint8_t rxPrioNumToQueIndx[DRV_GMAC_NUMBER_OF_QUEUES];
+    
+    /* Configuration for GMAC RX Filters*/
+    const struct DRV_GMAC_RXQUE_FILTER_INIT*   pRxQueFiltInit; 
+    
    
 }TCPIP_MODULE_MAC_PIC32C_CONFIG;
 
@@ -1004,7 +1092,7 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
 
 /******************************************************************************
   Function:
-      void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
+    void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents)
     
   Summary:
     Ethernet MAC driver interrupt function.
@@ -1021,6 +1109,7 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
 
   Parameters:
     - macIndex -  parameter identifying the intended MAC client
+    - currEthEvents - interrupt status of the GMAC Queue
 
   Return:
     None.
@@ -1028,7 +1117,7 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
   Remarks:
     None.
   ******************************************************************************/
-void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex );
+void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents);
 
 
 //DOM-IGNORE-BEGIN

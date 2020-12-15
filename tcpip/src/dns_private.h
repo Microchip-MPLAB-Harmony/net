@@ -48,6 +48,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // DNS debug levels
 #define TCPIP_DNS_DEBUG_MASK_BASIC           (0x0001)
 #define TCPIP_DNS_DEBUG_MASK_EVENTS          (0x0002)
+#define TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES    (0x0004)
+#define TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES  (0x0008)
 
 // enable DNS debugging levels
 #define TCPIP_DNS_DEBUG_LEVEL               (0)
@@ -64,7 +66,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef enum
 {
     // perfect match to TCPIP_DNS_EVENT_TYPE 
-    TCPIP_DNS_DBG_EVENT_NONE,               // DNS no event
+    TCPIP_DNS_DBG_EVENT_NONE = 0,           // DNS no event
     TCPIP_DNS_DBG_EVENT_NAME_QUERY,         // DNS Query sent
     TCPIP_DNS_DBG_EVENT_NAME_RESOLVED,      // DNS Name resolved
     TCPIP_DNS_DBG_EVENT_NAME_EXPIRED,       // name entry expired
@@ -74,7 +76,12 @@ typedef enum
     TCPIP_DNS_DBG_EVENT_NO_INTERFACE,       // a DNS probe could not be sent, no DNS interface could be selected
 
     // additional debug events
-    TCPIP_DNS_DBG_EVENT_ID_ERROR,           // received DNS transaction didin't match any current transaction ID
+    TCPIP_DNS_DBG_EVENT_RR_XTRACT_ERROR,    // failed to extract the name from the received DNS RR
+    TCPIP_DNS_DBG_EVENT_RR_STRUCT_ERROR,    // failed to skip fields in the RR structure
+    TCPIP_DNS_DBG_EVENT_RR_NO_RECORDS,      // the received DNS RR didn't have records
+    TCPIP_DNS_DBG_EVENT_RR_MISMATCH,        // the received DNS RR doesn't match the query
+    TCPIP_DNS_DBG_EVENT_RR_DATA_ERROR,      // error when trying to retrieve the DNS RR data
+
     TCPIP_DNS_DBG_EVENT_COMPLETE_ERROR,     // received DNS transaction for complete name
     TCPIP_DNS_DBG_EVENT_NO_IP_ERROR,        // received DNS transaction contains no IP addresses
     TCPIP_DNS_DBG_EVENT_UNSOLICITED_ERROR,  // received unexpected DNS transaction 
@@ -85,7 +92,7 @@ typedef enum
 typedef struct
 {
     uint8_t *head;      // pointer to allocated buffer
-    uint8_t* wrPtr;     // current write pointer, initialized to head
+    uint8_t* rdPtr;     // current read pointer, initialized to head
     uint8_t* endPtr;    // end pointer, initialized to head + len
 }TCPIP_DNS_RX_DATA;
 
@@ -114,7 +121,7 @@ typedef enum
 typedef struct
 {
     OA_HASH_ENTRY               hEntry;         // hash header;
-    uint8_t*                    memblk;         // memory block for IPv4 and IPv6 and TTL block of memory. Hostname is not part of this block
+    uint8_t*                    memblk;         // memory block for IPv4, IPv6 and hostname
     uint32_t                    tInsert;        // one time per hash entry
     uint32_t                    tRetry;         // retry time per hash entry
     IPV4_ADDR*                  pip4Address;    // pointer to an array of IPv4: nIPv4Entries entries 
@@ -154,6 +161,18 @@ typedef struct
 }TCPIP_DNS_DCPT;    // DNS descriptor
 
 
+typedef enum
+{
+    TCPIP_DNS_RR_TYPE_QUESTION,
+    TCPIP_DNS_RR_TYPE_ANSWER,
+    TCPIP_DNS_RR_TYPE_AUTHORITATIVE,
+    TCPIP_DNS_RR_TYPE_ADDITIONAL,
+    //
+
+    TCPIP_DNS_RR_TYPES,
+
+}TCPIP_DNS_RR_TYPE;
+
 
 // Structure for the DNS header
 typedef struct
@@ -188,6 +207,18 @@ typedef struct  _TAG_TCPIP_DNS_LIST_NODE
     TCPIP_NET_HANDLE                    hNet;       // interface that's registered for
                                                     // 0 if all    
 }TCPIP_DNS_LIST_NODE;
+
+
+typedef struct
+{
+    const TCPIP_DNS_HEADER* dnsHeader;  // header
+    uint8_t*                dnsPacket;  // processed packet
+    TCPIP_DNS_RX_DATA*      dnsRxData;  // current pointer into the packet
+    uint16_t                dnsPacketSize;  // packet size
+    TCPIP_DNS_HASH_ENTRY*   dnsHE;          // associated hash entry
+    TCPIP_DNS_DBG_EVENT_TYPE evDbgType;     // associated parsing event, if any
+}TCPIP_DNS_RR_PROCESS;
+
 
 
 

@@ -1,0 +1,29 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: lib_wolfcrypt}
+children:
+- type: Symbols
+  children:
+  - type: Boolean
+    attributes: {id: cryptoCrya_03710}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: lib_wolfcrypt, value: 'false'}
+  - type: Boolean
+    attributes: {id: cryptoCrya_U2803}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: lib_wolfcrypt, value: 'false'}
+  - type: Boolean
+    attributes: {id: cryptoCrya_U2805}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: lib_wolfcrypt, value: 'false'}
+- type: ElementPosition
+  attributes: {x: '30', y: '380', id: lib_wolfcrypt}

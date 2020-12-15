@@ -40,14 +40,14 @@ def instantiateComponent(tcpipIcmpv6Component):
 	tcpipIcmpv6UseClient.setDescription("Use ICMPv6 Client")
 	tcpipIcmpv6UseClient.setDefaultValue(False)
 
-	# Enable IPV6 User Notification
-	tcpipIcmpv6ClientUserNotify = tcpipIcmpv6Component.createBooleanSymbol("TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION", tcpipIcmpv6UseClient)
-	tcpipIcmpv6ClientUserNotify.setLabel("Enable ICMPV6 User Notification")
-	tcpipIcmpv6ClientUserNotify.setVisible(False)
-	tcpipIcmpv6ClientUserNotify.setDescription("Enable ICMPV6 User Notification")
-	tcpipIcmpv6ClientUserNotify.setDefaultValue(True)
-	tcpipIcmpv6ClientUserNotify.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_STACK_USE_ICMPV6_CLIENT"])
-
+	# Enable IPV6 Console Commands
+	tcpipIcmpv6ClientCommand= tcpipIcmpv6Component.createBooleanSymbol("TCPIP_ICMPV6_CLIENT_CONSOLE_CMD", tcpipIcmpv6UseClient)
+	tcpipIcmpv6ClientCommand.setLabel("Enable ICMPv6 Client Console Command")
+	tcpipIcmpv6ClientCommand.setVisible(False)
+	tcpipIcmpv6ClientCommand.setDescription("Enable ICMPV6 CLient Console Command")
+	tcpipIcmpv6ClientCommand.setDefaultValue(True)
+	tcpipIcmpv6ClientCommand.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_STACK_USE_ICMPV6_CLIENT"])
+    
 	# Add icmpv6.c file
 	tcpipICMPv6SourceFile = tcpipIcmpv6Component.createFileSymbol(None, None)
 	tcpipICMPv6SourceFile.setSourcePath("tcpip/src/icmpv6.c")

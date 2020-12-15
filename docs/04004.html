@@ -108,6 +108,21 @@ Returns</div>
 <li class="Element605"><a href="01455.html" target="topic">TCP_SOCKET</a> handle - Save this handle and use it when calling all other TCP APIs</li>
 </ul></p></div>
 </div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Sockets and user threads protection For efficiency reasons, there is NO PROTECTION for each individual API call except to Open and Close sockets! What it means is that:
+<ul class="Element635">
+<li class="Element605">the user application should close all its sockets before issuing a stack/if down command The stack manager takes care of the internally used sockets</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">A <a href="01409.html" target="topic">socket</a> can NOT be used concurrently from multiple threads! It's ok to pass a <a href="01409.html" target="topic">socket</a> from one thread to another as long as there's is no access from more than one thread at a time</li>
+</ul></p></div>
+</div>
 </div>
 <!-- End Page Content -->
 

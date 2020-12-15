@@ -41,6 +41,17 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "driver/gmac/src/dynamic/drv_gmac_lib.h"
 
+/** D E F I N I T I O N S ****************************************************/
+//PIC32C internal GMAC peripheral
+#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_MAC_PIC32C
+// RX Buffer allocation types
+#define GMAC_RX_STICKY_BUFFERS	1
+#define GMAC_RX_DYNAMIC_BUFFERS	0
+#define GMAC_INT_BITS  (GMAC_INT_RX_BITS | GMAC_INT_TX_BITS)
+
+/******************************************************************************
+ * Prototypes
+ ******************************************************************************/
 static bool _MacPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 static inline uint16_t _Calculate_Descriptor_Count (uint16_t numBytes, uint16_t buffSize );
 static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv);
@@ -50,8 +61,6 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,
         DRV_PIC32CGMAC_RX_FRAME_INFO *rx_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx);  
 static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag);
 
-#define GMAC_INT_BITS  (GMAC_INT_RX_BITS | GMAC_INT_TX_BITS)
-
 //GMAC TX and RX Descriptor structure with multiple Queues	
 typedef struct
 {
@@ -59,12 +68,12 @@ typedef struct
     DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue0[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0];    
 } DRV_PIC32CGMAC_HW_DCPT_ARRAY ;   
 
-// RX Buffer allocation types
-#define GMAC_RX_STICKY_BUFFERS	1
-#define GMAC_RX_DYNAMIC_BUFFERS	0
-
 // place the descriptors in 8-byte aligned memory region
 static __attribute__((__aligned__(8))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+
+uint32_t    drvGmacQueEvents;     //Priority Queue Event Status 
+//GMAC Interrupt sources for 6 Priority Queues
+INT_SOURCE  drvGmacIRQ[DRV_GMAC_NUMBER_OF_QUEUES] = {GMAC_IRQn};
 /****************************************************************************
  * Function:        DRV_PIC32CGMAC_LibInit
  * Summary: Initialize GMAC peripheral registers
@@ -96,7 +105,8 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
 	// pause enable, remove FCS, MDC clock   
     GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(3)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);
-	if(DRV_GMAC_RX_CHKSM_OFFLOAD != TCPIP_MAC_CHECKSUM_NONE)
+	
+	if((pMACDrv->sGmacData.gmacConfig.checksumOffloadRx) != TCPIP_MAC_CHECKSUM_NONE)
     {
         GMAC_REGS->GMAC_NCFGR |= GMAC_NCFGR_RXCOEN_Msk;
     }
@@ -125,22 +135,33 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
 	uint16_t wRxDescCnt_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt;
 	uint16_t wTxDescCnt_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt;
 	uint16_t wRxBufferSize_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
-	
+	uint32_t queIntEnable = 0;
+    
 	if (wRxDescCnt_temp < 1 || wTxDescCnt_temp < 1)
 	return DRV_PIC32CGMAC_RES_DESC_CNT_ERR;
 
 	if (!wRxBufferSize_temp || wRxBufferSize_temp > TCPIP_GMAC_RX_MAX_FRAME)
 	return DRV_PIC32CGMAC_RES_RX_SIZE_ERR;
 
+    if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueRxEnable == true)
+    {
+        queIntEnable = GMAC_INT_RX_BITS;
+    }
+    if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueTxEnable == true)
+    {
+        queIntEnable |= GMAC_INT_TX_BITS;
+    }
+    
 	//write dma configuration to register
 	GMAC_REGS->GMAC_DCFGR = GMAC_DCFGR_DRBS((wRxBufferSize_temp >> 6)) | GMAC_DCFGR_RXBMS(3) | GMAC_DCFGR_TXPBMS(1) | GMAC_DCFGR_FBLDO(4) | GMAC_DCFGR_DDRP(1);
-	if(DRV_GMAC_TX_CHKSM_OFFLOAD != TCPIP_MAC_CHECKSUM_NONE)
+	
+	if((pMACDrv->sGmacData.gmacConfig.checksumOffloadTx) != TCPIP_MAC_CHECKSUM_NONE)
     {
         GMAC_REGS->GMAC_DCFGR |= GMAC_DCFGR_TXCOEN_Msk;
     }
 	
 	//enable GMAC interrupts
-	GMAC_REGS->GMAC_IER = GMAC_INT_BITS;
+	GMAC_REGS->GMAC_IER = queIntEnable;
     
 	return DRV_PIC32CGMAC_RES_OK;
 	
@@ -293,11 +314,22 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
 {	   
 	DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
     uint8_t queue_idx, desc_idx;
-	
+	TCPIP_MAC_PACKET **pRxPcktAlloc;
+    
 	for(queue_idx=0; queue_idx < DRV_GMAC_NUMBER_OF_QUEUES; queue_idx++)
 	{		
         DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._RxBuffNewQueue);
         DRV_PIC32CGMAC_SingleListInitialize(&pMACDrv->sGmacData.gmac_queue[queue_idx]._RxBuffAckQueue);
+        
+        //allocate array of rxpckt pointer
+        pRxPcktAlloc = (*pMACDrv->sGmacData._callocF)(pMACDrv->sGmacData._AllocH,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt, sizeof(TCPIP_MAC_PACKET *));
+		if(pRxPcktAlloc == NULL)
+		{   
+			// failed
+			gmacRes = DRV_PIC32CGMAC_RES_OUT_OF_MEMORY;
+			break;
+		}   
+        (pMACDrv->sGmacData.gmac_queue[queue_idx].pRxPckt) = pRxPcktAlloc;
         
 		for(desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt; desc_idx++)
 		{
@@ -326,6 +358,15 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
 	
 	return gmacRes;
 }//DRV_PIC32CGMAC_LibRxInit
+
+/****************************************************************************
+ * Function:        DRV_PIC32CGMAC_LibRxQueFilterInit
+ * Summary : initialize Rx Filters
+ *****************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv)
+{    
+    return DRV_PIC32CGMAC_RES_OK;  
+}
 
 /****************************************************************************
  * Function:        DRV_PIC32CGMAC_LibTxInit
@@ -516,7 +557,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
 			GCIRC_INC(pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt);
 				
 			// Tx Callback
-			(*pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_MODULE_MAC_PIC32C);				
+			(*pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);				
 			pMACDrv->sGmacData._txStat.nTxOkPackets++;
 						
 			// Set USED bit for all the ack packets; because hardware set USED bit only for first buffer
@@ -777,6 +818,165 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACD
     }
     return DRV_PIC32CGMAC_RES_OK;
 }
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSetInterruptSrc
+ * Summary: update GMAC Queue structure with interrupt source
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibSetInterruptSrc(DRV_GMAC_DRIVER* pMACDrv)
+{
+    pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc = drvGmacIRQ[GMAC_QUE_0];    
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSetPriorityToQueueNum
+ * Summary: mapping priority to GMAC Queue number
+ *****************************************************************************/
+bool DRV_PIC32CGMAC_LibSetPriorityToQueueNum(DRV_GMAC_DRIVER* pMACDrv) 
+{        
+    pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[0] = GMAC_QUE_0;
+    pMACDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[0] = GMAC_QUE_0;    
+    
+    // successful
+    return true;
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibGetPriorityFromQueueNum
+ * Summary: retrieve priority number from queue index
+ *****************************************************************************/
+uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx) 
+{
+    return (uint8_t)queueIdx;
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibGetHighPrioReadyQue
+ * Summary: Return the highest priority queue ready
+ *****************************************************************************/
+uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void)
+{
+    if(drvGmacQueEvents & GMAC_QUE0_MASK)
+    {
+        return (uint8_t)GMAC_QUE_0;            
+    }    
+    return DRV_GMAC_NO_ACTIVE_QUEUE;
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibClearPriorityQue
+ * Summary: Clear the ready status of  priority queue
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibClearPriorityQue(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx)
+{
+    bool intStat;
+    intStat = SYS_INT_SourceDisable(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc);
+    drvGmacQueEvents &= ~(1<<queueIdx);
+    __DMB();
+    SYS_INT_SourceRestore(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc, intStat);
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysInt_Disable
+ * Summary: Disable all GMAC interrupts specified in queue mask
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Disable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
+{
+    if(queMask & GMAC_QUE0_MASK)
+    {
+        if(queStat)
+        {
+            queStat[GMAC_QUE_0] = SYS_INT_SourceDisable(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc);
+        }
+        else
+        {
+            SYS_INT_SourceDisable(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc);
+        }
+
+    }
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysIntStatus_Clear
+ * Summary: Clear all GMAC interrupts status specified in queue mask
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibSysIntStatus_Clear(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
+{
+    if(queMask & GMAC_QUE0_MASK)
+    {
+        SYS_INT_SourceStatusClear(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc);                        
+    }    
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysInt_Enable
+ * Summary: Enable all GMAC interrupts specified in queue mask 
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Enable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
+{
+    if(queMask & GMAC_QUE0_MASK)
+    {
+        SYS_INT_SourceEnable(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc);
+    }
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysInt_Restore
+ * Summary: Restore all GMAC interrupts specified in queue mask
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
+{
+    if(queMask & GMAC_QUE0_MASK)
+    {
+        if(queStat)
+        {
+            SYS_INT_SourceRestore(pMACDrv->sGmacData.gmac_queue[GMAC_QUE_0]._queIntSrc, queStat[GMAC_QUE_0]); 
+        }            
+    }
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibReadInterruptStatus
+ * Summary: read GMAC interrupt status
+ *****************************************************************************/
+uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx)
+{
+    return GMAC_REGS->GMAC_ISR;
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysInt_Restore
+ * Summary: enable GMAC interrupt events
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+{
+    GMAC_REGS->GMAC_IER = ethEvents;
+}
+
+/****************************************************************************
+ * Function: DRV_PIC32CGMAC_LibSysInt_Restore
+ * Summary: disable GMAC interrupt events
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibDisableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+{
+    GMAC_REGS->GMAC_IDR = ethEvents;
+}
+/****************************************************************************
+ * GMAC Interrupt Service Routines(ISR)
+ *****************************************************************************/
+//GMAC interrupt handler for Priority Queue 0
+void GMAC_InterruptHandler(void)
+{
+    GMAC_EVENTS  currEthEvents = (GMAC_EVENTS)GMAC_REGS->GMAC_ISR;
+    GMAC_REGS->GMAC_IDR = currEthEvents;
+    if(currEthEvents & GMAC_EV_RX_ALL)
+    {
+        drvGmacQueEvents |= GMAC_QUE0_MASK;
+    }
+    __DMB();
+	DRV_GMAC_Tasks_ISR((SYS_MODULE_OBJ)0, (uint32_t)currEthEvents);
+}
+
 
 /****************************************************************************
  * Function:        _MacPacketAck

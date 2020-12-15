@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -191,6 +191,7 @@ typedef struct
 {
     uint32_t    event_time; // Internal Timer, to keep track of events
     uint32_t    random_delay;
+    uint32_t    rand_state;
     ZCLL_STATE  zcll_state;
     IPV4_ADDR   temp_IP_addr;   // Temporary IP address before checking uniqueness
     uint8_t     time_recorded; // Flag to indicate event_time is loaded

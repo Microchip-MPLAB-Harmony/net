@@ -32,7 +32,6 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcClient.setVisible(False)
     tcpipSmtpcClient.setDescription("Use SMTPC Client")
     tcpipSmtpcClient.setDefaultValue(True) 
-    #tcpipSmtpcClient.setDependencies(tcpipSmtpcMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
 
     # Number of Mail Connections to be Created
     tcpipSmtpcMailConnNum = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_MAIL_CONNECTIONS", None)
@@ -40,39 +39,20 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcMailConnNum.setVisible(True)
     tcpipSmtpcMailConnNum.setDescription("Number of Mail Connections to be Created")
     tcpipSmtpcMailConnNum.setDefaultValue(2)
-    #tcpipSmtpcMailConnNum.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
 
-    # String that Identifies the SMTPC Client Mail Date
-    tcpipSmtpcClientMsgDate = tcpipSmtpcComponent.createStringSymbol("TCPIP_SMTPC_CLIENT_MESSAGE_DATE", None)
-    tcpipSmtpcClientMsgDate.setLabel("String that Identifies the SMTPC Client Mail Date")
-    tcpipSmtpcClientMsgDate.setVisible(True)
-    tcpipSmtpcClientMsgDate.setDescription("String that Identifies the SMTPC Client Mail Date")
-    tcpipSmtpcClientMsgDate.setDefaultValue("Wed, 20 July 2016 14:55:06 -0600")
-    #tcpipSmtpcClientMsgDate.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
+    # Size of the TX Buffer for the SMTPC Socket
+    tcpipSmtpcSktTxBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SKT_TX_BUFF_SIZE", None)
+    tcpipSmtpcSktTxBuffSize.setLabel("SMTPC Socket TX Buffer Size")
+    tcpipSmtpcSktTxBuffSize.setVisible(True)
+    tcpipSmtpcSktTxBuffSize.setDescription("Size of the TX Buffer for the SMTPC Socket")
+    tcpipSmtpcSktTxBuffSize.setDefaultValue(0)
 
-    # General Server Response Timeout in seconds
-    tcpipSmtpcServerReplyTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_REPLY_TIMEOUT", None)
-    tcpipSmtpcServerReplyTimeout.setLabel("General Server Response Timeout, Seconds")
-    tcpipSmtpcServerReplyTimeout.setVisible(True)
-    tcpipSmtpcServerReplyTimeout.setDescription("General Server Response Timeout in seconds")
-    tcpipSmtpcServerReplyTimeout.setDefaultValue(60)
-    #tcpipSmtpcServerReplyTimeout.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Server Acknowledgment of the Mail Data: Body, Attachments etc. in Seconds
-    tcpipSmtpcServerDataTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_DATA_TIMEOUT", None)
-    tcpipSmtpcServerDataTimeout.setLabel("Server Acknowledgment of the Mail Data: Body, Attachments etc. Seconds")
-    tcpipSmtpcServerDataTimeout.setVisible(True)
-    tcpipSmtpcServerDataTimeout.setDescription("Server Acknowledgment of the Mail Data: Body, Attachments etc. in Seconds")
-    tcpipSmtpcServerDataTimeout.setDefaultValue(60)
-    #tcpipSmtpcServerDataTimeout.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Timeout for the TLS Handshake to Complete in seconds
-    tcpipSmtpcTlsHandshakeTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT", None)
-    tcpipSmtpcTlsHandshakeTimeout.setLabel("Timeout for the TLS Handshake to Complete, Seconds")
-    tcpipSmtpcTlsHandshakeTimeout.setVisible(True)
-    tcpipSmtpcTlsHandshakeTimeout.setDescription("Timeout for the TLS Handshake to Complete in seconds")
-    tcpipSmtpcTlsHandshakeTimeout.setDefaultValue(10)
-    #tcpipSmtpcTlsHandshakeTimeout.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
+    # Size of the RX Buffer for the SMTPC Socket
+    tcpipSmtpcSktRxBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SKT_RX_BUFF_SIZE", None)
+    tcpipSmtpcSktRxBuffSize.setLabel("SMTPC Socket RX Buffer Size")
+    tcpipSmtpcSktRxBuffSize.setVisible(True)
+    tcpipSmtpcSktRxBuffSize.setDescription("Size of the RX Buffer for the SMTPC Socket")
+    tcpipSmtpcSktRxBuffSize.setDefaultValue(0)
 
     # Number of Retries for Sending a Mail Message
     tcpipSmtpcMailRetryNum = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_MAIL_RETRIES", None)
@@ -80,87 +60,98 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcMailRetryNum.setVisible(True)
     tcpipSmtpcMailRetryNum.setDescription("Number of Retries for Sending a Mail Message")
     tcpipSmtpcMailRetryNum.setDefaultValue(3)
-    #tcpipSmtpcMailRetryNum.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # The Retry Interval Because of a Server Transient Error in seconds
-    tcpipSmtpcSrvrTransientRetryTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT", None)
-    tcpipSmtpcSrvrTransientRetryTimeout.setLabel("The Retry Interval Because of a Server Transient Error, Seconds")
-    tcpipSmtpcSrvrTransientRetryTimeout.setVisible(True)
-    tcpipSmtpcSrvrTransientRetryTimeout.setDescription("The Retry Interval Because of a Server Transient Error in seconds")
-    tcpipSmtpcSrvrTransientRetryTimeout.setDefaultValue(600)
-    #tcpipSmtpcSrvrTransientRetryTimeout.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # The Retry Interval Because of a SMTPC Temporary Error in seconds
-    tcpipSmtpcInternRetryTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT", None)
-    tcpipSmtpcInternRetryTimeout.setLabel("The Retry Interval Because of a SMTPC Temporary Error, Seconds")
-    tcpipSmtpcInternRetryTimeout.setVisible(True)
-    tcpipSmtpcInternRetryTimeout.setDescription("The Retry Interval Because of a SMTPC Temporary Error in seconds")
-    tcpipSmtpcInternRetryTimeout.setDefaultValue(10)
-    #tcpipSmtpcInternRetryTimeout.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of the RX Buffer for Processing the Server Replies
-    tcpipSmtpcSrvrReplyBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE", None)
-    tcpipSmtpcSrvrReplyBuffSize.setLabel("Size of the RX Buffer for Processing the Server Replies")
-    tcpipSmtpcSrvrReplyBuffSize.setVisible(True)
-    tcpipSmtpcSrvrReplyBuffSize.setDescription("Size of the RX Buffer for Processing the Server Replies")
-    tcpipSmtpcSrvrReplyBuffSize.setDefaultValue(512)
-    #tcpipSmtpcSrvrReplyBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of a Buffer that Can Hold the 2 x Username and Password
-    tcpipSmtpcClientAuthBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE", None)
-    tcpipSmtpcClientAuthBuffSize.setLabel("Size of a Buffer that Can Hold the 2 x Username and Password")
-    tcpipSmtpcClientAuthBuffSize.setVisible(True)
-    tcpipSmtpcClientAuthBuffSize.setDescription("Size of a Buffer that Can Hold the 2 x Username and Password")
-    tcpipSmtpcClientAuthBuffSize.setDefaultValue(100)
-    #tcpipSmtpcClientAuthBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of a Buffer that Can Hold an Email Address: user@domain.smth
-    tcpipSmtpcClientAddrBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE", None)
-    tcpipSmtpcClientAddrBuffSize.setLabel("Size of a Buffer that Can Hold an Email Address: user@domain.smth")
-    tcpipSmtpcClientAddrBuffSize.setVisible(True)
-    tcpipSmtpcClientAddrBuffSize.setDescription("Size of a Buffer that Can Hold an Email Address: user@domain.smth")
-    tcpipSmtpcClientAddrBuffSize.setDefaultValue(80)
-    #tcpipSmtpcClientAddrBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of an Email Line when Sending the Email Body as Plain Text
-    tcpipSmtpcPlainLineBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE", None)
-    tcpipSmtpcPlainLineBuffSize.setLabel("Size of an Email Line when Sending the Email Body as Plain Text")
-    tcpipSmtpcPlainLineBuffSize.setVisible(True)
-    tcpipSmtpcPlainLineBuffSize.setDescription("Size of an Email Line when Sending the Email Body as Plain Text")
-    tcpipSmtpcPlainLineBuffSize.setDefaultValue(256)
-    #tcpipSmtpcPlainLineBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of the TX Buffer for the SMTPC Socket
-    tcpipSmtpcSktTxBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SKT_TX_BUFF_SIZE", None)
-    tcpipSmtpcSktTxBuffSize.setLabel("Size of the TX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktTxBuffSize.setVisible(True)
-    tcpipSmtpcSktTxBuffSize.setDescription("Size of the TX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktTxBuffSize.setDefaultValue(0)
-    #tcpipSmtpcSktTxBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # Size of the RX Buffer for the SMTPC Socket
-    tcpipSmtpcSktRxBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SKT_RX_BUFF_SIZE", None)
-    tcpipSmtpcSktRxBuffSize.setLabel("Size of the RX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktRxBuffSize.setVisible(True)
-    tcpipSmtpcSktRxBuffSize.setDescription("Size of the RX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktRxBuffSize.setDefaultValue(0)
-    #tcpipSmtpcSktRxBuffSize.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
-    # SMTPC Task Tick Rate in ms
-    tcpipSmtpcTskTickRate = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_TASK_TICK_RATE", None)
-    tcpipSmtpcTskTickRate.setLabel("SMTPC Task Tick Rate in ms")
-    tcpipSmtpcTskTickRate.setVisible(True)
-    tcpipSmtpcTskTickRate.setDescription("SMTPC Task Tick Rate in ms")
-    tcpipSmtpcTskTickRate.setDefaultValue(55)
-    #tcpipSmtpcTskTickRate.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
-
+    
+    # String that Identifies the SMTPC Client Mail Date
+    tcpipSmtpcClientMsgDate = tcpipSmtpcComponent.createStringSymbol("TCPIP_SMTPC_CLIENT_MESSAGE_DATE", None)
+    tcpipSmtpcClientMsgDate.setLabel("SMTPC Client Mail Date String")
+    tcpipSmtpcClientMsgDate.setVisible(True)
+    tcpipSmtpcClientMsgDate.setDescription("String that Identifies the SMTPC Client Mail Date")
+    tcpipSmtpcClientMsgDate.setDefaultValue("Wed, 20 July 2016 14:55:06 -0600")
+    
     # Use the Sample TCP/IP Console mail Command
     tcpipSmtpcMailCommand = tcpipSmtpcComponent.createBooleanSymbol("TCPIP_SMTPC_USE_MAIL_COMMAND", None)
-    tcpipSmtpcMailCommand.setLabel("Use the Sample TCP/IP Console mail Command")
+    tcpipSmtpcMailCommand.setLabel("Enable SMTP Client Console Command")
     tcpipSmtpcMailCommand.setVisible(True)
     tcpipSmtpcMailCommand.setDescription("Use the Sample TCP/IP Console mail Command")
     tcpipSmtpcMailCommand.setDefaultValue(False)
-    #tcpipSmtpcMailCommand.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
+    
+    # Advanced Settings
+    tcpipSmtpcAdvSettings = tcpipSmtpcComponent.createMenuSymbol("TCPIP_SMTPC_ADV_SETTING", None)
+    tcpipSmtpcAdvSettings.setLabel("Advanced Settings")
+    tcpipSmtpcAdvSettings.setDescription("Advanced Settings")
+    tcpipSmtpcAdvSettings.setVisible(True)
+    
+    # SMTPC Task Tick Rate in ms
+    tcpipSmtpcTskTickRate = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_TASK_TICK_RATE", tcpipSmtpcAdvSettings)
+    tcpipSmtpcTskTickRate.setLabel("SMTPC Task Rate (in msec)")
+    tcpipSmtpcTskTickRate.setVisible(True)
+    tcpipSmtpcTskTickRate.setDescription("SMTPC Task Tick Rate in ms")
+    tcpipSmtpcTskTickRate.setDefaultValue(55)
+
+    # General Server Response Timeout in seconds
+    tcpipSmtpcServerReplyTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_REPLY_TIMEOUT", tcpipSmtpcAdvSettings)
+    tcpipSmtpcServerReplyTimeout.setLabel("General Server Response Timeout (in sec)")
+    tcpipSmtpcServerReplyTimeout.setVisible(True)
+    tcpipSmtpcServerReplyTimeout.setDescription("General Server Response Timeout in seconds")
+    tcpipSmtpcServerReplyTimeout.setDefaultValue(60)
+
+    # Server Acknowledgment of the Mail Data: Body, Attachments etc. in Seconds
+    tcpipSmtpcServerDataTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_DATA_TIMEOUT", tcpipSmtpcAdvSettings)
+    tcpipSmtpcServerDataTimeout.setLabel("Timeout for Server Acknowledgment of Mail Data (in sec)")
+    tcpipSmtpcServerDataTimeout.setVisible(True)
+    tcpipSmtpcServerDataTimeout.setDescription("Server Acknowledgment of the Mail Data: Body, Attachments etc. in Seconds")
+    tcpipSmtpcServerDataTimeout.setDefaultValue(60)
+
+    # Timeout for the TLS Handshake to Complete in seconds
+    tcpipSmtpcTlsHandshakeTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT", tcpipSmtpcAdvSettings)
+    tcpipSmtpcTlsHandshakeTimeout.setLabel("Timeout for the TLS Handshake to Complete (in sec)")
+    tcpipSmtpcTlsHandshakeTimeout.setVisible(True)
+    tcpipSmtpcTlsHandshakeTimeout.setDescription("Timeout for the TLS Handshake to Complete in seconds")
+    tcpipSmtpcTlsHandshakeTimeout.setDefaultValue(10)
+
+
+    # The Retry Interval Because of a Server Transient Error in seconds
+    tcpipSmtpcSrvrTransientRetryTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT", tcpipSmtpcAdvSettings)
+    tcpipSmtpcSrvrTransientRetryTimeout.setLabel("Server Transient Error Retry Interval (in sec)")
+    tcpipSmtpcSrvrTransientRetryTimeout.setVisible(True)
+    tcpipSmtpcSrvrTransientRetryTimeout.setDescription("The Retry Interval Because of a Server Transient Error in seconds")
+    tcpipSmtpcSrvrTransientRetryTimeout.setDefaultValue(600)
+
+    # The Retry Interval Because of a SMTPC Temporary Error in seconds
+    tcpipSmtpcInternRetryTimeout = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT", tcpipSmtpcAdvSettings)
+    tcpipSmtpcInternRetryTimeout.setLabel("SMTPC Temporary Error Retry Interval (in sec)")
+    tcpipSmtpcInternRetryTimeout.setVisible(True)
+    tcpipSmtpcInternRetryTimeout.setDescription("The Retry Interval Because of a SMTPC Temporary Error in seconds")
+    tcpipSmtpcInternRetryTimeout.setDefaultValue(10)
+
+    # Size of the RX Buffer for Processing the Server Replies
+    tcpipSmtpcSrvrReplyBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE", tcpipSmtpcAdvSettings)
+    tcpipSmtpcSrvrReplyBuffSize.setLabel("Server Reply Processing RX Buffer Size")
+    tcpipSmtpcSrvrReplyBuffSize.setVisible(True)
+    tcpipSmtpcSrvrReplyBuffSize.setDescription("Size of the RX Buffer for Processing the Server Replies")
+    tcpipSmtpcSrvrReplyBuffSize.setDefaultValue(512)
+    
+    # Size of a Buffer that Can Hold the 2 x Username and Password
+    tcpipSmtpcClientAuthBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE", tcpipSmtpcAdvSettings)
+    tcpipSmtpcClientAuthBuffSize.setLabel("SMTP Client Authentication Buffer Size")
+    tcpipSmtpcClientAuthBuffSize.setVisible(True)
+    tcpipSmtpcClientAuthBuffSize.setDescription("Size of a Buffer that Can Hold the 2 x Username and Password")
+    tcpipSmtpcClientAuthBuffSize.setDefaultValue(100)
+
+    # Size of a Buffer that Can Hold an Email Address: user@domain.smth
+    tcpipSmtpcClientAddrBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE", tcpipSmtpcAdvSettings)
+    tcpipSmtpcClientAddrBuffSize.setLabel("Email Address Buffer Size")
+    tcpipSmtpcClientAddrBuffSize.setVisible(True)
+    tcpipSmtpcClientAddrBuffSize.setDescription("Size of a Buffer that Can Hold an Email Address: user@domain.smth")
+    tcpipSmtpcClientAddrBuffSize.setDefaultValue(80)
+
+    # Size of an Email Line when Sending the Email Body as Plain Text
+    tcpipSmtpcPlainLineBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE", tcpipSmtpcAdvSettings)
+    tcpipSmtpcPlainLineBuffSize.setLabel("Plain Email Text Line Buffer Size")
+    tcpipSmtpcPlainLineBuffSize.setVisible(True)
+    tcpipSmtpcPlainLineBuffSize.setDescription("Size of an Email Line when Sending the Email Body as Plain Text")
+    tcpipSmtpcPlainLineBuffSize.setDefaultValue(256)
+
 
     tcpipSmtpcheapdependency = ["TCPIP_SMTPC_MAIL_CONNECTIONS", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
@@ -188,7 +179,6 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipSmtpcSourceFile.setType("SOURCE")
     tcpipSmtpcSourceFile.setEnabled(True)
-    #tcpipSmtpcSourceFile.setDependencies(tcpipSmtpcGenSourceFile, ["TCPIP_USE_SMTPC_CLIENT"])
     
 
 def tcpipSmtpcMenuVisibleSingle(symbol, event):

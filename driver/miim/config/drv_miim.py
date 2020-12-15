@@ -32,79 +32,14 @@ def instantiateComponent(drvMiimComponent):
     drvUseMiim.setVisible(False)
     drvUseMiim.setDescription("Use MIIM Driver?")
     drvUseMiim.setDefaultValue(True)
-    
-    # Ethernet MAC Module ID
-    drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", None) 
-    drvMiimModuleId.setLabel("ETH Module ID")
-    drvMiimModuleId.setVisible(True)
-    drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
-    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):    
-        drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):    
-        drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
-        drvMiimModuleId.setDefaultValue("EMAC0_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
-        drvMiimModuleId.setDefaultValue("EMAC1_BASE_ADDRESS") 
-    drvMiimModuleId.setDependencies(drvMiimSetIntMacId,["drvGmac.TCPIP_USE_ETH_MAC","drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvEmac0.TCPIP_USE_EMAC0", "drvEmac1.TCPIP_USE_EMAC1"])
-
-    # Number of Driver Instances
-    drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", None)
-    drvMiimInstnNum.setLabel("Number of Driver Instances")
-    drvMiimInstnNum.setVisible(True)
-    drvMiimInstnNum.setDescription("Number of Driver Instances")
-    drvMiimInstnNum.setDefaultValue(1)
-    #drvMiimInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-
-    # Number of Instance Operations
-    drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", None)
-    drvMiimOpsInstnNum.setLabel("Number of Instance Operations")
-    drvMiimOpsInstnNum.setVisible(True)
-    drvMiimOpsInstnNum.setDescription("Number of Instance Operations")
-    # H3_ToDo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
-    drvMiimOpsInstnNum.setDefaultValue(4)
-    #drvMiimOpsInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
     # Maximum Number of Clients per Instance
     drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", None)
-    drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients per Instance")
+    drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients")
     drvMiimMaxNumClientsInstn.setVisible(True)
     drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
     drvMiimMaxNumClientsInstn.setDefaultValue(2)
-    #drvMiimMaxNumClientsInstn.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-    
-    # Enable Client Operation Protection Feature
-    drvMiimOpsProtectEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_CLIENT_OP_PROTECTION", None) 
-    drvMiimOpsProtectEnable.setLabel("Enable Client Operation Protection Feature")
-    drvMiimOpsProtectEnable.setVisible(True)
-    drvMiimOpsProtectEnable.setDescription("Enable Client Operation Protection Feature")
-    drvMiimOpsProtectEnable.setDefaultValue(False)
-    #drvMiimOpsProtectEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-    
-    # Enable MIIM Commands
-    drvMiimCmdEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_COMMANDS", None) 
-    drvMiimCmdEnable.setLabel("Enable MIIM Commands")
-    drvMiimCmdEnable.setVisible(True)
-    drvMiimCmdEnable.setDescription("Enable MIIM Commands")
-    drvMiimCmdEnable.setDefaultValue(False)
-    #drvMiimCmdEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-    
-    # MIIM Driver Object
-    drvMiimDrvObj = drvMiimComponent.createStringSymbol("DRV_MIIM_DRIVER_OBJECT", None) 
-    drvMiimDrvObj.setLabel("MIIM Driver Object")
-    drvMiimDrvObj.setVisible(True)
-    drvMiimDrvObj.setDescription("MIIM Driver Object")
-    drvMiimDrvObj.setDefaultValue("DRV_MIIM_OBJECT_BASE_Default")
-    #drvMiimDrvObj.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])   
 
-    # MIIM Driver Object Index
-    drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", None)
-    drvMiimDrvIndex.setLabel("MIIM Driver Object Index")
-    drvMiimDrvIndex.setVisible(True)
-    drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
-    drvMiimDrvIndex.setDefaultValue(0)
-    #drvMiimDrvIndex.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-    
     # RTOS Configuration
     drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
     drvMiimRtosMenu.setLabel("RTOS Configuration")
@@ -119,7 +54,6 @@ def instantiateComponent(drvMiimComponent):
     drvMiimInstnExecMode.setVisible(False)
     drvMiimInstnExecMode.setDescription("MIIM Driver Execution mode")
     drvMiimInstnExecMode.setDefaultValue("Standalone")
-    #drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
     # MIIM Driver Task Stack Size
     drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
@@ -155,7 +89,72 @@ def instantiateComponent(drvMiimComponent):
     drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
     drvMiimDrvTaskDelay.setDefaultValue(1)
     drvMiimDrvTaskDelay.setDependencies(drvMiimRTOSTaskDelayMenu, ["DRV_MIIM_RTOS", "DRV_MIIM_RTOS_USE_DELAY"])
-        
+            
+    # Advanced Settings
+    drvMiimAdvSettings = drvMiimComponent.createMenuSymbol("DRV_MIIM_ADV_SETTING", None)
+    drvMiimAdvSettings.setLabel("Advanced Settings")
+    drvMiimAdvSettings.setDescription("Advanced Settings")
+    drvMiimAdvSettings.setVisible(True)
+    
+    # Ethernet MAC Module ID
+    drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", drvMiimAdvSettings) 
+    drvMiimModuleId.setLabel("ETH Module ID")
+    drvMiimModuleId.setVisible(True)
+    drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):    
+        drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):    
+        drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
+        drvMiimModuleId.setDefaultValue("EMAC0_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
+        drvMiimModuleId.setDefaultValue("EMAC1_BASE_ADDRESS") 
+    drvMiimModuleId.setDependencies(drvMiimSetIntMacId,["drvGmac.TCPIP_USE_ETH_MAC","drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvEmac0.TCPIP_USE_EMAC0", "drvEmac1.TCPIP_USE_EMAC1"])
+
+    # Number of Driver Instances
+    drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", drvMiimAdvSettings)
+    drvMiimInstnNum.setLabel("Number of Driver Instances")
+    drvMiimInstnNum.setVisible(True)
+    drvMiimInstnNum.setDescription("Number of Driver Instances")
+    drvMiimInstnNum.setDefaultValue(1)
+
+    # Number of Instance Operations
+    drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", drvMiimAdvSettings)
+    drvMiimOpsInstnNum.setLabel("Maximum Number of Queued Operations")
+    drvMiimOpsInstnNum.setVisible(True)
+    drvMiimOpsInstnNum.setDescription("Maximum Number of Queued Operations per Instance")
+    # H3_ToDo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+    drvMiimOpsInstnNum.setDefaultValue(4)
+    
+    # Enable Client Operation Protection Feature
+    drvMiimOpsProtectEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_CLIENT_OP_PROTECTION", drvMiimAdvSettings) 
+    drvMiimOpsProtectEnable.setLabel("Enable Client Operation Protection Feature")
+    drvMiimOpsProtectEnable.setVisible(True)
+    drvMiimOpsProtectEnable.setDescription("Enable Client Operation Protection Feature")
+    drvMiimOpsProtectEnable.setDefaultValue(False)
+    
+    # Enable MIIM Commands
+    drvMiimCmdEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_COMMANDS", drvMiimAdvSettings) 
+    drvMiimCmdEnable.setLabel("Enable MIIM Commands")
+    drvMiimCmdEnable.setVisible(True)
+    drvMiimCmdEnable.setDescription("Enable MIIM Commands")
+    drvMiimCmdEnable.setDefaultValue(False)
+    
+    # MIIM Driver Object
+    drvMiimDrvObj = drvMiimComponent.createStringSymbol("DRV_MIIM_DRIVER_OBJECT", drvMiimAdvSettings) 
+    drvMiimDrvObj.setLabel("MIIM Driver Object")
+    drvMiimDrvObj.setVisible(True)
+    drvMiimDrvObj.setDescription("MIIM Driver Object")
+    drvMiimDrvObj.setDefaultValue("DRV_MIIM_OBJECT_BASE_Default") 
+
+    # MIIM Driver Object Index
+    drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", drvMiimAdvSettings)
+    drvMiimDrvIndex.setLabel("MIIM Driver Object Index")
+    drvMiimDrvIndex.setVisible(True)
+    drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
+    drvMiimDrvIndex.setDefaultValue(0)
+    drvMiimDrvIndex.setReadOnly(True)
+    
     # Add drv_miim.h file to project
     #file DRV_MIIM_H "$HARMONY_VERSION_PATH/framework/driver/miim/drv_miim.h" to "$PROJECT_HEADER_FILES/framework/driver/miim/drv_miim.h"
     drvMiimHeaderFile = drvMiimComponent.createFileSymbol(None, None)

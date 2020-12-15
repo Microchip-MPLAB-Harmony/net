@@ -120,8 +120,12 @@ def tcpipAutoConfigTCPEnable(symbol, event):
             setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         tcpipAutoConfigTransportGroup.setAttachmentVisible("tcpipTcp", "libtcpipTcp")
         tcpipCryptoEnable()
+        # Enable Sys Random H2 Adapter. if not enabled
+        if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER") != True): 
+            setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", True)
     else:
         res = Database.deactivateComponents(["tcpipTcp"])
+        setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", False)
     
 def tcpipAutoConfigUDPEnable(symbol, event):
     tcpipAutoConfigTransportGroup = Database.findGroup("TRANSPORT LAYER")

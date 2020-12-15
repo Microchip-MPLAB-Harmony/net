@@ -164,7 +164,7 @@ static const void* telnetAuthHParam;
 
 // prototypes
 static void _Telnet_MSG(const void* cmdIoParam, const char* str);
-static void _Telnet_PRINT(const void* cmdIoParam, const char* format, ...);
+static void _Telnet_PRINT(const void* cmdIoParam, const char* format, ...) FORMAT_ATTRIBUTE(printf, 2,  3);
 static void _Telnet_PUTC(const void* cmdIoParam, char c);
 static int  _Telnet_DATA_RDY(const void* cmdIoParam);
 static char _Telnet_GETC(const void* cmdIoParam);
@@ -188,7 +188,7 @@ static void _TelnetSocketRxSignalHandler(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SI
 static const SYS_CMD_API telnetIOApi =
 {
     _Telnet_MSG,
-    _Telnet_PRINT,
+    (SYS_CMD_PRINT_FNC)_Telnet_PRINT,
     _Telnet_PUTC,
     _Telnet_DATA_RDY,
     _Telnet_GETC
@@ -663,7 +663,7 @@ static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
                 connInfo.state = TCPIP_TELNET_GET_PASSWORD;
                 connInfo.presSkt = tSkt;
                 connInfo.tcpSkt = NET_PRES_SocketGetTransportHandle(tSkt);
-                TCPIP_TCP_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
+                NET_PRES_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
                 authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, &connInfo, telnetAuthHParam);
 #else
                 authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, 0, telnetAuthHParam);
@@ -690,7 +690,7 @@ static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
 
     if(sktOverflow)
     {
-        TCPIP_TCP_StringPut(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG);
+        NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG, strlen(TELNET_BUFFER_OVFLOW_MSG));
     }
 
     if(sktOverflow || sktDisconnect)
@@ -854,7 +854,7 @@ bool TCPIP_TELNET_ConnectionInfoGet(uint16_t connIx, TCPIP_TELNET_CONN_INFO* pIn
             pInfo->state = pDcpt->telnetState;
             pInfo->presSkt = pDcpt->telnetSkt;
             pInfo->tcpSkt = NET_PRES_SocketGetTransportHandle(pDcpt->telnetSkt);
-            TCPIP_TCP_SocketInfoGet(pInfo->tcpSkt, &pInfo->tcpInfo);
+            NET_PRES_SocketInfoGet(pInfo->tcpSkt, &pInfo->tcpInfo);
         }
         return true;
     }

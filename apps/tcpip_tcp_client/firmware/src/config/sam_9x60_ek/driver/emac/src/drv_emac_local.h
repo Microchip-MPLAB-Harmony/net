@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
-Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -219,6 +219,7 @@ typedef struct {
             // add another flags here
         };
     } macFlags;                                             // corresponding MAC flags
+    uint16_t                        _segLoadOffset;         // segment allocation offset
 
     // general stuff
     MAC_DRVR_CALLBACK               callBack;

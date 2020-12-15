@@ -128,6 +128,15 @@ typedef enum
     TC_TIMER_STATUS_INVALID = 0xFFFFFFFF
 } TC_TIMER_STATUS;
 
+typedef enum 
+{
+    TC_COMMAND_NONE,
+    TC_COMMAND_START_RETRIGGER,
+    TC_COMMAND_STOP,
+    TC_COMMAND_FORCE_UPDATE,
+    TC_COMMAND_READ_SYNC
+}TC_COMMAND;
+
 // *****************************************************************************
 
 typedef void (*TC_TIMER_CALLBACK) (TC_TIMER_STATUS status, uintptr_t context);

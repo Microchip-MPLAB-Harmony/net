@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -91,32 +91,6 @@ typedef struct
 
 // stack private API
 //
-
-
-/*****************************************************************************
-  Function:
-    void TCPIP_IPV6_Task (void)
-
-  Summary:
-    IPv6 task function
-
-  Description:
-    IPv6 task function
-
-  Precondition:
-    None
-
-  Parameters:
-    None
-
-  Returns:
-    None
-
-  Remarks:
-    None
-  ***************************************************************************/
-void TCPIP_IPV6_Task (void);
-
 
 /*****************************************************************************
   Function:
@@ -314,7 +288,7 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIP, IPV6_AD
     This function doesn't change any the internal MAC packet data structure members.
 
   ***************************************************************************/
-bool TCPIP_IPV6_AddressesGet(TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr);
+bool TCPIP_IPV6_AddressesGet(const TCPIP_MAC_PACKET* pRxPkt, const IPV6_ADDR** pDestIPAddr, const IPV6_ADDR** pSourceIPAddr);
 
 
 /*****************************************************************************
@@ -595,9 +569,6 @@ void * TCPIP_IPV6_UpperLayerHeaderPtrGet(IPV6_PACKET * pkt);
 unsigned short TCPIP_IPV6_PayloadChecksumCalculate (IPV6_PACKET * pkt);
 
 
-unsigned short TCPIP_IPV6_ArrayPutHelper (IPV6_PACKET * pkt, const void * dataSource, uint8_t dataType, unsigned short len);
-
-
 /*****************************************************************************
   Function:
     void TCPIP_IPV6_TransmitPacketStateReset (IPV6_PACKET * pkt)
@@ -792,7 +763,7 @@ bool  TCPIP_IPV6_AddressIsSolicitedNodeMulticast (const IPV6_ADDR * address);
 
 /*****************************************************************************
   Function:
-    IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, IPV6_ADDR * address)
+    uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, IPV6_ADDR * address)
 
   Summary:
     Gets the scope and type of an IPv6 address.
@@ -813,7 +784,7 @@ bool  TCPIP_IPV6_AddressIsSolicitedNodeMulticast (const IPV6_ADDR * address);
   Remarks:
     None
   ***************************************************************************/
-IPV6_ADDRESS_TYPE TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
+uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address);
 
 
 /*****************************************************************************

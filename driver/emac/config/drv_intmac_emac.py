@@ -207,24 +207,6 @@ def setVisibleNotMatching( symbol, event ):
     symbol.setVisible( not event["value"] )
 
 
-def setRxDeficitValue( symbol, event ):
-    # we must have at least 1 buffer per descriptor, if we can allocate then we can always work enough to work
-    # otherwise tell the user a deficit is present
-    id = event[ 'id' ]
-    if "QUEUE_ENABLE_" in id :
-        setVisibleMatching( symbol, event )
-
-    namespace = event[ 'namespace' ]
-    index = str( filter( lambda func: func.isdigit(), id ) )
-    descriptors =    Database.getSymbolValue( namespace, 'RX_DESCRIPTOR_COUNT_' + index )
-    staticBuffers =  Database.getSymbolValue( namespace, 'RX_STATIC_BUFFERS_' + index )
-    threshold =      Database.getSymbolValue( namespace, 'RX_BUFFER_ALLOCATION_THRESHOLD_' + index )
-    if( (descriptors > staticBuffers) and (0 == threshold) ):
-        symbol.setValue( descriptors - staticBuffers )
-    else:
-        symbol.setValue( 0 )
-
-
 def destroyComponent( macComponent ):
     # This keeps tcpip_configurator_driver.py code in sync with this object existence
     sendStateChangeMessage( 'tcpip_driver_config', 'MAC_STATE_DESTROYED' )
@@ -248,6 +230,48 @@ def sendStateChangeMessage( aRecipient, aState ):
                                         # 'State':aState,
                                     # }
                                 # )
+
+def txDescriptorCountCallBack(symbol, event):
+    if (event["value"] == "Low"):     
+        symbol.setValue(40)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(80)
+    else:
+        symbol.setValue(160)
+        
+def rxDescriptorCountCallBack(symbol, event):
+    if (event["value"] == "Low"):     
+        symbol.setValue(50)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(100)
+    else:
+        symbol.setValue(256)
+        
+def rxStaticBuffersCallBack(symbol, event):
+    if (event["value"] == "Low"):     
+        symbol.setValue(0)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(0)
+    else:
+        symbol.setValue(10)
+        
+def rxBufferAllocationThresholdCallBack(symbol, event):
+    if (event["value"] == "Low"):     
+        symbol.setValue(15)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(15)
+    else:
+        symbol.setValue(30)
+        
+def rxBufferAllocationCallBack(symbol, event):
+    if (event["value"] == "Low"):     
+        symbol.setValue(15)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(30)
+    else:
+        symbol.setValue(45)
+
+
 def emacHeapCalc():
     global macComponentId
     rx_static_buffers = Database.getSymbolValue( macComponentId, 'RX_STATIC_BUFFERS_0' )
@@ -401,38 +425,39 @@ def instantiateComponent( macComponent ):
         if qq == 0:
             queueEnable.setDefaultValue( True )
             queueEnable.setReadOnly( True )
-            queueEnable0Alternative = macComponent.createCommentSymbol( "QUEUE_ENABLE_0_ALTERNATIVE", None )
+            queueEnable0Alternative = macComponent.createMenuSymbol( "QUEUE_ENABLE_0_ALTERNATIVE", None )
             queueEnable0Alternative.setLabel( "Queue Info" )
             queueEnable0Alternative.setVisible( False )
             if queueCountValue == 1:
                 queueEnable.setVisible( False )
                 queueEnable0Alternative.setVisible( True )
                 queueMenu = queueEnable0Alternative
-
+                
+        emacTraffic = macComponent.createComboSymbol("TCPIP_EMAC_TRAFFIC",queueMenu,["Low", "Medium", "High"])
+        emacTraffic.setVisible(True)
+        emacTraffic.setLabel("MAC Default Configuration for Network Traffic")
+        emacTraffic.setDefaultValue("Medium")
+    
         # TX descriptors count
-        txDescriptorCount = macComponent.createIntegerSymbol( "TX_DESCRIPTOR_COUNT_" + qqStr, queueMenu )
+        txDescriptorCount = macComponent.createIntegerSymbol( "TX_DESCRIPTOR_COUNT_" + qqStr, emacTraffic )
         txDescriptorCount.setLabel( "TX descriptor count" )
-        txDescriptorCount.setMin( MIN_TX_DESCRIPTOR_COUNT )
         txDescriptorCount.setMax( TX_DEVICE_MAX_DESCRIPTORS )
-        if qq == 0:
-            txDescriptorCount.setDefaultValue( 10 )
-        else:
-            txDescriptorCount.setDefaultValue( MIN_TX_DESCRIPTOR_COUNT if queueEnable.getValue() else 0 )
+        txDescriptorCount.setDefaultValue(80)
         txDescriptorCount.setVisible( queueEnable.getValue() )
-        txDescriptorCount.setDependencies( setVisibleMatching, [queueEnableName] )
+        txDescriptorCount.setDependencies(txDescriptorCountCallBack, ["TCPIP_EMAC_TRAFFIC"])
+        
 
         # TX buffer size
-        txBufferSize = macComponent.createIntegerSymbol( "TX_BUFFER_SIZE_" + qqStr, queueMenu )
+        txBufferSize = macComponent.createIntegerSymbol( "TX_BUFFER_SIZE_" + qqStr, emacTraffic )
         txBufferSize.setLabel( "TX buffer size" )
         txBufferSize.setDescription( "Should be a multiple of 16" )
         txBufferSize.setMin( MIN_TX_BUFFER_SIZE )
         txBufferSize.setMax( MAX_TX_BUFFER_SIZE )
         txBufferSize.setDefaultValue( MAX_FRAME_SIZE if qq == 0 else MIN_TX_BUFFER_SIZE )
-        txBufferSize.setVisible( queueEnable.getValue() )
-        txBufferSize.setDependencies( setVisibleMatching, [queueEnableName] )
+        txBufferSize.setVisible( queueEnable.getValue() )        
 
         # RX buffer size
-        rxBufferSize = macComponent.createIntegerSymbol( "RX_BUFFER_SIZE_" + qqStr, queueMenu )
+        rxBufferSize = macComponent.createIntegerSymbol( "RX_BUFFER_SIZE_" + qqStr, emacTraffic )
         rxBufferSize.setLabel( "RX buffer size" )
         rxBufferSize.setDescription( "Should be a multiple of 16" )
         rxBufferSize.setMin( MIN_RX_BUFFER_SIZE )
@@ -440,62 +465,48 @@ def instantiateComponent( macComponent ):
         rxBufferSize.setDefaultValue( MAX_RX_BUFFER_SIZE if qq == 0 else MIN_RX_BUFFER_SIZE )
         rxBufferSize.setVisible( queueEnable.getValue() )
         rxBufferSize.setReadOnly( True )
-        rxBufferSize.setDependencies( setVisibleMatching, [queueEnableName] )
-
-        # RX buffer deficit
-        rxBufferDeficit = macComponent.createIntegerSymbol( "RX_BUFFER_DEFICIT_" + qqStr, queueMenu )
-        rxBufferDeficit.setLabel( "RX buffer deficit" )
-        rxBufferDeficit.setDescription( "static and dynamic buffers must satisfy descriptor count, if static count < descriptor count we must be able to allocate" )
-        rxBufferDeficit.setDefaultValue( 0 )
-        rxBufferDeficit.setReadOnly( True )
 
         # RX descriptors count
         rxDescriptorCountName = "RX_DESCRIPTOR_COUNT_" + qqStr
-        rxDescriptorCount = macComponent.createIntegerSymbol( rxDescriptorCountName, queueMenu )
+        rxDescriptorCount = macComponent.createIntegerSymbol( rxDescriptorCountName, emacTraffic )
         rxDescriptorCount.setLabel( "RX descriptor count" )
         rxDescriptorCount.setDescription( "Dictates the minimum buffer total -- static and dynamic buffers" )
         rxDescriptorCount.setMin( MIN_RX_DESCRIPTOR_COUNT )
         rxDescriptorCount.setMax( RX_DEVICE_MAX_DESCRIPTORS )
-        if qq == 0:
-            rxDescriptorCount.setDefaultValue( RX_DEVICE_MAX_DESCRIPTORS )
-        else:
-            rxDescriptorCount.setDefaultValue( MIN_RX_DESCRIPTOR_COUNT )
+        rxDescriptorCount.setDefaultValue( 100 )
         rxDescriptorCount.setVisible( queueEnable.getValue() )
-        rxDescriptorCount.setDependencies( setVisibleMatching, [queueEnableName] )
+        rxDescriptorCount.setDependencies(rxDescriptorCountCallBack, ["TCPIP_EMAC_TRAFFIC"])
         if rxDescriptorCount.getValue() > largestRxQueueDescriptorCount:
             largestRxQueueDescriptorCount = rxDescriptorCount.getValue()
         maxRxPacketPointersDependencies.append( rxDescriptorCountName )
 
         # RX static buffers
         rxStaticBuffersName = "RX_STATIC_BUFFERS_" + qqStr
-        rxStaticBuffers = macComponent.createIntegerSymbol( rxStaticBuffersName, queueMenu )
+        rxStaticBuffers = macComponent.createIntegerSymbol( rxStaticBuffersName, emacTraffic )
         rxStaticBuffers.setLabel( "RX static buffers" )
         rxStaticBuffers.setDescription( "RX buffers statically allocated" )
         rxStaticBuffers.setMin( 0 )
         rxStaticBuffers.setDefaultValue( 0 )
         rxStaticBuffers.setVisible( queueEnable.getValue() )
-        rxStaticBuffers.setDependencies( setVisibleMatching, [queueEnableName] )
+        rxStaticBuffers.setDependencies(rxStaticBuffersCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
         # RX dynamic allocation threshold
         rxBufferAllocationThresholdName = "RX_BUFFER_ALLOCATION_THRESHOLD_" + qqStr
-        rxBufferAllocationThreshold = macComponent.createIntegerSymbol( rxBufferAllocationThresholdName, queueMenu )
+        rxBufferAllocationThreshold = macComponent.createIntegerSymbol( rxBufferAllocationThresholdName, emacTraffic )
         rxBufferAllocationThreshold.setLabel( "RX dynamic allocation threshold" )
-        rxBufferAllocationThreshold.setDefaultValue( 10 if queueEnable.getValue() else 0 )
+        rxBufferAllocationThreshold.setDefaultValue( 15)
         rxBufferAllocationThreshold.setMin( 0 )
         rxBufferAllocationThreshold.setVisible( queueEnable.getValue() )
-        rxBufferAllocationThreshold.setDependencies( setVisibleMatching, [queueEnableName] )
+        rxBufferAllocationThreshold.setDependencies(rxBufferAllocationThresholdCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
         # RX dynamic buffer allocation
         rxBufferAllocationName = "RX_BUFFER_ALLOCATION_" + qqStr
-        rxBufferAllocation = macComponent.createIntegerSymbol( rxBufferAllocationName, queueMenu )
+        rxBufferAllocation = macComponent.createIntegerSymbol( rxBufferAllocationName, emacTraffic )
         rxBufferAllocation.setLabel( "RX dynamic buffer allocation" )
         rxBufferAllocation.setMin( 1 )
-        rxBufferAllocation.setDefaultValue( 10 )
+        rxBufferAllocation.setDefaultValue( 30 )
         rxBufferAllocation.setVisible( queueEnable.getValue() )
-        rxBufferAllocation.setDependencies( setVisibleMatching, [queueEnableName] )
-
-        # delayed setup
-        rxBufferDeficit.setDependencies( setRxDeficitValue, [queueEnableName, rxDescriptorCountName, rxStaticBuffersName, rxBufferAllocationThresholdName] )
+        rxBufferAllocation.setDependencies(rxBufferAllocationCallBack, ["TCPIP_EMAC_TRAFFIC"])
 
     maxRxPacketPointers = macComponent.createIntegerSymbol( "MAX_RX_PACKET_POINTERS", None )
     maxRxPacketPointers.setLabel( "Max RX Packet Pointers" )

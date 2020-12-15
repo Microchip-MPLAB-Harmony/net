@@ -171,7 +171,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
             // success
             pDrvInst->rxPtrVal = pkt->rsv.pNextPacket;
-            pkt->macPkt->pDSeg->segLen = pkt->rsv.rxByteCount;
+            pkt->macPkt->pDSeg->segLen = pkt->rsv.rxByteCount - 4 - sizeof(TCPIP_MAC_ETHERNET_HEADER); // remove FCS and Ethernet header size
             pkt->macPkt->pMacLayer = pkt->macPkt->pDSeg->segLoad;
             pkt->macPkt->pNetLayer = pkt->macPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);            
             pkt->state = DRV_ENC28J60_RX_PKTDEC;

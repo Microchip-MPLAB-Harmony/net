@@ -42,27 +42,35 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
 <#if TCPIP_STACK_USE_ICMPV4 == true>
-<#if TCPIP_STACK_USE_ICMP_SERVER == true>
-/*** ICMPv4 Server Configuration ***/
-#define TCPIP_STACK_USE_ICMP_SERVER
-<#if TCPIP_ICMP_ECHO_BROADCASTS == true>
-#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    true
-<#else>
-#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
-</#if>
-</#if>
+    <#if TCPIP_STACK_USE_ICMP_SERVER == true>
+        <#lt>/*** ICMPv4 Server Configuration ***/
+        <#lt>#define TCPIP_STACK_USE_ICMP_SERVER
+        <#if TCPIP_ICMP_ECHO_BROADCASTS == true>
+            <#lt>#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    true
+        <#else>
+            <#lt>#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
+        </#if>
+    </#if>
 
-<#if TCPIP_STACK_USE_ICMP_CLIENT == true>
-/*** ICMPv4 Client Configuration ***/
-#define TCPIP_STACK_USE_ICMP_CLIENT
-<#if TCPIP_ICMP_CLIENT_USER_NOTIFICATION == true>
-#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   true
-<#else>
-#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   false
-</#if>
-#define TCPIP_ICMP_ECHO_REQUEST_TIMEOUT       ${TCPIP_ICMP_ECHO_REQUEST_TIMEOUT}
-#define TCPIP_ICMP_TASK_TICK_RATE             ${TCPIP_ICMP_TASK_TICK_RATE}
-</#if>
+    <#if TCPIP_STACK_USE_ICMP_CLIENT == true>
+        <#lt>/*** ICMPv4 Client Configuration ***/
+        <#lt>#define TCPIP_STACK_USE_ICMP_CLIENT
+        <#if TCPIP_ICMP_CLIENT_USER_NOTIFICATION == true>
+            <#lt>#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   true
+        <#else>
+            <#lt>#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   false
+        </#if>      
+        <#lt>#define TCPIP_ICMP_ECHO_REQUEST_TIMEOUT        ${TCPIP_ICMP_ECHO_REQUEST_TIMEOUT}
+        <#lt>#define TCPIP_ICMP_TASK_TICK_RATE              ${TCPIP_ICMP_TASK_TICK_RATE}
+        <#lt>#define TCPIP_ICMP_COMMAND_ENABLE              ${TCPIP_ICMP_COMMAND_ENABLE?c}
+        <#if TCPIP_ICMP_COMMAND_ENABLE == true>
+            <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         ${TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS}
+            <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY    ${TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY}
+            <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT          ${TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT}
+            <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE    ${TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE}
+            <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    ${TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE}
+        </#if>
+    </#if>
 </#if>
 <#--
 /*******************************************************************************

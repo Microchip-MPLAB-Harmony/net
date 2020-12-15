@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -46,11 +46,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_UDP
 
 #include "tcpip/src/tcpip_private.h"
-#include "udp_private.h"
 
 #if defined(TCPIP_STACK_USE_UDP)
 
 
+#include "udp_private.h"
 
 
 /****************************************************************************
@@ -207,14 +207,14 @@ static SGL_LIST_NODE* _PoolRemoveNodeLocked(void)
 #endif  // (TCPIP_UDP_USE_POOL_BUFFERS != 0)
 
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static void _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes);
 #else
 static __inline__ void __attribute__((always_inline)) _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes);
 }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 static void     _UDPClose(UDP_SOCKET_DCPT* pSkt);
 static void     _UDPFreeTxResources(UDP_SOCKET_DCPT* pSkt);
@@ -237,9 +237,9 @@ static void _UDPResetRxPacket(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
         pSkt->rxSegLen = pRxPkt->pDSeg->segLen - sizeof(UDP_HEADER);
         pSkt->rxTotLen = pUDPHdr->Length;  
         pSkt->rxCurr = pRxPkt->pTransportLayer + sizeof(UDP_HEADER);
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
         pSkt->pCurrFrag = pRxPkt;
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
     }
     else
     {
@@ -1108,15 +1108,20 @@ static void TCPIP_UDP_Process(void)
 #endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
 
         ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
+        if(pRxPkt->totTransportLen < sizeof(UDP_HEADER))
+        {
+            ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
+        }
+
 #if defined (TCPIP_STACK_USE_IPV4)
-        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
+        else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
         {
             ackRes = TCPIP_UDP_ProcessIPv4(pRxPkt);
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
 #if defined (TCPIP_STACK_USE_IPV6)
-        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
+        else if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV6) 
         {
             ackRes = TCPIP_UDP_ProcessIPv6(pRxPkt);
         }
@@ -1238,9 +1243,9 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
             break;
         }
 
-        if(pPkt->pktClientData != 0)
+        if(pPkt->modPktData != 0)
         {   // redirect internally. once!
-            pPkt->pktClientData = 0;
+            pPkt->modPktData = 0;
             loopPkt = true;
             freePkt = false;
             break;
@@ -1442,17 +1447,12 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
     udpTotLength = TCPIP_Helper_ntohs(pUDPHdr->Length);
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
-    if(pRxPkt->totTransportLen < sizeof(UDP_HEADER))
-    {   // 1st fragment should have the UDP header, at least
-        return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
-    }
-#else
-    if(udpTotLength < sizeof(UDP_HEADER) || udpTotLength != pRxPkt->totTransportLen)
+#if (_TCPIP_IPV4_FRAGMENTATION == 0)
+    if(udpTotLength != pRxPkt->totTransportLen)
     {   // discard suspect packet
         return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
     }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
     pPktSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt);
     pPktDstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
@@ -1470,7 +1470,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 	    pseudoHdr.Length = pUDPHdr->Length;
 
 	    calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
         TCPIP_MAC_PACKET* pFragPkt;
         uint16_t totCalcUdpLen = 0;
         for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
@@ -1493,7 +1493,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         {
             calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pUDPHdr, udpTotLength, calcChkSum);
         }
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
         if(calcChkSum != 0)
         {   // discard packet
@@ -1664,11 +1664,11 @@ static uint16_t _UDPv4Flush(UDP_SOCKET_DCPT* pSkt)
 
     if(isMcastDest && pSkt->extFlags.mcastLoop)
     {
-        pv4Pkt->macPkt.pktClientData = 1;
+        pv4Pkt->macPkt.modPktData = 1;
     }
     else
     {
-        pv4Pkt->macPkt.pktClientData = 0;
+        pv4Pkt->macPkt.modPktData = 0;
     }
 
     TCPIP_PKT_FlightLogTxSkt(&pv4Pkt->macPkt, TCPIP_THIS_MODULE_ID,  ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort, pSkt->sktIx);
@@ -1700,7 +1700,9 @@ static IPV6_PACKET * _UDPv6AllocateTxPacketStruct (TCPIP_NET_IF * pNetIf, UDP_SO
     pkt = TCPIP_IPV6_TxPacketAllocate (pNetIf, _UDPv6TxAckFnc, pSkt);
 
     if (pkt == 0)
+    {
         return 0;
+    }
 
     if (TCPIP_IPV6_UpperLayerHeaderPut (pkt, NULL, sizeof (UDP_HEADER), IP_PROT_UDP, UDP_CHECKSUM_OFFSET) == NULL)
     {
@@ -1895,20 +1897,20 @@ static uint16_t _UDPv6IsTxPutReady(UDP_SOCKET_DCPT* pSkt, unsigned short count)
     bool    newPkt;
     IPV6_PACKET * pkt;
 
-    if (pSkt->pV6Pkt == NULL)
+    bool queued = false;
+    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    if((pkt = pSkt->pV6Pkt) != 0)
     {
-        // This should only happen if the user has made an inappropriate call to an 
-        // unopened socket.
-        return 0;
+        queued = pkt->flags.queued != 0;
     }
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
 
-    pkt = (IPV6_PACKET*)_TxSktGetLockedV6Pkt(pSkt, false);
-
-    if (pkt)
+    if (pkt && !queued)
     {   // packet available
         return pSkt->txEnd - pSkt->txWrite;
     }
 
+    // either no packet or already queued
     // Try to allocate a new transmit packet
     IPV6_PACKET * tempPtr = _UDPv6AllocateTxPacketStruct(pSkt->pSktNet, pSkt, false);
     if (tempPtr == 0)
@@ -1918,15 +1920,16 @@ static uint16_t _UDPv6IsTxPutReady(UDP_SOCKET_DCPT* pSkt, unsigned short count)
         return 0;
     }
 
-    if (!TCPIP_IPV6_TxPacketStructCopy (tempPtr, pkt))
+    // copy the old packet info
+    if (pkt != 0 && !TCPIP_IPV6_TxPacketStructCopy (tempPtr, pkt))
     {   // failed; leave the old one in place
         _UDPv6FreePacket(tempPtr);
         return 0;
     }
 
     // now store changes if original packet not yet available
-    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-    if (pkt->flags.queued == 0)
+    status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    if(pkt != 0 && pkt->flags.queued == 0)
     {   // TX thread just cleared it
         newPkt = false;
     }
@@ -1953,7 +1956,6 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 {
     UDP_HEADER*         h;
     uint16_t            udpTotLength;
-    uint16_t            dataLen;
     UDP_SOCKET_DCPT*    pSkt;
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
@@ -1969,9 +1971,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     // Retrieve UDP header.
     h = (UDP_HEADER*)pRxPkt->pTransportLayer;
     udpTotLength = TCPIP_Helper_ntohs(h->Length);
-    dataLen = pRxPkt->totTransportLen;
 
-    if(dataLen < sizeof(UDP_HEADER) || udpTotLength != dataLen)
+    if(udpTotLength != pRxPkt->totTransportLen)
     {   // discard suspect packet
         return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
     }
@@ -2020,8 +2021,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         pSkt = _UDPFindMatchingSocket(pRxPkt, h, IP_ADDRESS_TYPE_IPV6);
         if(pSkt == 0)
         {   // Send ICMP Destination Unreachable Code 4 (Port unreachable) and discard packet
-            uint16_t headerLen = pRxPkt->pktClientData;
-            TCPIP_IPV6_ErrorSend ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_DU_PORT_UNREACHABLE, ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, dataLen + headerLen + sizeof (IPV6_HEADER));
+            uint16_t headerLen = pRxPkt->ipv6PktData;
+            TCPIP_IPV6_ErrorSend ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_DU_PORT_UNREACHABLE, ICMPV6_ERROR_DEST_UNREACHABLE, 0x00000000, udpTotLength + headerLen + sizeof (IPV6_HEADER));
 
             // If there is no matching socket, There is no one to handle
             // this data.  Discard it.
@@ -2625,7 +2626,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET s, uint8_t *cData, uint16_t reqBytes)
                 pSkt->rxSegLen = 0;
                 pSkt->rxCurr = 0;
 
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
                 TCPIP_MAC_PACKET* pFrag;
                 pFrag = pSkt->pCurrFrag = pSkt->pCurrFrag->pkt_next;
                 if(pFrag != 0)
@@ -2634,7 +2635,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET s, uint8_t *cData, uint16_t reqBytes)
                     pSkt->rxSegLen = pFrag->totTransportLen;
                     pSkt->rxCurr = pFrag->pTransportLayer;
                 } 
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
             }
         }
         // else more data in this segment
@@ -2694,6 +2695,7 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
     UDP_SOCKET_DCPT *pSkt;
     TCPIP_NET_IF* pPktIf;
     TCPIP_UDP_PKT_MATCH exactMatch, looseMatch;
+    OSAL_CRITSECT_DATA_TYPE critStatus;
     // snapshot of socket settings
     UDP_PORT _localPort = 0, _remotePort = 0;
     uint16_t _addType = 0;
@@ -2722,7 +2724,7 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
     for(sktIx = 0; sktIx < nUdpSockets; sktIx++)
     {
         bool processSkt = false;
-        OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+        critStatus = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
         while(true)
         {
             pSkt = UDPSocketDcpt[sktIx];
@@ -2753,7 +2755,7 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
             processSkt = true;
             break;
         }
-        OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+        OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critStatus);
 
         if(processSkt == false)
         {
@@ -2869,7 +2871,7 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
 
                     // stop the user threads from messing with this socket TX buffer
                     bool useOldPkt = false;
-                    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+                    critStatus = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
                     if(pSkt->pV6Pkt == 0)
                     {   // we can use the new packet
                         _UDPSocketTxSet(pSkt, pNewPkt, pNewPkt->clientData, IP_ADDRESS_TYPE_IPV6);
@@ -2878,7 +2880,7 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
                     {
                         useOldPkt = true;
                     }
-                    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+                    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critStatus);
 
                     if(useOldPkt)
                     {
@@ -3550,7 +3552,7 @@ int TCPIP_UDP_SocketsNumberGet(void)
 }
 
 // fragmentation support
-#if (TCPIP_IPV4_FRAGMENTATION != 0)
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
 static void _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_MAC_PACKET *pFragPkt, *pFragNext;
@@ -3562,7 +3564,7 @@ static void _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RE
     }
 }
 
-#endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
 // external packet processing
 #if (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)

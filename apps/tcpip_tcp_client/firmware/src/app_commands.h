@@ -46,7 +46,7 @@ extern "C" {
 #endif
 
 #define MAX_URL_SIZE 255
-bool APP_Commands_Init();
+bool APP_Commands_Init(void);
 extern char APP_URL_Buffer[MAX_URL_SIZE];
 
 

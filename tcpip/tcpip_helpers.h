@@ -340,6 +340,36 @@ bool      TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6]);
 
 bool     TCPIP_Helper_MACAddressToString(const TCPIP_MAC_ADDR* macAddr, char* buff, size_t buffSize);
 
+// *****************************************************************************
+/*
+  Function:
+    bool    TCPIP_Helper_IsMcastMACAddress(const TCPIP_MAC_ADDR* pMacAddress);
+
+  Summary:
+	Checks if a MAC address is a multicast address
+
+  Description:
+	This function verifies if the supplied MAC address is a multicast address.
+	
+  Precondition:
+    pMacAddress - a valid pointer to a TCPIP_MAC_ADDR
+
+  Parameters:
+	pMacAddress - Pointer to TCPIP_MAC_ADDR to check
+	
+  Returns:
+  	- true  - if the MAC address is a multicast address
+  	- false - if the MAC address is not a multicast address
+
+ Remarks:
+    None.
+ */
+static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAddress(const TCPIP_MAC_ADDR* pMacAddress)
+{
+    return (pMacAddress->v[0] & 0x01) != 0;
+}
+
+
 // helpers to convert a host long to a network long
 // and reverse
 //
@@ -379,7 +409,7 @@ bool     TCPIP_Helper_MACAddressToString(const TCPIP_MAC_ADDR* macAddr, char* bu
     None.    
  */
 
-#if defined(__PIC32MX__) || defined(__PIC32MZ__) || defined(__PIC32MK__)
+#if defined(__mips__)
 uint32_t __attribute__((nomips16)) TCPIP_Helper_htonl(uint32_t hLong);
 
 uint16_t __attribute__((nomips16)) TCPIP_Helper_htons(uint16_t hShort);
@@ -401,7 +431,7 @@ static inline uint16_t __attribute__((always_inline)) TCPIP_Helper_htons(uint16_
        return (((hShort) << 8) | ((hShort) >> 8));
 }
 
-#endif  // !defined(__PIC32MX__)
+#endif  // !defined(__mips__)
 
 uint32_t    TCPIP_Helper_ntohl(uint32_t nLong);
 #define     TCPIP_Helper_ntohl(n)   TCPIP_Helper_htonl(n)

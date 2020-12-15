@@ -53,11 +53,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _ICMPv6_CONFIG_H_
 #define _ICMPv6_CONFIG_H_
 
-// allow ICMPV6 client user notification
-// if enabled, the TCPIP_ICMPV6_CallbackRegister/TCPIP_ICMPV6_CallbackDeregister
-// functions exist and can be used
+// Enable ICMPv6 Console Commands
 // Note that if disabled, the tcpip console ping6 command won't be available
-#define TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION           true 
+#define TCPIP_ICMPV6_CLIENT_CONSOLE_CMD           true 
 
 
 #endif  // _ICMPv6_CONFIG_H_

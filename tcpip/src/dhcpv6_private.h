@@ -56,6 +56,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //
 
 
+// local defines
+#if defined(TCPIP_DHCPV6_USER_NOTIFICATION) && (TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#define _TCPIP_DHCPV6_USER_NOTIFICATION  1
+#else
+#define _TCPIP_DHCPV6_USER_NOTIFICATION  0
+#endif
 
 
 // the run substate functions return a result:
@@ -97,14 +103,16 @@ typedef enum
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE    (0x0008)
 // report current client statistics: buffers lists and statistics counters 
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATS    (0x0010)
+// report client state when user notification is made
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0020)
 // advanced: report changes in the current IA state
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0020)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0040)
 // advanced: report changes in the current IA state or substate
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE     (0x0040)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE     (0x0080)
 // advanced: additional state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0080)
+#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0100)
 // advanced: use static debugging lists
-#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0100)
+#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0200)
 // advanced: print buffers traces
 #define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x0800)
 
@@ -1271,10 +1279,12 @@ typedef struct
 // descriptor of a DHCPv6 client
 typedef struct _tag_TCPIP_DHCPV6_CLIENT_DCPT
 {
-    TCPIP_DHCPV6_DUID_DCPT             clientDuid;     // DUID to be used for this client
+    TCPIP_DHCPV6_DUID_DCPT              clientDuid;     // DUID to be used for this client
     
     // current state
-    volatile TCPIP_DHCPV6_CLIENT_STATE  state;
+    volatile int16_t                    state;          // TCPIP_DHCPV6_CLIENT_STATE
+    volatile int16_t                    prevState;      // TCPIP_DHCPV6_CLIENT_STATE
+
 
     // running interface
     TCPIP_NET_IF*                       pDhcpIf;

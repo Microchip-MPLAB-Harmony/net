@@ -1,0 +1,21 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: lib_crypto}
+children:
+- type: Attachments
+  children:
+  - type: DirectDependency
+    attributes: {id: LIB_CRYPTO_WOLFCRYPT_Dependency}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: lib_wolfcrypt}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: lib_wolfcrypt}
+- type: ElementPosition
+  attributes: {x: '30', y: '200', id: lib_crypto}
