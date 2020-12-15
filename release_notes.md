@@ -1,4 +1,91 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.7.0 (December, 2020)
+### ADDITIONS AND UPDATES FOR  3.7.0:
+
+- **New Application Repos**
+
+The following table provides the list of the new applications repositories for the net distribution:
+
+| Repository                  | Platform          | Description                                         |
+| ------------ | ------------ |  ------------     |
+| net_apps_pic32mx      | PIC32MX                 | Networking applications for PIC32MX |
+| net_apps_pic32mz      | PIC32MZDA, PIC32MZEF    | Networking applications for PIC32MZDA and PIC32MZEF |
+| net_apps_sam_9x60     | SAM9X60                 | Networking applications for SAM9X60 |
+| net_apps_sam_a5d2     | SAMA5D2                 | Networking applications for SAMA5D2 |
+| net_apps_sam_e5x      | SAME54                  | Networking applications for SAME54 |
+| net_apps_sam_e70_v71  | SAME70, SAMV71          | Networking applications for SAME70 and SAMV71 |
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.7.0 release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| IPv4            | Added IP static forwarding support. For multiple interfaces hosts the TCP/IP stack provides routing functionality |
+| Layer 2 Bridge  | Added interfaces bridging at the MAC level. Hosts with multiple interfaces can bridge them to create a network aggregate |
+| MAC driver      | The packet allocation has been updated so that all the MAC driver use a unique data packet layout accross all architectures. This allows packets to be dynamically exchanged between different interfaces |
+| ZCLL            | Updated ZCLL to announce its own address and use a better pseudo-random algorithm. Thanks to *jdeguire* on the Forum for his contribution |
+| MHC             | The NET_PRES module configuration has been simplified and it belongs now to the TCP/IP stack. It is now part of *Libraries->TCPIP->Layer6-PRESENTATION->Presentation Layer*. The demos have been updated to use this new configuration module |
+| TCP/IP MHC      | All TCP/IP stack modules settings have been divided into *basic* and *advanced* settings to simplify the module configuration. The *advanced* settings contain not frequently used parameters and are hidden by default |
+
+
+
+- **Addressed Security Vulnerabilities**
+
+The following table provides the list of the security vulnerabilities addressed in the 3.7.0 release:
+
+| Vulnerability   | Description                          |
+| ------ | ------ |
+| CVE-2020-17439 (FSCT-2020-0017) | DNS Cache Poisoning |
+| CVE-2020-17441 (FSCT-2020-0014) |	IPv6 Payload Validation - DoS |
+
+
+- **New Applications**
+
+The following table provides the list of the new applications including bare metal and FreeRTOS configurations:
+
+| Application                 | Platform          | Description                                                                                      |
+| ------------ | ------------ |  ------------     |
+| tcpip_tcp_client | SAM9X60  | MPLABX TCP client demo application for SAM9X60 platform |
+
+- **Updated Applications**
+
+    - All applications have been regenerated and tested to work with the latest repositories the TCP/IP stack depends on: core, csp, crypto, etc.
+
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.7.0 release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| SAM9X60 MAC driver | Fixed bug in the driver receive functionality using clean instead of invalidate operation |
+| SAMA5D2 MAC driver | Updated the MAC driver to replace the global cache operations with line oriented ones |
+| ENC MAC driver     | Adjusted the packet segment length, removing the FCS and Ethernet header length |
+| PHY driver         | Updated the PHY driver operation to handle the MIIM reported errors |
+| PHY driver         | Removed PHY hardware configuration dependency of xc32 version |
+| DNS client         | Added RR checks for DNS to match the query name with the answers. Fixed bug when extracting the RR name |
+
+
+### KNOWN ISSUES
+
+The current known issues are as follows:
+
+* When regenerating the FreeRTOS projects containing wolfSSL/wolfCrypt do **NOT** override the changes in the *config.h* if this adds the inclusion of *definitions.h*.
+    - This header is needed for accessing the OSAL/FreeRTOS allocation functions: pvPortMalloc and vPortFree
+
+* Layer 2 Bridge documentation is not part of the current release
+    - It will be added in a future release
+    
+* Application for demonstrating the Layer 2 Bridge functionality is not part of the current release
+    - It will be added in a future release
+
+* Application for demonstrating the IPv4 static forwarding/routing functionality is not part of the current release
+    - It will be added in a future release
+
+
+- **Release notes for v3.6.4 apply**
+
 ## Net Release v3.6.4 (October, 2020)
 ### ADDITIONS AND UPDATES FOR  3.6.4:
 
