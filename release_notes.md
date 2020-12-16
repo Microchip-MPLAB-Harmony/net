@@ -27,7 +27,7 @@ The following table provides the list of the new features included in the 3.7.0 
 | ZCLL            | Updated ZCLL to announce its own address and use a better pseudo-random algorithm. Thanks to *jdeguire* on the Forum for his contribution |
 | MHC             | The NET_PRES module configuration has been simplified and it belongs now to the TCP/IP stack. It is now part of *Libraries->TCPIP->Layer6-PRESENTATION->Presentation Layer*. The demos have been updated to use this new configuration module |
 | TCP/IP MHC      | All TCP/IP stack modules settings have been divided into *basic* and *advanced* settings to simplify the module configuration. The *advanced* settings contain not frequently used parameters and are hidden by default |
-
+| GMAC Driver     | Support for Priority Queuing of Tx and Rx packets has been added |
 
 
 - **Addressed Security Vulnerabilities**
