@@ -1,5 +1,5 @@
 <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content>  
-<#if (((drvGmac.TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMA5D2"))> 
+<#if (((drvGmac.TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMRH71"))> 
 
 const DRV_GMAC_RXQUE_FILTER_INIT DRV_GMAC_Rx_Filt_Init =
 { 
@@ -256,7 +256,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
     .macTxPrioNum           = TCPIP_GMAC_TX_PRIO_COUNT,
     .macRxPrioNum           = TCPIP_GMAC_RX_PRIO_COUNT,
 <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content>  
-<#if (((drvGmac.TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMA5D2"))> 
+<#if (((drvGmac.TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((drvGmac.TCPIP_INTMAC_DEVICE) == "SAMRH71"))> 
 	.pRxQueFiltInit			= &DRV_GMAC_Rx_Filt_Init,
 </#if>
 </#if>
