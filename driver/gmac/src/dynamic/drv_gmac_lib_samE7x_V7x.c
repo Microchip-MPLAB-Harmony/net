@@ -83,9 +83,9 @@ typedef struct
   
 // place the descriptors in an uncached memory region
 #if defined(__IAR_SYSTEMS_ICC__)
-  static __attribute__((__aligned__(8)))  DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array @0x2045F000;
+  static __attribute__((__aligned__(8)))  DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array @DRV_GMAC_DESCRIPTOR_ADDRESS;
 #elif defined(__GNUC__)
-  static __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+  static __attribute__((__aligned__(8))) __attribute__((space(data),address(DRV_GMAC_DESCRIPTOR_ADDRESS))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
 #endif
   
 uint32_t    drvGmacQueEvents;     //Priority Queue Event Status 

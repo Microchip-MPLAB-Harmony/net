@@ -515,7 +515,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_GMAC_RX_PRIO_COUNT				1
 </#if>
 #define DRV_GMAC_NUMBER_OF_QUEUES				${DRV_GMAC_NUMBER_OF_QUEUES}
-#define DRV_GMAC_RMII_MODE					${DRV_GMAC_RMII_VALUE}
+#define DRV_GMAC_RMII_MODE						${DRV_GMAC_RMII_VALUE}
+<#if (TCPIP_INTMAC_DEVICE)?has_content>
+	<#if ((TCPIP_INTMAC_DEVICE == "SAME7x_V7x") || (TCPIP_INTMAC_DEVICE == "SAMRH71"))>
+		<#if DRV_GMAC_NO_CACHE_CONFIG?has_content && DRV_GMAC_NO_CACHE_CONFIG == true>
+			<#lt>#define DRV_GMAC_DESCRIPTOR_ADDRESS				0x${DRV_GMAC_NOCACHE_MEM_ADDRESS}
+		<#else>
+			<#lt>#error Configure Non-Cachebable Memory for storing GMAC Descriptors
+		</#if>
+	</#if>
+</#if>
 </#if>
 
 <#--
