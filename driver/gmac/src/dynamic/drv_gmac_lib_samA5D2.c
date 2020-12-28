@@ -559,7 +559,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
     // check for enough number of tx descriptors available
     if( nTotalDesc_count <= (GCIRC_SPACE(   pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead,
                                             pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail,
-                                            wTxDescCount)
+                                            wTxDescCount) + 1
                                             )
     )
     {
