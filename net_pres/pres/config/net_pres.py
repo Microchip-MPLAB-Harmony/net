@@ -91,7 +91,15 @@ def instantiateComponent(net_PresComponent):
     netPresSocketCnt.setVisible(True)
     netPresSocketCnt.setDescription("Number of Presentation Sockets")
     netPresSocketCnt.setDefaultValue(10)    
- 
+    
+    # Enable TNGTLS Certificate loading?
+    netPresTNGTLScert = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_ENABLE_ATECC_TNGTLS",None)
+    netPresTNGTLScert.setLabel("Trust&Go client certificate")
+    netPresTNGTLScert.setVisible(True)
+    netPresTNGTLScert.setDescription("Auto load device certificate from Trust&Go TNGTLS? Cryptoauth lib should be configured seperately")
+    netPresTNGTLScert.setDefaultValue(False)
+    netPresTNGTLScert.setDependencies(netPresWolfsslTngtls,["NET_PRES_BLOB_ENABLE_ATECC_TNGTLS"])
+    
     # Enable MPLAB Harmony TCP/IP as Transport Layer
     netPresTcpipTransLayer = net_PresComponent.createBooleanSymbol("NET_PRES_TRANSPORT_AS_TCPIP", None)
     netPresTcpipTransLayer.setLabel("Use MPLAB Harmony TCP/IP as Transport Layer?")
@@ -669,7 +677,10 @@ def netPresDatagramEnable(symbol, event):
         symbol.setValue(True)
     else:
         symbol.setValue(False)
-
+        
+def netPresWolfsslTngtls(symbol, event):
+    Database.setSymbolValue("lib_wolfssl","wolfsslLoadTNGTLSCert",event["value"])
+        
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}

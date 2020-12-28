@@ -46,6 +46,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/random.h"
 
 extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
+<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+#include "wolfssl/wolfcrypt/port/atmel/atmel.h"
+</#if>
 
 <#assign needSysConsole=false/>
 <#assign numInstance= 1>
@@ -277,6 +280,14 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		<#else>
 	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, 0);
 		</#if>
+	<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+    /*initialize Trust*Go and load device certificate into the context*/
+    atcatls_set_callbacks(net_pres_wolfSSLInfoStreamClient0.context);
+    /*Use TLS extension since we support only P256R1 with ECC608 Trust&Go*/
+    if (WOLFSSL_SUCCESS != wolfSSL_CTX_UseSupportedCurve(net_pres_wolfSSLInfoStreamClient0.context, WOLFSSL_ECC_SECP256R1)) {
+        return false;
+    }
+	</#if>
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited = true;
     return true;
     <#else>
@@ -291,6 +302,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
 {
+	<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+    atmel_finish();
+    </#if>
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
     wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
