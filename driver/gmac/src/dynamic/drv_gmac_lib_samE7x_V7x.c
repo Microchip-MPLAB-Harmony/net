@@ -571,9 +571,12 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	while(pPkt_temp != 0)
 	{
 		nTotalDesc_count  += _Calculate_Descriptor_Count(pPkt_temp->segLen,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
-		pPkt_temp = pPkt_temp->next;
-	}
-	
+		
+        // perform cache maintenance
+        DCACHE_CLEAN_BY_ADDR((uint32_t*)pPkt_temp->segLoad, pPkt_temp->segLen);
+        
+        pPkt_temp = pPkt_temp->next;
+	}	
 
 	//check for enough number of tx descriptors available
 	if(nTotalDesc_count <= (GCIRC_SPACE(pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead, pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail,
@@ -581,16 +584,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	{
 		wTxIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead ;
 		wNewTxHead = fixed_mod((wTxIndex + nTotalDesc_count),wTxDescCount);
-        
-        //Clean D-Cache is cache is enabled
-        if( (SCB->CCR & SCB_CCR_DC_Msk) == SCB_CCR_DC_Msk)
-        {
-#ifdef CACHE_CLEAN_BY_ADDRESS
-			SCB_CleanDCache_by_Addr ((uint32_t*)pPkt->segLoad, (int32_t) pPkt_temp->segLen);
-#else
-			SCB_CleanDCache();
-#endif			
-        }
 		
 		while (pPkt)
 		{
@@ -1614,13 +1607,10 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
 			//clear the buffer address bit-fields
 			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; 
 			_DRV_GMAC_RxUnlock(pMACDrv);
-			
-			//Invalidate D-Cache if cache is enabled
-			if( (SCB->CCR & SCB_CCR_DC_Msk) == SCB_CCR_DC_Msk)
-			{
-				SCB_InvalidateDCache_by_Addr((uint32_t *)(pRxTempPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen);
-			}
-			
+
+			// perform cache maintenance
+			DCACHE_INVALIDATE_BY_ADDR((uint32_t *)(pRxTempPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen);
+
 			if(frameSize)
 			{
 				GCIRC_INC(rx_index, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt);
