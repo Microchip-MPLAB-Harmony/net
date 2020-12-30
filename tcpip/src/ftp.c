@@ -1238,7 +1238,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                 break;
             }
         case TCPIP_FTP_CMD_SM_RECEIVE:
-            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos != 0x00u))
             {// The file was already opened, so load up its ID and seek
                 if(fp == SYS_FS_HANDLE_INVALID)
                 {// No file handles available, so wait for now
@@ -1533,7 +1533,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                     }
                     else
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
                         wCount = wCount - remainingBytes;
                         remainingBytes =0;
                         pFTPDcpt->callbackPos = 0;
