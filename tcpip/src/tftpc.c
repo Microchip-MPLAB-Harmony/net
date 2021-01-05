@@ -143,7 +143,7 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
         pClient = &gTFTPClientDcpt;
         
-        pClient->hSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_TFTP_SERVER_PORT, 0);
+        pClient->hSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_ANY, TCPIP_TFTP_SERVER_PORT, 0);
         if(pClient->hSocket == INVALID_UDP_SOCKET)
         {
             return false;
@@ -457,6 +457,7 @@ static void TCPIP_TFTPC_Process(void)
     bool res=true;
     bool bTimeout=false;
     uint32_t    replyPktSize=0;
+	bool bindRes = false;
     
     pClient = &gTFTPClientDcpt;
     pNetIf = _TCPIPStackAnyNetLinked(false);
@@ -478,9 +479,10 @@ static void TCPIP_TFTPC_Process(void)
             {   // wait some more
                 break;
             }
-            if(pClient->ipAddrType == IP_ADDRESS_TYPE_IPV4)
+            
+            bindRes = TCPIP_UDP_RemoteBind(pClient->hSocket, pClient->ipAddrType,TCPIP_TFTP_SERVER_PORT,&pClient->tftpServerAddr);
+            if (bindRes)
             {
-                TCPIP_UDP_RemoteBind(pClient->hSocket, pClient->ipAddrType,TCPIP_TFTP_SERVER_PORT,&pClient->tftpServerAddr);
                  // receiving from multiple TFTP servers
                 TCPIP_UDP_OptionsSet(pClient->hSocket, UDP_OPTION_STRICT_PORT, (void*)false);
                 //TCPIP_UDP_DestinationIPAddressSet(pClient->hSocket, IP_ADDRESS_TYPE_IPV4, &pClient->tftpServerAddr);

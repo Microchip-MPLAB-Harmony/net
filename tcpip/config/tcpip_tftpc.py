@@ -78,7 +78,7 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcSrvrAddrLen.setLabel("Maximum Length for Server Address")
     tcpipTftpcSrvrAddrLen.setVisible(True)
     tcpipTftpcSrvrAddrLen.setDescription("Maximum Length for Server Address")
-    tcpipTftpcSrvrAddrLen.setDefaultValue(16)
+    tcpipTftpcSrvrAddrLen.setDefaultValue(40)
 
     # TFTP Client Socket connection timeout in sec
     tcpipTftpcArpTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_ARP_TIMEOUT", tcpipTftpcAdvSettings)
