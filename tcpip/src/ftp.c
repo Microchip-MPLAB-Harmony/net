@@ -1,4 +1,4 @@
-/*******************************************************************************
+    /*******************************************************************************
   File Transfer Protocol (FTP) Server
 
   Summary:
@@ -316,7 +316,7 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pDcpt = sTCPIPFTPDcpt;
         for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++, pDcpt++)
         {
-            pDcpt->ftpCmdskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, ftpConfigData.cmdPort, 0, 0);
+            pDcpt->ftpCmdskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, ftpConfigData.cmdPort, 0, 0);
             if(pDcpt->ftpCmdskt == NET_PRES_INVALID_SOCKET)
             {   // failed
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: Socket creation failed");
@@ -945,8 +945,9 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_EXTND_PORT_FAILURE;
                 return true;
             }
+            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
             // create a server socket with a available port number and send this port number to the client with Response string.
-            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, 0, 0, 0);
+            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, remoteSockInfo.addressType, 0, 0, 0);
             // Make sure that a valid socket was available and returned
             // If not, return with an error
             if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
@@ -967,7 +968,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             // modify the response string.
             //response string should have server ip address and the new data port number.
 
-            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
             NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
             //prepare additional message IPaddress + Port
             strcpy(passiveMsg,"");
@@ -1128,7 +1128,7 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     bool releaseDataSkt=false;
 
     NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-    pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV4, pFTPDcpt->ftpDataPort, 0, 0);
+    pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, remoteSockInfo.addressType, pFTPDcpt->ftpDataPort, 0, 0);
 
     // Make sure that a valid socket was available and returned
     // If not, return with an error
@@ -1146,12 +1146,12 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     }
     
         
-    if(NET_PRES_SocketBind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, ftpConfigData.dataPort, 0) == false)
+    if(NET_PRES_SocketBind(pFTPDcpt->ftpDataskt, remoteSockInfo.addressType, ftpConfigData.dataPort, 0) == false)
     {
         releaseDataSkt = true;       
     }
     
-    if(NET_PRES_SocketRemoteBind(pFTPDcpt->ftpDataskt, IP_ADDRESS_TYPE_IPV4, 0, (NET_PRES_ADDRESS*)&remoteSockInfo.remoteIPaddress)== false)
+    if(NET_PRES_SocketRemoteBind(pFTPDcpt->ftpDataskt, remoteSockInfo.addressType, 0, (NET_PRES_ADDRESS*)&remoteSockInfo.remoteIPaddress)== false)
     {
         releaseDataSkt = true;        
     }    
