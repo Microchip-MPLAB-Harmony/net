@@ -539,6 +539,30 @@ const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData =
     .rxfragmentBufSize      = TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE,
     .fragmentPktRxTimeout   = TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT,
 };
+
+<#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>
+/*** DHCPv6 client Initialization Data ***/
+const TCPIP_DHCPV6_MODULE_CONFIG  tcpipDhcpcv6InitData = 
+{
+    .configFlags                = TCPIP_DHCPV6_CONFIG_STARTUP_FLAG,
+    .dhcpCliPort                = TCPIP_DHCPV6_CLIENT_CONNECT_PORT,
+    .dhcpSrvPort                = TCPIP_DHCPV6_SERVER_LISTEN_PORT,
+    .duidType                   = TCPIP_DHCPV6_DUID_TYPE_CONFIG,
+    .nIanaDcpts                 = TCPIP_DHCPV6_IANA_DESCRIPTORS_NO,
+    .nIataDcpts                 = TCPIP_DHCPV6_IATA_DESCRIPTORS_NO,
+    .nFreeDcpts                 = TCPIP_DHCPV6_IA_FREE_DESCRIPTORS_NO,
+    .defaultIanaT1              = TCPIP_DHCPV6_IANA_DEFAULT_T1,
+    .defaultIanaT2              = TCPIP_DHCPV6_IANA_DEFAULT_T2,
+    .defaultIataT1              = TCPIP_DHCPV6_IATA_DEFAULT_T1,
+    .defaultIataT2              = TCPIP_DHCPV6_IATA_DEFAULT_T2,
+    .ianaSolicitT1              = TCPIP_DHCPV6_IANA_SOLICIT_T1,
+    .ianaSolicitT2              = TCPIP_DHCPV6_IANA_SOLICIT_T2,
+    .solicitPrefLTime           = TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_PREF_LTIME,
+    .solicitValidLTime          = TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_VALID_LTIME,
+    .nMsgBuffers                = TCPIP_DHCPV6_MESSAGE_BUFFERS,
+    .msgBufferSize              = TCPIP_DHCPV6_MESSAGE_BUFFER_SIZE,        
+};
+</#if>
 </#if>
 
 <#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
@@ -904,6 +928,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_IPV6,             &tcpipIPv6InitData},            // TCPIP_MODULE_IPV6
     {TCPIP_MODULE_ICMPV6,           0},                             // TCPIP_MODULE_ICMPV6
     {TCPIP_MODULE_NDP,              0},                             // TCPIP_MODULE_NDP
+<#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>	
+	{TCPIP_MODULE_DHCPV6_CLIENT,    &tcpipDhcpcv6InitData},         // TCPIP_MODULE_DHCPV6_CLEINT
+</#if>	
 </#if>
 <#if (tcpipUdp.TCPIP_USE_UDP)?has_content && (tcpipUdp.TCPIP_USE_UDP) == true>
     {TCPIP_MODULE_UDP,              &tcpipUDPInitData},             // TCPIP_MODULE_UDP

@@ -327,7 +327,7 @@ typedef struct __attribute__((packed))
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LLT
     uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
     uint32_t    time_val;       // time the DUID is generated in seconds from midnight January 2000 % 2^32
-    uint8_t     ll_address[6];  // 6 bytes MAC address for ETH
+    uint8_t     ll_address[];  // 6 bytes MAC address for ETH
     // Remarks:
     //  - any interface may be used
     //  - the same DUID must be used for ALL interfaces!

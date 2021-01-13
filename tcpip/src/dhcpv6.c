@@ -993,7 +993,7 @@ static void _DHCPV6DbgMsgOut_PrintPassed(const char* task, TCPIP_DHCPV6_MSG_BUFF
 
 static void _DHCPV6DbgMsgOut_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_TYPE msgType, TCPIP_DHCPV6_IA_DCPT* pIa, const char* reason)
 {
-    char dhcpBuff[80];
+    char dhcpBuff[128];
     sprintf(dhcpBuff, "DHCPV6 task: %s, Msg: 0x%8x, type: %d, IA ix: %d, state: %d, failed: %s\r\n", task, (uint32_t)pMsgBuffer, msgType, pIa->parentIx, pIa->iaState, reason);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
@@ -2227,6 +2227,8 @@ static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_NET_IF* pNetIf)
             TCPIP_UDP_Close(dhcpSkt);
             dhcpSkt = INVALID_UDP_SOCKET;
         }
+		TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_STRICT_PORT, (void*)false);
+
     }
 
 
@@ -3871,6 +3873,10 @@ static void _DHCPV6Client_TransmitTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
             nBytes1 = TCPIP_UDP_ArrayPut(s, pTxBuffer->pMsgData, pTxBuffer->msgLen);
             nBytes2 = TCPIP_UDP_Flush(s);
 
+            // Set the Strict PORT option to false and user can receive the 
+            // packet from different port number other than 547.
+            TCPIP_UDP_OptionsSet(s, UDP_OPTION_STRICT_PORT, (void*)false);
+
             if(nBytes1 != nBytes2 || nBytes1 != pTxBuffer->msgLen)
             {   // should not happen
                 _DHCPV6DbgCond(false, __func__, __LINE__);
@@ -3941,6 +3947,10 @@ static void _DHCPV6Client_ReceiveTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
             // success
             TCPIP_Helper_SingleListTailAdd(&pClient->rxMsgList, (SGL_LIST_NODE*)pRxBuffer);
             pRxBuffer = 0;
+            
+            // Set the port Server number to 547 , so DHCP V6 Client transmit 
+            // the request message with port number 547.
+            TCPIP_UDP_RemoteBind(pClient->dhcpSkt,IP_ADDRESS_TYPE_IPV6,dhcpv6ServerPort,0);
 
             break;
         }

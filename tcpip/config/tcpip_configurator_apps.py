@@ -67,6 +67,14 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
     tcpipAutoConfigDDNS.setVisible(True)
     tcpipAutoConfigDDNS.setDescription("Enable DDNS")
     tcpipAutoConfigDDNS.setDependencies(tcpipAutoConfigDDNSEnable, ["TCPIP_AUTOCONFIG_ENABLE_DDNS"])
+    
+    # Enable DHCPV6_CLIENT
+    tcpipAutoConfigDHCPv6_CLIENT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DHCPV6_CLIENT", None)
+    tcpipAutoConfigDHCPv6_CLIENT.setLabel("DHCPV6 CLIENT")
+    tcpipAutoConfigDHCPv6_CLIENT.setVisible(True)
+    tcpipAutoConfigDHCPv6_CLIENT.setDescription("Enable DHCPV6_CLIENT") 
+    tcpipAutoConfigDHCPv6_CLIENT.setDependencies(tcpipAutoConfigDHCPV6CLIENTEnable, ["TCPIP_AUTOCONFIG_ENABLE_DHCPV6_CLIENT"])
+
 
     # Enable DHCP_CLIENT
     tcpipAutoConfigDHCP_CLIENT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DHCP_CLIENT", None)
@@ -311,6 +319,18 @@ def tcpipAutoConfigDDNSEnable(symbol, event):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDdns"])
+    
+def tcpipAutoConfigDHCPV6CLIENTEnable(symbol, event):
+    tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    enableTcpipAutoConfigApps(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["tcpipDhcpcv6"],"APPLICATION LAYER", False) 
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcpcv6", "libtcpipDhcpcv6")
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV6") != True):
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV6", True)
+        if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):    setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
+    else:
+        res = Database.deactivateComponents(["tcpipDhcpcv6"])
     
 def tcpipAutoConfigDHCPCLIENTEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
