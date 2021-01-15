@@ -877,7 +877,9 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
     uint32_t remoteIP = 0;
     uint16_t remotePort = 0;    
     IPV4_ADDR localAddr;
+    IPV4_ADDR remoteAddr;
     localAddr.Val = 0;
+    remoteAddr.Val = 0;
 #if defined(TCPIP_STACK_USE_IPV6)
     IPV6_ADDR localAddr6;
     localAddr6.d[0] = 0;
@@ -1080,8 +1082,9 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                 if (socket->addressFamily == AF_INET)
                 {
 #endif
-                    localAddr.Val = socket->localIP;
-                    TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_STACK_IPAddToNet(&localAddr, true));
+                    localAddr.Val  = socket->localIP == IP_ADDR_ANY ? 0 : socket->localIP;
+                    remoteAddr.Val = remoteIP;
+                    TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(0, &remoteAddr, &localAddr, true));
 #if defined(TCPIP_STACK_USE_IPV6)
                 }
 #endif
