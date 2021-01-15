@@ -824,6 +824,15 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
             }
         }
     }
+    else
+    {
+        if (pktRes != TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS)
+        {
+            // If forwarding rejected (too large for example) and host isn't going to process
+            TCPIP_PKT_PacketAcknowledge(pRxPkt, TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD); 
+            pktRes = TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_DISCARD;
+        }
+    }
 
 #if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     _MAC_Bridge_FDBUnlock(gBridgeDcpt);
