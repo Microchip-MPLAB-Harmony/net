@@ -791,13 +791,15 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         dupIpAddr.Val = 0;
         for(netIx = 0, pIf = tcpipNetIf; netIx < nNets && !initFail; netIx++, pIf++)
         {
-            dupIpAddr.Val = pIf->DefaultIPAddr.Val;
-            for(ix = netIx + 1, pScanIf = pIf + 1; ix < nNets; ix++, pScanIf++)
-            {
-                if(pScanIf->DefaultIPAddr.Val == dupIpAddr.Val)
+            if((dupIpAddr.Val = pIf->DefaultIPAddr.Val) != 0)
+            {   // IP address 0 does not count as duplicate
+                for(ix = netIx + 1, pScanIf = pIf + 1; ix < nNets; ix++, pScanIf++)
                 {
-                    initFail = 6;
-                    break;
+                    if(pScanIf->DefaultIPAddr.Val == dupIpAddr.Val)
+                    {
+                        initFail = 6;
+                        break;
+                    }
                 }
             }
         }
