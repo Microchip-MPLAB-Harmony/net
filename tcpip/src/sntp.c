@@ -663,8 +663,8 @@ static void TCPIP_SNTP_Process(void)
                 if((SYS_TMR_TickCountGet() - SNTPTimer > 1 * SYS_TMR_TickCounterFrequencyGet()))
                 {
                     TCPIP_SNTP_SetErrorState(SM_DNS_RESOLVED, SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
-                    break;
                 }
+                break;
             }
 
             // Success
