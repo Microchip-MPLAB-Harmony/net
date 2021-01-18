@@ -210,23 +210,28 @@ void TCPIP_FTPC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     TCPIP_FTPC_DCPT_TYPE * pftpcDcpt;
     int index;
     
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
-    {   // stack shut down
-        if(ftpcDcptPool != 0)
-        {
-            pftpcDcpt = ftpcDcptPool;
-		
-            for(index = 0; index < ftpcGlobalConfig.nMaxClients; index++, pftpcDcpt++)
+    if(ftpcInitCount > 0)
+    {
+        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        {   // stack shut down
+            if(--ftpcInitCount == 0)
             {
-                _ftpcReleaseSockets(pftpcDcpt);  
+                if(ftpcDcptPool != 0)
+                {
+                    pftpcDcpt = ftpcDcptPool;
+
+                    for(index = 0; index < ftpcGlobalConfig.nMaxClients; index++, pftpcDcpt++)
+                    {
+                        _ftpcReleaseSockets(pftpcDcpt);  
+                    }
+                    TCPIP_HEAP_Free(ftpcGlobalConfig.memH, ftpcDcptPool);
+                }
+                if(ftpcSignalHandle)
+                {
+                    _TCPIPStackSignalHandlerDeregister(ftpcSignalHandle);
+                    ftpcSignalHandle = 0;
+                } 
             }
-            if(ftpcSignalHandle)
-            {
-                _TCPIPStackSignalHandlerDeregister(ftpcSignalHandle);
-                ftpcSignalHandle = 0;
-            } 
-            TCPIP_HEAP_Free(ftpcGlobalConfig.memH, ftpcDcptPool);
-            ftpcInitCount--;
         }
     }
 }

@@ -296,7 +296,7 @@ static tcpipSignalHandle     tcpipCmdSignalHandle = 0;      // tick handle
 
 static TCPIP_COMMANDS_STAT  tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
 
-
+static int commandInitCount = 0;        // initialization count
 
 
 #endif  // defined(_TCPIP_STACK_COMMAND_TASK)
@@ -508,56 +508,61 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
     }
 
     // stack init
-    initialNetIfs = stackCtrl->nIfs;
+    if(commandInitCount == 0)
+    {   // 1st time we run
+        initialNetIfs = stackCtrl->nIfs;
 
-    // create command group
-    if (!SYS_CMD_ADDGRP(tcpipCmdTbl, sizeof(tcpipCmdTbl)/sizeof(*tcpipCmdTbl), "tcpip", ": stack commands"))
-    {
-        SYS_ERROR(SYS_ERROR_ERROR, "Failed to create TCPIP Commands\r\n");
-        return false;
-    }
+        // create command group
+        if (!SYS_CMD_ADDGRP(tcpipCmdTbl, sizeof(tcpipCmdTbl)/sizeof(*tcpipCmdTbl), "tcpip", ": stack commands"))
+        {
+            SYS_ERROR(SYS_ERROR_ERROR, "Failed to create TCPIP Commands\r\n");
+            return false;
+        }
 
 #if defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((TCPIP_STACK_DOWN_OPERATION != 0) || (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
-    // get storage for interfaces configuration
-    // cannot be taken from the TCPIP-HEAP because we need it persistent after
-    // TCPIP_STACK_Deinit() is called!
-    if(pCmdStgDcpt == 0 && pCmdNetConf == 0)
-    {
-        pCmdStgDcpt = (TCPIP_COMMAND_STG_DCPT*)TCPIP_STACK_CALLOC_FUNC(initialNetIfs, sizeof(*pCmdStgDcpt));
-        pCmdNetConf = (TCPIP_NETWORK_CONFIG*)TCPIP_STACK_CALLOC_FUNC(initialNetIfs, sizeof(*pCmdNetConf));
-        if(pCmdStgDcpt == 0 || pCmdNetConf == 0)
-        {   // failure is not considered to be catastrophic
-            SYS_ERROR(SYS_ERROR_WARNING, "Failed to create TCPIP Commands Storage/Config\r\n");
+        // get storage for interfaces configuration
+        // cannot be taken from the TCPIP-HEAP because we need it persistent after
+        // TCPIP_STACK_Deinit() is called!
+        if(pCmdStgDcpt == 0 && pCmdNetConf == 0)
+        {
+            pCmdStgDcpt = (TCPIP_COMMAND_STG_DCPT*)TCPIP_STACK_CALLOC_FUNC(initialNetIfs, sizeof(*pCmdStgDcpt));
+            pCmdNetConf = (TCPIP_NETWORK_CONFIG*)TCPIP_STACK_CALLOC_FUNC(initialNetIfs, sizeof(*pCmdNetConf));
+            if(pCmdStgDcpt == 0 || pCmdNetConf == 0)
+            {   // failure is not considered to be catastrophic
+                SYS_ERROR(SYS_ERROR_WARNING, "Failed to create TCPIP Commands Storage/Config\r\n");
+            }
         }
-    }
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((TCPIP_STACK_DOWN_OPERATION != 0) || (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
 
 #if defined(_TCPIP_COMMAND_PING4)
-    icmpAckRecv = 0;
+        icmpAckRecv = 0;
 #endif  // defined(_TCPIP_COMMAND_PING4)
 #if defined(_TCPIP_COMMAND_PING6)
-    hIcmpv6 = 0;
-    icmpAckRecv = 0;
+        hIcmpv6 = 0;
+        icmpAckRecv = 0;
 #endif  // defined(_TCPIP_COMMAND_PING6)
 
 #if defined(_TCPIP_STACK_COMMAND_TASK)
-    tcpipCmdSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_COMMAND_Task, 0);
-    if(tcpipCmdSignalHandle == 0)
-    {   // timer is not active now
-        SYS_ERROR(SYS_ERROR_ERROR, "TCPIP commands task registration failed\r\n");
-        return false;
-    }
-    // else the timer will start when we send a query
-    tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
+        tcpipCmdSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_COMMAND_Task, 0);
+        if(tcpipCmdSignalHandle == 0)
+        {   // timer is not active now
+            SYS_ERROR(SYS_ERROR_ERROR, "TCPIP commands task registration failed\r\n");
+            return false;
+        }
+        // else the timer will start when we send a query
+        tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
 #endif  // defined(_TCPIP_STACK_COMMAND_TASK)
 
 #if defined(_TCPIP_COMMANDS_MIIM)
-    // get the MIIM driver object
-    miimObj = &DRV_MIIM_OBJECT_BASE_Default;
-    miimObjIx = DRV_MIIM_DRIVER_INDEX;
-    miimHandle = 0;
-    miimOpHandle = 0;
+        // get the MIIM driver object
+        miimObj = &DRV_MIIM_OBJECT_BASE_Default;
+        miimObjIx = DRV_MIIM_DRIVER_INDEX;
+        miimHandle = 0;
+        miimOpHandle = 0;
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
+    }
+
+    commandInitCount++;
 
     return true;
 }
@@ -568,33 +573,35 @@ void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT) // stack shut down
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN) // interface down
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+    if(commandInitCount > 0 && stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
     {   // whole stack is going down
-#if defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((TCPIP_STACK_DOWN_OPERATION != 0) || (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
-        if(tcpipCmdPreserveSavedInfo == false)
-        {
-            TCPIP_STACK_FREE_FUNC(pCmdStgDcpt);
-            TCPIP_STACK_FREE_FUNC(pCmdNetConf);
-            pCmdStgDcpt = 0;
-            pCmdNetConf = 0;
-        }
-#endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && ((TCPIP_STACK_DOWN_OPERATION != 0) || (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0))
+        if(--commandInitCount == 0)
+        {   // close all
+#if defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
+            if(tcpipCmdPreserveSavedInfo == false)
+            {
+                TCPIP_STACK_FREE_FUNC(pCmdStgDcpt);
+                TCPIP_STACK_FREE_FUNC(pCmdNetConf);
+                pCmdStgDcpt = 0;
+                pCmdNetConf = 0;
+            }
+#endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 
 #if defined(_TCPIP_STACK_COMMAND_TASK)
-        if(tcpipCmdSignalHandle != 0)
-        {
-            _TCPIPStackSignalHandlerDeregister(tcpipCmdSignalHandle);
-            tcpipCmdSignalHandle = 0;
-        }
+            if(tcpipCmdSignalHandle != 0)
+            {
+                _TCPIPStackSignalHandlerDeregister(tcpipCmdSignalHandle);
+                tcpipCmdSignalHandle = 0;
+            }
 #endif  // defined(_TCPIP_STACK_COMMAND_TASK)
 
 #if defined(_TCPIP_COMMAND_PING6)
-        if(hIcmpv6)
-        {
-            TCPIP_ICMPV6_CallbackDeregister(hIcmpv6);
-        }
+            if(hIcmpv6)
+            {
+                TCPIP_ICMPV6_CallbackDeregister(hIcmpv6);
+            }
 #endif  // defined(_TCPIP_COMMAND_PING6)
-        
+        }
     }
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)

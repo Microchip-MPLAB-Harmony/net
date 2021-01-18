@@ -649,56 +649,62 @@ void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 {
     UDP_SOCKET_DCPT*    pSkt;
     int ix;
+
+    if(udpInitCount == 0)
+    {   // not properly initialized
+        return;
+    }
+
+    // we're up and running
     bool    killSem = false;
 
     _UserGblLock();     // make sure no one is opening/closing sockets now
-    if(udpInitCount > 0)
-    {   // we're up and running
-        // interface is going down
-        _UDPAbortSockets(1 << stackCtrl->netIx, TCPIP_UDP_SIGNAL_IF_DOWN); 
 
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
-        {   // stack shut down
-            if(--udpInitCount == 0)
-            {   // all closed
-                // release resources
-                // just in case there are any not bound sockets
-                for(ix = 0; ix < nUdpSockets; ix++)
+    // interface is going down
+    _UDPAbortSockets(1 << stackCtrl->netIx, TCPIP_UDP_SIGNAL_IF_DOWN); 
+
+    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+    {   // stack shut down
+        if(--udpInitCount == 0)
+        {   // all closed
+            // release resources
+            // just in case there are any not bound sockets
+            for(ix = 0; ix < nUdpSockets; ix++)
+            {
+                pSkt = UDPSocketDcpt[ix];
+                if(pSkt) 
                 {
-                    pSkt = UDPSocketDcpt[ix];
-                    if(pSkt) 
-                    {
-                        _UDPClose(pSkt);
-                    }
+                    _UDPClose(pSkt);
                 }
+            }
 
-                TCPIP_HEAP_Free(udpMemH, UDPSocketDcpt);
+            TCPIP_HEAP_Free(udpMemH, UDPSocketDcpt);
 
-                UDPSocketDcpt = 0;
+            UDPSocketDcpt = 0;
 
 #if (TCPIP_UDP_USE_POOL_BUFFERS != 0)
-                // Note: no protection for this access
-                TCPIP_MAC_PACKET*   pPkt;
-                while((pPkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_SingleListHeadRemove(&udpPacketPool)) != 0)
-                {
-                    TCPIP_PKT_PacketFree(pPkt);
-                }
-                udpPacketsInPool = 0;
-                udpPoolPacketSize = 0;
+            // Note: no protection for this access
+            TCPIP_MAC_PACKET*   pPkt;
+            while((pPkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_SingleListHeadRemove(&udpPacketPool)) != 0)
+            {
+                TCPIP_PKT_PacketFree(pPkt);
+            }
+            udpPacketsInPool = 0;
+            udpPoolPacketSize = 0;
 #endif  // (TCPIP_UDP_USE_POOL_BUFFERS != 0)
 
-                if(signalHandle)
-                {
-                    _TCPIPStackSignalHandlerDeregister(signalHandle);
-                    signalHandle = 0;
-                }
-
-                udpMemH = 0;
-                nUdpSockets = 0;
-                killSem = true;
+            if(signalHandle)
+            {
+                _TCPIPStackSignalHandlerDeregister(signalHandle);
+                signalHandle = 0;
             }
+
+            udpMemH = 0;
+            nUdpSockets = 0;
+            killSem = true;
         }
     }
+    
     if(killSem)
     {
         _UserGblLockDelete();

@@ -380,12 +380,15 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 void TCPIP_FTP_ServerDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
 {
-    if(stackData->stackAction == TCPIP_STACK_ACTION_DEINIT)
-    {   // whole stack is going down
-        if(--sTCPIPFTPServerCount == 0)
-        {   // all closed
-            // release resources
-            TCPIP_FTP_Cleanup();
+    if(sTCPIPFTPServerCount > 0)
+    {
+        if(stackData->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        {   // whole stack is going down
+            if(--sTCPIPFTPServerCount == 0)
+            {   // all closed
+                // release resources
+                TCPIP_FTP_Cleanup();
+            }
         }
     }
 }
