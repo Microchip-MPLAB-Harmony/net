@@ -97,6 +97,7 @@ def loadModule():
     net_PresComponent = Module.CreateComponent("net_Pres", "Presentation Layer", "/Libraries/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/net_pres.py")
     net_PresComponent.addCapability("libNet_Pres","net_pres",True)    
     net_PresComponent.addDependency("Net_Pres_Crypto_Dependency", "TLS Provider", None, False, False)
+    net_PresComponent.setDisplayType("TCP/IP Library")
     
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   
     tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")
@@ -244,114 +245,138 @@ def loadModule():
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)  
+        drvGmacComponent.setDisplayType("TCP/IP Drivers")
     elif Peripheral.moduleExists("EMAC"):
         aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_0.addCapability( "libdrvMac0", "MAC")
         aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, True, True)
+        aDrvMacComponent_0.setDisplayType("TCP/IP Drivers")
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
         aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, True, True)
+        aDrvMacComponent_1.setDisplayType("TCP/IP Drivers")
     elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
         drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
+        drvPic32mEthmacComponent.setDisplayType("TCP/IP Drivers")
             
     ## MIIM Driver
     drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")
-    drvMiimComponent.addCapability("libdrvMiim","MIIM",True)    
+    drvMiimComponent.addCapability("libdrvMiim","MIIM",True)   
+    drvMiimComponent.setDisplayType("TCP/IP Drivers")
     
     ################# ETHERNET PHY Driver ##############################################
     #Driver for Micrel KSZ8041 PHY
     drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
     drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",True)   
     drvExtPhyKsz8041Component.addDependency("KSZ8041_MIIM_Dependency", "MIIM", None, True, True)  
+    drvExtPhyKsz8041Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for Micrel KSZ8061 PHY
     drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
     drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)   
     drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)    
+    drvExtPhyKsz8061Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for Micrel KSZ8081 PHY
     drvExtPhyKsz8081Component = Module.CreateComponent("drvExtPhyKsz8081", "KSZ8081", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8081.py")
     drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",True)   
     drvExtPhyKsz8081Component.addDependency("KSZ8081_MIIM_Dependency", "MIIM", None, True, True)    
+    drvExtPhyKsz8081Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for Micrel KSZ8091 PHY
     drvExtPhyKsz8091Component = Module.CreateComponent("drvExtPhyKsz8091", "KSZ8091", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8091.py")
     drvExtPhyKsz8091Component.addCapability("libdrvExtPhyKsz8091","PHY",True)   
     drvExtPhyKsz8091Component.addDependency("KSZ8091_MIIM_Dependency", "MIIM", None, True, True)    
-        
+    drvExtPhyKsz8091Component.setDisplayType("TCP/IP Drivers")
+    
     #Driver for Micrel KSZ8863 PHY
     drvExtPhyKsz8863Component = Module.CreateComponent("drvExtPhyKsz8863", "KSZ8863", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8863.py")
     drvExtPhyKsz8863Component.addCapability("libdrvExtPhyKsz8863","PHY",True)   
     drvExtPhyKsz8863Component.addDependency("KSZ8863_MIIM_Dependency", "MIIM", None, True, True)  
+    drvExtPhyKsz8863Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC LAN8700 PHY
     drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
     drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",True)   
     drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)       
+    drvExtPhyLan8700Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC LAN8720PHY
     drvExtPhyLan8720Component = Module.CreateComponent("drvExtPhyLan8720", "LAN8720", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8720.py")
     drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",True)   
     drvExtPhyLan8720Component.addDependency("LAN8720_MIIM_Dependency", "MIIM", None, True, True) 
+    drvExtPhyLan8720Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC LAN8740 PHY
     drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
     drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)   
     drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyLan8740Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC LAN9303PHY
     drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
     drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",True)   
     drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM", None, True, True) 
+    drvExtPhyLan9303Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC DP83640PHY
     drvExtPhyDp83640Component = Module.CreateComponent("drvExtPhyDp83640", "DP83640", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83640.py")
     drvExtPhyDp83640Component.addCapability("libdrvExtPhyDp83640","PHY",True)   
     drvExtPhyDp83640Component.addDependency("DP83640_MIIM_Dependency", "MIIM", None, True, True) 
+    drvExtPhyDp83640Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC DP83848PHY
     drvExtPhyDp83848Component = Module.CreateComponent("drvExtPhyDp83848", "DP83848", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83848.py")
     drvExtPhyDp83848Component.addCapability("libdrvExtPhyDp83848","PHY",True)   
     drvExtPhyDp83848Component.addDependency("DP83848_MIIM_Dependency", "MIIM", None, True, True) 
+    drvExtPhyDp83848Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for SMSC IP101GRPHY
     drvExtPhyIp101grComponent = Module.CreateComponent("drvExtPhyIp101gr", "IP101GR", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ip101gr.py")
     drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",True)   
     drvExtPhyIp101grComponent.addDependency("IP101GR_MIIM_Dependency", "MIIM", None, True, True)     
+    drvExtPhyIp101grComponent.setDisplayType("TCP/IP Drivers")
     
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Harmony/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
     drvExtMacEncx24j600Component.addCapability("libdrvExtMacEncx24j600","MAC",None, False)   
     drvExtMacEncx24j600Component.addDependency("ENCX24J600_SPI", "DRV_SPI", None, False, True)   
+    drvExtMacEncx24j600Component.setDisplayType("TCP/IP Drivers")
     
     #Driver for ENC28J60
     drvExtMacEnc28j60Component = Module.CreateGeneratorComponent("drvExtMacEnc28j60", "ENC28J60", "/Harmony/Drivers/External Ethernet Controller", "driver/enc28j60/config/drv_enc28j60_common.py", "driver/enc28j60/config/drv_enc28j60.py")
     drvExtMacEnc28j60Component.addCapability("libdrvExtMacEnc28j60","MAC",None, False)  
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
-        
+    drvExtMacEnc28j60Component.setDisplayType("TCP/IP Drivers")    
     ########################## Harmony Network Presentation Module #################################    
     # OBSOLETE Module - Do not use this module for new demos#
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer(Obsolete)", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    
     netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
+    netPresComponent.setDisplayType("TCP/IP Library")
     
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
 
     tcpipAutoConfigAppsComponent = Module.CreateComponent("tcpip_apps_config", "TCP/IP Application Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_apps.py")
-
-    tcpipAutoConfigTransportComponent = Module.CreateComponent("tcpip_transport_config", "TCP/IP Transport Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_transport.py")
-
-    tcpipAutoConfigNetworkComponent = Module.CreateComponent("tcpip_network_config", "TCP/IP Network Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_network.py")
-
-    tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
-
-    tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Basic Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")
+    tcpipAutoConfigAppsComponent.setDisplayType("TCP/IP Configurators")
     
+    tcpipAutoConfigTransportComponent = Module.CreateComponent("tcpip_transport_config", "TCP/IP Transport Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_transport.py")
+    tcpipAutoConfigTransportComponent.setDisplayType("TCP/IP Configurators")
+    
+    tcpipAutoConfigNetworkComponent = Module.CreateComponent("tcpip_network_config", "TCP/IP Network Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_network.py")
+    tcpipAutoConfigNetworkComponent.setDisplayType("TCP/IP Configurators")
+    
+    tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
+    tcpipAutoConfigDriverComponent.setDisplayType("TCP/IP Configurators")
+    
+    tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Basic Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")
+    tcpipAutoConfigBasicComponent.setDisplayType("TCP/IP Configurators")
     ########################## Thirdy-Party Modules #################################   
     # Wolfmqtt 
     wolfmqttComponent = Module.CreateComponent("lib_wolfmqtt", "wolfMQTT Library", "/Third Party Libraries/wolfSSL/", "third_party_adapter/wolfMQTT/config/wolfmqtt.py")
     wolfmqttComponent.addCapability("lib_wolfmqtt","wolfmqtt",True)   
     wolfmqttComponent.addDependency("WolfMqtt_NetPres_Dependency", "net_pres", None, True, False)
+    wolfmqttComponent.setDisplayType("TCP/IP Thirdparty")
