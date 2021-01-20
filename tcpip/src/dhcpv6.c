@@ -3760,8 +3760,8 @@ static bool _DHCPV6OptionGet_Duid(TCPIP_DHCPV6_DUID_DCPT* pDstDuidDcpt, TCPIP_DH
     // the TCPIP_DHCPV6_DUID_EN has variable size
     // make sure we have enough space for it
     if((duidType == TCPIP_DHCPV6_DUID_TYPE_EN && duidLen > sizeof(TCPIP_DHCPV6_DUID_EN)) || 
-       (duidType == TCPIP_DHCPV6_DUID_TYPE_LLT && duidLen != sizeof(TCPIP_DHCPV6_DUID_LLT)) ||
-       (duidType == TCPIP_DHCPV6_DUID_TYPE_LL && duidLen != sizeof(TCPIP_DHCPV6_DUID_LL)))
+       (duidType == TCPIP_DHCPV6_DUID_TYPE_LLT && duidLen > sizeof(TCPIP_DHCPV6_DUID_LLT)) ||
+       (duidType == TCPIP_DHCPV6_DUID_TYPE_LL && duidLen > sizeof(TCPIP_DHCPV6_DUID_LL)))
     {
         _DHCPV6AssertCond(false, __func__, __LINE__);
         return false;

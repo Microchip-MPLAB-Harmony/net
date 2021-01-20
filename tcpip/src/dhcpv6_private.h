@@ -321,13 +321,22 @@ typedef struct __attribute__((packed))
 
 #define TCPIP_DHCPV6_HW_TYPE                    (1u)    //  RFC 1700 - 1 for ETH hardware type
 
+/*
+ * A network interface's Link layer address.
+ * A globally unique link-layer address for
+ * the link type.
+ * 20 bytes for the Ethernet address.
+ */
+
+#define TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN      20
+
 // DUID based on Link Layer + time: DUID-LLT
 typedef struct __attribute__((packed))
 {
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LLT
     uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
     uint32_t    time_val;       // time the DUID is generated in seconds from midnight January 2000 % 2^32
-    uint8_t     ll_address[];  // 6 bytes MAC address for ETH
+    uint8_t     ll_address[TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN];  // 20 bytes Link layer address for ETH
     // Remarks:
     //  - any interface may be used
     //  - the same DUID must be used for ALL interfaces!
@@ -361,7 +370,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LL
     uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
-    uint8_t     ll_address[6];  // 6 bytes MAC address for ETH
+    uint8_t     ll_address[TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN];  // 20 bytes MAC address for ETH
     // Remarks:
     // - The link-layer address is of any one network interface that is permanently connected
     //   to the client or server device.
