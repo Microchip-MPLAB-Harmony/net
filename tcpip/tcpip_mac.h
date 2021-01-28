@@ -1641,7 +1641,7 @@ typedef struct
     /*  packet free function */
     TCPIP_MAC_PKT_FreeF     pktFreeF;
 
-    /*  packet allocation function */
+    /*  packet acknowledge function */
     TCPIP_MAC_PKT_AckF      pktAckF;
 
     /* Synchronization object request function */
