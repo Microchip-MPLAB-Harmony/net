@@ -193,7 +193,10 @@ def tcpipArpGenSourceFile(sourceFile, event):
 def tcpipArpHeapCalc(): 
     numInterface = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
     cacheEntries = Database.getSymbolValue("tcpipArp","TCPIP_ARP_CACHE_ENTRIES")
-    heap_size = numInterface * (102 + (cacheEntries * 24))
+    heap_size = 0
+    if (numInterface != None):
+        heap_size = numInterface * (102 + (cacheEntries * 24))
+   
     return heap_size    
     
 def tcpipArpHeapUpdate(symbol, event): 

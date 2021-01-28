@@ -134,7 +134,9 @@ def tcpipDhcpcMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
 
 def tcpipDhcpcHeapCalc(): 
     numInterface = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
-    heap_size = numInterface * 88
+    heap_size = 0
+    if (numInterface != None):
+        heap_size = numInterface * 88
     return heap_size    
     
 def tcpipDhcpcHeapUpdate(symbol, event): 

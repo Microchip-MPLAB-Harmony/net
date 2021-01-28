@@ -2009,7 +2009,9 @@ def tcpipHeapCalc():
     
     # TCPIP_MODULE_MANAGER
     numInterface = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
-    heapsize = numInterface * 140
+    heap_size = 0
+    if (numInterface != None):
+        heapsize = numInterface * 140
     
     # GMAC
     if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)): 

@@ -394,7 +394,9 @@ def tcpipZcMdnsHeapCalc():
     if(Database.getSymbolValue("tcpipZeroConf","TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG") == True):
         memUsage = memUsage + 800   
     
-    heap_size = numInterface * memUsage
+    heap_size = 0
+    if (numInterface != None):
+        heap_size = numInterface * memUsage
     return heap_size    
     
 def tcpipZcMdnsHeapUpdate(symbol, event): 
