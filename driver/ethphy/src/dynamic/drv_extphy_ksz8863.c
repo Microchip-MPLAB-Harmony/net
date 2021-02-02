@@ -156,12 +156,12 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 // the DRV_ETHPHY_OBJECT
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8863 = 
 {
-    DRV_EXTPHY_MIIConfigure,
-    DRV_EXTPHY_MDIXConfigure,
-    DRV_EXTPHY_SMIClockGet,
-    0,                          // no WOL functionality yet
+    .miiConfigure = DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = 0,                      // no WOL functionality yet
+    .phyDetect = 0,                         // default detection performed
 };
-
 
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_Ksz8863LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )

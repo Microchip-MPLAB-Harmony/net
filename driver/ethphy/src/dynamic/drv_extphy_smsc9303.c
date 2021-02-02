@@ -180,12 +180,12 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 // the DRV_ETHPHY_OBJECT
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_SMSC_LAN9303 = 
 {
-    DRV_EXTPHY_MIIConfigure,
-    DRV_EXTPHY_MDIXConfigure,
-    DRV_EXTPHY_SMIClockGet,
-    0,                          // no WOL functionality yet
+    .miiConfigure = DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = 0,                      // no WOL functionality yet
+    .phyDetect = 0,                         // default detection performed
 };
-
 
 #define DRV_ETHPHY_SMC32_PhyAddr(reg) (((reg >> 6) & 0xf) | 0x10)
 #define DRV_ETHPHY_SMC32_RegAddr(reg) ((reg >> 1) & 0x1f)

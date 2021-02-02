@@ -154,40 +154,42 @@ typedef enum
     /* No PHY was detected or it failed to respond to reset command */
     DRV_ETHPHY_RES_DTCT_ERR               /*DOM-IGNORE-BEGIN*/ =  -1, /*DOM-IGNORE-END*/
 
+    /* Timeout in the detection procedure */
+    DRV_ETHPHY_RES_DTCT_TMO               /*DOM-IGNORE-BEGIN*/ =  -2, /*DOM-IGNORE-END*/
+
     /* No match between the capabilities: the PHY supported and the open
       requested ones */
-    DRV_ETHPHY_RES_CPBL_ERR               /*DOM-IGNORE-BEGIN*/ =  -2, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_CPBL_ERR               /*DOM-IGNORE-BEGIN*/ =  -3, /*DOM-IGNORE-END*/
 
     /* Hardware configuration doesn't match the requested open mode */
-    DRV_ETHPHY_RES_CFG_ERR                /*DOM-IGNORE-BEGIN*/ =  -3, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_CFG_ERR                /*DOM-IGNORE-BEGIN*/ =  -4, /*DOM-IGNORE-END*/
 
     /* No negotiation active */
-    DRV_ETHPHY_RES_NEGOTIATION_INACTIVE   /*DOM-IGNORE-BEGIN*/ =  -4, /*DOM-IGNORE-END*/
-
+    DRV_ETHPHY_RES_NEGOTIATION_INACTIVE   /*DOM-IGNORE-BEGIN*/ =  -5, /*DOM-IGNORE-END*/
 
     /* No negotiation support */
-    DRV_ETHPHY_RES_NEGOTIATION_UNABLE     /*DOM-IGNORE-BEGIN*/ =  -5, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_UNABLE     /*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
 
     /* Negotiation not started yet */
-    DRV_ETHPHY_RES_NEGOTIATION_NOT_STARTED/*DOM-IGNORE-BEGIN*/ =  -6, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_NOT_STARTED/*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
 
     /* Negotiation active */
-    DRV_ETHPHY_RES_NEGOTIATION_ACTIVE     /*DOM-IGNORE-BEGIN*/ =  -7, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NEGOTIATION_ACTIVE     /*DOM-IGNORE-BEGIN*/ =  -8, /*DOM-IGNORE-END*/
 
     /* Unsupported or operation error */
-    DRV_ETHPHY_RES_OPERATION_ERR          /*DOM-IGNORE-BEGIN*/ =  -8, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_OPERATION_ERR          /*DOM-IGNORE-BEGIN*/ =  -9, /*DOM-IGNORE-END*/
 
     /* Driver busy with a previous operation */
-    DRV_ETHPHY_RES_NOT_READY_ERR          /*DOM-IGNORE-BEGIN*/ =  -9, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_NOT_READY_ERR          /*DOM-IGNORE-BEGIN*/ =  -10, /*DOM-IGNORE-END*/
 
     /* Passed handle is invalid */
-    DRV_ETHPHY_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/ =  -10, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_HANDLE_ERR             /*DOM-IGNORE-BEGIN*/ =  -11, /*DOM-IGNORE-END*/
 
     /* Operation aborted */
-    DRV_ETHPHY_RES_ABORTED                /*DOM-IGNORE-BEGIN*/ =  -11, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_ABORTED                /*DOM-IGNORE-BEGIN*/ =  -12, /*DOM-IGNORE-END*/
 
     /* MIIM Driver Operation Error */
-    DRV_ETHPHY_RES_MIIM_ERR              /*DOM-IGNORE-BEGIN*/ =  -12, /*DOM-IGNORE-END*/
+    DRV_ETHPHY_RES_MIIM_ERR              /*DOM-IGNORE-BEGIN*/ =   -13, /*DOM-IGNORE-END*/
 
 } DRV_ETHPHY_RESULT; 
 
@@ -489,6 +491,65 @@ typedef unsigned int  (* DRV_ETHPHY_VENDOR_SMI_CLOCK_GET) ( const struct DRV_ETH
 
 typedef void (* DRV_ETHPHY_VENDOR_WOL_CONFIGURE) ( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE handle, unsigned char bAddr[]);
 
+// *****************************************************************************
+/* Pointer to Function:
+    typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE handle);
+
+  Summary:
+    Pointer to a function to perform the detection of a PHY
+   
+  Description:
+    This type describes a pointer to a function that performs
+    the PHY detection procedure.
+    The function should decide if the communication with the PHY is working correctly
+    and the PHY responds properly to the read/write attempts done by the driver.
+
+    If this function is not provided (0) a default detection function is used
+         - The default detection function uses the BMCON register:
+            - reads the register to check that the RESET bit is cleared
+            - sets the LOOPBACK and DUPLEX bits and writes them to BMCON
+            - reads back the register and checks that LOOPBACK and DUPLEX bits were set
+            - resets the LOOPBACK and DUPLEX bits, write back and checks that they were cleared
+            - if all operations were completed successfully, the detection procedure has passed
+              otherwise a failure will be returned
+
+    Otherwise the PHY driver can provide their own implementation
+
+  Precondition:
+    The PHY driver has been initialized
+
+  Parameters:
+    - pBaseObj- pointer to a PHY Base object
+    - handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
+
+  Returns:
+    - DRV_ETHPHY_RES_OK      - if success, operation complete
+    - DRV_ETHPHY_RES_PENDING - if function needs to be called again
+    < 0               - on failure: communication with the PHY failed or some other error
+
+  Remarks:
+    The PHY driver consists of 2 modules:
+        - the main/base PHY driver which uses standard IEEE PHY registers
+        - the vendor specific functionality
+    This function provides vendor specific functionality.
+    Every PHY driver has to expose this vendor specific function as part of its interface.
+    
+    Traditionally the name used for this function is DRV_EXTPHY_Detect but any name can be used.
+
+    The PHY driver will call the vendor detect function as part of the PHY initialization
+
+    The function can use all the vendor specific functions to store/retrieve specific data
+    or start SMI transactions (see Vendor Interface Routines). 
+
+    The function should not block but return DRV_ETHPHY_RES_PENDING if waiting for SMI transactions.
+
+    The function should complete within a specified time, otherwise a timeout will be generated.
+    Currently this timeout is given by the DRV_ETHPHY_RESET_CLR_TMO parameter.
+
+*/
+
+typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE handle);
+
 
 // *****************************************************************************
 /* Pointer to Function:
@@ -560,6 +621,10 @@ typedef struct
     /* PHY driver function to configure the WOL functionality */
     DRV_ETHPHY_VENDOR_WOL_CONFIGURE     wolConfigure;
 
+    /* PHY driver function to detect the PHY is present and working correctly.
+     * If == 0, a default detection function will be used
+     * see the DRV_ETHPHY_VENDOR_DETECT definition */
+    DRV_ETHPHY_VENDOR_DETECT            phyDetect;
 
 }DRV_ETHPHY_OBJECT;
 

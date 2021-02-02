@@ -99,6 +99,30 @@ static void _PhyDebugCond(bool cond, const char* message, int lineNo)
 #define _PhyDebugCond(cond, message, lineNo)
 #endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC)
 
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE) != 0)
+static void _PhyDetectPhase(uint16_t detectPhase)
+{
+    static uint16_t prevState = 0xffff;
+    if(detectPhase != prevState)
+    {
+        prevState = detectPhase;
+        SYS_CONSOLE_PRINT("PHY detect phase: %d\r\n", detectPhase);
+    }
+}
+#else
+#define _PhyDetectPhase(detectPhase)
+#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE)
+
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES) != 0)
+static void _PhyDetectValue(uint16_t rVal, bool writeOp)
+{
+    SYS_CONSOLE_PRINT("PHY detect value: %s 0x%04x\r\n", writeOp ? "write" : "read", rVal);
+}
+#else
+#define _PhyDetectValue(rVal, writeOp)
+#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES)
+
+
 typedef void (*_DRV_PHY_OperPhaseF)(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 static void _DRV_ETHPHY_ClientOpNone(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
@@ -215,6 +239,8 @@ static const _DRV_PHY_OperPhaseF _DRV_PHY_ResetPhasesTbl[] =
 //
 
 static void _DRV_PHY_SetOperDoneResult(DRV_ETHPHY_CLIENT_OBJ * hClientObj, DRV_ETHPHY_RESULT res);
+
+static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE hClientObj);
 
 static DRV_ETHPHY_LINK_STATUS _Phy2LinkStat(__BMSTATbits_t phyStat)
 {
@@ -530,32 +556,30 @@ static DRV_ETHPHY_CLIENT_OBJ * _DRV_ETHPHY_ClientObjectAllocate( DRV_ETHPHY_OBJ*
 //
 const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default = 
 {
-    DRV_ETHPHY_Initialize,
-    DRV_ETHPHY_Reinitialize,
-    DRV_ETHPHY_Deinitialize,
-    DRV_ETHPHY_Status,
-    DRV_ETHPHY_Tasks,
-    DRV_ETHPHY_Open,
-    DRV_ETHPHY_Close,
-    DRV_ETHPHY_ClientStatus,
-    DRV_ETHPHY_ClientOperationResult,
-    DRV_ETHPHY_ClientOperationAbort,
-    DRV_ETHPHY_PhyAddressGet,
-    DRV_ETHPHY_Setup,
-    DRV_ETHPHY_RestartNegotiation,
-    DRV_ETHPHY_HWConfigFlagsGet,
-    DRV_ETHPHY_NegotiationIsComplete,
-    DRV_ETHPHY_NegotiationResultGet,
-    DRV_ETHPHY_LinkStatusGet,
-    DRV_ETHPHY_Reset,
-    DRV_ETHPHY_VendorDataGet,
-    DRV_ETHPHY_VendorDataSet,
-    DRV_ETHPHY_VendorSMIReadStart,
-    DRV_ETHPHY_VendorSMIReadResultGet,
-    DRV_ETHPHY_VendorSMIWriteStart,
+     .DRV_ETHPHY_Initialize =             DRV_ETHPHY_Initialize,
+     .DRV_ETHPHY_Reinitialize =           DRV_ETHPHY_Reinitialize,
+     .DRV_ETHPHY_Deinitialize =           DRV_ETHPHY_Deinitialize,
+     .DRV_ETHPHY_Status =                 DRV_ETHPHY_Status,
+     .DRV_ETHPHY_Tasks =                  DRV_ETHPHY_Tasks,
+     .DRV_ETHPHY_Open =                   DRV_ETHPHY_Open,
+     .DRV_ETHPHY_Close =                  DRV_ETHPHY_Close,
+     .DRV_ETHPHY_ClientStatus =           DRV_ETHPHY_ClientStatus,
+     .DRV_ETHPHY_ClientOperationResult =  DRV_ETHPHY_ClientOperationResult,
+     .DRV_ETHPHY_ClientOperationAbort =   DRV_ETHPHY_ClientOperationAbort,
+     .DRV_ETHPHY_PhyAddressGet =          DRV_ETHPHY_PhyAddressGet,
+     .DRV_ETHPHY_Setup =                  DRV_ETHPHY_Setup,
+     .DRV_ETHPHY_RestartNegotiation =     DRV_ETHPHY_RestartNegotiation,
+     .DRV_ETHPHY_HWConfigFlagsGet =       DRV_ETHPHY_HWConfigFlagsGet,
+     .DRV_ETHPHY_NegotiationIsComplete =  DRV_ETHPHY_NegotiationIsComplete,
+     .DRV_ETHPHY_NegotiationResultGet =   DRV_ETHPHY_NegotiationResultGet,
+     .DRV_ETHPHY_LinkStatusGet =          DRV_ETHPHY_LinkStatusGet,
+     .DRV_ETHPHY_Reset =                  DRV_ETHPHY_Reset,
+     .DRV_ETHPHY_VendorDataGet =          DRV_ETHPHY_VendorDataGet,
+     .DRV_ETHPHY_VendorDataSet =          DRV_ETHPHY_VendorDataSet,
+     .DRV_ETHPHY_VendorSMIReadStart =     DRV_ETHPHY_VendorSMIReadStart,
+     .DRV_ETHPHY_VendorSMIReadResultGet = DRV_ETHPHY_VendorSMIReadResultGet,
+     .DRV_ETHPHY_VendorSMIWriteStart =    DRV_ETHPHY_VendorSMIWriteStart,
 };
-
-
 
 // self reference to the base object itself
 static const DRV_ETHPHY_OBJECT_BASE* gDrvEthBaseObj = &DRV_ETHPHY_OBJECT_BASE_Default;
@@ -934,116 +958,265 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
     hDriver->openFlags = openFlags;
 
-    hClientObj->operTStamp = SYS_TMR_TickCountGet() + ((DRV_ETHPHY_RESET_CLR_TMO * SYS_TMR_TickCounterFrequencyGet()) + 999) / 1000;
     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 0);
 }
 
     
 static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    // try to detect the PHY and reset it
-    __BMCONbits_t bmcon;
+    DRV_ETHPHY_VENDOR_DETECT detectF;
+    DRV_ETHPHY_OBJ* hDriver;
+    DRV_ETHPHY_RESULT res; 
+
 
     switch (hClientObj->operSubPhase)
     {
         case 0:
-            // initiate a read of the BMCON register
-            if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
-            {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 1);
-            }
+            // set the function to perform the transfer
+            hDriver = hClientObj->hDriver;
+
+            if((detectF = hDriver->pPhyObj->phyDetect) == 0)
+            {   // call the default detect procedure
+                detectF = _DRV_ETHPHY_DefaultDetect;
+            } 
+
+            hClientObj->vendorDetect = detectF;
+            hClientObj->vendorData = 0;
+            hClientObj->operTStamp = SYS_TMR_TickCountGet() + ((DRV_ETHPHY_RESET_CLR_TMO * SYS_TMR_TickCounterFrequencyGet()) + 999) / 1000;
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 1);
             break;
 
         case 1:
-            // wait the BMCON read/write to complete
-            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
-            {
-                break;
-            }
-
-            bmcon.w = hClientObj->smiData;
-            if(bmcon.RESET)
-            {   // that is suspicios...but give it a chance to clear itself
-                if(SYS_TMR_TickCountGet() < hClientObj->operTStamp)
-                {   // not yet tmo
-                    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 0);
-                }
-                else
-                {
-                    _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
-                }
-                break;
-            }
-
-            // success
-            // ok, reset bit is low
-            // try to see if we can write smth to the PHY
-            // we use BMCON::Loopback and duplex bits
-            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, _BMCON_LOOPBACK_MASK|_BMCON_DUPLEX_MASK))
-            {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 2);
-            }
-            break;
-
-        case 2:
-            // re-read the BMCON
-            if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
-            {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 3);
-            }
-            break;
-
-        case 3:
-            // wait the BMCON read/write to complete
-            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
-            {
-                break;
-            }
-
-            bmcon.w = hClientObj->smiData;
-            if( (bmcon.LOOPBACK == 0) || (bmcon.DUPLEX == 0) )
-            {   // failed to set
-                 _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
-            }
-            else
-            {   // clear bits and write
-                if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, bmcon.w ^ (_BMCON_LOOPBACK_MASK|_BMCON_DUPLEX_MASK)))
-                {
-                    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 4);
-                }
-            }
-            break;
-
-        case 4:
-            if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON))
-            {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 5);
-            }
-            break;
-
-        case 5:
-            // wait the BMCON read/write to complete
-            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
-            {
-                break;
-            }
-
-            bmcon.w = hClientObj->smiData;
-            if(bmcon.LOOPBACK || bmcon.DUPLEX)
-            {   // failed to clear
-                _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
-            }
-            else
+            // perform the transfer
+            res =  hClientObj->vendorDetect(gDrvEthBaseObj, (DRV_HANDLE)hClientObj);
+            if(res == DRV_ETHPHY_RES_OK)
             {   // everything seems to be fine
                 // initiate the PHY reset
                 _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_RESET, 0);
             }
-
+            else if(res < 0)
+            {   // failed 
+                _DRV_PHY_SetOperDoneResult(hClientObj, res);
+            }
+            else
+            {   // DRV_ETHPHY_RES_PENDING wait some more...
+                if(SYS_TMR_TickCountGet() >= hClientObj->operTStamp)
+                {   // tmo occurred
+                    _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_TMO);
+                }
+            }
             break;
 
         default:
             // shouldn't happen
             _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OPERATION_ERR);
+    }
+
+}
+
+
+// default PHY detection procedure
+static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE hClientObj)
+{
+    union
+    {
+        uint32_t    w;
+        struct
+        {
+            uint16_t low;
+            uint16_t high;
+        };
+    }vendorData;
+
+    __BMCONbits_t bmcon;
+    uint16_t    phyReg = 0;
+    uint16_t    detectPhase = 0;
+    int         phyAddress = 0;
+
+    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &vendorData.w);
+
+    if(res < 0)
+    {   // some error occurred
+        return res;
+    }
+
+    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+
+    detectPhase = vendorData.low;
+
+    _PhyDetectPhase(detectPhase);
+
+    // try to detect the PHY and reset it
+
+    switch (detectPhase)
+    {
+        case 0:
+            // initiate a read of the BMCON register
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            // advance to the next phase
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+
+        case 1:
+            // wait the BMCON read to complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            // got BMCON result
+            bmcon.w =  phyReg;
+            _PhyDetectValue(bmcon.w, false);
+            if(bmcon.RESET == 0)
+            {   // all good;advance to the next phase
+                vendorData.low = ++detectPhase;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            // that is suspicios...but give it a chance to clear itself
+            // otherwise operation will timeout
+            // back from start: re-read BMCON
+            vendorData.w = 0;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 2:
+            // try to see if we can write smth to the PHY
+            // we use BMCON::Loopback and duplex bits
+            bmcon.w = _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK;
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, bmcon.w, phyAddress);
+            _PhyDetectValue(bmcon.w, true);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 3:
+            // initiate re-read the BMCON
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            // advance to the next phase
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 4:
+            // wait the BMCON read to complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            bmcon.w = phyReg;
+            _PhyDetectValue(bmcon.w, false);
+            if( (bmcon.LOOPBACK == 0) || (bmcon.DUPLEX == 0) )
+            {   // failed to set
+                return DRV_ETHPHY_RES_DTCT_ERR; 
+            }
+            // advance to the next phase
+            vendorData.high = phyReg;
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 5:
+            // clear bits and write
+            bmcon.w = vendorData.high;
+            bmcon.w ^= _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK;
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, bmcon.w, phyAddress);
+            _PhyDetectValue(bmcon.w, true);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+            // advance to the next phase
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 6:
+            // re-read BMCON
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_BMCON, phyAddress);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+            // advance to the next phase
+            vendorData.low = ++detectPhase;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
+            return DRV_ETHPHY_RES_PENDING;
+
+        case 7:
+            // wait read complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_PENDING)
+            {   // retry
+                return DRV_ETHPHY_RES_PENDING;
+            }
+
+            bmcon.w = phyReg;
+            _PhyDetectValue(bmcon.w, false);
+            if(bmcon.LOOPBACK || bmcon.DUPLEX)
+            {   // failed to clear
+                return DRV_ETHPHY_RES_DTCT_ERR;
+            }
+
+            // everything seems to be fine
+            return DRV_ETHPHY_RES_OK;
+
+
+        default:
+            // shouldn't happen
+            return DRV_ETHPHY_RES_OPERATION_ERR;
     }
 }
 
@@ -2313,7 +2486,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadStart( DRV_HANDLE handle, uint16_t rIx
     
     if( hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || 
         hClientObj->operType != DRV_ETHPHY_CLIENT_OP_TYPE_SETUP || 
-        hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE)
+        (hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_DETECT && hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE))
     {   // not allowed
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
@@ -2350,7 +2523,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadResultGet( DRV_HANDLE handle, uint16_t
 
     if( hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || 
         hClientObj->operType != DRV_ETHPHY_CLIENT_OP_TYPE_SETUP || 
-        hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE)
+        (hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_DETECT && hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE))
     {   // not allowed
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }
@@ -2394,7 +2567,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
     
     if( hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || 
         hClientObj->operType != DRV_ETHPHY_CLIENT_OP_TYPE_SETUP || 
-        hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE)
+        (hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_DETECT && hClientObj->operPhase != DRV_ETHPHY_SETUP_PHASE_NEGOTIATE))
     {   // not allowed
         return DRV_ETHPHY_RES_NOT_READY_ERR;
     }

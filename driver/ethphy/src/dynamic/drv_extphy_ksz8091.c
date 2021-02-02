@@ -217,10 +217,10 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8091 = 
 {
-    DRV_EXTPHY_MIIConfigure,
-    DRV_EXTPHY_MDIXConfigure,
-    DRV_EXTPHY_SMIClockGet,
-    0,                          // no WOL functionality yet
+    .miiConfigure = DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = 0,                      // no WOL functionality yet
+    .phyDetect = 0,                         // default detection performed
 };
-
 

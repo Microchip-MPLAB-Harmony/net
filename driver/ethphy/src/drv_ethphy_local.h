@@ -63,7 +63,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "driver/ethphy/src/dynamic/drv_extphy_regs.h"
 
 // debugging
-#define DRV_PHY_DEBUG_MASK_BASIC        (0x0001)
+#define DRV_PHY_DEBUG_MASK_BASIC            (0x0001)    // basic assert/condition
+#define DRV_PHY_DEBUG_MASK_DETECT_PHASE     (0x0002)    // display detect phases/states
+#define DRV_PHY_DEBUG_MASK_DETECT_VALUES    (0x0004)    // display detect register read/write values
+
 
 // enable IPV4 debugging levels
 #define DRV_PHY_DEBUG_LEVEL  (0)
@@ -355,6 +358,7 @@ typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
 
     // vendor specific data
     uintptr_t                   vendorData;
+    DRV_ETHPHY_VENDOR_DETECT    vendorDetect;
 
 } DRV_ETHPHY_CLIENT_OBJ;
 
@@ -374,16 +378,16 @@ typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
 
 typedef struct _DRV_ETHPHY_OBJ_STRUCT
 {
-    uint8_t             objInUse;       // True if in use
-    uint8_t             busInUse;       // True if SMI bus in use;
-    uint16_t            numClients;     // Number of active clients
-    SYS_STATUS          status;         // Status of module
-    SYS_MODULE_INDEX    iModule;        // Module instance number
-    uintptr_t       ethphyId;       // The peripheral Id associated with the object
-    TCPIP_ETH_OPEN_FLAGS      openFlags;      // flags required at open time
-    DRV_ETHPHY_CONFIG_FLAGS configFlags;    // ETHPHY MII/RMII configuration flags
-    TCPIP_ETH_PAUSE_TYPE      macPauseType;   // MAC supported pause type
-    int                 phyAddress;     // PHY SMI address
+    uint8_t                     objInUse;       // True if in use
+    uint8_t                     busInUse;       // True if SMI bus in use;
+    uint16_t                    numClients;     // Number of active clients
+    SYS_STATUS                  status;         // Status of module
+    SYS_MODULE_INDEX            iModule;        // Module instance number
+    uintptr_t                   ethphyId;       // The peripheral Id associated with the object
+    TCPIP_ETH_OPEN_FLAGS        openFlags;      // flags required at open time
+    DRV_ETHPHY_CONFIG_FLAGS     configFlags;    // ETHPHY MII/RMII configuration flags
+    TCPIP_ETH_PAUSE_TYPE        macPauseType;   // MAC supported pause type
+    int                         phyAddress;     // PHY SMI address
     const DRV_ETHPHY_OBJECT*    pPhyObj; // PHY object, vendor specififc functions
     DRV_ETHPHY_CLIENT_OBJ       objClients[DRV_ETHPHY_CLIENTS_NUMBER]; // array of clients
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
