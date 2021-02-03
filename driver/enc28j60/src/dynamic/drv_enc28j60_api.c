@@ -227,6 +227,13 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object)
         (*pDrvInst->stackCfg.pktFreeF)(pkt);
     }
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxFreePackets);
+
+    while (TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->txPendingPackets) != 0)
+    {
+        TCPIP_MAC_PACKET * pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets);
+        (*pDrvInst->stackCfg.pktFreeF)(pkt);
+        
+    } 
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->txPendingPackets);
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
 
@@ -555,7 +562,9 @@ void DRV_ENC28J60_Close(DRV_HANDLE handle)
     }
     OSAL_RESULT res = OSAL_MUTEX_Lock(&pDrvInst->drvMutex, OSAL_WAIT_FOREVER);
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not get driver lock");
-    pDrvInst->numClients --;
+
+    (*pDrvInst->busVTable->fpCloseIf)(pDrvInst);
+        pDrvInst->numClients --;
     pDrvInst->exclusiveMode = false;
     res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);
     res = res;

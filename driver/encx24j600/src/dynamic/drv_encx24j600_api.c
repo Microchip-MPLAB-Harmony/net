@@ -160,7 +160,7 @@ SYS_MODULE_OBJ DRV_ENCX24J600_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT
     }
 
     // Clear out any cruft that might be in there
-    memset(pDrvInst, 0, sizeof(DRV_ENCX24J600_Configuration));
+    memset(pDrvInst, 0, sizeof(*pDrvInst));
 
     pDrvInst->inUse = true;
     OSAL_RESULT res = 0;
@@ -208,7 +208,8 @@ void DRV_ENCX24J600_Deinitialize(SYS_MODULE_OBJ object)
     {
         return;
     }
-
+    
+    
     DRV_ENCX24J600_SPI_DeinitializeInterface(pDrvInst);
 
     OSAL_MUTEX_Delete(&pDrvInst->drvMutex);
@@ -220,11 +221,17 @@ void DRV_ENCX24J600_Deinitialize(SYS_MODULE_OBJ object)
         (*pDrvInst->stackCfg.pktFreeF)(pkt);
     }
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxFreePackets);
+    
+    while (TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->txPendingPackets) != 0)
+    {
+        TCPIP_MAC_PACKET * pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets);
+        (*pDrvInst->stackCfg.pktFreeF)(pkt);
+        
+    } 
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->txPendingPackets);
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
 
-
-    memset(pDrvInst, 0, sizeof(DRV_ENCX24J600_Configuration));
+    memset(pDrvInst, 0, sizeof(*pDrvInst));
     drvEncX24J600NumOfDrivers--;
     if (drvEncX24J600NumOfDrivers == 0)
     {
@@ -544,6 +551,7 @@ void DRV_ENCX24J600_Close(DRV_HANDLE handle)
     res = res; // Force ignore of unused variable, which will be used if SYS_ASSERT was used
 
     SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not get driver lock");
+    (*pDrvInst->busVTable->fpCloseIf)(pDrvInst);
     pDrvInst->numClients --;
     pDrvInst->exclusiveMode = false;
     res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);

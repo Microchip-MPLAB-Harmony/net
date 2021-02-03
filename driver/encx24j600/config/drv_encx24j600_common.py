@@ -57,12 +57,6 @@ def instantiateComponent(drvExtMacEncx24j600CommonComponent):
     drvEncx24j600SystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
     drvEncx24j600SystemDefObjFile.setSourcePath("driver/encx24j600/templates/system/system_definitions_objects.h.ftl")
     drvEncx24j600SystemDefObjFile.setMarkup(True) 
-
-    drvEncx24j600SystemTaskFile = drvExtMacEncx24j600CommonComponent.createFileSymbol("DRV_ENCX24J600_TASKS_C", None)
-    drvEncx24j600SystemTaskFile.setType("STRING")
-    drvEncx24j600SystemTaskFile.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
-    drvEncx24j600SystemTaskFile.setSourcePath("driver/encx24j600/templates/system/system_tasks.c.ftl")
-    drvEncx24j600SystemTaskFile.setMarkup(True) 
         
     # file DRV_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/drv_encx24j600.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/drv_encx24j600.h"
     drvEncx24j600HeaderFile = drvExtMacEncx24j600CommonComponent.createFileSymbol(None, None)

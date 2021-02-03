@@ -65,12 +65,6 @@ def instantiateComponent(drvExtMacEnc28j60CommonComponent):
     drvEnc28j60SystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
     drvEnc28j60SystemDefObjFile.setSourcePath("driver/enc28j60/templates/system/system_definitions_objects.h.ftl")
     drvEnc28j60SystemDefObjFile.setMarkup(True) 
-
-    drvEnc28j60SystemTaskFile = drvExtMacEnc28j60CommonComponent.createFileSymbol("DRV_ENC28J60_TASKS_C", None)
-    drvEnc28j60SystemTaskFile.setType("STRING")
-    drvEnc28j60SystemTaskFile.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
-    drvEnc28j60SystemTaskFile.setSourcePath("driver/enc28j60/templates/system/system_tasks.c.ftl")
-    drvEnc28j60SystemTaskFile.setMarkup(True) 
         
     # file DRV_ENC28J60_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/drv_enc28j60.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/drv_enc28j60.h"
     drvEnc28j60HeaderFile = drvExtMacEnc28j60CommonComponent.createFileSymbol(None, None)
