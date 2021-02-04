@@ -91,6 +91,60 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( 
     return (uint32_t)rand();
 }
 
+// *****************************************************************************
+/* Function:
+    SYS_MODULE_OBJ SYS_RANDOM_CryptoInitialize(void);
+
+  Summary:
+    Initializes the cryptographic Random Number Generator
+
+  Description:
+	This function performs the initialization of the
+    Cryptographic-quality Random Number Generator.
+
+  Precondition:
+    None
+
+  Parameters:
+    None.
+
+  Returns:
+    A valid SYS_MODULE_OBJ value (!0) if initialization succeeded 
+    0 if error.
+    
+  Remarks:
+    The crypto random functions will call this function internally
+    to make sure proper initialization occurred.
+*/
+
+SYS_MODULE_OBJ SYS_RANDOM_CryptoInitialize(void);
+
+// *****************************************************************************
+/* Function:
+    void SYS_RANDOM_CryptoDeinitialize( SYS_MODULE_OBJ object );
+
+  Summary:
+    Deinitializes the cryptographic Random Number Generator
+
+  Description:
+	This function performs the deinitialization of the
+    Cryptographic-quality Random Number Generator.
+
+  Precondition:
+    SYS_RANDOM_CryptoInitialize() has been called
+
+  Parameters:
+    object  - valid handle returned by SYS_RANDOM_CryptoInitialize.
+
+  Returns:
+    None
+    
+  Remarks:
+    None
+*/
+
+void SYS_RANDOM_CryptoDeinitialize( SYS_MODULE_OBJ object );
+
 
 // *****************************************************************************
 /* Function:
@@ -112,6 +166,7 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( 
 
   Returns:
     32-bit random number.
+    0 if error.
     
   Remarks:
     None
@@ -122,7 +177,7 @@ uint32_t SYS_RANDOM_CryptoGet( void );
 
 // *****************************************************************************
 /* Function:
-    void SYS_RANDOM_CryptoBlockGet( uint8_t buffer, size_t bufferSize );
+    size_t SYS_RANDOM_CryptoBlockGet( uint8_t buffer, size_t bufferSize );
 
   Summary:
     Generates a sequence of random bytes using the cryptographic quality Random
@@ -140,13 +195,14 @@ uint32_t SYS_RANDOM_CryptoGet( void );
     size - The amount of random data, in bytes, to put in memory.
 
   Returns:
-    None.
+    size of the generated block.
+    0 if error.
     
   Remarks:
     None
 */
 
-void SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size );
+size_t SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size );
 
 // *****************************************************************************
 /* Function:
@@ -167,6 +223,7 @@ void SYS_RANDOM_CryptoBlockGet( void *buffer, size_t size );
 
   Returns:
     Returns one byte of cryptographic-quality random data.
+    0 if error.
     
   Remarks:
     None.
