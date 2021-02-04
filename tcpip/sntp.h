@@ -317,6 +317,92 @@ TCPIP_SNTP_RESULT     TCPIP_SNTP_ConnectionInitiate(void);
 //*****************************************************************************
 /*
   Function:
+    TCPIP_SNTP_RESULT TCPIP_SNTP_Disable(void);
+
+  Summary:
+    Disables the NTP client module
+
+  Description:
+    This function will disable the NTP client module
+    This means that it will no longer transmit or receive packets
+    In this state it can be configurated using TCPIP_SNTP_ConnectionParamSet 
+    
+  Precondition:
+    The TSNTP module should have been initialized.
+
+  Parameters:
+    None.
+
+  Returns:
+    - SNTP_RES_OK - the call succeeded
+
+  Remarks:
+    After a call to TCPIP_SNTP_Disable() the SNTP module will be idle
+    until a call to TCPIP_SNTP_Enable is made.
+ */
+TCPIP_SNTP_RESULT     TCPIP_SNTP_Disable(void);
+
+//*****************************************************************************
+/*
+  Function:
+    TCPIP_SNTP_RESULT TCPIP_SNTP_Enable(void);
+
+  Summary:
+    Enables the NTP client module
+
+  Description:
+    This function will enable the NTP client module if it was 
+    previously disabled.
+    The module will resume functionality, transmitting and receiving data
+    and acquiring time stamps
+    
+  Precondition:
+    The TSNTP module should have been initialized.
+
+  Parameters:
+    None.
+
+  Returns:
+    - SNTP_RES_OK - the call succeeded
+
+  Remarks:
+    After a call to TCPIP_SNTP_Disable() the SNTP module will be idle
+    until a call to TCPIP_SNTP_Enable is made.
+
+    When enabled, SNTP will try to connect to the NTP server
+    and acquire a time stamp
+ */
+TCPIP_SNTP_RESULT     TCPIP_SNTP_Enable(void);
+
+//*****************************************************************************
+/*
+  Function:
+    bool     TCPIP_SNTP_IsEnabled(void);
+
+  Summary:
+    Returns the enable/disable state of the NTP client module
+
+  Description:
+    This function returns the current enabled/disabled state of the module.
+    
+  Precondition:
+    The TSNTP module should have been initialized.
+
+  Parameters:
+    None.
+
+  Returns:
+    - true - if SNTP module is enabled
+    - false - if SNTP module is disabled
+
+  Remarks:
+    None
+ */
+bool     TCPIP_SNTP_IsEnabled(void);
+
+//*****************************************************************************
+/*
+  Function:
     TCPIP_SNTP_RESULT TCPIP_SNTP_TimeGet(uint32_t* pUTCSeconds, uint32_t* pMs);
 
   Summary:

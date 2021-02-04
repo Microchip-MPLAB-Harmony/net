@@ -121,6 +121,7 @@ typedef enum
 
 
 static TCPIP_SNTP_STATE     sntpState = SM_INIT;
+static bool                 sntpDisabled = false;   // run time enable/disable 
 
 // the server address
 static IP_MULTI_ADDRESS     ntpServerIP;
@@ -456,6 +457,7 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         }
 
         ntpEventHandler = 0;
+        sntpDisabled = false;
         break;
     }
 
@@ -560,8 +562,8 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         case SM_HOME:
-            if(sntpServerName[0] == 0)
-            {   // no active server name
+            if(sntpDisabled || sntpServerName[0] == 0)
+            {   // idle or no active server name
                 break;
             }
 
@@ -913,6 +915,39 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionInitiate(void)
 
     TCPIP_SNTP_SetNewState(SM_HOME);
     return SNTP_RES_OK;
+}
+
+TCPIP_SNTP_RESULT TCPIP_SNTP_Disable(void)
+{
+    if(sntpDisabled == false)
+    {   // no more rx data
+        TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)0);
+        // discard any data
+        while(TCPIP_UDP_GetIsReady(sntpSocket))
+        {
+            TCPIP_UDP_Discard(sntpSocket);
+        }
+        sntpDisabled = true;
+        TCPIP_SNTP_SetNewState(SM_HOME);
+    }
+
+    return SNTP_RES_OK;
+}
+
+TCPIP_SNTP_RESULT TCPIP_SNTP_Enable(void)
+{
+    if(sntpDisabled == true)
+    {   // re-enable the module
+        _SNTPAssertCond(sntpState == SM_HOME, __func__, __LINE__);
+        sntpDisabled = false;
+    }
+
+    return SNTP_RES_OK;
+}
+
+bool TCPIP_SNTP_IsEnabled(void)
+{
+    return sntpDisabled == false;
 }
 
 TCPIP_SNTP_RESULT TCPIP_SNTP_TimeStampStatus(void)
