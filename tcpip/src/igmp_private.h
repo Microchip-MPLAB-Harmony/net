@@ -360,7 +360,7 @@ typedef union
 
 
 // Group Record structure
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     recordType;         // a TCPIP_IGMPv3_RECORD_TYPE type
     uint8_t     auxLen;

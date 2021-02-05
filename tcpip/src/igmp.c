@@ -1548,6 +1548,10 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hN
     }
 
     res = _IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
+    // save the list size
+    size_t nSourceSlots = *listSize;
+    *listSize = 0;
+
     if(res != TCPIP_IGMP_OK)
     {
         return res;
@@ -1577,7 +1581,6 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hN
         TCPIP_IGMP_SKT_RECORD* pRec;
         TCPIP_IGMP_FILTER_TYPE sktFilter = 0;
         size_t nSources = 0;
-        size_t nSourceSlots = *listSize;
 
         for(srcIx = 0; srcIx < sHashDcpt->hEntries; srcIx++)
         {
