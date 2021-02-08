@@ -2313,7 +2313,7 @@ static int _Command_NetworkOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     TCPIP_COMMAND_STG_DCPT*   pDcpt;
     TCPIP_NETWORK_CONFIG*     pNetConf;
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
-    const TCPIP_NETWORK_CONFIG*     pIfConf;
+    TCPIP_NETWORK_CONFIG ifConf, *pIfConf;
     SYS_MODULE_OBJ      tcpipStackObj;
     TCPIP_STACK_INIT    tcpip_init_data;
     uint16_t net_ix = 0;
@@ -2347,7 +2347,8 @@ static int _Command_NetworkOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         // get the data passed at initialization
         tcpipStackObj = TCPIP_STACK_Initialize(0, 0);
         TCPIP_STACK_InitializeDataGet(tcpipStackObj, &tcpip_init_data);
-        pIfConf = tcpip_init_data.pNetConf + net_ix;
+        pIfConf = &ifConf;
+        memcpy(pIfConf, tcpip_init_data.pNetConf + net_ix, sizeof(*pIfConf));
 
 #if defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
         if(pCmdStgDcpt) 
@@ -2367,6 +2368,8 @@ static int _Command_NetworkOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         }
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
 
+        // change the power mode to FULL
+        pIfConf->powerMode = TCPIP_STACK_IF_POWER_FULL;
         res = TCPIP_STACK_NetUp(netH, pIfConf);
     }
     else if (memcmp(argv[2], "down", 4) == 0)

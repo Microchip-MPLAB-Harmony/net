@@ -881,22 +881,22 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
 <#if network_config_idx == true>
     /*** Network Configuration Index ${i} ***/
     {
-        TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i},       // interface
-        TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${i},            // hostName
-        TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX${i},             // macAddr
-        TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX${i},           // ipAddr
-        TCPIP_NETWORK_DEFAULT_IP_MASK_IDX${i},              // ipMask
-        TCPIP_NETWORK_DEFAULT_GATEWAY_IDX${i},              // gateway
-        TCPIP_NETWORK_DEFAULT_DNS_IDX${i},                  // priDNS
-        TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX${i},           // secondDNS
-        TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX${i},           // powerMode
-        TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX${i},      // startFlags
-       &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${i},           // pMacObject
+        .interface = TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i},
+        .hostName = TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${i},
+        .macAddr = TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX${i},
+        .ipAddr = TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX${i},
+        .ipMask = TCPIP_NETWORK_DEFAULT_IP_MASK_IDX${i},
+        .gateway = TCPIP_NETWORK_DEFAULT_GATEWAY_IDX${i},
+        .priDNS = TCPIP_NETWORK_DEFAULT_DNS_IDX${i},
+        .secondDNS = TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX${i},
+        .powerMode = TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX${i},
+        .startFlags = TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX${i},
+        .pMacObject = &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${i},
 <#if network_ipv6_idx??>
 <#if network_ipv6_idx == true>
-        TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX${i},         // ipv6Addr
-        TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${i},   // ipv6PrefixLen
-        TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${i},         // ipv6Gateway 
+        .ipv6Addr = TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX${i},
+        .ipv6PrefixLen = TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${i},
+        .ipv6Gateway = TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${i},
 </#if>
 </#if>
     },

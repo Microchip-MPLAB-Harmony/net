@@ -202,7 +202,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetPwrMode.setLabel("Power Mode")
     tcpipNetPwrMode.setVisible(True)
     tcpipNetPwrMode.setDefaultValue("full")
-    tcpipNetPwrMode.setReadOnly(True)
+    tcpipNetPwrMode.setReadOnly(False)
 
     tcpipNetConfigSysConfigFile = tcpipNetConfigComponent.createFileSymbol("TCPIP_NETWORK_CONFIG", None)
     tcpipNetConfigSysConfigFile.setType("STRING")

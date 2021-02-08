@@ -18,7 +18,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2012-2020 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2016-2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -518,7 +518,8 @@ struct TCPIP_MAC_OBJECT_TYPE;
     For an IPv4 alias interface .powerMode ==  TCPIP_STACK_IF_POWER_DOWN can be used to prevent
     the alias to be started when the stack is initialized and the primary interfaces go up.
  
-    A primary interface currently supports only the TCPIP_STACK_IF_POWER_FULL power mode.
+    A primary interface currently supports only the
+    TCPIP_STACK_IF_POWER_FULL and TCPIP_STACK_IF_POWER_DOWN power modes.
 
     Alias interfaces are not currently supported on IPv6.
 
