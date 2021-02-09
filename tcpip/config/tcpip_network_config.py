@@ -198,12 +198,15 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipEnableMacBridgeGlobalConfig.setDependencies(tcpipNetConfigMACBridgeGlobal, [tcpipAddMacBridge.getID()]) 
     
     # Network Interface Power Mode
-    tcpipNetPwrMode = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetPwrMode = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),tcpipNetAdvSettings)
     tcpipNetPwrMode.setLabel("Power Mode")
     tcpipNetPwrMode.setVisible(True)
-    tcpipNetPwrMode.setDefaultValue("full")
-    tcpipNetPwrMode.setReadOnly(False)
-
+    tcpipNetPwrMode.addKey("full", "0" , "Power full" )
+    tcpipNetPwrMode.addKey("down", "1" , "Power down" )
+    tcpipNetPwrMode.setDisplayMode("Key")
+    tcpipNetPwrMode.setOutputMode("Key")
+    tcpipNetPwrMode.setDefaultValue(0)
+    
     tcpipNetConfigSysConfigFile = tcpipNetConfigComponent.createFileSymbol("TCPIP_NETWORK_CONFIG", None)
     tcpipNetConfigSysConfigFile.setType("STRING")
     tcpipNetConfigSysConfigFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
