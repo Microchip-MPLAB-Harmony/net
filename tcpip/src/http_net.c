@@ -3373,7 +3373,7 @@ static uint16_t _HTTP_StartHttpChunk(TCPIP_HTTP_NET_CONN* pHttpCon, uint32_t chu
 // the output goes directly to the socket, if possible
 static uint16_t _HTTP_EndHttpChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_END_TYPE endType)
 {
-    char* endStr;
+    const char* endStr;
     if(endType == TCPIP_HTTP_CHUNK_END_CURRENT)
     {
         endStr = TCPIP_HTTP_NET_CRLF;
@@ -3444,7 +3444,7 @@ static uint16_t _HTTP_AppendEndHttpChunk(char* buffer, TCPIP_HTTP_CHUNK_END_TYPE
         return 0;
     }
 
-    char* endStr;
+    const char* endStr;
     if(endType == TCPIP_HTTP_CHUNK_END_CURRENT)
     {
         endStr = TCPIP_HTTP_NET_CRLF;
