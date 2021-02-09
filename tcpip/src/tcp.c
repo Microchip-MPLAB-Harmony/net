@@ -49,8 +49,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TCP)
 
-#include "crypto/crypto.h"
-
 
 /****************************************************************************
   Section:
@@ -2332,6 +2330,17 @@ int TCPIP_TCP_SocketsNumberGet(void)
     return TcpSockets;
 }
 
+#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+// sets the TCP sequence number using a pseudo random number
+static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
+{
+    uint32_t m = (SYS_TIME_Counter64Get() * 1000000 / 64 ) / SYS_TIME_FrequencyGet();   // 274 seconds period > MSL = 120 seconds
+    uint32_t seq = (SYS_RANDOM_PseudoGet() << 16) | (uint16_t)SYS_RANDOM_PseudoGet();
+    return seq + m;
+}
+
+#else
+#include "crypto/crypto.h"
 // sets the TCP sequence number based on RFC 6528
 // The socket identity: local and remote IP addresses + ports should be known
 static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
@@ -2417,6 +2426,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 #endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SEQ) != 0)
         return seq;
 }
+#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
 
 /****************************************************************************
   Section:
@@ -5996,7 +6006,11 @@ static TCP_PORT _TCP_EphemeralPortAllocate(void)
 
     count = num_ephemeral = TCPIP_TCP_LOCAL_PORT_END_NUMBER - TCPIP_TCP_LOCAL_PORT_START_NUMBER + 1;
 
+#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+    next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_PseudoGet() % num_ephemeral);
+#else
     next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_CryptoGet() % num_ephemeral);
+#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
 
     while(count--)
     {

@@ -189,5 +189,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // If false, the functionality does not exist and the generated code is slightly smaller 
 #define TCPIP_TCP_EXTERN_PACKET_PROCESS true
 
+// This setting enables/disables the usage of the Crypto RNG + Hash by the TCP module
+// TCP uses Crypto RNG + MD5 hash to compute the socket ISN (Initial Sequence Number)
+// Crypto RNG is also used to allocate a new ephemeral port
+// If Crypto usage is disabled then TCP will use Pseudo Random calls instead.
+// This will require much less resources but it will be insecure and exposed to attacks.
+// See RFC 6528 and 6056
+// Default should be false.
+// Note: even with the Crypto usage disabled an application can make the ISN and port numbers
+// harder to guess by seeding perriodically the pseudo random generator at run time
+// with a good random value 
+// Note: For applications that use use the crypto library anyway (TLS for example),
+// the impact in the resources when using the Crypto RNG is minimal and should be preferred
+#define TCPIP_TCP_DISABLE_CRYPTO_USAGE  false
 
 #endif  // _TCP_CONFIG_H_
