@@ -2332,19 +2332,23 @@ static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt)
     if(result == SYS_FS_HANDLE_INVALID)
     {
         fs_err = SYS_FS_Error();
+        memset(ftpMsg,0,sizeof(ftpMsg));
         if(fs_err == SYS_FS_ERROR_DENIED)
-        {
-            memset(ftpMsg,0,sizeof(ftpMsg));
+        {            
             sprintf(ftpMsg,"550 \"%s\" Directory is not empty! \r\n",pFTPDcpt->ftp_argv[1]);
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0)) 
-            {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                return true;
-            }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
         }
+        else if(fs_err == SYS_FS_ERROR_LOCKED)
+        {           
+            sprintf(ftpMsg,"550 \"%s\" Directory or File is Locked! \r\n",pFTPDcpt->ftp_argv[1]);
+        }
+        if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0)) 
+        {
+            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+            return true;
+        }
+        NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
+        NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
     }
     return result;
 }
