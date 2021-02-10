@@ -920,15 +920,19 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionInitiate(void)
 TCPIP_SNTP_RESULT TCPIP_SNTP_Disable(void)
 {
     if(sntpDisabled == false)
-    {   // no more rx data
-        TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)0);
-        // discard any data
-        while(TCPIP_UDP_GetIsReady(sntpSocket))
-        {
-            TCPIP_UDP_Discard(sntpSocket);
+    {
+        if(sntpState > SM_INIT)
+        {   // no more rx data
+            TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)0);
+            // discard any data
+            while(TCPIP_UDP_GetIsReady(sntpSocket))
+            {
+                TCPIP_UDP_Discard(sntpSocket);
+            }
+            TCPIP_SNTP_SetNewState(SM_HOME);
         }
+        // else let it 1st finish initialization
         sntpDisabled = true;
-        TCPIP_SNTP_SetNewState(SM_HOME);
     }
 
     return SNTP_RES_OK;
@@ -938,7 +942,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_Enable(void)
 {
     if(sntpDisabled == true)
     {   // re-enable the module
-        _SNTPAssertCond(sntpState == SM_HOME, __func__, __LINE__);
+        _SNTPAssertCond(sntpState == SM_INIT || sntpState == SM_HOME, __func__, __LINE__);
         sntpDisabled = false;
     }
 
