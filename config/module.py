@@ -86,6 +86,7 @@ def loadModule():
     tcpipTcpComponent = Module.CreateSharedComponent("tcpipTcp", "TCP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_tcp.py")
     tcpipTcpComponent.addCapability("libtcpipTcp","TCP",True)
     tcpipTcpComponent.addDependency("Tcp_IP_Dependency", "IP", None, True, True)
+    tcpipTcpComponent.addDependency("Tcp_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
     tcpipTcpComponent.setDisplayType("TCP/IP Library")
     
     tcpipUdpComponent = Module.CreateSharedComponent("tcpipUdp", "UDP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_udp.py")

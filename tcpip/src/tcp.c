@@ -2330,7 +2330,7 @@ int TCPIP_TCP_SocketsNumberGet(void)
     return TcpSockets;
 }
 
-#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
 // sets the TCP sequence number using a pseudo random number
 static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 {
@@ -2426,7 +2426,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 #endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_SEQ) != 0)
         return seq;
 }
-#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
 
 /****************************************************************************
   Section:
@@ -6006,11 +6006,11 @@ static TCP_PORT _TCP_EphemeralPortAllocate(void)
 
     count = num_ephemeral = TCPIP_TCP_LOCAL_PORT_END_NUMBER - TCPIP_TCP_LOCAL_PORT_START_NUMBER + 1;
 
-#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+#if defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
     next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_PseudoGet() % num_ephemeral);
 #else
     next_ephemeral = TCPIP_TCP_LOCAL_PORT_START_NUMBER + (SYS_RANDOM_CryptoGet() % num_ephemeral);
-#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != 0)
+#endif  // defined(TCPIP_TCP_DISABLE_CRYPTO_USAGE) && (TCPIP_TCP_DISABLE_CRYPTO_USAGE != false)
 
     while(count--)
     {

@@ -20,7 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+autoConnectTableCrypto = [["lib_crypto", "LIB_CRYPTO_WOLFCRYPT_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
     
 def instantiateComponent(tcpipTcpComponent):
     print("TCPIP TCP Component")
@@ -179,6 +179,20 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpExtPktProcess.setVisible(True)
     tcpipTcpExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipTcpExtPktProcess.setDefaultValue(False)
+    
+    # Disable Crypto Dependency
+    tcpipTcpCryptoSupport = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_DISABLE_CRYPTO_USAGE", tcpipTcpAdvSettings)
+    tcpipTcpCryptoSupport.setLabel("Disable Crypto Dependency")
+    tcpipTcpCryptoSupport.setVisible(True)
+    tcpipTcpCryptoSupport.setDescription("Disable Crypto Dependency")
+    tcpipTcpCryptoSupport.setDefaultValue(False)
+    tcpipCryptoEnable()
+    
+    # Disable Crypto Dependency
+    tcpipTcpCryptoSupportWarning = tcpipTcpComponent.createCommentSymbol("TCPIP_TCP_DISABLE_CRYPTO_USAGE ", tcpipTcpCryptoSupport)
+    tcpipTcpCryptoSupportWarning.setLabel("!!Potential security vulnerability. See RFC 6528 and 6056")
+    tcpipTcpCryptoSupportWarning.setVisible(False)
+    tcpipTcpCryptoSupportWarning.setDependencies(tcpipTcpCryptoDisable, ["TCPIP_TCP_DISABLE_CRYPTO_USAGE"])  
    
     tcpipTcpheapdependency = [  "TCPIP_TCP_MAX_SOCKETS", "TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", "TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", 
                                 "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_MAX_CONNECTIONS", 
@@ -335,24 +349,58 @@ def tcpipTcpHeapUpdate(symbol, event):
 
 
 def tcpipTcpMenuVisibleSingle(symbol, event):
-    if (event["value"] == True):
-        print("TCP Menu Visible.")      
+    if (event["value"] == True):     
         symbol.setVisible(True)
     else:
-        print("TCP Menu Invisible.")
-        symbol.setVisible(False)    
+        symbol.setVisible(False)  
+        
+def tcpipTcpCryptoDisable(symbol, event):
+    tcpComponent = Database.getComponentByID("tcpipTcp")
+    if (event["value"] == True):    
+        symbol.setVisible(True)
+        symbol.getComponent().setDependencyEnabled("Tcp_Crypto_Dependency", False);
+        # tcpipCryptoDisable()
+    else:
+        symbol.setVisible(False)  
+        symbol.getComponent().setDependencyEnabled("Tcp_Crypto_Dependency", True);
+        tcpipCryptoEnable()
         
 # make TCP options visible
 def tcpipTcpMenuVisible(symbol, tcpipIPSymbol):
     tcpipIPv4 = Database.getSymbolValue("tcpipIPv4","TCPIP_STACK_USE_IPV4")
     tcpipIPv6 = Database.getSymbolValue("tcpipIPv6","TCPIP_STACK_USE_IPV6")
-    print("TCP Menu")
     if(tcpipIPv4 or tcpipIPv6):
         symbol.setVisible(True)
         symbol.setValue(True,1)
     else:
         symbol.setVisible(False)
         symbol.setValue(False,1)
+
+
+def tcpipCryptoEnable(): 
+    autoConnect = False
+    if(Database.getComponentByID("lib_crypto") == None):
+        res = Database.activateComponents(["lib_crypto"]) 
+        autoConnect = True
+    if(Database.getComponentByID("lib_wolfcrypt") == None):
+        res = Database.activateComponents(["lib_wolfcrypt"])
+        autoConnect = True   
+        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_md5") != True):
+            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_md5", True)
+        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_random") != True):
+            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_random", True)   
+        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_hashdrng") != True):
+            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_hashdrng", True)                
+    if(autoConnect == True):
+        res = Database.connectDependencies(autoConnectTableCrypto)  
+
+def tcpipCryptoDisable(): 
+    if(Database.getComponentByID("lib_crypto") != None):
+        res = Database.deactivateComponents(["lib_crypto"]) 
+    if(Database.getComponentByID("lib_wolfcrypt") != None):
+        res = Database.deactivateComponents(["lib_wolfcrypt"])
+    
+
 
 def tcpipTcpGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])

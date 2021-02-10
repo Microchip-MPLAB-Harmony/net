@@ -21,7 +21,7 @@
 # ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 # THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ##############################################################################
-autoConnectTableCrypto = [["lib_crypto", "LIB_CRYPTO_WOLFCRYPT_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -119,7 +119,6 @@ def tcpipAutoConfigTCPEnable(symbol, event):
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
             setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         tcpipAutoConfigTransportGroup.setAttachmentVisible("tcpipTcp", "libtcpipTcp")
-        tcpipCryptoEnable()
         # Enable Sys Random H2 Adapter. if not enabled
         if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER") != True): 
             setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", True)
@@ -137,23 +136,6 @@ def tcpipAutoConfigUDPEnable(symbol, event):
         tcpipAutoConfigTransportGroup.setAttachmentVisible("tcpipUdp", "libtcpipUdp")       
     else:
         res = Database.deactivateComponents(["tcpipUdp"])
- 
-def tcpipCryptoEnable(): 
-    autoConnect = False
-    if(Database.getComponentByID("lib_crypto") == None):
-        res = Database.activateComponents(["lib_crypto"]) 
-        autoConnect = True
-    if(Database.getComponentByID("lib_wolfcrypt") == None):
-        res = Database.activateComponents(["lib_wolfcrypt"])
-        autoConnect = True   
-        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_md5") != True):
-            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_md5", True)
-        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_random") != True):
-            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_random", True)   
-        if(Database.getSymbolValue("lib_wolfcrypt", "wolfcrypt_hashdrng") != True):
-            Database.setSymbolValue("lib_wolfcrypt", "wolfcrypt_hashdrng", True)                
-    if(autoConnect == True):
-        res = Database.connectDependencies(autoConnectTableCrypto)        
 
 #Set symbols of other components
 def setVal(component, symbol, value):
