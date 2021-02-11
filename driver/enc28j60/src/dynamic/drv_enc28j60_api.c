@@ -43,8 +43,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "packet/drv_enc28j60_rx_packet.h"
 #include "drv_enc28j60_utils.h"
 
+#define TCPIP_THIS_MODULE_ID   TCPIP_MODULE_MAC_ENCJ60
 // Data needed by the TCPIP Stack
-
 const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject =
 {
     .macId = TCPIP_MODULE_MAC_ENCJ60,
@@ -211,6 +211,8 @@ SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT *
 void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object)
 {
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
+    TCPIP_MAC_PACKET* pkt;
+    
     if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
         return;
@@ -228,11 +230,12 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object)
     }
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxFreePackets);
 
-    while (TCPIP_Helper_ProtectedSingleListCount(&pDrvInst->txPendingPackets) != 0)
+    while ((pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets)) != 0)
     {
-        TCPIP_MAC_PACKET * pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->txPendingPackets);
-        (*pDrvInst->stackCfg.pktFreeF)(pkt);
-        
+        pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;        
+        // acknowledge the packet
+        (*pDrvInst->stackCfg.pktAckF)(pkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
+       
     } 
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->txPendingPackets);
     TCPIP_Helper_ProtectedSingleListDeinitialize(&pDrvInst->rxWaitingForPickupPackets);
