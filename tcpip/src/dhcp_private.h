@@ -250,7 +250,7 @@ typedef struct __attribute__((packed))
     uint8_t     len;        // >= 2
     struct
     {
-        uint8_t     type;       // hardware type according to "Assigned Numbers": TCPIP_BOOT_HW_TYPE
+        uint8_t     type;       // hardware type according to "Assigned Numbers"
         uint8_t     id[sizeof(TCPIP_MAC_ADDR) + 2]; // client ID; we use the hw address of the interface + IF number:
     }cliId;
 }TCPIP_DHCP_OPTION_DATA_CLIENT_ID;

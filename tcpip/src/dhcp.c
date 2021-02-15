@@ -2547,7 +2547,7 @@ static int _DHCPOptionClientId(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPTION_WRITE_DAT
         pClientOpt = (TCPIP_DHCP_OPTION_DATA_CLIENT_ID*)pSendData->pOpt;
         pClientOpt->opt = TCPIP_DHCP_PARAM_REQUEST_CLIENT_ID;
         pClientOpt->len = sizeof(pClientOpt->cliId);
-        pClientOpt->cliId.type =  TCPIP_BOOT_HW_TYPE;
+        pClientOpt->cliId.type =  0;    // using an extended hardware address
         memcpy(pClientOpt->cliId.id, _TCPIPStack_NetMACAddressGet(pNetIf), sizeof(pClientOpt->cliId.id) - 2);
         uint16_t netIx = TCPIP_STACK_NetIxGet(pNetIf);
         pClientOpt->cliId.id[sizeof(pClientOpt->cliId.id) - 2] = (uint8_t)(netIx >> 8);
