@@ -22,6 +22,7 @@
 *****************************************************************************"""
 
 tcpipNetConfigNumMaximum = 10
+macBridgeCount = 0   
 
 def instantiateComponent(tcpipNetConfigComponent):
     configName = Variables.get("__CONFIGURATION_NAME") 
@@ -67,6 +68,7 @@ def tcpipNetConfigMACBridgeMenuVisible(symbol, event):
 #Handle messages from other components
 def handleMessage(messageID, args):
     retDict= {}
+    global macBridgeCount
     if (messageID == "NETCONFIG_INTERFACE_COUNTER_INC"):
         netconfif_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count + 1)
@@ -76,12 +78,12 @@ def handleMessage(messageID, args):
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count - 1)
         retDict= {"Return": "Success"}
     elif (messageID == "NETCONFIG_MAC_BRIDGE_ENABLE"):
-        macBridge_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT")
-        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridge_count + 1)
+        macBridgeCount = macBridgeCount + 1        
+        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridgeCount)
         retDict= {"Return": "Success"}
     elif (messageID == "NETCONFIG_MAC_BRIDGE_DISABLE"):
-        macBridge_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT")
-        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridge_count - 1)
+        macBridgeCount = macBridgeCount - 1        
+        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridgeCount)
         retDict= {"Return": "Success"}
     elif (messageID == "SET_SYMBOL"):
         print "handleMessage: Set Symbol"

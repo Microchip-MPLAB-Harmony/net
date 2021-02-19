@@ -137,6 +137,22 @@ tcpipBridgeIfName.setDescription("Use Interface Names for Initialization, ASCII 
 tcpipBridgeIfName.setDefaultValue(False)
 tcpipBridgeIfName.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRIDGE"])
 
+# Mac Bridge Statistics Enable
+tcpipBridgeStats = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_STATISTICS", tcpipBridgeAdvSettings)
+tcpipBridgeStats.setLabel("Enable Statistics")
+tcpipBridgeStats.setVisible(False)
+tcpipBridgeStats.setDescription("Enable Bridge Statistics")
+tcpipBridgeStats.setDefaultValue(False)
+tcpipBridgeStats.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRIDGE"])
+
+# Mac Bridge Event Notify Enable
+tcpipBridgeNotify = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_EVENT_NOTIFY", tcpipBridgeAdvSettings)
+tcpipBridgeNotify.setLabel("Enable Event Notify")
+tcpipBridgeNotify.setVisible(False)
+tcpipBridgeNotify.setDescription("Enable Bridge Event Notification")
+tcpipBridgeNotify.setDefaultValue(False)
+tcpipBridgeNotify.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRIDGE"])
+
 # Bridge Task Tick Rate in ms
 tcpipBridgeTaskTickRate = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_TASK_RATE", tcpipBridgeAdvSettings)
 tcpipBridgeTaskTickRate.setLabel("Bridge Task Rate (in msec)")
