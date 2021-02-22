@@ -699,7 +699,7 @@ def instantiateComponent( macComponent ):
     basePathSrc =           basePath + "src/"
     basePathSrcDynamic =    basePathSrc + "dynamic/"
     cfgPath =               basePath + "/config/"
-    prjPath =               cfgPath + Variables.get( "__CONFIGURATION_NAME" ) + basePath
+    prjPath =               "config/" + Variables.get( "__CONFIGURATION_NAME" ) + basePath
     prjPathSrc =            prjPath + "src/"
     prjPathSrcDynamic =     prjPathSrc + "dynamic/"
     macLibDeviceCore =      getMacDeviceCoreName()
