@@ -634,6 +634,12 @@ def netPresEncProviderMenu(symbol, event):
             res = Database.activateComponents(["lib_wolfcrypt"])
         res = Database.connectDependencies(autoConnectTableWolfssl)  
         res = Database.connectDependencies(autoConnectTableCrypto)  
+        # Enable SNTP Dependency 
+        if(Database.getComponentByID("tcpip_apps_config") == None):
+            res = Database.activateComponents(["tcpip_apps_config"])
+        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNTP") != True):
+            setVal("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNTP", True)
+            
         #Todo: change to Database.sendMessage(); but need handleMessage() in lib_wolfssl
         Database.setSymbolValue("lib_wolfssl","wolfssl", True) 
         data.setSymbolValue("NET_PRES_BLOB_CERT", 0)
