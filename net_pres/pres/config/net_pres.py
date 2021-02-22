@@ -20,6 +20,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+autoConnectTableCrypto = [["lib_crypto", "LIB_CRYPTO_WOLFCRYPT_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
+autoConnectTableWolfssl = [["lib_wolfssl", "WolfSSL_Crypto_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
 
 def instantiateComponent(net_PresComponent):
 
@@ -624,7 +626,14 @@ def netPresEncProviderMenu(symbol, event):
     if (event["value"] == 0):        
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS", False)
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL", True)
-        res = Database.activateComponents(["lib_wolfssl"])
+        if(Database.getComponentByID("lib_wolfssl") == None):
+            res = Database.activateComponents(["lib_wolfssl"])
+        if(Database.getComponentByID("lib_crypto") == None):
+            res = Database.activateComponents(["lib_crypto"]) 
+        if(Database.getComponentByID("lib_wolfcrypt") == None):
+            res = Database.activateComponents(["lib_wolfcrypt"])
+        res = Database.connectDependencies(autoConnectTableWolfssl)  
+        res = Database.connectDependencies(autoConnectTableCrypto)  
         #Todo: change to Database.sendMessage(); but need handleMessage() in lib_wolfssl
         Database.setSymbolValue("lib_wolfssl","wolfssl", True) 
         data.setSymbolValue("NET_PRES_BLOB_CERT", 0)
