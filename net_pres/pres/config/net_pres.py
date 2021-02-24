@@ -623,17 +623,25 @@ def netPresEncryptMenuVisible(symbol, event):
 
 def netPresEncProviderMenu(symbol, event):
     data = symbol.getComponent() 
-    if (event["value"] == 0):        
+    if (event["value"] == 0):      
+        wolfssl_connect = False
+        crypto_connect = False
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS", False)
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL", True)
         if(Database.getComponentByID("lib_wolfssl") == None):
             res = Database.activateComponents(["lib_wolfssl"])
+            wolfssl_connect = True
         if(Database.getComponentByID("lib_crypto") == None):
             res = Database.activateComponents(["lib_crypto"]) 
+            crypto_connect = True
         if(Database.getComponentByID("lib_wolfcrypt") == None):
             res = Database.activateComponents(["lib_wolfcrypt"])
-        res = Database.connectDependencies(autoConnectTableWolfssl)  
-        res = Database.connectDependencies(autoConnectTableCrypto)  
+            wolfssl_connect = True
+            crypto_connect = True
+        if wolfssl_connect == True :
+            res = Database.connectDependencies(autoConnectTableWolfssl) 
+        if crypto_connect == True :
+            res = Database.connectDependencies(autoConnectTableCrypto)  
         # Enable SNTP Dependency 
         if(Database.getComponentByID("tcpip_apps_config") == None):
             res = Database.activateComponents(["tcpip_apps_config"])
