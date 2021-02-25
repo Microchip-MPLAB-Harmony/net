@@ -296,11 +296,9 @@ static tcpipSignalHandle     tcpipCmdSignalHandle = 0;      // tick handle
 
 static TCPIP_COMMANDS_STAT  tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
 
-static int commandInitCount = 0;        // initialization count
-
-
 #endif  // defined(_TCPIP_STACK_COMMAND_TASK)
 
+static int commandInitCount = 0;        // initialization count
 
 #if defined(TCPIP_STACK_USE_DNS)
 static char                 dnslookupTargetHost[31];     // current target host name
@@ -6300,7 +6298,6 @@ static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
             return;
         }
-#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 
         if(strcmp(argv[1], "deregister") == 0)
         {
@@ -6321,6 +6318,7 @@ static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             return;
         }
 
+#endif  // (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 
         if(strcmp(argv[1], "fdb") == 0)
         {   
