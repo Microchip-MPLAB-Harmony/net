@@ -82,7 +82,8 @@ def handleMessage(messageID, args):
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridgeCount)
         retDict= {"Return": "Success"}
     elif (messageID == "NETCONFIG_MAC_BRIDGE_DISABLE"):
-        macBridgeCount = macBridgeCount - 1        
+        if (macBridgeCount != 0):
+            macBridgeCount = macBridgeCount - 1        
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT", macBridgeCount)
         retDict= {"Return": "Success"}
     elif (messageID == "SET_SYMBOL"):
