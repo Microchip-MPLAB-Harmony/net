@@ -41,7 +41,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_TFTP_CLIENT_OPCODE            2
 #define TCPIP_TFTP_CLIENT_OCTET             6
 
-#define TCPIP_TFTPC_DEBUG
+/* This can be enabled to get TFTPC debugging messages */
+// #define TCPIP_TFTPC_DEBUG
 
 // Enum. of results returned by most of the TFTP functions.
 typedef enum _TFTP_RESULT
@@ -52,7 +53,8 @@ typedef enum _TFTP_RESULT
     TFTP_ACK_SEND,
     TFTP_ERROR,
     TFTP_RETRY,    
-    TFTP_TIMEOUT
+    TFTP_TIMEOUT,
+    TFTP_PKT_NOT_RECEIVED,
 } TFTP_RESULT;
 
 // The TFTP state machine
