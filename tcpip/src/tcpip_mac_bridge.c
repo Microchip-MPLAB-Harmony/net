@@ -1930,8 +1930,11 @@ bool TCPIP_MAC_Bridge_StatisticsGet(TCPIP_MAC_BRIDGE_HANDLE brHandle, TCPIP_MAC_
 
     return true;
 }
-
-
+#else
+bool TCPIP_MAC_Bridge_StatisticsGet(TCPIP_MAC_BRIDGE_HANDLE brHandle, TCPIP_MAC_BRIDGE_STAT* pStat, bool clear)
+{
+    return false;
+}
 #endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
 
 #endif  //if defined(TCPIP_STACK_USE_MAC_BRIDGE)

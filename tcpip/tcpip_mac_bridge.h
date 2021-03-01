@@ -687,7 +687,7 @@ SYS_STATUS TCPIP_MAC_Bridge_Status(TCPIP_MAC_BRIDGE_HANDLE brHandle);
     - false if failed
       
   Remarks:
-    Function exists only if MAC bridge statistics is enabled
+    Function exists only if MAC bridge statistics are enabled
 
  */
 bool TCPIP_MAC_Bridge_StatisticsGet(TCPIP_MAC_BRIDGE_HANDLE brHandle, TCPIP_MAC_BRIDGE_STAT* pStat, bool clear);
