@@ -26,7 +26,9 @@ macBridgeCount = 0
 
 def instantiateComponent(tcpipNetConfigComponent):
     configName = Variables.get("__CONFIGURATION_NAME") 
-
+    seriesNode = ATDF.getNode('/avr-tools-device-file/devices')
+    deviceSeries = seriesNode.getChildren()[0].getAttribute("series")
+    
     tcpipNetConfigNumMax = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX", None)
     tcpipNetConfigNumMax.setLabel("Number of Instances")
     tcpipNetConfigNumMax.setDefaultValue(tcpipNetConfigNumMaximum)
@@ -53,7 +55,14 @@ def instantiateComponent(tcpipNetConfigComponent):
     tcpipNetConfigMacBridgeGlobalEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_STACK_USE_MAC_BRIDGE", None)
     tcpipNetConfigMacBridgeGlobalEnable.setLabel("Mac Bridge Global Config Enable")
     tcpipNetConfigMacBridgeGlobalEnable.setDefaultValue(False)
-    tcpipNetConfigMacBridgeGlobalEnable.setVisible(False) 
+    tcpipNetConfigMacBridgeGlobalEnable.setVisible(False)     
+    
+    # Device Series
+    tcpipNetConfigDeviceSeries = tcpipNetConfigComponent.createStringSymbol("TCPIP_STACK_NETWORK_DEV_SERIES",None)   
+    tcpipNetConfigDeviceSeries.setLabel("Device Series")
+    tcpipNetConfigDeviceSeries.setVisible(False)
+    tcpipNetConfigDeviceSeries.setDefaultValue(deviceSeries)
+    tcpipNetConfigDeviceSeries.setReadOnly(True)
 
     execfile(Module.getPath() + "/tcpip/config/tcpip_mac_bridge.py")    
     

@@ -1749,7 +1749,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
     }
 
     // get the way the hw is configured
-#if defined(TCPIP_IF_PIC32MZW1)
+#if defined(TCPIP_IF_PIC32MZW_ETHMAC)
     hwFlags = DRV_ETHPHY_CFG_RMII;
     ethRes = DRV_ETHPHY_RES_OK;
 #elif defined (TCPIP_IF_ETHMAC)
