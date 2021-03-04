@@ -79,7 +79,6 @@ const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject =
 
 // Local information
 static DRV_ENC28J60_DriverInfo drvENC28J60DrvInst[DRV_ENC28J60_INSTANCES_NUMBER];
-//todo: now hardcoded as single instance; need to update for multiple instance
 static DRV_ENC28J60_ClientInfo drvENC28J60ClntInst[DRV_ENC28J60_CLIENT_INSTANCES_IDX0];
 static uint8_t drvENC28J60NumOfDrivers = 0;
 static OSAL_MUTEX_HANDLE_TYPE  drvENC28J60ClntMutex;
@@ -104,7 +103,6 @@ bool _DRV_ENC28J60_ValidateDriverInstance(DRV_ENC28J60_DriverInfo * ptr)
 DRV_ENC28J60_DriverInfo * _DRV_ENC28J60_ValidateClientHandle(DRV_ENC28J60_ClientInfo * ptr)
 {
     uint8_t x;
-    //todo: now hardcoded as single instance; need to update for multiple instance
     for (x = 0; x < DRV_ENC28J60_CLIENT_INSTANCES_IDX0; x++)
     {
         if (ptr == &(drvENC28J60ClntInst[x]))
@@ -503,7 +501,6 @@ DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
         }
     }
 
-    //todo: now hardcoded as single instance; need to update for multiple instance
     for (x = 0; x < DRV_ENC28J60_CLIENT_INSTANCES_IDX0; x++)
     {
         ptr = &drvENC28J60ClntInst[x];
