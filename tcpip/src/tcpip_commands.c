@@ -131,7 +131,7 @@ static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 #endif 
 static int _Command_DHCPSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_ZcllOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _Command_PrimaryDNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static int _Command_DNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 static int _Command_IPAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_GatewayAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -384,7 +384,7 @@ static const void*          miimCmdIoParam = 0;
 static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 
-#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS)
+#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS) && (TCPIP_IPV4_COMMANDS != 0)
 static void _CommandIpv4(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif 
 
@@ -410,7 +410,7 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif
     {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
     {"zcll",        (SYS_CMD_FNC)_Command_ZcllOnOff,            ": Turn ZCLL on/off"},
-    {"setdns",      (SYS_CMD_FNC)_Command_PrimaryDNSAddressSet, ": Set DNS address"},
+    {"setdns",      (SYS_CMD_FNC)_Command_DNSAddressSet,        ": Set DNS address"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
     {"setip",       (SYS_CMD_FNC)_Command_IPAddressSet,         ": Set IP address and mask"},
     {"setgw",       (SYS_CMD_FNC)_Command_GatewayAddressSet,    ": Set Gateway address"},
@@ -487,7 +487,7 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)  && defined(TCPIP_FTPC_COMMANDS)
     {"ftpc", (SYS_CMD_FNC)_Command_FTPC_Service,   ": Connect FTP Client to Server"},
 #endif  // (TCPIP_STACK_USE_FTP_CLIENT)    
-#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS)
+#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS) && (TCPIP_IPV4_COMMANDS != 0)
     {"ip4", _CommandIpv4,   ": IPv4"},
 #endif
 #if (TCPIP_PKT_ALLOC_COMMANDS != 0)
@@ -665,6 +665,10 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         ipAddr.Val = TCPIP_STACK_NetAddressDnsPrimary(netH);
         TCPIP_Helper_IPAddressToString(&ipAddr, addrBuff, sizeof(addrBuff));
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "DNS: %s\r\n", addrBuff);
+
+        ipAddr.Val = TCPIP_STACK_NetAddressDnsSecond(netH);
+        TCPIP_Helper_IPAddressToString(&ipAddr, addrBuff, sizeof(addrBuff));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "DNS2: %s\r\n", addrBuff);
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
         pMac = (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetAddressMac(netH);
@@ -1382,34 +1386,41 @@ static int _Command_GatewayAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, cha
 }
 
 #if defined(TCPIP_STACK_USE_IPV4)
-static int _Command_PrimaryDNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static int _Command_DNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     TCPIP_NET_HANDLE netH;
     IPV4_ADDR ipDNS;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if (argc != 3) {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setdns <interface> <x.x.x.x> \r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setdns PIC32INT 255.255.255.0 \r\n");
+    if (argc != 4)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setdns 1/2 <interface> <x.x.x.x> \r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setdns 1 eth0 255.255.255.0 \r\n");
         return false;
     }
 
-    netH = TCPIP_STACK_NetHandleGet(argv[1]);
-    if (netH == 0) {
+    int dnsIx = atoi(argv[1]);
+    if(dnsIx != 1 && dnsIx != 2)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown DNS index\r\n");
+        return false;
+    }
+
+    netH = TCPIP_STACK_NetHandleGet(argv[2]);
+    if (netH == 0)
+    {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
         return false;
     }
 
-    if (!TCPIP_Helper_StringToIPAddress(argv[2], &ipDNS)) {
+    if (!TCPIP_Helper_StringToIPAddress(argv[3], &ipDNS))
+    {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IP address string \r\n");
         return false;
     }
 
-    if(!TCPIP_STACK_NetAddressDnsPrimarySet(netH, &ipDNS)) {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Set DNS address failed\r\n");
-        return false;
-    }
-
+    bool res = dnsIx == 1 ? TCPIP_STACK_NetAddressDnsPrimarySet(netH, &ipDNS) : TCPIP_STACK_NetAddressDnsSecondSet(netH, &ipDNS); 
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Set DNS %d address %s\r\n", dnsIx, res ? "success" : "failed");
     return true;
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4)
@@ -2781,7 +2792,7 @@ void TCPIPCmdDnsTask(void)
             dnsRes = TCPIP_DNS_Resolve(dnslookupTargetHost, dnsType);
             if(dnsRes != TCPIP_DNS_RES_OK && dnsRes != TCPIP_DNS_RES_PENDING && dnsRes != TCPIP_DNS_RES_NAME_IS_IPADDRESS)
             {   // some other error
-                (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "DNS Lookup: DNS failure for %s\r\n", dnslookupTargetHost);
+                (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "DNS Lookup: DNS failure for %s, err: %d\r\n", dnslookupTargetHost, dnsRes);
                 tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
                 break;
             }
@@ -2804,7 +2815,7 @@ void TCPIPCmdDnsTask(void)
             }
             else if(dnsRes < 0 )
             {   // timeout or some other DNS error
-                (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "DNS Lookup: DNS failure for %s\r\n", dnslookupTargetHost);
+                (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "DNS Lookup: DNS failure for %s, err: %d\r\n", dnslookupTargetHost, dnsRes);
                 tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
                 break;
             }
@@ -5750,7 +5761,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 #endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
 
 
-#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS)
+#if defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS) && (TCPIP_IPV4_COMMANDS != 0)
 static void _CommandIpv4Arp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 #if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
@@ -5764,8 +5775,10 @@ static void _CommandIpv4(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
+    bool usage = true;
     while(argc > 1)
     {
+        usage = false;
         if(strcmp(argv[1], "arp") == 0)
         {
             _CommandIpv4Arp(pCmdIO, argc, argv);
@@ -5780,12 +5793,18 @@ static void _CommandIpv4(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             _CommandIpv4Table(pCmdIO, argc, argv);
         }
 #endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+        else
+        {
+            usage = true;
+        }
 
         break;
     }
 
-
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ip4 arp/fwd/table ix clr\r\n");
+    if(usage)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ip4 arp/fwd/table ix clr\r\n");
+    }
 }
 
 static void _CommandIpv4Arp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -5888,7 +5907,7 @@ static void _CommandIpv4Table(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
 #endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0)
 
 
-#endif  // defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS)
+#endif  // defined(TCPIP_STACK_USE_IPV4)  && defined(TCPIP_IPV4_COMMANDS) && (TCPIP_IPV4_COMMANDS != 0)
 
 #if (TCPIP_PKT_ALLOC_COMMANDS != 0)
 TCPIP_MAC_PACKET* pktList[10] = {0};
