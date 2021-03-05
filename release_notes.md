@@ -1,4 +1,48 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.7.1 (March, 2021)
+### ADDITIONS AND UPDATES FOR  3.7.1:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.7.1 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| FTP server            | Added the use of NetPres API |
+| TFTP Client           | Added IPv4/IPv6 Selection |
+| FTP Server            | Added IPv4/IPv6 Selection |
+| DHCPV6 client         | Added MHC support |
+| BSD                   | Updated connect procedure |
+| NET_PRES              | Trust&Go Client Certificate updates | 
+| PHY driver            | Added PHY vendor detection procedure |
+| SNTP                  | Added run time enable/disable functionality |
+| TCP                   | Allowed disabling of the Crypt RNG usage |
+| Manager               | Added support for power mode == 'down' |
+|                       | Allow network interfaces to start in 'down' state |
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.7.1 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| FTP, UDP, Commands    | Updated Deinitialize routine to perform action only if already properly initialized |
+| TFTP client           | PUT command large file transfer issue resolved |
+| ENCx24j600            | Fixed MAC driver failing to release all the allocated resources |
+| GMAC driver           | Fixed not transmitting with 1 Tx Descriptor |
+|                       | Enabled DCache Clean by Address |
+| SNTP                  | Fixed test for TCPIP_UDP_TxPutIsReady() |
+| MAC bridge            | Fixed corner case resulting in an orphaned packet |
+| Manager               | Removed address 0 from duplicate check |
+
+| MHC                   | Fixed wolmqtt regeneration failure due to missing 'user_settings.h' |
+|                       | Fixed issues with MAC bridging support |
+|                       | Auto activated SNTP Component when 'Encryption' in net_Pres component is enabled |
+|sys_adapter            | Fixed memory leaks in the random adapter |
+
+- **Release notes for v3.7.0 apply**
+
+
 ## Net Release v3.7.0 (December, 2020)
 ### ADDITIONS AND UPDATES FOR  3.7.0:
 
