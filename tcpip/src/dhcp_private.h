@@ -251,7 +251,12 @@ typedef struct __attribute__((packed))
     struct
     {
         uint8_t     type;       // hardware type according to "Assigned Numbers"
+#if defined(TCPIP_STACK_ALIAS_INTERFACE_SUPPORT) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
         uint8_t     id[sizeof(TCPIP_MAC_ADDR) + 2]; // client ID; we use the hw address of the interface + IF number:
+#else
+        uint8_t     id[sizeof(TCPIP_MAC_ADDR)]; // client ID; we use the hw address of the interface
+#endif  // defined(TCPIP_STACK_ALIAS_INTERFACE_SUPPORT) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
+
     }cliId;
 }TCPIP_DHCP_OPTION_DATA_CLIENT_ID;
 
