@@ -97,18 +97,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // This value will be used when the DNS server TTL value for an entry is 0
 #define TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL      (20 * 60)
 
-// Time-out for the a unsolved name, in seconds.
-// The name resolution will be aborted if the TMO elapsed
-// and the name could not be solved
-// Should be greater than TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO
+// Retry lookup timeout for a unsolved entry in the cache, in seconds.
+// If the TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO seconds elapsed and the name
+// has not been solved then the resolution will be retried.
+// Note: currently the stack will make 2 retries per interface
+// using both DNS1 and DNS2 to solve the name
+// Default value: 1 - 2 seconds
+#define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO      (2)
+
+// Time to solve a name on an interface, in seconds.
+// Obsolete! No longer in use.
 #define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO      (10)
 
-// Retry lookup for a unsolved entry in the cache, in seconds.
-// If the TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO seconds elapsed and the name
-// has not been solved then the name entry will be marked with server timeout and
-// the resolution will be retried.
-// Should be less than TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO
-#define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO      (3)
 
 // Max DNS host name size
 // Use an appropriate value, depending on the names that need to be solved

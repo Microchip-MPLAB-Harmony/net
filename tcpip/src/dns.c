@@ -156,21 +156,31 @@ static void _DNS_DbgEvent(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE
 {
     _DNSAssertCond(0 <= evType && evType <= TCPIP_DNS_DBG_EVENT_UNSOLICITED_ERROR, __func__, __LINE__);
     const char* hostName;
-    const char* ifName;
+    int ifIx;
+    int srvIx;
+    int retry;
+    int nRetries;
 
     if(pDnsHE == 0)
     {
-       hostName = "no host";
-       ifName = "no if";
+        hostName = "no host";
+        ifIx = -1;
+        srvIx = -1;
+        retry = -1;
+        nRetries = -1;
     }
     else
     {
         hostName = pDnsHE->pHostName;
-        ifName = TCPIP_STACK_NetNameGet(pDnsHE->currNet);
+        ifIx = TCPIP_STACK_NetIxGet(pDnsHE->currNet);
+        srvIx = pDnsHE->currServerIx;
+        retry = pDnsHE->currRetry;
+        nRetries = pDnsHE->nRetries;
     }
 
     const char* evName = _DNSDbg_EvNameTbl[evType];
-    SYS_CONSOLE_PRINT("DNS Event: %s, IF: %s, host: %s, time: %d\r\n", evName, ifName, hostName, pDnsDcpt->dnsTime);
+    SYS_CONSOLE_PRINT("DNS Event: %s, host: %s, time: %d\r\n", evName, hostName, pDnsDcpt->dnsTime);
+    SYS_CONSOLE_PRINT("ifIx: %d, srvIx: %d, retry: %d, nRetries: %d\r\n", ifIx, srvIx, retry, nRetries);
 }
 #else
 #define _DNS_DbgEvent(pDnsDcpt, pDnsHE, evType)
@@ -209,6 +219,27 @@ static void _DNS_DbgRRName(char* nameBuffer, TCPIP_DNS_RR_TYPE rrType)
 #define _DNS_DbgRRName(buffer, rrType)
 #endif  // ((TCPIP_DNS_DEBUG_LEVEL & (TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES | TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES)) != 0)
 
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_VALIDATE) != 0)
+static void _DNS_DbgValidateIf(TCPIP_NET_IF* pIf, int startIx, int selIx, bool success)
+{
+    SYS_CONSOLE_PRINT("DNS Validate - if: %d, startIx: %d, selIx: %d, success: %d\r\n", pIf->netIfIx, startIx, selIx, success);
+}
+#else
+#define _DNS_DbgValidateIf(pIf, startIx, selIx, success)
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_VALIDATE) != 0)
+
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_ARP_FLUSH) != 0)
+static void _DNS_DbgArpFlush(TCPIP_NET_IF* oldIf, int oldIx, TCPIP_NET_IF* newIf, int newIx, const IPV4_ADDR* dnsAdd)
+{
+    char addBuff[20];
+    
+    TCPIP_Helper_IPAddressToString(dnsAdd, addBuff, sizeof(addBuff));
+    
+    SYS_CONSOLE_PRINT("DNS ARP flush - old If: %d, oldIx %d, new If: %d, newIx: %d, add: %s\r\n", TCPIP_STACK_NetIxGet(oldIf), oldIx, TCPIP_STACK_NetIxGet(newIf), newIx, addBuff); 
+}
+#else
+#define _DNS_DbgArpFlush(oldIf, oldIx, newIf, newIx, dnsAdd)
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_ARP_FLUSH) != 0)
 /*****************************************************************************
  swap DNS Header content packet . This API is used when we recive
  the DNS response for a query from the server.
@@ -675,11 +706,13 @@ static TCPIP_DNS_RESULT _DNS_Resolve(const char* hostName, TCPIP_DNS_RESOLVE_TYP
         dnsHE->hEntry.flags.value &= ~TCPIP_DNS_FLAG_ENTRY_COMPLETE;
     }
     dnsHE->ipTTL.Val = 0;
-    dnsHE->currNet = 0;     // new search will re-select the interface and server
-    dnsHE->currServerIx = 0;
     dnsHE->resolve_type = type;
     dnsHE->recordMask |= recMask;
     dnsHE->tRetry = dnsHE->tInsert = pDnsDcpt->dnsTime;
+    dnsHE->currRetry = 0;
+    // if a strict interface, we try only on that; otherwise on all
+    int retryIfs = (pDnsDcpt->strictNet == 0) ? TCPIP_STACK_NumberOfNetworksGet() : 1;
+    dnsHE->nRetries = retryIfs * _TCPIP_DNS_IF_RETRY_COUNT;
     pDnsDcpt->unsolvedEntries++;
     return _DNS_Send_Query(pDnsDcpt, dnsHE);
 }
@@ -1024,6 +1057,8 @@ static bool _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDns
     // add the interfaces to be considered
     // the preferred interface
     _DNS_AddSelectionIf(pDnsDcpt->prefNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
+    // the current interface
+    _DNS_AddSelectionIf(pDnsHE->currNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
     // the default interface
     _DNS_AddSelectionIf((TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
     // and any other interface
@@ -1051,7 +1086,7 @@ static bool _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDns
     {
         if((pDnsIf = dnsSelectIfs[ix]) != 0)
         {   // for the last valid interface allow DNS servers wrap around
-            if(_DNS_ValidateIf(pDnsIf, pDnsHE, (ix == nIfs - 1) ? true : false))
+            if(_DNS_ValidateIf(pDnsIf, pDnsHE, (ix == nIfs - 1)))
             {
                 return true;
             }
@@ -1114,7 +1149,17 @@ static bool _DNS_ValidateIf(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, boo
     if(_DNS_NetIsValid(pIf))
     {
         srvFound = false;
-        startIx = (pDnsHE->currNet == pIf) ?  pDnsHE->currServerIx + 1 : 0;
+        if(pDnsHE->currNet == pIf)
+        {   // trying the current interface
+            // at 1st attempt just stick to what we had before
+            // when retrying; use a different server index
+            startIx = (pDnsHE->currRetry == 0) ? pDnsHE->currServerIx : pDnsHE->currServerIx + 1;
+        }
+        else
+        {   // for a new interface start with the 1st server
+            startIx = 0;
+        }
+
         for(ix = startIx; ix < sizeof(pIf->dnsServer) / sizeof(*pIf->dnsServer); ix++)
         {
             if(pIf->dnsServer[ix].Val != 0)
@@ -1141,7 +1186,12 @@ static bool _DNS_ValidateIf(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, boo
         {
             pDnsHE->currNet = pIf;
             pDnsHE->currServerIx = ix;
+            _DNS_DbgValidateIf(pIf, startIx, ix, true);
             return true;
+        }
+        else
+        {
+            _DNS_DbgValidateIf(pIf, startIx, ix, false);
         }
     }
 
@@ -1190,17 +1240,36 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
 
     while(true)
     {
-        if(!TCPIP_UDP_PutIsReady(dnsSocket))
-        {   // failed to allocate another TX buffer
-            res = TCPIP_DNS_RES_SOCKET_ERROR;
-            evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
-            break; 
-        }
-
+        int oldServerIx = pDnsHE->currServerIx; // store the previously used DNS server index
+        TCPIP_NET_IF* oldIf = pDnsHE->currNet;
         if(!_DNS_SelectIntf(pDnsDcpt, pDnsHE))
         {   // couldn't get an output interface
             res = TCPIP_DNS_RES_NO_INTERFACE;
             evType = TCPIP_DNS_EVENT_NO_INTERFACE;
+            break; 
+        }
+
+        if(oldIf == 0)
+        {
+            oldIf = pDnsHE->currNet; 
+        }
+        if(pDnsHE->currServerIx != oldServerIx || pDnsHE->currNet != oldIf )
+        {   // switched to another server/interface
+            // abort (if any) pending ARP on the old DNS server.
+            // a pending ARP counts as a socket TX pending packet
+            // and newer packets could be discarded if the socket limit is exceeded
+            IPV4_ADDR oldDns = oldIf->dnsServer[oldServerIx];
+            if(oldDns.Val != 0)
+            {
+                TCPIP_ARP_EntryRemove(oldIf, &oldDns);
+                _DNS_DbgArpFlush(oldIf, oldServerIx, pDnsHE->currNet, pDnsHE->currServerIx, &oldDns);
+            }
+        }
+
+        if(!TCPIP_UDP_PutIsReady(dnsSocket))
+        {   // failed to allocate another TX buffer
+            res = TCPIP_DNS_RES_SOCKET_ERROR;
+            evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
             break; 
         }
 
@@ -1370,21 +1439,36 @@ static void TCPIP_DNS_CacheTimeout(TCPIP_DNS_DCPT* pDnsDcpt)
                 {
                     timeout = pDnsHE->ipTTL.Val;
                 }
+                if((currTime - pDnsHE->tInsert) >= timeout)
+                {
+                    _DNS_UpdateExpiredHashEntry_Notify(pDnsDcpt, pDnsHE);
+                }
             }
             else
             {   // unsolved entry
-                timeout = TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO;
-            }
-
-            if((currTime - pDnsHE->tInsert) >= timeout)
-            {
-                _DNS_UpdateExpiredHashEntry_Notify(pDnsDcpt, pDnsHE);
-            }
-            else if((pDnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_COMPLETE) == 0 && (currTime - pDnsHE->tRetry) >= TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO)
-            {   // send further probes for unsolved entries
-                _DNS_Send_Query(pDnsDcpt, pDnsHE);
-                pDnsHE->hEntry.flags.value |= TCPIP_DNS_FLAG_ENTRY_TIMEOUT;
-                pDnsHE->tRetry = currTime;
+                if((pDnsHE->hEntry.flags.value & TCPIP_DNS_FLAG_ENTRY_TIMEOUT) == 0)
+                {   // alive entry
+                    if((currTime - pDnsHE->tRetry) >= TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO)
+                    {   // time for another attempt; the previous one should have been expired
+                        pDnsHE->tRetry = currTime;
+                        if(pDnsHE->currRetry < pDnsHE->nRetries)
+                        {   // more attempts; send further probes for unsolved entries
+                            pDnsHE->currRetry++;
+                            _DNS_Send_Query(pDnsDcpt, pDnsHE);
+                        }
+                        else
+                        {   // exhausted retries; timed out
+                            pDnsHE->hEntry.flags.value |= TCPIP_DNS_FLAG_ENTRY_TIMEOUT;
+                        }
+                    }
+                }
+                else
+                {   // timed out entry; check if it's time to remove it from cache
+                    if((currTime - pDnsHE->tRetry) >= _TCPIP_DNS_CLIENT_CACHE_UNSOLVED_EXPIRE_TMO)
+                    {
+                        _DNS_UpdateExpiredHashEntry_Notify(pDnsDcpt, pDnsHE);
+                    }
+                }
             }
         }
     } 

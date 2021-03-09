@@ -50,6 +50,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_DNS_DEBUG_MASK_EVENTS          (0x0002)
 #define TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES    (0x0004)
 #define TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES  (0x0008)
+#define TCPIP_DNS_DEBUG_MASK_VALIDATE        (0x0010)
+#define TCPIP_DNS_DEBUG_MASK_ARP_FLUSH       (0x0020)
 
 // enable DNS debugging levels
 #define TCPIP_DNS_DEBUG_LEVEL               (0)
@@ -61,6 +63,20 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // receive packet buffer size
 #define TCPIP_DNS_RX_BUFFER_SIZE            512
+
+// retries for solving a name
+//
+#if !defined(TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO) || (TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO == 0)
+#error "Invalid TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO value!"
+#endif
+
+// 2 retries per interface, to be able to try both DNS servers
+// this should match the number of DNS servers per interface
+#define _TCPIP_DNS_IF_RETRY_COUNT 2
+
+// once an entry is unsolved and exhausted its retries
+// it will be removed from the cache
+#define _TCPIP_DNS_CLIENT_CACHE_UNSOLVED_EXPIRE_TMO     1
 
 // a DNS debug event
 typedef enum
@@ -136,7 +152,8 @@ typedef struct
     uint8_t                     resolve_type;   // TCPIP_DNS_RESOLVE_TYPE value
     uint8_t                     currServerIx;   // current server used
     uint8_t                     recordMask;     // a TCPIP_DNS_ADDRESS_REC_MASK mask: IPv6/IPv4 
-    uint8_t                     padding[1];     // padding, unused
+    uint8_t                     currRetry;      // current retry number for an address resolution
+    uint8_t                     nRetries;       // # of retries for address resolution
 }TCPIP_DNS_HASH_ENTRY;
 
 
