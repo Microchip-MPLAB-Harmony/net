@@ -55,6 +55,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     harmonyFrameworkPath = Variables.get("__FRAMEWORK_DIR")     
     wirelessWincPresent = os.path.isdir(harmonyFrameworkPath + "/wireless/driver/winc")
     wirelessEthmacPresent = os.path.isdir(harmonyFrameworkPath + "/wireless/driver/ethmac")
+    net_10Baset1sPresent = os.path.isdir(harmonyFrameworkPath + "/net_10base_t1s/driver")
     
     if Peripheral.moduleExists("GMAC"): 
         # Enable GMAC
@@ -182,7 +183,14 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigIP101GR.setVisible(True)
     tcpipAutoConfigIP101GR.setDescription("Enable IP101GR")
     tcpipAutoConfigIP101GR.setDependencies(tcpipAutoConfigIP101GREnable, ["TCPIP_AUTOCONFIG_ENABLE_IP101GR"])     
-        
+    
+    # Enable LAN867x
+    tcpipAutoConfigLAN867x = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN867x", tcpipAutoConfigPhyMenu)
+    tcpipAutoConfigLAN867x.setLabel("LAN867x")
+    tcpipAutoConfigLAN867x.setVisible(net_10Baset1sPresent)
+    tcpipAutoConfigLAN867x.setDescription("Enable LAN867x")
+    tcpipAutoConfigLAN867x.setDependencies(tcpipAutoConfigLAN867xEnable, ["TCPIP_AUTOCONFIG_ENABLE_LAN867x"])
+
     # External Ethernet Controller driver menu
     tcpipAutoConfigExtEthControllerMenu = tcpipAutoConfigDriverComponent.createMenuSymbol("TCPIP_AUTOCONFIG_EXT_ETH_CTRL_MENU", None)
     tcpipAutoConfigExtEthControllerMenu.setLabel("External Ethernet Controllers")
@@ -416,7 +424,15 @@ def tcpipAutoConfigIP101GREnable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyIp101gr"])
-        
+
+def tcpipAutoConfigLAN867xEnable(symbol, event):
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvExtPhyLan867x"],"DRIVER LAYER")  
+        if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+            Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)
+    else:
+        res = Database.deactivateComponents(["drvExtPhyLan867x"])
         
 def tcpipAutoConfigENCX24J600Enable(symbol, event):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")

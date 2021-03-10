@@ -287,6 +287,11 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 <#assign emac_phy_type = drvExtPhyIp101gr.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyIp101gr.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyIp101gr.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN867x")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN867x"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "LAN867x")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "LAN867x"))>
+<#assign emac_phy_type = drvExtPhyLan867x.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyLan867x.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyLan867x.DRV_ETHPHY_RESET_CALLBACK>
 </#if>
 
 /*** ETH PHY Initialization Data ***/
