@@ -4384,10 +4384,10 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog reset <all> - Resets the log data + all masks\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog handler on/off <all> - Turns on/off the local log handler\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog type RX/TX/RXTX <clr> - Enables the log for RX, TX or both RX and TX packets\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog net and none/all/ifIx ifIx ... or none/all/ifIx ifIx.... <clr> - Updates the network log mask for the interface list\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog persist and none/all/modId modId... or none/all/modId modId... <clr> - Updates the persist mask for the module list\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog module and none/all/modId modId... or none/all/modId modId... <clr> - Updates the log mask for the module list\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog socket and none/all/sktIx sktIx... or none/all/sktIx sktIx... <clr> - Updates the log mask for the socket numbers\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog net and/or none/all/ifIx ifIx ... <clr> - Updates the network log mask for the interface list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog persist and/or none/all/modId modId... <clr> - Updates the persist mask for the module list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog module and/or none/all/modId modId... <clr> - Updates the log mask for the module list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog socket and/or none/all/sktIx sktIx... or <clr> - Updates the log mask for the socket numbers\r\n");
         return false;
     }
 
@@ -4689,12 +4689,13 @@ static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 typedef enum
 {
     CMD_PKT_XTRACT_FLAG_NONE        = 0x00,     // no flag set
-    CMD_PKT_XTRACT_FLAG_AND         = 0x01,     // AND command: avoid using string compare
-    CMD_PKT_XTRACT_FLAG_OR          = 0x02,     // OR command: avoid using string compare
-    CMD_PKT_XTRACT_FLAG_CLR         = 0x04,     // CLR command: avoid using string compare
+    CMD_PKT_XTRACT_FLAG_AND         = 0x01,     // AND command
+    CMD_PKT_XTRACT_FLAG_OR          = 0x02,     // OR command
+    CMD_PKT_XTRACT_FLAG_CLR         = 0x04,     // CLR command
 
-    CMD_PKT_XTRACT_FLAG_NEEDED      = 0x10,     // command needs to exist, not optional
-    CMD_PKT_XTRACT_FLAG_NEED_PARAMS = 0x20,     // command needs parameters
+    CMD_PKT_XTRACT_FLAG_BUSY        = 0x10,     // command exists
+    CMD_PKT_XTRACT_FLAG_NEEDED      = 0x20,     // command is mandatory, not optional
+    CMD_PKT_XTRACT_FLAG_NEED_PARAMS = 0x40,     // command needs parameters
 
 }CMD_PKT_XTRACT_FLAGS;
 
@@ -4722,10 +4723,11 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
     CMD_PKT_XTRACT_OP *pXtOp, *pCurrOp, *pNewOp;
     const CMD_PKT_XTRACT_OP* pCtOp;
     CMD_PKT_XTRACT_RES xtractRes;
+    uint32_t andMask, orMask;
     char argBuff[10 + 1];
 
-    // shortest form needs 6 args 'plog oper and none or all'
-    if(argc < 6)
+    // shortest form needs 4 args 'plog oper and param'
+    if(argc < 4)
     {
         return CMD_PKT_XTRACT_RES_ERR;
     }
@@ -4740,63 +4742,69 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
         pXtOp->cmdFlags = pCtOp->cmdFlags;
     }
 
+    orMask = 0;
+    andMask = 0xffffffff;
+
     int argIx = 2;
     argc -= 2;
     argBuff[sizeof(argBuff) - 1] = 0;
     pCurrOp = 0;
+    int notOptCount = 0;
 
     while(argc)
     {
-        pXtOp = xtract_op_tbl;
-        pNewOp = 0;
-        for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++)
-        {
-            if(strcmp(argv[argIx], pXtOp->cmdName) == 0)
-            {   // found command
-                pNewOp = pXtOp;
-                break;
+        if(pCurrOp == 0)
+        {   // extract new command
+            pXtOp = xtract_op_tbl;
+            pNewOp = 0;
+            for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++)
+            {
+                if(strcmp(argv[argIx], pXtOp->cmdName) == 0)
+                {   // found command
+                    pNewOp = pXtOp;
+                    break;
+                }
             }
-        }
 
-        if(pNewOp != 0)
-        {   // starting a new op
-            if(pNewOp->cmdCount != 0)
-            {   // no support for the same command multiple times
+            if(pNewOp == 0)
+            {   // no such command ?
                 return CMD_PKT_XTRACT_RES_ERR;
             }
 
             // set the new command
             pCurrOp = pNewOp;
-            pNewOp->cmdCount++;
-            if((pNewOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) == 0) 
-            {   // no need to continue this op
+            pCurrOp->cmdCount++;
+            pCurrOp->cmdFlags |= CMD_PKT_XTRACT_FLAG_BUSY;
+            if((pCurrOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEEDED) != 0)
+            {
+                notOptCount++;   // got one mandatory command i.e. or/and
+            }
+            if((pCurrOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) == 0) 
+            {   // no params; stop this op
                 pCurrOp = 0;
             }
-
-        }
-        else if(pCurrOp == 0)
-        {   // cannot collect parameters when outside a command
-            return CMD_PKT_XTRACT_RES_ERR;
         }
         else
-        {   // inside an op; collect parameters
+        {   // ongoing operation; extract parameters
             if(strcmp(argv[argIx], "none") == 0)
-            {
+            {   // 'none' should be the only parameter 
                 if(pCurrOp->cmdParams != 0)
-                {   // 'none' should be the only parameter 
+                {   
                     return CMD_PKT_XTRACT_RES_ERR;
                 }
                 pCurrOp->cmdMask = 0;
-                pCurrOp->cmdParams++; 
+                pCurrOp->cmdParams++;
+                pCurrOp = 0;    // no params, done 
             }
             else if(strcmp(argv[argIx], "all") == 0)
-            {
+            {   // 'all' should be the only parameter 
                 if(pCurrOp->cmdParams != 0)
-                {   // 'all' should be the only parameter 
+                {
                     return CMD_PKT_XTRACT_RES_ERR;
                 }
-                pCurrOp->cmdMask = 0xffffff;
+                pCurrOp->cmdMask = 0xffffffff;
                 pCurrOp->cmdParams++; 
+                pCurrOp = 0;    // no params, done 
             }
             else
             {   // should be a number
@@ -4811,16 +4819,19 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
 
                 int argInt = atoi(argBuff);
                 if(argInt == 0)
-                {   // wrong param
-                    return CMD_PKT_XTRACT_RES_ERR;
+                {   // not a number?; done with this operation
+                    pCurrOp = 0; 
+                    continue;
                 }
-
-                if(argInc)
-                {
-                    argInt--;
+                else
+                {   // valid number
+                    if(argInc)
+                    {
+                        argInt--;
+                    }
+                    pCurrOp->cmdMask |= 1 << argInt;
+                    pCurrOp->cmdParams++; 
                 }
-                pCurrOp->cmdMask |= 1 << argInt;
-                pCurrOp->cmdParams++; 
             }
         }
 
@@ -4829,36 +4840,42 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
     }
 
     // we're done; collect the result
+    if(notOptCount == 0)
+    {   // mandatory command not found
+        return CMD_PKT_XTRACT_RES_ERR;
+    }
+
     xtractRes = CMD_PKT_XTRACT_RES_OK;
     pXtOp = xtract_op_tbl;
     for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++)
     {
-        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEEDED) != 0 && pXtOp->cmdCount == 0)
-        {   // mandatory command not found
-            return CMD_PKT_XTRACT_RES_ERR;
-        }
-        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) != 0 && pXtOp->cmdParams == 0)
-        {   // command without parameters
-            return CMD_PKT_XTRACT_RES_ERR;
-        }
+        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_BUSY) != 0)
+        {   // in use entry
+            if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) != 0 && pXtOp->cmdParams == 0)
+            {   // command without parameters
+                return CMD_PKT_XTRACT_RES_ERR;
+            }
 
-        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_AND) != 0)
-        {
-            *pAndMask = pXtOp->cmdMask;
-        }
-        else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_OR) != 0)
-        {
-            *pOrMask = pXtOp->cmdMask;
-        }
-        else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_CLR) != 0)
-        {
-            if(pXtOp->cmdCount != 0)
-            {   // 'clr' was mentioned
-                xtractRes = CMD_PKT_XTRACT_RES_CLR;
+            if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_AND) != 0)
+            {
+                andMask &= pXtOp->cmdMask;
+            }
+            else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_OR) != 0)
+            {
+                orMask |= pXtOp->cmdMask;
+            }
+            else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_CLR) != 0)
+            {
+                if(pXtOp->cmdCount != 0)
+                {   // 'clr' was mentioned
+                    xtractRes = CMD_PKT_XTRACT_RES_CLR;
+                }
             }
         }
     }
 
+    *pOrMask = orMask;
+    *pAndMask = andMask;
     return xtractRes;
 }
 
