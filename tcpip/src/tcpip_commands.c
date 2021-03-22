@@ -664,7 +664,7 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
         ipAddr.Val = TCPIP_STACK_NetAddressDnsPrimary(netH);
         TCPIP_Helper_IPAddressToString(&ipAddr, addrBuff, sizeof(addrBuff));
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "DNS: %s\r\n", addrBuff);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "DNS1: %s\r\n", addrBuff);
 
         ipAddr.Val = TCPIP_STACK_NetAddressDnsSecond(netH);
         TCPIP_Helper_IPAddressToString(&ipAddr, addrBuff, sizeof(addrBuff));

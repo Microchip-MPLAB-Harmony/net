@@ -151,6 +151,8 @@ typedef enum
 {
     IPV4_ARP_PKT_TYPE_NONE, // invalid
     IPV4_ARP_PKT_TYPE_TX,   // IPv4 TX packet: IPV4_PACKET*
+    IPV4_ARP_PKT_TYPE_MAC,  // IPv4 MAC packet: TCPIP_MAC_PACKET*
+                            // usually for ICMP replies
     IPV4_ARP_PKT_TYPE_FWD,  // IPv4 forwarding packet: TCPIP_MAC_PACKET*
 }IPV4_ARP_PKT_TYPE;
 
@@ -164,7 +166,8 @@ typedef struct _tag_IPV4_ARP_ENTRY
     uint16_t                reserved;   // not used    
     union
     {
-        IPV4_PACKET*        pTxPkt;     // packet to be transmitted
+        IPV4_PACKET*        pTxPkt;     // IPv4 packet to be transmitted
+        TCPIP_MAC_PACKET*   pMacPkt;    // MAC packet to be transmitted 
         TCPIP_MAC_PACKET*   pFwdPkt;    // packet to be forwarded 
         void*               pPkt;       // generic   
     };

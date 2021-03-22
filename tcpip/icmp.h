@@ -112,7 +112,7 @@ typedef struct _tag_TCPIP_ICMP_ECHO_REQUEST
                                     //        Can be 0 if a default interface is to be selected 
                                     // callback: the handle of the network interface on which the request was received
     IPV4_ADDR           targetAddr; // input: The IP address where to send the request
-                                    // callback: th eIP address of the host that replied
+                                    // callback: the IP address of the host that replied
     uint16_t            sequenceNumber; // input: A sequence number to be used in the request
                                         //        Sequential echo requests with the same identifier
                                         //        should have different sequence numbers (counter usually).

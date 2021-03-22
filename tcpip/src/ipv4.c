@@ -431,7 +431,7 @@ static void                     TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL);
 
 
 // TX fragmentation
-static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16_t pktPayload);
+static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu, uint16_t pktPayload);
 static bool TCPIP_IPV4_FragmentTxAckFnc(TCPIP_MAC_PACKET* pkt,  const void* param);
 static void TCPIP_IPV4_FragmentTxAcknowledge(TCPIP_MAC_PACKET* pTxPkt, TCPIP_MAC_PKT_ACK_RES ackRes, IPV4_FRAG_TX_ACK txAck);
 static void TCPIP_IPV4_FragmentTxInsertToRx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pTxPkt, TCPIP_MAC_PACKET_FLAGS flags, bool signal);
@@ -752,6 +752,10 @@ static void TCPIP_IPV4_ArpListPurge(TCPIP_NET_IF* pNetIf)
         {   // IPV4_PACKET*
             pMacPkt = &pEntry->pTxPkt->macPkt;
         }
+        else if(pEntry->type == IPV4_ARP_PKT_TYPE_MAC)
+        {   // TCPIP_MAC_PACKET*
+            pMacPkt = pEntry->pMacPkt; 
+        }
 #if (TCPIP_IPV4_FORWARDING_ENABLE != 0)
         else if(pEntry->type == IPV4_ARP_PKT_TYPE_FWD)
         {   // TCPIP_MAC_PACKET*
@@ -768,7 +772,7 @@ static void TCPIP_IPV4_ArpListPurge(TCPIP_NET_IF* pNetIf)
 
         if(pNetIf == 0 || pNetIf == pPktIf)
         {   // match
-            if(pEntry->type == IPV4_ARP_PKT_TYPE_TX)
+            if(pEntry->type == IPV4_ARP_PKT_TYPE_TX || pEntry->type == IPV4_ARP_PKT_TYPE_MAC)
             {   // IPV4_PACKET TX packet 
                 TCPIP_IPV4_FragmentTxAcknowledge(pMacPkt, TCPIP_MAC_PKT_ACK_ARP_NET_ERR, IPV4_FRAG_TX_ACK_HEAD | IPV4_FRAG_TX_ACK_FRAGS);
             }
@@ -1668,13 +1672,31 @@ static TCPIP_NET_IF* TCPIP_IPV4_CheckPktTx(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACK
 // transmits a packet over the network
 bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
 {
+    return TCPIP_IPV4_PktTx(pPkt, &pPkt->macPkt, true);
+}
+
+bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersistent)
+{
     TCPIP_MAC_ADDR   destMacAdd, *pMacDst;
     TCPIP_NET_IF*    pNetIf, *pHostIf;
     TCPIP_IPV4_DEST_TYPE destType;
     IPV4_ADDR       arpTarget;
+    void*           arpPkt;
+    IPV4_ARP_PKT_TYPE arpType;
     uint16_t        pktPayload, linkMtu;
     bool            txRes;
     
+    if(isPersistent)
+    {
+        arpType = IPV4_ARP_PKT_TYPE_TX;
+        arpPkt = pPkt;
+    }
+    else 
+    {
+        arpType = IPV4_ARP_PKT_TYPE_MAC;
+        arpPkt = pMacPkt; 
+    }
+
     pNetIf = _TCPIPStackHandleToNet(pPkt->netIfH);
     if(pNetIf == 0)
     {
@@ -1699,26 +1721,26 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
     }
 
     // check valid interface
-    pNetIf = TCPIP_IPV4_CheckPktTx(pPkt->netIfH, &pPkt->macPkt);
+    pNetIf = TCPIP_IPV4_CheckPktTx(pPkt->netIfH, pMacPkt);
     if(pNetIf == 0)
     {   // cannot transmit over invalid interface
         return false;
     }
 
 
-    pPkt->macPkt.pktIf = pNetIf;
+    pMacPkt->pktIf = pNetIf;
 
     // properly format the packet
-    TCPIP_PKT_PacketMACFormat(&pPkt->macPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
+    TCPIP_PKT_PacketMACFormat(pMacPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
     if(destType != TCPIP_IPV4_DEST_SELF)
     {   // get the payload w/o the MAC frame
-        pktPayload = TCPIP_PKT_PayloadLen(&pPkt->macPkt) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        pktPayload = TCPIP_PKT_PayloadLen(pMacPkt) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
         linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
         if(pktPayload > linkMtu)
         {
 #if (_TCPIP_IPV4_FRAGMENTATION != 0)
-            IPV4_HEADER* pHdr = (IPV4_HEADER*)pPkt->macPkt.pNetLayer;
-            if(pHdr->FragmentInfo.DF != 0 || !TCPIP_IPV4_FragmentTxPkt(pPkt, linkMtu, pktPayload))
+            IPV4_HEADER* pHdr = (IPV4_HEADER*)pMacPkt->pNetLayer;
+            if(pHdr->FragmentInfo.DF != 0 || !TCPIP_IPV4_FragmentTxPkt(pMacPkt, linkMtu, pktPayload))
             {   // no fragments or failed to build the fragments; out of memory
                 return false;
             }
@@ -1729,11 +1751,11 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
         }
     }
 
-    TCPIP_PKT_FlightLogTx(&pPkt->macPkt, TCPIP_THIS_MODULE_ID);
+    TCPIP_PKT_FlightLogTx(pMacPkt, TCPIP_THIS_MODULE_ID);
 
     if(destType == TCPIP_IPV4_DEST_SELF)
     {
-        TCPIP_IPV4_FragmentTxInsertToRx(pNetIf, &pPkt->macPkt, TCPIP_MAC_PKT_FLAG_UNICAST, true);
+        TCPIP_IPV4_FragmentTxInsertToRx(pNetIf, pMacPkt, TCPIP_MAC_PKT_FLAG_UNICAST, true);
         return true;
     }
 
@@ -1750,23 +1772,23 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
             }
         }
 
-        if(!TCPIP_IPV4_QueueArpPacket(pPkt, _TCPIPStackNetIxGet(pNetIf), IPV4_ARP_PKT_TYPE_TX, &arpTarget))
+        if(!TCPIP_IPV4_QueueArpPacket(arpPkt, _TCPIPStackNetIxGet(pNetIf), arpType, &arpTarget))
         {
             return false;
         }
 
         // ARP notification will be received: either TMO or resolved
         // mark packet as queued 
-        pPkt->macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
+       pMacPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
         return true;
     }
 
   
     // MAC sets itself the TCPIP_MAC_PKT_FLAG_QUEUED
-    txRes = TCPIP_IPV4_TxMacPkt(pNetIf, &pPkt->macPkt);
+    txRes = TCPIP_IPV4_TxMacPkt(pNetIf, pMacPkt);
     if(txRes == false)
     {
-        TCPIP_IPV4_FragmentTxAcknowledge(&pPkt->macPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR, IPV4_FRAG_TX_ACK_FRAGS);
+        TCPIP_IPV4_FragmentTxAcknowledge(pMacPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR, IPV4_FRAG_TX_ACK_FRAGS);
     }
 
     return txRes;
@@ -1866,7 +1888,7 @@ static bool TCPIP_IPV4_QueueArpPacket(void* pPkt, int arpIfIx, IPV4_ARP_PKT_TYPE
     TCPIP_Helper_SingleListTailAdd(&pList->list, (SGL_LIST_NODE*)pEntry);
     TCPIP_Helper_ProtectedSingleListUnlock(pList);
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
-    if(type == IPV4_ARP_PKT_TYPE_TX)
+    if(type == IPV4_ARP_PKT_TYPE_TX || type == IPV4_ARP_PKT_TYPE_MAC)
     {
         _ipv4_arp_stat.txSubmit++;
     }
@@ -1918,6 +1940,16 @@ static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd,
         if(pEntry->type == IPV4_ARP_PKT_TYPE_TX)
         {   // IPV4_PACKET*
             pMacPkt = &pEntry->pTxPkt->macPkt;
+#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+            if(evType >= 0)
+            {
+                _ipv4_arp_stat.txSolved++;
+            }
+#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
+        }
+        else if(pEntry->type == IPV4_ARP_PKT_TYPE_MAC)
+        {   // TCPIP_MAC_PACKET*
+            pMacPkt = pEntry->pMacPkt;
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_ARP_QUEUE) != 0)
             if(evType >= 0)
             {
@@ -2717,15 +2749,14 @@ TCPIP_IPV4_FILTER_TYPE TCPIP_IPV4_PacketFilterClear(TCPIP_IPV4_FILTER_TYPE filtT
 //          - the source address is the IP address of the coresponding packet interface (which should be set!) 
 //          - total length and fragment info are converted to network order
 //          - data segment is re-adjusted with the IPv4 header length
-// MAC header:
+// setChecksum:
+//          - if true, the IPv4 header checksum is updated for the IPv4 header
+// MAC header: if setMac == true, then:
 //          - the destination addresses is set as the MAC packet source address
 //          - the source address is the MAC address of the coresponding packet interface (which should be set!) 
 //          - data segment is re-adjusted with the MAC header length
-//
-// setChecksum:
-//          - if true, the IPv4 header checksum is updated for the IPv4 header
 // TCPIP_MAC_PKT_FLAG_TX flag is set
-void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum)
+void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum, bool setMac)
 {
     IPV4_HEADER* pIpv4Hdr;
 
@@ -2748,14 +2779,17 @@ void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum
         pIpv4Hdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pIpv4Hdr, headerLen, 0);
     }
 
-    // set macHdr source and destination
-    TCPIP_MAC_ETHERNET_HEADER* macHdr;
-    macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
+    if(setMac)
+    {   // set macHdr source and destination
+        TCPIP_MAC_ETHERNET_HEADER* macHdr;
+        macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
 
-    memcpy(&macHdr->DestMACAddr, &macHdr->SourceMACAddr, sizeof(TCPIP_MAC_ADDR));
-    memcpy(&macHdr->SourceMACAddr, _TCPIPStack_NetMACAddressGet((TCPIP_NET_IF*)pRxPkt->pktIf), sizeof(TCPIP_MAC_ADDR));
+        memcpy(&macHdr->DestMACAddr, &macHdr->SourceMACAddr, sizeof(TCPIP_MAC_ADDR));
+        memcpy(&macHdr->SourceMACAddr, _TCPIPStack_NetMACAddressGet((TCPIP_NET_IF*)pRxPkt->pktIf), sizeof(TCPIP_MAC_ADDR));
 
-    pRxPkt->pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        pRxPkt->pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_HEADER);
+    }
+
     pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_TX; 
 }
 
@@ -3294,19 +3328,19 @@ static void TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL)
 
 
 // TX packet needs fragmentation; each fragment will contain the IPv4 header and a fragment of data
-static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16_t pktPayload)
+static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu, uint16_t pktPayload)
 {
     int ix;
     IPV4_FRAG_TX_PKT    *pFragTx;
-    TCPIP_MAC_PACKET    *pMacPkt, *pMacNext, *tail;
+    TCPIP_MAC_PACKET    *pFragPkt, *pMacNext, *tail;
     TCPIP_MAC_DATA_SEGMENT* pSeg;
     IPV4_HEADER*        pHdr;
     uint8_t*            pIpv4Load;
     IPV4_FRAGMENT_INFO  fragInfo;
 
-    uint16_t pktHeaderSize = pPkt->macPkt.pTransportLayer - pPkt->macPkt.pMacLayer; 
+    uint16_t pktHeaderSize = pMacPkt->pTransportLayer - pMacPkt->pMacLayer; 
 
-    uint16_t ipv4HeaderSize = pPkt->macPkt.pTransportLayer - pPkt->macPkt.pNetLayer;
+    uint16_t ipv4HeaderSize = pMacPkt->pTransportLayer - pMacPkt->pNetLayer;
     uint16_t ipv4Payload = pktPayload - ipv4HeaderSize;
 
     uint16_t fragSize = (linkMtu - ipv4HeaderSize) & 0xfff8;  // fragments need to be multiple of 8
@@ -3319,8 +3353,8 @@ static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16
     }
 
     // allocate nFrags -1 packets; we already have the 1st
-    pPkt->macPkt.pkt_next = 0;
-    tail = &pPkt->macPkt;
+    pMacPkt->pkt_next = 0;
+    tail = pMacPkt;
     for(ix = 1; ix < nFrags; ix++)
     {
         pFragTx = (IPV4_FRAG_TX_PKT*)TCPIP_PKT_PacketAlloc(sizeof(IPV4_FRAG_TX_PKT), ipv4HeaderSize, TCPIP_MAC_PKT_FLAG_IPV4 | TCPIP_MAC_PKT_FLAG_SPLIT | TCPIP_MAC_PKT_FLAG_TX);
@@ -3329,7 +3363,7 @@ static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16
             TCPIP_PKT_PacketAcknowledgeSet(&pFragTx->macPkt, TCPIP_IPV4_FragmentTxAckFnc, 0);
             pFragTx->fragSeg.segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in packet itself
             // copy the header part: MAC + IPv4
-            memcpy(pFragTx->macPkt.pMacLayer, pPkt->macPkt.pMacLayer, pktHeaderSize);
+            memcpy(pFragTx->macPkt.pMacLayer, pMacPkt->pMacLayer, pktHeaderSize);
             pFragTx->macPkt.pDSeg->segLen = pktHeaderSize;
             
             // link
@@ -3344,10 +3378,10 @@ static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16
 
     if(ix != nFrags)
     {   // couldn't allocate all packet fragments
-        for(pMacPkt = pPkt->macPkt.pkt_next; pMacPkt != 0; pMacPkt = pMacNext)
+        for(pFragPkt = pMacPkt->pkt_next; pFragPkt != 0; pFragPkt = pMacNext)
         {   // deallocate
-            pMacNext = pMacPkt->pkt_next;
-            TCPIP_PKT_PacketFree(pMacPkt);
+            pMacNext = pFragPkt->pkt_next;
+            TCPIP_PKT_PacketFree(pFragPkt);
         } 
 
         return false;
@@ -3355,30 +3389,30 @@ static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16
 
 
     // assemble the fragments
-    pIpv4Load = pPkt->macPkt.pTransportLayer; 
-    for(ix = 0, pMacPkt = &pPkt->macPkt; ix < nFrags; ix++, pMacPkt = pMacPkt->pkt_next)
+    pIpv4Load = pMacPkt->pTransportLayer; 
+    for(ix = 0, pFragPkt = pMacPkt; ix < nFrags; ix++, pFragPkt = pFragPkt->pkt_next)
     {
         uint16_t currFragSize = ix == nFrags - 1 ? lastFragSize : fragSize;
 
         if(ix == 0)
         {   // this is the master/parent packet
-            pSeg = pMacPkt->pDSeg;
+            pSeg = pFragPkt->pDSeg;
             pSeg->segLen = pktHeaderSize + currFragSize;    // truncate size
         }
         else
         {
-            pFragTx = (IPV4_FRAG_TX_PKT*)pMacPkt;
+            pFragTx = (IPV4_FRAG_TX_PKT*)pFragPkt;
             pSeg = &pFragTx->fragSeg;
             pSeg->segLen = pSeg->segSize = currFragSize;
             pSeg->segLoad = pIpv4Load;
-            pMacPkt->pDSeg->next = pSeg;  // link to the 1st data seg to be transmitted
+            pFragPkt->pDSeg->next = pSeg;  // link to the 1st data seg to be transmitted
         }
 
         // adjust the IPv4 header
-        pHdr = (IPV4_HEADER*)pMacPkt->pNetLayer;
+        pHdr = (IPV4_HEADER*)pFragPkt->pNetLayer;
         pHdr->TotalLength = TCPIP_Helper_htons(ipv4HeaderSize + currFragSize);
         fragInfo.val = 0;
-        fragInfo.fragOffset = (pIpv4Load - pPkt->macPkt.pTransportLayer) / 8; 
+        fragInfo.fragOffset = (pIpv4Load - pMacPkt->pTransportLayer) / 8; 
         if(ix != nFrags - 1)
         {
             fragInfo.MF = 1;
