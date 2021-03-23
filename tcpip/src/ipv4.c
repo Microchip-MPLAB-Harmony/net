@@ -1685,6 +1685,9 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
     IPV4_ARP_PKT_TYPE arpType;
     uint16_t        pktPayload, linkMtu;
     bool            txRes;
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+    bool            isFragmented = false;
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
     
     if(isPersistent)
     {
@@ -1744,6 +1747,10 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
             {   // no fragments or failed to build the fragments; out of memory
                 return false;
             }
+            else
+            {
+                isFragmented = true;
+            }
 #else
             // MAC transmit will fail anyway
             return false;
@@ -1786,10 +1793,13 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
   
     // MAC sets itself the TCPIP_MAC_PKT_FLAG_QUEUED
     txRes = TCPIP_IPV4_TxMacPkt(pNetIf, pMacPkt);
-    if(txRes == false)
-    {
+
+#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+    if(txRes == false && isFragmented)
+    {   // ack only fragments created here
         TCPIP_IPV4_FragmentTxAcknowledge(pMacPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR, IPV4_FRAG_TX_ACK_FRAGS);
     }
+#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
     return txRes;
 }
