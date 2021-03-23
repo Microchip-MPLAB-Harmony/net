@@ -272,7 +272,9 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 	TCPIP_MAC_RES		initRes;	
 	GMAC_QUE_LIST		queueIdx;	
 	GMAC_RX_FILTERS		gmacRxFilt;
-	
+    uint16_t max_tx_desc = 0;
+    uint16_t max_rx_desc = 0;
+    
 	macIx = _GmacIdToIndex(index);
 	
 	if(macIx < 0 )
@@ -337,11 +339,30 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_RX);
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_TX);
     
+
 	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
 	{
 		if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt < DRV_GMAC_MIN_TX_DESCRIPTORS)
 		{
 			return SYS_MODULE_OBJ_INVALID; //return invalid than setting min dscp count
+		}
+        if (queueIdx)
+        {
+            max_tx_desc = DRV_GMAC_MAX_TX_DESCRIPTORS_QUEx;
+            max_rx_desc = DRV_GMAC_MAX_RX_DESCRIPTORS_QUEx;
+        }
+        else
+        {
+            max_tx_desc = DRV_GMAC_MAX_TX_DESCRIPTORS_QUE0;
+            max_rx_desc = DRV_GMAC_MAX_RX_DESCRIPTORS_QUE0;
+        }
+        if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt > max_tx_desc)
+		{
+			return SYS_MODULE_OBJ_INVALID; //return invalid
+		}
+        if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt > max_rx_desc)
+		{
+			return SYS_MODULE_OBJ_INVALID; //return invalid
 		}
 		if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize < DRV_GMAC_MIN_RX_SIZE)
 		{
@@ -1197,10 +1218,10 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
 			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
 			pMacParams->linkMtu = TCPIP_MAC_LINK_MTU_ETH;
-            pMacParams->checksumOffloadRx = DRV_GMAC_RX_CHKSM_OFFLOAD;
-            pMacParams->checksumOffloadTx = DRV_GMAC_TX_CHKSM_OFFLOAD;
-            pMacParams->macTxPrioNum = TCPIP_GMAC_TX_PRIO_COUNT;
-            pMacParams->macRxPrioNum = TCPIP_GMAC_RX_PRIO_COUNT;
+            pMacParams->checksumOffloadRx = pMACDrv->sGmacData.gmacConfig.checksumOffloadRx;
+            pMacParams->checksumOffloadTx = pMACDrv->sGmacData.gmacConfig.checksumOffloadTx;
+            pMacParams->macTxPrioNum = pMACDrv->sGmacData.gmacConfig.macTxPrioNum;
+            pMacParams->macRxPrioNum = pMACDrv->sGmacData.gmacConfig.macRxPrioNum;
 		}
 
 		return TCPIP_MAC_RES_OK;

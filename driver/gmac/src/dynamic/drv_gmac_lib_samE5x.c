@@ -64,8 +64,8 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
 //GMAC TX and RX Descriptor structure with multiple Queues	
 typedef struct
 {
-	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue0[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0];    
-    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue0[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0];    
+	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue0[DRV_GMAC_MAX_TX_DESCRIPTORS_QUE0];    
+    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue0[DRV_GMAC_MAX_RX_DESCRIPTORS_QUE0];    
 } DRV_PIC32CGMAC_HW_DCPT_ARRAY ;   
 
 // place the descriptors in 8-byte aligned memory region
