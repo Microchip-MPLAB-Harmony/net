@@ -659,13 +659,10 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     ipv4Pkt.netIfH = pNetIf;
     
     if(!TCPIP_IPV4_PktTx(&ipv4Pkt, pRxPkt, false))
-    {   // failed; discard the segments
+    {   // failed; discard the segments (these are RX MAC buffers)
         for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
         {
-            if((pFragPkt->pktFlags & TCPIP_MAC_PKT_FLAG_QUEUED) == 0)
-            {
-                TCPIP_PKT_PacketAcknowledge(pFragPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR);
-            }
+            TCPIP_PKT_PacketAcknowledge(pFragPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR);
         }
         return false;
     }
