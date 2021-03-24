@@ -1341,7 +1341,7 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pRxBuffQueueNode;
     TCPIP_MAC_PACKET* pRxPkt;
     GMAC_QUE_LIST queueIdx;
-	uint8_t index = 0;
+	uint16_t index = 0;
     
 	//free all the Rx packets linked to New and Ack Queues.
 	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
@@ -1387,7 +1387,7 @@ static void _MacTxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 {
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxQueueNode;
     GMAC_QUE_LIST queueIdx;
-	uint8_t desc_idx = 0;
+	uint16_t desc_idx = 0;
     
 	//free all the x packets linked to New and Ack Queues.
 	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
@@ -1437,7 +1437,7 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx
 {
 	TCPIP_MAC_PACKET* pPkt;
 	DRV_PIC32CGMAC_SGL_LIST_NODE* tx_queue_node;
-    uint8_t desc_idx;
+    uint16_t desc_idx;
 
     
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk; 

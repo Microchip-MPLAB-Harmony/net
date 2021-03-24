@@ -305,7 +305,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
 	DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pRxBuffQueueNode;
 	uint16_t nRxDescCnt = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt;	
-	uint8_t desc_idx = start_index;
+	uint16_t desc_idx = start_index;
 
 	while (nDesc_Cnt--)
 	{
@@ -363,7 +363,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv) 
 {	   
 	DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
-    uint8_t queue_idx, desc_idx;
+    uint8_t queue_idx;
+	uint16_t desc_idx;
     TCPIP_MAC_PACKET **pRxPcktAlloc;
 	
 	for(queue_idx=0; queue_idx < DRV_GMAC_NUMBER_OF_QUEUES; queue_idx++)
@@ -507,7 +508,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
  *****************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv) 
 {
-	uint8_t queue_idx, desc_idx;
+	uint8_t queue_idx;
+	uint16_t desc_idx;
 	DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pNewQueueNode;
 	
@@ -1647,7 +1649,7 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
 	TCPIP_MAC_PACKET* pRxPkt;
     DRV_PIC32CGMAC_RESULT gmacAllocRes = DRV_PIC32CGMAC_RES_OK;
     DRV_PIC32CGMAC_SGL_LIST_NODE*   pRxBuffQueueNode;
-	uint8_t rxbuff_idx;
+	uint16_t rxbuff_idx;
 	
 	for(rxbuff_idx=0; rxbuff_idx < buffer_count; rxbuff_idx++)
 	{    

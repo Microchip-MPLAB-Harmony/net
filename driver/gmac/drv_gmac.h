@@ -126,7 +126,7 @@ typedef struct
  */
 typedef struct
 {
-    uint8_t   queueIndex; 
+    uint8_t queueIndex; 
     uint8_t dstcEnable;
     uint8_t dstcValue;
     uint8_t udpEnable;
@@ -146,7 +146,7 @@ typedef enum
  */
 typedef struct
 {
-    uint8_t   queueIndex; 
+    uint8_t queueIndex; 
     
     uint8_t vlanPrioEnable;
     uint8_t vlanPrio;
