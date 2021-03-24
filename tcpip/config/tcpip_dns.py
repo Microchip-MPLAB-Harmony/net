@@ -118,19 +118,12 @@ def instantiateComponent(tcpipDnsComponent):
     tcpipDnscCacheTtlTime.setDescription("Default Time-To-Live time in Seconds")
     tcpipDnscCacheTtlTime.setDefaultValue(1200)
 
-    # Time-out for an Unsolved Entry in the Cache
-    tcpipDnscCacheUnsolvedEntryTimeout = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO", tcpipDnscAdvSettings)
-    tcpipDnscCacheUnsolvedEntryTimeout.setLabel("Unsolved Cache Entry Timeout (in sec)")
-    tcpipDnscCacheUnsolvedEntryTimeout.setVisible(True)
-    tcpipDnscCacheUnsolvedEntryTimeout.setDescription("Time-out for an Unsolved Entry in the Cache; Should be greater than Retry Unsolved Cache Entry Timeout")
-    tcpipDnscCacheUnsolvedEntryTimeout.setDefaultValue(10)
-
     # Retry Lookup Host name after Time-out
     tcpipDnscLookupRetryTimeout = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO", tcpipDnscAdvSettings)
     tcpipDnscLookupRetryTimeout.setLabel("Retry Unsolved Cache Entry Timeout (in sec)")
     tcpipDnscLookupRetryTimeout.setVisible(True)
     tcpipDnscLookupRetryTimeout.setDescription("Timeout to Retry Unsolved Cache Entry; Should be less than Unsolved Cache Entry Timeout")
-    tcpipDnscLookupRetryTimeout.setDefaultValue(5)
+    tcpipDnscLookupRetryTimeout.setDefaultValue(2)
     
     # Delete Old Entries
     tcpipDnscDeleteOldEntry= tcpipDnsComponent.createBooleanSymbol("TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES", tcpipDnscAdvSettings)

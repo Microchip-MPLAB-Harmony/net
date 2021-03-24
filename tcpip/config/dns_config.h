@@ -105,11 +105,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Default value: 1 - 2 seconds
 #define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO      (2)
 
-// Time to solve a name on an interface, in seconds.
-// Obsolete! No longer in use.
-#define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO      (10)
-
-
 // Max DNS host name size
 // Use an appropriate value, depending on the names that need to be solved
 #define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN       (64)
