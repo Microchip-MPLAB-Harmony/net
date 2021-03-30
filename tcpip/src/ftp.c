@@ -77,7 +77,7 @@ static const char * const sTCPIPFTPCmdString[] =
     "MLSD",                         // TCPIP_FTP_CMD_MLSD
     "DELE",                         // TCPIP_FTP_CMD_DELE
     "NOOP",                         // TCPIP_FTP_CMD_NOOP
-    "MKD",                          // TCPIP_FTP_CMD_MKD
+    "MKD ",                         // TCPIP_FTP_CMD_MKD
     "XMKD",                         // TCPIP_FTP_CMD_XMKD
     "XRMD",                         // TCPIP_FTP_CMD_XRMD
     ""
@@ -498,6 +498,7 @@ static void TCPIP_FTP_ServerProcess(void)
     int         nServers;
     uint32_t    currentTick;
     TCPIP_FTP_DCPT* pFTPDcpt;
+    bool disconRes;
 
     for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
     {
@@ -507,23 +508,28 @@ static void TCPIP_FTP_ServerProcess(void)
             continue;
         }
 
-        if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpCmdskt) )
+        if((NET_PRES_SocketWasDisconnected(pFTPDcpt->ftpCmdskt))
+                || (NET_PRES_SocketWasReset(pFTPDcpt->ftpCmdskt)))
         {
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
-            pFTPDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
-            pFTPDcpt->ftpFlag.val = 0;
-            pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
-            if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
-            {
-                _FTP_ReleaseDataSocket(pFTPDcpt);  
+            if((disconRes = NET_PRES_SocketDisconnect(pFTPDcpt->ftpCmdskt)) == true)
+            {              
+                pFTPDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
+                pFTPDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
+                pFTPDcpt->ftpFlag.val = 0;
+                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
+                if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
+                {
+                    _FTP_ReleaseDataSocket(pFTPDcpt);  
+                }
+                // close the file descriptor when the connection is getting closed 
+                // during file transfer
+                if(pFTPDcpt->fileDescr != SYS_FS_HANDLE_INVALID)
+                {
+                    pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+                }
             }
-            // close the file descriptor when the connection is getting closed 
-            // during file transfer
-            if(pFTPDcpt->fileDescr != SYS_FS_HANDLE_INVALID)
-            {
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
-                pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-            }
+            
             continue;
         }
 
@@ -1680,14 +1686,51 @@ static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
     return false;
 }
 
+static TCPIP_FTP_RESP TCPIP_FTP_CMDLowerCase(char *upperCmd , char *lowerCmd )
+{
+    int i=0;
+    
+    if(upperCmd == NULL)
+    {
+        return TCPIP_FTP_COMMAND_UNKNOWN;
+    }
+    
+    for(i=0;i<=strlen(upperCmd);i++)
+    {
+      if(upperCmd[i]>=65&&upperCmd[i]<=90)
+      {
+         lowerCmd[i]=upperCmd[i]+32;
+      }
+    }
+
+    return  TCPIP_FTP_RESP_OK;
+}
+
 static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(uint8_t *cmd)
 {
     TCPIP_FTP_CMD i;
+    char lowerCommandStr[5];
 
     for ( i = 0; i < (TCPIP_FTP_CMD)TCPIP_FTP_CMD_TBL_SIZE; i++ )
     {
-        if ( !memcmp((void*)cmd, (const void*)sTCPIPFTPCmdString[i], strlen((char*)cmd)) )
+        // check the incoming command with upper case command
+        if(!memcmp((void*)cmd, (const void*)sTCPIPFTPCmdString[i], strlen((char*)cmd)))
+        {
+            // return the valid FTP number command 
             return i;
+        }
+        // memset the local command string array
+        memset(lowerCommandStr,0,sizeof(lowerCommandStr));
+        //get the lowercase command for the upper case global command table sTCPIPFTPCmdString[]
+        if(TCPIP_FTP_CMDLowerCase((char*)sTCPIPFTPCmdString[i],(char*)lowerCommandStr)!= TCPIP_FTP_RESP_OK)
+        {
+            return TCPIP_FTP_CMD_UNKNOWN;
+        }
+        // check the lowercase command 
+        if(!memcmp((void*)cmd, (const void*)lowerCommandStr, strlen((char*)cmd)))
+        {
+            return i;
+        }
     }
 
     return TCPIP_FTP_CMD_UNKNOWN;
@@ -1715,23 +1758,23 @@ static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt)
     {
         switch(smParseFTP)
         {
-        case SM_FTP_PARSE_PARAM:
-            if ( v == ' ' || v == ',' || v=='|')
-            {
-                *p = '\0';
-                smParseFTP = SM_FTP_PARSE_SPACE;
-            }
-            else if ( v == '\r' || v == '\n' )
-                *p = '\0';
-            break;
+            case SM_FTP_PARSE_PARAM:
+                if ( v == ' ' || v == ',' || v=='|')
+                {
+                    *p = '\0';
+                    smParseFTP = SM_FTP_PARSE_SPACE;
+                }
+                else if ( v == '\r' || v == '\n' )
+                    *p = '\0';
+                break;
 
-        case SM_FTP_PARSE_SPACE:
-            if (( v != ' ' ) && (v != '|'))
-            {
-                pFTPDcpt->ftp_argv[pFTPDcpt->ftp_argc++] = (uint8_t*)p;
-                smParseFTP = SM_FTP_PARSE_PARAM;
-            }
-            break;
+            case SM_FTP_PARSE_SPACE:
+                if (( v != ' ' ) && (v != '|'))
+                {
+                    pFTPDcpt->ftp_argv[pFTPDcpt->ftp_argc++] = (uint8_t*)p;
+                    smParseFTP = SM_FTP_PARSE_PARAM;
+                }
+                break;
         }
         p++;
         if(pFTPDcpt->ftp_argc == TCPIP_FTP_MAX_ARGS)

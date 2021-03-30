@@ -176,6 +176,7 @@ typedef enum _TCPIP_FTP_RESP
     TCPIP_FTP_RESP_FILESYSTEM_FAIL,
     TCPIP_FTP_RESP_SYST,
     TCPIP_FTP_FILE_ACTION_OK,
+    TCPIP_FTP_COMMAND_UNKNOWN,
     TCPIP_FTP_RESP_NONE ,   // This must always be the last
                             // There is no corresponding string.
 } TCPIP_FTP_RESP;
