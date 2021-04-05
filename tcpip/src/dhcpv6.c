@@ -205,7 +205,7 @@ static const TCPIP_DHCPV6_MSG_TRANSMIT_BOUNDS dhcpv6MessageBoundsTbl[TCPIP_DHCPV
 
 // complete DHCPV6 messages option mask
 // contains all the options that could be part of the messages
-static const TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
+static TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
 {
     {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_SOLICIT
         1,
@@ -341,115 +341,7 @@ static TCPIP_DHCPV6_OPTION_MASK_SET_3       DHCPV6_ORO_OPTION_MASK_TBL =
 
 // default/current  DHCPV6 messages option mask
 // could be changed by the user
-static TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_CURR_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
-{
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_SOLICIT
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_REQUEST
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_SERVER_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_CONFIRM
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_RENEW
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_SERVER_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_REBIND
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_RELEASE
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_SERVER_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_DECLINE
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_SERVER_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_NA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_IA_TA) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-    {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_INFO_REQUEST
-        1,
-        {
-            (
-             (1 << TCPIP_DHCPV6_OPT_CODE_CLIENT_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_SERVER_ID) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_OPTION_REQ) |
-             (1 << TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME)
-            ),
-        }
-    },
-
-};
+static TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_CURR_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] = {};
 
 
 // state processing function
@@ -1231,7 +1123,9 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
 {
     int     netIx;
     TCPIP_DHCPV6_CLIENT_DCPT*   pClient;
-
+    TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskOpt = DHCPV6_MSG_OPTION_MASK_TBL;
+    TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskCurrOpt = DHCPV6_MSG_OPTION_CURR_MASK_TBL;
+    
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         {
@@ -1287,6 +1181,16 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
         {
             return false;
         }
+    }
+    
+    // copying the default DHCPV6_MSG_OPTION_MASK_TBL content to DHCPV6_MSG_OPTION_CURR_MASK_TBL
+    if(pMsgMaskOpt != NULL && pMsgMaskCurrOpt != NULL)
+    {
+        memcpy(pMsgMaskCurrOpt,pMsgMaskOpt,sizeof(DHCPV6_MSG_OPTION_CURR_MASK_TBL));
+    }
+    else
+    {
+    	return false;
     }
 
 
