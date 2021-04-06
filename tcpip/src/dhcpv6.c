@@ -1185,16 +1185,8 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
     TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskCurrOpt = DHCPV6_MSG_OPTION_CURR_MASK_TBL;
     
     // copying the default DHCPV6_MSG_OPTION_MASK_TBL content to DHCPV6_MSG_OPTION_CURR_MASK_TBL
-    if(pMsgMaskOpt != NULL && pMsgMaskCurrOpt != NULL)
-    {
-        memcpy(pMsgMaskCurrOpt,pMsgMaskOpt,sizeof(DHCPV6_MSG_OPTION_CURR_MASK_TBL));
-    }
-    else
-    {
-    	return false;
-    }
-
-
+    memcpy(pMsgMaskCurrOpt,pMsgMaskOpt,sizeof(DHCPV6_MSG_OPTION_CURR_MASK_TBL));
+    
 
     if(dhcpv6InitCount == 0)
     {   // first time we're run
