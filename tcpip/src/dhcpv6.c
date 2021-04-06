@@ -205,7 +205,7 @@ static const TCPIP_DHCPV6_MSG_TRANSMIT_BOUNDS dhcpv6MessageBoundsTbl[TCPIP_DHCPV
 
 // complete DHCPV6 messages option mask
 // contains all the options that could be part of the messages
-static TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
+static const TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
 {
     {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_SOLICIT
         1,
@@ -1123,8 +1123,6 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
 {
     int     netIx;
     TCPIP_DHCPV6_CLIENT_DCPT*   pClient;
-    TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskOpt = DHCPV6_MSG_OPTION_MASK_TBL;
-    TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskCurrOpt = DHCPV6_MSG_OPTION_CURR_MASK_TBL;
     
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
@@ -1182,6 +1180,9 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
             return false;
         }
     }
+    
+    const TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskOpt = DHCPV6_MSG_OPTION_MASK_TBL;
+    TCPIP_DHCPV6_OPTION_MASK_SET_0* pMsgMaskCurrOpt = DHCPV6_MSG_OPTION_CURR_MASK_TBL;
     
     // copying the default DHCPV6_MSG_OPTION_MASK_TBL content to DHCPV6_MSG_OPTION_CURR_MASK_TBL
     if(pMsgMaskOpt != NULL && pMsgMaskCurrOpt != NULL)
