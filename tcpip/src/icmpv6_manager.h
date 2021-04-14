@@ -54,7 +54,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //*************
 #define ICMPV6_CHECKSUM_OFFSET                          2u
 
-typedef struct __attribute__((__packed__))
+typedef struct __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vCode;
@@ -62,7 +62,7 @@ typedef struct __attribute__((__packed__))
     uint32_t Reserved;
 } ICMPV6_HEADER_ROUTER_SOLICITATION;
 
-typedef struct __attribute__((__packed__))
+typedef struct __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vCode;
@@ -79,7 +79,7 @@ typedef struct __attribute__((__packed__))
     uint32_t retransTime;
 } ICMPV6_HEADER_ROUTER_ADVERTISEMENT;
 
-typedef struct  __attribute__((__packed__))
+typedef struct  __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vCode;
@@ -88,7 +88,7 @@ typedef struct  __attribute__((__packed__))
     IPV6_ADDR aTargetAddress;
 } ICMPV6_HEADER_NEIGHBOR_SOLICITATION;
 
-typedef struct  __attribute__((__packed__))
+typedef struct  __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vCode;
@@ -109,7 +109,7 @@ typedef struct  __attribute__((__packed__))
     IPV6_ADDR aTargetAddress;
 } ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT;
 
-typedef struct __attribute__((__packed__))
+typedef struct __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vCode;

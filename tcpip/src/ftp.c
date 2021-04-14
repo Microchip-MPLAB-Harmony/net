@@ -647,6 +647,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
     uint32_t fileSize=0;
     char tempMsg[10];
     SYS_FS_SHELL_RES fsWrapperRes;
+    char ftpMsg[SYS_FS_FILE_NAME_LEN + 18]; // 18 characters for extra parameter
 
     switch(cmd)
     {
@@ -694,7 +695,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 
         case TCPIP_FTP_CMD_FEAT:
             {
-                char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
                 memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"211-features:\r\n");
                 if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
@@ -757,7 +757,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_PWD:
         {
             char cwd[SYS_FS_FILE_NAME_LEN+1];
-            char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
             SYS_FS_SHELL_RES shellRes;
             memset(cwd,0,sizeof(cwd));
             // Get current directory -
@@ -784,8 +783,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 
         case TCPIP_FTP_CMD_CWD:
         {          
-            char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
-
             // check if the CWD is Same as the LOCAL_WEBSITE_PATH
             // change the directory to root path and then change path
             

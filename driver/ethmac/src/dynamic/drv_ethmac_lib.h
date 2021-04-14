@@ -927,10 +927,10 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus (DRV_ETHMAC_INSTANCE_DCPT* pMa
     <p>Replaces:<p><c><b>DRV_ETHMAC_RESULT EthTxGetPacketStatus(const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat)</b></c>
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetPacketStatus(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat);
+// DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetPacketStatus(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat);
 
 // DOM-IGNORE-BEGIN
-extern __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxGetPacketStatus(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat)
+static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxGetPacketStatus(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, const DRV_ETHMAC_PKT_STAT_TX** pTxStat)
 {
     return  DRV_ETHMAC_LibTxGetBufferStatus(pMacD, pPkt?pPkt->pBuff:0, pTxStat);
 }
@@ -1064,10 +1064,10 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgeBuffer (DRV_ETHMAC_INSTANCE_DCPT* p
     <p>Replaces:<p><c><b>DRV_ETHMAC_RESULT EthTxAcknowledgePacket(const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )</b></c>
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam );
+// DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam );
 
 // DOM-IGNORE-BEGIN
-extern __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )
+static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibTxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )
 {
     return  DRV_ETHMAC_LibTxAcknowledgeBuffer(pMacD, pPkt?pPkt->pBuff:0, ackFnc, fParam);
 }
@@ -1190,10 +1190,10 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer (DRV_ETHMAC_INSTANCE_DCPT* p
     <p>Replaces:<p><c><b>DRV_ETHMAC_RESULT EthRxAcknowledgePacket ( const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )</b></c>
  *****************************************************************************/
 
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgePacket (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam );
+// DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgePacket (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam );
 
 // DOM-IGNORE-BEGIN
-extern __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibRxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )
+static __inline__ DRV_ETHMAC_RESULT __attribute__((always_inline)) DRV_ETHMAC_LibRxAcknowledgePacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const DRV_ETHMAC_PKT_DCPT* pPkt, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam )
 {
     return DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pPkt?pPkt->pBuff:0, ackFnc, fParam);
 }

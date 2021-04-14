@@ -657,7 +657,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
     uint8_t         *pMemoryBlock;
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t i=0;
-    uint8_t nullval=0;
+    const IPV6_ADDR ipv6_addr_unspecified = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
 #endif
     pDnsSDcpt = &gDnsSrvDcpt;
     if((hostName == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
@@ -708,7 +708,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
         if(dnsSHE->pip6Address == 0)
             return TCPIP_DNSS_RES_NO_ENTRY;
 
-        if(memcmp(dnsSHE->pip6Address[i].v,&nullval,sizeof(IPV6_ADDR)) != 0)
+        if(memcmp(dnsSHE->pip6Address[i].v, ipv6_addr_unspecified.v, sizeof(IPV6_ADDR)) != 0)
         {
             memcpy(pGetAdd->v6Add.v,dnsSHE->pip6Address[i].v,sizeof(IPV6_ADDR));
         }

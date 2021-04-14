@@ -86,7 +86,7 @@ typedef struct
     TCPIP_MAC_ADDR mLinkLayerAddr;
 } NDP_OPTION_LLA;
 
-typedef struct __attribute__((__packed__))
+typedef struct __attribute__((aligned(2), __packed__))
 {
     uint8_t vType;
     uint8_t vLength;

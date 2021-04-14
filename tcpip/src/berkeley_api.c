@@ -49,6 +49,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 __attribute__((section(".bss.errno"))) int errno = 0;           // initialization required to provide definition
 #include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
 #else
+#include <errno.h>
 #include <sys/errno.h>
 #endif
 

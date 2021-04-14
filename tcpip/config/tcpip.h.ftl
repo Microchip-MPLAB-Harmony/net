@@ -247,7 +247,7 @@ typedef enum
     None.
 */
 
-typedef struct __attribute__((__packed__)) _IPV6_ADDR_STRUCT
+typedef struct __attribute__((aligned(2), packed)) _IPV6_ADDR_STRUCT
 {
     struct _IPV6_ADDR_STRUCT * next;
     struct _IPV6_ADDR_STRUCT * prev;

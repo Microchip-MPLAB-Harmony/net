@@ -312,7 +312,7 @@ typedef enum
 
 // generic DHCPv6 message header
 //
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     msg_type;       // a TCPIP_DHCPV6_MSG_TYPE value
     uint8_t     transId[3];     // transaction ID
@@ -331,7 +331,7 @@ typedef struct __attribute__((packed))
 #define TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN      20
 
 // DUID based on Link Layer + time: DUID-LLT
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LLT
     uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
@@ -349,7 +349,7 @@ typedef struct __attribute__((packed))
 // we impose a max limit on such identifiers to avoid run time malloc
 #define TCPIP_DHCPV6_DUID_EN_IDENTIFIER_LENGTH      16
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_EN
     uint32_t    ent_number;     // Vendor’s registered Private Enterprise Number as maintained by IANA
@@ -366,7 +366,7 @@ typedef struct __attribute__((packed))
 
 
 // DUID based on Link Layer: DUID-LL
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LL
     uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
@@ -678,7 +678,7 @@ typedef enum
 
 
 // generic option format
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t        optCode;    // identifying the specific option type carried in this option
     uint16_t        optLen;     // length of the option-data field in this option in octets
@@ -687,7 +687,7 @@ typedef struct __attribute__((packed))
 
 
 // Client ID option format
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_CLIENT_ID
     uint16_t                optLen;     // = length of the DUID
@@ -695,7 +695,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_OPTION_CLIENT_ID;
 
 // Server ID option format
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_SERVER_ID
     uint16_t                optLen;     // = length of the server DUID
@@ -703,7 +703,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_OPTION_SERVER_ID;
 
 // Client/Server ID option format
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_CLIENT_ID/ TCPIP_DHCPV6_OPT_CODE_SERVER_ID
     uint16_t                optLen;     // = length of the client/server DUID
@@ -713,7 +713,7 @@ typedef struct __attribute__((packed))
 
 // IA_NA option format
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint32_t                iaid;       // The unique identifier for this IA_NA;
                                         // the IAID must be unique among the identifiers for all of this client’s IA_NAs.
@@ -743,7 +743,7 @@ typedef struct __attribute__((packed))
 
 
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_IA_NA
     uint16_t                        optLen;     // =12 + length of IA_NA-options field
@@ -752,7 +752,7 @@ typedef struct __attribute__((packed))
 
 }TCPIP_DHCPV6_OPTION_IANA;
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint32_t    iaid;       // The unique identifier for this IA_TA;
                             // the IAID must be unique among the identifiers for all of this client’s IA_NAs.
@@ -768,7 +768,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_OPTION_IATA_BODY;
 
 // IA_TA option format
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_IA_TA
     uint16_t                        optLen;     // = 4 + length of IA_TA-options field
@@ -799,7 +799,7 @@ typedef struct
 
 
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                            optCode;        // = TCPIP_DHCPV6_OPT_CODE_IA_ADDR
     uint16_t                            optLen;         // 24 + length of IAaddr-options field
@@ -816,7 +816,7 @@ typedef struct __attribute__((packed))
 // to indicate which options the client should request from the server.
 // NEXT_HOP and RT_PREFIX Options found - https://tools.ietf.org/html/draft-ietf-mif-dhcpv6-route-option-05
 //
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_OPTION_REQ
     uint16_t            optLen;         // 2 * number of requested options.
@@ -829,7 +829,7 @@ typedef struct __attribute__((packed))
 // selection of a server by the client
 // A server MAY include a Preference option in an Advertise message to
 // control the selection of a server by the client
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_PREFERENCE
     uint16_t            optLen;         // 1
@@ -842,7 +842,7 @@ typedef struct __attribute__((packed))
 // A client MUST include an Elapsed Time option in messages to indicate how long
 // the client has been trying to complete a DHCP message exchange.
 //
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_ELAPSED_TIME
     uint16_t            optLen;         // 2
@@ -855,7 +855,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_OPTION_ELAPSED_TIME;
 
 // Relay Message Option
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_RELAY_MSG
     uint16_t            optLen;         // length of the DHCP relay message
@@ -866,7 +866,7 @@ typedef struct __attribute__((packed))
 
 
 // Authentication Option
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_AUTHENTICATE
     uint16_t            optLen;         // 11 + length of authentication information field
@@ -886,7 +886,7 @@ typedef struct __attribute__((packed))
 // the client sends messages directly to the server using the IPv6 address
 // specified in the server-address field of the option.
 // 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_UNICAST
     uint16_t            optLen;         // 16
@@ -897,7 +897,7 @@ typedef struct __attribute__((packed))
 // Status Code Option
 // This option returns a status indication related to the DHCP message
 // or option in which it appears
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_STATUS_CODE
     uint16_t            optLen;         // 2 + length of status-message
@@ -917,7 +917,7 @@ typedef struct __attribute__((packed))
 // point-to-point link). Although the protocol does not necessarily prohibit the use of this option
 // with multiple servers, it would cause problems as discussed in [RFC3315] and is thus inadvisable."
 //  
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_RAPID_COMMIT
     uint16_t            optLen;         // 0
@@ -928,14 +928,14 @@ typedef struct __attribute__((packed))
 // User Class Option
 // The User Class option is used by a client to identify the type or category of user or applications it represents.
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            userClassLen;   // = length of the opaque user class data
     uint8_t             opaqueData[];   // The user classes carried by the client
 
 }TCPIP_DHCPV6_USER_CLASS_DATA;
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_USER_CLASS
     uint16_t                        optLen;             // Length of user class data field
@@ -947,7 +947,7 @@ typedef struct __attribute__((packed))
 // This option is used by a client to identify the vendor that
 // manufactured the hardware on which the client is running
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            vendorClassLen;     // = length of the opaque vendor class data
     uint8_t             opaqueData[];       // The vendor classes carried by the client
@@ -955,7 +955,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_VENDOR_CLASS_DATA;
 
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_VENDOR_CLASS
     uint16_t                        optLen;             // 4 + length of vendor class data field
@@ -971,7 +971,7 @@ typedef struct __attribute__((packed))
 // Each instance of the option is interpreted according to the option codes defined by the vendor identified by the
 // Enterprise Number in that option.
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t            optCode;        // The code for the encapsulated option
     uint16_t            optLen;         // An unsigned integer giving the length of the option-data
@@ -980,7 +980,7 @@ typedef struct __attribute__((packed))
 }TCPIP_DHCPV6_VENDOR_OPTION_DATA;
 
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_VENDOR_OPTS
     uint16_t                        optLen;             // 4 + length of option-data field
@@ -992,7 +992,7 @@ typedef struct __attribute__((packed))
 
 // Interface-Id Option
 // This option MUST NOT appear in any message except a Relay-Forward or Relay-Reply message
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_INTERFACE_ID
     uint16_t                        optLen;             // Length of interface-id field
@@ -1011,7 +1011,7 @@ typedef struct __attribute__((packed))
 // or that does not pass the validation process for the authentication protocol!
 // STATELESS!
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_RECONF_MSG
     uint16_t                        optLen;     // 1
@@ -1023,7 +1023,7 @@ typedef struct __attribute__((packed))
 // A client uses the Reconfigure Accept option to announce to the server whether the client is willing to accept Reconfigure messages
 // A server uses this option to tell the client whether or not to accept Reconfigure messages.
 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_RECONF_ACCEPT
     uint16_t                        optLen;     // 0
@@ -1037,7 +1037,7 @@ typedef struct __attribute__((packed))
 // to which a client’s DNS resolver MAY send DNS queries
 // The DNS servers are listed in the order of preference for use by the client resolver
 //
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_DNS_SERVERS
     uint16_t                        optLen;     // Length of the list of DNS recursive name servers in octets;
@@ -1052,7 +1052,7 @@ typedef struct __attribute__((packed))
 // Specifies the domain search list the client is to use when resolving hostnames with DNS.
 // This option does not apply to other name resolution mechanisms.
 // 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;        // = TCPIP_DHCPV6_OPT_CODE_DOMAIN_LIST
     uint16_t                        optLen;         // Length of the ’searchlist’ field in octets;
@@ -1073,7 +1073,7 @@ typedef struct __attribute__((packed))
 // A DHCPv6 server sends the SOL_MAX_RT option to a client to override
 // the default value of TCPIP_DHCPV6_SOLICIT_MRT (SOL_MAX_RT)
 // 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;        // = TCPIP_DHCPV6_OPT_CODE_MAX_RT
     uint16_t                        optLen;         // 4
@@ -1088,7 +1088,7 @@ typedef struct __attribute__((packed))
 // A server sends the INF_MAX_RT option to a client to override
 // the default value of TCPIP_DHCPV6_INFO_REQ_MRT (INF_MAX_RT).
 // 
-typedef struct __attribute__((packed))
+typedef struct __attribute__((aligned(2), packed))
 {
     uint16_t                        optCode;        // = TCPIP_DHCPV6_OPT_CODE_INFO_MAX_RT
     uint16_t                        optLen;         // 4
