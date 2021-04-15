@@ -741,7 +741,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.ipAddr, (char *)httpDataBuff + 6, sizeof(httpNetData.ipAddr));
+            strncpy(httpNetData.ipAddr, (char *)httpDataBuff + 6, sizeof(httpNetData.ipAddr) - 1);
+            httpNetData.ipAddr[sizeof(httpNetData.ipAddr) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"gw"))
         {// Read new gateway address
@@ -750,7 +751,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.gwIP, (char *)httpDataBuff + 6, sizeof(httpNetData.gwIP));
+            strncpy(httpNetData.gwIP, (char *)httpDataBuff + 6, sizeof(httpNetData.gwIP) - 1);
+            httpNetData.gwIP[sizeof(httpNetData.gwIP) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"sub"))
         {// Read new static subnet
@@ -759,7 +761,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.ipMask, (char *)httpDataBuff + 6, sizeof(httpNetData.ipMask));
+            strncpy(httpNetData.ipMask, (char *)httpDataBuff + 6, sizeof(httpNetData.ipMask) - 1);
+            httpNetData.ipMask[sizeof(httpNetData.ipMask) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"dns1"))
         {// Read new primary DNS server
@@ -768,7 +771,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.dns1IP, (char *)httpDataBuff + 6, sizeof(httpNetData.dns1IP));
+            strncpy(httpNetData.dns1IP, (char *)httpDataBuff + 6, sizeof(httpNetData.dns1IP) - 1);
+            httpNetData.dns1IP[sizeof(httpNetData.dns1IP) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"dns2"))
         {// Read new secondary DNS server
@@ -777,7 +781,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.dns2IP, (char *)httpDataBuff + 6, sizeof(httpNetData.dns2IP));
+            strncpy(httpNetData.dns2IP, (char *)httpDataBuff + 6, sizeof(httpNetData.dns2IP) - 1);
+            httpNetData.dns2IP[sizeof(httpNetData.dns2IP) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"mac"))
         {   // read the new MAC address
@@ -786,11 +791,13 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
                 bConfigFailure = true;
                 break;
             }
-            strncpy(httpNetData.ifMacAddr, (char *)httpDataBuff + 6, sizeof(httpNetData.ifMacAddr));
+            strncpy(httpNetData.ifMacAddr, (char *)httpDataBuff + 6, sizeof(httpNetData.ifMacAddr) - 1);
+            httpNetData.ifMacAddr[sizeof(httpNetData.ifMacAddr) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"host"))
         {   // Read new hostname
-            strncpy(httpNetData.nbnsName, (char *)httpDataBuff + 6, sizeof(httpNetData.nbnsName));
+            strncpy(httpNetData.nbnsName, (char *)httpDataBuff + 6, sizeof(httpNetData.nbnsName) - 1);
+            httpNetData.nbnsName[sizeof(httpNetData.nbnsName) - 1] = 0;
         }
         else if(!strcmp((char *)httpDataBuff, (const char *)"dhcp"))
         {// Read new DHCP Enabled flag
@@ -813,7 +820,8 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostConfig(TCPIP_HTTP_NET_CONN_HANDLE connHa
         }
         // save current interface and mark as valid
         httpNetData.currNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
-        strncpy(httpNetData.ifName, TCPIP_STACK_NetNameGet(httpNetData.currNet), sizeof(httpNetData.ifName));
+        strncpy(httpNetData.ifName, TCPIP_STACK_NetNameGet(httpNetData.currNet), sizeof(httpNetData.ifName) - 1);
+        httpNetData.ifName[sizeof(httpNetData.ifName) - 1] = 0;
     }
     else
     {   // Configuration error
