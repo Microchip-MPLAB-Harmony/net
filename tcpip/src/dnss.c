@@ -614,18 +614,16 @@ static  void _DNSSRemoveCacheEntries(void)
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index,uint8_t * hostName,uint8_t * ipCount)
+TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount)
 {
     DNSS_HASH_ENTRY* pDnsSHE;
     OA_HASH_ENTRY	*hE;
     OA_HASH_DCPT	*pOH;
     DNSS_DCPT*	pDnsSDcpt;
 
-
-    
     pDnsSDcpt = &gDnsSrvDcpt;
     pOH = pDnsSDcpt->dnssHashDcpt;
-    if((hostName == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
+    if((hostName == 0 || hostSize == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
         return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
@@ -638,7 +636,8 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index,uint8_t * hostName,uint8_t 
     if((hE->flags.busy != 0) && (hE->flags.value & DNSS_FLAG_ENTRY_COMPLETE))
     {
        pDnsSHE = (DNSS_HASH_ENTRY*)hE;
-       strncpy((char*)hostName,(char*)pDnsSHE->pHostName,strlen((char*)pDnsSHE->pHostName));
+       strncpy((char*)hostName, (char*)pDnsSHE->pHostName, hostSize - 1);
+       hostName[hostSize - 1] = 0;
        *ipCount = pDnsSHE->nIPv4Entries;
 #if defined(TCPIP_STACK_USE_IPV6)
         *ipCount += pDnsSHE->nIPv6Entries;

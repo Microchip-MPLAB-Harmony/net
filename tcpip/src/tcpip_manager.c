@@ -1752,7 +1752,7 @@ static void _TCPIPStackSetIfNumberName(void)
             TCPIP_NET_IF* pAliasIf;
             for(pAliasIf = _TCPIPStackNetGetAlias(pNetIf), aliasIx = 0; pAliasIf != 0; pAliasIf = _TCPIPStackNetGetAlias(pAliasIf), aliasIx++)
             {
-                snprintf(pAliasIf->ifName, sizeof(pAliasIf->ifName), "%s%d:%d", ifName, ifNumber[pNetIf->macType], aliasIx);
+                snprintf(pAliasIf->ifName, sizeof(pAliasIf->ifName), "%s%d:%d", ifName, ifNumber[pNetIf->macType], aliasIx % 10);
                 pAliasIf->ifName[sizeof(pAliasIf->ifName) - 1] = 0;
             }
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
@@ -3535,7 +3535,7 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
     if(restartIf)
     {   
         // restore the if name
-        strncpy(pNetIf->ifName, oldIfName, sizeof(pNetIf->ifName)); 
+        memcpy(pNetIf->ifName, oldIfName, sizeof(pNetIf->ifName)); 
         // restore MAC config data
         pNetIf->pMacConfig = pMacConfig;
         pNetIf->netIfIx = netIfIx;

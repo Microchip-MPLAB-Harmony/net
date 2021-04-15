@@ -1395,11 +1395,11 @@ TCPIP_MDNS_ServiceRegister( TCPIP_NET_HANDLE netH
 
         strncpy((char*)desc->mSDCtx.srv_name
                 , (char*)srv_name
-                , sizeof(desc->mSDCtx.srv_name));
+                , sizeof(desc->mSDCtx.srv_name) - 1);
 
         strncpy((char*)desc->mSDCtx.srv_type
                 , (char*)srv_type
-                , sizeof(desc->mSDCtx.srv_type));
+                , sizeof(desc->mSDCtx.srv_type) - 1);
 
         desc->mSDCtx.sd_call_back = call_back;
         desc->mSDCtx.sd_context   = context;

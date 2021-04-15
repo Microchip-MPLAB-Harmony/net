@@ -65,7 +65,7 @@ static void                 _DNSPutString(uint8_t **putbuf, const char* string);
 static int                  _DNS_ReadName(TCPIP_DNS_RR_PROCESS* pProc, char* nameBuff, int buffSize);
 static int                  _DNS_ProcessRR(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_RR_PROCESS* pProc, TCPIP_DNS_RR_TYPE rrType);
 static void                 _DNSInitRxData(TCPIP_DNS_RX_DATA* rxData, uint8_t* buffer, int bufferSize);
-static bool                 _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, int bytes);
+static bool                 _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, size_t bytes);
 static bool                 _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE);
 static bool                 _DNS_Enable(TCPIP_NET_HANDLE hNet, bool checkIfUp, TCPIP_DNS_ENABLE_FLAGS flags);
 static void                 _DNS_DeleteHash(TCPIP_DNS_DCPT* pDnsDcpt);
@@ -1609,10 +1609,10 @@ static TCPIP_DNS_HASH_ENTRY* _DNSHashEntryFromTransactionId(TCPIP_DNS_DCPT* pDns
 // returns true if the specified number of bytes could be removed from the source data buffer
 // false otherwise
 // updates the source buffer descriptor
-static bool _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, int getBytes)
+static bool _DNSGetData(TCPIP_DNS_RX_DATA* srcBuff, void *destBuff, size_t getBytes)
 {
-    int avlblBytes = srcBuff->endPtr - srcBuff->rdPtr;
-    int copyBytes = getBytes;
+    size_t avlblBytes = srcBuff->endPtr - srcBuff->rdPtr;
+    size_t copyBytes = getBytes;
 
     if(copyBytes > avlblBytes)
     {

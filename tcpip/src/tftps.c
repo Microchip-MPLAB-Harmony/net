@@ -1123,7 +1123,8 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
     }
 
     temp[count1] = '\0';
-    strncpy((char*)tftp_con->file_name, temp,count1);
+    strncpy((char*)tftp_con->file_name, temp, sizeof(tftp_con->file_name) - 1);
+    tftp_con->file_name[sizeof(tftp_con->file_name) - 1] = 0;
     // increase the count value for the null terminated value
     count++;
     count1 = 0;
@@ -1140,7 +1141,8 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
     }
 
     temp[count1]='\0';
-    strncpy((char*)tftp_con->mode,temp,count1);
+    strncpy((char*)tftp_con->mode, temp, sizeof(tftp_con->mode) - 1);
+    tftp_con->mode[sizeof(tftp_con->mode) - 1] = 0;
     if(strcmp((char*)tftp_con->mode, TCPIP_TFTP_TRANSFERMODE_OCTET))
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_ERROR, "Error: transfer mode is not defined");
@@ -1219,7 +1221,8 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
         return TFTPS_RES_FILE_LENGTH_ERROR;        
     }
     temp[count1] = '\0';
-    strncpy((char*)tftp_con->file_name, temp,count1);
+    strncpy((char*)tftp_con->file_name, temp, sizeof(tftp_con->file_name) - 1);
+    tftp_con->file_name[sizeof(tftp_con->file_name) - 1] = 0;
 
     // increase the count value for the null terminated value
     count++;
@@ -1237,7 +1240,9 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
     }
 
     temp[count1]='\0';
-    strncpy((char*)tftp_con->mode,temp,count1);
+    strncpy((char*)tftp_con->mode, temp, sizeof(tftp_con->mode) - 1);
+    tftp_con->mode[sizeof(tftp_con->mode) - 1] = 0;
+
     if(strcmp((char*)tftp_con->mode, TCPIP_TFTP_TRANSFERMODE_OCTET))
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_ERROR, "Error: transfer mode is not defined");

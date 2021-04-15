@@ -3428,7 +3428,7 @@ static uint16_t _HTTP_PrependStartHttpChunk(char* buffer, uint32_t chunkSize)
 
     if(buffer)
     {
-        strncpy(buffer - hdrLen, chunkHdrBuff, hdrLen);
+        memcpy(buffer - hdrLen, chunkHdrBuff, hdrLen);
     }
 
     return hdrLen;
@@ -3462,7 +3462,7 @@ static uint16_t _HTTP_AppendEndHttpChunk(char* buffer, TCPIP_HTTP_CHUNK_END_TYPE
 
     if(buffer)
     {
-        strncpy(buffer, endStr, trailLen);
+        memcpy(buffer, endStr, trailLen);
     }
 
     return trailLen;
@@ -5532,7 +5532,9 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddDynChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCP
         }
 
         pDynChDcpt->pRootDcpt = pFileChDcpt->pRootDcpt;   // share the same root
+
         strncpy(pDynChDcpt->chunkFName, pFileChDcpt->chunkFName, sizeof(pDynChDcpt->chunkFName) - 1);
+        pDynChDcpt->chunkFName[sizeof(pDynChDcpt->chunkFName) - 1] = 0;
 
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
         if((dataFlags & TCPIP_HTTP_CHUNK_FLAG_TYPE_DATA_SSI) != 0)

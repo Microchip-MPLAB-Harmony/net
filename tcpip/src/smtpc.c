@@ -2219,15 +2219,15 @@ static TCPIP_SMTPC_STATUS smtpClientWriteCmd(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
 
     if(cmdStr == 0)
     {   // output just the arg
-        nBytes = sprintf(sBuff, "%s\r\n", cmdArg); 
+        nBytes = snprintf(sBuff, sizeof(sBuff), "%s\r\n", cmdArg); 
     }
     else if(cmdArg != 0)
     {
-        nBytes = sprintf(sBuff, "%s %s\r\n", cmdStr, cmdArg); 
+        nBytes = snprintf(sBuff, sizeof(sBuff), "%s %s\r\n", cmdStr, cmdArg); 
     }
     else
     {
-        nBytes = sprintf(sBuff, "%s\r\n", cmdStr); 
+        nBytes = snprintf(sBuff, sizeof(sBuff), "%s\r\n", cmdStr); 
     }
 
 

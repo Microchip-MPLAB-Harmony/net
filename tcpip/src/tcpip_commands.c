@@ -343,7 +343,7 @@ static ICMPV6_HANDLE        hIcmpv6 = 0;
 #define TCPIP_COMMAND_ICMP_ECHO_REQUEST_MIN_DELAY 5  // minimum delay between successive echo requests
 
 static char                 icmpTargetHost[31];     // current target host name
-static char                 icmpTargetAddrStr[17];  // current target address string
+static char                 icmpTargetAddrStr[16 + 1]; // current target address string
 static uint16_t             icmpSequenceNo;         // current sequence number
 static uint16_t             icmpIdentifier;         // current ID number
 
@@ -1932,7 +1932,8 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 #if defined(TCPIP_STACK_USE_IPV6)
     if(addrType == IP_ADDRESS_TYPE_IPV6)
     {
-        strncpy((char*)addrBuf,argv[4],strlen(argv[4]));
+        strncpy((char*)addrBuf, argv[4], sizeof(addrBuf) - 1);
+        addrBuf[sizeof(addrBuf) - 1] = 0;
         if (!TCPIP_Helper_StringToIPv6Address((char*)addrBuf, &ipDNS.v6Add)) {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IPv6 address string \r\n");
             return false;
@@ -2023,12 +2024,13 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     IP_MULTI_ADDRESS ipDNS;
     IP_ADDRESS_TYPE addrType;
     uint8_t         *hostName;
-    uint8_t         ipcount=0;
+    size_t          ipcount=0;
     int             index=0;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     TCPIP_DNSS_RESULT res;
     uint32_t    ttlTime=0;
     bool        entryPresent=false;
+    char        hostBuff[16];
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t     addrBuf[44];
 #endif    
@@ -2046,11 +2048,11 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
 
         while(1)
         {
-            res = TCPIP_DNSS_AddressCntGet(index,(uint8_t*)hostName,&ipcount);
+            res = TCPIP_DNSS_AddressCntGet(index, hostBuff, sizeof(hostBuff), &ipcount);
             if(res == TCPIP_DNSS_RES_OK)
             {
                 entryPresent = true;
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %d\r\n",hostName,ipcount);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %d\r\n", hostBuff, ipcount);
             }
             else if(res == TCPIP_DNSS_RES_NO_SERVICE)
             {
@@ -2890,7 +2892,8 @@ static int _CommandPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     // get the host
     if(TCPIP_Helper_StringToIPAddress(argv[1], &icmpTargetAddr))
     {
-        strncpy(icmpTargetAddrStr, argv[1], sizeof(icmpTargetAddrStr));
+        strncpy(icmpTargetAddrStr, argv[1], sizeof(icmpTargetAddrStr) - 1);
+        icmpTargetAddrStr[sizeof(icmpTargetAddrStr) - 1] = 0;
         icmpTargetHost[0] = '\0';
         newCmdStat = TCPIP_PING_CMD_START_PING;
     }
@@ -3107,7 +3110,8 @@ static int _Command_IPv6_Ping(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
 
     if(TCPIP_Helper_StringToIPv6Address(argv[argIx], &icmpv6TargetAddr))
     {
-        strncpy(icmpTargetAddrStr, argv[argIx], sizeof(icmpTargetAddrStr));
+        strncpy(icmpTargetAddrStr, argv[argIx], sizeof(icmpTargetAddrStr) - 1);
+        icmpTargetAddrStr[sizeof(icmpTargetAddrStr) - 1] = 0;
         icmpTargetHost[0] = '\0';
         tcpipCmdStat = TCPIP_SEND_ECHO_REQUEST_IPV6;
         memset(icmpv6TargetAddrStr,0,sizeof(icmpv6TargetAddrStr));

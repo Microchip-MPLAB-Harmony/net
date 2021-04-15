@@ -351,7 +351,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
 //*****************************************************************************
 /*
   Function:
-    TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(uint8_t * hostName,uint8_t * ipCount,int index)
+    TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount);
 
   Summary:
     Get DNS Server IPv4 or IPv4 Address count details for the Input value of Index
@@ -366,9 +366,10 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
     DNSServerInit should be called.
 
   Parameters:
-    hostName - Get DNS host name
-    ipCount  - Get the number of IPv4 or IPv6 Server address
-    index    - Server count details per index value
+    index       - index values to be used
+    hostName    - buffer to hold DNS host name
+    hostSize    - size of the buffer
+    ipCount     - the number of IPv4 or IPv6 Server addresses
 	
   Returns:
     TCPIP_DNSS_RESULT
@@ -376,7 +377,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
   Remarks:
 	None.
 */
-TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index,uint8_t * hostName,uint8_t * ipCount);
+TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount);
 
 // *****************************************************************************
 /*
