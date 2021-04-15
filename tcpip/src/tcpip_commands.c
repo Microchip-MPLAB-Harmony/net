@@ -5222,7 +5222,7 @@ void ftpc_res_print(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_FTPC_RETURN_TYPE res)
 
 static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-
+    int i;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     TCPIP_FTPC_STATUS_TYPE ftpcStatus;
     
@@ -5467,7 +5467,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_ASCII;
         ftpcDataConn.ftpcDataTxBuffSize = 0;
         ftpcDataConn.ftpcDataRxBuffSize = 0;
-        for(uint8_t i =1; i < argc; i++)
+        for(i = 1; i < argc; i++)
         {
             if(strcmp("-a",argv[i])==0)
             {
@@ -5529,7 +5529,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         ftpcDataConn.ftpcDataTxBuffSize = 0;
         ftpcDataConn.ftpcDataRxBuffSize = 0;
         
-        for(uint8_t i =1; i < argc; i++)
+        for(i = 1; i < argc; i++)
         {
             if(strcmp("-a",argv[i])==0)
             {
@@ -5669,7 +5669,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         ftpcDataConn.ftpcDataTxBuffSize = 0;
         ftpcDataConn.ftpcDataRxBuffSize = 0;
         
-        for(uint8_t i =1; i < argc; i++)
+        for(i = 1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
             {
@@ -5720,7 +5720,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         ftpcDataConn.ftpcDataTxBuffSize = 0;
         ftpcDataConn.ftpcDataRxBuffSize = 0;
         
-        for(uint8_t i =1; i < argc; i++)
+        for(i = 1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
             {
