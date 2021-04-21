@@ -5643,7 +5643,7 @@ bool  TCPIP_SNMP_WriteCommunityGet(int index,int len, uint8_t * dest)
     commLen = strlen((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index]);
     minLen= len<commLen?len:commLen;
 
-    strncpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],minLen);
+    memcpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],minLen);
 
     return true;
 }
@@ -5665,7 +5665,7 @@ bool  TCPIP_SNMP_ReadCommunityGet(int index,int len, uint8_t * dest)
     commLen = strlen((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index]);
     minLen= len<commLen?len:commLen;
 
-    strncpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],minLen);
+    memcpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],minLen);
 
     return true;
 }
@@ -5688,7 +5688,7 @@ bool  TCPIP_SNMP_WriteCommunitySet(int index,int len, uint8_t * src)
     commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index])-1;
     minLen= len<commLen?len:commLen;
 
-    strncpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],(char*)src,minLen);
+    memcpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],(char*)src,minLen);
 
     return true;
 }
@@ -5710,7 +5710,7 @@ bool  TCPIP_SNMP_ReadCommunitySet(int index,int len, uint8_t * src)
     commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index])-1;
     minLen= len<commLen?len:commLen;
 
-    strncpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],(char*)src,minLen);
+    memcpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],(char*)src,minLen);
 
     return true;
 }
@@ -5802,9 +5802,8 @@ void TCPIP_SNMP_TrapSpecificNotificationSet(uint8_t specTrap,uint8_t genTrap, SN
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
     snmpStkDcptMemStubPtr->gSpecificTrapNotification = specTrap;
     snmpStkDcptMemStubPtr->gGenericTrapNotification = genTrap;
-//#if defined(SNMP_STACK_USE_V2_TRAP)
     snmpStkDcptMemStubPtr->SNMPNotifyInfo.trapIDVar = trapID;
-//#endif
+
 }
 
 void TCPIP_SNMP_TrapInterFaceSet(TCPIP_NET_HANDLE netIntf)
