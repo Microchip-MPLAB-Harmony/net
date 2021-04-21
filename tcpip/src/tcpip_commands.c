@@ -6236,19 +6236,19 @@ static void _CommandBridgeEventHandler(TCPIP_MAC_BRIDGE_EVENT evType, const void
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_PKT_ALLOC:
-            sprintf(evBuff, "%s, packets: %lu\r\n", "fail alloc", (size_t)param);
+            sprintf(evBuff, "%s, packets: %u\r\n", "fail alloc", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_DCPT_ALLOC:
-            sprintf(evBuff, "%s, descriptors: %lu\r\n", "fail alloc", (size_t)param);
+            sprintf(evBuff, "%s, descriptors: %u\r\n", "fail alloc", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_MTU:
-            sprintf(evBuff, "%s, size: %lu\r\n", "fail MTU", (size_t)param);
+            sprintf(evBuff, "%s, size: %u\r\n", "fail MTU", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_SIZE:
-            sprintf(evBuff, "%s, size: %lu\r\n", "fail Size", (size_t)param);
+            sprintf(evBuff, "%s, size: %u\r\n", "fail Size", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_PKT_POOL_EMPTY:

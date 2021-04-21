@@ -2040,7 +2040,7 @@ def tcpipHeapCalc():
     # DHCPV6 Client    
     if((Database.getSymbolValue("tcpipDhcpcv6", "TCPIP_STACK_USE_DHCPV6_CLIENT") == True)): 
         if(Database.getSymbolValue("tcpipDhcpcv6","TCPIP_DHCPCV6_HEAP_SIZE") != None):
-            heapsize = heapsize + Database.getSymbolValue("tcpipDhcp","TCPIP_DHCPCV6_HEAP_SIZE")
+            heapsize = heapsize + Database.getSymbolValue("tcpipDhcpcv6","TCPIP_DHCPCV6_HEAP_SIZE")
     
     # ZCLL & MDNS  
     if((Database.getSymbolValue("tcpipZeroConf", "TCPIP_USE_LINK_ZERO_CONFIG") == True)): 
