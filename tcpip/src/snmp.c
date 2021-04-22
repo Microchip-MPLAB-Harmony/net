@@ -5628,90 +5628,108 @@ static uint8_t TCPIP_SNMP_OIDsCountGet(uint16_t pdulen)
 
 bool  TCPIP_SNMP_WriteCommunityGet(int index,int len, uint8_t * dest)
 {
-    int minLen=0;
-    int commLen=0;
-
     if((dest == NULL) || (len==0)|| (SnmpStackDcptMemStubPtr==NULL))
+    {
         return false;
+    }
 
-    if(len>TCPIP_SNMP_COMMUNITY_MAX_LEN)
-        return false;
-
+   
     if(index >= TCPIP_SNMP_MAX_COMMUNITY_SUPPORT)
+    {
         return false;
+    }
+    
 
-    commLen = strlen((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index]);
-    minLen= len<commLen?len:commLen;
-
-    memcpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],minLen);
-
+    /* the parameter "len" will be always less than and equal to the value of TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+    * The value of sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index]) = TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+    */        
+    strncpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],len-1);
+    dest[len-1] = '\0';
+    
     return true;
 }
 
-bool  TCPIP_SNMP_ReadCommunityGet(int index,int len, uint8_t * dest)
+bool  TCPIP_SNMP_ReadCommunityGet(int index,int len, uint8_t *dest)
 {
-    int minLen=0;
-    int commLen=0;
 
     if((dest == NULL) || (len==0)|| (SnmpStackDcptMemStubPtr==NULL))
+    {
         return false;
+    }
 
-    if(len>TCPIP_SNMP_COMMUNITY_MAX_LEN)
-        return false;
-
+       
     if(index >= TCPIP_SNMP_MAX_COMMUNITY_SUPPORT)
+    {
         return false;
-
-    commLen = strlen((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index]);
-    minLen= len<commLen?len:commLen;
-
-    memcpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],minLen);
-
+    }
+    
+    /* the parameter "len" will be always less than and equal to the value of TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+    * The value of sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index]) = TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+    */
+    strncpy((char*)dest,(char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],len-1);
+    dest[len-1] = '\0';
+    
     return true;
 }
 
 
 bool  TCPIP_SNMP_WriteCommunitySet(int index,int len, uint8_t * src)
 {
-    int minLen=0;
-    int commLen=0;
 
     if((src == NULL) || (len==0)|| (SnmpStackDcptMemStubPtr==NULL))
+    {
         return false;
+    }
 
-    if(len>TCPIP_SNMP_COMMUNITY_MAX_LEN)
+	if(len>TCPIP_SNMP_COMMUNITY_MAX_LEN)
+    {
         return false;
+    }
 
     if(index >= TCPIP_SNMP_MAX_COMMUNITY_SUPPORT)
+    {
         return false;
+    }
 
-    commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index])-1;
-    minLen= len<commLen?len:commLen;
+        
+    /* the parameter "len" will be always less than the value of TCPIP_SNMP_COMMUNITY_MAX_LEN
+     * The value of sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index]) = TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+     */
+	
+	size_t	commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index]);
+    strncpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],(char*)src,commLen - 1);
 
-    memcpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index],(char*)src,minLen);
-
+    SnmpStackDcptMemStubPtr->snmpNetConfig.writeCommunity[index][commLen-1] = '\0';
     return true;
 }
 
 bool  TCPIP_SNMP_ReadCommunitySet(int index,int len, uint8_t * src)
 {
-    int minLen=0;
-    int commLen=0;
 
     if((src == NULL) || (len==0) || (SnmpStackDcptMemStubPtr==NULL))
+    {
         return false;
+    }
 
     if(len>TCPIP_SNMP_COMMUNITY_MAX_LEN)
+    {
         return false;
+    }
 
     if(index >= TCPIP_SNMP_MAX_COMMUNITY_SUPPORT)
+    {
         return false;
-
-    commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index])-1;
-    minLen= len<commLen?len:commLen;
-
-    memcpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],(char*)src,minLen);
-
+    }
+    
+    
+    /* the parameter "en" will be always less than the value of TCPIP_SNMP_COMMUNITY_MAX_LEN
+     * The value of sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index]) = TCPIP_SNMP_COMMUNITY_MAX_LEN + 1
+     */
+	size_t commLen = sizeof(SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index]);
+	
+    strncpy((char*)SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index],(char*)src,commLen-1);
+    SnmpStackDcptMemStubPtr->snmpNetConfig.readCommunity[index][commLen-1] = '\0';
+    
     return true;
 }
 
