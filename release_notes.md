@@ -19,7 +19,7 @@ The following table provides the list of bug fixes in the 3.7.2 dot release:
 
 | Module                | Description                                             |
 | ------ | -------- |
-| All modules           | Various fixes for xc32 v3.0 build |
+| All net modules       | Various fixes for build with xc32 v3.0 |
 | IPv4                  | Updated TCPIP_IPV4_PacketTransmit() to acknowledge only the fragments it created |
 | ICMP                  | Discarded all ICMP fragments when TCPIP_IPV4_PktTx() failed |
 |                       | Updated the ICMP response to follow the IPv4 forwarding flow |
