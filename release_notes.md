@@ -1,4 +1,34 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.7.2 (April, 2021)
+### ADDITIONS AND UPDATES FOR  3.7.2:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.7.2 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| FTP server            | Added lower case commands support |
+| FTP server            | Command socket disconnect when client connection is not present |
+| Packet logger         | Support for just one of the and/or commands |
+| DHCP Client           | Use of extended ID for virtual interfaces only |
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.7.2 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| All modules           | Various fixes for xc32 v3.0 build |
+| IPv4                  | Updated TCPIP_IPV4_PacketTransmit() to acknowledge only the fragments it created |
+| ICMP                  | Discarded all ICMP fragments when TCPIP_IPV4_PktTx() failed |
+|                       | Updated the ICMP response to follow the IPv4 forwarding flow |
+| DNS client            | Updated the selection of the DNS server index and interface |
+| GMAC driver           | Fixed wrong index type in DRV_PIC32CGMAC_LibTxInit |
+| MHC                   | Set Display Type of all TCP/IP related component to identify the layer |
+
+- **Release notes for v3.7.1 apply**
+
 ## Net Release v3.7.1 (March, 2021)
 ### ADDITIONS AND UPDATES FOR  3.7.1:
 
