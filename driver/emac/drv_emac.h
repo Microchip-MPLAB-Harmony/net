@@ -228,7 +228,7 @@ SYS_MODULE_OBJ MAC_DRVR_Initialize(
     and return the MAC and the PHY to the idle/power down state.
 
 */
-void MAC_DRVR_Deinitialize( SYS_MODULE_OBJ object );
+void MAC_DRVR_DeInitialize( SYS_MODULE_OBJ object );
 
 /*******************************************************************************
   Function:
@@ -259,7 +259,7 @@ void MAC_DRVR_Deinitialize( SYS_MODULE_OBJ object );
   Remarks:
     This function is not supported yet.
  ******************************************************************************/
-void MAC_DRVR_Reinitialize(
+void MAC_DRVR_ReInitialize(
     SYS_MODULE_OBJ                  object,
     const SYS_MODULE_INIT * const   init
     );

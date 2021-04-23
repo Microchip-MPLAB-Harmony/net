@@ -30,8 +30,9 @@
 ############################################################################
 #### Code Generation ####
 ############################################################################
+processor = ""
 def instantiateComponent(tcpipAutoConfigAppsComponent):
-
+    global processor
     processor = Variables.get("__PROCESSOR")
 
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
@@ -426,12 +427,15 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
             res = Database.deactivateComponents(["tcpipFtpc"])
         
 def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
+    global processor
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
     tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
-    httpserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER")
+    if(("SAMA5" not in processor) and ("SAM9X6" not in processor)):
+        httpserver  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
-        httpserver.setReadOnly(True)
+        if(("SAMA5" not in processor) and ("SAM9X6" not in processor)):
+            httpserver.setReadOnly(True)
         res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
         
@@ -449,8 +453,9 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
-        if(httpserver.getReadOnly() == True):
-            httpserver.setReadOnly(False)
+        if(("SAMA5" not in processor) and ("SAM9X6" not in processor)):
+            if(httpserver.getReadOnly() == True):
+                httpserver.setReadOnly(False)
         if(Database.getComponentByID("tcpipHttpNet") != None):  
             res = Database.deactivateComponents(["tcpipHttpNet"])
     

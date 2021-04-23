@@ -30,15 +30,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 void emacStatisticsClear( void );
 
 /******************************************************************************/
-TCPIP_MAC_RES macDrvrStatisticsGet(         DRV_HANDLE                          hMac,
-                                            TCPIP_MAC_RX_STATISTICS *           pRxStatistics,
-                                            TCPIP_MAC_TX_STATISTICS *           pTxStatistics
-                                            );
-TCPIP_MAC_RES macDrvrRegisterStatisticsGet( DRV_HANDLE                          hMac,
-                                            TCPIP_MAC_STATISTICS_REG_ENTRY *    pStatisticsEntry,
-                                            int                                 maxEntries,
-                                            int *                               pActualNumEntries
-                                            );
 
 /*******************************************************************************
  * Prototypes
@@ -94,7 +85,7 @@ static const MAC_DRVR_HW_REG_DCPT macHwRegDcpt[] =
     { "Tx TUND: Transmit Under Runs       ", macDrvrGetEmacTund },
 };
 
-TCPIP_MAC_RES macDrvrStatisticsGet(
+TCPIP_MAC_RES MAC_DRVR_StatisticsGet(
     DRV_HANDLE                  hMac,
     TCPIP_MAC_RX_STATISTICS *   pRxStatistics,
     TCPIP_MAC_TX_STATISTICS *   pTxStatistics
@@ -126,7 +117,7 @@ TCPIP_MAC_RES macDrvrStatisticsGet(
     return TCPIP_MAC_RES_OK;
 }
 
-TCPIP_MAC_RES macDrvrRegisterStatisticsGet(
+TCPIP_MAC_RES MAC_DRVR_RegisterStatisticsGet(
     DRV_HANDLE                          hMac,
     TCPIP_MAC_STATISTICS_REG_ENTRY *    pStatisticsEntry,
     int                                 maxEntries,

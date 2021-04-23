@@ -50,7 +50,7 @@ bool    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
      return true;
 }
 
-CACHE_ALIGN DRV_ENCx24J600_RSV rsv_temp;
+static CACHE_ALIGN DRV_ENCx24J600_RSV rsv_temp;
 int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
 {
     uintptr_t ret;
