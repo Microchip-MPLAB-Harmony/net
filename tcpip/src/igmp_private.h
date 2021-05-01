@@ -312,7 +312,7 @@ typedef enum
 }TCPIP_IGMP_MESSAGE_TYPE;
 
 // generic IGMP header
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     type;   // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -321,7 +321,7 @@ typedef struct
 }TCPIP_IGMP_HEADER;
 
 // IGMP query message
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     type;           // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -329,8 +329,8 @@ typedef struct
     uint32_t    groupAddress;   // multicast address it refers to
 }TCPIP_IGMP_QUERY_MESSAGE;
 
-// IGMPv2 query message
-typedef struct
+// IGMPv3 query message
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     type;           // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -370,7 +370,7 @@ typedef struct __attribute__((aligned(2), packed))
 }TCPIP_IGMPv3_GROUP_RECORD;
 
 // membership IGMPv3 packet
-typedef struct
+typedef struct __attribute__((aligned(2), packed))
 {
     uint8_t     type;   // TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP
     uint8_t     reserved1;
