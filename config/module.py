@@ -251,21 +251,21 @@ def loadModule():
     if Peripheral.moduleExists("GMAC"):
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
-        drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)  
+        drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent.setDisplayType("MAC Layer")
     elif Peripheral.moduleExists("EMAC"):
         aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_0.addCapability( "libdrvMac0", "MAC")
-        aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, True, True)
+        aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, False, True)
         aDrvMacComponent_0.setDisplayType("MAC Layer")
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
-        aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, True, True)
+        aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, False, True)
         aDrvMacComponent_1.setDisplayType("MAC Layer")
     elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
-        drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
+        drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, False, True)
         drvPic32mEthmacComponent.setDisplayType("MAC Layer")
             
     ## MIIM Driver
@@ -276,73 +276,73 @@ def loadModule():
     ################# ETHERNET PHY Driver ##############################################
     #Driver for Micrel KSZ8041 PHY
     drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
-    drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",True)   
+    drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",False)   
     drvExtPhyKsz8041Component.addDependency("KSZ8041_MIIM_Dependency", "MIIM", None, True, True)  
     drvExtPhyKsz8041Component.setDisplayType("PHY Layer")
     
     #Driver for Micrel KSZ8061 PHY
     drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
-    drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)   
+    drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",False)   
     drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8061Component.setDisplayType("PHY Layer")
     
     #Driver for Micrel KSZ8081 PHY
     drvExtPhyKsz8081Component = Module.CreateComponent("drvExtPhyKsz8081", "KSZ8081", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8081.py")
-    drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",True)   
+    drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",False)   
     drvExtPhyKsz8081Component.addDependency("KSZ8081_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8081Component.setDisplayType("PHY Layer")
     
     #Driver for Micrel KSZ8091 PHY
     drvExtPhyKsz8091Component = Module.CreateComponent("drvExtPhyKsz8091", "KSZ8091", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8091.py")
-    drvExtPhyKsz8091Component.addCapability("libdrvExtPhyKsz8091","PHY",True)   
+    drvExtPhyKsz8091Component.addCapability("libdrvExtPhyKsz8091","PHY",False)   
     drvExtPhyKsz8091Component.addDependency("KSZ8091_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8091Component.setDisplayType("PHY Layer")
     
     #Driver for Micrel KSZ8863 PHY
     drvExtPhyKsz8863Component = Module.CreateComponent("drvExtPhyKsz8863", "KSZ8863", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8863.py")
-    drvExtPhyKsz8863Component.addCapability("libdrvExtPhyKsz8863","PHY",True)   
+    drvExtPhyKsz8863Component.addCapability("libdrvExtPhyKsz8863","PHY",False)   
     drvExtPhyKsz8863Component.addDependency("KSZ8863_MIIM_Dependency", "MIIM", None, True, True)  
     drvExtPhyKsz8863Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC LAN8700 PHY
     drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
-    drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",True)   
+    drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",False)   
     drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)       
     drvExtPhyLan8700Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC LAN8720PHY
     drvExtPhyLan8720Component = Module.CreateComponent("drvExtPhyLan8720", "LAN8720", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8720.py")
-    drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",True)   
+    drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",False)   
     drvExtPhyLan8720Component.addDependency("LAN8720_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan8720Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC LAN8740 PHY
     drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
-    drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)   
+    drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",False)   
     drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8740Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC LAN9303PHY
     drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
-    drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",True)   
+    drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",False)   
     drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan9303Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC DP83640PHY
     drvExtPhyDp83640Component = Module.CreateComponent("drvExtPhyDp83640", "DP83640", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83640.py")
-    drvExtPhyDp83640Component.addCapability("libdrvExtPhyDp83640","PHY",True)   
+    drvExtPhyDp83640Component.addCapability("libdrvExtPhyDp83640","PHY",False)   
     drvExtPhyDp83640Component.addDependency("DP83640_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83640Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC DP83848PHY
     drvExtPhyDp83848Component = Module.CreateComponent("drvExtPhyDp83848", "DP83848", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83848.py")
-    drvExtPhyDp83848Component.addCapability("libdrvExtPhyDp83848","PHY",True)   
+    drvExtPhyDp83848Component.addCapability("libdrvExtPhyDp83848","PHY",False)   
     drvExtPhyDp83848Component.addDependency("DP83848_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83848Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC IP101GRPHY
     drvExtPhyIp101grComponent = Module.CreateComponent("drvExtPhyIp101gr", "IP101GR", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ip101gr.py")
-    drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",True)   
+    drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",False)   
     drvExtPhyIp101grComponent.addDependency("IP101GR_MIIM_Dependency", "MIIM", None, True, True)     
     drvExtPhyIp101grComponent.setDisplayType("PHY Layer")
     
