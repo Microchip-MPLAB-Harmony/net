@@ -36,6 +36,17 @@ tcpipStackHeapPoolEntry = []
 tcpipStackHeapPoolBlkSize = []
 tcpipStackHeapPoolPreAllocBlkNum = []
 tcpipStackHeapPoolExpBlkNum = []
+macInterruptStruct = []
+tcpipStackMacIntName = []
+tcpipStackMacIntEnable = []
+tcpipStackMacIntVector = []
+TCIP_MAX_INTERFACE_COUNT = 6
+tcpipStackNetInterfaceMenu = []
+tcpipStackNetInterfaceName = []
+tcpipStackIntMacInterface = []
+tcpipStackMiiMode = []
+tcpipStackOthInterface = []
+configSummaryVisible = False
 #########################################################################################
 
 def instantiateComponent(tcpipStackComponent):
@@ -450,7 +461,147 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
     tcpipStackInitCback.setDefaultValue("TCPIP_STACK_InitCallback")
     tcpipStackInitCback.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_ENABLE_INIT_CALLBACK"])
+    ###################################################################################################
+    #################           Symbols for Configuration Summary                     #################
+    ####### Device Configuration
     
+    tcpipStackConfigSummary = tcpipStackComponent.createMenuSymbol("TCPIP_CONFIG_SUMMARY", None)
+    tcpipStackConfigSummary.setLabel("Configuration Summary")
+    tcpipStackConfigSummary.setVisible(configSummaryVisible)
+    
+    # Number of Active MAC interfaces
+    tcpipStackMacInterfaceNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_NET_INTERFACE_NUM", tcpipStackConfigSummary)
+    tcpipStackMacInterfaceNum.setLabel("Number of Network interfaces")
+    tcpipStackMacInterfaceNum.setDefaultValue(1)
+    tcpipStackMacInterfaceNum.setVisible(configSummaryVisible)
+    tcpipStackMacInterfaceNum.setReadOnly(True)
+    tcpipStackMacInterfaceNum.setDependencies(tcpipStackNumInterfaceUpdate, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])
+
+    for index in range(0,TCIP_MAX_INTERFACE_COUNT): 
+        tcpipStackNetInterfaceMenu.append(tcpipStackComponent.createMenuSymbol("TCPIP_STACK_NET_INTERFACE_MENU_IDX"+str(index),tcpipStackConfigSummary))
+        tcpipStackNetInterfaceMenu[index].setLabel("Interface "+ str(index))
+        tcpipStackNetInterfaceMenu[index].setVisible(configSummaryVisible if index < tcpipStackMacInterfaceNum.getValue() else False)
+        tcpipStackNetInterfaceMenu[index].setDependencies(tcpipStackInterfaceUpdate, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])
+
+        # Network Interface Name
+        tcpipStackNetInterfaceName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_NET_INTERFACE_NAME_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackNetInterfaceName[index].setLabel("Interface Name")
+        tcpipStackNetInterfaceName[index].setVisible(configSummaryVisible)
+        tcpipStackNetInterfaceName[index].setReadOnly(True)
+        tcpipStackNetInterfaceName[index].setDefaultValue("")
+        
+        # Is it an internal MAC Interface ?
+        tcpipStackIntMacInterface.append(tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INT_MAC_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackIntMacInterface[index].setLabel("Internal MAC?")
+        tcpipStackIntMacInterface[index].setVisible(configSummaryVisible)
+        tcpipStackIntMacInterface[index].setReadOnly(True)
+        tcpipStackIntMacInterface[index].setDefaultValue(False)    
+        tcpipStackIntMacInterface[index].setReadOnly(True)
+
+        # MII/RMII
+        tcpipStackMiiMode.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_MII_MODE_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackMiiMode[index].setLabel("PHY Interface")
+        tcpipStackMiiMode[index].setVisible(False)
+        tcpipStackMiiMode[index].setReadOnly(True)
+        tcpipStackMiiMode[index].setDefaultValue("")
+        tcpipStackMiiMode[index].setDependencies(tcpipStackMenuVisible, [tcpipStackIntMacInterface[index].getID()])    
+
+        # Other Interface
+        tcpipStackOthInterface.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_OTH_INT_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackOthInterface[index].setLabel("External Interface")
+        tcpipStackOthInterface[index].setVisible(configSummaryVisible)
+        tcpipStackOthInterface[index].setReadOnly(True)
+        tcpipStackOthInterface[index].setDefaultValue("")
+        tcpipStackOthInterface[index].setDependencies(tcpipStackMenuInvisible, [tcpipStackIntMacInterface[index].getID()])  
+        
+    # Internal MAC Clock 
+    tcpipStackMacClock = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_CLOCK", tcpipStackConfigSummary)
+    tcpipStackMacClock.setLabel("MAC Peripheral Clock Frequency")
+    tcpipStackMacClock.setVisible(configSummaryVisible)
+    tcpipStackMacClock.setReadOnly(True)
+    
+    # Non-Cacheable Memory Configuration
+    tcpipStackMpuEnable = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_NO_CACHE_CONFIG", tcpipStackConfigSummary)
+    tcpipStackMpuEnable.setLabel("Non-Cacheable Memory")
+    tcpipStackMpuEnable.setVisible(configSummaryVisible)
+    tcpipStackMpuEnable.setDefaultValue(False)
+    tcpipStackMpuEnable.setReadOnly(True)
+    
+    tcpipStackNoCacheMemAddress = tcpipStackComponent.createHexSymbol("TCPIP_STACK_NOCACHE_MEM_ADDRESS",tcpipStackMpuEnable)
+    tcpipStackNoCacheMemAddress.setLabel("Start Address of Non-Cacheable Memory")
+    tcpipStackNoCacheMemAddress.setVisible(configSummaryVisible) 
+    tcpipStackNoCacheMemAddress.setReadOnly(True)
+    
+    # MPU Non-Cacheable Memory Size
+    tcpipStackMpuNoCacheSize = tcpipStackComponent.createStringSymbol("TCPIP_STACK_NOCACHE_SIZE", tcpipStackMpuEnable)
+    tcpipStackMpuNoCacheSize.setLabel("Non-Cacheable Memory Size")
+    tcpipStackMpuNoCacheSize.setVisible(configSummaryVisible)
+    tcpipStackMpuNoCacheSize.setReadOnly(True)
+    
+    # Interrupt Configuration Summary
+    processor =  Variables.get("__PROCESSOR")    
+
+    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor):
+        macName = "GMAC"
+        intStringStart = "core.NVIC_"
+        intStringEnd = "_0_ENABLE"
+    elif "SAMA5" in processor:
+        macName = "GMAC"
+        intStringStart = "core."
+        intStringEnd = "_INTERRUPT_ENABLE"
+    elif "SAM9X60" in processor:
+        macName = "EMAC"
+        intStringStart = "core."
+        intStringEnd = "_INTERRUPT_ENABLE"
+    elif "PIC32MZ" in processor:
+        macName = "ETHERNET"
+        intStringStart = "core.EVIC_"
+        intStringEnd = "_ENABLE"
+    elif "PIC32MX" in processor:
+        macName = "ETH"
+        intStringStart = "core.EVIC_"
+        intStringEnd = "_ENABLE"    
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+    for interrupt in range (0, len(interruptsChildrenList)): 
+        if macName in str(interruptsChildrenList[interrupt].getAttribute("name")):
+            interruptDict = {}
+            interruptDict["index"] = int(interruptsChildrenList[interrupt].getAttribute("index"))
+            interruptDict["name"] = str(interruptsChildrenList[interrupt].getAttribute("name"))
+            interruptDict["caption"] = str(interruptsChildrenList[interrupt].getAttribute("caption"))
+            macInterruptStruct.append(interruptDict)
+
+    # Number of Interrupts
+    tcpipStackMacIntNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_INTERRUPT_NUM", tcpipStackConfigSummary)
+    tcpipStackMacIntNum.setLabel("Number of Interrupts")
+    tcpipStackMacIntNum.setVisible(configSummaryVisible)
+    tcpipStackMacIntNum.setDefaultValue(len(macInterruptStruct))
+    tcpipStackMacIntNum.setReadOnly(True)
+    
+    for intIndex in range(0, len(macInterruptStruct)):
+    
+        tcpipStackMacIntEnable.append(tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERRUPT_EN_IDX" + str(intIndex),tcpipStackConfigSummary))
+        tcpipStackMacIntEnable[intIndex].setLabel("Interrupt " + str(intIndex))
+        tcpipStackMacIntEnable[intIndex].setVisible(configSummaryVisible) 
+        tcpipStackMacIntEnable[intIndex].setReadOnly(True) 
+        if ("SAMA5" in processor) or ("SAM9X60" in processor):
+            tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["name"]) + intStringEnd]) 
+        else:
+            tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["index"]) + intStringEnd]) 
+            
+        tcpipStackMacIntName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_INTERRUPT_NAME_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
+        tcpipStackMacIntName[intIndex].setLabel("Interrupt Name" + str(intIndex) )
+        tcpipStackMacIntName[intIndex].setDefaultValue(macInterruptStruct[intIndex]["name"])
+        tcpipStackMacIntName[intIndex].setVisible(configSummaryVisible) 
+        tcpipStackMacIntName[intIndex].setReadOnly(True) 
+   
+        tcpipStackMacIntVector.append(tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_INTERRUPT_VECTOR_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
+        tcpipStackMacIntVector[intIndex].setLabel("Interrupt Vector" + str(intIndex) )
+        tcpipStackMacIntVector[intIndex].setDefaultValue(macInterruptStruct[intIndex]["index"])
+        tcpipStackMacIntVector[intIndex].setVisible(configSummaryVisible) 
+        tcpipStackMacIntVector[intIndex].setReadOnly(True) 
+
+    ###################################################################################################    
     #Add to system_config.h
     tcpipStackHeapHeaderFtl = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackHeapHeaderFtl.setSourcePath("tcpip/config/tcpip_heap.h.ftl")
@@ -1853,19 +2004,15 @@ def instantiateComponent(tcpipStackComponent):
 #########################################################################################   
         
 def tcpipStackMenuVisible(symbol, event):
-    if (event["value"] == True):
-        print("TCPIP Menu Visible.")        
+    if (event["value"] == True):     
         symbol.setVisible(True)
     else:
-        print("TCPIP Menu Invisible.")
         symbol.setVisible(False)
         
 def tcpipStackMenuInvisible(symbol, event):
-    if (event["value"] == False):
-        print("TCPIP Menu Visible.")        
+    if (event["value"] == False):  
         symbol.setVisible(True)
     else:
-        print("TCPIP Menu Invisible.")
         symbol.setVisible(False)    
 
 
@@ -2134,6 +2281,16 @@ def tcpipHeapCalc():
             
     return heapsize
 
+def tcpipStackMacIntUpdate(symbol, event):
+    symbol.setValue(event["value"]) 
+    
+def tcpipStackNumInterfaceUpdate(symbol, event):
+    symbol.setValue(event["value"]) 
+
+def tcpipStackInterfaceUpdate(symbol, event):
+    intIndex = int(symbol.getID().strip("TCPIP_STACK_NET_INTERFACE_MENU_IDX"))   
+    symbol.setVisible( True if intIndex < event["value"] else False )   
+    
 
 def tcpipStackHeapUpdate(symbol, event):
     heap_size = tcpipHeapCalc()

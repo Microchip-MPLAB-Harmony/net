@@ -372,11 +372,13 @@ def onAttachmentConnected(source, target):
         if( macInterface ):
             macInterface.clearValue()
             macInterface.setValue( target["component"].getDisplayName() )
-
+            setVal("tcpipStack", "TCPIP_STACK_NET_INTERFACE_NAME_IDX" + str(tcpipNetConfigIndex), target["component"].getDisplayName())
+            
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "NETCONFIG_MAC_Dependency"):    
         tcpipNetConfigIndex = int(source["component"].getID().strip("tcpipNetConfig_"))
         source["component"].clearSymbolValue("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
+        setVal("tcpipStack", "TCPIP_STACK_NET_INTERFACE_NAME_IDX" + str(tcpipNetConfigIndex), "")
 
 #Set symbols of other components
 def setVal(component, symbol, value):

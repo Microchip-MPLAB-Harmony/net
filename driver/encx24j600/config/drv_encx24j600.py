@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
+interfaceNum = []
 def instantiateComponent(drvExtMacEncx24j600Component, index):
     configName = Variables.get("__CONFIGURATION_NAME")      
     
@@ -159,3 +159,16 @@ def handleMessage(messageID, args):
     else:
         retDict= {"Return": "UnImplemented Command"}
     return retDict
+
+def onAttachmentConnected(source, target):
+    if (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.append(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
+        setVal("tcpipStack", "TCPIP_STACK_OTH_INT_IDX" + str(interface_number), "SPI") 
+
+def onAttachmentDisconnected(source, target):
+    if (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.remove(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_OTH_INT_IDX" + str(interface_number), "")   

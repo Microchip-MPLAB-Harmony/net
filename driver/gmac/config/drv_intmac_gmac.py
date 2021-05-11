@@ -61,10 +61,12 @@ tcpipGmacQueScreen2CompCOffsetStart = []
 tcpipGmacScreen2Que = []
 tcpipGmacRxQueScreen2EnableComment = []
 
+interfaceNum = []
 
 def instantiateComponent(drvGmacComponent):
     global gmac_periphID
     global drvGmacNoCacheMemRegSize
+    global tcpipGmacEthRmii
     
     print("TCPIP Ethernet MAC Component")   
     configName = Variables.get("__CONFIGURATION_NAME")      
@@ -90,12 +92,35 @@ def instantiateComponent(drvGmacComponent):
         
     # Enable GMAC clock
     Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True, 2)
+    
     # Use Internal Ethernet MAC Driver? 
     drvGmac = drvGmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
     drvGmac.setLabel("Use Internal Ethernet MAC Driver?")
     drvGmac.setVisible(False)
     drvGmac.setDescription("Use Internal Ethernet MAC Driver?")
     drvGmac.setDefaultValue(True)
+
+    drvGmacConfigSummary = drvGmacComponent.createMenuSymbol("DRV_GMAC_CONFIG_SUMMARY", None)
+    drvGmacConfigSummary.setLabel("Configuration Summary")
+    drvGmacConfigSummary.setVisible(False)
+    
+    # Internal Ethernet MAC Clock
+    processor =  Variables.get("__PROCESSOR")  
+    drvGmacClock = drvGmacComponent.createIntegerSymbol("DRV_GMAC_CLOCK", drvGmacConfigSummary)
+    drvGmacClock.setLabel("Internal Ethernet MAC Clock")
+    drvGmacClock.setVisible(False)    
+    if "SAME5" in processor:
+        drvGmacClock.setDefaultValue(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
+        drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MAIN_CLOCK_FREQUENCY"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
+    elif ("SAMV7" in processor) or ("SAME7" in processor):
+        drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+    elif ("SAMA5" in processor):
+        drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
+        drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
         
     # Use Internal Ethernet MAC Driver? 
     tcpipGmacQue0 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_0", None)
@@ -356,6 +381,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthRmii.setVisible(True)
     tcpipGmacEthRmii.setDescription("RMII Connection")
     tcpipGmacEthRmii.setDefaultValue(True)
+    tcpipGmacEthRmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_GMAC_ETH_OF_RMII"] )
 
     # Advanced Settings
     tcpipGmacAdvSettings = drvGmacComponent.createMenuSymbol("TCPIP_GMAC_ADV_SETTING", None)
@@ -1067,6 +1093,8 @@ def instantiateComponent(drvGmacComponent):
     Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+    setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX0", True)
+        
     if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
         interruptVector = "GMAC_Q1_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q1_INTERRUPT_HANDLER_LOCK"
@@ -1074,6 +1102,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX1", True)
         
         interruptVector = "GMAC_Q2_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q2_INTERRUPT_HANDLER_LOCK"
@@ -1081,6 +1110,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX2", True)
     
     if(gmac_periphID == "11046"): # SAME70, SAMV71, SAMRH71
         interruptVector = "GMAC_Q3_INTERRUPT_ENABLE"
@@ -1089,6 +1119,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX3", True)
         
         interruptVector = "GMAC_Q4_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q4_INTERRUPT_HANDLER_LOCK"
@@ -1096,6 +1127,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX4", True)
         
         interruptVector = "GMAC_Q5_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q5_INTERRUPT_HANDLER_LOCK"
@@ -1103,6 +1135,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX5", True)
     
     # PHY Connected to GMAC
     drvGmacPhyType = drvGmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", tcpipGmacAdvSettings)
@@ -1166,6 +1199,13 @@ def instantiateComponent(drvGmacComponent):
         drvGmacNoCachebool.setVisible(False)
         drvGmacNoCachebool.setDefaultValue(False)
         drvGmacNoCachebool.setDependencies(drvMacMPUConfig, ["DRV_GMAC_NO_CACHE_CONFIG", "DRV_GMAC_NOCACHE_REGION_SIZE", "DRV_GMAC_NOCACHE_MEM_ADDRESS"]) 
+        
+        # Set global MPU symbols
+        setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", drvGmacNoCacheConfig.getValue())
+        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", drvGmacNoCacheMemAddress.getValue())
+        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE",drvGmacNoCacheMemRegSize.getKeyForValue(drvGmacNoCacheMemRegSize.getSelectedValue()) )
+        
+        
     
     # Driver GMAC Heap Size
     drvGmacHeapSize = drvGmacComponent.createIntegerSymbol("DRV_GMAC_HEAP_SIZE", None)
@@ -1311,7 +1351,13 @@ def tcpipEthMacMdixSwapVisible(symbol, event):
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
-    
+        
+def tcpipEthMacMIIMode(symbol, event):   
+    for interface in range (0, len(interfaceNum)): 
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII" if event["value"] == True else "MII")
+        
+def tcpipGmacClockUpdate(symbol, event): 
+    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", event["value"])
         
 def tcpipGmacGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
@@ -1320,13 +1366,24 @@ def drvGmacGenHeaderFile(headerFile, event):
     headerFile.setEnabled(event["value"])
 
 def onAttachmentConnected(source, target):
+    global tcpipGmacEthRmii
     if (source["id"] == "GMAC_PHY_Dependency"): 
         Database.setSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE", target["component"].getDisplayName(),2)
+    elif (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.append(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipGmacEthRmii.getValue() == True else "MII")
         
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "GMAC_PHY_Dependency"): 
         Database.clearSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE")
         Database.setSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE", "Not Connected")
+    elif (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.remove(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "")    
 
 
 def tcpipGmacQueScreen1(symbol, event):
@@ -1706,10 +1763,14 @@ def drvMacMPUConfig(symbol, event):
             index = drvGmacNoCacheMemRegSize.getValue()
             keyval = drvGmacNoCacheMemRegSize.getKeyValue(index)
             key = drvGmacNoCacheMemRegSize.getKeyForValue(keyval)
+            setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", Database.getSymbolValue("drvGmac", "DRV_GMAC_NOCACHE_MEM_ADDRESS"))
+            setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE", key)
+            setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", True)
             mpuRegSize = coreComponent.getSymbolByID("MPU_Region_" + str(noCache_MPU_index) + "_Size")
             mpuRegSize.setSelectedKey(key)
         else:
             Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), False)
+            setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", False)
     
     
 
@@ -1841,4 +1902,13 @@ def handleMessage(messageID, args):
     return retDict
 
 def destroyComponent(drvGmacComponent):
-    Database.setSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC", False, 2)
+    global gmac_periphID
+    Database.setSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC", False, 2)    
+    setVal("core", "GMAC_INTERRUPT_ENABLE", False)
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+        setVal("core", "GMAC_Q1_INTERRUPT_ENABLE", False)
+        setVal("core", "GMAC_Q2_INTERRUPT_ENABLE", False)
+    if(gmac_periphID == "11046"): # SAME70, SAMV71, SAMRH71   
+        setVal("core", "GMAC_Q3_INTERRUPT_ENABLE", False)
+        setVal("core", "GMAC_Q4_INTERRUPT_ENABLE", False)
+        setVal("core", "GMAC_Q5_INTERRUPT_ENABLE", False)

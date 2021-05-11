@@ -56,6 +56,7 @@ macBaseAddressValue =       ""
 defaultMacDriverCode =      ""
 phyComponent =              ""
 showSuperfluous =           False
+interfaceNum = []
 
 def initializeGlobals( aComponent, theModuleCandidates ):
     global atdfMacModule
@@ -128,23 +129,29 @@ def onAttachmentConnected( source, target ):
     global userMacChoiceId
     global macComponentId
     global phyComponent
-
-    if(     (source["id"] == "MAC_PHY_Dependency" + str( userMacChoiceId ))
-        or  ((userMacChoiceId == 0) and (source["id"] == "MAC_PHY_Dependency"))
-    ):
+    global tcpipMacEthRmii
+    interface_number = 0
+    if((source["id"] == "MAC_PHY_Dependency" + str( userMacChoiceId )) or  ((userMacChoiceId == 0) and (source["id"] == "MAC_PHY_Dependency"))):
         phyComponent = target[ 'component' ].getID()
         Database.setSymbolValue( macComponentId, "DRV_MAC_PHY_TYPE", target['component'].getDisplayName() )
-
+    elif (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.append(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipMacEthRmii.getValue() == True else "MII")
 
 def onAttachmentDisconnected( source, target ):
     global userMacChoiceId
     global macComponentId
 
-    if(     (source['id'] == "MAC_PHY_Dependency" + str( userMacChoiceId ))
-        or  ((userMacChoiceId == 0) and (source['id'] == "MAC_PHY_Dependency"))
-    ):
+    if((source['id'] == "MAC_PHY_Dependency" + str( userMacChoiceId )) or  ((userMacChoiceId == 0) and (source['id'] == "MAC_PHY_Dependency"))):
         phyComponent = ""
         Database.clearSymbolValue( macComponentId, 'DRV_MAC_PHY_TYPE' )
+    elif (target["id"] == "NETCONFIG_MAC_Dependency"):
+        interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
+        interfaceNum.remove(interface_number)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "")
 
 
 def getMacDeviceCoreName():
@@ -191,6 +198,8 @@ def sendRmiiUpdate( symbol, event ):
     global userMacChoiceId
     global phyComponent
 
+    for interface in range (0, len(interfaceNum)): 
+        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII" if event["value"] == True else "MII")
     # if len( phyComponent ):
         # Database.sendMessage( phyComponent, 'MII_CHANGE',
                             # {   'PhyComponent':phyComponent,
@@ -210,6 +219,8 @@ def setVisibleNotMatching( symbol, event ):
 def destroyComponent( macComponent ):
     # This keeps tcpip_configurator_driver.py code in sync with this object existence
     sendStateChangeMessage( 'tcpip_driver_config', 'MAC_STATE_DESTROYED' )
+    setVal("core", atdfMacInstanceName + "_INTERRUPT_ENABLE", False)
+
 
 
 def finalizeComponent( macComponent ):
@@ -271,6 +282,8 @@ def rxBufferAllocationCallBack(symbol, event):
     else:
         symbol.setValue(45)
 
+def emacClockUpdate(symbol, event): 
+    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", event["value"])
 
 def emacHeapCalc():
     global macComponentId
@@ -315,6 +328,7 @@ def instantiateComponent( macComponent ):
     global macBaseAddressValue
     global defaultMacDriverCode
     global showSuperfluous
+    global tcpipMacEthRmii
 
     initializeGlobals( macComponent, atdfMacModuleCandidates )
     # Enable MAC clock
@@ -385,6 +399,8 @@ def instantiateComponent( macComponent ):
     interruptSource.setReadOnly( True )
     interruptSetHandler( True )
     interruptSource.setDependencies( interruptControl, ["MAC_INTERRUPT_SOURCE"] )
+    intIndex = int(atdfMacInstanceName.strip("EMAC"))
+    setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX" + str(intIndex), True)
 
     # Max Clients
     maxClients = macComponent.createIntegerSymbol( "MAC_MAX_CLIENTS", driverInfoMenu )
@@ -679,6 +695,20 @@ def instantiateComponent( macComponent ):
     phyType.setDefaultValue( "" )
     phyType.setReadOnly( True )
     
+    
+    emacConfigSummary = macComponent.createMenuSymbol("DRV_EMAC_CONFIG_SUMMARY", None)
+    emacConfigSummary.setLabel("Configuration Summary")
+    emacConfigSummary.setVisible(False)
+
+    emacClock = macComponent.createIntegerSymbol("DRV_EMAC_CLOCK", emacConfigSummary)
+    emacClock.setLabel("Internal Ethernet MAC Clock")
+    emacClock.setVisible(False) 
+    emacClock.setDefaultValue(Database.getSymbolValue("core", "MCK_FREQUENCY"))
+    emacClock.setDependencies(emacClockUpdate, ["core.MCK_FREQUENCY"])
+    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MCK_FREQUENCY")))
+
+
+
     emacheapdependency = ["RX_STATIC_BUFFERS_0","RX_BUFFER_ALLOCATION_THRESHOLD_0", 
                           "RX_BUFFER_ALLOCATION_0", "RX_BUFFER_SIZE_0", 
                           "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
