@@ -60,7 +60,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _TCPIP_COMMAND_PING4_DEBUG      0   // enable/disable extra ping debugging messages
 #endif
 
-#if defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_ICMPV6_CLIENT) && (TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION != 0)
+#if defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_ICMPV6_CLIENT) && defined(TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION) && (TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION != 0)
 #define _TCPIP_COMMAND_PING6
 #endif
 
@@ -3519,7 +3519,7 @@ static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     IPV4_ADDR ipAddr;
     TCPIP_ARP_RESULT  arpRes;
     TCPIP_MAC_ADDR    macAddr;
-    char*       message;
+    const char*       message;
     char        addrBuff[20];
     size_t      arpEntries, ix;
     TCPIP_ARP_ENTRY_QUERY arpQuery;
@@ -5097,7 +5097,7 @@ char ftpc_src_pathname[20];
 char ftpc_dst_pathname[20];
 char ctrl_buffer[150];
 
-void ctrlSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_CTRL_EVENT_TYPE ftpcEvent,
+void ctrlSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpCliHandle, TCPIP_FTPC_CTRL_EVENT_TYPE ftpcEvent,
                                             TCPIP_FTPC_CMD cmd, char * ctrlbuff, uint16_t ctrllen)
 {
     
@@ -5129,7 +5129,7 @@ void ctrlSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_CTRL_EVEN
 //This callback function returns 'true' when Data-Socket Rx/Tx data is handled in this callback itself.
 //Then, FTP Client function won't store/retrieve data to/from FileSystem.
 //When it returns 'false', the FTP Client function will store/retrieve data to/from FileSystem.
-bool dataSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_DATA_EVENT_TYPE ftpcEvent,
+bool dataSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpCliHandle, TCPIP_FTPC_DATA_EVENT_TYPE ftpcEvent,
                                             TCPIP_FTPC_CMD cmd, char * databuff, uint16_t  * datalen)
 {
     static uint32_t buffCount= 0;
@@ -5195,22 +5195,22 @@ bool dataSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_DATA_EVEN
     
 }
 
-void ftpc_res_print(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_FTPC_RETURN_TYPE res)
+void ftpc_res_print(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_FTPC_RETURN_TYPE ftpcRes)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-    if(res == TCPIP_FTPC_RET_OK)
+    if(ftpcRes == TCPIP_FTPC_RET_OK)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Command Started\r\n");
     }
-    else if(res == TCPIP_FTPC_RET_BUSY)
+    else if(ftpcRes == TCPIP_FTPC_RET_BUSY)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Ready\r\n");
     }        
-    else if(res == TCPIP_FTPC_RET_NOT_CONNECT)
+    else if(ftpcRes == TCPIP_FTPC_RET_NOT_CONNECT)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Connected\r\n");
     }
-    else if(res == TCPIP_FTPC_RET_NOT_LOGIN)
+    else if(ftpcRes == TCPIP_FTPC_RET_NOT_LOGIN)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Logged In\r\n");
     }
@@ -5231,7 +5231,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         TCPIP_FTPC_CTRL_CONN_TYPE ftpcConn;
         static IP_MULTI_ADDRESS serverIpAddr;
         static IP_ADDRESS_TYPE serverIpAddrType;
-        static uint16_t    tcpipServerPort = 0;
+        static uint16_t    ftpcServerPort = 0;
 
         if ((argc < 3)||(argc > 4))
         {
@@ -5240,12 +5240,12 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
             return false;
         }
         
-        tcpipServerPort = 0;
+        ftpcServerPort = 0;
         if (argc == 4)
         {
             if(strcmp("0",argv[3]) != 0)
             {        
-                tcpipServerPort = atoi(argv[3]);
+                ftpcServerPort = atoi(argv[3]);
             }            
         }    
         
@@ -5266,7 +5266,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         
         ftpcConn.ftpcServerAddr = &serverIpAddr;
         ftpcConn.ftpcServerIpAddrType = serverIpAddrType;
-        ftpcConn.serverCtrlPort = tcpipServerPort;
+        ftpcConn.serverCtrlPort = ftpcServerPort;
         
         ftpcHandle = TCPIP_FTPC_Connect(&ftpcConn, ctrlSktHandler, &res);
         if(res != TCPIP_FTPC_RET_OK)
@@ -5844,10 +5844,10 @@ static void _CommandIpv4Arp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }
 
-    bool res = TCPIP_IPv4_ArpStatGet(&arpStat, statClear);
+    bool arpRes = TCPIP_IPv4_ArpStatGet(&arpStat, statClear);
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 ARP Stat: %s\r\n", res ? "success" : "Failed");
-    if(res)
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 ARP Stat: %s\r\n", arpRes ? "success" : "Failed");
+    if(arpRes)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "pool: %d, pend: %d, txSubmit: %d, fwdSubmit: %d\r\n", arpStat.nPool, arpStat.nPend, arpStat.txSubmit, arpStat.fwdSubmit);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "txSolved: %d, fwdSolved: %d, totSolved: %d, totFailed: %d\r\n", arpStat.txSolved, arpStat.fwdSolved, arpStat.totSolved, arpStat.totFailed);

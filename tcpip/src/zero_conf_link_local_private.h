@@ -44,10 +44,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "zero_conf_helper.h"
 
-void info_zcll_print(char * msg);
-void debug_zcll_print(char * msg);
-void info_mdns_print(char * msg);
-void debug_mdns_print(char * msg);
+void info_zcll_print(const char * msg);
+void debug_zcll_print(const char * msg);
+void info_mdns_print(const char * msg);
+void debug_mdns_print(const char * msg);
 
 // For verbose debugging
 #ifdef TCPIP_ZC_DEBUG_MDNS

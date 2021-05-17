@@ -55,7 +55,7 @@ char zeroconf_dbg_msg[ZEROCONF_DBG_MSG_SIZE];
 #endif
 
 #if defined(TCPIP_ZC_INFO_ZCLL)
-void info_zcll_print(char * msg)
+void info_zcll_print(const char * msg)
 {
 	if (zeroconf_dbg_level >= 1)
 		SYS_CONSOLE_MESSAGE(msg);
@@ -63,7 +63,7 @@ void info_zcll_print(char * msg)
 #endif
 
 #if defined(TCPIP_ZC_DEBUG_ZCLL)
-void debug_zcll_print(char * msg)
+void debug_zcll_print(const char * msg)
 {
 	if (zeroconf_dbg_level >= 2)
 		SYS_CONSOLE_MESSAGE(msg);
@@ -71,7 +71,7 @@ void debug_zcll_print(char * msg)
 #endif
 
 #if defined(TCPIP_ZC_INFO_MDNS)
-void info_mdns_print(char * msg)
+void info_mdns_print(const char * msg)
 {
 	if (zeroconf_dbg_level >= 1)
 		SYS_CONSOLE_MESSAGE(msg);
@@ -79,7 +79,7 @@ void info_mdns_print(char * msg)
 #endif
 
 #if defined(TCPIP_ZC_DEBUG_MDNS)
-void debug_mdns_print(char * msg)
+void debug_mdns_print(const char * msg)
 {
 	if (zeroconf_dbg_level >= 2)
 		SYS_CONSOLE_MESSAGE(msg);

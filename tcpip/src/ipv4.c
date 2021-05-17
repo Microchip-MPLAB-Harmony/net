@@ -480,7 +480,7 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_FwdPktMacDestination(TCPIP_MAC_PACKET* pF
 static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TABLE_ENTRY* pEntry, IPV4_PKT_PROC_TYPE procType);
 static bool TCPIP_IPV4_ProcessExtPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV4_PKT_PROC_TYPE procType);
 static const IPV4_ROUTE_TABLE_ENTRY* TCPIP_IPV4_FindFwdRoute(IPV4_FORWARD_DESCRIPTOR* pFDcpt, TCPIP_MAC_PACKET* pRxPkt);
-static TCPIP_UINT32_VAL IPV4_32LeadingOnes(uint32_t value);
+static uint32_t IPV4_32LeadingOnes(uint32_t value);
 #if (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
 static TCPIP_IPV4_RES IPv4_BuildAsciiTable(IPV4_FORWARD_DESCRIPTOR* pFDcpt, const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pAEntry, size_t nEntries);
 #endif  // (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
@@ -1119,7 +1119,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
 // It returns the number of contiguous leading ones - in the hi part
 // followed by contiguous zeroes - in the low part
 // Counting stops if after detecting zeroes, a one is found again
-static TCPIP_UINT32_VAL IPV4_32LeadingOnes(uint32_t value)
+static uint32_t IPV4_32LeadingOnes(uint32_t value)
 {
     int ix;
     TCPIP_UINT32_VAL count;
@@ -1152,7 +1152,7 @@ static TCPIP_UINT32_VAL IPV4_32LeadingOnes(uint32_t value)
     count.word.HW = nOnes;
     count.word.LW = nZeroes;
 
-    return count;
+    return count.Val;
 }
 
 static TCPIP_IPV4_RES IPV4_BuildForwardTables(const TCPIP_IPV4_MODULE_CONFIG* pIpInit, const void* memH, int nIfs)
@@ -1330,7 +1330,7 @@ static TCPIP_IPV4_RES IPv4_BuildAsciiTable(IPV4_FORWARD_DESCRIPTOR* pFwdDcpt, co
         }
 
         // check for the proper mask format
-        onesCount = IPV4_32LeadingOnes(netMask.Val);
+        onesCount.Val = IPV4_32LeadingOnes(netMask.Val);
         if(onesCount.word.HW + onesCount.word.LW != 32)
         {   // ill formatted mask
             return TCPIP_IPV4_RES_MASK_ERR;
@@ -1386,7 +1386,7 @@ static TCPIP_IPV4_RES IPv4_BuildBinaryTable(IPV4_FORWARD_DESCRIPTOR* pFwdDcpt, c
         }
 
         // check for the proper mask format
-        onesCount = IPV4_32LeadingOnes(pBEntry->netMask);
+        onesCount.Val = IPV4_32LeadingOnes(pBEntry->netMask);
         if(onesCount.word.HW + onesCount.word.LW != 32)
         {   // ill formatted mask
             return TCPIP_IPV4_RES_MASK_ERR;
