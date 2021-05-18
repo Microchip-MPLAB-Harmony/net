@@ -751,7 +751,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
  ***********************************************/
 
 // returns a pending RX packet if exists
-TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat)  
+TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)  
 {
 	DRV_PIC32CGMAC_RESULT	ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;	
 	TCPIP_MAC_RES			mRes;	
@@ -816,10 +816,6 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
 	{
 		*pRes = mRes;
 	}
-	if(ppPktStat)
-	{
-		*ppPktStat = 0;
-	}
 	
 	if(mRes == TCPIP_MAC_RES_OK)
 	{   // valid ethernet packet;
@@ -851,10 +847,11 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
 			pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
 		}
 
-		if(ppPktStat)
+		if(pPktStat)
 		{					
-			*ppPktStat = (TCPIP_MAC_PACKET_RX_STAT*)&pRxPktStat;
+			*pPktStat = *(TCPIP_MAC_PACKET_RX_STAT*)&pRxPktStat;
 		}
+
 
         pRxPkt->pktPriority = DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(pMACDrv, queueIndex);
 		// success

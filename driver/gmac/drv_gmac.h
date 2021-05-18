@@ -658,7 +658,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
 
 // *****************************************************************************
 /* Function:
-    TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+    TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
   Summary:
     This is the MAC receive function.
@@ -668,7 +668,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     This function will return a packet if such a pending packet exists.
     
     Additional information about the packet is available by providing the pRes and
-    ppPktStat fields.
+    pPktStat fields.
 
   Precondition:
     DRV_GMAC_Initialize() should have been called.
@@ -679,10 +679,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     - pRes        - optional pointer to an address that will receive an additional
                     result associated with the operation.
                     Can be 0 if not needed.
-    - ppPktStat   - optional pointer to an address that will receive the received
-                    packet status.
-                    Note that this pointer cannot be used once the packet
-                    acknowledgment function was called.
+    - pPktStat    - optional pointer to an address where to copy the received packet status.
                     Can be 0 if not needed.
 
 
@@ -721,7 +718,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
     - The MAC driver may use the DRV_GMAC_Process() for obtaining new RX packets if needed.
 
 */
-TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
 
 /*****************************************************************************

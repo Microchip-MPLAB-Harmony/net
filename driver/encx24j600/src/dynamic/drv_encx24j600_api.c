@@ -694,7 +694,7 @@ TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPac
     Details:
     This function retrieves a packet from the driver.  The packet needs to be
     acknowledged with the linked acknowledge function so it can be reused.
-    Note: ppPktStat is ignored in the first release.
+    Note: pPktStat is ignored in the first release.
 
     Preconditions:
     The client had to be successfully open with DRV_ENCX24J600_Open()
@@ -702,13 +702,13 @@ TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPac
     Parameters:
         hMac: the successfully opened handle
         pRes: the result of the operation
-        ppPktStat: pointer to the receive statistics
+        pPktStat: address to the receive statistics
 
     Returns:
         pointer to a valid packet on success
         NULL otherwise
 */
-TCPIP_MAC_PACKET* DRV_ENCX24J600_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat)
+TCPIP_MAC_PACKET* DRV_ENCX24J600_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)
 {
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
     DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);

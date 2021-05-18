@@ -2198,7 +2198,7 @@ TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPa
 // *****************************************************************************
 /* Function:
      TCPIP_MAC_PACKET*   TCPIP_MAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, 
-	                                  const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+	                                  TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
   Summary:
     A packet is returned if such a pending packet exists.
@@ -2219,7 +2219,7 @@ TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPa
     - TCPIP_MAC_PKT_FLAG_SPLIT has to be set if the packet has multiple data segments
 
     Additional information about the packet is available by providing the pRes and
-    ppPktStat fields.
+    pPktStat fields.
 
   Precondition:
    TCPIP_MAC_Initialize should have been called.
@@ -2230,10 +2230,7 @@ TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPa
     pRes        - optional pointer to an address that will receive an additional
                     result associated with the operation.
                     Can be 0 if not needed.
-    ppPktStat   - optional pointer to an address that will receive the received
-                    packet status.
-                    Note that this pointer cannot be used once the packet
-                    acknowledgment function was called.
+    pPktStat    - optional pointer to an address where the received packet status will be copied
                     Can be 0 if not needed.
 
   Returns:
@@ -2259,10 +2256,10 @@ TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPa
 	
      Not all the MACs have hardware support for the received packet status.
       If the MAC driver cannot supply the TCPIP_MAC_PACKET_RX_STAT info,
-      it should set the ppPktStat to 0.
+      it should set the *pPktStat to 0.
 
 */
-TCPIP_MAC_PACKET*   TCPIP_MAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+TCPIP_MAC_PACKET*   TCPIP_MAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
 // *****************************************************************************
 /* Function:

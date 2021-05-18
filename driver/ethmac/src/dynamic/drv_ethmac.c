@@ -891,7 +891,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
  ***********************************************/
 
 // returns a pending RX packet if exists
-TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat)
+TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)
 {
 	DRV_ETHMAC_RESULT			        ethRes;
     DRV_ETHMAC_PKT_DCPT            *pRootDcpt, *pLastDcpt;
@@ -953,10 +953,6 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
     {
         *pRes = mRes;
     }
-    if(ppPktStat)
-    {
-        *ppPktStat = 0; 
-    }
 
     if(mRes == TCPIP_MAC_RES_OK)
     {   // valid ETH packet;
@@ -996,7 +992,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
 #endif  // (TCPIP_EMAC_RX_FRAGMENTS > 1)
 
         // no maintenance of the total packet length
-        // could be obtained through ppPktStat 
+        // could be obtained through pPktStat 
         pRxPkt->pDSeg->segLen = pRootDcpt->nBytes - sizeof(TCPIP_MAC_ETHERNET_HEADER);
         // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
         pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
@@ -1021,9 +1017,9 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
             pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
         }
 
-        if(ppPktStat)
+        if(pPktStat)
         {
-            *ppPktStat = (const TCPIP_MAC_PACKET_RX_STAT*)pRxPktStat; 
+            *pPktStat = *(TCPIP_MAC_PACKET_RX_STAT*)pRxPktStat; 
         }
         // success
         return pRxPkt;

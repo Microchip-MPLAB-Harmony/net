@@ -597,7 +597,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
 
 // *****************************************************************************
 /* Function:
-    TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+    TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
   Summary:
     This is the MAC receive function.
@@ -607,7 +607,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
     This function will return a packet if such a pending packet exists.
     
     Additional information about the packet is available by providing the pRes and
-    ppPktStat fields.
+    pPktStat fields.
 
   Precondition:
     DRV_ETHMAC_PIC32MACInitialize() should have been called.
@@ -618,11 +618,9 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
     - pRes        - optional pointer to an address that will receive an additional
                     result associated with the operation.
                     Can be 0 if not needed.
-    - ppPktStat   - optional pointer to an address that will receive the received
-                    packet status.
-                    Note that this pointer cannot be used once the packet
-                    acknowledgment function was called.
+    - pPktStat    - optional pointer to an address where the received packet status will be copied
                     Can be 0 if not needed.
+                    
 
 
   Returns:
@@ -660,7 +658,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
     - The MAC driver may use the DRV_ETHMAC_PIC32MACProcess() for obtaining new RX packets if needed.
 
 */
-TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
 
 /*****************************************************************************

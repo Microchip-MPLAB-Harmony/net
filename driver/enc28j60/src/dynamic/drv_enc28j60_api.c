@@ -253,10 +253,8 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object)
     Reinitializes the instance of the ENC28J60 driver
 
     Details:
-    This function will deinitialize and initialize the driver instance.  As with
-    DRV_ENC28J60_Initialize DRV_ENC28J60_SetMacCtrlInfo() must be called for
-    the driver to be useful.
-    Note: this function isnâ??t planned to be implemented for the first release.
+    This function will deinitialize and initialize the driver instance.
+    Note: this function is not implemented in the first release.
 
     Preconditions:
     The driver had to be successfully initialized with DRV_ENC28J60_Initialize().
@@ -366,12 +364,14 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object)
     Returns:
         None
 */
-void DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init)
+bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init)
 {
+    TCPIP_MAC_PACKET * pkt;
     DRV_ENC28J60_DriverInfo * pDrvInst = ( DRV_ENC28J60_DriverInfo *)object;
+
     if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))
     {
-        return;
+        return false;
     }
     memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
     memcpy(pDrvInst->stackParameters.ifPhyAddress.v, init->ifPhyAddress.v, sizeof(TCPIP_MAC_ADDR));
@@ -380,18 +380,37 @@ void DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
     pDrvInst->stackCfgReady = true;
    
     int32_t res = DRV_ENC28J60_SPI_InitializeInterface(pDrvInst);
-    res = res;
-    SYS_ASSERT(res == 0, "Could not initialize the bus interface");
+    if(res != 0)
+    {
+        SYS_ASSERT(false, "Could not initialize the bus interface");
+        return false;
+    }
+
     pDrvInst->mainStateInfo.state = DRV_ENC28J60_MS_INITIALIZATION;
     uint8_t count;
     for (count = 0; count < pDrvInst->drvCfg.rxDescriptors; count++)
     {
-        TCPIP_MAC_PACKET * pkt = (*pDrvInst->stackCfg.pktAllocF)(pDrvInst->drvCfg.rxDescBufferSize, pDrvInst->drvCfg.rxDescBufferSize, TCPIP_MAC_PKT_FLAG_STATIC);
+        pkt = (*pDrvInst->stackCfg.pktAllocF)(pDrvInst->drvCfg.rxDescBufferSize, pDrvInst->drvCfg.rxDescBufferSize, TCPIP_MAC_PKT_FLAG_STATIC);
+        if(pkt == 0)
+        {
+            SYS_ASSERT(false, "ENC28J60: could not allocate packets");
+            break;
+        }
         pkt->ackFunc = DRV_ENC28J60_RxPacketAck;
-            pkt->ackParam = pDrvInst;
+        pkt->ackParam = pDrvInst;
         TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
-
     }
+
+    if(count != pDrvInst->drvCfg.rxDescriptors)
+    {   // failed
+        while((pkt = (TCPIP_MAC_PACKET*)TCPIP_Helper_ProtectedSingleListHeadRemove(&pDrvInst->rxFreePackets)) != 0)
+        {
+            (*pDrvInst->stackCfg.pktFreeF)(pkt);
+        }
+        return false;
+    }
+
+    return true;
 }
 
 // *****************************************************************************
@@ -403,7 +422,6 @@ void DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
     Details:
     This function is used by the TCP/IP stack to fully initialize the driver with
     both the ENC28J60 specific configuration and the MAC control information.
-    With this function there is no need to call DRV_ENC28J60_SetMacCtrlInfo()
 
     Preconditions:
     None
@@ -425,7 +443,10 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
     {
         return SYS_MODULE_OBJ_INVALID;
     }
-    DRV_ENC28J60_SetMacCtrlInfo(pDrvInst, (TCPIP_MAC_MODULE_CTRL *)ptr->macControl);
+    if(!DRV_ENC28J60_SetMacCtrlInfo(pDrvInst, (TCPIP_MAC_MODULE_CTRL *)ptr->macControl))
+    {
+        return SYS_MODULE_OBJ_INVALID;
+    }
 
     return pDrvInst;
 }
@@ -703,7 +724,7 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
     Details:
     This function retrieves a packet from the driver.  The packet needs to be
     acknowledged with the linked acknowledge function so it can be reused.
-    Note: ppPktStat is ignored in the first release.
+    Note: pPktStat is ignored in the first release.
 
     Preconditions:
     The client had to be successfully open with DRV_ENC28J60_Open()
@@ -711,13 +732,13 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
     Parameters:
         hMac: the successfully opened handle
         pRes: the result of the operation
-        ppPktStat: pointer to the receive statistics
+        pPktStat: address to the receive statistics
 
     Returns:
         pointer to a valid packet on success
         NULL otherwise
 */
-TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat)
+TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)
 {
     DRV_ENC28J60_ClientInfo * pClient = (DRV_ENC28J60_ClientInfo *)hMac;
     DRV_ENC28J60_DriverInfo * pDrvInst = _DRV_ENC28J60_ValidateClientHandle(pClient);

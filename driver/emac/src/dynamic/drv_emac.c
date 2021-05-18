@@ -70,7 +70,7 @@ static void                 macDrvrClose(               DRV_HANDLE hMac );
 static bool                 macDrvrLinkCheck(           DRV_HANDLE hMac );
 static bool                 macDrvrPowerMode(           DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
 static TCPIP_MAC_RES        macDrvrPacketTx(            DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket );
-static TCPIP_MAC_PACKET *   macDrvrPacketRx (           DRV_HANDLE hMac, TCPIP_MAC_RES * pRes, const TCPIP_MAC_PACKET_RX_STAT ** ppPktStat );
+static TCPIP_MAC_PACKET *   macDrvrPacketRx (           DRV_HANDLE hMac, TCPIP_MAC_RES * pRes, TCPIP_MAC_PACKET_RX_STAT * pPktStat );
 static TCPIP_MAC_RES        macDrvrProcess(             DRV_HANDLE hMac );
 static TCPIP_MAC_RES        macDrvrParametersGet(       DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS * pMacParams );
 static size_t               macDrvrConfigGet(           DRV_HANDLE hMac, void * configBuff, size_t buffSize, size_t * pConfigSize );
@@ -576,7 +576,7 @@ TCPIP_MAC_RES macDrvrPacketTx( DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket )
 TCPIP_MAC_PACKET * macDrvrPacketRx(
     DRV_HANDLE                          hMac,
     TCPIP_MAC_RES *                     pRes,
-    const TCPIP_MAC_PACKET_RX_STAT **   ppPktStatus
+    TCPIP_MAC_PACKET_RX_STAT *   pPktStatus
     )
 {
     MAC_DRIVER *            pMacDrvr = (MAC_DRIVER *) hMac;
@@ -622,9 +622,9 @@ TCPIP_MAC_PACKET * macDrvrPacketRx(
     {
         *pRes = response;
     }
-    if( ppPktStatus )
+    if( pPktStatus )
     {
-       *ppPktStatus = 0;
+        memcpy( (void *) pPktStatus, (TCPIP_MAC_PACKET_RX_STAT *) &packetStatus, sizeof( TCPIP_MAC_PACKET_RX_STAT ) );
     }
 
     return pMacPacket;

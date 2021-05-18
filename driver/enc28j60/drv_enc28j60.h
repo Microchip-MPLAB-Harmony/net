@@ -160,9 +160,7 @@ extern const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject;
     Description:
       This function initializes the ENC28J60 Driver with configuration data 
       passed into it by either the system_init function or by the 
-      DRV_ENC28J60_StackInitialize function. Calling this function alone is 
-      not enough to initialize the driver,  DRV_ENC28J60_SetMacCtrlInfo must 
-      be called with valid data before the driver is ready to be opened.
+      DRV_ENC28J60_StackInitialize function.
     
     Preconditions:
       None.
@@ -207,10 +205,8 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object);
 	  <p><b>Implementation:</b> Dynamic</p>
     
     Description:
-      This function will deinitialize and initialize the driver instance.  As with 
-      DRV_ENC28J60_Initialize DRV_ENC28J60_SetMacCtrlInfo must be called for 
-      the driver to be useful.  
-      Note: This function is not planned to be implemented for the first release.
+      This function will deinitialize and initialize the driver instance.
+      Note: This function is not implemented in the first release.
 
     Preconditions:
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize.
@@ -291,9 +287,10 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object);
       - init	- The structure containing the MAC control information
  
     Returns:
-      None.
+      true if success
+      false otherwise
 */
-void DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init);
+bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * init);
 
 // *****************************************************************************
 /* ENC28J60 Stack Initialization
@@ -305,7 +302,6 @@ void DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
     Description:
       This function is used by the TCP/IP stack to fully initialize the driver with 
       both the ENC28J60 specific configuration and the MAC control information.  
-      With this function there is no need to call DRV_ENC28J60_SetMacCtrlInfo.
 
     Preconditions:
       None.
@@ -485,7 +481,7 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
     Description:
       This function retrieves a packet from the driver.  The packet needs to be 
       acknowledged with the linked acknowledge function so it can be reused. 
-      Note: ppPktStat is ignored in the first release.
+      Note: pPktStat is ignored in the first release.
 
     Preconditions:
       The client had to be successfully opened with DRV_ENC28J60_Open.
@@ -493,13 +489,13 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
     Parameters:
       hMac			- the successfully opened handle
       pRes			- the result of the operation
-      ppPktStat		- pointer to the receive statistics
+      pPktStat		- address to the receive statistics
 
     Returns:
       - Pointer to a valid packet	- if successful
       - NULL						- if unsuccessful
 */
-TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const TCPIP_MAC_PACKET_RX_STAT** ppPktStat);
+TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
 // *****************************************************************************
 /* ENC28J60 Process
