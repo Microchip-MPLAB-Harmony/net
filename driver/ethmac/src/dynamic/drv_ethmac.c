@@ -1050,6 +1050,8 @@ bool DRV_ETHMAC_PIC32MACLinkCheck(DRV_HANDLE hMac)
         return false;
     }
 
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMacD->mData.macConfig.pPhyBase;
+    pPhyBase->DRV_ETHPHY_Tasks(pMacD->mData.hPhySysObject);
 
     (*_DRV_ETHMAC_LinkStateTbl[pMacD->mData._linkCheckState])(pMacD);
 

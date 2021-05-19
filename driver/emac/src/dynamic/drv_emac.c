@@ -377,6 +377,14 @@ void macDrvrTasks( SYS_MODULE_OBJ object )
     MAC_DRIVER *                    pMacDrvr = (MAC_DRIVER *) object;
     static bool                     discardFlag = false;
 
+    if( SYS_STATUS_UNINITIALIZED == pMacDrvr->sysStat )
+    {   // nothing to do
+        return;
+    }
+
+    pPhyBase = pMacDrvr->config.pPhyBase;
+    pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );
+
     if( !(DRV_ETHPHY_LINK_ST_UP & pMacDrvr->linkInfo.negResult.linkStatus) )
     {
         if( discardFlag == true )
@@ -391,60 +399,54 @@ void macDrvrTasks( SYS_MODULE_OBJ object )
         discardFlag = true;
     }
 
-    if( SYS_STATUS_UNINITIALIZED != pMacDrvr->sysStat )
+    switch( pMacDrvr->sysStat )
     {
-        pPhyBase = pMacDrvr->config.pPhyBase;
-        pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );
-
-        switch( pMacDrvr->sysStat )
-        {
-            case SYS_STATUS_BUSY:
-                // perform the PHY initialization
-                hPhyClient = pMacDrvr->hPhyClient;
-                phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( hPhyClient );
-                if( phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY )
-                {   // wait some more
-                    break;
-                }
-
-                phyInitRes = pPhyBase->DRV_ETHPHY_ClientOperationResult( hPhyClient );
-                if ( phyInitRes != DRV_ETHPHY_RES_OK )
-                {
-                    macDrvrDeInit( pMacDrvr );
-                    // keep the error status though
-                    pMacDrvr->sysStat = SYS_STATUS_ERROR;
-                    SYS_ERROR_PRINT( SYS_ERROR_ERROR, "DRV PHY init failed: %d\r\n", phyInitRes );
-                    break;
-                }
-
-                // PHY was detected properly
-                pMacDrvr->macFlags._linkPresent = 1;
-                if( (pMacDrvr->config.ethFlags & TCPIP_ETH_OPEN_AUTO) != 0 )
-                {   // we'll just wait for the negotiation to be done
-                    pMacDrvr->macFlags._linkNegotiation = 1;       // performing the negotiation
-                }
-                else
-                {   // no need of negotiation results; just update the MAC
-                    pauseType = (pMacDrvr->config.ethFlags & TCPIP_ETH_OPEN_FDUPLEX) ? macDrvrPAUSE_CPBL_MASK : TCPIP_ETH_PAUSE_TYPE_NONE;
-                    macDrvrLibMacOpen( pMacDrvr, pMacDrvr->linkInfo.flags, pauseType );
-                }
-
-                pMacDrvr->linkInfo.upTick = SYS_TMR_TickCountGet();     // the initialization time
-                pMacDrvr->linkInfo.waitTick =
-                    ((SYS_TMR_TickCounterFrequencyGet() * pMacDrvr->config.linkInitDelay) + 999 ) / 1000;
-                pMacDrvr->linkInfo.checkState = MAC_DRVR_LINK_CHECK_START_LINK;
-
-                pMacDrvr->sysStat = SYS_STATUS_READY;
+        case SYS_STATUS_BUSY:
+            // perform the PHY initialization
+            hPhyClient = pMacDrvr->hPhyClient;
+            phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( hPhyClient );
+            if( phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY )
+            {   // wait some more
                 break;
+            }
 
-            case SYS_STATUS_ERROR_EXTENDED:
-            case SYS_STATUS_ERROR:
-            case SYS_STATUS_UNINITIALIZED:
-            case SYS_STATUS_READY:
-            case SYS_STATUS_READY_EXTENDED:
-            default:
+            phyInitRes = pPhyBase->DRV_ETHPHY_ClientOperationResult( hPhyClient );
+            if ( phyInitRes != DRV_ETHPHY_RES_OK )
+            {
+                macDrvrDeInit( pMacDrvr );
+                // keep the error status though
+                pMacDrvr->sysStat = SYS_STATUS_ERROR;
+                SYS_ERROR_PRINT( SYS_ERROR_ERROR, "DRV PHY init failed: %d\r\n", phyInitRes );
                 break;
-        }
+            }
+
+            // PHY was detected properly
+            pMacDrvr->macFlags._linkPresent = 1;
+            if( (pMacDrvr->config.ethFlags & TCPIP_ETH_OPEN_AUTO) != 0 )
+            {   // we'll just wait for the negotiation to be done
+                pMacDrvr->macFlags._linkNegotiation = 1;       // performing the negotiation
+            }
+            else
+            {   // no need of negotiation results; just update the MAC
+                pauseType = (pMacDrvr->config.ethFlags & TCPIP_ETH_OPEN_FDUPLEX) ? macDrvrPAUSE_CPBL_MASK : TCPIP_ETH_PAUSE_TYPE_NONE;
+                macDrvrLibMacOpen( pMacDrvr, pMacDrvr->linkInfo.flags, pauseType );
+            }
+
+            pMacDrvr->linkInfo.upTick = SYS_TMR_TickCountGet();     // the initialization time
+            pMacDrvr->linkInfo.waitTick =
+                ((SYS_TMR_TickCounterFrequencyGet() * pMacDrvr->config.linkInitDelay) + 999 ) / 1000;
+            pMacDrvr->linkInfo.checkState = MAC_DRVR_LINK_CHECK_START_LINK;
+
+            pMacDrvr->sysStat = SYS_STATUS_READY;
+            break;
+
+        case SYS_STATUS_ERROR_EXTENDED:
+        case SYS_STATUS_ERROR:
+        case SYS_STATUS_UNINITIALIZED:
+        case SYS_STATUS_READY:
+        case SYS_STATUS_READY_EXTENDED:
+        default:
+            break;
     }
 }
 
@@ -1433,6 +1435,9 @@ bool macDrvrLinkCheck( DRV_HANDLE hMac )
 
     if( pMacDrvr->macFlags._linkPresent )
     {
+        const DRV_ETHPHY_OBJECT_BASE *  pPhyBase = pMacDrvr->config.pPhyBase;
+        pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );
+
         macDrvrLinkStateTbl[ pMacDrvr->linkInfo.checkState ]( pMacDrvr );
         if( pMacDrvr->macFlags._linkPrev )
         {

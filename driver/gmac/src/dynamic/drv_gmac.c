@@ -543,6 +543,14 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
 	DRV_GMAC_DRIVER * pMACDrv = (DRV_GMAC_DRIVER *)object;
 	static bool discard_flag = false;
     
+	if(pMACDrv->sGmacData._macFlags._init == 0)
+	{   // nothing to do
+		return;
+	}
+	
+	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+	pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
+
     if( (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) == 0 )
 	{
         if(discard_flag == true)
@@ -556,16 +564,6 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
         discard_flag = true;
     }
     
-    
-	if(pMACDrv->sGmacData._macFlags._init == 0)
-	{   // nothing to do
-		return;
-	}
-	
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	
-	pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
-	
 	switch(pMACDrv->sGmacData.sysStat)
 	{
 		case SYS_STATUS_BUSY:
@@ -873,6 +871,9 @@ bool DRV_GMAC_LinkCheck(DRV_HANDLE hMac)
     {
 	    return false;
     }
+
+	const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+	pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
 
     (*_DRV_GMAC_LinkStateTbl[pMACDrv->sGmacData._linkCheckState])(pMACDrv);
 
