@@ -122,11 +122,6 @@ OA_HASH_ENTRY* TCPIP_OAHASH_EntryLookup(OA_HASH_DCPT* pOH, const void* key)
     bktIx = TCPIP_OAHASH_KeyHash(pOH, key);
 #endif  // defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 
-    if(bktIx < 0)
-    {
-        bktIx += pOH->hEntries;
-    }
-    
     while(bkts < pOH->hEntries)
     {
         pBkt = (OA_HASH_ENTRY*)((uint8_t*)(pOH->memBlk) + bktIx * pOH->hEntrySize);
@@ -146,11 +141,7 @@ OA_HASH_ENTRY* TCPIP_OAHASH_EntryLookup(OA_HASH_DCPT* pOH, const void* key)
 
         // advance to the next hash slot
         bktIx += probeStep;
-        if(bktIx < 0)
-        {
-            bktIx += pOH->hEntries;
-        }
-        else if(bktIx >= pOH->hEntries)
+        if(bktIx >= pOH->hEntries)
         {
             bktIx -= pOH->hEntries;
         }
@@ -279,11 +270,6 @@ static OA_HASH_ENTRY* _OAHashFindBkt(OA_HASH_DCPT* pOH, const void* key)
     bktIx = TCPIP_OAHASH_KeyHash(pOH, key);
 #endif  // defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 
-    if(bktIx < 0)
-    {
-        bktIx += pOH->hEntries;
-    }
-    
     while(bkts < pOH->hEntries)
     {
         pBkt = (OA_HASH_ENTRY*)((uint8_t*)(pOH->memBlk) + bktIx * pOH->hEntrySize);
@@ -313,11 +299,7 @@ static OA_HASH_ENTRY* _OAHashFindBkt(OA_HASH_DCPT* pOH, const void* key)
 
         // advance to the next hash slot
         bktIx += probeStep;
-        if(bktIx < 0)
-        {
-            bktIx += pOH->hEntries;
-        }
-        else if(bktIx >= pOH->hEntries)
+        if(bktIx >= pOH->hEntries)
         {
             bktIx -= pOH->hEntries;
         }
