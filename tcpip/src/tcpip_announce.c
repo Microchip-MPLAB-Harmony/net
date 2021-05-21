@@ -63,6 +63,7 @@ typedef struct
     uint16_t    currIx;     // current interface number when counting a failing sequence
     UDP_SOCKET_BCAST_TYPE bcastType;   // type of broadcast currently used
     uint32_t    requestMask;    // request mask per interface: bit x for interface x
+    uint32_t    readyMask;      // ready mask per interface: bit x for interface x
     const void* memH;           // memory handle
     tcpipSignalHandle   sigHandle;      // asynchronous handle
     TCPIP_ANNOUNCE_MESSAGE_CALLBACK usrCback;   // user callback
@@ -301,7 +302,6 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
         // store the memory allocation handle
         announceDcpt.memH = stackCtrl->memH;
         announceDcpt.nIfs = stackCtrl->nIfs;
-        announceDcpt.requestMask = 0;
 #if defined (TCPIP_STACK_USE_DHCP_CLIENT)
         announceDcpt.dhcpHandler = TCPIP_DHCP_HandlerRegister(0, (TCPIP_DHCP_EVENT_HANDLER)ANNOUNCE_Notify, (const void*)TCPIP_ANNOUNCE_EVENT_IPV4_DHCP);
         if (announceDcpt.dhcpHandler == NULL)
@@ -401,6 +401,7 @@ void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN)
         {
             announceDcpt.requestMask &= ~(1 << stackCtrl->netIx);
+            announceDcpt.readyMask &= ~(1 << stackCtrl->netIx);
         }
         else if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
@@ -530,10 +531,10 @@ static bool TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t
             (*pDcpt->usrCback)(pNetIf, annSkt);
         }
         TCPIP_UDP_Flush (annSkt);
+        return true;
     }
 
-    return true;
-
+    return false;
 }
 
 void TCPIP_ANNOUNCE_Task(void)
@@ -580,7 +581,7 @@ static void TCPIP_ANNOUNCE_Timeout(void)
 	{   // consume all queued packets
         if(!TCPIP_UDP_GetIsReady(s))
         {
-            return;
+            break;
         }
 			
         // See if this is a discovery query or reply
@@ -593,6 +594,22 @@ static void TCPIP_ANNOUNCE_Timeout(void)
         }
         TCPIP_UDP_Discard(s);
 	}	
+
+    TCPIP_NET_IF *pNetIf;
+    int netIx;
+    for(netIx = 0; netIx < announceDcpt.nIfs; netIx++)
+    {
+        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+        if(!TCPIP_STACK_NetIsReady(pNetIf))
+        {   // network not ready
+            announceDcpt.readyMask &= ~(1 << netIx);
+        }
+        else if((announceDcpt.readyMask & (1 << netIx)) == 0)
+        {   // now it becomes ready
+            announceDcpt.readyMask |= (1 << netIx);
+            ANNOUNCE_Notify (pNetIf, DHCP_EVENT_BOUND, (const void*)TCPIP_ANNOUNCE_EVENT_IPV4_DHCP);
+        }
+    }
 
 }
 
@@ -682,6 +699,7 @@ static void _TCPIP_AnnounceCleanup(void)
     }
 
     announceDcpt.requestMask = 0;
+    announceDcpt.readyMask = 0;
     announceDcpt.nIfs = 0;
 
 }

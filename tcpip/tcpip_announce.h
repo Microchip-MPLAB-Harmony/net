@@ -354,7 +354,7 @@ bool  TCPIP_ANNOUNCE_MessageRequest(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_BROADC
 
   Returns:
     true  -  if the call succeeded.
-    false - if failed; module i snot up, for example
+    false - if failed; module is not up, for example
 
   Remarks:
     Only one callback is supported for now.
