@@ -403,11 +403,6 @@ int         TCPIP_STACK_MacToNetIndex(TCPIP_MAC_HANDLE hMac);
 
 const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf);
 
-static __inline__ const uint8_t*  __attribute__((always_inline)) _TCPIPStackNetMACAddress(TCPIP_NET_IF* pNetIf)
-{
-    return pNetIf->netMACAddr.v;
-}
-
 static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetAddress(TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->netIPAddr.Val;

@@ -1768,7 +1768,7 @@ static TCPIP_MAC_BRIDGE_RESULT _MAC_Bridge_SetHostEntries(MAC_BRIDGE_DCPT* pDcpt
         _Mac_Bridge_AssertCond(_TCPIPStack_BridgeGetIfPort(pNetIf) == portIx, __func__, __LINE__);
 
 
-        pMacAddress = (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf);
+        pMacAddress = (const TCPIP_MAC_ADDR*)_TCPIPStack_NetMACAddressGet(pNetIf);
 
         if(TCPIP_Helper_IsMcastMACAddress(pMacAddress))
         {
@@ -1776,7 +1776,7 @@ static TCPIP_MAC_BRIDGE_RESULT _MAC_Bridge_SetHostEntries(MAC_BRIDGE_DCPT* pDcpt
         }
 
         // add this interface as a static entry
-        hE = (MAC_BRIDGE_HASH_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(pDcpt->hashDcpt, _TCPIPStackNetMACAddress(pNetIf));
+        hE = (MAC_BRIDGE_HASH_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(pDcpt->hashDcpt, _TCPIPStack_NetMACAddressGet(pNetIf));
         if(hE == 0)
         {   // out of entries!
             return TCPIP_MAC_BRIDGE_RES_FDB_FULL;

@@ -1040,7 +1040,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     {
         memcpy(&macHdr->DestMACAddr, pMacDst, sizeof(macHdr->DestMACAddr));
     }
-    memcpy(&macHdr->SourceMACAddr, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pFwdIf), sizeof(macHdr->SourceMACAddr));
+    memcpy(&macHdr->SourceMACAddr, (const TCPIP_MAC_ADDR*)_TCPIPStack_NetMACAddressGet(pFwdIf), sizeof(macHdr->SourceMACAddr));
     pFwdPkt->pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_HEADER);
     pFwdPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_TX; 
 
@@ -1710,7 +1710,7 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
     pMacDst = &destMacAdd;
     if((pHostIf = TCPIP_STACK_MatchNetAddress(pNetIf, &pPkt->destAddress)))
     {   // localhost address
-        memcpy(pMacDst, _TCPIPStackNetMACAddress(pHostIf), sizeof(*pMacDst));
+        memcpy(pMacDst, _TCPIPStack_NetMACAddressGet(pHostIf), sizeof(*pMacDst));
         pPkt->netIfH = pHostIf;
         destType = TCPIP_IPV4_DEST_SELF; 
     }
@@ -1734,7 +1734,7 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
     pMacPkt->pktIf = pNetIf;
 
     // properly format the packet
-    TCPIP_PKT_PacketMACFormat(pMacPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStackNetMACAddress(pNetIf), TCPIP_ETHER_TYPE_IPV4);
+    TCPIP_PKT_PacketMACFormat(pMacPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStack_NetMACAddressGet(pNetIf), TCPIP_ETHER_TYPE_IPV4);
     if(destType != TCPIP_IPV4_DEST_SELF)
     {   // get the payload w/o the MAC frame
         pktPayload = TCPIP_PKT_PayloadLen(pMacPkt) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
