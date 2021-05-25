@@ -271,6 +271,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternal(const TCPIP_STACK_HEAP_INTERNA
         if(OSAL_SEM_Create(&hDcpt->_heapSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
         {
             (*pHeapConfig->free_fnc)(allocatedHeapBuffer);
+            hInst = 0;
             res = TCPIP_STACK_HEAP_RES_SYNCH_ERR;
             break;
         }

@@ -354,6 +354,7 @@ static uint32_t             httpSecondCount;            // rough time keeping fo
 
 static tcpipSignalHandle    httpSignalHandle = 0;
 
+static const void*          httpMemH = 0;              // handle to be used in the TCPIP_HEAP_ calls
 
 static TCPIP_HTTP_NET_USER_CALLBACK         httpRegistry;   // room for one callback registration
 static const TCPIP_HTTP_NET_USER_CALLBACK*  httpUserCback = 0;
@@ -361,6 +362,10 @@ static const TCPIP_HTTP_NET_USER_CALLBACK*  httpUserCback = 0;
 #if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_NET_SSI_PROCESS != 0) || defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 static void* (*http_malloc_fnc)(size_t bytes) = 0; // HTTP malloc
 static void  (*http_free_fnc)(void* ptr) = 0;      // HTTP free
+
+static void* _HTTP_malloc_fnc(size_t bytes); // internal HTTP malloc, thread protection
+static void  _HTTP_free_fnc(void* ptr);      // internal HTTP free, thread protection
+
 #endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_NET_SSI_PROCESS != 0) || defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 // file shell object for file access
@@ -835,33 +840,35 @@ static void _HTTP_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         _HTTP_CloseConnections(0);
     }
 
+    _HTTPAssertCond(httpMemH == stackCtrl->memH, __func__, __LINE__);
+
     if(httpConnData)
     {
-        TCPIP_HEAP_Free(stackCtrl->memH, httpConnData);
+        TCPIP_HEAP_Free(httpMemH, httpConnData);
         httpConnData = 0;
         httpConnDataSize = 0;
     }
     if(httpConnCtrl)
     {
-        TCPIP_HEAP_Free(stackCtrl->memH, httpConnCtrl);
+        TCPIP_HEAP_Free(httpMemH, httpConnCtrl);
         httpConnCtrl = 0;
     }
 #if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
     if(httpAllocDynDcpt)
     {
-        TCPIP_HEAP_Free(stackCtrl->memH, httpAllocDynDcpt);
+        TCPIP_HEAP_Free(httpMemH, httpAllocDynDcpt);
         httpAllocDynDcpt =0;
     }
 #endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
     if(httpAllocChunks)
     {
-        TCPIP_HEAP_Free(stackCtrl->memH, httpAllocChunks);
+        TCPIP_HEAP_Free(httpMemH, httpAllocChunks);
         httpAllocChunks =0;
     }
 
     while((fileBuffDcpt = (TCPIP_HTTP_FILE_BUFF_DCPT*)TCPIP_Helper_SingleListHeadRemove(&httpFileBuffers)) != 0)
     {
-        TCPIP_HEAP_Free(stackCtrl->memH, fileBuffDcpt);
+        TCPIP_HEAP_Free(httpMemH, fileBuffDcpt);
     }
 
     if(httpSignalHandle)
@@ -892,6 +899,7 @@ static void _HTTP_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
     httpUserCback = 0;
     httpConnNo = 0;
+    httpMemH = 0;
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
@@ -926,8 +934,8 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         http_free_fnc = httpInitData->http_free_fnc;
         if(http_malloc_fnc == 0 || http_free_fnc == 0)
         {   // use the default stack values
-            http_malloc_fnc = _TCPIPStackHeapConfig()->malloc_fnc;
-            http_free_fnc = _TCPIPStackHeapConfig()->free_fnc;
+            http_malloc_fnc = _HTTP_malloc_fnc;
+            http_free_fnc = _HTTP_free_fnc;
         }
         if(http_malloc_fnc == 0 || http_free_fnc == 0)
         {   // failed; should not happen
@@ -953,25 +961,25 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         httpChunksNo = httpInitData->nChunks;
         httpChunkPoolRetries = httpInitData->chunkPoolRetries;
         httpFileBufferRetries = httpInitData->fileBufferRetries;
-
         TCPIP_Helper_SingleListInitialize (&httpFileBuffers);
 
-        httpConnCtrl = (TCPIP_HTTP_NET_CONN*)TCPIP_HEAP_Calloc(stackCtrl->memH, nConns, sizeof(*httpConnCtrl));
-        httpConnData = (uint8_t*)TCPIP_HEAP_Malloc(stackCtrl->memH, nConns * httpInitData->dataLen);
-        httpAllocChunks =  (TCPIP_HTTP_CHUNK_DCPT*)TCPIP_HEAP_Calloc(stackCtrl->memH, httpChunksNo, sizeof(TCPIP_HTTP_CHUNK_DCPT)); 
+        httpMemH = stackCtrl->memH;
+        httpConnCtrl = (TCPIP_HTTP_NET_CONN*)TCPIP_HEAP_Calloc(httpMemH, nConns, sizeof(*httpConnCtrl));
+        httpConnData = (uint8_t*)TCPIP_HEAP_Malloc(httpMemH, nConns * httpInitData->dataLen);
+        httpAllocChunks =  (TCPIP_HTTP_CHUNK_DCPT*)TCPIP_HEAP_Calloc(httpMemH, httpChunksNo, sizeof(TCPIP_HTTP_CHUNK_DCPT)); 
 
 #if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
         httpDynVarRetries = httpInitData->dynVarRetries;
         // allocate dynamic variable descriptors
         httpDynDescriptorsNo = httpInitData->nDescriptors;
-        httpAllocDynDcpt =  (TCPIP_HTTP_DYNVAR_BUFF_DCPT*)TCPIP_HEAP_Calloc(stackCtrl->memH, httpDynDescriptorsNo, sizeof(TCPIP_HTTP_DYNVAR_BUFF_DCPT)); 
+        httpAllocDynDcpt =  (TCPIP_HTTP_DYNVAR_BUFF_DCPT*)TCPIP_HEAP_Calloc(httpMemH, httpDynDescriptorsNo, sizeof(TCPIP_HTTP_DYNVAR_BUFF_DCPT)); 
 #endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
 
         // try to allocate the file buffers
         fileBufferTotSize = TCPIP_HTTP_CHUNK_HEADER_LEN + httpInitData->fileBufferSize + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1; 
         for(buffIx = 0; buffIx < httpInitData->nFileBuffers; buffIx ++)
         {
-            fileBuffDcpt = (TCPIP_HTTP_FILE_BUFF_DCPT*)TCPIP_HEAP_Malloc(stackCtrl->memH, sizeof(TCPIP_HTTP_FILE_BUFF_DCPT) + fileBufferTotSize);
+            fileBuffDcpt = (TCPIP_HTTP_FILE_BUFF_DCPT*)TCPIP_HEAP_Malloc(httpMemH, sizeof(TCPIP_HTTP_FILE_BUFF_DCPT) + fileBufferTotSize);
             if(fileBuffDcpt)
             {
                 fileBuffDcpt->fileBufferSize = httpInitData->fileBufferSize;
@@ -5745,6 +5753,22 @@ static uint16_t _HTTP_ConnectionDiscard(TCPIP_HTTP_NET_CONN* pHttpCon, uint16_t 
     return totDiscard;
 }
 
+#if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_NET_SSI_PROCESS != 0) || defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
+// internal HTTP malloc, thread protection
+static void* _HTTP_malloc_fnc(size_t bytes)
+{
+    return httpMemH == 0 ? 0 : TCPIP_HEAP_Malloc(httpMemH, bytes);
+}
+
+// internal HTTP free, thread protection
+static void  _HTTP_free_fnc(void* ptr)
+{
+    if(httpMemH != 0)
+    {
+        TCPIP_HEAP_Free(httpMemH, ptr);
+    }
+}
+#endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_NET_SSI_PROCESS != 0) || defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 #endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
