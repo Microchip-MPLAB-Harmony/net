@@ -147,7 +147,7 @@ bool BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
 /*****************************************************************************
   Function:
-    void BerkeleySocketDeinit(void)
+    void BerkeleySocketDeInit(void)
 
   Summary:
     De-Initializes the Berkeley socket structure array.
