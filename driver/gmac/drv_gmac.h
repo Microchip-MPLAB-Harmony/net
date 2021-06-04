@@ -100,8 +100,17 @@ typedef struct
 {	
 	/** RX Descriptor count */
 	uint16_t nRxDescCnt;
-    /** RX buffer count */
-	uint16_t nRxBuffCount;
+    /* Number of MAC dedicated RX buffers */
+    /* These buffers/packets are owned by the MAC and are not returned to the packet pool */
+    /* They are allocated at MAC initialization time using pktAllocF */ 
+    /* and freed at MAC de-initialize time using pktFreeF */
+    /* Could be 0, if only not dedicated buffers are needed. */
+    /* For best performance usually it's best to have some dedicated buffers */
+    /* so as to minimize the run time allocations */
+    uint16_t nRxDedicatedBuffers;
+    /* Number Additional RX buffer allocated during MAC initialization */
+    /* These buffers/packets are freed during runtime */
+	uint16_t nRxAddlBuffCount;
     /** RX buffer count threshold */
 	uint16_t nRxBuffCntThres;
     /** RX buffer allocate count */

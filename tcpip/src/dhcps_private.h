@@ -110,7 +110,7 @@ typedef struct
 
 
 // DHCP or BOOTP Header structure
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t	MessageType;	// Message type for this message
     uint8_t	HardwareType;	// Hardware type for this message

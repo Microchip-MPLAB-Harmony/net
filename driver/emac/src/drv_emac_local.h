@@ -208,18 +208,25 @@ typedef struct {
     SYS_STATUS                      sysStat;                // driver status
     union
     {
-        uint16_t        val;
+        uint8_t         val;
         struct
         {
-            uint16_t    _open               : 1;            // the corresponding MAC is opened
-            uint16_t    _linkPresent        : 1;            // lif connection to the PHY properly detected : on/off
-            uint16_t    _linkNegotiation    : 1;            // if an auto-negotiation is in effect : on/off
-            uint16_t    _linkPrev           : 1;            // last value of the link status: on/off
-            uint16_t    _linkUpDone         : 1;            // the link up sequence done
+            uint8_t     _open               : 1;            // the corresponding MAC is opened
+            uint8_t     _linkPresent        : 1;            // lif connection to the PHY properly detected : on/off
+            uint8_t     _linkNegotiation    : 1;            // if an auto-negotiation is in effect : on/off
+            uint8_t     _linkPrev           : 1;            // last value of the link status: on/off
+            uint8_t     _linkUpDone         : 1;            // the link up sequence done
             // add another flags here
         };
     } macFlags;                                             // corresponding MAC flags
-    uint16_t                        _segLoadOffset;         // segment allocation offset
+    uint8_t                         _dataOffset;            // the data offset (TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag)
+
+    int16_t                         _gapDcptOffset;         // gap descriptor offset  
+    uint16_t                        _gapDcptSize;           // gap descriptor size
+    // control flags from the stack
+    uint16_t                        _controlFlags;
+
+
 
     // general stuff
     MAC_DRVR_CALLBACK               callBack;

@@ -169,12 +169,16 @@ typedef struct
             uint16_t    _open               : 1;    // the corresponding MAC is opened
             uint16_t    _linkPresent        : 1;    // lif connection to the PHY properly detected : on/off
             uint16_t    _linkNegotiation    : 1;    // if an auto-negotiation is in effect : on/off
-            uint16_t	_linkPrev           : 1;    // last value of the link status: on/off
-            uint16_t	_linkUpDone       : 1;      // the link up sequence done
+            uint16_t    _linkPrev           : 1;    // last value of the link status: on/off
+            uint16_t    _linkUpDone         : 1;    // the link up sequence done
             // add another flags here
         };
     }                   _macFlags;          // corresponding MAC flags
-    uint16_t            _segLoadOffset;     // segment allocation offset
+
+    uint16_t            _controlFlags;      // TCPIP_MAC_CONTROL_FLAGS value 
+    int16_t             _gapDcptOffset;     // gap descriptor offset
+    uint16_t            _gapDcptSize;       // gap size
+    uint32_t            _dataOffsetMask;    // the data offset mask, based on the TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag
 
     TCPIP_MODULE_MAC_PIC32INT_CONFIG    macConfig;  // configuration parameters
     DRV_ETHERNET_REGISTERS*             pEthReg;    // pointer to Ethernet registers describing the peripheral

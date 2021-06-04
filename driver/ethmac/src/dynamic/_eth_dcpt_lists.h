@@ -44,12 +44,17 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     that the hardware overhead is higher when many buffers have to be handled
     for one packet.  The list ends when the next field is NULL or when the pBuff
     is NULL.
+
+    NOTE: definition matches the tcpip_mac.h::TCPIP_MAC_DATA_SEGMENT!
 */
 
 typedef struct _tag_DRV_ETHMAC_PKT_DCPT
 {
     // Next descriptor in chain. NULL to end
     struct _tag_DRV_ETHMAC_PKT_DCPT  *next;
+
+    // segment buffer. Not used
+    void                    *segBuffer;
 
     // Buffer to be transmitted
     void                   *pBuff;

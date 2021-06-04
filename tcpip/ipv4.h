@@ -531,7 +531,7 @@ typedef union
   Remarks:
     None.
  */
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     struct
     {

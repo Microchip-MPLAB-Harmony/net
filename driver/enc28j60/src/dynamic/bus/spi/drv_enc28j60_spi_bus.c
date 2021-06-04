@@ -1608,8 +1608,8 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    if(pSeg == 0 || pSeg->segLoadOffset < sizeof(TCPIP_MAC_PACKET*) + 2)
-    {   // cannot send this packet; 2 bytes gap needed to store the command
+    if(pSeg == 0)
+    {   // cannot send this packet; 
         return TCPIP_MAC_RES_PACKET_ERR;
     }
 

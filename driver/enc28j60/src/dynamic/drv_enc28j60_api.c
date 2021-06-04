@@ -373,6 +373,12 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
     {
         return false;
     }
+
+    if(init->gapDcptSize < 2)
+    {   // need 2 bytes gap before the packet to store the command
+        return false;
+    }
+
     memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
     memcpy(pDrvInst->stackParameters.ifPhyAddress.v, init->ifPhyAddress.v, sizeof(TCPIP_MAC_ADDR));
     pDrvInst->stackParameters.macType = TCPIP_MAC_TYPE_ETH;

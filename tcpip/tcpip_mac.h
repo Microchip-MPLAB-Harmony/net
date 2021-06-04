@@ -231,27 +231,21 @@ typedef enum
 
 
 // *****************************************************************************
-/*  TCPIP MAC Segment Payload
+/*  TCPIP MAC Segment Gap Descriptor
 
   Summary:
-    Payload data carried by a MAC data segment.
+    A data gap that's part of the MAC data segment.
 
   Description:
-    Structure of a segment payload buffer in a MAC data segment.
+    This data gap stores for each segment the pointer of the associated
+    TCPIP_MAC_PACKET (each segment is allocated as part of a TCPIP_MAC_PACKET).
 
-    The actual layout of the memory allocated for segment payload:
-    | ... alignment space, if needed                                |
-    | 4 bytes for storing the packet pointer this buffer belongs to |
-    | n bytes gap for MAC use. NOT  PRESERVED across calls!         |
-    | Cache aligned payload buffer (segSize bytes)                  |
+    It is intended as an simple way for the MAC driver to recover from the
+    segment buffer (the buffer where the payload is set) the corresponding packet pointer.
 
-  
+    It also has a variable gap space for the MAC driver use.
+
   Remarks:
-    See also the notes for the segLoadOffset member.
-    TCPIP_MAC_DATA_SEGMENT::segLoadOffset ==  sizeof(segmentPktPtr) + sizeof(segmentDataGap)
-
-    On 32-bit machines, the segment payload is allocated so that it is always
-    cache line size aligned and its size is 32-bits multiple.
 
     Normally only the 1st segment of a packet needs 
     this extra gap at the beginning of the segment buffer.
@@ -262,15 +256,18 @@ typedef enum
     This segmentDataGap space is reserved for the MAC purposes.
     However, it is not guaranteed to be saved when packets are sent across multiple MACs!
 
-    The actual layout of the memory allocated for a segment segLoad:
-    | ... alignment space, if needed                                |
-    | 4 bytes for storing the packet pointer this buffer belongs to |
-    | x bytes segmentDataGap for MAC use. NOT  PRESERVED across calls!     |
-    | Cache aligned payload buffer (segSize bytes)                  |
-    The segLoad points to this address, containing the 1st byte to be transmitted.
+    For the Harmony TCP/IP, the TCPIP_MAC_SEGMENT_GAP_DCPT precedes the 
+    segment buffer. The gap is at the beginning of the segment buffer.
+    So the actual layout of the memory allocated for a segment segBuffer:
+    TCPIP_MAC_SEGMENT_GAP_DCPT:
+        | ... alignment space, if needed                                |
+        | 4 bytes for storing the packet pointer this buffer belongs to |
+        | n bytes gap for MAC use. NOT  PRESERVED across calls!         |
+    segment buffer:
+        | Cache aligned buffer segBuffer (segSize bytes)                |
 
-    The packet allocator in the TCP/IP stack will set the packet pointer
-    the data buffer belongs in the segmentPktPtr member.
+
+    The Harmony TCP/IP stack packet allocator properly sets the segmentPktPtr.
         
 */
 typedef struct
@@ -280,23 +277,14 @@ typedef struct
      * a payload belongs to. */
     struct _tag_TCPIP_MAC_PACKET*   segmentPktPtr;
 
-    /* Extra space allocated before the actual segment payload begins.
-     * This space is used by the MAC driver.
+    /* Extra space allocated to be used by the MAC driver
      * The size of the gap is variable:
      *      - usually 4 bytes when only Ethernet drivers are used
      *      - 34 bytes when Wi-Fi drivers are present 
     */
     uint32_t                        segmentDataGap[];
 
-    /* The segment payload itself.
-       TCPIP_MAC_DATA_SEGMENT::segLoad points to this address!!!
-
-       It specifies the address of the 1st byte of the segment payload.
-       It is cache line size aligned.
-       For processors with no cache it is 32 bits aligned
-       Size is 32-bits multiple */
-    // uint32_t                        segmentPayload[];
-}TCPIP_MAC_SEGMENT_PAYLOAD;
+}TCPIP_MAC_SEGMENT_GAP_DCPT;
 
 
 
@@ -317,9 +305,18 @@ typedef struct
    
   
   Remarks:
-    See notes for the segLoadOffset member.
-    On 32-bit machines, the segment payload is allocated so that it is always
-    cache line size aligned and its size is 32-bits multiple.
+    The Harmony TCP/IP packet allocator concatenates the TCPIP_MAC_SEGMENT_GAP_DCPT
+    with the segment buffer.
+    Therefore the actual layout of the memory allocated for segment data:
+    TCPIP_MAC_SEGMENT_GAP_DCPT:
+        | ... alignment space, if needed                                |
+        | 4 bytes for storing the packet pointer this buffer belongs to |
+        | n bytes gap for MAC use. NOT  PRESERVED across calls!         |
+    segment buffer:
+        | Cache aligned buffer segBuffer (segSize bytes)                |
+
+    
+    Other alocators can produce a different memory layout.
 
 */
 
@@ -329,12 +326,20 @@ typedef struct _tag_MAC_DATA_SEGMENT
     /*  Multi-segment support, next segment in the chain. */
     struct _tag_MAC_DATA_SEGMENT* next;      
 
+    /*  Pointer to the segment data buffer
+        It specifies the address where the data starts in the buffer.
+        On 32-bit machines, the segment data buffer (segBuffer) is allocated so that it is always
+        cache line size aligned and its size is 32-bits multiple.
+        If the processor does not have cache, then it is 32 bits aligned */
+    uint8_t*                 segBuffer;        
+
     /*  Pointer to segment data payload
-        Points to TCPIP_MAC_SEGMENT_PAYLOAD::segmentPayload
-        
         It specifies the address of the 1st payload byte.
-        If the processor has cache, then it is always cache line size aligned.
-        Otherwise is 32 bits aligned */
+        It is updated at run time and it is
+        segLoad = segBuffer + dataOffset (see TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag)
+
+        For the Harmony TCP/IP stack the MAC drivers are required to support
+        dataOffset == 2 (i.e. TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2 flag will be set). */
     uint8_t*                 segLoad;        
 
     /*  Segment payload size;
@@ -349,7 +354,7 @@ typedef struct _tag_MAC_DATA_SEGMENT
     uint16_t                 segLen;         
 
     /*  Segment allocated total usable size.
-        This does not include the segLoadOffset (see below). */
+        This does not include the TCPIP_MAC_SEGMENT_GAP_DCPT */
     uint16_t                 segSize;        
 
     /*  TCPIP_MAC_SEGMENT_FLAGS segment flags:
@@ -359,26 +364,11 @@ typedef struct _tag_MAC_DATA_SEGMENT
 		TCPIP_MAC_SEG_FLAG_RX_STICKY */
     uint16_t                 segFlags;       
 
-    /*  Offset in bytes between the address pointed by segLoad 
-        and the address where the segment buffer starts/was allocated.
-        It specifies the gap space at the beginning of the TCPIP_MAC_SEGMENT_PAYLOAD
-        before the segmentPayload begins.
-        segLoadOffset ==  sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentPktPtr) + sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap)
-        
-        This currently is greater or equal than 8 bytes depending on the MAC drivers
-        that are part of the build!
-        See TCPIP_MAC_DATA_SEGMENT.
-
-        For implementations that may work outside the Harmony TCP/IP stack
-        it is up to the MAC to check that the value of this offset is enforced.
-        */
-    uint16_t                 segLoadOffset;  
-
     /* The size this segment payload allocation. Debug/trace purposes */
     uint16_t                 segAllocSize;  
 
     /*  Additional client segment data. Ignored by the MAC driver. */
-    uint8_t                  segClientData[2];
+    uint8_t                  segClientData[4];
 
     /*  Additional client segment payload; Ignored by the MAC driver. */
     /*  uint8_t                  segClientLoad[]; */
@@ -907,7 +897,12 @@ struct _tag_TCPIP_MAC_PACKET
        On TX: The MAC driver sets this field when calling the packet ackFunc.
        On RX: The higher level protocol which is the recipient of the packet
              sets this field when calling the packet ackFunc. */
-    int16_t                         ackRes;
+    int8_t                          ackRes;
+
+    /* Priority associated with the packet.
+       On TX: The MAC driver use this field to transmit packet using priority queues.
+       On RX: The MAC driver inform stack about the priority of the packet received */
+    uint8_t                         pktPriority;
 
     /* Packet client data; ignored by the MAC driver.
        It can be used by the packet client modules
@@ -926,10 +921,6 @@ struct _tag_TCPIP_MAC_PACKET
         };
     };
 
-    /* Priority associated with the packet.
-       On TX: The MAC driver use this field to transmit packet using priority queues.
-       On RX: The MAC driver inform stack about the priority of the packet received */
-    uint8_t                         pktPriority;
     /* Additional client packet payload, variable packet data.
        Ignored by the MAC driver. */
     uint32_t                        pktClientLoad[];
@@ -1505,6 +1496,47 @@ typedef void    (*TCPIP_MAC_EventF)(TCPIP_MAC_EVENT event, const void* eventPara
 */
 typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUEST request);
 
+// *****************************************************************************
+/*
+  Retrieve packet Function:
+    typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, bool isRx, bool peek);
+
+  Summary:
+    Helper function for the MAC driver to retrieve a TCPIP_MAC_PACKET packet belonging to a segment buffer
+
+  Description:
+    This function returns a TCPIP_MAC_PACKET pointer corresponding to a segment buffer.
+    The user of the MAC driver, the TCP/IP stack, can implement a fast mechanism for maintaining
+    the packet <-> buffer association.
+
+    The MAC driver will call th efunction to retrieve the TCPIP_MAC_PACKET that corresponds 
+    to a transmitted/received segment buffer.
+
+
+  Parameters:
+    segBuffer:      - pointer to a TX/RX buffer
+    isRx            - boolean specifying if an RX/TX packet is needed
+                      This allows implementing different RX/TX mappings/tables
+    peek            - boolean to specify if a peek operation is needed
+                      If true, the corresponding TCPIP_MAC_PACKET is not removed from the tables
+                      Otherwise the call will remove the TCPIP_MAC_PACKET from the tables
+
+  Returns:
+   - a valid TCPIP_MAC_PACKET pointer if the call was successful and the corresponding packet was found
+   - 0 if the call failed and no packet corresponding to the segment buffer was found
+
+  Remarks:   
+    This mechanism is optional and maintaining the TCPIP_MAC_PACKET pointer as part of the
+    TCPIP_MAC_SEGMENT_GAP_DCPT is preferred.
+    
+    If this function is provided, the MAC driver will have to call it to retrieve the TCPIP_MAC_PACKET that corresponds 
+    to a transmitted/received segment buffer.
+
+    The Harmony TCP/IP stack does not use this mechanism.
+
+*/
+typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, bool isRx, bool peek);
+
 
 // *****************************************************************************
 /*  MAC Types
@@ -1569,6 +1601,63 @@ typedef enum
 
 
 // *****************************************************************************
+/*  MAC Control Flags
+
+  Summary:
+    List of the MAC control flags.
+
+  Description:
+    List of specific MAC flags that control the MAC
+    functionality.
+  
+  Remarks:        
+    Multiple flags can be "ORed".
+
+    16 bits are reserved for now
+*/
+typedef enum
+{
+    /*  No special flag set */
+    TCPIP_MAC_CONTROL_FLAG_NONE         = 0x0000, 
+
+    /* Data payload offset of 2 bytes is required
+       This is the 2 bytes offset from the segment data buffer: TCPIP_MAC_DATA_SEGMENT.segBuffer
+       to where the payload data actually resides.
+       This has currently a value of 0 or 2.
+       When this flag is set, then dataOffset == 2
+            then the network header layers are properly aligned.
+            this should be the default
+       Otherwise dataOffset = 0;
+       Notes: the Harmony TCP/IP stack requires dataOffset == 2! 
+              If the driver does not support the offset value, then it needs to perform
+              the buffer adjustment internally!
+              
+              For extracting the segBuffer from segLoad the MAC driver should use the 
+              mask corresponding to the dataOffset:
+              TCPIP_MAC_DATA_SEGMENT::segBuffer = TCPIP_MAC_DATA_SEGMENT:: segLoad & dataOffsetMask
+              where
+                dataOffsetMask == 0xfffffffc if dataOffset == 2
+                dataOffsetMask == 0xffffffff if dataOffset == 0
+              */
+    TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2  = 0x0001,
+
+    
+
+    /*  The driver should not reuse its dynamically allocated buffers
+     *  even when the current number of buffers is below the threshold.
+     *  Dynamic buffers should be always freed */
+    TCPIP_MAC_CONTROL_NO_SMART_ALLOC    = 0x0002, 
+
+    /* The driver is not requested to verify the link status and/or
+       discard packets when link is down.
+       Note: the Harmony stack uses MAC link check */
+    TCPIP_MAC_CONTROL_NO_LINK_CHECK     = 0x0004, 
+
+    /* Other flags eventually added */
+
+}TCPIP_MAC_CONTROL_FLAGS;
+
+// *****************************************************************************
 /*  MAC Process Flags
 
   Summary:
@@ -1597,6 +1686,7 @@ typedef enum
     TCPIP_MAC_PROCESS_FLAG_ANY      = 0x0100, 
 
 }TCPIP_MAC_PROCESS_FLAGS;
+
 
 
 // *****************************************************************************
@@ -1654,23 +1744,53 @@ typedef struct
     /*  Parameter to be used when the event function is called. */
     const void*             eventParam;    
 
+    /* 
+    Function to retrieve a TCPIP_MAC_PACKET pointer corresponding to a TX/RX buffer.
+    This mechanism is optional and maintaining the TCPIP_MAC_PACKET pointer as part of the
+    TCPIP_MAC_SEGMENT_GAP_DCPT is preferred.
+    
+    If this function is provided, the MAC driver will have to call it to retrieve the TCPIP_MAC_PACKET that corresponds 
+    to a transmitted/received segment buffer.
+    Otherwise the TCPIP_MAC_SEGMENT_GAP_DCPT mechanism should be used.
+
+    The Harmony TCP/IP stack does not use this mechanism and the retrieveF should == 0. */
+    TCPIP_MAC_PKT_RetrieveF retrieveF;
+
     /*  number of the interfaces supported in this session */
     uint16_t                nIfs;         
-
-    /*  Module identifier. 
-        Allows multiple channels/ports, etc. MAC support. */
-    uint16_t                moduleId;
 
     /*  index of the current interface */
     uint16_t                netIx;
 
-    /* The extra space allocated at the beginning of the 
-    segment data buffer: TCPIP_MAC_DATA_SEGMENT.segLoad
-    segLoadOffset ==  sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentPktPtr) + sizeof(TCPIP_MAC_SEGMENT_PAYLOAD::segmentDataGap)
+    /*  Offset in bytes between the address pointed by segBuffer 
+        and the address of the TCPIP_MAC_SEGMENT_GAP_DCPT for this segment buffer is stored.
+        This offset has the same value for all packets RX/TX packets passed to the driver.
 
-    It can be different based on the MAC type included in the build
-    MAC driver uses it to have the layout of the data segment */
-    uint16_t                segLoadOffset;
+        The MAC driver can use this offset to restore the TCPIP_MAC_SEGMENT_GAP_DCPT
+        and the packet pointer the segment belongs to:
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(TCPIP_MAC_DATA_SEGMENT::segBuffer + gapDcptOffset);
+            TCPIP_MAC_PACKET* pMacPkt = pGap->segmentPktPtr;
+
+
+        Note: signed value!
+        */
+    int16_t                 gapDcptOffset;  
+
+    /*  Size of the TCPIP_MAC_SEGMENT_GAP_DCPT structure (the segmentDataGap size is variable) 
+        It specifies the gap space present in the TCPIP_MAC_SEGMENT_GAP_DCPT
+        gapDcptSize ==  sizeof(TCPIP_MAC_SEGMENT_GAP_DCPT) == 
+        == sizeof(TCPIP_MAC_SEGMENT_GAP_DCPT::segmentPktPtr) + sizeof(TCPIP_MAC_SEGMENT_GAP_DCPT::segmentDataGap)
+        
+        It has the same value for all packets allocated by the stack.
+
+        This currently is greater or equal than 8 bytes depending on the MAC drivers
+        that are part of the build!
+        See TCPIP_MAC_SEGMENT_GAP_DCPT.
+
+        For implementations that may work outside the Harmony TCP/IP stack
+        it is up to the MAC to check that the value of this offset is enforced.
+        */
+    uint16_t                gapDcptSize;
 
     /*  current action for the MAC/stack: TCPIP_MAC_ACTION value*/
     uint8_t                 macAction;
@@ -1681,6 +1801,8 @@ typedef struct
         TCPIP_MAC_POWER_MODE value */
     uint8_t                 powerMode;
 
+    /* A 16 bit value corresponding to TCPIP_MAC_CONTROL_FLAGS */
+    uint16_t                controlFlags;
 
     /*  Physical address of the interface. 
         MAC sets this field as part of the initialization function. 
@@ -2181,9 +2303,6 @@ void       TCPIP_MAC_Close(DRV_HANDLE hMac);
 	  
      On 32-bit machines, the 1st segment payload of a packet is allocated so
       that it is always cache line size aligned and its size is a cache line multiple.
-	  
-     Harmony MAC driver specific : the driver checks that the
-      segLoadOffset >= 8. See notes for the segLoadOffset member.
 	  
      The packet is not required to contain the Frame Check Sequence
       (FCS/CRC32) field. The MAC driver/controller will insert that field

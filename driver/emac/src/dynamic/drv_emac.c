@@ -215,8 +215,8 @@ SYS_MODULE_OBJ macDrvrInitialize(
     {   // have a client connected
         return SYS_MODULE_OBJ_INVALID;
     }
-    if( macControl->memH == 0 || macControl->segLoadOffset < sizeof(TCPIP_MAC_PACKET* ))
-    {     // not possible without dynamic memory or if there is no room to store the packet pointer!        
+    if( macControl->memH == 0)
+    {     // not possible without dynamic memory
         return SYS_MODULE_OBJ_INVALID;
     }
     if( initData == 0 )
@@ -265,7 +265,11 @@ SYS_MODULE_OBJ macDrvrInitialize(
     pMacDrvr->callBack.pktFreeF = macControl->pktFreeF;
     pMacDrvr->callBack.pktAckF = macControl->pktAckF;
     pMacDrvr->callBack.synchF = macControl->synchF;
-    pMacDrvr->_segLoadOffset = macControl->segLoadOffset;
+
+    pMacDrvr->_gapDcptOffset = macControl->gapDcptOffset;
+    pMacDrvr->_gapDcptSize = macControl->gapDcptSize;
+    pMacDrvr->_controlFlags = macControl->controlFlags;
+    pMacDrvr->_dataOffset = (macControl->controlFlags & TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) ? 2 : 0;
 
     // copy the configuration data
     pMacDrvr->config = *initData;
@@ -383,20 +387,24 @@ void macDrvrTasks( SYS_MODULE_OBJ object )
     }
 
     pPhyBase = pMacDrvr->config.pPhyBase;
-    pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );
 
-    if( !(DRV_ETHPHY_LINK_ST_UP & pMacDrvr->linkInfo.negResult.linkStatus) )
+    if((pMacDrvr->_controlFlags & TCPIP_MAC_CONTROL_NO_LINK_CHECK) == 0) 
     {
-        if( discardFlag == true )
+        pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );
+
+        if( !(DRV_ETHPHY_LINK_ST_UP & pMacDrvr->linkInfo.negResult.linkStatus) )
         {
-            pMacDrvr->txStat.linkLossResets++;
-            macDrvrTxPacketPoolReset( pMacDrvr, TCPIP_MAC_PKT_ACK_LINK_DOWN );
-            discardFlag = false;
+            if( discardFlag == true )
+            {
+                pMacDrvr->txStat.linkLossResets++;
+                macDrvrTxPacketPoolReset( pMacDrvr, TCPIP_MAC_PKT_ACK_LINK_DOWN );
+                discardFlag = false;
+            }
         }
-    }
-    else
-    {
-        discardFlag = true;
+        else
+        {
+            discardFlag = true;
+        }
     }
 
     switch( pMacDrvr->sysStat )
@@ -531,7 +539,7 @@ uint32_t txGetValidPacketCount( TCPIP_MAC_PACKET * pMacPacket, MAC_DRIVER * pMac
     for( pTemp = pMacPacket; pTemp; pTemp = pTemp->next )
     {
         pSeg = pTemp->pDSeg;
-        if(pSeg == 0 || pSeg->segLen == 0 || pSeg->segLoadOffset < pMacDrvr->_segLoadOffset)
+        if(pSeg == 0 || pSeg->segLen == 0)
         {   // having data is the only integrity check for validity
             // one bad apple ruins the barrel
             packetCount = 0;
@@ -792,8 +800,13 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
             macDrvrLibTxInit( pMacDrvr );
             break;
         }
-        // pull packet address from segment buffer
-        pMacPacket = *(TCPIP_MAC_PACKET **) ((EMAC_RX_ADDRESS_MASK & pMacDrvr->pTxDesc[ extract ].bufferAddress) - pMacDrvr->_segLoadOffset);
+
+        // get aligned buffer address from Tx Descriptor Buffer Address
+        uint8_t* pSegBuff = (uint8_t*)(EMAC_RX_ADDRESS_MASK & pMacDrvr->pTxDesc[ extract ].bufferAddress);
+        // get packet pointer from buffer gap descriptor
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pSegBuff + pMacDrvr->_gapDcptOffset);
+        pMacPacket = pGap->segmentPktPtr;
+        
         while( extract != pMacDrvr->txInsertPt )
         {
             ++segmentsReady;

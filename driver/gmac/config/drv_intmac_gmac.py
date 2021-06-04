@@ -151,11 +151,11 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacQue0RxEn.setDefaultValue(True)
     tcpipGmacQue0RxEn.setReadOnly(True)
     
-    # Number of Tx Descriptors To Be Created for Queue0
+    # Number of Tx Descriptors for Queue0
     tcpipGmacTxDescCountQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0", tcpipGmacQue0TxEn)
-    tcpipGmacTxDescCountQue0.setLabel("Number of Tx Descriptors To Be Created")
+    tcpipGmacTxDescCountQue0.setLabel("Number of Tx Descriptors")
     tcpipGmacTxDescCountQue0.setVisible(True)
-    tcpipGmacTxDescCountQue0.setDescription("Number of Tx Descriptors To Be Created for Queue0")
+    tcpipGmacTxDescCountQue0.setDescription("Number of Tx Descriptors for Queue0")
     tcpipGmacTxDescCountQue0.setDefaultValue(8)
     tcpipGmacTxDescCountQue0.setDependencies(tcpipGmacTxDescCountQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
 
@@ -182,14 +182,22 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacMaxTxPktSizeQue0Comment.setVisible(True)
     # tcpipGmacMaxTxPktSizeQue0Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE0"])
     
-    # Number of Rx Descriptors To Be Created for Queue0
+    # Number of Rx Descriptors for Queue0
     tcpipGmacRxDescCountQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0", tcpipGmacQue0RxEn)
-    tcpipGmacRxDescCountQue0.setLabel("Number of Rx Descriptors To Be Created")
+    tcpipGmacRxDescCountQue0.setLabel("Number of Rx Descriptors")
     tcpipGmacRxDescCountQue0.setVisible(True)
-    tcpipGmacRxDescCountQue0.setDescription("Number of Rx Descriptors To Be Created for Queue0")
+    tcpipGmacRxDescCountQue0.setDescription("Number of Rx Descriptors for Queue0")
     tcpipGmacRxDescCountQue0.setDefaultValue(8)
     tcpipGmacRxDescCountQue0.setDependencies(tcpipGmacRxDescCountQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
-
+    
+    # Number of Dedicated MAC RX Buffers
+    tcpipGmacRxOwnBufferQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE0", tcpipGmacQue0RxEn)
+    tcpipGmacRxOwnBufferQue0.setLabel("Number of Dedicated MAC RX Buffers")
+    tcpipGmacRxOwnBufferQue0.setVisible(True)
+    tcpipGmacRxOwnBufferQue0.setDescription("Number of Dedicated MAC RX Buffers")
+    tcpipGmacRxOwnBufferQue0.setDefaultValue(8)
+    tcpipGmacRxOwnBufferQue0.setDependencies(tcpipGmacRxOwnBufferQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
+    
     # Size Of RX Buffer for Queue0. Should Be Multiple Of 16.
     tcpipGmacRxBuffSizeQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE0", tcpipGmacQue0RxEn)
     tcpipGmacRxBuffSizeQue0.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
@@ -198,11 +206,11 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacRxBuffSizeQue0.setDefaultValue(1536)
     tcpipGmacRxBuffSizeQue0.setDependencies(tcpipGmacRxBuffSizeQue0CallBack, ["TCPIP_GMAC_QUEUE_0"])
     
-    # Number of additional Rx buffers To Be Created for Queue0
+    # Number of additional Rx buffers for Queue0
     tcpipGmacRxAddlBuffCountQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0", tcpipGmacQue0RxEn)
-    tcpipGmacRxAddlBuffCountQue0.setLabel("Number of additional Rx buffers to be created")
+    tcpipGmacRxAddlBuffCountQue0.setLabel("Number of additional Rx buffers")
     tcpipGmacRxAddlBuffCountQue0.setVisible(True)
-    tcpipGmacRxAddlBuffCountQue0.setDescription("Number of additional Sticky Rx buffers to be created for Queue0")
+    tcpipGmacRxAddlBuffCountQue0.setDescription("Number of additional Sticky Rx buffers for Queue0")
     tcpipGmacRxAddlBuffCountQue0.setDefaultValue(2)
     tcpipGmacRxAddlBuffCountQue0.setDependencies(tcpipGmacRxAddlBuffCountQue0CallBack, ["TCPIP_GMAC_TRAFFIC"]) 
         
@@ -422,21 +430,29 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacQue1RxEn.setDefaultValue(False)
         tcpipGmacQue1RxEn.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_1"])
 
-        # Number of Tx Descriptors To Be Created for Queue1
+        # Number of Tx Descriptors for Queue1
         tcpipGmacTxDescCountQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1", tcpipGmacQue1TxEn)
-        tcpipGmacTxDescCountQue1.setLabel("Number of Tx Descriptors To Be Created")
+        tcpipGmacTxDescCountQue1.setLabel("Number of Tx Descriptors")
         tcpipGmacTxDescCountQue1.setVisible(False)
-        tcpipGmacTxDescCountQue1.setDescription("Number of Tx Descriptors To Be Created for Queue1")
+        tcpipGmacTxDescCountQue1.setDescription("Number of Tx Descriptors for Queue1")
         tcpipGmacTxDescCountQue1.setDefaultValue(1)
         tcpipGmacTxDescCountQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE1"])
 
-        # Number of Rx Descriptors To Be Created for Queue1
+        # Number of Rx Descriptors for Queue1
         tcpipGmacRxDescCountQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1", tcpipGmacQue1RxEn)
-        tcpipGmacRxDescCountQue1.setLabel("Number of Rx Descriptors To Be Created")
+        tcpipGmacRxDescCountQue1.setLabel("Number of Rx Descriptors")
         tcpipGmacRxDescCountQue1.setVisible(False)
-        tcpipGmacRxDescCountQue1.setDescription("Number of Rx Descriptors To Be Created for Queue1")
+        tcpipGmacRxDescCountQue1.setDescription("Number of Rx Descriptors for Queue1")
         tcpipGmacRxDescCountQue1.setDefaultValue(1)
         tcpipGmacRxDescCountQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])
+
+        # Number of Dedicated MAC RX Buffers
+        tcpipGmacRxOwnBufferQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE1", tcpipGmacQue1RxEn)
+        tcpipGmacRxOwnBufferQue1.setLabel("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue1.setVisible(True)
+        tcpipGmacRxOwnBufferQue1.setDescription("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue1.setDefaultValue(8)
+        tcpipGmacRxOwnBufferQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])
 
         # Size Of RX Buffer for Queue1. Should Be Multiple Of 16.
         tcpipGmacRxBuffSizeQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE1", tcpipGmacQue1RxEn)
@@ -476,11 +492,11 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue1Comment.setVisible(False)
         tcpipGmacMaxTxPktSizeQue1Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE1"])
         
-        # Number of additional Rx buffers To Be Created for Queue1
+        # Number of additional Rx buffers for Queue1
         tcpipGmacRxAddlBuffCountQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1", tcpipGmacQue1RxEn)
-        tcpipGmacRxAddlBuffCountQue1.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue1.setLabel("Number of additional Rx buffers")
         tcpipGmacRxAddlBuffCountQue1.setVisible(False)
-        tcpipGmacRxAddlBuffCountQue1.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue1")
+        tcpipGmacRxAddlBuffCountQue1.setDescription("Number of additional Sticky Rx buffers for Queue1")
         tcpipGmacRxAddlBuffCountQue1.setDefaultValue(0)
         tcpipGmacRxAddlBuffCountQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])  
             
@@ -525,21 +541,29 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacQue2RxEn.setDefaultValue(False)
         tcpipGmacQue2RxEn.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"])
         
-        # Number of Tx Descriptors To Be Created for Queue2
+        # Number of Tx Descriptors for Queue2
         tcpipGmacTxDescCountQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2", tcpipGmacQue2TxEn)
-        tcpipGmacTxDescCountQue2.setLabel("Number of Tx Descriptors To Be Created")
+        tcpipGmacTxDescCountQue2.setLabel("Number of Tx Descriptors")
         tcpipGmacTxDescCountQue2.setVisible(False)
-        tcpipGmacTxDescCountQue2.setDescription("Number of Tx Descriptors To Be Created for Queue2")
+        tcpipGmacTxDescCountQue2.setDescription("Number of Tx Descriptors for Queue2")
         tcpipGmacTxDescCountQue2.setDefaultValue(1)
         tcpipGmacTxDescCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE2"])
 
-        # Number of Rx Descriptors To Be Created for Queue2
+        # Number of Rx Descriptors for Queue2
         tcpipGmacRxDescCountQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2", tcpipGmacQue2RxEn)
-        tcpipGmacRxDescCountQue2.setLabel("Number of Rx Descriptors To Be Created")
+        tcpipGmacRxDescCountQue2.setLabel("Number of Rx Descriptors")
         tcpipGmacRxDescCountQue2.setVisible(False)
-        tcpipGmacRxDescCountQue2.setDescription("Number of Rx Descriptors To Be Created for Queue2")
+        tcpipGmacRxDescCountQue2.setDescription("Number of Rx Descriptors for Queue2")
         tcpipGmacRxDescCountQue2.setDefaultValue(1)
         tcpipGmacRxDescCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
+    
+        # Number of Dedicated MAC RX Buffers
+        tcpipGmacRxOwnBufferQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE2", tcpipGmacQue2RxEn)
+        tcpipGmacRxOwnBufferQue2.setLabel("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue2.setVisible(True)
+        tcpipGmacRxOwnBufferQue2.setDescription("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue2.setDefaultValue(1)
+        tcpipGmacRxOwnBufferQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
 
         # Size Of RX Buffer for Queue2. Should Be Multiple Of 16.
         tcpipGmacRxBuffSizeQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE2", tcpipGmacQue2RxEn)
@@ -579,11 +603,11 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue2Comment.setVisible(False)
         tcpipGmacMaxTxPktSizeQue2Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE2"])
         
-        # Number of additional Rx buffers To Be Created for Queue2
+        # Number of additional Rx buffers for Queue2
         tcpipGmacRxAddlBuffCountQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2", tcpipGmacQue2RxEn)
-        tcpipGmacRxAddlBuffCountQue2.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue2.setLabel("Number of additional Rx buffers")
         tcpipGmacRxAddlBuffCountQue2.setVisible(False)
-        tcpipGmacRxAddlBuffCountQue2.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue2")
+        tcpipGmacRxAddlBuffCountQue2.setDescription("Number of additional Sticky Rx buffers for Queue2")
         tcpipGmacRxAddlBuffCountQue2.setDefaultValue(0)
         tcpipGmacRxAddlBuffCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
             
@@ -629,22 +653,30 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacQue3RxEn.setDefaultValue(False)
         tcpipGmacQue3RxEn.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_3"])        
         
-        # Number of Tx Descriptors To Be Created for Queue3
+        # Number of Tx Descriptors for Queue3
         tcpipGmacTxDescCountQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3", tcpipGmacQue3TxEn)
-        tcpipGmacTxDescCountQue3.setLabel("Number of Tx Descriptors To Be Created")
+        tcpipGmacTxDescCountQue3.setLabel("Number of Tx Descriptors")
         tcpipGmacTxDescCountQue3.setVisible(False)
-        tcpipGmacTxDescCountQue3.setDescription("Number of Tx Descriptors To Be Created for Queue3")
+        tcpipGmacTxDescCountQue3.setDescription("Number of Tx Descriptors for Queue3")
         tcpipGmacTxDescCountQue3.setDefaultValue(1)
         tcpipGmacTxDescCountQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE3"])
 
-        # Number of Rx Descriptors To Be Created for Queue3
+        # Number of Rx Descriptors for Queue3
         tcpipGmacRxDescCountQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3", tcpipGmacQue3RxEn)
-        tcpipGmacRxDescCountQue3.setLabel("Number of Rx Descriptors To Be Created")
+        tcpipGmacRxDescCountQue3.setLabel("Number of Rx Descriptors")
         tcpipGmacRxDescCountQue3.setVisible(False)
-        tcpipGmacRxDescCountQue3.setDescription("Number of Rx Descriptors To Be Created for Queue3")
+        tcpipGmacRxDescCountQue3.setDescription("Number of Rx Descriptors for Queue3")
         tcpipGmacRxDescCountQue3.setDefaultValue(1)
         tcpipGmacRxDescCountQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
-
+    
+        # Number of Dedicated MAC RX Buffers
+        tcpipGmacRxOwnBufferQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE3", tcpipGmacQue3RxEn)
+        tcpipGmacRxOwnBufferQue3.setLabel("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue3.setVisible(True)
+        tcpipGmacRxOwnBufferQue3.setDescription("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue3.setDefaultValue(1)
+        tcpipGmacRxOwnBufferQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
+        
         # Size Of RX Buffer for Queue3. Should Be Multiple Of 16.
         tcpipGmacRxBuffSizeQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE3", tcpipGmacQue3RxEn)
         tcpipGmacRxBuffSizeQue3.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
@@ -677,11 +709,11 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue3Comment.setVisible(False)
         tcpipGmacMaxTxPktSizeQue3Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE3"])
                 
-        # Number of additional Rx buffers To Be Created for Queue3
+        # Number of additional Rx buffers for Queue3
         tcpipGmacRxAddlBuffCountQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE3", tcpipGmacQue3RxEn)
-        tcpipGmacRxAddlBuffCountQue3.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue3.setLabel("Number of additional Rx buffers")
         tcpipGmacRxAddlBuffCountQue3.setVisible(False)
-        tcpipGmacRxAddlBuffCountQue3.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue3")
+        tcpipGmacRxAddlBuffCountQue3.setDescription("Number of additional Sticky Rx buffers for Queue3")
         tcpipGmacRxAddlBuffCountQue3.setDefaultValue(0)
         tcpipGmacRxAddlBuffCountQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
             
@@ -726,22 +758,30 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacQue4RxEn.setDefaultValue(False)
         tcpipGmacQue4RxEn.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_4"])
         
-        # Number of Tx Descriptors To Be Created for Queue4
+        # Number of Tx Descriptors for Queue4
         tcpipGmacTxDescCountQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4", tcpipGmacQue4TxEn)
-        tcpipGmacTxDescCountQue4.setLabel("Number of Tx Descriptors To Be Created")
+        tcpipGmacTxDescCountQue4.setLabel("Number of Tx Descriptors")
         tcpipGmacTxDescCountQue4.setVisible(False)
-        tcpipGmacTxDescCountQue4.setDescription("Number of Tx Descriptors To Be Created for Queue4")
+        tcpipGmacTxDescCountQue4.setDescription("Number of Tx Descriptors for Queue4")
         tcpipGmacTxDescCountQue4.setDefaultValue(1)
         tcpipGmacTxDescCountQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE4"])
 
-        # Number of Rx Descriptors To Be Created for Queue4
+        # Number of Rx Descriptors for Queue4
         tcpipGmacRxDescCountQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4", tcpipGmacQue4RxEn)
-        tcpipGmacRxDescCountQue4.setLabel("Number of Rx Descriptors To Be Created")
+        tcpipGmacRxDescCountQue4.setLabel("Number of Rx Descriptors")
         tcpipGmacRxDescCountQue4.setVisible(False)
-        tcpipGmacRxDescCountQue4.setDescription("Number of Rx Descriptors To Be Created for Queue4")
+        tcpipGmacRxDescCountQue4.setDescription("Number of Rx Descriptors for Queue4")
         tcpipGmacRxDescCountQue4.setDefaultValue(1)
         tcpipGmacRxDescCountQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
-
+    
+        # Number of Dedicated MAC RX Buffers
+        tcpipGmacRxOwnBufferQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE4", tcpipGmacQue4RxEn)
+        tcpipGmacRxOwnBufferQue4.setLabel("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue4.setVisible(True)
+        tcpipGmacRxOwnBufferQue4.setDescription("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue4.setDefaultValue(1)
+        tcpipGmacRxOwnBufferQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
+        
         # Size Of RX Buffer for Queue4. Should Be Multiple Of 16.
         tcpipGmacRxBuffSizeQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE4", tcpipGmacQue4RxEn)
         tcpipGmacRxBuffSizeQue4.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
@@ -774,11 +814,11 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue4Comment.setVisible(False)
         tcpipGmacMaxTxPktSizeQue4Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE4"])
         
-        # Number of additional Rx buffers To Be Created for Queue4
+        # Number of additional Rx buffers for Queue4
         tcpipGmacRxAddlBuffCountQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE4", tcpipGmacQue4RxEn)
-        tcpipGmacRxAddlBuffCountQue4.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue4.setLabel("Number of additional Rx buffers")
         tcpipGmacRxAddlBuffCountQue4.setVisible(False)
-        tcpipGmacRxAddlBuffCountQue4.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue4")
+        tcpipGmacRxAddlBuffCountQue4.setDescription("Number of additional Sticky Rx buffers for Queue4")
         tcpipGmacRxAddlBuffCountQue4.setDefaultValue(0)
         tcpipGmacRxAddlBuffCountQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
             
@@ -823,22 +863,30 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacQue5RxEn.setDefaultValue(False)
         tcpipGmacQue5RxEn.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])
         
-        # Number of Tx Descriptors To Be Created for Queue5
+        # Number of Tx Descriptors for Queue5
         tcpipGmacTxDescCountQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5", tcpipGmacQue5TxEn)
-        tcpipGmacTxDescCountQue5.setLabel("Number of Tx Descriptors To Be Created")
+        tcpipGmacTxDescCountQue5.setLabel("Number of Tx Descriptors")
         tcpipGmacTxDescCountQue5.setVisible(False)
-        tcpipGmacTxDescCountQue5.setDescription("Number of Tx Descriptors To Be Created for Queue5")
+        tcpipGmacTxDescCountQue5.setDescription("Number of Tx Descriptors for Queue5")
         tcpipGmacTxDescCountQue5.setDefaultValue(1)
         tcpipGmacTxDescCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE5"])
 
-        # Number of Rx Descriptors To Be Created for Queue5
+        # Number of Rx Descriptors for Queue5
         tcpipGmacRxDescCountQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5", tcpipGmacQue5RxEn)
-        tcpipGmacRxDescCountQue5.setLabel("Number of Rx Descriptors To Be Created")
+        tcpipGmacRxDescCountQue5.setLabel("Number of Rx Descriptors")
         tcpipGmacRxDescCountQue5.setVisible(False)
-        tcpipGmacRxDescCountQue5.setDescription("Number of Rx Descriptors To Be Created for Queue5")
+        tcpipGmacRxDescCountQue5.setDescription("Number of Rx Descriptors for Queue5")
         tcpipGmacRxDescCountQue5.setDefaultValue(1)
         tcpipGmacRxDescCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])
-
+    
+        # Number of Dedicated MAC RX Buffers
+        tcpipGmacRxOwnBufferQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE5", tcpipGmacQue5RxEn)
+        tcpipGmacRxOwnBufferQue5.setLabel("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue5.setVisible(True)
+        tcpipGmacRxOwnBufferQue5.setDescription("Number of Dedicated MAC RX Buffers")
+        tcpipGmacRxOwnBufferQue5.setDefaultValue(1)
+        tcpipGmacRxOwnBufferQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])
+        
         # Size Of RX Buffer for Queue5. Should Be Multiple Of 16.
         tcpipGmacRxBuffSizeQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE5", tcpipGmacQue5RxEn)
         tcpipGmacRxBuffSizeQue5.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
@@ -871,11 +919,11 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue5Comment.setVisible(False)
         tcpipGmacMaxTxPktSizeQue5Comment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE5"])
         
-        # Number of additional Rx buffers To Be Created for Queue5
+        # Number of additional Rx buffers for Queue5
         tcpipGmacRxAddlBuffCountQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE5", tcpipGmacQue5RxEn)
-        tcpipGmacRxAddlBuffCountQue5.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue5.setLabel("Number of additional Rx buffers")
         tcpipGmacRxAddlBuffCountQue5.setVisible(False)
-        tcpipGmacRxAddlBuffCountQue5.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue5")
+        tcpipGmacRxAddlBuffCountQue5.setDescription("Number of additional Sticky Rx buffers for Queue5")
         tcpipGmacRxAddlBuffCountQue5.setDefaultValue(0)
         tcpipGmacRxAddlBuffCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])      
             
@@ -1714,6 +1762,15 @@ def tcpipGmacRxDescCountQue0CallBack(symbol, event):
     else:
         symbol.setValue(10)
 
+def tcpipGmacRxOwnBufferQue0CallBack(symbol, event):
+    print event["value"]
+    if (event["value"] == "Low"):     
+        symbol.setValue(4)
+    elif(event["value"] == "Medium"):   
+        symbol.setValue(8)
+    else:
+        symbol.setValue(10)
+        
 def tcpipGmacRxBuffSizeQue0CallBack(symbol, event):
     print event["value"]
     if (event["value"] == "Low"):     

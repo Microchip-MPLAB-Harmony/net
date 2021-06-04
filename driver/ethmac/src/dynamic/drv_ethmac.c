@@ -422,8 +422,8 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
         return SYS_MODULE_OBJ_INVALID;     // have a client connected
     }
 
-    if(macControl->memH == 0 || macControl->segLoadOffset < sizeof(TCPIP_MAC_PACKET*))
-    {     // not possible without dynamic memory or if there is no room to store the packet pointer!        
+    if(macControl->memH == 0)
+    {     // not possible without dynamic memory!        
         return SYS_MODULE_OBJ_INVALID;
     }
     
@@ -455,7 +455,8 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     pMacD->mData._AllocH = macControl->memH;
     pMacD->mData._callocF = macControl->callocF;
     pMacD->mData._freeF = macControl->freeF;
-    pMacD->mData._segLoadOffset = macControl->segLoadOffset;    // Note: the driver assumes that the packet allocator sets the packet pointer for each allocated packet!
+    pMacD->mData._gapDcptOffset = macControl->gapDcptOffset;    // Note: the driver assumes that the packet allocator sets the packet pointer for each allocated packet!
+    pMacD->mData._gapDcptSize = macControl->gapDcptSize;
 
 
     pMacD->mData.pktAllocF = macControl->pktAllocF;
@@ -463,6 +464,8 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     pMacD->mData.pktAckF = macControl->pktAckF;
 
     pMacD->mData._synchF = macControl->synchF;
+    pMacD->mData._dataOffsetMask = (macControl->controlFlags & TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) ? 0xfffffffc : 0xffffffff;
+    pMacD->mData._controlFlags = macControl->controlFlags;
 
     // copy the configuration data
     pMacD->mData.macConfig = *initData; 
@@ -844,7 +847,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
     while(pPkt)
     {
         pSeg = pPkt->pDSeg;
-        if(pSeg == 0 || pSeg->segLoadOffset < pMacD->mData._segLoadOffset)
+        if(pSeg == 0)
         {   // cannot send this packet
             _DRV_ETHMAC_TxUnlock(pMacD);
             return TCPIP_MAC_RES_PACKET_ERR;
@@ -961,7 +964,10 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
 #if (TCPIP_EMAC_RX_FRAGMENTS > 1)
         for(pPrevPkt = 0, pCurrDcpt = pLastDcpt = pRootDcpt; pCurrDcpt != 0 && pCurrDcpt->pBuff != 0; pCurrDcpt = pCurrDcpt->next)
         {
-            pCurrPkt = (TCPIP_MAC_PACKET*)*(uint32_t*)((uint8_t*)pCurrDcpt->pBuff - pMacD->mData._segLoadOffset);
+            uint8_t* segBuff = (uint8_t*)((uint32_t)pCurrDcpt->pBuff & pMacD->mData._dataOffsetMask);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+            pCurrPkt = pGap->segmentPktPtr;
+                
             pCurrDSeg = pCurrPkt->pDSeg;
             pCurrDSeg->segLen = pCurrDcpt->nBytes;
             pCurrDSeg->next = 0;
@@ -985,7 +991,9 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
             pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
         } 
 #else
-        pRxPkt = (TCPIP_MAC_PACKET*)*(uint32_t*)((uint8_t*)pRootDcpt->pBuff - pMacD->mData._segLoadOffset);
+        uint8_t* segBuff = (uint8_t*)((uint32_t)pRootDcpt->pBuff & pMacD->mData._dataOffsetMask);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+        pRxPkt = pGap->segmentPktPtr;
         pRxPkt->pDSeg->next = 0;
         // adjust the last segment for FCS size
         pLastDcpt->nBytes -= 4;
@@ -1575,8 +1583,10 @@ static void	_MACTxPacketAckCallback(void* pBuff, int buffIx, void* fParam)
     {
         DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
 
-       // restore packet the buffer belongs to
-        TCPIP_MAC_PACKET* ptrPacket = (TCPIP_MAC_PACKET*)*(uint32_t*)((uint8_t*)pBuff - pMacD->mData._segLoadOffset);
+        // restore packet the buffer belongs to
+        uint8_t* segBuff = (uint8_t*)((uint32_t)pBuff & pMacD->mData._dataOffsetMask);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+        TCPIP_MAC_PACKET* ptrPacket = pGap->segmentPktPtr;
         
         // acknowledge the packet
         (*pMacD->mData.pktAckF)(ptrPacket, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);
@@ -1596,7 +1606,7 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     TCPIP_MAC_PACKET* pPkt;
     TCPIP_MAC_RES     pktRes;
 
-    if(pMacD->mData._macFlags._linkPrev == false)
+    if((pMacD->mData._controlFlags & TCPIP_MAC_CONTROL_NO_LINK_CHECK) == 0 && pMacD->mData._macFlags._linkPrev == false)
     {   // discard the TX queues
         _MacTxDiscardQueues(pMacD, TCPIP_MAC_PKT_ACK_LINK_DOWN); 
         // no need to try to schedule for TX
@@ -1717,7 +1727,11 @@ static void _MacTxFreeCallback(  void* ptr, void* param )
     uint8_t*    pTxBuff = (uint8_t*)DRV_ETHMAC_LibDescriptorGetBuffer(pMacD, ptr);
     if(pTxBuff)
     {
-        pTxPkt = (TCPIP_MAC_PACKET*)*(uint32_t*)(pTxBuff - pMacD->mData._segLoadOffset);
+        // check if the payload offset is actually used for TX
+        uint8_t* segBuff = (uint8_t*)((uint32_t)pTxBuff & pMacD->mData._dataOffsetMask);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+        pTxPkt = pGap->segmentPktPtr;
+
         (*pMacD->mData.pktAckF)(pTxPkt, TCPIP_MAC_PKT_ACK_NET_DOWN, TCPIP_THIS_MODULE_ID);
     }
 
@@ -1737,7 +1751,9 @@ static void _MacRxFreeCallback(  void* ptr, void* param )
     uint8_t*    pRxBuff = (uint8_t*)DRV_ETHMAC_LibDescriptorGetBuffer(pMacD, ptr);
     if(pRxBuff)
     {
-        pRxPkt = (TCPIP_MAC_PACKET*)*(uint32_t*)(pRxBuff - pMacD->mData._segLoadOffset);
+        uint8_t* segBuff = (uint8_t*)((uint32_t)pRxBuff & pMacD->mData._dataOffsetMask);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+        pRxPkt = pGap->segmentPktPtr;
         pRxPkt->pDSeg->next = 0;     // break the ETH MAC run time chaining
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
         (*(TCPIP_MAC_PKT_FreeFDbg)pMacD->mData.pktFreeF)(pRxPkt, TCPIP_THIS_MODULE_ID);
@@ -1805,9 +1821,12 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
         }
 
         // extract packet the segment belongs to
-        pCurrPkt = (TCPIP_MAC_PACKET*)*(uint32_t*)(pSeg->segLoad - pMacD->mData._segLoadOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pSeg->segBuffer + pMacD->mData._gapDcptOffset);
+        pCurrPkt = pGap->segmentPktPtr;
+
         if(isMacDead || (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0)
         {   // free the packet this segment belongs to
+            // Note: smart alloc could be implemented: reuse the dynamic buffers if below the threshold!
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)
             (*(TCPIP_MAC_PKT_FreeFDbg)pMacD->mData.pktFreeF)(pCurrPkt, TCPIP_THIS_MODULE_ID);
 #else

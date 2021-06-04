@@ -427,7 +427,7 @@ typedef struct __attribute__((__packed__))
   Remarks:
     Any extension headers present are considered part of the payload length.
  */
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     unsigned long V_T_F; // Version , Traffic class and Flow Label 
     unsigned short PayloadLength; // Length of IPv6 payload, i.e. the rest of packet following this IPv6 header in octets 

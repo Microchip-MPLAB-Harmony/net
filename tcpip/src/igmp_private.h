@@ -312,7 +312,7 @@ typedef enum
 }TCPIP_IGMP_MESSAGE_TYPE;
 
 // generic IGMP header
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t     type;   // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -321,7 +321,7 @@ typedef struct __attribute__((aligned(2), packed))
 }TCPIP_IGMP_HEADER;
 
 // IGMP query message
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t     type;           // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -330,7 +330,7 @@ typedef struct __attribute__((aligned(2), packed))
 }TCPIP_IGMP_QUERY_MESSAGE;
 
 // IGMPv3 query message
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t     type;           // message type: TCPIP_IGMP_MESSAGE_TYPE
     uint8_t     maxRespCode;    // max time for sending a report
@@ -360,7 +360,7 @@ typedef union
 
 
 // Group Record structure
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t     recordType;         // a TCPIP_IGMPv3_RECORD_TYPE type
     uint8_t     auxLen;
@@ -370,7 +370,7 @@ typedef struct __attribute__((aligned(2), packed))
 }TCPIP_IGMPv3_GROUP_RECORD;
 
 // membership IGMPv3 packet
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
     uint8_t     type;   // TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP
     uint8_t     reserved1;

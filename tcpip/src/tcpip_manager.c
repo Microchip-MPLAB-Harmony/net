@@ -3931,6 +3931,8 @@ static void TCPIP_STACK_StacktoMacCtrl(TCPIP_MAC_MODULE_CTRL* pMacCtrl, TCPIP_ST
     TCPIP_NET_IF* pNetIf = stackCtrlData->pNetIf;
 
 
+    memset(pMacCtrl, 0, sizeof(*pMacCtrl));
+
     pMacCtrl->nIfs = stackCtrlData->nIfs;
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
@@ -3963,11 +3965,12 @@ static void TCPIP_STACK_StacktoMacCtrl(TCPIP_MAC_MODULE_CTRL* pMacCtrl, TCPIP_ST
     pMacCtrl->eventParam = 0;
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
 
-    pMacCtrl->moduleId = pNetIf->macId;
     pMacCtrl->netIx = stackCtrlData->netIx;
+    pMacCtrl->gapDcptOffset = TCPIP_PKT_GapDcptOffset();
+    pMacCtrl->gapDcptSize = TCPIP_PKT_GapDcptSize();
     pMacCtrl->macAction = TCPIP_STACK_StackToMacAction(stackCtrlData->stackAction);
     pMacCtrl->powerMode = stackCtrlData->powerMode;
-    pMacCtrl->segLoadOffset = TCPIP_PKT_SegLoadOffset();
+    pMacCtrl->controlFlags = TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2;
     memcpy(pMacCtrl->ifPhyAddress.v, pNetIf->netMACAddr.v, sizeof(pMacCtrl->ifPhyAddress));
 }
 

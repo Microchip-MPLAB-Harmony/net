@@ -99,7 +99,7 @@ typedef enum
 /// The buffer addresses written into the descriptors must be aligned so the
 /// last few bits are zero.  These bits have special meaning for the GMAC
 /// peripheral and cannot be used as part of the address.
-#define GMAC_ADDRESS_MASK   ((unsigned int)0xFFFFFFFC)
+#define GMAC_RX_ADDRESS_MASK   ((unsigned int)0xFFFFFFFC)
 #define GMAC_LENGTH_FRAME   ((unsigned int)0x3FFF)    /// Length of frame mask
 
 // receive buffer descriptor bits
@@ -113,10 +113,9 @@ typedef enum
 #define GMAC_TX_WRAP_BIT        (1u << 30)
 #define GMAC_TX_USED_BIT        (1u << 31)
 #define GMAC_TX_RLE_BIT         (1u << 29) /// Retry Limit Exceeded
-#define GMAC_TX_UND_BIT         (1u << 28) /// Tx Buffer Under-run
-#define GMAC_TX_ERR_BIT         (1u << 27) /// Exhausted in mid-frame
-#define GMAC_TX_ERR_BITS  \
-                           (GMAC_TX_RLE_BIT | GMAC_TX_UND_BIT | GMAC_TX_ERR_BIT)
+#define GMAC_TX_LCOL_BIT        (1u << 28) /// Tx error due to late collision
+#define GMAC_TX_AHB_ERR_BIT     (1u << 27) /// Frame corruption due to AHB Error
+#define GMAC_TX_ERR_BITS        (GMAC_TX_RLE_BIT | GMAC_TX_LCOL_BIT | GMAC_TX_AHB_ERR_BIT)
 
 // Interrupt bits
 // All interrupts
@@ -126,7 +125,7 @@ typedef enum
 	(GMAC_IER_RCOMP_Msk  | GMAC_IER_RXUBR_Msk  | GMAC_IER_ROVR_Msk )
 // TX err interrupts
 #define GMAC_INT_TX_ERR_BITS  \
-	(GMAC_IER_TUR_Msk  | GMAC_IER_RLEX_Msk  | GMAC_IER_TFC_Msk  | GMAC_IER_HRESP_Msk )
+	(GMAC_IER_TUR_Msk  | GMAC_IER_RLEX_Msk  | GMAC_IER_TFC_Msk  | GMAC_IER_HRESP_Msk)
 // TX interrupts
 #define GMAC_INT_TX_BITS  (GMAC_INT_TX_ERR_BITS)
 // Interrupt Status bits
@@ -232,6 +231,7 @@ typedef enum
              
     /* Errors: Ethernet buffers, descriptors */
 	DRV_PIC32CGMAC_RES_DESC_CNT_ERR,
+            
     /* Some memory allocation failed */
     DRV_PIC32CGMAC_RES_OUT_OF_MEMORY        /*DOM-IGNORE-BEGIN*/ =  -1 /*DOM-IGNORE-END*/,
 
@@ -245,8 +245,12 @@ typedef enum
     DRV_PIC32CGMAC_RES_RX_PKT_SPLIT_ERR     /*DOM-IGNORE-BEGIN*/ =  -4 /*DOM-IGNORE-END*/,
 	
 	DRV_PIC32CGMAC_RES_EMPTY_BUFFER			/*DOM-IGNORE-BEGIN*/  =  -5 /*DOM-IGNORE-END*/,
+            
     /* Descriptor Queue Error*/        
     DRV_PIC32CGMAC_RES_QUEUE_ERR			/*DOM-IGNORE-BEGIN*/  =  -6 /*DOM-IGNORE-END*/,
+            
+    /* Transmission Errors*/        
+    DRV_PIC32CGMAC_RES_TX_ERR			    /*DOM-IGNORE-BEGIN*/  =  -7 /*DOM-IGNORE-END*/,
 
 } DRV_PIC32CGMAC_RESULT; 
 
@@ -1015,7 +1019,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     Buffers specified should be >0 and < 2048 bytes in size.
 
   Parameters:
-    pMACDrv       - driver instance.
+    pMACDrv         - driver instance.
+    pPktDSeg        - pointer to data segment of tx packet
     queueIdx        - Queue Index.
 
   Returns:
@@ -1044,8 +1049,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     or 0 size is retrieved or the list ends.
     <p>Replaces:<p><c><b>DRV_PIC32CGMAC_LibTxSendPacket (DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx)</b></c>
  *****************************************************************************/
-
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket (DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx);
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, TCPIP_MAC_DATA_SEGMENT * pPktDSeg,  GMAC_QUE_LIST queueIdx);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -1170,6 +1174,78 @@ typedef void ( *DRV_PIC32CGMAC_BUFF_AckF ) ( void *pPktBuff, int buffIx, void* p
  *****************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx);
 
+/*******************************************************************************
+  Function:
+    void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
+ 
+  Summary:
+    Acknowledge pending packets in transmit queue
+
+  Description:
+    This function acknowledges all packet queued for transmission. The packet is not
+    yet written to transmit descriptors. This will be called during error condition
+    to discard queued TX packets. The TX acknowledgment function will be called from this routine.
+
+  Precondition:
+    None
+
+  Parameters:
+    pMACDrv         - driver instance.
+    queueIdx        - queue Index
+    ackRes          - packet acknowledgment result
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    DRV_PIC32CGMAC_LibTxAckPendPacket(pMACDrv, queueIdx, ackRes); 
+    </code>
+
+  Remarks:
+    Any pending TX packet has to be acknowledged during error condition, otherwise the memory 
+    allocated for the packet will not be freed.
+
+    <p>Replaces:<p><c><b>void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes)</b></c>
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
+
+/*******************************************************************************
+  Function:
+    void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
+ 
+  Summary:
+    Acknowledge packets in transmit descriptors during transmit errors
+
+  Description:
+    This function acknowledges packets added to MAC transmit descriptors. This function will
+    acknowledge all the transmitted or not transmitted packets in transmit descriptor. 
+    This will be called during error condition to discard queued TX packets. 
+    The TX acknowledgment function will be called from this routine.
+
+  Precondition:
+    None
+
+  Parameters:
+    pMACDrv         - driver instance.
+    queueIdx        - queue Index
+    ackRes          - packet acknowledgment result
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    DRV_PIC32CGMAC_LibTxAckErrPacket(pMACDrv, queueIdx, ackRes); 
+    </code>
+
+  Remarks:
+    Any TX packets in transmit descriptors has to be acknowledged during error condition, 
+    otherwise the memory allocated for the packet will not be freed.
+
+    <p>Replaces:<p><c><b>void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes)</b></c>
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
 // *****************************************************************************
 // *****************************************************************************
 // Section: Packet receive functions
@@ -1297,15 +1373,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr);
 
   ************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs);
-
-/*******************************************************************************/
-//Clear the Tx node in the single linked list
-static inline void _Clear_TxNode(DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxNode)
-{
-	pTxNode->next = NULL;
-	pTxNode->data = NULL;
-	pTxNode->startIndex = pTxNode->endIndex = 0;
-}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -1460,6 +1527,14 @@ static __inline__ uint64_t __attribute__((always_inline)) _DRV_GMAC_HashValueGet
 // *****************************************************************************
 // *****************************************************************************
 
+/****************************************************************************
+ * Function: _DRV_GMAC_DescSpace
+ * Summary:  Returns number of available GMAC descriptors
+ *****************************************************************************/
+static __inline__ uint16_t __attribute__((always_inline)) _DRV_GMAC_DescSpace(uint16_t head, uint16_t tail, uint16_t size)
+{
+    return (tail > head)? (tail - head) : (size - head + tail);
+}
 
 /** ISO/IEC 14882:2003(E) - 5.6 Multiplicative operators:
  * The binary / operator yields the quotient, and the binary % operator yields

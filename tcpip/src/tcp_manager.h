@@ -55,7 +55,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     Type Definitions
   ***************************************************************************/
 // TCP Header Data Structure
-typedef struct __attribute__((aligned(2), packed))
+typedef struct
 {
 	uint16_t    SourcePort;		// Local port number
 	uint16_t    DestPort;		// Remote port number
