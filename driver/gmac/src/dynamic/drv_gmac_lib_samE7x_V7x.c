@@ -634,15 +634,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
         // get aligned buffer address from Tx Descriptor Buffer Address
         pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
         // get packet address from buffer address
-        if(pMACDrv->sGmacData._retrieveF != 0)
-        {
-            pPkt = pMACDrv->sGmacData._retrieveF(pbuff, false, false);
-        }
-        else
-        {
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
-            pPkt = pGap->segmentPktPtr;
-        }
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        pPkt = pGap->segmentPktPtr;
         
         while(tailIndex != headIndex)
         {
@@ -715,15 +708,8 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
         // get aligned buffer address from Tx Descriptor Buffer Address
         pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr - pMACDrv->sGmacData._dataOffsetMask);
         // get packet address from buffer address
-        if(pMACDrv->sGmacData._retrieveF != 0)
-        {
-            pPkt = pMACDrv->sGmacData._retrieveF(pbuff, false, false);
-        }
-        else
-        {
-            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
-            pPkt = pGap->segmentPktPtr;
-        }
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        pPkt = pGap->segmentPktPtr;
         
         pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
         // Tx Callback
@@ -1347,15 +1333,8 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment load buffer
-            if(pMacDrv->sGmacData._retrieveF != 0)
-            {
-                pPkt = pMacDrv->sGmacData._retrieveF(pDSegNext->segBuffer, true, true);
-            }
-            else
-            {
-                TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData._dcptOffset);
-                pPkt = pGap->segmentPktPtr;
-            }
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData._dcptOffset);
+            pPkt = pGap->segmentPktPtr;
         }	
         res  = true; 
     }
