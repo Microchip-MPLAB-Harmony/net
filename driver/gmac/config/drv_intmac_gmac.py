@@ -449,7 +449,7 @@ def instantiateComponent(drvGmacComponent):
         # Number of Dedicated MAC RX Buffers
         tcpipGmacRxOwnBufferQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE1", tcpipGmacQue1RxEn)
         tcpipGmacRxOwnBufferQue1.setLabel("Number of Dedicated MAC RX Buffers")
-        tcpipGmacRxOwnBufferQue1.setVisible(True)
+        tcpipGmacRxOwnBufferQue1.setVisible(False)
         tcpipGmacRxOwnBufferQue1.setDescription("Number of Dedicated MAC RX Buffers")
         tcpipGmacRxOwnBufferQue1.setDefaultValue(8)
         tcpipGmacRxOwnBufferQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])
@@ -560,7 +560,7 @@ def instantiateComponent(drvGmacComponent):
         # Number of Dedicated MAC RX Buffers
         tcpipGmacRxOwnBufferQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE2", tcpipGmacQue2RxEn)
         tcpipGmacRxOwnBufferQue2.setLabel("Number of Dedicated MAC RX Buffers")
-        tcpipGmacRxOwnBufferQue2.setVisible(True)
+        tcpipGmacRxOwnBufferQue2.setVisible(False)
         tcpipGmacRxOwnBufferQue2.setDescription("Number of Dedicated MAC RX Buffers")
         tcpipGmacRxOwnBufferQue2.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
@@ -672,7 +672,7 @@ def instantiateComponent(drvGmacComponent):
         # Number of Dedicated MAC RX Buffers
         tcpipGmacRxOwnBufferQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE3", tcpipGmacQue3RxEn)
         tcpipGmacRxOwnBufferQue3.setLabel("Number of Dedicated MAC RX Buffers")
-        tcpipGmacRxOwnBufferQue3.setVisible(True)
+        tcpipGmacRxOwnBufferQue3.setVisible(False)
         tcpipGmacRxOwnBufferQue3.setDescription("Number of Dedicated MAC RX Buffers")
         tcpipGmacRxOwnBufferQue3.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
@@ -777,7 +777,7 @@ def instantiateComponent(drvGmacComponent):
         # Number of Dedicated MAC RX Buffers
         tcpipGmacRxOwnBufferQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE4", tcpipGmacQue4RxEn)
         tcpipGmacRxOwnBufferQue4.setLabel("Number of Dedicated MAC RX Buffers")
-        tcpipGmacRxOwnBufferQue4.setVisible(True)
+        tcpipGmacRxOwnBufferQue4.setVisible(False)
         tcpipGmacRxOwnBufferQue4.setDescription("Number of Dedicated MAC RX Buffers")
         tcpipGmacRxOwnBufferQue4.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
@@ -882,7 +882,7 @@ def instantiateComponent(drvGmacComponent):
         # Number of Dedicated MAC RX Buffers
         tcpipGmacRxOwnBufferQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE5", tcpipGmacQue5RxEn)
         tcpipGmacRxOwnBufferQue5.setLabel("Number of Dedicated MAC RX Buffers")
-        tcpipGmacRxOwnBufferQue5.setVisible(True)
+        tcpipGmacRxOwnBufferQue5.setVisible(False)
         tcpipGmacRxOwnBufferQue5.setDescription("Number of Dedicated MAC RX Buffers")
         tcpipGmacRxOwnBufferQue5.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])
