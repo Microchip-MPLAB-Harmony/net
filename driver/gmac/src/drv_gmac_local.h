@@ -189,12 +189,12 @@ typedef struct
 //#define   DRV_GMAC_USE_TX_SEMAPHORE_LOCK
 
 
-#define DRV_GMAC_MIN_RX_SIZE           128      // minimum RX buffer size
+#define DRV_GMAC_MIN_RX_SIZE           64      // minimum RX buffer size
                                                 // less than this creates excessive fragmentation
-                                                // Keep it always multiple of 16!
+                                                // Keep it always multiple of 64!
 
 #define DRV_GMAC_MIN_TX_DESCRIPTORS    1       // minimum number of TX descriptors
-                                                 // needed to accomodate zero copy and TCP traffic
+                                                 // needed to accommodate zero copy and TCP traffic
                                                  
 // *****************************************************************************
 /* Ethernet Driver Module Link check states

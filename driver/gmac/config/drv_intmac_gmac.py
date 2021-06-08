@@ -158,15 +158,6 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacTxDescCountQue0.setDescription("Number of Tx Descriptors for Queue0")
     tcpipGmacTxDescCountQue0.setDefaultValue(8)
     tcpipGmacTxDescCountQue0.setDependencies(tcpipGmacTxDescCountQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
-
-    # Size Of TX Buffer for Queue0. Should Be Multiple Of 16.
-    tcpipGmacTxBuffSizeQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE0", tcpipGmacQue0TxEn)
-    tcpipGmacTxBuffSizeQue0.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-    tcpipGmacTxBuffSizeQue0.setVisible(True)
-    tcpipGmacTxBuffSizeQue0.setDescription("Size Of TX Buffer for Queue0. Should Be Multiple Of 16.")
-    tcpipGmacTxBuffSizeQue0.setDefaultValue(1536)
-    tcpipGmacTxBuffSizeQue0.setMax(1536)
-    tcpipGmacTxBuffSizeQue0.setDependencies(tcpipGmacTxBuffSizeQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
                     
     # Max Tx Packet size support for Queue0.
     tcpipGmacMaxTxPktSizeQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE0", tcpipGmacQue0TxEn)
@@ -198,11 +189,11 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacRxOwnBufferQue0.setDefaultValue(8)
     tcpipGmacRxOwnBufferQue0.setDependencies(tcpipGmacRxOwnBufferQue0CallBack, ["TCPIP_GMAC_TRAFFIC"])
     
-    # Size Of RX Buffer for Queue0. Should Be Multiple Of 16.
+    # Size Of RX Buffer for Queue0. Should Be Multiple Of 64.
     tcpipGmacRxBuffSizeQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE0", tcpipGmacQue0RxEn)
-    tcpipGmacRxBuffSizeQue0.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+    tcpipGmacRxBuffSizeQue0.setLabel("Size of RX Buffer (multiple of 64)")
     tcpipGmacRxBuffSizeQue0.setVisible(True)
-    tcpipGmacRxBuffSizeQue0.setDescription("Size Of RX Buffer for Queue0. Should Be Multiple Of 16.")
+    tcpipGmacRxBuffSizeQue0.setDescription("Size Of RX Buffer for Queue0. Should Be Multiple Of 64.")
     tcpipGmacRxBuffSizeQue0.setDefaultValue(1536)
     tcpipGmacRxBuffSizeQue0.setDependencies(tcpipGmacRxBuffSizeQue0CallBack, ["TCPIP_GMAC_QUEUE_0"])
     
@@ -454,25 +445,13 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxOwnBufferQue1.setDefaultValue(8)
         tcpipGmacRxOwnBufferQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])
 
-        # Size Of RX Buffer for Queue1. Should Be Multiple Of 16.
+        # Size Of RX Buffer for Queue1. Should Be Multiple Of 64.
         tcpipGmacRxBuffSizeQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE1", tcpipGmacQue1RxEn)
-        tcpipGmacRxBuffSizeQue1.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue1.setLabel("Size of RX Buffer (multiple of 64)")
         tcpipGmacRxBuffSizeQue1.setVisible(False)
-        tcpipGmacRxBuffSizeQue1.setDescription("Size Of RX Buffer for Queue1. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue1.setDescription("Size Of RX Buffer for Queue1. Should Be Multiple Of 64.")
         tcpipGmacRxBuffSizeQue1.setDefaultValue(64)
         tcpipGmacRxBuffSizeQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE1"])
-
-        # Size Of TX Buffer for Queue1. Should Be Multiple Of 16.
-        tcpipGmacTxBuffSizeQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE1", tcpipGmacQue1TxEn)
-        tcpipGmacTxBuffSizeQue1.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue1.setVisible(False)
-        tcpipGmacTxBuffSizeQue1.setDescription("Size Of TX Buffer for Queue1. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue1.setDefaultValue(64)
-        if(gmac_periphID == "44152"): #SAMA5D2
-            tcpipGmacTxBuffSizeQue1.setMax(1536)
-        else: # SAME70 or SAMV71
-            tcpipGmacTxBuffSizeQue1.setMax(464)
-        tcpipGmacTxBuffSizeQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE1"])
         
         # Max Tx Packet size support for Queue1.
         tcpipGmacMaxTxPktSizeQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE1", tcpipGmacQue1TxEn)
@@ -565,25 +544,13 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxOwnBufferQue2.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
 
-        # Size Of RX Buffer for Queue2. Should Be Multiple Of 16.
+        # Size Of RX Buffer for Queue2. Should Be Multiple Of 64.
         tcpipGmacRxBuffSizeQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE2", tcpipGmacQue2RxEn)
-        tcpipGmacRxBuffSizeQue2.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue2.setLabel("Size of RX Buffer (multiple of 64)")
         tcpipGmacRxBuffSizeQue2.setVisible(False)
-        tcpipGmacRxBuffSizeQue2.setDescription("Size Of RX Buffer for Queue2. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue2.setDescription("Size Of RX Buffer for Queue2. Should Be Multiple Of 64.")
         tcpipGmacRxBuffSizeQue2.setDefaultValue(64)
         tcpipGmacRxBuffSizeQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"])
-
-        # Size Of TX Buffer for Queue2. Should Be Multiple Of 16.
-        tcpipGmacTxBuffSizeQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE2", tcpipGmacQue2TxEn)
-        tcpipGmacTxBuffSizeQue2.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue2.setVisible(False)
-        tcpipGmacTxBuffSizeQue2.setDescription("Size Of TX Buffer for Queue2. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue2.setDefaultValue(64)
-        if(gmac_periphID == "44152"): #SAMA5D2
-            tcpipGmacTxBuffSizeQue2.setMax(1536)
-        else: # SAME70 or SAMV71
-            tcpipGmacTxBuffSizeQue2.setMax(464)
-        tcpipGmacTxBuffSizeQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE2"])
 
         # Max Tx Packet size support for Queue2.
         tcpipGmacMaxTxPktSizeQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE2", tcpipGmacQue2TxEn)
@@ -677,22 +644,13 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxOwnBufferQue3.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
         
-        # Size Of RX Buffer for Queue3. Should Be Multiple Of 16.
+        # Size Of RX Buffer for Queue3. Should Be Multiple Of 64.
         tcpipGmacRxBuffSizeQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE3", tcpipGmacQue3RxEn)
-        tcpipGmacRxBuffSizeQue3.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue3.setLabel("Size of RX Buffer (multiple of 64)")
         tcpipGmacRxBuffSizeQue3.setVisible(False)
-        tcpipGmacRxBuffSizeQue3.setDescription("Size Of RX Buffer for Queue3. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue3.setDescription("Size Of RX Buffer for Queue3. Should Be Multiple Of 64.")
         tcpipGmacRxBuffSizeQue3.setDefaultValue(64)
         tcpipGmacRxBuffSizeQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE3"])
-
-        # Size Of TX Buffer for Queue3. Should Be Multiple Of 16.
-        tcpipGmacTxBuffSizeQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE3", tcpipGmacQue3TxEn)
-        tcpipGmacTxBuffSizeQue3.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue3.setVisible(False)
-        tcpipGmacTxBuffSizeQue3.setDescription("Size Of TX Buffer for Queue3. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue3.setDefaultValue(64)
-        tcpipGmacTxBuffSizeQue3.setMax(1536)
-        tcpipGmacTxBuffSizeQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE3"])
                 
         # Max Tx Packet size support for Queue3.
         tcpipGmacMaxTxPktSizeQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE3", tcpipGmacQue3TxEn)
@@ -782,22 +740,13 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxOwnBufferQue4.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
         
-        # Size Of RX Buffer for Queue4. Should Be Multiple Of 16.
+        # Size Of RX Buffer for Queue4. Should Be Multiple Of 64.
         tcpipGmacRxBuffSizeQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE4", tcpipGmacQue4RxEn)
-        tcpipGmacRxBuffSizeQue4.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue4.setLabel("Size of RX Buffer (multiple of 64)")
         tcpipGmacRxBuffSizeQue4.setVisible(False)
-        tcpipGmacRxBuffSizeQue4.setDescription("Size Of RX Buffer for Queue4. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue4.setDescription("Size Of RX Buffer for Queue4. Should Be Multiple Of 64.")
         tcpipGmacRxBuffSizeQue4.setDefaultValue(64)
         tcpipGmacRxBuffSizeQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE4"])
-
-        # Size Of TX Buffer for Queue4. Should Be Multiple Of 16.
-        tcpipGmacTxBuffSizeQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE4", tcpipGmacQue4TxEn)
-        tcpipGmacTxBuffSizeQue4.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue4.setVisible(False)
-        tcpipGmacTxBuffSizeQue4.setDescription("Size Of TX Buffer for Queue4. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue4.setDefaultValue(64)
-        tcpipGmacTxBuffSizeQue4.setMax(1536)
-        tcpipGmacTxBuffSizeQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE4"])
                 
         # Max Tx Packet size support for Queue4.
         tcpipGmacMaxTxPktSizeQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE4", tcpipGmacQue4TxEn)
@@ -887,22 +836,13 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxOwnBufferQue5.setDefaultValue(1)
         tcpipGmacRxOwnBufferQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])
         
-        # Size Of RX Buffer for Queue5. Should Be Multiple Of 16.
+        # Size Of RX Buffer for Queue5. Should Be Multiple Of 64.
         tcpipGmacRxBuffSizeQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_QUE5", tcpipGmacQue5RxEn)
-        tcpipGmacRxBuffSizeQue5.setLabel("Size Of RX Buffer. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue5.setLabel("Size of RX Buffer (multiple of 64)")
         tcpipGmacRxBuffSizeQue5.setVisible(False)
-        tcpipGmacRxBuffSizeQue5.setDescription("Size Of RX Buffer for Queue5. Should Be Multiple Of 16.")
+        tcpipGmacRxBuffSizeQue5.setDescription("Size Of RX Buffer for Queue5. Should Be Multiple Of 64.")
         tcpipGmacRxBuffSizeQue5.setDefaultValue(64)
         tcpipGmacRxBuffSizeQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE5"])
-
-        # Size Of TX Buffer for Queue5. Should Be Multiple Of 16.
-        tcpipGmacTxBuffSizeQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_QUE5", tcpipGmacQue5TxEn)
-        tcpipGmacTxBuffSizeQue5.setLabel("Size Of TX Buffer. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue5.setVisible(False)
-        tcpipGmacTxBuffSizeQue5.setDescription("Size Of TX Buffer for Queue5. Should Be Multiple Of 16.")
-        tcpipGmacTxBuffSizeQue5.setDefaultValue(64)
-        tcpipGmacTxBuffSizeQue5.setMax(976)
-        tcpipGmacTxBuffSizeQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE5"])
                 
         # Max Tx Packet size support for Queue5.
         tcpipGmacMaxTxPktSizeQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE5", tcpipGmacQue5TxEn)
@@ -1743,15 +1683,6 @@ def tcpipGmacTxDescCountQue0CallBack(symbol, event):
         symbol.setValue(8)
     else:
         symbol.setValue(10)
-        
-def tcpipGmacTxBuffSizeQue0CallBack(symbol, event):
-    print event["value"]
-    if (event["value"] == "Low"):     
-        symbol.setValue(1536)
-    elif(event["value"] == "Medium"):   
-        symbol.setValue(1536)
-    else:
-        symbol.setValue(1536)
             
 def tcpipGmacRxDescCountQue0CallBack(symbol, event):
     print event["value"]

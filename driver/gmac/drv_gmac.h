@@ -117,8 +117,6 @@ typedef struct
 	uint16_t nRxBuffAllocCnt;
 	/** TX Descriptor count */
 	uint16_t nTxDescCnt;	
-	/** TX buffer size */
-	uint16_t txBufferSize;
     /** Max TX Packet size */
     uint16_t txMaxPktSize;
 	/** RX buffer size */
