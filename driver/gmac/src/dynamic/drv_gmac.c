@@ -1356,8 +1356,13 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 			gmac_queue.pRxDesc[index].rx_desc_buffaddr.val = 0;
 			gmac_queue.pRxDesc[index].rx_desc_status.val = 0;
 		}
-        //free rx packet array of pointers 
-        (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, gmac_queue.pRxPckt); 
+        
+        if(gmac_queue.pRxPckt != NULL)
+        {
+            //free rx packet array of pointers 
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, gmac_queue.pRxPckt); 
+            gmac_queue.pRxPckt = NULL;
+        }
         
         __DMB();
 	}
