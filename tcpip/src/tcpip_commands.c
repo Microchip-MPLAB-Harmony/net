@@ -3605,7 +3605,7 @@ static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         if (strcmp(argv[2], "query") == 0)
         {   // query for an address
             arpRes = TCPIP_ARP_EntryGet(netH, &ipAddr, &macAddr, false);
-            if(arpRes == ARP_RES_OK)
+            if(arpRes == ARP_RES_ENTRY_SOLVED)
             {
                 TCPIP_Helper_MACAddressToString(&macAddr, addrBuff, sizeof(addrBuff));
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "arp: IPv4 address: %s, MAC Address: %s\r\n", argv[3], addrBuff);

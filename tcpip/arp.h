@@ -396,12 +396,12 @@ TCPIP_ARP_RESULT      TCPIP_ARP_Resolve(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr
   Return Values:
     - true - The IP address has been resolved and MACAddr MAC address field
              indicates the response.
-    - false - The IP address is not yet resolved.  Try calling TCPIP_ARP_IsResolved
-              again at a later time.  If you don't get a response after an application 
-			  specific time-out period, you may want to call TCPIP_ARP_Resolve again 
-			  to transmit another ARP query (in case if the original query or response 
-			  was lost on the network).  If you never receive an ARP response, this 
-			  may indicate that the IP address isn't in use.
+    - false - The IP address is not resolved or a bad parameter was supplied.
+              Try calling TCPIP_ARP_IsResolved again at a later time.
+              If you don't get a response after an application specific time-out period,
+              you may want to call TCPIP_ARP_Resolve again to transmit another ARP query
+              (in case if the original query or response was lost on the network).
+              If you never receive an ARP response, this may indicate that the IP address isn't in use.
 
   Remarks:
     None.
@@ -537,8 +537,10 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd
                                  was added (and queued for resolving)
     - ARP_RES_CACHE_FULL       - if new entry could not be inserted,
                                  the cache was full
+    - ARP_RES_NO_ENTRY         - no such address found in cache
     - ARP_RES_BAD_ADDRESS      - bad address specified
     - ARP_RES_NO_INTERFACE     - no such interface
+    - ARP_RES_CONFIGURE_ERR    - interface not ready yet
 
   Remarks:
     Similar to TCPIP_ARP_Resolve + TCPIP_ARP_IsResolved, it avoids a double hash 

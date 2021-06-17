@@ -1270,13 +1270,13 @@ bool TCPIP_ARP_IsResolved(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr, TCPIP_MAC_AD
 
     if(IPAddr == 0 || IPAddr->Val == 0)
     {   
-        return ARP_RES_BAD_ADDRESS;
+        return false;
     }
 
     pIf = _TCPIPStackHandleToNetUp(hNet);
     if(!pIf)
     {
-        return ARP_RES_NO_INTERFACE;
+        return false;
     }
     
 
@@ -1431,7 +1431,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, TCP
     }
     else
     {
-        return (TCPIP_ARP_IsResolved(pIf, ipAdd, pHwAdd))? ARP_RES_OK : ARP_RES_NO_ENTRY;
+        return (TCPIP_ARP_IsResolved(pIf, ipAdd, pHwAdd))? ARP_RES_ENTRY_SOLVED : ARP_RES_NO_ENTRY;
     }
 
 }
