@@ -109,7 +109,7 @@ typedef struct
 // When not using a semaphore lock, a critical section
 // will be used.
 //#define   DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK
-#define   DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK
+//#define   DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK
 
 
 #define ETH_PIC32_INT_MAC_MIN_RX_SIZE           128     // minimum RX buffer size

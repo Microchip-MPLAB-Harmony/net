@@ -32,11 +32,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define macDrvrPAUSE_CPBL_MASK  (TCPIP_ETH_PAUSE_TYPE_ALL)
 
 /******************************************************************************/
-extern TCPIP_MAC_RES macDrvrStatisticsGet(              DRV_HANDLE                          hMac,
+extern TCPIP_MAC_RES EmacDrvrStatisticsGet(             MAC_DRIVER *                        pMacDrvr,
                                                         TCPIP_MAC_RX_STATISTICS *           pRxStatistics,
                                                         TCPIP_MAC_TX_STATISTICS *           pTxStatistics
                                                         );
-extern TCPIP_MAC_RES macDrvrRegisterStatisticsGet(      DRV_HANDLE                          hMac,
+extern TCPIP_MAC_RES EmacDrvrRegisterStatisticsGet(     MAC_DRIVER *                        pMacDrvr,
                                                         TCPIP_MAC_STATISTICS_REG_ENTRY *    pRegEntries,
                                                         int                                 nEntries,
                                                         int *                               pHwEntries
@@ -72,6 +72,8 @@ static bool                 macDrvrPowerMode(           DRV_HANDLE hMac, TCPIP_M
 static TCPIP_MAC_RES        macDrvrPacketTx(            DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket );
 static TCPIP_MAC_PACKET *   macDrvrPacketRx (           DRV_HANDLE hMac, TCPIP_MAC_RES * pRes, TCPIP_MAC_PACKET_RX_STAT * pPktStat );
 static TCPIP_MAC_RES        macDrvrProcess(             DRV_HANDLE hMac );
+static TCPIP_MAC_RES        macDrvrStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
+static TCPIP_MAC_RES        macDrvrRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
 static TCPIP_MAC_RES        macDrvrParametersGet(       DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS * pMacParams );
 static size_t               macDrvrConfigGet(           DRV_HANDLE hMac, void * configBuff, size_t buffSize, size_t * pConfigSize );
 static bool                 macDrvrEventMaskSet(        DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpMacEvents, bool enable );
@@ -158,9 +160,10 @@ const TCPIP_MAC_OBJECT DRV_EMAC1_Object =
 
 // the embedded descriptor to support multiple instances.  Create an array/list
 // of MAC_DCPT structures or allocate dynamically
-static MAC_DRIVER macDrvrDescription[ 2 ];
+#define DRV_EMAC_INSTANCES      2
+static MAC_DRIVER macDrvrDescription[ DRV_EMAC_INSTANCES ];
 
-static const TCPIP_MAC_OBJECT* macDrvrObjects[ 2 ] = 
+static const TCPIP_MAC_OBJECT* macDrvrObjects[ DRV_EMAC_INSTANCES ] = 
 {
     &DRV_EMAC0_Object,
     &DRV_EMAC1_Object,
@@ -171,12 +174,45 @@ static __inline__ int __attribute__((always_inline)) macIdToIndex( TCPIP_MODULE_
 {
     int macIndex = macId - TCPIP_MODULE_MAC_SAM9X60;
 
-    if( macIndex >= 0 && macIndex < sizeof( macDrvrDescription )/sizeof( *macDrvrDescription ) )
+    if( macIndex >= 0 && macIndex < sizeof( macDrvrDescription ) / sizeof( *macDrvrDescription ) )
     {
         return macIndex;
     }
     return -1;
 }
+
+#if (DRV_EMAC_INSTANCES == 1)
+static __inline__ MAC_DRIVER* __attribute__((always_inline)) _EmacHandleToMacDrv(uintptr_t handle)
+{
+    MAC_DRIVER* pMacD = (MAC_DRIVER*)handle;
+    return pMacD == macDrvrDescription ? pMacD : 0;
+}
+#elif (DRV_EMAC_INSTANCES == 2)
+static __inline__ MAC_DRIVER* __attribute__((always_inline)) _EmacHandleToMacDrv(uintptr_t handle)
+{
+    MAC_DRIVER* pMacD = (MAC_DRIVER*)handle;
+    return (pMacD == macDrvrDescription || pMacD == macDrvrDescription + 1) ? pMacD : 0;
+}
+#else
+// multiple instances version
+static MAC_DRIVER* _EmacHandleToMacDrv(uintptr_t handle)
+{
+    MAC_DRIVER* pMacD = (MAC_DRIVER*)handle;
+    int macIx = pMacD - macDrvrDescription;
+
+    if( macIx >= 0 && macIx < sizeof( macDrvrDescription ) / sizeof( *macDrvrDescription ) )
+    {
+        if(pMacD == macDrvrDescription + macIx)
+        {
+            return pMacD;
+        }
+    }
+
+    return 0;
+}
+
+#endif
+
 
 /*******************************************************************************
  * Function:        macDrvrInitialize
@@ -344,18 +380,21 @@ SYS_MODULE_OBJ macDrvrInitialize(
  ******************************************************************************/
 void macDrvrDeInitialize( SYS_MODULE_OBJ object )
 {
-    MAC_DRIVER * pMacDrvr = (MAC_DRIVER *) object;
-    switch( pMacDrvr->sysStat )
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( object );
+    if(pMacDrvr != 0)
     {
-        case SYS_STATUS_BUSY:
-        case SYS_STATUS_READY:
-        case SYS_STATUS_ERROR:
-            macDrvrDeInit( pMacDrvr );
-            break;
-        case SYS_STATUS_ERROR_EXTENDED:
-        case SYS_STATUS_UNINITIALIZED:
-        default:
-            break;
+        switch( pMacDrvr->sysStat )
+        {
+            case SYS_STATUS_BUSY:
+            case SYS_STATUS_READY:
+            case SYS_STATUS_ERROR:
+                macDrvrDeInit( pMacDrvr );
+                break;
+            case SYS_STATUS_ERROR_EXTENDED:
+            case SYS_STATUS_UNINITIALIZED:
+            default:
+                break;
+        }
     }
 }
 
@@ -367,8 +406,13 @@ void macDrvrReInitialize( SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const i
 
 SYS_STATUS macDrvrStatus( SYS_MODULE_OBJ object )
 {
-    MAC_DRIVER * pMacDrvr = (MAC_DRIVER *) object;
-    return pMacDrvr->sysStat;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( object );
+    if(pMacDrvr != 0)
+    {
+        return pMacDrvr->sysStat;
+    }
+
+    return SYS_STATUS_ERROR;    
 }
 
 void macDrvrTasks( SYS_MODULE_OBJ object )
@@ -378,10 +422,10 @@ void macDrvrTasks( SYS_MODULE_OBJ object )
     DRV_HANDLE                      hPhyClient;
     DRV_ETHPHY_RESULT               phyInitRes;
     const DRV_ETHPHY_OBJECT_BASE *  pPhyBase;
-    MAC_DRIVER *                    pMacDrvr = (MAC_DRIVER *) object;
     static bool                     discardFlag = false;
 
-    if( SYS_STATUS_UNINITIALIZED == pMacDrvr->sysStat )
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( object );
+    if(pMacDrvr == 0 || ( SYS_STATUS_UNINITIALIZED == pMacDrvr->sysStat ))
     {   // nothing to do
         return;
     }
@@ -465,19 +509,21 @@ size_t macDrvrConfigGet(
     size_t *    pConfigSize
     )
 {
-    MAC_DRIVER *    pMacDrvr = (MAC_DRIVER *) hMac;
     size_t          response = 0;
-
-    if( pConfigSize )
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr != 0)
     {
-        *pConfigSize = sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG );
-    }
-    if( configBuff && buffSize >= sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG ) )
-    {   // can copy the data
-        TCPIP_MODULE_MAC_SAM9X60_CONFIG * pMacConfig = (TCPIP_MODULE_MAC_SAM9X60_CONFIG *) configBuff;
+        if( pConfigSize )
+        {
+            *pConfigSize = sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG );
+        }
+        if( configBuff && buffSize >= sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG ) )
+        {   // can copy the data
+            TCPIP_MODULE_MAC_SAM9X60_CONFIG * pMacConfig = (TCPIP_MODULE_MAC_SAM9X60_CONFIG *) configBuff;
 
-        *pMacConfig = pMacDrvr->config;
-        response = sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG );
+            *pMacConfig = pMacDrvr->config;
+            response = sizeof( TCPIP_MODULE_MAC_SAM9X60_CONFIG );
+        }
     }
     return response;
 }
@@ -523,8 +569,11 @@ DRV_HANDLE macDrvrOpen(
 
 void macDrvrClose( DRV_HANDLE hMac )
 {
-    MAC_DRIVER * pMacDrvr = (MAC_DRIVER *) hMac;
-    pMacDrvr->macFlags._open = 0;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr != 0)
+    {
+        pMacDrvr->macFlags._open = 0;
+    }
 }
 
 /*******************************************************************************
@@ -552,11 +601,16 @@ uint32_t txGetValidPacketCount( TCPIP_MAC_PACKET * pMacPacket, MAC_DRIVER * pMac
 
 TCPIP_MAC_RES macDrvrPacketTx( DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket )
 {
-    MAC_DRIVER *        pMacDrvr = (MAC_DRIVER *) hMac;
     TCPIP_MAC_PACKET *  pTemp;
     TCPIP_MAC_RES       response = TCPIP_MAC_RES_PACKET_ERR;
     uint32_t            numPacketsToSend = 0;
 
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return TCPIP_MAC_RES_OP_ERR;
+    }
+    
     macDrvrTxLock( pMacDrvr );
     numPacketsToSend = txGetValidPacketCount( pMacPacket, pMacDrvr );
     if( numPacketsToSend )
@@ -589,7 +643,12 @@ TCPIP_MAC_PACKET * macDrvrPacketRx(
     TCPIP_MAC_PACKET_RX_STAT *   pPktStatus
     )
 {
-    MAC_DRIVER *            pMacDrvr = (MAC_DRIVER *) hMac;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return 0;
+    }
+
     TCPIP_MAC_PACKET *      pMacPacket = 0;
     MAC_DRVR_RXDCPT_STATUS  packetStatus = {.val = 0};
     TCPIP_MAC_RES           response = TCPIP_MAC_RES_PENDING;
@@ -681,7 +740,12 @@ TCPIP_MAC_RES macDrvrRxFilterHashTableEntrySet(
     const TCPIP_MAC_ADDR *  destMacAddr
     )
 {
-    MAC_DRIVER *    pMacDrvr = (MAC_DRIVER *) hMac;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return TCPIP_MAC_RES_OP_ERR;
+    }
+
     MAC_DRVR_HASH   hash;
     uint8_t         nullMacAddr[ 6 ] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -711,9 +775,14 @@ bool macDrvrPowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode )
 
 TCPIP_MAC_RES macDrvrProcess( DRV_HANDLE hMac )
 {
-    MAC_DRIVER *    pMacDrvr = (MAC_DRIVER *) hMac;
-    TCPIP_MAC_RES   response;
 
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return TCPIP_MAC_RES_OP_ERR;
+    }
+
+    TCPIP_MAC_RES   response;
     macDrvrTxLock( pMacDrvr );
     response = macDrvrTxPendingPackets( pMacDrvr );
     macDrvrTxAcknowledge( pMacDrvr );
@@ -724,7 +793,12 @@ TCPIP_MAC_RES macDrvrProcess( DRV_HANDLE hMac )
 
 TCPIP_MAC_RES macDrvrParametersGet( DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS * pMacParams )
 {
-    MAC_DRIVER *    pMacDrvr = (MAC_DRIVER *) hMac;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return TCPIP_MAC_RES_OP_ERR;
+    }
+
     TCPIP_MAC_RES   response = TCPIP_MAC_RES_IS_BUSY;
     if( pMacDrvr->sysStat == SYS_STATUS_READY )
     {
@@ -739,6 +813,19 @@ TCPIP_MAC_RES macDrvrParametersGet( DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS * pMac
     }
     return response;
 }
+
+static TCPIP_MAC_RES macDrvrStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
+{
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    return (pMacDrvr != 0) ? EmacDrvrStatisticsGet(pMacDrvr, pRxStatistics, pTxStatistics) : TCPIP_MAC_RES_OP_ERR;
+}
+
+static TCPIP_MAC_RES macDrvrRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries)
+{
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    return (pMacDrvr != 0) ?  EmacDrvrRegisterStatisticsGet(pMacDrvr, pRegEntries, nEntries, pHwEntries) : TCPIP_MAC_RES_OP_ERR; 
+}
+
 
 /*******************************************************************************
  * local functions and helpers
@@ -1186,7 +1273,12 @@ bool macDrvrEventMaskSet(
     bool            enable
     )
 {
-    MAC_DRIVER *            pMacDrvr = (MAC_DRIVER *) hMac;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr == 0)
+    {
+        return false;
+    }
+
     MAC_DRVR_EVENT_DCPT *   pEventDescription = &pMacDrvr->eventDescription;
     emac_registers_t *      pMacRegs = (emac_registers_t *) pMacDrvr->config.ethModuleId;
     MAC_EVENTS              macEvents;
@@ -1271,19 +1363,24 @@ bool macDrvrEventMaskSet(
 *****************************************************************************/
 bool macDrvrEventAcknowledge( DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpMacEvents )
 {
-    MAC_DRIVER *            pMacDrvr = (MAC_DRIVER *) hMac;
-    MAC_DRVR_EVENT_DCPT *   pEventDescription = &pMacDrvr->eventDescription;
-    MAC_EVENTS              macEvents;
-    bool                    previouslyActive, retval = false;
+    bool    retval = false;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr != 0)
+    {
 
-    if( pEventDescription->tcpMacEventsEnabled )
-    {   // already have some active
-        retval = true;
-        macEvents = translateTcpMacToMacEvent( pMacDrvr, tcpMacEvents );
-        previouslyActive = SYS_INT_SourceDisable( pMacDrvr->config.macIntSrc );    // stop ints for a while
-        pEventDescription->tcpMacEventsPending &= ~tcpMacEvents;    // no longer pending
-        pEventDescription->macEventsPending &= ~macEvents;          // no longer pending
-        SYS_INT_SourceRestore( pMacDrvr->config.macIntSrc, previouslyActive );     // re-enable
+        MAC_DRVR_EVENT_DCPT *   pEventDescription = &pMacDrvr->eventDescription;
+        MAC_EVENTS              macEvents;
+        bool                    previouslyActive;
+
+        if( pEventDescription->tcpMacEventsEnabled )
+        {   // already have some active
+            retval = true;
+            macEvents = translateTcpMacToMacEvent( pMacDrvr, tcpMacEvents );
+            previouslyActive = SYS_INT_SourceDisable( pMacDrvr->config.macIntSrc );    // stop ints for a while
+            pEventDescription->tcpMacEventsPending &= ~tcpMacEvents;    // no longer pending
+            pEventDescription->macEventsPending &= ~macEvents;          // no longer pending
+            SYS_INT_SourceRestore( pMacDrvr->config.macIntSrc, previouslyActive );     // re-enable
+        }
     }
     return retval;
 }
@@ -1334,8 +1431,8 @@ bool macDrvrEventAcknowledge( DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpMacEvents )
 *****************************************************************************/
 TCPIP_MAC_EVENT macDrvrEventPendingGet( DRV_HANDLE hMac )
 {
-    MAC_DRIVER * pMacDrvr = (MAC_DRIVER *) hMac;
-    return pMacDrvr->eventDescription.tcpMacEventsPending;
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    return pMacDrvr != 0 ? pMacDrvr->eventDescription.tcpMacEventsPending : TCPIP_MAC_EV_NONE;
 }
 
 /*******************************************************************************
@@ -1443,10 +1540,9 @@ static const macDrvrLinkStateF macDrvrLinkStateTbl[] =
 
 bool macDrvrLinkCheck( DRV_HANDLE hMac )
 {   // verify the link status
-    MAC_DRIVER *    pMacDrvr = (MAC_DRIVER *) hMac;
     bool            retval = false;
-
-    if( pMacDrvr->macFlags._linkPresent )
+    MAC_DRIVER * pMacDrvr = _EmacHandleToMacDrv( hMac );
+    if(pMacDrvr != 0 && pMacDrvr->macFlags._linkPresent )
     {
         const DRV_ETHPHY_OBJECT_BASE *  pPhyBase = pMacDrvr->config.pPhyBase;
         pPhyBase->DRV_ETHPHY_Tasks( pMacDrvr->hPhySysObject );

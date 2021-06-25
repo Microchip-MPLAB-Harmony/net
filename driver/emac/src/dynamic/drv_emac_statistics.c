@@ -30,11 +30,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 void emacStatisticsClear( void );
 
 /******************************************************************************/
-TCPIP_MAC_RES macDrvrStatisticsGet(         DRV_HANDLE                          hMac,
+TCPIP_MAC_RES EmacDrvrStatisticsGet(        MAC_DRIVER *                        pMacDrvr,
                                             TCPIP_MAC_RX_STATISTICS *           pRxStatistics,
                                             TCPIP_MAC_TX_STATISTICS *           pTxStatistics
                                             );
-TCPIP_MAC_RES macDrvrRegisterStatisticsGet( DRV_HANDLE                          hMac,
+TCPIP_MAC_RES EmacDrvrRegisterStatisticsGet(MAC_DRIVER *                        pMacDrvr,
                                             TCPIP_MAC_STATISTICS_REG_ENTRY *    pStatisticsEntry,
                                             int                                 maxEntries,
                                             int *                               pActualNumEntries
@@ -94,13 +94,12 @@ static const MAC_DRVR_HW_REG_DCPT macHwRegDcpt[] =
     { "Tx TUND: Transmit Under Runs       ", macDrvrGetEmacTund },
 };
 
-TCPIP_MAC_RES macDrvrStatisticsGet(
-    DRV_HANDLE                  hMac,
+TCPIP_MAC_RES EmacDrvrStatisticsGet(
+    MAC_DRIVER *                pMacDrvr,
     TCPIP_MAC_RX_STATISTICS *   pRxStatistics,
     TCPIP_MAC_TX_STATISTICS *   pTxStatistics
     )
 {
-    MAC_DRIVER * pMacDrvr = (MAC_DRIVER *) hMac;
 
     if( pRxStatistics )
     {
@@ -126,8 +125,8 @@ TCPIP_MAC_RES macDrvrStatisticsGet(
     return TCPIP_MAC_RES_OK;
 }
 
-TCPIP_MAC_RES macDrvrRegisterStatisticsGet(
-    DRV_HANDLE                          hMac,
+TCPIP_MAC_RES EmacDrvrRegisterStatisticsGet(
+    MAC_DRIVER *                        pMacDrvr,
     TCPIP_MAC_STATISTICS_REG_ENTRY *    pStatisticsEntry,
     int                                 maxEntries,
     int *                               pActualNumEntries
@@ -147,7 +146,7 @@ TCPIP_MAC_RES macDrvrRegisterStatisticsGet(
     if( pStatisticsEntry )
     {
         // provide EMAC0_REGS, or EMAC1_REGS, as argument to statistics function
-        emac_registers_t * pMacRegs = (emac_registers_t *)((MAC_DRIVER *) hMac)->config.ethModuleId;
+        emac_registers_t * pMacRegs = (emac_registers_t *)pMacDrvr->config.ethModuleId;
         unsigned int rr, nameSize;
 
         for( rr = 0; rr < maxEntries; rr++ )
