@@ -327,13 +327,13 @@ typedef enum
     None.
 */
 
-typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
+typedef struct 
 {
     uint16_t                    clientInUse;// True if in use
     uint16_t                    clientIx;   // client number
     uintptr_t                   ethphyId;   // The peripheral Id associated with the object
     DRV_ETHPHY_CLIENT_STATUS    status;     // Client Status
-    struct _DRV_ETHPHY_OBJ_STRUCT* hDriver; // Handle of driver that owns the client
+    struct _DRV_ETHPHY_INSTANCE* hDriver;   // Handle of driver that owns the client
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     DRV_HANDLE                  miimHandle; // MMIM client handle
     DRV_MIIM_OPERATION_HANDLE   miimOpHandle;   // current MIIM op in progress; 
@@ -376,7 +376,7 @@ typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
     None.
 */
 
-typedef struct _DRV_ETHPHY_OBJ_STRUCT
+typedef struct _DRV_ETHPHY_INSTANCE
 {
     uint8_t                     objInUse;       // True if in use
     uint8_t                     busInUse;       // True if SMI bus in use;
@@ -392,7 +392,7 @@ typedef struct _DRV_ETHPHY_OBJ_STRUCT
     DRV_ETHPHY_CLIENT_OBJ       objClients[DRV_ETHPHY_CLIENTS_NUMBER]; // array of clients
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     SYS_MODULE_INDEX            miimIndex;  // MIIM object index 
-} DRV_ETHPHY_OBJ;
+} DRV_ETHPHY_INSTANCE;
 
 
 #endif //#ifndef _DRV_ETHPHY_LOCAL_H
