@@ -1704,7 +1704,6 @@ uintptr_t DRV_ENC28J60_SPI_ReadDataStart(DRV_ENC28J60_DriverInfo *  pDrvInstance
 
         *pWrBuff = DRV_ENC28J60_SPI_INST_RBM;	
 
-        //spiHandle = DRV_SPI_BufferAddWriteRead(pBusInfo->clientHandle, pWrBuff, 1, &buffer[-1], dataSize + 1, DRV_ENC28J60_SPI_Acknowledge, pDrvInstance);
         DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff, 1, &buffer[-1], dataSize + 1, &spiHandle);
         if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)
         {
