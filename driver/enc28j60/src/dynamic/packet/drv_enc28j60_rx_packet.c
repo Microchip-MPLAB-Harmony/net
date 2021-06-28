@@ -49,7 +49,7 @@ bool    DRV_ENC28J60_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
      return true;
 }
 
-static CACHE_ALIGN DRV_ENC28J60_RSV rsv_temp;
+static CACHE_ALIGN DRV_ENC28J60_RSV_EXT rsv_temp_ext;
 
 int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DRV_ENC28J60_RX_PACKET_INFO *pkt)
 {
@@ -110,7 +110,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
 
         case DRV_ENC28J60_RX_READ_RSV:            
-            ret = (*pDrvInst->busVTable->fpDataRdStart)(pDrvInst, ( uint8_t *)&rsv_temp, sizeof(pkt->rsv), false);
+            ret = (*pDrvInst->busVTable->fpDataRdStart)(pDrvInst, ( uint8_t *)&rsv_temp_ext.rsv, sizeof(pkt->rsv), false);
             if(ret != 0)
             {   // success
                 pkt->operation = ret;
@@ -133,13 +133,13 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
                        
             // success; process the packet RSV
-            if(rsv_temp.pNextPacket % 2 != 0 || rsv_temp.crcError || rsv_temp.zero || (rsv_temp.rxByteCount > 1518) || (!rsv_temp.rxOk))
+            if(rsv_temp_ext.rsv.pNextPacket % 2 != 0 || rsv_temp_ext.rsv.crcError || rsv_temp_ext.rsv.zero || (rsv_temp_ext.rsv.rxByteCount > 1518) || (!rsv_temp_ext.rsv.rxOk))
             {
                 pkt->retry++;
                 pkt->state = DRV_ENC28J60_RX_SET_ERDPTR;
                 break;
             }
-            memcpy(( uint8_t *)&(pkt->rsv),&rsv_temp, sizeof(pkt->rsv));
+            memcpy(( uint8_t *)&(pkt->rsv),&rsv_temp_ext.rsv, sizeof(pkt->rsv));
             // valid packet
             pkt->retry = 0;
             // start reading the packet

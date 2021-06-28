@@ -776,6 +776,14 @@ typedef struct _DRV_ENC28J60_RSV
 	uint16_t zero:1;
 }  DRV_ENC28J60_RSV;
 
+// Extended Receive Status Vector
+typedef struct 
+{
+    uint8_t filler;
+    DRV_ENC28J60_RSV rsv;
+} DRV_ENC28J60_RSV_EXT;
+
+
 // the PHY ID on the ENC28J60
 #define DRV_ENC28J60_PHY_ID1_VALUE  0x0083 
 
