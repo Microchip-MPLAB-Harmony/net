@@ -1,0 +1,10 @@
+packagePluginConfiguration:
+- name: Net Manager
+  pluginID: TCP_IP_CONFIGURATION
+  binaryFilePath: plugins\net_manager.jar
+  typeOfPlugin: JAVA
+  loadingType: IMMEDIATE
+  isHeadless: false
+  initArgs:
+    pluginClass: com.microchip.mh3.plugin.net_manager.NetManagerPlugin
+
