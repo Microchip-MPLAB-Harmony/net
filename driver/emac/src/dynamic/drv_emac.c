@@ -665,7 +665,8 @@ TCPIP_MAC_PACKET * macDrvrPacketRx(
         // Reduce header length to get data segment length
         response = TCPIP_MAC_RES_OK;
         pMacDrvr->rxStat.nRxOkPackets++;
-        pMacPacket->pDSeg->segLen = pMacPacket->pDSeg->segLen - sizeof( TCPIP_MAC_ETHERNET_HEADER );
+        // set proper segment length
+        pMacPacket->pDSeg->segLen -= sizeof( TCPIP_MAC_ETHERNET_HEADER );
         // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
         pMacPacket->pMacLayer = pMacPacket->pDSeg->segLoad;
         pMacPacket->pNetLayer = pMacPacket->pMacLayer + sizeof( TCPIP_MAC_ETHERNET_HEADER );

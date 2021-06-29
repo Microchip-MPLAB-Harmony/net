@@ -785,8 +785,6 @@ static MAC_DRVR_RESULT rxExtractPacket(
         bytesRemaining = EMAC_RX_FRAME_LENGTH_MASK & pMacDrvr->pRxDesc[ pFrameInfo->endIndex ].status.val;
         // process all the frame segments
         pDSeg = pMacPacket->pDSeg;
-        pDSeg->segLoad = pDSeg->segBuffer + pMacDrvr->_dataOffset;
-        DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segSize );
         pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_ACK_REQUIRED; // allow rxMacPacketAck entry
         while( bufferCount-- )
         {
@@ -795,7 +793,14 @@ static MAC_DRVR_RESULT rxExtractPacket(
             pMacDrvr->pRxDesc[ ii ].bufferAddress.val &= (EMAC_RX_WRAP_BIT | DRVRnEMAC_RX_OWNER_BIT);
             pMacDrvr->pRxDesc[ ii ].status.val = 0;
             //
+            pDSeg->segLoad = pDSeg->segBuffer;
             extractSize = pMacDrvr->config.rxBufferSize;
+            if( ii == pFrameInfo->startIndex )
+            {   // adjust the segment start and size
+                pDSeg->segLoad += pMacDrvr->_dataOffset;
+                extractSize -= pMacDrvr->_dataOffset;
+            }
+
             if( extractSize > bytesRemaining )
             {
                 extractSize = bytesRemaining;
@@ -803,6 +808,7 @@ static MAC_DRVR_RESULT rxExtractPacket(
             bytesRemaining -= extractSize;
             pDSeg->segLen = extractSize;
             pDSeg->segSize = pMacDrvr->config.rxBufferSize;
+            DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) pDSeg->segLoad, extractSize );
             // link the next descriptors segment to the parent packet
             if( bytesRemaining )
             {
@@ -818,8 +824,6 @@ static MAC_DRVR_RESULT rxExtractPacket(
 
                 pDSeg->next = pTemp->pDSeg;
                 pDSeg = pDSeg->next;
-                pDSeg->segLoad = pDSeg->segBuffer;
-                DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) pDSeg->segLoad, pDSeg->segSize );
             }
         }
         pFrameInfo->endIndex = moduloIncrement( pFrameInfo->endIndex,
