@@ -1408,18 +1408,21 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
         //Free the Rx packets assigned to Rx descriptors and set rx descriptors to default
         for(index = 0; index < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; index++ )
 		{
-            // get Rx packet for each rx descriptor
-            pRxPkt = gmac_queue.pRxPckt[index];
-            if(pRxPkt)
+            if(gmac_queue.pRxPckt != NULL)
             {
-                
-                (*pMACDrv->sGmacData.pktFreeF)(pRxPkt);
-            }
-            
-            gmac_queue.nRxDescIndex = 0;
-			gmac_queue.pRxPckt[index] = 0;
-			gmac_queue.pRxDesc[index].rx_desc_buffaddr.val = 0;
-			gmac_queue.pRxDesc[index].rx_desc_status.val = 0;
+				// get Rx packet for each rx descriptor
+				pRxPkt = gmac_queue.pRxPckt[index];
+				if(pRxPkt)
+				{
+					
+					(*pMACDrv->sGmacData.pktFreeF)(pRxPkt);
+				}
+				
+				gmac_queue.nRxDescIndex = 0;
+				gmac_queue.pRxPckt[index] = 0;
+				gmac_queue.pRxDesc[index].rx_desc_buffaddr.val = 0;
+				gmac_queue.pRxDesc[index].rx_desc_status.val = 0;
+			}
 		}
         
         if(gmac_queue.pRxPckt != NULL)
