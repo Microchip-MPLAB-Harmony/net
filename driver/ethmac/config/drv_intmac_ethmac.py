@@ -443,7 +443,28 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacHeapSize.setVisible(False)
     tcpipEthmacHeapSize.setDefaultValue(tcpipEthmacHeapCalc())
     tcpipEthmacHeapSize.setReadOnly(True)
-    tcpipEthmacHeapSize.setDependencies(tcpipEthmacHeapUpdate, tcpipEthmacheapdependency)    
+    tcpipEthmacHeapSize.setDependencies(tcpipEthmacHeapUpdate, tcpipEthmacheapdependency)        
+        
+    #Add to definitions.h
+    tcpipEthmacSystemDefFile = drvPic32mEthmacComponent.createFileSymbol("ETHMAC_H_FILE", None)
+    tcpipEthmacSystemDefFile.setType("STRING")
+    tcpipEthmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    tcpipEthmacSystemDefFile.setSourcePath("driver/ethmac/templates/system/system_definitions.h.ftl")
+    tcpipEthmacSystemDefFile.setMarkup(True)  
+    
+    #Add forward declaration to initialization.c
+    tcpipEthmacInitDataSourceFtl = drvPic32mEthmacComponent.createFileSymbol(None, None)
+    tcpipEthmacInitDataSourceFtl.setType("STRING")
+    tcpipEthmacInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    tcpipEthmacInitDataSourceFtl.setSourcePath("driver/ethmac/templates/system/system_driver_initialize.c.ftl")
+    tcpipEthmacInitDataSourceFtl.setMarkup(True)
+    
+    #Add to initialization.c
+    tcpipEthmacSysInitDataSourceFtl = drvPic32mEthmacComponent.createFileSymbol(None, None)
+    tcpipEthmacSysInitDataSourceFtl.setType("STRING")
+    tcpipEthmacSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    tcpipEthmacSysInitDataSourceFtl.setSourcePath("driver/ethmac/templates/system/system_data_initialize.c.ftl")
+    tcpipEthmacSysInitDataSourceFtl.setMarkup(True)
     
     #Add to system_config.h
     tcpipEthmacHeaderFtl = drvPic32mEthmacComponent.createFileSymbol(None, None)
@@ -664,6 +685,8 @@ def onAttachmentConnected(source, target):
     global tcpipEthmacEthRmii
     if (source["id"] == "ETHMAC_PHY_Dependency"): 
         Database.setSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE", target["component"].getDisplayName(),2)
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "ETHMAC")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
@@ -673,6 +696,8 @@ def onAttachmentConnected(source, target):
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "ETHMAC_PHY_Dependency"): 
         Database.clearSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE")
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)

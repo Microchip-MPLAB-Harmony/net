@@ -56,6 +56,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "configuration.h"
 #include "driver/driver_common.h"
 #include "driver/ethphy/drv_ethphy.h"
 

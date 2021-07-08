@@ -94,7 +94,7 @@ def instantiateComponent(drvExtPhyLan9303Component):
     # External PHY Type
     drvExtPhyLan9303PhyType = drvExtPhyLan9303Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyLan9303AdvSettings)
     drvExtPhyLan9303PhyType.setVisible(False)   
-    drvExtPhyLan9303PhyType.setDefaultValue("SMSC_LAN9303")
+    drvExtPhyLan9303PhyType.setDefaultValue("LAN9303")
     
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyLan9303NegInitTimeout= drvExtPhyLan9303Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan9303AdvSettings)
@@ -148,6 +148,27 @@ def instantiateComponent(drvExtPhyLan9303Component):
     drvExtPhyLan9303PeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyLan9303PeripheralId.setDefaultValue(1)
     drvExtPhyLan9303PeripheralId.setReadOnly(True)
+
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyLan9303Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+                    
+    #Add forward declaration to initialization.c
+    drvExtPhyLan9303InitDataSourceFtl = drvExtPhyLan9303Component.createFileSymbol(None, None)
+    drvExtPhyLan9303InitDataSourceFtl.setType("STRING")
+    drvExtPhyLan9303InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyLan9303InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyLan9303InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyLan9303SysInitDataSourceFtl = drvExtPhyLan9303Component.createFileSymbol(None, None)
+    drvExtPhyLan9303SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyLan9303SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyLan9303SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyLan9303SysInitDataSourceFtl.setMarkup(True)    
     
     #Add to system_config.h
     drvExtPhyLan9303HeaderFtl = drvExtPhyLan9303Component.createFileSymbol(None, None)

@@ -1204,6 +1204,27 @@ def instantiateComponent(drvGmacComponent):
     drvGmacHeapSize.setReadOnly(True)
     drvGmacHeapSize.setDependencies(drvGmacHeapUpdate, gmacheapdependency)
     
+    #Add to definitions.h
+    tcpipGmacSystemDefFile = drvGmacComponent.createFileSymbol("GMAC_H_FILE", None)
+    tcpipGmacSystemDefFile.setType("STRING")
+    tcpipGmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    tcpipGmacSystemDefFile.setSourcePath("driver/gmac/templates/system/system_definitions.h.ftl")
+    tcpipGmacSystemDefFile.setMarkup(True)  
+    
+    #Add forward declaration to initialization.c
+    tcpipGmacInitDataSourceFtl = drvGmacComponent.createFileSymbol(None, None)
+    tcpipGmacInitDataSourceFtl.setType("STRING")
+    tcpipGmacInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    tcpipGmacInitDataSourceFtl.setSourcePath("driver/gmac/templates/system/system_driver_initialize.c.ftl")
+    tcpipGmacInitDataSourceFtl.setMarkup(True)
+    
+    #Add to initialization.c
+    tcpipGmacSysInitDataSourceFtl = drvGmacComponent.createFileSymbol(None, None)
+    tcpipGmacSysInitDataSourceFtl.setType("STRING")
+    tcpipGmacSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    tcpipGmacSysInitDataSourceFtl.setSourcePath("driver/gmac/templates/system/system_data_initialize.c.ftl")
+    tcpipGmacSysInitDataSourceFtl.setMarkup(True)
+    
     #Add to system_config.h
     tcpipGmacHeaderFtl = drvGmacComponent.createFileSymbol(None, None)
     tcpipGmacHeaderFtl.setSourcePath("driver/gmac/config/drv_intmac_gmac.h.ftl")
@@ -1357,6 +1378,8 @@ def onAttachmentConnected(source, target):
     global tcpipGmacEthRmii
     if (source["id"] == "GMAC_PHY_Dependency"): 
         Database.setSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE", target["component"].getDisplayName(),2)
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "GMAC")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
@@ -1367,6 +1390,8 @@ def onAttachmentDisconnected(source, target):
     if (source["id"] == "GMAC_PHY_Dependency"): 
         Database.clearSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE")
         Database.setSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE", "Not Connected")
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)

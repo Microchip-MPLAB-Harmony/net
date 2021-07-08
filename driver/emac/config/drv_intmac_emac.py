@@ -134,6 +134,8 @@ def onAttachmentConnected( source, target ):
     if((source["id"] == "MAC_PHY_Dependency" + str( userMacChoiceId )) or  ((userMacChoiceId == 0) and (source["id"] == "MAC_PHY_Dependency"))):
         phyComponent = target[ 'component' ].getID()
         Database.setSymbolValue( macComponentId, "DRV_MAC_PHY_TYPE", target['component'].getDisplayName() )
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", atdfMacInstanceName)
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
@@ -147,6 +149,8 @@ def onAttachmentDisconnected( source, target ):
     if((source['id'] == "MAC_PHY_Dependency" + str( userMacChoiceId )) or  ((userMacChoiceId == 0) and (source['id'] == "MAC_PHY_Dependency"))):
         phyComponent = ""
         Database.clearSymbolValue( macComponentId, 'DRV_MAC_PHY_TYPE' )
+        extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)
@@ -733,6 +737,28 @@ def instantiateComponent( macComponent ):
     prjPathSrc =            prjPath + "src/"
     prjPathSrcDynamic =     prjPathSrc + "dynamic/"
     macLibDeviceCore =      getMacDeviceCoreName()
+
+        
+    #Add to definitions.h
+    systemDefFile = macComponent.createFileSymbol("EMAC_H_FILE", None)
+    systemDefFile.setType("STRING")
+    systemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    systemDefFile.setSourcePath(basePath + "templates/system/system_definitions.h.ftl")
+    systemDefFile.setMarkup(True) 
+    
+    #Add forward declaration to initialization.c
+    initDriverSourceFtl = macComponent.createFileSymbol(None, None)
+    initDriverSourceFtl.setType("STRING")
+    initDriverSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    initDriverSourceFtl.setSourcePath(basePath + "templates/system/system_driver_initialize.c.ftl")
+    initDriverSourceFtl.setMarkup(True)
+    
+    #Add to initialization.c
+    sysInitDataSourceFtl = macComponent.createFileSymbol(None, None)
+    sysInitDataSourceFtl.setType("STRING")
+    sysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    sysInitDataSourceFtl.setSourcePath(basePath + "templates/system/system_data_initialize.c.ftl")
+    sysInitDataSourceFtl.setMarkup(True)    
 
     # Add to system_config.h
     headerFileFtl = macComponent.createFileSymbol( None, None )

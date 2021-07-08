@@ -1,5 +1,5 @@
 <#----------------------------------------------------------------------------
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -21,5 +21,4 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ---------------------------------------------------------------------------->
 
-#include "library/tcpip/tcpip.h"
-
+#include "driver/ethmac/drv_ethmac.h"

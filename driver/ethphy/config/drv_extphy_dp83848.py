@@ -94,7 +94,7 @@ def instantiateComponent(drvExtPhyDp83848Component):
     # External PHY Type
     drvExtPhyDp83848PhyType = drvExtPhyDp83848Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyDp83848AdvSettings)
     drvExtPhyDp83848PhyType.setVisible(False)   
-    drvExtPhyDp83848PhyType.setDefaultValue("National_DP83848")
+    drvExtPhyDp83848PhyType.setDefaultValue("DP83848")
         
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyDp83848NegInitTimeout= drvExtPhyDp83848Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyDp83848AdvSettings)
@@ -148,6 +148,27 @@ def instantiateComponent(drvExtPhyDp83848Component):
     drvExtPhyDp83848PeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyDp83848PeripheralId.setDefaultValue(1)
     drvExtPhyDp83848PeripheralId.setReadOnly(True)
+
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyDp83848Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+                                        
+    #Add forward declaration to initialization.c
+    drvExtPhyDp83848InitDataSourceFtl = drvExtPhyDp83848Component.createFileSymbol(None, None)
+    drvExtPhyDp83848InitDataSourceFtl.setType("STRING")
+    drvExtPhyDp83848InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyDp83848InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyDp83848InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyDp83848SysInitDataSourceFtl = drvExtPhyDp83848Component.createFileSymbol(None, None)
+    drvExtPhyDp83848SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyDp83848SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyDp83848SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyDp83848SysInitDataSourceFtl.setMarkup(True)    
     
     #Add to system_config.h
     drvExtPhyDp83848HeaderFtl = drvExtPhyDp83848Component.createFileSymbol(None, None)

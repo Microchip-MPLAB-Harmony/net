@@ -192,13 +192,20 @@ def instantiateComponent(drvMiimComponent):
     drvMiimSourceFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
     drvMiimSourceFile.setType("SOURCE")
     drvMiimSourceFile.setEnabled(True)
-    #drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])       
+    #drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
+    
+    #Add forward declaration to initialization.c
+    drvMiimInitDataSourceFtl = drvMiimComponent.createFileSymbol(None, None)
+    drvMiimInitDataSourceFtl.setType("STRING")
+    drvMiimInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvMiimInitDataSourceFtl.setSourcePath("driver/miim/templates/system/system_driver_initialize.c.ftl")
+    drvMiimInitDataSourceFtl.setMarkup(True)        
 
     #add "<#include \"/framework/driver/miim/config/drv_miim.c.ftl\">"  to list SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA
     drvMiimInitDataSourceFtl = drvMiimComponent.createFileSymbol(None, None)
     drvMiimInitDataSourceFtl.setType("STRING")
-    drvMiimInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
-    drvMiimInitDataSourceFtl.setSourcePath("driver/miim/config/drv_miim.c.ftl")
+    drvMiimInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvMiimInitDataSourceFtl.setSourcePath("driver/miim/templates/system/system_data_initialize.c.ftl")
     drvMiimInitDataSourceFtl.setMarkup(True)
 
     #add "<#include \"/framework/driver/miim/config/drv_miim_init.c.ftl\">"  to list SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS
@@ -208,13 +215,6 @@ def instantiateComponent(drvMiimComponent):
     drvMiimInitSourceFtl.setSourcePath("driver/miim/config/drv_miim_init.c.ftl")
     drvMiimInitSourceFtl.setMarkup(True)
     
-    #add "<#include \"/framework/driver/miim/config/drv_miim_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_DRIVER_TASKS
-    # drvMiimSysTaskSourceFtl = drvMiimComponent.createFileSymbol(None, None)
-    # drvMiimSysTaskSourceFtl.setType("STRING")
-    # drvMiimSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
-    # drvMiimSysTaskSourceFtl.setSourcePath("driver/miim/config/drv_miim_tasks.c.ftl")
-    # drvMiimSysTaskSourceFtl.setMarkup(True)
-    
     #add "<#include \"/framework/driver/miim/config/drv_miim.h.ftl\">"  to list SYSTEM_CONFIG_H_DRIVER_CONFIGURATION 
     drvMiimSysConfigSourceFtl = drvMiimComponent.createFileSymbol(None, None)
     drvMiimSysConfigSourceFtl.setType("STRING")
@@ -222,11 +222,11 @@ def instantiateComponent(drvMiimComponent):
     drvMiimSysConfigSourceFtl.setSourcePath("driver/miim/config/drv_miim.h.ftl")
     drvMiimSysConfigSourceFtl.setMarkup(True)
 
-    # drvMiimSystemDefFile = drvMiimComponent.createFileSymbol("MIIM_H_FILE", None)
-    # drvMiimSystemDefFile.setType("STRING")
-    # drvMiimSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    # drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
-    # drvMiimSystemDefFile.setMarkup(True)  
+    drvMiimSystemDefFile = drvMiimComponent.createFileSymbol("MIIM_H_FILE", None)
+    drvMiimSystemDefFile.setType("STRING")
+    drvMiimSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
+    drvMiimSystemDefFile.setMarkup(True)  
 
     drvMiimSystemDefObjFile = drvMiimComponent.createFileSymbol("DRV_MIIM_DEF_OBJ", None)
     drvMiimSystemDefObjFile.setType("STRING")

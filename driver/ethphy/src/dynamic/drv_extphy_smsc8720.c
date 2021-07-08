@@ -217,7 +217,7 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 // the DRV_ETHPHY_OBJECT
 
-const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_SMSC_LAN8720 = 
+const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8720 = 
 {
     .miiConfigure = DRV_EXTPHY_MIIConfigure,
     .mdixConfigure = DRV_EXTPHY_MDIXConfigure,

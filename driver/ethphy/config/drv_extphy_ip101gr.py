@@ -94,7 +94,7 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     # External PHY Type
     drvExtPhyIp101grPhyType = drvExtPhyIp101grComponent.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyIp101grAdvSettings)
     drvExtPhyIp101grPhyType.setVisible(False)   
-    drvExtPhyIp101grPhyType.setDefaultValue("IP_IP101GR")
+    drvExtPhyIp101grPhyType.setDefaultValue("IP101GR")
     
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyIp101grNegInitTimeout= drvExtPhyIp101grComponent.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyIp101grAdvSettings)
@@ -148,6 +148,27 @@ def instantiateComponent(drvExtPhyIp101grComponent):
     drvExtPhyIp101grPeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyIp101grPeripheralId.setDefaultValue(1)
     drvExtPhyIp101grPeripheralId.setReadOnly(True)
+
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyIp101grComponent.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+                                    
+    #Add forward declaration to initialization.c
+    drvExtPhyIp101grInitDataSourceFtl = drvExtPhyIp101grComponent.createFileSymbol(None, None)
+    drvExtPhyIp101grInitDataSourceFtl.setType("STRING")
+    drvExtPhyIp101grInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyIp101grInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyIp101grInitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyIp101grSysInitDataSourceFtl = drvExtPhyIp101grComponent.createFileSymbol(None, None)
+    drvExtPhyIp101grSysInitDataSourceFtl.setType("STRING")
+    drvExtPhyIp101grSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyIp101grSysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyIp101grSysInitDataSourceFtl.setMarkup(True)    
     
     #Add to system_config.h
     drvExtPhyIp101grHeaderFtl = drvExtPhyIp101grComponent.createFileSymbol(None, None)

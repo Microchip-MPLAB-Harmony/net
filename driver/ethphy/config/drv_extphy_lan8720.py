@@ -94,7 +94,7 @@ def instantiateComponent(drvExtPhyLan8720Component):
     # External PHY Type
     drvExtPhyLan8720PhyType = drvExtPhyLan8720Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyLan8720AdvSettings)
     drvExtPhyLan8720PhyType.setVisible(False)   
-    drvExtPhyLan8720PhyType.setDefaultValue("SMSC_LAN8720")
+    drvExtPhyLan8720PhyType.setDefaultValue("LAN8720")
         
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyLan8720NegInitTimeout= drvExtPhyLan8720Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8720AdvSettings)
@@ -148,6 +148,27 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyLan8720PeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyLan8720PeripheralId.setDefaultValue(1)
     drvExtPhyLan8720PeripheralId.setReadOnly(True)
+    
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyLan8720Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True)
+        
+    #Add forward declaration to initialization.c
+    drvExtPhyLan8720InitDataSourceFtl = drvExtPhyLan8720Component.createFileSymbol(None, None)
+    drvExtPhyLan8720InitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8720InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyLan8720InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyLan8720InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyLan8720SysInitDataSourceFtl = drvExtPhyLan8720Component.createFileSymbol(None, None)
+    drvExtPhyLan8720SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8720SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyLan8720SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyLan8720SysInitDataSourceFtl.setMarkup(True)    
     
     #Add to system_config.h
     drvExtPhyLan8720HeaderFtl = drvExtPhyLan8720Component.createFileSymbol(None, None)
@@ -230,7 +251,6 @@ def drvExtPhyLan8720MenuVisibleSingle(symbol, event):
         print("EthMac Menu Invisible.")
         symbol.setVisible(False)
         
-
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}

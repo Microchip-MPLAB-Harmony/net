@@ -437,7 +437,7 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 // the DRV_ETHPHY_OBJECT
 
-const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_IP_IP101GR = 
+const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_IP101GR = 
 {
     .miiConfigure = DRV_EXTPHY_MIIConfigure,
     .mdixConfigure = DRV_EXTPHY_MDIXConfigure,

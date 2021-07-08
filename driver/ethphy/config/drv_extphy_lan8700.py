@@ -94,7 +94,7 @@ def instantiateComponent(drvExtPhyLan8700Component):
     # External PHY Type
     drvExtPhyLan8700PhyType = drvExtPhyLan8700Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyLan8700AdvSettings)
     drvExtPhyLan8700PhyType.setVisible(False)   
-    drvExtPhyLan8700PhyType.setDefaultValue("SMSC_LAN8700")
+    drvExtPhyLan8700PhyType.setDefaultValue("LAN8700")
         
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyLan8700NegInitTimeout= drvExtPhyLan8700Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8700AdvSettings)
@@ -149,6 +149,27 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhyLan8700PeripheralId.setDefaultValue(1)
     drvExtPhyLan8700PeripheralId.setReadOnly(True)
 
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyLan8700Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+        
+    #Add forward declaration to initialization.c
+    drvExtPhyLan8700InitDataSourceFtl = drvExtPhyLan8700Component.createFileSymbol(None, None)
+    drvExtPhyLan8700InitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8700InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyLan8700InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyLan8700InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyLan8700SysInitDataSourceFtl = drvExtPhyLan8700Component.createFileSymbol(None, None)
+    drvExtPhyLan8700SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8700SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyLan8700SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyLan8700SysInitDataSourceFtl.setMarkup(True)    
+    
     #Add to system_config.h
     drvExtPhyLan8700HeaderFtl = drvExtPhyLan8700Component.createFileSymbol(None, None)
     drvExtPhyLan8700HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8700.h.ftl")

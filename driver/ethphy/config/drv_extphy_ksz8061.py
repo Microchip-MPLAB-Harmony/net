@@ -151,6 +151,27 @@ def instantiateComponent(drvExtPhyKsz8061Component):
     drvExtPhyKsz8061PeripheralId.setDefaultValue(1)
     drvExtPhyKsz8061PeripheralId.setReadOnly(True)
 
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyKsz8061Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+                            
+    #Add forward declaration to initialization.c
+    drvExtPhyKsz8061InitDataSourceFtl = drvExtPhyKsz8061Component.createFileSymbol(None, None)
+    drvExtPhyKsz8061InitDataSourceFtl.setType("STRING")
+    drvExtPhyKsz8061InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyKsz8061InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyKsz8061InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyKsz8061SysInitDataSourceFtl = drvExtPhyKsz8061Component.createFileSymbol(None, None)
+    drvExtPhyKsz8061SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyKsz8061SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyKsz8061SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyKsz8061SysInitDataSourceFtl.setMarkup(True)    
+    
     #Add to system_config.h
     drvExtPhyKsz8061HeaderFtl = drvExtPhyKsz8061Component.createFileSymbol(None, None)
     drvExtPhyKsz8061HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_ksz8061.h.ftl")

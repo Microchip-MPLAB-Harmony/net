@@ -1,5 +1,23 @@
+<#--
+/*******************************************************************************
+  MIIM Driver Freemarker Template File
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    system_data_initialize.c.ftl
+
+  Summary:
+    MIIM Driver Freemarker Template File
+
+  Description:
+
+*******************************************************************************/
+-->
+
 <#----------------------------------------------------------------------------
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -22,24 +40,10 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
-
-<#--
-// tcpip_stack_init.c.ftl: TCP/IP module Initialization Calls
--->
-
-<#if USE_TCPIP_STACK == true>
-<#if (((net_Pres.NET_PRES_USE)?has_content) && ((net_Pres.NET_PRES_USE)  == true))>
-	<#lt>/* Network Presentation Layer Initialization */
-	<#lt>sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
+<#if DRV_MIIM_USE_DRIVER>
+	<#lt>/* MIIM Driver Configuration */
+	<#lt>static const DRV_MIIM_INIT drvMiimInitData =
+	<#lt>{
+	<#lt>	.ethphyId = DRV_MIIM_ETH_MODULE_ID,
+	<#lt>};
 </#if>
-    <#lt>/* TCPIP Stack Initialization */
-    <#lt>sysObj.tcpip = TCPIP_STACK_Init();
-    <#lt>SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
-</#if>
-
-<#--
-/*******************************************************************************
- End of File
-*/
--->
-

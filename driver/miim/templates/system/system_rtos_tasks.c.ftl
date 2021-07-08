@@ -32,4 +32,18 @@
              </#if>
     <#lt>    }
     <#lt>}
+<#elseif (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX">
+    <#lt>TX_THREAD      _DRV_MIIM_Task_TCB;
+    <#lt>uint8_t*       _DRV_MIIM_Task_Stk_Ptr;
+
+    <#lt>static void _DRV_MIIM_Tasks( ULONG thread_input )
+    <#lt>{
+    <#lt>    while(1)
+    <#lt>    {
+    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim);
+             <#if DRV_MIIM_RTOS_USE_DELAY >
+    <#lt>        tx_thread_sleep((ULONG)(${DRV_MIIM_RTOS_DELAY} / (TX_TICK_PERIOD_MS)));
+             </#if>
+    <#lt>    }
+    <#lt>}
 </#if>

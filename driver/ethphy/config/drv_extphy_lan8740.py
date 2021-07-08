@@ -96,7 +96,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
     #drvExtPhyLan8740PhyType.setLabel("External PHY Type")
     drvExtPhyLan8740PhyType.setVisible(False)
     #drvExtPhyLan8740PhyType.setDescription("External PHY Type")
-    drvExtPhyLan8740PhyType.setDefaultValue("SMSC_LAN8740")
+    drvExtPhyLan8740PhyType.setDefaultValue("LAN8740")
     
     # Driver PHY Negotiation Time-out - ms
     drvExtPhyLan8740NegInitTimeout= drvExtPhyLan8740Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8740AdvSettings)
@@ -150,6 +150,27 @@ def instantiateComponent(drvExtPhyLan8740Component):
     drvExtPhyLan8740PeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyLan8740PeripheralId.setDefaultValue(1)
     drvExtPhyLan8740PeripheralId.setReadOnly(True)
+
+    # External MAC Name
+    drvExtPhyMacName= drvExtPhyLan8740Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
+    drvExtPhyMacName.setLabel("Mac Name") 
+    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setDefaultValue("")
+    drvExtPhyMacName.setReadOnly(True) 
+                
+    #Add forward declaration to initialization.c
+    drvExtPhyLan8740InitDataSourceFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
+    drvExtPhyLan8740InitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8740InitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA")
+    drvExtPhyLan8740InitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_driver_initialize.c.ftl")
+    drvExtPhyLan8740InitDataSourceFtl.setMarkup(True)    
+    
+    #Add to initialization.c
+    drvExtPhyLan8740SysInitDataSourceFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
+    drvExtPhyLan8740SysInitDataSourceFtl.setType("STRING")
+    drvExtPhyLan8740SysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+    drvExtPhyLan8740SysInitDataSourceFtl.setSourcePath("driver/ethphy/templates/system/system_data_initialize.c.ftl")
+    drvExtPhyLan8740SysInitDataSourceFtl.setMarkup(True)    
     
     #Add to system_config.h
     drvExtPhyLan8740HeaderFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
