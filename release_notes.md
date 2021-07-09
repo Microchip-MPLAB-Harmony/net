@@ -1,4 +1,51 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.7.3 (July, 2021)
+### ADDITIONS AND UPDATES FOR  3.7.3:
+
+- **Important functionality update**
+
+This release provides support for Microsoft NetxDuo and Azure IoT demos.  
+This release changes the allocation of the MAC packets and the payload alignment.  
+Protocol structures are now 32 bit boundary aligned.  
+MAC drivers have been updated to work with the new packet layout.  
+
+**Regular Harmony networking demos should use the previous v3.7.2 release!**  
+Complete testing with the new allocation scheme will be part of the net v3.8.0 release.
+
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.7.3 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| MAC drivers           | Updated the MC packet structure for a more efficient payload alignment. Protocol structures are now 32 bit aligned |
+| MAC drivers           | Updated the MAC TCPIP_MAC_PacketRx() signature |
+| MHC                   | Added support for Azure IoT configuration |
+| Announce              | Updated announce to advertise a static IPv4 address too |
+| HTTP_NET              | Defaulted the HTTP_NET allocation functions to TCP/IP heap |
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.7.3 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| GMAC driver           | Prevent multiple freeing of array of pointers for rx packet in _MacRxFreePacket |
+| ENC 28J60 driver      | Extended Receive Status Vector buffer to avoid overwrite and exception |
+| ETHMAC, GMAC driver   | Cleared the initialization flag so that the _MACDeinit is called only once |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+- [MPLAB® X IDE v5.45](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v2.50](https://www.microchip.com/mplab/compilers) or later
+- See package.xml for the required dependency repo versions.
+
+
+- **Release notes for v3.7.2 apply**
+
 ## Net Release v3.7.2 (April, 2021)
 ### ADDITIONS AND UPDATES FOR  3.7.2:
 
