@@ -594,8 +594,6 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
             if ( phyInitRes != DRV_ETHPHY_RES_OK)
             {
                 _MACDeinit(pMACDrv);
-                // keep the error status though
-                pMACDrv->sGmacData._macFlags._init = 1;
                 pMACDrv->sGmacData.sysStat = SYS_STATUS_ERROR;
                 SYS_ERROR_PRINT(SYS_ERROR_ERROR, "DRV PHY init failed: %d\r\n", phyInitRes);
                 break;

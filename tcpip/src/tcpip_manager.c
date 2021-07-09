@@ -1318,7 +1318,6 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
     pNetIf->macObjHandle = 0;
 
     pNetIf->Flags.bInterfaceEnabled = pNetIf->Flags.bMacInitialize = false;
-    pNetIf->Flags.powerMode = stackCtrlData->powerMode;
 
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)
     if(_TCPIPStackNetIsPrimary(pNetIf))
@@ -1352,7 +1351,6 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
     pNetIf->macObjHandle = 0;
 
     pNetIf->Flags.bInterfaceEnabled = pNetIf->Flags.bMacInitialize = false;
-    pNetIf->Flags.powerMode = powerMode;
 
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)

@@ -752,11 +752,9 @@ void DRV_ETHMAC_PIC32MACTasks(SYS_MODULE_OBJ object)
 
             phyInitRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(hPhyClient);
 
-            if ( phyInitRes != DRV_ETHPHY_RES_OK)
+            if ( phyInitRes != DRV_ETHPHY_RES_OK )
             {
                 _MACDeinit(pMacD);
-                // keep the error status though
-                pMacD->mData._macFlags._init = 1;
                 pMacD->mData.sysStat = SYS_STATUS_ERROR; 
                 SYS_ERROR_PRINT(SYS_ERROR_ERROR, "DRV PHY init failed: %d\r\n", phyInitRes);
                 break;
