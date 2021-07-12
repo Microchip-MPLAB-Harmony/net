@@ -827,6 +827,11 @@ typedef struct _DRV_ENCX24J600_RSV
 	uint16_t :11;
 }  DRV_ENCx24J600_RSV;
 
+typedef struct
+{
+    uint8_t            filler;
+    DRV_ENCx24J600_RSV rsv;
+}DRV_ENCx24J600_RSV_EXT;
 
 typedef enum
 {
