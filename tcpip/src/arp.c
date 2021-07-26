@@ -980,7 +980,7 @@ static void TCPIP_ARP_Timeout(void)
         // see if there's something to remove
         while( (pN = pArpDcpt->incompleteList.list.head) != 0)
         {
-            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
             if( (arpMod.timeSeconds - pE->tInsert) >= arpMod.entryPendingTmo)
             {   // expired, remove it
                 TCPIP_OAHASH_EntryRemove(pArpDcpt->hashDcpt, &pE->hEntry);
@@ -998,7 +998,7 @@ static void TCPIP_ARP_Timeout(void)
 
         for(pN = pArpDcpt->incompleteList.list.head; pN != 0; pN = pN->next)
         {
-            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
             if((pE->hEntry.flags.value & ARP_FLAG_ENTRY_GRATUITOUS) != 0)
             {
                 maxRetries = arpMod.entryGratRetries;
@@ -1020,7 +1020,7 @@ static void TCPIP_ARP_Timeout(void)
         // see the completed entries queue
         while( (pN = pArpDcpt->completeList.list.head) != 0)
         {
-            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+            pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
             if( (arpMod.timeSeconds - pE->tInsert) >= arpMod.entrySolvedTmo)
             {   // expired, remove it
                 TCPIP_OAHASH_EntryRemove(pArpDcpt->hashDcpt, &pE->hEntry);
@@ -1041,7 +1041,7 @@ static void TCPIP_ARP_Timeout(void)
                 pN = TCPIP_Helper_ProtectedSingleListHeadRemove(&pArpDcpt->completeList);
                 if(pN)
                 {
-                    pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+                    pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
                     TCPIP_OAHASH_EntryRemove(pArpDcpt->hashDcpt, &pE->hEntry);
                     _ARPNotifyClients(pIf, &pE->ipAddress, 0, ARP_EVENT_REMOVED_PURGED);
                 }
@@ -1717,7 +1717,7 @@ OA_HASH_ENTRY* TCPIP_OAHASH_EntryDelete(OA_HASH_DCPT* pOH)
 
     if( (pN = pArpDcpt->incompleteList.head) != 0)
     {
-        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
         if( (arpMod.timeSeconds - pE->tInsert) >= arpMod.entryPendingTmo)
         {   // we remove this one
             pRemList = &pArpDcpt->incompleteList;
@@ -1733,7 +1733,7 @@ OA_HASH_ENTRY* TCPIP_OAHASH_EntryDelete(OA_HASH_DCPT* pOH)
 
     if(pN)
     {
-        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
         return &pE->hEntry;    
     }
 
@@ -1787,7 +1787,7 @@ OA_HASH_ENTRY* TCPIP_ARP_HashEntryDelete(OA_HASH_DCPT* pOH)
 
     if( (pN = pArpDcpt->incompleteList.list.head) != 0)
     {
-        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
         if( (arpMod.timeSeconds - pE->tInsert) >= arpMod.entryPendingTmo)
         {   // we remove this one
             pRemList = &pArpDcpt->incompleteList;
@@ -1803,7 +1803,7 @@ OA_HASH_ENTRY* TCPIP_ARP_HashEntryDelete(OA_HASH_DCPT* pOH)
 
     if(pN)
     {
-        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(ARP_HASH_ENTRY, next));
+        pE = (ARP_HASH_ENTRY*) ((uint8_t*)pN - offsetof(struct _TAG_ARP_HASH_ENTRY, next));
         return &pE->hEntry;    
     }
 

@@ -1924,7 +1924,7 @@ static int _DNS_ReadName(TCPIP_DNS_RR_PROCESS* pProc, char* nameBuff, int buffSi
     }
     else
     {
-        wPtr = 0;
+        ePtr = wPtr = 0;
     }
 
 

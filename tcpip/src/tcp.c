@@ -2348,7 +2348,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
     CRYPT_MD5_CTX md5Ctx;
     uint32_t secretKey[16 / 4];   // 128 bits secret key
 
-    size_t dataSize;    // actual data size
+    size_t dataSize = 0;    // actual data size
 
     union
     {
