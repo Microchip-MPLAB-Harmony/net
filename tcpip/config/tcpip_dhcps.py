@@ -32,7 +32,7 @@ tcpipDhcpsPrimDnsAddr = []
 tcpipDhcpsSecDnsAddr = []
 tcpipDhcpsIfIdx = []
 tcpipDhcpsPoolEn = []
-tcpipNetConfigNumMax = 10  # hard coded value
+tcpipNetConfigNumMax = 2  # hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpsComponent):
     print(tcpipNetConfigNumMax)

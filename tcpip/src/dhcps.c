@@ -54,6 +54,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 uint32_t initTime ;
 
+// DHCP server Magic bytes "DHCP"
+#define TCPIP_DHCPS_MAGIC_COOKIE 0x63538263ul
+
 #define TCPIP_DHCPS_MAX_RECEIVED_BUFFER_SIZE 480
 static DHCPS_HASH_DCPT gPdhcpsHashDcpt = { 0,0};
 
@@ -92,7 +95,20 @@ static void TCPIP_DHCPS_TaskForLeaseTime(void);
 static void TCPIP_DHCPS_Process(void);
 static void TCPIP_DHCPSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
 
+#if ((TCPIP_DHCPS_DEBUG_LEVEL & TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+// a Basic debug Print and Message
 
+static void _DHCPSDbgCond(bool cond, const char* message, int lineNo)
+{
+    if(cond == false)
+    {
+        SYS_CONSOLE_PRINT("DHCP Server Cond: %s, in line: %d, \r\n", message, lineNo);
+    }
+}
+
+#else
+#define _DHCPSDbgCond(cond, message, lineNo)
+#endif  // (TCPIP_DHCPS_DEBUG_LEVEL & TCPIP_DHCPS_DEBUG_MASK_BASIC)
 
 
 /*static __inline__*/static  void /*__attribute__((always_inline))*/ _DHCPSSetHashEntry(DHCPS_HASH_ENTRY* dhcpsHE, DHCPS_ENTRY_FLAGS newFlags, TCPIP_MAC_ADDR* hwAdd, const uint8_t* pIPAddr)
@@ -163,9 +179,12 @@ static void dhcpServPoolAddressValidation(const TCPIP_DHCPS_MODULE_CONFIG* pDhcp
 
     *poolCnt =tempPoolCnt;
     
-    for(ix=0;ix<nIfx;ix++)
+    for(ix=0;ix<pDhcpsConfig->dhcpServerCnt;ix++)
     {
-        if(pDhcpsConfig->dhcpServer == NULL) break;
+        if(pDhcpsConfig->dhcpServer == NULL) 
+        {
+            break;
+        }
         
         pServer = pDhcpsConfig->dhcpServer+ix;
         if(pServer == NULL)
@@ -216,7 +235,11 @@ static void dhcpServPoolAddressValidation(const TCPIP_DHCPS_MODULE_CONFIG* pDhcp
         }
     }
     // if there is no pool, then pool count make it as 1 and use the default values for the server configuration.
-    if(tempPoolCnt==0)  tempPoolCnt=1;
+    if(tempPoolCnt==0)  
+    {
+        _DHCPSDbgCond(false, " Debug Message: No pool and Default Server configuration is use. This condition should not come.", __LINE__);
+        tempPoolCnt=1;
+    }
     *poolCnt = tempPoolCnt;
 }
 
@@ -226,16 +249,16 @@ static void _DHCPS_AddressPoolDescConfiguration(const TCPIP_DHCPS_MODULE_CONFIG*
     int poolCount=0;
     TCPIP_DHCPS_ADDRESS_CONFIG *pPoolServer=NULL;
     DHCP_SRVR_DCPT *pServerDcpt=NULL;
-    int nIntf=0,ix=0,poolIndex=0;
+    int ix=0,localPoolIndex=0;
 
-    nIntf = TCPIP_STACK_NumberOfNetworksGet();
+
     poolCount = dhcps_mod.poolCount;    
     if(gPdhcpSDcpt == NULL)
     {
         return;
     }
     
-    for(ix=0;ix<nIntf;ix++)
+    for(ix=0;ix<poolCount;ix++)
     {
         if(pDhcpsConfig->dhcpServer == NULL)
         {
@@ -252,7 +275,7 @@ static void _DHCPS_AddressPoolDescConfiguration(const TCPIP_DHCPS_MODULE_CONFIG*
             continue;
         }
 
-        pServerDcpt = gPdhcpSDcpt+poolIndex;
+        pServerDcpt = gPdhcpSDcpt+ix;
         if(pServerDcpt == NULL)
         {
             continue;
@@ -269,19 +292,17 @@ static void _DHCPS_AddressPoolDescConfiguration(const TCPIP_DHCPS_MODULE_CONFIG*
     // Secondary DNS server
         TCPIP_Helper_StringToIPAddress((char*)pPoolServer->secondDNS,&pServerDcpt->intfAddrsConf.serverDNS2);
 #endif
+        pServerDcpt->intfAddrsConf.poolIndex = localPoolIndex;
         pServerDcpt->netIx = pPoolServer->interfaceIndex;
 
-        poolIndex++;
-        if(poolCount==poolIndex)
-        {
-            break;
-        }
+        localPoolIndex++;
+       
     }
     
     // Get the default pool configuration
-    if(poolIndex == 0)
+    if(localPoolIndex == 0)
     {
-        pServerDcpt = gPdhcpSDcpt+poolIndex;
+        pServerDcpt = gPdhcpSDcpt+localPoolIndex;
         memset(&pServerDcpt->intfAddrsConf,0,sizeof(pServerDcpt->intfAddrsConf));
         pServerDcpt->netIx = TCPIP_STACK_NetIndexGet(TCPIP_STACK_NetDefaultGet());
     }
@@ -374,8 +395,8 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         dhcps_mod.poolCount = poolCnt;
         dhcps_mod.dhcpNextLease.Val = 0;
 
-        // expected that max number of pool entry is simillar to the interface index
-        // copy the valid interface details to the global dhcps descpritor table
+        // expected that max number of pool entry is similar to the interface index
+        // copy the valid interface details to the global dhcps descriptor table
        _DHCPS_AddressPoolDescConfiguration(pDhcpsConfig);
     }
 	
@@ -604,7 +625,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
         {
             return false;
         }
-        if(buffsize < 241u)
+        if(buffsize < TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE)
         {
             TCPIP_UDP_Discard(s);
             continue;
@@ -627,7 +648,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
         udpGetBufferData.head = getBuffer;
         udpGetBufferData.wrPtr = udpGetBufferData.head;
         udpGetBufferData.endPtr = udpGetBufferData.head+buffsize;
-        // Get Compleate Array of DHCP server Reply bytes
+        // Get Complete Array of DHCP server Reply bytes
         TCPIP_UDP_ArrayGet(s,udpGetBufferData.head,buffsize);
        // discard the current packet and point to the next queued packet
         TCPIP_UDP_Discard(s);
@@ -682,7 +703,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
             continue;
         }
 
-        if(dw != 0x63538263ul)
+        if(dw != TCPIP_DHCPS_MAGIC_COOKIE)
         {
             continue;
         }
@@ -692,21 +713,26 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
         {
             // Get option type
             if(!TCPIP_DHCPS_GetDataFromUDPBuff(&udpGetBufferData,&Option))
+            {
                 break;
+            }
             if(Option == DHCP_END_OPTION)
+            {
                 break;
+            }
 
             // Get option length
             if(!TCPIP_DHCPS_GetDataFromUDPBuff(&udpGetBufferData,&Len))
+            {
                 break;
+            }
             ix=0;
             
             // get the Descriptor index from the interface
             if(_DHCPSDescriptorGetFromIntf(pNetIfFromDcpt,&ix) == false)
             {
-                // donot break here, use the  0th index for pool for other
-                // interface if it is not configured.
-                ix=0;
+                // the interface is not configured for DHCP Server
+                return false;
             }
             // assign the dhcpDescriptor value
             pDhcpsDcpt = gPdhcpSDcpt+ix;
@@ -715,7 +741,9 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
             {
                 case DHCP_MESSAGE_TYPE:
                     if(!TCPIP_DHCPS_GetDataFromUDPBuff(&udpGetBufferData,&i))
+                    {
                         break;
+                    }
                     switch(i)
                     {
                         case DHCP_DISCOVER_MESSAGE:
@@ -768,9 +796,13 @@ static int TCPIP_DHCPS_CopyDataArrayToProcessBuff(uint8_t *val ,TCPIP_DHCPS_DATA
 {
     int nBytes = putbuf->endPtr - putbuf->wrPtr;
     if(len < nBytes)
+    {
         nBytes = len;
+    }
     if(nBytes <= 0)
+    {
         return 0;
+    }
     if(val == NULL)
     {
         putbuf->wrPtr = putbuf->wrPtr+nBytes;
@@ -821,20 +853,28 @@ static void DHCPReplyToDiscovery(TCPIP_NET_IF *pNetIf,BOOTP_HEADER *Header,DHCP_
 
         // Get option type
         if(!TCPIP_DHCPS_GetDataFromUDPBuff(getBuf,(uint8_t *)&Option))
+        {
             break;
+        }
         if(Option == DHCP_END_OPTION)
+        {
             break;
+        }
 
         // Get option length
         if(!TCPIP_DHCPS_GetDataFromUDPBuff(getBuf,(uint8_t *)&Len))
+        {
             break;
+        }
 
         switch(Option)
         {
             case DHCP_PARAM_REQUEST_IP_ADDRESS:
             {
                 if(!TCPIP_DHCPS_GetArrayOfDataFromUDPBuff(getBuf,(uint8_t*)&dw,4))
+                {
                     break;
+                }
                 if(Len != 4)
                 {
                     break;
@@ -1128,17 +1168,25 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
     // Client IP address, only filled in if client is in
     // BOUND, RENEW or REBINDING state and can respond to ARP requests.
     if(bAccept)
+    {
         rxHeader.ClientIP.Val = boot_header->ClientIP.Val; // Not yet Assigned
+    }
     else
+    {
         rxHeader.ClientIP.Val = 0; // Not yet Assigned
+    }
     // Leased IP address or Client IP address
     rxHeader.YourIP.Val = 0;
     // IP address of next server to use in bootstrap;
     //returned in DHCPOFFER, DHCPACK by server.
     if(bAccept)
+    {
         rxHeader.NextServerIP.Val = pNetIf->netIPAddr.Val;
+    }
     else
+    {
         rxHeader.NextServerIP.Val = 0;
+    }
     // Relay agent IP address, used in booting via a relay agent.
     rxHeader.RelayAgentIP.Val = 0;
     // Client MAC address
@@ -1236,7 +1284,6 @@ static void DHCPReplyToRequest(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, b
     s =dhcps_mod.uSkt;
     if(TCPIP_UDP_TxPutIsReady(s, DHCPS_MAX_REPONSE_PACKET_SIZE) < DHCPS_MAX_REPONSE_PACKET_SIZE)
     {
-        //TCPIP_UDP_Discard(s);
          return;
     }
     //this will put the start pointer at the beginning of the TX buffer
@@ -1339,7 +1386,9 @@ static void DHCPReplyToRequest(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, b
                         break;
                     }
                     if(_DHCPSAddCompleteEntry(pNetIf->netIfIx, (uint8_t*)&dw, &boot_header->ClientMAC, DHCPS_FLAG_ENTRY_COMPLETE)!= DHCPS_RES_OK)
+                    {
                         return ;
+                    }
                 }
                 break;
             }
@@ -1474,7 +1523,9 @@ static void DHCPReplyToRequest(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, b
     // of what the node's source IP address was (to ensure we don't try to
     // unicast to 0.0.0.0).
     if(false == bRenew)
+    {
         TCPIP_UDP_BcastIPV4AddressSet( s,UDP_BCAST_NETWORK_LIMITED,pNetIf);
+    }
 
     IP_MULTI_ADDRESS tmp_MultiAddr; tmp_MultiAddr.v4Add = pNetIf->netIPAddr;
     TCPIP_UDP_SourceIPAddressSet(s,IP_ADDRESS_TYPE_IPV4,&tmp_MultiAddr);
@@ -1958,13 +2009,14 @@ static bool _DHCPSDescriptorGetFromIntf(TCPIP_NET_IF *pNetIf,uint32_t *dcptIdx)
         {
             return false;
         }
-        if(pNetIf->netIfIx != pDhcpServDcpt->netIx )
+        if(pNetIf->netIfIx != pDhcpServDcpt->netIx)
         {
+            _DHCPSDbgCond(false, " Debug Message: DHCP Server Interface Number is not matching to the Network configuration DHCP server enable status :  ", pDhcpServDcpt->netIx);
             continue;
         }
         else
         {
-            *dcptIdx = (uint32_t)ix;
+            *dcptIdx = pDhcpServDcpt->intfAddrsConf.poolIndex;
             return true;
         }
     }
@@ -2016,7 +2068,7 @@ static bool _DHCPS_StartOperation(TCPIP_NET_IF* pNetIf,DHCP_SRVR_DCPT* pDhcpsDcp
     // more than interface, if the address pool is not configured.
     if(_DHCPSDescriptorGetFromIntf(pNetIf,&poolIndex) == false)
     {
-        poolIndex =0;
+        return false;
     }
     pDhcpsDcpt = gPdhcpSDcpt+poolIndex;
     if(pDhcpsDcpt == NULL)

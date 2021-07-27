@@ -84,6 +84,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef struct
 {
      int            interfaceIndex;     // Interface Index
+     uint32_t       poolIndex;          // Server Pool Index
      const char*    serverIPAddress;    // Server IP address
      const char*    startIPAddRange;    // Start IP address 
      const char*    ipMaskAddress;      // Netmask
@@ -108,11 +109,12 @@ typedef struct
 {
     bool    enabled;   				    // enable DHCP server
     bool    deleteOldLease;  		    // delete old cache if still in place,
+    uint32_t dhcpServerCnt;             // Maximum number of DHCP server entries to be supported
     // specific DHCP parameters
     size_t  leaseEntries;   		    // max number of lease entries
     uint32_t     entrySolvedTmo; 		// solved entry removed after this tmo in seconds
     TCPIP_DHCPS_ADDRESS_CONFIG *dhcpServer; // DHCP server lease address configuration details
-   // uint32_t    dhcpServerCnt;        // Max DHCP server support
+    
 } TCPIP_DHCPS_MODULE_CONFIG;
 
 // *****************************************************************************

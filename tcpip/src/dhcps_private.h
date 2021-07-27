@@ -51,6 +51,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _DHCPS_PRIVATE_H_ 
 #define _DHCPS_PRIVATE_H_
 
+
+// DHCP Server debug levels
+#define TCPIP_DHCPS_DEBUG_MASK_BASIC           (0x0001)
+#define TCPIP_DHCPS_DEBUG_MASK_EVENTS          (0x0002)
+
+
+// enable DHCP Server debugging levels
+#define TCPIP_DHCPS_DEBUG_LEVEL               (0)
+
+// Minimum DHCP Discovery packet size 
+#define TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE     300
+
 // Boot file name, null terminated string; "generic" name or null in DHCPDISCOVER, fully qualified
 // directory-path name in DHCPOFFER.
 #define DHCPS_BOOTFILE_NAME_SIZE 128
@@ -72,6 +84,7 @@ typedef struct
     IPV4_ADDR	serverDNS;		// Interface primary DNS server address when DHCP server is enabled
     IPV4_ADDR	serverDNS2;		// Interface secondary DNS server address when DHCP server is enabled
 #endif	
+    uint32_t    poolIndex;      // Dhcp server Pool Index
 }DHCPS_INTERFACE_CONFIG;
 
 typedef struct __attribute__((packed))
@@ -110,7 +123,7 @@ typedef struct
 
 
 // DHCP or BOOTP Header structure
-typedef struct
+typedef struct __attribute__((packed))
 {
     uint8_t	MessageType;	// Message type for this message
     uint8_t	HardwareType;	// Hardware type for this message
