@@ -1654,7 +1654,8 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileUpload(TCPIP_HTTP_NET_CONN* pHtt
         {
             _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR, pHttpCon->httpData + 1);
         }
-        strncpy(pHttpCon->fileName, (char*)pHttpCon->httpData + 1, sizeof(pHttpCon->fileName));
+        strncpy(pHttpCon->fileName, (char*)pHttpCon->httpData + 1, sizeof(pHttpCon->fileName) - 1);
+        pHttpCon->fileName[sizeof(pHttpCon->fileName) -  1] = 0;
 
 #if defined(TCPIP_HTTP_NET_USE_AUTHENTICATION)
         if(httpUserCback && httpUserCback->fileAuthenticate)
@@ -1731,7 +1732,8 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileOpen(TCPIP_HTTP_NET_CONN* pHttpC
     {
         _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR, pHttpCon->httpData + 1);
     }
-    strncpy(pHttpCon->fileName, (char*)pHttpCon->httpData + 1, sizeof(pHttpCon->fileName));
+    strncpy(pHttpCon->fileName, (char*)pHttpCon->httpData + 1, sizeof(pHttpCon->fileName) - 1);
+    pHttpCon->fileName[sizeof(pHttpCon->fileName) - 1] = 0;
 
     // Find the extension in the filename
     ext = strrchr(pHttpCon->fileName, TCPIP_HTTP_FILE_EXT_SEP);
@@ -3553,13 +3555,20 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
         pChDcpt->pRootDcpt = (pOwnDcpt == 0) ? pChDcpt : pOwnDcpt->pRootDcpt; 
         pChDcpt->fileChDcpt.fSize = fileSize;
         pChDcpt->fileChDcpt.fHandle = fH;
-        char* path = strrchr(fName, TCPIP_HTTP_FILE_PATH_SEP);
-        if(path)
-        {   // save a truncated version of the file name, no path 
-            fName = path + 1;
+        if(fName != 0)
+        {
+            char* path = strrchr(fName, TCPIP_HTTP_FILE_PATH_SEP);
+            if(path)
+            {   // save a truncated version of the file name, no path 
+                fName = path + 1;
+            }
+            strncpy(pChDcpt->chunkFName, fName, sizeof(pChDcpt->chunkFName) - 1);
+            pChDcpt->chunkFName[sizeof(pChDcpt->chunkFName) - 1] = 0;
         }
-        strncpy(pChDcpt->chunkFName, fName, sizeof(pChDcpt->chunkFName) - 1);
-        pChDcpt->chunkFName[sizeof(pChDcpt->chunkFName) - 1] = 0;
+        else
+        {
+            pChDcpt->chunkFName[0] = 0;
+        }
 
         break;
     }
@@ -4122,12 +4131,11 @@ static char* _HTTP_FileLineParse(TCPIP_HTTP_CHUNK_DCPT* pChDcpt, char* lineBuff,
     procEnd = 0;
 #endif // (TCPIP_HTTP_NET_SSI_PROCESS != 0)
 
+    dynEnd = 0;
 #if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
-
     dynStart = _HTTP_DynVarParse(lineBuff, &dynEnd, verifyOnly);
 #else
     dynStart = 0;
-    dynEnd = 0;
 #endif // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
 
     if(procStart != 0 && (dynStart == 0 || procStart < dynStart))
@@ -4808,6 +4816,7 @@ static bool  _HTTP_SSIExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DC
     _HTTPAssertCond(TCPIP_HTTP_NET_SSI_CMD_MAX_LEN < pFileChDcpt->fileChDcpt.fileBuffDcpt->fileBufferSize, __func__, __LINE__);
 
     success = false;
+    endSsiCmd = 0;
 
     while(true)
     {

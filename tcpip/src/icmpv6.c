@@ -1048,6 +1048,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                         // Indicate that a prefix option is present, but process it later (in case there are
                         // multiple prefix options)
                         prefixOption.vType = NDP_OPTION_TYPE_PREFIX_INFO;
+                        prefixOption.dValidLifetime = 0;
+                        prefixOption.dPreferredLifetime = 0;
 
                         TCPIP_IPV6_ArrayGet (pRxPkt, (uint8_t *)&prefixOption.vPrefixLen, sizeof (NDP_OPTION_PREFIX_INFO) - 2);
 
@@ -1061,6 +1063,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                         if (j != 6)
                             return;
                         mtuOption.vType = NDP_OPTION_TYPE_MTU;
+                        mtuOption.dMTU = 0;
                         // Read the two reserved bytes and  the 4-byte MTU
                         TCPIP_IPV6_ArrayGet (pRxPkt, (uint8_t *)&mtuOption.wReserved, 6);
                         mtuOption.dMTU = TCPIP_Helper_ntohl (mtuOption.dMTU);

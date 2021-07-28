@@ -2841,10 +2841,11 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
     {
         DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
 
-        if(pClient->flags.bDHCPEnabled == true && (pDhcpInfo->status = pClient->smState) >= TCPIP_DHCP_BOUND)
+        if(pClient->flags.bDHCPEnabled == true && pClient->smState >= TCPIP_DHCP_BOUND)
         {
             if(pDhcpInfo)
             {
+                pDhcpInfo->status = pClient->smState;
                 pDhcpInfo->dhcpTime = _DHCPSecondCountGet();
                 pDhcpInfo->leaseStartTime = pClient->tRequest;
                 pDhcpInfo->leaseDuration = pClient->tExpSeconds;

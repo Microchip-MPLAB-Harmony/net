@@ -724,6 +724,7 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle)
     if (fp == NULL)
     {
         pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+        return 0;
     }
     return (*fp)(pSkt->transHandle);    
     

@@ -665,7 +665,7 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
     tcpInitCount++;
 
     tcpSemaphoreEnabled = OSAL_SEM_Create(&tcpSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) == OSAL_RESULT_TRUE;
-    tcpSemaphore = tcpSemaphore;  // Remove a warning
+    (void)tcpSemaphore;  // Remove a warning
     if(!tcpSemaphoreEnabled)
     {
         _TcpCleanup();

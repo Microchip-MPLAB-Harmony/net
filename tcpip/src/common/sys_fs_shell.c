@@ -387,7 +387,8 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
     // OK, close the directory
     SYS_FS_DirClose(fsHandle);        
     
-    strcpy(pShell->cwd, abs_buff + pShell->rootLen);
+    strncpy(pShell->cwd, abs_buff + pShell->rootLen, sizeof(pShell->cwd) - 1);
+    pShell->cwd[sizeof(pShell->cwd) - 1] = 0;
     int len_cwd = strlen(pShell->cwd);
     char* end_cwd = pShell->cwd + len_cwd - 1;
     if(*end_cwd != '/')

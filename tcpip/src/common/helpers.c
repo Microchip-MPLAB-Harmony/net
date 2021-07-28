@@ -281,14 +281,14 @@ int stricmp(const char *s1, const char *s2)
         return s1 == 0 ? s2 == 0 ? 0 : -(*s2) : *s1;
     }
 
-    uint8_t c1, c2;
+    int c1, c2;
     do
     {
-        c1 = tolower(*s1++);
-        c2 = tolower(*s2++);
+        c1 = tolower((uint8_t)*s1++);
+        c2 = tolower((uint8_t)*s2++);
     }while(c1 != 0 && c1 == c2);
 
-    return (int)(c1 - c2); 
+    return (c1 - c2); 
 }
 
 

@@ -719,9 +719,9 @@ void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 #if (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 static void _UDPAbortSockets(uint32_t netMask, TCPIP_UDP_SIGNAL_TYPE sigType)
 {
-    int ix;
-    TCPIP_NET_HANDLE sktNet;
+    int ix, sktIfIx;
     UDP_SOCKET_DCPT* pSkt;
+    TCPIP_NET_IF* sktIf;
 
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;
     const void*     sigParam;
@@ -732,22 +732,26 @@ static void _UDPAbortSockets(uint32_t netMask, TCPIP_UDP_SIGNAL_TYPE sigType)
     {
         if((pSkt = UDPSocketDcpt[ix]) != 0)  
         {
-            uint32_t sktIfMask = 1 << TCPIP_STACK_NetIxGet(pSkt->pSktNet);
-            if((sktIfMask & netMask) != 0)
-            {   // match
-                sktNet = pSkt->pSktNet; 
-                // just disconnect, don't kill sockets
-                TCPIP_UDP_Disconnect(pSkt->sktIx, true);
-                // get a consistent reading
-                OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-                sigHandler = pSkt->sigHandler;
-                sigParam = pSkt->sigParam;
-                sigMask = pSkt->sigMask;
-                OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+            sktIf = pSkt->pSktNet;
+            sktIfIx = TCPIP_STACK_NetIxGet(sktIf); 
+            if(sktIfIx >= 0)
+            {
+                uint32_t sktIfMask = 1 << sktIfIx;
+                if((sktIfMask & netMask) != 0)
+                {   // match
+                    // just disconnect, don't kill sockets
+                    TCPIP_UDP_Disconnect(pSkt->sktIx, true);
+                    // get a consistent reading
+                    OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+                    sigHandler = pSkt->sigHandler;
+                    sigParam = pSkt->sigParam;
+                    sigMask = pSkt->sigMask;
+                    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
 
-                if(sigHandler != 0 && (sigMask & sigType) != 0)
-                {
-                    (*sigHandler)(pSkt->sktIx, sktNet, sigType, sigParam);
+                    if(sigHandler != 0 && (sigMask & sigType) != 0)
+                    {
+                        (*sigHandler)(pSkt->sktIx, (TCPIP_NET_HANDLE)sktIf, sigType, sigParam);
+                    }
                 }
             }
         }

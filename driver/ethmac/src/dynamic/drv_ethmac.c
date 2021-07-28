@@ -193,7 +193,7 @@ static const DRV_ETHMAC_HW_REG_DCPT macPIC32INTHwRegDcpt[] =
     {"MCOLFRM ",    _DRV_ETHMAC_GetMCollisionCount},
 };
 
-// correspondence between a TCPIP_MAC_RX_FILTER_TYPE and a DRV_ETH_RX_FILTERS
+// limited correspondence between a TCPIP_MAC_RX_FILTER_TYPE and a DRV_ETH_RX_FILTERS
 static const DRV_ETH_RX_FILTERS _DRV_ETHMAC_FiltConvTbl[] = 
 {
     DRV_ETH_FILT_BCAST_ACCEPT,          // TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT
@@ -2363,7 +2363,7 @@ static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE ma
     int ix;
     DRV_ETH_RX_FILTERS rxFilter = 0;
 
-    for(ix = 0; ix < 16; ix++)
+    for(ix = 0; ix < sizeof(_DRV_ETHMAC_FiltConvTbl) / sizeof(*_DRV_ETHMAC_FiltConvTbl); ix++)
     {
         if( ((uint32_t)macFilter & (1 << ix)) != 0)
         {

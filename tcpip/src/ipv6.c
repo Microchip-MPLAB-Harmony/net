@@ -520,6 +520,7 @@ static void TCPIP_IPV6_InitializeTask (void)
                 case IPV6_INIT_STATE_SOLICIT_ROUTER:
                     TCPIP_NDP_RouterSolicitStart(pNetIf);
                     pIpv6Config->initState = IPV6_INIT_STATE_DONE;
+                    /* FALLTHROUGH! */ 
                 case IPV6_INIT_STATE_DONE:
                     TCPIP_IPV6_InitializeStop (pNetIf);
                     break;
@@ -1491,6 +1492,11 @@ bool TCPIP_IPV6_PacketTransmitInFragments (IPV6_PACKET * pkt, uint16_t mtu)
                 break;
             }
             ptrSegment = ptrSegment->nextSegment;
+        }
+
+        if(ptrFragmentHeader == 0)
+        {
+            return false;
         }
 
         // Set M flag

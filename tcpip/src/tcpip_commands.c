@@ -2326,7 +2326,7 @@ static int _Command_NetworkOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
     TCPIP_NETWORK_CONFIG ifConf, *pIfConf;
     SYS_MODULE_OBJ      tcpipStackObj;
-    TCPIP_STACK_INIT    tcpip_init_data;
+    TCPIP_STACK_INIT    tcpip_init_data = {{0}};
     uint16_t net_ix = 0;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -2358,6 +2358,12 @@ static int _Command_NetworkOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         // get the data passed at initialization
         tcpipStackObj = TCPIP_STACK_Initialize(0, 0);
         TCPIP_STACK_InitializeDataGet(tcpipStackObj, &tcpip_init_data);
+        if(tcpip_init_data.pNetConf == 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation failed. No configuration\r\n");
+            return true;
+        }
+
         pIfConf = &ifConf;
         memcpy(pIfConf, tcpip_init_data.pNetConf + net_ix, sizeof(*pIfConf));
 
@@ -2433,9 +2439,9 @@ static int _Command_StackOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     TCPIP_COMMAND_STG_DCPT  *pDcpt;
     TCPIP_NETWORK_CONFIG    *pCurrConf, *pDstConf;
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
-    TCPIP_STACK_INIT        tcpipInit;
     SYS_MODULE_OBJ          tcpipStackObj;     // stack handle
     const char              *msg;
+    TCPIP_STACK_INIT        tcpipInit;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     if (argc < 2)
