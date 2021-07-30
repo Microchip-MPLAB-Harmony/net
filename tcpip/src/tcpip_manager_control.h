@@ -437,6 +437,10 @@ static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackHandl
     return (TCPIP_NET_IF*)hNet; 
 }
 
+// more checking, for user passed handles
+TCPIP_NET_IF*  TCPIP_Stack_UserHandleToNet(TCPIP_NET_HANDLE hNet);
+
+
 static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_NetworkIsUp(TCPIP_NET_IF* pNetIf)
 {
     if(pNetIf && pNetIf->Flags.bInterfaceEnabled)

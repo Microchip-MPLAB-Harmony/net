@@ -2339,6 +2339,27 @@ int  TCPIP_STACK_NetIndexGet(TCPIP_NET_HANDLE hNet)
     return TCPIP_STACK_NetIxGet(pNetIf);
 }
 
+// check a net handle is a valid network interface
+// more checking, for user passed handles
+TCPIP_NET_IF*  TCPIP_Stack_UserHandleToNet(TCPIP_NET_HANDLE hNet)
+{
+    if(tcpipNetIf != 0)
+    {
+        TCPIP_NET_IF* pNetIf = (TCPIP_NET_IF*)hNet;
+        int ix = pNetIf - tcpipNetIf;
+        if(0 <= ix && ix < tcpip_stack_ctrl_data.nIfs)
+        {
+            if(pNetIf == tcpipNetIf + ix)
+            {
+                return pNetIf;
+            }
+        }
+
+    }
+
+    return 0;
+}
+
 /*********************************************************************
  * Function:        TCPIP_STACK_MACIdToNet(TCPIP_STACK_MODULE macId)
  *
