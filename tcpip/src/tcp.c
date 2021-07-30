@@ -408,6 +408,47 @@ bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 }
 #endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
 
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_RX_CHECK) != 0)
+// check ports: 0 - irrelevant; otherwise it's considered in match
+static uint16_t checkTcpSrcPort = 0; 
+static uint16_t checkTcpDstPort = 80;
+
+static bool checkStrict = false;    // if 0, then any match, src or dest will do
+                                    // else both source and dest must match
+static uint32_t checkTcpBkptCnt = 0;
+
+static bool TCPIP_TCP_CheckRxPkt(TCP_HEADER* pHdr)
+{
+    TCP_PORT srcPort = pHdr->SourcePort;
+    TCP_PORT destPort = pHdr->DestPort;
+
+    bool srcMatch = (srcPort == 0 || srcPort == checkTcpSrcPort);
+    bool destMatch = (destPort == 0 || destPort == checkTcpDstPort);
+
+    bool match = 0;
+
+    if(checkStrict)
+    {
+        match = srcMatch && destMatch;
+    }
+    else
+    {
+        match = srcMatch || destMatch;
+    }
+
+    if(match)
+    {
+        checkTcpBkptCnt++;
+        return true;
+    }
+
+    return false;
+}
+#else
+#define TCPIP_TCP_CheckRxPkt(pHdr)
+#endif // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_RX_CHECK) != 0)
+
+
 /*static __inline__*/static  void /*__attribute__((always_inline))*/ _TcpSocketKill(TCB_STUB* pSkt)
 {
     _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_KILLED);       // trace purpose only
@@ -1631,6 +1672,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 
 
 	_TcpSwapHeader(pTCPHdr);
+    TCPIP_TCP_CheckRxPkt(pTCPHdr);
+
 	// Skip over options to retrieve data bytes
 	optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
 
