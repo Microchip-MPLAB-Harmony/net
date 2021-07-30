@@ -4318,7 +4318,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
 
 	// Loop through all sockets looking for a socket that is expecting this 
 	// packet or can handle it.
-	for(hTCP = 0; hTCP < TcpSockets; hTCP++ )
+	for(hTCP = 0; hTCP < TcpSockets; hTCP++)
     {
         pSkt = TCBStubs[hTCP];
 
@@ -5975,17 +5975,30 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     true if success
     false otherwise.
 
-  Note: An invalid hNet can be passed (0) so that the current
+  Note: A NULL hNet can be passed (0) so that the current
   network interface selection will be cleared
 
   ***************************************************************************/
 bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet)
 {
+    TCPIP_NET_IF* pNetIf;
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
 	
     if(pSkt)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
+        if(hNet != 0)
+        {
+            pNetIf = _TCPIPStackHandleToNet(hNet);
+            if(pNetIf == 0)
+            {   // wrong interface
+                return false;
+            }
+        }
+        else
+        {
+            pNetIf = 0;
+        }
+
         pSkt->pSktNet = pNetIf;
 
 #if defined (TCPIP_STACK_USE_IPV6)

@@ -1744,7 +1744,7 @@ bool  TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wM
     - false - Indicates failure
 
   Remarks:
-    An invalid hNet can be passed (0) so that the current network interface selection 
+    A NULL hNet can be passed (0) so that the current network interface selection 
 	will be cleared.
 
  */
