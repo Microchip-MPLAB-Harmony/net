@@ -49,6 +49,23 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef __UDP_PRIVATE_H_
 #define __UDP_PRIVATE_H_
 
+/****************************************************************************
+  Section:
+	Debug Definitions
+  ***************************************************************************/
+
+#define TCPIP_UDP_DEBUG_MASK_RX_CHECK       (0x0100)
+
+// enable UDP debugging levels
+#define TCPIP_UDP_DEBUG_LEVEL               (0)
+
+
+
+/****************************************************************************
+  Section:
+	Type Definitions
+  ***************************************************************************/
+
 #define UDP_CHECKSUM_OFFSET     6u
 
 #if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)

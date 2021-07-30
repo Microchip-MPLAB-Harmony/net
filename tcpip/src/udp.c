@@ -93,6 +93,47 @@ static const void* udpPktHandlerParam;
 	Function Prototypes
   ***************************************************************************/
 
+#if ((TCPIP_UDP_DEBUG_LEVEL & TCPIP_UDP_DEBUG_MASK_RX_CHECK) != 0)
+// check ports: 0 - irrelevant; otherwise it's considered in match
+static uint16_t checkUdpSrcPort = 0; 
+static uint16_t checkUdpDstPort = 80;
+
+static bool checkStrict = false;    // if 0, then any match, src or dest will do
+                                    // else both source and dest must match
+static uint32_t checkUdpBkptCnt = 0;
+
+static bool TCPIP_UDP_CheckRxPkt(UDP_HEADER* pHdr)
+{
+    UDP_PORT srcPort = pHdr->SourcePort;
+    UDP_PORT destPort = pHdr->DestinationPort;
+
+    bool srcMatch = (srcPort == 0 || srcPort == checkUdpSrcPort);
+    bool destMatch = (destPort == 0 || destPort == checkUdpDstPort);
+
+    bool match = 0;
+
+    if(checkStrict)
+    {
+        match = srcMatch && destMatch;
+    }
+    else
+    {
+        match = srcMatch || destMatch;
+    }
+
+    if(match)
+    {
+        checkUdpBkptCnt++;
+        return true;
+    }
+
+    return false;
+}
+#else
+#define TCPIP_UDP_CheckRxPkt(pHdr)
+#endif // ((TCPIP_UDP_DEBUG_LEVEL & TCPIP_UDP_DEBUG_MASK_RX_CHECK) != 0)
+
+
 // The User threads protection
 // For efficiency reasons, there is NO PROTECTION for each API call except Open and Close sockets
 // What it means is that:
@@ -1515,6 +1556,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     pUDPHdr->SourcePort = TCPIP_Helper_ntohs(pUDPHdr->SourcePort);
     pUDPHdr->DestinationPort = TCPIP_Helper_ntohs(pUDPHdr->DestinationPort);
     pUDPHdr->Length = udpTotLength - sizeof(UDP_HEADER);    
+
+    TCPIP_UDP_CheckRxPkt(pUDPHdr);
 
     while(true)
     {
