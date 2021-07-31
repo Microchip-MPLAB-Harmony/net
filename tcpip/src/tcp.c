@@ -5953,33 +5953,43 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 #endif  // (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 
 
-/*****************************************************************************
+/*
   Function:
-	bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet)
+    bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persistent)
 
   Summary:
-	Sets the interface for an TCP socket
-	
+    Sets the interface for an TCP socket
+
   Description:
-	This function sets the network interface for an TCP socket
+    This function sets the network interface for an TCP socket
 
   Precondition:
-	TCP socket should have been opened with _TCP_Open().
+    TCP socket should have been opened with TCPIP_TCP_ClientOpen()/TCPIP_TCP_ServerOpen().
     hTCP - valid socket
 
   Parameters:
-	hTCP - The TCP socket
-   	hNet - interface handle.
-	
+    hTCP        - The TCP socket
+    hNet        - interface handle.
+    persistent  - if true: 
+                    when the socket connection is closed and it listens again, it will retain this network interface setting.
+                    The same behavior is obtained by opening socket with TCPIP_TCP_ServerOpen() with a 
+                    valid localAddress parameter
+                - if false:
+                    when a server socket that was created using TCPIP_TCP_ServerOpen() with localAddress == 0
+                    closes the connection, the socket will re-listen on any interface
+
   Returns:
-    true if success
-    false otherwise.
+    - true  - Indicates success
+    - false - Indicates failure
 
-  Note: A NULL hNet can be passed (0) so that the current
-  network interface selection will be cleared
+  Remarks:
+    A NULL hNet can be passed (0) so that the current network interface selection 
+	will be cleared.
 
-  ***************************************************************************/
-bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet)
+    The persistent setting is applicable only to server sockets, as these sockets return to listen mode when a connection is closed.
+    When a client socket connection is closed, the socket is destroyed and no information is maintained.
+ */
+bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persistent)
 {
     TCPIP_NET_IF* pNetIf;
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
@@ -6000,6 +6010,10 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet)
         }
 
         pSkt->pSktNet = pNetIf;
+        if(persistent)
+        {
+            pSkt->flags.openBindIf = 1;
+        }
 
 #if defined (TCPIP_STACK_USE_IPV6)
         if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)

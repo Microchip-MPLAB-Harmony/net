@@ -1085,7 +1085,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
 #endif
                     localAddr.Val  = socket->localIP == IP_ADDR_ANY ? 0 : socket->localIP;
                     remoteAddr.Val = remoteIP;
-                    TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(0, &remoteAddr, &localAddr, true));
+                    TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(0, &remoteAddr, &localAddr, true), false);
 #if defined(TCPIP_STACK_USE_IPV6)
                 }
 #endif

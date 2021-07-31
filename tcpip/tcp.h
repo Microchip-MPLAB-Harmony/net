@@ -1723,7 +1723,7 @@ bool  TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wM
 //*****************************************************************************
 /*
   Function:
-    bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet)
+    bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persistent)
 
   Summary:
     Sets the interface for an TCP socket
@@ -1736,8 +1736,15 @@ bool  TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wM
     hTCP - valid socket
 
   Parameters:
-    hTCP - The TCP socket
-    hNet - interface handle.
+    hTCP        - The TCP socket
+    hNet        - interface handle.
+    persistent  - if true: 
+                    when the socket connection is closed and it listens again, it will retain this network interface setting.
+                    The same behavior is obtained by opening socket with TCPIP_TCP_ServerOpen() with a 
+                    valid localAddress parameter
+                - if false:
+                    when a server socket that was created using TCPIP_TCP_ServerOpen() with localAddress == 0
+                    closes the connection, the socket will re-listen on any interface
 
   Returns:
     - true  - Indicates success
@@ -1747,8 +1754,10 @@ bool  TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wM
     A NULL hNet can be passed (0) so that the current network interface selection 
 	will be cleared.
 
+    The persistent setting is applicable only to server sockets, as these sockets return to listen mode when a connection is closed.
+    When a client socket connection is closed, the socket is destroyed and no information is maintained.
  */
-bool   TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet);
+bool   TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persistent);
 
 //*****************************************************************************
 /*
