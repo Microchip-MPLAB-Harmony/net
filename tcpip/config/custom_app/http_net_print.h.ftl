@@ -177,7 +177,7 @@ typedef struct
 #define HTTP_APP_DYNVAR_BUFFER_SIZE     100
 
 //An entry for the dynamic variables which is used during the dynamic variable processing
-typedef struct
+typedef struct HTTP_APP_DYNVAR_BUFFER
 {
     uint16_t    busy;           // buffer is currently in process
     uint16_t    bufferSize;     // size of the associated buffer

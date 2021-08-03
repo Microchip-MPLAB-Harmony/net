@@ -1732,7 +1732,9 @@ static void _TCPIPStackSetIfNumberName(void)
     int netIx;
     TCPIP_NET_IF* pNetIf;
     TCPIP_MAC_TYPE macType;
-    int ifNumber[TCPIP_MAC_TYPES] = { 0 };
+    int ifNumber[TCPIP_MAC_TYPES];
+
+    memset(ifNumber, 0, sizeof(ifNumber));
 
     for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
     {
@@ -2630,8 +2632,8 @@ IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_
             IPV6_ADDR_STRUCT * currAddress = unicastHead;
             while(currAddress != addrNode)
             {
-                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)addrNode + offsetof(IPV6_ADDR_STRUCT, address));
-                IPV6_ADDR* pAddCurr = (IPV6_ADDR*)((uint8_t*)currAddress + offsetof(IPV6_ADDR_STRUCT, address));
+                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)addrNode + offsetof(struct _IPV6_ADDR_STRUCT, address));
+                IPV6_ADDR* pAddCurr = (IPV6_ADDR*)((uint8_t*)currAddress + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 if(memcmp(pAddNode->v + sizeof (IPV6_ADDR) - 3, pAddCurr->v + sizeof (IPV6_ADDR) - 3, 3) == 0)
                 {   // address match; skip this one
                     addrNode = addrNode->next;
@@ -2659,7 +2661,7 @@ IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_
             pAddStruct->next = pAddStruct->prev = 0;
             if(addrNode->flags.type == IPV6_ADDR_TYPE_UNICAST)
             {   // construct the solicited node multicast address
-                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)pAddStruct + offsetof(IPV6_ADDR_STRUCT, address));
+                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)pAddStruct + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 memcpy(pAddNode->v, IPV6_SOLICITED_NODE_MULTICAST.v, sizeof (IPV6_ADDR) - 3);
                 pAddStruct->flags.type = IPV6_ADDR_TYPE_MULTICAST;
             }

@@ -1223,7 +1223,7 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
         sourceAddress = TCPIP_IPV6_DASSourceAddressSelect (ptrPacket->netIfH, destinationAddress, NULL);
         if (sourceAddress != NULL)
         {
-            const IPV6_ADDR* pSrcAdd = (const IPV6_ADDR*)((uint8_t*)sourceAddress + offsetof(IPV6_ADDR_STRUCT, address));
+            const IPV6_ADDR* pSrcAdd = (const IPV6_ADDR*)((uint8_t*)sourceAddress + offsetof(struct _IPV6_ADDR_STRUCT, address));
             TCPIP_IPV6_SourceAddressSet(ptrPacket, pSrcAdd);
         }
         else
@@ -1799,7 +1799,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_AddressFind(TCPIP_NET_IF * pNetIf, const IPV6_ADDR
 
     while (nextEntryPointer != NULL)
     {
-        const IPV6_ADDR* pNextAdd = (const IPV6_ADDR*)((uint8_t*)nextEntryPointer + offsetof(IPV6_ADDR_STRUCT, address));
+        const IPV6_ADDR* pNextAdd = (const IPV6_ADDR*)((uint8_t*)nextEntryPointer + offsetof(struct _IPV6_ADDR_STRUCT, address));
         if (!memcmp (addr, pNextAdd, sizeof (IPV6_ADDR)))
         {
             return nextEntryPointer;
@@ -1840,7 +1840,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_SolicitedNodeMulticastAddressFind(TCPIP_NET_IF * p
 
     while (nextEntryPointer != NULL)
     {
-        const IPV6_ADDR* pNextAdd = (const IPV6_ADDR*)((uint8_t*)nextEntryPointer + offsetof(IPV6_ADDR_STRUCT, address));
+        const IPV6_ADDR* pNextAdd = (const IPV6_ADDR*)((uint8_t*)nextEntryPointer + offsetof(struct _IPV6_ADDR_STRUCT, address));
         if (!memcmp (&addr->v[13], &pNextAdd->v[13], 3))
         {
             return nextEntryPointer;
@@ -1869,7 +1869,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd (TCPIP_NET_HANDLE hNet, IPV6_
 
         if (entryLocation != NULL)
         {
-            IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
+            IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(struct _IPV6_ADDR_STRUCT, address));
             memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
             entryLocation->flags.type = IPV6_ADDR_TYPE_MULTICAST;
             addressType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, address);
@@ -2075,7 +2075,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, IPV6_ADD
 
             if (entryLocation != NULL)
             {
-                IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(IPV6_ADDR_STRUCT, address));
+                IPV6_ADDR* pEntryAdd = (IPV6_ADDR*)((uint8_t*)entryLocation + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 memcpy (pEntryAdd, address, sizeof (IPV6_ADDR));
                 i.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, address);
                 entryLocation->flags.type = i.bits.type;
@@ -2875,7 +2875,7 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
             // We can assume the the addresses are different; the function to add a local
             // address won't add a new one if it's already in the IPv6 Heap.
             {
-                const IPV6_ADDR* pAddTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(IPV6_ADDR_STRUCT, address));
+                const IPV6_ADDR* pAddTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 if (memcmp (pAddTwo, dest, 16) == 0)
                 {
                     return true;
@@ -2922,10 +2922,10 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
                 // If there's no policy that corresponds to the destination, skip this step
                 break;
             }
-            pDasOne = (const IPV6_ADDR*)((uint8_t*)addressOne + offsetof(IPV6_ADDR_STRUCT, address));
+            pDasOne = (const IPV6_ADDR*)((uint8_t*)addressOne + offsetof(struct _IPV6_ADDR_STRUCT, address));
             if (!TCPIP_IPV6_DASPolicyGet (pDasOne, &policy1, NULL, NULL))
             {
-                pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(IPV6_ADDR_STRUCT, address));
+                pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 if (TCPIP_IPV6_DASPolicyGet (pDasTwo, &policy2, NULL, NULL))
                 {
                     if (destPolicy == policy2)
@@ -2934,7 +2934,7 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
             }
             else
             {
-                pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(IPV6_ADDR_STRUCT, address));
+                pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(struct _IPV6_ADDR_STRUCT, address));
                 if (!TCPIP_IPV6_DASPolicyGet (pDasTwo, &policy2, NULL, NULL))
                 {
                     if (destPolicy == policy1)
@@ -2958,8 +2958,8 @@ unsigned char TCPIP_IPV6_ASCompareSourceAddresses(TCPIP_NET_IF * pNetIf, IPV6_AD
             }
             break;
         case ADDR_SEL_RULE_8:
-            pDasOne = (const IPV6_ADDR*)((uint8_t*)addressOne + offsetof(IPV6_ADDR_STRUCT, address));
-            pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(IPV6_ADDR_STRUCT, address));
+            pDasOne = (const IPV6_ADDR*)((uint8_t*)addressOne + offsetof(struct _IPV6_ADDR_STRUCT, address));
+            pDasTwo = (const IPV6_ADDR*)((uint8_t*)addressTwo + offsetof(struct _IPV6_ADDR_STRUCT, address));
             policy1 = TCPIP_Helper_FindCommonPrefix ((uint8_t *)dest, (uint8_t*)pDasOne, 16);
             policy2 = TCPIP_Helper_FindCommonPrefix ((uint8_t *)dest, (uint8_t*)pDasTwo, 16);
             if (policy2 > policy1)
@@ -3050,7 +3050,7 @@ void TCPIP_IPV6_TimestampsTaskUpdate (void)
                 else
                 {
                     tempAddress = ptrAddress->next;
-                    const IPV6_ADDR* pRemAdd = (const IPV6_ADDR*)((uint8_t*)ptrAddress + offsetof(IPV6_ADDR_STRUCT, address));
+                    const IPV6_ADDR* pRemAdd = (const IPV6_ADDR*)((uint8_t*)ptrAddress + offsetof(struct _IPV6_ADDR_STRUCT, address));
                     TCPIP_IPV6_AddressUnicastRemove((TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(i), pRemAdd);
                 }
                 ptrAddress = tempAddress;

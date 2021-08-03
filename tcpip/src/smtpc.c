@@ -1746,7 +1746,14 @@ static TCPIP_SMTPC_STATUS smtpDcptStateWaitReply(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt
         }
 
         // check it is the last line
-        while(isdigit((ch = *lastLinePtr++)));
+        while(true)
+        {
+            ch = *lastLinePtr++;
+            if(!isdigit(ch))
+            {
+                break;
+            }
+        }
         if(ch != ' ')
         {   // last line not in buffer yet
             break; 
@@ -1860,8 +1867,14 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcEhlo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
         }
         
         // skip the reply code and the delimiting chars
-        while(isdigit((ch = *currPtr)) || isspace(ch) || ch == '-' )
+        while(true)
         {
+            ch = *currPtr;
+            if(!isdigit(ch) && !isspace(ch) && (ch != '-'))
+            {
+                break;
+            }
+
             currPtr++;
         }
 
@@ -1903,8 +1916,13 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcEhlo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
                     }
                     else
                     {   // ignore
-                        while(currPtr != eolPtr && !isspace((ch = *currPtr)))
+                        while(currPtr != eolPtr)
                         {
+                            ch = *currPtr; 
+                            if(isspace(ch))
+                            {
+                                break;
+                            }
                             currPtr++;
                         }
                     }

@@ -279,7 +279,7 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
     uint8_t currentWord;
     char * endPtr;
     char*  str;
-    IPV6_ADDR   convAddr = {{0}};
+    IPV6_ADDR   convAddr;
     char   str_buff[64 + 1];     // enough space for longest address: 1111:2222:3333:4444:5555:6666:192.250.250.250
 
     if(addr)
@@ -291,6 +291,8 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
     {
         return true;
     }
+
+    memset(convAddr.v, 0, sizeof(convAddr));
 
     while(isspace(*addStr))
     {   // skip leading space

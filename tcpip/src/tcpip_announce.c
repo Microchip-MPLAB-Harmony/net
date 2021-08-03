@@ -869,7 +869,7 @@ const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
             addressPtr = pSDcpt->currAddress->next;
         }
 
-        return (pSDcpt->currAddress = addressPtr) == 0 ? 0 :  (const IPV6_ADDR*)((uint8_t*)addressPtr + offsetof(IPV6_ADDR_STRUCT, address));
+        return (pSDcpt->currAddress = addressPtr) == 0 ? 0 :  (const IPV6_ADDR*)((uint8_t*)addressPtr + offsetof(struct _IPV6_ADDR_STRUCT, address));
     }
 
     if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER)
