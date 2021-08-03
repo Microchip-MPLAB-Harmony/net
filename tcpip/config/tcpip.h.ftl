@@ -71,9 +71,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // TCP/IP stack version
 #define TCPIP_STACK_VERSION_MAJOR         8
-#define TCPIP_STACK_VERSION_MINOR         0
+#define TCPIP_STACK_VERSION_MINOR         1
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "8.00 - H3"
+#define TCPIP_STACK_VERSION_STR           "8.10 - H3"
 
 
 // *****************************************************************************
