@@ -708,7 +708,7 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
 	while(tailIndex != headIndex)
     {
         // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr - pMACDrv->sGmacData._dataOffsetMask);
+        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
         // get packet address from buffer address
         TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
         pPkt = pGap->segmentPktPtr;
