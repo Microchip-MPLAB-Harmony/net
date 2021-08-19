@@ -660,6 +660,8 @@ static void TCPIP_DHCPS_Process(void)
             break;
         case  DHCP_SERVER_IDLE:          // idle state
             break;
+		default:
+            break;
     }
     return;
 }
