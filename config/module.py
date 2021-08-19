@@ -130,7 +130,8 @@ def loadModule():
     tcpipDhcpsComponent = Module.CreateComponent("tcpipDhcps", "DHCP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcps.py")
     tcpipDhcpsComponent.addCapability("libtcpipDhcps","DHCPS",True)
     tcpipDhcpsComponent.addDependency("Dhcps_IPv4_Dependency", "IPv4", None, True, True)
-    tcpipDhcpsComponent.addDependency("Dhcps_UDP_Dependency", "UDP", None, True, True)  
+    tcpipDhcpsComponent.addDependency("Dhcps_UDP_Dependency", "UDP", None, True, True) 
+    tcpipDhcpsComponent.addDependency("Dhcps_Icmp_Dependency", "ICMPv4", None, True, True)
     tcpipDhcpsComponent.setDisplayType("Application Layer")
     
     tcpipDhcpcv6Component = Module.CreateComponent("tcpipDhcpcv6", "DHCPV6 CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcpv6.py")

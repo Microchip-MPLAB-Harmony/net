@@ -354,6 +354,8 @@ def tcpipAutoConfigDHCPSERVEREnable(symbol, event):
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcps", "libtcpipDhcps")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
             setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4") != True):
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:

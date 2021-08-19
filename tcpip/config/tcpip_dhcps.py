@@ -38,13 +38,14 @@ def instantiateComponent(tcpipDhcpsComponent):
     print(tcpipNetConfigNumMax)
     print("TCPIP DHCP Server Component")
     configName = Variables.get("__CONFIGURATION_NAME")
-    
+    tcpipDhcpsICMPClientEnable()
     # Enable DHCP Server
     tcpipDhcps = tcpipDhcpsComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER", None)
     tcpipDhcps.setLabel("DHCP Server")
     tcpipDhcps.setVisible(False)
     tcpipDhcps.setDescription("Enable DHCP Server")
     tcpipDhcps.setDefaultValue(True)
+    
 
     # Maximum Number of Entries in the Lease Table
     tcpipDhcpsLeaseEntryMaxNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT", None)
@@ -279,7 +280,33 @@ def tcpipDhcpsMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
     else:
         tcpipDependentSymbol.setVisible(False)
 
+def tcpipDhcpsICMPClientEnable():
+    tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
+    print(tcpipIcmpComp)
+    if(tcpipIcmpComp == None):
+        # Enable ICMP Dependency 
+        if(Database.getComponentByID("tcpip_network_config") == None):
+            res = Database.activateComponents(["tcpip_network_config"])
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4") != True):
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4", True)
+        else:
+            tcpipIcmpComp = Database.activateComponents(["tcpipIcmp"])
+            print(tcpipIcmpComp)
+
+        tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
+        print(tcpipIcmpComp)
+    if(tcpipIcmpComp != None):
+        tcpipICMPClientSymbol = tcpipIcmpComp.getSymbolByID("TCPIP_STACK_USE_ICMP_CLIENT")
+        print(tcpipICMPClientSymbol)
+        print("DHCP Server ICMP Client Menu visible.")
+    #if(tcpipIcmpClient):
+    #tcpipIcmpClient.setVisible(True)
+    #tcpipIcmpClient.setEnabled(True)
+        tcpipICMPClientSymbol.setValue(True)
+    print("DHCP Server ICMP Client Enabled.")
+  	
     
+  
 def tcpipDhcpsMenuVisibleSingle(symbol, event):
     if (event["value"] == True):
         print("DHCP Server Menu Visible.")      
