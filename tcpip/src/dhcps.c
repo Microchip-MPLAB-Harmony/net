@@ -653,17 +653,7 @@ static void TCPIP_DHCPSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE h
 
 static void TCPIP_DHCPS_Process(void)
 {
-    switch(dhcps_mod.smServer)
-    {
-        case DHCP_SERVER_LISTEN:
-            _DHCPS_ProcessGetPktandSendResponse();
-            break;
-        case  DHCP_SERVER_IDLE:          // idle state
-            break;
-		default:
-            break;
-    }
-    return;
+    _DHCPS_ProcessGetPktandSendResponse();   
 }
 
 static bool _DHCPS_ProcessGetPktandSendResponse(void)
@@ -1140,7 +1130,7 @@ static void DHCPReplyToDiscovery(TCPIP_NET_IF *pNetIf,BOOTP_HEADER *Header,DHCP_
     rxHeader.YourIP.Val = dhcpsHE->ipAddress.Val;
     // IP address of next server to use in bootstrap;
     //returned in DHCPOFFER, DHCPACK by server.
-    rxHeader.NextServerIP.Val = 0;
+    rxHeader.NextServerIP.Val = pNetIf->netIPAddr.Val;
     // Relay agent IP address, used in booting via a relay agent.
     rxHeader.RelayAgentIP.Val = 0;
     // Client MAC address
@@ -2005,10 +1995,18 @@ static size_t DHCPSgetFreeHashIndex(OA_HASH_DCPT* pOH,void* key,IPV4_ADDR *ipAdd
 #else
     probeStep = pOH->probeStep;
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
-    if(ipAddrExists != NULL)
+    if(ipAddrExists != NULL) 
     {// this is added for ICMP processing 
-        reqIP.Val = ipAddrExists->Val;
-        bktIx = reqIP.v[3] ^ ipAddr->v[3]; 
+        if(ipAddrExists->Val != 0)
+        {
+            reqIP.Val = ipAddrExists->Val;
+            bktIx = reqIP.v[3] ^ ipAddr->v[3];
+        }
+        else
+        {
+            reqIP.Val = 0;
+            bktIx = -1;
+        }
     }
     else
     {
@@ -2016,16 +2014,11 @@ static size_t DHCPSgetFreeHashIndex(OA_HASH_DCPT* pOH,void* key,IPV4_ADDR *ipAdd
         bktIx = -1;
     }
     
-    if(bktIx ==0xFFFFFFFF)
+    if((bktIx ==0xFFFFFFFF)||(bktIx >  pOH->hEntries))
     {
         bktIx = TCPIP_DHCPS_MACHashKeyHash(pOH,key);
     }
 
-    if(bktIx == 0xFFFFFFFF)
-    {
-        bktIx += pOH->hEntries;
-    }
-		
     while(bkts < pOH->hEntries)
     {
         pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);
