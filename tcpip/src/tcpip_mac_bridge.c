@@ -279,6 +279,30 @@ static void _MAC_Bridge_TracePkt(TCPIP_MAC_PACKET* pPkt, int brPort, bool isTx)
 #define _MAC_Bridge_TracePkt(pPkt, brPort, isRx)
 #endif  // ((MAC_BRIDGE_DEBUG_MASK & MAC_BRIDGE_DEBUG_MASK_TRACE_PKT) != 0)
 
+// rough bridge time keeping
+static uint32_t  bridgeSecCount = 0; 
+static uint32_t _MAC_Bridge_UpdateSecond(void)
+{
+    static uint32_t sysFreq = 0;
+
+    if(sysFreq == 0)
+    {
+        sysFreq = SYS_TIME_FrequencyGet();
+    }
+
+    if(sysFreq != 0)
+    {
+        bridgeSecCount = SYS_TIME_Counter64Get() / sysFreq; 
+    }
+
+    return bridgeSecCount;
+}
+
+static __inline__ uint32_t __attribute__((always_inline))  _MAC_Bridge_GetSecond(void)
+{
+    return bridgeSecCount;
+}
+
 // clear/empty the forwarding map
 static __inline__ void __attribute__((always_inline))  _MAC_Bridge_ClearMap(MAC_BRIDGE_FWD_DCPT* pFDcpt)
 {
@@ -461,16 +485,15 @@ bool TCPIP_MAC_Bridge_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
             return false;
         }
         
-        uint64_t tmoTicks = pBConfig->purgeTimeout != 0 ? pBConfig->purgeTimeout : TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT; 
-        tmoTicks *= SYS_TMR_TickCounterFrequencyGet();
-        if(tmoTicks > 0xffffffff / 2)
+        uint32_t purgeTmo = pBConfig->purgeTimeout != 0 ? pBConfig->purgeTimeout : TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT; 
+        if(purgeTmo > 0xffffffff / 2)
         {   // requested timeout too great
             _Mac_Bridge_InitCond(0, TCPIP_MAC_BRIDGE_RES_TIMEOUT_ERROR);
             _MAC_Bridge_Cleanup();
             return false;
         }
-        bridgeDcpt.purgeTmo = (uint32_t)tmoTicks;
-        bridgeDcpt.transitDelay = (uint32_t)pBConfig->transitDelay * SYS_TMR_TickCounterFrequencyGet();
+        bridgeDcpt.purgeTmo = purgeTmo;
+        bridgeDcpt.transitDelay = (uint32_t)pBConfig->transitDelay;
 
         bridgeDcpt.pktPoolSize = pBConfig->pktPoolSize;
         bridgeDcpt.pktSize = pBConfig->pktSize;
@@ -750,7 +773,7 @@ TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt
     _MAC_Bridge_CheckRxIpPkt(pRxPkt);
 
     // forward
-    fwdDcpt.tReceive = SYS_TMR_TickCountGet();
+    fwdDcpt.tReceive = _MAC_Bridge_GetSecond();
     fwdDcpt.pktLen = TCPIP_PKT_PayloadLen(pRxPkt);
     
 
@@ -877,6 +900,8 @@ void TCPIP_MAC_Bridge_Task(void)
         gBridgeDcpt->status = SYS_STATUS_READY;
     }
 
+    uint32_t currSec = _MAC_Bridge_UpdateSecond();
+
 #if (_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
     TCPIP_MAC_BRIDGE_RESULT res = _MAC_Bridge_FDBLock(gBridgeDcpt, false);
 
@@ -894,13 +919,12 @@ void TCPIP_MAC_Bridge_Task(void)
     int nEntries = gBridgeDcpt->hashDcpt->hEntries;
 
     _MAC_Bridge_CheckFDB(gBridgeDcpt);
-    uint32_t currTime = SYS_TMR_TickCountGet();
     for(ix = 0; ix < nEntries; ix++)
     {
         hE = (MAC_BRIDGE_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(gBridgeDcpt->hashDcpt, ix);
         if(hE->hEntry.flags.busy != 0 && (hE->hEntry.flags.value & MAC_BRIDGE_HFLAG_STATIC ) == 0)
         {   // in use dynamic entry
-            if((int32_t)(currTime - hE->tExpire) > 0)
+            if((int32_t)(currSec - hE->tExpire) > 0)
             {   // expired entry; remove
                 _MAC_Bridge_NotifyEvent(gBridgeDcpt, TCPIP_MAC_BRIDGE_EVENT_ENTRY_EXPIRED, hE->destAdd.v);
                 TCPIP_OAHASH_EntryRemove(gBridgeDcpt->hashDcpt, &hE->hEntry);
@@ -1476,7 +1500,7 @@ static void _MAC_Bridge_SetHashDynamicEntry(MAC_BRIDGE_HASH_ENTRY* hE, uint8_t p
     hE->hEntry.flags.value &= ~(clrFlags);
     hE->hEntry.flags.value |= setFlags;
     hE->learnPort = port;
-    hE->tExpire = SYS_TMR_TickCountGet() + gBridgeDcpt->purgeTmo;
+    hE->tExpire = _MAC_Bridge_GetSecond() + gBridgeDcpt->purgeTmo;
 }
 
 static void _MAC_Bridge_SetHashStaticEntry(MAC_BRIDGE_HASH_ENTRY* hE, MAC_BRIDGE_HASH_FLAGS flags, bool clearOutMap)
@@ -1501,7 +1525,7 @@ static void _MAC_Bridge_ForwardPacket(TCPIP_MAC_PACKET* pFwdPkt, MAC_BRIDGE_HASH
 
     // check we've not exceeded the time
     bool pktDrop;
-    if(SYS_TMR_TickCountGet() - pFDcpt->tReceive > pBDcpt->transitDelay)
+    if(_MAC_Bridge_GetSecond() - pFDcpt->tReceive > pBDcpt->transitDelay)
     {
         _MAC_Bridge_StatUpdate(pBDcpt, MAC_BRIDGE_STAT_TYPE_DELAY_PKTS, 1);
         pktDrop = true;
@@ -1863,13 +1887,12 @@ OA_HASH_ENTRY* _MAC_BridgeHashEntryDelete(OA_HASH_DCPT* pOH)
     MAC_BRIDGE_HASH_ENTRY* hE;
     int nEntries = gBridgeDcpt->hashDcpt->hEntries;
 
-    uint32_t currTime = SYS_TMR_TickCountGet();
     for(ix = 0; ix < nEntries; ix++)
     {
         hE = (MAC_BRIDGE_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(gBridgeDcpt->hashDcpt, ix);
         if(hE->hEntry.flags.busy != 0 && (hE->hEntry.flags.value & MAC_BRIDGE_HFLAG_STATIC ) == 0)
         {   // in use dynamic entry
-            if((int32_t)(currTime - hE->tExpire) > 0)
+            if((int32_t)(_MAC_Bridge_GetSecond() - hE->tExpire) > 0)
             {   // expired entry; remove
                 return &hE->hEntry;
             }
