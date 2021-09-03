@@ -100,7 +100,7 @@ typedef struct
             uint8_t bWasBound           : 1;    // successfully held a lease
             uint8_t bReportFail         : 1;    // report run time failure flag
             uint8_t bWriteBack          : 1;    // write back the resulting host name
-            uint8_t reserved            : 1;    // not used
+            uint8_t bRetry              : 1;    // a new cycle/retry because of a failure
 	    };
 	    uint8_t val;
 	} flags;
@@ -666,6 +666,8 @@ static void _DHCPSetRunFail(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_STATUS newStat
     {
         _DHCPSetFailTimeout(pClient, false, true);
     }
+
+    pClient->flags.bRetry = true;
 }
 
 static void _DHCPSetTimeout(DHCP_CLIENT_VARS* pClient)
@@ -2079,6 +2081,7 @@ static void _DHCPSetBoundState(DHCP_CLIENT_VARS* pClient)
     pClient->flags.bIsBound = true;	
     pClient->flags.bWasBound = true;	
     pClient->flags.bReportFail = true; 
+    pClient->flags.bRetry = false; 
     _DHCPSetIPv4Filter(pClient, false);
 }
 
@@ -2219,8 +2222,10 @@ static bool _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messa
     newTransaction = (messageType == TCPIP_DHCP_DISCOVER_MESSAGE || messageType == TCPIP_DHCP_REQUEST_RENEW_MESSAGE || (messageType == TCPIP_DHCP_REQUEST_MESSAGE && pClient->dhcpOp == TCPIP_DHCP_OPER_INIT_REBOOT));
     if (newTransaction)
     {
-        // generate a new transaction ID
-        pClient->transactionID.Val = SYS_RANDOM_PseudoGet(); 
+        if(pClient->flags.bRetry == false)
+        {   // generate a new transaction ID
+            pClient->transactionID.Val = SYS_RANDOM_PseudoGet(); 
+        }
         // Reset offered flag so we know to act upon the next valid offer
         pClient->flags.bOfferReceived = false;
     }
