@@ -121,6 +121,12 @@ int32_t NET_PRES_EncProviderPeek${INST_NUMBER}(void * providerData, uint8_t * bu
 int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_t inSize);
 int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
     </#if>
+	<#if ((lib_wolfssl.wolfsslTlsSni?has_content) && (lib_wolfssl.wolfsslTlsSni) == true)>
+		<#lt>#define NET_PRES_SNI_HOST_NAME		"${NET_PRES_SUPPORT_SNI_HOST_NAME}"
+	</#if>
+	<#if ((lib_wolfssl.wolfsslTlsAlpn?has_content) && (lib_wolfssl.wolfsslTlsAlpn) == true)>
+		<#lt>#define NET_PRES_ALPN_PROTOCOL_NAME_LIST		"${NET_PRES_SUPPORT_ALPN_PROTOCOL_NAME}"
+	</#if>
 </#macro>
 
 <#assign numInstance= 1>

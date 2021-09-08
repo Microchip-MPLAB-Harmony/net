@@ -202,6 +202,34 @@ def instantiateComponent(net_PresComponent):
     netPresClientEncrypt.setVisible(False)
     netPresClientEncrypt.setDefaultValue(True)
     netPresClientEncrypt.setDependencies(netPresEncryptMenuVisible, ["NET_PRES_SUPPORT_ENCRYPTION"])
+
+    # Support SNI?
+    netPresSNI = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SNI",netPresEncryptEnable)
+    netPresSNI.setLabel("Support SNI?")
+    netPresSNI.setVisible(False)
+    netPresSNI.setDefaultValue(False)
+    netPresSNI.setDependencies(netPresWolfSSLSNI, ["NET_PRES_SUPPORT_SNI"])
+
+    # Host Name for SNI?
+    netPresSNIHostName = net_PresComponent.createStringSymbol("NET_PRES_SUPPORT_SNI_HOST_NAME", netPresSNI) 
+    netPresSNIHostName.setLabel("SNI Host name")
+    netPresSNIHostName.setVisible(False)
+    netPresSNIHostName.setDescription("SNI host name")
+    netPresSNIHostName.setDefaultValue("microchip.com")
+    
+    # Support ALPN?
+    netPresALPN = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_ALPN",netPresEncryptEnable)
+    netPresALPN.setLabel("Support ALPN?")
+    netPresALPN.setVisible(False)
+    netPresALPN.setDefaultValue(False)
+    netPresALPN.setDependencies(netPresWolfSSLALPN, ["NET_PRES_SUPPORT_ALPN"])
+    
+    # Protocol Name for ALPN?
+    netPresALPNProtocolName = net_PresComponent.createStringSymbol("NET_PRES_SUPPORT_ALPN_PROTOCOL_NAME", netPresALPN) 
+    netPresALPNProtocolName.setLabel("ALPN Protocol Name List")
+    netPresALPNProtocolName.setVisible(False)
+    netPresALPNProtocolName.setDescription("ALPN protocol name")
+    netPresALPNProtocolName.setDefaultValue("x-amzn-mqtt-ca")
     
     netPresBlobCert = net_PresComponent.createKeyValueSetSymbol("NET_PRES_BLOB_CERT",netPresEncryptEnable)
     netPresBlobCert.setVisible(False)
@@ -704,6 +732,12 @@ def netPresDatagramEnable(symbol, event):
 def netPresWolfsslTngtls(symbol, event):
     Database.setSymbolValue("lib_wolfssl","wolfsslLoadTNGTLSCert",event["value"])
         
+def netPresWolfSSLSNI(symbol, event):
+    Database.setSymbolValue("lib_wolfssl","wolfsslTlsSni",event["value"])
+
+def netPresWolfSSLALPN(symbol, event):
+    Database.setSymbolValue("lib_wolfssl","wolfsslTlsAlpn",event["value"])
+
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}
