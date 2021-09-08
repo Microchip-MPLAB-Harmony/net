@@ -50,7 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 </#if>
 <#if .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"]?has_content>
 	<#lt><#if .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "ETHMAC">
-		<#lt><#if ((TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (TCPIP_STACK_NETWORK_DEV_SERIES != "PIC32MZW")>
+		<#lt><#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES != "PIC32MZW")>
 			<#lt>#define TCPIP_IF_ETHMAC
 		<#lt><#else>
 			<#lt>#define TCPIP_IF_PIC32MZW_ETHMAC	
