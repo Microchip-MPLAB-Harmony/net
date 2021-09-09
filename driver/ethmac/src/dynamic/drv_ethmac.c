@@ -94,10 +94,10 @@ static void     _MACDeinit(DRV_ETHMAC_INSTANCE_DCPT* pMacD );
 
 static TCPIP_MAC_RES    _MACTxPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PACKET * ptrPacket);
 static void             _MACTxAcknowledgeEth(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
-static void             _MACTxPacketAckCallback(void* pPktBuff, int buffIx, void* fParam);
+static void             _MACTxPacketAckCallback(void* pPktBuff, void* fParam);
 static TCPIP_MAC_RES    _MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
-static void             _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_ACK_RES ackRes);
+static void             _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_ACK_RES ackRes, bool synch);
 
 static bool             _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 
@@ -269,123 +269,6 @@ static void _DRV_ETHMAC_CacheInvalidate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 }
 #endif  // defined(__PIC32MZ__)
 
-// RX lock functions
-#if defined(DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
-    }
-}
-
-#else
-// use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    return true;
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
-    }
-}
-#endif  // defined(DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK)
-
-
-// TX lock functions
-#if defined(DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK)
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_DELETE);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_LOCK);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_UNLOCK);
-    }
-}
-#else
-// use critical sections
-static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    return true;
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_ENTER);
-    }
-}
-
-static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    if(pMacD->mData._synchF != 0)
-    {
-        (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_CRIT_LEAVE);
-    }
-}
-#endif  // defined(DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK)
 
 /*
  * interface functions
@@ -493,6 +376,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     pMacD->mData.pktAckF = macControl->pktAckF;
 
     pMacD->mData._synchF = macControl->synchF;
+
     pMacD->mData._dataOffsetMask = (macControl->controlFlags & TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) ? 0xfffffffc : 0xffffffff;
     pMacD->mData._controlFlags = macControl->controlFlags;
 
@@ -866,8 +750,6 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    _DRV_ETHMAC_TxLock(pMacD);
-
     _MACTxAcknowledgeEth(pMacD);
 
     // transmit the pending packets...don't transmit out of order
@@ -882,13 +764,13 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
         pSeg = pPkt->pDSeg;
         if(pSeg == 0)
         {   // cannot send this packet
-            _DRV_ETHMAC_TxUnlock(pMacD);
             return TCPIP_MAC_RES_PACKET_ERR;
         }
 
         pPkt = pPkt->next;
     }
 
+    _DRV_ETHMAC_TxLock(pMacD);
     while(ptrPacket && macRes == TCPIP_MAC_RES_OK)
     {   // can schedule some packets
         // set the queue flag; avoid race condition if MACTx is really fast;
@@ -1075,7 +957,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
     if(pRootDcpt->pBuff)
     {   // we have a failed packet available
         _DRV_ETHMAC_RxLock(pMacD);
-        DRV_ETHMAC_LibRxAcknowledgePacket(pMacD, pRootDcpt, 0, 0);
+        DRV_ETHMAC_LibRxAcknowledgePacket(pMacD, pRootDcpt);
         _DRV_ETHMAC_RxUnlock(pMacD);
     }
 
@@ -1490,11 +1372,9 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACProcess(DRV_HANDLE hMac)
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    _DRV_ETHMAC_TxLock(pMacD);
     _MACTxAcknowledgeEth(pMacD);
 
     _MacTxPendingPackets(pMacD);
-    _DRV_ETHMAC_TxUnlock(pMacD);
 
     // replenish RX buffers
     if((rxLowThreshold = pMacD->mData.macConfig.rxLowThreshold) != 0)
@@ -1639,21 +1519,18 @@ static void _MACTxAcknowledgeEth(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     DRV_ETHMAC_LibTxAcknowledgePacket(pMacD, 0, _MACTxPacketAckCallback, pMacD);
 }
 
-static void _MACTxPacketAckCallback(void* pBuff, int buffIx, void* fParam)
+static void _MACTxPacketAckCallback(void* pBuff, void* fParam)
 {
-    if(buffIx == 0)
-    {
-        DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
+    DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
 
-        // restore packet the buffer belongs to
-        uint8_t* segBuff = (uint8_t*)((uint32_t)pBuff & pMacD->mData._dataOffsetMask);
-        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
-        TCPIP_MAC_PACKET* ptrPacket = pGap->segmentPktPtr;
-        
-        // acknowledge the packet
-        (*pMacD->mData.pktAckF)(ptrPacket, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);
-        pMacD->mData._txStat.nTxOkPackets++;
-    }
+    // restore packet the buffer belongs to
+    uint8_t* segBuff = (uint8_t*)((uint32_t)pBuff & pMacD->mData._dataOffsetMask);
+    TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(segBuff + pMacD->mData._gapDcptOffset);
+    TCPIP_MAC_PACKET* ptrPacket = pGap->segmentPktPtr;
+
+    // acknowledge the packet
+    (*pMacD->mData.pktAckF)(ptrPacket, TCPIP_MAC_PKT_ACK_TX_OK, TCPIP_THIS_MODULE_ID);
+    pMacD->mData._txStat.nTxOkPackets++;
 }
 
 
@@ -1670,17 +1547,22 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 
     if((pMacD->mData._controlFlags & TCPIP_MAC_CONTROL_NO_LINK_CHECK) == 0 && pMacD->mData._macFlags._linkPrev == false)
     {   // discard the TX queues
-        _MacTxDiscardQueues(pMacD, TCPIP_MAC_PKT_ACK_LINK_DOWN); 
+        _MacTxDiscardQueues(pMacD, TCPIP_MAC_PKT_ACK_LINK_DOWN, true); 
         // no need to try to schedule for TX
         return TCPIP_MAC_RES_PENDING;
     }
 
 
+    DRV_ETHMAC_SGL_LIST failedList;
+    DRV_ETHMAC_SingleListInitialize(&failedList);
+
+    _DRV_ETHMAC_TxLock(pMacD);
     while( (pPkt = (TCPIP_MAC_PACKET*)(pMacD->mData._TxQueue.head)) != 0)
     {
         pktRes = _MACTxPacket(pMacD, pPkt);
         if(pktRes == TCPIP_MAC_RES_PENDING)
         {   // not enough room in the hw queue
+            _DRV_ETHMAC_TxUnlock(pMacD);
             return TCPIP_MAC_RES_PENDING;
         }
 
@@ -1688,10 +1570,17 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
         DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxQueue);
         if(pktRes != TCPIP_MAC_RES_OK)
         {   // not transmitted
-            (*pMacD->mData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_BUFFER_ERR, TCPIP_THIS_MODULE_ID);
+            DRV_ETHMAC_SingleListTailAdd(&failedList, (DRV_ETHMAC_SGL_LIST_NODE*)pPkt);
         }
     }
 
+    _DRV_ETHMAC_TxUnlock(pMacD);
+
+    // acknowledge the failed list
+    while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&failedList)) != 0)
+    {
+        (*pMacD->mData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_BUFFER_ERR, TCPIP_THIS_MODULE_ID);
+    }
 
     return TCPIP_MAC_RES_OK;
 }
@@ -1755,7 +1644,7 @@ static void _MACCleanup(DRV_ETHMAC_INSTANCE_DCPT* pMacD )
 {
     // TX clean up
     DRV_ETHMAC_LibDescriptorsPoolCleanUp(pMacD, DRV_ETHMAC_DCPT_TYPE_TX,  _MacTxFreeCallback, (void*)pMacD);
-    _MacTxDiscardQueues(pMacD, TCPIP_MAC_PKT_ACK_NET_DOWN); 
+    _MacTxDiscardQueues(pMacD, TCPIP_MAC_PKT_ACK_NET_DOWN, false); 
 
     // RX clean up
     DRV_ETHMAC_LibDescriptorsPoolCleanUp(pMacD, DRV_ETHMAC_DCPT_TYPE_RX,  _MacRxFreeCallback, (void*)pMacD);
@@ -1850,12 +1739,31 @@ static void _MACDeinit(DRV_ETHMAC_INSTANCE_DCPT* pMacD )
 }
 #endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
-static void _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_ACK_RES ackRes)
+static void _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_ACK_RES ackRes, bool synch)
 {
     TCPIP_MAC_PACKET* pPkt;
+    DRV_ETHMAC_SGL_LIST discardTx;
+
+    DRV_ETHMAC_SingleListInitialize(&discardTx);
+
+    if(synch)
+    {
+        _DRV_ETHMAC_TxLock(pMacD);
+    }
 
     while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxQueue)) != 0)
     {   // acknowledge the packet
+        DRV_ETHMAC_SingleListTailAdd(&discardTx, (DRV_ETHMAC_SGL_LIST_NODE*)pPkt);
+    }
+
+    if(synch)
+    {
+        _DRV_ETHMAC_TxUnlock(pMacD);
+    }
+
+    // acknowledge the packets
+    while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&discardTx)) != 0)
+    {
         (*pMacD->mData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
     }
 }
@@ -1878,7 +1786,7 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
         {   // acknowledge the ETHC
             // No further acknowledge/processing needed from MAC
             _DRV_ETHMAC_RxLock(pMacD);
-            DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pSeg->segLoad, 0, 0);
+            DRV_ETHMAC_LibRxAcknowledgeBuffer(pMacD, pSeg->segLoad);
             _DRV_ETHMAC_RxUnlock(pMacD);
         }
 

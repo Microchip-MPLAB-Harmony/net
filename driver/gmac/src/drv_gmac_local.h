@@ -186,7 +186,7 @@ typedef struct
 // When not using a semaphore lock, a critical section
 // will be used.
 //#define   DRV_GMAC_USE_RX_SEMAPHORE_LOCK
-//#define   DRV_GMAC_USE_TX_SEMAPHORE_LOCK
+#define   DRV_GMAC_USE_TX_SEMAPHORE_LOCK
 
 
 #define DRV_GMAC_MIN_RX_SIZE           64      // minimum RX buffer size

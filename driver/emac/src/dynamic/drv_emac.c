@@ -53,7 +53,7 @@ static SYS_MODULE_OBJ       macDrvrPhyInitialize(       MAC_DRIVER * pMacDrvr );
 static void                 macDrvrDeInit(              MAC_DRIVER * pMacDrvr );
 static void                 macDrvrTxAcknowledge(       MAC_DRIVER * pMacDrvr );
 static TCPIP_MAC_RES        macDrvrTxPendingPackets(    MAC_DRIVER * pMacDrvr );
-static void                 macDrvrTxAckAllPending(     MAC_DRIVER * pMacDrvr, TCPIP_MAC_PKT_ACK_RES ackRes );
+static void                 macDrvrTxGetAllPending(     MAC_DRIVER * pMacDrvr, MAC_DRVR_PACKET_LIST*  ackList );
 static void                 macDrvrTxPacketPoolReset(   MAC_DRIVER * pMacDrvr, TCPIP_MAC_PKT_ACK_RES ackRes );
 // MAC interface functions
 SYS_MODULE_OBJ              macDrvrInitialize(          const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init );
@@ -611,11 +611,13 @@ TCPIP_MAC_RES macDrvrPacketTx( DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket )
         return TCPIP_MAC_RES_OP_ERR;
     }
     
-    macDrvrTxLock( pMacDrvr );
     numPacketsToSend = txGetValidPacketCount( pMacPacket, pMacDrvr );
+
     if( numPacketsToSend )
     {
         response = TCPIP_MAC_RES_OK;
+
+        macDrvrTxLock( pMacDrvr );
         for( pTemp = pMacPacket; numPacketsToSend--; pTemp = pTemp->next )
         {   // Update pktFlags
             // packets are expected to have pDSeg updated with the packet pointer
@@ -626,9 +628,10 @@ TCPIP_MAC_RES macDrvrPacketTx( DRV_HANDLE hMac, TCPIP_MAC_PACKET * pMacPacket )
                                     pMacPacket
                                     );
         macDrvrTxPendingPackets( pMacDrvr );
+        macDrvrTxUnlock( pMacDrvr );
+
         macDrvrTxAcknowledge( pMacDrvr );
     }
-    macDrvrTxUnlock( pMacDrvr );
 
     return response;
 }
@@ -783,11 +786,11 @@ TCPIP_MAC_RES macDrvrProcess( DRV_HANDLE hMac )
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-    TCPIP_MAC_RES   response;
     macDrvrTxLock( pMacDrvr );
-    response = macDrvrTxPendingPackets( pMacDrvr );
-    macDrvrTxAcknowledge( pMacDrvr );
+    TCPIP_MAC_RES response = macDrvrTxPendingPackets( pMacDrvr );
     macDrvrTxUnlock( pMacDrvr );
+
+    macDrvrTxAcknowledge( pMacDrvr );
 
     return response;
 }
@@ -831,6 +834,7 @@ static TCPIP_MAC_RES macDrvrRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STA
 /*******************************************************************************
  * local functions and helpers
  */
+// TX should be locked!
 static TCPIP_MAC_RES macDrvrTxPendingPackets( MAC_DRIVER * pMacDrvr )
 {
     uint32_t                    segsAvailable;
@@ -868,11 +872,18 @@ static TCPIP_MAC_RES macDrvrTxPendingPackets( MAC_DRIVER * pMacDrvr )
     return TCPIP_MAC_RES_OK;
 }
 
+// TX should NOT be locked! performs lock/unlock as needed
 static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
 {
     TCPIP_MAC_PACKET *  pMacPacket;
     uint16_t            segmentsReady;
     uint16_t            extract;
+    MAC_DRVR_PACKET_LIST ackList, errList;
+
+    macDrvrPacketListInitialize(&ackList);
+    macDrvrPacketListInitialize(&errList);
+
+    macDrvrTxLock( pMacDrvr );
 
     // acknowledge when a complete segment is sent
     // only first segment has correct ownership setting -- emac does not update the others!
@@ -884,7 +895,7 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
         extract = pMacDrvr->txExtractPt;
         if( (EMAC_TX_ERR_BITS & pMacDrvr->pTxDesc[ extract ].status.val) )
         {   // transmit error: emac has restarted at base, descriptors should be reset
-            macDrvrTxAckAllPending( pMacDrvr, TCPIP_MAC_PKT_ACK_BUFFER_ERR );
+            macDrvrTxGetAllPending( pMacDrvr, &errList );
             macDrvrLibTxInit( pMacDrvr );
             break;
         }
@@ -906,8 +917,7 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
             else
             {   // complete segment sent
                 pMacDrvr->txExtractPt = moduloIncrement( extract, pMacDrvr->config.nTxDescCnt );
-                pMacPacket->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
-                pMacDrvr->callBack.pktAckF( pMacPacket, TCPIP_MAC_PKT_ACK_TX_OK, pMacDrvr->pObj->macId );
+                macDrvrPacketListTailAdd(&ackList, pMacPacket);
                 pMacDrvr->txStat.nTxOkPackets++;
                 while( segmentsReady-- )
                 {   // backup and cleanup descriptors, leaving the appropriate bits in place
@@ -920,6 +930,20 @@ static void macDrvrTxAcknowledge( MAC_DRIVER * pMacDrvr )
                 break;      // inner loop finished with this packet; rise to outer loop now
             }
         }
+    }
+
+    macDrvrTxUnlock( pMacDrvr );
+
+    // acknowledge the finished packets
+    while( (pMacPacket = macDrvrPacketListHeadRemove(&ackList)) != 0 )
+    {
+        pMacDrvr->callBack.pktAckF( pMacPacket, TCPIP_MAC_PKT_ACK_TX_OK, pMacDrvr->pObj->macId );
+    }
+
+    // acknowledge the error packets
+    while( (pMacPacket = macDrvrPacketListHeadRemove(&errList)) != 0 )
+    {
+        pMacDrvr->callBack.pktAckF( pMacPacket, TCPIP_MAC_PKT_ACK_BUFFER_ERR, pMacDrvr->pObj->macId );
     }
 }
 
@@ -1013,23 +1037,18 @@ static void macDrvrRxPacketPoolReset( MAC_DRIVER * pMacDrvr )
 }
 #endif
 
-static void macDrvrTxAckAllPending(
+// TX should be locked!
+static void macDrvrTxGetAllPending(
     MAC_DRIVER *            pMacDrvr,
-    TCPIP_MAC_PKT_ACK_RES   ackRes
+    MAC_DRVR_PACKET_LIST*  ackList
     )
-{   // remove and callback acknowledgment functions of packets in transmission queue
+{   // remove apackets in transmission queue and add to the supplied list
     TCPIP_MAC_PACKET * pMacPacket;
 
     while( pMacDrvr->txPendingList.nNodes )
     {   // release pending list packets
         pMacPacket = macDrvrPacketListHeadRemove( &pMacDrvr->txPendingList );
-        if( pMacDrvr->callBack.pktAckF )
-        {
-            pMacDrvr->callBack.pktAckF( pMacPacket,
-                                        ackRes,
-                                        pMacDrvr->pObj->macId
-                                        );
-        }
+        macDrvrPacketListTailAdd(ackList, pMacPacket);
     }
 }
 
@@ -1038,12 +1057,26 @@ static void macDrvrTxPacketPoolReset(
     TCPIP_MAC_PKT_ACK_RES   ackRes
     )
 {
+    MAC_DRVR_PACKET_LIST txList;
+    macDrvrPacketListInitialize(&txList);
+
     // acknowledge packets the mac has in it's descriptors
     macDrvrTxAcknowledge( pMacDrvr );
+
     // remove the packets queued for transmission
-    macDrvrTxAckAllPending( pMacDrvr, ackRes );
+    macDrvrTxLock( pMacDrvr );
+    macDrvrTxGetAllPending( pMacDrvr, &txList );
     // everything should be recovered so now we can reset the tx
     macDrvrLibTxInit( pMacDrvr );       // also called at standard init
+    macDrvrTxUnlock( pMacDrvr );
+
+    // acknowledge
+    TCPIP_MAC_PACKET *  pMacPacket;
+    while( (pMacPacket = macDrvrPacketListHeadRemove(&txList)) != 0 )
+    {
+        pMacDrvr->callBack.pktAckF( pMacPacket, ackRes, pMacDrvr->pObj->macId );
+    }
+
 }
 
 /*******************************************************************************

@@ -116,7 +116,7 @@ static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_
         DRV_ETH_RxBufferCountDecrement(ethId);
     }
 
-} //_EthAppendBusyList
+}
 
 
 static void _EthMacReset(DRV_ETHERNET_REGISTERS* ethId)
@@ -317,7 +317,7 @@ int DRV_ETHMAC_LibDescriptorsPoolAdd (DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nDesc
     }
 
     return nCreated;
-} //DRV_ETHMAC_LibDescriptorsPoolAdd
+}
 
 
 // *****************************************************************************
@@ -369,7 +369,7 @@ int DRV_ETHMAC_LibDescriptorsPoolRemove (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  int n
 
     return removed;
 
-}//DRV_ETHMAC_LibDescriptorsPoolRemove
+}
 
 
 /*******************************************************************************
@@ -395,7 +395,7 @@ void DRV_ETHMAC_LibDescriptorsPoolCleanUp(DRV_ETHMAC_INSTANCE_DCPT* pMacD,  DRV_
         _EnetPoolFreeDcptList(pMacD->mData._EnetRxBusyPtr, fFree, fParam);
     }
 
-} //DRV_ETHMAC_LibDescriptorsPoolCleanUp
+}
 
 
 /*******************************************************************************
@@ -417,7 +417,7 @@ void* DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void 
 
     return pBuff;
 
-} //DRV_ETHMAC_LibDescriptorGetBuffer
+}
 
 
 /****************************************************************************
@@ -449,7 +449,7 @@ static void _EnetPoolFreeDcptList(DRV_ETHMAC_DCPT_LIST* pList, DRV_ETHMAC_DCPT_F
         }
     }
 
-}//_EnetPoolFreeDcptList
+}
 
 
 // *****************************************************************************
@@ -537,7 +537,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
 
     return DRV_ETHMAC_RES_OK;
 
-} //DRV_ETHMAC_LibRxBuffersAppend
+}
 
 
 // *****************************************************************************
@@ -596,7 +596,7 @@ static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, cons
 
     return res;
 
-} //_EthTxSchedBuffer
+}
 
 
 /****************************************************************************
@@ -634,7 +634,7 @@ static void _EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIS
 
     }
 
-} //_EthTxSchedList
+}
 
 
 /****************************************************************************
@@ -660,7 +660,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
 
     return res;
 
-} //DRV_ETHMAC_LibTxSendBuffer
+}
 
 
 /****************************************************************************
@@ -694,7 +694,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxSendPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, co
 
     return res;
 
-} //DRV_ETHMAC_LibTxSendPacket
+}
 
 
 /****************************************************************************
@@ -732,7 +732,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxGetBufferStatus(DRV_ETHMAC_INSTANCE_DCPT* pMac
 
     return res;
 
-} //DRV_ETHMAC_LibTxGetBufferStatus
+}
 
 
 /****************************************************************************
@@ -771,7 +771,7 @@ static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_
 
     return pEDcpt;
 
-} //_EnetFindPacket
+}
 
 
 // *****************************************************************************
@@ -781,15 +781,13 @@ static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_
 // *****************************************************************************
 
 /****************************************************************************
- * Function:        _EthAckPacket
+ * Function:        _EthGetAckedPacket
  *
  * PreCondition:    None
  *
  * Input:           pPkt       - buffer/packet to be acknowledged or NULL
  *                  pRemList   - list to look for done packets and to remove the packets from
  *                  pAddList   - list were to add the removed packets
- *                  ackFnc     - function to be called for each acknowledged buffer in turn
- *                  fParam     - function argument
  *
  * Output:          DRV_ETHMAC_RES_OK - success
  *                  DRV_ETHMAC_RES_PACKET_QUEUED - there are packets queued
@@ -797,20 +795,19 @@ static DRV_ETHMAC_DCPT_NODE* _EnetFindPacket(const void* pBuff, DRV_ETHMAC_DCPT_
  *
  * Side Effects:    None
  *
- * Overview:        This function acknowledges a packet.
+ * Overview:        This function populates the pAddList with packets that need to be acknowledged.
  *                  The supplied packet has to have been completed otherwise the call will fail.
  *                  When pPkt==NULL, all packets with EOWN==0 will be acknowledged.
  *
  * Note:            None
  *****************************************************************************/
-static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* pRemList, DRV_ETHMAC_DCPT_LIST* pAddList, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam)
+static DRV_ETHMAC_RESULT _EthGetAckedPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* pRemList, DRV_ETHMAC_DCPT_LIST* pAddList)
 {
 
     DRV_ETHMAC_DCPT_NODE   *pEDcpt;
     DRV_ETHMAC_DCPT_NODE   *prev, *next;
     int     nAcks;
     int     pktFound;
-    int     buffIx;
 
     prev=next=0;
     nAcks=pktFound=0;
@@ -827,20 +824,12 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
             }
 
             next=pEDcpt;
-            buffIx=0;
             do
             {
                 pEDcpt=next;
                 next=pEDcpt->next;
                 while(pEDcpt->hwDcpt.hdr.EOWN);         // shouldn't happen
                 DRV_ETHMAC_LIB_ListAddTail(pAddList, pEDcpt);    // ack this node
-                if(ackFnc)
-                {
-                    void* pBuff;
-                    pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
-                    (*ackFnc)(pBuff, buffIx++, fParam); // call user's acknowledge
-                }
-
             }while(!pEDcpt->hwDcpt.hdr.EOP);
 
             nAcks++;
@@ -867,10 +856,9 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
         }
     }
 
-    return nAcks?DRV_ETHMAC_RES_OK:(pktFound?DRV_ETHMAC_RES_PACKET_QUEUED:DRV_ETHMAC_RES_NO_PACKET);
+    return nAcks ? DRV_ETHMAC_RES_OK : (pktFound ? DRV_ETHMAC_RES_PACKET_QUEUED : DRV_ETHMAC_RES_NO_PACKET);
 
-} //_EthAckPacket
-
+}
 
 /****************************************************************************
  * Function:        _EthRxAckBuffer
@@ -878,8 +866,6 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
  * PreCondition:    DRV_ETHMAC_LibRxSetBufferSize, DRV_ETHMAC_LibRxBuffersAppend, DRV_ETHMAC_LibRxGetPacket should have been called.
  *
  * Input:           pBuff  - buffer/packet to be acknowledged or NULL
- *                  ackFnc - function to be called for the acknowledged buffers or NULL
- *                  fParam - argument to be used in ackFnc callback
  *
  * Output:          DRV_ETHMAC_RES_OK - success
  *                  DRV_ETHMAC_RES_PACKET_QUEUED - there are packets in the receiving queue
@@ -896,7 +882,7 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
  *                  - pBuff must be the pointer to the first buffer in the packet, if the packet spans multiple buffers.
  *                  - ackFnc is just a helper that allows the application to call an acknowledge function for each received buffer in turn.
  *****************************************************************************/
-static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam)
+static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff)
 {
     DRV_ETHMAC_RESULT     res;
     DRV_ETHMAC_DCPT_NODE*  pEDcpt;
@@ -912,7 +898,7 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
     pStickyList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(stickyList));
 
 
-    res=_EthAckPacket(pBuff, pMacD->mData._EnetRxBusyPtr, pAckList, ackFnc, fParam);
+    res = _EthGetAckedPacket(pBuff, pMacD->mData._EnetRxBusyPtr, pAckList);
 
     while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList)))
     {
@@ -941,15 +927,15 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
 
     return res;
 
-} //_EthRxAckBuffer
+}
 
 
 /****************************************************************************
  * Function:        DRV_ETHMAC_LibRxAcknowledgeBuffer
  *****************************************************************************/
-DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff, DRV_ETHMAC_BUFF_AckF ackFnc, void* fParam)
+DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxAcknowledgeBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const void* pBuff)
 {
-    return _EthRxAckBuffer(pMacD, pBuff, ackFnc, fParam);
+    return _EthRxAckBuffer(pMacD, pBuff);
 }
 
 
@@ -965,13 +951,33 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxAcknowledgeBuffer(DRV_ETHMAC_INSTANCE_DCPT* pM
     
     pAckList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(ackList));
     
-    res = _EthAckPacket(pBuff, pMacD->mData._EnetTxBusyPtr, pAckList, ackFnc, fParam);
 
+    _DRV_ETHMAC_TxLock(pMacD);
+    res = _EthGetAckedPacket(pBuff, pMacD->mData._EnetTxBusyPtr, pAckList);
+
+    _DRV_ETHMAC_TxUnlock(pMacD);
+
+    // acknowledge the packets
+    if(ackFnc)
+    {
+        for(pEDcpt = pAckList->head; pEDcpt != 0; pEDcpt = pEDcpt->next)
+        {
+            if(pEDcpt->hwDcpt.hdr.SOP)
+            {
+                void* pBuff = (pEDcpt->hwDcpt.hdr.kv0 ? PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff) : PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
+                (*ackFnc)(pBuff, fParam); // call user's acknowledge
+            }
+        }
+    }
+
+    // reinsert the ack-ed list
+    _DRV_ETHMAC_TxLock(pMacD);
     while((pEDcpt=DRV_ETHMAC_LIB_ListRemoveHead(pAckList)))
     {
         pEDcpt->hwDcpt.pEDBuff = 0; // corresponding buffer is not owned
         DRV_ETHMAC_LIB_ListAddTail(pMacD->mData._EnetTxFreePtr, pEDcpt);
     }
+    _DRV_ETHMAC_TxUnlock(pMacD);
 
     return res;
 }
@@ -1001,7 +1007,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, voi
 
     return res;
 
-} //DRV_ETHMAC_LibRxGetBuffer
+}
 
 
 /****************************************************************************
@@ -1089,7 +1095,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
 
     return res;
 
-} //DRV_ETHMAC_LibRxGetPacket
+}
 
 DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int* pnBuffs)
 {
