@@ -1828,9 +1828,9 @@ typedef struct
 
 typedef struct
 {
-    SYS_MODULE_INIT                     moduleInit;     // System module initialization
-    const TCPIP_MAC_MODULE_CTRL* const  macControl;     // Stack prepared data 
-    const void* const                   moduleData;     // Driver specific initialization data
+    SYS_MODULE_INIT                 moduleInit;     // System module initialization
+    const TCPIP_MAC_MODULE_CTRL*    macControl;     // Stack prepared data 
+    const void*                     moduleData;     // Driver specific initialization data
 } TCPIP_MAC_INIT;
 
 
