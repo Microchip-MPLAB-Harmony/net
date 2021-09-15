@@ -84,8 +84,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *    to allow the dynamic update of the table
  *  - the forwarding table is populated when the IPv4 module is initialized:
  *    the table is part of the configuration data
- *  - API will be added to add/remove table entries at run time
- *    Currently this is not supported
  *  - When forwarding a packet from one interface to another, packet fragmentation is not yet supported
  *  - Forwading  of multicast packets is not currently supported
  *  - A packet can be both processed on the host and forwarded
@@ -179,6 +177,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     This implementation uses the forwarding table even in this case, as it is believed that this adds
     more flexibility, allowing the user to configure more specific rules for the forwarding.
 
+    The ASCII format is supported when build symbol TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0
+
  */
 
 typedef struct
@@ -220,7 +220,7 @@ typedef struct
     See the TCPIP_IPV4_FORWARD_ENTRY_ASCII description
 
   Remarks:
-    None.
+    The binary format is always supported 
 */
 
 typedef struct
@@ -238,6 +238,9 @@ typedef struct
     uint8_t         outIfIx;
     /* The path efficiency */
     uint8_t         metric;
+    /* number of leading ones in the netMask; negative means entry is invalid/unused.
+     * used only for TCPIP_IPV4_ForwadTableEntryGet function */
+    int8_t          nOnes;
 }TCPIP_IPV4_FORWARD_ENTRY_BIN;
 
 // *****************************************************************************
@@ -286,7 +289,9 @@ typedef enum
                                                     // the default should be disabled
 
     TCPIP_IPV4_FWD_FLAG_BINARY_TABLE     = 0x0000,  // The initialization forwarding table is in binary format, not strings - default setting
+                                                        // The binary format is always supported 
     TCPIP_IPV4_FWD_FLAG_ASCII_TABLE      = 0x0100,  // The initialization forwarding table is in ASCII format, using strings
+                                                        // Build symbol TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0
 
 }TCPIP_IPV4_FORWARD_FLAGS;
 
@@ -360,14 +365,14 @@ typedef struct
 {
     /* The number of entries that IPv4 can queue up for ARP resolution.
        Usually it should be <= the number of total ARP cache entries for all interfaces */
-    size_t                  arpEntries;
+    size_t          arpEntries;
 
 
     /* the following members are valid/used only if the IP forwarding is enabled
      * They are valid only when the stack is initialized with multiple network interfaces */
     
     /* Forwarding flags. See the definition of TCPIP_IPV4_FORWARD_FLAGS */
-    TCPIP_IPV4_FORWARD_FLAGS forwardFlags;
+    uint16_t        forwardFlags;
 
     /* The maximum number of broadcast and multicast packets that can be queued
      * waiting for the output interface to transmit them.
@@ -377,14 +382,14 @@ typedef struct
      * Note that if this limit is exceeded, the packets won't be forwarded
      * but still processed internally
      * If 0, packets won't be forwarded, just processed internally. */
-    size_t                  forwardTxQueueSize;
+    uint16_t        forwardTxQueueSize;
 
     /* The maximum number of entries in the forwarding table for each interface */
-    size_t                  forwardTableMaxEntries;
+    uint16_t        forwardTableMaxEntries;
 
     /* The number of entries in the initialization forwarding table
      * The number of entries per interface cannot exceed the 'forwardTableMaxEntries' value */
-    size_t                  forwardTableSize;
+    uint16_t        forwardTableSize;
 
     /* the forwarding table entries to start with
      * It contains the entries for all interfaces involved in forwarding
@@ -394,13 +399,14 @@ typedef struct
 }TCPIP_IPV4_MODULE_CONFIG;
 
 // *****************************************************************************
-/* IPv4 initialization result
+/* IPv4 operation result
 
   Summary:
-    List of initialization result codes
+    List of operation result codes
 
   Description:
     This is the list of results occurring in the IPv4 module initialization 
+    and API
 
   Remarks:
     Negative codes represent errors.
@@ -410,16 +416,20 @@ typedef enum
     TCPIP_IPV4_RES_OK       = 0,        // everything OK
 
     // errors
-    TCPIP_IPV4_RES_INIT_VAL_ERR = -1,       // initialization value error
-    TCPIP_IPV4_RES_SIGNAL_ERR   = -2,       // failed to create a signal handler
-    TCPIP_IPV4_RES_ARP_ERR      = -3,       // failed to initialize ARP queue
-    TCPIP_IPV4_RES_NOTIFY_ERR   = -4,       // failed to initialize notifications
-    TCPIP_IPV4_RES_MEM_ERR      = -5,       // failed to allocate memory
-    TCPIP_IPV4_RES_ENTRIES_ERR  = -6,       // invalid forward table entries
-    TCPIP_IPV4_RES_FORMAT_ERR   = -7,       // not supported forward table format 
-    TCPIP_IPV4_RES_ADDRESS_ERR  = -8,       // invalid IP address 
-    TCPIP_IPV4_RES_MASK_ERR     = -9,       // invalid IP mask 
-    TCPIP_IPV4_RES_IF_ERR       = -10,      // invalid interface
+    TCPIP_IPV4_RES_INIT_VAL_ERR     = -1,       // initialization value error
+    TCPIP_IPV4_RES_SIGNAL_ERR       = -2,       // failed to create a signal handler
+    TCPIP_IPV4_RES_ARP_ERR          = -3,       // failed to initialize ARP queue
+    TCPIP_IPV4_RES_NOTIFY_ERR       = -4,       // failed to initialize notifications
+    TCPIP_IPV4_RES_MEM_ERR          = -5,       // failed to allocate memory
+    TCPIP_IPV4_RES_ENTRIES_ERR      = -6,       // invalid forward table entries
+    TCPIP_IPV4_RES_FORMAT_ERR       = -7,       // not supported forward table format 
+    TCPIP_IPV4_RES_ADDRESS_ERR      = -8,       // invalid IP address 
+    TCPIP_IPV4_RES_MASK_ERR         = -9,       // invalid IP mask 
+    TCPIP_IPV4_RES_IF_ERR           = -10,      // invalid interface
+    TCPIP_IPV4_RES_FWD_ENTRY_ERR    = -11,      // invalid forwarding table entry
+    TCPIP_IPV4_RES_FWD_TABLE_ERR    = -12,      // invalid forwarding table - forwarding not enabled/existing
+    TCPIP_IPV4_RES_FWD_LOCK_ERR     = -13,      // lock of the forwarding table could not be created/obtained
+    TCPIP_IPV4_RES_FWD_NO_ENTRY_ERR = -14,      // no such entry exists
 
 
 }TCPIP_IPV4_RES;
@@ -1392,15 +1402,214 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
 // *****************************************************************************
 /*
   Function:
-    size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH);
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
 
   Summary:
-    Helper to get the current number of entries in the forwarding table
+    Helper to dynamically add entries to the FIB using the ASCII format
+   
+  Description:
+    The function is a helper that dynamically adds entries to the forwarding table using the ASCII format 
+   
+  Precondition:
+    IPv4 properly initialized
+    Forwarding supported
+        
+
+  Parameters:
+    pEntry    - pointer to a valid ASCII format entries
+    nEntries  - number of entries in the array
+
+  Returns:
+    - TCPIP_IPV4_RES_OK if operation successful
+    - an TCPIP_IPV4_RES < 0 if an error occurred
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled and TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0
+
+    The ASCII format is supported when build symbol TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0
+
+    Routing is suspended while this operation is in progress
+
+    Operation is expensive and occurs with locking of resources.
+
+    Entries will be added sequentially and the operation will stop once an error has occurred.
+    Returning an error may still mean that some entries have been added to the FIB!
+    Use one single entry if control needed over individual entries.
+ */
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+
+// *****************************************************************************
+/*
+  Function:
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+
+  Summary:
+    Helper to dynamically remove entries from the FIB using the ASCII format
+   
+  Description:
+    The function is a helper that dynamically removes entries from the forwarding table using the ASCII format 
+   
+  Precondition:
+    IPv4 properly initialized
+    Forwarding supported
+        
+
+  Parameters:
+    pEntry    - pointer to a valid ASCII format entries
+    nEntries  - number of entries in the array
+
+  Returns:
+    - TCPIP_IPV4_RES_OK if operation successful
+    - an TCPIP_IPV4_RES < 0 if an error occurred
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled and TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0
+
+    The ASCII format is supported when build symbol TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0
+
+    Routing is suspended while this operation is in progress
+
+    Operation is expensive and occurs with locking of resources.
+
+    Entries will be removed sequentially and the operation will stop once an error has occurred.
+    Returning an error may still mean that some entries have been removed to the FIB!
+    Use one single entry if control needed over individual entries.
+ */
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+
+// *****************************************************************************
+/*
+  Function:
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddBinary(const TCPIP_IPV4_FORWARD_ENTRY_BIN* pEntry, size_t nEntries);
+
+  Summary:
+    Helper to dynamically add entries to the FIB using the binary format
+   
+  Description:
+    The function is a helper that dynamically adds multiple entries to the forwarding table using the binary format 
+   
+  Precondition:
+    IPv4 properly initialized
+    Forwarding supported
+        
+
+  Parameters:
+    pEntry    - pointer to a valid binary format array of entries
+    nEntries  - number of entries in the array
+
+  Returns:
+    - TCPIP_IPV4_RES_OK if operation successful
+    - an TCPIP_IPV4_RES < 0 if an error occurred
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled and TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0
+
+    The binary format is always supported 
+
+    Routing is suspended while this operation is in progress
+
+    Operation is expensive and occurs with locking of resources.
+
+    Entries will be added sequentially and the operation will stop once an error has occurred.
+    Returning an error may still mean that some entries have been added to the FIB!
+    Use one single entry if control needed over individual entries.
+ */
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddBinary(const TCPIP_IPV4_FORWARD_ENTRY_BIN* pEntry, size_t nEntries);
+
+// *****************************************************************************
+/*
+  Function:
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveBinary(const TCPIP_IPV4_FORWARD_ENTRY_BIN* pEntry, size_t nEntries);
+
+  Summary:
+    Helper to dynamically remove entries from the FIB using the binary format
+   
+  Description:
+    The function is a helper that dynamically removes entries from the forwarding table using the binary format 
+    The FIB is searched to find an exact match with the supplied entries. 
+   
+  Precondition:
+    IPv4 properly initialized
+    Forwarding supported
+        
+
+  Parameters:
+    pEntry    - pointer to a valid binary format array of entries
+    nEntries  - number of entries in the array
+
+  Returns:
+    - TCPIP_IPV4_RES_OK if operation successful
+    - an TCPIP_IPV4_RES < 0 if an error occurred
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled and TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0
+
+    The binary format is always supported 
+
+    Routing is suspended while this operation is in progress
+
+    Operation is expensive and occurs with locking of resources.
+
+    Entries will be removed sequentially and the operation will stop once an error has occurred.
+    Returning an error may still mean that some entries have been removed to the FIB!
+    Use one single entry if control needed over individual entries.
+ */
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveBinary(const TCPIP_IPV4_FORWARD_ENTRY_BIN* pEntry, size_t nEntries);
+
+// *****************************************************************************
+/*
+  Function:
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAll(TCPIP_NET_HANDLE netH);
+
+  Summary:
+    Helper to dynamically remove all entries from the FIB
+   
+  Description:
+    The function is a helper that dynamically removes all entries from the forwarding table
+    corresponding to an interface
+   
+  Precondition:
+    IPv4 properly initialized
+    Forwarding supported
+        
+
+  Parameters:
+    netH    - network interface handle
+
+  Returns:
+    - TCPIP_IPV4_RES_OK if operation successful
+    - an TCPIP_IPV4_RES < 0 if an error occurred
+   
+      
+  Remarks:
+    Function exists only if IPv4 forwarding is enabled and TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0
+
+    Routing is suspended while this operation is in progress
+
+    Operation is expensive and occurs with locking of resources.
+
+    All entries will be removed from the FIB
+    The forwarding on that interface is practically disabled
+ */
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAll(TCPIP_NET_HANDLE netH);
+
+// *****************************************************************************
+/*
+  Function:
+    size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH, size_t* pValid);
+
+  Summary:
+    Helper to get the total number of entries in the forwarding table
     for the required interface
    
   Description:
-    The function is a helper that returns the current number of entries in the 
+    The function is a helper that returns the total number of entries in the 
     interface forwarding table
+    It also returns the number of currently used entries
    
   Precondition:
     IPv4 properly initialized
@@ -1409,9 +1618,11 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
 
   Parameters:
     netH    - network interface handle
+    pValid  - address to store the number of valid (in use) entries in the table
+              Could be NULL if not needed.
 
   Returns:
-    - the number of entries currently used in the forwarding table
+    - the total number of entries + th eones currently used in the forwarding table
       for the exiting interface
     - 0 if not a valid interface or forwarding table does not exist
    
@@ -1420,7 +1631,7 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
     Function exists only if IPv4 forwarding is enabled
 
  */
-size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH);
+size_t TCPIP_IPV4_ForwadTableSizeGet(TCPIP_NET_HANDLE netH, size_t* pValid);
 
 // *****************************************************************************
 /*

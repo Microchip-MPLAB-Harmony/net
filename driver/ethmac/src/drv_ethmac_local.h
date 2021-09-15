@@ -292,12 +292,12 @@ typedef struct
 
 // RX lock functions
 #if defined(DRV_ETHMAC_USE_RX_SEMAPHORE_LOCK)
-extern __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncRxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -305,7 +305,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_E
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -313,7 +313,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETH
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -323,16 +323,16 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_E
 
 #else
 // use critical sections
-extern __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_RxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return true;
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -340,7 +340,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxLock(DRV_ETH
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -351,12 +351,12 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_RxUnlock(DRV_E
 
 // TX lock functions
 #if defined(DRV_ETHMAC_USE_TX_SEMAPHORE_LOCK)
-extern __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return (pMacD->mData._synchF == 0) ? true : (*pMacD->mData._synchF)(&pMacD->mData._syncTxH, TCPIP_MAC_SYNCH_REQUEST_OBJ_CREATE);
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -364,7 +364,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_E
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -372,7 +372,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETH
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -381,16 +381,16 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_E
 }
 #else
 // use critical sections
-extern __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ bool __attribute__((always_inline)) _DRV_ETHMAC_TxCreate(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     return true;
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxDelete(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {
@@ -398,7 +398,7 @@ extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxLock(DRV_ETH
     }
 }
 
-extern __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
+static __inline__ void __attribute__((always_inline)) _DRV_ETHMAC_TxUnlock(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
     if(pMacD->mData._synchF != 0)
     {

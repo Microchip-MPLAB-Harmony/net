@@ -95,8 +95,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Enable support for forwarding table initialization using ASCII strings 
 #define TCPIP_IPV4_FORWARDING_TABLE_ASCII   1
 
-// Enable support for forwarding table initialization using binary values
-#define TCPIP_IPV4_FORWARDING_TABLE_BIN     1
+// Enable support for dynamic forwarding table API
+#define TCPIP_IPV4_FORWARDING_DYNAMIC_API     1
 
 // Number of slots in the IPv4 ARP queue
 // The number of entries that IPv4 can queue up for ARP resolution.

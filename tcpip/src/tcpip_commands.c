@@ -5918,16 +5918,17 @@ static void _CommandIpv4Table(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         return;
     }
 
-    size_t tableEntries = TCPIP_IPV4_ForwadTableSizeGet(netH);
+    size_t usedEntries;
+    size_t tableEntries = TCPIP_IPV4_ForwadTableSizeGet(netH, &usedEntries);
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 Fwd Table for iface: %d, size: %d\r\n", index, tableEntries);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 Fwd Table for iface: %d, entries: %d, used: %d\r\n", index, tableEntries, usedEntries);
 
     for(ix = 0; ix < tableEntries; ix++)
     {
         TCPIP_IPV4_ForwadTableEntryGet(netH, ix, &fwdEntry);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 Fwd Entry: %d\r\n", ix);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tnetAdd: 0x%08x, netMask: 0x%08x, gwAdd: 0x%08x\r\n", fwdEntry.netAddress, fwdEntry.netMask, fwdEntry.gwAddress);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\toutIfIx: %d, inIfIx: %d, metric: %d\r\n", fwdEntry.outIfIx, fwdEntry.inIfIx, fwdEntry.metric);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\toutIfIx: %d, inIfIx: %d, metric: %d, nOnes: %d\r\n", fwdEntry.outIfIx, fwdEntry.inIfIx, fwdEntry.metric, fwdEntry.nOnes);
     }
 
 }

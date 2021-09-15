@@ -138,11 +138,11 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4FwdAsciiEnable.setDefaultValue(True)
 
     # Enable initialization with Binary values
-    tcpipIPv4FwdBinEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_BIN_ENABLE", tcpipIPv4FwdSetting)
-    tcpipIPv4FwdBinEnable.setLabel("Support Forwarding Table with Binary Values")
-    tcpipIPv4FwdBinEnable.setVisible(True)
-    tcpipIPv4FwdBinEnable.setDescription("Support Forwarding Table initialization with Binary Values")
-    tcpipIPv4FwdBinEnable.setDefaultValue(True)
+    tcpipIPv4FwdDynEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_DYN_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdDynEnable.setLabel("Support Dynamic Forwarding Table Manipulation")
+    tcpipIPv4FwdDynEnable.setVisible(True)
+    tcpipIPv4FwdDynEnable.setDescription("Support Dynamic Forwarding Table API")
+    tcpipIPv4FwdDynEnable.setDefaultValue(True)
 
     # Enable forwarding of bcast packets
     tcpipIPv4FwdBcastEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_BCAST_ENABLE", tcpipIPv4FwdSetting)

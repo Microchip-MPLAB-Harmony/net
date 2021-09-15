@@ -195,17 +195,7 @@ typedef enum
 
 // internal forwarding entry
 // NOTE: same structure as TCPIP_IPV4_FORWARD_ENTRY_BIN! 
-typedef struct
-{
-    uint32_t    netAdd;     // network destination address
-    uint32_t    mask;       // associated mask for this route entry
-    uint32_t    gwAdd;      // gw destination address
-    uint8_t     inIfIx;     // input interface
-    uint8_t     outIfIx;    // interface to go out on
-    uint8_t     metric;     // path efficiency
-    uint8_t     nOnes;      // number of leading ones in the mask
-
-}IPV4_ROUTE_TABLE_ENTRY;
+typedef TCPIP_IPV4_FORWARD_ENTRY_BIN IPV4_ROUTE_TABLE_ENTRY;
 
 // run time forwarding flags
 typedef enum
@@ -215,6 +205,8 @@ typedef enum
     IPV4_FWD_FLAG_BCAST_ENABLE  = 0x02,   // forwarding of broadcasts is enabled
     IPV4_FWD_FLAG_MCAST_ENABLE  = 0x04,   // forwarding of multicasts is enabled
 
+    //
+    IPV4_FWD_FLAG_DYN_PROC      = 0x80,   // processed dynamically 
 
 }IPV4_FORWARD_RUN_FLAGS;
 
@@ -222,11 +214,22 @@ typedef enum
 typedef struct
 {
     IPV4_ROUTE_TABLE_ENTRY* fwdTable;       // forwarding table itself
-    size_t                  usedEntries;    // number of entries that are used
-    size_t                  totEntries;     // total number of entries
+    uint16_t                usedEntries;    // number of entries that are used 
+    uint16_t                totEntries;     // total number of entries
     uint16_t                iniFlags;       // TCPIP_IPV4_FORWARD_FLAGS: initialization flags
-    uint16_t                runFlags;       // IPV4_FORWARD_RUN_FLAGS: initialization flags
+    uint8_t                 runFlags;       // IPV4_FORWARD_RUN_FLAGS: initialization flags
+    uint8_t                 saveFlags;      // IPV4_FORWARD_RUN_FLAGS: save flags when messing with the FIB
 }IPV4_FORWARD_DESCRIPTOR;
+
+// overall structure of the forward descriptor:
+//      IPV4_FORWARD_DESCRIPTOR if0
+//      IPV4_FORWARD_DESCRIPTOR if1
+//      ...
+//      IPV4_FORWARD_DESCRIPTOR ifn
+//      IPV4_ROUTE_TABLE_ENTRY[forwardTableMaxEntries] for if0
+//      IPV4_ROUTE_TABLE_ENTRY[forwardTableMaxEntries] for if1
+//      ...
+//      IPV4_ROUTE_TABLE_ENTRY[forwardTableMaxEntries] for ifn
 
 // forwarded packets that need to also be processed locally
 // these are bcast/mcast packets
@@ -241,6 +244,8 @@ typedef struct _tag_IPV4_FORWARD_NODE
     TCPIP_MAC_ADDR                  sourceMacAdd;   // original source MAC address the packet came from
     TCPIP_MAC_ADDR                  destMacAdd;     // original destination MAC address
 }IPV4_FORWARD_NODE;
+
+
 
 #endif // _IPV4_PRIVATE_H_
 
