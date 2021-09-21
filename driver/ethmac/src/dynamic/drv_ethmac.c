@@ -118,14 +118,14 @@ static void _DRV_ETHMAC_LinkStateNegComplete(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 static void _DRV_ETHMAC_LinkStateNegResult(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
 
-static uint16_t     _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
-static uint16_t     _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
+static uint32_t     _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
 
 static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
@@ -2334,42 +2334,42 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
     SYS_INT_SourceStatusClear(pMacD->mData._macIntSrc);         // acknowledge the int Controller
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_FramesTxdOkCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_FramesRxdOkCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_RxPacketCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_RxOverflowCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_FCSErrorCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_AlignErrorCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_SingleCollisionCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
+static uint32_t _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
 {
     return DRV_ETH_MultipleCollisionCountGet(ethId);
 }

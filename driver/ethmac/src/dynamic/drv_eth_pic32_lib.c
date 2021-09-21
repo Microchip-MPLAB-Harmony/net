@@ -255,39 +255,39 @@ void DRV_ETH_MACGetAddress(DRV_ETHERNET_REGISTERS* eth, uint8_t *bAddress )
     *(bAddress + 5) = eth->EMACxSA0.STNADDR6;
 }
 
-uint16_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)eth->ETHFRMTXOK.FRMTXOKCNT;
+    return eth->ETHFRMTXOK.FRMTXOKCNT;
 }
 
-uint16_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)eth->ETHFRMRXOK.FRMRXOKCNT;
+    return eth->ETHFRMRXOK.FRMRXOKCNT;
 }
 
-uint16_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)eth->ETHRXOVFLOW.RXOVFLWCNT;
+    return eth->ETHRXOVFLOW.RXOVFLWCNT;
 }
 
-uint16_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)eth->ETHFCSERR.FCSERRCNT;
+    return eth->ETHFCSERR.FCSERRCNT;
 }
 
-uint16_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
     return (eth->ETHALGNERR.ALGNERRCNT);
 }
 
-uint16_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)(eth->ETHSCOLFRM.SCOLFRMCNT);
+    return eth->ETHSCOLFRM.SCOLFRMCNT;
 }
 
-uint16_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* eth)
+uint32_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (uint16_t)(eth->ETHMCOLFRM.MCOLFRMCNT);
+    return eth->ETHMCOLFRM.MCOLFRMCNT;
 }
 
 

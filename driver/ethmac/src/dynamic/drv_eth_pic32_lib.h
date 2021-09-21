@@ -1774,7 +1774,7 @@ void DRV_ETH_MACGetAddress (DRV_ETHERNET_REGISTERS* pEthReg, uint8_t *bAddress )
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of Ethernet Control Frames transmitted successfully.
@@ -1797,11 +1797,11 @@ void DRV_ETH_MACGetAddress (DRV_ETHERNET_REGISTERS* pEthReg, uint8_t *bAddress )
     None
 */
 
-uint16_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of the frames frames received successfully.
@@ -1827,11 +1827,11 @@ uint16_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of the dropped Ethernet receive frames.
@@ -1846,7 +1846,7 @@ uint16_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     pEthReg - pointer to the Ethernet registers
 
   Returns:
-    - count - uint16_t receiver overflow counts
+    - count - uint32_t receiver overflow counts
 
   Example:
 
@@ -1854,11 +1854,11 @@ uint16_t DRV_ETH_FramesRxdOkCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of the frame check sequence error.
@@ -1881,11 +1881,11 @@ uint16_t DRV_ETH_RxOverflowCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of Ethernet alignment errors.
@@ -1908,11 +1908,11 @@ uint16_t DRV_ETH_FCSErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of the frames transmitted successfully on a second attempt.
@@ -1936,11 +1936,11 @@ uint16_t DRV_ETH_AlignErrorCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //******************************************************************************
 /* Function:
-    uint16_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
+    uint32_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
     Gets the count of the frames transmitted successfully after there was more 
@@ -1965,7 +1965,7 @@ uint16_t DRV_ETH_SingleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     None
 */
 
-uint16_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
+uint32_t DRV_ETH_MultipleCollisionCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
 
 //*******************************************************************************
 /*  Function:

@@ -270,7 +270,7 @@ typedef struct
 
 
 
-typedef uint16_t (*DRV_ETHMAC_HW_REG_FUNC)(DRV_ETHERNET_REGISTERS* ethId);
+typedef uint32_t (*DRV_ETHMAC_HW_REG_FUNC)(DRV_ETHERNET_REGISTERS* ethId);
 
 // *****************************************************************************
 /* PIC32 MAC Hardware statistics register access structure
