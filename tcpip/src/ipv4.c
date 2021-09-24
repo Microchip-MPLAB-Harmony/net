@@ -2664,9 +2664,14 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEA
         }
 
         pktSrcIP = &pHeader->SourceAddress;
-        if(pktSrcIP->Val == 0 || pktSrcIP->v[0] == 0x7f)
-        {   // RFC 1812: discard if the source address is: {0, 0} or { 127, <any> }
-            // {0, host} not known yet!
+        if(pktSrcIP->v[0] == 0x7f)
+        {   // RFC 1812: discard if the source address is: { 127, <any> }
+            break;
+        }
+
+        if(pktSrcIP->Val == 0 && !_TCPIPStack_IsLimitedBcast(pktDestIP))
+        {   // RFC 1812: discard if the source address is: {0, 0}; {0, host} not known yet!
+            // however broadcast packets could be processed (DHCPs)
             break;
         }
 
