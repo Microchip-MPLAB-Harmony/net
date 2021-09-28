@@ -1366,7 +1366,7 @@ def tcpipEthMacMIIMode(symbol, event):
         setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII" if event["value"] == True else "MII")
         
 def tcpipGmacClockUpdate(symbol, event): 
-    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", event["value"])
+    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(event["value"]))
         
 def tcpipGmacGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
