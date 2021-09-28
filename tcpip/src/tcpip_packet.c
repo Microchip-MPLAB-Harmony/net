@@ -183,6 +183,7 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
         pPkt->ackRes = ackRes;
     }
 
+    pPkt->pktPriority = 0; //clear the packet priority to default
     if(pPkt->ackFunc)
     {
        TCPIP_PKT_FlightLogAcknowledge(pPkt, moduleId, ackRes);
@@ -195,7 +196,6 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Packet Ack: orphan packet! \r\n");
     }
-    pPkt->pktPriority = 0; //clear the packet priority to default
 }
 
 void TCPIP_PKT_SegmentAppend(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_DATA_SEGMENT* pSeg)
