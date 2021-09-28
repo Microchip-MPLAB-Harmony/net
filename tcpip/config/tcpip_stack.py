@@ -541,7 +541,7 @@ def instantiateComponent(tcpipStackComponent):
     # Interrupt Configuration Summary
     processor =  Variables.get("__PROCESSOR")    
 
-    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor):
+    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
