@@ -710,15 +710,13 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 	GMAC_QUE_LIST queueIdx = GMAC_QUE_0;
     
     // Check if priority is between 0 and (Number of Queues -1 )
-    if (((ptrPacket->pktPriority) >= (uint8_t)0 ) && ((ptrPacket->pktPriority) < DRV_GMAC_NUMBER_OF_QUEUES))
+    if ((ptrPacket->pktPriority) >= DRV_GMAC_NUMBER_OF_QUEUES)
     {    
-        queueIdx = (GMAC_QUE_LIST)(pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[ptrPacket->pktPriority]);	        
+        return TCPIP_MAC_RES_PACKET_ERR; 	        
     }
-    else
-    {        
-        return TCPIP_MAC_RES_PACKET_ERR; 
-    }
-
+	
+	queueIdx = (GMAC_QUE_LIST)(pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[ptrPacket->pktPriority]);
+	
     if (queueIdx == DRV_GMAC_DUMMY_PRIORITY)
     {
         // fallback to default queue priority
