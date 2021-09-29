@@ -540,7 +540,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Interrupt Configuration Summary
     processor =  Variables.get("__PROCESSOR")    
-
+    macName = "None"
     if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
@@ -560,46 +560,48 @@ def instantiateComponent(tcpipStackComponent):
     elif "PIC32MX" in processor:
         macName = "ETH"
         intStringStart = "core.EVIC_"
-        intStringEnd = "_ENABLE"    
-    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+        intStringEnd = "_ENABLE" 
+        
+    if macName != "None":
+        interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
-    for interrupt in range (0, len(interruptsChildrenList)): 
-        if macName in str(interruptsChildrenList[interrupt].getAttribute("name")):
-            interruptDict = {}
-            interruptDict["index"] = int(interruptsChildrenList[interrupt].getAttribute("index"))
-            interruptDict["name"] = str(interruptsChildrenList[interrupt].getAttribute("name"))
-            interruptDict["caption"] = str(interruptsChildrenList[interrupt].getAttribute("caption"))
-            macInterruptStruct.append(interruptDict)
+        for interrupt in range (0, len(interruptsChildrenList)): 
+            if macName in str(interruptsChildrenList[interrupt].getAttribute("name")):
+                interruptDict = {}
+                interruptDict["index"] = int(interruptsChildrenList[interrupt].getAttribute("index"))
+                interruptDict["name"] = str(interruptsChildrenList[interrupt].getAttribute("name"))
+                interruptDict["caption"] = str(interruptsChildrenList[interrupt].getAttribute("caption"))
+                macInterruptStruct.append(interruptDict)
 
-    # Number of Interrupts
-    tcpipStackMacIntNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_INTERRUPT_NUM", tcpipStackConfigSummary)
-    tcpipStackMacIntNum.setLabel("Number of Interrupts")
-    tcpipStackMacIntNum.setVisible(configSummaryVisible)
-    tcpipStackMacIntNum.setDefaultValue(len(macInterruptStruct))
-    tcpipStackMacIntNum.setReadOnly(True)
-    
-    for intIndex in range(0, len(macInterruptStruct)):
-    
-        tcpipStackMacIntEnable.append(tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERRUPT_EN_IDX" + str(intIndex),tcpipStackConfigSummary))
-        tcpipStackMacIntEnable[intIndex].setLabel("Interrupt " + str(intIndex))
-        tcpipStackMacIntEnable[intIndex].setVisible(configSummaryVisible) 
-        tcpipStackMacIntEnable[intIndex].setReadOnly(True) 
-        if ("SAMA5" in processor) or ("SAM9X60" in processor):
-            tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["name"]) + intStringEnd]) 
-        else:
-            tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["index"]) + intStringEnd]) 
-            
-        tcpipStackMacIntName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_INTERRUPT_NAME_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
-        tcpipStackMacIntName[intIndex].setLabel("Interrupt Name" + str(intIndex) )
-        tcpipStackMacIntName[intIndex].setDefaultValue(macInterruptStruct[intIndex]["name"])
-        tcpipStackMacIntName[intIndex].setVisible(configSummaryVisible) 
-        tcpipStackMacIntName[intIndex].setReadOnly(True) 
-   
-        tcpipStackMacIntVector.append(tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_INTERRUPT_VECTOR_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
-        tcpipStackMacIntVector[intIndex].setLabel("Interrupt Vector" + str(intIndex) )
-        tcpipStackMacIntVector[intIndex].setDefaultValue(macInterruptStruct[intIndex]["index"])
-        tcpipStackMacIntVector[intIndex].setVisible(configSummaryVisible) 
-        tcpipStackMacIntVector[intIndex].setReadOnly(True) 
+        # Number of Interrupts
+        tcpipStackMacIntNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_INTERRUPT_NUM", tcpipStackConfigSummary)
+        tcpipStackMacIntNum.setLabel("Number of Interrupts")
+        tcpipStackMacIntNum.setVisible(configSummaryVisible)
+        tcpipStackMacIntNum.setDefaultValue(len(macInterruptStruct))
+        tcpipStackMacIntNum.setReadOnly(True)
+        
+        for intIndex in range(0, len(macInterruptStruct)):
+        
+            tcpipStackMacIntEnable.append(tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERRUPT_EN_IDX" + str(intIndex),tcpipStackConfigSummary))
+            tcpipStackMacIntEnable[intIndex].setLabel("Interrupt " + str(intIndex))
+            tcpipStackMacIntEnable[intIndex].setVisible(configSummaryVisible) 
+            tcpipStackMacIntEnable[intIndex].setReadOnly(True) 
+            if ("SAMA5" in processor) or ("SAM9X60" in processor):
+                tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["name"]) + intStringEnd]) 
+            else:
+                tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["index"]) + intStringEnd]) 
+                
+            tcpipStackMacIntName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_INTERRUPT_NAME_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
+            tcpipStackMacIntName[intIndex].setLabel("Interrupt Name" + str(intIndex) )
+            tcpipStackMacIntName[intIndex].setDefaultValue(macInterruptStruct[intIndex]["name"])
+            tcpipStackMacIntName[intIndex].setVisible(configSummaryVisible) 
+            tcpipStackMacIntName[intIndex].setReadOnly(True) 
+       
+            tcpipStackMacIntVector.append(tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_INTERRUPT_VECTOR_IDX" + str(intIndex),tcpipStackMacIntEnable[intIndex]))
+            tcpipStackMacIntVector[intIndex].setLabel("Interrupt Vector" + str(intIndex) )
+            tcpipStackMacIntVector[intIndex].setDefaultValue(macInterruptStruct[intIndex]["index"])
+            tcpipStackMacIntVector[intIndex].setVisible(configSummaryVisible) 
+            tcpipStackMacIntVector[intIndex].setReadOnly(True) 
 
     ###################################################################################################    
     #Add to system_config.h
