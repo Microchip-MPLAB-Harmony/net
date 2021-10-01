@@ -547,11 +547,11 @@ static void  TCPIP_ICMP_Process(void)
                 if(pIcmpEchoRequest != 0)
                 {   // we have an extended  request in place
                     TCPIP_NET_IF* pktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
-                    if(pIcmpEchoRequest->identifier == pRxHdr->wIdentifier && pIcmpEchoRequest->sequenceNumber == pRxHdr->wSequenceNumber &&
-                            (pIcmpEchoRequest->targetAddr.Val == srcAdd || (srcAdd == _TCPIPStackNetAddress(pktIf) && pIcmpEchoRequest->targetAddr.Val == 0x0100007f)))
+                    if(pIcmpEchoRequest->identifier == pRxHdr->wIdentifier && pIcmpEchoRequest->sequenceNumber == pRxHdr->wSequenceNumber)
                     {   // our reply
                         if(pIcmpEchoRequest->callback)
-                        {
+                        {   // update the responder 
+                            pIcmpEchoRequest->targetAddr.Val = srcAdd; 
                             (*pIcmpEchoRequest->callback)(pIcmpEchoRequest, pIcmpEchoRequest, TCPIP_ICMP_ECHO_REQUEST_RES_OK);
                         }
                         pIcmpEchoRequest = 0;    // free

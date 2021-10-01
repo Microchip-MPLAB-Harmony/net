@@ -103,7 +103,7 @@ static struct arp_app_callbacks reg_apps[MAX_REG_APPS]; // Call-Backs storage fo
     Helper Function Prototypes
   ***************************************************************************/
 
-static bool         _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, TCPIP_MAC_ADDR* dstMAC);
+static bool         _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, const TCPIP_MAC_ADDR* dstMAC, const TCPIP_MAC_ADDR* srcMAC);
 
 #ifdef TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL
 static void         _ARPProcessRxPkt(TCPIP_NET_IF* pIf, ARP_PACKET* packet);
@@ -111,8 +111,8 @@ static void         _ARPProcessRxPkt(TCPIP_NET_IF* pIf, ARP_PACKET* packet);
 
 static void         _SwapARPPacket(ARP_PACKET* p);
 
-static void         _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, TCPIP_MAC_ADDR* hwAdd);
-static TCPIP_ARP_RESULT   _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, TCPIP_MAC_ADDR* hwAdd);
+static void         _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, const TCPIP_MAC_ADDR* hwAdd);
+static TCPIP_ARP_RESULT   _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, const TCPIP_MAC_ADDR* hwAdd);
     
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void         _ARPDeleteResources(void);
@@ -145,7 +145,7 @@ void TCPIP_ARP_HashKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const voi
 #endif  // defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 
 /*static __inline__*/static  void /*__attribute__((always_inline))*/ _ARPSetEntry(ARP_HASH_ENTRY* arpHE, ARP_ENTRY_FLAGS newFlags,
-                                                                      TCPIP_MAC_ADDR* hwAdd, PROTECTED_SINGLE_LIST* addList)
+                                                                      const TCPIP_MAC_ADDR* hwAdd, PROTECTED_SINGLE_LIST* addList)
 {
     arpHE->hEntry.flags.value &= ~ARP_FLAG_ENTRY_VALID_MASK;
     arpHE->hEntry.flags.value |= newFlags;
@@ -364,7 +364,7 @@ static void _ARPProcessRxPkt(TCPIP_NET_IF* pIf, ARP_PACKET* packet)
 
 /*****************************************************************************
   Function:
-    static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, TCPIP_MAC_ADDR* dstMAC)
+    static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, const TCPIP_MAC_ADDR* dstMAC, const TCPIP_MAC_ADDR* srcMAC)
 
   Description:
     Writes an ARP packet to the MAC using the interface pointer for src IP and MAC address.
@@ -373,13 +373,14 @@ static void _ARPProcessRxPkt(TCPIP_NET_IF* pIf, ARP_PACKET* packet)
     None
 
   Parameters:
+  if srcMAC == 0, then it uses the the MAC address of the used interface pIf
 
   Return Values:
     true - The ARP packet was generated properly
     false - otherwise
 
   ***************************************************************************/
-static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, TCPIP_MAC_ADDR* dstMAC)
+static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint32_t srcIP, uint32_t dstIP, const TCPIP_MAC_ADDR* dstMAC, const TCPIP_MAC_ADDR* srcMAC)
 {
     TCPIP_MAC_PACKET* pMacPkt;
     ARP_PACKET*       pArp;
@@ -406,7 +407,14 @@ static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint
     pArp->ProtocolLen   = sizeof(IPV4_ADDR);
     pArp->Operation = oper;
 
-    pArp->SenderMACAddr = pIf->netMACAddr;
+    if(srcMAC == 0)
+    {
+        pArp->SenderMACAddr = pIf->netMACAddr;
+    }
+    else
+    {
+        pArp->SenderMACAddr = *srcMAC;
+    }
     pArp->SenderIPAddr.Val  = srcIP;
     pArp->TargetMACAddr = *dstMAC;
     pArp->TargetIPAddr.Val  = dstIP;
@@ -433,7 +441,7 @@ static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint
 
 /*****************************************************************************
   Function:
-    static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, TCPIP_MAC_ADDR* hwAdd)
+    static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, const TCPIP_MAC_ADDR* hwAdd)
 
   Description:
     Updates the info for an existing ARP cache entry
@@ -449,7 +457,7 @@ static bool _ARPSendIfPkt(TCPIP_NET_IF* pIf, TCPIP_ARP_OPERATION_TYPE oper, uint
   Return Values:
     None
   ***************************************************************************/
-static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, TCPIP_MAC_ADDR* hwAdd)
+static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, const TCPIP_MAC_ADDR* hwAdd)
 {
     TCPIP_ARP_EVENT_TYPE evType; 
     ARP_CACHE_DCPT  *pArpDcpt;
@@ -484,7 +492,7 @@ static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, TCPIP_MAC_
 
 /*****************************************************************************
   Function:
-    static TCPIP_ARP_RESULT _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, TCPIP_MAC_ADDR* hwAdd)
+    static TCPIP_ARP_RESULT _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, const TCPIP_MAC_ADDR* hwAdd)
 
   Description:
     Updates the info for an existing ARP cache entry
@@ -501,7 +509,7 @@ static void _ARPUpdateEntry(TCPIP_NET_IF* pIf, ARP_HASH_ENTRY* arpHE, TCPIP_MAC_
     ARP_RES_CACHE_FULL  - cache full error
     ARP_RES_OK          - success
   ***************************************************************************/
-static TCPIP_ARP_RESULT _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, TCPIP_MAC_ADDR* hwAdd)
+static TCPIP_ARP_RESULT _ARPAddCompleteEntry(TCPIP_NET_IF* pIf, IPV4_ADDR* pIPAddr, const TCPIP_MAC_ADDR* hwAdd)
 {
     ARP_CACHE_DCPT  *pArpDcpt;
     ARP_HASH_ENTRY  *arpHE;
@@ -1011,7 +1019,7 @@ static void TCPIP_ARP_Timeout(void)
             {   // expired, retry it
                 if(isConfig == false || (pE->hEntry.flags.value & ARP_FLAG_ENTRY_CONFIGURE) != 0 )
                 {
-                    _ARPSendIfPkt(pIf, ARP_OPERATION_REQ, (uint32_t)pIf->netIPAddr.Val, pE->ipAddress.Val, &arpBcastAdd);
+                    _ARPSendIfPkt(pIf, ARP_OPERATION_REQ, (uint32_t)pIf->netIPAddr.Val, pE->ipAddress.Val, &arpBcastAdd, 0);
                     pE->nRetries++;
                 }
             }
@@ -1059,17 +1067,16 @@ static void TCPIP_ARP_Timeout(void)
 
 static void TCPIP_ARP_Process(void)
 {
-    TCPIP_NET_IF* pIf;
+    TCPIP_NET_IF* pInIf, *pTgtIf;
     TCPIP_MAC_PACKET* pPkt;
 
     ARP_PACKET      *pArpPkt;
-    TCPIP_MAC_ADDR        *dstMAC; 
     OA_HASH_ENTRY   *hE;
     ARP_CACHE_DCPT  *pArpDcpt;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_ARP_RESULT arpReqRes;
     IPV4_ADDR targetAdd;
-    IPV4_ADDR alignedIpV4Addr;
+    IPV4_ADDR   algnSenderIpAddr;
 
 
     // extract queued ARP packets
@@ -1093,27 +1100,47 @@ static void TCPIP_ARP_Process(void)
         {
             targetAdd.Val = pArpPkt->TargetIPAddr.Val;
             // detect the proper alias interface
-            pPkt->pktIf = pIf = _TCPIPStackMapAliasInterface((TCPIP_NET_IF*)pPkt->pktIf, &targetAdd);
-            pArpDcpt = _ARPGetIfDcpt(pIf);
+            pPkt->pktIf = pInIf = _TCPIPStackMapAliasInterface((TCPIP_NET_IF*)pPkt->pktIf, &targetAdd);
+            pArpDcpt = _ARPGetIfDcpt(pInIf);
 
 #ifdef TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL
-            _ARPProcessRxPkt(pIf, pArpPkt);
+            _ARPProcessRxPkt(pInIf, pArpPkt);
 #endif
 
             // Handle incoming ARP packet
-            alignedIpV4Addr.Val = pArpPkt->SenderIPAddr.Val;
-            hE = TCPIP_OAHASH_EntryLookup(pArpDcpt->hashDcpt, &alignedIpV4Addr.Val);
+            algnSenderIpAddr.Val = pArpPkt->SenderIPAddr.Val;
+            hE = TCPIP_OAHASH_EntryLookup(pArpDcpt->hashDcpt, &algnSenderIpAddr.Val);
             if(hE != 0)
             {   // we already have this sender and we should update it
-                _ARPUpdateEntry(pIf, (ARP_HASH_ENTRY*)hE, &pArpPkt->SenderMACAddr);
+                _ARPUpdateEntry(pInIf, (ARP_HASH_ENTRY*)hE, &pArpPkt->SenderMACAddr);
             }
 
-            while(!_TCPIPStackIsConfig(pIf) && (targetAdd.Val == pIf->netIPAddr.Val))
+            pTgtIf = 0;
+            if(targetAdd.Val == pInIf->netIPAddr.Val)
+            {
+                pTgtIf = pInIf;
+            }
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (!defined(TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS) || (TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS == 0))
+            // check if there is another interface that has this IP address, bridged to pInIf
+            else if(_TCPIPStack_BridgeCheckIf(pInIf))
+            {   // inIf is bridged
+                TCPIP_NET_IF* pOtherIf = TCPIP_STACK_NetByAddress(&targetAdd);
+                if(pOtherIf != 0 && _TCPIPStack_BridgeCheckIf(pOtherIf))
+                {   // inIf and target are bridged; however we check that they are in the same network
+                    if(_TCPIPStackNetNetwork(pOtherIf) == _TCPIPStackNetNetwork(pInIf))
+                    {
+                        pTgtIf = pOtherIf;
+                    }
+                }
+            }
+#endif  // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (!defined(TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS) || (TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS == 0))
+
+
+            while( pTgtIf != 0 && !_TCPIPStackIsConfig(pTgtIf))
             {   // we are the target and we should add to cache anyway
                 if(hE == 0)
                 {   // not there yet
-                    alignedIpV4Addr.Val = pArpPkt->SenderIPAddr.Val;
-                    arpReqRes = _ARPAddCompleteEntry(pIf, &alignedIpV4Addr, &pArpPkt->SenderMACAddr);
+                    arpReqRes = _ARPAddCompleteEntry(pInIf, &algnSenderIpAddr, &pArpPkt->SenderMACAddr);
                 }
 
                 // Handle incoming ARP operation
@@ -1126,17 +1153,18 @@ static void TCPIP_ARP_Process(void)
                      * Check Sender's MAC-address with own MAC-address and 
                      * if it is matched, response will not be sent back. This
                      * was leading to flooding of ARP-answeres */
-                    if(!memcmp (&pArpPkt->SenderMACAddr, &pIf->netMACAddr, 6))
+                    if(!memcmp (&pArpPkt->SenderMACAddr, &pTgtIf->netMACAddr, 6))
                     {
+#if ((ARP_DEBUG_MASK & ARP_DEBUG_ZCLL_MASK) != 0)
                         SYS_CONSOLE_MESSAGE("Loopback answer suppressed \r\n");
+#endif  // ((ARP_DEBUG_MASK & ARP_DEBUG_ZCLL_MASK) != 0)
                         break;
                     }
 #endif
 
                     // Need to send a reply to the requestor 
-                    dstMAC = &pArpPkt->SenderMACAddr;
                     // Send an ARP response to the received request
-                    if(!_ARPSendIfPkt(pIf, ARP_OPERATION_RESP, (uint32_t)pIf->netIPAddr.Val, (uint32_t)pArpPkt->SenderIPAddr.Val, dstMAC))
+                    if(!_ARPSendIfPkt(pInIf, ARP_OPERATION_RESP, (uint32_t)pTgtIf->netIPAddr.Val, (uint32_t)pArpPkt->SenderIPAddr.Val, &pArpPkt->SenderMACAddr, &pTgtIf->netMACAddr))
                     {
                         arpReqRes =  ARP_RES_TX_FAILED;
                     }
@@ -1215,7 +1243,7 @@ static TCPIP_ARP_RESULT _ARPProbeAddress(TCPIP_NET_IF* pIf, IPV4_ADDR* IPAddr, I
      
     if((opType & ARP_OPERATION_PROBE_ONLY) != 0)
     {   // just send an ARP probe
-        return _ARPSendIfPkt(pIf, (opType & ARP_OPERATION_MASK), (uint32_t)srcAddr->Val, (uint32_t)IPAddr->Val, &arpBcastAdd) ? ARP_RES_PROBE_OK : ARP_RES_PROBE_FAILED;
+        return _ARPSendIfPkt(pIf, (opType & ARP_OPERATION_MASK), (uint32_t)srcAddr->Val, (uint32_t)IPAddr->Val, &arpBcastAdd, 0) ? ARP_RES_PROBE_OK : ARP_RES_PROBE_FAILED;
     }
 
     pArpDcpt = _ARPGetIfDcpt(pIf);
@@ -1236,7 +1264,7 @@ static TCPIP_ARP_RESULT _ARPProbeAddress(TCPIP_NET_IF* pIf, IPV4_ADDR* IPAddr, I
         _ARPSetEntry((ARP_HASH_ENTRY*)hE, newFlags, 0, &pArpDcpt->incompleteList);
 
         // initiate an ARP request operation
-        _ARPSendIfPkt(pIf, (opType & ARP_OPERATION_MASK), (uint32_t)srcAddr->Val, ((ARP_HASH_ENTRY*)hE)->ipAddress.Val, &arpBcastAdd);
+        _ARPSendIfPkt(pIf, (opType & ARP_OPERATION_MASK), (uint32_t)srcAddr->Val, ((ARP_HASH_ENTRY*)hE)->ipAddress.Val, &arpBcastAdd, 0);
         return ARP_RES_ENTRY_NEW;
     }
     // else, even if it is not complete, TCPIP_ARP_Task will initiate retransmission

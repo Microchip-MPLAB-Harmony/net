@@ -413,6 +413,11 @@ static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetMask(TC
     return pNetIf->netMask.Val;
 }
 
+static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetNetwork(TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf->netIPAddr.Val & pNetIf->netMask.Val);
+}
+
 // returns the host part of an IPv4 address
 static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackHostPartAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {

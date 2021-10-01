@@ -161,6 +161,14 @@ tcpipBridgeTaskTickRate.setDescription("Bridge Maintenance Task Rate (in msec)")
 tcpipBridgeTaskTickRate.setDefaultValue(333)
 tcpipBridgeTaskTickRate.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRIDGE"])
 
+# Disable the ports glue
+tcpipBridgeDisableGlue = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE", tcpipBridgeAdvSettings)
+tcpipBridgeDisableGlue.setLabel("Disable the MAC Bridge Ports Glue")
+tcpipBridgeDisableGlue.setVisible(False)
+tcpipBridgeDisableGlue.setDescription("Disable the MAC Bridge Ports Glueing")
+tcpipBridgeDisableGlue.setDefaultValue(False)
+tcpipBridgeDisableGlue.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRIDGE"])
+
 #####################################################################################################
 # Add to configuration.h
 tcpipBridgeHeaderFtl = tcpipNetConfigComponent.createFileSymbol(None, None)

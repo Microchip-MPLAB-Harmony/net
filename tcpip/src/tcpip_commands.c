@@ -3022,11 +3022,6 @@ static void CommandPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_I
             errorMask |= 0x2;
         }
 
-        if(pEchoReq->targetAddr.Val != icmpTargetAddr.Val)
-        {
-            errorMask |= 0x4;
-        }
-
         if(pEchoReq->dataSize != icmpPingSize)
         {
             errorMask |= 0x8;
@@ -6102,8 +6097,8 @@ static void _CommandBridgeShowStats(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_MAC_BRIDG
     for(ix = 0; ix < TCPIP_MAC_BRIDGE_MAX_PORTS_NO; ix++, pPort++)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t port %d stats:\r\n", ix);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t pkts received: %d, dest me-ucast: %d, dest notme-ucast: %d, dest mcast: %d\r\n", pPort->rxPackets, pPort->rxDestMeUcast, pPort->rxDestNotMeUcast, pPort->rxDestMcast);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t pkts reserved: %d, fwd ucast: %d, fwd mcast: %d, fwd direct: %d\r\n", pPort->reservedPackets, pPort->fwdUcastPackets, pPort->fwdMcastPackets, pPort->fwdDirectPackets);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t\t pkts received: %d, dest me-ucast: %d, dest notme-ucast: %d, dest mcast: %d\r\n", pPort->rxPackets, pPort->rxDestMeUcast, pPort->rxDestNotMeUcast, pPort->rxDestMcast);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t\t pkts reserved: %d, fwd ucast: %d, fwd mcast: %d, fwd direct: %d\r\n", pPort->reservedPackets, pPort->fwdUcastPackets, pPort->fwdMcastPackets, pPort->fwdDirectPackets);
     }
 }
 
@@ -6243,19 +6238,19 @@ static void _CommandBridgeEventHandler(TCPIP_MAC_BRIDGE_EVENT evType, const void
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_PKT_ALLOC:
-            sprintf(evBuff, "%s, packets: %u\r\n", "fail alloc", (size_t)param);
+            sprintf(evBuff, "%s, packets: %lu\r\n", "fail alloc", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_DCPT_ALLOC:
-            sprintf(evBuff, "%s, descriptors: %u\r\n", "fail alloc", (size_t)param);
+            sprintf(evBuff, "%s, descriptors: %lu\r\n", "fail alloc", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_MTU:
-            sprintf(evBuff, "%s, size: %u\r\n", "fail MTU", (size_t)param);
+            sprintf(evBuff, "%s, size: %lu\r\n", "fail MTU", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_FAIL_SIZE:
-            sprintf(evBuff, "%s, size: %u\r\n", "fail Size", (size_t)param);
+            sprintf(evBuff, "%s, size: %lu\r\n", "fail Size", (size_t)param);
             break;
 
         case TCPIP_MAC_BRIDGE_EVENT_PKT_POOL_EMPTY:

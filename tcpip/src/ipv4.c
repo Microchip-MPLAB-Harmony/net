@@ -2834,13 +2834,6 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktHost(TCPIP_NET_IF* pNetIf, IPV4_HE
             }
         }
 
-        // check is for the arriving interface
-        if(TCPIP_STACK_AddressIsOfNet(pNetIf, pktDestIP))
-        {   // unicast to me
-            procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
-            break;
-        }
-
         if(_TCPIPStack_IsBcastAddress(pNetIf, pktDestIP))
         {   // net or limited bcast
             procType = ((currFilter & TCPIP_IPV4_FILTER_BROADCAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_BCAST) : (IPV4_PKT_TYPE_BCAST);
@@ -2852,6 +2845,28 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktHost(TCPIP_NET_IF* pNetIf, IPV4_HE
             procType = ((currFilter & TCPIP_IPV4_FILTER_MULTICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_MCAST) : (IPV4_PKT_TYPE_MCAST);
             break;
         }
+
+        // unicast; check is for the arriving interface
+        if(TCPIP_STACK_AddressIsOfNet(pNetIf, pktDestIP))
+        {   // unicast to me
+            procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
+            break;
+        }
+#if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (!defined(TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS) || (TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS == 0))
+        // check if there is another interface that has this IP address, bridged to pNetIf
+        else if(_TCPIPStack_BridgeCheckIf(pNetIf))
+        {   // pNetIf is bridged
+            TCPIP_NET_IF* pTgtIf = TCPIP_STACK_NetByAddress(pktDestIP);
+            if(pTgtIf != 0 && _TCPIPStack_BridgeCheckIf(pTgtIf))
+            {   // pNetIf and target IF are bridged; however we check that they are in the same network
+                if(_TCPIPStackNetNetwork(pTgtIf) == _TCPIPStackNetNetwork(pNetIf))
+                {
+                    procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
+                    break;
+                }
+            }
+        }
+#endif  // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (!defined(TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS) || (TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS == 0))
 
         // some other type of packet
         

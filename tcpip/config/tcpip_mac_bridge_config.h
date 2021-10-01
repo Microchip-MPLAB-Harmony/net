@@ -146,8 +146,15 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // enable the MAC bridge commands
-// commands to se the contents of th eFDB, to add static entries, etc.
+// commands to se the contents of the FDB, to add static entries, etc.
 #define TCPIP_STACK_MAC_BRIDGE_COMMANDS     1
+
+// when the 'glue' is enabled, the bridge host ports/interfaces can be reached from each bridge port
+// i.e. you can ping bridge port j while connected to port i.
+// However, the IP addresses of the 2 ports should be part of the same network for this to work
+// Default is disabled, so this symbol should be undefined/false
+//#define TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS      0
+
 
 #endif  // _TCPIP_MAC_BRIDGE_CONFIG_H_
 

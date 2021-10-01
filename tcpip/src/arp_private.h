@@ -60,6 +60,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // 
 
 
+// debug
+#define ARP_DEBUG_ZCLL_MASK     0x01
+
+#define ARP_DEBUG_MASK          0
+
 
 #define HW_ETHERNET             (0x0001u)   // ARP Hardware type as defined by IEEE 802.3
 #define ARP_IP                  (0x0800u)   // ARP IP packet type as defined by IEEE 802.3

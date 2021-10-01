@@ -200,11 +200,40 @@ static uint16_t checkRxUdpDstPort = 68;
 static uint16_t checkRxTcpSrcPort = 9760; 
 static uint16_t checkRxTcpDstPort = 9760; 
 
+static uint32_t checkRxArpTarget = 0xc701a8c0; 
+
 static uint32_t checkRxUdpBkptCnt = 0;
 static uint32_t checkRxIcmpBkptCnt = 0;
 static uint32_t checkRxTcpBkptCnt = 0;
+static uint32_t checkRxArpBkptCnt = 0;
+
+typedef struct __attribute__((aligned(2), packed))
+{
+    uint16_t    HardwareType; 
+    uint16_t    Protocol;
+    uint8_t     MACAddrLen;
+    uint8_t     ProtocolLen;
+    uint16_t    Operation;
+    TCPIP_MAC_ADDR    SenderMACAddr;
+    uint32_t    SenderIPAddr; 
+    TCPIP_MAC_ADDR    TargetMACAddr; 
+    uint32_t    TargetIPAddr; 
+} _MAC_BRIDGE_CHECK_ARP_PACKET;
+
 static void _MAC_Bridge_CheckRxIpPkt(TCPIP_MAC_PACKET* pRxPkt)
 {
+    TCPIP_MAC_ETHERNET_HEADER*  pMacHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;    
+    uint16_t frameType = TCPIP_Helper_ntohs(pMacHdr->Type);
+    if(frameType ==  0x0806)
+    {
+        _MAC_BRIDGE_CHECK_ARP_PACKET* pArpPkt = (_MAC_BRIDGE_CHECK_ARP_PACKET*)pRxPkt->pNetLayer;
+        if(pArpPkt->TargetIPAddr == checkRxArpTarget)
+        { 
+            checkRxArpBkptCnt++;
+            return;
+        }
+    }
+
     IPV4_HEADER* pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
     if(pHeader->Protocol == IP_PROT_ICMP)
     {
@@ -646,7 +675,7 @@ static void _MAC_Bridge_Cleanup(void)
 //          - process on this host
 //
 // - destination unicast:
-//      there could a dynamic entry for this ucast address
+//      there could be a dynamic entry for this ucast address
 //
 //      - dst exists in FDB static:
 //

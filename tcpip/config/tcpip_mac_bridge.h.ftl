@@ -82,6 +82,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 </#if>
                                                     0
 
+<#if TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE == true>
+#define TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS true
+<#else>
+#define TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE_PORTS false
+</#if>
 </#if>
 
 <#--
