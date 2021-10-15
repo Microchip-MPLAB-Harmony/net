@@ -1,4 +1,59 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.7.4 (October, 2021)
+### ADDITIONS AND UPDATES FOR  3.7.4:
+
+- **Important functionality update**
+
+This release provides support for Microchip Wi-Fi demos.  
+As with the Release v3.7.3 this release uses updated MAC drivers to work with the new packet allocation and layout.  
+
+**Regular Harmony networking demos should use the previous v3.7.2 release!**  
+Complete testing with the new allocation scheme will be part of the net v3.8.0 release.
+
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.7.4 dot release:
+
+| Module                | Description                          |
+| ------ | ------ |
+| IPv4          | Added dynamic routing API |
+|               | Allowed internal routing of broadcast packets with source IP address == 0 |
+| MAC bridge    | Added bridge ports glue code for ARP and IPv4 |
+|               | Update the MAC bridge to do its own time keeping |
+| NET_PRES      | Updates for support of SNI and ALPN features for TLS connection |
+| DHCP Server   | Added ICMP support, renewal and rebind option support |
+| TCP, UDP      | Added run time debug checkpoints |
+| ETHMAC driver | Updated synchronization to protect only the driver queues |
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.7.4 dot release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| GMAC driver   | Fix for incorrect use of _dataOffsetMask |
+|               | DRV_GMAC_PacketTx properly verifies the packet priority field |
+| Manager       | Fixed the clearing of the packet priority |
+| ETHMAC driver | Updated the ETH MAC statistics registers to return 32 bits |
+| DHCP server   | Run time exception issue resolved |
+| MHC           | Fixed Incorrect definition of "TCPIP_IF_PIC32MZW_ETHMAC" for PIC32M projects |
+|               | Add processor condition check for SAMRH71 macName |
+|               | Fixed MHC failure on devices without internal mac when tcp/ip stack enabled |
+| All net modules| Updates and fixes for MISRA build failures |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+- [MPLAB® X IDE v5.45](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v2.50](https://www.microchip.com/mplab/compilers) or later
+- See package.xml for the required dependency repo versions.
+
+
+- **Release notes for v3.7.3 apply**
+
 ## Net Release v3.7.3 (July, 2021)
 ### ADDITIONS AND UPDATES FOR  3.7.3:
 
