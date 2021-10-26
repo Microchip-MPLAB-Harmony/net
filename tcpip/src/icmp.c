@@ -546,7 +546,6 @@ static void  TCPIP_ICMP_Process(void)
                 // Get the sequence number and identifier fields
                 if(pIcmpEchoRequest != 0)
                 {   // we have an extended  request in place
-                    TCPIP_NET_IF* pktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
                     if(pIcmpEchoRequest->identifier == pRxHdr->wIdentifier && pIcmpEchoRequest->sequenceNumber == pRxHdr->wSequenceNumber)
                     {   // our reply
                         if(pIcmpEchoRequest->callback)
