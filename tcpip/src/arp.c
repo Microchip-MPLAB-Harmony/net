@@ -124,7 +124,7 @@ static void         _ARPDeleteClients(void);
 
 static void         _ARPNotifyClients(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* MACAddr, TCPIP_ARP_EVENT_TYPE evType);
 
-static TCPIP_ARP_RESULT   _ARPProbeAddress(TCPIP_NET_IF* pIf, IPV4_ADDR* IPAddr, IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType, TCPIP_MAC_ADDR* pHwAdd);
+static TCPIP_ARP_RESULT   _ARPProbeAddress(TCPIP_NET_IF* pIf, const IPV4_ADDR* IPAddr, const IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType, TCPIP_MAC_ADDR* pHwAdd);
 
 static TCPIP_MAC_PACKET* _ARPAllocateTxPacket(void);
 
@@ -1187,7 +1187,7 @@ static void TCPIP_ARP_Process(void)
     
 // the IP layer should request for the proper IP address!
 // no checking is done at this level
-TCPIP_ARP_RESULT TCPIP_ARP_Resolve(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr)
+TCPIP_ARP_RESULT TCPIP_ARP_Resolve(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPAddr)
 {
     TCPIP_NET_IF *pIf;
    
@@ -1210,7 +1210,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_Resolve(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr)
     return _ARPProbeAddress(pIf, IPAddr, &pIf->netIPAddr, ARP_OPERATION_REQ, 0);
 }
 
-TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr, IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType)
+TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPAddr, const IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType)
 {
     TCPIP_NET_IF *pIf;
 
@@ -1235,7 +1235,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr, IPV4_
 }
 
 
-static TCPIP_ARP_RESULT _ARPProbeAddress(TCPIP_NET_IF* pIf, IPV4_ADDR* IPAddr, IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType, TCPIP_MAC_ADDR* pHwAdd)
+static TCPIP_ARP_RESULT _ARPProbeAddress(TCPIP_NET_IF* pIf, const IPV4_ADDR* IPAddr, const IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType, TCPIP_MAC_ADDR* pHwAdd)
 {
     ARP_CACHE_DCPT  *pArpDcpt;
     OA_HASH_ENTRY   *hE;
@@ -1290,7 +1290,7 @@ static TCPIP_ARP_RESULT _ARPProbeAddress(TCPIP_NET_IF* pIf, IPV4_ADDR* IPAddr, I
 
 }
 
-bool TCPIP_ARP_IsResolved(TCPIP_NET_HANDLE hNet, IPV4_ADDR* IPAddr, TCPIP_MAC_ADDR* MACAddr)
+bool TCPIP_ARP_IsResolved(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPAddr, TCPIP_MAC_ADDR* MACAddr)
 {
     OA_HASH_ENTRY   *hE;
     ARP_CACHE_DCPT  *pArpDcpt;
@@ -1354,7 +1354,7 @@ static void _SwapARPPacket(ARP_PACKET* p)
     p->Operation        = TCPIP_Helper_htons(p->Operation);
 }
 
-TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, TCPIP_MAC_ADDR* hwAdd, bool perm)
+TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* hwAdd, bool perm)
 {
     ARP_CACHE_DCPT  *pArpDcpt;
     ARP_HASH_ENTRY  *arpHE;
@@ -1434,7 +1434,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, TCP
     return res;
 }
 
-TCPIP_ARP_RESULT TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, TCPIP_MAC_ADDR* pHwAdd, bool probe)
+TCPIP_ARP_RESULT TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, TCPIP_MAC_ADDR* pHwAdd, bool probe)
 {   
     TCPIP_NET_IF  *pIf;
 
@@ -1464,7 +1464,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, TCP
 
 }
 
-TCPIP_ARP_RESULT TCPIP_ARP_EntryRemove(TCPIP_NET_HANDLE hNet,  IPV4_ADDR* ipAdd)
+TCPIP_ARP_RESULT TCPIP_ARP_EntryRemove(TCPIP_NET_HANDLE hNet,  const IPV4_ADDR* ipAdd)
 {
     OA_HASH_ENTRY   *hE;
     ARP_CACHE_DCPT  *pArpDcpt;
@@ -1498,7 +1498,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntryRemove(TCPIP_NET_HANDLE hNet,  IPV4_ADDR* ipAdd)
 }
 
 
-TCPIP_ARP_RESULT TCPIP_ARP_EntryRemoveNet(TCPIP_NET_HANDLE hNet, IPV4_ADDR* ipAdd, IPV4_ADDR* mask , TCPIP_ARP_ENTRY_TYPE type)
+TCPIP_ARP_RESULT TCPIP_ARP_EntryRemoveNet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const IPV4_ADDR* mask , TCPIP_ARP_ENTRY_TYPE type)
 {
     OA_HASH_ENTRY   *hE;
     ARP_HASH_ENTRY  *arpHE;
