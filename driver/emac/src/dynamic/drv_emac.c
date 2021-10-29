@@ -697,7 +697,7 @@ TCPIP_MAC_PACKET * macDrvrPacketRx(
     }
     if( pPktStatus )
     {
-        memcpy( (void *) pPktStatus, (TCPIP_MAC_PACKET_RX_STAT *) &packetStatus, sizeof( TCPIP_MAC_PACKET_RX_STAT ) );
+        memcpy(pPktStatus, (TCPIP_MAC_PACKET_RX_STAT_PIC32C*)&packetStatus, sizeof(TCPIP_MAC_PACKET_RX_STAT_PIC32C));
     }
 
     return pMacPacket;
