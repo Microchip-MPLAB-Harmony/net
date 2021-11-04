@@ -6082,7 +6082,7 @@ static void _CommandBridgeShowStats(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_MAC_BRIDG
 
     if(res == false)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "failed to get stats!%d\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "failed to get stats!\r\n");
         return;
     }
 
