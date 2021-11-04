@@ -367,8 +367,7 @@ static void _IPv4ProcessExtPktDbg(TCPIP_MAC_PACKET* pRxPkt)
 #define _IPv4ProcessExtPktDbg(pRxPkt)
 #endif  // (TCPIP_IPV4_FORWARDING_ENABLE != 0) && ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_PROC_EXT) != 0)
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
-
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
 static TCPIP_IPV4_FORWARD_STAT _ipv4_fwd_stat[3] = {{0}};  // FWD stats on if 0, 1, all else
 
 bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, bool clear)
@@ -397,7 +396,7 @@ bool TCPIP_IPv4_ForwardStatGet(size_t index, TCPIP_IPV4_FORWARD_STAT* pStat, boo
 {
     return false;
 }
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
 
 #if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FILT_COUNT) != 0)
 static uint32_t ipv4PrevFCount = -1;
@@ -860,10 +859,10 @@ static bool TCPIP_IPV4_ProcessExtPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRx
         }
 
         // no route
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (netIx < 2 ? netIx : 2);
         pFwdDbg->failNoRoute++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         break;
     }
 
@@ -990,9 +989,9 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     uint16_t        pktPayload, linkMtu;
     uint8_t         headerLen;
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (pEntry->outIfIx < 2 ? pEntry->outIfIx : 2);
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
     
     // the forward interface
     // do NOT set the packet interface, as this could be redirected internally too...
@@ -1011,17 +1010,17 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     destType = TCPIP_IPV4_FwdPktMacDestination(pFwdPkt, pEntry, &pMacDst, &arpTarget);
     if(destType == TCPIP_IPV4_DEST_FAIL) 
     {   // discard, cannot send
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         pFwdDbg->failMacDest++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         return false;
     }
 
     if(!TCPIP_STACK_NetworkIsUp(pFwdIf))
     {   // don't send over dead interface
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         pFwdDbg->failNetDown++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         return false;
     }
 
@@ -1032,9 +1031,9 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
         linkMtu = _TCPIPStackNetLinkMtu(pFwdIf);
         if(pktPayload > linkMtu)
         {
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->failMtu++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
             return false;
         }
     }
@@ -1043,7 +1042,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     {   // after forwarding need to be processed locally  
         // save packet MAC address before changing anything
         pFwdNode = TCPIP_IPV4_Forward_QueuePacket(pFwdPkt, procType);
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         if(pFwdNode == 0)
         {   // no more packets could be queued up
             pFwdDbg->failFwdQueue++;
@@ -1052,7 +1051,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
         {
             pFwdDbg->fwdQueuedPackets++;
         }
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         if(pFwdNode == 0)
         {   // no more packets could be queued up
             return false;
@@ -1096,18 +1095,18 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
 
         if(!TCPIP_IPV4_QueueArpPacket(pFwdPkt, pEntry->outIfIx, IPV4_ARP_PKT_TYPE_FWD, &arpTarget))
         {
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->failArpQueue++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
             return false;
         }
 
         // ARP notification will be received: either TMO or resolved
         // mark packet as queued 
         pFwdPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
         pFwdDbg->arpQueued++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         return true;
     }
 
@@ -1130,7 +1129,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     }
 
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
     if(macRes)
     {
         pFwdDbg->macPackets++;
@@ -1139,7 +1138,7 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     {
         pFwdDbg->failMac++;
     }
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
 
     return macRes;
 }
@@ -2642,9 +2641,9 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEA
     int ifIx = _TCPIPStackNetIxGet(pNetIf);
     TCPIP_MAC_ETHERNET_HEADER* macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
     TCPIP_IPV4_FORWARD_STAT* pFwdDbg = _ipv4_fwd_stat + (ifIx < 2 ? ifIx : 2);
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
 
     while(true)
     {
@@ -2681,9 +2680,9 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEA
         if(TCPIP_STACK_MatchNetAddress(pNetIf, pktDestIP) != 0)
         {   // unicast to one of my networks
             procType = ((currFilter & TCPIP_IPV4_FILTER_UNICAST) == 0) ? (IPV4_PKT_DEST_HOST | IPV4_PKT_TYPE_UNICAST) : (IPV4_PKT_TYPE_UNICAST);
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->ucastPackets++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
             break;
         }
 
@@ -2708,9 +2707,9 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEA
                     procType |= IPV4_PKT_DEST_HOST;
                 }
             }
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->mcastPackets++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
 
             break;
         }
@@ -2740,18 +2739,18 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPktFwd(TCPIP_NET_IF* pNetIf, IPV4_HEA
                 }
             }
 
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->bcastPackets++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
             break;
         }
 
         // some other type of packet
         // should be forwarded
         procType = IPV4_PKT_DEST_FWD;
-#if ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#if (_TCPIP_IPV4_FORWARDING_STATS != 0)
             pFwdDbg->fwdPackets++;
-#endif  // ((TCPIP_IPV4_DEBUG_LEVEL & TCPIP_IPV4_DEBUG_MASK_FWD) != 0)
+#endif  // (_TCPIP_IPV4_FORWARDING_STATS != 0)
         
         break;
     }

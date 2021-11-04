@@ -151,6 +151,13 @@ def instantiateComponent(tcpipIPv4Component):
     tcpipIPv4FwdBcastEnable.setDescription("Enable Forwarding Broadcast Packets on the Forwarding Interface")
     tcpipIPv4FwdBcastEnable.setDefaultValue(False)
 
+    # Enable forwarding statistics
+    tcpipIPv4FwdStatsEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_STATS_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdStatsEnable.setLabel("Enable Forwarding Statistics")
+    tcpipIPv4FwdStatsEnable.setVisible(True)
+    tcpipIPv4FwdStatsEnable.setDescription("Enable Forwarding Statistics Gathering on the Forwarding Interfaces")
+    tcpipIPv4FwdStatsEnable.setDefaultValue(False)
+
     # Forwarding queue slots
     tcpipIPv4FwdSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_QUEUE_SLOTS", tcpipIPv4FwdSetting)
     tcpipIPv4FwdSlots.setLabel("Forwarding TX Queue Slots")
