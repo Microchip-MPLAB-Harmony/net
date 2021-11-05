@@ -45,14 +45,14 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcSktTxBuffSize.setLabel("SMTPC Socket TX Buffer Size")
     tcpipSmtpcSktTxBuffSize.setVisible(True)
     tcpipSmtpcSktTxBuffSize.setDescription("Size of the TX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktTxBuffSize.setDefaultValue(0)
+    tcpipSmtpcSktTxBuffSize.setDefaultValue(2048)
 
     # Size of the RX Buffer for the SMTPC Socket
     tcpipSmtpcSktRxBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_SKT_RX_BUFF_SIZE", None)
     tcpipSmtpcSktRxBuffSize.setLabel("SMTPC Socket RX Buffer Size")
     tcpipSmtpcSktRxBuffSize.setVisible(True)
     tcpipSmtpcSktRxBuffSize.setDescription("Size of the RX Buffer for the SMTPC Socket")
-    tcpipSmtpcSktRxBuffSize.setDefaultValue(0)
+    tcpipSmtpcSktRxBuffSize.setDefaultValue(2048)
 
     # Number of Retries for Sending a Mail Message
     tcpipSmtpcMailRetryNum = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_MAIL_RETRIES", None)
