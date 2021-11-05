@@ -129,7 +129,7 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcSrvrReplyBuffSize.setLabel("Server Reply Processing RX Buffer Size")
     tcpipSmtpcSrvrReplyBuffSize.setVisible(True)
     tcpipSmtpcSrvrReplyBuffSize.setDescription("Size of the RX Buffer for Processing the Server Replies")
-    tcpipSmtpcSrvrReplyBuffSize.setDefaultValue(512)
+    tcpipSmtpcSrvrReplyBuffSize.setDefaultValue(2048)
     
     # Size of a Buffer that Can Hold the 2 x Username and Password
     tcpipSmtpcClientAuthBuffSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE", tcpipSmtpcAdvSettings)
