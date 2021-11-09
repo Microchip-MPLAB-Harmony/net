@@ -58,7 +58,7 @@ static DHCPS_ICMP_PROCESS   dhcpsicmpProcessSteps = DHCPS_ICMP_IDLE;
 uint32_t                    dhcpsicmpStartTick;
 static TCPIP_NET_HANDLE     dhcpsicmpNetH = 0;
 static void TCPIP_DHCPS_EchoICMPRequestTask(void);
-static void                 DHCPSPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result);
+static void                 DHCPSPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
 
 static IPV4_ADDR            dhcpsicmpTargetAddr;         // current target address
 static uint8_t              dhcpsicmpPingBuff[TCPIP_DHCPS_ICMP_ECHO_REQUEST_BUFF_SIZE];
@@ -2625,7 +2625,7 @@ static void TCPIP_DHCPS_EchoICMPRequestTask(void)
    
 }
 
-static void DHCPSPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result)
+static void DHCPSPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param)
 {
     char debugBuf[128];
     

@@ -62,6 +62,14 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpTskTickRate.setDefaultValue(33)
     tcpipIcmpTskTickRate.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])    
 
+    # Maximum number of parallel outgoing ICMP Echo requests
+    tcpipIcmpMaxClientReqNum = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS", tcpipIcmpv4Client)
+    tcpipIcmpMaxClientReqNum.setLabel("Maximum Number of Supported Client Requests")
+    tcpipIcmpMaxClientReqNum.setVisible(False)
+    tcpipIcmpMaxClientReqNum.setDescription("Maximum Number of Parallel ICMP Echo requests")
+    tcpipIcmpMaxClientReqNum.setDefaultValue(4)
+    tcpipIcmpMaxClientReqNum.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
+
     # Enable ICMP Commands
     tcpipIcmpCommandEnable = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_COMMAND_ENABLE", tcpipIcmpv4Client)
     tcpipIcmpCommandEnable.setLabel("Enable ICMP Client Console Commands")
@@ -70,7 +78,7 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpCommandEnable.setDefaultValue(False)
     tcpipIcmpCommandEnable.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
     
-    # Number of ICMP Echo requests
+    # Number of ICMP Echo requests tp send
     tcpipIcmpEchoReqNum = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS", tcpipIcmpCommandEnable)
     tcpipIcmpEchoReqNum.setLabel("Number of ICMP Echo requests")
     tcpipIcmpEchoReqNum.setVisible(False)
@@ -109,14 +117,6 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpEchoReqDataSize.setDescription("Echo request Default Data Size - bytes")
     tcpipIcmpEchoReqDataSize.setDefaultValue(100)
     tcpipIcmpEchoReqDataSize.setDependencies(tcpipIcmpTCPEnable, ["tcpipTcp.TCPIP_USE_TCP", "TCPIP_ICMP_COMMAND_ENABLE"])
-
-    # Enable User Notification
-    tcpipIcmpClientUsrNotify = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_CLIENT_USER_NOTIFICATION", tcpipIcmpv4Client)
-    tcpipIcmpClientUsrNotify.setLabel("Enable User Notification")
-    tcpipIcmpClientUsrNotify.setVisible(False)
-    tcpipIcmpClientUsrNotify.setDescription("Enable User Notification")
-    tcpipIcmpClientUsrNotify.setDefaultValue(True)
-    tcpipIcmpClientUsrNotify.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
 
     # Echo request timeout in ms
     tcpipIcmpEchoReqTimeout = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_ECHO_REQUEST_TIMEOUT", tcpipIcmpv4Client)

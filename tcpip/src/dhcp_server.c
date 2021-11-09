@@ -50,7 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/sys_random_h2_adapter.h"
 
 #if defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 
 
 static TCPIP_DHCPS_DCPT*        gDhcpDcpt = 0;
@@ -183,6 +183,7 @@ static void _DhcpsDisplayStat(DHCPS_HASH_ENTRY* he)
         char addBuff[20];
         TCPIP_Helper_IPAddressToString(&he->ipAddress, addBuff, sizeof(addBuff));
         const char* msg = statMsgTbl[he->state];
+        (void)msg;
         he->prevState = he->state;
         SYS_CONSOLE_PRINT("DHCPS state: %s, if: %d, address: %s \r\n", msg, he->parent->pNetIf->netIfIx, addBuff);
     }
@@ -265,6 +266,7 @@ static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType
     }
 #endif // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
+    (void)evStr; (void)evMsg; (void)evInfo1; (void)evInfo2;
     SYS_CONSOLE_PRINT("DHCPs - if: %d %s: %s, evInfo1: 0x%08x, evInfo2: 0x%08x\r\n", TCPIP_STACK_NetIndexGet(pktIf), evStr, evMsg, evInfo1, evInfo2);
 }
 #else
@@ -300,6 +302,7 @@ static void _DHCPS_SendMessagePrint(DHCPS_HASH_ENTRY* he, uint32_t destAdd)
     const char* srvMsg = _DHCPS_MsgType_Tbl[srvMsgType];
     const char* cliMsg = _DHCPS_MsgType_Tbl[cliMsgType];
 
+    (void)cliMsg; (void)srvMsg; (void)addBuff;
     SYS_CONSOLE_PRINT("DHCPs sent msg - if: %d to: %s, cliMsg: %s, srvMsg: %s\r\n", he->parent->pNetIf->netIfIx, addBuff, cliMsg, srvMsg);
 }
 
@@ -4104,9 +4107,9 @@ bool TCPIP_DHCPS_HandlerDeRegister(TCPIP_DHCPS_EVENT_HANDLE hDhcp)
 
 
 #else
-bool TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet){return TCPIP_DHCPS_RES_SERVICE_STOP_ERROR;}
+TCPIP_DHCPS_RES TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet){return TCPIP_DHCPS_RES_SERVICE_STOP_ERROR;}
 TCPIP_DHCPS_RES TCPIP_DHCPS_Enable(TCPIP_NET_HANDLE hNet){return TCPIP_DHCPS_RES_SERVICE_START_ERROR;}
 bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet){return false;}
-#endif //#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#endif //#if defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 #endif // defined(TCPIP_STACK_USE_IPV4)
 

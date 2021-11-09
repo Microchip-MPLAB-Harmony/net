@@ -129,7 +129,6 @@ static int _Command_AddressService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
 static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif 
-static int _Command_DHCPSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_ZcllOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_DNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // defined(TCPIP_STACK_USE_IPV4)
@@ -160,7 +159,18 @@ static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
+static int _Command_DHCPSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#elif defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
+static void _CommandDHCPsOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static bool _CommandDHCPsEnable(TCPIP_NET_HANDLE netH);
+static bool _CommandDHCPsDisable(TCPIP_NET_HANDLE netH);
+static void _Command_DHCPsLeaseList(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+static void _Command_DHCPsLeaseRemove(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+static void _Command_DHCPsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+#if defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
+static void _Command_DHCPsConfigure(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+#endif // defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
 #endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
 #if defined(TCPIP_STACK_USE_DNS)
 static int _Command_DNSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -315,7 +325,7 @@ static void                 TCPIPCmdDnsTask(void);
 
 static int                  _CommandPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
-static void                 CommandPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result);
+static void                 CommandPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
 
 static void                 TCPIPCmdPingTask(void);
 
@@ -408,7 +418,6 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
     {"dhcp",        (SYS_CMD_FNC)_CommandDhcpOptions,           ": DHCP client commands"},
 #endif
-    {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
     {"zcll",        (SYS_CMD_FNC)_Command_ZcllOnOff,            ": Turn ZCLL on/off"},
     {"setdns",      (SYS_CMD_FNC)_Command_DNSAddressSet,        ": Set DNS address"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
@@ -424,7 +433,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
     {"heapinfo",    (SYS_CMD_FNC)_Command_HeapInfo,             ": Check heap status"},
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
+    {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
     {"dhcpsinfo",   (SYS_CMD_FNC)_Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
+#elif defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
+    {"dhcps",       _CommandDHCPsOptions,                       ": DHCP server commands"},
 #endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
 #if defined(_TCPIP_COMMAND_PING4)
     {"ping",        (SYS_CMD_FNC)_CommandPing,                  ": Ping an IP address"},
@@ -737,13 +749,13 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
         else 
 #endif
-#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
         if(TCPIP_DHCPS_IsEnabled(netH))
         {
             msgAdd = "dhcps";
         }
         else
-#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)        
+#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
         {
             msgAdd = "default IP address";
         }
@@ -816,7 +828,359 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
     return true;
 
 }
-#endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
+#elif defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
+static void _CommandDHCPsOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   
+    // dhcps interface {on/off, list, remove ix/all <keepPerm> <keepBusy>, stats}
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    while(argc >= 3)
+    {
+        TCPIP_NET_HANDLE netH = TCPIP_STACK_NetHandleGet(argv[1]);
+        if (netH == 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface\r\n");
+            return;
+        }
+
+        if(strcmp(argv[2], "on") == 0 || strcmp(argv[2], "off") == 0)
+        {
+            _Command_AddressService(pCmdIO, argc, argv, TCPIP_STACK_ADDRESS_SERVICE_DHCPS);
+            return;
+        }
+
+        if(strcmp(argv[2], "list") == 0)
+        {
+            _Command_DHCPsLeaseList(pCmdIO, argc, argv, netH); 
+            return;
+        }
+
+        if(strcmp(argv[2], "remove") == 0)
+        {
+            if(argc >= 4)
+            {
+                _Command_DHCPsLeaseRemove(pCmdIO, argc, argv, netH); 
+                return;
+            }
+            break;
+        }
+
+        if(strcmp(argv[2], "stats") == 0)
+        {
+            _Command_DHCPsStat(pCmdIO, argc, argv, netH); 
+            return;
+        }
+
+#if defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
+        if(strcmp(argv[2], "configure") == 0)
+        {
+            _Command_DHCPsConfigure(pCmdIO, argc, argv, netH); 
+            return;
+        }
+#endif // defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
+
+        break;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: dhcps interface command\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Command is one of: {on/off, list, remove ix/all <keepBusy> <keepPerm>, stats} \r\n");
+
+}
+
+static bool _CommandDHCPsEnable(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_DHCPS_RES res = TCPIP_DHCPS_Enable(netH);
+    return res == TCPIP_DHCPS_RES_OK; 
+}
+
+static bool _CommandDHCPsDisable(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_DHCPS_RES res = TCPIP_DHCPS_Disable(netH);
+    return res == TCPIP_DHCPS_RES_OK; 
+}
+
+
+static void _Command_DHCPsLeaseList(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
+{   
+    // dhcps interface list
+    
+    char   addrBuff[20];
+    char   idBuff[48];  // TODO aa: should be TCPIP_DHCPS_CLIENT_ID_MAX_SIZE * 3
+
+    union
+    {
+        TCPIP_DHCPS_LEASE_INFO leaseInfo;
+        uint8_t id_space[sizeof(TCPIP_DHCPS_LEASE_INFO) + 16 /*TCPIP_DHCPS_CLIENT_ID_MAX_SIZE*/];   // TODO aa 
+    }extLeaseInfo;
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    uint16_t nLeases;
+    uint16_t usedLeases;
+    TCPIP_DHCPS_RES res = TCPIP_DHCPS_LeaseEntriesGet(netH, &nLeases, &usedLeases);
+    if(res != TCPIP_DHCPS_RES_OK)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam,"Failed to get DHCPS leases: %d\r\n", res);
+        return;
+    }
+
+    uint16_t leaseIx;
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"DHCPS: total leases: %d, used: %d\r\n", nLeases, usedLeases);
+
+    if(usedLeases == 0)
+    {
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"IP Address\tID\r\n");
+    for(leaseIx = 0; leaseIx < nLeases; leaseIx++)
+    {
+        TCPIP_DHCPS_LEASE_INFO* pLeaseInfo = &extLeaseInfo.leaseInfo;
+        res = TCPIP_DHCPS_LeaseGetInfo(netH, pLeaseInfo, leaseIx);
+        if(res ==  TCPIP_DHCPS_RES_UNUSED_INDEX)
+        {
+            continue;
+        }
+        else if (res < 0)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam,"Failure for DHCPS lease: %d, res: %d\r\n", leaseIx, res);
+            return;
+        }
+
+        // OK, display
+        TCPIP_Helper_IPAddressToString(&pLeaseInfo->ipAddress, addrBuff, sizeof(addrBuff));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s ", addrBuff);
+        int jx;
+        char* pBuff = idBuff;
+        const uint8_t* pId = pLeaseInfo->clientId;
+        for(jx = 0; jx < sizeof(idBuff) / 3 && jx < pLeaseInfo->clientIdLen; jx++, pId++)
+        {
+            pBuff += sprintf(pBuff, "%.2x:", *pId);
+        }
+        *(pBuff - 1) = ' '; // suppress the last ':'
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s ", idBuff);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, " Time: %d secs, state: %d, index: %d\r\n", pLeaseInfo->leaseTime, pLeaseInfo->leaseState, leaseIx);
+    }
+
+}
+
+static void _Command_DHCPsLeaseRemove(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
+{   
+    // dhcps interface remove ix/all <keepPerm> <keepBusy>
+    
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool removeAll = false;
+    uint16_t leaseIx = 0;
+    bool keepBusy = false;
+    bool keepPerm = false;
+
+    if(strcmp(argv[3], "all") == 0)
+    {
+        removeAll = true;
+    }
+    else
+    {
+        bool isInc = false;
+        size_t len = strlen(argv[3]);
+        if(argv[3][len - 1] == '0')
+        {
+            argv[3][len - 1]++;
+            isInc =  true;
+        }
+            
+        leaseIx = atoi(argv[3]);
+        if(leaseIx == 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam,"Invalid DHCPS lease index\r\n");
+            return;
+        }
+
+        if(isInc)
+        {
+            leaseIx--;
+            argv[3][len - 1]--;
+        }
+    }
+
+    int startIx = 5;
+    while(argc >= startIx)
+    {
+
+        if(strcmp(argv[startIx - 1], "keepBusy") == 0)
+        {
+            keepBusy = true;
+        }
+
+        if(strcmp(argv[startIx - 1], "keepPerm") == 0)
+        {
+            keepPerm = true;
+        }
+        startIx++;
+    }
+
+    TCPIP_DHCPS_RES res;
+    if(removeAll == false)
+    {
+        res = TCPIP_DHCPS_LeaseRemove(netH, leaseIx, keepBusy);
+    }
+    else
+    {
+        res = TCPIP_DHCPS_LeaseRemoveAll(netH, keepPerm, keepBusy);
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"DHCPS remove %s, res: %d\r\n", argv[3], res);
+}
+
+static void _Command_DHCPsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
+{   
+    // dhcps interface stats
+    
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    TCPIP_DHCPS_STATISTICS_DATA statData;
+
+    TCPIP_DHCPS_RES res = TCPIP_DHCPS_StatisticsDataGet(netH, &statData);
+
+    if(res < 0)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam,"Failed to get stats: %d\r\n", res);
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\treleasedDelCount: %d, expiredDelCount: %d cacheFullCount: %d \r\n", statData.releasedDelCount, statData.expiredDelCount, statData.cacheFullCount);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\tpoolEmptyCount: %d, declinedCount: %d arpFailCount: %d \r\n", statData.poolEmptyCount, statData.declinedCount, statData.arpFailCount);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\techoFailCount: %d, icmpFailCount: %d icmpProbeCount: %d \r\n", statData.echoFailCount, statData.icmpFailCount, statData.icmpProbeCount);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\tmsgOvflCount: %d, arpInjectCount: %d\r\n", statData.msgOvflCount, statData.arpInjectCount);
+}
+
+// run-time configuration example 
+#if defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
+static void _Command_DHCPsConfigure(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
+{   
+    // dhcps interface configure <1/2>
+    static const TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions1[] =
+    {
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_ROUTER,
+            .ipStr = "192.168.222.20",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_DNS,
+            .ipStr = "192.168.222.20",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_DNS,
+            .ipStr = "192.168.222.21",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL,
+            .mult = 2,
+            .div = 3,
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING,
+            .mult = 6,
+            .div = 7,
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_NAME_SERVER,
+            .ipStr = "192.168.222.20",
+        },
+
+    };    
+    
+    static const TCPIP_DHCPS_INTERFACE_CONFIG dhcpsConfig1[] = 
+    {
+        {
+            .ifIndex = 0,
+            .configFlags = 0,
+            .leaseEntries = 20,
+            .leaseDuration = 60,
+            .minLeaseDuration = 60,
+            .maxLeaseDuration = 120,
+            .unreqOfferTmo = 10,
+            .serverIPAddress = "192.168.222.1",
+            .startIPAddress = "192.168.222.200",
+            .prefixLen = 24,
+            .pOptConfig = dhcpsOptions1,
+            .nOptConfigs = sizeof(dhcpsOptions1) / sizeof(*dhcpsOptions1),
+        }
+    };
+
+    static const TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions2[] =
+    {
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_ROUTER,
+            .ipStr = "192.168.111.10",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_DNS,
+            .ipStr = "192.168.111.10",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_DNS,
+            .ipStr = "192.168.111.11",
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL,
+            .mult = 3,
+            .div = 4,
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING,
+            .mult = 5,
+            .div = 6,
+        },
+        {
+            .optType = TCPIP_DHCPS_CLIENT_OPTION_NTP_SERVER,
+            .ipStr = "192.168.111.111",
+        },
+
+    };    
+    
+    static const TCPIP_DHCPS_INTERFACE_CONFIG dhcpsConfig2[] = 
+    {
+        {
+            .ifIndex = 0,
+            .configFlags = 0,
+            .leaseEntries = 20,
+            .leaseDuration = 60,
+            .minLeaseDuration = 60,
+            .maxLeaseDuration = 120,
+            .unreqOfferTmo = 10,
+            .serverIPAddress = "192.168.111.100",
+            .startIPAddress = "192.168.111.101",
+            .prefixLen = 24,
+            .pOptConfig = dhcpsOptions2,
+            .nOptConfigs = sizeof(dhcpsOptions2) / sizeof(*dhcpsOptions2),
+        }
+    };
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    const TCPIP_DHCPS_INTERFACE_CONFIG* pConfig = dhcpsConfig1;
+    uint16_t nConfigs = sizeof(dhcpsConfig1) / sizeof(*dhcpsConfig1); 
+
+    if(argc >= 4)
+    {
+        int cfgNo = atoi(argv[3]);
+        if(cfgNo == 2)
+        {
+            pConfig = dhcpsConfig2;
+            nConfigs = sizeof(dhcpsConfig2) / sizeof(*dhcpsConfig2); 
+        }
+    }
+
+
+    TCPIP_DHCPS_RES res = TCPIP_DHCPS_Configure(pConfig, nConfigs);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPS configure res: %d\r\n", res);
+
+}
+#endif // defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
+
+#endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER) defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 
 static int _Command_DefaultInterfaceSet (SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
@@ -1091,10 +1455,12 @@ static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 #endif  // defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
 
 #if defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER)
 static int _Command_DHCPSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     return _Command_AddressService(pCmdIO, argc, argv, TCPIP_STACK_ADDRESS_SERVICE_DHCPS);
 }
+#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)
 
 static int _Command_ZcllOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
@@ -1150,6 +1516,10 @@ static int _Command_AddressService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
         case TCPIP_STACK_ADDRESS_SERVICE_DHCPS:
             addFnc = svcEnable?TCPIP_DHCPS_Enable:TCPIP_DHCPS_Disable;
+            break;
+#elif defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
+        case TCPIP_STACK_ADDRESS_SERVICE_DHCPS:
+            addFnc = svcEnable? _CommandDHCPsEnable : _CommandDHCPsDisable;
             break;
 #endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)
 
@@ -2999,7 +3369,7 @@ static int _CommandPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
 }
 
-static void CommandPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result)
+static void CommandPingHandler(const  TCPIP_ICMP_ECHO_REQUEST* pEchoReq, TCPIP_ICMP_REQUEST_HANDLE iHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param)
 {
     char addBuff[20];
 
@@ -3363,6 +3733,7 @@ static void TCPIPCmdPingTask(void)
             echoRequest.pData = icmpPingBuff;
             echoRequest.dataSize = icmpPingSize;
             echoRequest.callback = CommandPingHandler;
+            echoRequest.param = 0;
 
             {
                 int ix;

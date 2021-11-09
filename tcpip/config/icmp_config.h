@@ -52,13 +52,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _ICMP_CONFIG_H_
 #define _ICMP_CONFIG_H_
 
-// allow ICMP client user notification
-// if enabled, the TCPIP_ICMP_CallbackRegister/TCPIP_ICMP_CallbackDeregister
-// functions exist and can be used
-// Note that if disabled, the tcpip console ping command won't be available
-#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION           true 
-
-
 // Timeout for a request that was sent and no reply was received
 // milliseconds
 #define TCPIP_ICMP_ECHO_REQUEST_TIMEOUT                500
@@ -74,5 +67,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
 #define TCPIP_ICMP_TASK_TICK_RATE                 33
+
+
+// Maximum number of parallel outgoing ICMP echo requests supported at one time
+// Default value is 4
+#define TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS    4
 
 #endif  // _ICMP_CONFIG_H_

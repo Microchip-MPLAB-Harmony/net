@@ -166,7 +166,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // run time tests
 #define _TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW    (0x10000)    // ignore the renew message, wait for rebind
 // enable IPV4 debugging levels
-#define _TCPIP_DHCPS_DEBUG_LEVEL                 (0x1f)
+#define _TCPIP_DHCPS_DEBUG_LEVEL                 (0)
 
 // buffer for RX processing
 // Note: the output reply is assembled here too!

@@ -55,13 +55,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     <#if TCPIP_STACK_USE_ICMP_CLIENT == true>
         <#lt>/*** ICMPv4 Client Configuration ***/
         <#lt>#define TCPIP_STACK_USE_ICMP_CLIENT
-        <#if TCPIP_ICMP_CLIENT_USER_NOTIFICATION == true>
-            <#lt>#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   true
-        <#else>
-            <#lt>#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   false
-        </#if>      
         <#lt>#define TCPIP_ICMP_ECHO_REQUEST_TIMEOUT        ${TCPIP_ICMP_ECHO_REQUEST_TIMEOUT}
         <#lt>#define TCPIP_ICMP_TASK_TICK_RATE              ${TCPIP_ICMP_TASK_TICK_RATE}
+        <#lt>#define TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS   ${TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS}
         <#lt>#define TCPIP_ICMP_COMMAND_ENABLE              ${TCPIP_ICMP_COMMAND_ENABLE?c}
         <#if TCPIP_ICMP_COMMAND_ENABLE == true>
             <#lt>#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         ${TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS}
