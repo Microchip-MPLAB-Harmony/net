@@ -22,17 +22,8 @@
 *****************************************************************************"""
 
 ################## DHCP Server Instances ##############################
-tcpipDhcpServerInstanceRangePrev = 1
-tcpipDhcpServerInstancesNumPrev = 1
 tcpipDhcpServerInstance = []
-tcpipDhcpServerAddrRangeStart = []
-tcpipDhcpServerNetMaskAddr = []
-tcpipDhcpServerGatewayAddr = []
-tcpipDhcpServerPrimDnsAddr = []
-tcpipDhcpServerSecDnsAddr = []
 tcpipDhcpServerIfIdx = []
-tcpipDhcpServerPoolEn = []
-
 tcpipDhcpServerLeaseEntryMaxNum = []
 tcpipDhcpServerLeaseDurationDflt = []
 tcpipDhcpServerIpAddr = []
@@ -46,21 +37,33 @@ tcpipDhcpServerNameServerIPAddr = []
 tcpipDhcpServerNTPServerIPAddr = []
 tcpipDhcpServerInstanceAdvMenu = []
 tcpipDhcpServerConfigFlagMenu = []
-tcpipDhcpServerConfigFlag1 = []
-tcpipDhcpServerConfigFlag2 = []
+tcpipDhcpServerStartDisable = []
+tcpipDhcpServerDelLeaseInfo = []
+tcpipDhcpServerCoflictDetectDisable = []
+tcpipDhcpServerLeaseExtDisable = []
+tcpipDhcpServerKeepInfoUnreq = []
+tcpipDhcpServerProbeFailAbort = []
+           
 tcpipDhcpServerLeaseDurationMin = []
 tcpipDhcpServerLeaseDurationMax = []
 tcpipDhcpServerUnreqTimeout = []
 
+tcpipDhcpServerT1RenewalTimeMenu = [] 
+tcpipDhcpServerT1RenewMultFactor = []       
+tcpipDhcpServerT1RenewDivFactor = []
+tcpipDhcpServerT2RebindTimeMenu = []
+tcpipDhcpServerT2RebindMultFactor = []
+tcpipDhcpServerT2RebindDivFactor = []
+
+tcpipDhcpServerInstanceRangePrev = 1
 tcpipNetConfigNumMax = 5  # hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpServerComponent):
     print(tcpipNetConfigNumMax)
     print("TCPIP DHCP Server Component")
     configName = Variables.get("__CONFIGURATION_NAME")
-    # tcpipDhcpServerICMPClientEnable()
     # Enable DHCP Server
-    tcpipDhcpServer = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER", None)
+    tcpipDhcpServer = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER_V2", None)
     tcpipDhcpServer.setLabel("DHCP Server")
     tcpipDhcpServer.setVisible(False)
     tcpipDhcpServer.setDescription("Enable DHCP Server")
@@ -71,10 +74,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         dhcpsIntrfcCount = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
     else:
         dhcpsIntrfcCount = 1
-    
-    # if (dhcpsIntrfcCount==None):
-        # dhcpsIntrfcCount = 1
-        # print ("interface error")
+
     # Maximum Number of Interfaces supported by DHCP Server
     tcpipDhcpServerMaxIntrfcNum = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MAX_INTERFACES", None)
     tcpipDhcpServerMaxIntrfcNum.setLabel("Maximum Number of Interfaces")
@@ -108,77 +108,65 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerIPAttemptNum.setDescription("Number of Attempts for new IP Address in case of conflict detection")
     tcpipDhcpServerIPAttemptNum.setDefaultValue(1)
     tcpipDhcpServerIPAttemptNum.setMin(0)
-    
-    # Number of DHCP Server Driver Instances
-    tcpipDhcpServerInstancesNum = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INSTANCES_NUMBER", None)
-    tcpipDhcpServerInstancesNum.setLabel("Number of DHCP Server Instances")
-    tcpipDhcpServerInstancesNum.setMax(tcpipNetConfigNumMax)
-    tcpipDhcpServerInstancesNum.setMin(1)
-    tcpipDhcpServerInstancesNum.setVisible(True)
-    tcpipDhcpServerInstancesNum.setDescription("Number of DHCP Server Instances")
-    tcpipDhcpServerInstancesNum.setDefaultValue(1)
-    tcpipDhcpServerInstancesNum.setDependencies(tcpipDhcpServerInstnNumVisible, ["TCPIP_DHCPS_INSTANCES_NUMBER"])
 
     for index in range(0,tcpipNetConfigNumMax): 
-        tcpipDhcpServerInstance.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_IDX"+str(index),tcpipDhcpServerInstancesNum))
-        tcpipDhcpServerInstance[index].setLabel("DHCP Server Instance "+ str(index))
-        if (index < tcpipDhcpServerInstancesNum.getValue()):
-            tcpipDhcpServerInstance[index].setVisible(True)
-            tcpipDhcpServerInstance[index].setDefaultValue(True)
+        tcpipDhcpServerInstance.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_IDX"+str(index),None))
+        tcpipDhcpServerInstance[index].setLabel("DHCP Server on Interface "+ str(index))
+        if (index < tcpipDhcpServerMaxIntrfcNum.getValue()):
+            tcpipDhcpServerInstance[index].setVisible(True)            
         else:
-            tcpipDhcpServerInstance[index].setDefaultValue(False)
             tcpipDhcpServerInstance[index].setVisible(False) 
-        # tcpipDhcpServerInstance[index].setVisible(True)
-        # tcpipDhcpServerInstance[index].setDefaultValue(True)
-        tcpipDhcpServerInstance[index].setReadOnly(True)
-        tcpipDhcpServerInstance[index].setDependencies(tcpipDhcpServerEnableInstance, ["TCPIP_DHCPS_INSTANCES_NUMBER"])      
+        tcpipDhcpServerInstance[index].setDefaultValue(False)     
     
         # DHCP Server interface index
         tcpipDhcpServerIfIdx.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INTERFACE_INDEX_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerIfIdx[index].setLabel("Interface Index for DHCP Server")
-        tcpipDhcpServerIfIdx[index].setVisible(True)
+        tcpipDhcpServerIfIdx[index].setVisible(False)
         tcpipDhcpServerIfIdx[index].setDefaultValue(index)
         tcpipDhcpServerIfIdx[index].setReadOnly(True)
-        # tcpipDhcpServerIfIdx[index].setDependencies(tcpipDhcpServerInstnIfIdxMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])
 
         # Maximum Number of Leases
         tcpipDhcpServerLeaseEntryMaxNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MAX_LEASE_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerLeaseEntryMaxNum[index].setLabel("Maximum Number of Leases")
-        tcpipDhcpServerLeaseEntryMaxNum[index].setVisible(True)
+        tcpipDhcpServerLeaseEntryMaxNum[index].setVisible(False)
         tcpipDhcpServerLeaseEntryMaxNum[index].setDefaultValue(32)
+        tcpipDhcpServerLeaseEntryMaxNum[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
 
         # Default Lease Duration
         tcpipDhcpServerLeaseDurationDflt.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_DFLT_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerLeaseDurationDflt[index].setLabel("Default Lease Duration(in Sec)")
-        tcpipDhcpServerLeaseDurationDflt[index].setVisible(True)
+        tcpipDhcpServerLeaseDurationDflt[index].setVisible(False)
         tcpipDhcpServerLeaseDurationDflt[index].setDefaultValue(28800) # 8 Hours - 8 x 60 x 60
+        tcpipDhcpServerLeaseDurationDflt[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
         # Server IP Address
         tcpipDhcpServerIpAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_SERVER_IP_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerIpAddr[index].setLabel("DHCPS Server IP Address")
-        tcpipDhcpServerIpAddr[index].setVisible(True)
+        tcpipDhcpServerIpAddr[index].setVisible(False)
         tcpipDhcpServerIpAddr[index].setDefaultValue("192.168.1." + str(index + 1))
-        # tcpipDhcpServerIpAddr[index].setDependencies(tcpipDhcpServerInstnIpAddrMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])
+        tcpipDhcpServerIpAddr[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
         # Lease Start IP Address
         tcpipDhcpServerStartIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_START_IP_ADDR_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerStartIPAddr[index].setLabel("Start Lease Address")
-        tcpipDhcpServerStartIPAddr[index].setVisible(True)
+        tcpipDhcpServerStartIPAddr[index].setLabel("Lease IP Address Starting from")
+        tcpipDhcpServerStartIPAddr[index].setVisible(False)
         tcpipDhcpServerStartIPAddr[index].setDefaultValue("192.168.1.100")
-        # tcpipDhcpServerAddrRangeStart[index].setDependencies(tcpipDhcpServerInstnAddrRangeMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])
+        tcpipDhcpServerStartIPAddr[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
-        # Number of Leading Bits in Network Mask
-        tcpipDhcpServerLeadBitNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MASK_LEAD_BIT_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerLeadBitNum[index].setLabel("Number of Leading 1 Bits in Network Mask ")
-        tcpipDhcpServerLeadBitNum[index].setVisible(True)
+        # Prefix Length (CIDR notation) Network Mask
+        tcpipDhcpServerLeadBitNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MASK_PREFIX_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
+        tcpipDhcpServerLeadBitNum[index].setLabel("Prefix Length (CIDR notation)")
+        tcpipDhcpServerLeadBitNum[index].setVisible(False)
         tcpipDhcpServerLeadBitNum[index].setMin(0)
         tcpipDhcpServerLeadBitNum[index].setMax(32)
         tcpipDhcpServerLeadBitNum[index].setDefaultValue(24) 
+        tcpipDhcpServerLeadBitNum[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
         # Client Options        
         tcpipDhcpServerClientOptMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_CLIENT_OPT_MENU_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerClientOptMenu[index].setLabel("Client Options")
-        tcpipDhcpServerClientOptMenu[index].setVisible(True)
+        tcpipDhcpServerClientOptMenu[index].setVisible(False)
+        tcpipDhcpServerClientOptMenu[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
         # Router IP Address
         tcpipDhcpServerRouterIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_ROUTER_IP_ADDR_IDX" + str(index), tcpipDhcpServerClientOptMenu[index]))
@@ -212,27 +200,56 @@ def instantiateComponent(tcpipDhcpServerComponent):
         tcpipDhcpServerInstanceAdvMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_INSTN_ADV_MENU_IDX" + str(index), tcpipDhcpServerInstance[index]))
         # tcpipDhcpServerInstanAdvMenu[index].setLabel("Config Flags")
         tcpipDhcpServerInstanceAdvMenu[index].setLabel("Instance "+ str(index) + " Advanced Setting")
-        tcpipDhcpServerInstanceAdvMenu[index].setVisible(True)
+        tcpipDhcpServerInstanceAdvMenu[index].setVisible(False)
+        tcpipDhcpServerInstanceAdvMenu[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
 
         # Config Flags menu       
         tcpipDhcpServerConfigFlagMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_CONFIG_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerConfigFlagMenu[index].setLabel("Config Flags")
+        tcpipDhcpServerConfigFlagMenu[index].setLabel("Configuration Flags")
         tcpipDhcpServerConfigFlagMenu[index].setVisible(True)
         
-        # Config Flag 1 
-        tcpipDhcpServerConfigFlag1.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_CONFIG_FLAG1_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerConfigFlag1[index].setLabel("Flag 1")
-        tcpipDhcpServerConfigFlag1[index].setVisible(True)
-        tcpipDhcpServerConfigFlag1[index].setDefaultValue(False)
+        # Config Flag - DHCP Server Disabled at Start
+        tcpipDhcpServerStartDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_START_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerStartDisable[index].setLabel("Disabled at Start of Interface")
+        tcpipDhcpServerStartDisable[index].setVisible(True)
+        tcpipDhcpServerStartDisable[index].setDefaultValue(False)
+        tcpipDhcpServerStartDisable[index].setDescription("DHCP Server Disabled at Start of Interface")
                 
-        # Config Flag 2 
-        tcpipDhcpServerConfigFlag2.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_CONFIG_FLAG2_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerConfigFlag2[index].setLabel("Flag 2")
-        tcpipDhcpServerConfigFlag2[index].setVisible(True)
-        tcpipDhcpServerConfigFlag2[index].setDefaultValue(False)        
-
-
-       
+        # Config Flag - DHCP Server Delete Lease Info on Interface Restart
+        tcpipDhcpServerDelLeaseInfo.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_DELETE_LEASE_INFO_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerDelLeaseInfo[index].setLabel("Delete Lease Info on Restart")
+        tcpipDhcpServerDelLeaseInfo[index].setVisible(True)
+        tcpipDhcpServerDelLeaseInfo[index].setDefaultValue(False)  
+        tcpipDhcpServerDelLeaseInfo[index].setDescription("DHCP Server Delete Lease Info on Interface Restart")
+     
+        # Config Flag - DHCP Server Disable Conflict Detection of newly allocated addresses
+        tcpipDhcpServerCoflictDetectDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_CONFLICT_DETECT_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerCoflictDetectDisable[index].setLabel("Disable Conflict Detection")
+        tcpipDhcpServerCoflictDetectDisable[index].setVisible(True)
+        tcpipDhcpServerCoflictDetectDisable[index].setDefaultValue(False)  
+        tcpipDhcpServerCoflictDetectDisable[index].setDescription("DHCP Server Disable Conflict Detection of newly allocated addresses")
+                
+        # Config Flag - DHCP Server Disable Lease Extension Request
+        tcpipDhcpServerLeaseExtDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_LEASE_EXT_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerLeaseExtDisable[index].setLabel("Disable Lease Extension Request")
+        tcpipDhcpServerLeaseExtDisable[index].setVisible(True)
+        tcpipDhcpServerLeaseExtDisable[index].setDefaultValue(False)  
+        tcpipDhcpServerLeaseExtDisable[index].setDescription("DHCP Server Disable Lease Extension Request from Client")
+                
+        # Config Flag - DHCP Server Keep Info for Offers Not Requested (multi-server environment)
+        tcpipDhcpServerKeepInfoUnreq.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_KEEP_INFO_UNREQ_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerKeepInfoUnreq[index].setLabel("Keep Info of Offers Not Requested")
+        tcpipDhcpServerKeepInfoUnreq[index].setVisible(True)
+        tcpipDhcpServerKeepInfoUnreq[index].setDefaultValue(False)  
+        tcpipDhcpServerKeepInfoUnreq[index].setDescription("DHCP Server Keep Info of Offers Not Requested by Client (multi-server environment)")
+                
+        # Config Flag - DHCP Server Abort if ICMP Probe for Conflict Detection Fails
+        tcpipDhcpServerProbeFailAbort.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_PROB_FAIL_ABORT_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerProbeFailAbort[index].setLabel("ICMP Probe Failure Abort")
+        tcpipDhcpServerProbeFailAbort[index].setVisible(True)
+        tcpipDhcpServerProbeFailAbort[index].setDefaultValue(False)  
+        tcpipDhcpServerProbeFailAbort[index].setDescription("DHCP Server Abort if ICMP Probe for Conflict Detection Fails")
+        
         # Minimum Lease Duration
         tcpipDhcpServerLeaseDurationMin.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_MIN_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
         tcpipDhcpServerLeaseDurationMin[index].setLabel("Minimum Lease Duration(in Sec)")
@@ -244,6 +261,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         tcpipDhcpServerLeaseDurationMax[index].setLabel("Maximum Lease Duration(in Sec)")
         tcpipDhcpServerLeaseDurationMax[index].setVisible(True)
         tcpipDhcpServerLeaseDurationMax[index].setDefaultValue(0)
+        tcpipDhcpServerLeaseDurationMax[index].setDescription("When 0, Default Lease Duration will be used")
        
         # Unrequested Offer Timeout
         tcpipDhcpServerUnreqTimeout.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_UNREQ_TMO_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
@@ -251,41 +269,44 @@ def instantiateComponent(tcpipDhcpServerComponent):
         tcpipDhcpServerUnreqTimeout[index].setVisible(True)
         tcpipDhcpServerUnreqTimeout[index].setDefaultValue(0)
         
-        # # DHCP Server Net Mask Address
-        # tcpipDhcpServerNetMaskAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerNetMaskAddr[index].setLabel("DHCPS Netmask")
-        # tcpipDhcpServerNetMaskAddr[index].setVisible(True)
-        # tcpipDhcpServerNetMaskAddr[index].setDefaultValue("255.255.255.0")
-        # tcpipDhcpServerNetMaskAddr[index].setDependencies(tcpipDhcpServerInstnNetMaskAddrMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])
-    
-        # # DHCP Server Default Gateway Address
-        # tcpipDhcpServerGatewayAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_GATEWAY_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerGatewayAddr[index].setLabel("Default Gateway")
-        # tcpipDhcpServerGatewayAddr[index].setVisible(True)
-        # tcpipDhcpServerGatewayAddr[index].setDefaultValue("192.168.1.1")
-        # tcpipDhcpServerGatewayAddr[index].setDependencies(tcpipDhcpServerInstnGatewayAddrMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"]) 
-    
-        # # DHCP Server Primary DNS Server Address
-        # tcpipDhcpServerPrimDnsAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerPrimDnsAddr[index].setLabel("Primary DNS Server Address")
-        # tcpipDhcpServerPrimDnsAddr[index].setVisible(True)
-        # tcpipDhcpServerPrimDnsAddr[index].setDefaultValue("192.168.1.1")
-        # tcpipDhcpServerPrimDnsAddr[index].setDependencies(tcpipDhcpServerInstnPrimDnsAddrMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"]) 
-    
-        # # DHCP Server Secondary DNS Server Address
-        # tcpipDhcpServerSecDnsAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerSecDnsAddr[index].setLabel("Secondary DNS Server Address")
-        # tcpipDhcpServerSecDnsAddr[index].setVisible(True)
-        # tcpipDhcpServerSecDnsAddr[index].setDefaultValue("192.168.1.1")
-        # tcpipDhcpServerSecDnsAddr[index].setDependencies(tcpipDhcpServerInstnSecDnsAddrMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])   
-    
-        # DHCP Server Pool enabled
-        # tcpipDhcpServerPoolEn.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_POOL_ENABLED_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerPoolEn[index].setLabel("Pool Enabled")
-        # tcpipDhcpServerPoolEn[index].setVisible(True)
-        # tcpipDhcpServerPoolEn[index].setDefaultValue(True)
-        # tcpipDhcpServerPoolEn[index].setDependencies(tcpipDhcpServerInstnPoolEnMenu, [tcpipDhcpServerInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])   
-    
+        # T1 Renewal Time       
+        tcpipDhcpServerT1RenewalTimeMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_T1_RENEWAL_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
+        tcpipDhcpServerT1RenewalTimeMenu[index].setLabel("T1 Renewal Time Calculation")
+        tcpipDhcpServerT1RenewalTimeMenu[index].setVisible(True)
+
+        # T1 Renewal Time - Multiplication Factor
+        tcpipDhcpServerT1RenewMultFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T1RENEW_MULT_FACT_IDX" + str(index), tcpipDhcpServerT1RenewalTimeMenu[index]))
+        tcpipDhcpServerT1RenewMultFactor[index].setLabel("Multiplication Factor")
+        tcpipDhcpServerT1RenewMultFactor[index].setVisible(True)
+        tcpipDhcpServerT1RenewMultFactor[index].setDefaultValue(1)
+        tcpipDhcpServerT1RenewMultFactor[index].setMin(0)
+        
+        # T1 Renewal Time - Division Factor
+        tcpipDhcpServerT1RenewDivFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T1RENEW_DIV_FACT_IDX" + str(index), tcpipDhcpServerT1RenewalTimeMenu[index]))
+        tcpipDhcpServerT1RenewDivFactor[index].setLabel("Division Factor")
+        tcpipDhcpServerT1RenewDivFactor[index].setVisible(True)
+        tcpipDhcpServerT1RenewDivFactor[index].setDefaultValue(2)
+        tcpipDhcpServerT1RenewDivFactor[index].setMin(1)
+        
+        # T2 Rebind Time       
+        tcpipDhcpServerT2RebindTimeMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_T2_REBIND_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
+        tcpipDhcpServerT2RebindTimeMenu[index].setLabel("T2 Rebind Time Calculation")
+        tcpipDhcpServerT2RebindTimeMenu[index].setVisible(True)
+
+        # T2 Rebind Time  - Multiplication Factor
+        tcpipDhcpServerT2RebindMultFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T2REBIND_MULT_FACT_IDX" + str(index), tcpipDhcpServerT2RebindTimeMenu[index]))
+        tcpipDhcpServerT2RebindMultFactor[index].setLabel("Multiplication Factor")
+        tcpipDhcpServerT2RebindMultFactor[index].setVisible(True)
+        tcpipDhcpServerT2RebindMultFactor[index].setDefaultValue(7)
+        tcpipDhcpServerT2RebindMultFactor[index].setMin(0)
+        
+        # T2 Rebind Time  - Division Factor
+        tcpipDhcpServerT2RebindDivFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T2REBIND_DIV_FACT_IDX" + str(index), tcpipDhcpServerT2RebindTimeMenu[index]))
+        tcpipDhcpServerT2RebindDivFactor[index].setLabel("Division Factor")
+        tcpipDhcpServerT2RebindDivFactor[index].setVisible(True)
+        tcpipDhcpServerT2RebindDivFactor[index].setDefaultValue(8)
+        tcpipDhcpServerT2RebindDivFactor[index].setMin(1)
+            
     ######################################################################################################################################    
 
     # Advanced Settings
@@ -375,11 +396,11 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerOptionNTPServerValNum.setMax(2)    
     
     # Suppress T1 Renewal and T2 Rebind
-    tcpipDhcpServerOptionT1T2Suppress = tcpipDhcpServerComponent.createBooleanSymbol("o TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS ", tcpipDhcpServerAdvSettings)
+    tcpipDhcpServerOptionT1T2Suppress = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS", tcpipDhcpServerAdvSettings)
     tcpipDhcpServerOptionT1T2Suppress.setLabel("Suppress T1 Renewal and T2 Rebind")
     tcpipDhcpServerOptionT1T2Suppress.setVisible(True)
     tcpipDhcpServerOptionT1T2Suppress.setDescription("Suppress T1 Renewal and T2 Rebind")
-    tcpipDhcpServerOptionT1T2Suppress.setDefaultValue(True)
+    tcpipDhcpServerOptionT1T2Suppress.setDefaultValue(False)
 
     # Events Report
     
@@ -427,27 +448,6 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerEventMultThread.setDescription("Enable Multi-Threaded Access")
     tcpipDhcpServerEventMultThread.setDefaultValue(False)    
 
-    # Time-out for a Solved Entry in the Cache in Seconds.
-    tcpipDhcpServerLeaseSolvedEntryTimeout = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO", tcpipDhcpServerAdvSettings)
-    tcpipDhcpServerLeaseSolvedEntryTimeout.setLabel("Timeout for a Solved Entry in the Cache (in sec)")
-    tcpipDhcpServerLeaseSolvedEntryTimeout.setVisible(True)
-    tcpipDhcpServerLeaseSolvedEntryTimeout.setDescription("Time-out for a Solved Entry in the Cache in Seconds.")
-    tcpipDhcpServerLeaseSolvedEntryTimeout.setDefaultValue(1200)
-
-    # Time-out for a Solved Entry in the Cache in Seconds.
-    tcpipDhcpServerLeaseUnsolvedEntryTimeout = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK", tcpipDhcpServerAdvSettings)
-    tcpipDhcpServerLeaseUnsolvedEntryTimeout.setLabel("Timeout for an Unsolved Entry (in sec)")
-    tcpipDhcpServerLeaseUnsolvedEntryTimeout.setVisible(True)
-    tcpipDhcpServerLeaseUnsolvedEntryTimeout.setDescription("Time-out for an Unsolved Entry in Seconds")
-    tcpipDhcpServerLeaseUnsolvedEntryTimeout.setDefaultValue(5)
-
-    # Delete Old Entries
-    tcpipDhcpServerOldEntryDelete = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_DELETE_OLD_ENTRIES", tcpipDhcpServerAdvSettings)
-    tcpipDhcpServerOldEntryDelete.setLabel("Delete Old Entries")
-    tcpipDhcpServerOldEntryDelete.setVisible(True)
-    tcpipDhcpServerOldEntryDelete.setDescription("Delete Old Entries")
-    tcpipDhcpServerOldEntryDelete.setDefaultValue(True)    
-
     tcpipDhcpServerheapdependency = ["TCPIP_DHCPS_INSTANCES_NUMBER", "TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
     # # DHCP Server Heap Size
@@ -460,21 +460,21 @@ def instantiateComponent(tcpipDhcpServerComponent):
     
     #Add to system_config.h
     tcpipDhcpServerHeaderFtl = tcpipDhcpServerComponent.createFileSymbol(None, None)
-    tcpipDhcpServerHeaderFtl.setSourcePath("tcpip/config/dhcps.h.ftl")
+    tcpipDhcpServerHeaderFtl.setSourcePath("tcpip/config/dhcp_server.h.ftl")
     tcpipDhcpServerHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
     tcpipDhcpServerHeaderFtl.setMarkup(True)
     tcpipDhcpServerHeaderFtl.setType("STRING")
 
-    # Add dhcps.c file
-    tcpipDhcpSourceFile = tcpipDhcpServerComponent.createFileSymbol(None, None)
-    tcpipDhcpSourceFile.setSourcePath("tcpip/src/dhcps.c")
-    tcpipDhcpSourceFile.setOutputName("dhcps.c")
-    tcpipDhcpSourceFile.setOverwrite(True)
-    tcpipDhcpSourceFile.setDestPath("library/tcpip/src/")
-    tcpipDhcpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipDhcpSourceFile.setType("SOURCE")
-    tcpipDhcpSourceFile.setEnabled(True)
-    tcpipDhcpSourceFile.setDependencies(tcpipDhcpServerGenSourceFile, ["TCPIP_STACK_USE_DHCP_SERVER"])
+    # Add dhcp_server.c file
+    tcpipDhcpServerSourceFile = tcpipDhcpServerComponent.createFileSymbol(None, None)
+    tcpipDhcpServerSourceFile.setSourcePath("tcpip/src/dhcp_server.c")
+    tcpipDhcpServerSourceFile.setOutputName("dhcp_server.c")
+    tcpipDhcpServerSourceFile.setOverwrite(True)
+    tcpipDhcpServerSourceFile.setDestPath("library/tcpip/src/")
+    tcpipDhcpServerSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipDhcpServerSourceFile.setType("SOURCE")
+    tcpipDhcpServerSourceFile.setEnabled(True)
+    # tcpipDhcpServerSourceFile.setDependencies(tcpipDhcpServerGenSourceFile, ["TCPIP_STACK_USE_DHCP_SERVER"])
     
 #############################################################################################################
 
@@ -490,228 +490,23 @@ def instantiateComponent(tcpipDhcpServerComponent):
     # if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
         # symbol.setVisible(event["value"])
     
-# def tcpipDhcpServerEnableInstance(tcpipNetDependentSymbol, event):
-    # global tcpipDhcpServerInstancesNumPrev
-    # print("Start tcpipDhcpServerEnableInstance")
-    
-    # if(event["id"] == "TCPIP_STACK_USE_DHCP_SERVER" ):
-        # print("USE DHCP Server")
-        # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-        # print("DHCP Server Enabled: " + str(tcpipDhcpServerEnable) )
-        # tcpipDhcpServerIndex = int(tcpipNetDependentSymbol.getID().strip("TCPIP_DHCP_SERVER_IDX"))
-        # print("DHCP Server Index: " + str(tcpipDhcpServerIndex) )
-        # print(tcpipDhcpServerInstancesNumPrev)
-        # if(tcpipDhcpServerEnable == True):
-            # if(tcpipDhcpServerIndex < tcpipDhcpServerInstancesNumPrev ):
-                # tcpipNetDependentSymbol.setVisible(True)
-        # else:
-            # tcpipNetDependentSymbol.setVisible(False)
-    
-    # else:   
-        # #tcpipNetDependentSymbol.setVisible(True)
-        # if(event["id"] == "TCPIP_STACK_NETWORK_CONFIG_NUMBER" ):
-            # tcpipDhcpServerNetConfigNum = int(Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_CONFIG_NUMBER"))
-            # print("Net Config Num:" + str(tcpipDhcpServerNetConfigNum))
-            # tcpipNetDependentSymbol.getComponent().getSymbolByID("TCPIP_DHCP_SERVER_INSTANCES_NUMBER").setMax(tcpipDhcpServerNetConfigNum)
-        # else:           
-            # print(tcpipNetDependentSymbol.getID())
-            # tcpipDhcpServerInstanceNumberValue = event["value"]
-            # print("Max No:" + str(tcpipNetDependentSymbol.getComponent().getSymbolByID("TCPIP_DHCP_SERVER_INSTANCES_NUMBER").getMax()))
-            # print(tcpipDhcpServerInstanceNumberValue)
-            # print(tcpipDhcpServerInstancesNumPrev)
-            # if(tcpipDhcpServerInstanceNumberValue > tcpipDhcpServerInstancesNumPrev ):
-                # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setVisible(True)
-                # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setValue(True, 1)
-                # print("Set TRUE"+ str(tcpipDhcpServerInstancesNumPrev))
-                # tcpipDhcpServerInstancesNumPrev = tcpipDhcpServerInstancesNumPrev + 1
-                # #Add more network configurations
-            # else:
-                # if(tcpipDhcpServerInstanceNumberValue < tcpipDhcpServerInstancesNumPrev ):
-                    # #Reduce network configurations
-                    # tcpipDhcpServerInstancesNumPrev = tcpipDhcpServerInstancesNumPrev - 1
-                    # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setVisible(False)
-                    # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setValue(False, 1)
-                    # print("Set FALSE"+ str(tcpipDhcpServerInstancesNumPrev))
-                    
-                # #else:
-                    # #Do Nothing
-    # print("END tcpipDhcpServerEnableInstance")
-    
-# def tcpipDhcpServerInstnNumVisible(symbol, event):   
-    # if(event["id"] == "TCPIP_STACK_NETWORK_CONFIG_NUMBER" ):
-        # eventValue = event["value"]
-        # symbol.setValue(int(eventValue),1)
-    # else:
-        # if (event["value"] == True):
-            # tcpipDhcpServerNetConfigNum = int(Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_CONFIG_NUMBER"))
-            # symbol.getComponent().getSymbolByID("TCPIP_DHCP_SERVER_INSTANCES_NUMBER").setMax(tcpipDhcpServerNetConfigNum)        
-            # symbol.setVisible(True)
-        # else:       
-            # symbol.setVisible(False)
-
-##############################################################################################################
-
-# make DHCP Server option visible
-# def tcpipDhcpServerMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
-    # tcpipIPv4 = Database.getSymbolValue("tcpipIPv4","TCPIP_STACK_USE_IPV4")
-    # tcpipUdp = Database.getSymbolValue("tcpipUdp","TCPIP_USE_UDP")
-
-    # if(tcpipIPv4 and tcpipUdp):
-        # tcpipDependentSymbol.setVisible(True)
-    # else:
-        # tcpipDependentSymbol.setVisible(False)
-
-# def tcpipDhcpServerICMPClientEnable():
-    # tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
-    # print(tcpipIcmpComp)
-    # if(tcpipIcmpComp == None):
-        # # Enable ICMP Dependency 
-        # if(Database.getComponentByID("tcpip_network_config") == None):
-            # res = Database.activateComponents(["tcpip_network_config"])
-        # if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4") != True):
-            # setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4", True)
-        # else:
-            # tcpipIcmpComp = Database.activateComponents(["tcpipIcmp"])
-            # print(tcpipIcmpComp)
-
-        # tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
-        # print(tcpipIcmpComp)
-    # if(tcpipIcmpComp != None):
-        # tcpipICMPClientSymbol = tcpipIcmpComp.getSymbolByID("TCPIP_STACK_USE_ICMP_CLIENT")
-        # print(tcpipICMPClientSymbol)
-        # print("DHCP Server ICMP Client Menu visible.")
-    # #if(tcpipIcmpClient):
-    # #tcpipIcmpClient.setVisible(True)
-    # #tcpipIcmpClient.setEnabled(True)
-        # tcpipICMPClientSymbol.setValue(True)
-    # print("DHCP Server ICMP Client Enabled.")
-    
-    
-  
-# def tcpipDhcpServerMenuVisibleSingle(symbol, event):
-    # if (event["value"] == True):
-        # print("DHCP Server Menu Visible.")      
-        # symbol.setVisible(True)
-    # else:
-        # print("DHCP Server Menu Invisible.")
-        # symbol.setVisible(False)    
-
-# def tcpipDhcpServerInstnAddrRangeMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-    
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)
-
-# def tcpipDhcpServerInstnIpAddrMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-    
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)
-
-# def tcpipDhcpServerInstnNetMaskAddrMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)
-    
-# def tcpipDhcpServerInstnGatewayAddrMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_SERVER_GATEWAY_ADDRESS_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)    
-
-# def tcpipDhcpServerInstnPrimDnsAddrMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)    
-
-# def tcpipDhcpServerInstnSecDnsAddrMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)    
-
-# def tcpipDhcpServerInstnIfIdxMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCPS_INTERFACE_INDEX_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False)    
-
-# def tcpipDhcpServerInstnPoolEnMenu(symbol, event):
-    # print("DHCP Server Instance Start.")
-    # tcpipDhcpServerInstnIndex = int(symbol.getID().strip("TCPIP_DHCP_SERVER_POOL_ENABLED_IDX"))
-    # print(tcpipDhcpServerInstnIndex)
-    # tcpipDhcpServerInstnEnable = tcpipDhcpServerInstance[tcpipDhcpServerInstnIndex].getValue()
-    # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    # print(tcpipDhcpServerEnable)
-
-    # if(tcpipDhcpServerInstnEnable and tcpipDhcpServerEnable):
-        # symbol.setVisible(True)
-    # else:
-        # symbol.setVisible(False) 
         
 def tcpipDhcpServerGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 
-
-
-
-#########################################################################################################################
-#########################################################################################################################
 def tcpipDhcpServerMaxInstCount(symbol, event):   
-    # print "Netconfig interface Count : " + str (event["value"])
+    global tcpipDhcpServerInstanceRangePrev 
     symbol.setValue(int(event["value"]))
-    symbol.getComponent().getSymbolByID("TCPIP_DHCPS_INSTANCES_NUMBER").setMax(int(event["value"])) 
+    
+    for index in range(event["value"]):
+        tcpipDhcpServerInstance[index].setVisible(True)
+    
+    if tcpipDhcpServerInstanceRangePrev > event["value"]:
+        for index in range(event["value"], tcpipDhcpServerInstanceRangePrev):
+            tcpipDhcpServerInstance[index].setVisible(False)
+            tcpipDhcpServerInstance[index].setValue(False)
+            
+    tcpipDhcpServerInstanceRangePrev = event["value"]
 
 def tcpipDhcpServerInstnNumVisible(symbol, event):   
     global tcpipDhcpServerInstanceRangePrev  
@@ -727,63 +522,9 @@ def tcpipDhcpServerInstnNumVisible(symbol, event):
             
     tcpipDhcpServerInstanceRangePrev = event["value"]
 
-            
-def tcpipDhcpServerEnableInstance(tcpipNetDependentSymbol, event):
-    global tcpipDhcpServerInstancesNumPrev
-    print("Start tcpipDhcpServerEnableInstance")
-    
-    tcpipDhcpServerIndex = int(tcpipNetDependentSymbol.getID().strip("TCPIP_DHCPS_IDX"))
-    print str(tcpipDhcpServerIndex)
-    tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-    
-    
-    # if(event["id"] == "TCPIP_STACK_USE_DHCP_SERVER" ):
-        # print("USE DHCP Server")
-        # tcpipDhcpServerEnable = Database.getSymbolValue("tcpipDhcpServer","TCPIP_STACK_USE_DHCP_SERVER")
-        # print("DHCP Server Enabled: " + str(tcpipDhcpServerEnable) )
-        # tcpipDhcpServerIndex = int(tcpipNetDependentSymbol.getID().strip("TCPIP_DHCP_SERVER_IDX"))
-        # print("DHCP Server Index: " + str(tcpipDhcpServerIndex) )
-        # print(tcpipDhcpServerInstancesNumPrev)
-        # if(tcpipDhcpServerEnable == True):
-            # if(tcpipDhcpServerIndex < tcpipDhcpServerInstancesNumPrev ):
-                # tcpipNetDependentSymbol.setVisible(True)
-        # else:
-            # tcpipNetDependentSymbol.setVisible(False)
-    
-    # else:   
-        # #tcpipNetDependentSymbol.setVisible(True)
-        # if(event["id"] == "TCPIP_STACK_NETWORK_CONFIG_NUMBER" ):
-            # tcpipDhcpServerNetConfigNum = int(Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_CONFIG_NUMBER"))
-            # print("Net Config Num:" + str(tcpipDhcpServerNetConfigNum))
-            # tcpipNetDependentSymbol.getComponent().getSymbolByID("TCPIP_DHCP_SERVER_INSTANCES_NUMBER").setMax(tcpipDhcpServerNetConfigNum)
-        # else:           
-            # print(tcpipNetDependentSymbol.getID())
-            # tcpipDhcpServerInstanceNumberValue = event["value"]
-            # print("Max No:" + str(tcpipNetDependentSymbol.getComponent().getSymbolByID("TCPIP_DHCP_SERVER_INSTANCES_NUMBER").getMax()))
-            # print(tcpipDhcpServerInstanceNumberValue)
-            # print(tcpipDhcpServerInstancesNumPrev)
-            # if(tcpipDhcpServerInstanceNumberValue > tcpipDhcpServerInstancesNumPrev ):
-                # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setVisible(True)
-                # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setValue(True, 1)
-                # print("Set TRUE"+ str(tcpipDhcpServerInstancesNumPrev))
-                # tcpipDhcpServerInstancesNumPrev = tcpipDhcpServerInstancesNumPrev + 1
-                # #Add more network configurations
-            # else:
-                # if(tcpipDhcpServerInstanceNumberValue < tcpipDhcpServerInstancesNumPrev ):
-                    # #Reduce network configurations
-                    # tcpipDhcpServerInstancesNumPrev = tcpipDhcpServerInstancesNumPrev - 1
-                    # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setVisible(False)
-                    # tcpipDhcpServerInstance[tcpipDhcpServerInstancesNumPrev].setValue(False, 1)
-                    # print("Set FALSE"+ str(tcpipDhcpServerInstancesNumPrev))
-                    
-                # #else:
-                    # #Do Nothing
-    print("END tcpipDhcpServerEnableInstance")
-
-
-
-#########################################################################################################################
-#########################################################################################################################
+       
+def tcpipDhcpServerInstnMenuVisible(symbol, event):
+    symbol.setVisible(event["value"])
 
 #Set symbols of other components
 def setVal(component, symbol, value):
@@ -805,6 +546,8 @@ def handleMessage(messageID, args):
         retDict= {"Return": "UnImplemented Command"}
     return retDict
         
+def finalizeComponent( macComponent ):
+    tcpipDhcpServerInstance[0].setValue(True)
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipDhcpServer", "TCPIP_STACK_USE_DHCP_SERVER", False, 2)

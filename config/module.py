@@ -135,7 +135,7 @@ def loadModule():
     tcpipDhcpsComponent.setDisplayType("Application Layer")
     
     # DHCP Server new module
-    tcpipDhcpServerComponent = Module.CreateComponent("tcpipDhcpServer", "DHCP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcp_server.py")
+    tcpipDhcpServerComponent = Module.CreateComponent("tcpipDhcpServer", "DHCP SERVER v2", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcp_server.py")
     tcpipDhcpServerComponent.addCapability("libtcpipDhcpServer","DHCPS",True)
     tcpipDhcpServerComponent.addDependency("DhcpServer_IPv4_Dependency", "IPv4", None, True, True)
     tcpipDhcpServerComponent.addDependency("DhcpServer_UDP_Dependency", "UDP", None, True, True) 

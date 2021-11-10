@@ -979,7 +979,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackDhcpsHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
     tcpipStackDhcpsHeaderFile.setType("HEADER")
     tcpipStackDhcpsHeaderFile.setOverwrite(True)
-
+    
     # Add dhcps_manager.h file to project
     tcpipStackDhcpsManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackDhcpsManagerHeaderFile.setSourcePath("tcpip/src/dhcps_manager.h")
@@ -997,7 +997,34 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackDhcpPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipStackDhcpPrivateHeaderFile.setType("HEADER")
     tcpipStackDhcpPrivateHeaderFile.setOverwrite(True)
+    
+    # Add dhcp_server.h file to project
+    tcpipStackDhcpServerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackDhcpServerHeaderFile.setSourcePath("tcpip/dhcp_server.h")
+    tcpipStackDhcpServerHeaderFile.setOutputName("dhcp_server.h")
+    tcpipStackDhcpServerHeaderFile.setDestPath("library/tcpip/")
+    tcpipStackDhcpServerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+    tcpipStackDhcpServerHeaderFile.setType("HEADER")
+    tcpipStackDhcpServerHeaderFile.setOverwrite(True)
+    
+    # Add dhcp_server_manager.h file to project
+    tcpipStackDhcpServerManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackDhcpServerManagerHeaderFile.setSourcePath("tcpip/src/dhcp_server_manager.h")
+    tcpipStackDhcpServerManagerHeaderFile.setOutputName("dhcp_server_manager.h")
+    tcpipStackDhcpServerManagerHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackDhcpServerManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackDhcpServerManagerHeaderFile.setType("HEADER")
+    tcpipStackDhcpServerManagerHeaderFile.setOverwrite(True)
 
+    # Add dhcp_server_private.h file to project
+    tcpipStackDhcpServerPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackDhcpServerPrivateHeaderFile.setSourcePath("tcpip/src/dhcp_server_private.h")
+    tcpipStackDhcpServerPrivateHeaderFile.setOutputName("dhcp_server_private.h")
+    tcpipStackDhcpServerPrivateHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackDhcpServerPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackDhcpServerPrivateHeaderFile.setType("HEADER")
+    tcpipStackDhcpServerPrivateHeaderFile.setOverwrite(True)
+    
     # Add zero_conf_link_local.h file to project
     tcpipStackZcLlHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackZcLlHeaderFile.setSourcePath("tcpip/zero_conf_link_local.h")

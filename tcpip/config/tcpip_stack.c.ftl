@@ -299,6 +299,73 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 };
 </#if>
 
+<#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content && (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
+/*** DHCP Server v2 initialization data ***/
+
+<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
+	<#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
+	<#if dhcp_interface_enable_idx??>
+    <#if (dhcp_interface_enable_idx == true)>
+TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions${i}[] =
+{
+    {
+        .optType = TCPIP_DHCPS_CLIENT_OPTION_ROUTER,
+        .ipStr = TCPIP_DHCPS_ROUTER_IP_ADDR_IDX${i},
+    },
+    {
+        .optType = TCPIP_DHCPS_CLIENT_OPTION_DNS,
+        .ipStr = TCPIP_DHCPS_DNS_IP_ADDR_IDX${i},
+    },
+    {
+        .optType = TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL,
+        .mult = TCPIP_DHCPS_T1RENEW_MULT_FACT_IDX${i},
+        .div = TCPIP_DHCPS_T1RENEW_DIV_FACT_IDX${i},
+    },
+    {
+        .optType = TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING,
+        .mult = TCPIP_DHCPS_T2REBIND_MULT_FACT_IDX${i},
+        .div = TCPIP_DHCPS_T2REBIND_DIV_FACT_IDX${i},
+    },
+
+};
+	</#if>
+    </#if>
+</#list>
+
+TCPIP_DHCPS_INTERFACE_CONFIG dhcpsIfConfig[] = 
+{
+<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
+	<#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
+	<#if dhcp_interface_enable_idx??>
+    <#if (dhcp_interface_enable_idx == true)>
+    {
+        .ifIndex    = TCPIP_DHCPS_INTERFACE_INDEX_IDX${i},
+        .configFlags = TCPIP_DHCPS_CONFIG_FLAG_IDX${i},
+        .leaseEntries = TCPIP_DHCPS_MAX_LEASE_NUM_IDX${i},
+        .leaseDuration = TCPIP_DHCPS_LEASEDURATION_DFLT_IDX${i},
+        .minLeaseDuration = TCPIP_DHCPS_LEASEDURATION_MIN_IDX${i},
+        .maxLeaseDuration = TCPIP_DHCPS_LEASEDURATION_MAX_IDX${i},
+        .unreqOfferTmo = TCPIP_DHCPS_UNREQ_TMO_IDX${i},
+        .serverIPAddress = TCPIP_DHCPS_SERVER_IP_ADDRESS_IDX${i},
+        .startIPAddress = TCPIP_DHCPS_START_IP_ADDR_IDX${i},
+        .prefixLen = TCPIP_DHCPS_MASK_PREFIX_NUM_IDX${i},
+        .pOptConfig = dhcpsOptions${i},
+        .nOptConfigs = sizeof(dhcpsOptions${i}) / sizeof(*dhcpsOptions${i}),
+    },
+	</#if>
+    </#if>
+</#list>
+};
+
+const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
+{
+	.pIfConfig   		= dhcpsIfConfig,
+	.nConfigs       	= sizeof(dhcpsIfConfig) / sizeof(*dhcpsIfConfig),
+	.maxLeases     		= TCPIP_DHCPS_MAX_LEASES,
+	.nProbes       		= TCPIP_DHCPS_ICMP_PROBES,
+	.conflictAttempts  	= TCPIP_DHCPS_CONFLICT_ATTEMPTS,
+};
+</#if>
 <#if (tcpipFtps.TCPIP_USE_FTP_MODULE)?has_content && (tcpipFtps.TCPIP_USE_FTP_MODULE) == true>
 /*** FTP Server Initialization Data ***/
 const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
