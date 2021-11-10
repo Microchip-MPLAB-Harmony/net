@@ -76,6 +76,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Note that this also the maximum number of interfaces in the stack for this build!
 #define TCPIP_DHCPS_MAX_INTERFACES      4
 
+// Maximum number of leases that the DHCP server can support for an interface
+// The actual number of leases per interface could be smaller than this
+// Multiple of 32
+#define TCPIP_DHCPS_MAX_LEASES          64
+
 // size of the buffer when sending a ICMP echo request for address conflict detection
 // should be between 8 and 32 bytes
 #define TCPIP_DHCPS_ICMP_ECHO_DATA_SIZE 16

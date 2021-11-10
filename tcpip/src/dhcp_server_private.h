@@ -51,60 +51,24 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _DHCP_SERVER_PRIVATE_H_ 
 #define _DHCP_SERVER_PRIVATE_H_
 
-// @@@@ configuration
-// maximum size of the client identifier field
-// needs to be >= size of a MAC Address
-// Note: when a client is requesting a lease using a longer client ID 
-// the ID will be truncated!
-//
-#define TCPIP_DHCPS_CLIENT_ID_MAX_SIZE 16
 
-// maximum number of interfaces on which DHCPs could run
-// Note that this also the maximum number of interfaces in the stack for this build!
-// @@@@_aa: do we have a max number of interfaces in the build? We could use that one!
-#define TCPIP_DHCPS_MAX_INTERFACES      4
+// internal definitions
 
-// size of the buffer when sending a ICMP echo request for address conflict detection
-// should be between 8 and 32 bytes
-#define TCPIP_DHCPS_ICMP_ECHO_DATA_SIZE 16
+// mimimum leases to allocate
+#define _TCPIP_DHCPS_MIN_LEASES  32
 
-// number of retries if ICMP is not able to send a ping
-// this should only happen if there are too many ICMP echo requests ongoing
-#define TCPIP_DHCPS_ICMP_ECHO_RETRIES   2
+// round up to M32
+#if (TCPIP_DHCPS_MAX_LEASES == 0)
+#define _TCPIP_DHCPS_USR_MAX_LEASES _TCPIP_DHCPS_MIN_LEASES
+#else
+#define _TCPIP_DHCPS_USR_MAX_LEASES (((TCPIP_DHCPS_MAX_LEASES + 31) / 32) * 32)
+#endif
 
-// maximum number of values for the TCPIP_DHCPS_OPTION_TYPE client options
-// a value defined as 0 excludes that option
-#define TCPIP_DHCPS_OPTION_ROUTER_VALUES        1
-#define TCPIP_DHCPS_OPTION_DNS_VALUES           2
-#define TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES   1
-#define TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES   1
-#define TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES    1
-
-// suppress the 'renewal T1' and 'rebinding T2' options when replying to a client request
-// by default thse options are enabled
-// #define TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS
-
-// enable the report of error events using the event notification mechanism
-#define TCPIP_DHCPS_REPORT_ERROR_EVENT      1
-
-// enable the report of client events using the event notification mechanism
-#define TCPIP_DHCPS_REPORT_CLIENT_EVENT      1
-
-// maximum number of event registrations
-// if 0 or not defined, there is no event registration
-#define TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS     2
-
-// maintain statistics counts
-#define TCPIP_DHCPS_ENABLE_STATISTICS              1
-
-// allow dynamic manipulation of the DHCPs DB
-#define TCPIP_DHCPS_DYNAMIC_DB_ACCESS       1
-
-// enable multi-threaded access
-#define TCPIP_DHCPS_MULTI_THREADED_ACCESS   1
-
-// internal
-// 
+#if _TCPIP_DHCPS_USR_MAX_LEASES < _TCPIP_DHCPS_MIN_LEASES
+#define _TCPIP_DHCPS_MAX_LEASES _TCPIP_DHCPS_MIN_LEASES
+#else
+#define _TCPIP_DHCPS_MAX_LEASES _TCPIP_DHCPS_USR_MAX_LEASES
+#endif
 
 #define _TCPIP_DHCPS_CLIENT_ID_MIN_SIZE     6
 #if TCPIP_DHCPS_CLIENT_ID_MAX_SIZE < _TCPIP_DHCPS_CLIENT_ID_MIN_SIZE
@@ -572,7 +536,7 @@ typedef struct _tag_TCPIP_DHCPS_INTERFACE_DCPT
     TCPIP_DHCPS_STATISTICS_DATA statData;   // statistics counters
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
 
-    uint32_t        ipMap[];        // bitmap of IP addresses; a set bit specifies an available address
+    uint32_t        ipMap[_TCPIP_DHCPS_MAX_LEASES / 32];        // bitmap of IP addresses; a set bit specifies an available address
 
 }TCPIP_DHCPS_INTERFACE_DCPT;    // descriptor per interface
 

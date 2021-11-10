@@ -361,7 +361,6 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 {
 	.pIfConfig   		= dhcpsIfConfig,
 	.nConfigs       	= sizeof(dhcpsIfConfig) / sizeof(*dhcpsIfConfig),
-	.maxLeases     		= TCPIP_DHCPS_MAX_LEASES,
 	.nProbes       		= TCPIP_DHCPS_ICMP_PROBES,
 	.conflictAttempts  	= TCPIP_DHCPS_CONFLICT_ATTEMPTS,
 };

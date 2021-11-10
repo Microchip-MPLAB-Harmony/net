@@ -996,6 +996,7 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
 #endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
 
         default:
+            (void)nSets;
             res = TCPIP_DHCPS_RES_OPTION_ERR;
             break;
     }
@@ -1005,7 +1006,6 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
 
 bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCPS_MODULE_CONFIG* pDhcpsConfig)
 {    
-    size_t allocSize, maxLeases;
     TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt;
     TCPIP_DHCPS_RES initRes;
 
@@ -1043,13 +1043,8 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
             break;
         }
 
-        // 1st pass to calculate the interfaces and allocation size
-        allocSize = sizeof(TCPIP_DHCPS_DCPT);
-        maxLeases = ((pDhcpsConfig->maxLeases + 31) / 32) * 32;   // round up to multiple of 32
-        allocSize += maxLeases / 8;  // each lease takes a bit in the ipMap
-
-
-        gDhcpDcpt = (TCPIP_DHCPS_DCPT*)TCPIP_HEAP_Calloc(stackCtrl->memH, 1, allocSize);
+        // allocate the descriptor
+        gDhcpDcpt = (TCPIP_DHCPS_DCPT*)TCPIP_HEAP_Calloc(stackCtrl->memH, 1, sizeof(TCPIP_DHCPS_DCPT));
         if(gDhcpDcpt == 0)
         {   // failed
             initRes = TCPIP_DHCPS_RES_ALLOC_ERR;
@@ -1062,7 +1057,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         gDhcpDcpt->nProbes = pDhcpsConfig->nProbes ? pDhcpsConfig->nProbes : _TCPIP_DHCPS_DEFAULT_PROBE_COUNT;
         gDhcpDcpt->nReprobes = pDhcpsConfig->conflictAttempts ? pDhcpsConfig->conflictAttempts : _TCPIP_DHCPS_DEFAULT_REPROBE_COUNT;
         gDhcpDcpt->probeTmoMs = (TCPIP_ICMP_ECHO_REQUEST_TIMEOUT * 3) / 2;  // make sure we timeout after ICMP does!
-        gDhcpDcpt->maxLeases = maxLeases;
+        gDhcpDcpt->maxLeases = _TCPIP_DHCPS_MAX_LEASES;
         gDhcpDcpt->icmpSequenceNo = SYS_RANDOM_PseudoGet();
         gDhcpDcpt->icmpIdentifier = SYS_RANDOM_PseudoGet();
         gDhcpDcpt->stackSigHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DHCPS_Task, TCPIP_DHCPS_TASK_PROCESS_RATE);
@@ -1923,6 +1918,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         break;
     }
 
+    (void)evType; (void)evInfo1; (void)evInfo2;
     _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
 
     if(he != 0)
@@ -2878,6 +2874,7 @@ static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTR
 
     }
 
+    (void)evType;
     _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, (uint32_t)he->probeCount, echoRequest.targetAddr.Val);
     return echoRes >= 0;
 }

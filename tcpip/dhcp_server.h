@@ -207,7 +207,7 @@ typedef struct
     uint8_t     ifIndex;            // interface number to which this configuration refers to
     uint8_t     configFlags;        // a TCPIP_DHCPS_CONFIG_FLAGS value 
     uint16_t    leaseEntries;       // max number of leases for this interface
-                                    // Must be <= TCPIP_DHCPS_MODULE_CONFIG::maxLeases
+                                    // Must be <= TCPIP_DHCPS_MAX_LEASES
     uint32_t    leaseDuration;      // default lease duration to be granted to clients, seconds 
     uint32_t    minLeaseDuration;   // minimum lease duration that can be requested by a client, seconds 
                                     // if 0, then a default of 60 seconds will be used
@@ -256,7 +256,6 @@ typedef struct
     const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig;      // array of DHCP server configurations per interface
     uint16_t    nConfigs;                               // number of DHCP server configurations in the pIfConfig array, one per interface
                                                         // Cannot exceed the TCPIP_DHCPS_MAX_INTERFACES, which is the number of interfaces in the stack!
-    uint16_t    maxLeases;                              // maximum supported number of leases per interface
     uint8_t     nProbes;                                // number of ICMP echo probes to send when doing address conflict detection - default 1
     uint8_t     conflictAttempts;                       // number of attempts to find a new IP address when ICMP detected an address conflict - default 1
 } TCPIP_DHCPS_MODULE_CONFIG;

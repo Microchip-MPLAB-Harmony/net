@@ -407,7 +407,7 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
     {TCPIP_MODULE_DHCP_CLIENT,   (tcpipModuleInitFunc)TCPIP_DHCP_Initialize,        TCPIP_DHCP_Deinitialize},           // TCPIP_MODULE_DHCP_CLIENT
 #endif
-#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
     {TCPIP_MODULE_DHCP_SERVER,   (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize,       TCPIP_DHCPS_Deinitialize},          // TCPIP_MODULE_DHCP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ANNOUNCE)
@@ -517,7 +517,7 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
     {TCPIP_MODULE_DHCP_CLIENT,   (tcpipModuleInitFunc)TCPIP_DHCP_Initialize},           // TCPIP_MODULE_DHCP_CLIENT
 #endif
-#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
     {TCPIP_MODULE_DHCP_SERVER,   (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize},          // TCPIP_MODULE_DHCP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ANNOUNCE)
@@ -3251,13 +3251,13 @@ TCPIP_STACK_ADDRESS_SERVICE_TYPE TCPIP_STACK_AddressServiceSelect(TCPIP_NET_IF* 
     }
 #endif  // defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
 
-#if defined(TCPIP_STACK_USE_DHCP_SERVER)
+#if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
     if((configFlags & TCPIP_NETWORK_CONFIG_DHCP_SERVER_ON) != 0 )
     { 
         pNetIf->Flags.bIsDHCPSrvEnabled = 1;
         return TCPIP_STACK_ADDRESS_SERVICE_DHCPS;
     }
-#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)
+#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 
 #endif  // defined(TCPIP_STACK_USE_IPV4)
     // couldn't select an address service
