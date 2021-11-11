@@ -968,7 +968,7 @@ static bool _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ o
                     }
                     // avoid replying to these requests while changing the address
                     IPV4_ADDR zeroAdd = {0};
-                    _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
+                    _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
                 }
                 else if(!TCPIP_STACK_AddressServiceCanStart(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPC))
                 {
@@ -2037,7 +2037,7 @@ static void _DHCPSetNewLease(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf)
     oldNetIp.Val = TCPIP_STACK_NetAddressGet(pNetIf);
     oldNetMask.Val = TCPIP_STACK_NetMaskGet(pNetIf);
 
-    _TCPIPStackSetConfigAddress(pNetIf, &pClient->dhcpIPAddress, &pClient->dhcpMask, false);
+    _TCPIPStackSetConfigAddress(pNetIf, &pClient->dhcpIPAddress, &pClient->dhcpMask, 0, false);
     if(pClient->validValues.Gateway)
     {
         TCPIP_STACK_GatewayAddressSet(pNetIf, &pClient->dhcpGateway);
@@ -2597,7 +2597,7 @@ void TCPIP_DHCP_ConnectionHandler(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT connEven
         {
             // let it wait for the connection
             _DHCPClientClose(pNetIf, false, false);
-            _TCPIPStackSetConfigAddress(pNetIf, 0, 0, true);
+            _TCPIPStackSetConfigAddress(pNetIf, 0, 0, 0, true);
             TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPC, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST);
             _DHCPDbgAddServiceEvent(pClient, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST, 0);
             _DHCPNotifyClients(pNetIf, DHCP_EVENT_CONN_LOST);

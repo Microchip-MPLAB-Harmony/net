@@ -166,7 +166,9 @@ static void _CommandDHCPsOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 static bool _CommandDHCPsEnable(TCPIP_NET_HANDLE netH);
 static bool _CommandDHCPsDisable(TCPIP_NET_HANDLE netH);
 static void _Command_DHCPsLeaseList(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+#if (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 static void _Command_DHCPsLeaseRemove(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
+#endif  // (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 static void _Command_DHCPsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
 #if defined(_TCPIP_STACK_DHCPS_CONFIG_EXAMPLE)
 static void _Command_DHCPsConfigure(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH);
@@ -855,6 +857,7 @@ static void _CommandDHCPsOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
             return;
         }
 
+#if (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
         if(strcmp(argv[2], "remove") == 0)
         {
             if(argc >= 4)
@@ -864,6 +867,7 @@ static void _CommandDHCPsOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
             }
             break;
         }
+#endif  // (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 
         if(strcmp(argv[2], "stats") == 0)
         {
@@ -965,6 +969,7 @@ static void _Command_DHCPsLeaseList(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
 
 }
 
+#if (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 static void _Command_DHCPsLeaseRemove(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
 {   
     // dhcps interface remove ix/all <keepPerm> <keepBusy>
@@ -1031,6 +1036,7 @@ static void _Command_DHCPsLeaseRemove(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, cha
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam,"DHCPS remove %s, res: %d\r\n", argv[3], res);
 }
+#endif  // (TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 
 static void _Command_DHCPsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_NET_HANDLE netH)
 {   

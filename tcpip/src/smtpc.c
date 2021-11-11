@@ -1634,6 +1634,7 @@ static TCPIP_SMTPC_STATUS smtpDcptTransactionQuit(TCPIP_SMTPC_MESSAGE_DCPT* pDcp
 {
     if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_EHLO) != 0)
     {
+         pDcpt->retryCnt = 0; //added to stop retries even when successful! @@@@
         // tmo error should take us to close 
         smtpcSetErrorJump(pDcpt, TCPIP_SMTPC_STAT_TRANSACTION_CLOSE);
         TCPIP_SMTPC_STATUS newStat = smtpCommandParam(pDcpt, TCPIP_SMTPC_CMD_QUIT, 0, smtpcServerGenTmo);

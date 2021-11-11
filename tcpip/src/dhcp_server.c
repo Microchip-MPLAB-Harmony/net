@@ -615,13 +615,13 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
     for(ix = 0; ix < nConfigs; ix++, pIfConfig++)
     {
         memset(&cliOptions, 0, sizeof(cliOptions));
-#if (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         // set the T1 and T2 options, just in case; user can overwrite
         cliOptions.t1Mult = _TCPIP_DHCPS_DEFAULT_T1_MULT;
         cliOptions.t1Div = _TCPIP_DHCPS_DEFAULT_T1_DIV;
         cliOptions.t2Mult = _TCPIP_DHCPS_DEFAULT_T2_MULT;
         cliOptions.t2Div = _TCPIP_DHCPS_DEFAULT_T2_DIV;
-#endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
         valRes = _DHCPS_ParseConfigOptions(&cliOptions, pIfConfig->pOptConfig, pIfConfig->nOptConfigs);
         if(valRes < 0)
@@ -629,13 +629,13 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
             return valRes;
         }
         // 
-#if (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         // check T2 > T1
         if(cliOptions.t1Mult * cliOptions.t2Div > cliOptions.t2Mult * cliOptions.t1Div)
         {   // failed; use defaults
             return TCPIP_DHCPS_RES_T1_T2_ERR;
         } 
-#endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
         pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pIfConfig->ifIndex); 
         int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
@@ -967,7 +967,7 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
 
 #endif // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
 
-#if (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         case TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL:
             if(pOptConfig->mult == 0 || pOptConfig->div == 0)
             {
@@ -993,7 +993,7 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
             break;
 
 
-#endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
         default:
             (void)nSets;
@@ -1150,7 +1150,7 @@ static void _DHCPS_Cleanup(void)
         }
 
         pIDcpt = gDhcpDcpt->ifDcpt;
-        for(ix = 0; ix <  gDhcpDcpt->ifCount; pIDcpt++)
+        for(ix = 0; ix <  gDhcpDcpt->ifCount; ix++, pIDcpt++)
         {
             if(pIDcpt->hashDcpt != 0)
             {   
@@ -2601,7 +2601,7 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     }
 #endif  // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
 
-#if (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
     if(he->srvMsgType == DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != DHCP_MESSAGE_TYPE_INFORM)
     {
         // option DHCP_OPTION_RENEWAL_T1 
@@ -2618,7 +2618,7 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
         uPtr.pOption->t2RebindingType.intVal = TCPIP_Helper_htonl(t2);
         uPtr.wrPtr += sizeof(uPtr.pOption->t2RebindingType);
     }
-#endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
   
     // No more options, mark ending
     *uPtr.wrPtr++ = DHCP_OPTION_END;
@@ -3342,10 +3342,13 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Configure(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfCon
 
         // configure the interface address and mask 
         pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pIfConfig->ifIndex); 
-        ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
-        pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
-        _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, false);
+        if(pNetIf->Flags.bIsDHCPSrvEnabled)
+        {
+            ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
+            _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+            pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
+            _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
+        }
     }
 
     _DHCPS_AccessUnlock();
@@ -3737,8 +3740,8 @@ static TCPIP_DHCPS_RES _DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart)
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
-        // configure the interface address and mask 
-        _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, false);
+        // configure the interface address, mask and gateway
+        _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
         pNetIf->Flags.bIsDHCPSrvEnabled = true;
 
         return TCPIP_DHCPS_RES_OK;

@@ -655,7 +655,7 @@ static void TCPIP_ZCLL_Process(void)
                 _ZCLL_RandInit(hZcll, pNetIf);
 
                 hZcll->conflict_count = 0;
-                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
+                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
                 hZcll->probe_count = 0;
 
                 hZcll->zcll_state = SM_ADDR_PROBE;
@@ -722,7 +722,7 @@ static void TCPIP_ZCLL_Process(void)
                     hZcll->temp_IP_addr.Val = 0x0;
 
                     hZcll->conflict_count++;
-                    _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
+                    _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
                 }
                 else if((hZcll->conflict_count == 0) &&
                         hZcll->temp_IP_addr.Val      &&
@@ -741,7 +741,7 @@ static void TCPIP_ZCLL_Process(void)
                         hZcll->temp_IP_addr.Val = 0x0;
 
                         hZcll->conflict_count++;
-                        _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
+                        _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
                     }
                 }
 
@@ -871,7 +871,7 @@ static void TCPIP_ZCLL_Process(void)
                     // Claim it. Goto DEFEND state
                     IPV4_ADDR   zcllMask;
                     zcllMask.Val = IPV4_LLBASE_MASK;
-                    _TCPIPStackSetConfigAddress(pNetIf, &hZcll->temp_IP_addr, &zcllMask, false);
+                    _TCPIPStackSetConfigAddress(pNetIf, &hZcll->temp_IP_addr, &zcllMask, 0, false);
                     hZcll->zcll_state = SM_ADDR_DEFEND;
                     INFO_ZCLL_MESG(zeroconf_dbg_msg,"\r\n******** Taken IP-Addr: " \
                             "%d.%d.%d.%d ******** \r\n",
@@ -951,7 +951,7 @@ static void TCPIP_ZCLL_Process(void)
 
                 INFO_ZCLL_PRINT("ADDR_RELEASE --> ADDR_INIT\r\n");
 
-                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, true);
+                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
 
                 // Need New Addr
                 hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);

@@ -103,6 +103,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 // default T1 and T2 factors
+#if defined(TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS) && (TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == true)
+#define _TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS  1
+#else
+#define _TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS  0
+#endif
+
 #define _TCPIP_DHCPS_DEFAULT_T1_MULT    1
 #define _TCPIP_DHCPS_DEFAULT_T1_DIV     2
 
@@ -495,14 +501,14 @@ typedef struct
 #if (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
     uint32_t        cliNtpServer[TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES];// time server addresses
 #endif  // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
-#if (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
     uint16_t        t1Mult;         // multiplication factor of lease time for the T1 renewal time; default 1
     uint16_t        t1Div;          // divide factor of lease time for the T1 renewal time; default 2
                                     // T1 = (leaseTime * mult) / div;
     uint16_t        t2Mult;         // multiplication factor of lease time for the T2 rebinding time; default 7
     uint16_t        t2Div;          // divide factor of lease time for the T2 rebinding time; default 8
                                     // T2 = (leaseTime * mult) / div;
-#endif  // (!defined TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS)
+#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
     uint32_t        cliOptFlags;    // TCPIP_DHCPS_CLIENT_OPTION_FLAG value, the (extra) supported client options
 }TCPIP_DHCPS_CLIENT_OPTIONS;
 
