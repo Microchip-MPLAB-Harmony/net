@@ -4154,7 +4154,7 @@ static TCPIP_SMTPC_ATTACH_BUFFER smtpBuffAttachTbl[] =
     TCPIP_SMTPC_ATTACH_TYPE_TEXT,       // type
     TCPIP_SMTPC_ENCODE_TYPE_7BIT,       // encode
     "second_attach.txt",                  // attachName
-    (const uint8_t*)"This is yet another text attachment but supplied as a buffer.\r\n.Enjoy!\r\
+    (const uint8_t*)"This is yet another text attachment also supplied as a buffer.\r\n.Adjust as needed.\r\
      Some real files are attached separately.\r\n",            // attachBuffer 
      0,                                 // attachSize
     },
@@ -4202,7 +4202,7 @@ static TCPIP_SMTPC_MAIL_MESSAGE myMailTestMsg =
 static TCPIP_SMTPC_MESSAGE_HANDLE tcpipMailHandle = 0;
 
 
-static char        tcpipMailServer[20] = "";    // IPv4 mail server address string
+static char        tcpipMailServer[40] = "";    // IPv4 mail server address string
 static uint16_t    tcpipServerPort = 587;
 static char        tcpipAuthUser[80 + 1] = "";
 static char        tcpipAuthPass[80 + 1] = "";

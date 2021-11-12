@@ -382,7 +382,7 @@ static bool smtpcIsDcptTmo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt);
 
 static TCPIP_SMTPC_STATUS smtpcErrorStop(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, TCPIP_SMTPC_MESSAGE_RESULT res, TCPIP_SMTPC_DCPT_FLAGS retryFlags);
 
-static void smtpcRetryInit(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt);
+static void smtpcRetryInit(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, TCPIP_SMTPC_DCPT_FLAGS flags);
 
 static TCPIP_SMTPC_STATUS smtpcServerErrorStop(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, TCPIP_SMTPC_MESSAGE_RESULT res, int serverCode);
 
@@ -826,18 +826,21 @@ TCPIP_SMTPC_MESSAGE_HANDLE TCPIP_SMTPC_MailMessage(const TCPIP_SMTPC_MAIL_MESSAG
         pDcpt->addType = addType;
         pDcpt->retryCnt = smtpcMailRetries;
 
+        TCPIP_SMTPC_DCPT_FLAGS flags;
+        
        if(!useDns)
         {
             pDcpt->serverAdd = ipAddr;
             newStat = TCPIP_SMTPC_STAT_SOCKET_GET;
+            flags = TCPIP_SMTPC_DCPT_FLAG_NONE;
         }
         else
         {
-            pDcpt->dcptFlags |= TCPIP_SMTPC_DCPT_FLAG_DNS;
             newStat = TCPIP_SMTPC_STAT_DNS_START;
+            flags = TCPIP_SMTPC_DCPT_FLAG_DNS;
         }
         smtpcSetStatus(pDcpt, newStat);
-        smtpcRetryInit(pDcpt);
+        smtpcRetryInit(pDcpt, flags);
 
         critStat = smtpcThreadLock();
         TCPIP_Helper_SingleListTailAdd(&smtpcMessageBusyList, (SGL_LIST_NODE*)pDcpt);
@@ -964,8 +967,19 @@ static TCPIP_SMTPC_STATUS smtpDcptStateWaitRetry(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt
     }
     else
     {
-        newStat = (pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_DNS) != 0 ? TCPIP_SMTPC_STAT_DNS_START : TCPIP_SMTPC_STAT_SOCKET_GET;
-        smtpcRetryInit(pDcpt);
+        TCPIP_SMTPC_DCPT_FLAGS flags;
+        if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_DNS) != 0)
+        {
+            newStat = TCPIP_SMTPC_STAT_DNS_START;
+            flags = TCPIP_SMTPC_DCPT_FLAG_DNS;
+        }
+        else
+        {
+            newStat = TCPIP_SMTPC_STAT_SOCKET_GET;
+            flags = TCPIP_SMTPC_DCPT_FLAG_NONE;
+        }
+
+        smtpcRetryInit(pDcpt, flags);
     }
 
     return newStat;
@@ -1634,13 +1648,16 @@ static TCPIP_SMTPC_STATUS smtpDcptTransactionQuit(TCPIP_SMTPC_MESSAGE_DCPT* pDcp
 {
     if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_EHLO) != 0)
     {
-         pDcpt->retryCnt = 0; //added to stop retries even when successful! @@@@
         // tmo error should take us to close 
         smtpcSetErrorJump(pDcpt, TCPIP_SMTPC_STAT_TRANSACTION_CLOSE);
         TCPIP_SMTPC_STATUS newStat = smtpCommandParam(pDcpt, TCPIP_SMTPC_CMD_QUIT, 0, smtpcServerGenTmo);
         if(newStat == pDcpt->currStat && smtpcIsDcptTmo(pDcpt))
         {   // make sure we're not stuck here trying to send the quit...
             return TCPIP_SMTPC_STAT_TRANSACTION_CLOSE;
+        }
+        else if(pDcpt->messageRes == TCPIP_SMTPC_RES_OK)
+        {   // done with the connection
+            pDcpt->dcptFlags &= ~TCPIP_SMTPC_DCPT_FLAG_CONNECTED;
         }
 
         return newStat;
@@ -2169,8 +2186,8 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcTransactResetWait(TCPIP_SMTPC_MESSAGE_DC
 // process the server reply to quit
 static TCPIP_SMTPC_STATUS smtpDcptRxProcTransactQuitWait(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, const char* replyBuffer, int nLines)
 {
-    // no matter what the server replies here we move on
-    return TCPIP_SMTPC_STAT_TRANSACTION_QUIT_WAIT + 1;
+    // no matter what the server replies here we move on and close
+    return TCPIP_SMTPC_STAT_TRANSACTION_CLOSE;
 }
 
 
@@ -2370,12 +2387,12 @@ static TCPIP_SMTPC_STATUS smtpcServerErrorStop(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, 
 }
 
 // initializes a descriptor for a retry round
-static void smtpcRetryInit(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt)
+static void smtpcRetryInit(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, TCPIP_SMTPC_DCPT_FLAGS flags)
 {
     pDcpt->messageRes = TCPIP_SMTPC_RES_PENDING;
     pDcpt->messageWarn = 0;
     pDcpt->errorStat = 0;
-    pDcpt->dcptFlags = TCPIP_SMTPC_DCPT_FLAG_NONE;
+    pDcpt->dcptFlags = flags;
     smtpcSetErrorJump(pDcpt, TCPIP_SMTPC_STAT_MAIL_DONE_REPORT);
 }
 
