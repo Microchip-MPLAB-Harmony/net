@@ -316,6 +316,7 @@ def instantiateComponent(tcpipStackComponent):
                                 "tcpipTelnet.TCPIP_USE_TELNET", "tcpipTelnet.TCPIP_TELNET_HEAP_SIZE", 
                                 "tcpipDns.TCPIP_USE_DNS_CLIENT", "tcpipDns.TCPIP_DNS_CLIENT_HEAP_SIZE", 
                                 "tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER", "tcpipDhcps.TCPIP_DHCP_SERVER_HEAP_SIZE", 
+                                "tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2", "tcpipDhcpServer.TCPIP_DHCP_SERVER_V2_HEAP_SIZE", 
                                 "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipFtps.TCPIP_FTPS_HEAP_SIZE", 
                                 "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipHttp.TCPIP_HTTP_HEAP_SIZE",
                                 "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_HEAP_SIZE",
@@ -2252,6 +2253,11 @@ def tcpipHeapCalc():
     if((Database.getSymbolValue("tcpipDhcps", "TCPIP_STACK_USE_DHCP_SERVER") == True)): 
         if(Database.getSymbolValue("tcpipDhcps","TCPIP_DHCP_SERVER_HEAP_SIZE") != None):
             heapsize = heapsize + Database.getSymbolValue("tcpipDhcps","TCPIP_DHCP_SERVER_HEAP_SIZE")  
+            
+    # DHCP Server v2
+    if((Database.getSymbolValue("tcpipDhcpServer", "TCPIP_STACK_USE_DHCP_SERVER_V2") == True)): 
+        if(Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCP_SERVER_V2_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCP_SERVER_V2_HEAP_SIZE") 
 
     # FTP Server
     if((Database.getSymbolValue("tcpipFtps", "TCPIP_USE_FTP_MODULE") == True)): 

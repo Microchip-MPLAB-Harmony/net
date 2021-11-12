@@ -59,9 +59,9 @@ tcpipDhcpServerInstanceRangePrev = 1
 tcpipNetConfigNumMax = 5  # hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpServerComponent):
-    print(tcpipNetConfigNumMax)
-    print("TCPIP DHCP Server Component")
+    print("TCPIP DHCP Server V2 Component")
     configName = Variables.get("__CONFIGURATION_NAME")
+    
     # Enable DHCP Server
     tcpipDhcpServer = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER_V2", None)
     tcpipDhcpServer.setLabel("DHCP Server")
@@ -109,6 +109,9 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerIPAttemptNum.setDefaultValue(1)
     tcpipDhcpServerIPAttemptNum.setMin(0)
 
+    tcpipDhcpServerInstnDependency = ["TCPIP_DHCPS_MAX_INTERFACES"]
+      
+    
     for index in range(0,tcpipNetConfigNumMax): 
         tcpipDhcpServerInstance.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_IDX"+str(index),None))
         tcpipDhcpServerInstance[index].setLabel("DHCP Server on Interface "+ str(index))
@@ -117,7 +120,9 @@ def instantiateComponent(tcpipDhcpServerComponent):
         else:
             tcpipDhcpServerInstance[index].setVisible(False) 
         tcpipDhcpServerInstance[index].setDefaultValue(False)     
-    
+            
+        tcpipDhcpServerInstnDependency.append(tcpipDhcpServerInstance[index].getID())
+        
         # DHCP Server interface index
         tcpipDhcpServerIfIdx.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INTERFACE_INDEX_IDX" + str(index), tcpipDhcpServerInstance[index]))
         tcpipDhcpServerIfIdx[index].setLabel("Interface Index for DHCP Server")
@@ -127,7 +132,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
 
         # Maximum Number of Leases
         tcpipDhcpServerLeaseEntryMaxNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MAX_LEASE_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerLeaseEntryMaxNum[index].setLabel("Maximum Number of Leases")
+        tcpipDhcpServerLeaseEntryMaxNum[index].setLabel("Number of Leases")
         tcpipDhcpServerLeaseEntryMaxNum[index].setVisible(False)
         tcpipDhcpServerLeaseEntryMaxNum[index].setDefaultValue(32)
         tcpipDhcpServerLeaseEntryMaxNum[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
@@ -198,8 +203,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Instance Advanced menu       
         tcpipDhcpServerInstanceAdvMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_INSTN_ADV_MENU_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        # tcpipDhcpServerInstanAdvMenu[index].setLabel("Config Flags")
-        tcpipDhcpServerInstanceAdvMenu[index].setLabel("Instance "+ str(index) + " Advanced Setting")
+        tcpipDhcpServerInstanceAdvMenu[index].setLabel("Interface "+ str(index) + " Advanced Setting")
         tcpipDhcpServerInstanceAdvMenu[index].setVisible(False)
         tcpipDhcpServerInstanceAdvMenu[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
 
@@ -309,6 +313,13 @@ def instantiateComponent(tcpipDhcpServerComponent):
             
     ######################################################################################################################################    
 
+    # DHCP Server Instance Count
+    tcpipDhcpServerInstanceCount = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INSTANCE_COUNT", None)
+    tcpipDhcpServerInstanceCount.setLabel("DHCP Server Instance Count")
+    tcpipDhcpServerInstanceCount.setVisible(False)
+    tcpipDhcpServerInstanceCount.setDefaultValue(0) 
+    tcpipDhcpServerInstanceCount.setDependencies(tcpipDhcpServerInstnCount, tcpipDhcpServerInstnDependency)
+    
     # Advanced Settings
     tcpipDhcpServerAdvSettings = tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_ADV_SETTING", None)
     tcpipDhcpServerAdvSettings.setLabel("Advanced Settings")
@@ -448,15 +459,15 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerEventMultThread.setDescription("Enable Multi-Threaded Access")
     tcpipDhcpServerEventMultThread.setDefaultValue(False)    
 
-    tcpipDhcpServerheapdependency = ["TCPIP_DHCPS_INSTANCES_NUMBER", "TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
-        
-    # # DHCP Server Heap Size
-    # tcpipDhcpServerHeapSize = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_HEAP_SIZE", None)
-    # tcpipDhcpServerHeapSize.setLabel("DHCP Server Heap Size (bytes)")  
-    # tcpipDhcpServerHeapSize.setVisible(False)
-    # # tcpipDhcpServerHeapSize.setDefaultValue(tcpipDhcpServerHeapCalc())
-    # tcpipDhcpServerHeapSize.setReadOnly(True)
-    # tcpipDhcpServerHeapSize.setDependencies(tcpipDhcpServerHeapUpdate, tcpipDhcpServerheapdependency)      
+    tcpipDhcpServerheapdependency = ["TCPIP_DHCPS_MAX_LEASES", "TCPIP_DHCPS_OPTION_ROUTER_VALUES", "TCPIP_DHCPS_OPTION_DNS_VALUES", "TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES", "TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS", "TCPIP_DHCPS_MAX_INTERFACES", "TCPIP_DHCPS_CLIENT_ID_MAX_SIZE", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK", "TCPIP_DHCPS_INSTANCE_COUNT"]     
+    
+    # DHCP Server Heap Size
+    tcpipDhcpServerHeapSize = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_V2_HEAP_SIZE", None)
+    tcpipDhcpServerHeapSize.setLabel("DHCP Server Heap Size (bytes)")  
+    tcpipDhcpServerHeapSize.setVisible(False)
+    tcpipDhcpServerHeapSize.setDefaultValue(tcpipDhcpServerHeapCalc())
+    tcpipDhcpServerHeapSize.setReadOnly(True)
+    tcpipDhcpServerHeapSize.setDependencies(tcpipDhcpServerHeapUpdate, tcpipDhcpServerheapdependency)      
     
     #Add to system_config.h
     tcpipDhcpServerHeaderFtl = tcpipDhcpServerComponent.createFileSymbol(None, None)
@@ -474,21 +485,33 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
     tcpipDhcpServerSourceFile.setType("SOURCE")
     tcpipDhcpServerSourceFile.setEnabled(True)
-    # tcpipDhcpServerSourceFile.setDependencies(tcpipDhcpServerGenSourceFile, ["TCPIP_STACK_USE_DHCP_SERVER"])
     
 #############################################################################################################
 
-# def tcpipDhcpServerHeapCalc(): 
-    # nDHCPInterfaces = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_INSTANCES_NUMBER")
-    # leaseEntries = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT")
-    # heap_size = (nDHCPInterfaces * 32) + (40 + (leaseEntries * 28))
-    # return heap_size    
+def tcpipDhcpServerHeapCalc(): 
+    max_leases = ((Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_MAX_LEASES") + 31)/32)*32 #round up to a multiple of 32
+    dhcps_interface_dcpt_size = 78  + 4 * ( Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_ROUTER_VALUES") + \
+                                            Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_DNS_VALUES") + \
+                                            Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES") + \
+                                            Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES") + \
+                                            Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES") + \
+                                            max_leases / 32)
+                                            
+    dhcps_dcpt_size = 24 + ((Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_DNS_VALUES")) * 12) + \
+                           (Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_OPTION_DNS_VALUES")) * (dhcps_interface_dcpt_size)
     
-# def tcpipDhcpServerHeapUpdate(symbol, event): 
-    # heap_size = tcpipDhcpServerHeapCalc()
-    # symbol.setValue(heap_size)
-    # if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
-        # symbol.setVisible(event["value"])
+    leaseEntries = max_leases
+    extraSize = 40 + leaseEntries * (76 + min(6, Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_CLIENT_ID_MAX_SIZE"))) 
+    instanceCount = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_INSTANCE_COUNT")
+    instance_size = extraSize * instanceCount
+    heap_size = dhcps_dcpt_size + instance_size
+    return heap_size    
+    
+def tcpipDhcpServerHeapUpdate(symbol, event): 
+    heap_size = tcpipDhcpServerHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
     
         
 def tcpipDhcpServerGenSourceFile(sourceFile, event):
@@ -522,7 +545,16 @@ def tcpipDhcpServerInstnNumVisible(symbol, event):
             
     tcpipDhcpServerInstanceRangePrev = event["value"]
 
-       
+
+def tcpipDhcpServerInstnCount(symbol, event):
+    maxInterfaces = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_MAX_INTERFACES")
+    instanceCount = 0
+    for index in range(maxInterfaces):
+        if tcpipDhcpServerInstance[index].getValue() == True:
+            instanceCount += 1   
+    symbol.setValue(instanceCount)
+
+    
 def tcpipDhcpServerInstnMenuVisible(symbol, event):
     symbol.setVisible(event["value"])
 
@@ -550,4 +582,4 @@ def finalizeComponent( macComponent ):
     tcpipDhcpServerInstance[0].setValue(True)
 
 def destroyComponent(component):
-    Database.setSymbolValue("tcpipDhcpServer", "TCPIP_STACK_USE_DHCP_SERVER", False, 2)
+    Database.setSymbolValue("tcpipDhcpServer", "TCPIP_STACK_USE_DHCP_SERVER_V2", False, 2)

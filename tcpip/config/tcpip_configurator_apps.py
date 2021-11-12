@@ -91,6 +91,13 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
     tcpipAutoConfigDHCP_SERVER.setDescription("Enable DHCP_SERVER")
     tcpipAutoConfigDHCP_SERVER.setDependencies(tcpipAutoConfigDHCPSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_DHCP_SERVER"])
 
+    # Enable DHCP_SERVER_V2
+    tcpipAutoConfigDHCP_SERVER_v2 = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DHCP_SERVER_V2", None)
+    tcpipAutoConfigDHCP_SERVER_v2.setLabel("DHCP SERVER V2")
+    tcpipAutoConfigDHCP_SERVER_v2.setVisible(True)
+    tcpipAutoConfigDHCP_SERVER_v2.setDescription("Enable DHCP_SERVER V2")
+    tcpipAutoConfigDHCP_SERVER_v2.setDependencies(tcpipAutoConfigDHCPSERVERv2Enable, ["TCPIP_AUTOCONFIG_ENABLE_DHCP_SERVER_V2"])
+    
     # Enable DNS_CLIENT
     tcpipAutoConfigDNS_CLIENT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", None)
     tcpipAutoConfigDNS_CLIENT.setLabel("DNS CLIENT")
@@ -348,8 +355,10 @@ def tcpipAutoConfigDHCPCLIENTEnable(symbol, event):
     
 def tcpipAutoConfigDHCPSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    dhcpServerV2_state  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_DHCP_SERVER_V2")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
+        dhcpServerV2_state.setReadOnly(True)
         res = Database.activateComponents(["tcpipDhcps"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcps", "libtcpipDhcps")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
@@ -359,7 +368,31 @@ def tcpipAutoConfigDHCPSERVEREnable(symbol, event):
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
             setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
-        res = Database.deactivateComponents(["tcpipDhcps"])
+        if(dhcpServerV2_state.getReadOnly() == True):
+            dhcpServerV2_state.setReadOnly(False)
+        if(Database.getComponentByID("tcpipDhcps") != None):
+            res = Database.deactivateComponents(["tcpipDhcps"])
+
+
+def tcpipAutoConfigDHCPSERVERv2Enable(symbol, event):
+    tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    dhcpServer_state  = event['source'].getSymbolByID("TCPIP_AUTOCONFIG_ENABLE_DHCP_SERVER")
+    enableTcpipAutoConfigApps(True)
+    if (event["value"] == True):
+        dhcpServer_state.setReadOnly(True)
+        res = Database.activateComponents(["tcpipDhcpServer"],"APPLICATION LAYER", False)    
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcpServer", "libtcpipDhcps")
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4") != True):
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4", True)
+        if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
+    else:
+        if(dhcpServer_state.getReadOnly() == True):
+            dhcpServer_state.setReadOnly(False)
+        if(Database.getComponentByID("tcpipDhcpServer") != None):
+            res = Database.deactivateComponents(["tcpipDhcpServer"])
     
 def tcpipAutoConfigDNSCLIENTEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")

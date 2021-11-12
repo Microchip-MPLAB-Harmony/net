@@ -266,7 +266,7 @@ TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
 <#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0)?has_content && (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX0,
-		.poolIndex          = TCPIP_DHCP_SERVER_POOL_INDEX_IDX0,
+        .poolIndex          = TCPIP_DHCP_SERVER_POOL_INDEX_IDX0,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX0,
         .startIPAddRange    = TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START_IDX0,
         .ipMaskAddress      = TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX0,
@@ -278,7 +278,7 @@ TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
 <#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1)?has_content && (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX1,
-		.poolIndex          = TCPIP_DHCP_SERVER_POOL_INDEX_IDX1,
+        .poolIndex          = TCPIP_DHCP_SERVER_POOL_INDEX_IDX1,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX1,
         .startIPAddRange    = TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START_IDX1,
         .ipMaskAddress      = TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX1,
@@ -292,7 +292,7 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 {
     .enabled            = true,
     .deleteOldLease     = TCPIP_DHCP_SERVER_DELETE_OLD_ENTRIES,
-	.dhcpServerCnt		= TCPIP_DHCPS_MAX_NUMBER_INSTANCES,
+    .dhcpServerCnt      = TCPIP_DHCPS_MAX_NUMBER_INSTANCES,
     .leaseEntries       = TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT,
     .entrySolvedTmo     = TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO,
     .dhcpServer         = (TCPIP_DHCPS_ADDRESS_CONFIG*)DHCP_POOL_CONFIG,
@@ -303,8 +303,8 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 /*** DHCP Server v2 initialization data ***/
 
 <#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
-	<#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
-	<#if dhcp_interface_enable_idx??>
+    <#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
+    <#if dhcp_interface_enable_idx??>
     <#if (dhcp_interface_enable_idx == true)>
 TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions${i}[] =
 {
@@ -328,15 +328,15 @@ TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions${i}[] =
     },
 
 };
-	</#if>
+    </#if>
     </#if>
 </#list>
 
 TCPIP_DHCPS_INTERFACE_CONFIG dhcpsIfConfig[] = 
 {
 <#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
-	<#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
-	<#if dhcp_interface_enable_idx??>
+    <#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
+    <#if dhcp_interface_enable_idx??>
     <#if (dhcp_interface_enable_idx == true)>
     {
         .ifIndex    = TCPIP_DHCPS_INTERFACE_INDEX_IDX${i},
@@ -352,17 +352,17 @@ TCPIP_DHCPS_INTERFACE_CONFIG dhcpsIfConfig[] =
         .pOptConfig = dhcpsOptions${i},
         .nOptConfigs = sizeof(dhcpsOptions${i}) / sizeof(*dhcpsOptions${i}),
     },
-	</#if>
+    </#if>
     </#if>
 </#list>
 };
 
 const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 {
-	.pIfConfig   		= dhcpsIfConfig,
-	.nConfigs       	= sizeof(dhcpsIfConfig) / sizeof(*dhcpsIfConfig),
-	.nProbes       		= TCPIP_DHCPS_ICMP_PROBES,
-	.conflictAttempts  	= TCPIP_DHCPS_CONFLICT_ATTEMPTS,
+    .pIfConfig          = dhcpsIfConfig,
+    .nConfigs           = sizeof(dhcpsIfConfig) / sizeof(*dhcpsIfConfig),
+    .nProbes            = TCPIP_DHCPS_ICMP_PROBES,
+    .conflictAttempts   = TCPIP_DHCPS_CONFLICT_ATTEMPTS,
 };
 </#if>
 <#if (tcpipFtps.TCPIP_USE_FTP_MODULE)?has_content && (tcpipFtps.TCPIP_USE_FTP_MODULE) == true>
@@ -668,7 +668,7 @@ TCPIP_MAC_BRIDGE_ENTRY_BIN tcpipMacbridgeTable[${tcpipNetConfig.TCPIP_STACK_NETW
 <#if network_config_idx??>
 <#if network_config_idx == true>
 <#if mac_bridge_enable == true>
-	{${i}},
+    {${i}},
 </#if>
 </#if>
 </#if>
@@ -682,9 +682,9 @@ TCPIP_MAC_BRIDGE_ENTRY_BIN tcpipMacbridgeTable[${tcpipNetConfig.TCPIP_STACK_NETW
 /*** TCPIP MAC Bridge Initialization Data ***/
 const TCPIP_MAC_BRIDGE_CONFIG  tcpipBridgeInitData = 
 {
-	.purgeTimeout = TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT,
+    .purgeTimeout = TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT,
     .transitDelay = TCPIP_MAC_BRIDGE_MAX_TRANSIT_DELAY,
-	.fdbEntries = TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES,
+    .fdbEntries = TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES,
     .pktPoolSize = TCPIP_MAC_BRIDGE_PACKET_POOL_SIZE,
     .pktSize = TCPIP_MAC_BRIDGE_PACKET_SIZE,
     .dcptPoolSize = TCPIP_MAC_BRIDGE_DCPT_POOL_SIZE,
@@ -694,7 +694,7 @@ const TCPIP_MAC_BRIDGE_CONFIG  tcpipBridgeInitData =
     .bridgeTableSize = ${tcpipNetConfig.TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT},
     .bridgeTable = (const TCPIP_MAC_BRIDGE_ENTRY*)tcpipMacbridgeTable,
     // advanced
-	.bridgePermTableSize = 0,
+    .bridgePermTableSize = 0,
     .bridgePermTable = 0,
 
 };
@@ -817,9 +817,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_IPV6,             &tcpipIPv6InitData},            // TCPIP_MODULE_IPV6
     {TCPIP_MODULE_ICMPV6,           0},                             // TCPIP_MODULE_ICMPV6
     {TCPIP_MODULE_NDP,              0},                             // TCPIP_MODULE_NDP
-<#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>	
-	{TCPIP_MODULE_DHCPV6_CLIENT,    &tcpipDhcpcv6InitData},         // TCPIP_MODULE_DHCPV6_CLEINT
-</#if>	
+<#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>  
+    {TCPIP_MODULE_DHCPV6_CLIENT,    &tcpipDhcpcv6InitData},         // TCPIP_MODULE_DHCPV6_CLEINT
+</#if>  
 </#if>
 <#if (tcpipUdp.TCPIP_USE_UDP)?has_content && (tcpipUdp.TCPIP_USE_UDP) == true>
     {TCPIP_MODULE_UDP,              &tcpipUDPInitData},             // TCPIP_MODULE_UDP
@@ -832,6 +832,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 </#if>
 <#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content && (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
     {TCPIP_MODULE_DHCP_SERVER,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
+</#if>
+<#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content && (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
+    {TCPIP_MODULE_DHCP_SERVER_V2,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
 </#if>
 <#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content && (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
     {TCPIP_MODULE_ANNOUNCE,         &tcpipAnnounceInitData},        // TCPIP_MODULE_ANNOUNCE
