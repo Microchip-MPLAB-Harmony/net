@@ -288,9 +288,8 @@ typedef struct _TCPIP_STACK_MODULE_CTRL
     // i.e., across StackInit() -> StackDeInit() calls
     // 
     //
-    // number of the interfaces supported in this session
-    int     nIfs;         
-    int     nAliases;       // number of alias interfaces in this session         
+    uint16_t    nIfs;       // number of the interfaces supported in this session
+    uint16_t    nAliases;   // number of alias interfaces in this session         
 	// number of the modules enabled in this session
 	int 	nModules;
     // allocation parameters

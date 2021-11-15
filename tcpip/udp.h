@@ -208,6 +208,8 @@ typedef enum
     UDP_OPTION_MULTICAST,           // Sets the multicast options for a socket by using UDP_OPTION_MULTICAST_DATA value
     UDP_OPTION_TOS,     			// Sets the Type of Service (TOS) for IPv4 packets sent by the socket
     UDP_OPTION_DF,     			    // Sets the Don't Fragment (DF) option for IPv4 packets sent by the socket
+    UDP_OPTION_ENFORCE_STRICT_NET,  // Do enforce the UDP_OPTION_STRICT_NET status when using TCPIP_UDP_Bind/TCPIP_UDP_SocketNetSet operations
+                                    // Option enabled by default; these operations will enforce the UDP_OPTION_STRICT_NET 
 }UDP_SOCKET_OPTION;
 
 
@@ -792,6 +794,7 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_OPTION_MULTICAST_DATA structure
 					  - UDP_OPTION_TOS				- 8-bit value of the TOS
 					  - UDP_OPTION_DF				- boolean - true: no fragmentation allowed; false: fragmentation allowed
+					  - UDP_OPTION_ENFORCE_STRICT_NET	- boolean - true: enforce strictness (default); false: do not enforce strictness 
 
   Returns:
  	- true  - Indicates success
@@ -840,6 +843,7 @@ bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION opti
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_MULTICAST_FLAGS value to receive the current socket settings
 			 		  - UDP_OPTION_TOS				- pointer to an 8 bit value to receive the TOS
 					  - UDP_OPTION_DF				- pointer to boolean - true: no fragmentation allowed; false: fragmentation allowed
+					  - UDP_OPTION_ENFORCE_STRICT_NET - pointer to boolean - false:  strictness not enforced; true: strictness enforced (default)
 
   Returns:
  	- true  - Indicates success

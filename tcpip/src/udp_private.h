@@ -230,7 +230,7 @@ typedef struct
             uint16_t    serverSkt        : 1;   // socket opened as server
             uint16_t    tos              : 6;   // Type of Service: 6 bits!
             uint16_t    df               : 1;   // Don't Fragment bit
-            uint16_t    reserved         : 1;   // not used
+            uint16_t    noNetStrict      : 1;   // do not enforce net strictness
         };
         uint16_t     Val;
     }extFlags;      // additional socket flags

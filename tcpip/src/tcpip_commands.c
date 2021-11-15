@@ -1057,7 +1057,7 @@ static void _Command_DHCPsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     (*pCmdIO->pCmdApi->print)(cmdIoParam,"\treleasedDelCount: %d, expiredDelCount: %d cacheFullCount: %d \r\n", statData.releasedDelCount, statData.expiredDelCount, statData.cacheFullCount);
     (*pCmdIO->pCmdApi->print)(cmdIoParam,"\tpoolEmptyCount: %d, declinedCount: %d arpFailCount: %d \r\n", statData.poolEmptyCount, statData.declinedCount, statData.arpFailCount);
     (*pCmdIO->pCmdApi->print)(cmdIoParam,"\techoFailCount: %d, icmpFailCount: %d icmpProbeCount: %d \r\n", statData.echoFailCount, statData.icmpFailCount, statData.icmpProbeCount);
-    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\tmsgOvflCount: %d, arpInjectCount: %d\r\n", statData.msgOvflCount, statData.arpInjectCount);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"\tmsgOvflCount: %d, arpInjectCount: %d, sktNotReadyCount: %d\r\n", statData.msgOvflCount, statData.arpInjectCount, statData.sktNotReadyCount);
 }
 
 // run-time configuration example 

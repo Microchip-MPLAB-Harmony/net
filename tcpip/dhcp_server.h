@@ -307,10 +307,8 @@ typedef enum
     TCPIP_DHCPS_RES_NO_LEASE           = -23,  // no such lease exists
     TCPIP_DHCPS_RES_DB_FULL            = -24,  // another lease could not be added, the DB (cache) is full
     TCPIP_DHCPS_RES_STATE_ERROR        = -25,  // a bad state was specified when adding a lease
-    TCPIP_DHCPS_RES_MAP_ERROR          = -26,  // a new pool could not be added, all slots are already mapped
-
-    TCPIP_DHCPS_RES_SERVICE_START_ERROR = -27, // DHCP service could not be started
-    TCPIP_DHCPS_RES_SERVICE_STOP_ERROR  = -28, // DHCP service could not be stopped
+    TCPIP_DHCPS_RES_SERVICE_START_ERROR = -26, // DHCP service could not be started
+    TCPIP_DHCPS_RES_SERVICE_STOP_ERROR  = -27, // DHCP service could not be stopped
 
 
     TCPIP_DHCPS_RES_SERVICE_ERROR      = -77,  // DHCP service internal error; Should not happen
@@ -637,7 +635,8 @@ typedef struct  __attribute__((packed))
     uint16_t        icmpFailCount;      // number of times ICMP rejected a ping operation
     uint16_t        msgOvflCount;       // number of times a DHCP packet > then the reserved buffer for it was received
     uint16_t        icmpProbeCount;     // number of ICMP probes successfully sent
-    uint16_t        arpInjectCount;     // number of sent
+    uint16_t        arpInjectCount;     // number of ARP injections to send replies directly to clients
+    uint16_t        sktNotReadyCount;   // number of failed send messagges because of no socket TX buffer
 }TCPIP_DHCPS_STATISTICS_DATA;
 
 // *****************************************************************************

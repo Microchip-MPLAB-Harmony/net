@@ -465,7 +465,7 @@ static bool             _UDPSetSourceAddress(UDP_SOCKET_DCPT* pSkt, IP_ADDRESS_T
 
 static  bool _UDPSocketBind(UDP_SOCKET_DCPT* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_ADDRESS* srcAddress)
 {
-    if((pSkt->pSktNet = pNet) != 0)
+    if((pSkt->pSktNet = pNet) != 0 && pSkt->extFlags.noNetStrict == 0)
     {   // specific bind requested
         pSkt->flags.looseNetIf = 0;
     }
@@ -2964,7 +2964,7 @@ bool TCPIP_UDP_SocketNetSet(UDP_SOCKET s, TCPIP_NET_HANDLE hNet)
         // user can clear the assigned interface
 
         _RxSktLock(pSkt);
-        if((pSkt->pSktNet = pIf) != 0)
+        if((pSkt->pSktNet = pIf) != 0 && pSkt->extFlags.noNetStrict == 0)
         {   // specific bind requested
             pSkt->flags.looseNetIf = 0;
         }
@@ -3305,6 +3305,10 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 pSkt->extFlags.df = (optParam != 0);
                 return true;
                 
+            case UDP_OPTION_ENFORCE_STRICT_NET:
+                pSkt->extFlags.noNetStrict = (optParam == 0);
+                return true;
+                
             default:
                 break;
         }
@@ -3407,6 +3411,10 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 
              case UDP_OPTION_DF:
                 *(bool*)optParam = pSkt->extFlags.df != 0;
+                return true;
+                
+             case UDP_OPTION_ENFORCE_STRICT_NET:
+                *(bool*)optParam = pSkt->extFlags.noNetStrict == 0;
                 return true;
                 
            default:

@@ -54,6 +54,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // internal definitions
 
+// number of interfaces to run the server on
+// currently is the same number as TCPIP_DHCPS_MAX_INTERFACES but it could be greater
+#define _TCPIP_DHCPS_INTERFACES_COUNT   TCPIP_DHCPS_MAX_INTERFACES
+
 // mimimum leases to allocate
 #define _TCPIP_DHCPS_MIN_LEASES  32
 
@@ -576,10 +580,12 @@ typedef struct
     uint16_t                icmpSequenceNo; // current ICMP sequence number
     uint16_t                icmpIdentifier; // current ICMP identifier
     uint16_t                maxLeases;      // max number of leases for any interface
+    int16_t                 maxIx;          // maximum index used in the ifDcpt
+    uint16_t                stackIfs;       // number of stack interfaces in the current run
+    DHCPS_IF_MAP            ifMap[_TCPIP_DHCPS_INTERFACES_COUNT]; // interface mapping in ifDcpt 
 #if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
     TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS]; // users to receive notification 
 #endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
-    DHCPS_IF_MAP            ifMap[TCPIP_DHCPS_MAX_INTERFACES]; // interface mapping in ifDcpt 
 
     TCPIP_DHCPS_INTERFACE_DCPT ifDcpt[TCPIP_DHCPS_MAX_INTERFACES];    // each interface descriptor 
 

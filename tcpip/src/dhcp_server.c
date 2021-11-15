@@ -108,7 +108,7 @@ static void _DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_IC
 
 static uint8_t* _DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he);
 static uint8_t* _DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint32_t* pSrc, size_t nSources);
-static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he);
+static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he);
 static void _DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy);
 static void _DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy);
 
@@ -146,7 +146,7 @@ static size_t TCPIP_DHCPS_HashProbeHash(OA_HASH_DCPT* pOH, const void* key);
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
 #if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-volatile int _DhcpsStayAssertLoop = 1;
+volatile int _DhcpsStayAssertLoop = 0;
 static void _DhcpsAssert(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
@@ -648,24 +648,9 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
             pIDcpt->hashDcpt = 0;
         }
         else
-        {   // new interface to map; check if there is still room
-            DHCPS_IF_MAP* pMap = gDhcpDcpt->ifMap;
-            int mapIx;
-            for(mapIx = 0; mapIx < sizeof(gDhcpDcpt->ifMap) / sizeof(*gDhcpDcpt->ifMap); mapIx++, pMap++)
-            {
-                if((pMap->mapFlag & DHCPS_IF_FLAG_MAPPED) == 0)
-                {   // free slot
-                    ifIx = mapIx;
-                    break;
-                }
-            }
+        {   // new interface to map; get the next free slot
+            ifIx = ++gDhcpDcpt->maxIx;
         }
-
-        if(ifIx < 0)
-        {   // no mapping slot could be found
-            return TCPIP_DHCPS_RES_MAP_ERROR;
-        } 
-
 
         pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
@@ -735,9 +720,9 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
     uint32_t    minLease, maxLease;
     DHCPS_IF_MAP* pIfMap;
     TCPIP_DHCPS_RES optRes;
-    DHCPS_IF_MAP ifMap[TCPIP_DHCPS_MAX_INTERFACES]; // map of the used interfaces
+    DHCPS_IF_MAP ifMap[_TCPIP_DHCPS_INTERFACES_COUNT]; // map of the used interfaces
 
-    if(pIfConfig == 0 || ifConfigNo == 0)
+    if(pIfConfig == 0 || ifConfigNo == 0 || ifConfigNo > TCPIP_DHCPS_MAX_INTERFACES)
     {
         return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
     }
@@ -746,6 +731,11 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
     memset(ifMap, 0, sizeof(ifMap));
     for(ix = 0; ix < ifConfigNo; ix++, pIfConfig++)
     {
+        if(pIfConfig->ifIndex >= gDhcpDcpt->stackIfs)
+        {
+            return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
+        }
+
         if(pIfConfig->leaseEntries == 0 || pIfConfig->leaseEntries > gDhcpDcpt->maxLeases || pIfConfig->leaseDuration == 0)
         {   // wrong parameters
             return TCPIP_DHCPS_RES_LEASE_PARAM_ERR;
@@ -1052,6 +1042,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         }
 
         gDhcpDcpt->memH = stackCtrl->memH;
+        gDhcpDcpt->stackIfs = stackCtrl->nIfs;
         gDhcpDcpt->uSkt = INVALID_UDP_SOCKET;
         gDhcpDcpt->ifCount = (uint8_t)sizeof(gDhcpDcpt->ifDcpt) / sizeof(*gDhcpDcpt->ifDcpt);
         gDhcpDcpt->nProbes = pDhcpsConfig->nProbes ? pDhcpsConfig->nProbes : _TCPIP_DHCPS_DEFAULT_PROBE_COUNT;
@@ -1060,6 +1051,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         gDhcpDcpt->maxLeases = _TCPIP_DHCPS_MAX_LEASES;
         gDhcpDcpt->icmpSequenceNo = SYS_RANDOM_PseudoGet();
         gDhcpDcpt->icmpIdentifier = SYS_RANDOM_PseudoGet();
+        gDhcpDcpt->maxIx = -1;
         gDhcpDcpt->stackSigHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DHCPS_Task, TCPIP_DHCPS_TASK_PROCESS_RATE);
         if(gDhcpDcpt->stackSigHandle == 0)
         {
@@ -1082,7 +1074,14 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         }
         if(optRes ==  false)
         {
-            initRes = TCPIP_DHCPS_RES_SKT_SIGNAL_ERR;
+            initRes = TCPIP_DHCPS_RES_SKT_OPTION_ERR;
+            break;
+        }
+
+        optRes = TCPIP_UDP_OptionsSet(gDhcpDcpt->uSkt, UDP_OPTION_ENFORCE_STRICT_NET, (void*)false);
+        if(optRes ==  false)
+        {
+            initRes = TCPIP_DHCPS_RES_SKT_OPTION_ERR;
             break;
         }
 
@@ -2478,7 +2477,7 @@ static uint8_t* _DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he)
 }
 
 // srvMsgType is one of {DHCP_MESSAGE_TYPE_OFFER, DHCP_MESSAGE_TYPE_ACK, DHCP_MESSAGE_TYPE_NAK}
-static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
+static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
 {
     // NAK messages
     // Note: less than 256 bytes in length!
@@ -2487,7 +2486,17 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
         "requested address is invalid",     // DHCP_NAK_CODE_REQ_ADDRESS_INVALID
     };
 
+    UDP_SOCKET skt = gDhcpDcpt->uSkt;
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
+
+    if(TCPIP_UDP_PutIsReady(skt) < _TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
+    {   // socket full ?
+#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+        pIDcpt->statData.sktNotReadyCount++;
+#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+        return false;
+    }
+
     uint32_t magicCookie = _TCPIP_DHCPS_MAGIC_COOKIE_HOST;
     uint8_t* wrStartPtr;
     
@@ -2676,7 +2685,6 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
         LINK-LAYER ADDRESS SPECIFIED IN THE ’chaddr’ field!!!
       
     */
-    UDP_SOCKET skt = gDhcpDcpt->uSkt;
     UDP_PORT destPort = TCPIP_DHCP_CLIENT_PORT;
     IP_MULTI_ADDRESS destAdd;
     bool useBcast = false;
@@ -2736,6 +2744,7 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     IP_MULTI_ADDRESS srcAdd;
     srcAdd.v4Add = pIDcpt->pNetIf->netIPAddr;
     TCPIP_UDP_SourceIPAddressSet(skt, IP_ADDRESS_TYPE_IPV4, &srcAdd);
+    TCPIP_UDP_SocketNetSet(skt, pIDcpt->pNetIf);
 
     // set the data to the socket
     uint16_t wrBytes = TCPIP_UDP_ArrayPut(skt, wrStartPtr, uPtr.wrPtr - wrStartPtr);
@@ -2748,6 +2757,8 @@ static void _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     TCPIP_UDP_Flush(skt);
 
     _DHCPS_SendMessagePrint(he, destAdd.v4Add.Val);
+
+    return true;
 }
 
 // populates a mult_int option from a source of uint32_t
@@ -3060,8 +3071,10 @@ static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
 static void _DHCPS_TickFnc_SendOffer(DHCPS_HASH_ENTRY* he)
 {
     he->srvMsgType = DHCP_MESSAGE_TYPE_OFFER; 
-    _DHCPS_SendMessage(he);
-    _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
+    if(_DHCPS_SendMessage(he))
+    {
+        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
+    }
 }
 
 // TCPIP_DHCPS_LEASE_STATE_OFFERED
