@@ -50,7 +50,10 @@ __attribute__((section(".bss.errno"))) int errno = 0;           // initializatio
 #include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
 #else
 #include <errno.h>
+#if (__XC32_VERSION < 4000) || (__XC32_VERSION == 243739000)
+// xc32 versions >= v4.0 no longer have sys/errno.h 
 #include <sys/errno.h>
+#endif
 #endif
 
 static bool TCP_SocketWasReset(SOCKET s);
