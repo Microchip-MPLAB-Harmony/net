@@ -63,7 +63,14 @@ def instantiateComponent(tcpipNetConfigComponent):
     tcpipNetConfigDeviceSeries.setVisible(False)
     tcpipNetConfigDeviceSeries.setDefaultValue(deviceSeries)
     tcpipNetConfigDeviceSeries.setReadOnly(True)
-
+    
+    #Add to system_config.h
+    tcpipNetConfig = tcpipNetConfigComponent.createFileSymbol(None, None)
+    tcpipNetConfig.setSourcePath("tcpip/config/network_config.h.ftl")
+    tcpipNetConfig.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+    tcpipNetConfig.setMarkup(True)
+    tcpipNetConfig.setType("STRING")
+    
     execfile(Module.getPath() + "/tcpip/config/tcpip_mac_bridge.py")    
     
 def tcpipNetConfigMACBridgeMenuVisible(symbol, event):

@@ -302,7 +302,7 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 <#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content && (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
 /*** DHCP Server v2 initialization data ***/
 
-<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
+<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_INTERFACE_MAX_COUNT -1) as i >
     <#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
     <#if dhcp_interface_enable_idx??>
     <#if (dhcp_interface_enable_idx == true)>
@@ -334,7 +334,7 @@ TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions${i}[] =
 
 TCPIP_DHCPS_INTERFACE_CONFIG dhcpsIfConfig[] = 
 {
-<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_MAX_INTERFACES -1) as i >
+<#list 0 ..(tcpipDhcpServer.TCPIP_DHCPS_INTERFACE_MAX_COUNT -1) as i >
     <#assign dhcp_interface_enable_idx = "tcpipDhcpServer.TCPIP_DHCPS_IDX${i}"?eval>
     <#if dhcp_interface_enable_idx??>
     <#if (dhcp_interface_enable_idx == true)>

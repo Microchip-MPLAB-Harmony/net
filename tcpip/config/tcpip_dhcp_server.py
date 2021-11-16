@@ -76,9 +76,9 @@ def instantiateComponent(tcpipDhcpServerComponent):
         dhcpsIntrfcCount = 1
 
     # Maximum Number of Interfaces supported by DHCP Server
-    tcpipDhcpServerMaxIntrfcNum = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MAX_INTERFACES", None)
+    tcpipDhcpServerMaxIntrfcNum = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INTERFACE_MAX_COUNT", None)
     tcpipDhcpServerMaxIntrfcNum.setLabel("Maximum Number of Interfaces")
-    tcpipDhcpServerMaxIntrfcNum.setVisible(True)
+    tcpipDhcpServerMaxIntrfcNum.setVisible(False)
     tcpipDhcpServerMaxIntrfcNum.setDescription("Maximum Number of Interfaces supported by DHCP Server")
     tcpipDhcpServerMaxIntrfcNum.setDefaultValue(int(dhcpsIntrfcCount))
     tcpipDhcpServerMaxIntrfcNum.setMin(0)
@@ -109,7 +109,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerIPAttemptNum.setDefaultValue(1)
     tcpipDhcpServerIPAttemptNum.setMin(0)
 
-    tcpipDhcpServerInstnDependency = ["TCPIP_DHCPS_MAX_INTERFACES"]
+    tcpipDhcpServerInstnDependency = ["TCPIP_DHCPS_INTERFACE_MAX_COUNT"]
       
     
     for index in range(0,tcpipNetConfigNumMax): 
@@ -314,9 +314,9 @@ def instantiateComponent(tcpipDhcpServerComponent):
     ######################################################################################################################################    
 
     # DHCP Server Instance Count
-    tcpipDhcpServerInstanceCount = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INSTANCE_COUNT", None)
-    tcpipDhcpServerInstanceCount.setLabel("DHCP Server Instance Count")
-    tcpipDhcpServerInstanceCount.setVisible(False)
+    tcpipDhcpServerInstanceCount = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INTERFACE_COUNT", None)
+    tcpipDhcpServerInstanceCount.setLabel("DHCP Server Interface Count")
+    tcpipDhcpServerInstanceCount.setVisible(True)
     tcpipDhcpServerInstanceCount.setDefaultValue(0) 
     tcpipDhcpServerInstanceCount.setDependencies(tcpipDhcpServerInstnCount, tcpipDhcpServerInstnDependency)
     
@@ -459,7 +459,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
     tcpipDhcpServerEventMultThread.setDescription("Enable Multi-Threaded Access")
     tcpipDhcpServerEventMultThread.setDefaultValue(False)    
 
-    tcpipDhcpServerheapdependency = ["TCPIP_DHCPS_MAX_LEASES", "TCPIP_DHCPS_OPTION_ROUTER_VALUES", "TCPIP_DHCPS_OPTION_DNS_VALUES", "TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES", "TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS", "TCPIP_DHCPS_MAX_INTERFACES", "TCPIP_DHCPS_CLIENT_ID_MAX_SIZE", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK", "TCPIP_DHCPS_INSTANCE_COUNT"]     
+    tcpipDhcpServerheapdependency = ["TCPIP_DHCPS_MAX_LEASES", "TCPIP_DHCPS_OPTION_ROUTER_VALUES", "TCPIP_DHCPS_OPTION_DNS_VALUES", "TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES", "TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES", "TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS", "TCPIP_DHCPS_INTERFACE_MAX_COUNT", "TCPIP_DHCPS_CLIENT_ID_MAX_SIZE", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK", "TCPIP_DHCPS_INTERFACE_COUNT"]     
     
     # DHCP Server Heap Size
     tcpipDhcpServerHeapSize = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_V2_HEAP_SIZE", None)
@@ -502,7 +502,7 @@ def tcpipDhcpServerHeapCalc():
     
     leaseEntries = max_leases
     extraSize = 40 + leaseEntries * (76 + min(6, Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_CLIENT_ID_MAX_SIZE"))) 
-    instanceCount = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_INSTANCE_COUNT")
+    instanceCount = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_INTERFACE_COUNT")
     instance_size = extraSize * instanceCount
     heap_size = dhcps_dcpt_size + instance_size
     return heap_size    
@@ -547,7 +547,7 @@ def tcpipDhcpServerInstnNumVisible(symbol, event):
 
 
 def tcpipDhcpServerInstnCount(symbol, event):
-    maxInterfaces = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_MAX_INTERFACES")
+    maxInterfaces = Database.getSymbolValue("tcpipDhcpServer","TCPIP_DHCPS_INTERFACE_MAX_COUNT")
     instanceCount = 0
     for index in range(maxInterfaces):
         if tcpipDhcpServerInstance[index].getValue() == True:
