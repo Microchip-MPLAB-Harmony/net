@@ -316,7 +316,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
     # DHCP Server Instance Count
     tcpipDhcpServerInstanceCount = tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_INTERFACE_COUNT", None)
     tcpipDhcpServerInstanceCount.setLabel("DHCP Server Interface Count")
-    tcpipDhcpServerInstanceCount.setVisible(True)
+    tcpipDhcpServerInstanceCount.setVisible(False)
     tcpipDhcpServerInstanceCount.setDefaultValue(0) 
     tcpipDhcpServerInstanceCount.setDependencies(tcpipDhcpServerInstnCount, tcpipDhcpServerInstnDependency)
     
