@@ -720,9 +720,9 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
     uint32_t    minLease, maxLease;
     DHCPS_IF_MAP* pIfMap;
     TCPIP_DHCPS_RES optRes;
-    DHCPS_IF_MAP ifMap[_TCPIP_DHCPS_INTERFACES_COUNT]; // map of the used interfaces
+    DHCPS_IF_MAP ifMap[_TCPIP_DHCPS_NET_INTERFACES_COUNT]; // map of the used interfaces
 
-    if(pIfConfig == 0 || ifConfigNo == 0 || ifConfigNo > TCPIP_DHCPS_MAX_INTERFACES)
+    if(pIfConfig == 0 || ifConfigNo == 0 || ifConfigNo > TCPIP_DHCPS_INTERFACE_COUNT)
     {
         return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
     }
@@ -3333,7 +3333,7 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Configure(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfCon
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt;
     TCPIP_DHCPS_RES res = TCPIP_DHCPS_RES_OK;
 
-    if(pIfConfig == 0 || nConfigs == 0 || nConfigs > TCPIP_DHCPS_MAX_INTERFACES)
+    if(pIfConfig == 0 || nConfigs == 0 || nConfigs > TCPIP_DHCPS_INTERFACE_COUNT)
     {
         return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
     }

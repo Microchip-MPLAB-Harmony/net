@@ -54,9 +54,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // internal definitions
 
-// number of interfaces to run the server on
-// currently is the same number as TCPIP_DHCPS_MAX_INTERFACES but it could be greater
-#define _TCPIP_DHCPS_INTERFACES_COUNT   TCPIP_DHCPS_MAX_INTERFACES
+// number of interfaces the stack is built with
+// could be greater than TCPIP_DHCPS_INTERFACE_COUNT (for ex 5 interfaces but server only on 2)
+#if defined(TCPIP_STACK_NETWORK_INTERAFCE_COUNT) && (TCPIP_STACK_NETWORK_INTERAFCE_COUNT >= TCPIP_DHCPS_INTERFACE_COUNT)
+#define _TCPIP_DHCPS_NET_INTERFACES_COUNT   TCPIP_STACK_NETWORK_INTERAFCE_COUNT
+#else
+#define _TCPIP_DHCPS_NET_INTERFACES_COUNT   TCPIP_DHCPS_INTERFACE_COUNT
+#endif
 
 // mimimum leases to allocate
 #define _TCPIP_DHCPS_MIN_LEASES  32
@@ -575,19 +579,19 @@ typedef struct
     uint16_t                probeTmoMs;     // timeout to wait for reply to an ICMP echo probe, ms - default 10 ms
     uint8_t                 nProbes;        // number of ICMP echo probes to send when doing address conflict detection - default 1
     uint8_t                 nReprobes;      // number of ICMP echo reprobe attempts when address conflict detected
-    uint8_t                 ifCount;        // number of interface descriptors == TCPIP_DHCPS_MAX_INTERFACES
+    uint8_t                 ifCount;        // number of interface descriptors == TCPIP_DHCPS_INTERFACE_COUNT
     uint8_t                 accessLock;     // lock for multi-threaded access
     uint16_t                icmpSequenceNo; // current ICMP sequence number
     uint16_t                icmpIdentifier; // current ICMP identifier
     uint16_t                maxLeases;      // max number of leases for any interface
     int16_t                 maxIx;          // maximum index used in the ifDcpt
     uint16_t                stackIfs;       // number of stack interfaces in the current run
-    DHCPS_IF_MAP            ifMap[_TCPIP_DHCPS_INTERFACES_COUNT]; // interface mapping in ifDcpt 
+    DHCPS_IF_MAP            ifMap[_TCPIP_DHCPS_NET_INTERFACES_COUNT]; // interface mapping in ifDcpt 
 #if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
     TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS]; // users to receive notification 
 #endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
-    TCPIP_DHCPS_INTERFACE_DCPT ifDcpt[TCPIP_DHCPS_MAX_INTERFACES];    // each interface descriptor 
+    TCPIP_DHCPS_INTERFACE_DCPT ifDcpt[TCPIP_DHCPS_INTERFACE_COUNT];    // each interface descriptor 
 
 }TCPIP_DHCPS_DCPT;    // DHCP server descriptor
 

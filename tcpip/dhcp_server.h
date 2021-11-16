@@ -255,7 +255,7 @@ typedef struct
 {
     const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig;      // array of DHCP server configurations per interface
     uint16_t    nConfigs;                               // number of DHCP server configurations in the pIfConfig array, one per interface
-                                                        // Cannot exceed the TCPIP_DHCPS_MAX_INTERFACES, which is the number of interfaces in the stack!
+                                                        // Cannot exceed the TCPIP_DHCPS_INTERFACE_COUNT, which is the number of interfaces the server can support
     uint8_t     nProbes;                                // number of ICMP echo probes to send when doing address conflict detection - default 1
     uint8_t     conflictAttempts;                       // number of attempts to find a new IP address when ICMP detected an address conflict - default 1
 } TCPIP_DHCPS_MODULE_CONFIG;
@@ -1089,7 +1089,7 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
 
 // *****************************************************************************
 /* Function:
-    TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_HANDLER handler, 
+    TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_HANDLER handler, 
 	                           const void* hParam)
 
   Summary:
@@ -1125,13 +1125,12 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
     callback.
  */
 
-TCPIP_DHCPS_EVENT_HANDLE      TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, 
-                          TCPIP_DHCPS_EVENT_HANDLER handler, const void* hParam);
+TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_HANDLER handler, const void* hParam);
 
 
 // *****************************************************************************
 /* Function:
-    TCPIP_DHCPS_HandlerDeRegister(TCPIP_DHCPS_EVENT_HANDLE hDhcp)
+    bool TCPIP_DHCPS_HandlerDeRegister(TCPIP_DHCPS_EVENT_HANDLE hDhcp)
 
   Summary:
     Deregisters a previously registered DHCP handler.

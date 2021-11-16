@@ -73,8 +73,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // maximum number of interfaces on which DHCPs could run
-// Note that this could be less than the maximum number of interfaces in the stack for this build!
-#define TCPIP_DHCPS_MAX_INTERFACES      4
+// Note that this could be less than the maximum number of interfaces
+// in the stack for this build (TCPIP_STACK_NETWORK_INTERAFCE_COUNT)!
+#define TCPIP_DHCPS_INTERFACE_COUNT      2
 
 // Maximum number of leases that the DHCP server can support for an interface
 // The actual number of leases per interface could be smaller than this
