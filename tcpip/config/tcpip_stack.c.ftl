@@ -834,7 +834,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_DHCP_SERVER,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
 </#if>
 <#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content && (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
-    {TCPIP_MODULE_DHCP_SERVER_V2,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
+    {TCPIP_MODULE_DHCP_SERVER,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
 </#if>
 <#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content && (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
     {TCPIP_MODULE_ANNOUNCE,         &tcpipAnnounceInitData},        // TCPIP_MODULE_ANNOUNCE

@@ -113,6 +113,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content &&  (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
 #include "tcpip/src/dhcps_manager.h"
 </#if>
+<#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content &&  (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
+#include "tcpip/src/dhcp_server_manager.h"
+</#if>
 <#if (tcpipArp.TCPIP_USE_ARP)?has_content && (tcpipArp.TCPIP_USE_ARP) == true>
 #include "tcpip/src/arp_manager.h"
 </#if>

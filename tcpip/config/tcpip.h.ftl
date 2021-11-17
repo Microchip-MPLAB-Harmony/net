@@ -723,6 +723,9 @@ typedef struct TCPIP_STACK_INIT
 <#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content &&  (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
 #include "tcpip/dhcps.h"
 </#if>
+<#if (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2)?has_content &&  (tcpipDhcpServer.TCPIP_STACK_USE_DHCP_SERVER_V2) == true>
+#include "tcpip/dhcp_server.h"
+</#if>
 <#if (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG)?has_content &&  (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG) == true>
 #include "tcpip/zero_conf_link_local.h"
 #include "tcpip/zero_conf_multicast_dns.h"
