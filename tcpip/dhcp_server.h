@@ -14,6 +14,13 @@
      The DHCP server module implements the 'RFC 2131 - Dynamic Host Configuration Protocol' standard.
      It assigns an IP address to a requesting DHCP client.
      The server address range is defined when the module is configured.
+ 
+     Some of the known issues and implementation limitations:
+        - there is no support for multiple sub-net pools
+        - Operation for clients using relay agents may be impacted
+            The server will assign a lease in the server network,
+            not in the relay agent 'down link' network
+
 
 *******************************************************************************/
 
@@ -103,6 +110,9 @@ typedef enum
                                                             // (ICMP module rejected the calls, TCPIP_DHCPS_EVENT_ECHO_FAIL event)
                                                             // abort offering the lease to the client
                                                             // By default the server will send the offer to the client
+    TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT = 0x0040, // keep silent when receiving a client request for which there is no previous record
+                                                            // (i.e. don't verify the requested IP address and send NAK, etc.)
+                                                            // By default the server will reply with NAK if the requested lease is invalid
 
 }TCPIP_DHCPS_CONFIG_FLAGS;
 
@@ -269,7 +279,7 @@ typedef struct
     DHCPs operation result
 
   Description:
-    During the initialization process or the DHCPs module will print
+    During the initialization process the DHCPs module will print
     an error code if the initialization failed.
     This is a quick pointer to what went wrong in the initialization process.
 
@@ -279,7 +289,7 @@ typedef struct
 
 typedef enum
 {
-    TCPIP_DHCPS_RES_OK                 = 0,    // initialization successful
+    TCPIP_DHCPS_RES_OK                 = 0,    // initialization/operation successful
     // errors
 
     TCPIP_DHCPS_RES_NO_INIT_DATA       = -1,   // missing initialization data
@@ -449,11 +459,11 @@ typedef enum
                                                     // evInfo2: IP address requested by client
 
     TCPIP_DHCPS_EVENT_REQ_UNKNOWN       = -15,  // DHCPREQUEST from an unknown client, no entry in the DB for it
-                                                    // evInfo1: 0 
-                                                    // evInfo2: IP address requested by client if it exists
+                                                    // evInfo1: IP address requested by client if it exists
+                                                    // evInfo2: time at which the event occurres
 
     TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR  = -16,  // DHCPREQUEST from client with wrong format
-                                                    // evInfo1: IP address that server has for this client 
+                                                    // evInfo1: IP address that server has for or requested by this client 
                                                     // evInfo2: a TCPIP_DHCPS_REQ_FORMAT_ERR_MASK value
 
     TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR = -17,  // DHCPINFORM from client with wrong format

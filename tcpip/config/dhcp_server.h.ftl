@@ -82,22 +82,25 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         <#lt>#define TCPIP_DHCPS_NTPSERVER_IP_ADDR_IDX${i}      "${.vars["TCPIP_DHCPS_NTPSERVER_IP_ADDR_IDX" + i]}"
         <#lt>#define TCPIP_DHCPS_CONFIG_FLAG_IDX${i}            \
         <#if (.vars["TCPIP_DHCPS_START_DISABLE_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_DISABLED \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_DISABLED |\
         </#if>
         <#if (.vars["TCPIP_DHCPS_DELETE_LEASE_INFO_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_DELETE_OLD \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_DELETE_OLD |\
         </#if>
         <#if (.vars["TCPIP_DHCPS_CONFLICT_DETECT_DISABLE_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_NO_CONFLICT_DETECT \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_NO_CONFLICT_DETECT |\
         </#if>
         <#if (.vars["TCPIP_DHCPS_LEASE_EXT_DISABLE_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_NO_LEASE_EXTEND \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_NO_LEASE_EXTEND |\
         </#if>
         <#if (.vars["TCPIP_DHCPS_KEEP_INFO_UNREQ_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_KEEP_UNREQ_OFFERS \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_KEEP_UNREQ_OFFERS |\
         </#if>
         <#if (.vars["TCPIP_DHCPS_PROB_FAIL_ABORT_IDX" + i] != false)>
-        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_ABORT_IF_PROBE_FAILED \
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_ABORT_IF_PROBE_FAILED |\
+        </#if>
+        <#if (.vars["TCPIP_DHCPS_KEEP_SILENT_IDX" + i] != false)>
+        <#lt>                                                TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT |\
         </#if>
         <#lt>                                                0
         

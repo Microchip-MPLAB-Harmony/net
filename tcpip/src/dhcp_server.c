@@ -1727,6 +1727,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
         {   // last choice, allocate a new address from the pool
             // Use of giaddr: RFC 2131 pg 27/46:
             //      Thus, DHCP does not require that the client be assigned as address from the subnet in ’giaddr’
+            // Currently we do not support multiple pools
             reqIndex = IpIndexFindFree(pIDcpt, true);
             if(reqIndex < 0)
             {   // no pool entry available
@@ -1938,6 +1939,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
 
 
 // Replies to a DHCP Request message.
+static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+
 typedef TCPIP_DHCPS_LEASE_STATE (*_DHCPReplyToRequestFnc)(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
@@ -1970,18 +1973,81 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT*
 
     if(he == 0)
     {   // no record of this client
-        // RFC 2131 4.3.2 DHCPREQUEST message:
-        //  DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
-        //      If the DHCP server has no record of this client, then it MUST remain silent,
-        //      and MAY output a warning to the network administrator.
-        uint32_t evInfo2 =  (pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0;
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_REQ_UNKNOWN, 0, evInfo2);
-        return TCPIP_DHCPS_LEASE_STATE_IDLE;
+        return _DHCPReplyToRequest_NoRecord(pIDcpt, pHeader, pRxOpt, ppHe);
     }
 
     // else respond according to state
     return _DHCPReplyToRequesTBL[he->state](pIDcpt, pHeader, pRxOpt, ppHe);
 }
+
+// he == 0
+// no previous record of this client
+//  DHCPREQUEST generated during INIT-REBOOT state pg 32/46
+static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+{
+    uint32_t requestedIpAddr = (pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0; 
+
+    TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
+    uint32_t evInfo1 = requestedIpAddr; 
+    uint32_t evInfo2 = _DHCPS_SecCount();
+
+    // do some sanity checks
+    if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0)
+    {   // keep silent but report
+        evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
+    }
+    else if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
+    {   // there should NOT be a server identifier! ignore but notify ill formatted message
+        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+    }
+    else if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
+    {   // there should be a requested IP address. ignore but notify ill formatted message
+        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+    }
+    else if(pHeader->ciaddr != 0)
+    {
+        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
+    } 
+    else if( (pHeader->giaddr == 0 && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0) ||
+            ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0)
+    {   // good client address... since we do not have any record for this client (he == 0) we should stay silent:
+        // TODO aa: for giaddr != 0, how does the server know the 'remote subnet mask' to check the giaddr? 
+        // DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
+        //  If the DHCP server has no record of this client, then it MUST remain silent,
+        //  and MAY output a warning to the network administrator.
+        evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
+    }
+    else
+    {   // wrong network address: should be NAK-ed
+        // create a 'fake' hash entry just for this NAK since there's no record
+        // Note: if unicast is needed (giaddr != 0) and an ARP injection is needed
+        // then this ARP entry will not be removed as this hash entry is fake
+        // However, since this is the address of the relay server it shouldn't be a problem
+        DHCPS_HASH_ENTRY fakeHe;
+        DHCPS_HASH_ENTRY* he = &fakeHe;
+
+        // initialize it
+        he->parent = pIDcpt;
+        _DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_REQUEST);
+        he->srvMsgType = DHCP_MESSAGE_TYPE_NAK;
+        he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
+        _DHCPS_SendMessage(he);
+    }
+
+
+    if(evType != 0)
+    {   
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+    }
+
+    return TCPIP_DHCPS_LEASE_STATE_IDLE;
+    
+}
+
+
 
 // he->state == TCPIP_DHCPS_LEASE_STATE_IDLE
 // which is invalid
@@ -2539,9 +2605,9 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     if(he->srvMsgType == DHCP_MESSAGE_TYPE_NAK)
     {
         _DhcpsAssert(he->nakCode != 0, __func__, __LINE__);
-        _DhcpsAssert(he->nakCode < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl), __func__, __LINE__);
+        _DhcpsAssert(he->nakCode - 1 < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl), __func__, __LINE__);
 
-        const char* msg = nak_messgage_tbl[he->nakCode];
+        const char* msg = nak_messgage_tbl[he->nakCode - 1];
         uint8_t msgLen = strlen(msg);
 
         uPtr.pOption->multByteType.optionType = DHCP_OPTION_MESSAGE;

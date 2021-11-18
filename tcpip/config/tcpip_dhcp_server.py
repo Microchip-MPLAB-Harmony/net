@@ -43,6 +43,7 @@ tcpipDhcpServerCoflictDetectDisable = []
 tcpipDhcpServerLeaseExtDisable = []
 tcpipDhcpServerKeepInfoUnreq = []
 tcpipDhcpServerProbeFailAbort = []
+tcpipDhcpServerKeepSilent = []
            
 tcpipDhcpServerLeaseDurationMin = []
 tcpipDhcpServerLeaseDurationMax = []
@@ -253,6 +254,13 @@ def instantiateComponent(tcpipDhcpServerComponent):
         tcpipDhcpServerProbeFailAbort[index].setVisible(True)
         tcpipDhcpServerProbeFailAbort[index].setDefaultValue(False)  
         tcpipDhcpServerProbeFailAbort[index].setDescription("DHCP Server Abort if ICMP Probe for Conflict Detection Fails")
+        
+        # Config Flag - DHCP Server Silent if No Client record
+        tcpipDhcpServerKeepSilent.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_KEEP_SILENT_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
+        tcpipDhcpServerKeepSilent[index].setLabel("Keep Silent if No Record")
+        tcpipDhcpServerKeepSilent[index].setVisible(True)
+        tcpipDhcpServerKeepSilent[index].setDefaultValue(False)  
+        tcpipDhcpServerKeepSilent[index].setDescription("DHCP Server Keep Silent for a Client Request with No Record")
         
         # Minimum Lease Duration
         tcpipDhcpServerLeaseDurationMin.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_MIN_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
