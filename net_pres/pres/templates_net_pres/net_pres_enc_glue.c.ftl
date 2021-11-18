@@ -234,6 +234,13 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     {
         return false;
     }
+    <#if NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION == false>
+    // Turn off verification, because SNTP is usually blocked by a firewall
+    wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, SSL_VERIFY_NONE, 0);
+		<#else>
+	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, 0);
+		</#if>
+	
     wolfSSL_SetIORecv(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIORecv)&NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST});
     wolfSSL_SetIOSend(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, (CallbackIOSend)&NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST});
         <#if CONNECTION="Client">
@@ -246,6 +253,16 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     }
 			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
+<#if NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN_VARIABLE>
+    if (wolfSSL_CTX_use_certificate_chain_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
+    {
+        // Couldn't load the device certificates
+        //SYS_CONSOLE_MESSAGE("Something went wrong loading the device certificates\r\n");
+        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        return false;
+    }
+		
+<#else>
     if (wolfSSL_CTX_use_certificate_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
     {
         // Couldn't load the device certificates
@@ -253,6 +270,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
         return false;
     }
+</#if>
     if (wolfSSL_CTX_use_PrivateKey_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, pvtKeyPtr, pvtKeyLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
     {
         // Couldn't load the device private key
@@ -274,13 +292,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         return false;
     }
         </#if>
-		<#if NET_PRES_BLOB_ENABLE_PEER_CERT_VERIFICATION == false>
-    // Turn off verification, because SNTP is usually blocked by a firewall
-    wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, SSL_VERIFY_NONE, 0);
-		<#else>
-	wolfSSL_CTX_set_verify(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, WOLFSSL_VERIFY_PEER, 0);
-		</#if>
-	<#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
+    <#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
     /*initialize Trust*Go and load device certificate into the context*/
     atcatls_set_callbacks(net_pres_wolfSSLInfoStreamClient0.context);
     /*Use TLS extension since we support only P256R1 with ECC608 Trust&Go*/
