@@ -99,7 +99,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES    1
 
 // suppress the 'renewal T1' and 'rebinding T2' options when replying to a client request
-// by default thse options are enabled
+// by default these options are enabled
 // #define TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS
 
 // enable the report of error events using the event notification mechanism
