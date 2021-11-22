@@ -348,7 +348,7 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 	nunits=(nBytes+sizeof(_headNode)-1)/sizeof(_headNode)+1;	// allocate units   
 	prev=0;
 
-    OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
+    (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
 
 	for(ptr = hDcpt->_heapHead; ptr != 0; prev = ptr, ptr = ptr->next)
 	{
@@ -387,13 +387,13 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
             {
                 hDcpt->_heapWatermark = hDcpt->_heapAllocatedUnits;
             }
-            OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+            (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
             return ptr + 1;
 		}
 	}
 
     hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_NO_MEM;
-    OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+    (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
     return 0;
 }
 
@@ -425,13 +425,13 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 
     ptr = (_headNode*)pBuff-1;
 
-    OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
+    (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
 
 #ifdef TCPIP_STACK_DRAM_DEBUG_ENABLE
     if(ptr < hDcpt->_heapStart || ptr+ptr->units > hDcpt->_heapEnd)
     {
         hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_PTR_ERR;   // not one of our pointers!!!
-        OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+        (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
         return 0;
     }
 #endif
@@ -533,12 +533,12 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
     if(fail)
     {
         hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_PTR_ERR;   // corrupted pointer!!!
-        OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+        (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
         return 0;
     }
     
     hDcpt->_heapAllocatedUnits -= freedUnits;
-    OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+    (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
     return freedUnits * sizeof(_headNode);
 }
 
@@ -595,7 +595,7 @@ static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
     hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
     if(hDcpt)
     {
-        OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
+        (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
 
         for(ptr = hDcpt->_heapHead; ptr != 0; ptr = ptr->next)
         {
@@ -604,7 +604,7 @@ static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
                 max_nunits = ptr->units;
             }
         }
-        OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+        (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
     }
 
     return max_nunits * sizeof(_headNode);   

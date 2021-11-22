@@ -1300,12 +1300,12 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
 {
     TCPIP_MAC_DATA_SEGMENT *    pDSegNext;
 	DRV_GMAC_DRIVER * pMacDrv = (DRV_GMAC_DRIVER *)param;   
-    GMAC_QUE_LIST queueIdx = (GMAC_QUE_LIST)(pMacDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[pPkt->pktPriority]);
     
     bool res = false;
 
     if(pPkt && pPkt->pDSeg)
     {
+        GMAC_QUE_LIST queueIdx = (GMAC_QUE_LIST)(pMacDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[pPkt->pktPriority]);
         while(pPkt->pDSeg)
         {
             pDSegNext = pPkt->pDSeg->next;

@@ -1966,7 +1966,7 @@ static void _DRV_ETHPHY_NegCompletePhaseAN_Restart(DRV_ETHPHY_CLIENT_OBJ * hClie
 
     if(SYS_TMR_TickCountGet() < hClientObj->operTStamp)
     {   // wait some more; re-read
-        _DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON);
+        (void)_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMCON);
     }
     else
     {   // timeout
@@ -1991,7 +1991,7 @@ static void _DRV_ETHPHY_NegCompletePhaseAN_Complete(DRV_ETHPHY_CLIENT_OBJ * hCli
     {   // not done yet
         if(SYS_TMR_TickCountGet() < hClientObj->operTStamp)
         {   // wait some more
-            _DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMSTAT);
+            (void)_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMSTAT);
         }
         else
         {   // timeout

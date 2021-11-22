@@ -159,14 +159,14 @@ static __inline__ void  __attribute__((always_inline))          _UserGblLockDele
 static __inline__ void  __attribute__((always_inline))          _UserGblLock(void)
 {
     // Shared Data Lock
-    OSAL_SEM_Pend(&userSem, OSAL_WAIT_FOREVER);
+    (void)OSAL_SEM_Pend(&userSem, OSAL_WAIT_FOREVER);
 }    
 
 // unlocks access to shared resources
 static __inline__ void  __attribute__((always_inline))          _UserGblUnlock(void)
 {
     // Shared Data unlock
-    OSAL_SEM_Post(&userSem);
+    (void)OSAL_SEM_Post(&userSem);
 }
 
 // following is the implementation for the RX thread lock
@@ -3294,8 +3294,9 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
 
                         return true;
                     }
+
+                    return false;
                 }
-                return false;
 
             case UDP_OPTION_TOS:
                 pSkt->extFlags.tos = (uint8_t)(unsigned int)optParam;
@@ -3401,9 +3402,10 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                         *pMcFlags = mcFlags;
                         return true;
                     }
+
+                    return false;
                 }
 
-                return false;
 
              case UDP_OPTION_TOS:
                 *(uint8_t*)optParam = pSkt->extFlags.tos;

@@ -817,7 +817,7 @@ static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
         }
         if(res != TCPIP_STACK_HEAP_RES_OK)
         {
-            OSAL_SEM_Post(&pPool->poolSemaphore);
+            (void)OSAL_SEM_Post(&pPool->poolSemaphore);
             break;
         }
 
@@ -921,7 +921,7 @@ static void* _PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry)
         }
     }
 
-    OSAL_SEM_Post(&pPool->poolSemaphore);
+    (void)OSAL_SEM_Post(&pPool->poolSemaphore);
     return pBuff;
 }
 
@@ -965,7 +965,7 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
             {
                 pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_PTR_ERR; 
             }
-            OSAL_SEM_Post(&pPool->poolSemaphore);
+            (void)OSAL_SEM_Post(&pPool->poolSemaphore);
         }
         break;
     }

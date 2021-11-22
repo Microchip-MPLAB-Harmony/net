@@ -122,13 +122,13 @@ static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(DRV_HANDLE handle, unsigned i
 // between user threads and task thread
 static __inline__ void __attribute__((always_inline)) _DRV_MIIM_ObjLock(DRV_MIIM_OBJ* pMiimObj)
 {
-    OSAL_SEM_Pend(&pMiimObj->objSem, OSAL_WAIT_FOREVER);
+    (void)OSAL_SEM_Pend(&pMiimObj->objSem, OSAL_WAIT_FOREVER);
 }
 
 // unlocks access to object lists and resources
 static __inline__ void __attribute__((always_inline)) _DRV_MIIM_ObjUnlock(DRV_MIIM_OBJ* pMiimObj)
 {
-    OSAL_SEM_Post(&pMiimObj->objSem);
+    (void)OSAL_SEM_Post(&pMiimObj->objSem);
 }
 
 

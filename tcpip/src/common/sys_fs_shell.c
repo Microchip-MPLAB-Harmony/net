@@ -169,14 +169,14 @@ static __inline__ void  __attribute__((always_inline)) _InstanceLockDelete(OSAL_
 static __inline__ void  __attribute__((always_inline)) _InstanceLock(SHELL_OBJ_INSTANCE* pShell)
 {
     // Shared Data Lock
-    OSAL_SEM_Pend(&pShell->mtSem, OSAL_WAIT_FOREVER);
+    (void)OSAL_SEM_Pend(&pShell->mtSem, OSAL_WAIT_FOREVER);
 }    
 
 // unlocks access to shared shell resources
 static __inline__ void  __attribute__((always_inline)) _InstanceUnlock(SHELL_OBJ_INSTANCE* pShell)
 {
     // Shared Data unlock
-    OSAL_SEM_Post(&pShell->mtSem);
+    (void)OSAL_SEM_Post(&pShell->mtSem);
 }
 
 #endif  // (_SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
