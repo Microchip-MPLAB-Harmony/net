@@ -352,10 +352,10 @@ def instantiateComponent(net_PresComponent):
     netPresBlobClientDeviceCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
 
     # Variable Name Containing Type of Device certificate?
-    netPresBlobClientDeviceCertIsChainCertVar = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN_VARIABLE", netPresBlobClientMutualAuthSupport) 
-    netPresBlobClientDeviceCertIsChainCertVar.setLabel("Is Device Certificate is a Chain Certificate?")
+    netPresBlobClientDeviceCertIsChainCertVar = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDeviceCertIsChainCertVar.setLabel("Is Device Certificate a Chain Certificate?")
     netPresBlobClientDeviceCertIsChainCertVar.setVisible(True)
-    netPresBlobClientDeviceCertIsChainCertVar.setDescription("Variable Name Containing Type of Device Certificate?")
+    netPresBlobClientDeviceCertIsChainCertVar.setDescription("Device Certificate is a Chain Certificate?")
     netPresBlobClientDeviceCertIsChainCertVar.setDefaultValue(False)
     netPresBlobClientDeviceCertIsChainCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
 
