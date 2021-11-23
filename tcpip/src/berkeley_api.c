@@ -56,11 +56,17 @@ __attribute__((section(".bss.errno"))) int errno = 0;           // initializatio
 #endif
 #endif
 
+
 static bool TCP_SocketWasReset(SOCKET s);
 static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort);
 
 static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
+static int _BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res);
+static int _BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res);
+
+static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype);
+static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype);
 
 #if !defined(MAX_BSD_SOCKETS)
 #define MAX_BSD_SOCKETS 4
@@ -2576,25 +2582,35 @@ int TCPIP_BSD_PresSocket(SOCKET s)
     return socket->SocketID;
 }
 
-typedef enum {
-    TCPIP_BERKELEY_GAI_INACTIVE,
-#ifdef TCPIP_STACK_USE_IPV4
+typedef enum 
+{
+    TCPIP_BERKELEY_GAI_INACTIVE  = 0,
     TCPIP_BERKELEY_GAI_START_IPV4,
     TCPIP_BERKELEY_GAI_WAIT_IPV4,
-#endif
-#ifdef TCPIP_STACK_USE_IPV6
     TCPIP_BERKELEY_GAI_START_IPV6,
     TCPIP_BERKELEY_GAI_WAIT_IPV6,
-#endif
     TCPIP_BERKELEY_GAI_FINISHED
 } TCPIP_BERKELEY_GAI_STATE;
 
 uint32_t sgaihash = 0;
 TCPIP_BERKELEY_GAI_STATE sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-int getaddrinfo(const char *node, const char *service,
-                const struct addrinfo *hints,
-                struct addrinfo **res)
+
+// Note: a DNS query with TCPIP_DNS_Resolve(name, TCPIP_DNS_TYPE_ANY) is deprecated by some DNS servers
+// that's why it needs to be done in turn: TCPIP_DNS_TYPE_A, then TCPIP_DNS_TYPE_AAAA
+int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res)
 {
+    int counter;
+    int numDNS;
+    int setres;
+    IPV4_ADDR tmpv4;
+    IPV6_ADDR tmpv6;
+
+    if(res == 0)
+    {
+        errno = EINVAL;
+        return EAI_SYSTEM;
+    }
+
     uint32_t nodeHash = fnv_32a_hash((void*)node, strlen(node));
     if (sgaihash != 0)
     {
@@ -2609,303 +2625,310 @@ int getaddrinfo(const char *node, const char *service,
         sgaihash = nodeHash;
         sgaistate++;
     }
+
+    *res = 0;
+
     switch (sgaistate)
     {
-#ifdef TCPIP_STACK_USE_IPV4
         case TCPIP_BERKELEY_GAI_START_IPV4:
-        {
-            if (hints == NULL || hints->ai_family == 0 || hints->ai_family == AF_INET)
-            {
-                TCPIP_DNS_RESULT result = TCPIP_DNS_Resolve(node, TCPIP_DNS_TYPE_A);
-                switch (result)
-                {
-                    case TCPIP_DNS_RES_NO_SERVICE:
-                    {
-                        sgaihash = 0;
-                        sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                        return EAI_FAIL;
-                    }
-                    case TCPIP_DNS_RES_NAME_IS_IPADDRESS:
-                    {
-                        struct addrinfo * ptr;
-                        IPV4_ADDR tmp;
-                        if (TCPIP_Helper_StringToIPAddress(node, &tmp))
-                        {
-                            ptr = NULL;
-                            ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                            SYS_ASSERT(ptr != NULL, "Could not allocate memory for address info");
-                            *res = ptr;
-                            ptr->ai_family = AF_INET;
-                            ptr->ai_next = NULL;
-                            if (hints != NULL)
-                            {
-                                ptr->ai_flags = hints->ai_flags;
-                                ptr->ai_socktype = hints->ai_socktype;
-                                ptr->ai_protocol = hints->ai_protocol;
-                                ptr->ai_canonname = hints->ai_canonname;
-                            }
-                            ptr->ai_addrlen = sizeof(struct sockaddr_in);
-                            ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(struct sockaddr_in));
-                            SYS_ASSERT(ptr->ai_addr != NULL, "Could not allocate memory for address info");
-                            ((struct sockaddr_in*)(ptr->ai_addr))->sin_family = AF_INET;
-                            ((SOCKADDR_IN*)(ptr->ai_addr))->sin_addr.S_un.S_addr = tmp.Val;
-                            sgaihash = 0;
-                            sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                            return 0;
-                        }
-#ifdef TCPIP_STACK_USE_IPV6
-                        else
-                        {
-                            if (hints != NULL && hints->ai_family == 0)
-                            {
-                                // IPv6 address
-                                sgaistate+=2;
-                                return EAI_AGAIN;
-                            }
-                            else
-                            {
-                                sgaihash = 0;
-                                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                                return EAI_NONAME;
-                            }
-                        }
-#else
-                        sgaihash = 0;
-                        sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                        return EAI_FAIL;
-#endif
-                    }
-                    break;
-                    case TCPIP_DNS_RES_OK:
-                    case TCPIP_DNS_RES_PENDING:
-                    {
-                        sgaistate ++;
-                    }
-                    default:
-                        SYS_ASSERT(false, "TCPIP_DNS_Resolve is passing back a new error");
-                        break;
-                }
-            }
-            else
-            {
-                sgaistate +=2;
+            if(hints != NULL && hints->ai_family != AF_UNSPEC && hints->ai_family != AF_INET)
+            {   // IPv4 resolution not needed; jump to IPv6
+                sgaistate += 2;
                 return EAI_AGAIN;
             }
-        }
+
+            setres = _BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_A);
+
+            if(setres <= 0)
+            {   // either done or some error;
+                sgaihash = 0;
+                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
+                return setres;
+            }
+
+            
+            // pending, advance to the new state
+            sgaistate ++;
+            return EAI_AGAIN;
+
         case TCPIP_BERKELEY_GAI_WAIT_IPV4:
-        {
-            IPV4_ADDR tmp;
-            TCPIP_DNS_RESULT result = TCPIP_DNS_IsNameResolved(node, &tmp, 0);
-            switch (result)
-            {
-                case TCPIP_DNS_RES_NO_SERVICE:
-                case TCPIP_DNS_RES_SERVER_TMO:
-                {
-                    sgaihash = 0;
-                    sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                    return EAI_FAIL;
-                }
-                case TCPIP_DNS_RES_PENDING:
-                    return EAI_AGAIN;
-                case TCPIP_DNS_RES_OK:
-                case TCPIP_DNS_RES_NO_NAME_ENTRY:
-                {
-                    sgaistate++;
-                }
-                default:
-                    SYS_ASSERT(false, "TCPIP_DNS_IsNameResolved is passing back a new error");
-                    break;
+
+            setres = _BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_A);
+
+            if(setres < 0)
+            {   // DNS error; abort
+                sgaihash = 0;
+                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
+                return EAI_FAIL;
             }
-        }
-#endif
-#ifdef TCPIP_STACK_USE_IPV6
-        case TCPIP_BERKELEY_GAI_START_IPV6:
-        {
-            if (hints == NULL || hints->ai_family == 0 || hints->ai_family == AF_INET6)
-            {
-                TCPIP_DNS_RESULT result = TCPIP_DNS_Resolve(node, TCPIP_DNS_TYPE_AAAA);
-                switch (result)
-                {
-                    case TCPIP_DNS_RES_NO_SERVICE:
-                    {
-                        sgaihash = 0;
-                        sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                        return EAI_FAIL;
-                    }
-                    case TCPIP_DNS_RES_NAME_IS_IPADDRESS:
-                    {
-                        IPV6_ADDR tmp;
-                        if (TCPIP_Helper_StringToIPv6Address(node, &tmp))
-                        {
-                            struct addrinfo * ptr;
-                            ptr = NULL;
-                            ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                            SYS_ASSERT(ptr != NULL, "Could not allocate memory for address info");
-                            *res = ptr;
-                            ptr->ai_family = AF_INET6;
-                            ptr->ai_next = NULL;
-                            if (hints != NULL)
-                            {
-                                ptr->ai_flags = hints->ai_flags;
-                                ptr->ai_socktype = hints->ai_socktype;
-                                ptr->ai_protocol = hints->ai_protocol;
-                                ptr->ai_canonname = hints->ai_canonname;
-                            }
-                            ptr->ai_addrlen = sizeof(struct sockaddr_in6);
-                            ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(SOCKADDR_IN6));
-                            SYS_ASSERT(ptr->ai_addr != NULL, "Could not allocate memory for address info");
-                            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_family = AF_INET6;
-                            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[0] = tmp.d[0];
-                            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[1] = tmp.d[1];
-                            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[2] = tmp.d[2];
-                            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[3] = tmp.d[3];
-                            sgaihash = 0;
-                            sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                            return 0;
-                        }
-                        else
-                        {
-                            sgaihash = 0;
-                            sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                            return EAI_FAIL;
-                        }
-                    }
-                    break;
-                    case TCPIP_DNS_RES_OK:
-                    case TCPIP_DNS_RES_PENDING:
-                    {
-                        sgaistate ++;
-                    }
-                    default:
-                        SYS_ASSERT(false, "TCPIP_DNS_Resolve is passing back a new error");
-                        break;
-                }
-            }
-            else
-            {
-                sgaistate +=2;
+            else if(setres > 0)
+            {   // wait some more
                 return EAI_AGAIN;
             }
-        }
+
+            // ok, advance to the new state
+            sgaistate ++;
+            return EAI_AGAIN;
+
+        case TCPIP_BERKELEY_GAI_START_IPV6:
+            if(hints != NULL && hints->ai_family != AF_UNSPEC && hints->ai_family != AF_INET6)
+            {   // IPv6 resolution not needed; jump to done
+                sgaistate += 2;
+                return EAI_AGAIN;
+            }
+
+            setres = _BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_AAAA);
+
+            if(setres <= 0)
+            {   // either done or some error;
+                sgaihash = 0;
+                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
+                return setres;
+            }
+
+            // pending, advance to the new state
+            sgaistate ++;
+            return EAI_AGAIN;
+
         case TCPIP_BERKELEY_GAI_WAIT_IPV6:
-        {
-            IPV6_ADDR tmp;
-            TCPIP_DNS_RESULT dnsRes = TCPIP_DNS_IsNameResolved(node, 0, &tmp);
-            switch (dnsRes)
-            {
-                case TCPIP_DNS_RES_NO_SERVICE:
-                case TCPIP_DNS_RES_SERVER_TMO:
-                {
-                    sgaihash = 0;
-                    sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                    return EAI_FAIL;
-                }
-                case TCPIP_DNS_RES_PENDING:
-                    return EAI_AGAIN;
-                case TCPIP_DNS_RES_OK:
-                case TCPIP_DNS_RES_NO_NAME_ENTRY:
-                {
-                    sgaistate++;
-                }
-                default:
-                    SYS_ASSERT(false, "TCPIP_DNS_IsNameResolved is passing back a new error");
-                    break;
+
+            setres = _BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_AAAA);
+
+            if(setres < 0)
+            {   // DNS error; abort
+                sgaihash = 0;
+                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
+                return EAI_FAIL;
             }
+            else if(setres > 0)
+            {   // wait some more
+                return EAI_AGAIN;
+            }
+
+            // ok, advance to the new state
+            sgaistate ++;
+            return EAI_AGAIN;
+
+        case TCPIP_BERKELEY_GAI_FINISHED:
+            *res = 0;
+            setres = 0;
+            if(hints == NULL || hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET)
+            {   // get IPv4
+                numDNS = TCPIP_DNS_GetIPAddressesNumber(node, IP_ADDRESS_TYPE_IPV4);
+
+                for (counter = 0; counter < numDNS; counter++)
+                {
+                    TCPIP_DNS_GetIPv4Addresses(node, counter, &tmpv4, 1);
+                    setres = _BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
+                    if(setres != 0)
+                    {   // some failure
+                        break;
+                    }
+                }
+            }
+
+            if(setres == 0 && (hints == NULL || hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET6))
+            {   // get IPv6
+                numDNS = TCPIP_DNS_GetIPAddressesNumber(node, IP_ADDRESS_TYPE_IPV6);
+
+                for (counter = 0; counter < numDNS; counter++)
+                {
+                    TCPIP_DNS_GetIPv6Addresses(node, counter, &tmpv6, 1);
+                    setres = _BSD_SetIp6AddrInfo(&tmpv6, hints, res);
+                    if(setres != 0)
+                    {   // some failure
+                        break;
+                    }
+                }
+            }
+
+            sgaihash = 0;
+            sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
+            if (setres == 0 && *res == 0)
+            {
+                setres = EAI_NONAME;
+            }
+            return setres;
+
+        default:
+            SYS_ASSERT(false, "Should not be here!");
+            return EAI_SYSTEM;
+    }
+
+}
+
+// starts a DNS resolve query
+// returns:
+//      < 0 if error
+//      0 if done (query was an IP address, not a name)
+//      1 if pending
+//
+static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype)
+{
+    IPV4_ADDR tmpv4;
+    IPV6_ADDR tmpv6;
+
+    TCPIP_DNS_RESULT result = TCPIP_DNS_Resolve(node, dnstype);
+
+    if(result < 0)
+    {   // DNS error; abort
+        return EAI_FAIL;
+    }
+    else if(result == TCPIP_DNS_RES_PENDING || result == TCPIP_DNS_RES_OK)
+    {   // ok, wait a while or DNS name known
+        return 1;
+    }
+    else if(result == TCPIP_DNS_RES_NAME_IS_IPADDRESS)
+    {   // name resolution available
+        if (TCPIP_Helper_StringToIPAddress(node, &tmpv4))
+        {
+            return _BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
         }
-#endif
-    case TCPIP_BERKELEY_GAI_FINISHED:
+        else if (TCPIP_Helper_StringToIPv6Address(node, &tmpv6))
+        {
+            return _BSD_SetIp6AddrInfo(&tmpv6, hints, res);
+        }
+    }
+
+    // should not get here
+    SYS_ASSERT(false, "getaddrinfo unknown error");
+    return EAI_FAIL;
+
+} 
+
+// checks a DNS resolve
+// returns:
+//      < 0 if error
+//      0 if done
+//      1 if pending
+//
+static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype)
+{
+    IPV4_ADDR tmpv4;
+    IPV6_ADDR tmpv6;
+    TCPIP_DNS_RESULT result;
+
+    if(dnstype == TCPIP_DNS_TYPE_A)
     {
-        *res = NULL;
-        struct addrinfo * ptr;
-        ptr = NULL;
-        int counter;
-        int numDNS;
-#ifdef TCPIP_STACK_USE_IPV4
-        numDNS = TCPIP_DNS_GetIPAddressesNumber(node, IP_ADDRESS_TYPE_IPV4);
-        for (counter = 0; counter < numDNS; counter++)
-        {
-            if (ptr == NULL)
-            {
-                ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                SYS_ASSERT(ptr != NULL, "Could not allocate memory for address info");
-                *res = ptr;
-            }
-            else
-            {
-                ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                SYS_ASSERT(ptr->ai_next != NULL, "Could not allocate memory for address info");
-                ptr = ptr->ai_next;
-            }
-            ptr->ai_family = AF_INET;
-            ptr->ai_next = NULL;
-            if (hints != NULL)
-            {
-                ptr->ai_flags = hints->ai_flags;
-                ptr->ai_socktype = hints->ai_socktype;
-                ptr->ai_protocol = hints->ai_protocol;
-                ptr->ai_canonname = hints->ai_canonname;
-            }
-            ptr->ai_addrlen = sizeof(struct sockaddr_in);
-            ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(struct sockaddr_in));
-            SYS_ASSERT(ptr->ai_addr != NULL, "Could not allocate memory for address info");
-            ((struct sockaddr_in*)(ptr->ai_addr))->sin_family = AF_INET;
-            IPV4_ADDR tmp;
-            TCPIP_DNS_GetIPv4Addresses(node, counter, &tmp, 1);
-            ((SOCKADDR_IN*)(ptr->ai_addr))->sin_addr.S_un.S_addr = tmp.Val;
-        }
-#endif
-#ifdef TCPIP_STACK_USE_IPV6
-        numDNS = TCPIP_DNS_GetIPAddressesNumber(node, IP_ADDRESS_TYPE_IPV6);
-        for (counter = 0; counter < numDNS; counter++)
-        {
-            if (ptr == NULL)
-            {
-                ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                SYS_ASSERT(ptr != NULL, "Could not allocate memory for address info");
-                *res = ptr;
-            }
-            else
-            {
-                ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
-                SYS_ASSERT(ptr->ai_next != NULL, "Could not allocate memory for address info");
-                ptr = ptr->ai_next;
-            }
-            ptr->ai_family = AF_INET6;
-            ptr->ai_next = NULL;
-            if (hints != NULL)
-            {
-                ptr->ai_flags = hints->ai_flags;
-                ptr->ai_socktype = hints->ai_socktype;
-                ptr->ai_protocol = hints->ai_protocol;
-                ptr->ai_canonname = hints->ai_canonname;
-            }
-            ptr->ai_addrlen = sizeof(struct sockaddr_in6);
-            ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(SOCKADDR_IN6));
-            SYS_ASSERT(ptr->ai_addr != NULL, "Could not allocate memory for address info");
-            ((struct sockaddr_in6*)(ptr->ai_addr))->sin6_family = AF_INET6;
-            IPV6_ADDR tmp;
-            TCPIP_DNS_GetIPv6Addresses(node, counter, &tmp, 1);
-            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[0] = tmp.d[0];
-            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[1] = tmp.d[1];
-            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[2] = tmp.d[2];
-            ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[3] = tmp.d[3];
-        }
-#endif
-        SYS_ASSERT(*res != NULL, "Res should not be NULL");
-        sgaihash = 0;
-        sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-        if (ptr == NULL)
-        {
-            return EAI_NONAME;
-        }
+        result = TCPIP_DNS_IsNameResolved(node, &tmpv4, 0);
+    }
+    else
+    {
+        result = TCPIP_DNS_IsNameResolved(node, 0, &tmpv6);
+    }
+
+    if(result < 0)
+    {   // DNS error; abort
+        return EAI_FAIL;
+    }
+    else if(result == TCPIP_DNS_RES_PENDING)
+    {   // ok, wait a while
+        return 1;
+    }
+    else if(result == TCPIP_DNS_RES_OK)
+    {   // ok, done
         return 0;
     }
-        default:
-            break;
+
+    // should not get here
+    SYS_ASSERT(false, "getaddrinfo unknown error");
+    return EAI_FAIL;
+
+} 
+
+// returns 0 if done
+// EAI_MEMORY if out of memory
+static int _BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res)
+{
+    struct addrinfo* ptr = *res;
+
+    if(ptr == 0)
+    {
+        ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        *res = ptr;
     }
-    SYS_ASSERT(false, "Should not be here!");
-    return EAI_SYSTEM;
+    else
+    {
+        ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr = ptr->ai_next;
+    }
+
+    if(ptr == 0)
+    {
+        SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
+        return EAI_MEMORY;
+    }
+
+    ptr->ai_family = AF_INET;
+    ptr->ai_next = NULL;
+    if (hints != NULL)
+    {
+        ptr->ai_flags = hints->ai_flags;
+        ptr->ai_socktype = hints->ai_socktype;
+        ptr->ai_protocol = hints->ai_protocol;
+        ptr->ai_canonname = hints->ai_canonname;
+    }
+
+    ptr->ai_addrlen = sizeof(struct sockaddr_in);
+    ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(struct sockaddr_in));
+    if(ptr->ai_addr == 0)
+    {
+        SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
+        return EAI_MEMORY;
+    }
+
+    ((struct sockaddr_in*)(ptr->ai_addr))->sin_family = AF_INET;
+    ((SOCKADDR_IN*)(ptr->ai_addr))->sin_addr.S_un.S_addr = ipAddr;
+    return 0;
 }
+
+static int _BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res)
+{
+    struct addrinfo* ptr = *res;
+
+    if(ptr == 0)
+    {
+        ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        *res = ptr;
+    }
+    else
+    {
+        ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr = ptr->ai_next;
+    }
+
+    if(ptr == 0)
+    {
+        SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
+        return EAI_MEMORY;
+    }
+
+    ptr->ai_family = AF_INET6;
+    ptr->ai_next = NULL;
+    if (hints != NULL)
+    {
+        ptr->ai_flags = hints->ai_flags;
+        ptr->ai_socktype = hints->ai_socktype;
+        ptr->ai_protocol = hints->ai_protocol;
+        ptr->ai_canonname = hints->ai_canonname;
+    }
+
+    ptr->ai_addrlen = sizeof(struct sockaddr_in6);
+    ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(SOCKADDR_IN6));
+    if(ptr->ai_addr == 0)
+    {
+        SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
+        return EAI_MEMORY;
+    }
+
+    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_family = AF_INET6;
+    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[0] = ipAddr->d[0];
+    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[1] = ipAddr->d[1];
+    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[2] = ipAddr->d[2];
+    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[3] = ipAddr->d[3];
+    return 0;
+}
+
 
 void freeaddrinfo(struct addrinfo *res)
 {

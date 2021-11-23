@@ -68,6 +68,7 @@ typedef int16_t SOCKET;   //Socket descriptor
 
 #define AF_INET         2			// Internet Address Family - IPv4, UDP, TCP, etc.
 #define AF_INET6        10          // Internet Address Family - IPv6
+#define AF_UNSPEC       0           // Ipv4 or IPv6
 
 #define IP_ADDR_ANY     0x01000000u			// IP Address for server binding
 #define INADDR_ANY      0x01000000u	// IP address for server binding.
