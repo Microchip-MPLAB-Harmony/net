@@ -423,7 +423,12 @@ def setVal(component, symbol, value):
         return False
     else:
         return True
-
+        
+def finalizeComponent(tcpipTcpComponent):
+    # Enable Sys Random H2 Adapter. if not enabled
+    if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER") != True): 
+        setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", True)
+            
 #Handle messages from other components
 def handleMessage(messageID, args):
     retDict= {}
@@ -436,5 +441,7 @@ def handleMessage(messageID, args):
     return retDict
       
   
-def destroyComponent(component):
+def destroyComponent(tcpipTcpComponent):
     Database.setSymbolValue("tcpipTcp", "TCPIP_USE_TCP", False, 2)
+    if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER") != False): 
+        setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", False)

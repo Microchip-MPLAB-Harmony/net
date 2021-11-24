@@ -2357,6 +2357,15 @@ def handleMessage(messageID, args):
         retDict= {"Return": "UnImplemented Command"}
     return retDict
       
+
+        
+def finalizeComponent( macComponent ):
+    tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    if (tcpipAutoConfigBasicGroup != None):  
+        tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipStack", "Core_SysConsole_Dependency")
+    if (tcpipAutoConfigStackGroup != None):  
+        tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipStack:Core_SysConsole_Dependency")
       
 def destroyComponent(tcpipStackComponent):
     Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)

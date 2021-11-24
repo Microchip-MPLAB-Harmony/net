@@ -1807,6 +1807,7 @@ def initNoCacheMPU():
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Access"), 3)
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), Database.getSymbolValue("drvGmac", "DRV_GMAC_NOCACHE_MEM_ADDRESS"))
                 break
+                
 
 
 def gmacHeapCalc():
@@ -1916,6 +1917,7 @@ def handleMessage(messageID, args):
 
 def destroyComponent(drvGmacComponent):
     global gmac_periphID
+    global noCache_MPU_index
     Database.setSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC", False, 2)    
     setVal("core", "GMAC_INTERRUPT_ENABLE", False)
     if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
@@ -1925,3 +1927,5 @@ def destroyComponent(drvGmacComponent):
         setVal("core", "GMAC_Q3_INTERRUPT_ENABLE", False)
         setVal("core", "GMAC_Q4_INTERRUPT_ENABLE", False)
         setVal("core", "GMAC_Q5_INTERRUPT_ENABLE", False)
+        setVal("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), False)
+
