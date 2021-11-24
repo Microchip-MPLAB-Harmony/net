@@ -115,6 +115,10 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( 
   Remarks:
     The crypto random functions will call this function internally
     to make sure proper initialization occurred.
+
+    Currently there is no protection against multiple threads performing initialization/de-initialization
+    but only between multiple threads calling directly a SYS_RANDOM_Crypto service which can perform initialization, if needed
+    Stop all calls before calling SYS_RANDOM_CryptoDeinitialize()!
 */
 
 SYS_MODULE_OBJ SYS_RANDOM_CryptoInitialize(void);
