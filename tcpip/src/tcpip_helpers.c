@@ -714,7 +714,6 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 {
 	uint8_t i;
 	uint8_t vByteNumber;
-	bool bPad;
 	uint16_t wBytesOutput;
 
     if(cSourceData == 0 || cDestData == 0)
@@ -730,7 +729,6 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 	{
 		// Fetch a Base64 byte and decode it to the original 6 bits
 		i = *cSourceData++;
-		bPad = (i == '=');
 		if(i >= 'A' && i <= 'Z')	// Regular data
 			i -= 'A' - 0;
 		else if(i >= 'a' && i <= 'z')
@@ -748,8 +746,6 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 		// Write the 6 bits to the correct destination location(s)
 		if(vByteNumber == 0u)
 		{
-			if(bPad)				// Padding here would be illegal, treat it as a non-Base64 chacter and just skip over it
-				continue;
 			vByteNumber++;
 			if(wBytesOutput >= wDestLen)
 				break;
@@ -762,8 +758,6 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 			*cDestData++ |= i >> 4;
 			if(wBytesOutput >= wDestLen)
 				break;
-			if(bPad)
-				continue;
 			wBytesOutput++;
 			*cDestData = i << 4;
 		}
@@ -773,8 +767,6 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 			*cDestData++ |= i >> 2;
 			if(wBytesOutput >= wDestLen)
 				break;
-			if(bPad)
-				continue;
 			wBytesOutput++;
 			*cDestData = i << 6;
 		}
@@ -815,7 +807,7 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
 	Encoding cannot be performed in-place.
     If surceData overlaps with  destData, the behavior is undefined.
 	
-	The source data is padded wit 1 or 2 bytes, if needed, to make the source size a multiple
+	The source data is padded with 1 or 2 bytes, if needed, to make the source size a multiple
     of 3 bytes.
     Then for each 3 bytes tuple in the source 4 output bytes are generated.
     The output size needed is pad(sourceLen) * 4 / 3 bytes.
@@ -1040,8 +1032,8 @@ uint16_t TCPIP_Helper_ChecksumFold(uint32_t rawChksum)
 {
     TCPIP_UINT32_VAL checksum;
 
-    checksum.Val = rawChksum;
-    checksum.Val = (uint32_t)checksum.w[0] + (uint32_t)checksum.w[1];
+    checksum.Val = rawChksum;   // init checksum
+    checksum.Val = (uint32_t)checksum.w[0] + (uint32_t)checksum.w[1];   // checksum = low 16 bit + high 16 bit
     checksum.w[0] += checksum.w[1];
     return checksum.w[0];
     
