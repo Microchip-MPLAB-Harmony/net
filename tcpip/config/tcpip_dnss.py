@@ -29,6 +29,7 @@ def instantiateComponent(tcpipDnssComponent):
     processor = Variables.get("__PROCESSOR")
     # Enable DNS Server
     tcpipDnss = tcpipDnssComponent.createBooleanSymbol("TCPIP_USE_DNSS", None)
+    tcpipDnss.setHelp("mcc_h3_dnss_configurations")
     tcpipDnss.setLabel("DNS Server")
     tcpipDnss.setVisible(False)
     tcpipDnss.setDescription("Enable DNS Server")
@@ -36,6 +37,7 @@ def instantiateComponent(tcpipDnssComponent):
 
     # Maximum Number of IPv4 Entries
     tcpipDnssIpv4EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", None)
+    tcpipDnssIpv4EntryMaxNum.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssIpv4EntryMaxNum.setLabel("Maximum Number of IPv4 Cache Entries")
     tcpipDnssIpv4EntryMaxNum.setVisible(True)
     tcpipDnssIpv4EntryMaxNum.setDescription("Maximum Number of IPv4 Entries")
@@ -43,6 +45,7 @@ def instantiateComponent(tcpipDnssComponent):
 
     # Maximum Number of IPv6 Entries
     tcpipDnssIpv6EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", None)
+    tcpipDnssIpv6EntryMaxNum.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssIpv6EntryMaxNum.setLabel("Maximum Number of IPv6 Cache Entries")
     tcpipDnssIpv6EntryMaxNum.setVisible(False)
     tcpipDnssIpv6EntryMaxNum.setDescription("Maximum Number of IPv6 Entries")
@@ -51,6 +54,7 @@ def instantiateComponent(tcpipDnssComponent):
     
     # Default DNS Host Name Length
     tcpipDnssHostNameLen = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_HOST_NAME_LEN", None)
+    tcpipDnssHostNameLen.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssHostNameLen.setLabel("Default DNS Host Name Length")
     tcpipDnssHostNameLen.setVisible(True)
     tcpipDnssHostNameLen.setDescription("Default DNS Host Name Length")
@@ -58,6 +62,7 @@ def instantiateComponent(tcpipDnssComponent):
     
     # Enable DNS Server Console Commands
     tcpipDnssCmdEnable = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_CONSOLE_CMD", None)
+    tcpipDnssCmdEnable.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssCmdEnable.setLabel("Enable Console Commands")
     tcpipDnssCmdEnable.setVisible(True)
     tcpipDnssCmdEnable.setDescription("Enable DNS Server Console Commands")
@@ -71,6 +76,7 @@ def instantiateComponent(tcpipDnssComponent):
 
     # DNS Server Time-Out Task Processing Rate in Milliseconds
     tcpipDnssTskProcessRate = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TASK_PROCESS_RATE", tcpipDnssAdvSettings)
+    tcpipDnssTskProcessRate.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssTskProcessRate.setLabel("DNS Server Task Rate (in msec)")
     tcpipDnssTskProcessRate.setVisible(True)
     tcpipDnssTskProcessRate.setDescription("DNS Server Time-Out Task Processing Rate in Milliseconds")
@@ -78,6 +84,7 @@ def instantiateComponent(tcpipDnssComponent):
     
     # Default TTL Time for an IP Address in Seconds
     tcpipDnssTtlTime = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TTL_TIME", tcpipDnssAdvSettings)
+    tcpipDnssTtlTime.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssTtlTime.setLabel("Default DNS Server Time-To-Live(in sec) ")
     tcpipDnssTtlTime.setVisible(True)
     tcpipDnssTtlTime.setDescription("Default TTL Time for an IP Address in Seconds")
@@ -85,6 +92,7 @@ def instantiateComponent(tcpipDnssComponent):
 
     # Delete Old Cache if Still in Place
     tcpipDnssDeleteOldLease = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_DELETE_OLD_LEASE", tcpipDnssAdvSettings)
+    tcpipDnssDeleteOldLease.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssDeleteOldLease.setLabel("Delete Old Cache if Still in Place")
     tcpipDnssDeleteOldLease.setVisible(True)
     tcpipDnssDeleteOldLease.setDescription("Delete Old Cache if Still in Place")
@@ -92,6 +100,7 @@ def instantiateComponent(tcpipDnssComponent):
 
     # Reply DNS Info with Board Info
     tcpipDnssReplyBoardAddr = tcpipDnssComponent.createBooleanSymbol("TCPIP_DNSS_REPLY_BOARD_ADDR", tcpipDnssAdvSettings)
+    tcpipDnssReplyBoardAddr.setHelp("mcc_h3_dnss_configurations")
     tcpipDnssReplyBoardAddr.setLabel("Reply to Client Request with Board Info")
     tcpipDnssReplyBoardAddr.setVisible(True)
     tcpipDnssReplyBoardAddr.setDescription("Reply to DNS Client Request with Board Info")
