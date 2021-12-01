@@ -28,6 +28,7 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
     
     # Enable Berkeley API
     tcpipBerkeleyApi = tcpipBerkeleyApiComponent.createBooleanSymbol("TCPIP_STACK_USE_BERKELEY_API", None)
+    tcpipBerkeleyApi.setHelp("mcc_h3_bsd_configurations")
     tcpipBerkeleyApi.setLabel("Berkeley API")
     tcpipBerkeleyApi.setVisible(False)
     tcpipBerkeleyApi.setDescription("Enable Berkeley API")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 
     # Maximum Number of Simultaneous Sockets Supported
     tcpipBerkeleyBsdSktsMaxNum = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_MAX_BSD_SOCKETS", None)
+    tcpipBerkeleyBsdSktsMaxNum.setHelp("mcc_h3_bsd_configurations")
     tcpipBerkeleyBsdSktsMaxNum.setLabel("Maximum Number of Simultaneous Sockets")
     tcpipBerkeleyBsdSktsMaxNum.setVisible(True)
     tcpipBerkeleyBsdSktsMaxNum.setDescription("Maximum Number of Simultaneous Sockets Supported")
