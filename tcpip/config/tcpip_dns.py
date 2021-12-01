@@ -30,6 +30,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # Enable DNS Client
     tcpipDnsc = tcpipDnsComponent.createBooleanSymbol("TCPIP_USE_DNS_CLIENT", None)
+    tcpipDnsc.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnsc.setLabel("DNS Client")
     tcpipDnsc.setVisible(False)
     tcpipDnsc.setDescription("Enable DNS Client")
@@ -37,6 +38,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # Number of DNS Resolver Entries
     tcpipDnscCacheEntryNum = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_ENTRIES", None)
+    tcpipDnscCacheEntryNum.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCacheEntryNum.setLabel("Number of DNS Cache Entries")
     tcpipDnscCacheEntryNum.setVisible(True)
     tcpipDnscCacheEntryNum.setDescription("Number of DNS Resolver Cache Entries")
@@ -44,6 +46,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # DNS Connection Type 
     tcpipDnscAddressType = tcpipDnsComponent.createComboSymbol("TCPIP_DNS_CLIENT_ADDRESS_TYPE", None, TCPIP_ADDRESS_TYPE_STRICT)
+    tcpipDnscAddressType.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscAddressType.setLabel("DNS Connection Type")
     tcpipDnscAddressType.setVisible(True)
     tcpipDnscAddressType.setDescription("DNS Connection Type")
@@ -51,6 +54,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # DNS Client Host Name Length
     tcpipDnscHostNameLenMax = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN", None)
+    tcpipDnscHostNameLenMax.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscHostNameLenMax.setLabel("DNS Host Name Maximum Length")
     tcpipDnscHostNameLenMax.setVisible(True)
     tcpipDnscHostNameLenMax.setDescription("DNS Client Host Name Length")
@@ -58,6 +62,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # Enable DNS Client Console Command
     tcpipDnscCmdEnable = tcpipDnsComponent.createBooleanSymbol("TCPIP_DNS_CLIENT_CONSOLE_CMD", None)
+    tcpipDnscCmdEnable.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCmdEnable.setLabel("Enable Console Commands")
     tcpipDnscCmdEnable.setVisible(True)
     tcpipDnscCmdEnable.setDescription("Enable DNS Client Console Commands")
@@ -71,6 +76,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # DNS Client Task Update Rate in msec
     tcpipDnscTskProcessRate = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_TASK_PROCESS_RATE", tcpipDnscAdvSettings)
+    tcpipDnscTskProcessRate.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscTskProcessRate.setLabel("DNS Client Task Rate (in msec)")
     tcpipDnscTskProcessRate.setVisible(True)
     tcpipDnscTskProcessRate.setDescription("Task Update Rate in msec")
@@ -78,6 +84,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # DNS Client Cache Entry Time outs
     tcpipDnscCacheEntryTimeout = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO", tcpipDnscAdvSettings)
+    tcpipDnscCacheEntryTimeout.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCacheEntryTimeout.setLabel("Default Cache Entry Timeout (in sec)")
     tcpipDnscCacheEntryTimeout.setVisible(True)
     tcpipDnscCacheEntryTimeout.setDescription("DNS Client Cache Entry Time outs")
@@ -85,6 +92,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # DNS Client-Server Time out in Seconds
     tcpipDnscServerTimeout = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_SERVER_TMO", tcpipDnscAdvSettings)
+    tcpipDnscServerTimeout.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscServerTimeout.setLabel("No Server Reply Timeout(in sec)")
     tcpipDnscServerTimeout.setVisible(True)
     tcpipDnscServerTimeout.setDescription("Client-Server Time out in Seconds")
@@ -92,6 +100,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # Maximum Number of IPv4 Answers to be Considered
     tcpipDnscCachePerIpv4Num = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS", tcpipDnscAdvSettings)
+    tcpipDnscCachePerIpv4Num.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCachePerIpv4Num.setLabel("Maximum Number of IPv4 Answers to be Considered")
     tcpipDnscCachePerIpv4Num.setVisible(True)
     tcpipDnscCachePerIpv4Num.setDescription("Maximum Number of IPv4 Answers to be Considered")
@@ -99,6 +108,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # Maximum Number of IPv6 Answers to be Considered
     tcpipDnscCachePerIpv6Num = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS", tcpipDnscAdvSettings)
+    tcpipDnscCachePerIpv6Num.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCachePerIpv6Num.setLabel("Maximum Number of IPv6 Answers to be Considered")
     tcpipDnscCachePerIpv6Num.setVisible(True)
     tcpipDnscCachePerIpv6Num.setDescription("Maximum Number of IPv4 Answers to be Considered")
@@ -106,6 +116,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # Maximum Number of Interfaces Considered for DNS resolution
     tcpipDnscInterfaceMaxNum = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES", tcpipDnscAdvSettings)
+    tcpipDnscInterfaceMaxNum.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscInterfaceMaxNum.setLabel("Maximum Number of Interfaces Considered for DNS resolution")
     tcpipDnscInterfaceMaxNum.setVisible(True)
     tcpipDnscInterfaceMaxNum.setDescription("Maximum Number of Interfaces Considered for DNS resolution")
@@ -113,6 +124,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # Default TTL time in Seconds
     tcpipDnscCacheTtlTime = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL", tcpipDnscAdvSettings)
+    tcpipDnscCacheTtlTime.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscCacheTtlTime.setLabel("Default TTL time (in sec)")
     tcpipDnscCacheTtlTime.setVisible(True)
     tcpipDnscCacheTtlTime.setDescription("Default Time-To-Live time in Seconds")
@@ -120,6 +132,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # Retry Lookup Host name after Time-out
     tcpipDnscLookupRetryTimeout = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO", tcpipDnscAdvSettings)
+    tcpipDnscLookupRetryTimeout.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscLookupRetryTimeout.setLabel("Retry Unsolved Cache Entry Timeout (in sec)")
     tcpipDnscLookupRetryTimeout.setVisible(True)
     tcpipDnscLookupRetryTimeout.setDescription("Timeout to Retry Unsolved Cache Entry; Should be less than Unsolved Cache Entry Timeout")
@@ -127,6 +140,7 @@ def instantiateComponent(tcpipDnsComponent):
     
     # Delete Old Entries
     tcpipDnscDeleteOldEntry= tcpipDnsComponent.createBooleanSymbol("TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES", tcpipDnscAdvSettings)
+    tcpipDnscDeleteOldEntry.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscDeleteOldEntry.setLabel("Delete Old Entries")
     tcpipDnscDeleteOldEntry.setVisible(True)
     tcpipDnscDeleteOldEntry.setDescription("Delete Old Entries")
@@ -134,6 +148,7 @@ def instantiateComponent(tcpipDnsComponent):
 
     # Enable User Notification
     tcpipDnscUsrNotification= tcpipDnsComponent.createBooleanSymbol("TCPIP_DNS_CLIENT_USER_NOTIFICATION", tcpipDnscAdvSettings)
+    tcpipDnscUsrNotification.setHelp("mcc_h3_dnsc_configurations")
     tcpipDnscUsrNotification.setLabel("Enable User Notification")
     tcpipDnscUsrNotification.setVisible(True)
     tcpipDnscUsrNotification.setDescription("Enable User Notification")
