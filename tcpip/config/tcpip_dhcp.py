@@ -28,6 +28,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # Enable DHCP Client
     tcpipDhcpc = tcpipDhcpComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_CLIENT", None)
+    tcpipDhcpc.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpc.setLabel("DHCP Client")
     tcpipDhcpc.setVisible(False)
     tcpipDhcpc.setDescription("Enable DHCP Client")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipDhcpComponent):
 
     # DHCP Client Request Time-out in seconds
     tcpipDhcpcReqTimeout = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TIMEOUT", None)
+    tcpipDhcpcReqTimeout.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (in sec)")
     tcpipDhcpcReqTimeout.setVisible(True)
     tcpipDhcpcReqTimeout.setDescription("DHCP Request Time-out in seconds")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # DHCP Client Host name maximum size
     tcpipDhcpcHostNameSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HOST_NAME_SIZE", None)
+    tcpipDhcpcHostNameSize.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcHostNameSize.setLabel("DHCP Host Name Maximum Size")
     tcpipDhcpcHostNameSize.setVisible(True)
     tcpipDhcpcHostNameSize.setDescription("DHCP Client Host name maximum size")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # Enable DHCP Client Console Command
     tcpipDhcpcCmdEnable = tcpipDhcpComponent.createBooleanSymbol("TCPIP_DHCP_CLIENT_CONSOLE_CMD", None)
+    tcpipDhcpcCmdEnable.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcCmdEnable.setLabel("Enable Console Commands")
     tcpipDhcpcCmdEnable.setVisible(True)
     tcpipDhcpcCmdEnable.setDescription("Enable DHCP Client Console Commands")
@@ -62,6 +66,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # DHCP Client Tick Rate in msec
     tcpipDhcpcTickRate = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TASK_TICK_RATE", tcpipDhcpcAdvSettings)
+    tcpipDhcpcTickRate.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcTickRate.setLabel("DHCP Client Task Rate (in msec)")
     tcpipDhcpcTickRate.setVisible(True)
     tcpipDhcpcTickRate.setDescription("DHCP Tick Rate in msec")
@@ -69,6 +74,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # DHCP Client port
     tcpipDhcpcConnectPort = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_CLIENT_CONNECT_PORT", tcpipDhcpcAdvSettings)
+    tcpipDhcpcConnectPort.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcConnectPort.setLabel("Client Port for DHCP Client Transactions")
     tcpipDhcpcConnectPort.setVisible(True)
     tcpipDhcpcConnectPort.setDescription("Client Port for DHCP Client Transactions")
@@ -76,6 +82,7 @@ def instantiateComponent(tcpipDhcpComponent):
 
     # Remote Server Port for DHCP Server Messages
     tcpipDhcpcServerListenPort= tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_LISTEN_PORT", tcpipDhcpcAdvSettings)
+    tcpipDhcpcServerListenPort.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcServerListenPort.setLabel("Remote Server Port for DHCP Server Messages")
     tcpipDhcpcServerListenPort.setVisible(True)
     tcpipDhcpcServerListenPort.setDescription("Remote Server Port for DHCP Server Messages")
@@ -83,6 +90,7 @@ def instantiateComponent(tcpipDhcpComponent):
     
     # Time Server Options + Maximum Number Time Servers to Store
     tcpipDhcpcTimeServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_TIME_SERVER_MAX", tcpipDhcpcAdvSettings)
+    tcpipDhcpcTimeServerMax.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcTimeServerMax.setLabel("Maximum Number of Time Servers to Store")
     tcpipDhcpcTimeServerMax.setVisible(True)
     tcpipDhcpcTimeServerMax.setDescription("Maximum Number of Time Server Addresses that Can Be Stored")
@@ -90,6 +98,7 @@ def instantiateComponent(tcpipDhcpComponent):
 
     # NTP Server Options + Maximum Number NTP Servers to Store
     tcpipDhcpcNtpServerMax = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_OPTION_NTP_SERVER_MAX", tcpipDhcpcAdvSettings)
+    tcpipDhcpcNtpServerMax.setHelp("mcc_h3_dhcp_configurations")
     tcpipDhcpcNtpServerMax.setLabel("Maximum Number of NTP Servers to Store")
     tcpipDhcpcNtpServerMax.setVisible(True)
     tcpipDhcpcNtpServerMax.setDescription("Maximum Number of NTP Server Addresses that Can Be Stored")
