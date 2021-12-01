@@ -27,6 +27,7 @@ def instantiateComponent(tcpipIcmpComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     # ICMPv4 Client and Server
     tcpipIcmp = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMPV4", None)
+    tcpipIcmp.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmp.setLabel("ICMPv4 Client and Server")
     tcpipIcmp.setVisible(False)
     tcpipIcmp.setDescription("ICMPv4 Client and Server")
@@ -34,6 +35,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Use ICMPv4 Server
     tcpipIcmpv4Server = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_SERVER", None)
+    tcpipIcmpv4Server.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpv4Server.setLabel("Use ICMPv4 Server")
     tcpipIcmpv4Server.setVisible(True)
     tcpipIcmpv4Server.setDescription("Use ICMPv4 Server")
@@ -41,6 +43,7 @@ def instantiateComponent(tcpipIcmpComponent):
     
     # Allow Replies to Echo Broadcast Requests
     tcpipIcmpEchoBroadcast = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_ECHO_BROADCASTS", tcpipIcmpv4Server)
+    tcpipIcmpEchoBroadcast.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoBroadcast.setLabel("Allow Replies to Echo Broadcast Requests")
     tcpipIcmpEchoBroadcast.setVisible(True)
     tcpipIcmpEchoBroadcast.setDescription("Allow Replies to Echo Broadcast Requests")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipIcmpComponent):
     
     # Use ICMPv4 Client
     tcpipIcmpv4Client = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_CLIENT", None)
+    tcpipIcmpv4Client.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpv4Client.setLabel("Use ICMPv4 Client")
     tcpipIcmpv4Client.setVisible(True)
     tcpipIcmpv4Client.setDescription("Use ICMPv4 Client")
@@ -56,6 +60,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # ICMP task rate in ms
     tcpipIcmpTskTickRate = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_TASK_TICK_RATE", tcpipIcmpv4Client)
+    tcpipIcmpTskTickRate.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpTskTickRate.setLabel("ICMP Client Task Rate (in msec)")
     tcpipIcmpTskTickRate.setVisible(False)
     tcpipIcmpTskTickRate.setDescription("ICMP task rate in ms")
@@ -64,6 +69,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Maximum number of parallel outgoing ICMP Echo requests
     tcpipIcmpMaxClientReqNum = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS", tcpipIcmpv4Client)
+    tcpipIcmpMaxClientReqNum.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpMaxClientReqNum.setLabel("Maximum Number of Supported Client Requests")
     tcpipIcmpMaxClientReqNum.setVisible(False)
     tcpipIcmpMaxClientReqNum.setDescription("Maximum Number of Parallel ICMP Echo requests")
@@ -72,6 +78,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Enable ICMP Commands
     tcpipIcmpCommandEnable = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_COMMAND_ENABLE", tcpipIcmpv4Client)
+    tcpipIcmpCommandEnable.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpCommandEnable.setLabel("Enable ICMP Client Console Commands")
     tcpipIcmpCommandEnable.setVisible(False)
     tcpipIcmpCommandEnable.setDescription("Enable ICMP Client Console Commands")
@@ -80,6 +87,7 @@ def instantiateComponent(tcpipIcmpComponent):
     
     # Number of ICMP Echo requests tp send
     tcpipIcmpEchoReqNum = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS", tcpipIcmpCommandEnable)
+    tcpipIcmpEchoReqNum.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoReqNum.setLabel("Number of ICMP Echo requests")
     tcpipIcmpEchoReqNum.setVisible(False)
     tcpipIcmpEchoReqNum.setDescription("Number of ICMP Echo requests")
@@ -88,14 +96,16 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # ICMP Reply Time-out in ms
     tcpipIcmpEchoReqDelay = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY", tcpipIcmpCommandEnable)
-    tcpipIcmpEchoReqDelay.setLabel("ICMP Reply Time-out (in msec)")
+    tcpipIcmpEchoReqDelay.setHelp("mcc_h3_icmp_configurations")
+    tcpipIcmpEchoReqDelay.setLabel("ICMP Request Delay (in msec)")
     tcpipIcmpEchoReqDelay.setVisible(False)
-    tcpipIcmpEchoReqDelay.setDescription("ICMP Reply Time-out in ms")
+    tcpipIcmpEchoReqDelay.setDescription("ICMP Request delay in ms")
     tcpipIcmpEchoReqDelay.setDefaultValue(1000)
     tcpipIcmpEchoReqDelay.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_ICMP_COMMAND_ENABLE"])
 
     # ICMP Give Up Time-out in ms
     tcpipIcmpEchoTimeout= tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT", tcpipIcmpCommandEnable)
+    tcpipIcmpEchoTimeout.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoTimeout.setLabel("ICMP Give Up Time-out (in msec)")
     tcpipIcmpEchoTimeout.setVisible(False)
     tcpipIcmpEchoTimeout.setDescription("ICMP Give Up Time-out in ms")
@@ -104,6 +114,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Echo Request Data Buffer size - bytes
     tcpipIcmpEchoReqBuffSize= tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE", tcpipIcmpCommandEnable)
+    tcpipIcmpEchoReqBuffSize.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoReqBuffSize.setLabel("Echo Request Data Buffer size - bytes")
     tcpipIcmpEchoReqBuffSize.setVisible(False)
     tcpipIcmpEchoReqBuffSize.setDescription("Echo Request Data Buffer size - bytes")
@@ -112,6 +123,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Echo request Default Data Size - bytes
     tcpipIcmpEchoReqDataSize= tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE", tcpipIcmpCommandEnable)
+    tcpipIcmpEchoReqDataSize.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoReqDataSize.setLabel("Echo request Default Data Size - bytes")
     tcpipIcmpEchoReqDataSize.setVisible(False)
     tcpipIcmpEchoReqDataSize.setDescription("Echo request Default Data Size - bytes")
@@ -120,6 +132,7 @@ def instantiateComponent(tcpipIcmpComponent):
 
     # Echo request timeout in ms
     tcpipIcmpEchoReqTimeout = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_ECHO_REQUEST_TIMEOUT", tcpipIcmpv4Client)
+    tcpipIcmpEchoReqTimeout.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoReqTimeout.setLabel("Echo request timeout (in msec)")
     tcpipIcmpEchoReqTimeout.setVisible(False)
     tcpipIcmpEchoReqTimeout.setDescription("Echo request timeout in ms")
