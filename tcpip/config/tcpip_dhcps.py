@@ -41,6 +41,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     tcpipDhcpsICMPClientEnable()
     # Enable DHCP Server
     tcpipDhcps = tcpipDhcpsComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER", None)
+    tcpipDhcps.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcps.setLabel("DHCP Server")
     tcpipDhcps.setVisible(False)
     tcpipDhcps.setDescription("Enable DHCP Server")
@@ -49,6 +50,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # Maximum Number of Entries in the Lease Table
     tcpipDhcpsLeaseEntryMaxNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT", None)
+    tcpipDhcpsLeaseEntryMaxNum.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsLeaseEntryMaxNum.setLabel("Maximum Number of Entries in the Lease Table")
     tcpipDhcpsLeaseEntryMaxNum.setVisible(True)
     tcpipDhcpsLeaseEntryMaxNum.setDescription("Maximum Number of Entries in the Lease Table")
@@ -57,6 +59,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # Number of DHCP Server Driver Instances
     tcpipDhcpsInstancesNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_INSTANCES_NUMBER", None)
+    tcpipDhcpsInstancesNum.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsInstancesNum.setLabel("Number of DHCP Server Instances")
     tcpipDhcpsInstancesNum.setMax(tcpipNetConfigNumMax)
     tcpipDhcpsInstancesNum.setMin(1)
@@ -78,6 +81,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server interface index
         tcpipDhcpsIfIdx.append(tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsIfIdx.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsIfIdx[index].setLabel("Interface Index for DHCP Server")
         tcpipDhcpsIfIdx[index].setVisible(True)
         tcpipDhcpsIfIdx[index].setDefaultValue(index)
@@ -85,6 +89,7 @@ def instantiateComponent(tcpipDhcpsComponent):
         
         # DHCP Server Address Range Start
         tcpipDhcpsAddrRangeStart.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsAddrRangeStart.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsAddrRangeStart[index].setLabel("DHCPS Address Range Start")
         tcpipDhcpsAddrRangeStart[index].setVisible(True)
         tcpipDhcpsAddrRangeStart[index].setDefaultValue("192.168.1.100")
@@ -92,6 +97,7 @@ def instantiateComponent(tcpipDhcpsComponent):
         
         # DHCP Server IP Address
         tcpipDhcpsIpAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsIpAddr.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsIpAddr[index].setLabel("DHCPS Server IP Address")
         tcpipDhcpsIpAddr[index].setVisible(True)
         tcpipDhcpsIpAddr[index].setDefaultValue("192.168.1.1")
@@ -99,6 +105,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Net Mask Address
         tcpipDhcpsNetMaskAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsNetMaskAddr.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsNetMaskAddr[index].setLabel("DHCPS Netmask")
         tcpipDhcpsNetMaskAddr[index].setVisible(True)
         tcpipDhcpsNetMaskAddr[index].setDefaultValue("255.255.255.0")
@@ -106,6 +113,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Default Gateway Address
         tcpipDhcpsGatewayAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_GATEWAY_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsGatewayAddr.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsGatewayAddr[index].setLabel("Default Gateway")
         tcpipDhcpsGatewayAddr[index].setVisible(True)
         tcpipDhcpsGatewayAddr[index].setDefaultValue("192.168.1.1")
@@ -113,6 +121,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Primary DNS Server Address
         tcpipDhcpsPrimDnsAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsPrimDnsAddr.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsPrimDnsAddr[index].setLabel("Primary DNS Server Address")
         tcpipDhcpsPrimDnsAddr[index].setVisible(True)
         tcpipDhcpsPrimDnsAddr[index].setDefaultValue("192.168.1.1")
@@ -120,6 +129,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Secondary DNS Server Address
         tcpipDhcpsSecDnsAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsSecDnsAddr.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsSecDnsAddr[index].setLabel("Secondary DNS Server Address")
         tcpipDhcpsSecDnsAddr[index].setVisible(True)
         tcpipDhcpsSecDnsAddr[index].setDefaultValue("192.168.1.1")
@@ -127,6 +137,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Pool enabled
         tcpipDhcpsPoolEn.append(tcpipDhcpsComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_POOL_ENABLED_IDX" + str(index), tcpipDhcpsInstance[index]))
+        tcpipDhcpsPoolEn.setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsPoolEn[index].setLabel("Pool Enabled")
         tcpipDhcpsPoolEn[index].setVisible(True)
         tcpipDhcpsPoolEn[index].setDefaultValue(True)
@@ -141,6 +152,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # DHCP Server Update Rate in msec
     tcpipDhcpsTskProcessRate = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_TASK_PROCESS_RATE", tcpipDhcpsAdvSettings)
+    tcpipDhcpsTskProcessRate.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsTskProcessRate.setLabel("DHCP Server Task Rate (in msec)")
     tcpipDhcpsTskProcessRate.setVisible(True)
     tcpipDhcpsTskProcessRate.setDescription("DHCP Server Update Rate in msec")
@@ -148,6 +160,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # Time-out for a Solved Entry in the Cache in Seconds.
     tcpipDhcpsLeaseSolvedEntryTimeout = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO", tcpipDhcpsAdvSettings)
+    tcpipDhcpsLeaseSolvedEntryTimeout.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsLeaseSolvedEntryTimeout.setLabel("Timeout for a Solved Entry in the Cache (in sec)")
     tcpipDhcpsLeaseSolvedEntryTimeout.setVisible(True)
     tcpipDhcpsLeaseSolvedEntryTimeout.setDescription("Time-out for a Solved Entry in the Cache in Seconds.")
@@ -155,6 +168,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # Time-out for a Solved Entry in the Cache in Seconds.
     tcpipDhcpsLeaseUnsolvedEntryTimeout = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK", tcpipDhcpsAdvSettings)
+    tcpipDhcpsLeaseUnsolvedEntryTimeout.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setLabel("Timeout for an Unsolved Entry (in sec)")
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setVisible(True)
     tcpipDhcpsLeaseUnsolvedEntryTimeout.setDescription("Time-out for an Unsolved Entry in Seconds")
@@ -162,6 +176,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 
     # Delete Old Entries
     tcpipDhcpsOldEntryDelete = tcpipDhcpsComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_DELETE_OLD_ENTRIES", tcpipDhcpsAdvSettings)
+    tcpipDhcpsOldEntryDelete.setHelp("mcc_h3_dhcps_configurations")
     tcpipDhcpsOldEntryDelete.setLabel("Delete Old Entries")
     tcpipDhcpsOldEntryDelete.setVisible(True)
     tcpipDhcpsOldEntryDelete.setDescription("Delete Old Entries")
