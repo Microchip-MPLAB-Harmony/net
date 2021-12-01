@@ -28,6 +28,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # Enable FTP Client
     tcpipFtpc = tcpipFtpcComponent.createBooleanSymbol("TCPIP_STACK_USE_FTP_CLIENT", None)
+    tcpipFtpc.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpc.setLabel("FTP Client")
     tcpipFtpc.setVisible(False)
     tcpipFtpc.setDescription("Enable FTP Client")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipFtpcComponent):
 
     # FTP Client maximum number of simultaneous client connections
     tcpipFtpcMaxNumClient = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_MAX_NUM_CLIENT", None)
+    tcpipFtpcMaxNumClient.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcMaxNumClient.setLabel("Maximum number of simultaneous client")
     tcpipFtpcMaxNumClient.setVisible(True)
     tcpipFtpcMaxNumClient.setDescription("Maximum number of simultaneous client")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # Transmit Buffer Size for the FTP Client Data Socket
     tcpipFtpcDataSktTxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT", None)
+    tcpipFtpcDataSktTxBuffSize.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcDataSktTxBuffSize.setLabel("Default Data Socket Transmit Buffer Size")
     tcpipFtpcDataSktTxBuffSize.setVisible(True)
     tcpipFtpcDataSktTxBuffSize.setDescription("Default Transmit Buffer Size for the FTPC Data Socket")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipFtpcComponent):
 
     # Receive Buffer Size for the FTP Client Data Socket
     tcpipFtpcDataSktRxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT", None)
+    tcpipFtpcDataSktRxBuffSize.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcDataSktRxBuffSize.setLabel("Default Data Socket Receive Buffer Size")
     tcpipFtpcDataSktRxBuffSize.setVisible(True)
     tcpipFtpcDataSktRxBuffSize.setDescription("Default Receive Buffer Size for the FTPC Data Socket")
@@ -56,6 +60,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # Enable FTPC Commands
     tcpipFtpcCmdEnable = tcpipFtpcComponent.createBooleanSymbol("TCPIP_FTPC_COMMANDS", None) 
+    tcpipFtpcCmdEnable.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcCmdEnable.setLabel("Enable Console Commands")
     tcpipFtpcCmdEnable.setVisible(True)
     tcpipFtpcCmdEnable.setDescription("Enable FTP Client Console Commands")
@@ -69,6 +74,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # FTP Client Tick Rate in msec
     tcpipFtpcTickRate = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_TASK_TICK_RATE", tcpipFtpcAdvSettings)
+    tcpipFtpcTickRate.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcTickRate.setLabel("FTPC Tick Rate (in msec)")
     tcpipFtpcTickRate.setVisible(True)
     tcpipFtpcTickRate.setDescription("FTPC Tick Rate in msec")
@@ -76,6 +82,7 @@ def instantiateComponent(tcpipFtpcComponent):
     
     # FTP Client request Time-Out
     tcpipFtpcReqTimeout = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_TMO", tcpipFtpcAdvSettings)
+    tcpipFtpcReqTimeout.setHelp("mcc_h3_ftpc_configurations")
     tcpipFtpcReqTimeout.setLabel("FTP Request Time-out (in sec)")
     tcpipFtpcReqTimeout.setVisible(True)
     tcpipFtpcReqTimeout.setDescription("FTP Request Time-out in seconds")
