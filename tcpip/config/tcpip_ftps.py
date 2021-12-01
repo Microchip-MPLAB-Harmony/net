@@ -42,6 +42,7 @@ def instantiateComponent(tcpipFtpsComponent):
         
     # Use FTP Module
     tcpipFtpsModule = tcpipFtpsComponent.createBooleanSymbol("TCPIP_USE_FTP_MODULE", None)
+    tcpipFtpsModule.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsModule.setLabel("Use FTP Module")
     tcpipFtpsModule.setVisible(False)
     tcpipFtpsModule.setDescription("Use FTP Module")
@@ -49,6 +50,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Maximum Number of FTP Connections Allowed per Interface
     tcpipFtpsConnMaxNum = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_MAX_CONNECTIONS", None)
+    tcpipFtpsConnMaxNum.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsConnMaxNum.setLabel("Maximum Number of FTP Connections Allowed per Interface")
     tcpipFtpsConnMaxNum.setVisible(True)
     tcpipFtpsConnMaxNum.setDescription("Maximum Number of FTP Connections Allowed per Interface")
@@ -56,6 +58,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Maximum Length for User Name
     tcpipFtpsUsrNameMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_USER_NAME_LEN", None)
+    tcpipFtpsUsrNameMaxLen.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsUsrNameMaxLen.setLabel("Maximum Length for User Name")
     tcpipFtpsUsrNameMaxLen.setVisible(True)
     tcpipFtpsUsrNameMaxLen.setDescription("Maximum Length for User Name")
@@ -63,6 +66,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Transmit Buffer Size for the FTP Data Socket
     tcpipFtpsDataSktTxBuffSize = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE", None)
+    tcpipFtpsDataSktTxBuffSize.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsDataSktTxBuffSize.setLabel("FTP Data Socket TX Buffer Size")
     tcpipFtpsDataSktTxBuffSize.setVisible(True)
     tcpipFtpsDataSktTxBuffSize.setDescription("Transmit Buffer Size for the FTP Data Socket")
@@ -70,6 +74,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Receive Buffer Size for the FTP Data Socket
     tcpipFtpsDataSktRxBuffSize = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE", None)
+    tcpipFtpsDataSktRxBuffSize.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsDataSktRxBuffSize.setLabel("FTP Data Socket RX Buffer Size")
     tcpipFtpsDataSktRxBuffSize.setVisible(True)
     tcpipFtpsDataSktRxBuffSize.setDescription("Receive Buffer Size for the FTP Data Socket")
@@ -77,6 +82,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Default FTP Mount point directory
     tcpipFtpRootDir = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_MOUNT_POINT", None)
+    tcpipFtpRootDir.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpRootDir.setLabel("FTP Server Root Directory Path")
     tcpipFtpRootDir.setVisible(True)
     tcpipFtpRootDir.setDescription("FTP Server Root Directory Path")
@@ -90,6 +96,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # FTP Server Task Rate in msec
     tcpipFtpsTskTickRate = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_TASK_TICK_RATE", tcpipFtpsAdvSettings)
+    tcpipFtpsTskTickRate.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsTskTickRate.setLabel("FTP Server Task Rate (in msec)")
     tcpipFtpsTskTickRate.setVisible(True)
     tcpipFtpsTskTickRate.setDescription("FTP Server Task Rate in msec")
@@ -97,6 +104,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # FTPs Command Listening Port
     tcpipFtpsCmdPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_COMMAND_LISTEN_PORT", tcpipFtpsAdvSettings)
+    tcpipFtpsCmdPort.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsCmdPort.setLabel("Command Listening Port")
     tcpipFtpsCmdPort.setVisible(True)
     tcpipFtpsCmdPort.setDescription("FTP Server Command Listening Port")
@@ -104,6 +112,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # FTPs Data Listening Port
     tcpipFtpsDataPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_DATA_LISTEN_PORT", tcpipFtpsAdvSettings)
+    tcpipFtpsDataPort.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsDataPort.setLabel("Data Listening Port")
     tcpipFtpsDataPort.setVisible(True)
     tcpipFtpsDataPort.setDescription("FTP Server Data Listening Port")
@@ -111,6 +120,7 @@ def instantiateComponent(tcpipFtpsComponent):
     
     # FTP Server timeout in seconds
     tcpipFtpsTimeout = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_TIMEOUT", tcpipFtpsAdvSettings)
+    tcpipFtpsTimeout.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsTimeout.setLabel("FTP Server timeout (in sec)")
     tcpipFtpsTimeout.setVisible(True)
     tcpipFtpsTimeout.setDescription("FTP Server timeout in seconds")
@@ -118,6 +128,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Enable FTP File PUT Command
     tcpipFtpsFilePut = tcpipFtpsComponent.createBooleanSymbol("TCPIP_FTP_PUT_ENABLED", tcpipFtpsAdvSettings)
+    tcpipFtpsFilePut.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsFilePut.setLabel("FTP File PUT Command")
     tcpipFtpsFilePut.setVisible(True)
     tcpipFtpsFilePut.setDescription("Enable FTP File PUT Command")
@@ -125,6 +136,7 @@ def instantiateComponent(tcpipFtpsComponent):
     
     # FTP Authentication Selection
     tcpipFtpsAuth= tcpipFtpsComponent.createComboSymbol("TCPIP_FTPS_AUTH_CONFIG", tcpipFtpsAdvSettings, TCPIP_FTPS_AUTH_TYPES)
+    tcpipFtpsAuth.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsAuth.setLabel("Select FTP Authentication")
     tcpipFtpsAuth.setVisible(True)
     tcpipFtpsAuth.setDescription("FTP Authentication Selection")
@@ -132,6 +144,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # FTP Connection info Authentication
     tcpipFtpsAuthInfo = tcpipFtpsComponent.createBooleanSymbol("TCPIP_FTPS_AUTHENTICATION_CONN_INFO", tcpipFtpsAuth)
+    tcpipFtpsAuthInfo.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsAuthInfo.setLabel("Connection Info Used for Authentication ")
     tcpipFtpsAuthInfo.setVisible(True)
     tcpipFtpsAuthInfo.setDescription("Connection Info is Passed to the Authentication Handler")
@@ -140,6 +153,7 @@ def instantiateComponent(tcpipFtpsComponent):
     
     # FTP Login User Name
     tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_USER_NAME", tcpipFtpsAuth)
+    tcpipFtpsLoginUsrName.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsLoginUsrName.setLabel("FTP Login User Name")
     tcpipFtpsLoginUsrName.setVisible(False)
     tcpipFtpsLoginUsrName.setDescription("FTP Login User Name")
@@ -148,6 +162,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # FTP Login Password
     tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_PASSWORD", tcpipFtpsAuth)
+    tcpipFtpsLoginUsrName.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsLoginUsrName.setLabel("FTP Login Password")
     tcpipFtpsLoginUsrName.setVisible(False)
     tcpipFtpsLoginUsrName.setDescription("FTP Login Password")
@@ -156,6 +171,7 @@ def instantiateComponent(tcpipFtpsComponent):
 
     # Maximum Length of FTP Login Password
     tcpipFtpsLoginPswdMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_PASSWD_LEN", tcpipFtpsAuth)
+    tcpipFtpsLoginPswdMaxLen.setHelp("mcc_h3_ftps_configurations")
     tcpipFtpsLoginPswdMaxLen.setLabel("Maximum Length of FTP Login Password")
     tcpipFtpsLoginPswdMaxLen.setVisible(False)
     tcpipFtpsLoginPswdMaxLen.setDescription("Maximum Length of FTP Login Password")
