@@ -28,6 +28,7 @@ def instantiateComponent(tcpipDdnsComponent):
     
     # Enable Dynamis DNS Module
     tcpipDdns = tcpipDdnsComponent.createBooleanSymbol("TCPIP_USE_DDNS", None)
+    tcpipDdns.setHelp("mcc_h3_ddns_configurations")
     tcpipDdns.setLabel("Dynamic DNS Module")
     tcpipDdns.setVisible(False)
     tcpipDdns.setDescription("Enable Dynamic DNS Module")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipDdnsComponent):
 
     # Default CheckIP server for Determining Current IP Address
     tcpipDdnsChkIpServer = tcpipDdnsComponent.createStringSymbol("TCPIP_DDNS_CHECKIP_SERVER", None)
+    tcpipDdnsChkIpServer.setHelp("mcc_h3_ddns_configurations")
     tcpipDdnsChkIpServer.setLabel("Default CheckIP Server")
     tcpipDdnsChkIpServer.setVisible(True)
     tcpipDdnsChkIpServer.setDescription("Default CheckIP server for Determining Current IP Address")
@@ -48,6 +50,7 @@ def instantiateComponent(tcpipDdnsComponent):
     
     # Dynamic DNS Task Rate in msec
     tcpipDdnsTskRate = tcpipDdnsComponent.createIntegerSymbol("TCPIP_DDNS_TASK_TICK_RATE", tcpipDdnsAdvSettings)
+    tcpipDdnsTskRate.setHelp("mcc_h3_ddns_configurations")
     tcpipDdnsTskRate.setLabel("dynDNS Task Rate (in msec)")
     tcpipDdnsTskRate.setVisible(True)
     tcpipDdnsTskRate.setDescription("Dynamic DNS Task Rate in msec")
