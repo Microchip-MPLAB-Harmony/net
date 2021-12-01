@@ -28,6 +28,7 @@ def instantiateComponent(tcpipIcmpv6Component):
 	
 	# Use ICMPv6 Server
 	tcpipIcmpv6UseServer = tcpipIcmpv6Component.createBooleanSymbol("TCPIP_STACK_USE_ICMPV6_SERVER", None)
+    tcpipIcmpv6UseServer.setHelp("mcc_h3_icmpv6_configurations")
 	tcpipIcmpv6UseServer.setLabel("Use ICMPv6 Server")
 	tcpipIcmpv6UseServer.setVisible(True)
 	tcpipIcmpv6UseServer.setDescription("Use ICMPv6 Server")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipIcmpv6Component):
 
 	# Use ICMPv6 Client
 	tcpipIcmpv6UseClient = tcpipIcmpv6Component.createBooleanSymbol("TCPIP_STACK_USE_ICMPV6_CLIENT", None)
+    tcpipIcmpv6UseClient.setHelp("mcc_h3_icmpv6_configurations")
 	tcpipIcmpv6UseClient.setLabel("Use ICMPv6 Client")
 	tcpipIcmpv6UseClient.setVisible(True)
 	tcpipIcmpv6UseClient.setDescription("Use ICMPv6 Client")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipIcmpv6Component):
 
 	# Enable IPV6 Console Commands
 	tcpipIcmpv6ClientCommand= tcpipIcmpv6Component.createBooleanSymbol("TCPIP_ICMPV6_CLIENT_CONSOLE_CMD", tcpipIcmpv6UseClient)
+    tcpipIcmpv6ClientCommand.setHelp("mcc_h3_icmpv6_configurations")
 	tcpipIcmpv6ClientCommand.setLabel("Enable ICMPv6 Client Console Command")
 	tcpipIcmpv6ClientCommand.setVisible(False)
 	tcpipIcmpv6ClientCommand.setDescription("Enable ICMPV6 CLient Console Command")
