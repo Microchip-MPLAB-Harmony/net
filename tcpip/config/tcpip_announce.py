@@ -29,6 +29,7 @@ def instantiateComponent(tcpipAnnounceComponent):
         
     # Use Announce Discovery Tool
     tcpipAnnounce = tcpipAnnounceComponent.createBooleanSymbol("TCPIP_USE_ANNOUNCE", None)
+    tcpipAnnounce.setHelp("mcc_h3_announce_configurations")
     tcpipAnnounce.setLabel("Use Announce Discovery Tool")
     tcpipAnnounce.setVisible(False)
     tcpipAnnounce.setDescription("Use Announce Discovery Tool")
@@ -36,6 +37,7 @@ def instantiateComponent(tcpipAnnounceComponent):
 
     # Enable/Disable Announce Network Directed Broadcast
     tcpipAnnounceNetBroadcast = tcpipAnnounceComponent.createComboSymbol("TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST", None, TCPIP_ANNOUNCE_BRDCST_TYPE)
+    tcpipAnnounceNetBroadcast.setHelp("mcc_h3_announce_configurations")
     tcpipAnnounceNetBroadcast.setLabel("Announce Broadcast Type")
     tcpipAnnounceNetBroadcast.setVisible(True)
     tcpipAnnounceNetBroadcast.setDescription("Enable/Disable Announce Network Directed Broadcast")
@@ -49,6 +51,7 @@ def instantiateComponent(tcpipAnnounceComponent):
 
     # Announce Task Rate in ms
     tcpipAnnounceTskRate= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_TASK_RATE", tcpipAnnounceAdvSettings)
+    tcpipAnnounceTskRate.setHelp("mcc_h3_announce_configurations")
     tcpipAnnounceTskRate.setLabel("Announce Task Rate (in msec)")
     tcpipAnnounceTskRate.setVisible(True)
     tcpipAnnounceTskRate.setDescription("Announce Task Rate in ms")
@@ -56,6 +59,7 @@ def instantiateComponent(tcpipAnnounceComponent):
     
     # Maximum Payload Size
     tcpipAnnouncePayloadMax= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_MAX_PAYLOAD", tcpipAnnounceAdvSettings)
+    tcpipAnnouncePayloadMax.setHelp("mcc_h3_announce_configurations")
     tcpipAnnouncePayloadMax.setLabel("Maximum Payload Size")
     tcpipAnnouncePayloadMax.setVisible(True)
     tcpipAnnouncePayloadMax.setDescription("Maximum Payload Size")
