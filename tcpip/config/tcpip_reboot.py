@@ -28,6 +28,7 @@ def instantiateComponent(tcpipRebootComponent):
 		
 	# Use Reboot Server
 	tcpipReboot = tcpipRebootComponent.createBooleanSymbol("TCPIP_USE_REBOOT_SERVER", None)
+    tcpipReboot.setHelp("mcc_h3_reboot_configurations")
 	tcpipReboot.setLabel("Use Reboot Server")
 	tcpipReboot.setVisible(False)
 	tcpipReboot.setDescription("Use Reboot Server")
@@ -36,6 +37,7 @@ def instantiateComponent(tcpipRebootComponent):
 
 	# Allow Only Same Subnet
 	tcpipRebootAllowSameSubnet = tcpipRebootComponent.createBooleanSymbol("TCPIP_REBOOT_SAME_SUBNET_ONLY", None)
+    tcpipRebootAllowSameSubnet.setHelp("mcc_h3_reboot_configurations")
 	tcpipRebootAllowSameSubnet.setLabel("Allow Only Same Subnet")
 	tcpipRebootAllowSameSubnet.setVisible(True)
 	tcpipRebootAllowSameSubnet.setDescription("Allow Only Same Subnet")
@@ -44,6 +46,7 @@ def instantiateComponent(tcpipRebootComponent):
 
 	# Reboot Message
 	tcpipRebootMessage = tcpipRebootComponent.createStringSymbol("TCPIP_REBOOT_MESSAGE", None)
+    tcpipRebootMessage.setHelp("mcc_h3_reboot_configurations")
 	tcpipRebootMessage.setLabel("Reboot Message")
 	tcpipRebootMessage.setVisible(True)
 	tcpipRebootMessage.setDescription("Reboot Message")
@@ -52,6 +55,7 @@ def instantiateComponent(tcpipRebootComponent):
 
 	# Reboot Server Tick Rate in ms
 	tcpipRebootTskTickRate = tcpipRebootComponent.createIntegerSymbol("TCPIP_REBOOT_TASK_TICK_RATE", None)
+    tcpipRebootTskTickRate.setHelp("mcc_h3_reboot_configurations")
 	tcpipRebootTskTickRate.setLabel("Reboot Server Tick Rate - ms")
 	tcpipRebootTskTickRate.setVisible(True)
 	tcpipRebootTskTickRate.setDescription("Reboot Server Tick Rate in ms")
