@@ -26,6 +26,7 @@ def instantiateComponent(tcpipIperfComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     # Use iperf Benchmark Tool
     tcpipIperf = tcpipIperfComponent.createBooleanSymbol("TCPIP_USE_IPERF", None)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperf.setLabel("Use iperf Benchmark Tool")
     tcpipIperf.setVisible(False)
     tcpipIperf.setDescription("Use iperf Benchmark Tool")
@@ -33,6 +34,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # Number of Iperf Instances
     tcpipIperfInstancesMax = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_MAX_INSTANCES", None)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfInstancesMax.setLabel("Number of Iperf Instances")
     tcpipIperfInstancesMax.setVisible(True)
     tcpipIperfInstancesMax.setDescription("Number of Iperf Instances")
@@ -40,6 +42,7 @@ def instantiateComponent(tcpipIperfComponent):
     
     # Socket TX Buffer Size
     tcpipIperfTxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BUFFER_SIZE", None)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfTxBuffSize.setLabel("Socket TX Buffer Size")
     tcpipIperfTxBuffSize.setVisible(True)
     tcpipIperfTxBuffSize.setDescription("Socket TX Buffer Size")
@@ -47,6 +50,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # Socket RX Buffer Size
     tcpipIperfRxBuffSize = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_RX_BUFFER_SIZE", None)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfRxBuffSize.setLabel("Socket RX Buffer Size")
     tcpipIperfRxBuffSize.setVisible(True)
     tcpipIperfRxBuffSize.setDescription("Socket RX Buffer Size")
@@ -60,6 +64,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # Time-out for TX Channel to Become Ready in ms
     tcpipIperfTxWaitTimeout = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_WAIT_TMO", tcpipIperfAdvSettings)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfTxWaitTimeout.setLabel("Timeout for TX Channel to Become Ready (in msec)")
     tcpipIperfTxWaitTimeout.setVisible(True)
     tcpipIperfTxWaitTimeout.setDescription("Time-out for TX Channel to Become Ready in ms")
@@ -67,6 +72,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # Maximum Number of UDP TX Packet Queue
     tcpipIperfTxQueueLimit = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_QUEUE_LIMIT", tcpipIperfAdvSettings)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfTxQueueLimit.setLabel("Maximum Number of UDP TX Packet Queue")
     tcpipIperfTxQueueLimit.setVisible(True)
     tcpipIperfTxQueueLimit.setDescription("Maximum Number of UDP TX Packet Queue")
@@ -74,6 +80,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # Iperf timing error in ms
     tcpipIperfTimingError = tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TIMING_ERROR_MARGIN", tcpipIperfAdvSettings)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfTimingError.setLabel("Iperf Timing Error (in msec)")
     tcpipIperfTimingError.setVisible(True)
     tcpipIperfTimingError.setDescription("Iperf timing error in ms")
@@ -81,6 +88,7 @@ def instantiateComponent(tcpipIperfComponent):
 
     # TX Default Bandwidth in Mbps
     tcpipIperfTxBwLimit= tcpipIperfComponent.createIntegerSymbol("TCPIP_IPERF_TX_BW_LIMIT", tcpipIperfAdvSettings)
+    tcpipIperf.setHelp("mcc_h3_iperf_configurations")
     tcpipIperfTxBwLimit.setLabel("Default TX Bandwidth(in Mbps)")
     tcpipIperfTxBwLimit.setVisible(True)
     tcpipIperfTxBwLimit.setDescription("TX Default Bandwidth in Mbps")
