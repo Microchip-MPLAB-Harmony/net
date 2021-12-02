@@ -37,6 +37,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Use SNTP Client
     tcpipSntpClient = tcpipSntpComponent.createBooleanSymbol("TCPIP_USE_SNTP_CLIENT", None)
+    tcpipSntpClient.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpClient.setLabel("Use SNTP Client")
     tcpipSntpClient.setVisible(False)
     tcpipSntpClient.setDescription("Use SNTP Client")
@@ -44,6 +45,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # SNTP Server Name
     tcpipSntpSrvrName = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER", None)
+    tcpipSntpSrvrName.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpSrvrName.setLabel("NTP Server Name")
     tcpipSntpSrvrName.setVisible(True)
     tcpipSntpSrvrName.setDescription("SNTP Server Name")
@@ -51,6 +53,7 @@ def instantiateComponent(tcpipSntpComponent):
     
     # Default Connection Type
     tcpipSntpConnType = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_CONNECTION_TYPE", None, TCPIP_ADDRESS_TYPE_STRICT)
+    tcpipSntpConnType.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpConnType.setLabel("Default Connection Type")
     tcpipSntpConnType.setVisible(True)
     tcpipSntpConnType.setDescription("Default Connection Type")
@@ -64,6 +67,7 @@ def instantiateComponent(tcpipSntpComponent):
     
     # Task Tick Rate in ms
     tcpipSntpTskTickRate = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_TASK_TICK_RATE", tcpipSntpAdvSettings)
+    tcpipSntpTskTickRate.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpTskTickRate.setLabel("SNTP Task Rate (in msec)")
     tcpipSntpTskTickRate.setVisible(True)
     tcpipSntpTskTickRate.setDescription("Task Tick Rate in ms")
@@ -72,6 +76,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # RX Queue Limit
     tcpipSntpRxQueueLimit = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_RX_QUEUE_LIMIT", tcpipSntpAdvSettings)
+    tcpipSntpRxQueueLimit.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpRxQueueLimit.setLabel("RX Queue Limit")
     tcpipSntpRxQueueLimit.setVisible(True)
     tcpipSntpRxQueueLimit.setDescription("RX Queue Limit")
@@ -79,6 +84,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Server Address Max Length
     tcpipSntpSrvrMaxLength = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_SERVER_MAX_LENGTH", tcpipSntpAdvSettings)
+    tcpipSntpSrvrMaxLength.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpSrvrMaxLength.setLabel("Server Address Maximum Length")
     tcpipSntpSrvrMaxLength.setVisible(True)
     tcpipSntpSrvrMaxLength.setDescription("Server Address Max Length")
@@ -86,6 +92,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Query Interval in seconds
     tcpipSntpQueryInterval = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_QUERY_INTERVAL", tcpipSntpAdvSettings)
+    tcpipSntpQueryInterval.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpQueryInterval.setLabel("Query Interval (in sec)")
     tcpipSntpQueryInterval.setVisible(True)
     tcpipSntpQueryInterval.setDescription("Query Interval in seconds")
@@ -93,6 +100,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Fast Query Interval
     tcpipSntpFastQueryInterval = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_FAST_QUERY_INTERVAL", tcpipSntpAdvSettings)
+    tcpipSntpFastQueryInterval.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpFastQueryInterval.setLabel("Fast Query Interval (in sec)")
     tcpipSntpFastQueryInterval.setVisible(True)
     tcpipSntpFastQueryInterval.setDescription("Fast Query Interval")
@@ -100,6 +108,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Sntp Epoch
     tcpipSntpEpoch = tcpipSntpComponent.createLongSymbol("TCPIP_NTP_EPOCH", tcpipSntpAdvSettings)
+    tcpipSntpEpoch.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpEpoch.setLabel("Epoch")
     tcpipSntpEpoch.setVisible(True)
     tcpipSntpEpoch.setDescription("Sntp Epoch")
@@ -107,6 +116,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # SNTP Reply Time-out in Seconds
     tcpipSntpReplyTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_REPLY_TIMEOUT", tcpipSntpAdvSettings)
+    tcpipSntpReplyTimeout.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpReplyTimeout.setLabel("NTP Reply Timeout (in sec)")
     tcpipSntpReplyTimeout.setVisible(True)
     tcpipSntpReplyTimeout.setDescription("SNTP Reply Time-out in Seconds")
@@ -114,6 +124,7 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Maximum Stratum
     tcpipSntpStratumMax = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_MAX_STRATUM", tcpipSntpAdvSettings)
+    tcpipSntpStratumMax.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpStratumMax.setLabel("Max Stratum")
     tcpipSntpStratumMax.setVisible(True)
     tcpipSntpStratumMax.setDescription("Maximum Stratum")
@@ -121,13 +132,15 @@ def instantiateComponent(tcpipSntpComponent):
 
     # Time Stamp Time-Out
     tcpipSntpTimestampTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_TIME_STAMP_TMO", tcpipSntpAdvSettings)
-    tcpipSntpTimestampTimeout.setLabel("Time Stamp Timeout (in )")
+    tcpipSntpTimestampTimeout.setHelp("mcc_h3_sntp_configurations")
+    tcpipSntpTimestampTimeout.setLabel("Time Stamp Timeout (in sec)")
     tcpipSntpTimestampTimeout.setVisible(True)
     tcpipSntpTimestampTimeout.setDescription("Time Stamp Time-Out")
     tcpipSntpTimestampTimeout.setDefaultValue(660)
 
     # SNTP Version
     tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", tcpipSntpAdvSettings, TCPIP_SNTP_PROTOCOL_TYPE)
+    tcpipSntpVersion.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpVersion.setLabel("SNTP Version")
     tcpipSntpVersion.setVisible(True)
     tcpipSntpVersion.setDescription("SNTP Version")
@@ -135,6 +148,7 @@ def instantiateComponent(tcpipSntpComponent):
         
     # Default Interface
     tcpipSntpDefault = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_DEFAULT_IF", tcpipSntpAdvSettings)  
+    tcpipSntpDefault.setHelp("mcc_h3_sntp_configurations")
     tcpipSntpDefault.setLabel("Default Interface")
     tcpipSntpDefault.setVisible(True)
     tcpipSntpDefault.setDescription("Default Interface")
