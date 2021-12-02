@@ -28,6 +28,7 @@ def instantiateComponent(tcpipIgmpComponent):
     
     # Use IGMPv3 Module
     tcpipIgmp = tcpipIgmpComponent.createBooleanSymbol("TCPIP_USE_IGMP", None)
+    tcpipIgmp.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmp.setLabel("Use IGMPv3 Module")
     tcpipIgmp.setVisible(False)
     tcpipIgmp.setDescription("Use IGMPv3 Module")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Number of IGMP Interfaces
     tcpipIgmpInterfaceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_INTERFACES", None)
+    tcpipIgmpInterfaceNum.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpInterfaceNum.setLabel("Number of IGMP Interfaces")
     tcpipIgmpInterfaceNum.setVisible(True)
     tcpipIgmpInterfaceNum.setDescription("Number of IGMP Interfaces")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Number of Multicast Groups
     tcpipIgmpMcastGrpNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_MCAST_GROUPS", None)
+    tcpipIgmpMcastGrpNum.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpMcastGrpNum.setLabel("Number of Multicast Groups")
     tcpipIgmpMcastGrpNum.setVisible(True)
     tcpipIgmpMcastGrpNum.setDescription("Number of Multicast Groups")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Number of Sources in Each Group
     tcpipIgmpSourceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOURCES_PER_GROUP", None)
+    tcpipIgmpSourceNum.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpSourceNum.setLabel("Number of Sources in Each Group")
     tcpipIgmpSourceNum.setVisible(True)
     tcpipIgmpSourceNum.setDescription("Number of Sources in Each Group")
@@ -56,6 +60,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Number of Sockets per Source
     tcpipIgmpSktNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE", None)
+    tcpipIgmpSktNum.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpSktNum.setLabel("Number of Socket Records per Source")
     tcpipIgmpSktNum.setVisible(True)
     tcpipIgmpSktNum.setDescription("Number of Socket Records per Source")
@@ -69,6 +74,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # IGMP Task Rate
     tcpipIgmpTskTickRate = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_TASK_TICK_RATE", tcpipIgmpAdvSettings)
+    tcpipIgmpTskTickRate.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpTskTickRate.setLabel("IGMP Task Rate (in msec)")
     tcpipIgmpTskTickRate.setVisible(True)
     tcpipIgmpTskTickRate.setDescription("IGMP Task Rate")
@@ -76,6 +82,7 @@ def instantiateComponent(tcpipIgmpComponent):
         
     # Default Robustness Variable Value
     tcpipIgmpRobustVarValue = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_ROBUSTNESS_VARIABLE", tcpipIgmpAdvSettings)
+    tcpipIgmpRobustVarValue.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpRobustVarValue.setLabel("Default Robustness Variable Value")
     tcpipIgmpRobustVarValue.setVisible(True)
     tcpipIgmpRobustVarValue.setDescription("Default Robustness Variable Value")
@@ -83,6 +90,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Default Unsolicited Report Interval in ms
     tcpipIgmpUnsoilicitReportInterval = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL", tcpipIgmpAdvSettings)
+    tcpipIgmpUnsoilicitReportInterval.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpUnsoilicitReportInterval.setLabel("Default Unsolicited Report Interval (in msec)")
     tcpipIgmpUnsoilicitReportInterval.setVisible(True)
     tcpipIgmpUnsoilicitReportInterval.setDescription("Default Unsolicited Report Interval in ms")
@@ -90,6 +98,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # IGMPv2 Support Only
     tcpipIgmpv2Support = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMPV2_SUPPORT_ONLY", tcpipIgmpAdvSettings)
+    tcpipIgmpv2Support.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpv2Support.setLabel("IGMPv2 Support Only")
     tcpipIgmpv2Support.setVisible(True)
     tcpipIgmpv2Support.setDescription("IGMPv2 Support Only")
@@ -97,6 +106,7 @@ def instantiateComponent(tcpipIgmpComponent):
 
     # Enable User Notification Functions"
     tcpipIgmpUsrNotify = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMP_USER_NOTIFICATION", tcpipIgmpAdvSettings)
+    tcpipIgmpUsrNotify.setHelp("mcc_h3_igmp_configurations")
     tcpipIgmpUsrNotify.setLabel("Enable User Notification Functions")
     tcpipIgmpUsrNotify.setVisible(True)
     tcpipIgmpUsrNotify.setDescription("Enable User Notification Functions")
