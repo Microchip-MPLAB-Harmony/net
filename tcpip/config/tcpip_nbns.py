@@ -27,6 +27,7 @@ def instantiateComponent(tcpipNbnsComponent):
         
     # Use NetBIOS Name Server
     tcpipNbns = tcpipNbnsComponent.createBooleanSymbol("TCPIP_USE_NBNS", None)
+    tcpipNbns.setHelp("mcc_h3_nbns_configurations")
     tcpipNbns.setLabel("Use NetBIOS Name Server")
     tcpipNbns.setVisible(False)
     tcpipNbns.setDescription("Use NetBIOS Name Server")
@@ -40,6 +41,7 @@ def instantiateComponent(tcpipNbnsComponent):
     
     # NetBIOS Task Rate in ms
     tcpipNbnsTskTickRate = tcpipNbnsComponent.createIntegerSymbol("TCPIP_NBNS_TASK_TICK_RATE", tcpipNbnsAdvSettings)
+    tcpipNbnsTskTickRate.setHelp("mcc_h3_nbns_configurations")
     tcpipNbnsTskTickRate.setLabel("NetBIOS Task Rate (in msec)")
     tcpipNbnsTskTickRate.setVisible(True)
     tcpipNbnsTskTickRate.setDescription("NetBIOS Task Rate in ms")
