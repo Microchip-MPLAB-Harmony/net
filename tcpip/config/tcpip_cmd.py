@@ -27,6 +27,7 @@ def instantiateComponent(tcpipCmdComponent):
 		
 	# Use TCP/IP Commands
 	tcpipCmd = tcpipCmdComponent.createBooleanSymbol("TCPIP_STACK_USE_COMMANDS", None)
+    tcpipCmd.setHelp("mcc_h3_tcpipcmd_configurations")
 	tcpipCmd.setLabel("Use TCP/IP Commands")
 	tcpipCmd.setVisible(False)
 	tcpipCmd.setDescription("Use TCP/IP Commands")
@@ -34,6 +35,7 @@ def instantiateComponent(tcpipCmdComponent):
 
 	# Enable Storage for Stack Commands
 	tcpipCmdStorage = tcpipCmdComponent.createBooleanSymbol("TCPIP_STACK_COMMANDS_STORAGE_ENABLE", None)
+    tcpipCmdStorage.setHelp("mcc_h3_tcpipcmd_configurations")
 	tcpipCmdStorage.setLabel("Enable Storage for Stack Commands")
 	tcpipCmdStorage.setVisible((Database.getSymbolValue("tcpipStack", "TCPIP_STACK_CONFIGURATION_SAVE_RESTORE") == True))
 	tcpipCmdStorage.setDescription("Enable Storage for Stack Commands")
