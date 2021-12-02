@@ -41,6 +41,7 @@ def instantiateComponent(tcpipTelnetComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     # Use Telnet Server
     tcpipTelnet = tcpipTelnetComponent.createBooleanSymbol("TCPIP_USE_TELNET", None)
+    tcpipTelnet.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnet.setLabel("Use Telnet Server")
     tcpipTelnet.setVisible(False)
     tcpipTelnet.setDescription("Use Telnet Server")
@@ -48,6 +49,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Max Connections
     tcpipTelnetConnMax = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_MAX_CONNECTIONS", None)
+    tcpipTelnetConnMax.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetConnMax.setLabel("Maximum Connections")
     tcpipTelnetConnMax.setVisible(True)
     tcpipTelnetConnMax.setDescription("Maximum Connections")
@@ -55,6 +57,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # TX Buffer size
     tcpipTelnetTxSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_SKT_TX_BUFF_SIZE", None)
+    tcpipTelnetTxSize.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetTxSize.setLabel("Default Socket TX Buffer Size")
     tcpipTelnetTxSize.setVisible(True)
     tcpipTelnetTxSize.setDescription("Socket TX Buffer Size")
@@ -62,6 +65,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # RX Buffer size
     tcpipTelnetRxSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_SKT_RX_BUFF_SIZE", None)
+    tcpipTelnetRxSize.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetRxSize.setLabel("Default Socket RX Buffer Size")
     tcpipTelnetRxSize.setVisible(True)
     tcpipTelnetRxSize.setDescription("Socket RX Buffer Size")
@@ -69,6 +73,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Listening port
     tcpipTelnetListenPort = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_LISTEN_PORT", None)
+    tcpipTelnetListenPort.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetListenPort.setLabel("Telnet Server Listening Port")
     tcpipTelnetListenPort.setVisible(True)
     tcpipTelnetListenPort.setDescription("Telnet Server Listening Port")
@@ -82,6 +87,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Task Rate in ms
     tcpipTelnetTskTickRate = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_TASK_TICK_RATE", tcpipTelnetAdvSettings)
+    tcpipTelnetTskTickRate.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetTskTickRate.setLabel("Telnet Task Rate (in msec)")
     tcpipTelnetTskTickRate.setVisible(True)
     tcpipTelnetTskTickRate.setDescription("Task Rate in ms")
@@ -89,6 +95,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Print buffer size
     tcpipTelnetPrintBuffSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_PRINT_BUFF_SIZE", tcpipTelnetAdvSettings)
+    tcpipTelnetPrintBuffSize.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetPrintBuffSize.setLabel("Size of the Internal Print Buffer")
     tcpipTelnetPrintBuffSize.setVisible(True)
     tcpipTelnetPrintBuffSize.setDescription("Size of the Internal Print Buffer")
@@ -96,6 +103,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Line buffer size
     tcpipTelnetLineBuffSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_LINE_BUFF_SIZE", tcpipTelnetAdvSettings)
+    tcpipTelnetLineBuffSize.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetLineBuffSize.setLabel("Size of the Internal Line Buffer")
     tcpipTelnetLineBuffSize.setVisible(True)
     tcpipTelnetLineBuffSize.setDescription("Size of the Internal Line Buffer")
@@ -103,6 +111,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # User name buffer size
     tcpipTelnetUserBuffSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_USERNAME_SIZE", tcpipTelnetAdvSettings)
+    tcpipTelnetUserBuffSize.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetUserBuffSize.setLabel("Size of the Internal User Name Buffer")
     tcpipTelnetUserBuffSize.setVisible(True)
     tcpipTelnetUserBuffSize.setDescription("Size of the Internal User Name Buffer")
@@ -116,6 +125,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # telnet sockets created with NO-DELAY option
     tcpipTelnetConfigFlagNoDly = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_FLAG_NO_DELAY", tcpipTelnetConfigFlag)
+    tcpipTelnetConfigFlagNoDly.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetConfigFlagNoDly.setLabel("Create Telnet Sockets with NO-DELAY option")
     tcpipTelnetConfigFlagNoDly.setVisible(True)
     tcpipTelnetConfigFlagNoDly.setDescription("telnet sockets created with NO-DELAY option")
@@ -123,6 +133,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Pass control characters
     tcpipTelnetConfigPassControl = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_CONFIG_PASS_CONTROL_CHARS", tcpipTelnetConfigFlag)
+    tcpipTelnetConfigPassControl.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetConfigPassControl.setLabel("Pass Control Characters to Console")
     tcpipTelnetConfigPassControl.setVisible(True)
     tcpipTelnetConfigPassControl.setDescription("Do not Process Control Characters but Pass them to the Console")
@@ -130,6 +141,7 @@ def instantiateComponent(tcpipTelnetComponent):
     
     # telnet Authentication Selection
     tcpipTelnetAuth= tcpipTelnetComponent.createComboSymbol("TCPIP_TELNET_AUTH_CONFIG", tcpipTelnetAdvSettings, TCPIP_TELNET_AUTH_TYPES)
+    tcpipTelnetAuth.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetAuth.setLabel("Select telnet Authentication")
     tcpipTelnetAuth.setVisible(True)
     tcpipTelnetAuth.setDescription("telnet Authentication Selection")
@@ -137,6 +149,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # telnet Connection info Authentication
     tcpipTelnetAuthInfo = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_AUTHENTICATION_CONN_INFO", tcpipTelnetAuth)
+    tcpipTelnetAuthInfo.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetAuthInfo.setLabel("Connection Info Used for Authentication ")
     tcpipTelnetAuthInfo.setVisible(True)
     tcpipTelnetAuthInfo.setDescription("Connection Info is Passed to the Authentication Handler")
@@ -145,6 +158,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Telnet User Name
     tcpipTelnetUsrName = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_USERNAME", tcpipTelnetAuth)
+    tcpipTelnetUsrName.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetUsrName.setLabel("User Name")
     tcpipTelnetUsrName.setVisible(False)
     tcpipTelnetUsrName.setDescription("Telnet User Name")
@@ -153,6 +167,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
     # Telnet Password
     tcpipTelnetPswd = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_PASSWORD", tcpipTelnetAuth)
+    tcpipTelnetPswd.setHelp("mcc_h3_telnet_configurations")
     tcpipTelnetPswd.setLabel("Password")
     tcpipTelnetPswd.setVisible(False)
     tcpipTelnetPswd.setDescription("Telnet Password")
