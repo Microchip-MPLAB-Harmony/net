@@ -27,6 +27,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # Use TFTP Client Module
     tcpipTftpc = tcpipTftpcComponent.createBooleanSymbol("TCPIP_USE_TFTPC_MODULE", None)
+    tcpipTftpc.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpc.setLabel("Use TFTP Client Module")
     tcpipTftpc.setVisible(False)
     tcpipTftpc.setDescription("Use TFTP Client Module")
@@ -34,6 +35,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # TFTP Client Maximum retries
     tcpipTftpcRetryMax= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_MAX_RETRIES", None)
+    tcpipTftpcRetryMax.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcRetryMax.setLabel("TFTP Client Maximum Retries")
     tcpipTftpcRetryMax.setVisible(True)
     tcpipTftpcRetryMax.setDescription("TFTP Client Maximum retries")
@@ -41,6 +43,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # Maximum Length for a file name
     tcpipTftpcFilenameLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_FILENAME_LEN", None)
+    tcpipTftpcFilenameLen.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcFilenameLen.setLabel("Maximum Length for File name")
     tcpipTftpcFilenameLen.setVisible(True)
     tcpipTftpcFilenameLen.setDescription("Maximum Length for a file name")
@@ -48,6 +51,7 @@ def instantiateComponent(tcpipTftpcComponent):
     
     # Enable TFTP Client Console Commands
     tcpipTftpcCmdEnable = tcpipTftpcComponent.createBooleanSymbol("TCPIP_TFTPC_CONSOLE_CMD", None) 
+    tcpipTftpcCmdEnable.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcCmdEnable.setLabel("Enable Console Commands")
     tcpipTftpcCmdEnable.setVisible(True)
     tcpipTftpcCmdEnable.setDescription("Enable TFTP Client Console Commands")
@@ -61,6 +65,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # TFTP Client Task Rate in msec
     tcpipTftpcTskTickRate= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_TASK_TICK_RATE", tcpipTftpcAdvSettings)
+    tcpipTftpcTskTickRate.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcTskTickRate.setLabel("TFTP Client Task Rate (in msec)")
     tcpipTftpcTskTickRate.setVisible(True)
     tcpipTftpcTskTickRate.setDescription("TFTP Client Task Rate in msec")
@@ -68,6 +73,7 @@ def instantiateComponent(tcpipTftpcComponent):
     
     # Enable User Notification
     tcpipTftpcUsrNotify = tcpipTftpcComponent.createBooleanSymbol("TCPIP_TFTPC_USER_NOTIFICATION", tcpipTftpcAdvSettings)
+    tcpipTftpcUsrNotify.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcUsrNotify.setLabel("Enable User Notification")
     tcpipTftpcUsrNotify.setVisible(True)
     tcpipTftpcUsrNotify.setDescription("Enable User Notification")
@@ -75,6 +81,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # Maximum Length for Server Address
     tcpipTftpcSrvrAddrLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_SERVERADDRESS_LEN", tcpipTftpcAdvSettings)
+    tcpipTftpcSrvrAddrLen.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcSrvrAddrLen.setLabel("Maximum Length for Server Address")
     tcpipTftpcSrvrAddrLen.setVisible(True)
     tcpipTftpcSrvrAddrLen.setDescription("Maximum Length for Server Address")
@@ -82,6 +89,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # TFTP Client Socket connection timeout in sec
     tcpipTftpcArpTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_ARP_TIMEOUT", tcpipTftpcAdvSettings)
+    tcpipTftpcArpTimeout.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcArpTimeout.setLabel("TFTP Client Socket Connection Timeout (in sec)")
     tcpipTftpcArpTimeout.setVisible(True)
     tcpipTftpcArpTimeout.setDescription("TFTP Client Socket connection timeout in sec")
@@ -89,6 +97,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # TFTP Client command process timeout in sec
     tcpipTftpcCmdProcessTimeout= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_CMD_PROCESS_TIMEOUT", tcpipTftpcAdvSettings)
+    tcpipTftpcCmdProcessTimeout.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcCmdProcessTimeout.setLabel("TFTP Client Command Process Timeout (in sec)")
     tcpipTftpcCmdProcessTimeout.setVisible(True)
     tcpipTftpcCmdProcessTimeout.setDescription("TFTP Client command process timeout in sec")
@@ -96,6 +105,7 @@ def instantiateComponent(tcpipTftpcComponent):
 
     # Default Interface
     tcpipTftpcDefault = tcpipTftpcComponent.createStringSymbol("TCPIP_TFTPC_DEFAULT_IF", tcpipTftpcAdvSettings)  
+    tcpipTftpcDefault.setHelp("mcc_h3_tftpc_configurations")
     tcpipTftpcDefault.setLabel("Default Interface")
     tcpipTftpcDefault.setVisible(True)
     tcpipTftpcDefault.setDescription("Default Interface")
