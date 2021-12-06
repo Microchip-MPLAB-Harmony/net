@@ -28,6 +28,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Enable TCP
     tcpipTCP = tcpipTcpComponent.createBooleanSymbol("TCPIP_USE_TCP", None)
+    tcpipTCP.setHelp("mcc_h3_tcp_configurations")
     tcpipTCP.setLabel("Use TCP")
     tcpipTCP.setVisible(False)
     tcpipTCP.setDescription("Enable TCP")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Maximum TX Segment Size
     tcpipTcpMaxTxSegSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SEG_SIZE_TX", None)
+    tcpipTcpMaxTxSegSize.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxTxSegSize.setLabel("Maximum TX Segment Size")
     tcpipTcpMaxTxSegSize.setVisible(True)
     tcpipTcpMaxTxSegSize.setDescription("Maximum TX Segment Size")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Maximum number of sockets
     tcpipTcpMaxSktNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SOCKETS", None)
+    tcpipTcpMaxSktNum.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxSktNum.setLabel("Maximum Number of Sockets")
     tcpipTcpMaxSktNum.setVisible(True)
     tcpipTcpMaxSktNum.setDescription("Maximum number of sockets")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Default TX Socket Size
     tcpipTcpSktTxSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", None)
+    tcpipTcpSktTxSize.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpSktTxSize.setLabel("Default TX Buffer Size")
     tcpipTcpSktTxSize.setVisible(True)
     tcpipTcpSktTxSize.setDescription("Default TX Buffer Size")
@@ -56,6 +60,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Default RX Socket Size
     tcpipTcpSktRxSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", None)
+    tcpipTcpSktRxSize.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpSktRxSize.setLabel("Default RX Buffer Size")
     tcpipTcpSktRxSize.setVisible(True)
     tcpipTcpSktRxSize.setDescription("Default RX Buffer Size")
@@ -63,6 +68,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Keep Alive Timeout in ms
     tcpipTcpKeepAliveTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_KEEP_ALIVE_TIMEOUT", None)
+    tcpipTcpKeepAliveTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpKeepAliveTimeout.setLabel("Default Keep Alive Time-out (in msec)")
     tcpipTcpKeepAliveTimeout.setVisible(True)
     tcpipTcpKeepAliveTimeout.setDescription("Keep Alive Timeout in ms")
@@ -70,6 +76,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Enable TCP Commands
     tcpipTcpCommands = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_COMMANDS", None)
+    tcpipTcpCommands.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpCommands.setLabel("Enable TCP Console Commands")
     tcpipTcpCommands.setVisible(True)
     tcpipTcpCommands.setDescription("Enable TCP Commands")
@@ -83,6 +90,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # TCP Task Tick Rate
     tcpipTcpTaskTickRate = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_TASK_TICK_RATE", tcpipTcpAdvSettings)
+    tcpipTcpTaskTickRate.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpTaskTickRate.setLabel("TCP Task Rate")
     tcpipTcpTaskTickRate.setVisible(True)
     tcpipTcpTaskTickRate.setDescription("TCP Task Tick Rate")
@@ -90,6 +98,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Enable TCP Sockets Dynamic Options
     tcpipTcpDynOptions = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_DYNAMIC_OPTIONS", tcpipTcpAdvSettings)
+    tcpipTcpDynOptions.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpDynOptions.setLabel("Enable TCP Sockets Dynamic Options")
     tcpipTcpDynOptions.setVisible(True)
     tcpipTcpDynOptions.setDescription("Enable TCP Sockets Dynamic Options")
@@ -97,6 +106,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Start Timeout in ms
     tcpipTcpStartTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_START_TIMEOUT_VAL", tcpipTcpAdvSettings)
+    tcpipTcpStartTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpStartTimeout.setLabel("Start Time-out (in msec)")
     tcpipTcpStartTimeout.setVisible(True)
     tcpipTcpStartTimeout.setDescription("Start Timeout in ms")
@@ -104,6 +114,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Delayed Ack Timeout in ms
     tcpipTcpDelayAckTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_DELAYED_ACK_TIMEOUT", tcpipTcpAdvSettings)
+    tcpipTcpDelayAckTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpDelayAckTimeout.setLabel("Delayed Ack Time-out (in msec)")
     tcpipTcpDelayAckTimeout.setVisible(True)
     tcpipTcpDelayAckTimeout.setDescription("Delayed Ack Timeout in ms")
@@ -111,6 +122,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Fin Wait 2 Timeout in ms
     tcpipTcpFinWait2Timeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_FIN_WAIT_2_TIMEOUT", tcpipTcpAdvSettings)
+    tcpipTcpFinWait2Timeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpFinWait2Timeout.setLabel("Fin Wait 2 Time-out (in msec)")
     tcpipTcpFinWait2Timeout.setVisible(True)
     tcpipTcpFinWait2Timeout.setDescription("Fin Wait 2 Timeout in ms")
@@ -119,6 +131,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Maximum number of retries
     tcpipTcpMaxRetryNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_RETRIES", tcpipTcpAdvSettings)
+    tcpipTcpMaxRetryNum.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxRetryNum.setLabel("Maximum Number of Transmission Retries")
     tcpipTcpMaxRetryNum.setVisible(True)
     tcpipTcpMaxRetryNum.setDescription("Maximum number of retries")
@@ -126,6 +139,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Maximum number of Unacked Keep Alives
     tcpipTcpMaxUnackKeepAlivesNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES", tcpipTcpAdvSettings)
+    tcpipTcpMaxUnackKeepAlivesNum.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxUnackKeepAlivesNum.setLabel("Maximum Number of Keep Alive Retries")
     tcpipTcpMaxUnackKeepAlivesNum.setVisible(True)
     tcpipTcpMaxUnackKeepAlivesNum.setDescription("Maximum number of Unacked Keep Alives Retries")
@@ -133,6 +147,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Maximum number of Syn Retries
     tcpipTcpMaxSynRetryNum = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MAX_SYN_RETRIES", tcpipTcpAdvSettings)
+    tcpipTcpMaxSynRetryNum.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxSynRetryNum.setLabel("Maximum Number of SYN Retries")
     tcpipTcpMaxSynRetryNum.setVisible(True)
     tcpipTcpMaxSynRetryNum.setDescription("Maximum number of Syn Retries")
@@ -140,6 +155,7 @@ def instantiateComponent(tcpipTcpComponent):
         
     # Auto Transmit Timeout in ms
     tcpipTcpAutoTxTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL", tcpipTcpAdvSettings)
+    tcpipTcpAutoTxTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpAutoTxTimeout.setLabel("Auto Transmit Time-out (in msec)")
     tcpipTcpAutoTxTimeout.setVisible(True)
     tcpipTcpAutoTxTimeout.setDescription("Auto Transmit Timeout in ms")
@@ -147,6 +163,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Window Update Time-out
     tcpipTcpWindowUpdateTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL", tcpipTcpAdvSettings)
+    tcpipTcpWindowUpdateTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpWindowUpdateTimeout.setLabel("Window Update Time-out (in msec)")
     tcpipTcpWindowUpdateTimeout.setVisible(True)
     tcpipTcpWindowUpdateTimeout.setDescription("Window Update Time-out")
@@ -154,6 +171,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Close Wait Timeout in ms
     tcpipTcpCloseWaitTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_CLOSE_WAIT_TIMEOUT", tcpipTcpAdvSettings)
+    tcpipTcpCloseWaitTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpCloseWaitTimeout.setLabel("OBSOLETE! Close Wait Time-out (in msec). Should be 0!")
     tcpipTcpCloseWaitTimeout.setVisible(True)
     tcpipTcpCloseWaitTimeout.setDescription("OBSOLETE! Close Wait Timeout in ms. Should be 0!")
@@ -161,6 +179,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Maximum Segment Length (MSL) Timeout in seconds
     tcpipTcpMaxSegLenTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_MSL_TIMEOUT", tcpipTcpAdvSettings)
+    tcpipTcpMaxSegLenTimeout.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpMaxSegLenTimeout.setLabel("Maximum Segment Length (MSL) Timeout (in sec)")
     tcpipTcpMaxSegLenTimeout.setVisible(True)
     tcpipTcpMaxSegLenTimeout.setDescription("Maximum Segment Length (MSL) Timeout in seconds")
@@ -168,6 +187,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # TCP quiet time in seconds
     tcpipTcpQuietTime = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_QUIET_TIME", tcpipTcpAdvSettings)
+    tcpipTcpQuietTime.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpQuietTime.setLabel("TCP quiet time (in sec)")
     tcpipTcpQuietTime.setVisible(True)
     tcpipTcpQuietTime.setDescription("TCP quiet time in seconds")
@@ -175,6 +195,7 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Enable External Packet Processing
     tcpipTcpExtPktProcess = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_EXTERN_PACKET_PROCESS", tcpipTcpAdvSettings)
+    tcpipTcpExtPktProcess.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipTcpExtPktProcess.setVisible(True)
     tcpipTcpExtPktProcess.setDescription("Allows External Processing of RX Packets")
@@ -182,6 +203,7 @@ def instantiateComponent(tcpipTcpComponent):
     
     # Disable Crypto Dependency
     tcpipTcpCryptoSupport = tcpipTcpComponent.createBooleanSymbol("TCPIP_TCP_DISABLE_CRYPTO_USAGE", tcpipTcpAdvSettings)
+    tcpipTcpCryptoSupport.setHelp("mcc_h3_tcp_configurations")
     tcpipTcpCryptoSupport.setLabel("Disable Crypto Dependency")
     tcpipTcpCryptoSupport.setVisible(True)
     tcpipTcpCryptoSupport.setDescription("Disable Crypto Dependency")
