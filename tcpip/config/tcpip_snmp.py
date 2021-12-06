@@ -34,6 +34,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Use SNMP
     tcpipSnmp = tcpipSnmpComponent.createBooleanSymbol("TCPIP_USE_SNMP", None)
+    tcpipSnmp.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmp.setLabel("Use SNMP")
     tcpipSnmp.setVisible(False)
     tcpipSnmp.setDescription("Use SNMP")
@@ -41,6 +42,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # Default SNMP Mount point directory
     tcpipSnmpRootDir = tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_MOUNT_POINT", None)
+    tcpipSnmpRootDir.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpRootDir.setLabel("SNMP Server Root Directory Path")
     tcpipSnmpRootDir.setVisible(True)
     tcpipSnmpRootDir.setDescription("SNMP Server Root Directory Path")
@@ -48,6 +50,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # BIB file name
     tcpipSnmpBibFileName = tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_BIB_FILE_NAME", None)
+    tcpipSnmpBibFileName.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpBibFileName.setLabel("BIB file name")
     tcpipSnmpBibFileName.setVisible(True)
     tcpipSnmpBibFileName.setDescription("BIB file name")
@@ -55,6 +58,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Maximum SNMP message size
     tcpipSnmpMsgSizeMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_MSG_SIZE", None)
+    tcpipSnmpMsgSizeMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpMsgSizeMax.setLabel("Maximum SNMP message size")
     tcpipSnmpMsgSizeMax.setVisible(True)
     tcpipSnmpMsgSizeMax.setDescription("Maximum SNMP message size")
@@ -62,6 +66,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Maximum Community Length
     tcpipSnmpCommunityLenMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_COMMUNITY_MAX_LEN", None)
+    tcpipSnmpCommunityLenMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpCommunityLenMax.setLabel("Maximum Community Length")
     tcpipSnmpCommunityLenMax.setVisible(True)
     tcpipSnmpCommunityLenMax.setDescription("Maximum Community Length")
@@ -69,6 +74,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # Maximum Community Support
     tcpipSnmpCommunitySuppMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_COMMUNITY_SUPPORT", None)
+    tcpipSnmpCommunitySuppMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpCommunitySuppMax.setLabel("Maximum Community Entries")
     tcpipSnmpCommunitySuppMax.setMax(tcpipSnmpMaxCommNum)
     tcpipSnmpCommunitySuppMax.setMin(0)
@@ -79,6 +85,7 @@ def instantiateComponent(tcpipSnmpComponent):
 ####-----------------------------------------------------------------------------------------##########
     for index in range(0,tcpipSnmpMaxCommNum):  
         tcpipSnmpStackConfigIdx.append(tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_STACK_CONFIG_IDX"+str(index),tcpipSnmpCommunitySuppMax))
+        tcpipSnmpStackConfigIdx.setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpStackConfigIdx[index].setLabel("Community Entry "+ str(index))
         tcpipSnmpStackConfigIdx[index].setVisible(True)
         if (index < tcpipSnmpCommunitySuppMax.getValue()):  
@@ -90,6 +97,7 @@ def instantiateComponent(tcpipSnmpComponent):
         
         # Snmp Read Community Name
         tcpipSnmpReadCommName.append(tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX" + str(index), tcpipSnmpStackConfigIdx[index]))
+        tcpipSnmpReadCommName.setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpReadCommName[index].setLabel("Read Community Name")
         tcpipSnmpReadCommName[index].setVisible(True)
         if(index == 0):
@@ -105,6 +113,7 @@ def instantiateComponent(tcpipSnmpComponent):
         
         # Snmp Write Community Name
         tcpipSnmpWriteCommName.append(tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX" + str(index), tcpipSnmpStackConfigIdx[index]))
+        tcpipSnmpWriteCommName.setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpWriteCommName[index].setLabel("Write Community Name")
         tcpipSnmpWriteCommName[index].setVisible(True)
         if(index == 0):
@@ -121,6 +130,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Trap Support
     tcpipSnmpTrapSupport = tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_USE_TRAP_SUPPORT", None)
+    tcpipSnmpTrapSupport.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpTrapSupport.setLabel("Trap Support")
     tcpipSnmpTrapSupport.setVisible(True)
     tcpipSnmpTrapSupport.setDescription("Trap Support")
@@ -128,6 +138,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Trap table size
     tcpipSnmpTrapTblSize = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_TRAP_TABLE_SIZE", tcpipSnmpTrapSupport)
+    tcpipSnmpTrapTblSize.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpTrapTblSize.setLabel("Trap table size")
     tcpipSnmpTrapTblSize.setVisible(True)
     tcpipSnmpTrapTblSize.setDescription("Trap table size")
@@ -135,6 +146,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # V2 Trap Support
     tcpipSnmpV2TrapSupport = tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_STACK_USE_V2_TRAP", tcpipSnmpTrapSupport)
+    tcpipSnmpV2TrapSupport.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpV2TrapSupport.setLabel("V2 Trap Support")
     tcpipSnmpV2TrapSupport.setVisible(True)
     tcpipSnmpV2TrapSupport.setDescription("V2 Trap Support")
@@ -143,6 +155,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # Include SNMP Custom Template
     tcpipSnmpCustTemplate = tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_CUSTOM_TEMPLATE", None)
+    tcpipSnmpCustTemplate.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpCustTemplate.setLabel("Include SNMP Custom Template")
     tcpipSnmpCustTemplate.setVisible(True)
     tcpipSnmpCustTemplate.setDescription("Include SNMP Custom Template")
@@ -161,6 +174,7 @@ def instantiateComponent(tcpipSnmpComponent):
     
     # SNMP process rate
     tcpipSnmpTskProcRate = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_TASK_PROCESS_RATE", tcpipSnmpAdvSettings)
+    tcpipSnmpTskProcRate.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpTskProcRate.setLabel("SNMP Task Rate (in msec)")
     tcpipSnmpTskProcRate.setVisible(True)
     tcpipSnmpTskProcRate.setDescription("SNMP process rate")
@@ -168,6 +182,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Maximum OID Length
     tcpipSnmpOldLenMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_OID_MAX_LEN", tcpipSnmpAdvSettings)
+    tcpipSnmpOldLenMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpOldLenMax.setLabel("Maximum OID Length")
     tcpipSnmpOldLenMax.setVisible(True)
     tcpipSnmpOldLenMax.setDescription("Maximum OID Length")
@@ -175,6 +190,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Maximum non record OID ID
     tcpipSnmpNonRecOldIdMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_NON_REC_ID_OID", tcpipSnmpAdvSettings)
+    tcpipSnmpNonRecOldIdMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpNonRecOldIdMax.setLabel("Maximum non record OID")
     tcpipSnmpNonRecOldIdMax.setVisible(True)
     tcpipSnmpNonRecOldIdMax.setDescription("Maximum non record OID ID")
@@ -182,12 +198,14 @@ def instantiateComponent(tcpipSnmpComponent):
 
     
     tcpipSnmpCommMaxNum= tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_COMMUNITY_MAX_NUM", tcpipSnmpAdvSettings)
+    tcpipSnmpCommMaxNu.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpCommMaxNum.setDefaultValue(tcpipSnmpMaxCommNum)
     tcpipSnmpCommMaxNum.setVisible(False)
 
 
     # Notify Community Length
     tcpipSnmpNotifyCommunLen = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_NOTIFY_COMMUNITY_LEN", tcpipSnmpAdvSettings)
+    tcpipSnmpNotifyCommunLen.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpNotifyCommunLen.setLabel("Notify Community Length")
     tcpipSnmpNotifyCommunLen.setVisible(True)
     tcpipSnmpNotifyCommunLen.setDescription("Notify Community Length")
@@ -195,6 +213,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     # Trap community max length
     tcpipSnmpTrapCommunMemUseLenMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN_MEM_USE", tcpipSnmpAdvSettings)
+    tcpipSnmpTrapCommunMemUseLenMax.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpTrapCommunMemUseLenMax.setLabel("Trap community maximum length")
     tcpipSnmpTrapCommunMemUseLenMax.setVisible(True)
     tcpipSnmpTrapCommunMemUseLenMax.setDescription("Trap community max length")
