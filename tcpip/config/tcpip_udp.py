@@ -28,6 +28,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Enable UDP
     tcpipUDP = tcpipUdpComponent.createBooleanSymbol("TCPIP_USE_UDP", None)
+    tcpipUDP.setHelp("mcc_h3_udp_configurations")
     tcpipUDP.setLabel("Use UDP")
     tcpipUDP.setVisible(False)
     tcpipUDP.setDescription("Enable UDP")
@@ -35,6 +36,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Maximum number of UDP Sockets
     tcpipUdpMaxNumSocket = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_MAX_SOCKETS", None)
+    tcpipUdpMaxNumSocket.setHelp("mcc_h3_udp_configurations")
     tcpipUdpMaxNumSocket.setLabel("Maximum number of Sockets")
     tcpipUdpMaxNumSocket.setVisible(True)
     tcpipUdpMaxNumSocket.setDescription("Maximum number of UDP Sockets")
@@ -42,6 +44,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Default TX Socket Buffer Size
     tcpipUdpSktTxSize = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", None)
+    tcpipUdpSktTxSize.setHelp("mcc_h3_udp_configurations")
     tcpipUdpSktTxSize.setLabel("Default TX Buffer Size")
     tcpipUdpSktTxSize.setVisible(True)
     tcpipUdpSktTxSize.setDescription("Default TX Socket Buffer Size")
@@ -49,6 +52,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Enable UDP Commands
     tcpipUdpCommands = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_COMMANDS", None)
+    tcpipUdpCommands.setHelp("mcc_h3_udp_configurations")
     tcpipUdpCommands.setLabel("Enable UDP Console Commands")
     tcpipUdpCommands.setVisible(True)
     tcpipUdpCommands.setDescription("Enable UDP Commands")
@@ -62,6 +66,7 @@ def instantiateComponent(tcpipUdpComponent):
     
     # Enable Calculate TX Checksum
     tcpipUdpTxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_TX_CHECKSUM", tcpipUdpAdvSettings)
+    tcpipUdpTxUseCheckSum.setHelp("mcc_h3_udp_configurations")
     tcpipUdpTxUseCheckSum.setLabel("Calculate TX Checksum")
     tcpipUdpTxUseCheckSum.setVisible(True)
     tcpipUdpTxUseCheckSum.setDescription("Enable Calculate TX Checksum")
@@ -69,6 +74,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Enable Calculate RX Checksum
     tcpipUdpRxUseCheckSum = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_RX_CHECKSUM", tcpipUdpAdvSettings)
+    tcpipUdpRxUseCheckSum.setHelp("mcc_h3_udp_configurations")
     tcpipUdpRxUseCheckSum.setLabel("Calculate RX Checksum")
     tcpipUdpRxUseCheckSum.setVisible(True)
     tcpipUdpRxUseCheckSum.setDescription("Enable Calculate RX Checksum")
@@ -76,6 +82,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Default TX Socket Queue limit
     tcpipUdpSktTxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT", tcpipUdpAdvSettings)
+    tcpipUdpSktTxQueueLimit.setHelp("mcc_h3_udp_configurations")
     tcpipUdpSktTxQueueLimit.setLabel("TX Queue Limit")
     tcpipUdpSktTxQueueLimit.setVisible(True)
     tcpipUdpSktTxQueueLimit.setDescription("Default TX Socket Queue limit")
@@ -83,6 +90,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Default RX Socket Queue limit
     tcpipUdpSktRxQueueLimit = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT", tcpipUdpAdvSettings)
+    tcpipUdpSktRxQueueLimit.setHelp("mcc_h3_udp_configurations")
     tcpipUdpSktRxQueueLimit.setLabel("RX Queue Limit")
     tcpipUdpSktRxQueueLimit.setVisible(True)
     tcpipUdpSktRxQueueLimit.setDescription("Default RX Socket Queue limit")
@@ -90,6 +98,7 @@ def instantiateComponent(tcpipUdpComponent):
         
     # Enable UDP Pool Buffers
     tcpipUdpPoolBuffers = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_USE_POOL_BUFFERS", tcpipUdpAdvSettings)
+    tcpipUdpPoolBuffers.setHelp("mcc_h3_udp_configurations")
     tcpipUdpPoolBuffers.setLabel("Enable Pool Buffers")
     tcpipUdpPoolBuffers.setVisible(True)
     tcpipUdpPoolBuffers.setDescription("Enable UDP Pool Buffers")
@@ -98,6 +107,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Number of Socket Pool Buffers
     tcpipUdpSktPoolBufferNum = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_POOL_BUFFERS", tcpipUdpPoolBuffers)
+    tcpipUdpSktPoolBufferNum.setHelp("mcc_h3_udp_configurations")
     tcpipUdpSktPoolBufferNum.setLabel("Pool Buffers")
     tcpipUdpSktPoolBufferNum.setVisible(False)
     tcpipUdpSktPoolBufferNum.setDescription("Number of Socket Pool Buffers")
@@ -106,6 +116,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # UDP Socket Pool Buffer Size
     tcpipUdpSktPoolBufferSize = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE", tcpipUdpPoolBuffers)
+    tcpipUdpSktPoolBufferSize.setHelp("mcc_h3_udp_configurations")
     tcpipUdpSktPoolBufferSize.setLabel("Pool Buffer Size")
     tcpipUdpSktPoolBufferSize.setVisible(False)
     tcpipUdpSktPoolBufferSize.setDescription("UDP Socket Pool Buffer Size")
@@ -114,6 +125,7 @@ def instantiateComponent(tcpipUdpComponent):
 
     # Enable External Packet Processing
     tcpipUdpExtPktProcess = tcpipUdpComponent.createBooleanSymbol("TCPIP_UDP_EXTERN_PACKET_PROCESS", tcpipUdpAdvSettings)
+    tcpipUdpExtPktProcess.setHelp("mcc_h3_udp_configurations")
     tcpipUdpExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipUdpExtPktProcess.setVisible(True)
     tcpipUdpExtPktProcess.setDescription("Allows External Processing of RX Packets")
