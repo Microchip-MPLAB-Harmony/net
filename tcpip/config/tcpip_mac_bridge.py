@@ -28,6 +28,7 @@ def tcpipBridgeGenSourceFile(sourceFile, event):
    
 # Enable the bridge Commands
 tcpipBridgeCommands = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_STACK_MAC_BRIDGE_COMMANDS", tcpipNetConfigMacBridgeMenu)
+tcpipBridgeCommands.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeCommands.setLabel("Enable the MAC Bridge Commands")
 tcpipBridgeCommands.setVisible(False)
 tcpipBridgeCommands.setDescription("Enable the MAC Bridge TCP/IP Commands")
@@ -36,6 +37,7 @@ tcpipBridgeCommands.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # FDB entries
 tcpipBridgeFDBEntries = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_FDB_TABLE_ENTRIES", tcpipNetConfigMacBridgeMenu)
+tcpipBridgeFDBEntries.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeFDBEntries.setLabel("Number of Entries in the FDB")
 tcpipBridgeFDBEntries.setVisible(False)
 tcpipBridgeFDBEntries.setDescription("Number of Entries in the Filtering Database")
@@ -44,6 +46,7 @@ tcpipBridgeFDBEntries.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_
 
 # maximum number of ports
 tcpipBridgeMaxPorts = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_MAX_PORTS_NO", tcpipNetConfigMacBridgeMenu)
+tcpipBridgeMaxPorts.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeMaxPorts.setLabel("Maximum Number of Ports in the Bridge")
 tcpipBridgeMaxPorts.setVisible(False)
 tcpipBridgeMaxPorts.setDescription("Maximum Number of Ports in the Bridge")
@@ -52,6 +55,7 @@ tcpipBridgeMaxPorts.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # packet pool size
 tcpipBridgePktPool = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_PACKET_POOL_SIZE", tcpipNetConfigMacBridgeMenu)
+tcpipBridgePktPool.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgePktPool.setLabel("Number of Packets in the Pool")
 tcpipBridgePktPool.setVisible(False)
 tcpipBridgePktPool.setDescription("Number of Packets in the Pool")
@@ -60,6 +64,7 @@ tcpipBridgePktPool.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC
 
 # pool packet size
 tcpipBridgePktSize = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_PACKET_SIZE", tcpipNetConfigMacBridgeMenu)
+tcpipBridgePktSize.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgePktSize.setLabel("Size of the Packets in the Pool")
 tcpipBridgePktSize.setVisible(False)
 tcpipBridgePktSize.setDescription("Size of the Packets in the Pool")
@@ -68,6 +73,7 @@ tcpipBridgePktSize.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC
 
 # pool replenish
 tcpipBridgePoolRepl = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_PACKET_POOL_REPLENISH", tcpipNetConfigMacBridgeMenu)
+tcpipBridgePoolRepl.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgePoolRepl.setLabel("Number of packets to Replenish the pool")
 tcpipBridgePoolRepl.setVisible(False)
 tcpipBridgePoolRepl.setDescription(" Number of Packets to Replenish the Pool if Empty")
@@ -76,6 +82,7 @@ tcpipBridgePoolRepl.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # descriptor pool size
 tcpipBridgeDcptPool = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_DCPT_POOL_SIZE", tcpipNetConfigMacBridgeMenu)
+tcpipBridgeDcptPool.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeDcptPool.setLabel("Number of Descriptors in the Pool")
 tcpipBridgeDcptPool.setVisible(False)
 tcpipBridgeDcptPool.setDescription("Number of Descriptors in the Pool")
@@ -84,6 +91,7 @@ tcpipBridgeDcptPool.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # descriptor replenish
 tcpipBridgeDcptRepl = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_DCPT_POOL_REPLENISH", tcpipNetConfigMacBridgeMenu)
+tcpipBridgeDcptRepl.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeDcptRepl.setLabel("Number of Descriptors to Replenish the pool")
 tcpipBridgeDcptRepl.setVisible(False)
 tcpipBridgeDcptRepl.setDescription(" Number of Descriptors to Replenish the Pool if Empty")
@@ -99,6 +107,7 @@ tcpipBridgeAdvSettings.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE
 
 # Purge timeout
 tcpipBridgeTmo = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_ENTRY_TIMEOUT", tcpipBridgeAdvSettings)
+tcpipBridgeTmo.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeTmo.setLabel("Timeout for an Entry to be Purged")
 tcpipBridgeTmo.setVisible(False)
 tcpipBridgeTmo.setDescription("Timeout for an Entry to be Purged from the FDB")
@@ -107,6 +116,7 @@ tcpipBridgeTmo.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_BRI
 
 # transit delay
 tcpipBridgeTransit = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_MAX_TRANSIT_DELAY", tcpipBridgeAdvSettings)
+tcpipBridgeTransit.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeTransit.setLabel("Maximum Transit Delay")
 tcpipBridgeTransit.setVisible(False)
 tcpipBridgeTransit.setDescription("Maximum Transit Delay within the Bridge")
@@ -115,6 +125,7 @@ tcpipBridgeTransit.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC
 
 # Dynamic Learning 
 tcpipBridgeDynLearn = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_NO_DYNAMIC_LEARN", tcpipBridgeAdvSettings)
+tcpipBridgeDynLearn.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeDynLearn.setLabel("Do not Learn Dynamic Addresses")
 tcpipBridgeDynLearn.setVisible(False)
 tcpipBridgeDynLearn.setDescription("Do not Learn Dynamic Addresses, Use Only Static FDB Entries")
@@ -123,6 +134,7 @@ tcpipBridgeDynLearn.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MA
 
 # FDB Entry exists
 tcpipBridgeEntryExists = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_FDB_ENTRY_EXISTS", tcpipBridgeAdvSettings)
+tcpipBridgeEntryExists.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeEntryExists.setLabel("Forward Traffic Only if Entry Exists")
 tcpipBridgeEntryExists.setVisible(False)
 tcpipBridgeEntryExists.setDescription("Forward Traffic Only if Entry Exists in FDB")
@@ -131,6 +143,7 @@ tcpipBridgeEntryExists.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE
 
 # Initialize with interface names
 tcpipBridgeIfName = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_IF_NAME_TABLE", tcpipBridgeAdvSettings)
+tcpipBridgeIfName.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeIfName.setLabel("Use Interface Names for Initialization")
 tcpipBridgeIfName.setVisible(False)
 tcpipBridgeIfName.setDescription("Use Interface Names for Initialization, ASCII Strings")
@@ -139,6 +152,7 @@ tcpipBridgeIfName.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_
 
 # Mac Bridge Statistics Enable
 tcpipBridgeStats = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_STATISTICS", tcpipBridgeAdvSettings)
+tcpipBridgeStats.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeStats.setLabel("Enable Statistics")
 tcpipBridgeStats.setVisible(False)
 tcpipBridgeStats.setDescription("Enable Bridge Statistics")
@@ -147,6 +161,7 @@ tcpipBridgeStats.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_B
 
 # Mac Bridge Event Notify Enable
 tcpipBridgeNotify = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_MAC_BRIDGE_EVENT_NOTIFY", tcpipBridgeAdvSettings)
+tcpipBridgeNotify.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeNotify.setLabel("Enable Event Notify")
 tcpipBridgeNotify.setVisible(False)
 tcpipBridgeNotify.setDescription("Enable Bridge Event Notification")
@@ -155,6 +170,7 @@ tcpipBridgeNotify.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_USE_MAC_
 
 # Bridge Task Tick Rate in ms
 tcpipBridgeTaskTickRate = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_MAC_BRIDGE_TASK_RATE", tcpipBridgeAdvSettings)
+tcpipBridgeTaskTickRate.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeTaskTickRate.setLabel("Bridge Task Rate (in msec)")
 tcpipBridgeTaskTickRate.setVisible(False)
 tcpipBridgeTaskTickRate.setDescription("Bridge Maintenance Task Rate (in msec)")
@@ -163,6 +179,7 @@ tcpipBridgeTaskTickRate.setDependencies(tcpipBridgeMenuVisible, ["TCPIP_STACK_US
 
 # Disable the ports glue
 tcpipBridgeDisableGlue = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_STACK_MAC_BRIDGE_DISABLE_GLUE", tcpipBridgeAdvSettings)
+tcpipBridgeDisableGlue.setHelp("mcc_h3_bridge_configurations")
 tcpipBridgeDisableGlue.setLabel("Disable the MAC Bridge Ports Glue")
 tcpipBridgeDisableGlue.setVisible(False)
 tcpipBridgeDisableGlue.setDescription("Disable the MAC Bridge Ports Glueing")

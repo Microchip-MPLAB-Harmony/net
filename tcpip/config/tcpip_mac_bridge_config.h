@@ -3,13 +3,13 @@
     Microchip Technology Inc.
 	
   File Name:
-    ip_config.h
+    tcpip_mac_bridge_config.h
 	
   Summary:
-    Internet Protocol (IP) Configuration file.
+    Layer 2 MAC bridge Configuration file.
 	
   Description:
-    This file contains the IP module configuration options.
+    This file contains the MAC Layer 2 bridge module configuration options.
 
     This file is not part of the project, it is a configuration template file only. 
   **********************************************************/
