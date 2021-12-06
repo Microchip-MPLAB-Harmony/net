@@ -40,6 +40,7 @@ def instantiateComponent(tcpipIPv4Component):
     
     # Enable IPv4   
     tcpipIPv4 = tcpipIPv4Component.createBooleanSymbol("TCPIP_STACK_USE_IPV4", None)
+    tcpipIPv4.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4.setLabel("IPv4")
     tcpipIPv4.setVisible(False)
     tcpipIPv4.setDescription("Enable IPv4")
@@ -47,6 +48,7 @@ def instantiateComponent(tcpipIPv4Component):
     
     # Enable IPv4 Commands
     tcpipIpv4Commands = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_COMMANDS_ENABLE", None)
+    tcpipIpv4Commands.setHelp("mcc_h3_ipv4_configurations")
     tcpipIpv4Commands.setLabel("Enable IPv4 Commands")
     tcpipIpv4Commands.setVisible(True)
     tcpipIpv4Commands.setDescription("Enable the IPv4 TCP/IP Commands")
@@ -60,6 +62,7 @@ def instantiateComponent(tcpipIPv4Component):
     
     # ARP queue slots
     tcpipIPv4ArpSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_ARP_QUEUE_SLOTS", tcpipIPv4AdvSettings)
+    tcpipIPv4ArpSlots.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4ArpSlots.setLabel("Number of ARP Requests IPv4 can queue")
     tcpipIPv4ArpSlots.setVisible(True)
     tcpipIPv4ArpSlots.setDescription("Number of ARP requests that IPv4 Can Queue Up")
@@ -67,6 +70,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Load IPv4 Configurations
     tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", tcpipIPv4AdvSettings)
+    tcpipIPv4Frag.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4Frag.setLabel("Enable IPv4 Fragmentation Support")
     tcpipIPv4Frag.setVisible(True)
     tcpipIPv4Frag.setDescription("Enable IPv4 fragmentation support")
@@ -82,6 +86,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Initial fragment timeout in seconds
     tcpipIPv4FragTimeout = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FRAGMENT_TIMEOUT", tcpipIPv4FragSetting)
+    tcpipIPv4FragTimeout.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FragTimeout.setLabel("Initial fragment timeout (in sec)")
     tcpipIPv4FragTimeout.setVisible(True)
     tcpipIPv4FragTimeout.setDescription("Initial fragment timeout in seconds")
@@ -89,6 +94,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Limit for the number of fragmented streams
     tcpipIPv4FragStreamMaxNum = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FRAGMENT_MAX_STREAMS", tcpipIPv4FragSetting)
+    tcpipIPv4FragStreamMaxNum.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FragStreamMaxNum.setLabel("Maximum number of fragmented streams")
     tcpipIPv4FragStreamMaxNum.setVisible(True)
     tcpipIPv4FragStreamMaxNum.setDescription("Maximum limit for number of fragmented streams")
@@ -96,6 +102,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Limit for the number of fragments
     tcpipIPv4FragMaxNum = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FRAGMENT_MAX_NUMBER", tcpipIPv4FragSetting)
+    tcpipIPv4FragMaxNum.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FragMaxNum.setLabel("Maximum number of fragments")
     tcpipIPv4FragMaxNum.setVisible(True)
     tcpipIPv4FragMaxNum.setDescription("Maximum limit for number of fragments")
@@ -103,6 +110,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Enable External Packet Processing
     tcpipIpv4ExtPktProcess = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_EXTERN_PACKET_PROCESS", tcpipIPv4AdvSettings)
+    tcpipIpv4ExtPktProcess.setHelp("mcc_h3_ipv4_configurations")
     tcpipIpv4ExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipIpv4ExtPktProcess.setVisible(True)
     tcpipIpv4ExtPktProcess.setDescription("Allows External Processing of RX Packets")
@@ -110,6 +118,7 @@ def instantiateComponent(tcpipIPv4Component):
     
     # IPv4 Task Tick Rate in ms
     tcpipIPv4TaskTickRate = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_TASK_TICK_RATE", tcpipIPv4FragSetting)
+    tcpipIPv4TaskTickRate.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4TaskTickRate.setLabel("IPv4 Fragmentation Task Rate (in msec)")
     tcpipIPv4TaskTickRate.setVisible(True)
     tcpipIPv4TaskTickRate.setDescription("IPv4 task rate (in msec)")
@@ -117,6 +126,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # IPv4 Forwarding Support
     tcpipIPv4Forward = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD", tcpipIPv4AdvSettings)
+    tcpipIPv4Forward.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4Forward.setLabel("Enable IPv4 Forwarding Support")
     tcpipIPv4Forward.setVisible(True)
     tcpipIPv4Forward.setDescription("Enable IPv4 Forwarding Support")
@@ -132,6 +142,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Enable initialization with ASCII strings
     tcpipIPv4FwdAsciiEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_ASCII_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdAsciiEnable.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdAsciiEnable.setLabel("Support Forwarding Table with ASCII strings")
     tcpipIPv4FwdAsciiEnable.setVisible(True)
     tcpipIPv4FwdAsciiEnable.setDescription("Support Forwarding Table initialization with ASCII strings")
@@ -139,6 +150,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Enable initialization with Binary values
     tcpipIPv4FwdDynEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_DYN_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdDynEnable.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdDynEnable.setLabel("Support Dynamic Forwarding Table Manipulation")
     tcpipIPv4FwdDynEnable.setVisible(True)
     tcpipIPv4FwdDynEnable.setDescription("Support Dynamic Forwarding Table API")
@@ -146,6 +158,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Enable forwarding of bcast packets
     tcpipIPv4FwdBcastEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_BCAST_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdBcastEnable.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdBcastEnable.setLabel("Enable Broadcast Traffic Forwarding")
     tcpipIPv4FwdBcastEnable.setVisible(True)
     tcpipIPv4FwdBcastEnable.setDescription("Enable Forwarding Broadcast Packets on the Forwarding Interface")
@@ -153,6 +166,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Enable forwarding statistics
     tcpipIPv4FwdStatsEnable = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_STATS_ENABLE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdStatsEnable.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdStatsEnable.setLabel("Enable Forwarding Statistics")
     tcpipIPv4FwdStatsEnable.setVisible(True)
     tcpipIPv4FwdStatsEnable.setDescription("Enable Forwarding Statistics Gathering on the Forwarding Interfaces")
@@ -160,6 +174,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Forwarding queue slots
     tcpipIPv4FwdSlots = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_QUEUE_SLOTS", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdSlots.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdSlots.setLabel("Forwarding TX Queue Slots")
     tcpipIPv4FwdSlots.setVisible(True)
     tcpipIPv4FwdSlots.setDescription("Number of Multicast and Broadcast Packets that IPv4 Forwarding Can Queue Up")
@@ -167,6 +182,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Max number of entries in the forwarding table
     tcpipIPv4FwdTblMaxSize = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FORWARD_TABLE_MAX_SIZE", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdTblMaxSize.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdTblMaxSize.setLabel("Forwarding Table Maximum Size")
     tcpipIPv4FwdTblMaxSize.setVisible(True)
     tcpipIPv4FwdTblMaxSize.setDescription("Maximum Number of Entries in the Forwarding Table")
@@ -177,6 +193,7 @@ def instantiateComponent(tcpipIPv4Component):
 
     # Select ASCII/Binary entries
     tcpipIPv4FwdAsciiSelect = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FORWARD_ASCII_SELECT", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdAsciiSelect.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdAsciiSelect.setLabel("Use ASCII Init Forwarding Table")
     tcpipIPv4FwdAsciiSelect.setVisible(True)
     tcpipIPv4FwdAsciiSelect.setDescription("Use ASCII Values for the Initialization Forwarding Table")
@@ -185,6 +202,7 @@ def instantiateComponent(tcpipIPv4Component):
     
     # Number of forwarding table entries
     tcpipIPv4FwdTableNum = tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FORWARD_TABLE_CNT", tcpipIPv4FwdSetting)
+    tcpipIPv4FwdTableNum.setHelp("mcc_h3_ipv4_configurations")
     tcpipIPv4FwdTableNum.setLabel("Number of Entries in the Init Forwarding table")
     tcpipIPv4FwdTableNum.setVisible(True)
     tcpipIPv4FwdTableNum.setDescription("Current Entries in the Initialization Forwarding table")
@@ -205,6 +223,7 @@ def instantiateComponent(tcpipIPv4Component):
         
         # Net Address
         tcpipIPv4FwdEntryNetAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryNetAdd.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryNetAdd[index].setLabel("Network Destination Address")
         tcpipIPv4FwdEntryNetAdd[index].setVisible(False)
         tcpipIPv4FwdEntryNetAdd[index].setDefaultValue("0.0.0.0")
@@ -212,6 +231,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Net Mask
         tcpipIPv4FwdEntryNetMask.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryNetMask.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryNetMask[index].setLabel("Network Mask")
         tcpipIPv4FwdEntryNetMask[index].setVisible(False)
         tcpipIPv4FwdEntryNetMask[index].setDefaultValue("0.0.0.0")
@@ -219,6 +239,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Gw Address
         tcpipIPv4FwdEntryGwAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryGwAdd.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryGwAdd[index].setLabel("Gateway Destination Address")
         tcpipIPv4FwdEntryGwAdd[index].setVisible(False)
         tcpipIPv4FwdEntryGwAdd[index].setDefaultValue("0.0.0.0")
@@ -226,6 +247,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Source Interface name
         tcpipIPv4FwdEntrySrcIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntrySrcIfName.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntrySrcIfName[index].setLabel("Source Interface Name")
         tcpipIPv4FwdEntrySrcIfName[index].setVisible(False)
         tcpipIPv4FwdEntrySrcIfName[index].setDefaultValue("")
@@ -233,6 +255,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Destination Interface name
         tcpipIPv4FwdEntryDestIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryDestIfName.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryDestIfName[index].setLabel("Destination Interface Name")
         tcpipIPv4FwdEntryDestIfName[index].setVisible(False)
         tcpipIPv4FwdEntryDestIfName[index].setDefaultValue("")
@@ -241,6 +264,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Metric
         tcpipIPv4FwdEntryMetric.append(tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_ENTRY_METRIC_IDX" + str(index), tcpipIPv4FwdEntry[index]))
+        tcpipIPv4FwdEntryMetric.setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryMetric[index].setLabel("Entry Metric Value")
         tcpipIPv4FwdEntryMetric[index].setVisible(False)
         tcpipIPv4FwdEntryMetric[index].setDefaultValue(10)
