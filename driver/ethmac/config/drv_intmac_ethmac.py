@@ -37,6 +37,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use Internal Ethernet MAC Driver? 
     drvEthmac = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
+    drvEthmac.setHelp("mcc_h3_ethmac_configurations")
     drvEthmac.setLabel("Use Internal Ethernet MAC Driver?")
     drvEthmac.setVisible(False)
     drvEthmac.setDescription("Use Internal Ethernet MAC Driver?")
@@ -73,12 +74,14 @@ def instantiateComponent(drvPic32mEthmacComponent):
         Database.setSymbolValue("core", "CONFIG_FETHIO", "OFF", 1)
 
     tcpipEthmacTraffic = drvPic32mEthmacComponent.createComboSymbol("TCPIP_EMAC_TRAFFIC",None,["Low", "Medium", "High"])
+    tcpipEthmacTraffic.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacTraffic.setVisible(True)
     tcpipEthmacTraffic.setLabel("MAC Default Configuration for Network Traffic")
     tcpipEthmacTraffic.setDefaultValue("Medium")
     
     # Number of Tx Descriptors to be created
     tcpipEthmacTxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_TX_DESCRIPTORS", tcpipEthmacTraffic)
+    tcpipEthmacTxDescCount.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacTxDescCount.setLabel("Number of Tx Descriptors to be created")
     tcpipEthmacTxDescCount.setVisible(True)
     tcpipEthmacTxDescCount.setDescription("Number of Tx Descriptors to be created")
@@ -87,6 +90,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Number of Rx Descriptors to be created
     tcpipEthmacRxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DESCRIPTORS", tcpipEthmacTraffic)
+    tcpipEthmacRxDescCount.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxDescCount.setLabel("Number of Rx Descriptors to be created")
     tcpipEthmacRxDescCount.setVisible(True)
     tcpipEthmacRxDescCount.setDescription("Number of Rx Descriptors to be created")
@@ -95,6 +99,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Number of Dedicated MAC RX Buffers
     tcpipEthmacRxOwnBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_DEDICATED_BUFFERS", tcpipEthmacTraffic)
+    tcpipEthmacRxOwnBuffer.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxOwnBuffer.setLabel("Number of Dedicated MAC RX Buffers")
     tcpipEthmacRxOwnBuffer.setVisible(True)
     tcpipEthmacRxOwnBuffer.setDescription("Number of Dedicated MAC RX Buffers")
@@ -103,6 +108,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Number of Non_Dedicated RX Buffers for MAC Initialization
     tcpipEthmacRxDynBuffer = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_INIT_BUFFERS", tcpipEthmacTraffic)
+    tcpipEthmacRxDynBuffer.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxDynBuffer.setLabel("Number of Non_Dedicated RX Buffers")
     tcpipEthmacRxDynBuffer.setVisible(True)
     tcpipEthmacRxDynBuffer.setDescription("Number of Non_Dedicated RX Buffers for MAC Initialization")
@@ -111,6 +117,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Minimum Threshold for the Buffer Replenish Process
     tcpipEthmacRxBufferThres = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_THRESHOLD", tcpipEthmacTraffic)
+    tcpipEthmacRxBufferThres.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxBufferThres.setLabel("Minimum Threshold for the Buffer Replenish Process")
     tcpipEthmacRxBufferThres.setVisible(True)
     tcpipEthmacRxBufferThres.setDescription("Minimum Threshold for the Buffer Replenish Process")
@@ -119,6 +126,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Number of RX Buffers to Allocate when Below Threshold Condition is Detected
     tcpipEthmacRxBufferReFill = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_LOW_FILL", tcpipEthmacTraffic)
+    tcpipEthmacRxBufferReFill.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxBufferReFill.setLabel("Rx Buffer Allocate Count during  Replenish Process")
     tcpipEthmacRxBufferReFill.setVisible(True)
     tcpipEthmacRxBufferReFill.setDescription("Number of RX Buffers to Allocate when Below Threshold Condition is Detected")
@@ -127,6 +135,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Size of a RX Buffer. Should Be Multiple of 16
     tcpipEthmacRxBuffSize = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_BUFF_SIZE", tcpipEthmacTraffic)
+    tcpipEthmacRxBuffSize.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxBuffSize.setLabel("Size of a RX Buffer. Should Be Multiple of 16")
     tcpipEthmacRxBuffSize.setVisible(True)
     tcpipEthmacRxBuffSize.setDescription("Size of a RX Buffer. Should Be Multiple of 16")
@@ -136,12 +145,14 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Ethernet RX Filters Selection Settings
     tcpipEthRxFilter = drvPic32mEthmacComponent.createMenuSymbol(None, None) 
+    tcpipEthRxFilter.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthRxFilter.setLabel("Ethernet RX Filters Selection")
     tcpipEthRxFilter.setVisible(True)
     tcpipEthRxFilter.setDescription("Ethernet RX Filters Selection Settings")
 
     # Accept Broadcast Packets
     tcpipEthmacEthFilterBcastAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_BCAST_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterBcastAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterBcastAccept.setLabel("Accept Broadcast Packets")
     tcpipEthmacEthFilterBcastAccept.setVisible(True)
     tcpipEthmacEthFilterBcastAccept.setDescription("Accept Broadcast Packets")
@@ -149,6 +160,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Accept Multicast Packets
     tcpipEthmacEthFilterMcastAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_MCAST_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterMcastAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterMcastAccept.setLabel("Accept Multicast Packets")
     tcpipEthmacEthFilterMcastAccept.setVisible(True)
     tcpipEthmacEthFilterMcastAccept.setDescription("Accept Multicast Packets")
@@ -156,6 +168,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Accept Unicast Packets
     tcpipEthmacEthFilterUcastAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_UCAST_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterUcastAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterUcastAccept.setLabel("Accept Unicast Packets")
     tcpipEthmacEthFilterUcastAccept.setVisible(True)
     tcpipEthmacEthFilterUcastAccept.setDescription("Accept Unicast Packets")
@@ -163,6 +176,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Accept Not Me Unicast Packets
     tcpipEthmacEthFilterNotmeUcastAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_UCAST_OTHER_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterNotmeUcastAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterNotmeUcastAccept.setLabel("Accept Not Me Unicast Packets")
     tcpipEthmacEthFilterNotmeUcastAccept.setVisible(True)
     tcpipEthmacEthFilterNotmeUcastAccept.setDescription("Accept Not Me Unicast Packets")
@@ -170,6 +184,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Reject Runt Packets (< 64 bytes)
     tcpipEthmacEthFilterUcastHashReject = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_RUNT_REJECT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterUcastHashReject.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterUcastHashReject.setLabel("Reject Runt Packets (< 64 bytes)")
     tcpipEthmacEthFilterUcastHashReject.setVisible(True)
     tcpipEthmacEthFilterUcastHashReject.setDescription("Reject Runt Packets (< 64 bytes)")
@@ -177,6 +192,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
  
     # Accept Runt Packets (< 64 bytes)
     tcpipEthmacEthFilterRuntAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_RUNT_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterRuntAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterRuntAccept.setLabel("Accept Runt Packets (< 64 bytes)")
     tcpipEthmacEthFilterRuntAccept.setVisible(True)
     tcpipEthmacEthFilterRuntAccept.setDescription("Accept Runt Packets (< 64 bytes)")
@@ -184,6 +200,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Reject Packets with Wrong CRC
     tcpipEthmacEthFilterCrcErrReject = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_CRC_ERROR_REJECT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterCrcErrReject.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterCrcErrReject.setLabel("Reject Packets with Wrong CRC")
     tcpipEthmacEthFilterCrcErrReject.setVisible(True)
     tcpipEthmacEthFilterCrcErrReject.setDescription("Reject Packets with Wrong CRC")
@@ -191,6 +208,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Accept Packets with Wrong CRC
     tcpipEthmacEthFilterCrcErrAccept = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_FILTER_CRC_ERROR_ACCEPT", tcpipEthRxFilter)
+    tcpipEthmacEthFilterCrcErrAccept.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFilterCrcErrAccept.setLabel("Accept Packets with Wrong CRC")
     tcpipEthmacEthFilterCrcErrAccept.setVisible(True)
     tcpipEthmacEthFilterCrcErrAccept.setDescription("Accept Packets with Wrong CRC")
@@ -198,12 +216,14 @@ def instantiateComponent(drvPic32mEthmacComponent):
  
     # Ethernet Connection Flags
     tcpipEthConnFlag = drvPic32mEthmacComponent.createMenuSymbol(None, None) 
+    tcpipEthConnFlag.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthConnFlag.setLabel("Ethernet Connection Flags")
     tcpipEthConnFlag.setVisible(True)
     tcpipEthConnFlag.setDescription("Ethernet Connection Flags")
     
     # Use Auto Negotiation
     tcpipEthmacEthAutoNegotiate = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_AUTO_NEGOTIATION", tcpipEthConnFlag)
+    tcpipEthmacEthAutoNegotiate.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthAutoNegotiate.setLabel("Use Auto Negotiation")
     tcpipEthmacEthAutoNegotiate.setVisible(True) 
     tcpipEthmacEthAutoNegotiate.setDescription("Use Auto Negotiation")
@@ -211,6 +231,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use Full Duplex
     tcpipEthmacEthFullDuplex = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_FULL_DUPLEX", tcpipEthConnFlag)
+    tcpipEthmacEthFullDuplex.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthFullDuplex.setLabel("Use Full Duplex")
     tcpipEthmacEthFullDuplex.setVisible(True)
     tcpipEthmacEthFullDuplex.setDescription("Use Full Duplex")
@@ -218,6 +239,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use Half Duplex
     tcpipEthmacEthHalfDuplex = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_HALF_DUPLEX", tcpipEthConnFlag)
+    tcpipEthmacEthHalfDuplex.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthHalfDuplex.setLabel("Use Half Duplex")
     tcpipEthmacEthHalfDuplex.setVisible(True)
     tcpipEthmacEthHalfDuplex.setDescription("Use Half Duplex")
@@ -225,6 +247,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use 100MBps
     tcpipEthmacEthUse100 = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_100", tcpipEthConnFlag)
+    tcpipEthmacEthUse100.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthUse100.setLabel("Use 100MBps")
     tcpipEthmacEthUse100.setVisible(True) 
     tcpipEthmacEthUse100.setDescription("Use 100MBps")
@@ -232,6 +255,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use 10MBps
     tcpipEthmacEthUse10 = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_10", tcpipEthConnFlag)
+    tcpipEthmacEthUse10.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthUse10.setLabel("Use 10MBps")
     tcpipEthmacEthUse10.setVisible(True)
     tcpipEthmacEthUse10.setDescription("Use 10MBps")
@@ -239,6 +263,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Allow Huge Packets
     tcpipEthmacEthHugePkt = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_HUGE_PKTS", tcpipEthConnFlag)
+    tcpipEthmacEthHugePkt.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthHugePkt.setLabel("Allow Huge Packets")
     tcpipEthmacEthHugePkt.setVisible(True)
     tcpipEthmacEthHugePkt.setDescription("Allow Huge Packets")
@@ -246,6 +271,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Loopbacked At The MAC Level
     tcpipEthmacEthMacLoopBack = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_MAC_LOOPBACK", tcpipEthConnFlag)
+    tcpipEthmacEthMacLoopBack.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthMacLoopBack.setLabel("Loopbacked At The MAC Level")
     tcpipEthmacEthMacLoopBack.setVisible(True) 
     tcpipEthmacEthMacLoopBack.setDescription("Loopbacked At The MAC Level")
@@ -253,6 +279,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Loopbacked At The PHY Level
     tcpipEthmacEthPhyLoopBack = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_PHY_LOOPBACK", tcpipEthConnFlag)
+    tcpipEthmacEthPhyLoopBack.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthPhyLoopBack.setLabel("Loopbacked At The PHY Level")
     tcpipEthmacEthPhyLoopBack.setVisible(True)
     tcpipEthmacEthPhyLoopBack.setDescription("Loopbacked At The PHY Level")
@@ -260,6 +287,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use Auto MDIX
     tcpipEthmacEthMdixAuto = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_MDIX_AUTO", tcpipEthConnFlag)
+    tcpipEthmacEthMdixAuto.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthMdixAuto.setLabel("Use Auto MDIX")
     tcpipEthmacEthMdixAuto.setVisible(True) 
     tcpipEthmacEthMdixAuto.setDescription("Use Auto MDIX")
@@ -267,6 +295,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # Use Swapped MDIX
     tcpipEthmacEthMdixSwap = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_MDIX_SWAP", tcpipEthConnFlag)
+    tcpipEthmacEthMdixSwap.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthMdixSwap.setLabel("Use Swapped MDIX")
     tcpipEthmacEthMdixSwap.setVisible(False)
     tcpipEthmacEthMdixSwap.setDescription("Use Swapped MDIX")
@@ -275,6 +304,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # RMII Connection
     tcpipEthmacEthRmii = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_RMII", tcpipEthConnFlag)
+    tcpipEthmacEthRmii.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacEthRmii.setLabel("RMII Connection")
     tcpipEthmacEthRmii.setVisible(True)
     tcpipEthmacEthRmii.setDescription("RMII Connection")
@@ -290,6 +320,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # EMAC Module ID
     tcpipEmacModuleId = drvPic32mEthmacComponent.createStringSymbol("TCPIP_EMAC_MODULE_ID", tcpipEthmacAdvSettings)
+    tcpipEmacModuleId.setHelp("mcc_h3_ethmac_configurations")
     tcpipEmacModuleId.setLabel("EMAC Module ID")
     tcpipEmacModuleId.setVisible(True)
     tcpipEmacModuleId.setDescription("EMAC Module ID")
@@ -312,6 +343,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     #Configures the library for interrupt mode operations
     tcpipEthmacInterruptEnable = drvPic32mEthmacComponent.createBooleanSymbol("INTERRUPT_ENABLE", tcpipEthmacAdvSettings)
+    tcpipEthmacInterruptEnable.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacInterruptEnable.setLabel("Enable Interrupt?")
     tcpipEthmacInterruptEnable.setDefaultValue(True) 
     
@@ -348,6 +380,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
         
     # Maximum Frame Size - Longer Frames Will Be Discarded
     tcpipEthmacMaxFrame = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_MAX_FRAME", tcpipEthmacAdvSettings)
+    tcpipEthmacMaxFrame.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacMaxFrame.setLabel("Maximum Frame Size - Longer Frames Will Be Discarded")
     tcpipEthmacMaxFrame.setVisible(True)
     tcpipEthmacMaxFrame.setDescription("Maximum Frame Size - Longer Frames Will Be Discarded")
@@ -355,6 +388,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Link Maximum Transmission Unit - (576 - 1500)
     tcpipEthmacLinkMTU = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_LINK_MTU", tcpipEthmacAdvSettings)
+    tcpipEthmacLinkMTU.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacLinkMTU.setLabel("Link Maximum Transmission Unit - (576 - 1500)")
     tcpipEthmacLinkMTU.setMin(576)
     tcpipEthmacLinkMTU.setMax(1500)
@@ -364,6 +398,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # MAC Maximum Number of Supported RX Fragments
     tcpipEthmacRxFragMaxNum = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_FRAGMENTS", tcpipEthmacAdvSettings)
+    tcpipEthmacRxFragMaxNum.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacRxFragMaxNum.setLabel("MAC Maximum Number of Supported RX Fragments")
     tcpipEthmacRxFragMaxNum.setMin(1)
     tcpipEthmacRxFragMaxNum.setMax(6)
@@ -379,6 +414,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Auto Flow Control Enable
     tcpipEthAutoFlowCtrlEnable = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE", tcpipEthAutoFlowCtrl)
+    tcpipEthAutoFlowCtrlEnable.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthAutoFlowCtrlEnable.setLabel("Auto Flow Control Enable")
     tcpipEthAutoFlowCtrlEnable.setVisible(True)
     tcpipEthAutoFlowCtrlEnable.setDescription("Auto Flow Control Enable")
@@ -386,6 +422,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # Pause Time Value for the Auto Flow Control, bytes
     tcpipEthmacAutoFlowCtrlPauseTime = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlPauseTime.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacAutoFlowCtrlPauseTime.setLabel("Pause Time Value for the Auto Flow Control, bytes")
     tcpipEthmacAutoFlowCtrlPauseTime.setMin(64)
     tcpipEthmacAutoFlowCtrlPauseTime.setMax(4194240)
@@ -396,6 +433,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # The Full Water Mark, in Number of Packets
     tcpipEthmacAutoFlowCtrlFullWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlFullWtrMark.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacAutoFlowCtrlFullWtrMark.setLabel("The Full Water Mark, in Number of Packets")
     tcpipEthmacAutoFlowCtrlFullWtrMark.setMin(1)
     tcpipEthmacAutoFlowCtrlFullWtrMark.setMax(255)
@@ -406,6 +444,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
 
     # The Empty Water Mark, in Number of Packets
     tcpipEthmacAutoFlowCtrlEmptyWtrMark = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK", tcpipEthAutoFlowCtrlEnable)
+    tcpipEthmacAutoFlowCtrlEmptyWtrMark.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacAutoFlowCtrlEmptyWtrMark.setLabel("The Empty Water Mark, in Number of Packets")
     tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMin(0)
     tcpipEthmacAutoFlowCtrlEmptyWtrMark.setMax(255)
@@ -416,6 +455,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     
     # PHY Connected to Ethernet MAC
     tcpipEthmacPhyType = drvPic32mEthmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", None)
+    tcpipEthmacPhyType.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacPhyType.setLabel("External PHY Device")
     tcpipEthmacPhyType.setVisible(True)
     tcpipEthmacPhyType.setDescription("PHY Connected to ETHERNET MAC")
@@ -439,6 +479,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
         
     # ETHMAC Heap Size
     tcpipEthmacHeapSize = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_HEAP_SIZE", None)
+    tcpipEthmacHeapSize.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacHeapSize.setLabel("ETHMAC Heap Size (bytes)")     
     tcpipEthmacHeapSize.setVisible(False)
     tcpipEthmacHeapSize.setDefaultValue(tcpipEthmacHeapCalc())
