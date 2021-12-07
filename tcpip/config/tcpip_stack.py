@@ -79,6 +79,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # TCP/IP Stack Enable 
     tcpipStackEnable = tcpipStackComponent.createBooleanSymbol("USE_TCPIP_STACK", None)
+    tcpipStackEnable.setHelp("mcc_h3_manager_configurations")
     tcpipStackEnable.setLabel("Use TCP/IP Stack?")
     tcpipStackEnable.setDescription("Enables TCP/IP stack")
     tcpipStackEnable.setReadOnly(True)
@@ -87,6 +88,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Define number of network Configurations
     tcpipStackTickRate = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_TICK_RATE", None)
+    tcpipStackTickRate.setHelp("mcc_h3_manager_configurations")
     tcpipStackTickRate.setLabel("TCP/IP Stack State Machine Tick Rate, ms.")
     tcpipStackTickRate.setVisible(True)
     tcpipStackTickRate.setDescription("TCP/IP Stack State Machine Tick Rate")
@@ -103,6 +105,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Menu for RTOS options
     tcpipStackInstnExecMode = tcpipStackComponent.createComboSymbol("TCPIP_STACK_RTOS", tcpipStackRtosMenu, ["Standalone"]) 
+    tcpipStackInstnExecMode.setHelp("mcc_h3_manager_configurations")
     tcpipStackInstnExecMode.setLabel("Run Library Tasks as")
     tcpipStackInstnExecMode.setVisible(False)
     tcpipStackInstnExecMode.setDescription("Rtos Options")
@@ -110,6 +113,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Task Stack Size
     tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_STACK_SIZE", tcpipStackRtosMenu)
+    tcpipStackTaskSize.setHelp("mcc_h3_manager_configurations")
     tcpipStackTaskSize.setLabel("Stack Size (in bytes)")
     tcpipStackTaskSize.setVisible(True)
     tcpipStackTaskSize.setDescription("Rtos Task Stack Size")
@@ -118,6 +122,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Task Priority
     tcpipStackTaskPriority = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_PRIORITY", tcpipStackRtosMenu)
+    tcpipStackTaskPriority.setHelp("mcc_h3_manager_configurations")
     tcpipStackTaskPriority.setLabel("Task Priority")
     tcpipStackTaskPriority.setVisible(True)
     tcpipStackTaskPriority.setDescription("Rtos Task Priority")
@@ -126,6 +131,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Use Task Delay?
     tcpipStackUseTaskDelay = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_RTOS_USE_DELAY", tcpipStackRtosMenu)
+    tcpipStackUseTaskDelay.setHelp("mcc_h3_manager_configurations")
     tcpipStackUseTaskDelay.setLabel("Use Task Delay?")
     tcpipStackUseTaskDelay.setVisible(True)
     tcpipStackUseTaskDelay.setDescription("Rtos Use Task Delay?")
@@ -134,6 +140,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # RTOS Task Delay
     tcpipStackTaskDelay = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_RTOS_DELAY", tcpipStackRtosMenu)
+    tcpipStackTaskDelay.setHelp("mcc_h3_manager_configurations")
     tcpipStackTaskDelay.setLabel("Task Delay")
     tcpipStackTaskDelay.setVisible(True)
     tcpipStackTaskDelay.setDescription("MIIM Driver Task Delay")
@@ -169,6 +176,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Use Heap Config
     tcpipStackHeapConfig = tcpipStackComponent.createComboSymbol("TCPIP_STACK_USE_HEAP_CONFIG", tcpipStackHeap, TCPIP_STACK_HEAP_TYPE)
+    tcpipStackHeapConfig.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapConfig.setLabel("Use Heap Config")
     tcpipStackHeapConfig.setVisible(True)
     tcpipStackHeapConfig.setDescription("Use Heap Config")
@@ -176,6 +184,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # TCP/IP Stack Dynamic RAM Size
     tcpipStackHeapStackDramSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_SIZE", tcpipStackHeap)
+    tcpipStackHeapStackDramSize.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackDramSize.setLabel("TCP/IP Stack Dynamic RAM Size")
     tcpipStackHeapStackDramSize.setVisible(True)
     tcpipStackHeapStackDramSize.setDescription("TCP/IP Stack Dynamic RAM Size")
@@ -185,14 +194,16 @@ def instantiateComponent(tcpipStackComponent):
     
     # The Expansion Size for the Internal Heap Pool
     tcpipStackHeapStackPoolExpnSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_POOL_EXPANSION_SIZE", tcpipStackHeap)
+    tcpipStackHeapStackPoolExpnSize.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackPoolExpnSize.setLabel("The Expansion Size for the Internal Heap Pool")
     tcpipStackHeapStackPoolExpnSize.setVisible(False)
     tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
-    tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
+    tcpipStackHeapStackPoolExpnSize.setDefaultValue(4096)
     tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
     
     # Number of Heap Pool Entries
     tcpipStackHeapPoolEntryNum = tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRIES_NUMBER", tcpipStackHeap)
+    tcpipStackHeapPoolEntryNum.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapPoolEntryNum.setLabel("Number of Heap Pool Entries")
     tcpipStackHeapPoolEntryNum.setVisible(False)
     tcpipStackHeapPoolEntryNum.setDescription("Number of Heap Pool Entries")
@@ -209,6 +220,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Heap Block Size
         tcpipStackHeapPoolBlkSize.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_SIZE_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolBlkSize.setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolBlkSize[index].setLabel("Size of the Block, Bytes")
         tcpipStackHeapPoolBlkSize[index].setVisible(True)
         tcpipStackHeapPoolBlkSize[index].setDefaultValue(int(TCIPHEAP_POOL_DFLT_SIZE[index]))
@@ -217,6 +229,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Heap Pre-allocated blocks
         tcpipStackHeapPoolPreAllocBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolPreAllocBlkNum.setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolPreAllocBlkNum[index].setLabel("Number of Pre-allocated Blocks with this Size")
         tcpipStackHeapPoolPreAllocBlkNum[index].setVisible(True)
         tcpipStackHeapPoolPreAllocBlkNum[index].setDefaultValue(0)
@@ -225,6 +238,7 @@ def instantiateComponent(tcpipStackComponent):
         
         # Heap Pre-allocated blocks
         tcpipStackHeapPoolExpBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
+        tcpipStackHeapPoolExpBlkNum.setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolExpBlkNum[index].setLabel("Number of Blocks to Dynamically Expand for this Pool Entry")
         tcpipStackHeapPoolExpBlkNum[index].setVisible(True)
         tcpipStackHeapPoolExpBlkNum[index].setDefaultValue(TCIPHEAP_POOL_EXPBLK_NUM[index])
@@ -233,6 +247,7 @@ def instantiateComponent(tcpipStackComponent):
     #####################################################################################################
     # Stack allocation function, malloc style
     tcpipStackHeapStackMalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_MALLOC_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackMalloc.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackMalloc.setLabel("Stack allocation function, malloc style")
     tcpipStackHeapStackMalloc.setVisible(True)
     tcpipStackHeapStackMalloc.setDescription("Stack allocation function, malloc style")
@@ -240,6 +255,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Stack allocation function, calloc style
     tcpipStackHeapStackCalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_CALLOC_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackCalloc.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackCalloc.setLabel("Stack allocation function, calloc style")
     tcpipStackHeapStackCalloc.setVisible(True)
     tcpipStackHeapStackCalloc.setDescription("Stack allocation function, calloc style")
@@ -247,6 +263,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Stack deallocation function, free style
     tcpipStackHeapStackFree = tcpipStackComponent.createStringSymbol("TCPIP_STACK_FREE_FUNC", tcpipStackHeap)
+    tcpipStackHeapStackFree.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackFree.setLabel("Stack deallocation function, free style")
     tcpipStackHeapStackFree.setVisible(True)
     tcpipStackHeapStackFree.setDescription("Stack deallocation function, free style")
@@ -254,6 +271,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Flags supported for heap allocation
     tcpipStackHeapFlag = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USE_FLAGS", tcpipStackHeap, TCPIP_STACK_HEAP_FLAGS)
+    tcpipStackHeapFlag.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapFlag.setLabel("Flags supported for heap allocation")
     tcpipStackHeapFlag.setVisible(True)
     tcpipStackHeapFlag.setDescription("Flags supported for heap allocation")
@@ -261,6 +279,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Heap area usage
     tcpipStackHeapUsageConfig = tcpipStackComponent.createComboSymbol("TCPIP_STACK_HEAP_USAGE_CONFIG", tcpipStackHeap, TCPIP_STACK_HEAP_USAGE)
+    tcpipStackHeapUsageConfig.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapUsageConfig.setLabel("Heap area usage")
     tcpipStackHeapUsageConfig.setVisible(True)
     tcpipStackHeapUsageConfig.setDescription("Heap area usage")
@@ -268,6 +287,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Maximum heap types
     tcpipStackHeapStackSupportHeap = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SUPPORTED_HEAPS", tcpipStackHeap)
+    tcpipStackHeapStackSupportHeap.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackSupportHeap.setLabel("Maximum heap types")
     tcpipStackHeapStackSupportHeap.setVisible(True)
     tcpipStackHeapStackSupportHeap.setDescription("Maximum heap types")
@@ -275,6 +295,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # TCP/IP Stack Dynamic RAM Lower Limit
     tcpipStackHeapStackDramLim = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_RUN_LIMIT", tcpipStackHeap)
+    tcpipStackHeapStackDramLim.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackDramLim.setLabel("TCP/IP Stack Dynamic RAM Lower Limit")
     tcpipStackHeapStackDramLim.setVisible(True)
     tcpipStackHeapStackDramLim.setDescription("TCP/IP Stack Dynamic RAM Lower Limit")
@@ -283,6 +304,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # TCP/IP Stack Dynamic Allocation Debug
     tcpipStackHeapStackDramDebug = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_DEBUG_ENABLE", tcpipStackHeap)
+    tcpipStackHeapStackDramDebug.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackDramDebug.setLabel("TCP/IP Stack Dynamic Allocation Debug")
     tcpipStackHeapStackDramDebug.setVisible(True)
     tcpipStackHeapStackDramDebug.setDescription("TCP/IP Stack Dynamic Allocation Debug")
@@ -290,6 +312,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # TCP/IP Stack Dynamic Allocation Trace
     tcpipStackHeapStackDramTrace = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DRAM_TRACE_ENABLE", tcpipStackHeapStackDramDebug)
+    tcpipStackHeapStackDramTrace.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackDramTrace.setLabel("TCP/IP Stack Dynamic Allocation Trace")
     tcpipStackHeapStackDramTrace.setVisible(False)
     tcpipStackHeapStackDramTrace.setDescription("TCP/IP Stack Dynamic Allocation Trace")
@@ -298,6 +321,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # TCP/IP Stack Number of Trace Slots
     tcpipStackHeapStackDramTraceSlotsNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_DRAM_TRACE_SLOTS", tcpipStackHeapStackDramDebug)
+    tcpipStackHeapStackDramTraceSlotsNum.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapStackDramTraceSlotsNum.setLabel("TCP/IP Stack Number of Trace Slots")
     tcpipStackHeapStackDramTraceSlotsNum.setVisible(False)
     tcpipStackHeapStackDramTraceSlotsNum.setDescription("TCP/IP Stack Number of Trace Slots")
@@ -331,6 +355,7 @@ def instantiateComponent(tcpipStackComponent):
                                 
     # TCP/IP Stack Recommended Heap Size
     tcpipStackHeapRecommendSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_HEAP_SIZE_RECOMMEND", tcpipStackHeap)
+    tcpipStackHeapRecommendSize.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapRecommendSize.setLabel("TCP/IP Heap Size Estimate(in kilobytes)")
     tcpipStackHeapRecommendSize.setVisible(True)
     tcpipStackHeapRecommendSize.setDescription("TCP/IP Heap Size Estimate(in kilobytes)")
@@ -339,6 +364,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapRecommendSize.setDependencies(tcpipStackHeapUpdate, tcpipHeapRecommendlist)
         
     tcpipStackHeapSizeMask = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_HEAP_CALC_MASK", tcpipStackHeapRecommendSize)
+    tcpipStackHeapSizeMask.setHelp("mcc_h3_manager_configurations")
     tcpipStackHeapSizeMask.setLabel("Module-wise Heap Estimate(show with each module)")
     tcpipStackHeapSizeMask.setVisible(True)
     tcpipStackHeapSizeMask.setDefaultValue(False)
@@ -355,6 +381,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Event Notification
     tcpipStackEventNotify = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EVENT_NOTIFICATION", tcpipStackAdvSettings)
+    tcpipStackEventNotify.setHelp("mcc_h3_manager_configurations")
     tcpipStackEventNotify.setVisible(False)
     tcpipStackEventNotify.setDefaultValue(True)
     
@@ -365,6 +392,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Enable User Notification
     tcpipStackUserNotify= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_USER_NOTIFICATION", tcpipStackAdvSettings)
+    tcpipStackUserNotify.setHelp("mcc_h3_manager_configurations")
     tcpipStackUserNotify.setLabel("Enable User Notification")
     tcpipStackUserNotify.setVisible(True)
     tcpipStackUserNotify.setDescription("Enable User Notification")
@@ -373,6 +401,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable Deinitialize of TCP/IP stack
     tcpipStackDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_DOWN_OPERATION", tcpipStackAdvSettings)
+    tcpipStackDown.setHelp("mcc_h3_manager_configurations")
     tcpipStackDown.setLabel("Enable Stack Deinitialize Operations")
     tcpipStackDown.setVisible(True)
     tcpipStackDown.setDescription("Enable Deinitialize of TCP/IP stack")
@@ -380,6 +409,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Enable stack up/down of TCP/IP stack
     tcpipStackIfUpDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_IF_UP_DOWN_OPERATION", tcpipStackDown)
+    tcpipStackIfUpDown.setHelp("mcc_h3_manager_configurations")
     tcpipStackIfUpDown.setLabel("Enable IF Up/Down Operations")
     tcpipStackIfUpDown.setVisible(True)
     tcpipStackIfUpDown.setDescription("Enable interface up/down of TCP/IP stack")
@@ -388,6 +418,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable stack Mac Down
     tcpipStackMacDown= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_MAC_DOWN_OPERATION", tcpipStackAdvSettings)
+    tcpipStackMacDown.setHelp("mcc_h3_manager_configurations")
     tcpipStackMacDown.setLabel("Enable MAC Down on Failure")
     tcpipStackMacDown.setVisible(False)
     tcpipStackMacDown.setDescription("Enable MAC Down on Failure")
@@ -396,6 +427,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable Interface Address Change Signaling
     tcpipStackIfChange= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INTERFACE_CHANGE_SIGNALING", tcpipStackAdvSettings)
+    tcpipStackIfChange.setHelp("mcc_h3_manager_configurations")
     tcpipStackIfChange.setLabel("Enable Interface Address Change Signaling")
     tcpipStackIfChange.setVisible(True)
     tcpipStackIfChange.setDescription("Enable Interface Address Change Signaling")
@@ -404,6 +436,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable Configuration Save/Restore Functionality
     tcpipStackConfigSaveRestore= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_CONFIGURATION_SAVE_RESTORE", tcpipStackAdvSettings)
+    tcpipStackConfigSaveRestore.setHelp("mcc_h3_manager_configurations")
     tcpipStackConfigSaveRestore.setLabel("Enable Configuration Save/Restore Functionality")
     tcpipStackConfigSaveRestore.setVisible(True)
     tcpipStackConfigSaveRestore.setDescription("Enable Configuration Save/Restore Functionality")
@@ -414,6 +447,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Define number of entries in the secure port table
     tcpipStackSecPortNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_SECURE_PORT_ENTRIES", tcpipStackAdvSettings)
+    tcpipStackSecPortNum.setHelp("mcc_h3_manager_configurations")
     tcpipStackSecPortNum.setLabel("Number of entries in the secure port table")
     tcpipStackSecPortNum.setVisible(True)
     tcpipStackSecPortNum.setDescription("Number of entries in the secure port table")
@@ -421,6 +455,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable Alias Interfaces Support
     tcpipStackAliasInterface= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ALIAS_INTERFACE_SUPPORT", tcpipStackAdvSettings)
+    tcpipStackAliasInterface.setHelp("mcc_h3_manager_configurations")
     tcpipStackAliasInterface.setLabel("Enable Alias Interfaces Support")
     tcpipStackAliasInterface.setVisible(True)
     tcpipStackAliasInterface.setDescription("Enable Alias Interfaces Support")
@@ -428,6 +463,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable Packet Logger
     tcpipStackPktLogEnable= tcpipStackComponent.createBooleanSymbol("TCPIP_PACKET_LOG_ENABLE", tcpipStackAdvSettings)
+    tcpipStackPktLogEnable.setHelp("mcc_h3_manager_configurations")
     tcpipStackPktLogEnable.setLabel("Enable Packet Logger")
     tcpipStackPktLogEnable.setVisible(True)
     tcpipStackPktLogEnable.setDescription("Enable Packet Logger")
@@ -435,6 +471,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Number of Entries in the Packet Logger
     tcpipStackPktLogSize= tcpipStackComponent.createIntegerSymbol("TCPIP_PKT_LOG_SIZE", tcpipStackPktLogEnable)
+    tcpipStackPktLogSize.setHelp("mcc_h3_manager_configurations")
     tcpipStackPktLogSize.setLabel("Number of Entries in the Packet Logger")
     tcpipStackPktLogSize.setVisible(False)
     tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
@@ -443,6 +480,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable External Packet Processing
     tcpipStackExtPktProcess= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EXTERN_PACKET_PROCESS", tcpipStackAdvSettings)
+    tcpipStackExtPktProcess.setHelp("mcc_h3_manager_configurations")
     tcpipStackExtPktProcess.setLabel("Enable External Packet Processing")
     tcpipStackExtPktProcess.setVisible(True)
     tcpipStackExtPktProcess.setDescription("Allows External Processing of RX Packets")
@@ -450,6 +488,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Enable TCP/IP stack Initialization callback 
     tcpipStackEnableInitCback= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ENABLE_INIT_CALLBACK", tcpipStackAdvSettings)
+    tcpipStackEnableInitCback.setHelp("mcc_h3_manager_configurations")
     tcpipStackEnableInitCback.setLabel("Enable Stack Initialization Callback")
     tcpipStackEnableInitCback.setVisible(True)
     tcpipStackEnableInitCback.setDescription("Enable Stack Initialization Callback")
@@ -457,6 +496,7 @@ def instantiateComponent(tcpipStackComponent):
 
     # Callback Function
     tcpipStackInitCback = tcpipStackComponent.createStringSymbol("TCPIP_STACK_INIT_CALLBACK", tcpipStackEnableInitCback)
+    tcpipStackInitCback.setHelp("mcc_h3_manager_configurations")
     tcpipStackInitCback.setLabel("Stack Initialization Callback Function")
     tcpipStackInitCback.setVisible(False)
     tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
@@ -472,6 +512,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Number of Active MAC interfaces
     tcpipStackMacInterfaceNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_NET_INTERFACE_NUM", tcpipStackConfigSummary)
+    tcpipStackMacInterfaceNum.setHelp("mcc_h3_manager_configurations")
     tcpipStackMacInterfaceNum.setLabel("Number of Network interfaces")
     tcpipStackMacInterfaceNum.setDefaultValue(1)
     tcpipStackMacInterfaceNum.setVisible(configSummaryVisible)
@@ -486,6 +527,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Network Interface Name
         tcpipStackNetInterfaceName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_NET_INTERFACE_NAME_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackNetInterfaceName[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackNetInterfaceName[index].setLabel("Interface Name")
         tcpipStackNetInterfaceName[index].setVisible(configSummaryVisible)
         tcpipStackNetInterfaceName[index].setReadOnly(True)
@@ -493,6 +535,7 @@ def instantiateComponent(tcpipStackComponent):
         
         # Is it an internal MAC Interface ?
         tcpipStackIntMacInterface.append(tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_INT_MAC_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackIntMacInterface[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackIntMacInterface[index].setLabel("Internal MAC?")
         tcpipStackIntMacInterface[index].setVisible(configSummaryVisible)
         tcpipStackIntMacInterface[index].setReadOnly(True)
@@ -501,6 +544,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # MII/RMII
         tcpipStackMiiMode.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_MII_MODE_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackMiiMode[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackMiiMode[index].setLabel("PHY Interface")
         tcpipStackMiiMode[index].setVisible(False)
         tcpipStackMiiMode[index].setReadOnly(True)
@@ -509,6 +553,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Other Interface
         tcpipStackOthInterface.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_OTH_INT_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
+        tcpipStackOthInterface[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackOthInterface[index].setLabel("External Interface")
         tcpipStackOthInterface[index].setVisible(configSummaryVisible)
         tcpipStackOthInterface[index].setReadOnly(True)
