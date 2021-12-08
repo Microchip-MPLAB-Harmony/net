@@ -386,18 +386,21 @@ def instantiateComponent( macComponent ):
 
     # MAC base address
     macBaseAddress = macComponent.createStringSymbol( "MAC_BASE_ADDRESS", driverInfoMenu )
+    macBaseAddress.setHelp("mcc_h3_emac_configurations")
     macBaseAddress.setLabel( "MAC Base Address" )
     macBaseAddress.setDefaultValue( macBaseAddressValue )
     macBaseAddress.setReadOnly( True )
 
     # MAC Network Driver -- for export to NETCONFIG
     driverMacCode = macComponent.createStringSymbol( "DRV_MAC_CODE", driverInfoMenu )
+    driverMacCode.setHelp("mcc_h3_emac_configurations")
     driverMacCode.setLabel( "Default Network MAC Driver" )
     driverMacCode.setDefaultValue( defaultMacDriverCode )
     driverMacCode.setReadOnly( True )
 
     # MAC Interrupt Source
     interruptSource = macComponent.createStringSymbol( "MAC_INTERRUPT_SOURCE", driverInfoMenu )
+    interruptSource.setHelp("mcc_h3_emac_configurations")
     interruptSource.setLabel( "Interrupt Source" )
     interruptSource.setDefaultValue( atdfMacInstanceName + "_IRQn" )
     interruptSource.setReadOnly( True )
@@ -454,12 +457,14 @@ def instantiateComponent( macComponent ):
                 queueMenu = queueEnable0Alternative
                 
         emacTraffic = macComponent.createComboSymbol("TCPIP_EMAC_TRAFFIC",queueMenu,["Low", "Medium", "High"])
+        emacTraffic.setHelp("mcc_h3_emac_configurations")
         emacTraffic.setVisible(True)
         emacTraffic.setLabel("MAC Default Configuration for Network Traffic")
         emacTraffic.setDefaultValue("Medium")
     
         # TX descriptors count
         txDescriptorCount = macComponent.createIntegerSymbol( "TX_DESCRIPTOR_COUNT_" + qqStr, emacTraffic )
+        txDescriptorCount.setHelp("mcc_h3_emac_configurations")
         txDescriptorCount.setLabel( "TX descriptor count" )
         txDescriptorCount.setMax( TX_DEVICE_MAX_DESCRIPTORS )
         txDescriptorCount.setDefaultValue(80)
@@ -469,6 +474,7 @@ def instantiateComponent( macComponent ):
 
         # TX buffer size
         txBufferSize = macComponent.createIntegerSymbol( "TX_BUFFER_SIZE_" + qqStr, emacTraffic )
+        txBufferSize.setHelp("mcc_h3_emac_configurations")
         txBufferSize.setLabel( "TX buffer size" )
         txBufferSize.setDescription( "Should be a multiple of 16" )
         txBufferSize.setMin( MIN_TX_BUFFER_SIZE )
@@ -478,6 +484,7 @@ def instantiateComponent( macComponent ):
 
         # RX buffer size
         rxBufferSize = macComponent.createIntegerSymbol( "RX_BUFFER_SIZE_" + qqStr, emacTraffic )
+        rxBufferSize.setHelp("mcc_h3_emac_configurations")
         rxBufferSize.setLabel( "RX buffer size" )
         rxBufferSize.setDescription( "Should be a multiple of 16" )
         rxBufferSize.setMin( MIN_RX_BUFFER_SIZE )
@@ -489,6 +496,7 @@ def instantiateComponent( macComponent ):
         # RX descriptors count
         rxDescriptorCountName = "RX_DESCRIPTOR_COUNT_" + qqStr
         rxDescriptorCount = macComponent.createIntegerSymbol( rxDescriptorCountName, emacTraffic )
+        rxDescriptorCount.setHelp("mcc_h3_emac_configurations")
         rxDescriptorCount.setLabel( "RX descriptor count" )
         rxDescriptorCount.setDescription( "Dictates the minimum buffer total -- static and dynamic buffers" )
         rxDescriptorCount.setMin( MIN_RX_DESCRIPTOR_COUNT )
@@ -503,6 +511,7 @@ def instantiateComponent( macComponent ):
         # RX static buffers
         rxStaticBuffersName = "RX_STATIC_BUFFERS_" + qqStr
         rxStaticBuffers = macComponent.createIntegerSymbol( rxStaticBuffersName, emacTraffic )
+        rxStaticBuffers.setHelp("mcc_h3_emac_configurations")
         rxStaticBuffers.setLabel( "RX static buffers" )
         rxStaticBuffers.setDescription( "RX buffers statically allocated" )
         rxStaticBuffers.setMin( 0 )
@@ -513,6 +522,7 @@ def instantiateComponent( macComponent ):
         # RX dynamic allocation threshold
         rxBufferAllocationThresholdName = "RX_BUFFER_ALLOCATION_THRESHOLD_" + qqStr
         rxBufferAllocationThreshold = macComponent.createIntegerSymbol( rxBufferAllocationThresholdName, emacTraffic )
+        rxBufferAllocationThreshold.setHelp("mcc_h3_emac_configurations")
         rxBufferAllocationThreshold.setLabel( "RX dynamic allocation threshold" )
         rxBufferAllocationThreshold.setDefaultValue( 15)
         rxBufferAllocationThreshold.setMin( 0 )
@@ -522,6 +532,7 @@ def instantiateComponent( macComponent ):
         # RX dynamic buffer allocation
         rxBufferAllocationName = "RX_BUFFER_ALLOCATION_" + qqStr
         rxBufferAllocation = macComponent.createIntegerSymbol( rxBufferAllocationName, emacTraffic )
+        rxBufferAllocation.setHelp("mcc_h3_emac_configurations")
         rxBufferAllocation.setLabel( "RX dynamic buffer allocation" )
         rxBufferAllocation.setMin( 1 )
         rxBufferAllocation.setDefaultValue( 30 )
@@ -537,62 +548,74 @@ def instantiateComponent( macComponent ):
 
     # RX Link Filters
     rxLinkFilters = macComponent.createMenuSymbol( None, None )
+    rxLinkFilters.setHelp("mcc_h3_emac_configurations")
     rxLinkFilters.setLabel( "RX Link Filters" )
 
     # Accept broadcast packets
     linkAcceptBcast = macComponent.createBooleanSymbol( "LINK_ACCEPT_BCAST", rxLinkFilters )
+    linkAcceptBcast.setHelp("mcc_h3_emac_configurations")
     linkAcceptBcast.setLabel( "Accept broadcast packets" )
     linkAcceptBcast.setDefaultValue( True )
 
     # Accept multicast packets
     linkAcceptMcast = macComponent.createBooleanSymbol( "LINK_ACCEPT_MCAST", rxLinkFilters )
+    linkAcceptMcast.setHelp("mcc_h3_emac_configurations")
     linkAcceptMcast.setLabel( "Accept multicast packets" )
     linkAcceptMcast.setDefaultValue( True )
 
     # Accept unicast packets
     linkAcceptUcast = macComponent.createBooleanSymbol( "LINK_ACCEPT_UCAST", rxLinkFilters )
+    linkAcceptUcast.setHelp("mcc_h3_emac_configurations")
     linkAcceptUcast.setLabel( "Accept unicast packets" )
     linkAcceptUcast.setDefaultValue( True )
 
     # Accept multicast packets matching hash
     linkAcceptMcastHash = macComponent.createBooleanSymbol( "LINK_ACCEPT_MCAST_HASH", rxLinkFilters )
+    linkAcceptMcastHash.setHelp("mcc_h3_emac_configurations")
     linkAcceptMcastHash.setLabel( "Accept multicast packets matching hash" )
     linkAcceptMcastHash.setDefaultValue( False )
 
     # Accept unicast packets matching hash
     linkAcceptUcastHash = macComponent.createBooleanSymbol( "LINK_ACCEPT_UCAST_HASH", rxLinkFilters )
+    linkAcceptUcastHash.setHelp("mcc_h3_emac_configurations")
     linkAcceptUcastHash.setLabel( "Accept unicast packets matching hash" )
     linkAcceptUcastHash.setDefaultValue( False )
 
     # Reject packets with wrong CRC
     linkRejectCrcError = macComponent.createBooleanSymbol( "LINK_REJECT_CRC_ERROR", rxLinkFilters )
+    linkRejectCrcError.setHelp("mcc_h3_emac_configurations")
     linkRejectCrcError.setLabel( "Reject packets with wrong CRC" )
     linkRejectCrcError.setDefaultValue( True )
 
     # Accept packets with wrong CRC
     linkAcceptCrcError = macComponent.createBooleanSymbol( "LINK_ACCEPT_CRC_ERROR", rxLinkFilters )
+    linkAcceptCrcError.setHelp("mcc_h3_emac_configurations")
     linkAcceptCrcError.setLabel( "Accept packets with wrong CRC" )
     linkAcceptCrcError.setDefaultValue( False )
 
     # Accept maximum frame size packets
     linkAcceptMaxFrameSizePackets = macComponent.createBooleanSymbol( "LINK_ACCEPT_MAX_FRAME_SIZE_PACKETS", rxLinkFilters )
+    linkAcceptMaxFrameSizePackets.setHelp("mcc_h3_emac_configurations")
     linkAcceptMaxFrameSizePackets.setLabel( "Accept maximum frame size packets" )
     linkAcceptMaxFrameSizePackets.setDescription( "Maximum frame size = " + str( MAX_FRAME_SIZE ) + " bytes" )
     linkAcceptMaxFrameSizePackets.setDefaultValue( False )
 
     # Accept packets with frame error
     linkAcceptFrameError = macComponent.createBooleanSymbol( "LINK_ACCEPT_FRAME_ERROR", rxLinkFilters )
+    linkAcceptFrameError.setHelp("mcc_h3_emac_configurations")
     linkAcceptFrameError.setLabel( "Accept packets with frame error" )
     linkAcceptFrameError.setDefaultValue( False )
 
     # Accept jumbo packets
     linkAcceptJumboFrame = macComponent.createBooleanSymbol( "LINK_ACCEPT_JUMBO_FRAME", rxLinkFilters )
+    linkAcceptJumboFrame.setHelp("mcc_h3_emac_configurations")
     linkAcceptJumboFrame.setLabel( "Accept jumbo packets" )
     linkAcceptJumboFrame.setDescription( "Maximum jumbo packet size = " + str( MAX_JUMBO_PACKET_SIZE ) + " bytes" )
     linkAcceptJumboFrame.setDefaultValue( False )
 
     # Promiscuous mode enable
     linkAcceptAll = macComponent.createBooleanSymbol( "LINK_ACCEPT_ALL", rxLinkFilters )
+    linkAcceptAll.setHelp("mcc_h3_emac_configurations")
     linkAcceptAll.setLabel( "Promiscuous mode enable" )
     linkAcceptAll.setDefaultValue( False )
 
@@ -602,12 +625,14 @@ def instantiateComponent( macComponent ):
 
     # Auto negotiation enable
     linkAutoNegotiateEnableName = "LINK_AUTO_NEGOTIATION"
+    linkAutoNegotiateEnable = macComponent.setHelp("mcc_h3_emac_configurations")
     linkAutoNegotiateEnable = macComponent.createBooleanSymbol( linkAutoNegotiateEnableName, linkConnection )
     linkAutoNegotiateEnable.setLabel( "Auto negotiation enable" )
     linkAutoNegotiateEnable.setDefaultValue( True )
     #### Auto negotiation options
     # Use auto full duplex
     linkAutoFullDuplex = macComponent.createBooleanSymbol( "LINK_AUTO_FULL_DUPLEX", linkAutoNegotiateEnable )
+    linkAutoFullDuplex.setHelp("mcc_h3_emac_configurations")
     linkAutoFullDuplex.setLabel( "Allow full duplex" )
     linkAutoFullDuplex.setDefaultValue( True )
     linkAutoFullDuplex.setVisible( linkAutoNegotiateEnable.getValue() )
@@ -615,6 +640,7 @@ def instantiateComponent( macComponent ):
 
     # Allow half duplex
     linkAutoHalfDuplex = macComponent.createBooleanSymbol( "LINK_AUTO_HALF_DUPLEX", linkAutoNegotiateEnable )
+    linkAutoHalfDuplex.setHelp("mcc_h3_emac_configurations")
     linkAutoHalfDuplex.setLabel( "Allow half duplex" )
     linkAutoHalfDuplex.setDefaultValue( True )
     linkAutoHalfDuplex.setVisible( linkAutoNegotiateEnable.getValue() )
@@ -622,6 +648,7 @@ def instantiateComponent( macComponent ):
 
     # Allow 100Mbps
     linkAuto100 = macComponent.createBooleanSymbol( "LINK_AUTO_100", linkAutoNegotiateEnable )
+    linkAuto100.setHelp("mcc_h3_emac_configurations")
     linkAuto100.setLabel( "Allow 100Mbps" )
     linkAuto100.setDefaultValue( True )
     linkAuto100.setVisible( linkAutoNegotiateEnable.getValue() )
@@ -629,6 +656,7 @@ def instantiateComponent( macComponent ):
 
     # Allow 10Mbps
     linkAuto10 = macComponent.createBooleanSymbol( "LINK_AUTO_10", linkAutoNegotiateEnable )
+    linkAuto10.setHelp("mcc_h3_emac_configurations")
     linkAuto10.setLabel( "Allow 10Mbps" )
     linkAuto10.setDefaultValue( True )
     linkAuto10.setVisible( linkAutoNegotiateEnable.getValue() )
@@ -642,6 +670,7 @@ def instantiateComponent( macComponent ):
         ( "Half_10",  "0x03", "Half Duplex, 10  Mbps" ),
     ]
     linkManualChoice = macComponent.createKeyValueSetSymbol( "LINK_MANUAL_CHOICE", linkConnection )
+    linkManualChoice.setHelp("mcc_h3_emac_configurations")
     linkManualChoice.setLabel( "Manual link type" )
     for tupleElem in linkChoices:
         linkManualChoice.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
@@ -655,33 +684,39 @@ def instantiateComponent( macComponent ):
 
     # Allow huge packets
     allowHugePackets = macComponent.createBooleanSymbol( "ALLOW_HUGE_PACKETS", linkConnection )
+    allowHugePackets.setHelp("mcc_h3_emac_configurations")
     allowHugePackets.setLabel( "Allow huge packets" )
     allowHugePackets.setDefaultValue( False )
 
     # MDIX auto enable
     mdixAutoEnable = macComponent.createBooleanSymbol( "MDIX_AUTO_ENABLE", linkConnection )
+    mdixAutoEnable.setHelp("mcc_h3_emac_configurations")
     mdixAutoEnable.setLabel( "MDIX auto enable" )
     mdixAutoEnable.setDefaultValue( True )
 
     # MDIX swap
     mdixSwap = macComponent.createBooleanSymbol( "MDIX_SWAP", linkConnection )
+    mdixSwap.setHelp("mcc_h3_emac_configurations")
     mdixSwap.setLabel( "MDIX swapped" )
     mdixSwap.setDescription( "Only used when MDIX auto is disabled" )
     mdixSwap.setDefaultValue( False )
 
     # MAC level loop back
     macLoopBack = macComponent.createBooleanSymbol( "MAC_LOOPBACK", linkConnection )
+    macLoopBack.setHelp("mcc_h3_emac_configurations")
     macLoopBack.setLabel( "MAC level loop back" )
     macLoopBack.setDefaultValue( False )
 
     # PHY level loop back
     phyLoopBack = macComponent.createBooleanSymbol( "PHY_LOOPBACK", linkConnection )
+    phyLoopBack.setHelp("mcc_h3_emac_configurations")
     phyLoopBack.setLabel( "PHY level loop back" )
     phyLoopBack.setDefaultValue( False )
 
     # EXTERNAL PHY INFO
     # Use RMII Connection to PHY
     tcpipMacEthRmii = macComponent.createBooleanSymbol( "USE_RMII", None )
+    tcpipMacEthRmii.setHelp("mcc_h3_emac_configurations")
     tcpipMacEthRmii.setLabel( "Use RMII" )
     tcpipMacEthRmii.setDefaultValue( True )
     if atdfMacInstanceName == 'EMAC1':
@@ -695,6 +730,7 @@ def instantiateComponent( macComponent ):
 
     # PHY Connected to MAC
     phyType = macComponent.createStringSymbol( "DRV_MAC_PHY_TYPE", None )
+    phyType.setHelp("mcc_h3_emac_configurations")
     phyType.setLabel( "External PHY Device" )
     phyType.setDefaultValue( "" )
     phyType.setReadOnly( True )
@@ -719,6 +755,7 @@ def instantiateComponent( macComponent ):
     
     # Driver EMAC Heap Size
     drvEmacHeapSize = macComponent.createIntegerSymbol("DRV_EMAC_HEAP_SIZE", None)
+    drvEmacHeapSize.setHelp("mcc_h3_emac_configurations")
     drvEmacHeapSize.setLabel("EMAC Heap Size (bytes)") 
     drvEmacHeapSize.setVisible(False)
     drvEmacHeapSize.setDescription("EMAC Heap Size")
