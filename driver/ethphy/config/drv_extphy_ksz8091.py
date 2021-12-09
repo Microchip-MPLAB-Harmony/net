@@ -28,6 +28,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
 
     # PHY Address
     drvExtPhyKsz8091Addr= drvExtPhyKsz8091Component.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
+    drvExtPhyKsz8091Addr.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091Addr.setLabel("PHY Address") 
     drvExtPhyKsz8091Addr.setVisible(True)
     drvExtPhyKsz8091Addr.setDescription("PHY Address")
@@ -35,6 +36,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Use a Function to be called at PHY Reset
     drvExtPhyKsz8091ResetCallbackEnable = drvExtPhyKsz8091Component.createBooleanSymbol("DRV_ETHPHY_USE_RESET_CALLBACK", None)
+    drvExtPhyKsz8091ResetCallbackEnable.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091ResetCallbackEnable.setLabel("Use a Function to be called at PHY Reset")
     drvExtPhyKsz8091ResetCallbackEnable.setVisible(True)
     drvExtPhyKsz8091ResetCallbackEnable.setDescription("Use a Function to be called at PHY Reset")
@@ -42,6 +44,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # App Function
     drvExtPhyKsz8091ResetCallback = drvExtPhyKsz8091Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyKsz8091ResetCallbackEnable)
+    drvExtPhyKsz8091ResetCallback.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091ResetCallback.setLabel("App Function")
     drvExtPhyKsz8091ResetCallback.setVisible(False)
     drvExtPhyKsz8091ResetCallback.setDescription("App Function")
@@ -56,6 +59,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # RMII Data Interface
     drvExtPhyKsz8091ConfigRmii = drvExtPhyKsz8091Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_RMII", drvExtPhyKsz8091ConnFlag)
+    drvExtPhyKsz8091ConfigRmii.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyKsz8091ConfigRmii.setVisible(True)
     drvExtPhyKsz8091ConfigRmii.setDescription("RMII Data Interface")
@@ -67,6 +71,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
         # Configuration Fuses Is ALT
         drvExtPhyKsz8091ConfigAlt = drvExtPhyKsz8091Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyKsz8091ConnFlag)
+        drvExtPhyKsz8091ConfigAlt.setHelp("mcc_h3_phy_configurations")
         drvExtPhyKsz8091ConfigAlt.setLabel("Configuration Fuses Is ALT")
         drvExtPhyKsz8091ConfigAlt.setVisible(True)
         drvExtPhyKsz8091ConfigAlt.setDescription("Configuration Fuses Is ALT")
@@ -74,6 +79,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
         
         # Use The Fuses Configuration
         drvExtPhyKsz8091ConfigAuto = drvExtPhyKsz8091Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_AUTO", drvExtPhyKsz8091ConnFlag)
+        drvExtPhyKsz8091ConfigAuto.setHelp("mcc_h3_phy_configurations")
         drvExtPhyKsz8091ConfigAuto.setLabel("Use The Fuses Configuration")
         drvExtPhyKsz8091ConfigAuto.setVisible(True)
         drvExtPhyKsz8091ConfigAuto.setDescription("Use The Fuses Configuration")
@@ -87,6 +93,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
 
     # Delay for the Link Initialization in ms
     drvExtPhyKsz8091LinkInitDelay= drvExtPhyKsz8091Component.createIntegerSymbol("TCPIP_INTMAC_PHY_LINK_INIT_DELAY", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091LinkInitDelay.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091LinkInitDelay.setLabel("Delay for the Link Initialization - ms") 
     drvExtPhyKsz8091LinkInitDelay.setVisible(True)
     drvExtPhyKsz8091LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
@@ -99,6 +106,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Negotiation Time-out - ms
     drvExtPhyKsz8091NegInitTimeout= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091NegInitTimeout.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091NegInitTimeout.setLabel("PHY Negotiation Time-out - ms") 
     drvExtPhyKsz8091NegInitTimeout.setVisible(True)
     drvExtPhyKsz8091NegInitTimeout.setDescription("Driver PHY Negotiation Time-out - ms")
@@ -106,6 +114,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Negotiation Done Time-out - ms
     drvExtPhyKsz8091NegDoneTimeout= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_NEG_DONE_TMO", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091NegDoneTimeout.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091NegDoneTimeout.setLabel("PHY Negotiation Done Time-out - ms") 
     drvExtPhyKsz8091NegDoneTimeout.setVisible(True)
     drvExtPhyKsz8091NegDoneTimeout.setDescription("Driver PHY Negotiation Done Time-out - ms")
@@ -113,6 +122,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Reset Clear Time-out - ms
     drvExtPhyKsz8091ResetClearTimeout= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_RESET_CLR_TMO", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091ResetClearTimeout.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091ResetClearTimeout.setLabel("PHY Reset Clear Time-out - ms") 
     drvExtPhyKsz8091ResetClearTimeout.setVisible(True)
     drvExtPhyKsz8091ResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out - ms")
@@ -120,6 +130,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Instances Number
     drvExtPhyKsz8091InstanceNum= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091InstanceNum.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091InstanceNum.setLabel("PHY Instances Number") 
     drvExtPhyKsz8091InstanceNum.setVisible(True)
     drvExtPhyKsz8091InstanceNum.setDescription("Driver PHY Instances Number")
@@ -128,6 +139,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Clients Number
     drvExtPhyKsz8091ClientNum= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091ClientNum.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091ClientNum.setLabel("PHY Clients Number") 
     drvExtPhyKsz8091ClientNum.setVisible(True)
     drvExtPhyKsz8091ClientNum.setDescription("Driver PHY Clients Number")
@@ -136,6 +148,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Peripheral Index Number
     drvExtPhyKsz8091IndexNum= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091IndexNum.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091IndexNum.setLabel("PHY Peripheral Index Number") 
     drvExtPhyKsz8091IndexNum.setVisible(True)
     drvExtPhyKsz8091IndexNum.setDescription("Driver PHY Peripheral Index Number")
@@ -144,6 +157,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     
     # Driver PHY Peripheral ID
     drvExtPhyKsz8091PeripheralId= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz8091AdvSettings)
+    drvExtPhyKsz8091PeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8091PeripheralId.setLabel("PHY Peripheral ID") 
     drvExtPhyKsz8091PeripheralId.setVisible(True)
     drvExtPhyKsz8091PeripheralId.setDescription("Driver PHY Peripheral ID")
