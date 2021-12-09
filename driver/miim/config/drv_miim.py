@@ -28,6 +28,7 @@ def instantiateComponent(drvMiimComponent):
     
     # Use Internal Ethernet MAC Driver? 
     drvUseMiim = drvMiimComponent.createBooleanSymbol("DRV_MIIM_USE_DRIVER", None) 
+    drvUseMiim.setHelp("mcc_h3_miim_configurations")
     drvUseMiim.setLabel("Use MIIM Driver?")
     drvUseMiim.setVisible(False)
     drvUseMiim.setDescription("Use MIIM Driver?")
@@ -35,6 +36,7 @@ def instantiateComponent(drvMiimComponent):
 
     # Maximum Number of Clients per Instance
     drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", None)
+    drvMiimMaxNumClientsInstn.setHelp("mcc_h3_miim_configurations")
     drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients")
     drvMiimMaxNumClientsInstn.setVisible(True)
     drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
@@ -57,6 +59,7 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Driver Task Stack Size
     drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
+    drvMiimDrvTaskSize.setHelp("mcc_h3_miim_configurations")
     drvMiimDrvTaskSize.setLabel("Stack Size (in bytes)")
     drvMiimDrvTaskSize.setVisible(True)
     drvMiimDrvTaskSize.setDescription("MIIM Driver Task Stack Size")
@@ -66,6 +69,7 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Driver Task Priority
     drvMiimDrvTaskPriority = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_PRIORITY", drvMiimRtosMenu)
+    drvMiimDrvTaskPriority.setHelp("mcc_h3_miim_configurations")
     drvMiimDrvTaskPriority.setLabel("Task Priority")
     drvMiimDrvTaskPriority.setVisible(True)
     drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
@@ -75,6 +79,7 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Use Task Delay?
     drvMiimUseTaskDelay = drvMiimComponent.createBooleanSymbol("DRV_MIIM_RTOS_USE_DELAY", drvMiimRtosMenu)
+    drvMiimUseTaskDelay.setHelp("mcc_h3_miim_configurations")
     drvMiimUseTaskDelay.setLabel("Use Task Delay?")
     drvMiimUseTaskDelay.setVisible(True)
     drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
@@ -84,6 +89,7 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Driver Task Delay
     drvMiimDrvTaskDelay = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_DELAY", drvMiimRtosMenu)
+    drvMiimDrvTaskDelay.setHelp("mcc_h3_miim_configurations")
     drvMiimDrvTaskDelay.setLabel("Task Delay")
     drvMiimDrvTaskDelay.setVisible(True)
     drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
@@ -98,6 +104,7 @@ def instantiateComponent(drvMiimComponent):
     
     # Ethernet MAC Module ID
     drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", drvMiimAdvSettings) 
+    drvMiimModuleId.setHelp("mcc_h3_miim_configurations")
     drvMiimModuleId.setLabel("ETH Module ID")
     drvMiimModuleId.setVisible(True)
     drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
@@ -113,6 +120,7 @@ def instantiateComponent(drvMiimComponent):
 
     # Number of Driver Instances
     drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", drvMiimAdvSettings)
+    drvMiimInstnNum.setHelp("mcc_h3_miim_configurations")
     drvMiimInstnNum.setLabel("Number of Driver Instances")
     drvMiimInstnNum.setVisible(True)
     drvMiimInstnNum.setDescription("Number of Driver Instances")
@@ -120,6 +128,7 @@ def instantiateComponent(drvMiimComponent):
 
     # Number of Instance Operations
     drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", drvMiimAdvSettings)
+    drvMiimOpsInstnNum.setHelp("mcc_h3_miim_configurations")
     drvMiimOpsInstnNum.setLabel("Maximum Number of Queued Operations")
     drvMiimOpsInstnNum.setVisible(True)
     drvMiimOpsInstnNum.setDescription("Maximum Number of Queued Operations per Instance")
@@ -128,6 +137,7 @@ def instantiateComponent(drvMiimComponent):
     
     # Enable Client Operation Protection Feature
     drvMiimOpsProtectEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_CLIENT_OP_PROTECTION", drvMiimAdvSettings) 
+    drvMiimOpsProtectEnable.setHelp("mcc_h3_miim_configurations")
     drvMiimOpsProtectEnable.setLabel("Enable Client Operation Protection Feature")
     drvMiimOpsProtectEnable.setVisible(True)
     drvMiimOpsProtectEnable.setDescription("Enable Client Operation Protection Feature")
@@ -135,6 +145,7 @@ def instantiateComponent(drvMiimComponent):
     
     # Enable MIIM Commands
     drvMiimCmdEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_COMMANDS", drvMiimAdvSettings) 
+    drvMiimCmdEnable.setHelp("mcc_h3_miim_configurations")
     drvMiimCmdEnable.setLabel("Enable MIIM Commands")
     drvMiimCmdEnable.setVisible(True)
     drvMiimCmdEnable.setDescription("Enable MIIM Commands")
@@ -142,6 +153,7 @@ def instantiateComponent(drvMiimComponent):
     
     # MIIM Driver Object
     drvMiimDrvObj = drvMiimComponent.createStringSymbol("DRV_MIIM_DRIVER_OBJECT", drvMiimAdvSettings) 
+    drvMiimDrvObj.setHelp("mcc_h3_miim_configurations")
     drvMiimDrvObj.setLabel("MIIM Driver Object")
     drvMiimDrvObj.setVisible(True)
     drvMiimDrvObj.setDescription("MIIM Driver Object")
@@ -149,6 +161,7 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Driver Object Index
     drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", drvMiimAdvSettings)
+    drvMiimDrvIndex.setHelp("mcc_h3_miim_configurations")
     drvMiimDrvIndex.setLabel("MIIM Driver Object Index")
     drvMiimDrvIndex.setVisible(True)
     drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
