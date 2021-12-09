@@ -254,7 +254,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
 <#if NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN>
-    if (wolfSSL_CTX_use_certificate_chain_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen, SSL_FILETYPE_${NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_FORMAT}) != SSL_SUCCESS)
+    if (wolfSSL_CTX_use_certificate_chain_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, deviceCertPtr, deviceCertLen) != SSL_SUCCESS)
     {
         // Couldn't load the device certificates
         //SYS_CONSOLE_MESSAGE("Something went wrong loading the device certificates\r\n");
