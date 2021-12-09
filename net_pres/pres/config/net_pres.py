@@ -335,6 +335,15 @@ def instantiateComponent(net_PresComponent):
     netPresBlobClientMutualAuthFileName.setDefaultValue("device-certs.h")
     netPresBlobClientMutualAuthFileName.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
 
+    # Variable Name Containing Type of Device certificate?
+    netPresBlobClientDeviceCertIsChainCertVar = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN", netPresBlobClientMutualAuthSupport) 
+    netPresBlobClientDeviceCertIsChainCertVar.setLabel("Is Device Certificate a Chain Certificate in PEM format?")
+    netPresBlobClientDeviceCertIsChainCertVar.setVisible(True)
+    netPresBlobClientDeviceCertIsChainCertVar.setDescription("Device Certificate is a Chain Certificate? Only PEM chain certificate  is supported! Device Private Key can be either PEM or ASN1(DER)")
+    netPresBlobClientDeviceCertIsChainCertVar.setDefaultValue(False)
+    netPresBlobClientDeviceCertIsChainCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
+
+
     # Variable Name Containing Data for TLS Device Certificate?
     netPresBlobClientDeviceCertVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_CERT_VARIABLE", netPresBlobClientMutualAuthSupport) 
     netPresBlobClientDeviceCertVar.setLabel("Variable Name Containing Data for Device Certificate?")
@@ -350,15 +359,6 @@ def instantiateComponent(net_PresComponent):
     netPresBlobClientDeviceCertLenVar.setDescription("Variable Name Containing Size of Device Certificate?")
     netPresBlobClientDeviceCertLenVar.setDefaultValue("deviceCert_len")
     netPresBlobClientDeviceCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
-
-    # Variable Name Containing Type of Device certificate?
-    netPresBlobClientDeviceCertIsChainCertVar = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN", netPresBlobClientMutualAuthSupport) 
-    netPresBlobClientDeviceCertIsChainCertVar.setLabel("Is Device Certificate a Chain Certificate?")
-    netPresBlobClientDeviceCertIsChainCertVar.setVisible(True)
-    netPresBlobClientDeviceCertIsChainCertVar.setDescription("Device Certificate is a Chain Certificate?")
-    netPresBlobClientDeviceCertIsChainCertVar.setDefaultValue(False)
-    netPresBlobClientDeviceCertIsChainCertVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT"])
-
 
     # Variable Name Containing Data for TLS Device Private Key?
     netPresBlobClientDevicePvtKeyVar = net_PresComponent.createStringSymbol("NET_PRES_BLOB_CLIENT_DEVICE_PVT_KEY_VARIABLE", netPresBlobClientMutualAuthSupport) 
