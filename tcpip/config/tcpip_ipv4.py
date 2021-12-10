@@ -223,7 +223,7 @@ def instantiateComponent(tcpipIPv4Component):
         
         # Net Address
         tcpipIPv4FwdEntryNetAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntryNetAdd.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntryNetAdd[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryNetAdd[index].setLabel("Network Destination Address")
         tcpipIPv4FwdEntryNetAdd[index].setVisible(False)
         tcpipIPv4FwdEntryNetAdd[index].setDefaultValue("0.0.0.0")
@@ -231,7 +231,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Net Mask
         tcpipIPv4FwdEntryNetMask.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_NET_MASK_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntryNetMask.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntryNetMask[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryNetMask[index].setLabel("Network Mask")
         tcpipIPv4FwdEntryNetMask[index].setVisible(False)
         tcpipIPv4FwdEntryNetMask[index].setDefaultValue("0.0.0.0")
@@ -239,7 +239,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Gw Address
         tcpipIPv4FwdEntryGwAdd.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_GW_ADD_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntryGwAdd.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntryGwAdd[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryGwAdd[index].setLabel("Gateway Destination Address")
         tcpipIPv4FwdEntryGwAdd[index].setVisible(False)
         tcpipIPv4FwdEntryGwAdd[index].setDefaultValue("0.0.0.0")
@@ -247,7 +247,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Source Interface name
         tcpipIPv4FwdEntrySrcIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_SRC_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntrySrcIfName.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntrySrcIfName[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntrySrcIfName[index].setLabel("Source Interface Name")
         tcpipIPv4FwdEntrySrcIfName[index].setVisible(False)
         tcpipIPv4FwdEntrySrcIfName[index].setDefaultValue("")
@@ -255,7 +255,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Destination Interface name
         tcpipIPv4FwdEntryDestIfName.append(tcpipIPv4Component.createStringSymbol("TCPIP_IPV4_FWD_ENTRY_DEST_IF_NAME_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntryDestIfName.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntryDestIfName[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryDestIfName[index].setLabel("Destination Interface Name")
         tcpipIPv4FwdEntryDestIfName[index].setVisible(False)
         tcpipIPv4FwdEntryDestIfName[index].setDefaultValue("")
@@ -264,7 +264,7 @@ def instantiateComponent(tcpipIPv4Component):
 
         # Metric
         tcpipIPv4FwdEntryMetric.append(tcpipIPv4Component.createIntegerSymbol("TCPIP_IPV4_FWD_ENTRY_METRIC_IDX" + str(index), tcpipIPv4FwdEntry[index]))
-        tcpipIPv4FwdEntryMetric.setHelp("mcc_h3_ipv4_configurations")
+        tcpipIPv4FwdEntryMetric[index].setHelp("mcc_h3_ipv4_configurations")
         tcpipIPv4FwdEntryMetric[index].setLabel("Entry Metric Value")
         tcpipIPv4FwdEntryMetric[index].setVisible(False)
         tcpipIPv4FwdEntryMetric[index].setDefaultValue(10)

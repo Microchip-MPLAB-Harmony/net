@@ -163,7 +163,7 @@ def instantiateComponent(tcpipIPv6Component):
 
     #Fragmentation Packet Time-out Value
     tcpipIPv6FragPktTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT", tcpipIPv6AdvSettings)
-    tcpipIPv6.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6FragPktTimeout.setHelp("mcc_h3_ipv6_configurations")
     tcpipIPv6FragPktTimeout.setLabel("Fragmentation Packet Time-out (in sec)")
     tcpipIPv6FragPktTimeout.setVisible(True)
     tcpipIPv6FragPktTimeout.setDescription("Fragmentation Packet Time-out Value")

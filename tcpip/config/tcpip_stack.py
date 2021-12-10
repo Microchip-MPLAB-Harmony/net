@@ -220,7 +220,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Heap Block Size
         tcpipStackHeapPoolBlkSize.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_SIZE_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolBlkSize.setHelp("mcc_h3_manager_configurations")
+        tcpipStackHeapPoolBlkSize[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolBlkSize[index].setLabel("Size of the Block, Bytes")
         tcpipStackHeapPoolBlkSize[index].setVisible(True)
         tcpipStackHeapPoolBlkSize[index].setDefaultValue(int(TCIPHEAP_POOL_DFLT_SIZE[index]))
@@ -229,7 +229,7 @@ def instantiateComponent(tcpipStackComponent):
 
         # Heap Pre-allocated blocks
         tcpipStackHeapPoolPreAllocBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolPreAllocBlkNum.setHelp("mcc_h3_manager_configurations")
+        tcpipStackHeapPoolPreAllocBlkNum[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolPreAllocBlkNum[index].setLabel("Number of Pre-allocated Blocks with this Size")
         tcpipStackHeapPoolPreAllocBlkNum[index].setVisible(True)
         tcpipStackHeapPoolPreAllocBlkNum[index].setDefaultValue(0)
@@ -238,7 +238,7 @@ def instantiateComponent(tcpipStackComponent):
         
         # Heap Pre-allocated blocks
         tcpipStackHeapPoolExpBlkNum.append(tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX" + str(index), tcpipStackHeapPoolEntry[index]))
-        tcpipStackHeapPoolExpBlkNum.setHelp("mcc_h3_manager_configurations")
+        tcpipStackHeapPoolExpBlkNum[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackHeapPoolExpBlkNum[index].setLabel("Number of Blocks to Dynamically Expand for this Pool Entry")
         tcpipStackHeapPoolExpBlkNum[index].setVisible(True)
         tcpipStackHeapPoolExpBlkNum[index].setDefaultValue(TCIPHEAP_POOL_EXPBLK_NUM[index])

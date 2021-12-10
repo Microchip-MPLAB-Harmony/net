@@ -85,7 +85,7 @@ def instantiateComponent(tcpipSnmpComponent):
 ####-----------------------------------------------------------------------------------------##########
     for index in range(0,tcpipSnmpMaxCommNum):  
         tcpipSnmpStackConfigIdx.append(tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_STACK_CONFIG_IDX"+str(index),tcpipSnmpCommunitySuppMax))
-        tcpipSnmpStackConfigIdx.setHelp("mcc_h3_snmp_configurations")
+        tcpipSnmpStackConfigIdx[index].setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpStackConfigIdx[index].setLabel("Community Entry "+ str(index))
         tcpipSnmpStackConfigIdx[index].setVisible(True)
         if (index < tcpipSnmpCommunitySuppMax.getValue()):  
@@ -97,7 +97,7 @@ def instantiateComponent(tcpipSnmpComponent):
         
         # Snmp Read Community Name
         tcpipSnmpReadCommName.append(tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX" + str(index), tcpipSnmpStackConfigIdx[index]))
-        tcpipSnmpReadCommName.setHelp("mcc_h3_snmp_configurations")
+        tcpipSnmpReadCommName[index].setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpReadCommName[index].setLabel("Read Community Name")
         tcpipSnmpReadCommName[index].setVisible(True)
         if(index == 0):
@@ -113,7 +113,7 @@ def instantiateComponent(tcpipSnmpComponent):
         
         # Snmp Write Community Name
         tcpipSnmpWriteCommName.append(tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX" + str(index), tcpipSnmpStackConfigIdx[index]))
-        tcpipSnmpWriteCommName.setHelp("mcc_h3_snmp_configurations")
+        tcpipSnmpWriteCommName[index].setHelp("mcc_h3_snmp_configurations")
         tcpipSnmpWriteCommName[index].setLabel("Write Community Name")
         tcpipSnmpWriteCommName[index].setVisible(True)
         if(index == 0):
@@ -198,7 +198,7 @@ def instantiateComponent(tcpipSnmpComponent):
 
     
     tcpipSnmpCommMaxNum= tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_COMMUNITY_MAX_NUM", tcpipSnmpAdvSettings)
-    tcpipSnmpCommMaxNu.setHelp("mcc_h3_snmp_configurations")
+    tcpipSnmpCommMaxNum.setHelp("mcc_h3_snmp_configurations")
     tcpipSnmpCommMaxNum.setDefaultValue(tcpipSnmpMaxCommNum)
     tcpipSnmpCommMaxNum.setVisible(False)
 

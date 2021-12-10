@@ -68,7 +68,7 @@ def instantiateComponent(tcpipSmtpcComponent):
     
     # String that Identifies the SMTPC Client Mail Date
     tcpipSmtpcClientMsgDate = tcpipSmtpcComponent.createStringSymbol("TCPIP_SMTPC_CLIENT_MESSAGE_DATE", None)
-    tcpipSmtpcClient.setHelp("mcc_h3_smtpc_configurations")
+    tcpipSmtpcClientMsgDate.setHelp("mcc_h3_smtpc_configurations")
     tcpipSmtpcClientMsgDate.setLabel("SMTPC Client Mail Date String")
     tcpipSmtpcClientMsgDate.setVisible(True)
     tcpipSmtpcClientMsgDate.setDescription("String that Identifies the SMTPC Client Mail Date")

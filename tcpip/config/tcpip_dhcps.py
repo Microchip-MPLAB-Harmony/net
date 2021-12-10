@@ -81,7 +81,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server interface index
         tcpipDhcpsIfIdx.append(tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsIfIdx.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsIfIdx[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsIfIdx[index].setLabel("Interface Index for DHCP Server")
         tcpipDhcpsIfIdx[index].setVisible(True)
         tcpipDhcpsIfIdx[index].setDefaultValue(index)
@@ -89,7 +89,7 @@ def instantiateComponent(tcpipDhcpsComponent):
         
         # DHCP Server Address Range Start
         tcpipDhcpsAddrRangeStart.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsAddrRangeStart.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsAddrRangeStart[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsAddrRangeStart[index].setLabel("DHCPS Address Range Start")
         tcpipDhcpsAddrRangeStart[index].setVisible(True)
         tcpipDhcpsAddrRangeStart[index].setDefaultValue("192.168.1.100")
@@ -97,7 +97,7 @@ def instantiateComponent(tcpipDhcpsComponent):
         
         # DHCP Server IP Address
         tcpipDhcpsIpAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsIpAddr.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsIpAddr[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsIpAddr[index].setLabel("DHCPS Server IP Address")
         tcpipDhcpsIpAddr[index].setVisible(True)
         tcpipDhcpsIpAddr[index].setDefaultValue("192.168.1.1")
@@ -105,7 +105,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Net Mask Address
         tcpipDhcpsNetMaskAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsNetMaskAddr.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsNetMaskAddr[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsNetMaskAddr[index].setLabel("DHCPS Netmask")
         tcpipDhcpsNetMaskAddr[index].setVisible(True)
         tcpipDhcpsNetMaskAddr[index].setDefaultValue("255.255.255.0")
@@ -113,7 +113,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Default Gateway Address
         tcpipDhcpsGatewayAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_GATEWAY_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsGatewayAddr.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsGatewayAddr[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsGatewayAddr[index].setLabel("Default Gateway")
         tcpipDhcpsGatewayAddr[index].setVisible(True)
         tcpipDhcpsGatewayAddr[index].setDefaultValue("192.168.1.1")
@@ -121,7 +121,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Primary DNS Server Address
         tcpipDhcpsPrimDnsAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsPrimDnsAddr.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsPrimDnsAddr[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsPrimDnsAddr[index].setLabel("Primary DNS Server Address")
         tcpipDhcpsPrimDnsAddr[index].setVisible(True)
         tcpipDhcpsPrimDnsAddr[index].setDefaultValue("192.168.1.1")
@@ -129,7 +129,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Secondary DNS Server Address
         tcpipDhcpsSecDnsAddr.append(tcpipDhcpsComponent.createStringSymbol("TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsSecDnsAddr.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsSecDnsAddr[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsSecDnsAddr[index].setLabel("Secondary DNS Server Address")
         tcpipDhcpsSecDnsAddr[index].setVisible(True)
         tcpipDhcpsSecDnsAddr[index].setDefaultValue("192.168.1.1")
@@ -137,7 +137,7 @@ def instantiateComponent(tcpipDhcpsComponent):
     
         # DHCP Server Pool enabled
         tcpipDhcpsPoolEn.append(tcpipDhcpsComponent.createBooleanSymbol("TCPIP_DHCP_SERVER_POOL_ENABLED_IDX" + str(index), tcpipDhcpsInstance[index]))
-        tcpipDhcpsPoolEn.setHelp("mcc_h3_dhcps_configurations")
+        tcpipDhcpsPoolEn[index].setHelp("mcc_h3_dhcps_configurations")
         tcpipDhcpsPoolEn[index].setLabel("Pool Enabled")
         tcpipDhcpsPoolEn[index].setVisible(True)
         tcpipDhcpsPoolEn[index].setDefaultValue(True)

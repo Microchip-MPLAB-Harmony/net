@@ -138,7 +138,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
 
         # Maximum Number of Leases
         tcpipDhcpServerLeaseEntryMaxNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MAX_LEASE_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerLeaseEntryMaxNum.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeaseEntryMaxNum[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeaseEntryMaxNum[index].setLabel("Number of Leases")
         tcpipDhcpServerLeaseEntryMaxNum[index].setVisible(False)
         tcpipDhcpServerLeaseEntryMaxNum[index].setDefaultValue(32)
@@ -146,7 +146,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
 
         # Default Lease Duration
         tcpipDhcpServerLeaseDurationDflt.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_DFLT_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerLeaseDurationDflt.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeaseDurationDflt[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeaseDurationDflt[index].setLabel("Default Lease Duration(in Sec)")
         tcpipDhcpServerLeaseDurationDflt[index].setVisible(False)
         tcpipDhcpServerLeaseDurationDflt[index].setDefaultValue(28800) # 8 Hours - 8 x 60 x 60
@@ -154,7 +154,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Server IP Address
         tcpipDhcpServerIpAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_SERVER_IP_ADDRESS_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerIpAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerIpAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerIpAddr[index].setLabel("DHCPS Server IP Address")
         tcpipDhcpServerIpAddr[index].setVisible(False)
         tcpipDhcpServerIpAddr[index].setDefaultValue("192.168.1." + str(index + 1))
@@ -162,7 +162,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Lease Start IP Address
         tcpipDhcpServerStartIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_START_IP_ADDR_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerStartIPAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerStartIPAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerStartIPAddr[index].setLabel("Lease IP Address Starting from")
         tcpipDhcpServerStartIPAddr[index].setVisible(False)
         tcpipDhcpServerStartIPAddr[index].setDefaultValue("192.168.1.100")
@@ -170,7 +170,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Prefix Length (CIDR notation) Network Mask
         tcpipDhcpServerLeadBitNum.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_MASK_PREFIX_NUM_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerLeadBitNum.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeadBitNum[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeadBitNum[index].setLabel("Prefix Length (CIDR notation)")
         tcpipDhcpServerLeadBitNum[index].setVisible(False)
         tcpipDhcpServerLeadBitNum[index].setMin(0)
@@ -180,28 +180,28 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Client Options        
         tcpipDhcpServerClientOptMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_CLIENT_OPT_MENU_IDX" + str(index), tcpipDhcpServerInstance[index]))
-        tcpipDhcpServerClientOptMenu.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerClientOptMenu[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerClientOptMenu[index].setLabel("Client Options")
         tcpipDhcpServerClientOptMenu[index].setVisible(False)
         tcpipDhcpServerClientOptMenu[index].setDependencies(tcpipDhcpServerInstnMenuVisible, [tcpipDhcpServerInstance[index].getID()])
         
         # Router IP Address
         tcpipDhcpServerRouterIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_ROUTER_IP_ADDR_IDX" + str(index), tcpipDhcpServerClientOptMenu[index]))
-        tcpipDhcpServerRouterIPAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerRouterIPAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerRouterIPAddr[index].setLabel("Router IP Address")
         tcpipDhcpServerRouterIPAddr[index].setVisible(True)
         tcpipDhcpServerRouterIPAddr[index].setDefaultValue("192.168.1.1")
 
         # DNS IP Address
         tcpipDhcpServerDnsIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_DNS_IP_ADDR_IDX" + str(index), tcpipDhcpServerClientOptMenu[index]))
-        tcpipDhcpServerDnsIPAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerDnsIPAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerDnsIPAddr[index].setLabel("DNS IP Address")
         tcpipDhcpServerDnsIPAddr[index].setVisible(True)
         tcpipDhcpServerDnsIPAddr[index].setDefaultValue("192.168.1.1")
 
         # Time Server IP Address
         tcpipDhcpServerTimeServerIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_TIMESERVER_IP_ADDR_IDX" + str(index), tcpipDhcpServerClientOptMenu[index]))
-        tcpipDhcpServerTimeServerIPAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerTimeServerIPAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerTimeServerIPAddr[index].setLabel("Time Server IP Address")
         tcpipDhcpServerTimeServerIPAddr[index].setVisible(True)
 
@@ -212,7 +212,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
 
         # NTP Server IP Address
         tcpipDhcpServerNTPServerIPAddr.append(tcpipDhcpServerComponent.createStringSymbol("TCPIP_DHCPS_NTPSERVER_IP_ADDR_IDX" + str(index), tcpipDhcpServerClientOptMenu[index]))
-        tcpipDhcpServerNTPServerIPAddr.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerNTPServerIPAddr[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerNTPServerIPAddr[index].setLabel("NTP Server IP Address")
         tcpipDhcpServerNTPServerIPAddr[index].setVisible(True)
         
@@ -225,13 +225,13 @@ def instantiateComponent(tcpipDhcpServerComponent):
 
         # Config Flags menu       
         tcpipDhcpServerConfigFlagMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_CONFIG_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerConfigFlagMenu.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerConfigFlagMenu[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerConfigFlagMenu[index].setLabel("Configuration Flags")
         tcpipDhcpServerConfigFlagMenu[index].setVisible(True)
         
         # Config Flag - DHCP Server Disabled at Start
         tcpipDhcpServerStartDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_START_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerStartDisable.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerStartDisable[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerStartDisable[index].setLabel("Disabled at Start of Interface")
         tcpipDhcpServerStartDisable[index].setVisible(True)
         tcpipDhcpServerStartDisable[index].setDefaultValue(False)
@@ -239,7 +239,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
                 
         # Config Flag - DHCP Server Delete Lease Info on Interface Restart
         tcpipDhcpServerDelLeaseInfo.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_DELETE_LEASE_INFO_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerDelLeaseInfo.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerDelLeaseInfo[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerDelLeaseInfo[index].setLabel("Delete Lease Info on Restart")
         tcpipDhcpServerDelLeaseInfo[index].setVisible(True)
         tcpipDhcpServerDelLeaseInfo[index].setDefaultValue(False)  
@@ -247,7 +247,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
      
         # Config Flag - DHCP Server Disable Conflict Detection of newly allocated addresses
         tcpipDhcpServerCoflictDetectDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_CONFLICT_DETECT_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerCoflictDetectDisable.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerCoflictDetectDisable[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerCoflictDetectDisable[index].setLabel("Disable Conflict Detection")
         tcpipDhcpServerCoflictDetectDisable[index].setVisible(True)
         tcpipDhcpServerCoflictDetectDisable[index].setDefaultValue(False)  
@@ -255,7 +255,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
                 
         # Config Flag - DHCP Server Disable Lease Extension Request
         tcpipDhcpServerLeaseExtDisable.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_LEASE_EXT_DISABLE_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerLeaseExtDisable.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeaseExtDisable[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeaseExtDisable[index].setLabel("Disable Lease Extension Request")
         tcpipDhcpServerLeaseExtDisable[index].setVisible(True)
         tcpipDhcpServerLeaseExtDisable[index].setDefaultValue(False)  
@@ -263,7 +263,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
                 
         # Config Flag - DHCP Server Keep Info for Offers Not Requested (multi-server environment)
         tcpipDhcpServerKeepInfoUnreq.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_KEEP_INFO_UNREQ_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerKeepInfoUnreq.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerKeepInfoUnreq[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerKeepInfoUnreq[index].setLabel("Keep Info of Not Requested Offers")
         tcpipDhcpServerKeepInfoUnreq[index].setVisible(True)
         tcpipDhcpServerKeepInfoUnreq[index].setDefaultValue(False)  
@@ -271,7 +271,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
                 
         # Config Flag - DHCP Server Abort if ICMP Probe for Conflict Detection Fails
         tcpipDhcpServerProbeFailAbort.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_PROB_FAIL_ABORT_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerProbeFailAbort.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerProbeFailAbort[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerProbeFailAbort[index].setLabel("ICMP Probe Failure Abort")
         tcpipDhcpServerProbeFailAbort[index].setVisible(True)
         tcpipDhcpServerProbeFailAbort[index].setDefaultValue(False)  
@@ -279,7 +279,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Config Flag - DHCP Server Silent if No Client record
         tcpipDhcpServerKeepSilent.append(tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_DHCPS_KEEP_SILENT_IDX"+str(index),tcpipDhcpServerConfigFlagMenu[index]))
-        tcpipDhcpServerKeepSilent.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerKeepSilent[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerKeepSilent[index].setLabel("Keep Silent if No Record")
         tcpipDhcpServerKeepSilent[index].setVisible(True)
         tcpipDhcpServerKeepSilent[index].setDefaultValue(False)  
@@ -287,14 +287,14 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # Minimum Lease Duration
         tcpipDhcpServerLeaseDurationMin.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_MIN_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerLeaseDurationMin.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeaseDurationMin[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeaseDurationMin[index].setLabel("Minimum Lease Duration(in Sec)")
         tcpipDhcpServerLeaseDurationMin[index].setVisible(True)
         tcpipDhcpServerLeaseDurationMin[index].setDefaultValue(60)
        
         # Maximum Lease Duration
         tcpipDhcpServerLeaseDurationMax.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_LEASEDURATION_MAX_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerLeaseDurationMax.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerLeaseDurationMax[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerLeaseDurationMax[index].setLabel("Maximum Lease Duration(in Sec)")
         tcpipDhcpServerLeaseDurationMax[index].setVisible(True)
         tcpipDhcpServerLeaseDurationMax[index].setDefaultValue(0)
@@ -302,20 +302,20 @@ def instantiateComponent(tcpipDhcpServerComponent):
        
         # Unrequested Offer Timeout
         tcpipDhcpServerUnreqTimeout.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_UNREQ_TMO_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerUnreqTimeout.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerUnreqTimeout[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerUnreqTimeout[index].setLabel("Unrequested Offer Timeout(in Sec)")
         tcpipDhcpServerUnreqTimeout[index].setVisible(True)
         tcpipDhcpServerUnreqTimeout[index].setDefaultValue(0)
         
         # T1 Renewal Time       
         tcpipDhcpServerT1RenewalTimeMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_T1_RENEWAL_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerT1RenewalTimeMenu.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT1RenewalTimeMenu[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT1RenewalTimeMenu[index].setLabel("T1 Renewal Time Calculation")
         tcpipDhcpServerT1RenewalTimeMenu[index].setVisible(True)
 
         # T1 Renewal Time - Multiplication Factor
         tcpipDhcpServerT1RenewMultFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T1RENEW_MULT_FACT_IDX" + str(index), tcpipDhcpServerT1RenewalTimeMenu[index]))
-        tcpipDhcpServerT1RenewMultFactor.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT1RenewMultFactor[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT1RenewMultFactor[index].setLabel("Multiplication Factor")
         tcpipDhcpServerT1RenewMultFactor[index].setVisible(True)
         tcpipDhcpServerT1RenewMultFactor[index].setDefaultValue(1)
@@ -323,7 +323,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # T1 Renewal Time - Division Factor
         tcpipDhcpServerT1RenewDivFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T1RENEW_DIV_FACT_IDX" + str(index), tcpipDhcpServerT1RenewalTimeMenu[index]))
-        tcpipDhcpServerT1RenewDivFactor.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT1RenewDivFactor[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT1RenewDivFactor[index].setLabel("Division Factor")
         tcpipDhcpServerT1RenewDivFactor[index].setVisible(True)
         tcpipDhcpServerT1RenewDivFactor[index].setDefaultValue(2)
@@ -331,13 +331,13 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # T2 Rebind Time       
         tcpipDhcpServerT2RebindTimeMenu.append(tcpipDhcpServerComponent.createMenuSymbol("TCPIP_DHCPS_T2_REBIND_MENU_IDX" + str(index), tcpipDhcpServerInstanceAdvMenu[index]))
-        tcpipDhcpServerT2RebindTimeMenu.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT2RebindTimeMenu[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT2RebindTimeMenu[index].setLabel("T2 Rebind Time Calculation")
         tcpipDhcpServerT2RebindTimeMenu[index].setVisible(True)
 
         # T2 Rebind Time  - Multiplication Factor
         tcpipDhcpServerT2RebindMultFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T2REBIND_MULT_FACT_IDX" + str(index), tcpipDhcpServerT2RebindTimeMenu[index]))
-        tcpipDhcpServerT2RebindMultFactor.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT2RebindMultFactor[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT2RebindMultFactor[index].setLabel("Multiplication Factor")
         tcpipDhcpServerT2RebindMultFactor[index].setVisible(True)
         tcpipDhcpServerT2RebindMultFactor[index].setDefaultValue(7)
@@ -345,7 +345,7 @@ def instantiateComponent(tcpipDhcpServerComponent):
         
         # T2 Rebind Time  - Division Factor
         tcpipDhcpServerT2RebindDivFactor.append(tcpipDhcpServerComponent.createIntegerSymbol("TCPIP_DHCPS_T2REBIND_DIV_FACT_IDX" + str(index), tcpipDhcpServerT2RebindTimeMenu[index]))
-        tcpipDhcpServerT2RebindDivFactor.setHelp("mcc_h3_dhcp_server_configurations")
+        tcpipDhcpServerT2RebindDivFactor[index].setHelp("mcc_h3_dhcp_server_configurations")
         tcpipDhcpServerT2RebindDivFactor[index].setLabel("Division Factor")
         tcpipDhcpServerT2RebindDivFactor[index].setVisible(True)
         tcpipDhcpServerT2RebindDivFactor[index].setDefaultValue(8)
