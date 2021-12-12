@@ -84,7 +84,7 @@ def instantiateComponent(net_PresComponent):
     netPresTaskDelay.setLabel("Task Delay")
     netPresTaskDelay.setVisible(True)
     netPresTaskDelay.setDescription("Net Pres Task Delay")
-    netPresTaskDelay.setDefaultValue(1000)
+    netPresTaskDelay.setDefaultValue(1)
     netPresTaskDelay.setDependencies(netPresRTOSTaskDelayMenu, ["NET_PRES_RTOS","NET_PRES_RTOS_USE_DELAY"])
         
     # Number of Presentation Sockets
@@ -699,6 +699,11 @@ def netPresEncProviderMenu(symbol, event):
         data.setSymbolValue("NET_PRES_BLOB_SERVER_KEY_FILENAME", "wolfssl/certs_test.h")
         data.setSymbolValue("NET_PRES_BLOB_SERVER_KEY_VARIABLE", "server_key_der_2048")
         data.setSymbolValue("NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE", "sizeof_server_key_der_2048")
+        
+        if(Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None) :
+            print("FreeRTOS selected")
+            data.setSymbolValue("NET_PRES_RTOS_STACK_SIZE",32768)
+            
         
     else:
         #Todo: change to Database.sendMessage(); but need handleMessage() in lib_wolfssl
