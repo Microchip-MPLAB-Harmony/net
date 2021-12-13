@@ -118,34 +118,31 @@ typedef union
     word. Different receive status after receiving a packet is stored in this
     32-bit field by GMAC engine
 */
+
 typedef union  
 {
 	uint32_t val;
 	struct _GmacRxStatusBM 
 	{
-		uint32_t	len: 13,				/** Length of frame including FCS */
-					offset: 1,              /** Receive buffer offset,
-                                            bits 13:12 of frame length for jumbo
-                                            frame */
-					bSof: 1,				/** Start of frame */
-					bEof: 1,				/** End of frame */
-					bCFI: 1,				/** Concatenation Format Indicator */
-					vlanPriority: 3,		/** VLAN priority (if VLAN detected) */
-					bPriorityDetected: 1,	/** Priority tag detected */
-					bVlanDetected: 1,		/**< VLAN tag detected */
-					bTypeIDMatch: 2,		/**< Type ID match */
-					bTypeIDMatchfound: 1,	/**< Type ID match found*/
-					bAddrMatch: 2,			/**< Specific Address register 1, 2, 3, 4 match */
-					bAddrMatchfound: 1,     /**< Specific Address match found */
-					reserved: 1,				
-					bUniHashMatch: 1,       /**< Unicast hash match */
-					bMultiHashMatch: 1,     /**< Multicast hash match */
-					bBroadcastDetected: 1;  /**< Global all ones broadcast
-                                                address detected */
+		uint32_t	len: 13;				/** Length of frame including FCS */
+		uint32_t	offset: 1;              /** Receive buffer offset,
+                                            bits 13:12 of frame length for jumbo frame */
+		uint32_t	bSof: 1;				/** Start of frame */
+		uint32_t	bEof: 1;				/** End of frame */
+		uint32_t	bCFI: 1;				/** Concatenation Format Indicator */
+		uint32_t	vlanPriority: 3;		/** VLAN priority (if VLAN detected) */
+		uint32_t	bPriorityDetected: 1;	/** Priority tag detected */
+		uint32_t	bVlanDetected: 1;		/**< VLAN tag detected */
+		uint32_t	bTypeIDMatch: 2;		/**< Type ID match */
+		uint32_t	bTypeIDMatchfound: 1;	/**< Type ID match found*/
+		uint32_t	bAddrMatch: 2;			/**< Specific Address register 1, 2, 3, 4 match */
+		uint32_t	bAddrMatchfound: 1;     /**< Specific Address match found */
+		uint32_t	reserved: 1;				
+		uint32_t	bUniHashMatch: 1;       /**< Unicast hash match */
+		uint32_t	bMultiHashMatch: 1;     /**< Multicast hash match */
+		uint32_t	bBroadcastDetected: 1;  /**< Global all ones broadcast address detected */
 	} bm;
 } DRV_GMAC_RXDCPT_STATUS;
-
-
 // *****************************************************************************
 /*  Receive Descriptor
 

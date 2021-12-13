@@ -887,8 +887,8 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
 		}
 
 		if(pPktStat)
-		{					
-			*pPktStat = *(TCPIP_MAC_PACKET_RX_STAT*)&pRxPktStat;
+		{
+            pPktStat->rxStatPIC32C = (TCPIP_MAC_PACKET_RX_STAT_PIC32C)(pRxPktStat.val);
 		}
 
 

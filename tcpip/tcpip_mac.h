@@ -475,28 +475,26 @@ typedef union
 {
 	uint32_t val;
 	struct _TCPRxStatusBM 
-    {
-        uint32_t len: 12;               /* Length of frame including FCS */
-        uint32_t offset: 2;             /* Receive buffer offset,
-                                        bits 13:12 of frame length for jumbo frame */
-        uint32_t bSof: 1;               /* Start of frame */
-        uint32_t bEof: 1;               /* End of frame */
-        uint32_t bCFI: 1;               /* Concatenation Format Indicator */
-        uint32_t vlanPriority: 3;       /* VLAN priority (if VLAN detected) */
-        uint32_t bPriorityDetected: 1;  /* Priority tag detected */
-        uint32_t bVlanDetected: 1;      /* < VLAN tag detected */
-        uint32_t bTypeIDMatch: 1;       /* < Type ID match */
-        uint32_t bAddr4Match: 1;        /* < Address register 4 match */
-        uint32_t bAddr3Match: 1;        /* < Address register 3 match */
-        uint32_t bAddr2Match: 1;        /* < Address register 2 match */
-        uint32_t bAddr1Match: 1;        /* < Address register 1 match */
-        uint32_t reserved: 1;           
-        uint32_t bExtAddrMatch: 1;      /* < External address match */
-        uint32_t bUniHashMatch: 1;      /* < Unicast hash match */
-        uint32_t bMultiHashMatch: 1;    /* < Multicast hash match */
-        uint32_t bBroadcastDetected: 1; /* < Global all ones broadcast address detected */
-    } bm;
-}TCPIP_MAC_PACKET_RX_STAT_PIC32C;
+	{
+		uint32_t	len: 13;				/** Length of frame including FCS */
+		uint32_t	offset: 1;              /** Receive buffer offset,
+                                            bits 13:12 of frame length for jumbo frame */
+		uint32_t	bSof: 1;				/** Start of frame */
+		uint32_t	bEof: 1;				/** End of frame */
+		uint32_t	bCFI: 1;				/** Concatenation Format Indicator */
+		uint32_t	vlanPriority: 3;		/** VLAN priority (if VLAN detected) */
+		uint32_t	bPriorityDetected: 1;	/** Priority tag detected */
+		uint32_t	bVlanDetected: 1;		/**< VLAN tag detected */
+		uint32_t	bTypeIDMatch: 2;		/**< Type ID match */
+		uint32_t	bTypeIDMatchfound: 1;	/**< Type ID match found*/
+		uint32_t	bAddrMatch: 2;			/**< Specific Address register 1, 2, 3, 4 match */
+		uint32_t	bAddrMatchfound: 1;     /**< Specific Address match found */
+		uint32_t	reserved: 1;				
+		uint32_t	bUniHashMatch: 1;       /**< Unicast hash match */
+		uint32_t	bMultiHashMatch: 1;     /**< Multicast hash match */
+		uint32_t	bBroadcastDetected: 1;  /**< Global all ones broadcast address detected */
+	} bm;
+} TCPIP_MAC_PACKET_RX_STAT_PIC32C;
 
 // *****************************************************************************
 /*  MAC Received Packet Status
