@@ -625,8 +625,8 @@ def instantiateComponent( macComponent ):
 
     # Auto negotiation enable
     linkAutoNegotiateEnableName = "LINK_AUTO_NEGOTIATION"
-    linkAutoNegotiateEnable = macComponent.setHelp("mcc_h3_emac_configurations")
     linkAutoNegotiateEnable = macComponent.createBooleanSymbol( linkAutoNegotiateEnableName, linkConnection )
+    linkAutoNegotiateEnable.setHelp("mcc_h3_emac_configurations")
     linkAutoNegotiateEnable.setLabel( "Auto negotiation enable" )
     linkAutoNegotiateEnable.setDefaultValue( True )
     #### Auto negotiation options
