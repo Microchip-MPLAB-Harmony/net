@@ -771,7 +771,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
 
 	TCPIP_MAC_RES			mRes;	
 	TCPIP_MAC_PACKET		*pRxPkt = NULL;
-	DRV_GMAC_RXDCPT_STATUS	pRxPktStat = {0};
+	TCPIP_MAC_PACKET_RX_STAT_PIC32C	pRxPktStat = {0};
 	DRV_PIC32CGMAC_RESULT	ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;	
 	int                     buffsPerRxPkt = 0;
     static GMAC_QUE_LIST    queueIndex = DRV_GMAC_NO_ACTIVE_QUEUE;    
@@ -888,7 +888,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
 
 		if(pPktStat)
 		{
-            pPktStat->rxStatPIC32C = (TCPIP_MAC_PACKET_RX_STAT_PIC32C)(pRxPktStat.val);
+            pPktStat->rxStatPIC32C.val = pRxPktStat.val;
 		}
 
 

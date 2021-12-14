@@ -27,7 +27,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifndef __GMAC_DCPT_LISTS_H_
 #define __GMAC_DCPT_LISTS_H_
-
+#include "tcpip/tcpip_mac.h"
 // *****************************************************************************
 /*  GMAC Queue List
  
@@ -108,42 +108,6 @@ typedef union
 } DRV_GMAC_RXDCPT_ADDR;             /**< Address, Wrap & Ownership */
 
 // *****************************************************************************
-/*  RX Packet Descriptor Status Word
-
-  Summary:
-    Status word with each Receive Descriptor
-
-  Description:
-    The Receive descriptor consist of two 32-bit word; one is Receive Status
-    word. Different receive status after receiving a packet is stored in this
-    32-bit field by GMAC engine
-*/
-
-typedef union  
-{
-	uint32_t val;
-	struct _GmacRxStatusBM 
-	{
-		uint32_t	len: 13;				/** Length of frame including FCS */
-		uint32_t	offset: 1;              /** Receive buffer offset,
-                                            bits 13:12 of frame length for jumbo frame */
-		uint32_t	bSof: 1;				/** Start of frame */
-		uint32_t	bEof: 1;				/** End of frame */
-		uint32_t	bCFI: 1;				/** Concatenation Format Indicator */
-		uint32_t	vlanPriority: 3;		/** VLAN priority (if VLAN detected) */
-		uint32_t	bPriorityDetected: 1;	/** Priority tag detected */
-		uint32_t	bVlanDetected: 1;		/**< VLAN tag detected */
-		uint32_t	bTypeIDMatch: 2;		/**< Type ID match */
-		uint32_t	bTypeIDMatchfound: 1;	/**< Type ID match found*/
-		uint32_t	bAddrMatch: 2;			/**< Specific Address register 1, 2, 3, 4 match */
-		uint32_t	bAddrMatchfound: 1;     /**< Specific Address match found */
-		uint32_t	reserved: 1;				
-		uint32_t	bUniHashMatch: 1;       /**< Unicast hash match */
-		uint32_t	bMultiHashMatch: 1;     /**< Multicast hash match */
-		uint32_t	bBroadcastDetected: 1;  /**< Global all ones broadcast address detected */
-	} bm;
-} DRV_GMAC_RXDCPT_STATUS;
-// *****************************************************************************
 /*  Receive Descriptor
 
   Summary:
@@ -156,7 +120,7 @@ typedef union
 typedef struct
 {
 	volatile DRV_GMAC_RXDCPT_ADDR rx_desc_buffaddr;
-	volatile DRV_GMAC_RXDCPT_STATUS rx_desc_status;
+	volatile TCPIP_MAC_PACKET_RX_STAT_PIC32C rx_desc_status;
 	
 } DRV_PIC32CGMAC_HW_RXDCPT; 
 

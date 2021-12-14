@@ -709,11 +709,11 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
  *****************************************************************************/
 DRV_PIC32CGMAC_RESULT
 DRV_PIC32CGMAC_LibRxGetPacket(
-    DRV_GMAC_DRIVER *           pMACDrv,
-    TCPIP_MAC_PACKET **         pRxPkt,
-    int *                       pnBuffs,
-    DRV_GMAC_RXDCPT_STATUS *    pRxStat,
-    GMAC_QUE_LIST               queueIdx
+    DRV_GMAC_DRIVER *           		pMACDrv,
+    TCPIP_MAC_PACKET **         		pRxPkt,
+    int *                       		pnBuffs,
+    TCPIP_MAC_PACKET_RX_STAT_PIC32C *   pRxStat,
+    GMAC_QUE_LIST               		queueIdx
     )
 {	
 	DRV_PIC32CGMAC_RX_FRAME_INFO rx_frame_state = {0,0,0};

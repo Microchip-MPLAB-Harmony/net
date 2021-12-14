@@ -1255,7 +1255,7 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
 /*******************************************************************************
   Function:
     DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, 
- *                          DRV_GMAC_RXDCPT_STATUS* pRxStat,GMAC_QUE_LIST queueIdx )
+ *                          TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx )
 
   Summary:
     Provides the layout and the status of the next available received packet.
@@ -1302,10 +1302,10 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
     </code>
 
   Remarks:
-    <p>Replaces:<p><c><b>DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, DRV_GMAC_RXDCPT_STATUS* pRxStat,GMAC_QUE_LIST queueIdx )</b></c>
+    <p>Replaces:<p><c><b>DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx )</b></c>
  *****************************************************************************/
 
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, DRV_GMAC_RXDCPT_STATUS* pRxStat,GMAC_QUE_LIST queueIdx );
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, TCPIP_MAC_PACKET_RX_STAT_PIC32C* pRxStat,GMAC_QUE_LIST queueIdx );
 
 
 /*******************************************************************************
