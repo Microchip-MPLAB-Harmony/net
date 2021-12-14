@@ -319,7 +319,7 @@ def tcpipDhcpsICMPClientEnable():
     #tcpipIcmpClient.setEnabled(True)
         tcpipICMPClientSymbol.setValue(True)
     print("DHCP Server ICMP Client Enabled.")
-  	
+    
     
   
 def tcpipDhcpsMenuVisibleSingle(symbol, event):
