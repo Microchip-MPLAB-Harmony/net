@@ -1287,8 +1287,8 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
         pktIf = (TCPIP_NET_IF*)udpSockInfo.hNet;
 
         // set most common values
-        evInfo1 = (uint32_t)pktIf->netIfIx;
-        evInfo2 = udpSockInfo.sourceIPaddress.v4Add.Val;
+        evInfo1 = udpSockInfo.sourceIPaddress.v4Add.Val;
+        evInfo2 = _DHCPS_SecCount();
 
         if(_DHCPS_AccessLock() == false)
         {
@@ -1300,7 +1300,7 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
         if(avlblBytes < _TCPIP_DHCPS_MIN_PROCESS_PACKET_SIZE)
         {
             evType = TCPIP_DHCPS_EVENT_MSG_UNDERFLOW;
-            evInfo1 = (uint32_t)avlblBytes;
+            evInfo2 = (uint32_t)avlblBytes;
             break;
         }
 
@@ -1327,7 +1327,7 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
             pIfDcpt->statData.msgOvflCount++;
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             evType = TCPIP_DHCPS_EVENT_MSG_OVERFLOW;
-            evInfo1 = (uint32_t)avlblBytes;
+            evInfo2 = (uint32_t)avlblBytes;
             avlblBytes = sizeof(gDhcpProcPacket);
         }
 

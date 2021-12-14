@@ -402,34 +402,34 @@ typedef enum
                                                     // evInfo2: current time at which the inform occurred  
     // error events < 0
     TCPIP_DHCPS_EVENT_PROCESS_LOCK      = -1,   // DHCP message processing postponed as the DB access was locked
-                                                    // evInfo1: index of the interface
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: current time at which the request occurred  
 
     TCPIP_DHCPS_EVENT_TICK_LOCK         = -2,   // DHCP timeout processing postponed as the DB access was locked
                                                     // evInfo1: time (DHCPs second) when this occurred
                                                     // evInfo2: 0
 
     TCPIP_DHCPS_EVENT_MSG_OVERFLOW      = -3,   // DHCP message received is > than the internally allocated buffer 
-                                                    // evInfo1: sizeof the received message
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: sizeof the received message
 
     TCPIP_DHCPS_EVENT_MSG_UNDERFLOW     = -4,   // DHCP message received is < than the minimum DHCP valid message
-                                                    // evInfo1: sizeof the received message
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: sizeof the received message
 
     TCPIP_DHCPS_EVENT_IF_DISABLED       = -5,   // DHCP message received on an interface that has DHCP server disabled
-                                                    // evInfo1: index of the interface
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: current time at which the request occurred  
 
     TCPIP_DHCPS_EVENT_IF_ERROR          = -6,   // DHCP message received on an interface that the DHCP server has not mapped internally
                                                     // This should not normally happen
-                                                    // evInfo1: index of the interface
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: current time at which the request occurred  
 
     TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR  = -7,   // DHCP message received is badly formatted:
                                                     // operation != 1 or header type != 1 or header length != 6 or bad header MAC address or bad magic cookie
-                                                    // evInfo1: index of the interface
-                                                    // evInfo2: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
+                                                    // evInfo2: current time at which the request occurred  
 
     TCPIP_DHCPS_EVENT_POOL_EMPTY        = -8,   // DHCP pool was empty, cannot allocate a new lease
                                                     // evInfo1: none
