@@ -5,7 +5,7 @@
         <Dependency name="csp" version="v3.10.0"/>
         <Dependency name="bsp" version="v3.10.0"/>
         <Dependency name="dev_packs" version="v3.10.0"/>
-        <Dependency name="crypto" version="v3.7.4"/>
+        <Dependency name="crypto" version="v3.7.5"/>
         <Dependency name="usb" version="v3.8.1"/>
         <Dependency name="wolfssl" version="v4.7.0"/>
         <Dependency name="wolfMQTT" version="v1.7.1"/>
