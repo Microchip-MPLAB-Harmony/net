@@ -114,7 +114,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     // pause enable, remove FCS, MDC clock
     GMAC_REGS->GMAC_NCFGR =  GMAC_NCFGR_FD_Msk | (GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos))
                           | GMAC_NCFGR_CLK_MCK_64 | GMAC_NCFGR_PEN_Msk | GMAC_NCFGR_RFCS_Msk |
-						  GMAC_NCFGR_RXBUFO(pMACDrv->sGmacData._rxDataOffset);   
+						  GMAC_NCFGR_RXBUFO(pMACDrv->sGmacData._dataOffset);   
 	
 	if((pMACDrv->sGmacData.gmacConfig.checksumOffloadRx) != TCPIP_MAC_CHECKSUM_NONE)
     {
@@ -612,9 +612,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
         }        
         
         // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)pTxDesc[tailIndex].tx_desc_buffaddr - pMACDrv->sGmacData._rxDataOffset;
+        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
         // get packet address from buffer address
-        pPkt = *(TCPIP_MAC_PACKET**)(pbuff - pMACDrv->sGmacData._segLoadOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        pPkt = pGap->segmentPktPtr;
         
         
         while(tailIndex != headIndex)
@@ -686,9 +687,10 @@ void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST 
 	while(tailIndex != headIndex)
     {
         // get aligned buffer address from Tx Descriptor Buffer Address
-        pbuff = (uint8_t*)pTxDesc[tailIndex].tx_desc_buffaddr - pMACDrv->sGmacData._rxDataOffset;
+        pbuff = (uint8_t*)((uint32_t)pTxDesc[tailIndex].tx_desc_buffaddr & pMACDrv->sGmacData._dataOffsetMask);
         // get packet address from buffer address
-        pPkt = *(TCPIP_MAC_PACKET**)(pbuff - pMACDrv->sGmacData._segLoadOffset);
+        TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pbuff + pMACDrv->sGmacData._dcptOffset);
+        pPkt = pGap->segmentPktPtr;
         
         pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
         // Tx Callback
@@ -1256,7 +1258,7 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // always free if NO_SMART_ALLOC flag is set
             // free if RX packets greater than the defined threshold
             if((pPkt->pDSeg->segFlags  & TCPIP_MAC_SEG_FLAG_RX_STICKY) == 0 && 
-                (((pMacDrv->sGmacData.controlFlags & TCPIP_MAC_CONTROL_NO_SMART_ALLOC) != 0) ||
+                (((pMacDrv->sGmacData._controlFlags & TCPIP_MAC_CONTROL_NO_SMART_ALLOC) != 0) ||
                     (pMacDrv->sGmacData.gmac_queue[queueIdx]._RxQueue.nNodes > 
                         pMacDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres)))
             {            
@@ -1276,7 +1278,8 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             // Ethernet packet stored in multiple MAC descriptors, each segment
             // is allocated as a complete mac packet
             // extract the packet pointer using the segment load buffer
-            pPkt = *(TCPIP_MAC_PACKET **) (pDSegNext->segBuffer - pMacDrv->sGmacData._segLoadOffset);
+            TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData._dcptOffset);
+            pPkt = pGap->segmentPktPtr;
         }	
         res  = true; 
     }
