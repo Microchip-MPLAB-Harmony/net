@@ -74,8 +74,12 @@ typedef struct
 } DRV_PIC32CGMAC_HW_DCPT_ARRAY;
   
 // place the descriptors in an uncached memory region
-__attribute__((__aligned__(8))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array @".region_nocache";
-
+#if defined(__IAR_SYSTEMS_ICC__)
+  static __attribute__((__aligned__(8))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array @".region_nocache";
+#elif defined(__GNUC__)
+ static __attribute__((__aligned__(8))) __attribute__((space(data),section(".region_nocache"))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+  
+#endif
 uint32_t    drvGmacQueEvents;     //Priority Queue Event Status 
 //GMAC Interrupt sources for 6 Priority Queues
 INT_SOURCE  drvGmacIRQ[DRV_GMAC_NUMBER_OF_QUEUES] = {GMAC_IRQn, GMAC_Q1_IRQn, GMAC_Q2_IRQn};
