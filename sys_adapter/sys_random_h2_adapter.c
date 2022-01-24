@@ -185,8 +185,9 @@ uint32_t SYS_RANDOM_CryptoGet( void )
     {
         uint32_t    u32;
         uint8_t     u8[4];
-    }sUint = {0};
+    }sUint;
 
+    sUint.u32 = 0;
     CRYPT_RNG_CTX* pCtx = _SYS_RANDOM_CryptoLock();
 
     if(pCtx)
