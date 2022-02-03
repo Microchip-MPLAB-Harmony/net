@@ -36,7 +36,10 @@ def instantiateComponent(tcpipNetConfigComponent):
     
     tcpipNetConfigInterfaceCount = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_INTERAFCE_COUNT", None)
     tcpipNetConfigInterfaceCount.setLabel("Number of Instances")
-    tcpipNetConfigInterfaceCount.setDefaultValue(1)
+    if Variables.get("__H3_RUNTIME") == "MCC":
+        tcpipNetConfigInterfaceCount.setDefaultValue(0)
+    else:
+        tcpipNetConfigInterfaceCount.setDefaultValue(1)
     tcpipNetConfigInterfaceCount.setVisible(True)
     tcpipNetConfigInterfaceCount.setReadOnly(True)   
     
