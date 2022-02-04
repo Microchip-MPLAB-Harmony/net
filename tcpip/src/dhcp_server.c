@@ -3284,6 +3284,7 @@ static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_IN
         {
             pLeaseInfo->ipAddress.Val = he->ipAddress.Val;
             pLeaseInfo->leaseState = he->state;
+            memcpy(pLeaseInfo->macAdd.v, he->chaddr, sizeof(pLeaseInfo->macAdd)); 
 
             if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
             {
@@ -3686,6 +3687,8 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseAddById(TCPIP_NET_HANDLE netH, const TCPIP_DHCP
         he->parent = pIDcpt;
         he->clientIdLen = keyLen;
         memcpy(he->clientId, fmtClientId, sizeof(he->clientId));
+        memset(he->chaddr, 0, sizeof(he->chaddr));
+        memcpy(he->chaddr, pSet->macAdd.v, sizeof(pSet->macAdd));
         he->ipAddress.Val = pSet->ipAddress.Val;
         _DHCPS_LeaseRestart(he, pSet->leaseTime); 
         if(pSet->leaseTime == 0xffffffff)

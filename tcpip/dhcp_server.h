@@ -582,6 +582,7 @@ typedef struct
 {
     IPV4_ADDR       ipAddress;      // leased IP address
     uint32_t        leaseTime;      // remaining lease time
+    TCPIP_MAC_ADDR  macAdd;         // Client MAC address
     uint8_t         leaseState;     // A TCPIP_DHCPS_LEASE_STATE value, the current state 
     uint8_t         clientIdLen;    // on input this stores the size of the clientId
                                     // on return, this field stores the actual client ID size
@@ -612,6 +613,7 @@ typedef struct
     IPV4_ADDR       ipAddress;      // IP address to set
     uint32_t        leaseTime;      // lease time
                                     // use 0xffffffff for permanent lease
+    TCPIP_MAC_ADDR  macAdd;         // client MAC address to set
     uint8_t         leaseState;     // The state of the lease.
                                     // Normally should be TCPIP_DHCPS_LEASE_STATE_BOUND
                                     // Only TCPIP_DHCPS_LEASE_STATE_BOUND, TCPIP_DHCPS_LEASE_STATE_RELEASED or TCPIP_DHCPS_LEASE_STATE_EXPIRED allowed
