@@ -59,7 +59,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_DHCP_DEBUG_MASK_STATUS            0x10    // enable status display
 #define TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE     0x20    // enable receive results display
 #define TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE     0x40    // enable TX messages display
-#define TCPIP_DHCP_DEBUG_MASK_TIME_RES_MS       0x80    // display time with ms resolution
 
 
 #define TCPIP_DHCP_DEBUG_MASK_FAKE_TMO          0x0100    // enable fake timeout support...
@@ -145,16 +144,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // and switch to a different address service; seconds
 // This is used only at the initialization
 #define TCPIP_DHCP_INIT_FAIL_TMO        10
-
-// Default time to wait for an ARP probe
-// when checking a lease, seconds
-#define TCPIP_DHCP_LEASE_CHECK_TMO       2
-
-// Default time to attepmt a retry when the ARP
-// validation failed, seconds
-// Standard sets it to 10 secs
-#define TCPIP_DHCP_WAIT_FAIL_CHECK_TMO   10
-
 
 
 // DHCP UDP socket minimum size for being able to carry

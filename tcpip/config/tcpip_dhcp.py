@@ -104,6 +104,22 @@ def instantiateComponent(tcpipDhcpComponent):
     tcpipDhcpcNtpServerMax.setDescription("Maximum Number of NTP Server Addresses that Can Be Stored")
     tcpipDhcpcNtpServerMax.setDefaultValue(0)
     
+    # DHCP ARP probe check timeout, seconds
+    tcpipDhcpcArpCheckTmo = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_ARP_LEASE_CHECK_TMO", tcpipDhcpcAdvSettings)
+    tcpipDhcpcArpCheckTmo.setHelp("mcc_h3_dhcp_configurations")
+    tcpipDhcpcArpCheckTmo.setLabel("ARP probe check timeout (in msec)")
+    tcpipDhcpcArpCheckTmo.setVisible(True)
+    tcpipDhcpcArpCheckTmo.setDescription("DHCP Client ARP probe check timeout in msec")
+    tcpipDhcpcArpCheckTmo.setDefaultValue(1000)
+    
+    # DHCP ARP probe retry attempt timeout, seconds
+    tcpipDhcpcArpFailTmo = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_WAIT_ARP_FAIL_CHECK_TMO", tcpipDhcpcAdvSettings)
+    tcpipDhcpcArpFailTmo.setHelp("mcc_h3_dhcp_configurations")
+    tcpipDhcpcArpFailTmo.setLabel("ARP probe retry timeout (in seconds)")
+    tcpipDhcpcArpFailTmo.setVisible(True)
+    tcpipDhcpcArpFailTmo.setDescription("DHCP Client ARP probe retry timeout in seconds")
+    tcpipDhcpcArpFailTmo.setDefaultValue(10)
+    
     tcpipDhcpcheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
     # DHCPC Heap Size

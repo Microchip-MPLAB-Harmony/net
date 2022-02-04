@@ -103,6 +103,15 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Only if TCPIP_DHCP_USE_OPTION_NTP_SERVER is enabled
 #define TCPIP_DHCP_NTP_SERVER_ADDRESSES        1 
 
+// Iime to wait for an ARP probe when checking a lease, milliseconds
+// Default value: 1 second
+// Note: if 0, then the ARP probe (required by the standard) is skipped
+#define TCPIP_DHCP_ARP_LEASE_CHECK_TMO       1000
+
+// Time to wait before attempting a retry when the ARP validation failed, seconds
+// Standard sets it to 10 secs
+// Relevant only if TCPIP_DHCP_LEASE_CHECK_TMO != 0
+#define TCPIP_DHCP_WAIT_ARP_FAIL_CHECK_TMO   10
 
 
 #endif  // _DCHP_CONFIG_H_

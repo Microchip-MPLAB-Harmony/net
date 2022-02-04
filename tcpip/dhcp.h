@@ -116,6 +116,7 @@ typedef enum
     TCPIP_DHCP_GET_REQUEST_ACK,	    // waiting for a Request ACK message
     TCPIP_DHCP_WAIT_LEASE_CHECK,    // waiting for received lease verification
     TCPIP_DHCP_WAIT_LEASE_RETRY,    // waiting for another attempt after the lease verification failed
+    TCPIP_DHCP_SKIP_LEASE_CHECK,    // skip the lease verification state
     TCPIP_DHCP_BOUND,				// bound
     TCPIP_DHCP_SEND_RENEW,			// sending a REQUEST message (RENEW state)
     TCPIP_DHCP_GET_RENEW_ACK,		// waiting for ACK in RENEW state
