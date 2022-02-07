@@ -67,14 +67,21 @@ def instantiateComponent(drvGmacComponent):
     global gmac_periphID
     global drvGmacNoCacheMemRegSize
     global tcpipGmacEthRmii
+    global tcpipGmacEthMii
+    global tcpipGmacEthGmii
     
     print("TCPIP Ethernet MAC Component")   
     configName = Variables.get("__CONFIGURATION_NAME")      
-    
-    gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="GMAC"]')
-    gmac_periphID = str(gmac_node.getAttribute("id"))
+
     device_node = ATDF.getNode('/avr-tools-device-file/devices/device')
     dev_family = str(device_node.getAttribute("family"))
+    dev_series = str(device_node.getAttribute("series"))   
+    if "PIC32CZ" in dev_series:
+        gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="ETH"]')
+    else:
+        gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="GMAC"]')
+    gmac_periphID = str(gmac_node.getAttribute("id"))
+
     
     # GMAC device name
     tcpipGmacDevName = drvGmacComponent.createStringSymbol("TCPIP_INTMAC_DEVICE", None)
@@ -89,9 +96,15 @@ def instantiateComponent(drvGmacComponent):
             tcpipGmacDevName.setDefaultValue("SAME5x")  
     elif (gmac_periphID == "44152"): # SAMA5D2
         tcpipGmacDevName.setDefaultValue("SAMA5D2")          
-        
-    # Enable GMAC clock
-    Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True, 2)
+    elif (gmac_periphID == "03792"): # PIC32CZ
+        tcpipGmacDevName.setDefaultValue("PIC32CZ")   
+    
+    if (gmac_periphID == "03792"): # PIC32CZ    
+        # Enable ETH_TX clock
+        Database.setSymbolValue("core", "ETH_TX_CLOCK_ENABLE", True)
+    else:
+        # Enable GMAC clock
+        Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True)
     
     # Use Internal Ethernet MAC Driver? 
     drvGmac = drvGmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
@@ -118,6 +131,15 @@ def instantiateComponent(drvGmacComponent):
         drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
         setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+    elif ("PIC32CZ" in processor):     
+        coreComponent = Database.getComponentByID("core")
+        clkdivSymbol = coreComponent.getSymbolByID("CONF_MCLK_CLKDIV1")
+        main_clock = int(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
+        clock_div = int(clkdivSymbol.getSelectedValue(), 16)
+        peripheral_clock = main_clock/clock_div
+        drvGmacClock.setDefaultValue(peripheral_clock)
+        drvGmacClock.setDependencies(tcpipPic32CZGmacClockUpdate, ["core.MAIN_CLOCK_FREQUENCY","core.CONF_MCLK_CLKDIV1"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(peripheral_clock))
     elif ("SAMA5" in processor):
         drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
         drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
@@ -366,20 +388,29 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthHalfDuplex.setDescription("Use Half Duplex")
     tcpipGmacEthHalfDuplex.setDefaultValue(True)
     
-    # Use 100Mbps
+    if (gmac_periphID == "03792"): # PIC32CZ
+        # Use 1000MBps
+        tcpipGmacEthUse1000 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_1000", tcpipEthConnFlag)
+        tcpipGmacEthUse1000.setHelp("mcc_h3_gmac_configurations")
+        tcpipGmacEthUse1000.setLabel("Use 1000MBps")
+        tcpipGmacEthUse1000.setVisible(True) 
+        tcpipGmacEthUse1000.setDescription("Use 1000MBps")
+        tcpipGmacEthUse1000.setDefaultValue(False)
+    
+    # Use 100MBps
     tcpipGmacEthUse100 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_100", tcpipEthConnFlag)
     tcpipGmacEthUse100.setHelp("mcc_h3_gmac_configurations")
-    tcpipGmacEthUse100.setLabel("Use 100Mbps")
+    tcpipGmacEthUse100.setLabel("Use 100MBps")
     tcpipGmacEthUse100.setVisible(True) 
-    tcpipGmacEthUse100.setDescription("Use 100Mbps")
+    tcpipGmacEthUse100.setDescription("Use 100MBps")
     tcpipGmacEthUse100.setDefaultValue(True)
     
-    # Use 10Mbps
+    # Use 10MBps
     tcpipGmacEthUse10 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_10", tcpipEthConnFlag)
     tcpipGmacEthUse10.setHelp("mcc_h3_gmac_configurations")
-    tcpipGmacEthUse10.setLabel("Use 10Mbps")
+    tcpipGmacEthUse10.setLabel("Use 10MBps")
     tcpipGmacEthUse10.setVisible(True)
-    tcpipGmacEthUse10.setDescription("Use 10Mbps")
+    tcpipGmacEthUse10.setDescription("Use 10MBps")
     tcpipGmacEthUse10.setDefaultValue(True)
     
     # Use Auto MDIX
@@ -408,6 +439,27 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthRmii.setDefaultValue(True)
     tcpipGmacEthRmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_GMAC_ETH_OF_RMII"] )
 
+    # MII Connection
+    tcpipGmacEthMii = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_MII", tcpipEthConnFlag)
+    tcpipGmacEthMii.setHelp("mcc_h3_gmac_configurations")
+    tcpipGmacEthMii.setLabel("MII Connection")
+    tcpipGmacEthMii.setVisible(True)
+    tcpipGmacEthMii.setDescription("MII Connection")
+    tcpipGmacEthMii.setDefaultValue(False)
+    # tcpipGmacEthMii.setReadOnly(True)
+    tcpipGmacEthMii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_GMAC_ETH_OF_MII"] )
+    
+    if (gmac_periphID == "03792"): # PIC32CZ
+        # GMII Connection
+        tcpipGmacEthGmii = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_GMII", tcpipEthConnFlag)
+        tcpipGmacEthGmii.setHelp("mcc_h3_gmac_configurations")
+        tcpipGmacEthGmii.setLabel("GMII Connection")
+        tcpipGmacEthGmii.setVisible(True)
+        tcpipGmacEthGmii.setDescription("GMII Connection")
+        tcpipGmacEthGmii.setDefaultValue(False)
+        # tcpipGmacEthGmii.setReadOnly(True)
+        tcpipGmacEthGmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_GMAC_ETH_OF_GMII"] )
+    
     # Advanced Settings
     tcpipGmacAdvSettings = drvGmacComponent.createMenuSymbol("TCPIP_GMAC_ADV_SETTING", None)
     tcpipGmacAdvSettings.setLabel("Advanced Settings")
@@ -417,7 +469,7 @@ def instantiateComponent(drvGmacComponent):
     # SAM E70/V71/RH71 has 6 Priority Queue
     # SAM A5D2 has 3 Priority Queue
     # SAM E54 has only 1 Queue
-    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ
         tcpipGmacPrioQueues = drvGmacComponent.createMenuSymbol("TCPIP_GMAC_PRIORITY_QUEUES", tcpipGmacAdvSettings)
         tcpipGmacPrioQueues.setHelp("mcc_h3_gmac_configurations")
         tcpipGmacPrioQueues.setLabel("GMAC Priority Queues")
@@ -636,7 +688,7 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxBuffAllocCountQue2.setMin(1)
         tcpipGmacRxBuffAllocCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_EN_QUE2"]) 
         
-    if(gmac_periphID == "11046"): # SAME70 or SAMV71 or SAMRH71        
+    if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMRH71 or PIC32CZ       
         # GMAC Queue 3
         tcpipGmacQue3 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_3", tcpipGmacPrioQueues)
         tcpipGmacQue3.setHelp("mcc_h3_gmac_configurations")
@@ -1040,7 +1092,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthFilterJumboFrameAccept.setDescription("Accept Jumbo Packets (upto 10240 bytes)")
     tcpipGmacEthFilterJumboFrameAccept.setDefaultValue(False)   
     
-    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMA5D2
         # Advanced Rx Queue Filters
         tcpipGmacRxQueFilterEnable = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_RX_QUE_FILTER_EN", tcpipGmacRxFilterMenu)
         tcpipGmacRxQueFilterEnable.setHelp("mcc_h3_gmac_configurations")
@@ -1139,15 +1191,17 @@ def instantiateComponent(drvGmacComponent):
     tcpipEmacModuleId.setLabel("GMAC Module ID")
     tcpipEmacModuleId.setVisible(True)
     tcpipEmacModuleId.setDescription("GMAC Module ID")
-    tcpipEmacModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
-    
+    if (gmac_periphID == "03792"):
+        tcpipEmacModuleId.setDefaultValue("ETH_BASE_ADDRESS")
+    else:
+        tcpipEmacModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
     # Driver GMAC Number of queues
     drvGmacQueueNum = drvGmacComponent.createIntegerSymbol("DRV_GMAC_NUMBER_OF_QUEUES", None)
     drvGmacQueueNum.setHelp("mcc_h3_gmac_configurations")
     drvGmacQueueNum.setLabel("GMAC Instances Number")
     drvGmacQueueNum.setVisible(False)
     drvGmacQueueNum.setDescription("Number of GMAC Queues")
-    if(gmac_periphID == "11046"): # SAME70, SAMV71
+    if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70, SAMV71, PIC32CZ
         drvGmacQueueNum.setDefaultValue(6)  
     elif (gmac_periphID == "U2005"): # SAME54
         drvGmacQueueNum.setDefaultValue(1)
@@ -1177,7 +1231,7 @@ def instantiateComponent(drvGmacComponent):
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX0", True)
         
-    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ
         interruptVector = "GMAC_Q1_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q1_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
@@ -1194,7 +1248,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX2", True)
     
-    if(gmac_periphID == "11046"): # SAME70, SAMV71, SAMRH71
+    if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70, SAMV71, SAMRH71, PIC32CZ
         interruptVector = "GMAC_Q3_INTERRUPT_ENABLE"
         interruptHandlerLock = "GMAC_Q3_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
@@ -1228,7 +1282,7 @@ def instantiateComponent(drvGmacComponent):
     drvGmacPhyType.setDefaultValue("Not Connected")
     drvGmacPhyType.setReadOnly(True)
     
-    if(gmac_periphID == "11046"): # SAME70, SAMV71, SAMRH71
+    if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70, SAMV71, SAMRH71, PIC32CZ
         # Menu for Non-Cacheable Memory region
         drvGmacNoCacheMenu = drvGmacComponent.createMenuSymbol("DRV_GMAC_NO_CACHE_MENU", tcpipGmacAdvSettings)
         drvGmacNoCacheMenu.setHelp("mcc_h3_gmac_configurations")
@@ -1273,10 +1327,14 @@ def instantiateComponent(drvGmacComponent):
         drvGmacNoCacheMemAddress.setLabel("Start Address of Non-Cacheable Memory")
         drvGmacNoCacheMemAddress.setVisible(True)  
         drvGmacNoCacheMemAddress.setMin(0)
-        if (dev_family == "SAMRH"):
-            drvGmacNoCacheMemAddress.setDefaultValue(0x2105F000)
-        else:
-            drvGmacNoCacheMemAddress.setDefaultValue(0x2045F000)            
+        if(gmac_periphID == "11046"):
+            if (dev_family == "SAMRH"):
+                drvGmacNoCacheMemAddress.setDefaultValue(0x2105F000)
+            else:
+                drvGmacNoCacheMemAddress.setDefaultValue(0x2045F000)  
+        elif (gmac_periphID == "03792"): # PIC32CZ
+            drvGmacNoCacheMemAddress.setDefaultValue(0x2009F000)  
+            
         drvGmacNoCacheMemAddress.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_GMAC_NO_CACHE_CONFIG"]) 
 
         initNoCacheMPU()
@@ -1399,6 +1457,8 @@ def instantiateComponent(drvGmacComponent):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_samE5x"
     elif (gmac_periphID == "44152"): # SAMA5D2
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_samA5D2"
+    elif (gmac_periphID == "03792"): # PIC32CZ
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32CZ"
         
     drvGmacLibSourceFile = drvGmacComponent.createFileSymbol(None, None)
     drvGmacLibSourceFile.setSourcePath("driver/gmac/src/dynamic/" + drvGmacLibCFileStem + ".c")
@@ -1462,12 +1522,48 @@ def tcpipEthMacMdixSwapVisible(symbol, event):
     else:
         symbol.setVisible(True)
         
-def tcpipEthMacMIIMode(symbol, event):   
-    for interface in range (0, len(interfaceNum)): 
-        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII" if event["value"] == True else "MII")
+def tcpipEthMacRMIIMode(symbol, event): 
+    global tcpipGmacEthMii
+    global tcpipGmacEthGmii
+    if event["value"] == True:
+        tcpipGmacEthMii.setReadOnly(True)
+        tcpipGmacEthGmii.setReadOnly(True)
+        for interface in range (0, len(interfaceNum)): 
+            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII")
+    else:
+        tcpipGmacEthMii.setReadOnly(False)
+        tcpipGmacEthGmii.setReadOnly(False)
+  
+
+def tcpipEthMacMIIMode(symbol, event): 
+    global tcpipGmacEthRmii
+    global tcpipGmacEthMii
+    global tcpipGmacEthGmii
+    
+    rmii_enable = tcpipGmacEthRmii.getValue()    
+    mii_enable = tcpipGmacEthMii.getValue()
+    gmii_enable = tcpipGmacEthGmii.getValue()
+ 
+    if (rmii_enable == True) and (mii_enable == False) and (gmii_enable == False): 
+        for interface in range (0, len(interfaceNum)): 
+            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII")
+    elif (rmii_enable == False) and (mii_enable == True) and (gmii_enable == False):  
+        for interface in range (0, len(interfaceNum)): 
+            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "MII")
+    elif (rmii_enable == False) and (mii_enable == False) and (gmii_enable == True):
+        for interface in range (0, len(interfaceNum)): 
+            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "GMII")
         
 def tcpipGmacClockUpdate(symbol, event): 
     setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(event["value"]))
+    
+def tcpipPic32CZGmacClockUpdate(symbol, event): 
+    coreComponent = Database.getComponentByID("core")
+    clkdivSymbol = coreComponent.getSymbolByID("CONF_MCLK_CLKDIV1")       
+    main_clock = int(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
+    clock_div = int(clkdivSymbol.getSelectedValue(), 16)
+    peripheral_clock = main_clock/clock_div
+    setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(peripheral_clock))
         
 def tcpipGmacGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
@@ -1587,7 +1683,7 @@ def tcpipGmacType1Filter(parent,menu):
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_0", "0", "Rx Queue 0")
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_1", "1", "Rx Queue 1")
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_2", "2", "Rx Queue 2")
-        if(gmac_periphID == "11046"): # SAME70 or SAMV71
+        if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or PIC32CZ
             tcpipGmacScreen1Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
             tcpipGmacScreen1Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
             tcpipGmacScreen1Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
@@ -1647,7 +1743,7 @@ def tcpipGmacType2Filter(parent,menu):
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_0", "0", "Rx Queue 0")
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_1", "1", "Rx Queue 1")
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_2", "2", "Rx Queue 2")
-        if(gmac_periphID == "11046"): # SAME70 or SAMV71
+        if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or PIC32CZ
             tcpipGmacScreen2Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
             tcpipGmacScreen2Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
             tcpipGmacScreen2Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
@@ -2021,10 +2117,10 @@ def destroyComponent(drvGmacComponent):
     global noCache_MPU_index
     Database.setSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC", False, 2)    
     setVal("core", "GMAC_INTERRUPT_ENABLE", False)
-    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ
         setVal("core", "GMAC_Q1_INTERRUPT_ENABLE", False)
         setVal("core", "GMAC_Q2_INTERRUPT_ENABLE", False)
-    if(gmac_periphID == "11046"): # SAME70, SAMV71, SAMRH71   
+    if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70, SAMV71, SAMRH71, PIC32CZ   
         setVal("core", "GMAC_Q3_INTERRUPT_ENABLE", False)
         setVal("core", "GMAC_Q4_INTERRUPT_ENABLE", False)
         setVal("core", "GMAC_Q5_INTERRUPT_ENABLE", False)

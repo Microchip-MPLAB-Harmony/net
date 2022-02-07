@@ -49,29 +49,33 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}	"${.vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"]}"
 </#if>
 <#if .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"]?has_content>
-	<#lt><#if .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "ETHMAC">
-		<#lt><#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES != "PIC32MZW")>
+	<#if .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "ETHMAC">
+		<#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES != "PIC32MZW")>
 			<#lt>#define TCPIP_IF_ETHMAC
-		<#lt><#else>
+		<#else>
 			<#lt>#define TCPIP_IF_PIC32MZW_ETHMAC	
-		<#lt></#if>
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC">
-		<#lt>#define TCPIP_IF_GMAC
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "EMAC0">
+		</#if>
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC">
+        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CZ"))>
+            <#lt>#define TCPIP_IF_PIC32CZ_GMAC
+        <#else>
+			<#lt>#define TCPIP_IF_GMAC	
+		</#if>
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "EMAC0">
 		<#lt>#define TCPIP_IF_EMAC0
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "EMAC1">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "EMAC1">
 		<#lt>#define TCPIP_IF_EMAC1
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_WK_NAME_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_WK_NAME_IDX${idx}"] = "PIC32WK">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_WK_NAME_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_WK_NAME_IDX${idx}"] = "PIC32WK">
 		<#lt>#define TCPIP_IF_PIC32WK
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "MRF24WN">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "MRF24WN">
 		<#lt>#define TCPIP_IF_MRF24WN
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "WINC">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "WINC">
 		<#lt>#define TCPIP_IF_WINC
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "WILC1000">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "WILC1000">
 		<#lt>#define TCPIP_IF_WILC1000
-	<#lt><#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "PIC32MZW1">
+	<#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "PIC32MZW1">
 		<#lt>#define TCPIP_IF_PIC32MZW1
-	<#lt></#if>
+	</#if>
 </#if>
 
 #define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${INDEX?string}				"${.vars["TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${INDEX?string}"]}"

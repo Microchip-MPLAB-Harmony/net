@@ -455,6 +455,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_GMAC_ETH_OF_HALF_DUPLEX>
                                                     TCPIP_ETH_OPEN_HDUPLEX |\
 </#if>
+<#if TCPIP_GMAC_ETH_OF_1000>
+                                                    TCPIP_ETH_OPEN_1000 |\
+</#if>
 <#if TCPIP_GMAC_ETH_OF_100>
                                                     TCPIP_ETH_OPEN_100 |\
 </#if>
@@ -479,6 +482,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_GMAC_ETH_OF_RMII>
                                                     TCPIP_ETH_OPEN_RMII |\
 </#if>
+<#if TCPIP_GMAC_ETH_OF_MII>
+                                                    TCPIP_ETH_OPEN_MII |\
+</#if>
+<#if TCPIP_GMAC_ETH_OF_GMII>
+                                                    TCPIP_ETH_OPEN_GMII |\
+</#if>
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			${TCPIP_INTMAC_MODULE_ID}
@@ -489,6 +498,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_INTMAC_PERIPHERAL_CLK  				${core.CLK_MCK_FREQ}
 <#elseif TCPIP_INTMAC_DEVICE == "SAME5x">
 #define TCPIP_INTMAC_PERIPHERAL_CLK  				${core.MAIN_CLOCK_FREQUENCY}
+<#elseif TCPIP_INTMAC_DEVICE == "PIC32CZ">
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				(${core.MAIN_CLOCK_FREQUENCY}/${core.CONF_MCLK_CLKDIV1})           
 <#elseif TCPIP_INTMAC_DEVICE == "SAMA5D2">
 #define TCPIP_INTMAC_PERIPHERAL_CLK  				${core.MCK_CLK_FREQUENCY}
 </#if>
@@ -517,7 +528,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define DRV_GMAC_NUMBER_OF_QUEUES				${DRV_GMAC_NUMBER_OF_QUEUES}
 #define DRV_GMAC_RMII_MODE						${DRV_GMAC_RMII_VALUE}
 <#if (TCPIP_INTMAC_DEVICE)?has_content>
-	<#if ((TCPIP_INTMAC_DEVICE == "SAME7x_V7x") || (TCPIP_INTMAC_DEVICE == "SAMRH71"))>
+	<#if ((TCPIP_INTMAC_DEVICE == "SAME7x_V7x") || (TCPIP_INTMAC_DEVICE == "PIC32CZ") || (TCPIP_INTMAC_DEVICE == "SAMRH71"))>
 		<#if DRV_GMAC_NO_CACHE_CONFIG?has_content && DRV_GMAC_NO_CACHE_CONFIG == true>
 			<#lt>#define DRV_GMAC_DESCRIPTOR_ADDRESS				0x${DRV_GMAC_NOCACHE_MEM_ADDRESS}
 		<#else>

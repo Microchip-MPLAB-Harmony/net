@@ -270,20 +270,32 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MNGMNT_PORT_ENABLE(uintptr_t ethPhyId)
     {
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        ETH_REGS->ETH_NCR |=	ETH_NCR_MPE_Msk;
+        <#else>
         GMAC_REGS->GMAC_NCR |=	GMAC_NCR_MPE_Msk;
+        </#if>
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MNGMNT_PORT_DISABLE(uintptr_t ethPhyId)
     {
-       GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_MPE_Msk;
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        ETH_REGS->ETH_NCR &= ~ETH_NCR_MPE_Msk;
+        <#else>
+        GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_MPE_Msk;
+        </#if>       
+       
     }
     
     static  __inline__ bool __attribute__((always_inline))_DRV_MIIM_IS_BUSY(uintptr_t ethPhyId)
     {
-       if ((GMAC_REGS->GMAC_NSR & GMAC_NSR_IDLE_Msk) != GMAC_NSR_IDLE_Msk)
-           return true;
-       else
-           return false;          
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        bool    phyBusy = (ETH_REGS->ETH_NSR & ETH_NSR_IDLE_Msk) != ETH_NSR_IDLE_Msk;
+        <#else>
+        bool    phyBusy = (GMAC_REGS->GMAC_NSR & GMAC_NSR_IDLE_Msk) != GMAC_NSR_IDLE_Msk;
+        </#if>    
+        
+        return phyBusy;        
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_PHYADDR_SET(uintptr_t ethPhyId,DRV_MIIM_OP_DCPT* pOpDcpt)
@@ -299,6 +311,15 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_WRITE_DATA(uintptr_t ethPhyId,DRV_MIIM_OP_DCPT* pOpDcpt)
     {
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        ETH_REGS->ETH_MAN = 
+                                (~ETH_MAN_WZO_Msk & ETH_MAN_CLTTO_Msk)
+                                 | (ETH_MAN_OP(0x1)) 
+                                 | ETH_MAN_WTN(0x02) 
+                                 | ETH_MAN_PHYA(pOpDcpt->phyAdd) 
+                                 | ETH_MAN_REGA(pOpDcpt->regIx) 
+                                 | ETH_MAN_DATA(pOpDcpt->opData);
+        <#else>
         GMAC_REGS->GMAC_MAN = 
                                 (~GMAC_MAN_WZO_Msk & GMAC_MAN_CLTTO_Msk)
                                  | (GMAC_MAN_OP(0x1)) 
@@ -306,6 +327,8 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
                                  | GMAC_MAN_PHYA(pOpDcpt->phyAdd) 
                                  | GMAC_MAN_REGA(pOpDcpt->regIx) 
                                  | GMAC_MAN_DATA(pOpDcpt->opData);
+        </#if>   
+        
     }
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_WRITE_START(uintptr_t ethPhyId)
@@ -315,18 +338,34 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
    
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_READ_START(uintptr_t ethPhyId, DRV_MIIM_OP_DCPT* pOpDcpt)
     {
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        ETH_REGS->ETH_MAN = 
+                                (~ETH_MAN_WZO_Msk & ETH_MAN_CLTTO_Msk)
+                                 | (ETH_MAN_OP(0x2)) 
+                                 | ETH_MAN_WTN(0x02) 
+                                 | ETH_MAN_PHYA(pOpDcpt->phyAdd) 
+                                 | ETH_MAN_REGA(pOpDcpt->regIx) 
+                                 | ETH_MAN_DATA(0);
+        <#else>
         GMAC_REGS->GMAC_MAN =    (~GMAC_MAN_WZO_Msk & GMAC_MAN_CLTTO_Msk) 
                                     | (GMAC_MAN_OP(0x2)) 
                                     | GMAC_MAN_WTN(0x02) 
                                     | GMAC_MAN_PHYA(pOpDcpt->phyAdd) 
                                     | GMAC_MAN_REGA(pOpDcpt->regIx) 
                                     | GMAC_MAN_DATA(0);
+        </#if>      
+     
     }
     
                                  
     static  __inline__ uint16_t __attribute__((always_inline))_DRV_MIIM_OP_READ_DATA_GET(uintptr_t ethPhyId)
     {
-       return (uint16_t)(GMAC_REGS->GMAC_MAN & GMAC_MAN_DATA_Msk) ;
+       <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        return (uint16_t)(ETH_REGS->ETH_MAN & ETH_MAN_DATA_Msk) ;
+        <#else>
+        return (uint16_t)(GMAC_REGS->GMAC_MAN & GMAC_MAN_DATA_Msk) ;
+        </#if>   
+       
     }
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_CLEAR_DATA_VALID(uintptr_t ethPhyId)
@@ -376,13 +415,25 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
         { 
             clock_dividor = 0; 
         } 
+        <#if (drvGmac.TCPIP_INTMAC_DEVICE)?has_content && (drvGmac.TCPIP_INTMAC_DEVICE == "PIC32CZ")>
+        ETH_REGS->ETH_NCR &= ~ETH_NCR_TXEN_Msk; 
+        ETH_REGS->ETH_NCR &= ~ETH_NCR_RXEN_Msk;	
+        ETH_REGS->ETH_NCFGR =   (ETH_REGS->ETH_NCFGR & 
+                                (~ETH_NCFGR_CLK_Msk)) | 
+                                (clock_dividor << ETH_NCFGR_CLK_Pos); 
+        ETH_REGS->ETH_NCR |= ETH_NCR_TXEN_Msk; 
+        ETH_REGS->ETH_NCR |= ETH_NCR_RXEN_Msk;
+        <#else>
         GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk; 
         GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;	
-        GMAC_REGS->GMAC_NCFGR = 
-                   (GMAC_REGS->GMAC_NCFGR & 
-                        (~GMAC_NCFGR_CLK_Msk)) | (clock_dividor << GMAC_NCFGR_CLK_Pos); 
+        GMAC_REGS->GMAC_NCFGR = (GMAC_REGS->GMAC_NCFGR & 
+                                (~GMAC_NCFGR_CLK_Msk)) | 
+                                (clock_dividor << GMAC_NCFGR_CLK_Pos); 
         GMAC_REGS->GMAC_NCR |= GMAC_NCR_TXEN_Msk; 
-        GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;	
+        GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;
+        </#if>  
+        
+        	
     } 
 </#if>    
 

@@ -103,53 +103,59 @@ typedef enum
 
     // Use full duplex or full duplex negotiation capability needed
     TCPIP_ETH_OPEN_FDUPLEX
-        /*DOM-IGNORE-BEGIN*/ = 0x2 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_AUTO << 1) /*DOM-IGNORE-END*/,
 
     // Use half duplex or half duplex negotiation capability needed
     TCPIP_ETH_OPEN_HDUPLEX
-        /*DOM-IGNORE-BEGIN*/ = 0x4 /*DOM-IGNORE-END*/,
-
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_FDUPLEX << 1) /*DOM-IGNORE-END*/,
+            
+    // Use 1000MBps or 1000MBps negotiation capability needed
+    TCPIP_ETH_OPEN_1000
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_HDUPLEX << 1) /*DOM-IGNORE-END*/,
+            
     // Use 100MBps or 100MBps negotiation capability needed
     TCPIP_ETH_OPEN_100
-        /*DOM-IGNORE-BEGIN*/ = 0x8 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_1000 << 1) /*DOM-IGNORE-END*/,
 
     // Use 10MBps or 10MBps negotiation capability needed
     TCPIP_ETH_OPEN_10
-        /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_100 << 1) /*DOM-IGNORE-END*/,
 
     // Allow huge packets RX/TX
     TCPIP_ETH_OPEN_HUGE_PKTS
-        /*DOM-IGNORE-BEGIN*/ = 0x20 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_10 << 1) /*DOM-IGNORE-END*/,
 
-    // Loopbacked at the MAC level
+    // Loopback at the MAC level
     TCPIP_ETH_OPEN_MAC_LOOPBACK
-        /*DOM-IGNORE-BEGIN*/ = 0x40 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_HUGE_PKTS << 1) /*DOM-IGNORE-END*/,
 
-    /*When PHY is loopbacked, negotiation will be disabled!*/
+    /*When PHY is loopback, negotiation will be disabled!*/
     TCPIP_ETH_OPEN_PHY_LOOPBACK
-        /*DOM-IGNORE-BEGIN*/ = 0x80 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_MAC_LOOPBACK << 1) /*DOM-IGNORE-END*/,
 
     // Use Auto MDIX
     TCPIP_ETH_OPEN_MDIX_AUTO
-        /*DOM-IGNORE-BEGIN*/ = 0x100 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_PHY_LOOPBACK << 1) /*DOM-IGNORE-END*/,
 
     // Use normal MDIX when Auto MDIX disabled
     TCPIP_ETH_OPEN_MDIX_NORM
-        /*DOM-IGNORE-BEGIN*/ = 0x0 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_MDIX_AUTO << 1) /*DOM-IGNORE-END*/,
 
     // Use swapped MDIX when Auto MDIX disabled
     TCPIP_ETH_OPEN_MDIX_SWAP
-        /*DOM-IGNORE-BEGIN*/ = 0x200 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_MDIX_NORM << 1) /*DOM-IGNORE-END*/,
 
-    // MII/RMII flags:
-
+    // GMII/MII/RMII flags:
+    // GMII connection
+    TCPIP_ETH_OPEN_GMII
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_MDIX_SWAP << 1) /*DOM-IGNORE-END*/,
     // RMII connection
     TCPIP_ETH_OPEN_RMII
-        /*DOM-IGNORE-BEGIN*/ = 0x400 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_GMII << 1) /*DOM-IGNORE-END*/,
 
     // MII connection
     TCPIP_ETH_OPEN_MII
-        /*DOM-IGNORE-BEGIN*/ = 0x000 /*DOM-IGNORE-END*/,
+        /*DOM-IGNORE-BEGIN*/ = (TCPIP_ETH_OPEN_RMII << 1) /*DOM-IGNORE-END*/,
 
 
     // All capabilities default

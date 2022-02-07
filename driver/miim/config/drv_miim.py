@@ -108,8 +108,11 @@ def instantiateComponent(drvMiimComponent):
     drvMiimModuleId.setLabel("ETH Module ID")
     drvMiimModuleId.setVisible(True)
     drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
-    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):    
-        drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):   
+        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ")):  
+            drvMiimModuleId.setDefaultValue("ETH_BASE_ADDRESS") 
+        else:
+            drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
     elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):    
         drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS") 
     elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
@@ -306,8 +309,11 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
         symbol.setVisible(False)
         
 def drvMiimSetIntMacId(symbol, event):
-    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)): 
-        symbol.setValue("GMAC_BASE_ADDRESS")
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):
+        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ")):  
+            symbol.setValue("ETH_BASE_ADDRESS") 
+        else:
+            symbol.setValue("GMAC_BASE_ADDRESS")
     elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
         symbol.setValue("_ETH_BASE_ADDRESS")
     elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    

@@ -209,21 +209,22 @@ typedef enum
 {
     /*  RMII data interface in configuration fuses. */
     DRV_ETHPHY_CFG_RMII        /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/ ,
-
+    /*  GMII data interface in configuration fuses. */
+    DRV_ETHPHY_CFG_GMII        /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/ ,
      /*  MII data interface in configuration fuses. */
-    DRV_ETHPHY_CFG_MII         /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/ ,
+    DRV_ETHPHY_CFG_MII         /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/ ,
 
     /*  Configuration fuses is ALT */
-    DRV_ETHPHY_CFG_ALTERNATE   /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/ ,
+    DRV_ETHPHY_CFG_ALTERNATE   /*DOM-IGNORE-BEGIN*/ = 0x08 /*DOM-IGNORE-END*/ ,
 
     /*  Configuration fuses is DEFAULT */
-    DRV_ETHPHY_CFG_DEFAULT     /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/ ,
+    DRV_ETHPHY_CFG_DEFAULT     /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/ ,
 
     /*  Use the fuses configuration to detect if you are RMII/MII and ALT/DEFAULT configuration */
     /*  NOTE: - this option does not check the consistency btw the software call and the way the */
     /*          fuses are configured. If just assumes that the fuses are properly configured. */
     /*        - option is valid for DRV_ETHPHY_Setup() call only! */
-    DRV_ETHPHY_CFG_AUTO        /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/
+    DRV_ETHPHY_CFG_AUTO        /*DOM-IGNORE-BEGIN*/ = 0x20 /*DOM-IGNORE-END*/
 
 } DRV_ETHPHY_CONFIG_FLAGS;
 
@@ -2042,6 +2043,7 @@ extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8720;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8740;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9303;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8061;
+extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9031;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8081;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8091;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8041;
@@ -2050,6 +2052,22 @@ extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN867x;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8742A;
 
 
+#define DRV_ETHPHY_PHYID_KSZ9031    0x1009031
+#define DRV_ETHPHY_PHYID_KSZ8081    0x1008081
+#define DRV_ETHPHY_PHYID_KSZ8091    0x1008091 
+#define DRV_ETHPHY_PHYID_KSZ8041    0x1008041   
+#define DRV_ETHPHY_PHYID_KSZ8863    0x1008863  
+#define DRV_ETHPHY_PHYID_KSZ8061    0x1008061 
+
+#define DRV_ETHPHY_PHYID_LAN8700    0x2008700 
+#define DRV_ETHPHY_PHYID_LAN8720    0x2008720 
+#define DRV_ETHPHY_PHYID_LAN8740    0x2008740 
+#define DRV_ETHPHY_PHYID_LAN9303    0x2009303 
+#define DRV_ETHPHY_PHYID_LAN867x    0x200867x   
+
+#define DRV_ETHPHY_PHYID_DP83640    0x6083640   
+#define DRV_ETHPHY_PHYID_DP83848    0x6083848   
+#define DRV_ETHPHY_PHYID_IP101GR    0x7010100 
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

@@ -36,7 +36,7 @@
     </#if>
     <#lt>const DRV_ETHPHY_INIT tcpipPhyInitData_${emac_phy_type} =
     <#lt>{    
-    <#lt>    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
+    <#lt>    .ethphyId               = DRV_ETHPHY_PERIPHERAL_ID,
     <#lt>    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
     <#lt>    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
     <#lt>    .pPhyObject             = &DRV_ETHPHY_OBJECT_${emac_phy_type},
