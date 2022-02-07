@@ -1219,29 +1219,43 @@ def instantiateComponent(drvGmacComponent):
     elif (gmac_periphID == "44152"): # SAMA5D2
         drvGmacRmiiVal.setDefaultValue(1)
     
-    interruptVector = "GMAC_INTERRUPT_ENABLE"
-    interruptHandler = "GMAC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "GMAC_INTERRUPT_HANDLER_LOCK"
+    if (gmac_periphID == "03792"):
+        interruptVector = "ETH_PRI_Q_0_INTERRUPT_ENABLE"
+        interruptHandler = "ETH_PRI_Q_0_INTERRUPT_HANDLER"
+        interruptHandlerLock = "ETH_PRI_Q_0_INTERRUPT_HANDLER_LOCK"
+    else:
+        interruptVector = "GMAC_INTERRUPT_ENABLE"
+        interruptHandler = "GMAC_INTERRUPT_HANDLER"
+        interruptHandlerLock = "GMAC_INTERRUPT_HANDLER_LOCK"
 
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
-    Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
+    if (gmac_periphID != "03792"):
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX0", True)
         
     if(gmac_periphID == "11046") or (gmac_periphID == "44152") or (gmac_periphID == "03792"): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ
-        interruptVector = "GMAC_Q1_INTERRUPT_ENABLE"
-        interruptHandlerLock = "GMAC_Q1_INTERRUPT_HANDLER_LOCK"
+        if (gmac_periphID == "03792"):#PIC32CZ
+            interruptVector = "ETH_PRI_Q_1_INTERRUPT_ENABLE"
+            interruptHandlerLock = "ETH_PRI_Q_1_INTERRUPT_HANDLER_LOCK"
+        else:
+            interruptVector = "GMAC_Q1_INTERRUPT_ENABLE"
+            interruptHandlerLock = "GMAC_Q1_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX1", True)
         
-        interruptVector = "GMAC_Q2_INTERRUPT_ENABLE"
-        interruptHandlerLock = "GMAC_Q2_INTERRUPT_HANDLER_LOCK"
+        if (gmac_periphID == "03792"):#PIC32CZ
+            interruptVector = "ETH_PRI_Q_2_INTERRUPT_ENABLE"
+            interruptHandlerLock = "ETH_PRI_Q_2_INTERRUPT_HANDLER_LOCK"
+        else:
+            interruptVector = "GMAC_Q2_INTERRUPT_ENABLE"
+            interruptHandlerLock = "GMAC_Q2_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
@@ -1249,24 +1263,36 @@ def instantiateComponent(drvGmacComponent):
         setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX2", True)
     
     if(gmac_periphID == "11046") or (gmac_periphID == "03792"): # SAME70, SAMV71, SAMRH71, PIC32CZ
-        interruptVector = "GMAC_Q3_INTERRUPT_ENABLE"
-        interruptHandlerLock = "GMAC_Q3_INTERRUPT_HANDLER_LOCK"
+        if (gmac_periphID == "03792"):#PIC32CZ
+            interruptVector = "ETH_PRI_Q_3_INTERRUPT_ENABLE"
+            interruptHandlerLock = "ETH_PRI_Q_3_INTERRUPT_HANDLER_LOCK"
+        else:
+            interruptVector = "GMAC_Q3_INTERRUPT_ENABLE"
+            interruptHandlerLock = "GMAC_Q3_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX3", True)
         
-        interruptVector = "GMAC_Q4_INTERRUPT_ENABLE"
-        interruptHandlerLock = "GMAC_Q4_INTERRUPT_HANDLER_LOCK"
+        if (gmac_periphID == "03792"):#PIC32CZ
+            interruptVector = "ETH_PRI_Q_4_INTERRUPT_ENABLE"
+            interruptHandlerLock = "ETH_PRI_Q_4_INTERRUPT_HANDLER_LOCK"
+        else:
+            interruptVector = "GMAC_Q4_INTERRUPT_ENABLE"
+            interruptHandlerLock = "GMAC_Q4_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         setVal("tcpipStack", "TCPIP_STACK_INTERRUPT_EN_IDX4", True)
         
-        interruptVector = "GMAC_Q5_INTERRUPT_ENABLE"
-        interruptHandlerLock = "GMAC_Q5_INTERRUPT_HANDLER_LOCK"
+        if (gmac_periphID == "03792"):#PIC32CZ
+            interruptVector = "ETH_PRI_Q_5_INTERRUPT_ENABLE"
+            interruptHandlerLock = "ETH_PRI_Q_5_INTERRUPT_HANDLER_LOCK"
+        else:
+            interruptVector = "GMAC_Q5_INTERRUPT_ENABLE"
+            interruptHandlerLock = "GMAC_Q5_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.clearSymbolValue("core", interruptHandlerLock)

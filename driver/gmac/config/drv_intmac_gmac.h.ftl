@@ -455,8 +455,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_GMAC_ETH_OF_HALF_DUPLEX>
                                                     TCPIP_ETH_OPEN_HDUPLEX |\
 </#if>
+<#if (TCPIP_GMAC_ETH_OF_1000)?has_content>
 <#if TCPIP_GMAC_ETH_OF_1000>
                                                     TCPIP_ETH_OPEN_1000 |\
+</#if>
 </#if>
 <#if TCPIP_GMAC_ETH_OF_100>
                                                     TCPIP_ETH_OPEN_100 |\
@@ -485,8 +487,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_GMAC_ETH_OF_MII>
                                                     TCPIP_ETH_OPEN_MII |\
 </#if>
+<#if (TCPIP_GMAC_ETH_OF_GMII)?has_content>
 <#if TCPIP_GMAC_ETH_OF_GMII>
                                                     TCPIP_ETH_OPEN_GMII |\
+</#if>
 </#if>
                                                     0
 
