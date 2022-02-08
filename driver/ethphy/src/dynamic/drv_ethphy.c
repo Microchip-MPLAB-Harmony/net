@@ -69,8 +69,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //
 #define PROT_802_3  0x01    // IEEE 802.3 capability
 // all comm capabilities our MAC supports
-#define MAC_COMM_CPBL_MASK  (_BMSTAT_BASE10T_HDX_MASK|_BMSTAT_BASE10T_FDX_MASK|_BMSTAT_BASE100TX_HDX_MASK|_BMSTAT_BASE100TX_FDX_MASK|_BASE1000X_FDX_MASK|_BASE1000X_HDX_MASK|_BASE1000T_FDX_MASK|_BASE1000T_HDX_MASK)
-#define MAC_BASE1000_CPBL_MASK  (_BASE1000X_FDX_MASK|_BASE1000X_HDX_MASK|_BASE1000T_FDX_MASK|_BASE1000T_HDX_MASK)
+#define MAC_COMM_CPBL_MASK  (_BMSTAT_BASE10T_HDX_MASK|_BMSTAT_BASE10T_FDX_MASK|_BMSTAT_BASE100TX_HDX_MASK|_BMSTAT_BASE100TX_FDX_MASK|_BMSTAT_EXTSTAT_MASK)
+#define MAC_BASE1000_CPBL_MASK  (_EXTSTAT_1000BASEX_FDX_MASK|_EXTSTAT_1000BASEX_HDX_MASK |_EXTSTAT_1000BASET_FDX_MASK|_EXTSTAT_1000BASET_HDX_MASK)
 
 
 // local prototypes
@@ -151,7 +151,8 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 static void _DRV_ETHPHY_SetupPhaseNegotiate(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-
+//Temporary fix; this work around should be implemented as part of KSZ9031 Driver
+static void _DRV_ETHPHY_KSZ9031LinkupErrata(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 
 static const _DRV_PHY_OperPhaseF _DRV_PHY_SetupPhasesTbl[] = 
@@ -159,6 +160,8 @@ static const _DRV_PHY_OperPhaseF _DRV_PHY_SetupPhasesTbl[] =
     _DRV_ETHPHY_SetupPhaseIdle,
     _DRV_ETHPHY_SetupPhaseDetect,
     _DRV_ETHPHY_SetupPhaseReset,
+    //Temporary fix; this work around should be part of KSZ9031 Driver
+    _DRV_ETHPHY_KSZ9031LinkupErrata,
     _DRV_ETHPHY_SetupPhaseNegotiate,
 };
 
@@ -1324,7 +1327,9 @@ static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             }
             else
             {   // success
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 0);
+                //_DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 0);
+                //Temporary fix; this work around should be implemented as part of KSZ9031 Driver
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 0);
             }
             break;
 
@@ -1334,6 +1339,94 @@ static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
             break;
     }
 
+}
+
+//Temporary fix; this work around should be implemented as part of KSZ9031 Driver
+static void _DRV_ETHPHY_KSZ9031LinkupErrata(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+{
+     
+    switch(hClientObj->operSubPhase)
+    {
+        case 0:
+            // Write Register Dh = 0x0000 //Set up register address for MMD - Device Address 0h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_CONTROL, 0x0000))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 1);
+            }
+            break;
+
+        case 1:
+            // Write Register Eh = 0x0004 //Select Register 4h of MMD - Device Address 0h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_DATA, 0x0004))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 2);
+            }
+            break;
+            
+        case 2:
+            // Write Register Dh = 0x4000 //Select register data for MMD - Device Address 0h, Register 4h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_CONTROL, 0x4000))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 3);
+            }
+            break;
+            
+        case 3:
+            // Write Register Eh = 0x0006 //Write value 0x0006 to MMD - Device Address 0h, Register 4h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_DATA, 0x0006))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 4);
+            }
+            break;
+            
+        case 4:
+            // Write Register Dh = 0x0000 //Set up register address for MMD - Device Address 0h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_CONTROL, 0x0000))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 5);
+            }
+            break;
+            
+        case 5:
+            // Write Register Eh = 0x0003 //Select Register 3h of MMD - Device Address 0h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_DATA, 0x0003))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 6);
+            }
+            break;
+            
+        case 6:
+            // Write Register Dh = 0x4000 //Select register data for MMD - Device Address 0h, Register 3h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_CONTROL, 0x4000))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 7);
+            }
+            break;
+            
+        case 7:
+            // Write Register Eh = 0x1A80 //Write value 0x1A80 to MMD - Device Address 0h, Register 3h
+            if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_MMD_DATA, 0x1A80))
+            {
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA, 8);
+            }
+            break;            
+            
+        case 8:
+            // wait the BMCON write/read to complete
+            if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
+            {
+                break;
+            }
+
+            // success
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, 0);
+            break;
+
+        default:
+            // shouldn't happen
+            _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_DTCT_ERR);
+            break;
+    }
 }
 
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
@@ -1487,19 +1580,19 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1(DRV_ETHPHY_CLIENT_OBJ * hC
         return;
     }
 
-    uint16_t  phyCpbl, matchCpbl;
+    uint16_t  phyCpbl, matchCommCpbl;
 
     phyCpbl   = hClientObj->smiData;
 
-    matchCpbl = (hClientObj->operReg[0] & (MAC_COMM_CPBL_MASK | _BMSTAT_AN_ABLE_MASK)) & phyCpbl; // common features
-    if(!(matchCpbl & MAC_COMM_CPBL_MASK))
+    matchCommCpbl = (MAC_COMM_CPBL_MASK | _BMSTAT_AN_ABLE_MASK) & phyCpbl; // common features
+    if(!(matchCommCpbl & MAC_COMM_CPBL_MASK))
     {   // no match?
         _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_CPBL_ERR);
         return;
     }
 
     // we're ok, we can configure the PHY
-    hClientObj->operReg[1] = matchCpbl;
+    hClientObj->operReg[0] = matchCommCpbl;
     hClientObj->vendorData = 0;
     
     if (phyCpbl & _BMSTAT_EXTSTAT_MASK)
@@ -1565,30 +1658,32 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
     DRV_ETHPHY_INSTANCE *hDriver = hClientObj->hDriver;
 
     // restore match capabilities
-    uint16_t  matchCpbl = hClientObj->operReg[1];
+    uint16_t  matchCommCpbl = hClientObj->operReg[0];
+    uint16_t  matchExtCpbl = hClientObj->operReg[1];
+    TCPIP_ETH_OPEN_FLAGS  openFlags = hClientObj->hDriver->openFlags;
 
-    if(matchCpbl &_BMSTAT_AN_ABLE_MASK)
+    if((matchCommCpbl &_BMSTAT_AN_ABLE_MASK) && (openFlags & TCPIP_ETH_OPEN_AUTO))
     {   // ok, we can perform auto negotiation
         uint16_t anadReg;
 
-        anadReg = (((matchCpbl >> _BMSTAT_NEGOTIATION_POS) << _ANAD_NEGOTIATION_POS) & _ANAD_NEGOTIATION_MASK) | PROT_802_3;
-        if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_PAUSE)
+        anadReg = (((matchCommCpbl >> _BMSTAT_NEGOTIATION_POS) << _ANAD_NEGOTIATION_POS) & _ANAD_NEGOTIATION_MASK) | PROT_802_3;
+        //Errata: Do not set asymmetric pause for KSZ9031 PHY
+        if(hClientObj->ethphyId != DRV_ETHPHY_PHYID_KSZ9031)
         {
-            anadReg |= _ANAD_PAUSE_MASK;
-        }
-
-        if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_ASM_DIR)
-        {
-            //Errata: Do not set asymmetric pause for KSZ9031 PHY
-            if(hClientObj->ethphyId != DRV_ETHPHY_PHYID_KSZ9031)
+            if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_PAUSE)
             {
-                anadReg |= _ANAD_ASM_DIR_MASK;
+               anadReg |= _ANAD_PAUSE_MASK;
+            }
+            if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_ASM_DIR)
+            {
+
+                    anadReg |= _ANAD_ASM_DIR_MASK;
             }
         }
 
         if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_ANAD, anadReg))
         {   // advertise our capabilities
-            if (matchCpbl & MAC_BASE1000_CPBL_MASK)
+            if ((matchExtCpbl & MAC_BASE1000_CPBL_MASK) && (openFlags & TCPIP_ETH_OPEN_1000))
             {
                 _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_13);
             }
@@ -1603,16 +1698,16 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
         uint16_t  ctrlReg;
 
         ctrlReg = 0;
-        if(matchCpbl & (_BASE1000T_FDX_MASK | _BASE1000T_HDX_MASK))   // set 1000Mbps request/capability
+        if((matchExtCpbl & (_BASE1000T_FDX_MASK | _BASE1000T_HDX_MASK)) && (openFlags & TCPIP_ETH_OPEN_1000))  // set 1000Mbps request/capability
         {
-            ctrlReg |= _BMCON_AN_ENABLE_MASK; //Auto-Neg must for 1000Mbps
+            ctrlReg |= _BMCON_SPEED1000_MASK | _BMCON_AN_ENABLE_MASK; //Auto-Neg must for 1000Mbps
         }
-        else if(matchCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK))   // set 100Mbps request/capability
+        else if((matchCommCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK)) && (openFlags & TCPIP_ETH_OPEN_100))  // set 100Mbps request/capability
         {
-            ctrlReg |= _BMCON_SPEED_MASK;
+            ctrlReg |= _BMCON_SPEED100_MASK;
         }
 
-        if(matchCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000T_FDX_MASK))
+        if(matchCommCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000T_FDX_MASK))
         {
             ctrlReg |= _BMCON_DUPLEX_MASK;
         }
@@ -1670,12 +1765,13 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hC
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS openFlags = TCPIP_ETH_OPEN_DEFAULT;
-    uint16_t    matchCpbl = 0 ;
+    uint16_t    matchCpbl = 0 , matchExtCpbl = 0;
 
     // now update the open flags
     // the upper layer needs to know the PHY set-up to further set-up the MAC.
     openFlags = hClientObj->hDriver->openFlags;
     matchCpbl = hClientObj->operReg[1];
+    matchExtCpbl = hClientObj->operReg[1];
 
     // clear the capabilities
     openFlags &= ~(TCPIP_ETH_OPEN_AUTO | TCPIP_ETH_OPEN_FDUPLEX | TCPIP_ETH_OPEN_HDUPLEX | TCPIP_ETH_OPEN_1000 | TCPIP_ETH_OPEN_100 | TCPIP_ETH_OPEN_10);
@@ -1684,7 +1780,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hC
     {
         openFlags |= TCPIP_ETH_OPEN_AUTO;
     }
-    if(matchCpbl & (_BASE1000X_FDX_MASK|_BASE1000X_HDX_MASK|_BASE1000T_FDX_MASK|_BASE1000T_HDX_MASK))   // set 1000Mbps request/capability
+    if(matchExtCpbl & (_EXTSTAT_1000BASET_FDX_MASK|_EXTSTAT_1000BASET_HDX_MASK|_EXTSTAT_1000BASEX_FDX_MASK|_EXTSTAT_1000BASEX_HDX_MASK))   // set 1000Mbps request/capability
     {
         openFlags |= TCPIP_ETH_OPEN_1000;
     }
@@ -1696,11 +1792,11 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hC
     {
         openFlags |= TCPIP_ETH_OPEN_10;
     }
-    if(matchCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000X_FDX_MASK | _BASE1000T_FDX_MASK))
+    if((matchCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000X_FDX_MASK)) || (matchExtCpbl & (_EXTSTAT_1000BASET_FDX_MASK|_EXTSTAT_1000BASEX_FDX_MASK)))
     {
         openFlags |= TCPIP_ETH_OPEN_FDUPLEX;
     }
-    if(matchCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE100TX_HDX_MASK | _BASE1000X_HDX_MASK | _BASE1000T_HDX_MASK ))
+    if((matchCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE100TX_HDX_MASK | _BASE1000X_HDX_MASK | _BASE1000T_HDX_MASK )) || (matchExtCpbl & (_EXTSTAT_1000BASET_HDX_MASK|_EXTSTAT_1000BASEX_HDX_MASK)))
     {
         openFlags |= TCPIP_ETH_OPEN_HDUPLEX;
     }
@@ -1730,31 +1826,13 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase11(DRV_ETHPHY_CLIENT_OBJ * h
 
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase12(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    static uint16_t ext_stat = 0, extCpbl = 0, base1000Capl = 0;
+    static uint16_t extStat = 0;
     if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
-    ext_stat = hClientObj->smiData;
-    if (ext_stat & _EXTSTAT_BASE1000X_FDX_MASK)
-    {
-        extCpbl = _BASE1000X_FDX_MASK;
-    }
-    if (ext_stat & _EXTSTAT_BASE1000X_HDX_MASK)
-    {
-        extCpbl |= _BASE1000X_HDX_MASK;
-    }
-    if (ext_stat & _EXTSTAT_BASE1000T_FDX_MASK)
-    {
-        extCpbl |= _BASE1000T_FDX_MASK;
-    }
-    if (ext_stat & _EXTSTAT_BASE1000T_HDX_MASK)
-    {
-        extCpbl |= _BASE1000T_HDX_MASK;
-    }
-    base1000Capl = (hClientObj->operReg[0] & (MAC_COMM_CPBL_MASK)) & extCpbl;
-    
-    hClientObj->operReg[1] |= base1000Capl;   
+    extStat = hClientObj->smiData;
+    hClientObj->operReg[1] = extStat & MAC_BASE1000_CPBL_MASK;
     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_2);  
     
 }
@@ -1769,31 +1847,33 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase13(DRV_ETHPHY_CLIENT_OBJ * h
 }
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase14(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    uint16_t extCaplAdv = 0, matchCpbl = 0;
+    uint16_t ext1000baseCtrl = 0, matchExtStat = 0;
+    
     if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
         return;
     }
-    extCaplAdv = hClientObj->smiData;
-    matchCpbl = hClientObj->operReg[1];
-    if(matchCpbl & _BASE1000T_FDX_MASK)
+    ext1000baseCtrl = hClientObj->smiData;
+    matchExtStat = hClientObj->operReg[1];
+    
+    if(matchExtStat & _EXTSTAT_1000BASET_FDX_MASK)
     {
-        extCaplAdv |= _1000BASE_TCTRL_TFDX_MASK;
+        ext1000baseCtrl |= _1000BASE_TCTRL_TFDX_MASK;
     }
     else
     {
-        extCaplAdv &= ~_1000BASE_TCTRL_TFDX_MASK;
+        ext1000baseCtrl &= ~_1000BASE_TCTRL_TFDX_MASK;
     }
-    if(matchCpbl & _BASE1000T_HDX_MASK)
+    if(matchExtStat & _EXTSTAT_1000BASET_HDX_MASK)
     {
-        extCaplAdv |= _1000BASE_TCTRL_THDX_MASK;
+        ext1000baseCtrl |= _1000BASE_TCTRL_THDX_MASK;
     }
     else
     {
-        extCaplAdv &= ~_1000BASE_TCTRL_THDX_MASK;
+        ext1000baseCtrl &= ~_1000BASE_TCTRL_THDX_MASK;
     }
     
-    if(_DRV_PHY_SMIWriteStart( hClientObj, PHY_REG_1000BASECON, extCaplAdv))
+    if(_DRV_PHY_SMIWriteStart( hClientObj, PHY_REG_1000BASECON, ext1000baseCtrl))
     {
         _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_5);
     }

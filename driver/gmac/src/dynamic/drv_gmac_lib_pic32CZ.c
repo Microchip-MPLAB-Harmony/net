@@ -123,7 +123,7 @@ INT_SOURCE  drvGmacIRQ[DRV_GMAC_NUMBER_OF_QUEUES] = {
  * Summary: Initialize GMAC peripheral registers
  *****************************************************************************/
 void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv) 
-{	    
+{	
 	ETH_REGS->ETH_CTRLA = ETH_CTRLA_ENABLE(1);
     while(ETH_REGS->ETH_SYNCB);
     //disable Tx
@@ -153,12 +153,12 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
                                             ETH_TSR_TFC_Msk  | ETH_TSR_TXCOMP_Msk  | ETH_TSR_HRESP_Msk;
 									
 	//Clear all GMAC Interrupt status
-	ETH_REGS->ETH_ISR;
-	ETH_REGS->ETH_ISRQ[0] ;   
-	ETH_REGS->ETH_ISRQ[1] ;
-    ETH_REGS->ETH_ISRQ[2] ;
-    ETH_REGS->ETH_ISRQ[3] ;
-    ETH_REGS->ETH_ISRQ[4] ;
+    ETH_REGS->ETH_ISR = ETH_REGS->ETH_ISR & ETH_ISR_Msk;
+	ETH_REGS->ETH_ISRQ[0] =  ETH_REGS->ETH_ISRQ[0] & ETH_ISRQ_Msk;   
+	ETH_REGS->ETH_ISRQ[1] =  ETH_REGS->ETH_ISRQ[1] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[2] =  ETH_REGS->ETH_ISRQ[2] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[3] =  ETH_REGS->ETH_ISRQ[3] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[4] =  ETH_REGS->ETH_ISRQ[4] & ETH_ISRQ_Msk;   
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
 	// pause enable, remove FCS, MDC clock
     ETH_REGS->ETH_NCFGR = ETH_NCFGR_SPD(1) | ETH_NCFGR_FD(1) | ETH_NCFGR_DBW(1) | 
@@ -281,12 +281,12 @@ void DRV_PIC32CGMAC_LibClose(DRV_GMAC_DRIVER * pMACDrv, DRV_PIC32CGMAC_CLOSE_FLA
 	ETH_REGS->ETH_NCR &= ~ETH_NCR_RXEN_Msk;
 	
 	// Clear interrupt status
-	ETH_REGS->ETH_ISR;
-	ETH_REGS->ETH_ISRQ[0];
-	ETH_REGS->ETH_ISRQ[1];
-    ETH_REGS->ETH_ISRQ[2] ;
-    ETH_REGS->ETH_ISRQ[3] ;
-    ETH_REGS->ETH_ISRQ[4] ;
+    ETH_REGS->ETH_ISR = ETH_REGS->ETH_ISR & ETH_ISR_Msk;
+	ETH_REGS->ETH_ISRQ[0] =  ETH_REGS->ETH_ISRQ[0] & ETH_ISRQ_Msk;   
+	ETH_REGS->ETH_ISRQ[1] =  ETH_REGS->ETH_ISRQ[1] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[2] =  ETH_REGS->ETH_ISRQ[2] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[3] =  ETH_REGS->ETH_ISRQ[3] & ETH_ISRQ_Msk;   
+    ETH_REGS->ETH_ISRQ[4] =  ETH_REGS->ETH_ISRQ[4] & ETH_ISRQ_Msk; 
 }
 
 /****************************************************************************
@@ -1224,11 +1224,12 @@ uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx)
     if(queueIdx == (uint32_t)GMAC_QUE_0)
     {
         isr = ETH_REGS->ETH_ISR;
+        ETH_REGS->ETH_ISR = isr;
     }
     else
     {
         isr = ETH_REGS->ETH_ISRQ[queueIdx - 1];
-        
+        ETH_REGS->ETH_ISRQ[queueIdx - 1] = isr;
     }
     
     return isr;

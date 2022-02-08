@@ -66,6 +66,8 @@ typedef enum
     PHY_REG_ANLPRNP     = 8,  // Extended: Auto-Negotiation Link Partner Received Next Page
     PHY_REG_1000BASECON = 9,
     PHY_REG_1000BASESTAT = 10,
+    PHY_REG_MMD_CONTROL = 13,
+    PHY_REG_MMD_DATA = 14,
     PHY_REG_EXTSTAT = 15,
     // specific vendor registers: 16-31
     PHY_REG_VENDOR  = 16,   // this is updated by each specific PHY
@@ -99,13 +101,15 @@ typedef union {
   };
 } __BMCONbits_t;    // reg 0: PHY_REG_BMCON
 
+
+#define _BMCON_SPEED1000_MASK   0x0040
 #define _BMCON_COLTEST_MASK     0x0080
 #define _BMCON_DUPLEX_MASK      0x0100
 #define _BMCON_AN_RESTART_MASK  0x0200
 #define _BMCON_ISOLATE_MASK     0x0400
 #define _BMCON_PDWN_MASK        0x0800
 #define _BMCON_AN_ENABLE_MASK   0x1000
-#define _BMCON_SPEED_MASK       0x2000
+#define _BMCON_SPEED100_MASK       0x2000
 #define _BMCON_LOOPBACK_MASK    0x4000
 #define _BMCON_RESET_MASK       0x8000
 
@@ -148,6 +152,12 @@ typedef union {
 #define _BMSTAT_BASE100TX_HDX_MASK  0x2000
 #define _BMSTAT_BASE100TX_FDX_MASK  0x4000
 #define _BMSTAT_BASE100T4_MASK      0x8000
+
+#define _EXTSTAT_1000BASEX_FDX_MASK 0x8000
+#define _EXTSTAT_1000BASEX_HDX_MASK 0x4000
+#define _EXTSTAT_1000BASET_FDX_MASK 0x2000
+#define _EXTSTAT_1000BASET_HDX_MASK 0x1000
+
 
 #define _BASE1000X_FDX_MASK 0x0400
 #define _BASE1000X_HDX_MASK 0x0200
