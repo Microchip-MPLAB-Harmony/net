@@ -135,7 +135,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _TCPIP_DHCPS_ARP_INJECT_TMO         1000   // milliseconds
 
 // debugging
-#define _TCPIP_DHCPS_DEBUG_MASK_BASIC           (0x0001)    // print sout addertions and conditions
+#define _TCPIP_DHCPS_DEBUG_MASK_BASIC           (0x0001)    // prints out assertions and conditions
 #define _TCPIP_DHCPS_DEBUG_MASK_STATUS          (0x0002)    // prints out current server status
 #define _TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT     (0x0004)    // prints out error events
 #define _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT    (0x0008)    // prints out client events

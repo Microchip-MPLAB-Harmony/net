@@ -370,117 +370,65 @@ typedef enum
 
     // client lease events > 0
 
-    TCPIP_DHCPS_EVENT_ECHO_PROBE_SENT,          // sent an ICMP probe
-                                                    // evInfo1: probe count
-                                                    // evInfo2: IP address (uint32_t, network order) trying to ping
-    TCPIP_DHCPS_EVENT_DISCOVER,                 // DHCP discovery received
-                                                    // evInfo1: IP address that server assigned to the client 
-                                                    // evInfo2: current time at which the discovery occurred  
+    TCPIP_DHCPS_EVENT_ECHO_PROBE_SENT,          // sent an ICMP probe 
 
-    TCPIP_DHCPS_EVENT_REQUEST_OFFERRED,        // lease ACK for offer request
-                                                    // evInfo1: IP address that server assigned to the client 
-                                                    // evInfo2: current time at which the request occurred  
+    TCPIP_DHCPS_EVENT_DISCOVER,                 // DHCP discovery received 
 
-    TCPIP_DHCPS_EVENT_REQUEST_RENEW,            // lease ACK sent for renew request
-                                                    // evInfo1: IP address that server had for the client 
-                                                    // evInfo2: current time at which the renew occurred  
+    TCPIP_DHCPS_EVENT_REQUEST_OFFERRED,         // lease ACK for offer request 
+
+    TCPIP_DHCPS_EVENT_REQUEST_RENEW,            // lease ACK sent for renew request 
     
-    TCPIP_DHCPS_EVENT_REQUEST_REBIND,           // lease ACK sent for rebind request
-                                                    // evInfo1: IP address that server had for the client 
-                                                    // evInfo2: current time at which the rebind occurred  
+    TCPIP_DHCPS_EVENT_REQUEST_REBIND,           // lease ACK sent for rebind request 
 
-    TCPIP_DHCPS_EVENT_REQUEST_EXPIRED,          // lease ACK sent for an expired request
-                                                    // evInfo1: IP address that server had for the client 
-                                                    // evInfo2: current time at which the request occurred  
+    TCPIP_DHCPS_EVENT_REQUEST_EXPIRED,          // lease ACK sent for an expired request 
 
-    TCPIP_DHCPS_EVENT_OTHER_SELECT,             // DHCP client selected a different server
-                                                    // evInfo1: IP address that server had 
-                                                    // evInfo2: IP address requested by client
+    TCPIP_DHCPS_EVENT_OTHER_SELECT,             // DHCP client selected a different server 
 
-    TCPIP_DHCPS_EVENT_INFORM,                   // DHCPINFORM from a client, with an IP address already assigned
-                                                    // evInfo1: inform IP address of the client 
-                                                    // evInfo2: current time at which the inform occurred  
+    TCPIP_DHCPS_EVENT_INFORM,                   // DHCPINFORM from a client, with an IP address already assigned 
     // error events < 0
-    TCPIP_DHCPS_EVENT_PROCESS_LOCK      = -1,   // DHCP message processing postponed as the DB access was locked
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: current time at which the request occurred  
+    TCPIP_DHCPS_EVENT_PROCESS_LOCK      = -1,   // DHCP message processing postponed as the DB access was locked 
 
-    TCPIP_DHCPS_EVENT_TICK_LOCK         = -2,   // DHCP timeout processing postponed as the DB access was locked
-                                                    // evInfo1: time (DHCPs second) when this occurred
-                                                    // evInfo2: 0
+    TCPIP_DHCPS_EVENT_TICK_LOCK         = -2,   // DHCP timeout processing postponed as the DB access was locked 
 
-    TCPIP_DHCPS_EVENT_MSG_OVERFLOW      = -3,   // DHCP message received is > than the internally allocated buffer 
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: sizeof the received message
+    TCPIP_DHCPS_EVENT_MSG_OVERFLOW      = -3,   // DHCP message received is > than the internally allocated buffer  
 
-    TCPIP_DHCPS_EVENT_MSG_UNDERFLOW     = -4,   // DHCP message received is < than the minimum DHCP valid message
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: sizeof the received message
+    TCPIP_DHCPS_EVENT_MSG_UNDERFLOW     = -4,   // DHCP message received is < than the minimum DHCP valid message 
 
-    TCPIP_DHCPS_EVENT_IF_DISABLED       = -5,   // DHCP message received on an interface that has DHCP server disabled
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: current time at which the request occurred  
+    TCPIP_DHCPS_EVENT_IF_DISABLED       = -5,   // DHCP message received on an interface that has DHCP server disabled 
 
-    TCPIP_DHCPS_EVENT_IF_ERROR          = -6,   // DHCP message received on an interface that the DHCP server has not mapped internally
+    TCPIP_DHCPS_EVENT_IF_ERROR          = -6,   // DHCP message received on an interface that the DHCP server has not mapped internally 
                                                     // This should not normally happen
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: current time at which the request occurred  
 
-    TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR  = -7,   // DHCP message received is badly formatted:
+    TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR  = -7,   // DHCP message received is badly formatted: 
                                                     // operation != 1 or header type != 1 or header length != 6 or bad header MAC address or bad magic cookie
-                                                    // evInfo1: IP address (uint32_t, network order) of the client that sent the message
-                                                    // evInfo2: current time at which the request occurred  
 
-    TCPIP_DHCPS_EVENT_POOL_EMPTY        = -8,   // DHCP pool was empty, cannot allocate a new lease
-                                                    // evInfo1: none
-                                                    // evInfo2: none
+    TCPIP_DHCPS_EVENT_POOL_EMPTY        = -8,   // DHCP pool was empty, cannot allocate a new lease 
+                                                    // Note: this could remove a new client from the DB so the TCPIP_DHCPS_LEASE_INFO won't be available any longer
 
-    TCPIP_DHCPS_EVENT_CACHE_FULL        = -9,   // DHCP cache for the interface was full, cannot store a new lease
-                                                    // evInfo1: number of cache entries that are reported as full (size of the cache)
-                                                    // evInfo2: none
+    TCPIP_DHCPS_EVENT_CACHE_FULL        = -9,   // DHCP cache for the interface was full, cannot store a new lease 
 
-    TCPIP_DHCPS_EVENT_ECHO_PROBE_FAIL   = -10,   // Attempt to send an ICMP probe failed: ICMP module rejected the call
-                                                    // evInfo1: probe count
-                                                    // evInfo2: IP address (uint32_t, network order) trying to ping
+    TCPIP_DHCPS_EVENT_ECHO_PROBE_FAIL   = -10,   // Attempt to send an ICMP probe failed: ICMP module rejected the call 
 
-    TCPIP_DHCPS_EVENT_ECHO_FAIL         = -11,   // ICMP probes failed completely; probes aborted
-                                                    // evInfo1: ICMP retries attempted
-                                                    // evInfo2: IP address (uint32_t, network order) trying to ping
+    TCPIP_DHCPS_EVENT_ECHO_FAIL         = -11,   // ICMP probes failed completely; probes aborted 
 
-    TCPIP_DHCPS_EVENT_REPROBE_FAIL      = -12,   // ICMP reprobes failed completely; probes aborted
-                                                    // evInfo1: ICMP reprobes attempted
-                                                    // evInfo2: IP address (uint32_t, network order) trying to ping
+    TCPIP_DHCPS_EVENT_REPROBE_FAIL      = -12,   // ICMP reprobes failed completely; probes aborted 
+                                                    // Note: this will remove the client from the DB so the TCPIP_DHCPS_LEASE_INFO won't be available any longer
 
-    TCPIP_DHCPS_EVENT_ARP_FAIL          = -13,  // attempt to inject to ARP cache failed
-                                                    // evInfo1: ARP reply
-                                                    // evInfo2: IP address (uint32_t, network order) trying to inject
-    TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR = -14,  // DHCPREQUEST from client with wrong requested IP address
-                                                    // evInfo1: IP address that server had 
-                                                    // evInfo2: IP address requested by client
+    TCPIP_DHCPS_EVENT_ARP_FAIL          = -13,  // attempt to inject to ARP cache failed 
+    TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR = -14,  // DHCPREQUEST from client with wrong requested IP address 
 
-    TCPIP_DHCPS_EVENT_REQ_UNKNOWN       = -15,  // DHCPREQUEST from an unknown client, no entry in the DB for it
-                                                    // evInfo1: IP address requested by client if it exists
-                                                    // evInfo2: time at which the event occurres
+    TCPIP_DHCPS_EVENT_REQ_UNKNOWN       = -15,  // DHCPREQUEST from an unknown client, no entry in the DB for it 
 
-    TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR  = -16,  // DHCPREQUEST from client with wrong format
-                                                    // evInfo1: IP address that server has for or requested by this client 
-                                                    // evInfo2: a TCPIP_DHCPS_REQ_FORMAT_ERR_MASK value
+    TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR  = -16,  // DHCPREQUEST from client with wrong format 
 
-    TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR = -17,  // DHCPINFORM from client with wrong format
-                                                    // evInfo1: IP address of the client 
-                                                    // evInfo2: a TCPIP_DHCPS_REQ_FORMAT_ERR_MASK value
+    TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR = -17,  // DHCPINFORM from client with wrong format 
 
-    TCPIP_DHCPS_EVENT_REQ_UNEXPECT      = -18,  // unexpected DHCPREQUEST received a client. ignored
-                                                    // evInfo1: IP address that server has for this client 
-                                                    // evInfo2: the current TCPIP_DHCPS_LEASE_STATE for this lease
+    TCPIP_DHCPS_EVENT_REQ_UNEXPECT      = -18,  // unexpected DHCPREQUEST received a client. ignored 
 
-    TCPIP_DHCPS_EVENT_DECLINED          = -19,  // client issues a DHCPDECLINE; address was in use 
-                                                    // evInfo1: IP address that was declined
-                                                    // evInfo2: time at which the event occurres
+    TCPIP_DHCPS_EVENT_DECLINED          = -19,  // client issues a DHCPDECLINE; address was in use  
+                                                    // Note: this will remove the client from the DB so the TCPIP_DHCPS_LEASE_INFO won't be available any longer
 
-    TCPIP_DHCPS_EVENT_INFORM_INVALID    = -20,  // DHCPINFORM from a client, with an IP address not in our network/pool
-                                                    // evInfo1: inform IP address of the client 
-                                                    // evInfo2: time at which the event occurres
+    TCPIP_DHCPS_EVENT_INFORM_INVALID    = -20,  // DHCPINFORM from a client, with an IP address not in our network/pool 
 
 
 } TCPIP_DHCPS_EVENT_TYPE;
@@ -503,6 +451,79 @@ typedef const void* TCPIP_DHCPS_EVENT_HANDLE;
 
 // *****************************************************************************
 /*
+  Structure:
+    TCPIP_DHCPS_EVENT_DATA_INFO
+
+  Summary:
+    DHCP Server event associated data information.
+
+  Description:
+    DHCP server data info and flags that's passed when an event occurred
+
+  Remarks:
+    None
+    
+*/
+
+typedef struct
+{
+    union
+    {
+        uint16_t    val;
+        struct
+        {
+            uint16_t    infoIpValid:    1;  // if 1, then the ipAddress value is valid 
+            uint16_t    infoSize:       1;  // if 1, then the data value represents message size 
+            uint16_t    infoSlots:      1;  // if 1, then the data value represents the number of slots in the cache
+            uint16_t    infoFmtMask:    1;  // if 1, then the data value represents a TCPIP_DHCPS_REQ_FORMAT_ERR_MASK value
+            uint16_t    infoState:      1;  // if 1, then the data value represents a TCPIP_DHCPS_LEASE_STATE value
+            uint16_t    infoReqIp:      1; // if 1, then the data value represents the requested IP value
+            uint16_t    infoTargetIp:   1; // if 1, then the data value represents a target IP value (ARP/ICMP)
+            uint16_t    infoIcmpCount:  1; // if 1, then the data value represents the number of ICMP retries/probes
+            uint16_t    reserved:       6;  // reserved for future use
+            uint16_t    leaseIndexValid:1;  // if 1, then the leaseIndex value is valid
+            uint16_t    macAddValid:    1;  // if 1, then the macAdd value is valid 
+        };
+    }flags;
+    uint32_t    ipAddress;  // if flags.infoIpValid != 0, the IP address of the client
+                                // otherwise not applicable/available
+    uint32_t    data;       // additional event info data as specified by flags.info...
+}TCPIP_DHCPS_EVENT_DATA_INFO;
+
+
+
+// *****************************************************************************
+/*
+  Structure:
+    TCPIP_DHCPS_EVENT_DATA
+
+  Summary:
+    DHCP Server event associated data.
+
+  Description:
+    DHCP server data that's passed when an event occurred
+
+  Remarks:
+    None
+    
+*/
+
+typedef struct
+{
+    TCPIP_NET_HANDLE        hNet;       // Interface handle on which the event has occurred
+                                        // 0 if not applicable
+    uint32_t                evTime;     // the current time at which the event occurred                                        
+    int16_t                 evType;     // a TCPIP_DHCPS_EVENT_TYPE value: the type of event that has occurred
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo; // additional event data and flags for the validity of fields
+
+    uint16_t                leaseIndex; // if flags.leaseIndexValid != 0, an index hat can be used for a query with TCPIP_DHCPS_LeaseGetInfo
+                                        // otherwise not applicable/available
+    TCPIP_MAC_ADDR          macAdd;     // if flags.macAddValid != 0, then the client MAC address for this event
+                                        // otherwise not applicable/available
+}TCPIP_DHCPS_EVENT_DATA;
+
+// *****************************************************************************
+/*
   Type:
     TCPIP_DHCPS_EVENT_HANDLER
 
@@ -515,22 +536,19 @@ typedef const void* TCPIP_DHCPS_EVENT_HANDLE;
     registered handler.
 
   Parameters:
-    hNet    - Interface handle on which the event has occurred
-    evType  - the type of event that has occurred
-    evInfo1 - additional info associated with the event
-              See the TCPIP_DHCPS_EVENT_TYPE definition 
-    evInfo2 - additional info associated with the event
-              See the TCPIP_DHCPS_EVENT_TYPE definition 
-    hParam  - user supplied handle parameter
+    evData  - data associated with this event
+    param   - user supplied handle parameter
               Not used by the DHCP module.
 
   Remarks:
     The handler has to be short and fast. It is meant for
     setting an event flag, <i>not</i> for lengthy processing!
+
+    evData is available only in the context of the event handler call!
+    User should make a copy of the needed fields for future use.
  */
 
-typedef void    (*TCPIP_DHCPS_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_TYPE evType, uint32_t evInfo1, uint32_t evInfo2, const void* param);
-
+typedef void    (*TCPIP_DHCPS_EVENT_HANDLER)(TCPIP_DHCPS_EVENT_DATA* evData, const void* param);
 
 // *****************************************************************************
 /*
@@ -580,6 +598,7 @@ typedef enum
 */
 typedef struct
 {
+    TCPIP_NET_HANDLE hNet;          // Interface on which this lease is granted
     IPV4_ADDR       ipAddress;      // leased IP address
     uint32_t        leaseTime;      // remaining lease time
     TCPIP_MAC_ADDR  macAdd;         // Client MAC address

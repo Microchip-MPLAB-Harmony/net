@@ -236,8 +236,12 @@ void            TCPIP_OAHASH_EntriesRemoveAll(OA_HASH_DCPT* pOH);
 // helper to return an pointer to an entry
 // entryIx should be < hEntries
 // otherwise it returns 0 
-OA_HASH_ENTRY*   TCPIP_OAHASH_EntryGet(OA_HASH_DCPT* pOH, size_t entryIx);
+OA_HASH_ENTRY*  TCPIP_OAHASH_EntryGet(OA_HASH_DCPT* pOH, size_t entryIx);
 
+// helper to return the index of a hash entry
+// returns an index >= 0 if success
+// returns < 0 if failure
+int32_t         TCPIP_OAHASH_EntryGetIndex(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* pHe);       
 
 #if !defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 

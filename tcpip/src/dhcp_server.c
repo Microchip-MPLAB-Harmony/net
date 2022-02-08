@@ -113,7 +113,7 @@ static void _DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy);
 static void _DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy);
 
 #if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
-static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, uint32_t evInfo1, uint32_t evInfo2);
+static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo);
 #endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
 static void IpIndexMarkBusy(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index);
@@ -235,7 +235,7 @@ static const char* _DHCPS_ClientEvent_Tbl[] =
 #endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
 
-static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, uint32_t evInfo1, uint32_t evInfo2)
+static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
 {
     const char* evStr = "illegal";
     const char* evMsg = "illegal";
@@ -266,11 +266,23 @@ static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType
     }
 #endif // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
-    (void)evStr; (void)evMsg; (void)evInfo1; (void)evInfo2;
-    SYS_CONSOLE_PRINT("DHCPs - if: %d %s: %s, evInfo1: 0x%08x, evInfo2: 0x%08x\r\n", TCPIP_STACK_NetIndexGet(pktIf), evStr, evMsg, evInfo1, evInfo2);
+    (void)evStr; (void)evMsg;
+    uint32_t ipAddress = 0;
+    uint32_t data = 0;
+    uint16_t flags = 0;
+
+    if(evInfo != 0)
+    {
+        flags = evInfo->flags.val;
+        ipAddress = evInfo->ipAddress;
+        data = evInfo->data;
+    }
+
+    (void)ipAddress; (void)data; (void)flags;
+    SYS_CONSOLE_PRINT("DHCPs - if: %d %s: %s, ipAddress: 0x%08x, data: 0x%08x, flags: 0x%04x\r\n", TCPIP_STACK_NetIndexGet(pktIf), evStr, evMsg, ipAddress, data, flags);
 }
 #else
-#define _DHCPS_EventPrint(pktIf, evType, evInfo1, evInfo2) do { (void)evInfo1; (void)evInfo2; } while (0)
+#define _DHCPS_EventPrint(pktIf, evType, he, evInfo) do { (void)he; (void)evInfo; } while (0)
 #endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & (_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT | _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT)) != 0
 
 #if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_SENT_MESSAGE ) != 0
@@ -364,55 +376,6 @@ static __inline__ void __attribute__((always_inline)) _DHCPS_AccessUnlock(void)
 }
 #endif  // (_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
 
-
-#if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
-static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, uint32_t evInfo1, uint32_t evInfo2)
-{
-    int ix;
-    TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS];
-
-   _DhcpsAssert(evType != 0, __func__, __LINE__);
-
-    bool doNotify;
-
-#if (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
-    if(evType < 0)
-    {
-        doNotify = true;
-    }
-#elif (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
-    if(evType > 0)
-    {
-        doNotify = true;
-    }
-#endif
-
-   if(doNotify)
-   {
-       // make a quick copy
-       OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
-       memcpy(registeredUsers, gDhcpDcpt->registeredUsers, sizeof(registeredUsers));
-       _DHCPS_Unlock(lock);
-
-
-       TCPIP_DHCPS_EVENT_NODE* pEvent = registeredUsers;
-       for(ix = 0; ix < sizeof(registeredUsers) / sizeof(*registeredUsers); ix++, pEvent++)
-       {
-           if(pEvent->handler != 0)
-           {   // found handler
-               if(pEvent->hNet == 0 || pEvent->hNet == pktIf)
-               {   // trigger event
-                   (*pEvent->handler)(pktIf, evType, evInfo1, evInfo2, pEvent->hParam);
-               }
-           }
-       }
-   }
-
-    _DHCPS_EventPrint(pktIf, evType, evInfo1, evInfo2);
-}
-#else
-#define _DHCPS_NotifyClients(pktIf, evType, evInfo1, evInfo2) _DHCPS_EventPrint(pktIf, evType, evInfo1, evInfo2)
-#endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
 static __inline__ uint32_t __attribute__((always_inline)) _DHCPS_SecCount(void)
 {
@@ -994,6 +957,84 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
     return res;
 }
 
+#if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
+{
+    int ix;
+    TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS];
+    TCPIP_DHCPS_EVENT_DATA  evData;
+
+   _DhcpsAssert(evType != 0, __func__, __LINE__);
+
+    bool doNotify;
+
+#if (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
+    if(evType < 0)
+    {
+        doNotify = true;
+    }
+#elif (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
+    if(evType > 0)
+    {
+        doNotify = true;
+    }
+#endif
+
+   if(doNotify)
+   {
+       // make a quick copy
+       OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
+       memcpy(registeredUsers, gDhcpDcpt->registeredUsers, sizeof(registeredUsers));
+       _DHCPS_Unlock(lock);
+
+
+       memset(&evData, 0, sizeof(evData));
+       evData.hNet = (TCPIP_NET_HANDLE)pktIf;
+       evData.evTime = _DHCPS_SecCount();
+       evData.evType = (int16_t)evType;
+       if(evInfo)
+       {
+           evData.evInfo = *evInfo;
+       }
+       
+       if(he != 0)
+       {
+           int32_t leaseIndex = TCPIP_OAHASH_EntryGetIndex(he->parent->hashDcpt, &he->hEntry);
+            _DhcpsAssert(leaseIndex >= 0, __func__, __LINE__);
+           evData.leaseIndex = (uint16_t)leaseIndex;
+           evData.evInfo.flags.leaseIndexValid = 1;
+
+           memcpy(evData.macAdd.v, he->chaddr, sizeof(evData.macAdd));
+           evData.evInfo.flags.macAddValid = 1;
+
+           if(evData.evInfo.flags.infoIpValid == 0)
+           {
+               evData.evInfo.ipAddress = he->ipAddress.Val;
+               evData.evInfo.flags.infoIpValid = 1;
+           }
+       }
+
+
+
+       TCPIP_DHCPS_EVENT_NODE* pEvent = registeredUsers;
+       for(ix = 0; ix < sizeof(registeredUsers) / sizeof(*registeredUsers); ix++, pEvent++)
+       {
+           if(pEvent->handler != 0)
+           {   // found handler
+               if(pEvent->hNet == 0 || pEvent->hNet == pktIf)
+               {   // trigger event
+                   (*pEvent->handler)(&evData, pEvent->hParam);
+               }
+           }
+       }
+   }
+
+    _DHCPS_EventPrint(pktIf, evType, he, evInfo);
+}
+#else
+#define _DHCPS_NotifyClients(pktIf, evType, he, evInfo) _DHCPS_EventPrint(pktIf, evType, he, evInfo)
+#endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+
 bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCPS_MODULE_CONFIG* pDhcpsConfig)
 {    
     TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt;
@@ -1272,23 +1313,23 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
     BOOTP_HEADER*       pHeader;
     uint8_t*            rxPtr;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE;
-    uint32_t evInfo1, evInfo2;
     bool processPkt = false;
     bool accessLocked = false;
     TCPIP_NET_IF*       pktIf;  // interface on which the packet arrived
     TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt = 0; // associated DHCPs interface descriptor
     TCPIP_DHCPS_DATA    udpGetData = {0};
-
-
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
 
     while(true)
     {
+        evInfo.flags.val = 0;
+
         TCPIP_UDP_SocketInfoGet(skt, &udpSockInfo);
         pktIf = (TCPIP_NET_IF*)udpSockInfo.hNet;
 
         // set most common values
-        evInfo1 = udpSockInfo.sourceIPaddress.v4Add.Val;
-        evInfo2 = _DHCPS_SecCount();
+        evInfo.ipAddress = udpSockInfo.sourceIPaddress.v4Add.Val;
+        evInfo.flags.infoIpValid = 1;
 
         if(_DHCPS_AccessLock() == false)
         {
@@ -1300,7 +1341,8 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
         if(avlblBytes < _TCPIP_DHCPS_MIN_PROCESS_PACKET_SIZE)
         {
             evType = TCPIP_DHCPS_EVENT_MSG_UNDERFLOW;
-            evInfo2 = (uint32_t)avlblBytes;
+            evInfo.flags.infoSize = 1;
+            evInfo.data = (uint32_t)avlblBytes;
             break;
         }
 
@@ -1327,7 +1369,8 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
             pIfDcpt->statData.msgOvflCount++;
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             evType = TCPIP_DHCPS_EVENT_MSG_OVERFLOW;
-            evInfo2 = (uint32_t)avlblBytes;
+            evInfo.flags.infoSize = 1;
+            evInfo.data = (uint32_t)avlblBytes;
             avlblBytes = sizeof(gDhcpProcPacket);
         }
 
@@ -1383,7 +1426,7 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
 
     if(evType != TCPIP_DHCPS_EVENT_NONE)
     {
-        _DHCPS_NotifyClients(pktIf, evType, evInfo1, evInfo2);
+        _DHCPS_NotifyClients(pktIf, evType, 0, &evInfo);
     }
 
     if(processPkt)
@@ -1708,6 +1751,9 @@ static void _DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, 
 static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_LEASE_STATE newState = TCPIP_DHCPS_LEASE_STATE_SEND_OFFER;
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+
+    evInfo.flags.val = 0;
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
@@ -1743,11 +1789,16 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
         {   // data base full
             // release the acquired index
             IpIndexMarkFree(pIDcpt, reqIndex);
-            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_CACHE_FULL, (uint32_t)pIDcpt->hashDcpt->fullSlots, 0);
+            evInfo.flags.infoSlots = 1;
+            evInfo.data = (uint32_t)pIDcpt->hashDcpt->fullSlots;
+            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_CACHE_FULL, 0, &evInfo);
             return TCPIP_DHCPS_LEASE_STATE_IDLE;
         }
 
         // assigned new hash entry
+        // set its state it so we can send a notification
+        _DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_DISCOVER);
+
         *ppHe = he;
         if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_CONFLICT_DETECT) == 0)
         {
@@ -1818,7 +1869,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
         }
     }
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DISCOVER, he->ipAddress.Val, currTime);
+    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DISCOVER, he, 0);
 
     return newState;
     
@@ -1859,8 +1910,11 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_INFORM;
-    uint32_t    evInfo1 = pHeader->ciaddr;
-    uint32_t    evInfo2 = _DHCPS_SecCount();
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
+    evInfo.flags.infoIpValid = 1;
+    evInfo.ipAddress = pHeader->ciaddr;
     TCPIP_DHCPS_LEASE_STATE newState = TCPIP_DHCPS_LEASE_STATE_INFORM; 
 
     // basic sanity check
@@ -1869,7 +1923,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         if(pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS)
         {   // Requested IP address  MUST NOT be in an INFORM message
             evType = TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR; 
-            evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET; 
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET; 
             break;
         }
 
@@ -1894,7 +1949,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
             {   // data base full
                 // keep the acquired index as busy
                 evType = TCPIP_DHCPS_EVENT_CACHE_FULL;
-                evInfo1 = (uint32_t)pIDcpt->hashDcpt->fullSlots; 
+                evInfo.flags.infoSlots = 1;
+                evInfo.data = (uint32_t)pIDcpt->hashDcpt->fullSlots; 
                 break;
             }
 
@@ -1918,8 +1974,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         break;
     }
 
-    (void)evType; (void)evInfo1; (void)evInfo2;
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
 
     if(he != 0)
     {
@@ -1988,8 +2043,11 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFAC
     uint32_t requestedIpAddr = (pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0; 
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    uint32_t evInfo1 = requestedIpAddr; 
-    uint32_t evInfo2 = _DHCPS_SecCount();
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
+    evInfo.flags.infoIpValid = 1;
+    evInfo.ipAddress = requestedIpAddr; 
 
     // do some sanity checks
     if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0)
@@ -1999,22 +2057,25 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFAC
     else if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
     }
     else if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should be a requested IP address. ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
     }
     else if(pHeader->ciaddr != 0)
     {
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
     } 
     else if( (pHeader->giaddr == 0 && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0) ||
             ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0)
     {   // good client address... since we do not have any record for this client (he == 0) we should stay silent:
-        // TODO aa: for giaddr != 0, how does the server know the 'remote subnet mask' to check the giaddr? 
+        // Note: for giaddr != 0, the server should know the 'remote subnet mask' to check the giaddr
         // DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
         //  If the DHCP server has no record of this client, then it MUST remain silent,
         //  and MAY output a warning to the network administrator.
@@ -2040,7 +2101,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFAC
 
     if(evType != 0)
     {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, 0, &evInfo);
     }
 
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
@@ -2060,9 +2121,16 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DC
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     DHCPS_HASH_ENTRY* he = *ppHe;
-    TCPIP_DHCPS_LEASE_STATE currState = he->state;
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_REQ_UNEXPECT, he->ipAddress.Val, currState);
+    evInfo.flags.infoIpValid = 1;
+    evInfo.ipAddress = he->ipAddress.Val;
+    evInfo.flags.infoState = 1;
+    TCPIP_DHCPS_LEASE_STATE currState = he->state;
+    evInfo.data = currState;
+
+    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_REQ_UNEXPECT, he, &evInfo);
 
     return currState;
 }
@@ -2097,6 +2165,9 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_
 //    
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     TCPIP_DHCPS_LEASE_STATE newState = he->state;
@@ -2104,23 +2175,24 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
     uint32_t currTime = _DHCPS_SecCount();
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    uint32_t evInfo1 = he->ipAddress.Val;
-    uint32_t evInfo2 = currTime;
 
     if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
     }
     else if(pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should NOT be a requested IP address. ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET;
     }
     else if(pHeader->ciaddr != he->ipAddress.Val)
     {
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
     } 
     else
     {   // all good...
@@ -2156,12 +2228,11 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
         _DHCPS_SendMessage(he);
 #endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
         evType = bRenew ? TCPIP_DHCPS_EVENT_REQUEST_RENEW : TCPIP_DHCPS_EVENT_REQUEST_REBIND; 
-        evInfo2 = currTime;
     }
 
     if(evType != 0)
     {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
     }
 
     return newState;
@@ -2196,23 +2267,26 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
 //
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     TCPIP_DHCPS_LEASE_STATE newState = he->state;
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    uint32_t evInfo1 = he->ipAddress.Val;
-    uint32_t evInfo2 = _DHCPS_SecCount();
 
     if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
     }
     else if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should be a requested IP address. ignore but notify ill formatted message
         evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-        evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+        evInfo.flags.infoFmtMask = 1;
+        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
     }
     else
     {
@@ -2239,14 +2313,15 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE
             he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
             // retain expired state
             evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
-            evInfo2 = pRxOpt->requestAddress.reqIpAddr;
+            evInfo.flags.infoReqIp = 1;
+            evInfo.data = pRxOpt->requestAddress.reqIpAddr;
         }
         _DHCPS_SendMessage(he);
     }
 
     if(evType != 0)
     {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
     }
 
     return newState;
@@ -2314,10 +2389,11 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE
 //  
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
     DHCPS_HASH_ENTRY* he = *ppHe;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    uint32_t evInfo1 = he->ipAddress.Val;
-    uint32_t evInfo2 = _DHCPS_SecCount();
 
     TCPIP_DHCPS_LEASE_STATE newState = TCPIP_DHCPS_LEASE_STATE_OFFERED; 
 
@@ -2326,7 +2402,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
         if(pRxOpt->serverIdentifier.optionType != DHCP_OPTION_SERVER_IDENTIFIER)
         {   // there should be a server identifier; wait some more
             evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-            evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_MISS;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_MISS;
             break;
         }
 
@@ -2334,7 +2411,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
         if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
         {   // missing option ?
             evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
-            evInfo2 = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+            evInfo.flags.infoFmtMask = 1;
+            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
             break;
         }
 
@@ -2346,7 +2424,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
             // RFC 2131 pg 31/46: Servers SHOULD NOT reuse offerred addresses and use a timeout mechanism to decide when to reuse!
             // wait for the timeout to reuse this address
             evType = TCPIP_DHCPS_EVENT_OTHER_SELECT;
-            evInfo2 = pRxOpt->requestAddress.reqIpAddr;
+            evInfo.flags.infoReqIp = 1;
+            evInfo.data = pRxOpt->requestAddress.reqIpAddr;
             break;
         }
 
@@ -2372,7 +2451,8 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
             he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
             newState = TCPIP_DHCPS_LEASE_STATE_OFFERED;   // retain state
             evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
-            evInfo2 = pRxOpt->requestAddress.reqIpAddr;
+            evInfo.flags.infoReqIp = 1;
+            evInfo.data = pRxOpt->requestAddress.reqIpAddr;
         }
 
         _DHCPS_SendMessage(he);
@@ -2381,7 +2461,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
 
     if(evType != 0)
     {
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, evInfo1, evInfo2);
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
     }
 
     return newState;
@@ -2393,14 +2473,14 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
 // address is already in use.  The server MUST mark the network address
 // as not available and SHOULD notify the local system administrator of
 // a possible configuration problem.
-// TODO aa: the client included DHCP_OPTION_MESSAGE should be included in notification!
+// Note: the client included DHCP_OPTION_MESSAGE should be included in notification
 static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     if(he != 0)
     { // Remove the leased address from the hash table; keep the address marked as 'busy'
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DECLINED, he->ipAddress.Val, _DHCPS_SecCount());
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DECLINED, he, 0);
 #if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
         int32_t entryIx = _PoolIndexFromIpAddress(pIDcpt, he->ipAddress.Val); 
         // should be a valid IP address since it's in the database!
@@ -2794,7 +2874,11 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
 #if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIDcpt->statData.arpFailCount++;
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
-            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ARP_FAIL, (uint32_t)arpRes, destAdd.v4Add.Val);
+            TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+            evInfo.flags.val = 0;
+            evInfo.flags.infoTargetIp = 1;
+            evInfo.data = destAdd.v4Add.Val;
+            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ARP_FAIL, he, &evInfo);
         }
         else
         {
@@ -2952,7 +3036,12 @@ static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTR
     }
 
     (void)evType;
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, (uint32_t)he->probeCount, echoRequest.targetAddr.Val);
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+    evInfo.flags.infoTargetIp = 1;
+    evInfo.data = echoRequest.targetAddr.Val;
+
+    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
     return echoRes >= 0;
 }
 
@@ -2983,7 +3072,7 @@ static void _DHCPS_ProcessTick(void)
 
     if(_DHCPS_AccessLock() == false)
     {
-        _DHCPS_NotifyClients(0, TCPIP_DHCPS_EVENT_TICK_LOCK, _DHCPS_SecCount(), 0);
+        _DHCPS_NotifyClients(0, TCPIP_DHCPS_EVENT_TICK_LOCK, 0, 0);
         return;
     } 
 
@@ -3055,7 +3144,11 @@ static void _DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he)
 #if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pIDcpt->statData.echoFailCount++;
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ECHO_FAIL, (uint32_t)TCPIP_DHCPS_ICMP_ECHO_RETRIES, he->ipAddress.Val);
+        TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+        evInfo.flags.val = 0;
+        evInfo.flags.infoIcmpCount = 1;
+        evInfo.data = TCPIP_DHCPS_ICMP_ECHO_RETRIES;
+        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ECHO_FAIL, he, &evInfo);
         if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_ABORT_IF_PROBE_FAILED) == 0)
         {   // we're going proceed with the offer as it is
             _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
@@ -3091,8 +3184,10 @@ static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
 // reissue the ping with the new address
 static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
 {
+    TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
+    evInfo.flags.val = 0;
+
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    uint32_t evInfo1 = 0;
     bool abort = false;
 
     while(true)
@@ -3101,7 +3196,8 @@ static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
         {
             abort = true;
             evType = TCPIP_DHCPS_EVENT_REPROBE_FAIL;
-            evInfo1 = (uint32_t)gDhcpDcpt->nReprobes;
+            evInfo.flags.infoIcmpCount = 1;
+            evInfo.data = (uint32_t)gDhcpDcpt->nReprobes;
             break;
         }
 
@@ -3121,14 +3217,14 @@ static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
         break;
     }
 
+    if(evType != TCPIP_DHCPS_EVENT_NONE)
+    {
+        _DHCPS_NotifyClients(he->parent->pNetIf, evType, he, &evInfo);
+    }
+
     if(abort)
     {   // keep IP address as busy!
         _DHCPS_RemoveEntry(he, false);
-    }
-
-    if(evType != TCPIP_DHCPS_EVENT_NONE)
-    {
-        _DHCPS_NotifyClients(he->parent->pNetIf, evType, evInfo1, 0);
     }
 
 }
@@ -3282,6 +3378,7 @@ static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_IN
     {   // found entry
         if(pLeaseInfo)
         {
+            pLeaseInfo->hNet = he->parent->pNetIf;
             pLeaseInfo->ipAddress.Val = he->ipAddress.Val;
             pLeaseInfo->leaseState = he->state;
             memcpy(pLeaseInfo->macAdd.v, he->chaddr, sizeof(pLeaseInfo->macAdd)); 

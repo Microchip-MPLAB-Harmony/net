@@ -252,6 +252,29 @@ OA_HASH_ENTRY* TCPIP_OAHASH_EntryGet(OA_HASH_DCPT* pOH, size_t entryIx)
     return 0;
 }
 
+int32_t TCPIP_OAHASH_EntryGetIndex(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* pHe)
+{
+    if(pOH != 0 && pHe != 0)
+    {
+        OA_HASH_ENTRY   *pStartBkt, *pEndBkt, *pBkt;
+
+        pStartBkt = (OA_HASH_ENTRY*)pOH->memBlk;
+        pEndBkt = (OA_HASH_ENTRY*)((uint8_t*)pOH->memBlk + pOH->hEntries * pOH->hEntrySize);
+
+        if(pStartBkt <= pHe && pHe < pEndBkt)
+        {
+            size_t entryIx = ((uint8_t*)pHe - (uint8_t*)pStartBkt) / pOH->hEntrySize;
+            pBkt = (OA_HASH_ENTRY*)((uint8_t*)pStartBkt + entryIx * pOH->hEntrySize);
+            if(pBkt == pHe)
+            {
+                return (int32_t)entryIx;
+            }
+        } 
+    }
+
+    return -1;
+}
+
 // implementation
 
 // finds a entry that either contains the desired key
