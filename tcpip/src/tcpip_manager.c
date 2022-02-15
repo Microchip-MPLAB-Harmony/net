@@ -1719,7 +1719,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \r\n", ifUpMask);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Interface Initialization failed: 0x%x - Aborting! \r\n", ifUpMask);
             return false;
         }
     }
