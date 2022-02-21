@@ -3918,7 +3918,7 @@ static void _DHCPV6Client_ProcessTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
     TCPIP_DHCPV6_SERVER_STATUS_CODE serverStatCode;
     TCPIP_DHCPV6_MESSAGE_HEADER* pHdr;
     TCPIP_DHCPV6_MSG_BUFFER* pRxBuffer;
-    SINGLE_LIST*    pInsertList;
+    SINGLE_LIST*    pInsertList = 0;
     bool discardMsg;
 
     while((pRxBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(&pClient->rxMsgList)) != 0)

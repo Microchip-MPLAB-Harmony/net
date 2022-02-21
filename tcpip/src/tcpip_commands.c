@@ -2589,7 +2589,7 @@ static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     int  opCode = 0;        // 0- none; 1 - start; 2 - stop
     bool opRes;
     IP_ADDRESS_TYPE ipType = IP_ADDRESS_TYPE_ANY;
-    TCPIP_NET_HANDLE netH;
+    TCPIP_NET_HANDLE netH = 0;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     bool printUsage = true;
 

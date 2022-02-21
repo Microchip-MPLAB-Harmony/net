@@ -503,7 +503,8 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
     else
     {
         struct sockaddr_in6 *local_addr = (struct sockaddr_in6*) name;
-        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)local_addr + offsetof(struct sockaddr_in6, sin6_addr));
+        uint8_t* sin6 = (uint8_t*)local_addr + offsetof(struct sockaddr_in6, sin6_addr);
+        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
         memcpy(&lAddr6, sin6_addr->in6_u.u6_addr8, sizeof(struct in6_addr));
 
         if (lAddr6.d[0] == IP_ADDR_ANY)
@@ -930,7 +931,8 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
     {
         addr6 = (struct sockaddr_in6 *) name;
         remotePort = addr6->sin6_port;
-        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+        uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
         memcpy(remoteIP6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
         localAddr6.d[0] = socket->localIP;
         localAddr6.d[1] = socket->localIPv6[0];
@@ -1306,7 +1308,8 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
                 }
                 struct sockaddr_in6* addr6 = (struct sockaddr_in6*)to;
                 wRemotePort = addr6->sin6_port;
-                struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+                struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
                 memcpy(remoteIp6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
             }
 #endif
@@ -1629,7 +1632,8 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
                         NET_PRES_SocketInfoGet(socket->SocketID, &udpSockInfo);
                         if (udpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                         {
-                            struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                            uint8_t* sin6 = (uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+                            struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
                             memcpy(sin6_addr->in6_u.u6_addr8, udpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
                             rem_addr6->sin6_port = udpSockInfo.remotePort;
                             *fromlen = sizeof (struct sockaddr_in6);
@@ -1686,7 +1690,8 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
                     NET_PRES_SocketInfoGet(socket->SocketID, &tcpSockInfo);
                     if (tcpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                     {
-                        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                        uint8_t* sin6 = (uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+                        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
                         memcpy(sin6_addr->in6_u.u6_addr8, tcpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
                         rem_addr6->sin6_port = tcpSockInfo.remotePort;
                         *fromlen = sizeof (struct sockaddr_in6);

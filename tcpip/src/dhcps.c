@@ -683,6 +683,8 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
         return false;
     }
       
+    pdhcpsHashDcpt = &gPdhcpsHashDcpt;
+
     while(true)
     {
         switch(dhcpsSmSate)
@@ -708,7 +710,6 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
                     continue;
                 }
                 memset(getBuffer,0,sizeof(getBuffer));
-                pdhcpsHashDcpt = &gPdhcpsHashDcpt;
                 dhcpsSmSate = TCPIP_DHCPS_DETECT_VALID_INTF;
                 // break free
                 
@@ -927,7 +928,6 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
 
                 // assign the dhcpDescriptor value
                 pDhcpsDcpt = gPdhcpSDcpt+ix;
-                pdhcpsHashDcpt = &gPdhcpsHashDcpt;
                 if(_DHCPS_FindValidAddressFromPool(&gBOOTPHeader,pDhcpsDcpt,pdhcpsHashDcpt,(IPV4_ADDR*)&dhcps_mod.dhcpNextLease) != DHCPS_RES_OK)
                 {
                     dhcpsSmSate = TCPIP_DHCPS_START_RECV_NEW_PACKET;
@@ -958,7 +958,6 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
                 }
                 // assign the dhcpDescriptor value
                 pDhcpsDcpt = gPdhcpSDcpt+ix;
-                pdhcpsHashDcpt = &gPdhcpsHashDcpt;
                 DHCPReplyToDiscovery((TCPIP_NET_IF*)gpDhcpsNetH,&gBOOTPHeader,pDhcpsDcpt,pdhcpsHashDcpt,&udpGetBufferData);
                 dhcpsSmSate = TCPIP_DHCPS_START_RECV_NEW_PACKET;
                 _DHCPSStateSet(dhcpsSmSate);
