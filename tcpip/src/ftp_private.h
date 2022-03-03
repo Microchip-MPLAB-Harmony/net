@@ -70,8 +70,8 @@ typedef struct
 // max size of a FTP command string
 #define TCPIP_FTP_CMD_MAX_STRING_LEN            SYS_FS_FILE_NAME_LEN
 
-// Maximum size for a file name in a SD card is expected to be 100
-#define TCPIP_FTP_MAX_FILE_NAME_LEN 100
+// Maximum size for a file name 
+#define TCPIP_FTP_MAX_FILE_NAME_LEN SYS_FS_FILE_NAME_LEN
 
 // Maximum string size for a file date and time in a SD card is expected to be 25
 #define TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN    25

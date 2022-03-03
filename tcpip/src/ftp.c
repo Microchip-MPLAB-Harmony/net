@@ -1342,7 +1342,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
     static uint8_t fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
                     TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN+
                     TCPIP_FTP_MAX_FILE_SIZE_STR_LEN+
-                    +20];
+                    +40];
     char FileRecordsDateTime[TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN];
     char fileRecrdTime[13];
     char FileRecordssize[TCPIP_FTP_MAX_FILE_SIZE_STR_LEN];
@@ -1587,7 +1587,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 }
                 else
                 {
-                    sprintf((char*)fileNameList,"%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.fname);
+                    sprintf((char*)fileNameList, "%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.fname);
                 }
                 /* total name byte name length list */
                 lfNameLen = strlen((char *)fileNameList);
