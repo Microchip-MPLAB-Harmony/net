@@ -366,6 +366,7 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestCancel (TCPIP_ICMP_REQUEST_HANDLE icmpHan
         if(pFound)
         {
             TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, (SGL_LIST_NODE*) prev);
+            TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pFound);
         }
 
         _ICMPRequestListUnlock(lock);
@@ -496,6 +497,7 @@ static void  TCPIP_ICMP_Process(void)
                     echoResult = pFound->request;
 
                     TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, (SGL_LIST_NODE*) prev);
+                    TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pFound);
                 }
 
                 _ICMPRequestListUnlock(lock);
