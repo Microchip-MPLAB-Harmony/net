@@ -427,12 +427,8 @@ typedef struct  _TAG_DHCPS_HASH_ENTRY
 {
     OA_HASH_ENTRY   hEntry; // hash header;
     struct _tag_TCPIP_DHCPS_INTERFACE_DCPT* parent;    // interface descriptor it belongs to
-    union
-    {
-        uint32_t        leaseStartTime; // time when bound or when offer was sent
-        uint32_t        probeStartTimeMs; // ms time when echo probe was sent
-        uint32_t        timeSec;          // generic time, seconds
-    };
+    uint32_t        leaseStartTime;     // time when bound or when offer was sent, seconds
+    uint32_t        probeStartTimeMs;   // ms time when echo probe was sent
     uint32_t        leaseEndTime;       // leaseStartTime + cliLeaseDuration, seconds;
     uint32_t        cliLeaseTime;       // lease time to be sent to the client, seconds;
     uint32_t        ciaddr;             // Client IP in the request we're serving
