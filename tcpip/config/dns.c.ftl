@@ -381,6 +381,18 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             return false;
         }
 
+        // only IPv4 operation supported for now
+#if !defined (TCPIP_STACK_USE_IPV4)
+        (void)_DNSPutString;
+        (void)_DNS_SelectIntf;
+        return false;
+#else
+        if(dnsData->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+        {
+            return false;
+        }
+#endif  // !defined (TCPIP_STACK_USE_IPV4)
+
         pDnsDcpt->memH = stackData->memH;
         hashMemSize = sizeof(OA_HASH_DCPT) + dnsData->cacheEntries * sizeof(TCPIP_DNS_HASH_ENTRY);
         hashDcpt = (OA_HASH_DCPT*)TCPIP_HEAP_Malloc(pDnsDcpt->memH, hashMemSize);
@@ -410,11 +422,7 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pDnsDcpt->cacheEntryTMO = dnsData->entrySolvedTmo;
         pDnsDcpt->nIPv4Entries= dnsData->nIPv4Entries;
         pDnsDcpt->nIPv6Entries = dnsData->nIPv6Entries;
-#if defined (TCPIP_STACK_USE_IPV4)
-        pDnsDcpt->ipAddressType = IP_ADDRESS_TYPE_IPV4;     // dnsData->ipAddressType;
-#else
-        pDnsDcpt->ipAddressType = IP_ADDRESS_TYPE_IPV6;     // dnsData->ipAddressType;
-#endif // defined (TCPIP_STACK_USE_IPV6)
+        pDnsDcpt->ipAddressType = dnsData->ipAddressType;
 
         // allocate memory for each DNS hostname , IPv4 address and IPv6 address
         // and the allocation will be done per Hash descriptor
@@ -1218,6 +1226,7 @@ static void _DNSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TC
     }
 }
 
+#if defined (TCPIP_STACK_USE_IPV4)
 static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE)
 {
     TCPIP_DNS_HEADER    DNSPutHeader;
@@ -1336,6 +1345,12 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
     _DNSNotifyClients(pDnsDcpt, pDnsHE, evType);
     return res;
 }
+#else
+static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE)
+{
+    return TCPIP_DNS_RES_NO_SERVICE; 
+}
+#endif
 
 TCPIP_DNS_RESULT TCPIP_DNS_RemoveEntry(const char *hostName)
 {

@@ -228,7 +228,7 @@ typedef enum
     DNS module runtime configuration and initialization parameters. 
 
   Remarks:
-    None.
+    Currently the DNS module operation is supported only over IPv4.
 
 */
 typedef struct
