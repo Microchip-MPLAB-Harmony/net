@@ -1672,12 +1672,11 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
         {
             if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_PAUSE)
             {
-               anadReg |= _ANAD_PAUSE_MASK;
+                anadReg |= _ANAD_PAUSE_MASK;
             }
             if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_ASM_DIR)
             {
-
-                    anadReg |= _ANAD_ASM_DIR_MASK;
+                anadReg |= _ANAD_ASM_DIR_MASK;
             }
         }
 
@@ -1698,16 +1697,13 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
         uint16_t  ctrlReg;
 
         ctrlReg = 0;
-        if((matchExtCpbl & (_BASE1000T_FDX_MASK | _BASE1000T_HDX_MASK)) && (openFlags & TCPIP_ETH_OPEN_1000))  // set 1000Mbps request/capability
-        {
-            ctrlReg |= _BMCON_SPEED1000_MASK | _BMCON_AN_ENABLE_MASK; //Auto-Neg must for 1000Mbps
-        }
-        else if((matchCommCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK)) && (openFlags & TCPIP_ETH_OPEN_100))  // set 100Mbps request/capability
+        
+        if((matchCommCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK)) && (openFlags & TCPIP_ETH_OPEN_100))  // set 100Mbps request/capability
         {
             ctrlReg |= _BMCON_SPEED100_MASK;
         }
 
-        if(matchCommCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000T_FDX_MASK))
+        if(matchCommCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK ))
         {
             ctrlReg |= _BMCON_DUPLEX_MASK;
         }
@@ -1765,42 +1761,47 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hC
 static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS openFlags = TCPIP_ETH_OPEN_DEFAULT;
-    uint16_t    matchCpbl = 0 , matchExtCpbl = 0;
-
+    uint16_t  matchCommCpbl = hClientObj->operReg[0];
+    uint16_t  matchExtCpbl = hClientObj->operReg[1];
+    
     // now update the open flags
     // the upper layer needs to know the PHY set-up to further set-up the MAC.
     openFlags = hClientObj->hDriver->openFlags;
-    matchCpbl = hClientObj->operReg[1];
-    matchExtCpbl = hClientObj->operReg[1];
 
-    // clear the capabilities
-    openFlags &= ~(TCPIP_ETH_OPEN_AUTO | TCPIP_ETH_OPEN_FDUPLEX | TCPIP_ETH_OPEN_HDUPLEX | TCPIP_ETH_OPEN_1000 | TCPIP_ETH_OPEN_100 | TCPIP_ETH_OPEN_10);
 
-    if(matchCpbl & _BMSTAT_AN_ABLE_MASK)
-    {
-        openFlags |= TCPIP_ETH_OPEN_AUTO;
+    if(!(matchCommCpbl &_BMSTAT_AN_ABLE_MASK))
+    {       
+        openFlags &= ~TCPIP_ETH_OPEN_AUTO;
     }
-    if(matchExtCpbl & (_EXTSTAT_1000BASET_FDX_MASK|_EXTSTAT_1000BASET_HDX_MASK|_EXTSTAT_1000BASEX_FDX_MASK|_EXTSTAT_1000BASEX_HDX_MASK))   // set 1000Mbps request/capability
+    
+    // set 1000Mbps request/capability
+    if(!(matchExtCpbl & (_EXTSTAT_1000BASET_FDX_MASK | _EXTSTAT_1000BASET_HDX_MASK))) 
     {
-        openFlags |= TCPIP_ETH_OPEN_1000;
+        openFlags &= ~TCPIP_ETH_OPEN_1000;
     }
-    if(matchCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK))   // set 100Mbps request/capability
+    
+    // set 100Mbps request/capability
+    if(!(matchCommCpbl & (_BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK)))  
     {
-        openFlags |= TCPIP_ETH_OPEN_100;
+        openFlags &= ~TCPIP_ETH_OPEN_100;
     }
-    if(matchCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK))   // set 10Mbps request/capability
+    
+    // set 10Mbps request/capability
+    if(!(matchCommCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK)))  
     {
-        openFlags |= TCPIP_ETH_OPEN_10;
+        openFlags &= ~TCPIP_ETH_OPEN_10;
     }
-    if((matchCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | _BASE1000X_FDX_MASK)) || (matchExtCpbl & (_EXTSTAT_1000BASET_FDX_MASK|_EXTSTAT_1000BASEX_FDX_MASK)))
+    
+    if(!((matchCommCpbl & (_BMSTAT_BASE10T_FDX_MASK | _BMSTAT_BASE100TX_FDX_MASK)) || (matchExtCpbl & _BASE1000T_FDX_MASK )))
     {
-        openFlags |= TCPIP_ETH_OPEN_FDUPLEX;
+        openFlags &= ~TCPIP_ETH_OPEN_FDUPLEX;
     }
-    if((matchCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE100TX_HDX_MASK | _BASE1000X_HDX_MASK | _BASE1000T_HDX_MASK )) || (matchExtCpbl & (_EXTSTAT_1000BASET_HDX_MASK|_EXTSTAT_1000BASEX_HDX_MASK)))
+    
+    if(!((matchCommCpbl & (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE100TX_HDX_MASK)) || (matchExtCpbl & _BASE1000T_HDX_MASK )))
     {
-        openFlags |= TCPIP_ETH_OPEN_HDUPLEX;
+        openFlags &= ~TCPIP_ETH_OPEN_HDUPLEX;
     }
-
+   
     // store the openFlags!
     // upper layer needs to know the PHY set-up to further set-up the MAC.
     hClientObj->hDriver->openFlags = openFlags;
@@ -1832,6 +1833,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase12(DRV_ETHPHY_CLIENT_OBJ * h
         return;
     }
     extStat = hClientObj->smiData;
+
     hClientObj->operReg[1] = extStat & MAC_BASE1000_CPBL_MASK;
     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_2);  
     

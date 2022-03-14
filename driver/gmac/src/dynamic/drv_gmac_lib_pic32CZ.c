@@ -608,7 +608,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
            (pTxDesc[wTxIndex].tx_desc_buffaddr == 0))
         {
 			// perform cache maintenance
-			DCACHE_CLEAN_BY_ADDR((uint32_t*)pPktDSeg->segLoad, pPktDSeg->segLen);
+            DCACHE_CLEAN();
             pTxDesc[wTxIndex].tx_desc_status.val &= (GMAC_TX_WRAP_BIT |GMAC_TX_USED_BIT); //clear all Tx Status except Wrap Bit and Used Bit
             pTxDesc[wTxIndex].tx_desc_buffaddr = (uint32_t)((uint8_t *)pPktDSeg->segLoad);	//set the buffer address
             pTxDesc[wTxIndex].tx_desc_status.val |= (pPktDSeg->segLen) & GMAC_LENGTH_FRAME; //Set Length for each frame
