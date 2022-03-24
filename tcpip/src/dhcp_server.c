@@ -754,7 +754,7 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
         startIPAddress.Val =  TCPIP_Helper_ntohl(startIPAddress.Val);
         // check that [start, start + leases] length is within [net start, net end]
         netStartAdd.Val = startIPAddress.Val & TCPIP_Helper_ntohl(ipMaskAddress.Val);
-        avlblLeases = maxLeases - (startIPAddress.Val - netStartAdd.Val);
+        avlblLeases = maxLeases - (startIPAddress.Val - netStartAdd.Val) + 1;
         if(avlblLeases <  pIfConfig->leaseEntries)
         {
             return TCPIP_DHCPS_RES_NOT_ENOUGH_LEASES;
