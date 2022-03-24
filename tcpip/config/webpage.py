@@ -4,6 +4,7 @@ global count
 global webPagePathParsing
 global tcpipHttpNetWebPageDirMyPath
 global createWebPageFileSymbol
+global webpageGenSourceFile
 global clearFileSymbols
 global mytcpipHttpNetComponent
 global symbolList
@@ -17,7 +18,13 @@ def clearFileSymbols():
 #Return File symbols from the Symbol list.
 def createWebPageFileSymbol(count):
     return symbolList[count]
-
+#webpage files generation
+def webpageGenSourceFile(sourceFile, event):
+    print("SourceFile: ")
+    print(sourceFile)
+    sourceFile.setEnabled(event["value"])
+  
+    
 #Callback function which is called when there is a path configuration from MHC
 def tcpipHttpNetWebServerMyPathVisible(sym, event):
     ORG_PATH = event["value"]
@@ -45,6 +52,8 @@ def webPagePathParsing(path):
     lastDirectory = webPagePath[len(webPagePath)-1]
     #get the current root web page directory path
     webPageRootPath = ORG_PATH.split(lastDirectory)[0]
+    print("webpageRootPath: ")
+    print(webPageRootPath)
     
     for (root, dirs, fileNames) in os.walk(ORG_PATH):
         for fileName in fileNames:
@@ -75,6 +84,8 @@ def webPagePathParsing(path):
             webpageListFile.setType("SOURCE")
             webpageListFile.setMarkup(False)
             webpageListFile.setEnabled(True)
+            print("SourceFile: " + htmFile)
+            webpageListFile.setDependencies(webpageGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
             count += 1
 
 
