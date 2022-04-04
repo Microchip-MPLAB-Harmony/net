@@ -3322,19 +3322,25 @@ TCPIP_HTTP_NET_USER_HANDLE TCPIP_HTTP_NET_UserHandlerRegister(const TCPIP_HTTP_N
 
 bool TCPIP_HTTP_NET_UserHandlerDeregister(TCPIP_HTTP_NET_USER_HANDLE hHttp)
 {
-    if(httpConnCtrl)
-    {   // we're up and running
-        if(hHttp && hHttp == httpUserCback)
-        {
-            if(TCPIP_HTTP_NET_ActiveConnectionCountGet(0) == 0)
-            {
-                httpUserCback = 0;
-                return true;
-            }
-        }
+    if(httpConnCtrl == 0 || hHttp == 0 || hHttp != httpUserCback)
+    {   // minimal sanity check
+        return false;
     }
 
-    return false;
+    // we're up and running
+    // abort all connections
+    int connIx;
+    TCPIP_HTTP_NET_CONN* pHttpCon = httpConnCtrl;
+    for(connIx = 0; connIx < httpConnNo; connIx++, pHttpCon++)
+    {
+        if(pHttpCon->socket != NET_PRES_INVALID_SOCKET)
+        {
+            TCP_SOCKET tcp_skt = NET_PRES_SocketGetTransportHandle(pHttpCon->socket);
+            TCPIP_TCP_Abort(tcp_skt, false);
+        }
+    }
+    httpUserCback = 0;
+    return true;
 }
 
 

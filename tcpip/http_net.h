@@ -1841,13 +1841,12 @@ TCPIP_HTTP_NET_USER_HANDLE    TCPIP_HTTP_NET_UserHandlerRegister
     hHttp   - A handle returned by a previous call to TCPIP_HTTP_NET_UserHandlerRegister
 
   Returns:
-    - true	- if the call succeeds
-    - false - if no such handler is registered
-              or there are active connections
+    - true	- if the call succeeded and the user handle was de-registered
+    - false - if no such handler is registered 
 
   Remarks:
-    The call will fail if there is active HTTP traffic.
-    The handler cannot be deregistered while HTTP traffic is in progress.
+    The call will succeed even if there is active HTTP traffic.
+    It will abort all active connections, effectively stopping the HTTP server.
  */
 
 bool             TCPIP_HTTP_NET_UserHandlerDeregister(TCPIP_HTTP_NET_USER_HANDLE hHttp);
