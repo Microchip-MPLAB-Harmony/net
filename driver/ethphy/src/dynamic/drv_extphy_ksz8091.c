@@ -148,11 +148,11 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             phyCtrl2.w = phyReg;
             if(oFlags & TCPIP_ETH_OPEN_MDIX_AUTO)
             {   // enable Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 1;
+                phyCtrl2.PAIR_SWAP_DISABLE = 0;
             }
             else
             {   // no Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 0;  // disable Auto-MDIX
+                phyCtrl2.PAIR_SWAP_DISABLE = 1;  // disable Auto-MDIX
                 if(oFlags & TCPIP_ETH_OPEN_MDIX_SWAP)
                 {
                     phyCtrl2.MDI_X_SELECT = 1;    // swap
