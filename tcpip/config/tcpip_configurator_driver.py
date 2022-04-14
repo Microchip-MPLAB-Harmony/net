@@ -440,9 +440,9 @@ def tcpipAutoConfigENCX24J600Enable(symbol, event):
     enableTcpipAutoConfigDrv(True)
     if (event["value"] == True) and (Database.getComponentByID("drvExtMacEncx24j600") == None):
         res = Database.activateComponents(["drvExtMacEncx24j600"],"DRIVER LAYER")  
-        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0", "libdrvExtMacEncx24j600")
-        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0","ENCX24J600_SPI")
-        tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEncx24j600_0:ENCX24J600_SPI")
+        # tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0", "libdrvExtMacEncx24j600")
+        # tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0","ENCX24J600_SPI")
+        # tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEncx24j600_0:ENCX24J600_SPI")
     else:
         res = Database.deactivateComponents(["drvExtMacEnc28j60"])
      
@@ -453,9 +453,9 @@ def tcpipAutoConfigENC28J60Enable(symbol, event):
     enableTcpipAutoConfigDrv(True)
     if (event["value"] == True) and (Database.getComponentByID("drvExtMacEnc28j60") == None):
         res = Database.activateComponents(["drvExtMacEnc28j60"],"DRIVER LAYER")  
-        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0", "libdrvExtMacEnc28j60")
-        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0","ENC28J60_SPI")
-        tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEnc28j60_0:ENC28J60_SPI")
+        # tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0", "libdrvExtMacEnc28j60")
+        # tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0","ENC28J60_SPI")
+        # tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEnc28j60_0:ENC28J60_SPI")
     else:
         res = Database.deactivateComponents(["drvExtMacEnc28j60"])
                       

@@ -154,3 +154,13 @@ def onAttachmentDisconnected(source, target):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_OTH_INT_IDX" + str(interface_number), "")   
+        
+def finalizeComponent( macComponent ):
+    print "Finalize Instance Component " + macComponent.getID()
+    tcpipAutoConfigDataLinkGroup = Database.findGroup("DATA LINK LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    if (tcpipAutoConfigStackGroup != None) and (tcpipAutoConfigDataLinkGroup != None):  
+        print "Exporting Attachment " + macComponent.getID()
+        tcpipAutoConfigDataLinkGroup.setAttachmentVisible(macComponent.getID(), "libdrvExtMacEnc28j60")
+        tcpipAutoConfigDataLinkGroup.setAttachmentVisible(macComponent.getID(),"ENC28J60_SPI")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("DATA LINK LAYER", macComponent.getID() + ":ENC28J60_SPI")

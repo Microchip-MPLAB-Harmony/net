@@ -259,21 +259,21 @@ def loadModule():
     ###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
     if Peripheral.moduleExists("GMAC"):
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
-        drvGmacComponent.addCapability("libdrvGmac","MAC")
+        drvGmacComponent.addMultiCapability("libdrvGmac","MAC", None)
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent.setDisplayType("MAC Layer")
     elif Peripheral.moduleExists("EMAC"):
         aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
-        aDrvMacComponent_0.addCapability( "libdrvMac0", "MAC")
+        aDrvMacComponent_0.addMultiCapability( "libdrvMac0", "MAC", None)
         aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, False, True)
         aDrvMacComponent_0.setDisplayType("MAC Layer")
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
-        aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
+        aDrvMacComponent_1.addMultiCapability( "libdrvMac1", "MAC", None)
         aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, False, True)
         aDrvMacComponent_1.setDisplayType("MAC Layer")
     elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
-        drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
+        drvPic32mEthmacComponent.addMultiCapability("libdrvPic32mEthmac","MAC", None)
         drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, False, True)
         drvPic32mEthmacComponent.setDisplayType("MAC Layer")
             
@@ -357,13 +357,13 @@ def loadModule():
     
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Harmony/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
-    drvExtMacEncx24j600Component.addCapability("libdrvExtMacEncx24j600","MAC",None, False)   
+    drvExtMacEncx24j600Component.addMultiCapability("libdrvExtMacEncx24j600","MAC",None)   
     drvExtMacEncx24j600Component.addDependency("ENCX24J600_SPI", "DRV_SPI", None, False, True)   
     drvExtMacEncx24j600Component.setDisplayType("MAC Layer")
     
     #Driver for ENC28J60
     drvExtMacEnc28j60Component = Module.CreateGeneratorComponent("drvExtMacEnc28j60", "ENC28J60", "/Harmony/Drivers/External Ethernet Controller", "driver/enc28j60/config/drv_enc28j60_common.py", "driver/enc28j60/config/drv_enc28j60.py")
-    drvExtMacEnc28j60Component.addCapability("libdrvExtMacEnc28j60","MAC",None, False)  
+    drvExtMacEnc28j60Component.addMultiCapability("libdrvExtMacEnc28j60","MAC",None)  
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
     drvExtMacEnc28j60Component.setDisplayType("MAC Layer")
     ########################## Harmony Network Presentation Module #################################    
@@ -371,7 +371,7 @@ def loadModule():
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer(Obsolete)", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    
     netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
-    netPresComponent.setDisplayType("Presentation Layer")
+    # netPresComponent.setDisplayType("Presentation Layer")
     
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
