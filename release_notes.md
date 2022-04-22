@@ -74,6 +74,8 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 - [MPLAB® XC32 C/C++ Compiler v4.00](https://www.microchip.com/mplab/compilers) or later
 - Harmony net repository, 3.8.0
 - Harmony net demo apps repositories, 3.8.0
+- MPLAB Code Configurator (MCC), 5.1.2
+- MCC Harmony Core, 1.1.0
 
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
 
@@ -86,7 +88,6 @@ In order to regenerate source code for any of the applications, you will also ne
 - wolfSSL  v4.7.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v4.7.0-stable) for demos requiring wolfSSL encryption
 - wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
 - CMSIS-FreeRTOS 10.3.1 (https://github.com/Microchip-MPLAB-Harmony/CMSIS-FreeRTOS/tree/v10.3.1) for demos requiring FreeRTOS support
-- MPLAB Code Configurator (MCC) v.1.1.0
 
 
 #### Development Kit Support
