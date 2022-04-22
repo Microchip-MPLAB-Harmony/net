@@ -1,4 +1,157 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.8.0 (April, 2022)
+### ADDITIONS AND UPDATES FOR  3.8.0:
+
+- **New features**
+
+The following table provides the list of the new features included in the 3.8.0 release:
+- All applications have been migrated from MHC to MCC
+- Migration of select applications to the Net Plugin (beta)
+    - tcpip_tcp_server net plugin application
+    - berkeley_udp_client net plugin application
+    - web_net_server_sdcard_fatfs net plugin application
+- Added configuration help for all modules and drivers
+
+
+| Module                | Description                          |
+| ------ | ------ |
+| DHCP Server V2  | A new implementation of the DCP server. Improved functionality over multiple interfaces and configuration. Beta release|
+| HTTP NET        | Updated the HTTP de-register call to abort the existing connections |
+| MQTT            | Updated the default broker to test.mosquitto.org |
+| IPv4            | Added IPv4 Forwarding Statistics to MHC/MCC |
+
+- **New Applications**
+
+The following table provides the list of the new applications including bare metal and FreeRTOS configurations:
+
+| Application                 | Platform          | Description                                                                                      |
+| ------------ | ------------ |  ------------     |
+| tcpip_tcp_server_bridge   | PIC32MZ  | MPLABX Layer 2 bridge application for PIC32MZ platform |
+| tcpip_tcp_server_ipv4_fwd | PIC32MZ  | MPLABX IPv4 forwarding/routing application for PIC32MZ platform |
+| tcpip_tcp_client          | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_tcp_client_server   | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_tcp_server          | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_udp_client          | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_udp_client_server   | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_udp_server          | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| web_net_server_qspi_mpfs  | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| web_net_server_sdcard_fatfs| SAM9X60, SAMA5D2 | MPLABX migrated applications |
+| wolfssl_tcp_client        | SAM9X60, SAMA5D2  | MPLABX migrated applications |
+| tcpip_client_server       | SAMA5D2           | MPLABX migrated application |
+| wolfssl_tcp_server        | SAMA5D2           | MPLABX migrated application |
+
+- **Updated Applications**
+
+    - All applications have been regenerated and tested to work with the latest repositories the TCP/IP stack depends on: core, csp, crypto, etc.
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in the 3.8.0 release:
+
+| Module                | Description                                             |
+| ------ | -------- |
+| KSZ8091 PHY driver    | Updated the KSZ8091 PHY Auto MDIX setting |
+| IPv6                  | Fixed compilation issue for IPv6 only demos|
+| Net Utilities         | Updated the mpfs utility to generate HTTP_APP_DYNVAR_BUFFER for http_net_print.h file |
+| ICMP                  | Updated ICMP to properly release a request once the request is done |
+| FTP Server            | Updated the formatting for the file command list |
+| IPV6                  | TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION updated to TCPIP_ICMPV6_CLIENT_CONSOLE_CMD |
+| SAMA5D2 MAC driver    | Added extra checks and updates to the A5D2 MAC driver |
+| Manager               | Added a more explicit initialization failure message |
+| DHCP client           | ARP check timeout is MHC/MCC configurable now |
+| SMTPC                 | Increased the default socket buffer size to 2 KB |
+| SYS_Random adapter    | Added multi-threaded protection for the SYS_Random adapter |
+| All modules           | Fixes for MISRA violations |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.00](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.00](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, 3.8.0
+- Harmony net demo apps repositories, 3.8.0
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, 3.10.1
+- Harmony csp repository, 3.11.1
+- Harmony bsp repository, 3.11.1
+- Harmony dev_packs repository, 3.11.1
+- Harmony crypto repository, 3.7.6
+- Harmony usb repository, 3.8.1 for demos requiring USB
+- wolfSSL  v4.7.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v4.7.0-stable) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS 10.3.1 (https://github.com/Microchip-MPLAB-Harmony/CMSIS-FreeRTOS/tree/v10.3.1) for demos requiring FreeRTOS support
+- MPLAB Code Configurator (MCC) v.1.1.0
+
+
+#### Development Kit Support
+
+This release supports applications for the following development kits
+
+| Development Kits |
+| --- |
+| [PIC32MZEF Embedded Connectivity with FPU Starter Kit](https://www.microchip.com/DevelopmentTools/ProductDetails/DM320007-C) |
+| [PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit](https://www.microchip.com/developmenttools/ProductDetails/DM320010-C) |
+| [SAM A5D2 Xplained Ultra Evaluation Kit](https://www.microchip.com/Developmenttools/ProductDetails/ATSAMA5D2C-XULT) |
+| [SAM E54 Xplained Pro Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/ATSAME54-XPRO) |
+| [SAM E70 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAME70-XULT) |
+| [SAM V71 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAMV71-XULT) |
+| [PIC32MX Ethernet Starter Kit II](http://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=DM320004-2) |
+| [SAM9X60-EK Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/DT100126) |
+
+### KNOWN ISSUES
+
+The current known issues are as follows:
+* IAR projects are not supported in this release
+
+* SAM9X60/SAMA5D2 MPLABX demos regeneration should **NOT** overwrite the mpfs_net_img.c file.
+    - The symbols used in this automatically generated file are not present in the project.
+
+* wolfSSL/wolfCrypto PIC32M projects should be built with xc32 version >= 3.01.
+    - Otherwise the build will fail.
+
+* HTTP_NET projects using https with wolfSSL/wolfCrypt need to use xc32 v3.01.
+    - A crash occurrs with xc32 v4.0 for PIC32MZ, SAME54.
+    - Issue is under investigation.
+
+* HTTP_NET FreeRTOS demos need a heap size of 200K when using the XC32 v4.0.0 compiler.
+
+* SAMA5D2 MPLABX demos should **NOT** overwrite the linker script ddr.ld when regenerated.
+    - Otherwise the GMAC descriptors: gmac_dcpt_array will not be placed in the '.region_nocache'
+
+* SAMA5D2 projects should be built with -O0 optimization and at least 16 descriptors.
+    - Higher optimization may cause GMAC driver lock up.
+    - Investigation is in progress.
+
+* The SAM9x60 MPLABX should **NOT** overwrite the linker script ddram.ld when regenerated.
+    - Otherwise the EMAC descriptors: EMAC0_DcptArray will not be placed in the '.region_nocache'
+
+* wolfMQTT demos need to have the file third_party/wolfMQTT/mqtt_socket.c built without xc32 option 'Make warnings into errors'
+    - That is because it uses the obsolete #include <sys/errno.h>
+    - Applies to PIC32MZ, SAME70, SAMV71 platforms
+
+* Net Plugin issues:
+    - Issue 1: The connection between MAC and NETCONFIG is missing in MCC project graph.
+        - This happens for Net demos not migrated to TCP/IP Configurator. This issue will not impact code regeneration.
+        - Reason: The MAC components updated for multi-capability support (MH3-52292). 
+        - Workaround: Open the project graph in MCC. Open 'TCP/IP Configuration' from Plugins drop-down menu. Go to 'Data Link' Layer. Connect nodes between NETCONFIG and MAC.
+
+    - Issue 2: Cannot remove dependency node on group-box once added.
+        - This issue happens when multiple instances of external ethernet controller are added to project and one instance is removed later
+        - Reason: New python interface API needed (CFW-1183) 
+        - Workaround: No work around available
+
+    - Issue 3: While starting the TCP/IP demo projects, the ‘Number of Instances Using UART’ field in SYS_CONSOLE shows value ‘2’.
+        - This happens when only one UART is connected to SYS_CONSOLE, and the above field should be ‘1’.
+        - Reason: Under investigation
+        - Workaround: Remove SYS_CONSOLE from project graph. Add the SYS_CONSOLE back to project graph. Connect the dependencies.
+
+
 ## Net Release v3.7.4 (October, 2021)
 ### ADDITIONS AND UPDATES FOR  3.7.4:
 
