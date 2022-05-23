@@ -1,7 +1,7 @@
 packagePluginConfiguration:
 - name: Net Manager
   pluginID: TCP_IP_CONFIGURATION
-  binaryFilePath: plugins\net_manager.jar
+  binaryFilePath: plugins/net_manager.jar
   typeOfPlugin: JAVA
   loadingType: IMMEDIATE
   isHeadless: false
