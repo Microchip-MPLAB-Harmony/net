@@ -1,9 +1,9 @@
 /*******************************************************************************
-  KSZ8081PHY API for Microchip TCP/IP Stack
+  KSZ9031 PHY API for Microchip TCP/IP Stack
 *******************************************************************************/
 
 /*****************************************************************************
- Copyright (C) 2017-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2022 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -30,7 +30,25 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_ksz8081.h"
+#include "driver/ethphy/src/dynamic/drv_extphy_ksz9131.h"
+
+/******************************************************************************
+ * Prototypes
+ ******************************************************************************/
+static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj);
+
+/******************************************************************************
+ * Definitions
+ ******************************************************************************/
+typedef enum
+{
+    //States for Clock Skew setting
+    DRV_KSZ9131_SKEW_CLK_1 = 0,
+    DRV_KSZ9131_SKEW_CLK_2,
+    DRV_KSZ9131_SKEW_CLK_3,  
+    DRV_KSZ9131_SKEW_CLK_4,
+    DRV_KSZ9131_SKEW_CLK_5,
+} DRV_KSZ9131_SKEW_STATE;
 
 /****************************************************************************
  *                 interface functions
@@ -61,13 +79,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-#if (KSZ8081RNB == 0)
-    return (cFlags & DRV_ETHPHY_CFG_RMII) ? DRV_ETHPHY_RES_CFG_ERR : DRV_ETHPHY_RES_OK;
-#else
-    return (cFlags & DRV_ETHPHY_CFG_RMII) ? DRV_ETHPHY_RES_OK : DRV_ETHPHY_RES_CFG_ERR;
-#endif  // (KSZ8081RNB == 0)
+    return _DRV_KSZ9131_Skew_Setting(pBaseObj, hClientObj);
 }
-
 
 /****************************************************************************
  * Function:        DRV_EXTPHY_MDIXConfigure
@@ -93,106 +106,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, TCPIP_ETH_OPEN_FLAGS oFlags)
 {
-    union
-    {
-        uint32_t    w;
-        struct
-        {
-            uint16_t low;
-            uint16_t high;
-        };
-    } vendorData = { 0 };
-
-    __KSZ8081_PhyControl2Bits_t phyCtrl2;
-    uint16_t    phyReg = 0;
-    uint16_t    mdixConfPhase = 0;
-    int         phyAddress = 0;
-
-    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &vendorData.w);
-
-    if(res < 0)
-    {   // some error occurred
-        return res;
-    }
-
-    mdixConfPhase = vendorData.low;
-
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
-
-    switch(mdixConfPhase)
-    {
-        case 0:
-            res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyAddress);
-            if(res < 0)
-            {   // some error
-                return res;
-            }
-            else if(res == DRV_ETHPHY_RES_PENDING)
-            {   // retry
-                return DRV_ETHPHY_RES_PENDING;
-            }
-
-            // advance to the next phase
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, ++mdixConfPhase);
-            return DRV_ETHPHY_RES_PENDING;
-
-
-        case 1:
-            res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, &phyReg);
-            if(res < 0)
-            {   // some error
-                return res;
-            }
-            else if(res == DRV_ETHPHY_RES_PENDING)
-            {   // retry
-                return DRV_ETHPHY_RES_PENDING;
-            }
-
-            // got PHY_REG_PHY_CONTROL_2 result
-            phyCtrl2.w = phyReg;
-            if(oFlags & TCPIP_ETH_OPEN_MDIX_AUTO)
-            {   // enable Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 1;
-            }
-            else
-            {   // no Auto-MDIX
-                phyCtrl2.PAIR_SWAP_DISABLE = 0;  // disable Auto-MDIX
-                if(oFlags & TCPIP_ETH_OPEN_MDIX_SWAP)
-                {
-                    phyCtrl2.MDI_X_SELECT = 1;    // swap
-                }
-                else
-                {
-                    phyCtrl2.MDI_X_SELECT = 0;  // normal   
-                }
-            }
-
-            vendorData.low = mdixConfPhase + 1;
-            vendorData.high = phyCtrl2.w;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
-            return DRV_ETHPHY_RES_PENDING;
- 
-        case 2:
-            phyReg = vendorData.high;
-            // update the PHY_REG_PHY_CONTROL_2 Register
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_PHY_CONTROL_2, phyReg, phyAddress);
-            if(res < 0)
-            {   // some error
-                return res;
-            }
-            else if(res == DRV_ETHPHY_RES_PENDING)
-            {   // retry
-                return DRV_ETHPHY_RES_PENDING;
-            }
-
-            // done    
-            return DRV_ETHPHY_RES_OK;
-
-
-        default:
-            // shouldn't happen
-            return DRV_ETHPHY_RES_OPERATION_ERR; 
-    }
+ return DRV_ETHPHY_RES_OK;
 }
 
 
@@ -219,7 +133,7 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseOb
 
 // the DRV_ETHPHY_OBJECT
 
-const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8081 = 
+const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ9131 = 
 {
     .miiConfigure = DRV_EXTPHY_MIIConfigure,
     .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
@@ -228,3 +142,109 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8081 =
     .phyDetect = 0,                         // default detection performed
 };
 
+
+static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
+{
+    uint32_t skewState = 0;
+    int phyAddress = 0;
+    
+    DRV_ETHPHY_RESULT res = pBaseObj->DRV_ETHPHY_VendorDataGet(hClientObj, &skewState);
+    if(res < 0)
+    {   // some error occurred
+        return res;
+    }
+    
+    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
+    
+    switch (skewState)
+    {
+        case DRV_KSZ9131_SKEW_CLK_1:
+            //Write to MMD Control register to set MMD Device Address : 02
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x02), phyAddress);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            skewState++;
+            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+            res = DRV_ETHPHY_RES_PENDING;
+            break;
+
+        case DRV_KSZ9131_SKEW_CLK_2:
+            // wait for write complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_OK)
+            {   
+                // Write to MMD Address register to set Register Address for access : Clock Pad Skew Register
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_CLK_SKEW_REG), phyAddress);
+                if(res < 0)
+                {   // some error
+                    return res;
+                }
+                skewState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
+            break;
+
+        case DRV_KSZ9131_SKEW_CLK_3:
+            // wait for write complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_OK)
+            {   
+                //Write to MMD Control register to access the data
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x02), phyAddress);
+                if(res < 0)
+                {   // some error
+                    return res;
+                }
+                skewState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
+            break;
+            
+        case DRV_KSZ9131_SKEW_CLK_4:
+            // wait for write complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res == DRV_ETHPHY_RES_OK)
+            {   
+                //Write to MMD Data register to write data to register : Set Rx/Tx Clock pad skew to maximum
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x3FF, phyAddress);
+                if(res < 0)
+                {   // some error
+                    return res;
+                }
+                skewState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, skewState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
+            break;
+            
+        case DRV_KSZ9131_SKEW_CLK_5:
+            // wait for write complete
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            if(res < 0)
+            {   // some error
+                return res;
+            }
+            else if(res != DRV_ETHPHY_RES_OK)
+            { 
+                res = DRV_ETHPHY_RES_PENDING;
+            }
+            break;
+    }
+    return res;
+}

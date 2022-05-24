@@ -124,8 +124,6 @@ typedef enum
     DRV_ETHPHY_SETUP_PHASE_IDLE = 0,
     DRV_ETHPHY_SETUP_PHASE_DETECT,
     DRV_ETHPHY_SETUP_PHASE_RESET,
-   //Temporary fix; this work around should be part of KSZ9031 Driver
-    DRV_ETHPHY_SETUP_PHASE_LINKUP_ERRATA,
     DRV_ETHPHY_SETUP_PHASE_NEGOTIATE,
     DRV_ETHPHY_SETUP_PHASE_DONE,
     DRV_ETHPHY_SETUP_PHASE_ERROR,       // failed
@@ -393,7 +391,8 @@ typedef struct _DRV_ETHPHY_INSTANCE
     DRV_ETHPHY_CONFIG_FLAGS     configFlags;    // ETHPHY MII/RMII configuration flags
     TCPIP_ETH_PAUSE_TYPE        macPauseType;   // MAC supported pause type
     int                         phyAddress;     // PHY SMI address
-    const DRV_ETHPHY_OBJECT*    pPhyObj; // PHY object, vendor specififc functions
+    const DRV_ETHPHY_OBJECT*    pPhyObj;    // PHY object, vendor specific functions
+	DRV_ETHPHY_TMO *            ethphyTmo;  //PHY Initialization Time-outs 
     DRV_ETHPHY_CLIENT_OBJ       objClients[DRV_ETHPHY_CLIENTS_NUMBER]; // array of clients
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     SYS_MODULE_INDEX            miimIndex;  // MIIM object index 

@@ -22,8 +22,10 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
-<#if HarmonyCore.SELECT_RTOS == "BareMetal">
-    <#lt>DRV_MIIM_Tasks(sysObj.drvMiim);
+<#if HarmonyCore.SELECT_RTOS == "BareMetal">    
+	<#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>	DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt></#list>	
 <#elseif HarmonyCore.SELECT_RTOS == "FreeRTOS">
     <#lt>    xTaskCreate( _DRV_MIIM_Task,
     <#lt>        "DRV_MIIM_Tasks",

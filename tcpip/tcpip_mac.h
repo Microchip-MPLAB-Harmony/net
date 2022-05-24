@@ -145,8 +145,9 @@ typedef enum
     TCPIP_MODULE_MAC_PIC32INT_0     = 0x1040,   // alternate numbered name
 
     // Internal/Embedded GMAC of PIC32C: 
-    TCPIP_MODULE_MAC_PIC32C         = 0x1050,
-    TCPIP_MODULE_MAC_PIC32C_0       = 0x1050,   // alternate numbered name
+    TCPIP_MODULE_MAC_PIC32C         = 0x1050,	// instance base
+    TCPIP_MODULE_MAC_PIC32C_0       = 0x1050,   // first mac instance
+	TCPIP_MODULE_MAC_PIC32C_1       = 0x1051,   // second mac instance
 
     // External MRF24WN Wi-Fi MAC: room for 16 MRF24WN devices
     TCPIP_MODULE_MAC_MRF24WN        = 0x1060,

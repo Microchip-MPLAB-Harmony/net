@@ -20,7 +20,10 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+drvMiimInstMaxNum = 2
+drvMiimInstMenu = []
+drvMiimDrvIndex = []
+drvMiimModuleId = []
 def instantiateComponent(drvMiimComponent):
     print("MIIM Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -32,15 +35,40 @@ def instantiateComponent(drvMiimComponent):
     drvUseMiim.setLabel("Use MIIM Driver?")
     drvUseMiim.setVisible(False)
     drvUseMiim.setDescription("Use MIIM Driver?")
-    drvUseMiim.setDefaultValue(True)
+    drvUseMiim.setDefaultValue(True)    
 
-    # Maximum Number of Clients per Instance
-    drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", None)
-    drvMiimMaxNumClientsInstn.setHelp("mcc_h3_miim_configurations")
-    drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients")
-    drvMiimMaxNumClientsInstn.setVisible(True)
-    drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
-    drvMiimMaxNumClientsInstn.setDefaultValue(2)
+    # Number of Driver Instances
+    drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", None)
+    drvMiimInstnNum.setHelp("mcc_h3_miim_configurations")
+    drvMiimInstnNum.setLabel("Number of Driver Instances")
+    drvMiimInstnNum.setVisible(True)
+    drvMiimInstnNum.setMax(drvMiimInstMaxNum)
+    drvMiimInstnNum.setMin(0)
+    drvMiimInstnNum.setDescription("Number of Driver Instances")
+    if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM") != None):
+        drvMiimInstnNum.setDefaultValue(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")) 
+    drvMiimInstnNum.setDependencies(drvMiimSetIntMacCnt,["tcpipStack.TCPIP_STACK_INTMAC_INTERFACE_NUM"])
+
+    for index in range(0,drvMiimInstMaxNum):  
+        drvMiimInstMenu.append(drvMiimComponent.createMenuSymbol("DRV_MIIM_INST_MENU_ID"+str(index),drvMiimInstnNum))
+        drvMiimInstMenu[index].setLabel("MIIM Instance "+ str(index))
+        drvMiimInstMenu[index].setVisible(False)
+        
+        # MIIM Driver Object Index
+        drvMiimDrvIndex.append(drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX"+str(index),drvMiimInstMenu[index]))
+        drvMiimDrvIndex[index].setHelp("mcc_h3_miim_configurations")
+        drvMiimDrvIndex[index].setLabel("MIIM Driver Object Index "+ str(index))
+        drvMiimDrvIndex[index].setVisible(False)
+        drvMiimDrvIndex[index].setDescription("MIIM Driver Object Index")
+        drvMiimDrvIndex[index].setDefaultValue(index)
+        drvMiimDrvIndex[index].setReadOnly(True)
+                            
+        # Ethernet MAC Module ID
+        drvMiimModuleId.append(drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID"+str(index),drvMiimInstMenu[index]))
+        drvMiimModuleId[index].setHelp("mcc_h3_miim_configurations")
+        drvMiimModuleId[index].setLabel("ETH Module ID")
+        drvMiimModuleId[index].setVisible(False)
+        drvMiimModuleId[index].setDescription("Ethernet MAC Module ID")    
 
     # RTOS Configuration
     drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
@@ -101,33 +129,6 @@ def instantiateComponent(drvMiimComponent):
     drvMiimAdvSettings.setLabel("Advanced Settings")
     drvMiimAdvSettings.setDescription("Advanced Settings")
     drvMiimAdvSettings.setVisible(True)
-    
-    # Ethernet MAC Module ID
-    drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", drvMiimAdvSettings) 
-    drvMiimModuleId.setHelp("mcc_h3_miim_configurations")
-    drvMiimModuleId.setLabel("ETH Module ID")
-    drvMiimModuleId.setVisible(True)
-    drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
-    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):   
-        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ")):  
-            drvMiimModuleId.setDefaultValue("ETH_BASE_ADDRESS") 
-        else:
-            drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):    
-        drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
-        drvMiimModuleId.setDefaultValue("EMAC0_BASE_ADDRESS") 
-    elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
-        drvMiimModuleId.setDefaultValue("EMAC1_BASE_ADDRESS") 
-    drvMiimModuleId.setDependencies(drvMiimSetIntMacId,["drvGmac.TCPIP_USE_ETH_MAC","drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvEmac0.TCPIP_USE_EMAC0", "drvEmac1.TCPIP_USE_EMAC1"])
-
-    # Number of Driver Instances
-    drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", drvMiimAdvSettings)
-    drvMiimInstnNum.setHelp("mcc_h3_miim_configurations")
-    drvMiimInstnNum.setLabel("Number of Driver Instances")
-    drvMiimInstnNum.setVisible(True)
-    drvMiimInstnNum.setDescription("Number of Driver Instances")
-    drvMiimInstnNum.setDefaultValue(1)
 
     # Number of Instance Operations
     drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", drvMiimAdvSettings)
@@ -162,14 +163,14 @@ def instantiateComponent(drvMiimComponent):
     drvMiimDrvObj.setDescription("MIIM Driver Object")
     drvMiimDrvObj.setDefaultValue("DRV_MIIM_OBJECT_BASE_Default") 
 
-    # MIIM Driver Object Index
-    drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", drvMiimAdvSettings)
-    drvMiimDrvIndex.setHelp("mcc_h3_miim_configurations")
-    drvMiimDrvIndex.setLabel("MIIM Driver Object Index")
-    drvMiimDrvIndex.setVisible(True)
-    drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
-    drvMiimDrvIndex.setDefaultValue(0)
-    drvMiimDrvIndex.setReadOnly(True)
+
+    # Maximum Number of Clients per Instance
+    drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", drvMiimAdvSettings)
+    drvMiimMaxNumClientsInstn.setHelp("mcc_h3_miim_configurations")
+    drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients")
+    drvMiimMaxNumClientsInstn.setVisible(True)
+    drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
+    drvMiimMaxNumClientsInstn.setDefaultValue(2)
     
     # Add drv_miim.h file to project
     #file DRV_MIIM_H "$HARMONY_VERSION_PATH/framework/driver/miim/drv_miim.h" to "$PROJECT_HEADER_FILES/framework/driver/miim/drv_miim.h"
@@ -316,10 +317,18 @@ def drvMiimSetIntMacId(symbol, event):
             symbol.setValue("GMAC_BASE_ADDRESS")
     elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
         symbol.setValue("_ETH_BASE_ADDRESS")
+    elif ((Database.getSymbolValue("drvGmac0", "TCPIP_USE_ETH_MAC") == True)):    
+        symbol.setValue("GMAC0_BASE_ADDRESS")
+    elif ((Database.getSymbolValue("drvGmac1", "TCPIP_USE_ETH_MAC") == True)):    
+        symbol.setValue("GMAC1_BASE_ADDRESS") 
     elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
         symbol.setValue("EMAC0_BASE_ADDRESS")
     elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
         symbol.setValue("EMAC1_BASE_ADDRESS")    
+
+
+def drvMiimSetIntMacCnt(symbol, event):
+    symbol.setValue(event["value"])
 
 def genRtosTask(symbol, event):
     symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))

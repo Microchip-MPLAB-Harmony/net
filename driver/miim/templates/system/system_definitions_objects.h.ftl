@@ -19,6 +19,9 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
----------------------------------------------------------------------------->
-
-    SYS_MODULE_OBJ  drvMiim;
+---------------------------------------------------------------------------->   
+<#if DRV_MIIM_USE_DRIVER == true>
+    <#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>   SYS_MODULE_OBJ  drvMiim_${i};
+    <#lt></#list>
+</#if>

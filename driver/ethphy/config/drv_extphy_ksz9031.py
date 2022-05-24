@@ -167,18 +167,18 @@ def instantiateComponent(drvExtPhyKsz9031Component):
     drvExtPhyKsz9031IndexNum.setReadOnly(True)
     
     # Driver PHY Peripheral ID
-    drvExtPhyKsz9031PeripheralId= drvExtPhyKsz9031Component.createHexSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz9031AdvSettings)
+    drvExtPhyKsz9031PeripheralId= drvExtPhyKsz9031Component.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz9031AdvSettings) #todo# convert it to string for other PHYs too
     drvExtPhyKsz9031PeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz9031PeripheralId.setLabel("PHY Peripheral ID") 
     drvExtPhyKsz9031PeripheralId.setVisible(True)
     drvExtPhyKsz9031PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyKsz9031PeripheralId.setDefaultValue(0x1009031)
+    drvExtPhyKsz9031PeripheralId.setDefaultValue("")
     drvExtPhyKsz9031PeripheralId.setReadOnly(True)
 
     # External MAC Name
     drvExtPhyMacName= drvExtPhyKsz9031Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
     drvExtPhyMacName.setLabel("Mac Name") 
-    drvExtPhyMacName.setVisible(False)   
+    drvExtPhyMacName.setVisible(True)   
     drvExtPhyMacName.setDefaultValue("")
     drvExtPhyMacName.setReadOnly(True) 
                             

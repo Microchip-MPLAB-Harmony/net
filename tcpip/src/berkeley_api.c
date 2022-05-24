@@ -47,7 +47,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifdef __ICCARM__
 __attribute__((section(".bss.errno"))) int errno = 0;           // initialization required to provide definition
-#include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
+#include "device.h"                              // extended E codes not provided in IAR errno.h
 #else
 #include <errno.h>
 #if (__XC32_VERSION < 4000) || (__XC32_VERSION == 243739000)

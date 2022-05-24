@@ -60,16 +60,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/system.h"
 #include "system/int/sys_int.h"
 #include "system/time/sys_time.h"
-#include "peripheral/port/plib_port.h" //niyas
 #include "tcpip/tcpip_mac_object.h"
-
-
-
 #include "system/debug/sys_debug.h"
 #include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
-
 #include "driver/gmac/drv_gmac.h"
 #include "driver/gmac/src/dynamic/drv_gmac_lib.h"
 // *****************************************************************************
@@ -121,11 +116,11 @@ typedef struct
 #define   DRV_GMAC_USE_TX_SEMAPHORE_LOCK
 
 
-#define DRV_GMAC_MIN_RX_SIZE           64      // minimum RX buffer size
+#define DRV_GMAC_MIN_RX_SIZE            64      // minimum RX buffer size
                                                 // less than this creates excessive fragmentation
                                                 // Keep it always multiple of 64!
-
-#define DRV_GMAC_MIN_TX_DESCRIPTORS    1       // minimum number of TX descriptors
+#define DRV_GMAC_RX_MAX_FRAME           1536    // Maximum RX Frame Size for GMAC
+#define DRV_GMAC_MIN_TX_DESCRIPTORS     1       // minimum number of TX descriptors
                                                  // needed to accommodate zero copy and TCP traffic
                                                  
 // *****************************************************************************
@@ -154,30 +149,23 @@ typedef enum
  * Configuration Structure for Queues in GMAC.
  */
 typedef struct
-{	
-	/** Pointer to allocated RX buffer */    
+{	/** Pointer to allocated RX buffer */    
     TCPIP_MAC_PACKET **pRxPckt;
     // So that many number of Rx packet pointers for all Queues
 	/** Pointer to Rx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc;
     // Rx queues for RX packet buffers
-    DRV_PIC32CGMAC_SGL_LIST _RxQueue;
-	
+    DRV_PIC32CGMAC_SGL_LIST _RxQueue;	
 	/** Pointer to Tx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc;
     //Queue list of for transmission
-	DRV_PIC32CGMAC_SGL_LIST _TxQueue;
-    
+	DRV_PIC32CGMAC_SGL_LIST _TxQueue;    
 	/** RX index of current processing Descriptor */
 	uint16_t nRxDescIndex;
-
 	/** Circular buffer head pointer by upper layer (buffer to send) */
 	uint16_t nTxDescHead;
 	/** Circular buffer tail pointer incremented by handlers (buffer sent) */
 	uint16_t nTxDescTail;	
-    
-    /** interrupt source for GMAC queues */
-    INT_SOURCE   _queIntSrc;
 } DRV_GMAC_QUEUE;
 // *****************************************************************************
 /* GMAC driver data.
@@ -239,7 +227,7 @@ typedef struct {
 	TCPIP_MAC_TX_STATISTICS         _txStat;
                
     // GMAC queues
-	DRV_GMAC_QUEUE                  gmac_queue[DRV_GMAC_NUMBER_OF_QUEUES];
+	DRV_GMAC_QUEUE                  * gmac_queue;//[DRV_GMAC_NUMBER_OF_QUEUES];
     // GMAC configuration parameters	
 	TCPIP_MODULE_MAC_PIC32C_CONFIG  gmacConfig;  
     
@@ -275,7 +263,7 @@ typedef struct
 } DRV_GMAC_DRIVER;
 
 /* Function prototype for accessing Statistics registers */
-typedef uint32_t (*DRV_PIC32CGMAC_HW_REG_FUNC)(void);
+typedef uint32_t (*DRV_PIC32CGMAC_HW_REG_FUNC)(DRV_GMAC_DRIVER*);
 
 // *****************************************************************************
 /* PIC32 MAC Hardware statistics register access structure
@@ -731,30 +719,6 @@ void DRV_PIC32CGMAC_LibTransferEnable (DRV_GMAC_DRIVER* pMACDrv);
 
 /*******************************************************************************
   Function:
-      void DRV_PIC32CGMAC_LibSetInterruptSrc (DRV_GMAC_DRIVER* pMACDrv)
-
-  Summary:
-    Update GMAC Queue structure with interrupt source
-  Description:
-
-  Precondition:
-    None
-  Parameters:
-    pMACDrv -  GMAC device driver structure.
-  Returns:
-    None
-
-  Remarks:
-    None
-
-    Replaces:
-
-    <b><c>void EthInit(void)</c></b>
-  ************************************************************************/
-void DRV_PIC32CGMAC_LibSetInterruptSrc(DRV_GMAC_DRIVER* pMACDrv);
-
-/*******************************************************************************
-  Function:
       bool DRV_PIC32CGMAC_LibSetPriorityToQueueNum(DRV_GMAC_DRIVER* pMACDrv)
 
   Summary:
@@ -805,7 +769,7 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
 
 /*******************************************************************************
   Function:
-      uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void)
+      uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(DRV_GMAC_DRIVER* pMACDrv)
 
   Summary:
     Return the highest priority queue ready
@@ -814,7 +778,7 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
   Precondition:
     None
   Parameters:
-    None
+    pMACDrv -  GMAC device driver structure.
   Returns:
     priority Queue index
 
@@ -825,7 +789,7 @@ uint8_t DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC
 
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
-uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(void);
+uint8_t DRV_PIC32CGMAC_LibGetHighPrioReadyQue(DRV_GMAC_DRIVER* pMACDrv);
 
 /*******************************************************************************
   Function:
@@ -956,7 +920,7 @@ void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask
 
 /*******************************************************************************
   Function:
-      uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx)
+      uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx)
 
   Summary:
     Read GMAC interrupt status
@@ -965,6 +929,7 @@ void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask
   Precondition:
     None
   Parameters:
+    pMACDrv -  GMAC device driver structure.
     queueIdx - queue index
   Returns:
     GMAC interrupt status
@@ -976,11 +941,11 @@ void DRV_PIC32CGMAC_LibSysInt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask
 
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
-uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx);
+uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx);
 
 /*******************************************************************************
   Function:
-      void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+      void DRV_PIC32CGMAC_LibEnableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
 
   Summary:
     Enable GMAC interrupt events
@@ -989,6 +954,7 @@ uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx);
   Precondition:
     None
   Parameters:
+    pMACDrv -  GMAC device driver structure.
     queueIdx - queue index
     ethEvents - interrupt events
   Returns:
@@ -1001,11 +967,11 @@ uint32_t DRV_PIC32CGMAC_LibReadInterruptStatus(GMAC_QUE_LIST queueIdx);
 
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
-void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
+void DRV_PIC32CGMAC_LibEnableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
 
 /*******************************************************************************
   Function:
-      void DRV_PIC32CGMAC_LibDisableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
+      void DRV_PIC32CGMAC_LibDisableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents)
 
   Summary:
     Disable GMAC interrupt events
@@ -1014,6 +980,7 @@ void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEv
   Precondition:
     None
   Parameters:
+    pMACDrv -  GMAC device driver structure.
     queueIdx - queue index
     ethEvents - interrupt events
   Returns:
@@ -1026,7 +993,7 @@ void DRV_PIC32CGMAC_LibEnableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEv
 
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
-void DRV_PIC32CGMAC_LibDisableInterrupt(GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
+void DRV_PIC32CGMAC_LibDisableInterrupt(DRV_GMAC_DRIVER *pMACDrv, GMAC_QUE_LIST queueIdx, GMAC_EVENTS ethEvents);
 
 /*******************************************************************************
   Function:
@@ -1515,7 +1482,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv, 
 
 /*******************************************************************************
   Function:
-      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr)
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (DRV_GMAC_DRIVER* pMACDrv, const uint8_t * pMacAddr)
 
   Summary:
     Set MAC address for Ethernet controller
@@ -1526,17 +1493,18 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv, 
     None.
 
   Parameters:
+    pMACDrv  - driver instance.
     pMacAddr -  address of MAC Address array.
 
   Returns:
     DRV_PIC32CGMAC_RESULT
 
   ************************************************************************/
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr);
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (DRV_GMAC_DRIVER* pMACDrv, const uint8_t * pMacAddr);
 
 /*******************************************************************************
   Function:
-      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr)
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, uint8_t * pMacAddr)
 
   Summary:
     Get MAC address for Ethernet controller
@@ -1547,13 +1515,14 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr);
     None.
 
   Parameters:
+    pMACDrv  - driver instance.
     pMacAddr -  address of MAC Address array.
 
   Returns:
     DRV_PIC32CGMAC_RESULT
 
   ************************************************************************/
-DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr);
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (DRV_GMAC_DRIVER* pMACDrv, uint8_t * pMacAddr);
 
 /*******************************************************************************
   Function:
@@ -1581,7 +1550,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACD
 
 /****************************************************************************
   Function: 
-    void DRV_PIC32CGMAC_LibSetRxFilter(GMAC_RX_FILTERS  gmacRxFilt)
+    void DRV_PIC32CGMAC_LibSetRxFilter(DRV_GMAC_DRIVER* pMACDrv, GMAC_RX_FILTERS  gmacRxFilt)
  
   Summary: 
     Set GMAC Rx Filters
@@ -1590,16 +1559,17 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACD
     None
  
   Parameters: 
+    pMACDrv    - driver instance.
     gmacRxFilt - RX Filter for GMAC
  
   Returns:
     None
  *****************************************************************************/
-void DRV_PIC32CGMAC_LibSetRxFilter(GMAC_RX_FILTERS  gmacRxFilt);
+void DRV_PIC32CGMAC_LibSetRxFilter(DRV_GMAC_DRIVER* pMACDrv, GMAC_RX_FILTERS  gmacRxFilt);
 
 /****************************************************************************
   Function: 
-    void DRV_PIC32CGMAC_LibClearTxComplete(void)
+    void DRV_PIC32CGMAC_LibClearTxComplete(DRV_GMAC_DRIVER* pMACDrv)
  
   Summary: 
     Clear GMAC Tx Complete status
@@ -1608,30 +1578,49 @@ void DRV_PIC32CGMAC_LibSetRxFilter(GMAC_RX_FILTERS  gmacRxFilt);
     None
  
   Parameters: 
-    None
- 
+    pMACDrv    - driver instance. 
+     
   Returns:
     None
  *****************************************************************************/
-void DRV_PIC32CGMAC_LibClearTxComplete(void);
+void DRV_PIC32CGMAC_LibClearTxComplete(DRV_GMAC_DRIVER* pMACDrv);
 
 /****************************************************************************
   Function: 
-    void DRV_PIC32CGMAC_LibTxEnable(bool enable)
+    bool DRV_PIC32CGMAC_LibIsTxComplete(DRV_GMAC_DRIVER* pMACDrv)
+ 
+  Summary: 
+    Check GMAC Tx Complete status
+ 
+  Precondition: 
+    None
+ 
+  Parameters: 
+    pMACDrv    - driver instance. 
+     
+  Returns:
+    true or false
+ *****************************************************************************/
+bool DRV_PIC32CGMAC_LibIsTxComplete(DRV_GMAC_DRIVER* pMACDrv);
+
+/****************************************************************************
+  Function: 
+    void DRV_PIC32CGMAC_LibTxEnable(DRV_GMAC_DRIVER* pMACDrv, bool enable)
  
   Summary: 
     Enable/Disable GMAC Transmit
  
   Precondition: 
     None
- 
+   
   Parameters: 
+    pMACDrv    - driver instance. 
     bool enable - true/false
  
   Returns:
     None
  *****************************************************************************/
-void DRV_PIC32CGMAC_LibTxEnable(bool enable);
+void DRV_PIC32CGMAC_LibTxEnable(DRV_GMAC_DRIVER* pMACDrv, bool enable);
 
 /****************************************************************************
   Function: 
@@ -1644,56 +1633,56 @@ void DRV_PIC32CGMAC_LibTxEnable(bool enable);
     None
  
   Parameters: 
-    None
+    pMACDrv    - driver instance. 
  
   Returns:
     32-bit statistics register value
  *****************************************************************************/
-uint32_t DRV_PIC32CGMAC_LibGetTxOctetLow(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxOctetHigh(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxBCastFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxMCastFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxPauseFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx64ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx127ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx255ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx511ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx1023ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTx1518ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxGT1518ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxUnderRunFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxSingleCollFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxMultiCollFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxExcessCollFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxLateCollFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxDeferFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetTxCSErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxOctetLow(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxOctetHigh(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxBCastFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxMCastFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxPauseFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx64ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx127ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx255ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx511ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx1023ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRx1518ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxGT1518ByteFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxUnderSizeFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxOverSizeFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxJabberFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxFCSErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxLFErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxSymErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxAlignErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxResErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxOverRunFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount(void);
-uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(void);
+uint32_t DRV_PIC32CGMAC_LibGetTxOctetLow(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxOctetHigh(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxBCastFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxMCastFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxPauseFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx64ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx127ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx255ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx511ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx1023ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTx1518ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxGT1518ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxUnderRunFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxSingleCollFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxMultiCollFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxExcessCollFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxLateCollFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxDeferFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetTxCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxOctetLow(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxOctetHigh(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxBCastFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxMCastFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxPauseFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx64ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx127ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx255ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx511ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx1023ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRx1518ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxGT1518ByteFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxUnderSizeFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxOverSizeFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxJabberFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxFCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxLFErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxSymErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxAlignErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxResErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxOverRunFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
+uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv);
 // *****************************************************************************
 // *****************************************************************************
 // Section: Mutex Locks
@@ -1899,6 +1888,30 @@ __STATIC_INLINE int fixed_mod(int a, int b)
 
 /** Clear circular buffer */
 #define GCIRC_CLEAR(head, tail)  (head = tail = 0)
+
+/****************************************************************************
+ * Function:        _DRV_GMAC_HashValueSet
+ * Summary: Set Hash Value in GMAC register
+ *****************************************************************************/
+static __inline__ void __attribute__((always_inline)) _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
+{
+    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
+    pGmacRegs->GMAC_HRB = hash_value & 0xffffffff;
+    pGmacRegs->GMAC_HRT = (hash_value >> 32) & 0xffffffff;    
+}
+
+/****************************************************************************
+ * Function:        _DRV_GMAC_HashValueGet
+ * Summary: Read Hash Value in GMAC register
+ *****************************************************************************/
+static __inline__ uint64_t __attribute__((always_inline)) _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv)
+{
+    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
+    uint64_t hash_value = 0;    
+    hash_value = pGmacRegs->GMAC_HRT;
+    hash_value = (hash_value << 32) | pGmacRegs->GMAC_HRB;
+    return hash_value;
+}
 /*******************************************************************************
  End of File
 */

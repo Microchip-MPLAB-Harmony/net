@@ -46,7 +46,7 @@ tcpipStackNetInterfaceName = []
 tcpipStackIntMacInterface = []
 tcpipStackMiiMode = []
 tcpipStackOthInterface = []
-configSummaryVisible = False
+configSummaryVisible = True
 #########################################################################################
 
 def instantiateComponent(tcpipStackComponent):
@@ -529,6 +529,15 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackMacInterfaceNum.setReadOnly(True)
     tcpipStackMacInterfaceNum.setDependencies(tcpipStackNumInterfaceUpdate, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])
 
+    # Number of Internal MAC interfaces
+    tcpipStackIntMacInterfaceNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_INTMAC_INTERFACE_NUM", tcpipStackConfigSummary)
+    tcpipStackIntMacInterfaceNum.setHelp("mcc_h3_manager_configurations")
+    tcpipStackIntMacInterfaceNum.setLabel("Number of Internal MAC interfaces")
+    tcpipStackIntMacInterfaceNum.setDefaultValue(0)
+    tcpipStackIntMacInterfaceNum.setVisible(configSummaryVisible)
+    tcpipStackIntMacInterfaceNum.setReadOnly(True)
+    # tcpipStackIntMacInterfaceNum.setDependencies(tcpipStackNumInterfaceUpdate, ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT"])
+    
     for index in range(0,TCIP_MAX_INTERFACE_COUNT): 
         tcpipStackNetInterfaceMenu.append(tcpipStackComponent.createMenuSymbol("TCPIP_STACK_NET_INTERFACE_MENU_IDX"+str(index),tcpipStackConfigSummary))
         tcpipStackNetInterfaceMenu[index].setLabel("Interface "+ str(index))
@@ -556,7 +565,7 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackMiiMode.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_MII_MODE_IDX" + str(index), tcpipStackNetInterfaceMenu[index]))
         tcpipStackMiiMode[index].setHelp("mcc_h3_manager_configurations")
         tcpipStackMiiMode[index].setLabel("PHY Interface")
-        tcpipStackMiiMode[index].setVisible(False)
+        tcpipStackMiiMode[index].setVisible(True)
         tcpipStackMiiMode[index].setReadOnly(True)
         tcpipStackMiiMode[index].setDefaultValue("")
         tcpipStackMiiMode[index].setDependencies(tcpipStackMenuVisible, [tcpipStackIntMacInterface[index].getID()])    
@@ -569,6 +578,31 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackOthInterface[index].setReadOnly(True)
         tcpipStackOthInterface[index].setDefaultValue("")
         tcpipStackOthInterface[index].setDependencies(tcpipStackMenuInvisible, [tcpipStackIntMacInterface[index].getID()])  
+        
+        # # MAC Name
+        # tcpipStackMacName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_MAC_NAME_IDX" + str(index), tcpipStackConfigSummary)
+        # tcpipStackMacName[index].setHelp("mcc_h3_manager_configurations")
+        # tcpipStackMacName[index].setLabel("MAC Name")
+        # tcpipStackMacName[index].setVisible(configSummaryVisible)
+        # tcpipStackMacName[index].setReadOnly(True)
+        # tcpipStackMacName[index].setDefaultValue("")
+        
+        
+        # # PHY Name
+        # tcpipStackPhyName.append(tcpipStackComponent.createStringSymbol("TCPIP_STACK_PHY_NAME_IDX" + str(index), tcpipStackConfigSummary)
+        # tcpipStackPhyName[index].setHelp("mcc_h3_manager_configurations")
+        # tcpipStackPhyName[index].setLabel("PHY Name")
+        # tcpipStackPhyName[index].setVisible(configSummaryVisible)
+        # tcpipStackPhyName[index].setReadOnly(True)
+        # tcpipStackPhyName[index].setDefaultValue("")
+        
+        # # Interface Number
+        # tcpipStackIntNUm.append(tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_INT_NUM_IDX" + str(index), tcpipStackConfigSummary)
+        # tcpipStackIntNUm[index].setHelp("mcc_h3_manager_configurations")
+        # tcpipStackIntNUm[index].setLabel("Interface Num")
+        # tcpipStackIntNUm[index].setVisible(configSummaryVisible)
+        # tcpipStackIntNUm[index].setReadOnly(True)
+        # tcpipStackIntNUm[index].setDefaultValue(0)                
         
     # Internal MAC Clock 
     tcpipStackMacClock = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_CLOCK", tcpipStackConfigSummary)
@@ -601,7 +635,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
-    elif "SAMA5" in processor:
+    elif ("SAMA5" in processor) or ("SAMA7G" in processor):
         macName = "GMAC"
         intStringStart = "core."
         intStringEnd = "_INTERRUPT_ENABLE"
@@ -642,7 +676,7 @@ def instantiateComponent(tcpipStackComponent):
             tcpipStackMacIntEnable[intIndex].setLabel("Interrupt " + str(intIndex))
             tcpipStackMacIntEnable[intIndex].setVisible(configSummaryVisible) 
             tcpipStackMacIntEnable[intIndex].setReadOnly(True) 
-            if ("SAMA5" in processor) or ("SAM9X60" in processor):
+            if ("SAMA5" in processor) or ("SAMA7G" in processor) or ("SAM9X60" in processor):
                 tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["name"]) + intStringEnd]) 
             else:
                 tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["index"]) + intStringEnd]) 
@@ -2255,7 +2289,14 @@ def tcpipHeapCalc():
     if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)): 
         if(Database.getSymbolValue("drvGmac","DRV_GMAC_HEAP_SIZE") != None):        
             heapsize = heapsize + Database.getSymbolValue("drvGmac","DRV_GMAC_HEAP_SIZE")
-        
+    # GMAC0        
+    if((Database.getSymbolValue("drvGmac0", "TCPIP_USE_ETH_MAC") == True)): 
+        if(Database.getSymbolValue("drvGmac0","DRV_GMAC_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvGmac0","DRV_GMAC_HEAP_SIZE")
+    # GMAC1        
+    if((Database.getSymbolValue("drvGmac1", "TCPIP_USE_ETH_MAC") == True)): 
+        if(Database.getSymbolValue("drvGmac1","DRV_GMAC_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvGmac1","DRV_GMAC_HEAP_SIZE")        
     # ETHMAC    
     if((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
         if(Database.getSymbolValue("drvPic32mEthmac","DRV_ETHMAC_HEAP_SIZE") != None): 
@@ -2414,6 +2455,15 @@ def handleMessage(messageID, args):
         print "handleMessage: Set Symbol"
         retDict= {"Return": "Success"}
         Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    elif (messageID == "INC_SYMBOL"):
+        print "handleMessage: Increment Symbol"
+        symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
+        Database.setSymbolValue(args["Component"], args["Id"], symbol_value + 1)
+        retDict= {"Return": "Success"}
+    elif (messageID == "DEC_SYMBOL"):
+        symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
+        Database.setSymbolValue(args["Component"], args["Id"], symbol_value - 1)
+        retDict= {"Return": "Success"}
     else:
         retDict= {"Return": "UnImplemented Command"}
     return retDict

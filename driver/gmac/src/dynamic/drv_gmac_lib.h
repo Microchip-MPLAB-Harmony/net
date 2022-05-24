@@ -77,55 +77,55 @@ typedef enum{
     /*DOM-IGNORE-BEGIN*/ = 0 /*DOM-IGNORE-END*/,
 	// Management Frame Sent
 	GMAC_EV_MGMTFRAMESENT
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_MFS_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_MFS_Msk /*DOM-IGNORE-END*/,
 	
 	// Receive Complete
 	GMAC_EV_RXCOMPLETE
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_RCOMP_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RCOMP_Msk /*DOM-IGNORE-END*/,
 	
 	// RX Used Bit Read
 	GMAC_EV_RXUSEDBITREAD
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_RXUBR_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RXUBR_Msk /*DOM-IGNORE-END*/,
 	
 	// TX Used Bit Read
 	GMAC_EV_TXUSEDBITREAD
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_TXUBR_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TXUBR_Msk /*DOM-IGNORE-END*/,
 	
 	// Transmit Underrun
 	GMAC_EV_TXUNDERRUN
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_TUR_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TUR_Msk /*DOM-IGNORE-END*/,
 	
 	// Retry Limit Exceeded
 	GMAC_EV_RETRYLIMITEXCEED
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_RLEX_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RLEX_Msk /*DOM-IGNORE-END*/,
 	
 	// Transmit Frame Corruption
 	GMAC_EV_TXFRAMECORRUPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_TFC_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TFC_Msk /*DOM-IGNORE-END*/,
 	
 	// Transmit Complete
 	GMAC_EV_TXCOMPLETE
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_TCOMP_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TCOMP_Msk /*DOM-IGNORE-END*/,
 
 	// Receive Overrun
 	GMAC_EV_RXOVERRUN
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_ROVR_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_ROVR_Msk /*DOM-IGNORE-END*/,
 
 	// HRESP Not OK
 	GMAC_EV_HRESPNOTOK
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_HRESP_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_HRESP_Msk /*DOM-IGNORE-END*/,
 
 	// Pause Frame with Non-zero Pause Quantum Received
 	GMAC_EV_PAUSEFRAMENZRECV
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_PFNZ_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFNZ_Msk /*DOM-IGNORE-END*/,
 
 	// Pause Time Zero
 	GMAC_EV_PAUSETIMEZERO
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_PTZ_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PTZ_Msk /*DOM-IGNORE-END*/,
 
 	// Pause Frame Transmitted
 	GMAC_EV_PAUSEFRAMETX
-	/*DOM-IGNORE-BEGIN*/ = ETH_ISR_PFTR_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFTR_Msk /*DOM-IGNORE-END*/,
 	// All events
 	GMAC_EV_ALL
 	/*DOM-IGNORE-BEGIN*/= (	GMAC_EV_MGMTFRAMESENT | GMAC_EV_RXCOMPLETE |  GMAC_EV_RXUSEDBITREAD |
@@ -181,35 +181,35 @@ typedef enum{
 typedef enum{
 	// Frames with wrong Preamble are accepted
 	GMAC_FILT_PREAMBLE_ERR_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_RXBP_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_RXBP_Msk /*DOM-IGNORE-END*/,
 
 	// Frames with wrong CRC are accepted
 	GMAC_FILT_CRC_ERR_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_IRXFCS_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_IRXFCS_Msk /*DOM-IGNORE-END*/,
 
 	// Frames with Maximum frame size accepted
 	GMAC_FILT_MAXFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_MAXFS_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MAXFS_Msk /*DOM-IGNORE-END*/,
 
 	// Frames with Unicast Hash match accepted
 	GMAC_FILT_UCASTHASH_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_UNIHEN_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_UNIHEN_Msk /*DOM-IGNORE-END*/,
 	
 	// Frames with Multicast Hash match accepted
 	GMAC_FILT_MCASTHASH_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_MTIHEN_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MTIHEN_Msk /*DOM-IGNORE-END*/,
 	
 	// All Broadcast rejected
 	GMAC_FILT_BCAST_REJECT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_NBC_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_NBC_Msk /*DOM-IGNORE-END*/,
 	
 	// All valid frames accepted
 	GMAC_FILT_ALLFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_CAF_Msk /*DOM-IGNORE-END*/,
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_CAF_Msk /*DOM-IGNORE-END*/,
 	
 	// Jumbo frames accepted
 	GMAC_FILT_JUMBOFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = ETH_NCFGR_JFRAME_Msk /*DOM-IGNORE-END*/,	
+	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_JFRAME_Msk /*DOM-IGNORE-END*/,	
 	
 	GMAC_FILT_ALL_FILTERS
 	/*DOM-IGNORE-BEGIN*/    =	GMAC_FILT_PREAMBLE_ERR_ACCEPT	|	GMAC_FILT_CRC_ERR_ACCEPT	|
@@ -219,26 +219,5 @@ typedef enum{
 								GMAC_FILT_JUMBOFRAME_ACCEPT	/*DOM-IGNORE-END*/
 } GMAC_RX_FILTERS;
 
-/****************************************************************************
- * Function:        _DRV_GMAC_HashValueSet
- * Summary: Set Hash Value in GMAC register
- *****************************************************************************/
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_HashValueSet(uint64_t hash_value)
-{
-    ETH_REGS->ETH_HRB = hash_value & 0xffffffff;
-    ETH_REGS->ETH_HRT = (hash_value >> 32) & 0xffffffff;    
-}
-
-/****************************************************************************
- * Function:        _DRV_GMAC_HashValueGet
- * Summary: Read Hash Value in GMAC register
- *****************************************************************************/
-static __inline__ uint64_t __attribute__((always_inline)) _DRV_GMAC_HashValueGet(void)
-{
-    uint64_t hash_value = 0;    
-    hash_value = ETH_REGS->ETH_HRT;
-    hash_value = (hash_value << 32) | ETH_REGS->ETH_HRB;
-    return hash_value;
-}
 #endif  // _DRV_PIC32CGMAC_LIB_H_
 

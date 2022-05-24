@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    drv_extphy_ksz9031.h.ftl
+    drv_extphy_ksz9131.h.ftl
 
   Summary:
     TCPIP MAC Freemarker Template File
@@ -41,11 +41,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
+<#assign emac_phy_type = TCPIP_EMAC_PHY_TYPE>
 
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
+#define DRV_${emac_phy_type}_PHY_CONFIG_FLAGS       ( 0 \
 <#if TCPIP_INTMAC_PHY_CONFIG_GMII?has_content && TCPIP_INTMAC_PHY_CONFIG_GMII == true>
                                                     | DRV_ETHPHY_CFG_GMII \
-<#elseif TCPIP_INTMAC_PHY_CONFIG_RMII?has_content && TCPIP_INTMAC_PHY_CONFIG_RMII == true>			
+<#elseif TCPIP_INTMAC_PHY_CONFIG_RGMII?has_content && TCPIP_INTMAC_PHY_CONFIG_RGMII == true>            
+                                                    | DRV_ETHPHY_CFG_RGMII \
+<#elseif TCPIP_INTMAC_PHY_CONFIG_RMII?has_content && TCPIP_INTMAC_PHY_CONFIG_RMII == true>          
                                                     | DRV_ETHPHY_CFG_RMII \
 <#else>
                                                     | DRV_ETHPHY_CFG_MII \
@@ -60,15 +63,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 </#if>
                                                     )
 
-#define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
-#define TCPIP_INTMAC_PHY_ADDRESS                    ${TCPIP_INTMAC_PHY_ADDRESS}
-#define DRV_ETHPHY_INSTANCES_NUMBER                 ${DRV_ETHPHY_INSTANCES_NUMBER}
-#define DRV_ETHPHY_CLIENTS_NUMBER                   ${DRV_ETHPHY_CLIENTS_NUMBER}
-#define DRV_ETHPHY_INDEX                            ${DRV_ETHPHY_INDEX}
-#define DRV_ETHPHY_PERIPHERAL_ID                    ${DRV_ETHPHY_PERIPHERAL_ID}
-#define DRV_ETHPHY_NEG_INIT_TMO                     ${DRV_ETHPHY_NEG_INIT_TMO}
-#define DRV_ETHPHY_NEG_DONE_TMO                     ${DRV_ETHPHY_NEG_DONE_TMO}
-#define DRV_ETHPHY_RESET_CLR_TMO                    ${DRV_ETHPHY_RESET_CLR_TMO}
+#define DRV_${emac_phy_type}_PHY_LINK_INIT_DELAY        ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
+#define DRV_${emac_phy_type}_PHY_ADDRESS                ${TCPIP_INTMAC_PHY_ADDRESS}
+#define DRV_${emac_phy_type}_PHY_PERIPHERAL_ID          ${DRV_ETHPHY_PERIPHERAL_ID}
+#define DRV_ETHPHY_${emac_phy_type}_NEG_INIT_TMO        ${DRV_ETHPHY_NEG_INIT_TMO}
+#define DRV_ETHPHY_${emac_phy_type}_NEG_DONE_TMO        ${DRV_ETHPHY_NEG_DONE_TMO}
+#define DRV_ETHPHY_${emac_phy_type}_RESET_CLR_TMO       ${DRV_ETHPHY_RESET_CLR_TMO}
 
 <#--
 /*******************************************************************************

@@ -138,25 +138,24 @@ typedef union {
   };
 } __BMSTATbits_t;   // reg 1: PHY_REG_BMSTAT
 
-#define _BMSTAT_EXTEND_ABLE_MASK    0x0001
-#define _BMSTAT_JABBER_DET_MASK     0x0002
-#define _BMSTAT_LINK_STAT_MASK      0x0004
-#define _BMSTAT_AN_ABLE_MASK        0x0008
-#define _BMSTAT_REM_FAULT_MASK      0x0010
-#define _BMSTAT_AN_COMPLETE_MASK    0x0020
-#define _BMSTAT_PREAMBLE_SUPPRESS_MASK \
-                                    0x0040
-#define _BMSTAT_EXTSTAT_MASK        0x0100
-#define _BMSTAT_BASE10T_HDX_MASK    0x0800
-#define _BMSTAT_BASE10T_FDX_MASK    0x1000
-#define _BMSTAT_BASE100TX_HDX_MASK  0x2000
-#define _BMSTAT_BASE100TX_FDX_MASK  0x4000
-#define _BMSTAT_BASE100T4_MASK      0x8000
+#define _BMSTAT_EXTEND_ABLE_MASK        0x0001
+#define _BMSTAT_JABBER_DET_MASK         0x0002
+#define _BMSTAT_LINK_STAT_MASK          0x0004
+#define _BMSTAT_AN_ABLE_MASK            0x0008
+#define _BMSTAT_REM_FAULT_MASK          0x0010
+#define _BMSTAT_AN_COMPLETE_MASK        0x0020
+#define _BMSTAT_PREAMBLE_SUPPRESS_MASK  0x0040
+#define _BMSTAT_EXTSTAT_MASK            0x0100
+#define _BMSTAT_BASE10T_HDX_MASK        0x0800
+#define _BMSTAT_BASE10T_FDX_MASK        0x1000
+#define _BMSTAT_BASE100TX_HDX_MASK      0x2000
+#define _BMSTAT_BASE100TX_FDX_MASK      0x4000
+#define _BMSTAT_BASE100T4_MASK          0x8000
 
-#define _EXTSTAT_1000BASEX_FDX_MASK 0x8000
-#define _EXTSTAT_1000BASEX_HDX_MASK 0x4000
-#define _EXTSTAT_1000BASET_FDX_MASK 0x2000
-#define _EXTSTAT_1000BASET_HDX_MASK 0x1000
+#define _EXTSTAT_1000BASEX_FDX_MASK     0x8000
+#define _EXTSTAT_1000BASEX_HDX_MASK     0x4000
+#define _EXTSTAT_1000BASET_FDX_MASK     0x2000
+#define _EXTSTAT_1000BASET_HDX_MASK     0x1000
 
 
 #define _BASE1000X_FDX_MASK 0x0400
@@ -165,10 +164,11 @@ typedef union {
 #define _BASE1000T_HDX_MASK 0x0080
 
 
-#define _BMSTAT_NEGOTIATION_MASK    (_BMSTAT_BASE10T_HDX_MASK|_BMSTAT_BASE10T_FDX_MASK| \
-                    _BMSTAT_BASE100TX_HDX_MASK|_BMSTAT_BASE100TX_FDX_MASK|_BMSTAT_BASE100T4_MASK)       // negotiation field mask
-#define _BMSTAT_NEGOTIATION_POS     11      // negotiation field position
-#define _BMSTAT_NEGOTIATION_LENGTH  5       // negotiation field length
+#define _BMSTAT_NEGOTIATION_MASK    (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK| \
+                                    _BMSTAT_BASE100TX_HDX_MASK | _BMSTAT_BASE100TX_FDX_MASK | \
+                                    _BMSTAT_BASE100T4_MASK)       // negotiation field mask
+#define _BMSTAT_CAPABILITY_POS      11  // capability field position in basic status register
+#define _BMSTAT_NEGOTIATION_LENGTH  5   // negotiation field length
 
 
 // extended registers
@@ -231,10 +231,11 @@ typedef union {
 #define _ANAD_REM_FAULT_MASK      0x2000
 #define _ANAD_NP_ABLE_MASK        0x8000
 
-#define _ANAD_NEGOTIATION_MASK      (_ANAD_BASE10T_MASK|_ANAD_BASE10T_FDX_MASK|_ANAD_BASE100TX_MASK|_ANAD_BASE100TX_FDX_MASK| \
-                    _ANAD_BASE100T4_MASK)   // negotiation field mask
-#define _ANAD_NEGOTIATION_POS       5       // negotiation field position
-#define _ANAD_NEGOTIATION_LENGTH    5       // negotiation field length
+#define _ANAD_NEGOTIATION_MASK      (_ANAD_BASE10T_MASK | _ANAD_BASE10T_FDX_MASK | \
+                                    _ANAD_BASE100TX_MASK|_ANAD_BASE100TX_FDX_MASK| \
+                                    _ANAD_BASE100T4_MASK)   // negotiation field mask
+#define _ANAD_CAPABLITY_POS         5 // capability field position in Auto-Neg Adv register
+#define _ANAD_NEGOTIATION_LENGTH    5 // negotiation field length
 
 
 typedef union {

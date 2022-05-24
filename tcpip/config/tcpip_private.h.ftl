@@ -51,7 +51,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdbool.h>
 #include <stddef.h>
         
-#include "toolchain_specifics.h"
+#include "device.h"
 #include "system_config.h"
 #include "system/debug/sys_debug.h"
 #include "system/sys_random_h2_adapter.h"

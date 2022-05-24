@@ -20,268 +20,165 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ---------------------------------------------------------------------------->
-<#if (TCPIP_INTMAC_DEVICE)?has_content>  
-<#if (((TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((TCPIP_INTMAC_DEVICE) == "SAMRH71"))> 
+<#lt><#if (TCPIP_INTMAC_DEVICE)?has_content>  
+    <#lt><#if (((TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((TCPIP_INTMAC_DEVICE) == "SAMRH71") || ((TCPIP_INTMAC_DEVICE) == "PIC32CZ") || ((TCPIP_INTMAC_DEVICE) == "SAMA7G"))> 
+        <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"]?has_content>   
+            <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"] == true>  
+                
+                <#lt>DRV_GMAC_TYPE1_FILTER_INIT  ${GMAC_PERIPHERAL_INSTANCE?lower_case}Type1FiltInit[TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN1_COUNT_QUE]=
+                <#lt>{
+                    <#lt><#assign GMAC_SCREEN1_COUNT_QUE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_SCREEN1_COUNT_QUE">
+                    <#lt><#if .vars[GMAC_SCREEN1_COUNT_QUE] gte 1>      
+                        <#lt><#list 0 ..(.vars[GMAC_SCREEN1_COUNT_QUE] -1) as i >
+                            <#lt>   {   /** SCREEN1 QUEUE ${i} **/
+                                <#lt>       .queueIndex = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN1_QUE_IDX${i},
+                                <#lt>       .dstcEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN1_DSTCEN_IDX${i},
+                                <#lt><#assign dstcen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN1_DSTCEN_IDX" + i?string>
+                                <#lt><#if .vars[dstcen] == true>
+                                    <#lt>       .dstcValue = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN1_DSTC_IDX${i},
+                                <#lt></#if>  
+                                <#lt>       .udpEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN1_UDPEN_IDX${i},
+                                <#lt><#assign udpen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN1_UDPEN_IDX" + i?string>
+                                <#lt><#if .vars[udpen] == true>
+                                    <#lt>       .udpPortNum = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN1_UDPPORTNUM_IDX${i},
+                                <#lt></#if>     
+                            <#lt>   },
+                        <#lt></#list>
+                    <#lt></#if>
+                <#lt>};         
 
-const DRV_GMAC_RXQUE_FILTER_INIT DRV_GMAC_Rx_Filt_Init =
-{ 
-	.type1FiltCount = TCPIP_GMAC_SCREEN1_COUNT_QUE,
-<#if (TCPIP_GMAC_RX_QUE_FILTER_EN)?has_content>  
-<#if ((TCPIP_GMAC_RX_QUE_FILTER_EN) == true)> 	
-<#if (TCPIP_GMAC_SCREEN1_COUNT_QUE > 0)>
-<#list 0 ..(TCPIP_GMAC_SCREEN1_COUNT_QUE -1) as i >
-	.type1FiltInit[${i}].queueIndex = TCPIP_GMAC_SCREEN1_QUE_IDX${i},
-	.type1FiltInit[${i}].dstcEnable = TCPIP_QUE_SCREEN1_DSTCEN_IDX${i},
-	<#assign dstcen = "TCPIP_QUE_SCREEN1_DSTCEN_IDX${i}"?eval>
-	<#if dstcen == true>
-    .type1FiltInit[${i}].dstcValue = TCPIP_QUE_SCREEN1_DSTC_IDX${i},
-	</#if>	
-    .type1FiltInit[${i}].udpEnable = TCPIP_QUE_SCREEN1_UDPEN_IDX${i},
-	<#assign udpen = "TCPIP_QUE_SCREEN1_UDPEN_IDX${i}"?eval>
-	<#if udpen == true>
-    .type1FiltInit[${i}].udpPortNum = TCPIP_QUE_SCREEN1_UDPPORTNUM_IDX${i},
-	</#if>	
-	
-</#list>
-</#if>
-</#if>
-</#if>
-	.type2FiltCount = TCPIP_GMAC_SCREEN2_COUNT_QUE,
-<#if (TCPIP_GMAC_RX_QUE_FILTER_EN)?has_content>  
-<#if ((TCPIP_GMAC_RX_QUE_FILTER_EN) == true)> 
-<#if (TCPIP_GMAC_SCREEN2_COUNT_QUE > 0)>
-<#list 0 ..(TCPIP_GMAC_SCREEN2_COUNT_QUE -1) as i >
-	.type2FiltInit[${i}].queueIndex = TCPIP_GMAC_SCREEN2_QUE_IDX${i},
-	.type2FiltInit[${i}].vlanPrioEnable = TCPIP_QUE_SCREEN2_VLANPRIOEN_IDX${i},
-	<#assign vlanprioen = "TCPIP_QUE_SCREEN2_VLANPRIOEN_IDX${i}"?eval>
-	<#if vlanprioen == true>
-	.type2FiltInit[${i}].vlanPrio = TCPIP_QUE_SCREEN2_VLANPRIO_IDX${i},
-	</#if>	
-    .type2FiltInit[${i}].ethTypeEnable = TCPIP_QUE_SCREEN2_ETHTYPEEN_IDX${i},
-	<#assign ethtypeen = "TCPIP_QUE_SCREEN2_ETHTYPEEN_IDX${i}"?eval>
-	<#if ethtypeen == true>
-    .type2FiltInit[${i}].ethType = TCPIP_QUE_SCREEN2_ETHTYPE_IDX${i},
-	</#if>	
-	
-    .type2FiltInit[${i}].compAEnable = TCPIP_QUE_SCREEN2_COMPAEN_IDX${i},
-	<#assign compaen = "TCPIP_QUE_SCREEN2_COMPAEN_IDX${i}"?eval>
-	<#if compaen == true>
-	.type2FiltInit[${i}].compAValue = TCPIP_QUE_SCREEN2_COMPA_IDX${i},
-	.type2FiltInit[${i}].compAMask = TCPIP_QUE_SCREEN2_COMPAMASK_IDX${i},
-	.type2FiltInit[${i}].compAOffset = TCPIP_QUE_SCREEN2_COMPAOFFST_IDX${i},
-	.type2FiltInit[${i}].compAOffsetStart = TCPIP_QUE_SCREEN2_COMPAOFFSTSTRT_IDX${i},
-	</#if>	
-	
-	.type2FiltInit[${i}].compBEnable = TCPIP_QUE_SCREEN2_COMPBEN_IDX${i},
-	<#assign compben = "TCPIP_QUE_SCREEN2_COMPBEN_IDX${i}"?eval>
-	<#if compben == true>
-	.type2FiltInit[${i}].compBValue = TCPIP_QUE_SCREEN2_COMPB_IDX${i},
-	.type2FiltInit[${i}].compBMask = TCPIP_QUE_SCREEN2_COMPBMASK_IDX${i},
-	.type2FiltInit[${i}].compBOffset = TCPIP_QUE_SCREEN2_COMPBOFFST_IDX${i},
-	.type2FiltInit[${i}].compBOffsetStart = TCPIP_QUE_SCREEN2_COMPBOFFSTSTRT_IDX${i},
-	</#if>
-	
-	.type2FiltInit[${i}].compCEnable = TCPIP_QUE_SCREEN2_COMPCEN_IDX${i},
-	<#assign compcen = "TCPIP_QUE_SCREEN2_COMPCEN_IDX${i}"?eval>
-	<#if compcen == true>	
-	.type2FiltInit[${i}].compCValue = TCPIP_QUE_SCREEN2_COMPC_IDX${i},
-	.type2FiltInit[${i}].compCMask = TCPIP_QUE_SCREEN2_COMPCMASK_IDX${i},
-	.type2FiltInit[${i}].compCOffset = TCPIP_QUE_SCREEN2_COMPCOFFST_IDX${i},
-	.type2FiltInit[${i}].compCOffsetStart = TCPIP_QUE_SCREEN2_COMPCOFFSTSTRT_IDX${i},
-	</#if>
-	
-</#list>
-</#if>
-</#if>
-</#if>
-};
-</#if>
-</#if>
-	
-/*** GMAC MAC Initialization Data ***/
-const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
-{ 
-	/** QUEUE 0 Intialization**/
-<#if (TCPIP_GMAC_QUEUE_0)?has_content>
-	<#if (TCPIP_GMAC_QUEUE_0)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE0)  == true>
-	.gmac_queue_config[0].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[0].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE0)  == true>
-	.gmac_queue_config[0].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[0].queueRxEnable	= false,
-	</#if>	
-	<#else>	
-	.gmac_queue_config[0].queueTxEnable	= false,
-	.gmac_queue_config[0].queueRxEnable	= false,		
-	</#if>
-	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
-	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
-	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
-	.gmac_queue_config[0].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE0,
-	.gmac_queue_config[0].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE0,
-	.gmac_queue_config[0].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0,
-	.gmac_queue_config[0].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0,
-	.gmac_queue_config[0].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0,
-</#if>	
+                <#lt>DRV_GMAC_TYPE2_FILTER_INIT  ${GMAC_PERIPHERAL_INSTANCE?lower_case}Type2FiltInit[TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN2_COUNT_QUE]=
+                <#lt>{
+                    <#lt><#assign GMAC_SCREEN2_COUNT_QUE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_SCREEN2_COUNT_QUE">
+                    <#lt><#if .vars[GMAC_SCREEN2_COUNT_QUE] gte 1>      
+                        <#lt><#list 0 ..(.vars[GMAC_SCREEN2_COUNT_QUE] -1) as i >
+                            <#lt>   {   /** SCREEN2 QUEUE ${i} **/
+                                <#lt>       .queueIndex = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN2_QUE_IDX${i},
+                                <#lt>       .vlanPrioEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_VLANPRIOEN_IDX${i},                         
+                                <#lt><#assign vlanprioen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN2_VLANPRIOEN_IDX" + i?string>                                
+                                <#lt><#if .vars[vlanprioen] == true>
+                                    <#lt>       .vlanPrio = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_VLANPRIO_IDX${i},
+                                <#lt></#if>                         
+                                <#lt>       .ethTypeEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_ETHTYPEEN_IDX${i},
+                                <#lt><#assign ethtypeen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN2_ETHTYPEEN_IDX" + i?string>
+                                <#lt><#if .vars[ethtypeen] == true>
+                                    <#lt>       .ethType = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_ETHTYPE_IDX${i},
+                                <#lt></#if>                                 
+                                <#lt>       .compAEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPAEN_IDX${i},
+                                <#lt><#assign compaen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN2_COMPAEN_IDX" + i?string>
+                                <#lt><#if .vars[compaen] == true>
+                                    <#lt>       .compAValue = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPA_IDX${i},
+                                    <#lt>       .compAMask = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPAMASK_IDX${i},
+                                    <#lt>       .compAOffset = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPAOFFST_IDX${i},
+                                    <#lt>       .compAOffsetStart = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPAOFFSTSTRT_IDX${i},
+                                <#lt></#if>                                 
+                                <#lt>       .compBEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPBEN_IDX${i},
+                                <#lt><#assign compben = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN2_COMPBEN_IDX" + i?string>
+                                <#lt><#if .vars[compben] == true>
+                                    <#lt>       .compBValue = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPB_IDX${i},
+                                    <#lt>       .compBMask = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPBMASK_IDX${i},
+                                    <#lt>       .compBOffset = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPBOFFST_IDX${i},
+                                    <#lt>       .compBOffsetStart = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPBOFFSTSTRT_IDX${i},
+                                <#lt></#if>                             
+                                <#lt>       .compCEnable = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPCEN_IDX${i},
+                                <#lt><#assign compcen = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUE_SCREEN2_COMPCEN_IDX" + i?string>
+                                <#lt><#if .vars[compcen] == true>   
+                                    <#lt>       .compCValue = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPC_IDX${i},
+                                    <#lt>       .compCMask = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPCMASK_IDX${i},
+                                    <#lt>       .compCOffset = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPCOFFST_IDX${i},
+                                    <#lt>       .compCOffsetStart = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_QUE_SCREEN2_COMPCOFFSTSTRT_IDX${i},
+                                <#lt></#if> 
+                            <#lt>   },                          
+                        <#lt></#list>
+                    <#lt></#if>
+                <#lt>};
 
-<#if (TCPIP_GMAC_QUEUE_1)?has_content>
-	/** QUEUE 1 Intialization**/
-	<#if (TCPIP_GMAC_QUEUE_1)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE1)  == true>
-	.gmac_queue_config[1].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[1].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE1)  == true>
-	.gmac_queue_config[1].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[1].queueRxEnable	= false,
-	</#if>	
-	<#else>			
-	.gmac_queue_config[1].queueTxEnable	= false,
-	.gmac_queue_config[1].queueRxEnable	= false,
-	</#if>
-	.gmac_queue_config[1].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1,
-	.gmac_queue_config[1].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1,
-	.gmac_queue_config[1].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE1,
-	.gmac_queue_config[1].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE1,
-	.gmac_queue_config[1].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE1,
-	.gmac_queue_config[1].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1,
-	.gmac_queue_config[1].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1,
-	.gmac_queue_config[1].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE1,
-</#if>
+                <#lt>const DRV_GMAC_RXQUE_FILTER_INIT DRV_${GMAC_PERIPHERAL_INSTANCE}_Rx_Filt_Init =
+                <#lt>{ 
+                    <#lt>   .type1FiltCount = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN1_COUNT_QUE,          
+                    <#lt>   .type2FiltCount = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_SCREEN2_COUNT_QUE,
+                    <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"]?has_content>   
+                        <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"] == true>  
+                            <#lt>   .type1FiltInit = ${GMAC_PERIPHERAL_INSTANCE?lower_case}Type1FiltInit,
+                            <#lt>   .type2FiltInit = ${GMAC_PERIPHERAL_INSTANCE?lower_case}Type2FiltInit,
+                        <#lt></#if>
+                    <#lt></#if>
+                <#lt>}; 
+                
+            <#lt></#if>         
+        <#lt></#if>
+    <#lt></#if>
+<#lt></#if>
 
-<#if (TCPIP_GMAC_QUEUE_2)?has_content>
-	/** QUEUE 2 Intialization**/
-	<#if (TCPIP_GMAC_QUEUE_2)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE2)  == true>
-	.gmac_queue_config[2].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[2].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE2)  == true>
-	.gmac_queue_config[2].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[2].queueRxEnable	= false,
-	</#if>
-	<#else>	
-	.gmac_queue_config[2].queueTxEnable	= false,
-	.gmac_queue_config[2].queueRxEnable	= false,		
-	</#if>
-	.gmac_queue_config[2].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2,
-	.gmac_queue_config[2].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2,
-	.gmac_queue_config[2].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE2,
-	.gmac_queue_config[2].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE2,
-	.gmac_queue_config[2].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE2,
-	.gmac_queue_config[2].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2,
-	.gmac_queue_config[2].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2,
-	.gmac_queue_config[2].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE2,
-</#if>
+uint8_t txPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first} [DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES];
+uint8_t rxPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first} [DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES];
 
-<#if (TCPIP_GMAC_QUEUE_3)?has_content>
-	/** QUEUE 3 Intialization**/
-	<#if (TCPIP_GMAC_QUEUE_3)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE3)  == true>
-	.gmac_queue_config[3].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[3].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE3)  == true>
-	.gmac_queue_config[3].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[3].queueRxEnable	= false,
-	</#if>
-	<#else>		
-	.gmac_queue_config[3].queueTxEnable	= false,
-	.gmac_queue_config[3].queueRxEnable	= false,
-	</#if>
-	.gmac_queue_config[3].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3,
-	.gmac_queue_config[3].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3,
-	.gmac_queue_config[3].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE3,
-	.gmac_queue_config[3].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE3,
-	.gmac_queue_config[3].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE3,
-	.gmac_queue_config[3].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE3,
-	.gmac_queue_config[3].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE3,
-	.gmac_queue_config[3].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE3,
-</#if>
-
-<#if (TCPIP_GMAC_QUEUE_4)?has_content>	
-	/** QUEUE 4 Intialization**/
-	<#if (TCPIP_GMAC_QUEUE_4)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE4)  == true>
-	.gmac_queue_config[4].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[4].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE4)  == true>
-	.gmac_queue_config[4].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[4].queueRxEnable	= false,
-	</#if>
-	<#else>	
-	.gmac_queue_config[4].queueTxEnable	= false,
-	.gmac_queue_config[4].queueRxEnable	= false,		
-	</#if>
-	.gmac_queue_config[4].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4,
-	.gmac_queue_config[4].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4,
-	.gmac_queue_config[4].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE4,
-	.gmac_queue_config[4].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE4,
-	.gmac_queue_config[4].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE4,
-	.gmac_queue_config[4].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE4,
-	.gmac_queue_config[4].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE4,
-	.gmac_queue_config[4].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE4,
-</#if>
-
-<#if (TCPIP_GMAC_QUEUE_5)?has_content>
-	/** QUEUE 5 Intialization**/
-	<#if (TCPIP_GMAC_QUEUE_5)  == true>
-	<#if (TCPIP_GMAC_TX_EN_QUE5)  == true>
-	.gmac_queue_config[5].queueTxEnable	= true,
-	<#else>	
-	.gmac_queue_config[5].queueTxEnable	= false,
-	</#if>	
-	<#if (TCPIP_GMAC_RX_EN_QUE5)  == true>
-	.gmac_queue_config[5].queueRxEnable	= true,
-	<#else>	
-	.gmac_queue_config[5].queueRxEnable	= false,
-	</#if>	
-	<#else>		
-	.gmac_queue_config[5].queueTxEnable	= false,
-	.gmac_queue_config[5].queueRxEnable	= false,
-	</#if>
-	.gmac_queue_config[5].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5,
-	.gmac_queue_config[5].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5,
-	.gmac_queue_config[5].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE5,
-	.gmac_queue_config[5].txMaxPktSize	= TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE5,
-	.gmac_queue_config[5].nRxDedicatedBuffers	= TCPIP_GMAC_RX_DEDICATED_BUFFERS_QUE5,
-	.gmac_queue_config[5].nRxAddlBuffCount	= TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE5,
-	.gmac_queue_config[5].nRxBuffCntThres	= TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE5,
-	.gmac_queue_config[5].nRxBuffAllocCnt	= TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE5,
-</#if>
-	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
-	.linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
-    .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
-<#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,	
-<#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
-<#else>
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
-</#if>
-    .pPhyInit               = &tcpipPhyInitData_${DRV_INTMAC_PHY_TYPE},
-	.checksumOffloadRx      = DRV_GMAC_RX_CHKSM_OFFLOAD,
-    .checksumOffloadTx      = DRV_GMAC_TX_CHKSM_OFFLOAD,
-    .macTxPrioNum           = TCPIP_GMAC_TX_PRIO_COUNT,
-    .macRxPrioNum           = TCPIP_GMAC_RX_PRIO_COUNT,
-<#if (TCPIP_INTMAC_DEVICE)?has_content>  
-<#if (((TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((TCPIP_INTMAC_DEVICE) == "SAMRH71"))> 
-	.pRxQueFiltInit			= &DRV_GMAC_Rx_Filt_Init,
-</#if>
-</#if>
+/*** ${GMAC_PERIPHERAL_INSTANCE} Initialization Data ***/
+TCPIP_MODULE_GMAC_QUEUE_CONFIG  ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_config[DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES]=
+{
+    <#lt><#assign queCnt = "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_MAX_MAC_QUE_CNT"?eval - 1 >
+    <#lt><#list 0..queCnt as qIndx>
+    <#lt><#assign MAC_QUEUE_ENABLE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_QUEUE_" + qIndx?string >
+    <#lt><#assign MAC_QUEUE_TX_ENABLE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_TX_EN_QUE" + qIndx?string >
+    <#lt><#assign MAC_QUEUE_RX_ENABLE =  "TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_EN_QUE" + qIndx?string >
+        <#lt><#if .vars[MAC_QUEUE_ENABLE]?has_content>          
+            <#lt>   {   /** QUEUE ${qIndx} Initialization**/
+                <#lt><#if .vars[ MAC_QUEUE_ENABLE ] == true>
+                    <#lt><#if .vars[ MAC_QUEUE_TX_ENABLE ] == true>
+                        <#lt>       .queueTxEnable = true,
+                    <#lt><#else>
+                        <#lt>       .queueTxEnable = false,
+                    <#lt></#if>
+                    <#lt><#if .vars[ MAC_QUEUE_RX_ENABLE ] == true>
+                        <#lt>       .queueRxEnable = true,
+                    <#lt><#else>
+                        <#lt>       .queueRxEnable = false,
+                    <#lt></#if> 
+                <#lt><#else>
+                    <#lt>       .queueTxEnable = false,
+                    <#lt>       .queueRxEnable = false,
+                <#lt></#if> 
+                <#lt>       .nRxDescCnt    = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_DESCRIPTORS_COUNT_QUE" + qIndx?string]},
+                <#lt>       .nTxDescCnt    = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_TX_DESCRIPTORS_COUNT_QUE" + qIndx?string]},
+                <#lt>       .rxBufferSize  = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_BUFF_SIZE_QUE" + qIndx?string]},
+                <#lt>       .txMaxPktSize  = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_MAX_TX_PKT_SIZE_QUE" + qIndx?string]},
+                <#lt>       .nRxDedicatedBuffers   = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_DEDICATED_BUFFERS_QUE" + qIndx?string]},
+                <#lt>       .nRxAddlBuffCount  = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_ADDL_BUFF_COUNT_QUE" + qIndx?string]},
+                <#lt>       .nRxBuffCntThres   = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_BUFF_COUNT_THRESHOLD_QUE" + qIndx?string]},
+                <#lt>       .nRxBuffAllocCnt   = ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_BUFF_ALLOC_COUNT_QUE" + qIndx?string]},   
+                <#lt>       .queueIntSrc       = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_INT_SRC_QUE" + qIndx?string]},                               
+            <#lt>   },
+        <#lt></#if>
+    <#lt></#list>
 };
 
+
+const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
+{ 
+    <#lt>       .gmac_queue_config = ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_config,
+    <#lt>       .macQueNum = DRV_${GMAC_PERIPHERAL_INSTANCE}_NUMBER_OF_QUEUES, 
+    <#lt>       .txPrioNumToQueIndx = txPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},
+    <#lt>       .rxPrioNumToQueIndx = rxPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},
+    <#lt>       .ethFlags               = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_ETH_OPEN_FLAGS,    
+    <#lt>       .linkInitDelay          = DRV_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]}_PHY_LINK_INIT_DELAY, // #todo# : do for all internal MACS
+    <#lt>       .ethModuleId            = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_MODULE_ID,
+    <#lt><#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
+        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303, 
+    <#lt><#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
+        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
+    <#lt><#else>
+        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
+    <#lt></#if>
+    <#lt>       .pPhyInit               = &tcpipPhyInitData_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]}, // #todo# : do for all internal MACS
+    <#lt>       .checksumOffloadRx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_RX_CHKSM_OFFLOAD,
+    <#lt>       .checksumOffloadTx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_TX_CHKSM_OFFLOAD,
+    <#lt>       .macTxPrioNum           = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_TX_PRIO_COUNT,
+    <#lt>       .macRxPrioNum           = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_PRIO_COUNT,  
+    <#lt>       .macRxFilt              = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_FILTERS,
+    <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"]?has_content>   
+        <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"] == true> 
+            <#lt>       .pRxQueFiltInit         = &DRV_${GMAC_PERIPHERAL_INSTANCE}_Rx_Filt_Init,
+        <#lt></#if>
+    <#lt></#if>
+};
 

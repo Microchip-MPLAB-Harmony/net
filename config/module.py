@@ -257,7 +257,16 @@ def loadModule():
     tcpipZeroConfComponent.setDisplayType("Application Layer")
 
     ###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
-    if Peripheral.moduleExists("GMAC"):
+    if ("SAMA7G" in Variables.get("__PROCESSOR")) and (Peripheral.moduleExists("GMAC")):
+        drvGmacComponent_0 = Module.CreateComponent("drvGmac0", "GMAC0", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
+        drvGmacComponent_0.addMultiCapability("libdrvGmac0","MAC", None)
+        drvGmacComponent_0.addDependency("GMAC0_PHY_Dependency", "PHY", None, False, True)  
+        drvGmacComponent_0.setDisplayType("MAC Layer")
+        drvGmacComponent_1 = Module.CreateComponent("drvGmac1", "GMAC1", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
+        drvGmacComponent_1.addMultiCapability("libdrvGmac1","MAC", None)
+        drvGmacComponent_1.addDependency("GMAC1_PHY_Dependency", "PHY", None, False, True)  
+        drvGmacComponent_1.setDisplayType("MAC Layer")
+    elif Peripheral.moduleExists("GMAC"):
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addMultiCapability("libdrvGmac","MAC", None)
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
@@ -319,10 +328,16 @@ def loadModule():
     drvExtPhyKsz8863Component.setDisplayType("PHY Layer")
     
     #Driver for Micrel KSZ9031 PHY
-    drvExtPhyKsz9031Component = Module.CreateComponent("drvExtPhyKsz9031", "KSZ9031", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz9031.py")
+    drvExtPhyKsz9031Component = Module.CreateComponent("drvExtPhyKsz9031", "KSZ9031", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz9031.py")
     drvExtPhyKsz9031Component.addCapability("libdrvExtPhyKsz9031","PHY",False)   
     drvExtPhyKsz9031Component.addDependency("KSZ9031_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz9031Component.setDisplayType("PHY Layer")
+    
+    #Driver for Micrel KSZ9131 PHY
+    drvExtPhyKsz9131Component = Module.CreateComponent("drvExtPhyKsz9131", "KSZ9131", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz9131.py")
+    drvExtPhyKsz9131Component.addCapability("libdrvExtPhyKsz9131","PHY",False)   
+    drvExtPhyKsz9131Component.addDependency("KSZ9131_MIIM_Dependency", "MIIM", None, True, True)    
+    drvExtPhyKsz9131Component.setDisplayType("PHY Layer")
     
     #Driver for SMSC LAN8700 PHY
     drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")

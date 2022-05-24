@@ -43,8 +43,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
 <#if DRV_MIIM_USE_DRIVER == true>
-    /* Initialize the MIIM Driver */
-    sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
+    <#lt><#list 0..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>   /* Initialize the MIIM Driver Instance ${i}*/
+    <#lt>   sysObj.drvMiim_${i} = DRV_MIIM_Initialize(DRV_MIIM_DRIVER_INDEX_${i}, (const SYS_MODULE_INIT *) &drvMiimInitData_${i}); 
+    <#lt></#list>
 </#if>
 <#--
 /*******************************************************************************

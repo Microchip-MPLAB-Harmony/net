@@ -22,6 +22,8 @@
 # THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ##############################################################################
 autoConnectTableGMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac:libdrvGmac"]]
+autoConnectTableGMAC0 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac0:libdrvGmac0"]]
+autoConnectTableGMAC1 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac1:libdrvGmac1"]]
 autoConnectTableEthmac = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvPic32mEthmac:libdrvPic32mEthmac"]]
 autoConnectTableEMAC0 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvEmac0:libdrvMac0"]]
 autoConnectTableEMAC1 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvEmac1:libdrvMac1"]]
@@ -56,8 +58,20 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     wirelessWincPresent = os.path.isdir(harmonyFrameworkPath + "/wireless_wifi/driver/winc")
     wirelessEthmacPresent = os.path.isdir(harmonyFrameworkPath + "/wireless_wifi/driver/ethmac")
     net_10Baset1sPresent = os.path.isdir(harmonyFrameworkPath + "/net_10base_t1s/driver")
-    
-    if Peripheral.moduleExists("GMAC"): 
+    if ("SAMA7G" in Variables.get("__PROCESSOR")) and (Peripheral.moduleExists("GMAC")):
+        # Enable GMAC0
+        tcpipAutoConfigGMAC0 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_GMAC0", None)
+        tcpipAutoConfigGMAC0.setLabel("GMAC0")
+        tcpipAutoConfigGMAC0.setVisible(True)
+        tcpipAutoConfigGMAC0.setDescription("Enable GMAC0")
+        tcpipAutoConfigGMAC0.setDependencies(tcpipAutoConfigGMAC0Enable, ["TCPIP_AUTOCONFIG_ENABLE_GMAC0"])
+        # Enable GMAC1
+        tcpipAutoConfigGMAC1 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_GMAC1", None)
+        tcpipAutoConfigGMAC1.setLabel("GMAC1")
+        tcpipAutoConfigGMAC1.setVisible(True)
+        tcpipAutoConfigGMAC1.setDescription("Enable GMAC1")
+        tcpipAutoConfigGMAC1.setDependencies(tcpipAutoConfigGMAC1Enable, ["TCPIP_AUTOCONFIG_ENABLE_GMAC1"])         
+    elif Peripheral.moduleExists("GMAC"): 
         # Enable GMAC
         tcpipAutoConfigGMAC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_GMAC", None)
         tcpipAutoConfigGMAC.setLabel("GMAC")
@@ -286,6 +300,25 @@ def tcpipAutoConfigGMACEnable(symbol, event):
     else:
         res = Database.deactivateComponents(["drvGmac"])
         
+def tcpipAutoConfigGMAC0Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvGmac0"],"DRIVER LAYER")   
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvGmac0", "libdrvGmac0")
+        res = Database.connectDependencies(autoConnectTableGMAC0)
+    else:
+        res = Database.deactivateComponents(["drvGmac0"])
+        
+def tcpipAutoConfigGMAC1Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvGmac1"],"DRIVER LAYER")   
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvGmac1", "libdrvGmac1")
+        res = Database.connectDependencies(autoConnectTableGMAC1)
+    else:
+        res = Database.deactivateComponents(["drvGmac0"])        
 def tcpipAutoConfigETHMACEnable(symbol, event):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
     enableTcpipAutoConfigDrv(True)

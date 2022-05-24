@@ -17,7 +17,7 @@
 -->
 
 <#----------------------------------------------------------------------------
- Copyright (C) 2021 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2021-2022 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,9 +41,11 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 <#if DRV_MIIM_USE_DRIVER>
-	<#lt>/* MIIM Driver Configuration */
-	<#lt>static const DRV_MIIM_INIT drvMiimInitData =
-	<#lt>{
-	<#lt>	.ethphyId = DRV_MIIM_ETH_MODULE_ID,
-	<#lt>};
+    <#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+        <#lt>/*** MIIM Driver Instance ${i} Configuration ***/
+        <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i} =
+        <#lt>{
+        <#lt>   .ethphyId = DRV_MIIM_ETH_MODULE_ID_${i},
+        <#lt>};
+    <#lt></#list>
 </#if>

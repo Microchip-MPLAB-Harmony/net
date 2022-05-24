@@ -127,42 +127,15 @@ def instantiateComponent(drvExtPhyKsz8081Component):
     drvExtPhyKsz8081ResetClearTimeout.setVisible(True)
     drvExtPhyKsz8081ResetClearTimeout.setDescription("Driver PHY Reset Clear Time-out (mSec)")
     drvExtPhyKsz8081ResetClearTimeout.setDefaultValue(500)
-    
-    # Driver PHY Instances Number
-    drvExtPhyKsz8081InstanceNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", drvExtPhyKsz8081AdvSettings)
-    drvExtPhyKsz8081InstanceNum.setHelp("mcc_h3_phy_configurations")
-    drvExtPhyKsz8081InstanceNum.setLabel("PHY Instances Number") 
-    drvExtPhyKsz8081InstanceNum.setVisible(True)
-    drvExtPhyKsz8081InstanceNum.setDescription("Driver PHY Instances Number")
-    drvExtPhyKsz8081InstanceNum.setDefaultValue(1)
-    drvExtPhyKsz8081InstanceNum.setReadOnly(True)
-    
-    # Driver PHY Clients Number
-    drvExtPhyKsz8081ClientNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_CLIENTS_NUMBER", drvExtPhyKsz8081AdvSettings)
-    drvExtPhyKsz8081ClientNum.setHelp("mcc_h3_phy_configurations")
-    drvExtPhyKsz8081ClientNum.setLabel("PHY Clients Number") 
-    drvExtPhyKsz8081ClientNum.setVisible(True)
-    drvExtPhyKsz8081ClientNum.setDescription("Driver PHY Clients Number")
-    drvExtPhyKsz8081ClientNum.setDefaultValue(1)
-    drvExtPhyKsz8081ClientNum.setReadOnly(True)
-    
-    # Driver PHY Peripheral Index Number
-    drvExtPhyKsz8081IndexNum= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_INDEX", drvExtPhyKsz8081AdvSettings)
-    drvExtPhyKsz8081IndexNum.setHelp("mcc_h3_phy_configurations")
-    drvExtPhyKsz8081IndexNum.setLabel("PHY Peripheral Index Number") 
-    drvExtPhyKsz8081IndexNum.setVisible(True)
-    drvExtPhyKsz8081IndexNum.setDescription("Driver PHY Peripheral Index Number")
-    drvExtPhyKsz8081IndexNum.setDefaultValue(1)
-    drvExtPhyKsz8081IndexNum.setReadOnly(True)
-    
+
     # Driver PHY Peripheral ID
-    drvExtPhyKsz8081PeripheralId= drvExtPhyKsz8081Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz8081AdvSettings)
+    drvExtPhyKsz8081PeripheralId= drvExtPhyKsz8081Component.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz8081AdvSettings)
     drvExtPhyKsz8081PeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz8081PeripheralId.setLabel("PHY Peripheral ID") 
     drvExtPhyKsz8081PeripheralId.setVisible(True)
     drvExtPhyKsz8081PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyKsz8081PeripheralId.setDefaultValue(1)
-    drvExtPhyKsz8081PeripheralId.setReadOnly(True)         
+    drvExtPhyKsz8081PeripheralId.setDefaultValue("")
+    drvExtPhyKsz8081PeripheralId.setReadOnly(True)        
     
     # External MAC Name
     drvExtPhyMacName= drvExtPhyKsz8081Component.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
