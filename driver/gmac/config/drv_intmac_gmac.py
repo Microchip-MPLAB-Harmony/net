@@ -366,20 +366,20 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthHalfDuplex.setDescription("Use Half Duplex")
     tcpipGmacEthHalfDuplex.setDefaultValue(True)
     
-    # Use 100MBps
+    # Use 100Mbps
     tcpipGmacEthUse100 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_100", tcpipEthConnFlag)
     tcpipGmacEthUse100.setHelp("mcc_h3_gmac_configurations")
-    tcpipGmacEthUse100.setLabel("Use 100MBps")
+    tcpipGmacEthUse100.setLabel("Use 100Mbps")
     tcpipGmacEthUse100.setVisible(True) 
-    tcpipGmacEthUse100.setDescription("Use 100MBps")
+    tcpipGmacEthUse100.setDescription("Use 100Mbps")
     tcpipGmacEthUse100.setDefaultValue(True)
     
-    # Use 10MBps
+    # Use 10Mbps
     tcpipGmacEthUse10 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_OF_10", tcpipEthConnFlag)
     tcpipGmacEthUse10.setHelp("mcc_h3_gmac_configurations")
-    tcpipGmacEthUse10.setLabel("Use 10MBps")
+    tcpipGmacEthUse10.setLabel("Use 10Mbps")
     tcpipGmacEthUse10.setVisible(True)
-    tcpipGmacEthUse10.setDescription("Use 10MBps")
+    tcpipGmacEthUse10.setDescription("Use 10Mbps")
     tcpipGmacEthUse10.setDefaultValue(True)
     
     # Use Auto MDIX

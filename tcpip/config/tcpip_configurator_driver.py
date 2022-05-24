@@ -52,7 +52,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigDrvEnable.setVisible(False)
     tcpipAutoConfigDrvEnable.setDefaultValue(True)
     # Check if Wireless Module are present to show respective Drivers
-    harmonyFrameworkPath = Variables.get("__FRAMEWORK_DIR")     
+    harmonyFrameworkPath = Variables.get("__FRAMEWORK_ROOT")     
     wirelessWincPresent = os.path.isdir(harmonyFrameworkPath + "/wireless_wifi/driver/winc")
     wirelessEthmacPresent = os.path.isdir(harmonyFrameworkPath + "/wireless_wifi/driver/ethmac")
     net_10Baset1sPresent = os.path.isdir(harmonyFrameworkPath + "/net_10base_t1s/driver")

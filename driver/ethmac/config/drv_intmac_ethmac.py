@@ -245,20 +245,20 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthHalfDuplex.setDescription("Use Half Duplex")
     tcpipEthmacEthHalfDuplex.setDefaultValue(True)
     
-    # Use 100MBps
+    # Use 100Mbps
     tcpipEthmacEthUse100 = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_100", tcpipEthConnFlag)
     tcpipEthmacEthUse100.setHelp("mcc_h3_ethmac_configurations")
-    tcpipEthmacEthUse100.setLabel("Use 100MBps")
+    tcpipEthmacEthUse100.setLabel("Use 100Mbps")
     tcpipEthmacEthUse100.setVisible(True) 
-    tcpipEthmacEthUse100.setDescription("Use 100MBps")
+    tcpipEthmacEthUse100.setDescription("Use 100Mbps")
     tcpipEthmacEthUse100.setDefaultValue(True)
     
-    # Use 10MBps
+    # Use 10Mbps
     tcpipEthmacEthUse10 = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_10", tcpipEthConnFlag)
     tcpipEthmacEthUse10.setHelp("mcc_h3_ethmac_configurations")
-    tcpipEthmacEthUse10.setLabel("Use 10MBps")
+    tcpipEthmacEthUse10.setLabel("Use 10Mbps")
     tcpipEthmacEthUse10.setVisible(True)
-    tcpipEthmacEthUse10.setDescription("Use 10MBps")
+    tcpipEthmacEthUse10.setDescription("Use 10Mbps")
     tcpipEthmacEthUse10.setDefaultValue(True)
     
     # Allow Huge Packets
