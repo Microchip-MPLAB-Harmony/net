@@ -128,7 +128,7 @@ static TCPIP_ARP_RESULT   _ARPProbeAddress(TCPIP_NET_IF* pIf, const IPV4_ADDR* I
 
 static TCPIP_MAC_PACKET* _ARPAllocateTxPacket(void);
 
-static bool         _ARPTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
+static void         _ARPTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
 
 static void         TCPIP_ARP_Timeout(void);
 static void         TCPIP_ARP_Process(void);
@@ -852,15 +852,16 @@ static TCPIP_MAC_PACKET* _ARPAllocateTxPacket(void)
 }
 
 
-static bool _ARPTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
+static void _ARPTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 {
     if(arpMod.pMacPkt != pPkt)
     {   // another one allocated
         TCPIP_PKT_PacketFree(pPkt);
-        return false;
     }
-    // else we should be OK
-    return true;
+    else
+    {   // still using this packet
+        pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
 }
 
 

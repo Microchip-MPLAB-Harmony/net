@@ -549,15 +549,12 @@ typedef void (*IPV6_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, IPV6_EVENT_TYPE evType
     const void* - 0
 	
   Returns:
-    -true  - if the packet needs the queuing flags removed (it is not deleted 
-	         and still in use)
-    -false - if the packet does not need the queuing flags removed (either no 
-	         longer exists or the flags updated)
+    None
 
   Remarks:
     None.
 */
-typedef bool (*IPV6_PACKET_ACK_FNC)(void*, bool, const void*);
+typedef void (*IPV6_PACKET_ACK_FNC)(void*, bool, const void*);
 
 //*****************************************************************************
 /* 

@@ -115,7 +115,7 @@ static void         TCPIP_IGMP_GenQueryTimeout(void);
 static void         TCPIP_IGMP_GroupQueryTimeout(void);
 
 static IPV4_PACKET* _IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen);
-static bool         _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam);
+static void         _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam);
 static TCPIP_IGMP_RESULT _IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, int ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pOldDcpt, TCPIP_IGMP_GIF_STATE_DCPT* pNewDcpt);
 static TCPIP_IGMP_RESULT _IGMP_ScheduleFmcReport(IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources);
 static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock);
@@ -1933,7 +1933,7 @@ static void _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evTy
 
 // packet deallocation function
 // packet was transmitted by the IP layer
-static bool _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
+static void _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
 {
     if(pTxPkt->modPktData != 0)
     {   // redirect internally. once!
@@ -1946,8 +1946,6 @@ static bool _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackPara
     {
         TCPIP_PKT_PacketFree(pTxPkt);
     }
-
-    return false;
 }
 
 static IPV4_PACKET * _IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen)

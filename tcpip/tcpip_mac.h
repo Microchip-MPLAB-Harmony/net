@@ -771,15 +771,12 @@ typedef struct _tag_TCPIP_MAC_PACKET    TCPIP_MAC_PACKET;
     once the TX/RX packet processing is done.
 
   Returns:
-    - true  - if the packet needs the queuing flags removed 
-	          (it is not deleted and still in use)
-    - false - if the packet does not need the queuing flags removed 
-	          (either no longer exists or the flags updated) 
+    None
   
   Remarks:        
     None.
 */
-typedef bool    (*TCPIP_MAC_PACKET_ACK_FUNC)(TCPIP_MAC_PACKET* pkt,  const void* param);
+typedef void    (*TCPIP_MAC_PACKET_ACK_FUNC)(TCPIP_MAC_PACKET* pkt,  const void* param);
 
 
 // *****************************************************************************

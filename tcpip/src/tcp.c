@@ -197,7 +197,7 @@ static uint32_t         _TCP_SktSetSequenceNo(const TCB_STUB* pSkt);
 #if defined (TCPIP_STACK_USE_IPV4)
 static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addType);
 static TCP_V4_PACKET*   _Tcpv4AllocateTxPacketIfQueued(TCB_STUB * pSkt, bool resetOldPkt);
-static bool             _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
+static void             _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
 static void             _Tcpv4UnlinkDataSeg(TCP_V4_PACKET* pPkt);
 static void             _Tcpv4LinkDataSeg(TCP_V4_PACKET* pPkt, uint8_t* pBuff1, uint16_t bSize1, uint8_t* pBuff2, uint16_t bSize2);
 static bool             _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, uint16_t loadLen);
@@ -213,8 +213,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt);
 
 
 static IPV6_PACKET*     _TCPv6AllocateTxPacketStruct (TCB_STUB * stub);
-static bool             _Tcpv6AckFnc (void * pkt, bool sent, const void * param);
-static bool             _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pkt,  const void* param);
+static void             _Tcpv6AckFnc (void * pkt, bool sent, const void * param);
+static void             _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pkt,  const void* param);
 static IPV6_PACKET*     _Tcpv6AllocateTxPacketIfQueued (TCB_STUB * pSkt, bool resetOldPkt);
 static IPV6_PACKET*     _TxSktGetLockedV6Pkt(TCB_STUB* pSkt, IPV6_PACKET** ppSktPkt, bool setQueued);
 static IPV6_PACKET*     _TxSktFreeLockedV6Pkt(TCB_STUB* pSkt);
@@ -1442,7 +1442,7 @@ static TCP_V4_PACKET* _TcpAllocateTxPacket(TCB_STUB* pSkt, IP_ADDRESS_TYPE addTy
 }
 
 
-static bool _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
+static void _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 {
     TCPIP_NET_HANDLE pktIf = 0;
     TCPIP_TCP_SIGNAL_TYPE sigType = 0;
@@ -1511,7 +1511,6 @@ static bool _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
         (*sigHandler)(sktIx, pktIf, sigType, sigParam);
     }
 
-    return false;
 }
 
 // unlinks the data segments
@@ -1857,7 +1856,7 @@ static IPV6_PACKET * _TCPv6AllocateTxPacketStruct (TCB_STUB * pSkt)
     return pkt;
 }
 
-static bool _Tcpv6AckFnc (void * pkt, bool success, const void * param)
+static void _Tcpv6AckFnc (void * pkt, bool success, const void * param)
 {
     IPV6_PACKET*    pV6Pkt;
     TCB_STUB* pSkt = (TCB_STUB*)param;
@@ -1868,7 +1867,7 @@ static bool _Tcpv6AckFnc (void * pkt, bool success, const void * param)
 
     if((pV6Pkt = (IPV6_PACKET*)pkt) == 0)
     {   // shouldn't happen
-        return false;
+        return;
     }
 
 	while(pSkt != 0)
@@ -1906,10 +1905,9 @@ static bool _Tcpv6AckFnc (void * pkt, bool success, const void * param)
         TCPIP_IPV6_PacketFree (pV6Pkt);
     }
 
-    return freePkt ? false : true;
 }
 
-static bool _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
+static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
 {
     TCPIP_NET_HANDLE pktIf = 0;
     TCPIP_TCP_SIGNAL_TYPE sigType = 0;
@@ -1963,7 +1961,6 @@ static bool _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
         (*sigHandler)(sktIx, pktIf, sigType, sigParam);
 
     }
-    return false;
 }
 
 #endif  // defined (TCPIP_STACK_USE_IPV6)

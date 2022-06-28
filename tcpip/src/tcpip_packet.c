@@ -187,10 +187,7 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
     if(pPkt->ackFunc)
     {
        TCPIP_PKT_FlightLogAcknowledge(pPkt, moduleId, ackRes);
-       if((*pPkt->ackFunc)(pPkt, pPkt->ackParam))
-       {
-           pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
-       }
+       (*pPkt->ackFunc)(pPkt, pPkt->ackParam);
     }
     else
     {

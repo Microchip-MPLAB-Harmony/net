@@ -118,7 +118,7 @@ static void txInitializeLLDP(void);
 static bool TCPIP_LLDP_SetMulticastFilter(void);
 
 static TCPIP_MAC_PACKET* LldpAllocateTxPacket(uint16_t pktSize);
-static bool LldpTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
+static void LldpTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
 
 static void TCPIP_LLDP_Timeout(void);
 
@@ -771,15 +771,16 @@ static TCPIP_MAC_PACKET* LldpAllocateTxPacket(uint16_t pktSize)
 }
 
 
-static bool LldpTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
+static void LldpTxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 {
     if(pLldpPkt != pPkt)
     {   // another one allocated
         TCPIP_PKT_PacketFree(pPkt);
-        return false;
     }
-    // else we should be OK
-    return true;
+    else
+    {
+        pPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
 }
 
 

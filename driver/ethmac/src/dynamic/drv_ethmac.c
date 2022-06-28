@@ -99,7 +99,7 @@ static TCPIP_MAC_RES    _MacTxPendingPackets(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
 static void             _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_ACK_RES ackRes, bool synch);
 
-static bool             _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+static void             _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 
 static TCPIP_MAC_RES    DRV_ETHMAC_PIC32MACEventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF, const void* eventParam);
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
@@ -1769,7 +1769,7 @@ static void _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_A
 }
 
 // a RX packet has been done with 
-static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
+static void _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
 {
     TCPIP_MAC_PACKET* pCurrPkt;
     TCPIP_MAC_DATA_SEGMENT* pSeg, *pNSeg;
@@ -1809,7 +1809,6 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
         }
     }
 
-    return false;
 }
 
 

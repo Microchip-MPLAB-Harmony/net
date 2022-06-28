@@ -192,7 +192,7 @@ static void TCPIP_IPV6_EUI64(TCPIP_NET_IF* pNetIf, uint64_t* pRes);
 static uint16_t             TCPIP_IPV6_PacketPayload(IPV6_PACKET* pkt);
 static TCPIP_MAC_PACKET*    TCPIP_IPV6_MacPacketTxAllocate(IPV6_PACKET* pkt, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags);
 static void                 TCPIP_IPV6_MacPacketTxPutHeader(IPV6_PACKET* pkt, TCPIP_MAC_PACKET* pMacPkt, uint16_t pktType);
-static bool                 TCPIP_IPV6_MacPacketTxAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+static void                 TCPIP_IPV6_MacPacketTxAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 static void                 TCPIP_IPV6_MacPacketTxAddSegments(IPV6_PACKET* ptrPacket, TCPIP_MAC_PACKET* pMacPkt, uint16_t segFlags);
 
 // MAC API RX functions
@@ -3847,10 +3847,9 @@ static void TCPIP_IPV6_MacPacketTxAddSegments(IPV6_PACKET* ptrPacket, TCPIP_MAC_
 
 
 // TX packet acknowledge function
-static bool TCPIP_IPV6_MacPacketTxAck(TCPIP_MAC_PACKET* pMacPkt,  const void* param)
+static void TCPIP_IPV6_MacPacketTxAck(TCPIP_MAC_PACKET* pMacPkt,  const void* param)
 {
     TCPIP_PKT_PacketFree(pMacPkt);
-    return false;
 }
 
 static void TCPIP_IPV6_MacPacketTxPutHeader(IPV6_PACKET* pkt, TCPIP_MAC_PACKET* pMacPkt, uint16_t pktType)

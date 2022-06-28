@@ -107,7 +107,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
 
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
 static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen);
-static bool _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pkt, const void* ackParam);
+static void _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pkt, const void* ackParam);
 static void  TCPIP_ICMP_Timeout(void);
 
 static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) _ICMPRequestListLock(void)
@@ -243,10 +243,9 @@ static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen)
 
 // packet deallocation function
 // packet was transmitted by the IP layer
-static bool _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
+static void _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
 {
     TCPIP_PKT_PacketFree(pTxPkt);
-    return false;
 }
 
 ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, TCPIP_ICMP_REQUEST_HANDLE* pHandle)

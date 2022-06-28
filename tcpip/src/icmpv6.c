@@ -66,7 +66,7 @@ typedef struct  _TAG_ICMPV6_LIST_NODE
 
 // prototypes
 //
-static bool _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param);
+static void _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param);
 
 static void _ICMPV6_NotifyClients(TCPIP_NET_HANDLE hNetIf, uint8_t type, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, void * header);
 
@@ -300,13 +300,12 @@ bool TCPIP_ICMPV6_EchoRequestSend(TCPIP_NET_HANDLE netH, IPV6_ADDR * targetAddr,
   Remarks:
     None
   ***************************************************************************/
-static bool _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param)
+static void _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param)
 {
     if (pktPointer)
     {
         TCPIP_IPV6_PacketFree (pktPointer);
     }
-    return false;
 }
 
 /*****************************************************************************

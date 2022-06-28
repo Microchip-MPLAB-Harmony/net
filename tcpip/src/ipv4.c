@@ -436,7 +436,7 @@ static void                     TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL);
 
 // TX fragmentation
 static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu, uint16_t pktPayload);
-static bool TCPIP_IPV4_FragmentTxAckFnc(TCPIP_MAC_PACKET* pkt,  const void* param);
+static void TCPIP_IPV4_FragmentTxAckFnc(TCPIP_MAC_PACKET* pkt,  const void* param);
 static void TCPIP_IPV4_FragmentTxAcknowledge(TCPIP_MAC_PACKET* pTxPkt, TCPIP_MAC_PKT_ACK_RES ackRes, IPV4_FRAG_TX_ACK txAck);
 static void TCPIP_IPV4_FragmentTxInsertToRx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pTxPkt, TCPIP_MAC_PACKET_FLAGS flags, bool signal);
 static bool TCPIP_IPV4_TxMacPkt(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pPkt);
@@ -3796,12 +3796,11 @@ static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu
     return true;
 }
 
-static bool TCPIP_IPV4_FragmentTxAckFnc(TCPIP_MAC_PACKET* pkt,  const void* param)
+static void TCPIP_IPV4_FragmentTxAckFnc(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
     // this is temporary fragment packet;
     // if MAC is done with it, just delete
     TCPIP_PKT_PacketFree(pkt);
-    return false;
 }
 
 // transmits the packet as multiple fragments

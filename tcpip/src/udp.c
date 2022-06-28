@@ -386,7 +386,7 @@ static bool             _UDPTxPktValid(UDP_SOCKET_DCPT * pSkt);
 
 #if defined (TCPIP_STACK_USE_IPV4)
 static void*            _UDPv4AllocateSktTxBuffer(UDP_SOCKET_DCPT* pSkt, IP_ADDRESS_TYPE addType, bool update);
-static bool             _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
+static void             _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param);
 static uint16_t         _UDPv4IsTxPutReady(UDP_SOCKET_DCPT* pSkt);
 static uint16_t         _UDPv4Flush(UDP_SOCKET_DCPT* pSkt);
 static void*            _TxSktGetLockedV4Pkt(UDP_SOCKET_DCPT* pSkt, bool clrSktPkt);
@@ -401,8 +401,8 @@ static void*             _UDPAllocateTxPacket(uint16_t pktSize, uint16_t txBuffS
 
 #if defined (TCPIP_STACK_USE_IPV6)
 static IPV6_PACKET*     _UDPv6AllocateTxPacketStruct (TCPIP_NET_IF * pNetIf, UDP_SOCKET_DCPT * socket, bool update);
-static bool             _UDPv6TxAckFnc (void* pkt, bool success, const void * param);
-static bool             _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pkt, const void * param);
+static void             _UDPv6TxAckFnc (void* pkt, bool success, const void * param);
+static void             _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pkt, const void * param);
 static uint16_t         _UDPv6IsTxPutReady(UDP_SOCKET_DCPT* pSkt, unsigned short count);
 static uint16_t         _UDPv6Flush(UDP_SOCKET_DCPT* pSkt);
 static void             _UDPv6FreePacket(IPV6_PACKET* pPkt);
@@ -1268,7 +1268,7 @@ static void* _UDPv4AllocateSktTxBuffer(UDP_SOCKET_DCPT* pSkt, IP_ADDRESS_TYPE ad
     return pPkt;
 }
 
-static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
+static void _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 {
     TCPIP_NET_HANDLE pktIf = 0;
     UDP_SOCKET   sktIx = 0;
@@ -1336,7 +1336,7 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
         pPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
         TCPIP_PKT_FlightLogTxSkt(pPkt, TCPIP_THIS_MODULE_ID, ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort, pSkt->sktIx);
         _TCPIPStackInsertRxPacket((TCPIP_NET_IF*)pPkt->pktIf, pPkt, true);
-        return false;
+        return;
     }
 
     if(freePkt)
@@ -1359,8 +1359,6 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
         (*sigHandler)(sktIx, pktIf, TCPIP_UDP_SIGNAL_TX_DONE, sigParam);
 
     }
-
-    return false;
 }
 
 static void _UDPv4TxPktReset(UDP_SOCKET_DCPT* pSkt, IPV4_PACKET* pPkt)
@@ -1795,7 +1793,7 @@ static void _UDPv6FreePacket(IPV6_PACKET* pkt)
     TCPIP_IPV6_PacketFree ((IPV6_PACKET *)pkt);
 }
 
-static bool _UDPv6TxAckFnc (void* pkt, bool success, const void * param)
+static void _UDPv6TxAckFnc (void* pkt, bool success, const void * param)
 {
     UDP_SOCKET   sktIx;
     IPV6_PACKET*    pV6Pkt = (IPV6_PACKET*)pkt;
@@ -1846,8 +1844,6 @@ static bool _UDPv6TxAckFnc (void* pkt, bool success, const void * param)
         _UDPv6FreePacket (pV6Pkt);
     }
     
-    return freePkt ? false: true;
-    
 }
 
 static void _UDPv6TxPktReset(UDP_SOCKET_DCPT* pSkt, IPV6_PACKET* pV6Pkt, void* pUpperLayer)
@@ -1862,7 +1858,7 @@ static void _UDPv6TxPktReset(UDP_SOCKET_DCPT* pSkt, IPV6_PACKET* pV6Pkt, void* p
     pSkt->txWrite = pSkt->txStart;
 }
 
-static bool _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
+static void _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
 {
     TCPIP_NET_HANDLE pktIf = 0;
     UDP_SOCKET   sktIx = 0;
@@ -1909,7 +1905,6 @@ static bool _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
 
     }
 
-    return false;
 }
 
 // same TX protection
