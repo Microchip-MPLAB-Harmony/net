@@ -4914,13 +4914,13 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
         {
             if((logEntry.moduleLog & ( 1 << jx)) != 0)
             {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s ", _CommandPktLogModuleNames[jx]);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s(0x%08x) ", _CommandPktLogModuleNames[jx], logEntry.moduleStamp[jx - 1]);
                 modPrint = true;
             }
         }
         if(modPrint)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n\tMAC stamp: 0x%08x, ACK stamp: 0x%08x\r\n", logEntry.macStamp, logEntry.ackStamp);
         }
 
         if((logEntry.logFlags & TCPIP_PKT_LOG_FLAG_SKT_PARAM) != 0)

@@ -150,6 +150,10 @@ typedef struct
 
     int16_t             ackRes;             // acknowledge result; TCPIP_MAC_PKT_ACK_RES
     uint16_t            logFlags;           // log flags;     
+    // time stamps; SYS_TIME_CounterGet()
+    uint32_t            macStamp;           // MAC driver tstamp
+    uint32_t            ackStamp;           // acknowledge tstamp
+    uint32_t            moduleStamp[TCPIP_MODULE_LAYER3];   // each module tstamp
 
 }TCPIP_PKT_LOG_ENTRY;
 

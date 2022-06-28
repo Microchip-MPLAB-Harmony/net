@@ -1018,13 +1018,21 @@ static TCPIP_PKT_LOG_ENTRY* _TCPIP_PKT_FlightLog(TCPIP_MAC_PACKET* pPkt, TCPIP_S
         pLogEntry->netMask = netMask;
     }
 
+    uint32_t tStamp = SYS_TIME_CounterGet();
     if(moduleId >= TCPIP_MODULE_MAC_START)
     {
         pLogEntry->macId = moduleId;
+        pLogEntry->macStamp = tStamp;
     }
     else
     {   // some module can log the same packet multiple times if routed internally
+        if(moduleId > TCPIP_MODULE_LAYER3)
+        {
+            moduleId = TCPIP_MODULE_LAYER3;
+        }
+
         pLogEntry->moduleLog |= 1 << moduleId;
+        pLogEntry->moduleStamp[moduleId - 1] = tStamp;
     }
 
     pLogEntry->logFlags |= logFlags;
@@ -1096,6 +1104,7 @@ void TCPIP_PKT_FlightLogAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE m
         pLogEntry->pktAcker = moduleId;
         // store the module to log it
         pLogEntry->moduleLog |= 1 << moduleId; 
+        pLogEntry->ackStamp = SYS_TIME_CounterGet();
 
         bool discardPkt = false;
 
