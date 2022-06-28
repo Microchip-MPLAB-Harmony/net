@@ -189,7 +189,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
         hDcpt =0;
         hInst = 0;
 
-        if( pHeapConfig == 0)
+        if( pHeapConfig == 0 || pHeapConfig->malloc_fnc == 0 || pHeapConfig->free_fnc == 0 || pHeapConfig->calloc_fnc == 0)
         {
             res = TCPIP_STACK_HEAP_RES_INIT_ERR;
             break;
@@ -231,7 +231,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
                 hDcpt->heapDoMap = true;
             }
         }
-        // check if alignmnt needed
+        // check if alignment needed
         if((hDcpt->heapConfig.heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN) == 0)
         {
             hDcpt->heapDoAlign = true;

@@ -338,7 +338,6 @@ typedef struct
                                             //
     TCPIP_STACK_HEAP_USAGE  heapUsage;      // the usage intended for                                            
     void* (*malloc_fnc)(size_t bytes);      // malloc style allocation function
-    void* (*calloc_fnc)(size_t nElems, size_t elemSize);      // calloc style allocation function
     void  (*free_fnc)(void* ptr);           // free style allocation function
 
     // specific heap parameters per heap type
@@ -366,7 +365,6 @@ typedef struct
                                             //
     TCPIP_STACK_HEAP_USAGE  heapUsage;      // currently not used                                            
     void* (*malloc_fnc)(size_t bytes);      // malloc style function for allocating the internal heap itself
-    void* (*calloc_fnc)(size_t nElems, size_t elemSize);      // calloc style function for allocating the internal heap itself
     void  (*free_fnc)(void* ptr);           // free style function for releasing the allocated internal heap
 
     // specific internal heap parameters
@@ -402,10 +400,10 @@ typedef struct
                                             //
     TCPIP_STACK_HEAP_USAGE  heapUsage;      // currently not used                                            
     void* (*malloc_fnc)(size_t bytes);      // malloc style function to be called when allocation is needed
-    void* (*calloc_fnc)(size_t nElems, size_t elemSize);      // calloc style function to be called when allocation is needed
     void  (*free_fnc)(void* ptr);           // free style function for releasing the allocated memory
 
     // specific external heap parameters
+    void* (*calloc_fnc)(size_t nElems, size_t elemSize);      // calloc style function to be called when allocation is needed
 
 
 }TCPIP_STACK_HEAP_EXTERNAL_CONFIG;
@@ -454,7 +452,6 @@ typedef struct
                                             //
     TCPIP_STACK_HEAP_USAGE heapUsage;       // not used                                            
     void* (*malloc_fnc)(size_t bytes);      // malloc style function for allocating the pool heap itself
-    void* (*calloc_fnc)(size_t nElems, size_t elemSize);      // calloc style function for allocating the pool heap itself
     void  (*free_fnc)(void* ptr);           // free style function for releasing the allocated pool heap
 
     // specific pool heap parameters

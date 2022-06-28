@@ -482,7 +482,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         hInst = 0;
         poolRes = TCPIP_STACK_HEAP_RES_OK;
 
-        if( pHeapConfig == 0 || pHeapConfig->pEntries == 0)
+        if( pHeapConfig == 0 || pHeapConfig->malloc_fnc == 0 || pHeapConfig->free_fnc == 0 || pHeapConfig->pEntries == 0)
         {
             poolRes = TCPIP_STACK_HEAP_RES_INIT_ERR;
             break;

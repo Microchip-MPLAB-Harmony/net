@@ -208,7 +208,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternal(const TCPIP_STACK_HEAP_INTERNA
         hDcpt =0;
         hInst = 0;
         
-        if( pHeapConfig == 0)
+        if( pHeapConfig == 0 || pHeapConfig->malloc_fnc == 0 || pHeapConfig->free_fnc == 0 || pHeapConfig->heapSize == 0)
         {
             res = TCPIP_STACK_HEAP_RES_INIT_ERR;
             break;

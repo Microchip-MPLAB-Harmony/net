@@ -710,7 +710,6 @@ TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
-    .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
     .free_fnc = TCPIP_STACK_FREE_FUNC,
     .heapSize = TCPIP_STACK_DRAM_SIZE,
 };
@@ -721,8 +720,8 @@ TCPIP_STACK_HEAP_EXTERNAL_CONFIG tcpipHeapConfig =
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
-    .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
     .free_fnc = TCPIP_STACK_FREE_FUNC,
+    .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
 };
 <#elseif (TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL">
     <#lt>TCPIP_STACK_HEAP_POOL_ENTRY tcpipHeapPoolEntryTbl[TCPIP_HEAP_POOL_ENTRIES_NUMBER] =
@@ -746,7 +745,6 @@ TCPIP_STACK_HEAP_POOL_CONFIG tcpipHeapConfig =
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
-    .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
     .free_fnc = TCPIP_STACK_FREE_FUNC,
     .nPoolEntries = TCPIP_HEAP_POOL_ENTRIES_NUMBER,
     .pEntries = tcpipHeapPoolEntryTbl,

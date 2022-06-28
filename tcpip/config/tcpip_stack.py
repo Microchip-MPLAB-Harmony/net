@@ -260,6 +260,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackCalloc.setVisible(True)
     tcpipStackHeapStackCalloc.setDescription("Stack allocation function, calloc style")
     tcpipStackHeapStackCalloc.setDefaultValue("calloc")
+    tcpipStackHeapStackCalloc.setDependencies(tcpipStackHeapExternMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
 
     # Stack deallocation function, free style
     tcpipStackHeapStackFree = tcpipStackComponent.createStringSymbol("TCPIP_STACK_FREE_FUNC", tcpipStackHeap)
@@ -2112,6 +2113,12 @@ def tcpipStackHeapMenuVisibleSingle(symbol, event):
         
 def tcpipStackHeapInternMenuVisible(symbol, event):
     if (event["value"] == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipStackHeapExternMenuVisible(symbol, event):   
+    if (event["value"] == "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP" ):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)

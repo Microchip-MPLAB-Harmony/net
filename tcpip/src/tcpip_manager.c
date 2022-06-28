@@ -699,17 +699,11 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         // find the heap settings
         pHeapConfig = _TCPIP_STACK_FindModuleData(TCPIP_MODULE_MANAGER, pModConfig, nModules);
         heapData = (pHeapConfig != 0) ? (const TCPIP_STACK_HEAP_CONFIG*)pHeapConfig->configData : 0;
-        if( heapData == 0 || heapData->malloc_fnc == 0 || heapData->calloc_fnc == 0 || heapData->free_fnc == 0)
-        {   // cannot instantiate a heap
-            heapH = 0;
-        }
-        else
-        {   // create the heap and get a handle to the heap memory
-            heapH = TCPIP_HEAP_Create(heapData, 0);
-        }
+        // create the heap and get a handle to the heap memory
+        heapH = TCPIP_HEAP_Create(heapData, 0);
 
         if((tcpip_stack_ctrl_data.memH = heapH) == 0)
-        {
+        {   // cannot instantiate a heap
             SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Heap creation failed, type: %d\r\n", heapData ? heapData->heapType : TCPIP_STACK_HEAP_TYPE_NONE);
             initFail = 1;
             break;
