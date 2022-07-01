@@ -747,6 +747,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
         }
         
     }       
+    _MACTxAcknowledgeEth(pMACDrv,queueIdx);	
 	_MacTxPendingPackets(pMACDrv,queueIdx);
 	_MACTxAcknowledgeEth(pMACDrv,queueIdx);	
     _DRV_GMAC_TxUnlock(pMACDrv);
@@ -1298,9 +1299,14 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx)  
 {
-    // Clear the TXCOMP transmit status
-    GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
-    DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
+    // Check if TXCOMP transmit status is set
+    if (GMAC_REGS->GMAC_TSR & GMAC_TSR_TXCOMP_Msk)
+    {
+        // Clear the TXCOMP transmit status
+        GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
+        DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
+    }
+    
 }
 
 
@@ -1313,7 +1319,7 @@ static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueI
 static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx ) 
 {
 	TCPIP_MAC_PACKET* pPkt;
-	
+	TCPIP_MAC_RES res = TCPIP_MAC_RES_PENDING;
 	DRV_PIC32CGMAC_RESULT ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;    
     
     //packet in queue for transmission
@@ -1332,21 +1338,15 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	
 	if((ethRes == DRV_PIC32CGMAC_RES_OK)||(ethRes == DRV_PIC32CGMAC_RES_NO_PACKET))
 	{
-		return TCPIP_MAC_RES_OK;
+		res = TCPIP_MAC_RES_OK;
 	}
 	else if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
 	{   
         // not enough resource in the Tx hardware
-		return TCPIP_MAC_RES_PENDING;
+		res = TCPIP_MAC_RES_PENDING;
 	}
-	else
-    {		
-        // not transmitted	
-		pMACDrv->sGmacData._txStat.nTxErrorPackets++;
-		(*pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_BUFFER_ERR,TCPIP_THIS_MODULE_ID);	
-        return TCPIP_MAC_RES_PACKET_ERR; 
-    }
-
+    return res;
+    
 }
 
 

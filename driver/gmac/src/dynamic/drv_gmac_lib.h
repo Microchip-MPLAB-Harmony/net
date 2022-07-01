@@ -272,6 +272,21 @@ typedef enum
 
 /**************************************************************************
   Summary:
+    Defines the different TX Frame Ack Status
+  Description:
+    GMAC Tx packets after transmission should be removed from Tx Descriptors.
+    Following are the states used for searching Tx buffers already transmitted
+**************************************************************************/
+typedef enum  
+{
+	GMAC_TX_NO_FRAME_DETECTED,
+	GMAC_TX_FIRST_BUFFER_DETECTED,
+	GMAC_TX_LAST_BUFFER_DETECTED,
+    GMAC_TX_ERROR_DETECTED,        
+} GMAC_TXBUFFER_STATE;
+
+/**************************************************************************
+  Summary:
      GMAC Rx descriptor data packet attributes
   Description:
 	 These attributes used during the search for valid Rx packet,on GMAC Rx Interrupt.
@@ -282,6 +297,19 @@ typedef struct
 	uint16_t endIndex;
 	uint16_t buffer_count;	
 } DRV_PIC32CGMAC_RX_FRAME_INFO; 
+
+/**************************************************************************
+  Summary:
+     GMAC TX descriptor Data packet Attributes
+  Description:
+    These attributes used during the search for transmitted Tx packets
+**************************************************************************/
+typedef struct
+{
+	uint16_t startIndex;
+	uint16_t endIndex;
+	uint16_t buffer_count;	
+} DRV_GMAC_TX_FRAME_INFO; 
 
 // *****************************************************************************
 /* Ethernet Close Flags
