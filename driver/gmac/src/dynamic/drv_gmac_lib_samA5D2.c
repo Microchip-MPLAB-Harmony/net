@@ -52,7 +52,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
-static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+static void _MacRxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv);
 static GMAC_RXFRAME_STATE _SearchRxPacket(DRV_GMAC_DRIVER * pMACDrv,
         DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, GMAC_QUE_LIST queueIdx);
@@ -319,9 +319,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(
 
                 _DRV_GMAC_RxUnlock(pMACDrv);
 
-        // set the packet acknowledgment
-        pPacket->ackFunc = (TCPIP_MAC_PACKET_ACK_FUNC)_MacRxPacketAck;
-        pPacket->ackParam = pMACDrv;
+				// set the packet acknowledgment
+				pPacket->ackFunc = _MacRxPacketAck;
+				pPacket->ackParam = pMACDrv;
 
         /* Save packet pointer */
         pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[desc_idx] = pPacket;
@@ -1284,12 +1284,10 @@ void GMAC_Q2_Handler(void)
  * Function:        _MacRxPacketAck
  * Summary: ACK function to free the RX packet
  *****************************************************************************/
-static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
+static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
 {
     TCPIP_MAC_DATA_SEGMENT *    pDSegNext;
-  DRV_GMAC_DRIVER * pMacDrv = (DRV_GMAC_DRIVER *)param;
-
-    bool res = false;
+	DRV_GMAC_DRIVER * pMacDrv = (DRV_GMAC_DRIVER *)param;
 
     if(pPkt && pPkt->pDSeg)
     {
@@ -1326,10 +1324,7 @@ static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             TCPIP_MAC_SEGMENT_GAP_DCPT* pGap = (TCPIP_MAC_SEGMENT_GAP_DCPT*)(pDSegNext->segBuffer + pMacDrv->sGmacData._dcptOffset);
             pPkt = pGap->segmentPktPtr;
         }
-        res  = true;
     }
-
-    return res;
 }
 
 /****************************************************************************
