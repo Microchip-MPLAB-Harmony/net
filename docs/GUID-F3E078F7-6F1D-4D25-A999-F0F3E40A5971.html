@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="ICMP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-544C3F55-CCD8-4195-BD7B-86B26C43512E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8D0E3797-6098-4DFD-9992-850020D09858.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-516D5B0D-BD25-459C-B12E-2FDDADAADBDC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-45C0E86E-9D4C-416C-80EA-B3C01158086A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E0BAEEB0-E90D-43E5-80F6-B01432C82D69.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1C75AA10-811B-4F46-A428-19F9A50F4F57.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-16262C6E-46B3-47F5-A6DB-23BC83862AAF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BC8B9023-E991-4837-87BE-790B9EFA8D2D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-27C6EDE2-7EE7-404E-A08E-B56360F7D44D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F498D777-A055-406B-9DF6-6F0AA6502AED.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2DEBAEA2-8E8F-4B37-B9F5-648F6D47C436.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8D907A4D-1C8C-4857-B0AD-4F6CB8F7C4E9.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="icmp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>ICMP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-icmp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="icmp-module">
+<h1 class="title topictitle1" id="ariaid-title1">ICMP Module</h1><div class="body"><p class="p">The Internet Control Message Protocol is used to send error and status messages and requests. The ICMP module implements the Echo Reply message type (commonly referred to as a ping) which can be used to determine if a specified host is reachable across an IP network from a device running the TCP/IP stack. An ICMP server is also supported to respond to pings from other devices.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-687CF30C-58CB-47E2-90C5-F5E81E9D2D61-low.png" alt="icmp_abstract_block" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d125418e27"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d125418e29"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_CLIENT_USER_NOTIFICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>allow ICMP client user notification if enabled, the TCPIP_ICMP_CallbackRegister/TCPIP_ICMP_CallbackDeregister functions exist and can be used Note that if disabled, the tcpip console ping command won't be available</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_ECHO_REQUEST_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Timeout for a request that was sent and no reply was received milliseconds</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>The ICMP task processing rate: number of milliseconds to generate an ICMP tick. This is the tick that advances the ICMP state machine. The default value is around 30 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_ECHO_ALLOW_BROADCASTS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>allow replies to echo requests sent to a broadcast address by default this should be disabled, to prevent broadcast flood attacks</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_CallbackDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Deregisters the ICMP callback function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Registers a callback to allow the application layer to process incoming ICMPv4 packets</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_EchoRequestSend</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Sends an ICMP echo request to a remote node.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_EchoRequest</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Sends an ICMP echo request containing user supplied data</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_EchoRequestCancel</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Cancels a previously sent ICMP echo request</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>ICMP_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>a handle that a client can use after the event handler has been registered</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>ICMP_ECHO_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>result of an ICMP Echo Request call</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Placeholder for ICMP module configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>_tag_TCPIP_ICMP_ECHO_REQUEST</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Contains the data needed for an ICMP request operation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_ECHO_REQUEST</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>Contains the data needed for an ICMP request operation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_ECHO_REQUEST_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>A result code for an Echo Request callback (as a result of an ICMP TCPIP_ICMP_EchoRequest call)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>TCPIP_ICMP_REQUEST_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>This is type TCPIP_ICMP_REQUEST_HANDLE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e27 "><span>__ICMP_H</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d125418e29 "><span>This is macro __ICMP_H.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-544C3F55-CCD8-4195-BD7B-86B26C43512E.html">__ICMP_H Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8D0E3797-6098-4DFD-9992-850020D09858.html">ICMP_ECHO_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-516D5B0D-BD25-459C-B12E-2FDDADAADBDC.html">ICMP_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.html">TCPIP_ICMP_CallbackDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-45C0E86E-9D4C-416C-80EA-B3C01158086A.html">TCPIP_ICMP_CallbackRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E0BAEEB0-E90D-43E5-80F6-B01432C82D69.html">TCPIP_ICMP_ECHO_REQUEST Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1C75AA10-811B-4F46-A428-19F9A50F4F57.html">TCPIP_ICMP_ECHO_REQUEST_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-16262C6E-46B3-47F5-A6DB-23BC83862AAF.html">TCPIP_ICMP_EchoRequest Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BC8B9023-E991-4837-87BE-790B9EFA8D2D.html">TCPIP_ICMP_EchoRequestCancel Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-27C6EDE2-7EE7-404E-A08E-B56360F7D44D.html">TCPIP_ICMP_EchoRequestSend Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F498D777-A055-406B-9DF6-6F0AA6502AED.html">TCPIP_ICMP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2DEBAEA2-8E8F-4B37-B9F5-648F6D47C436.html">TCPIP_ICMP_REQUEST_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8D907A4D-1C8C-4857-B0AD-4F6CB8F7C4E9.html">TCPIP_ICMP_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

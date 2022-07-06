@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="IPv6 Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-521D9159-797C-4B43-BF77-E1D2D0536CD7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5FC5F67B-7C87-4FBC-860C-6CA22065CCC0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1F0A9F83-78A5-4F0F-A957-379861E2AEFA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5BB5AACD-118C-40CC-BE01-30EEAE286DB8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CF81482A-0347-4640-9715-FD9D425BDEEE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2E31B416-72D7-4E99-A278-3550AE90357C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A185E54B-88C8-473F-9C6B-6659008AFCAF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2EBE4199-A79F-4C93-8E07-2FAC2C6C0F3E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CFB606B7-ADFE-4011-BC93-3FBF6E56C544.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-12FE1022-BB7D-4268-A36C-D30F79A6D5F5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1EFF8A7F-F61B-483C-922D-A90479736453.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E58E8D41-415B-4D3A-889A-039690926BB8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FFCA82E1-BD8B-4E37-88A0-A2EEFD1C1B47.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-29AE27DA-535A-437D-B901-883C884CCB58.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-60457E64-AF8C-4471-A05E-13AFC7EAFADA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7A28F2C9-46BA-43FA-B0E0-03988231D060.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-84AD5E92-CF3A-47A9-B081-BF6BC7122F56.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1D426D0A-D57A-499D-A7B0-7950B1FF306F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2607797F-B898-48D2-87BF-F41312C0C255.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F5A63CE1-2732-41BE-9F62-8284FBDE4FFD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-229F2A7B-50AF-4F9F-AD23-47824A8B773B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B5E4619F-6A29-45B3-B455-EE7FDCF2F1E8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-96C035A3-003B-4C27-8A56-14F6DC0D5B56.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EA4EEF60-25F7-4135-B144-5A6A01DB1D0B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E4C52DC2-E752-4537-9468-4AE1C0C9FEFF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-437FBA33-13E8-4E89-B92F-E5E9AAFAFA90.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1E38C9BF-E9B6-40A5-A8B6-1D522B9C6A81.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A23F1082-F8DD-41B6-B489-C1B2515F2F1F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B09E7918-C7C4-45CB-81E2-965D3294E95D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AC8BD761-06A7-4A57-BD01-7E54E6AA9739.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6FF90021-66FF-49D3-9420-42FB43F599DE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C23CA7A2-1B83-478C-B581-9D989DAD0816.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5FF87290-1801-4BA3-A188-BC03CE18EDDF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-833EE614-43F8-4723-A982-10F407BCF36D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7BB52DE1-29D2-412C-8F77-80092B18A749.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-10D2DC81-88D8-4ECF-96A0-7CF6C01FD388.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F2866270-6C0F-4DD8-8F21-629B5D01F42D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DEFFE509-AA4D-46A6-AFD7-C6679F415C62.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-35B61D12-0656-4FB6-A5F3-E0BC4C83E2D3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-82812F3E-3749-45EF-90A7-A32BE900B638.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1FCEF5D4-22F5-414B-BF0F-E07E8A6122CF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-55CEB648-6627-45B9-A882-AC2DD80892C0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E3F25204-AFB7-438F-AAF4-126896DC2171.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0F56AEC4-82A7-4A8A-98BB-B988B9A062BA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1E4CCA85-AF3B-43B7-9161-D6243C918736.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BE0C1081-916F-4859-90D0-356F5D42E3EE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F9877B54-0920-42F5-BF63-A234CAAF3673.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BA8E4747-D164-45A3-9E11-9BB8694C4576.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B6BBF09F-09E4-49A1-8E06-780429BBEF8D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ECE26595-BE89-43D8-99A6-EED06D60F483.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0BA795A7-6D48-48CF-A925-30288A33D19C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D2E5A710-25A0-4A46-8838-728A17478011.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4E827157-E3AF-4465-92B2-BED2A2B801B4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B8FDDB51-973C-4C74-8ACA-C6249AC9EE65.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2DAF0DBE-3943-48A6-A38F-8C0A510B528D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-283E141E-5C2A-4977-B6E1-180215D04795.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9EB90A68-DF37-4610-A38C-5ED82ACACB78.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AC2E9422-6951-4421-A4B2-E2560BBD2688.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-92902367-AA36-4F8C-8E8F-2A4380D2FFB0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EC27AF9F-AF72-4DD7-A104-8E7991699A1B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5097A05F-94BE-41A9-8E92-4C81A9EF8CA4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B2DE133C-C875-40B3-BACE-9073D63DE82C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-99BCAA38-D478-406B-85D1-88639F4C8D1E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D10D7083-A933-42A7-BA90-CB60C95FC6F6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-52BB79ED-7CC3-4194-A27A-D493A366DD19.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7079544C-E6F0-4693-B31F-C5B70B4ABC67.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-03AFA467-86F9-4F5A-A106-7129B71494FE.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ipv6-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>IPv6 Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ipv6-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ipv6-module">
+<h1 class="title topictitle1" id="ariaid-title1">IPv6 Module</h1><div class="body"><p class="p">IPv6 is the workhorse protocol of the TCP/IP protocol suite. All TCP, UDP, ICMP, and IGMP data gets transmitted as IP datagrams. IP provides an unreliable, connectionless datagram delivery service.</p>
+<p class="p">IPv6 provides a best effort service. When something goes wrong, such as a router temporarily running out of buffers, IPv6 has a simple error handling algorithm: throw away the datagram and try to send an ICMP message back to the source. Any required reliability must be provided by the upper layers (e.g., TCP).</p>
+<p class="p">The term connectionless means that IPv6 does not maintain any state information about successive datagrams. Each datagram is handled independently from all other datagrams. This also means that IPv6 datagrams can get delivered out of order. If a source sends two consecutive datagrams (first A, and then B) to the same destination, each is routed independently and can take different routes, with B arriving before A.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">This module provides software abstraction of the IP module existent in any TCP/IP Stack implementation. It provide raw datagram service to other modules in the stack.</p>
+<br /><img class="image" src="GUID-8DA344E1-01C4-4B7A-BE7C-0B9BCE70DE26-low.png" alt="IPv6 Abstraction Model" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d174039e33"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d174039e35"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_HandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Registers an IPv6 event handler callback function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_HandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Deregisters an IPv6 event handler callback function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_InterfaceIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Determines if an interface is ready for IPv6 transactions.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PacketFree</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Frees a TCP/IP Packet structure from dynamic memory.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PayloadSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Allocates a segment on the end of a packet segment chain and uses it to address prebuffered data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_DASSourceAddressSelect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Determines the appropriate source address for a given destination address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_DestAddressGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Gets the destination address for a IPv6 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_DestAddressSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Sets the destination address for a IPv6 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_SourceAddressGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Gets the source address for an IPv6 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_SourceAddressSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Sets the source address for a IPv6 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_ArrayPutHelper</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Helper function to write data to a packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_Put</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Writes a character of data to a packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_TxIsPutReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Determines whether a TX packet can be written to.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_TxPacketAllocate</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Dynamically allocates a packet for transmitting IP protocol data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_ArrayGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Reads the next byte of data from the specified MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_Flush</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Flushes a IP TX packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_Get</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Reads the next byte of data from the specified MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_UniqueLocalUnicastAddressAdd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Adds a Unique Local Unicast Address (ULA) to a specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_RouterAddressAdd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Adds a new router address to a specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_UnicastAddressAdd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Adds a unicast address to a specified interface</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_DefaultRouterDelete</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Deletes the current router list for a specified interface</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_DefaultRouterGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Returns the current router address for a specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_IsFragmentationEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Helper to get the IPv6 fragmentation support.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_MaxDatagramDataSizeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Helper to get the maximum datagream data size (MDDS) on a specific interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_AddressUnicastRemove</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Removed a configured unicast address from an interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_MulticastListenerAdd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Adds a multicast listener to an interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_MulticastListenerRemove</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Removes a multicast listener from a given interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PacketHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Deregisters a previously registered packet handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PacketHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Sets a new packet processing handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_DATA_SEGMENT_HEADER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 Data Segment header.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_NEXT_HEADER_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Defines a list of IPv6 next header types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_PACKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Packet structure/state tracking for IPv6 packets.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_PACKET_ACK_FNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Packet allocation and deallocation acknowledgment callback function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_SEGMENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides an enumeration of IPv6 segment types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ULA_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides a list of possible ULA action flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ULA_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides a list of possible ULA results.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_DATA_DYNAMIC_BUFFER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data to transmit is allocated in dynamically allocated RAM</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_DATA_NETWORK_FIFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data to transmit is stored in the Network Controller's FIFOs</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_DATA_NONE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>The data segment is unused</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_DATA_PIC_RAM</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data to transmit is stored in PIC RAM</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_NO_UPPER_LAYER_CHECKSUM</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Value flag for no upper layer checksum</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PutArray</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Writes data to a packet</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>_IPV6_DATA_SEGMENT_HEADER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 Data Segment header.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>_IPV6_PACKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Packet structure/state tracking for IPv6 packets.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>_IPV6_RX_FRAGMENT_BUFFER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 Received fragmented packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides a place holder for IPv6 configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_HEADER_OFFSET_DEST_ADDR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Header offset for destination address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_HEADER_OFFSET_NEXT_HEADER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Header offset for next header</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_HEADER_OFFSET_PAYLOAD_LENGTH</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Header offset for payload length</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_HEADER_OFFSET_SOURCE_ADDR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Header offset for source address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_HBHO_PAYLOAD_JUMBOGRAM</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 Type-length-value type code for the Hop-by-hop "Jumbo-gram Payload" option</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_HBHO_ROUTER_ALERT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 Type-length-value type code for the Hop-by-hop "Router Alert" option</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_PAD_1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 Type-length-value type code for the Pad 1 option</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_PAD_N</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 Type-length-value type code for the Pad N option</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_UNREC_OPT_DISCARD_PP</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 action code for the unrecognized option reaction to discard the packet and send an ICMP parameter problem message</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_UNREC_OPT_DISCARD_PP_NOT_MC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 action code for the unrecognized option reaction to discard the packet and send an ICMP parameter problem message is the destination address isn't a multicast address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_UNREC_OPT_DISCARD_SILENT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 action code for the unrecognized option reaction to discard the packet silently</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_UNREC_OPT_SKIP_OPTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>IPv6 action code for the unrecognized option reaction to skip the option</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_RX_FRAGMENT_BUFFER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 Received fragmented packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_TLV_OPTION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 TLV options.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Pointer to IPv6 object</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>This enumeration is used to notify IPv6 client applications.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_EVENT_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Clients can register a handler with the IPv6 service.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ADDRESS_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 address types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ADDRESS_PREFERENCE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides selection of public versus temporary addresses.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ADDRESS_POLICY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Data structure for IPv6 address policy.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>IPV6_ACTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Provides a list of possible IPv6 actions.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PACKET_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Pointer to a function(handler) that will get called to process an incoming IPv6 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e33 "><span>TCPIP_IPV6_PROCESS_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d174039e35 "><span>Defines a IPv6 packet processing handle.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-521D9159-797C-4B43-BF77-E1D2D0536CD7.html">IPV6_ACTION Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5FC5F67B-7C87-4FBC-860C-6CA22065CCC0.html">IPV6_ADDRESS_POLICY Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1F0A9F83-78A5-4F0F-A957-379861E2AEFA.html">IPV6_ADDRESS_PREFERENCE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5BB5AACD-118C-40CC-BE01-30EEAE286DB8.html">IPV6_ADDRESS_TYPE Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CF81482A-0347-4640-9715-FD9D425BDEEE.html">IPV6_DATA_DYNAMIC_BUFFER Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2E31B416-72D7-4E99-A278-3550AE90357C.html">IPV6_DATA_NETWORK_FIFO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A185E54B-88C8-473F-9C6B-6659008AFCAF.html">IPV6_DATA_NONE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2EBE4199-A79F-4C93-8E07-2FAC2C6C0F3E.html">IPV6_DATA_PIC_RAM Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CFB606B7-ADFE-4011-BC93-3FBF6E56C544.html">IPV6_DATA_SEGMENT_HEADER Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-12FE1022-BB7D-4268-A36C-D30F79A6D5F5.html">IPV6_EVENT_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1EFF8A7F-F61B-483C-922D-A90479736453.html">IPV6_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E58E8D41-415B-4D3A-889A-039690926BB8.html">IPV6_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FFCA82E1-BD8B-4E37-88A0-A2EEFD1C1B47.html">IPV6_HEADER_OFFSET_DEST_ADDR Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-29AE27DA-535A-437D-B901-883C884CCB58.html">IPV6_HEADER_OFFSET_NEXT_HEADER Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-60457E64-AF8C-4471-A05E-13AFC7EAFADA.html">IPV6_HEADER_OFFSET_PAYLOAD_LENGTH Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7A28F2C9-46BA-43FA-B0E0-03988231D060.html">IPV6_HEADER_OFFSET_SOURCE_ADDR Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-84AD5E92-CF3A-47A9-B081-BF6BC7122F56.html">IPV6_NEXT_HEADER_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1D426D0A-D57A-499D-A7B0-7950B1FF306F.html">IPV6_NO_UPPER_LAYER_CHECKSUM Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2607797F-B898-48D2-87BF-F41312C0C255.html">IPV6_PACKET Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F5A63CE1-2732-41BE-9F62-8284FBDE4FFD.html">IPV6_PACKET_ACK_FNC Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-229F2A7B-50AF-4F9F-AD23-47824A8B773B.html">IPV6_RX_FRAGMENT_BUFFER Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B5E4619F-6A29-45B3-B455-EE7FDCF2F1E8.html">IPV6_SEGMENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-96C035A3-003B-4C27-8A56-14F6DC0D5B56.html">IPV6_TLV_HBHO_PAYLOAD_JUMBOGRAM Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EA4EEF60-25F7-4135-B144-5A6A01DB1D0B.html">IPV6_TLV_HBHO_ROUTER_ALERT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E4C52DC2-E752-4537-9468-4AE1C0C9FEFF.html">IPV6_TLV_OPTION_TYPE Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-437FBA33-13E8-4E89-B92F-E5E9AAFAFA90.html">IPV6_TLV_PAD_1 Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1E38C9BF-E9B6-40A5-A8B6-1D522B9C6A81.html">IPV6_TLV_PAD_N Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A23F1082-F8DD-41B6-B489-C1B2515F2F1F.html">IPV6_TLV_UNREC_OPT_DISCARD_PP Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B09E7918-C7C4-45CB-81E2-965D3294E95D.html">IPV6_TLV_UNREC_OPT_DISCARD_PP_NOT_MC Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AC8BD761-06A7-4A57-BD01-7E54E6AA9739.html">IPV6_TLV_UNREC_OPT_DISCARD_SILENT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6FF90021-66FF-49D3-9420-42FB43F599DE.html">IPV6_TLV_UNREC_OPT_SKIP_OPTION Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C23CA7A2-1B83-478C-B581-9D989DAD0816.html">IPV6_ULA_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5FF87290-1801-4BA3-A188-BC03CE18EDDF.html">IPV6_ULA_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-833EE614-43F8-4723-A982-10F407BCF36D.html">TCPIP_IPV6_AddressUnicastRemove Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7BB52DE1-29D2-412C-8F77-80092B18A749.html">TCPIP_IPV6_ArrayGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-10D2DC81-88D8-4ECF-96A0-7CF6C01FD388.html">TCPIP_IPV6_ArrayPutHelper Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F2866270-6C0F-4DD8-8F21-629B5D01F42D.html">TCPIP_IPV6_DASSourceAddressSelect Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DEFFE509-AA4D-46A6-AFD7-C6679F415C62.html">TCPIP_IPV6_DefaultRouterDelete Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-35B61D12-0656-4FB6-A5F3-E0BC4C83E2D3.html">TCPIP_IPV6_DefaultRouterGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-82812F3E-3749-45EF-90A7-A32BE900B638.html">TCPIP_IPV6_DestAddressGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1FCEF5D4-22F5-414B-BF0F-E07E8A6122CF.html">TCPIP_IPV6_DestAddressSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-55CEB648-6627-45B9-A882-AC2DD80892C0.html">TCPIP_IPV6_Flush Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E3F25204-AFB7-438F-AAF4-126896DC2171.html">TCPIP_IPV6_Get Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0F56AEC4-82A7-4A8A-98BB-B988B9A062BA.html">TCPIP_IPV6_HandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1E4CCA85-AF3B-43B7-9161-D6243C918736.html">TCPIP_IPV6_HandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BE0C1081-916F-4859-90D0-356F5D42E3EE.html">TCPIP_IPV6_InterfaceIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F9877B54-0920-42F5-BF63-A234CAAF3673.html">TCPIP_IPV6_IsFragmentationEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BA8E4747-D164-45A3-9E11-9BB8694C4576.html">TCPIP_IPV6_MaxDatagramDataSizeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B6BBF09F-09E4-49A1-8E06-780429BBEF8D.html">TCPIP_IPV6_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ECE26595-BE89-43D8-99A6-EED06D60F483.html">TCPIP_IPV6_MulticastListenerAdd Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0BA795A7-6D48-48CF-A925-30288A33D19C.html">TCPIP_IPV6_MulticastListenerRemove Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D2E5A710-25A0-4A46-8838-728A17478011.html">TCPIP_IPV6_PACKET_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4E827157-E3AF-4465-92B2-BED2A2B801B4.html">TCPIP_IPV6_PacketFree Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B8FDDB51-973C-4C74-8ACA-C6249AC9EE65.html">TCPIP_IPV6_PacketHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2DAF0DBE-3943-48A6-A38F-8C0A510B528D.html">TCPIP_IPV6_PacketHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-283E141E-5C2A-4977-B6E1-180215D04795.html">TCPIP_IPV6_PayloadSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9EB90A68-DF37-4610-A38C-5ED82ACACB78.html">TCPIP_IPV6_PROCESS_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AC2E9422-6951-4421-A4B2-E2560BBD2688.html">TCPIP_IPV6_Put Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-92902367-AA36-4F8C-8E8F-2A4380D2FFB0.html">TCPIP_IPV6_PutArray Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EC27AF9F-AF72-4DD7-A104-8E7991699A1B.html">TCPIP_IPV6_RouterAddressAdd Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5097A05F-94BE-41A9-8E92-4C81A9EF8CA4.html">TCPIP_IPV6_SourceAddressGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B2DE133C-C875-40B3-BACE-9073D63DE82C.html">TCPIP_IPV6_SourceAddressSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-99BCAA38-D478-406B-85D1-88639F4C8D1E.html">TCPIP_IPV6_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D10D7083-A933-42A7-BA90-CB60C95FC6F6.html">TCPIP_IPV6_TxIsPutReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-52BB79ED-7CC3-4194-A27A-D493A366DD19.html">TCPIP_IPV6_TxPacketAllocate Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7079544C-E6F0-4693-B31F-C5B70B4ABC67.html">TCPIP_IPV6_UnicastAddressAdd Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-03AFA467-86F9-4F5A-A106-7129B71494FE.html">TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

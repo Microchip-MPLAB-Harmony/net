@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="MPLAB® Harmony TCP/IP Library" />
+<meta name="DC.relation" scheme="URI" content="GUID-2561DB16-7947-4C02-97DC-A0BFC17070C9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3DCBF1EB-5623-4419-B244-DDD9B01704EE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5F35C98C-EC8E-40FF-9B62-3B31D508F820.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9356D53B-4F42-4E1E-B051-90F7C4D448E6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-27C514CD-DE28-4215-BB75-6C8EA971E12E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EE292D18-2DE6-478E-AAE1-74C69A31459E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0B7ADACD-E078-4FE5-BC6A-B7CABFE390D3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D15C8F84-C30C-451F-8AB7-F8E62AD494C2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-987D1913-E20A-467D-9E57-DEC60B2EBE5D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2F39A35D-A741-49F8-BAA9-3B3C9B665486.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CE11EBFA-49BD-4D91-86C5-FFD24810B03C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3FB7E1A3-E2CF-43D2-B8BB-8E306C170FF3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-25A4CF50-2F8F-47E7-A90C-ABFA52814459.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4C21649D-F597-4151-8607-5281DF9F04CC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DCB13BC6-B7A2-45CA-89E7-9474EAF05EFB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-338BE6D4-6407-4074-804F-803059F7212B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EA29E72F-4194-41F9-9F19-D8BBA00D62F2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0C1AF471-66D4-472F-84AF-212E9E18B21D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B37C4F4C-DC2D-48D9-9909-AACBA987B57A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-60817292-D657-471A-86CE-25D068933506.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5FBC9524-1287-42EB-B1A1-6F4C3C9980FD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FC6E0701-F309-47D1-9F2D-0253AADF48FC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2B9B587D-5018-4CA9-AA8D-2395A2D004A5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1477C704-4A26-476C-8E70-7514FAF123F4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7764E81C-8FC9-4B3E-8830-255BDE678AA0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-832A1C71-21E8-4386-BFCE-18B19538AC01.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9461917B-27CE-44ED-80DB-67D963896E8F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5AE30EFB-7B7C-4B4E-8BCF-FAB8D8FB9A89.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D76DC993-4CD3-4C65-92DB-14DEAB57BB27.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1076C2EA-7DC5-419E-A3E7-BBA92CFF5CFB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58EA08F2-E38D-48FD-BD75-C2972C0EE761.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A24BDAD2-C63E-40B1-894D-1DC3CC6CB66A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A4DC3D07-DDAD-4748-A855-304CA3439336.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F4DF749A-0F8C-4482-8661-C005A0BE0CF4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A8906C8D-A608-4572-AE74-1E517DD2B0BE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-75470E5B-2289-4F94-AE85-2BB7DF4C4F07.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="mplab-harmony-tcpip-library" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>MPLAB® Harmony TCP/IP Library</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-mplab-harmony-tcpip-library" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="mplab-harmony-tcpip-library">
+<h1 class="title topictitle1" id="ariaid-title1">MPLAB® Harmony TCP/IP Library</h1><div class="body"><p class="p">This distribution package contains a variety of TCP/IP firmware projects that demonstrate the capabilities of the MPLAB Harmony TCP/IP Stack. Each project describes its hardware setup and requirements. They are located in the net/apps folder.</p>
+<p class="p">This package also contains drivers for the Ethernet Controller (MAC) and supported external PHYs that can be connected to development boards, such as the LAN8720, LAN8740, KSZ8041, KSZ8061, etc.
+A PHY management and control MIIM driver supporting multiple clients is also supplied. All the drivers are located in the net/drivers folder.</p>
+<p class="p">The distribution package contains the NET_PRES layer in the net/net/pres folder. This software module is used by the TCP/IP stack to establish encrypted connections (TLS, DTLS) with the use of an external service provider (wolfSSL).</p>
+<p class="p">Part of the distribution package is the TCP/IP Stack itself, containing the source files for all the modules that are part of the stack in the net/tcpip folder.</p>
+<p class="p">This distribution package contains various TCP/IP utilities ( MPFS generator, TCP/IP Discoverer, Microchip MIB Compiler) that assist in the development and diagnostics of the TCP/IP applications. The utilities are located in the net/utilities folder.
+Note that third-party code - wolfSSL - is required for support of TLS and DTLS features.</p>
+<p class="p">Prior to using the TCP/IP demonstrations, it is recommended to review the MPLAB Harmony Release Notes (release_notes.md) for any known issues. It is located in the net folder</p>
+<p class="p"><strong class="ph b">Introduction</strong></p>
+<p class="p">The MPLAB Harmony TCP/IP Stack provides a foundation for embedded network applications by handling most of the interaction required between the physical network port and the application. It includes modules for several commonly used application layers, including HTTP for serving web pages, SMTP for sending e-mails, SNMP for providing status and control, Telnet, TFTP, SNTP and many more. In addition, the stack includes light-weight and high-performance implementations of the TCP and UDP transport layers, as well as other supporting modules such as IPv4, IPv6, ICMPv4, ICMPv6, DHCPv4, DHCPv6, ARP, NDP, IGMP, DNS, etc.</p>
+<p class="p"><strong class="ph b">Flash and RAM Usage</strong></p>
+<p class="p">The following figures provide Flash and RAM usage information for the supported devices.</p>
+<br /><img class="image" src="GUID-8D1A0127-53E3-4A42-B1AD-761BCBED0665-low.png" alt="PIC32MZ_resources" /><br /><br /><img class="image" src="GUID-9B4A4D43-2E0A-49EE-A9C8-8EB3DFE10CE2-low.png" alt="PIC32MZDAS_resources" /><br /><br /><img class="image" src="GUID-2F70ED8A-519D-49BE-AE94-495CF9EC73AC-low.png" alt="SAME70_resources" /><br /><br /><img class="image" src="GUID-7EABD50C-6156-4A7B-BA73-1A83817ABA99-low.png" alt="SAMV71_resources" /><br /><br /><img class="image" src="GUID-05BCE8C7-1D71-4786-B242-C68F08E829D3-low.png" alt="SAME54_resources" /><br /><br /><img class="image" src="GUID-D8F9C92F-A45C-4F4A-98AD-E58B9CC3B61D-low.png" alt="SAMA5D2_resources" /><br /><p class="p"><strong class="ph b">Heap Usage Estimate</strong></p>
+<p class="p">The overall heap estimate is available with the 'TCPIP CORE' module configurations as shown below</p>
+<br /><img class="image" src="GUID-0DF6748B-868B-4668-8BB1-4923CADD4BD6-low.png" alt="TCPIP Heap Estimate" /><br /><p class="p">The estimated heap size for TCP/IP is displayed in kilobytes. The TCP/IP heap size is derived by adding the heap estimation for each of the TCP/IP modules.</p>
+<p class="p">The module-wise heap estimation can be viewed with each TCP/IP modules by enabling ‘Module-wise Heap Estimate’ as shown below.</p>
+<br /><img class="image" src="GUID-2E5A5AC8-58D2-4619-ABD5-52FABA37FC8A-low.png" alt="TCPIP Heap Estimate modulewise" /><br /><p class="p">Remarks: Please note the following points regarding heap estimation,</p>
+<ul class="ul"><li class="li"><p class="p">This calculation provides an estimation close to "worst case" scenario.</p>
+</li>
+<li class="li"><p class="p">Calculation does not consider all the run-time dynamic memory allocations/de-allocations.</p>
+</li>
+<li class="li"><p class="p">Calculation does not consider the dynamic changes of the TCP and/or UDP socket buffer sizes.</p>
+</li>
+<li class="li"><p class="p">The heap runtime tool gives a more accurate picture of heap usage. The run time tool is preferred as the static estimation of heap usage is approximative only.</p>
+</li>
+<li class="li"><p class="p">The heap runtime tool can be used by enabling TCPIP_STACK_DRAM_DEBUG_ENABLE and TCPIP_STACK_DRAM_TRACE_ENABLE symbols. Then "heapinfo" command will give runtime heap usage.</p>
+</li>
+<li class="li"><p class="p">It should be noted that even if an "out of memory" condition occurs at run time, the stack will behave graciously, and it will report the error, so that the operation can be re-tried.</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">TCP/IP Stack Libraries/Modules, Drives and Layers</strong></p>
+<p class="p">TCP/IP Library includes the following Libraries/Modules, Drives and Layers:</p>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-2561DB16-7947-4C02-97DC-A0BFC17070C9.html">Announce Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3DCBF1EB-5623-4419-B244-DDD9B01704EE.html">ARP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5F35C98C-EC8E-40FF-9B62-3B31D508F820.html">Berkeley Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9356D53B-4F42-4E1E-B051-90F7C4D448E6.html">DHCP Client Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-27C514CD-DE28-4215-BB75-6C8EA971E12E.html">DHCP Server Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EE292D18-2DE6-478E-AAE1-74C69A31459E.html">DHCP Server Module (V2)</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0B7ADACD-E078-4FE5-BC6A-B7CABFE390D3.html">DHCPv6 Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D15C8F84-C30C-451F-8AB7-F8E62AD494C2.html">DNS Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-987D1913-E20A-467D-9E57-DEC60B2EBE5D.html">DNS Server Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2F39A35D-A741-49F8-BAA9-3B3C9B665486.html">Dynamic DNS Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CE11EBFA-49BD-4D91-86C5-FFD24810B03C.html">FTP Client Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3FB7E1A3-E2CF-43D2-B8BB-8E306C170FF3.html">FTP Server Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-25A4CF50-2F8F-47E7-A90C-ABFA52814459.html">HTTP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845.html">HTTP Net Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html">ICMP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4C21649D-F597-4151-8607-5281DF9F04CC.html">ICMPv6 Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DCB13BC6-B7A2-45CA-89E7-9474EAF05EFB.html">IGMP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-338BE6D4-6407-4074-804F-803059F7212B.html">Iperf Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EA29E72F-4194-41F9-9F19-D8BBA00D62F2.html">IPv4 Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135.html">IPv6 Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0C1AF471-66D4-472F-84AF-212E9E18B21D.html">MAC Driver Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B37C4F4C-DC2D-48D9-9909-AACBA987B57A.html">Manager Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-60817292-D657-471A-86CE-25D068933506.html">NBNS Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5FBC9524-1287-42EB-B1A1-6F4C3C9980FD.html">NDP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FC6E0701-F309-47D1-9F2D-0253AADF48FC.html">Reboot Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2B9B587D-5018-4CA9-AA8D-2395A2D004A5.html">SMTP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1477C704-4A26-476C-8E70-7514FAF123F4.html">SMTPC Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7764E81C-8FC9-4B3E-8830-255BDE678AA0.html">SNMP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-832A1C71-21E8-4386-BFCE-18B19538AC01.html">SNTP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9461917B-27CE-44ED-80DB-67D963896E8F.html">TCP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html">Telnet Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5AE30EFB-7B7C-4B4E-8BCF-FAB8D8FB9A89.html">TFTP Client Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D76DC993-4CD3-4C65-92DB-14DEAB57BB27.html">TFTP Server Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html">UDP Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1076C2EA-7DC5-419E-A3E7-BBA92CFF5CFB.html">Zeroconf Module</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58EA08F2-E38D-48FD-BD75-C2972C0EE761.html">ENC28J60 Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html">ENCx24J600 Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A24BDAD2-C63E-40B1-894D-1DC3CC6CB66A.html">Ethernet GMAC Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A4DC3D07-DDAD-4748-A855-304CA3439336.html">Ethernet MAC Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F4DF749A-0F8C-4482-8661-C005A0BE0CF4.html">Ethernet PHY Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A8906C8D-A608-4572-AE74-1E517DD2B0BE.html">MIIM Driver Library</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-75470E5B-2289-4F94-AE85-2BB7DF4C4F07.html">Networking Presentation Layer</a></strong><br />
+</li>
+</ul>
+</div></body>
+</html>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Zeroconf Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-890B63B7-0798-40C8-90F2-75C029CC66FC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9DF34C88-1362-40AF-96CB-91D235E15F99.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8AE11F4C-45C5-4D5D-91FA-DC93DCFAAF74.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AB645995-18DD-49C5-8A13-52F35B0D6E60.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6CA1CA3F-29AE-487B-BD5E-5803D9E9A04E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-13542F9F-FB82-4857-A222-F39F35DA80C7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BEC868B6-5E68-43CA-B0BD-06EA115D4339.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CA63B30E-EABD-4DDB-B676-1416AB83A279.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CA22AE73-6689-44DB-8A43-36DF320C8ECC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E315EB00-D610-404F-9F5C-F62B206F19B5.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="zeroconf-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Zeroconf Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-zeroconf-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-1076C2EA-7DC5-419E-A3E7-BBA92CFF5CFB"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="zeroconf-module">
+<h1 class="title topictitle1" id="ariaid-title1">Zeroconf Module</h1><div class="body"><p class="p">Zero configuration (Zeroconf), provides a mechanism to ease the configuration of a device on a network. It also provides for a more human-like naming convention, instead of relying on IP addresses alone. Zeroconf also goes by the names Bonjour (Apple) and Avahi (Linux), and is an IETF standard</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">Zeroconf Software Abstraction Model:</p>
+<br /><img class="image" src="GUID-5CBF2A9D-5D30-4DC7-B0E9-A64478F5F1E0-low.png" alt="TCPIP ZEROCONF Abstraction Model" /><br /><p class="p">Bonjour Service Model:</p>
+<br /><img class="image" src="GUID-3E062FBA-C554-4C42-9E29-B0FB928BE33C-low.png" alt="TCPIP ZEROCONF Bonjour Service" /><br /><p class="p"><strong class="ph b">Enabling</strong></p>
+<p class="p">Zeroconf can be enabled in the MPLAB Harmony Configurator, or by setting the following two defines in system_config.h file:</p>
+<ul class="ul"><li class="li"><p class="p">TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL</p>
+</li>
+<li class="li"><p class="p">TCPIP_STACK_USE_ZEROCONF_MDNS_SD</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Link Local (Zeroconf)</strong></p>
+<p class="p">The first component of Zeroconf is the ability to self-assign an IP address to each member of a network. Normally, a DHCP server would handle such situations. However, in cases where no DHCP server exists, Zeroconf enabled devices negotiate unique IP addresses amongst themselves.</p>
+<p class="p"><strong class="ph b">mDNS</strong></p>
+<p class="p">The second component of Zeroconf is the ability to self-assign human-readable hostnames for themselves. Multicast DNS provides a local network the ability to have the features of a DNS server. Users can use easily remembered hostnames to accesses the devices on the network. In the event that devices elect to use the same hostname, as in the IP address resolution, each of the devices will auto-negotiate new names for themselves (usually by appending a number to the end of the name).</p>
+<p class="p"><strong class="ph b">Service Discovery</strong></p>
+<p class="p">The last component of Zeroconf is service discovery. All Zeroconf devices can broadcast what services they provide. For instance, a printer can broadcast that it has printing services available. A thermostat can broadcast that it has an HVAC control service. Other interested parties on the network who are looking for certain services can then see a list of devices that have the capability of providing the service, and_connect_directly to it. This further eliminates the need to know whether something exists on a network (and what its IP or hostname is). As an end-user, all you would need to do is query the network if a certain service exists, and easily_connect_to it.</p>
+<p class="p"><strong class="ph b">Zeroconf Enabled Environments</strong></p>
+<p class="p">All Apple products have Zeroconf enabled by default. On Windows, you'll need to download the Safari web browser, and during the install, enable support for Bonjour. Note that in the Safari browser, you can browse and see a list of all Bonjour enabled devices, and click through to them automatically.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d288706e67"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d288706e69"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span><strong class="ph b">Multicast DNS Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_MDNS_ServiceDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>DNS Service Discovery function for end-user to deregister a service advertisement, which was previously registered with the TCPIP_MDNS_ServiceRegister function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_MDNS_ServiceRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>DNS Service Discovery function for end-users to register a service advertisement. The service is associated with all interfaces.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_MDNS_ServiceUpdate</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>DNS-Service Discovery function for end-user to update the service advertisement, which was previously registered with TCPIP_MDNS_ServiceRegister.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_MDNS_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span><strong class="ph b">Link Local Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_ZCLL_Disable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Disables Zero Configuration on the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_ZCLL_Enable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Enables Zero Configuration on the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_ZCLL_IsEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Returns whether or not an interface is enabled for zero configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>TCPIP_ZCLL_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>ZCLL_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>Placeholder for Zero Configuration Link Layer module configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e67 "><span>MDNSD_ERR_CODE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d288706e69 "><span>void DisplayHostName(uint8_t *HostName);</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-890B63B7-0798-40C8-90F2-75C029CC66FC.html">MDNSD_ERR_CODE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9DF34C88-1362-40AF-96CB-91D235E15F99.html">TCPIP_MDNS_ServiceDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8AE11F4C-45C5-4D5D-91FA-DC93DCFAAF74.html">TCPIP_MDNS_ServiceRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AB645995-18DD-49C5-8A13-52F35B0D6E60.html">TCPIP_MDNS_ServiceUpdate Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6CA1CA3F-29AE-487B-BD5E-5803D9E9A04E.html">TCPIP_MDNS_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-13542F9F-FB82-4857-A222-F39F35DA80C7.html">TCPIP_ZCLL_Disable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BEC868B6-5E68-43CA-B0BD-06EA115D4339.html">TCPIP_ZCLL_Enable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CA63B30E-EABD-4DDB-B676-1416AB83A279.html">TCPIP_ZCLL_IsEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CA22AE73-6689-44DB-8A43-36DF320C8ECC.html">TCPIP_ZCLL_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E315EB00-D610-404F-9F5C-F62B206F19B5.html">ZCLL_MODULE_CONFIG Structure</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

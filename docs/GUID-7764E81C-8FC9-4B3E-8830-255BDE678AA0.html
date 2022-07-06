@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="SNMP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-66EB8140-8350-4270-9335-D4FF366A19E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-466B5C12-06AE-4050-B87C-DFD1D82C1D1C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B936FE71-BC8A-4085-A15E-DE30F33EAB1A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-95B5B21B-3EAC-42F2-99DC-E824BAFAA690.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-29B73F88-AF3C-48F4-9A52-C7B627F6CE39.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8B6901B5-C673-41CC-9B6B-A1BC1930957A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-475EA177-97E0-48BA-9344-49A2B23E9557.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-00113BB0-63B1-4D54-9D52-DA918CB5088B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DED3F85C-11E1-4A7F-B94B-9FECDBD0893E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CD1946E6-72CB-4B9E-916C-977488D1C1BF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5DC19ED6-6171-4351-91CA-8F617D998E0D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-01176052-ADEA-46EC-B40E-DA11F594DEA2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B850CFAA-BB01-48D4-AED8-8DC14C64DB7C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-14D7AEBA-1091-4B1E-B659-BC43A542CD7B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3F29431E-56A5-49C6-9321-E844E214FF3B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C3A94F5C-9DFC-4C2E-9F41-F1A449C3BF71.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CE587E2A-69CB-4C73-AF12-C5AB810DEE7F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FD6BE11C-630D-410B-9A3B-D3EC1B499916.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-54D967D4-38C6-42F9-AA0C-B2D20A25909F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-68289005-8CBF-47A4-AAFF-3AEE46F579CF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4260D9D5-06A3-4388-9E49-AB9E449EA7B2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-014B6D41-C8F4-42E2-9F09-4A5F9FD1111B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C044EA98-7B3B-4398-B958-889287333022.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2CE2DE56-547A-4F35-8240-592D03786853.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6EB562C9-CDC8-457B-A9D6-9127D545C12A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7C11A229-085E-4497-941D-A47992479F3B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-471E5DF3-2EAD-460A-B963-894E6FE9B915.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9B5A7DC2-40DE-4992-9792-7FAAF93D8FD6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2CB40EFF-DCB6-4D23-9EFB-402861EF9FC6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-261FDEEA-4939-4E47-AFFC-2FBAD980A114.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4FA11FF3-612E-4D10-8242-377C3F6CF5E1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7D4DC390-FD6F-4435-958B-4324BEC8A4A1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AA2B2D44-E7CB-4B29-BC69-AD6DD77EB809.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7FCCF0BB-53A5-4D31-A8F2-D77B6181EBBB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0E6D3607-9921-44C7-8B68-E85554C80801.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BF0CB5D1-6D57-4E3A-9F66-1C3E4BD80FA8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B97A78AF-FD36-4D79-BF47-F2AE22902F8A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BDCAEFFB-3D1B-44A3-B656-D4A18383E66C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-430DEB4B-1ACE-44A6-A6CE-D220080CF2B5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9DE145CE-6D99-4501-94F3-9C24899050ED.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-63000CBB-6A16-4510-9B87-9DEBB62B7A7B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-001B34EC-903E-4448-863C-256B62C95F53.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5B3AAF37-93AA-401D-B7CD-D28AA4E7F1A2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A0A2D32D-BDBE-4B12-B7C5-478283FE6A7C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C8CCD3C1-DE9B-410F-B924-83D4FAE8ED2C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-243E1FD7-D220-4F22-A76F-1C6467C973BF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-74D650FD-483B-49E2-AD07-CDC28CB5D7CC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-123BF979-9342-48FD-BAFA-65AF224C4EF5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-80B1258C-5639-4C20-81D1-6B253609CA21.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CE1E6891-8778-4B78-8DF8-98743975C78C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2F85BB10-868F-4CC7-B4DF-D8F780841490.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-53A2E18F-48FD-478F-A5AA-46C48685700C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A47F927D-FEE2-4271-88C5-255447EFDD1C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BCFFB578-25A1-4639-90F3-9500380B13A1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B723237E-484E-42E2-A7DA-CCAC4BBE507B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7ACBECE6-7FEC-42BA-9E8A-1DFD758509CA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-941A2702-62E8-424D-8E43-B21B0A9FC1DA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-12045D71-B016-41AD-A0FA-28ACF7850FC6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E58EF65B-97FD-46B4-A696-0A6B6F120F77.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2D3B8E39-56C5-4354-9971-1FF1912BCADC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5E4C405D-613A-4FA7-AE5E-4A7593890586.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7F43936A-7FCB-4575-9709-C92EFB582D83.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="snmp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>SNMP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-snmp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-7764E81C-8FC9-4B3E-8830-255BDE678AA0"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="snmp-module">
+<h1 class="title topictitle1" id="ariaid-title1">SNMP Module</h1><div class="body"><p class="p">SNMP is one of the key components of a Network Management System (NMS). SNMP is an application layer protocol that facilitates the exchange of management information among network devices. It is a part of the TCP/IP protocol suite.</p>
+<p class="p">SNMP is an Internet protocol that was originally designed to manage different network devices, such as file servers, hubs, routers and so on. It can also be used to manage and control an ever increasing number of small embedded systems connected to one another over any IP network. Systems can communicate with each other using SNMP to transfer control and status information, creating a truly distributed system.</p>
+<p class="p">SNMP is used in a variety of devices where remote monitoring and controlling of the network node is desired, such as a network printer, online Uninterrupted Power Supply (UPS), security cameras, home and industrial appliances monitor and control, automatic energy meter readings, etc.</p>
+<p class="p">Unlike more familiar human-oriented protocols, like HTTP, SNMP is considered a machine-to-machine protocol.</p>
+<blockquote class="lq"><p class="p">Note:  The related application note, AN870 "SNMP V2c Agent for Microchip TCP/IP Stack" (DS8000870) is available for download from the Microchip web site at: http://ww1.microchip.com/downloads/en/AppNotes/00870b.pdf</p>
+</blockquote>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-3844C6A3-2018-462D-A737-DF9E06CDDC51-low.png" alt="TCPIP SNMP Abstraction Model" /><br /><p class="p"><strong class="ph b">SNMP Server (Agent)</strong></p>
+<p class="p">SNMP is an Internet protocol that was originally designed to manage different network devices, such as file servers, hubs, routers, and so on. It can also be used to manage and control an ever increasing number of small embedded systems connected to one another over any IP network. Systems can communicate with each other using SNMP to transfer control and status information, creating a truly distributed system</p>
+<p class="p">Location of the SNMP Stack in the TCP/IP Protocol Stack:</p>
+<br /><img class="image" src="GUID-9A47A2AE-4B6C-42B6-B856-E879099747C5-low.png" alt="tcpip_stack_diagram" /><br /><p class="p">The Microchip SNMP Server is a multi-lingual implementation, which supports SNMPv1, V2c, and V3 server features simultaneously. The SNMP Server is implemented to address the requirements of embedded applications and works with both IPv4 and IPv6 addresses. SNMPv1 and V2c are enabled by TCPIP_STACK_USE_SNMP_SERVER. SNMPv3 support is enabled by TCPIP_STACK_USE_SNMPV3_SERVER. Since the SNMPv3 stack requires the support of SNMPv1 and SNMPv2c, TCPIP_STACK_USE_SNMPV3_SERVER should be enabled with TCPIP_STACK_USE_SNMP_SERVER.</p>
+<blockquote class="lq"><p class="p">Note:  Currently, the SNMP agent will be able to communicate with one manager at a time, and it will be connected to either an IPv4 address or an IPv6 address.</p>
+</blockquote>
+<p class="p"><em class="ph i">V2c</em></p>
+<p class="p">V2c is implemented with support for the configuration of multiple community names and the community names can be configured through the HTTP web interface. An access-restricted web page is provided with the demonstration application to allow dynamic configuration of SNMP communities.</p>
+<p class="p"><em class="ph i">SNMPv3</em></p>
+<p class="p">SNMPv3 RFC specifies different types of access mechanisms, user security model (USM), authentication and privacy protocols. The Microchip SNMPv3 Server is implemented with support for the AES 128 CFB 128 and DES-CBC privacy protocols, and the MD5 and SHA1 message authentication protocols. The demonstration implementation of the server is configured with three types of user names with respective authentication and privacy credentials and authentication types. These credentials and other user information are stored in the global array. The user of the SNMPv3 stack can decide on the number of user names in the User’s database to be stored with the SNMPv3 Server. According to the SNMPv3 recommendation, the SNMPv3 Server should not be configured with the authentication and privacy passwords. Instead, it could be configured with the respective localized keys of the password. The Microchip SNMPv3 agent is provided with the password information in the database for "Getting Started" and for understanding purposes only. It is recommended that the SNMPv3 stack be modified to restrict access to the password OIDs declared in the user database.</p>
+<blockquote class="lq"><p class="p">Note:  Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in the SNMP Stack will prevent access to the variables that should be secured by SNMPv3. SNMP variables are structures in a tree in the MIB. Access to parts of this tree is determined by version. For example, SYSTEM-type variables can be accessed regardless of the SNMP version, while SNMPv2c requests can access part of the tree, and authenticated SNMPv3 requests can access the complete tree.</p>
+</blockquote>
+<p class="p"><strong class="ph b">MIB Files</strong></p>
+<p class="p">SNMP describes the hierarchal storage of management objects (referred to with object IDs or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files:</p>
+<p class="p">mchip.mib - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing information about the variables used in the demonstration
+snmp.mib - This is a custom-formatted file that can be parsed to create Web page and header resources that can be accessed with a MCHP device
+The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip MIB script (snmp.mib) to generate two files named snmp.bib and mib.h. The snmp.bib file is a compressed record of management objects that will be stored with web pages and the mib.h file contains C defines for each OID. These files are included in the appropriate directories for the TCP/IP Demonstration Applications, but for a custom application the snmp.bib must be copied to the web page directory, mib.h copied to the application directory and included in the project. Rebuild your project, and then rebuild and re-upload the web page. This will bundle the BIB file into the web page image, which will allow the SNMP agent to search for the required variable information with the MPFS file system.</p>
+<p class="p"><strong class="ph b">MIB Browsers</strong></p>
+<p class="p">Several SNMP MIB browsers are available. Users can also install a customized MIB browser specific to their application.</p>
+<p class="p">This documentation describes how to use the iREASONING Networks MIB Browser to run the TCP/IP SNMP demonstration applications. The MIB Browser can be obtained from: http://www.ireasoning.com/downloadmibbrowserlicense.shtml. The MIB script upload, the MIB tree structure display, and the SNMP query mechanism procedures vary from browser to browser.</p>
+<blockquote class="lq"><p class="p">Important!  The use of a MIB browser or other third-party products may require that users review and agree to the terms of a license. Microchip's reference to the iREASONING Networks MIB Browser is for the users' convenience. It is the user's responsibility to obtain information about, and comply with the terms of, any applicable licenses.</p>
+</blockquote>
+<p class="p">Refer to the Microchip application note, AN870 "SNMP V2c Agent for Microchip TCP/IP Stack" (DS00000870) for more details on the MIB scripts, community names, and demonstration SNMP MIB variable tree structure.</p>
+<p class="p">The ASN.1 format mchip.mib file is defined with a private variable tree structure for the MIB variables. Also the mchip.mib is added with the number of OIDs that could be accessed only with SNMPv3 request. The browser can access every variable in the MIB database provided the community name matches. The access to the MIB variables is restricted to the type of the request. The RFC1213 MIB variables could be accessed with SNMPv2c/v3 request. But the SNMP-FRAMEWORK-MIB.mib variables could only be accessed with a SNMPv3 request if the credentials are matched and the message is authenticated. To modify these MIB variables, corresponding changes must be made to both MIB scripts (snmp.mib and mchip.mib).</p>
+<ul class="ul"><li class="li"><p class="p">For SNMP V2c services , The V2c agent is configured by default with three Read communities ("public", "read", "") and three Write communities ("private","write","public")</p>
+</li>
+<li class="li"><p class="p">At run-time, the community names can be dynamically configured using the HTTP interface for SNMP community name configuration</p>
+</li>
+<li class="li"><p class="p">If the V2c agent receives an SNMP request with an unknown community name, the agent will generate an Authentication trap</p>
+</li>
+</ul>
+<p class="p">The V2c agent's multiple community support feature enables the user application to provide limited access to the requesting browser based on the community name used by the browser to access the MIB database variables of the agent.</p>
+<p class="p">For SNMPv3 services:</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e100"><span>Type</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e102"><span>USER 1</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e104"><span>USER 2</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e106"><span>USER 3</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>USM User</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>microchip</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>SnmpAdmin</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>root</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>Security Level</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>auth, priv</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>auth, no priv</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>no auth, no priv</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>Auth Algorithm</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>MD5</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>SHA1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>N/A</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>Auth Password</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>auth12345</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>ChandlerUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>N/A</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>Privacy Algorithm</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>AES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>N/A</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>N/A</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e100 "><span>Privacy Password</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e102 "><span>priv12345</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e104 "><span>N/A</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e106 "><span>N/A</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p">If SNMPv3 services are required, SNMPv3 browser is required to be configured with the user name, authentication and privacy password, message authentication hash type, privacy protocol type. The SNMP server would respond only if one of the user credentials and user security parameters in the following table is configured at the manager. The previous table is stored in the global structure with the SNMPv3 server stack. The SNMPv3 server would only respond if the request credentials of the MIB browser matches to that of the stored user data base of the SNMP server.</p>
+<p class="p">The Microchip SNMPv3 stack does support only one Context Engine ID with the server. Leave the "Context Name" option in the "Advanced" tab empty. It is ignored on the server.</p>
+<p class="p">According to the user and the auth and privacy protocols configured with the SNMP browser, the UDP authenticated and encrypted message would be exchanged between server and the client.</p>
+<ul class="ul"><li class="li"><p class="p">If the USER 1 values, as shown in the table, are configured in the MIB browser, the data exchange between the client and server is encrypted and authenticated. The PDU could be captured in the Ethernet packet sniffer, such as WireShark, and examined. As the data is encrypted and authenticated, the data integrity and the privacy is achieved.</p>
+</li>
+<li class="li"><p class="p">If USER 2 values, as shown in the table, are configured in the MIB browser, the data exchange between client and server is authenticated. The data integrity would be checked once the data is received at either end. The message authentication mechanism protects from the possible data sniffing and modification threat, and also guarantees that the data is received from the authenticated and guaranteed source.</p>
+</li>
+<li class="li"><p class="p">If USER 3 values, as shown in the table, are configured in the MIB browser, the data exchange between client and server is neither authenticated nor encrypted</p>
+</li>
+<li class="li"><p class="p">Considering the three USER configurations, if the SNMP server is to be accessed over WAN, in the Internet cloud, the data should be encrypted and authenticated to have the highest level of data privacy and integrity</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">SNMP Traps</strong></p>
+<p class="p">The MPLAB Harmony TCP/IP Stack supports Trap version1 and Trap version2 formatted traps. Traps are notifications from the agent to the manager that are used when a predefined event occurs at the agent.</p>
+<p class="p">From mchip.mib, the ipv4TrapTable and ipv6TrapTable are the two tabular sections, which are used to configure HOST IPv4 and IPv6 address and this will help the HOST trap receiver to receive the traps.</p>
+<p class="p">Several preprocessor macros in the snmp_config.h variant header file can be used to enable or disable traps in the agent. Commenting and uncommenting these macros in the file will have different results. The SNMP_TRAP_DISABLED macro will disable traps entirely if it is not commented:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d191790e192', this);">Copy</button><code id="d191790e192" content="#define SNMP_TRAP_DISABLED">#define SNMP_TRAP_DISABLED</code></pre><p class="p">The user must configure the expected trap format at the SNMP Manager. SNMPv2 entities acting as an agent should be able to generate and transmit SNMP V2 trap PDUs when the manager is configured to receive and process SNMP V2 trap PDUs. To configure the trap format, comment or uncomment the SNMP_STACK_USE_V2_TRAP macro in the snmp_config.h header file:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d191790e196', this);">Copy</button><code id="d191790e196" content="#define SNMP_STACK_USE_V2_TRAP">#define SNMP_STACK_USE_V2_TRAP</code></pre><p class="p">If the macro has been commented out, the SNMP agent will send V1 formatted trap PDUs; otherwise, it will send V2 formatted trap PDUs. By default, the SNMP agent is configured to send V2 formatted traps. Note that the SNMP V2c agent should only send V2 formatted traps.</p>
+<p class="p">To enable traps in SNMPv3, the #define SNMP_V1_V2_TRAP_WITH_SNMPv3 macro must be uncommented.</p>
+<p class="p">The following table illustrates how to enable/disable traps for different versions of SNMP.</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e213"><span>Type</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e215"><span>SNMPv1</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e217"><span>SNMPv2c</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e219"><span>SNMPv3</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e213 "><span>TRAPv2 (enabled by default)</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e215 "><span>Comment out the #define SNMP_TRAP_DISABLED macro</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e217 "><span>Comment out the #define SNMP_TRAP_DISABLED macro</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e219 "><span>Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the #define SNMP_V1_V2_TRAP_WITH_SNMPV3 macro</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e213 "><span>TRAPv2 (disabled by default)</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e215 "><span>Not supported</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e217 "><span>Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the #define SNMP_STACK_USE_V2_TRAP macro</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e219 "><span>Comment out the #define SNMP_TRAP_DISABLED macro Uncomment the #define SNMP_V1_V2_TRAP_WITH_SNMPV3 macro. Uncomment the #define SNMP_STACK_USE_V2_TRAP macro</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><em class="ph i">Demonstrations</em>
+Two trap demonstrations APIs are included with the TCP/IP Stack. The task functions for these demonstrations are called in the main application function:</p>
+<ul class="ul"><li class="li"><p class="p">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status of the SNMP_STACK_USE_V2_TRAP macro). The trap PDU will only have one demonstration variable binding on the varbind list.</p>
+</li>
+<li class="li"><p class="p">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4) variable bindings. The user should modify or use this routine as a reference for sending V2 trap format notifications with multiple bindings on the varbind list.</p>
+</li>
+</ul>
+<blockquote class="lq"><p class="p">Note:  The user should only enable one SNMP demonstration API at a time. By default, the SNMPV2TrapDemo API is enabled and SNMPTrapDemo is commented out (disabled).</p>
+</blockquote>
+<p class="p"><em class="ph i">V1/V2 Formatted Traps with a Single Variable Binding</em>
+In the snmp_config.h header file:</p>
+<ul class="ul"><li class="li"><p class="p">Uncomment #define SNMP_TRAP_DISABLED</p>
+</li>
+<li class="li"><p class="p">Comment //#define SNMP_STACK_USE_V2_TRAP</p>
+</li>
+</ul>
+<p class="p">For the Trap demonstration, two events are defined within the V2c agent:</p>
+<ul class="ul"><li class="li"><p class="p">If the Analog Potentiometer value is greater than 14, the agent will send a Trap every 5 seconds to the configured 'IPv4TrapReceiverIP address'.</p>
+</li>
+<li class="li"><p class="p">If Button 3 on the demonstration board is pressed, an organization-specific PUSH_BUTTON trap will be sent.</p>
+</li>
+</ul>
+<p class="p">The current implementation of the V2c agent also generates a standard "Authentication Failure Trap":</p>
+<ul class="ul"><li class="li"><p class="p">If a request is received to modify (Set) a private MIB variable, or</p>
+</li>
+<li class="li"><p class="p">If the value of the variable is requested (Get) by a browser with the wrong community name</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">HTTP Configuration</strong></p>
+<div class="p">If a HTTP server is used with the Harmony TCP/IP stack, it is possible to dynamically configure the Read and Write community names through the SNMP Configuration web page. Access the web page using http://mchpboard_c/mpfsupload or http://<span class="undefined_element">(for IPv6 it should be http://<span class="xref"></span>:80/index.html), and then access the SNMP Configuration web page through the navigation bar. Use "admin" for the username and "microchip" for the password.</span><br /><img class="image" src="GUID-9A9F08B0-04E4-4444-8C8C-5CD057B9C6D1-low.png" alt="SNMP HTTP Community Configuration Screen" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e306"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d191790e308"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_BIB_FILE_NAME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>The Microchip mib2bib.jar compiler is used to convert the Microchip MIB script to binary format and it is compatible with the Microchip SNMP agent. which is written in ASCII format. Name of the bib file for SNMP is snmp.bib.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_COMMUNITY_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This is the maximum length for community string. Application must ensure that this length is observed. SNMP module adds one byte extra after TCPIP_SNMP_COMMUNITY_MAX_LEN for adding '0' NULL character.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_MAX_COMMUNITY_SUPPORT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Specifying more strings than TCPIP_SNMP_MAX_COMMUNITY_SUPPORT will result in the later strings being ignored (but still wasting program memory). Specifying fewer strings is legal, as long as at least one is present.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_MAX_MSG_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>The maximum length in octets of an SNMP message which this SNMP agent able to process. As per RFC 3411 snmpEngineMaxMessageSize and RFC 1157 ( section 4- protocol specification ) and implementation supports more than 480 whenever feasible. It should be divisible by 16</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_MAX_NON_REC_ID_OID</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Update the Non record id OID value which is part of CustomSnmpDemoApp.c file. This is the maximum size for gSnmpNonMibRecInfo<span class="xref"></span> which is the list of static variable Parent OIDs which are not part of mib.h file. This structure is used to restrict access to static variables of SNMPv3 OIDs from SNMPv2c and SNMPv1 version. With SNMPv3 all the OIDs accessible but when we are using SNMPv2c version , static variables of the SNMPv3 cannot be accessible with SNMP version v2c. SNMP agent supports both SMIv1 and SMIv2 standard and snmp.mib has been updated with respect to SMIV2 standard and it... more</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_NOTIFY_COMMUNITY_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Maximum length for SNMP Trap community name</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_OID_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Maximum length for the OID String. Change this to match your OID string length.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TASK_PROCESS_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP task processing rate, in milli-seconds. The SNMP module will process a timer event with this rate for processing its own state machine, etc. The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>The maximum size of TRAP community string length</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN_MEM_USE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Trap information. This macro will be used to avoid SNMP OID memory buffer corruption</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAP_TABLE_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This table maintains list of interested receivers who should receive notifications when some interesting event occurs.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMPv3 Authentication Localized password key length size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMPv3 authentication localized Key length for memory validation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMPv3 Privacy Password key length size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMPv3 privacy key length size for memory validation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_USER_SECURITY_NAME_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Maximum size for SNMPv3 User Security Name length.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_USER_SECURITY_NAME_LEN_MEM_USE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>User security name length for memory validation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_USM_MAX_USER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Maximum number of SNMPv3 users. User Security Model should have at least 1 user. Default is 3.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>**SNMP Module Functions **</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_NotifyIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Resolves given remoteHost IP address into MAC address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_NotifyPrepare</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Collects trap notification info and send ARP to remote host.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapTimeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets SNMP Trap UDP client open socket time-out.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_ClientGetNet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Get a network interface for SNMP TRAP.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_ExactIndexGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>To search for exact index node in case of a Sequence variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_IsValidCommunity</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Validates community name for access control.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_IsValidLength</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Validates the set variable data length to data type.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_MibIDSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the agent MIB ID for SNP notification.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_NextIndexGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>To search for next index node in case of a Sequence variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_ReadCommunityGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the readCommunity String with SNMP index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_RecordIDValidation</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Used to restrict the access dynamic and non dynamic OID string for a particular SNMP Version.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_SendFailureTrap</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Prepares and validates the remote node that will receive a trap and send the trap PDU.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapInterFaceSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the TRAP interface for SNMP notification.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAPMibIDGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the agent MIB ID for SNP notification.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapSendFlagGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the status of trap send flag.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapSendFlagSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the status of trap send flag.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapSpecificNotificationGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the specific trap.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TrapSpecificNotificationSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the specific trap, generic trap, and trap ID.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_VarbindGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Used to get/collect OID variable information.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_VarbindSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the MIB variable with the requested value.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_WriteCommunityGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the writeCommunity String with SNMP index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_AuthTrapFlagGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the status of authentication trap flag.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_AuthTrapFlagSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the status of authentication trap flag.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_IsTrapEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the SNMP Trap status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_ReadCommunitySet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the readCommunity String with SNMP index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_SocketIDGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the Socket ID for SNMP Server socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_SocketIDSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the Socket ID for SNMP Server socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAPTypeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Get SNMP Trap type for version v1 and v2c.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAPv1Notify</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Creates and Sends TRAPv1 pdu.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_TRAPv2Notify</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Creates and sends TRAP PDU.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_ValidateTrapIntf</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the status of trap interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_WriteCommunitySet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Sets the writeCommunity String with SNMP index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span><strong class="ph b">SNMPv3 Module Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_EngineUserDataBaseGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Get SNMPv3 engine data base details.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_EngineUserDataBaseSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Set SNMPv3 engine data base details.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPv3_TrapConfigDataGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets the SNMPv3 Trap configuration details using the user name index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPv3_Notify</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Creates and Sends SNMPv3 TRAP PDU.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_TrapTypeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Gets SNMP Trap type for version v3.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span><strong class="ph b">SNMP Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_COMMUNITY_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Definition to represent different type of SNMP communities.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_END_OF_VAR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This Macro is used for both SNMP SET and GET Variable processing to indicate the end of SNMP variable processing. For multi byte data request, the end byte will be always SNMP_END_OF_VAR.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_INDEX_INVALID</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This Macro is used for both SNMP SET and GET Sequence Variable processing. SNMP starts processing the start of sequence variable with Invalid index. TCPIP_SNMP_ExactIndexGet and TCPIP_SNMP_NextIndexGet returns a valid index as per SNMP_INDEX_INVALID.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_NON_MIB_RECD_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Restrict access for specific OIDs.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_START_OF_VAR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This Macro is used for both SNMP SET and GET Variable processing to indicate the start of SNMP variable processing. For multi byte data request, the first byte will be always SNMP_START_OF_VAR.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_TRAP_IP_ADDRESS_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Definition of the supported address types for SNMP trap.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_VAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Definition to represent SNMP OID object values.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_ID</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP dynamic variable ID.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_INDEX</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP sequence variable index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_V1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This macro is used for SNMP version 1</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_V2C</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This macro is used for SNMP version 2 with community</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_V3</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>This macro is used for SNMP version 3 with authentication and privacy</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_GENERIC_TRAP_NOTIFICATION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Definition to represent different SNMP generic trap types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMP_VENDOR_SPECIFIC_TRAP_NOTIFICATION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Definition to represent different SNMP vendor trap types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span><strong class="ph b">SNMPv3 Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMPV3_HMAC_HASH_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different type of authentication for SNMPv3.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>SNMPV3_PRIV_PROT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different type of encryption and decryption for SNMPv3.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>STD_BASED_SNMP_MESSAGE_PROCESSING_MODEL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different SNMP Message processing model</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>STD_BASED_SNMP_SECURITY_MODEL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different Security services for SNMPv3 messages.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>STD_BASED_SNMPV3_SECURITY_LEVEL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different Security Level for SNMPv3 messages.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>Different Configuration parameters of SNMPv3 operation</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_COMMUNITY_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP community configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP module configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_TARGET_ENTRY_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMP module trap target address configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e306 "><span>TCPIP_SNMPV3_USM_USER_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d191790e308 "><span>SNMPv3 USM configuration.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-66EB8140-8350-4270-9335-D4FF366A19E2.html">SNMP_COMMUNITY_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-466B5C12-06AE-4050-B87C-DFD1D82C1D1C.html">SNMP_END_OF_VAR Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B936FE71-BC8A-4085-A15E-DE30F33EAB1A.html">SNMP_GENERIC_TRAP_NOTIFICATION_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-95B5B21B-3EAC-42F2-99DC-E824BAFAA690.html">SNMP_INDEX Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-29B73F88-AF3C-48F4-9A52-C7B627F6CE39.html">SNMP_INDEX Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8B6901B5-C673-41CC-9B6B-A1BC1930957A.html">SNMP_INDEX_INVALID Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-475EA177-97E0-48BA-9344-49A2B23E9557.html">SNMP_NON_MIB_RECD_INFO Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-00113BB0-63B1-4D54-9D52-DA918CB5088B.html">SNMP_START_OF_VAR Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DED3F85C-11E1-4A7F-B94B-9FECDBD0893E.html">SNMP_TRAP_IP_ADDRESS_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CD1946E6-72CB-4B9E-916C-977488D1C1BF.html">SNMP_V1 Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5DC19ED6-6171-4351-91CA-8F617D998E0D.html">SNMP_V2C Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-01176052-ADEA-46EC-B40E-DA11F594DEA2.html">SNMP_V3 Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B850CFAA-BB01-48D4-AED8-8DC14C64DB7C.html">SNMP_VAL Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-14D7AEBA-1091-4B1E-B659-BC43A542CD7B.html">SNMP_VENDOR_SPECIFIC_TRAP_NOTIFICATION_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3F29431E-56A5-49C6-9321-E844E214FF3B.html">SNMPV3_HMAC_HASH_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C3A94F5C-9DFC-4C2E-9F41-F1A449C3BF71.html">SNMPV3_PRIV_PROT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CE587E2A-69CB-4C73-AF12-C5AB810DEE7F.html">STD_BASED_SNMP_MESSAGE_PROCESSING_MODEL Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FD6BE11C-630D-410B-9A3B-D3EC1B499916.html">STD_BASED_SNMP_SECURITY_MODEL Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-54D967D4-38C6-42F9-AA0C-B2D20A25909F.html">STD_BASED_SNMPV3_SECURITY_LEVEL Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-68289005-8CBF-47A4-AAFF-3AEE46F579CF.html">TCPIP_SNMP_AuthTrapFlagGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4260D9D5-06A3-4388-9E49-AB9E449EA7B2.html">TCPIP_SNMP_AuthTrapFlagSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-014B6D41-C8F4-42E2-9F09-4A5F9FD1111B.html">TCPIP_SNMP_ClientGetNet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C044EA98-7B3B-4398-B958-889287333022.html">TCPIP_SNMP_COMMUNITY_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2CE2DE56-547A-4F35-8240-592D03786853.html">TCPIP_SNMP_ExactIndexGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6EB562C9-CDC8-457B-A9D6-9127D545C12A.html">TCPIP_SNMP_IsTrapEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7C11A229-085E-4497-941D-A47992479F3B.html">TCPIP_SNMP_IsValidCommunity Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-471E5DF3-2EAD-460A-B963-894E6FE9B915.html">TCPIP_SNMP_IsValidLength Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9B5A7DC2-40DE-4992-9792-7FAAF93D8FD6.html">TCPIP_SNMP_MibIDSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2CB40EFF-DCB6-4D23-9EFB-402861EF9FC6.html">TCPIP_SNMP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-261FDEEA-4939-4E47-AFFC-2FBAD980A114.html">TCPIP_SNMP_NextIndexGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4FA11FF3-612E-4D10-8242-377C3F6CF5E1.html">TCPIP_SNMP_NotifyIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7D4DC390-FD6F-4435-958B-4324BEC8A4A1.html">TCPIP_SNMP_NotifyPrepare Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AA2B2D44-E7CB-4B29-BC69-AD6DD77EB809.html">TCPIP_SNMP_ReadCommunityGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7FCCF0BB-53A5-4D31-A8F2-D77B6181EBBB.html">TCPIP_SNMP_ReadCommunitySet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0E6D3607-9921-44C7-8B68-E85554C80801.html">TCPIP_SNMP_RecordIDValidation Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BF0CB5D1-6D57-4E3A-9F66-1C3E4BD80FA8.html">TCPIP_SNMP_SendFailureTrap Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B97A78AF-FD36-4D79-BF47-F2AE22902F8A.html">TCPIP_SNMP_SocketIDGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BDCAEFFB-3D1B-44A3-B656-D4A18383E66C.html">TCPIP_SNMP_SocketIDSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-430DEB4B-1ACE-44A6-A6CE-D220080CF2B5.html">TCPIP_SNMP_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9DE145CE-6D99-4501-94F3-9C24899050ED.html">TCPIP_SNMP_TrapInterFaceSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-63000CBB-6A16-4510-9B87-9DEBB62B7A7B.html">TCPIP_SNMP_TRAPMibIDGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-001B34EC-903E-4448-863C-256B62C95F53.html">TCPIP_SNMP_TrapSendFlagGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5B3AAF37-93AA-401D-B7CD-D28AA4E7F1A2.html">TCPIP_SNMP_TrapSendFlagSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A0A2D32D-BDBE-4B12-B7C5-478283FE6A7C.html">TCPIP_SNMP_TrapSpecificNotificationGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C8CCD3C1-DE9B-410F-B924-83D4FAE8ED2C.html">TCPIP_SNMP_TrapSpecificNotificationSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-243E1FD7-D220-4F22-A76F-1C6467C973BF.html">TCPIP_SNMP_TrapTimeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-74D650FD-483B-49E2-AD07-CDC28CB5D7CC.html">TCPIP_SNMP_TRAPTypeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-123BF979-9342-48FD-BAFA-65AF224C4EF5.html">TCPIP_SNMP_TRAPv1Notify Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-80B1258C-5639-4C20-81D1-6B253609CA21.html">TCPIP_SNMP_TRAPv2Notify Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CE1E6891-8778-4B78-8DF8-98743975C78C.html">TCPIP_SNMP_ValidateTrapIntf Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2F85BB10-868F-4CC7-B4DF-D8F780841490.html">TCPIP_SNMP_VarbindGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-53A2E18F-48FD-478F-A5AA-46C48685700C.html">TCPIP_SNMP_VarbindSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A47F927D-FEE2-4271-88C5-255447EFDD1C.html">TCPIP_SNMP_WriteCommunityGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BCFFB578-25A1-4639-90F3-9500380B13A1.html">TCPIP_SNMP_WriteCommunitySet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B723237E-484E-42E2-A7DA-CCAC4BBE507B.html">TCPIP_SNMPV3_EngineUserDataBaseGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7ACBECE6-7FEC-42BA-9E8A-1DFD758509CA.html">TCPIP_SNMPV3_EngineUserDataBaseSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-941A2702-62E8-424D-8E43-B21B0A9FC1DA.html">TCPIP_SNMPv3_Notify Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-12045D71-B016-41AD-A0FA-28ACF7850FC6.html">TCPIP_SNMPV3_TARGET_ENTRY_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E58EF65B-97FD-46B4-A696-0A6B6F120F77.html">TCPIP_SNMPv3_TrapConfigDataGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2D3B8E39-56C5-4354-9971-1FF1912BCADC.html">TCPIP_SNMPV3_TrapTypeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5E4C405D-613A-4FA7-AE5E-4A7593890586.html">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7F43936A-7FCB-4575-9709-C92EFB582D83.html">TCPIP_SNMPV3_USM_USER_CONFIG Structure</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

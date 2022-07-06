@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="HTTP Net Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2B8CFDE8-2E18-48B2-A291-091F5C596CFD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4EC4A087-FE22-4E4F-A1D8-A037640F4A7A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-22EEE12A-8095-4263-A16B-6EB1BE211BFC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E8DD11CF-127A-464E-8684-3F9602872DA8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-78D816B5-80FB-448C-862E-4EAB327B951D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3EB90173-AE2B-4B3F-BE07-7BA9E443A82C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FCAE4AE8-9FF9-46FC-AA47-3AF9E35F1763.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-81628E5E-DA0C-4D2A-801B-319CC0432EDD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-743CF905-4A75-4FD2-AA75-781FE5A66CF4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-204D92AD-4B7A-4F86-ACC7-D685A54835DB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-646813C0-3BE6-4298-A3E0-6FDA23E38392.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-19CA1625-9912-4247-BC29-1346DB85056C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A55F1CC6-EB49-4F88-863C-2E7789CDC962.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F53C26EA-02E1-4A28-AFDE-D6899CC24A82.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B019DCF4-7677-4AA0-87CD-94705943F14A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-77E3B633-27B7-4B00-84F8-2ADB12C4497C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7645CE81-674E-46E5-9299-201CE93A0DB5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4B6D3FBF-37B0-4452-B11D-E9F23D830CE1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9A7BDDC3-1994-4804-A724-FE1590E504F5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0303C1A0-F9D1-44B6-A8DC-A3C82369CD36.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C22ADF63-1E80-4E6E-8566-7F263E5CA8A3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9FAAF46E-46AA-4A7B-BE01-F2D8FF635A2D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-869379C7-2E76-4AF2-B4E9-B268AB55F7FC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ED48CCA1-93DB-4F99-8ECB-CE1874AE2414.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CC4E1A18-4325-47FB-AF6B-FDEED3BA4D8D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F45EEB2E-070E-474F-BFFA-1ACB41751BB2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AB9D49A8-5234-4C22-A9A7-A9FA8BF21F23.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A7728F7D-46D9-4089-A9A8-3B446B322E63.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F811235C-7F42-45CF-8A73-2BC279A97F08.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-241A3E46-D4D6-4380-A754-1FFAE8BF89D5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C5E9B002-20FC-4712-A0C1-FB75538DA2CC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6F4B31B8-AF16-4486-984A-E3B14BB588A8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4442D4BA-8525-4E52-92DE-7492FEC95509.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-38561CC8-76E8-48BA-93B5-B308EBC5D409.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B48BB488-DB27-4BC0-8217-2C2A2E9A2ACA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C341DC5D-0DD5-40D1-B8C1-3DAB33D15327.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-14572904-72C8-4FEA-9C5C-55F4A7794723.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CD7B84FD-F56B-4DB7-956C-101907684AE5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-571D37CC-1208-420E-8098-12DB6C4D39E1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B0B218E3-BE98-416E-B734-FC88BB176B7B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-65E03364-0D0C-4608-9CA9-788C7D69E2FB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-30DF66DB-246B-4D1C-B7D0-B71D86DE145E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8EDFDD03-F79D-41A4-BA86-90DDDF65C1C7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BDAD3375-4B9E-475C-A7BE-E51C89360AC8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8F3FAFA4-F46C-417E-B212-34A6C28AEA3D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-678252B9-1A23-48D6-8843-1AED6826E8BB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F7857D7E-1D81-43D5-B705-788309082A19.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-59C7F6E7-5E5A-4142-822B-28D920D95FDA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8E81C406-F9B6-484F-A826-09C470DDA57A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-201C1000-E273-4BB9-BFD9-446B81D266C7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9572D9BA-CE2C-4C4C-9860-F6ABB4D79D6F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F9677C23-CF61-4D8D-98C0-BDF0783F8A01.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F9E03BA6-6E20-4AB5-8F60-9C17E98E36FD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-12D0A16F-A3EB-49E2-B710-8C30734C6275.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-64C0C411-DB7C-445C-8F9C-2E54B7F3BE98.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-50C1896B-DB0D-40D0-A254-9CDC74F60D59.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6222B855-ECB7-4F9B-8C5A-3A948AC136C2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4BFC71FD-058B-4267-95E7-CA41C886D179.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-36437C8B-F52A-4073-80EB-BF0BDCE50D0A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-324BD12A-4C52-4EB1-9DB8-6AAF52888A22.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-698DCD9B-D267-47B4-9483-1ECC2149D2A9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CE8E1F8C-AD43-4349-90C3-1AB8F2FDAFC3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58C75B00-D8C2-44F9-B3A3-DA128722BEE1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C832BF63-CCA3-42D7-B086-378DC5389728.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="http-net-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>HTTP Net Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-http-net-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="http-net-module">
+<h1 class="title topictitle1" id="ariaid-title1">HTTP Net Module</h1><div class="body"><p class="p">The HTTP Net Web Server module allows a development board to act as a Web server. This facilitates an easy method to view status information and control applications using any standard Web browser. It uses the Networking Presentation Layer to integrate with an external encryption services provider (usually wolfSSL) allowing for secure connections.</p>
+<blockquote class="lq"><p class="p">Note:  The HTTP_NET server supports encrypted communication by using the Networking Presentation layer to integrate an external encryption services provider (usually wolfSSL) for TLS support.</p>
+</blockquote>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-20ECEDDE-25E9-4932-A1D7-7CB916C7A43E-low.png" alt="HTTP NET Abstraction Model" /><br /><p class="p"><strong class="ph b">HTTP Net Features</strong></p>
+<p class="p">The HTTP Net module is a HTTP server module that works using the Networking Presentation Layer of the MPLAB Harmony framework. This allows it to support both encrypted and plain text connections.</p>
+<p class="p">Some of the key features of the HTTP Net module include:</p>
+<ul class="ul"><li class="li"><p class="p">The updated module implements HTTP 1.1 persistent connections by default, using the “Transfer-Encoding: chunked” HTTP header. It can be configured to operate with closing the connections like the previous HTTP server.</p>
+</li>
+<li class="li"><p class="p">The application has to dynamically register its HTTP processing functions with the HTTP Net server using the TCPIP_HTTP_NET_UserHandlerRegister call. The HTTP Net server no longer relies on well known function names.</p>
+</li>
+<li class="li"><p class="p">The HTTP Net server supports either secure or plain text connections, but not both simultaneously. The specification of a secure or non-secure connection can be easily done by:</p>
+<ul class="ul"><li class="li"><p class="p">Selecting the server listening port: 80 or 443</p>
+</li>
+<li class="li"><p class="p">Using the module configuration flags</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">The HTTP Net module reports run-time events that could be caught by the user application using the “eventReport” registered function that carries a TCPIP_HTTP_NET_EVENT_TYPE enumerated type</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Dynamic Variables Processing</strong></p>
+<p class="p">Parsing of the dynamic variables is done at run-time. The web pages could be changed at run-time, without the need for rebuilding the HTTP Net server. This allows the TCP/IP Stack to run as a library and only the application code to be changed accordingly. The application is required to register a “dynamicPrint” with the HTTP Net server. This function will be called at run-time to process the dynamic variables.</p>
+<p class="p">The supported syntax is ~var_name(param1, param2, …)~. When parsing a string like this within a web page, the HTTP Net server will invoke the “dynamicPrint” function using a TCPIP_HTTP_DYN_VAR_DCPT data structure that specifies the dynamic variable name, its number and type of parameters as well as each parameter value.</p>
+<p class="p">For example, the variable ~myVariable(2,6)~ will generate the “dynamicPrint” call with the following parameters:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e58', this);">Copy</button><code id="d80283e58" content="varDcpt.dynName = &#34;myVariable&#34;; &#xA;varDcpt.nArgs = 2; &#xA;varDcpt.dynArgs-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32; &#xA;varDcpt.dynArgs-&gt;argInt32 = 2; &#xA;(varDcpt.dynArgs + 1)-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32; &#xA;(varDcpt.dynArgs + 1)-&gt;argInt32 = 6; ">varDcpt.dynName = "myVariable"; 
+varDcpt.nArgs = 2; 
+varDcpt.dynArgs-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32; 
+varDcpt.dynArgs-&gt;argInt32 = 2; 
+(varDcpt.dynArgs + 1)-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32; 
+(varDcpt.dynArgs + 1)-&gt;argInt32 = 6; </code></pre><p class="p">String and int32_t variable types are currently supported.</p>
+<p class="p">The application needs to return a TCPIP_HTTP_DYN_PRINT_RES result specifying if it’s done with processing or it needs to be called again.</p>
+<p class="p">Applications no longer have direct access to the underlying transport socket for a HTTP connection. All of the data write operations need to go through the required API function: TCPIP_HTTP_NET_DynamicWrite. This function actually just attaches the data to be written to the connection, using data descriptors. The actual output occurs only when all data is gathered and the data size is known.</p>
+<p class="p">Buffers used in a TCPIP_HTTP_NET_DynamicWrite need to be persistent until the moment when the output is generated. RAM buffers are supported by using a “dynamicAck” (TCPIP_HTTP_NET_DynAcknowledge) type function. Once the output operation is completed the HTTP Net module will call back into the application indicating that the corresponding buffer is no longer used and can be freed/reused.</p>
+<p class="p">In situations where the dynamic variable print function needs to perform additional write operations, or simply needs to be called again, it must a special result code: TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_AGAIN. Typically this is used when outputting large amounts of data that cannot fit into one single buffer write operation or when the data is not available all at once.</p>
+<blockquote class="lq"><p class="p">Note:  The parsing of the files for dynamic content is done at run time. Therefore when generating the image, files that contain dynamic content should not be compressed!</p>
+</blockquote>
+<p class="p"><strong class="ph b">Include Files Processing</strong></p>
+<p class="p">The HTTP Net module dynamically parses the web pages and the file inclusion is done by the module itself, completely transparent for the application.</p>
+<p class="p">The included files can contain dynamic variables that are parsed at run time.</p>
+<p class="p"><strong class="ph b">File Processing</strong></p>
+<p class="p">File processing consists of the following:</p>
+<ul class="ul"><li class="li"><p class="p">An included file can include other files that have dynamic variables</p>
+</li>
+<li class="li"><p class="p">Application can include a file as part of its dynamic variable processing using the TCPIP_HTTP_NET_ConnectionFileInclude()API. That file can include other files.</p>
+</li>
+<li class="li"><p class="p">The only limit to the depth of inclusion is the memory resources and the TCPIP_HTTP_NET_MODULE_CONFIG:: maxRecurseLevel setting. A TCPIP_HTTP_NET_EVENT_DEPTH_ERROR event will be generated if the maximum depth is exceeded at run-time.</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">SSI Processing</strong></p>
+<p class="p">At run-time, the HTTP Net server processes a subset of the Server Side Includes (SSI) commands. SSI is a portable way to add small amounts of dynamic content on web pages in a standard way that is supported by most HTTP servers. Currently the #include, #set and #echo commands are supported. Other commands will be eventually added. This allows a better compatibility with other existing HTTP servers and is targeted at the removal of proprietary extensions.</p>
+<p class="p">Whenever executing an SSI command within a web page, the HTTP Net server will notify the application by using the registered SSI callback: ssiNotify. This callback contains a TCPIP_HTTP_SSI_NOTIFY_DCPT pointer to a structure describing the SSI context needed for processing:</p>
+<ul class="ul"><li class="li"><p class="p">File name the SSI command belongs to</p>
+</li>
+<li class="li"><p class="p">The SSI command line</p>
+</li>
+<li class="li"><p class="p">Number of SSI attributes and their values, etc.</p>
+</li>
+</ul>
+<p class="p">The application can do any modifications it chooses to and returns a value instructing the HTTP Net server if the processing of the command is necessary or not.</p>
+<p class="p"><em class="ph i">SSI include Command</em></p>
+<p class="p">The SSI Include command allows the dynamic inclusion of a file. The supported syntax is:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e120', this);">Copy</button><code id="d80283e120" content="&lt;!--#include virtual=&#34;file_name&#34; --&gt; or &lt;!--#include file=&#34;file_name&#34; --&gt;. ">&lt;!--#include virtual="file_name" --&gt; or &lt;!--#include file="file_name" --&gt;. </code></pre><p class="p">Currently the arguments for both “virtual” and “file” commands are passed unaltered to the SYS_FS, so they behave identically. However it is recommended that the original SSI significance for these keywords should be maintained:</p>
+<ul class="ul"><li class="li"><p class="p">Use “virtual” for specifying a URL relative to the document being server</p>
+</li>
+<li class="li"><p class="p">Use “file” for a file path, relative to the current directory (it cannot be an absolute path)
+The ~inc:file_name~ keyword is maintained for backward compatibility. However the SSI include command should be preferred.</p>
+</li>
+</ul>
+<p class="p"><em class="ph i">SSI set Command</em></p>
+<p class="p">The SSI set command allows to dynamically set a SSI variable value. The supported syntax is:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e137', this);">Copy</button><code id="d80283e137" content="&lt;!--#set var=&#34;v_name&#34; value=&#34;v_value&#34; --&gt;. ">&lt;!--#set var="v_name" value="v_value" --&gt;. </code></pre><p class="p">String or integer variables are supported. Variable reference is also supported:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e141', this);">Copy</button><code id="d80283e141" content="&lt;!--#set var=&#34;n_name&#34; value=&#34;$otherVar&#34; --&gt;. ">&lt;!--#set var="n_name" value="$otherVar" --&gt;. </code></pre><p class="p">This command will create or update the variable n_name to have the value of the variable otherVar, if it exists.</p>
+<p class="p">A new SSI variable will be created if a variable having the name v_name does not exist. If the variable v_name already exists, it will have its value updated as the result of this command.</p>
+<p class="p">An existing variable can be deleted using the empty value set command:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e149', this);">Copy</button><code id="d80283e149" content="&lt;!--#set var=&#34;v_name&#34; value=&#34;&#34; --&gt;.">&lt;!--#set var="v_name" value="" --&gt;.</code></pre><p class="p"><em class="ph i">SSI echo Command</em>
+The SSI echo command allows the dynamic print of a SSI variable. The supported syntax is:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d80283e156', this);">Copy</button><code id="d80283e156" content="&lt;!--#echo var=&#34;v_name&#34; --&gt;.">&lt;!--#echo var="v_name" --&gt;.</code></pre><p class="p">If the application ssiNotify exists, the HTTP Net server will call it and the application may choose to change the current value dynamically. If ssiNotify returns false, the HTTP Net server will display the current value of the variable v_name as part of the current page.</p>
+<p class="p">The SSI API can be used to evaluate or change the current value of the SSI variables:</p>
+<ul class="ul"><li class="li"><p class="p">TCPIP_HTTP_NET_SSIVariableGet</p>
+</li>
+<li class="li"><p class="p">TCPIP_HTTP_NET_SSIVariableSet</p>
+</li>
+<li class="li"><p class="p">TCPIP_HTTP_NET_SSIVariableDelete</p>
+</li>
+</ul>
+<p class="p">The maximum number of SSI variables is under the control of the application by using the configuration parameter: TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER.</p>
+<p class="p"><strong class="ph b">mpfs2.jar Utility</strong></p>
+<p class="p"><em class="ph i">Dynamic Variable Processing</em></p>
+<p class="p">The HTTP Net server does not use the DynRecord.bin and FileRcrd.bin files for processing the dynamic variables. The parsing and processing of dynamic variables is done at run-time. Therefore, the mpfs2.jar utility is no longer necessary, other than to generate a mpfs_img2.c image file for the NVM MPFS image.</p>
+<p class="p"><em class="ph i">Application Custom Support Files</em></p>
+<p class="p">The application custom support files generated with MHC have new names: custom_http_net_app.c and http_net_print.c. However, the http_net_print.c file is not generated by the mpfs2 utility and is maintained only for easy comparison between HTTP and HTTP Net application processing. The custom_http_net_app.c file is entirely generated using a MHC template file and it is not dynamically updated in any way by the mpfs2 utility.</p>
+<p class="p"><em class="ph i">Generated File Name</em></p>
+<p class="p">Currently the name of the generated file for MPFS image is maintained unchanged: mpfs_img2.c.</p>
+<p class="p"><em class="ph i">MPFS Image Generation for Internal NVM Storage</em></p>
+<p class="p">The mpfs2 utility can still be used to generate the MPFS image for internal NVM storage. It can also be useful because it parses the web pages and comes out with the http_print.c file that contains the list of TCPIP_HTTP_Print functions. This can be helpful in gathering info about the dynamic variables that are contained within the web pages.</p>
+<blockquote class="lq"><p class="p">Note:  For demonstration applications that use SSI, the file inclusion is now done in a standard way using HTML (i.e., .htm) files. Therefore, when generating the image, *.htm must be added to Advanced Settings &gt; Do Not Compress.</p>
+</blockquote>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d80283e210"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d80283e212"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CACHE_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Max lifetime (sec) of static responses as string</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CONFIG_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Define the HTTP module configuration flags Use 0 for default See HTTP_MODULE_FLAGS definition for possible values</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Size of the buffer used for sending the cookies to the client. Should be able to accommodate the longest cookie response. Otherwise the cookies will be truncated.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DEFAULT_FILE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Indicate what HTTP file to serve when no specific one is requested</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DYNVAR_ARG_MAX_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum number of arguments for a dynamic variable</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>how many buffers descriptors for dynamic variable processing they are independent of the HTTP connection number all the HTTP connections use from the dynamic descriptors pool</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DYNVAR_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum size for a complete dynamic variable: name + args must be &lt;= TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE! If it is much larger than needed then inefficiency occurs when reading data from the file and then discarding it because a much larger than needed data buffer was read</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Configure MPFS over HTTP updating Comment this line to disable updating via HTTP</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILE_UPLOAD_NAME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>This is macro TCPIP_HTTP_NET_FILE_UPLOAD_NAME.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Size of the peek buffer to perform searches into. If the underlying transport layer supports offset peak operation with a offset, the value could be smaller (80 characters, for example); otherwise, a one time peek is required and the buffer should be larger - recommended to be close to the size of the socket RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MAX_CONNECTIONS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Maximum numbers of simultaneous supported HTTP connections.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MAX_DATA_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Define the maximum data length for reading cookie and GET/POST arguments (bytes)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MAX_HEADER_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>The length of longest header string that can be parsed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>The maximum depth of recursive calls for serving a web page: no dynvars files: 1; file including a file: 2 ; if the include file includes another file: +1 ; if a dyn variable: +1; Default value is 3;</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Size of the buffer used for sending the response messages to the client. Should be able to accommodate the longest server response: Default setting should be 300 bytes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Define the size of the RX buffer for the HTTP socket Use 0 for default TCP socket value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Define the size of the TX buffer for the HTTP socket Use 0 for default TCP socket value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_TASK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>The HTTP task rate, ms The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Max time (sec) to await for more HTTP client data in an active connection state before timing out and disconnecting the socket</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_USE_AUTHENTICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Enable basic authentication support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_USE_COOKIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Enable cookie support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_USE_POST</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Define which HTTP modules to use If not using a specific module, comment it to save resources Enable POST support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CHUNK_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>retry limit for allocating a chunk from the pool If more retries are not successful the operation will be aborted</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CHUNKS_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>number of chunks that are created It depends on the TCPIP_HTTP_NET_MAX_RECURSE_LEVEL and on the number of connections Maximum number should be TCPIP_HTTP_NET_MAX_CONNECTIONS * TCPIP_HTTP_NET_MAX_RECURSE_LEVEL i.e. TCPIP_HTTP_NET_MODULE_CONFIG::nConnections * TCPIP_HTTP_NET_MODULE_CONFIG::nChunks All the chunks are in a pool and are used by all connections</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DYNVAR_PROCESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>This symbol enables the processing of dynamic variables Make it evaluate to false (0) if dynamic variables are not needed All the following symbols referring to dynamic variables are relevant only when TCPIP_HTTP_NET_DYNVAR_PROCESS != 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>retry limit for a dynamic variable processing ths puts a limit on the number of times a dynamic variable "dynamicPrint" function can return TCPIP_HTTP_DYN_PRINT_RES_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN and avoids having the HTTP code locked up forever. If more retries are attempted the processing will be considered done and dynamicPrint function will not be called again</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Retry limit for allocating a file buffer from the pool. If more retries are not successful the operation will be aborted.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Size of the buffer used for processing HTML, dynamic variable and binary files. For dynamic variable files it should be able to accommodate the longest HTML line size, including CRLF!</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Number of file buffers to be created; These buffers are used to store data while file processing is done They are organized in a pool Each file being processed needs a file buffer and tries to get it from the pool If a buffer is not available, the HTTP conenction will wait for one to become available. Once the file is done the file buffer is released and could be used by a different file The number depends on the number of files that are processed in parallel To avoid deadlock the number should be &gt;= than the number of... more</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FILENAME_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum size of a HTTP file name with the path removed from the file name one extra char added for the string terminator</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum number of attributes for a SSI command most SSI commands take just one attribute/value pair per line but multiple attribute/value pairs on the same line are allowed where it makes sense</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_CMD_MAX_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum size for a SSI command line: command + attribute/value pairs must be &lt;= TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE! If it is much larger than needed then inefficiency occurs when reading data from the file and then discarding it because a much larger than needed data buffer was read</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>message to echo when echoing a not found variable</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_PROCESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>This symbol enables the processing of SSI commands Make it evaluate to false (0) if SSI commands are not needed All the following symbols referring to SSI commands are relevant only when TCPIP_HTTP_NET_SSI_PROCESS != 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_STATIC_ATTTRIB_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>number of static attributes associated to a SSI command if the command has more attributes than this number the excess will be allocated dynamically</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum length of a SSI variable name any excess characters will be truncated Note that this can result in multiple variables being represented as one SSI variable</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum size of a SSI string variable value any excess characters will be truncated Note that the variable value requires SSI storage that's allocated dynamically Also, this value determines the size of an automatic (stack) buffer when the variable is echoed. If this value is large, make sure you have enough stack space.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>maximum number of SSI variables that can be created at run time These variables are stored in an internal hash. For max. efficiency this number should be a prime.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CONNECTION_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Persistent connection idle timeout, in seconds If a persistent connection is idle for more that this timeout the server will close it. Usually the client closes the connection. Using this timeout value the server can close the its side of the connection to avoid all connections to remain indefinitely open if the client misbehaves. Use 0 to never timeout. The timeout value has to be &lt;= 32767 seconds.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span><em class="ph i">HTTP_NET_CONFIG_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>This is macro <em class="ph i">HTTP_NET_CONFIG_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_FREE_FUNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP corresponding deallocation function, free style This is the function the HTTP will call for freeing the allocated memory Use standard C library 'free' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MALLOC_FUNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP allocation function, malloc style This is the function the HTTP will call to allocate memory needed for: dynamic variables, SSI or file uploads. Use standard C library 'malloc' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionByteCountDec</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Decrements the connection byte count.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionByteCountSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets how many bytes are available to be read.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionCallbackPosSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets the callback position indicator.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionDiscard</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Discards any pending data in the connection RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionFlush</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Immediately transmits all connection pending TX data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionHasArgsSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets whether there are get or cookie arguments.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionIsAuthorizedSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets the authorized state for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionNetHandle</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns the network handle of the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPeek</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Reads a specified number of data bytes from the connection RX buffer without removing them from the buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPostSmSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Set the POST state machine state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Reads an array of data bytes from a connection's RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionReadBufferSize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns the size of the connection RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionReadIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Determines how many bytes can be read from the connection RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionStatusSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets HTTP status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionStringFind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Helper to find a string of characters in an incoming connection buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionUserDataSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Sets the user data parameter for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DynamicWrite</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Writes a data buffer to the current connection</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DynamicWriteString</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Helper for writing a string within a dynamic variable context.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_URLDecode</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Parses a string from URL encoding to plain text.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_UserHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Deregisters a previously registered HTTP user handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_UserHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Registers a user callback structure with the HTTP server</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ActiveConnectionCountGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets the number of active (and inactive) connections.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ArgGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Locates a form field value in a given data array.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionByteCountGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns how many bytes are available to be read.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionCallbackPosGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns the callback position indicator.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionDataBufferGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns pointer to connection general purpose data buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionFileGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Get handle to current connection's file.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionHasArgsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Checks whether there are get or cookie arguments.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionIsAuthorizedGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets the authorized state for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPostSmGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Get the POST state machine state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionSocketGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Get the socket for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionStatusGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets HTTP status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionUserDataGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets the user data parameter for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPostNameRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Reads a name from a URL encoded string in the network transport buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPostValueRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Reads a value from a URL encoded string in the network transport buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionDataBufferSizeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns the size of the connection general purpose data buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionDynamicDescriptors</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Returns the number of dynamic variable descriptors</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSIVariableDelete</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Function to delete an SSI variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSIVariableGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Function to get access to an existing SSI variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSIVariableGetByIndex</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Function to get access to an existing SSI variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSIVariableSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Function to set an SSI variable.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_SSIVariablesNumberGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Function to get the number of the current SSI variables.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionHandleGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets the connection handle of a HTTP connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionIndexGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Gets the index of the HTTP connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_DynamicFileInclude</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Dynamically includes/writes a file to the HTTP connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>_tag_TCPIP_HTTP_NET_USER_CALLBACK</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP user implemented callback data structure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_DYN_ARG_DCPT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP dynamic argument descriptor.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_DYN_ARG_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP supported dynamic variables argument types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_DYN_PRINT_RES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Dynamic print result when a dynamic variable print callback function returns;</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_DYN_VAR_DCPT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP dynamic variable descriptor.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_DYN_VAR_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP supported dynamic variables flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_CONN_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP connection identifier, handle of a HTTP connection</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP reported run-time events.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_IO_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Result states for execution callbacks</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP module dynamic configuration data</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_MODULE_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP module configuration flags Multiple flags can be OR-ed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_READ_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Result states for TCPIP_HTTP_NET_ConnectionPostNameRead, TCPIP_HTTP_NET_ConnectionPostValueRead and TCPIP_HTTP_NET_ConnectionPostReadPair</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Supported Commands and Server Response Codes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_USER_CALLBACK</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP user implemented callback data structure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_USER_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP user handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_NET_ConnectionPostReadPair</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>Reads a name and value pair from a URL encoded string in the network transport buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_SSI_ATTR_DCPT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP SSI attribute descriptor.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>TCPIP_HTTP_SSI_NOTIFY_DCPT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>HTTP SSI notification descriptor.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e210 "><span>_<em class="ph i">HTTP_NET_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d80283e212 "><span>This is macro _<em class="ph i">HTTP_NET_H</em>.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-2B8CFDE8-2E18-48B2-A291-091F5C596CFD.html">_HTTP_NET_H Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4EC4A087-FE22-4E4F-A1D8-A037640F4A7A.html">TCPIP_HTTP_DYN_ARG_DCPT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-22EEE12A-8095-4263-A16B-6EB1BE211BFC.html">TCPIP_HTTP_DYN_ARG_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E8DD11CF-127A-464E-8684-3F9602872DA8.html">TCPIP_HTTP_DYN_PRINT_RES Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-78D816B5-80FB-448C-862E-4EAB327B951D.html">TCPIP_HTTP_DYN_VAR_DCPT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3EB90173-AE2B-4B3F-BE07-7BA9E443A82C.html">TCPIP_HTTP_DYN_VAR_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FCAE4AE8-9FF9-46FC-AA47-3AF9E35F1763.html">TCPIP_HTTP_NET_ActiveConnectionCountGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-81628E5E-DA0C-4D2A-801B-319CC0432EDD.html">TCPIP_HTTP_NET_ArgGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-743CF905-4A75-4FD2-AA75-781FE5A66CF4.html">TCPIP_HTTP_NET_CONN_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-204D92AD-4B7A-4F86-ACC7-D685A54835DB.html">TCPIP_HTTP_NET_ConnectionByteCountDec Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-646813C0-3BE6-4298-A3E0-6FDA23E38392.html">TCPIP_HTTP_NET_ConnectionByteCountGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-19CA1625-9912-4247-BC29-1346DB85056C.html">TCPIP_HTTP_NET_ConnectionByteCountSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A55F1CC6-EB49-4F88-863C-2E7789CDC962.html">TCPIP_HTTP_NET_ConnectionCallbackPosGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F53C26EA-02E1-4A28-AFDE-D6899CC24A82.html">TCPIP_HTTP_NET_ConnectionCallbackPosSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B019DCF4-7677-4AA0-87CD-94705943F14A.html">TCPIP_HTTP_NET_ConnectionDataBufferGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-77E3B633-27B7-4B00-84F8-2ADB12C4497C.html">TCPIP_HTTP_NET_ConnectionDataBufferSizeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7645CE81-674E-46E5-9299-201CE93A0DB5.html">TCPIP_HTTP_NET_ConnectionDiscard Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4B6D3FBF-37B0-4452-B11D-E9F23D830CE1.html">TCPIP_HTTP_NET_ConnectionDynamicDescriptors Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9A7BDDC3-1994-4804-A724-FE1590E504F5.html">TCPIP_HTTP_NET_ConnectionFileGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0303C1A0-F9D1-44B6-A8DC-A3C82369CD36.html">TCPIP_HTTP_NET_ConnectionFlush Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C22ADF63-1E80-4E6E-8566-7F263E5CA8A3.html">TCPIP_HTTP_NET_ConnectionHandleGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9FAAF46E-46AA-4A7B-BE01-F2D8FF635A2D.html">TCPIP_HTTP_NET_ConnectionHasArgsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-869379C7-2E76-4AF2-B4E9-B268AB55F7FC.html">TCPIP_HTTP_NET_ConnectionHasArgsSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ED48CCA1-93DB-4F99-8ECB-CE1874AE2414.html">TCPIP_HTTP_NET_ConnectionIndexGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CC4E1A18-4325-47FB-AF6B-FDEED3BA4D8D.html">TCPIP_HTTP_NET_ConnectionIsAuthorizedGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F45EEB2E-070E-474F-BFFA-1ACB41751BB2.html">TCPIP_HTTP_NET_ConnectionHasArgsSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AB9D49A8-5234-4C22-A9A7-A9FA8BF21F23.html">TCPIP_HTTP_NET_ConncetionNetHandle Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A7728F7D-46D9-4089-A9A8-3B446B322E63.html">TCPIP_HTTP_NET_ConnectionPeek Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F811235C-7F42-45CF-8A73-2BC279A97F08.html">TCPIP_HTTP_NET_ConnectionPostNameRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-241A3E46-D4D6-4380-A754-1FFAE8BF89D5.html">TCPIP_HTTP_NET_ConnectionPostReadPair Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C5E9B002-20FC-4712-A0C1-FB75538DA2CC.html">TCPIP_HTTP_NET_ConnectionPostSmGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6F4B31B8-AF16-4486-984A-E3B14BB588A8.html">TCPIP_HTTP_NET_ConnectionPostSmSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4442D4BA-8525-4E52-92DE-7492FEC95509.html">TCPIP_HTTP_NET_ConnectionPostValueRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-38561CC8-76E8-48BA-93B5-B308EBC5D409.html">TCPIP_HTTP_NET_ConnectionRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B48BB488-DB27-4BC0-8217-2C2A2E9A2ACA.html">TCPIP_HTTP_NET_ConnectionReadBufferSize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C341DC5D-0DD5-40D1-B8C1-3DAB33D15327.html">TCPIP_HTTP_NET_ConnectionReadIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-14572904-72C8-4FEA-9C5C-55F4A7794723.html">TCPIP_HTTP_NET_ConnectionSocketGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CD7B84FD-F56B-4DB7-956C-101907684AE5.html">TCPIP_HTTP_NET_ConnectionStatusGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-571D37CC-1208-420E-8098-12DB6C4D39E1.html">TCPIP_HTTP_NET_ConnectionStatusSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B0B218E3-BE98-416E-B734-FC88BB176B7B.html">TCPIP_HTTP_NET_ConnectionStringFind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-65E03364-0D0C-4608-9CA9-788C7D69E2FB.html">TCPIP_HTTP_NET_ConnectionUserDataGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-30DF66DB-246B-4D1C-B7D0-B71D86DE145E.html">TCPIP_HTTP_NET_ConnectionUserDataSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8EDFDD03-F79D-41A4-BA86-90DDDF65C1C7.html">TCPIP_HTTP_NET_DynamicFileInclude Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BDAD3375-4B9E-475C-A7BE-E51C89360AC8.html">TCPIP_HTTP_NET_DynamicWrite Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8F3FAFA4-F46C-417E-B212-34A6C28AEA3D.html">TCPIP_HTTP_NET_DynamicWriteString Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-678252B9-1A23-48D6-8843-1AED6826E8BB.html">TCPIP_HTTP_NET_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F7857D7E-1D81-43D5-B705-788309082A19.html">TCPIP_HTTP_NET_IO_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-59C7F6E7-5E5A-4142-822B-28D920D95FDA.html">TCPIP_HTTP_NET_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8E81C406-F9B6-484F-A826-09C470DDA57A.html">TCPIP)HTTP_NET_MODULE_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-201C1000-E273-4BB9-BFD9-446B81D266C7.html">TCPIP_HTTP_NET_READ_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9572D9BA-CE2C-4C4C-9860-F6ABB4D79D6F.html">TCPIP_HTTP_NET_SSIVariableDelete Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F9677C23-CF61-4D8D-98C0-BDF0783F8A01.html">TCPIP_HTTP_NET_SSIVariableGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F9E03BA6-6E20-4AB5-8F60-9C17E98E36FD.html">TCPIP_HTTP_NET_SSIVariableGetByIndex Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-12D0A16F-A3EB-49E2-B710-8C30734C6275.html">TCPIP_HTTP_NET_SSIVariableSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-64C0C411-DB7C-445C-8F9C-2E54B7F3BE98.html">TCPIP_HTTP_NET_SSIVariablesNumberGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-50C1896B-DB0D-40D0-A254-9CDC74F60D59.html">TCPIP_HTTP_NET_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6222B855-ECB7-4F9B-8C5A-3A948AC136C2.html">TCPIP_HTTP_NET_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4BFC71FD-058B-4267-95E7-CA41C886D179.html">TCPIP_HTTP_NET_URLDecode Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-36437C8B-F52A-4073-80EB-BF0BDCE50D0A.html">TCPIP_HTTP_NET_USER_CALLBACK Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-324BD12A-4C52-4EB1-9DB8-6AAF52888A22.html">TCPIP_HTTP_NET_USER_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-698DCD9B-D267-47B4-9483-1ECC2149D2A9.html">TCPIP_HTTP_NET_UserHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CE8E1F8C-AD43-4349-90C3-1AB8F2FDAFC3.html">TCPIP_HTTP_NET_UserHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58C75B00-D8C2-44F9-B3A3-DA128722BEE1.html">TCPIP_HTTP_SSI_ATTR_DCPT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C832BF63-CCA3-42D7-B086-378DC5389728.html">TCPIP_HTTP_SSI_NOTIFY_DCPT Structure</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

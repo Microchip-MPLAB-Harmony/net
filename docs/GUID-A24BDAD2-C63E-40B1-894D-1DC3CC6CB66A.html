@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Ethernet GMAC Driver Library" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A4833A60-F6A0-4EC8-8F8E-A0ABF7C0B545.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4F98C91D-7BB3-4806-B6BB-AE327FE987A1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2EB734CC-B9C6-455E-9884-2DBAB08E1EA8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3FCD898D-4FBE-45F7-90AF-5AFA95E68831.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-622D99A6-36C4-45DC-98D4-95EFDA77AA18.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2A0AD6C6-F354-47C7-BBF8-FD4B8D918EAD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A0386E9E-955F-4A64-8E05-C5A3DB49EE36.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EC961F58-4F67-4CB1-A47F-22AEE2FC3327.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-805F2DE9-7E0B-4B05-89A4-AEB96FDC36E6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-439D69E3-ABD1-4304-BDCB-F8DBA503B7EB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4882F386-766E-438D-8CDD-0F9D48F29610.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0CD0B980-1595-4B23-90C9-8CDD654F99C5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8C5BDD05-DD86-40A9-B4D0-8DF92452F7C7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-59E56A40-997A-4938-8323-43385CAAB59F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AF9C23DA-AF83-441B-8598-6D10D255B441.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9AA24DCC-E1F4-42A4-A028-45365EA4B1BF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BB4AAF17-373C-48C5-88D6-C15D9E926EBE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1A2A6D25-8F46-4DCB-806C-18384140A6BC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F246FB89-BF12-48D4-B25C-AE8239E4C104.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-608FBC47-100D-4D70-AED4-BE906B761FC9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-30247EE9-2918-44C6-89A5-06347C527C83.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ethernet-gmac-driver-library" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Ethernet GMAC Driver Library</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ethernet-gmac-driver-library" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-A24BDAD2-C63E-40B1-894D-1DC3CC6CB66A"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ethernet-gmac-driver-library">
+<h1 class="title topictitle1" id="ariaid-title1">Ethernet GMAC Driver Library</h1><div class="body"><p class="p">The Ethernet Media Access Controller (GMAC) module implements a 10/100 Mbps Ethernet MAC, compatible with the IEEE 802.3 standard. The GMAC can operate in either half or full duplex mode at all supported speeds.</p>
+<p class="p">Embedded Characteristics</p>
+<ul class="ul"><li class="li"><p class="p">Compatible with IEEE Standard 802.3</p>
+</li>
+<li class="li"><p class="p">10, 100 Mbps operation</p>
+</li>
+<li class="li"><p class="p">Full and half duplex operation at all supported speeds of operation</p>
+</li>
+<li class="li"><p class="p">Statistics Counter Registers for RMON/MIB</p>
+</li>
+<li class="li"><p class="p">MII interface to the physical layer</p>
+</li>
+<li class="li"><p class="p">Integrated physical coding</p>
+</li>
+<li class="li"><p class="p">Direct memory access (DMA) interface to external memory</p>
+</li>
+<li class="li"><p class="p">Support for 6 priority queues in DMA</p>
+</li>
+<li class="li"><p class="p">8 KB transmit RAM and 4 KB receive RAM</p>
+</li>
+<li class="li"><p class="p">Programmable burst length and endianism for DMA</p>
+</li>
+<li class="li"><p class="p">Interrupt generation to signal receive and transmit completion, errors or other events</p>
+</li>
+<li class="li"><p class="p">Automatic pad and cyclic redundancy check (CRC) generation on transmitted frames</p>
+</li>
+<li class="li"><p class="p">Automatic discard of frames received with errors</p>
+</li>
+<li class="li"><p class="p">Receive and transmit IP, TCP and UDP checksum offload. Both IPv4 and IPv6 packet types supported</p>
+</li>
+<li class="li"><p class="p">Address checking logic for four specific 48-bit addresses, four type IDs, promiscuous mode, hash matching of unicast and multicast destination addresses and Wake-on-LAN</p>
+</li>
+<li class="li"><p class="p">Management Data Input/Output (MDIO) interface for physical layer management</p>
+</li>
+<li class="li"><p class="p">Support for jumbo frames up to 10240 Bytes</p>
+</li>
+<li class="li"><p class="p">Full duplex flow control with recognition of incoming pause frames and hardware generation of transmitted pause frames</p>
+</li>
+<li class="li"><p class="p">Half duplex flow control by forcing collisions on incoming frames</p>
+</li>
+<li class="li"><p class="p">Support for 802.1Q VLAN tagging with recognition of incoming VLAN and priority tagged frames</p>
+</li>
+<li class="li"><p class="p">Support for 802.1Qbb priority-based flow control</p>
+</li>
+<li class="li"><p class="p">Programmable Inter Packet Gap (IPG) Stretch</p>
+</li>
+<li class="li"><p class="p">Recognition of IEEE 1588 PTP frames</p>
+</li>
+<li class="li"><p class="p">IEEE 1588 time stamp unit (TSU)</p>
+</li>
+<li class="li"><p class="p">Support for 802.1AS timing and synchronization</p>
+</li>
+<li class="li"><p class="p">Supports 802.1Qav traffic shaping on two highest priority queues</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">The Ethernet Controller provides the modules needed to implement a 10/100 Mbps Ethernet node using an external Ethernet PHY chip. The PHY chip provides a digital-analog interface as part of the Physical Layer and the controller provides the Media Access Controller (MAC)_layer above the PHY.</p>
+<p class="p">As shown in figure below, the Ethernet Controller consists of the following modules:</p>
+<ul class="ul"><li class="li"><p class="p">Media Access Control (MAC) block: Responsible for implementing the MAC functions of the Ethernet IEEE 802.3 Specification</p>
+</li>
+<li class="li"><p class="p">Flow Control (FC) block: Responsible for control of the transmission of PAUSE frames. (Reception of PAUSE frames is handled within the MAC.)</p>
+</li>
+<li class="li"><p class="p">RX Filter (RXF) block: This module performs filtering on every receive packet to determine whether each packet should be accepted or rejected</p>
+</li>
+<li class="li"><p class="p">TX DMA/TX Buffer Management Engine: The TX DMA and TX Buffer Management engines perform data transfers from the memory (using descriptor tables) to the MAC Transmit Interface</p>
+</li>
+<li class="li"><p class="p">RX DMA/RX Buffer Management Engine: The RX DMA and RX Buffer Management engines transfer receive packets from the MAC to the memory (using descriptor tables)</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-F5DACACF-A288-4829-A389-BC3CA23009EF-low.png" alt="ETHC_Block" /><br /><p class="p">For completeness, we also need to look at the interface diagram of a representative Ethernet PHY. As shown in Figure 2, the PHY has two interfaces, one for configuring and managing the PHY (SMI/MIIM) and another for transmit and receive data (RMII or MII). The SMI/MIIM interface is the responsibility of the Ethernet PHY Driver Library. When setting up the Ethernet PHY, this Ethernet driver calls primitives from the Ethernet PHY Driver library. The RMII/MII data interface is the responsibility of the Ethernet MAC Driver Library (this library).</p>
+<br /><img class="image" src="GUID-C9F74FE2-DFA7-40A7-811C-F64256ED779F-low.png" alt="SMSC LAN8720 Block Diagram" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d119819e136"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d119819e138"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Client Level Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Close</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Closes a client instance of the PIC32 MAC Driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Open</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Opens a client instance of the PIC32 MAC Driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Deinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Deinitializes the PIC32 Ethernet MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Initialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Initializes the PIC32 Ethernet MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Reinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Reinitializes the PIC32 Ethernet MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Receive Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_PacketRx</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>This is the MAC receive function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_RxFilterHashTableEntrySet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Sets the current MAC hash table receive filter.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Transmit Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_PacketTx</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>MAC driver transmit function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Event Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_EventAcknowledge</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Acknowledges and re-enables processed events.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_EventMaskSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Enables/disables the MAC events.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_EventPendingGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Returns the currently pending events.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Other Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_ConfigGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Gets the current MAC driver configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_LinkCheck</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Checks current link status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_ParametersGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>MAC parameter get function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_PowerMode</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Selects the current power mode for the Ethernet MAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Process</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>MAC periodic processing function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_RegisterStatisticsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Gets the current MAC hardware statistics registers.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Provides the current status of the MAC driver module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_StatisticsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Gets the current MAC statistics.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_Tasks</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Maintains the EThernet MAC driver's state machine.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>DRV_GMAC_INDEX_COUNT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>Number of valid Ethernet driver indices.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span>_DRV_GMAC_H</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span>This is macro _DRV_GMAC_H.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e136 "><span> </span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d119819e138 "><span> </span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-A4833A60-F6A0-4EC8-8F8E-A0ABF7C0B545.html">DRV_GMAC_Close Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4F98C91D-7BB3-4806-B6BB-AE327FE987A1.html">DRV_GMAC_ConfigGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2EB734CC-B9C6-455E-9884-2DBAB08E1EA8.html">DRV_GMAC_Deinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3FCD898D-4FBE-45F7-90AF-5AFA95E68831.html">DRV_GMAC_EventAcknowledge Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-622D99A6-36C4-45DC-98D4-95EFDA77AA18.html">DRV_GMAC_EventMaskSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2A0AD6C6-F354-47C7-BBF8-FD4B8D918EAD.html">DRV_GMAC_EventPendingGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A0386E9E-955F-4A64-8E05-C5A3DB49EE36.html">DRV_GMAC_INDEX_COUNT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EC961F58-4F67-4CB1-A47F-22AEE2FC3327.html">DRV_GMAC_Initialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-805F2DE9-7E0B-4B05-89A4-AEB96FDC36E6.html">DRV_GMAC_LinkCheck Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-439D69E3-ABD1-4304-BDCB-F8DBA503B7EB.html">DRV_GMAC_Open Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4882F386-766E-438D-8CDD-0F9D48F29610.html">DRV_GMAC_PacketRx Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0CD0B980-1595-4B23-90C9-8CDD654F99C5.html">DRV_GMAC_PacketTx Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8C5BDD05-DD86-40A9-B4D0-8DF92452F7C7.html">DRV_GMAC_ParametersGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-59E56A40-997A-4938-8323-43385CAAB59F.html">DRV_GMAC_PowerMode Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AF9C23DA-AF83-441B-8598-6D10D255B441.html">DRV_GMAC_Process Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9AA24DCC-E1F4-42A4-A028-45365EA4B1BF.html">DRV_GMAC_RegisterStatisticsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BB4AAF17-373C-48C5-88D6-C15D9E926EBE.html">DRV_GMAC_Reinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1A2A6D25-8F46-4DCB-806C-18384140A6BC.html">DRV_GMAC_RxFilterHashTableEntrySet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F246FB89-BF12-48D4-B25C-AE8239E4C104.html">DRV_GMAC_StatisticsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-608FBC47-100D-4D70-AED4-BE906B761FC9.html">DRV_GMAC_Status Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-30247EE9-2918-44C6-89A5-06347C527C83.html">DRV_GMAC_Tasks Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

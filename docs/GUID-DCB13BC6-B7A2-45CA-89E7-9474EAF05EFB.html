@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="IGMP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9F3B95DE-F127-481D-8456-3405E093B3B5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FF2D219A-C393-4997-BB07-0E154846FA02.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-077C63BB-3BEF-4AD0-912B-54F67EFCD6F3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3FB194B0-D981-437C-A414-589E2F6AA6B1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3677FC08-B717-4AF7-A6F7-0255D4A37ECB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-31B86115-03F3-41B6-B2A0-77E01FE35D84.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-613CC0F0-8DDF-4B50-ABF5-12633AE21D65.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EB4FEDE2-B865-4A2B-A345-CE10E6447167.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-717CE47B-9DA1-4C30-AFBE-1807B04FCFC4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CD5B40E8-2DB7-4F6A-BC85-4178EC2A05E9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5096062A-E0FC-47ED-84D7-2B89E4D066A5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-87849350-1F04-4175-887F-0EB875774E92.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6144796B-8069-4B41-BF89-981E67656516.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-77B72E29-93E6-4604-ADED-4A3D10585673.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-949459F3-589F-4E96-A337-0A34DD9A8F1F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A97488A2-3063-4B2C-98A3-085563D4CA3C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-587A9A50-323B-4310-A7D0-CDA58E9123CB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2C68C719-82B4-46CC-A8D8-5B9205D81E6F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C2B672F3-CF8F-44EB-9942-706F420D5CC2.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="igmp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>IGMP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-igmp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-DCB13BC6-B7A2-45CA-89E7-9474EAF05EFB"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="igmp-module">
+<h1 class="title topictitle1" id="ariaid-title1">IGMP Module</h1><div class="body"><p class="p">The IGMP module implements the IGMPv3 protocol. This protocol is used by hosts and routers to establish multicast group memberships.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">IGMP Software Abstraction Block Diagram</p>
+<br /><img class="image" src="GUID-D20219EB-3633-4BCB-80FB-4DBC166D34C6-low.png" alt="TCPIP IGMP Abstraction Model" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d49911e29"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d49911e31"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span><em class="ph i">IGMP_CONFIG_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>This is macro <em class="ph i">IGMP_CONFIG_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_INTERFACES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>the maximum number of interfaces that support IGMP Should be &lt;= interfaces that are present at the stack initialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_MCAST_GROUPS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>maximum number of multicast groups (addresses) for which a IGMP application can subscribe Each group can listen to multiple sources Should be prime number for best performance</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_ROBUSTNESS_VARIABLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>The default Robustness Variable value The Robustness Variable allows tuning for the expected packet loss on a network. If a network is expected to be lossy, the Robustness Variable may be increased. IGMP is robust to (Robustness Variable - 1) packet losses. RFC 3376 IGMPv3: The Robustness Variable MUST NOT be zero, and SHOULD NOT be one. Default: 2 This is just a default value. The actual value is taken from a router query.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>maximum number of socket records that are part of a IGMP source unicast address for a specific group G Note that same socket may need multiple records if it listens on multiple interfaces! When operating in IGMPv2 style, it represents the total number of sockets that can join/leave a specific group.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_SOURCES_PER_GROUP</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>maximum number of unicast sources per group a IGMP application can listen to Each unicast source can be used by multiple sockets Should be prime number for best performance</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>The IGMP task processing rate: number of milliseconds to generate an IGMP tick. This is the tick that advances the IGMP state machine. The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>The default Unsolicited Report Interval, milliseconds The Unsolicited Report Interval is the time between repetitions of a host’s initial report of membership in a group. RFC 3376 IGMPv3: Default: 1 second.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_USER_NOTIFICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>enable/disable user notification functions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMPV2_SUPPORT_ONLY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>If this symbol is !0, then only Join and Leave operations are supported, without support for source addresses required by IGMPv3 This results in smaller code and less RAM needed by the IGMP module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_STACK_USE_IGMP</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMPv3 functionality</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_ExcludeSource</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Helper to unsubscribe from one source.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_GroupInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Gets current info about a multicast group.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_GroupsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Gets current info about multicast groups.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_HandlerDeRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Deregisters a previously registered IGMP client handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_HandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Registers a IGMP client Handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_IncludeSource</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Helper to subscribe to one source.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_Join</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMPv2 style "join" function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_Leave</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMPv2 style "leave" function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_Subscribe</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Subscribes to an IGMP multicast group.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_SubscribeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Returns the subscription to sources in an IGMP multicast group.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_Unsubscribe</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Removes the subscription to sources in an IGMP multicast group.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_EVENT_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>Notification handler that can be called when an IGMP event ocurrs and the user needs to be notified</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>This enumeration lists the IGMP events used to notify IGMP client applications.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_FILTER_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>This enumeration lists the supported IGMP filters.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_GROUP_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMP group information</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMP client handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>IGMP module run-time configuration/initialization data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e29 "><span>TCPIP_IGMP_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d49911e31 "><span>This enumeration is used to report the result of an IGMP API call.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-9F3B95DE-F127-481D-8456-3405E093B3B5.html">TCPIP_IGMP_EVENT_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FF2D219A-C393-4997-BB07-0E154846FA02.html">TCPIP_IGMP_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-077C63BB-3BEF-4AD0-912B-54F67EFCD6F3.html">TCPIP_IGMP_ExcludeSource Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3FB194B0-D981-437C-A414-589E2F6AA6B1.html">TCPIP_IGMP_FILTER_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3677FC08-B717-4AF7-A6F7-0255D4A37ECB.html">TCPIP_IGMP_GROUP_INFO Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-31B86115-03F3-41B6-B2A0-77E01FE35D84.html">TCPIP_IGMP_GroupInfoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-613CC0F0-8DDF-4B50-ABF5-12633AE21D65.html">TCPIP_IGMP_GroupSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EB4FEDE2-B865-4A2B-A345-CE10E6447167.html">TCPIP_IGMP_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-717CE47B-9DA1-4C30-AFBE-1807B04FCFC4.html">TCPIP_IGMP_HandlerDeRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CD5B40E8-2DB7-4F6A-BC85-4178EC2A05E9.html">TCPIP_IGMP_HandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5096062A-E0FC-47ED-84D7-2B89E4D066A5.html">TCPIP_IGMP_IncludeSource Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-87849350-1F04-4175-887F-0EB875774E92.html">TCPIP_IGMP_Join Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6144796B-8069-4B41-BF89-981E67656516.html">TCPIP_IGMP_Leave Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-77B72E29-93E6-4604-ADED-4A3D10585673.html">TCPIP_IGMP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-949459F3-589F-4E96-A337-0A34DD9A8F1F.html">TCPIP_IGMP_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A97488A2-3063-4B2C-98A3-085563D4CA3C.html">TCPIP_IGMP_Subscribe Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-587A9A50-323B-4310-A7D0-CDA58E9123CB.html">TCPIP_IGMP_SubscribeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2C68C719-82B4-46CC-A8D8-5B9205D81E6F.html">TCPIP_IGMP_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C2B672F3-CF8F-44EB-9942-706F420D5CC2.html">TCPIP_IGMP_Unsubscribe Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

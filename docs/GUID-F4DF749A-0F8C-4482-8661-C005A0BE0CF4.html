@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Ethernet PHY Driver Library" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-644FEB78-43EB-4195-88AA-9DCBD0BFCE4B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B6FF9242-5A12-42D4-945D-E8B2E5B81A6A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8BC5DC71-49AA-44D5-A610-C9DAF9BDEA90.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0FD40D52-5201-447A-A339-76D717612BEE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D3D86CBE-00BE-4BD6-BAB0-1EB678789ED2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E4878DAF-5DCA-47B5-A1ED-0F358153A9CA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-70933C81-52F2-42FE-809E-27FAC2E07EA2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E3BE0396-DB19-45C0-AD96-5107E203D006.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F7BE1385-D779-4113-849A-912F8FB3A552.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7A74A52A-A005-4691-BAB3-F67BA58BB3A3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2CFA45A0-F069-4AA0-830A-C5844311C281.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4C1B2C58-4567-4545-965D-58C9C5F8EA98.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F93D3025-155A-4C6B-B235-4389B8A6BE59.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C7240DC3-F6D5-4AFA-BD7B-C944004A881B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-011B6632-AE0D-4E6F-879A-7D08C2A8B2AD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C55588FA-F0B1-4BA1-B875-3C2134BF6312.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B07757C8-E631-4EFD-80A7-F15B70C51B52.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C036B76E-27A7-4ECC-B7AF-A70B38C64E58.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-77338732-56E0-49ED-9807-B6A63D3C982C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-06EC5166-673E-443F-908E-244EE9857629.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-779137A6-F3A1-4607-91B5-B1138393F3F2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9964853D-CE4F-410A-BC32-69266F0C45F8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FBB9A9D7-3D9D-468A-BB42-2F9C7BC65FB3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-16F762D1-2759-4C6F-A805-980CD344C1FC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B7C5B153-34DD-4F63-9D4F-26DA3D8C96C1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-05D345E2-2F63-444B-ADE3-980C9EDF3C60.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FCEED70A-C1F4-4CF9-8EB4-07C69A30F3B0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-232CB98E-5626-48E1-9036-6C695B6E23F1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EFE56862-9029-465A-8CE5-BE62D3B4655E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-33131955-19BD-40F4-8C4A-F18AD4452302.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-52AB79BD-03EF-4668-A7B6-6DF67B773699.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-04B7E0DA-96EF-4F1D-8496-83C5DEF57318.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B2536AEB-7368-46C6-A52A-C7C64EFECAB8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DAF10DAD-5926-45EC-BB04-536107AB5DD9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-06C76B30-B783-4FFA-A770-1DED1FDF2D86.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-143522CF-551B-4BFF-82D6-83E3AD55F0B6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EFCA359C-66A7-42E1-A094-E41854A9C37F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8D88BA74-4B6E-4166-A90C-A041AD260A58.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B0DD6AAF-4EE9-4C7C-928F-DC7C132524C5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58D2CEA2-AB9C-40C1-A589-051F2D431221.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-90229388-3007-44F9-8FCE-5D83E2F35BD4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1507EBE8-7AAB-4E0A-9216-593F2B134C6D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7A2EBE9F-A271-4FB8-9B58-7FA5936D9261.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-19FF5031-AB25-40D0-B80A-A5FBBCD53284.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0CF05471-81CB-4011-9B42-18B51811C9AA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CD3C7839-1D4D-49B7-8B78-BC3BAA58D217.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ethernet-phy-driver-library" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Ethernet PHY Driver Library</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ethernet-phy-driver-library" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-F4DF749A-0F8C-4482-8661-C005A0BE0CF4"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ethernet-phy-driver-library">
+<h1 class="title topictitle1" id="ariaid-title1">Ethernet PHY Driver Library</h1><div class="body"><p class="p">This library provides a software abstraction for configuring external Ethernet PHY devices for use with the on-chip Ethernet Controller.</p>
+<p class="p">Supported Ethernet PHYs:</p>
+<ul class="ul"><li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/KSZ8041" target="_blank">KSZ8041</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/KSZ8061" target="_blank">KSZ8061</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/KSZ8081" target="_blank">KSZ8081</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/KSZ8091" target="_blank">KSZ8091</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/KSZ8863" target="_blank">KSZ8863</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/LAN8700" target="_blank">LAN8700</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/LAN8720A" target="_blank">LAN8720</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/LAN8740A" target="_blank">LAN8740</a></p>
+</li>
+<li class="li"><p class="p"><a class="xref" href="https://www.microchip.com/en-us/product/LAN9303" target="_blank">LAN9303</a></p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Using the Library</strong></p>
+<p class="p">The user of this driver is the MPLAB Harmony TCP/IP Stack through its Ethernet MAC driver. This Ethernet PHY driver is not intended as a system wide driver that the application or other system modules may use. It is intended for the sole use of the MPLAB Harmony TCP/IP stack and implements the PHY driver required by the Ethernet MAC.</p>
+<p class="p">However, the user can have access to the PHY registers by using the MIIM Driver.</p>
+<p class="p">This topic describes the basic architecture and functionality of the Ethernet PHY driver and is meant for advanced users or TCP/IP Stack driver developers</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">To understand how this library works you must first understand how an external Ethernet PHY interfaces with the Ethernet Controller. As shown in Figure 1, the PHY has two interfaces:</p>
+<p class="p">The management interface for configuration/control of the PHY, known as the Media Independent Interface Management (MIIM) or Serial Management Interface (SMI)
+The transmit and receive data interface, which could be the Media Independent Interface (MIIM) or the Reduced Media Independent Interface (RMII)</p>
+<br /><img class="image" src="GUID-C9F74FE2-DFA7-40A7-811C-F64256ED779F-low.png" alt="SMSC LAN8720 Block Diagram" /><br /><p class="p">The block diagram also shows an interrupt signal (nINT) going to an external interrupt pin on the host device and signals going to on-board LEDs to show link state and link activity.</p>
+<p class="p">The SMI or MIIM interface controls the PHY. This control interface is standardized for all PHYs by Clause 22 of the 802.3 standard. It provides up to 32 16-bit registers on the PHY. The following table provides a summary of all 32 registers. Consult the data sheet for the PHY device for the specific bit fields in each register.</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d39006e91"><span>Register Address</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d39006e93"><span>Register Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d39006e95"><span>Register Type</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>0</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Control</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Basic</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Basic</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>2, 3</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>PHY Identifier</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>4</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Auto-Negotiation Advertisement</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>5</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Auto-Negotiation Link Partner Base Page Ability</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>6</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Auto-Negotiation Expansion</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>7</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Auto-Negotiation Next Page Transmit</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>8</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Auto-Negotiation Link Partner Received Next Page</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>9</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>MASTER-SLAVE Control Register</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>10</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>MASTER-SLAVE Status Register</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>11-14</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Reserved</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>15</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Extended Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Reserved</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e91 "><span>16-31</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e93 "><span>Vendor Specific</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e95 "><span>Extended</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d39006e199"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d39006e201"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_CLIENTS_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Selects the maximum number of clients.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INDEX</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Ethernet PHY static index selection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INSTANCES_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Selects the maximum number of hardware instances that can be supported by the dynamic driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_PERIPHERAL_ID</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines an override of the peripheral ID.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_NEG_DONE_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Value of the PHY negotiation complete time out as per IEEE 802.3 spec.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_NEG_INIT_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Value of the PHY negotiation initiation time out as per IEEE 802.3 spec.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_RESET_CLR_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Value of the PHY Reset self clear time out as per IEEE 802.3 spec.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">System Level Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Initialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Initializes the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Deinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Deinitializes the specified instance of the Ethernet PHY driver module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Reinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Reinitializes the driver and refreshes any associated hardware settings.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Provides the current status of the Ethernet PHY driver module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Tasks</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Maintains the driver's state machine and implements its ISR.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Setup</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Initializes Ethernet PHY configuration and set up procedure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">Client Level Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Open</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Opens the specified Ethernet PHY driver instance and returns a handle to it.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Close</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Closes an opened instance of the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_ClientStatus</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Gets the current client-specific status the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_Reset</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Immediately resets the Ethernet PHY.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_ClientOperationAbort</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Aborts a current client operation initiated by the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_ClientOperationResult</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Gets the result of a client operation initiated by the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">Vendor Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VendorDataGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the current value of the vendor data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VendorDataSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the current value of the vendor data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VendorSMIReadResultGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Reads the result of a previous vendor initiated SMI read transfer with DRV_ETHPHY_VendorSMIReadStart.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VendorSMIReadStart</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Starts a vendor SMI read transfer. Data will be available with DRV_ETHPHY_VendorSMIReadResultGet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VendorSMIWriteStart</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Starts a vendor SMI write transfer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">Other Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_LinkStatusGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the current link status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_PhyAddressGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the PHY address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_HWConfigFlagsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the current Ethernet PHY hardware MII/RMII and ALTERNATE/DEFAULT configuration flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_RestartNegotiation</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Restarts auto-negotiation of the Ethernet PHY link.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_NegotiationIsComplete</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the results of a previously initiated Ethernet PHY negotiation.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_NegotiationResultGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Returns the result of a completed negotiation.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_CLIENT_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Identifies the client-specific status of the Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Contains all the data necessary to initialize the Ethernet PHY device.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INDEX_0</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Ethernet PHY driver index definitions.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INDEX_1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>This is macro DRV_ETHPHY_INDEX_1.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INDEX_COUNT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Number of valid Ethernet PHY driver indices.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_NEGOTIATION_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Contains all the data necessary to get the Ethernet PHY negotiation result</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_SETUP</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Contains all the data necessary to set up the Ethernet PHY device.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VENDOR_MDIX_CONFIGURE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Pointer to function that configures the MDIX mode for the Ethernet PHY.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VENDOR_MII_CONFIGURE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Pointer to function to configure the Ethernet PHY in one of the MII/RMII operation modes.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VENDOR_SMI_CLOCK_GET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Pointer to a function to return the SMI/MIIM maximum clock speed in Hz of the Ethernet PHY.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_OBJECT_BASE_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Identifies the base interface of a Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_CONFIG_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines configuration options for the Ethernet PHY.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_LINK_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines the possible status flags of PHY Ethernet link.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_OBJECT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Identifies the interface of a Ethernet PHY vendor driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_OBJECT_BASE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Identifies the base interface of a Ethernet PHY driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_VENDOR_WOL_CONFIGURE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Pointer to a function to configure the PHY WOL functionality</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>_DRV_ETHPHY_CONFIG_H</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>This is macro _DRV_ETHPHY_CONFIG_H.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>_DRV_ETHPHY_H</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>This is macro _DRV_ETHPHY_H.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_RESET_FUNCTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Pointer to a function to perform an additional PHY reset</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines the possible results of Ethernet operations that can succeed or fail</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INTERFACE_INDEX</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines the index type for a PHY interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e199 "><span>DRV_ETHPHY_INTERFACE_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d39006e201 "><span>Defines the type of interface a PHY supports.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-644FEB78-43EB-4195-88AA-9DCBD0BFCE4B.html">DRV_ETHPHY_CLIENT_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B6FF9242-5A12-42D4-945D-E8B2E5B81A6A.html">DRV_ETHPHY_ClientOperationAbort Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8BC5DC71-49AA-44D5-A610-C9DAF9BDEA90.html">DRV_ETHPHY_ClientOperationResult Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0FD40D52-5201-447A-A339-76D717612BEE.html">DRV_ETHPHY_CLIENTS_NUMBER Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D3D86CBE-00BE-4BD6-BAB0-1EB678789ED2.html">DRV_ETHPHY_ClientStatus Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E4878DAF-5DCA-47B5-A1ED-0F358153A9CA.html">DRV_ETHPHY_Close Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-70933C81-52F2-42FE-809E-27FAC2E07EA2.html">DRV_ETHPHY_CONFIG_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E3BE0396-DB19-45C0-AD96-5107E203D006.html">DRV_ETHPHY_Deinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F7BE1385-D779-4113-849A-912F8FB3A552.html">DRV_ETHPHY_HWConfigFlagsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7A74A52A-A005-4691-BAB3-F67BA58BB3A3.html">DRV_ETHPHY_INDEX_0 Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2CFA45A0-F069-4AA0-830A-C5844311C281.html">DRV_ETHPHY_INDEX_COUNT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4C1B2C58-4567-4545-965D-58C9C5F8EA98.html">DRV_ETHPHY_INIT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F93D3025-155A-4C6B-B235-4389B8A6BE59.html">DRV_ETHPHY_Initialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C7240DC3-F6D5-4AFA-BD7B-C944004A881B.html">DRV_ETHPHY_INSTANCES_NUMBER Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-011B6632-AE0D-4E6F-879A-7D08C2A8B2AD.html">DRV_ETHPHY_INTERFACE_INDEX Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C55588FA-F0B1-4BA1-B875-3C2134BF6312.html">DRV_ETHPHY_INTERFACE_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B07757C8-E631-4EFD-80A7-F15B70C51B52.html">DRV_ETHPHY_LINK_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C036B76E-27A7-4ECC-B7AF-A70B38C64E58.html">DRV_ETHPHY_LinkStatusGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-77338732-56E0-49ED-9807-B6A63D3C982C.html">DRV_ETHPHY_NEG_DONE_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-06EC5166-673E-443F-908E-244EE9857629.html">DRV_ETHPHY_NEG_INIT_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-779137A6-F3A1-4607-91B5-B1138393F3F2.html">DRV_ETHPHY_NEGOTIATION_RESULT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9964853D-CE4F-410A-BC32-69266F0C45F8.html">DRV_ETHPHY_NegotiationIsComplete Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FBB9A9D7-3D9D-468A-BB42-2F9C7BC65FB3.html">DRV_ETHPHY_NegotiationResultGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-16F762D1-2759-4C6F-A805-980CD344C1FC.html">DRV_ETHPHY_OBJECT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B7C5B153-34DD-4F63-9D4F-26DA3D8C96C1.html">DRV_ETHPHY_OBJECT_BASE Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-05D345E2-2F63-444B-ADE3-980C9EDF3C60.html">DRV_ETHPHY_Open Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FCEED70A-C1F4-4CF9-8EB4-07C69A30F3B0.html">DRV_ETHPHY_PERIPHERAL_ID Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-232CB98E-5626-48E1-9036-6C695B6E23F1.html">DRV_ETHPHY_PhyAddressGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EFE56862-9029-465A-8CE5-BE62D3B4655E.html">DRV_ETHPHY_Reinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-33131955-19BD-40F4-8C4A-F18AD4452302.html">DRV_ETHPHY_Reset Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-52AB79BD-03EF-4668-A7B6-6DF67B773699.html">DRV_ETHPHY_RESET_CLR_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-04B7E0DA-96EF-4F1D-8496-83C5DEF57318.html">DRV_ETHPHY_RESET_FUNCTION Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B2536AEB-7368-46C6-A52A-C7C64EFECAB8.html">DRV_ETHPHY_RestartNegotiation Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DAF10DAD-5926-45EC-BB04-536107AB5DD9.html">DRV_ETHPHY_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-06C76B30-B783-4FFA-A770-1DED1FDF2D86.html">DRV_ETHPHY_SETUP Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-143522CF-551B-4BFF-82D6-83E3AD55F0B6.html">DRV_ETHPHY_Status</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EFCA359C-66A7-42E1-A094-E41854A9C37F.html">DRV_ETHPHY_Tasks Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8D88BA74-4B6E-4166-A90C-A041AD260A58.html">DRV_ETHPHY_VENDOR_MDIX_CONFIGURE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B0DD6AAF-4EE9-4C7C-928F-DC7C132524C5.html">DRV_ETHPHY_VENDOR_MII_CONFIGURE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58D2CEA2-AB9C-40C1-A589-051F2D431221.html">DRV_ETHPHY_VENDOR_SMI_CLOCK_GET Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-90229388-3007-44F9-8FCE-5D83E2F35BD4.html">DRV_ETHPHY_VENDOR_WOL_CONFIGURE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1507EBE8-7AAB-4E0A-9216-593F2B134C6D.html">DRV_ETHPHY_VendorDataGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7A2EBE9F-A271-4FB8-9B58-7FA5936D9261.html">DRV_ETHPHY_VendorDataSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-19FF5031-AB25-40D0-B80A-A5FBBCD53284.html">DRV_ETHPHY_VendorSMIReadResultGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0CF05471-81CB-4011-9B42-18B51811C9AA.html">DRV_ETHPHY_VendorSMIReadStart Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CD3C7839-1D4D-49B7-8B78-BC3BAA58D217.html">DRV_ETHPHY_VendorSMIWriteStart Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

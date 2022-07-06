@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Announce Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-45F06B75-B37F-41E2-81C1-B463535CC07D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DD1359E2-FCD4-4F82-8E75-EB78A2E1E7EF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-455343FF-D0C5-45F1-B7C2-C566D20C8D95.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AE6B35B3-8C2A-4FB7-BC76-38B4F9F3CBD5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7499888A-AA54-4A66-8081-A446FCC0DB37.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5D55A772-A20A-478C-B885-4FE4984D0725.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9A0666DA-6B06-4C37-B365-9537F3BCFD78.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="announce-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Announce Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-announce-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-2561DB16-7947-4C02-97DC-A0BFC17070C9"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="announce-module">
+<h1 class="title topictitle1" id="ariaid-title1">Announce Module</h1><div class="body"><p class="p">TCP/IP Stack Library Announce Module for Microchip Devices</p>
+<p class="p">This library provides the API of the Announce Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP Stack.
+The module implements a proprietary network discovery protocol.</p>
+<p class="p">This module will facilitate device discovery on DHCP enabled networks by broadcasting a UDP message on port 30303 whenever the local IP address changes</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-28DCACAD-DE2A-457F-BB59-A6DD527F3816-low.png" alt="TCPIP ANNOUNCE abstract diagram" /><br /><p class="p"><strong class="ph b">Discovering the Board</strong></p>
+<p class="p">The Announce module provides an easy way to determine useful parameters for your TCP/IP node’s interfaces. This module works in conjunction with the TCP/IP Discoverer personal computer utility to display an interface’s MAC and IPv4/IPv6 addresses, IPv6 multicast listeners, NBNS host name, and MAC type. During stack operation several events may cause an Announce packet to be broadcast on a particular interface. These include:</p>
+<ul class="ul"><li class="li"><p class="p">Reception of an Announce packet request on that interface</p>
+</li>
+<li class="li"><p class="p">A DHCP event on that interface (i.e., the interface has configured a new IPv4 address using DHCP)</p>
+</li>
+<li class="li"><p class="p">The addition or removal of an IPv6 Unicast Address from an interface (after Duplicate Address Detection)</p>
+</li>
+<li class="li"><p class="p">The addition or removal of an IPv6 Multicast Listener from an interface</p>
+</li>
+<li class="li"><p class="p">A user call to the ANNOUNCE_Notify function specifying the interface on which to send the announce message</p>
+</li>
+</ul>
+<p class="p">Each Announce packet is a UDP packet broadcast from the corresponding interface’s IP address. The payload is a series of fields beginning with an 8-bit field ID, followed by field information, followed by a field terminator (0x0D 0x0A). The current field IDs and information formats are:</p>
+<ul class="ul"><li class="li"><p class="p">0x01 – This field ID indicates that not all of the interface’s address information could be transmitted in one packet. There is no field information for this ID.</p>
+<ul class="ul"><li class="li"><p class="p">0x01 0x0A 0x0D</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x02 – MAC address (6 bytes).</p>
+<ul class="ul"><li class="li"><p class="p">0x02 0x00 0x04 0xA3 0x12 0x0f 0x94 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x03 – MAC type. The field information for this ID is a variable length string describing the MAC type of this interface – "ENCJ60", "ENCJ600", "97J60", "PIC32INT", "PIC32CINT", etc.</p>
+<ul class="ul"><li class="li"><p class="p">0x03 ‘P’ ‘I’ ‘C’ ‘3’ ‘2’ ‘I’ ‘N’ ‘T’ 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x04 – Host name. The NBNS host name of the interface, with trailing spaces.</p>
+<ul class="ul"><li class="li"><p class="p">0x04 ‘M’ ‘C’ ‘H’ ‘P’ ‘B’ ‘O’ ‘A’ ‘R’ ‘D’ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x05 – The interface’s IPv4 address (4 bytes, big-endian).</p>
+<ul class="ul"><li class="li"><p class="p">0x05 0x0A 0x00 0x01 0x03 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x06 – One of the interface's IPv6 unicast addresses (16 bytes, big-endian). Note that the interface may have more than one of these. The interface also has a corresponding solicited-node multicast address listener for every unicast address that is given. The interface may have static IP address.</p>
+<ul class="ul"><li class="li"><p class="p">0x06 0xFE 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x02 0x04 0xA3 0xFF 0xFE 0x12 0x0F 0x94 0x0D 0x0A</p>
+</li>
+<li class="li"><p class="p">0x06 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x02 0x04 0xA3 0xFF 0xAA 0xAA 0xAA 0xAA 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x07 – One of the interface’s IPv6 multicast address listeners (16 bytes, big-endian). The solicited-node multicast address listeners will not be included.</p>
+<ul class="ul"><li class="li"><p class="p">0x07 0xFF 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x08 – One of the interface's IPv6 default router address (16 bytes, big-endian).</p>
+<ul class="ul"><li class="li"><p class="p">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">0x09 – One of the interface's IPv6 default gateway address (16 bytes, big-endian).</p>
+<ul class="ul"><li class="li"><p class="p">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</p>
+</li>
+</ul>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">This section describes the Application Programming Interface (API) functions of the Announce module. Refer to each section for a detailed description.</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d83244e124"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d83244e126"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_MessageRequest</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_CallbackRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Allows the registration of a user callback.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_BROADCAST_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Announce message type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_FIELD_PAYLOAD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Announce payload types</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_MESSAGE_CALLBACK</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Announce message callback function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e124 "><span>TCPIP_ANNOUNCE_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d83244e126 "><span>Announce Configuration structure placeholder</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-45F06B75-B37F-41E2-81C1-B463535CC07D.html">TCPIP_ANNOUNCE_BROADCAST_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DD1359E2-FCD4-4F82-8E75-EB78A2E1E7EF.html">TCPIP_ANNOUNCE_CallbackRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-455343FF-D0C5-45F1-B7C2-C566D20C8D95.html">TCPIP_ANNOUNCE_FIELD_PAYLOAD Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AE6B35B3-8C2A-4FB7-BC76-38B4F9F3CBD5.html">TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7499888A-AA54-4A66-8081-A446FCC0DB37.html">TCPIP_ANNOUNCE_MessageRequest Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5D55A772-A20A-478C-B885-4FE4984D0725.html">TCPIP_ANNOUNCE_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9A0666DA-6B06-4C37-B365-9537F3BCFD78.html">TCPIP_ANNOUNCE_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

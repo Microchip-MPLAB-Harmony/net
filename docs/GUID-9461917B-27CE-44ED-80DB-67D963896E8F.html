@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="TCP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-68E8F75C-904C-4EA5-B069-9C38BD5897B7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-912DD67D-07EE-4EA1-BEB6-A1AB190AF1EE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-37AC4203-D5E1-4E87-B655-96976074EB8E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9CB9084C-9554-4FBF-B513-27DAC5B429A6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E2B08BBC-2E3A-4DBB-95EB-875C36F4A35E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4567539C-B19F-4DBD-A86E-031C8679AFF8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CF1F5589-30B5-4F40-AFAE-1E182CF264DB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C868486A-6EC9-40EB-B216-5A67901EE666.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F42A84D9-F584-41BA-9185-E2B4AD880031.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9B86AE3A-89C9-45FD-A75C-AAA3A0A0417A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-33601DD6-2869-4D23-9621-4C9FA0A5F41D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6065C536-2D5E-4DE6-8693-CDDB9468D005.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3D127332-A8D5-479B-A16B-B6ACD00F86FF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9C6F2B16-5C79-404E-A87D-24194C4561E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-18086776-3675-461A-8E20-1C1824C48A90.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-17EAEBB4-16A8-46C6-9DA2-41774C5023FC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-19673432-24DA-469F-AE16-91B60B020DD0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B451162D-7BB5-486E-90F9-214DC4278290.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5D80514B-D9E6-4B84-BC67-B1F62C1DBDCC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B9758F33-8EC6-4BE2-917F-02B470CDF54F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8F3F58C4-1DAB-4979-9D36-26D319D41E01.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CA3913D4-C1E2-4A14-A6A3-B5A45A97F6C9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6AEC1BD6-F03B-4DC2-86D9-BC6024E3C231.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C6CC94FF-9D0F-4075-8C4C-A4777AC58474.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-63E84829-EA54-407E-B1CC-116E021FAB7A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ED18B0C0-F614-4B29-8EA7-114DBFAA74CF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6F23D2EF-B6E7-494F-84ED-5F4E4281BEEC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-23D21B7F-0C49-4545-967B-8B5C733E6130.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6BE3132D-9D0A-432C-8EC4-15AB39D0D0AB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1532C09B-053B-48E5-A98E-FE60E8210E2C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-326BE6E8-7109-48AF-87ED-2F766BFB5934.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-139944A2-E205-4723-B424-24F7E5319CBB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3155D9C2-F544-4BC5-98B7-EEC72241DFB7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-69179ECB-8909-45CD-9A7F-E7268E132EE5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8BAAE306-6142-458A-97BB-BFE70A468F22.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-60542769-81AD-4E9A-892F-47549D980671.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0274D9A9-AC80-43E3-B3D7-2F7ACB6EF33B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DEF9BEE7-666A-4C41-8A10-C06A45D0294D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0C4247BD-FE52-4439-8BA5-AC0DB82C8A2C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-990F969B-A523-410A-B363-5970F6C14638.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FF3F4B34-30C8-46CE-9DC1-B161BBFC621B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9EE838C7-EC9B-449B-A065-89402F2576F2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-265ED9D5-455D-43C3-B82A-8FDF80CEF01A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E2A46EF2-2C2A-4D82-B4CB-CB48A6470410.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AB4B99E9-A0E7-437B-A009-10C66075F30C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0A3EFD43-F2CF-4057-8AAF-E8C18636D1A1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2B4E16B1-ABF8-474A-B4FD-DCF816BEB456.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58FF1B35-1905-43E3-BDBE-FDCAEB3C1108.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-83A3E9E6-DF80-4868-9CE4-AA5C67BD90F0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DA99B668-971A-44F2-9FE4-E9A146633CB0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E11BC382-BE0D-43B8-9E90-7F3679B1355F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-05117C73-29E9-4EAD-847C-07F8848E637D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FC9335FB-6AE1-4F4A-B484-45B19D882B5A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8D07D2FD-CA2E-4201-B376-AF770DA9A7EA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-008B6CD0-A768-4201-B068-1EBA909B9260.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-082D9EB1-DD48-4638-A6D7-B09FAD68CFD1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C7667A7A-5D60-4688-AC44-EFAB2C5DFC5C.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="tcp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TCP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tcp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-9461917B-27CE-44ED-80DB-67D963896E8F"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="tcp-module">
+<h1 class="title topictitle1" id="ariaid-title1">TCP Module</h1><div class="body"><p class="p">TCP is a standard transport layer_protocol described in RFC 793. It provides reliable stream-based connections over unreliable networks, and forms the foundation for HTTP, SMTP, and many other protocol standards</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">This module provides software abstraction of the TCP module existent in any TCP/IP Stack implementation.</p>
+<br /><img class="image" src="GUID-9A47A2AE-4B6C-42B6-B856-E879099747C5-low.png" alt="tcpip_stack_diagram" /><br /><p class="p"><strong class="ph b">How the Library Works</strong></p>
+<p class="p">Connections made over TCP guarantee data transfer at the expense of throughput. Connections are made through a three-way handshake process, ensuring a one-to-one connection. Remote nodes advertise how much data they are ready to receive, and all data transmitted must be acknowledged. If a remote node fails to acknowledge the receipt of data, it is automatically retransmitted. This ensures that network errors such as lost, corrupted, or out-of-order packets are automatically corrected.</p>
+<p class="p">To accomplish this, TCP must use buffers for both the transmit and receive operations. Once the transmit buffer is full, no more data can be sent until the remote node has acknowledged receipt.</p>
+<p class="p">When the Harmony TCP/IP Stack is used without a RTOS, the application must return to the main system loop to allow the other services in the system, including the TCP/IP stack, to advance.</p>
+<p class="p">The remote node cannot transmit more data until the local device has acknowledged receipt and receiving space is available in the buffer. When a local application needs to read more data, it must return to the main system/application loop and wait for a new packet to arrive.</p>
+<p class="p"><strong class="ph b">Core Functionality</strong></p>
+<p class="p">The following diagram provides an overview for the use of the TCP module.</p>
+<br /><img class="image" src="GUID-0D760E05-B7FD-427D-BB02-A2CCD45E715A-low.png" alt="TCP Connection Flow" /><br /><p class="p">Server sockets are opened using TCPIP_TCP_ServerOpen. This function will open a listening socket_waiting for client connections on the specified TCP port number. A client socket_is opened using TCPIP_TCP_ClientOpen. This function will open a socket_that connects to a remote host. The remote host is specified using an IP address and a TCP port number.</p>
+<p class="p">Once connected, applications can read and write data. On each entry, the application must verify that the socket_is still connected. For most applications a call to TCPIP_TCP_IsConnected will be sufficient, but TCPIP_TCP_WasReset may also be used for listening sockets that may turn over quickly.</p>
+<p class="p">To write data, call TCPIP_TCP_PutIsReady to check how much space is available. Then, call the TCPIP_TCP_ArrayPut function to write data as space is available. Once complete, call TCPIP_TCP_Flush to transmit data immediately. Alternately, return to the main system/stack loop. Data will be transmitted by the internal TCP state machine as the buffer becomes full or a programmable delay time has passed.</p>
+<p class="p">To read data, call TCPIP_TCP_GetIsReady to determine how many bytes are ready to be retrieved. Then use the TCPIP_TCP_ArrayGet function to read data from the_socket, and/or the TCPIP_TCP_Find family of functions to locate data in the buffer. When no more data remains, return to the main system/stack loop to wait for more data to arrive.</p>
+<p class="p">If the application needs to close the connection, call TCPIP_TCP_Disconnect, and then return to the main system/stack loop and wait for the remote node to acknowledge the disconnection. Client sockets will be closed and associated resources freed, while listening sockets will wait for a new connection. For more information, refer to the examples provided with the MPLAB Harmony distribution examples, or read the associated RFC.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d219254e59"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d219254e61"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout before automatically transmitting unflushed data, ms. Default value is 40 ms.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_CLOSE_WAIT_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout for the CLOSE_WAIT state, ms If the remote socket closes the connection the TCP/IP stack will automatically close the socket after this timeout. If the value is set to 0 then the socket will wait forever for the application to close the socket (default behavior). Default should be 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_DELAYED_ACK_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout for delayed-acknowledgment algorithm, ms</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_DYNAMIC_OPTIONS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Enable the TCP sockets dynamic options set/get functionality If enabled, the functions: TCPIP_TCP_OptionsSet, TCPIP_TCP_OptionsGet and TCPIP_TCP_FifoSizeAdjust exist and are compiled in If disabled, these functions do not exist and cannot be used/called Note that this setting can affect modules that use TCP sockets</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FIN_WAIT_2_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout for FIN WAIT 2 state, ms</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_KEEP_ALIVE_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout for keep-alive messages when no traffic is sent, ms</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MAX_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Maximum number of retransmission attempts</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MAX_SEG_SIZE_TX</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP Maximum Segment Size for TX. The TX maximum segment size is actually governed by the remote node's MSS option advertised during connection establishment. However, if the remote node specifies an unmanageably large MSS (ex: &gt; Ethernet MTU), this define sets a hard limit so that TX buffers are not overflowed. If the remote node does not advertise a MSS option, all TX segments are fixed at 536 bytes maximum. This symbol sets an upper bound on the TCP MSS on the transmit side which can ignore/override the remote node advertising.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MAX_SOCKETS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>The maximum number of sockets to create in the stack. When defining TCPIP_TCP_MAX_SOCKETS take into account the number of interfaces the stack is supporting.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MAX_SYN_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Smaller than all other retries to reduce SYN flood DoS duration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Maximum number of keep-alive messages that can be sent without receiving a response before automatically closing the connection</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Default socket RX buffer size Note that this setting affects all TCP sockets that are created and, together with TCPIP_TCP_MAX_SOCKETS, has a great impact on the heap size that's used by the stack (see TCPIP_STACK_DRAM_SIZE setting). When large RX bufferrs are needed, probably a dynamic, per socket approach, is a better choice (see TCPIP_TCP_OptionsSet function). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Note that some modules (like HTTP) use their own settings to... more</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Default socket TX buffer size Note that this setting affects all TCP sockets that are created and, together with TCPIP_TCP_MAX_SOCKETS, has a great impact on the heap size that's used by the stack (see TCPIP_STACK_DRAM_SIZE setting). When large TX bufferrs are needed, probably a dynamic, per socket approach, is a better choice (see TCPIP_TCP_OptionsSet function). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Note that some modules (like HTTP) use their own settings to... more</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_START_TIMEOUT_VAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout to retransmit unacked data, ms</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>The TCP task processing rate: number of milliseconds to generate an TCP tick. This is the tick that advances the TCP state machine. The default value is 5 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Timeout before automatically transmitting a window update due to a TCPIP_TCP_Get() or TCPIP_TCP_ArrayGet() function call, ms.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_COMMANDS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCPIP TCP info commands Enables/Disables the TCP command feature. This setting will add a TCP "info" command to the TCP/IP command menu allowing a run time inspection of the TCP sockets Set the value to 1 to enable, 0 to disable the feature.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MSL_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Maximum Segment Length (MSL) timeout, seconds This value sets the time a socket will be in the TIME_WAIT/2MSL state after the socket performed an active close. RFC recommended value is 120 sec. Other common values are: 30/60 sec Note that if this symbol is defined to 0, then the TIME_WAIT/2MSL state is skipped! This could lead to duplicate sequence numbers problems if sockets are frequently/rapidly closed and reopened and normally should be avoided.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_QUIET_TIME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>This value specifies the TCP quiet time: TCP will not send any data for TCPIP_TCP_QUIET_TIME seconds after rebooting! Usualy this value should match the MSL value. Note that if this symbol is defined to 0, then the TCP quiet time state is skipped! During the quiet time there will be no TCP traffic initiated by TCP. So, clients won't be able to connect to remote hosts and servers won't reply to client requests.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_EXTERN_PACKET_PROCESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>This setting enables/disables the processing of the RX packets by an external handler The user of the TCP can register an external function to process the incoming packets If true, the functionality is built in and could be used by the application If false, the functionality does not exist and the generated code is slightly smaller</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span><strong class="ph b">Socket Management Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ServerOpen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Opens a TCP socket as a server.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ClientOpen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Opens a TCP socket as a client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Close</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Disconnects an open socket and destroys the socket handle, releasing the associated resources.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Connect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Connects a client socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Bind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Binds a socket to a local address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_RemoteBind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Binds a socket to a remote address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_IsConnected</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines if a socket has an established connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_WasReset</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Self-clearing semaphore indicating socket reset.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Disconnect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Disconnects an open socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Abort</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Aborts a connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_OptionsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Allows getting the options for a socket like: current RX/TX buffer size, etc.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_OptionsSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Allows setting options to a socket like adjust RX/TX buffer size, etc.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SocketInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Obtains information about a currently open socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SocketNetGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Gets the current network interface of an TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SocketNetSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Sets the interface for an TCP socket</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SignalHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Deregisters a previously registered TCP socket signal handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SignalHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Registers a TCP socket signal handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_IsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Returns the current status of the TCP module</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SocketsNumberGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Returns the number of existent TCP sockets.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SocketTraceSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Sets the current socket trace status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_PacketHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Deregisters a previously registered packet handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_PacketHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Sets a new packet processing handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span><strong class="ph b">Transmit Data Transfer Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_PutIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how much free space is available in the TCP TX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ArrayPut</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Writes an array from a buffer to a TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_StringPut</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Writes a null-terminated string to a TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Put</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Writes a single byte to a TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Flush</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Immediately transmits all pending TX data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FifoTxFullGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how many bytes are pending in the TCP TX FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FifoTxFreeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how many bytes are free and could be written in the TCP TX FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span><strong class="ph b">Receive Data Transfer Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_GetIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how many bytes can be read from the TCP RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ArrayGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Reads an array of data bytes from a TCP socket's RX buffer/FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ArrayPeek</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Reads a specified number of data bytes from the TCP RX buffer/FIFO without removing them from the buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_ArrayFind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Searches for a string in the TCP RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Find</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Searches for a byte in the TCP RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Get</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Retrieves a single byte to a TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Peek</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Peaks at one byte in the TCP RX buffer/FIFO without removing it from the buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_Discard</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Discards any pending data in the RCP RX FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FifoRxFreeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how many bytes are free in the RX buffer/FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FifoSizeAdjust</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Adjusts the relative sizes of the RX and TX buffers.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_FifoRxFullGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Determines how many bytes are pending in the RX buffer/FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_ADJUST_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP adjust RX and TX buffers flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_OPTION_LINGER_DATA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Socket linger options.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_PORT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Defines a TCP Port number.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_SOCKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Defines a TCP Socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_SOCKET_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP socket information.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_SOCKET_OPTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP Socket run-time options.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>INVALID_SOCKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Invalid socket indicator macro.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_OPTION_THRES_FLUSH_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>List of the socket half threshold TX flush types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCP_OPTION_KEEP_ALIVE_DATA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Socket keep alive options</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP module run-time configuration/initialization data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SIGNAL_FUNCTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP signal handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SIGNAL_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP socket handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_SIGNAL_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP run time signal/event types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_STATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>TCP socket state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_PACKET_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Pointer to a function(handler) that will get called to process an incoming TCP packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e59 "><span>TCPIP_TCP_PROCESS_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d219254e61 "><span>Defines a TCP packet processing handle.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-68E8F75C-904C-4EA5-B069-9C38BD5897B7.html">INVALID_SOCKET Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-912DD67D-07EE-4EA1-BEB6-A1AB190AF1EE.html">TCP_ADJUST_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-37AC4203-D5E1-4E87-B655-96976074EB8E.html">TCP_OPTION_KEEP_ALIVE_DATA Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9CB9084C-9554-4FBF-B513-27DAC5B429A6.html">TCP_OPTION_LINGER_DATA Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E2B08BBC-2E3A-4DBB-95EB-875C36F4A35E.html">TCP_OPTION_THRES_FLUSH_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4567539C-B19F-4DBD-A86E-031C8679AFF8.html">TCP_SOCKET Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CF1F5589-30B5-4F40-AFAE-1E182CF264DB.html">TCP_SOCKET Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C868486A-6EC9-40EB-B216-5A67901EE666.html">TCP_SOCKET_INFO Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F42A84D9-F584-41BA-9185-E2B4AD880031.html">TCP_SOCKET_OPTION Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9B86AE3A-89C9-45FD-A75C-AAA3A0A0417A.html">TCPIP_TCP_Abort Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-33601DD6-2869-4D23-9621-4C9FA0A5F41D.html">TCPIP_TCP_ArrayFind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6065C536-2D5E-4DE6-8693-CDDB9468D005.html">TCPIP_TCP_ArrayGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3D127332-A8D5-479B-A16B-B6ACD00F86FF.html">TCPIP_TCP_ArrayPeek Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9C6F2B16-5C79-404E-A87D-24194C4561E2.html">TCPIP_TCP_ArrayPut Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-18086776-3675-461A-8E20-1C1824C48A90.html">TCPIP_TCP_Bind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-17EAEBB4-16A8-46C6-9DA2-41774C5023FC.html">TCPIP_TCP_ClientOpen Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-19673432-24DA-469F-AE16-91B60B020DD0.html">TCPIP_TCP_Close Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B451162D-7BB5-486E-90F9-214DC4278290.html">TCPIP_TCP_Connect Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5D80514B-D9E6-4B84-BC67-B1F62C1DBDCC.html">TCPIP_TCP_Discard Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B9758F33-8EC6-4BE2-917F-02B470CDF54F.html">TCPIP_TCP_Disconnect Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8F3F58C4-1DAB-4979-9D36-26D319D41E01.html">TCPIP_TCP_FifoRxFreeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CA3913D4-C1E2-4A14-A6A3-B5A45A97F6C9.html">TCPIP_TCP_FifoRxFullGet Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6AEC1BD6-F03B-4DC2-86D9-BC6024E3C231.html">TCPIP_TCP_FifoSizeAdjust Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C6CC94FF-9D0F-4075-8C4C-A4777AC58474.html">TCPIP_TCP_FifoTxFreeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-63E84829-EA54-407E-B1CC-116E021FAB7A.html">TCPIP_TCP_FifoTxFullGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ED18B0C0-F614-4B29-8EA7-114DBFAA74CF.html">TCPIP_TCP_Find Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6F23D2EF-B6E7-494F-84ED-5F4E4281BEEC.html">TCPIP_TCP_Flush Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-23D21B7F-0C49-4545-967B-8B5C733E6130.html">TCPIP_TCP_Get Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6BE3132D-9D0A-432C-8EC4-15AB39D0D0AB.html">TCPIP_TCP_GetIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1532C09B-053B-48E5-A98E-FE60E8210E2C.html">TCPIP_TCP_IsConnected Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-326BE6E8-7109-48AF-87ED-2F766BFB5934.html">TCPIP_TCP_IsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-139944A2-E205-4723-B424-24F7E5319CBB.html">TCPIP_TCP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3155D9C2-F544-4BC5-98B7-EEC72241DFB7.html">TCPIP_TCP_OptionsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-69179ECB-8909-45CD-9A7F-E7268E132EE5.html">TCPIP_TCP_OptionsSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8BAAE306-6142-458A-97BB-BFE70A468F22.html">TCPIP_TCP_PACKET_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-60542769-81AD-4E9A-892F-47549D980671.html">TCPIP_TCP_PacketHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0274D9A9-AC80-43E3-B3D7-2F7ACB6EF33B.html">TCPIP_TCP_Peek Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DEF9BEE7-666A-4C41-8A10-C06A45D0294D.html">TCPIP_TCP_PROCESS_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0C4247BD-FE52-4439-8BA5-AC0DB82C8A2C.html">TCPIP_TCP_PacketHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-990F969B-A523-410A-B363-5970F6C14638.html">TCPIP_TCP_Put Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FF3F4B34-30C8-46CE-9DC1-B161BBFC621B.html">TCPIP_TCP_PutIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9EE838C7-EC9B-449B-A065-89402F2576F2.html">TCPIP_TCP_RemoteBind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-265ED9D5-455D-43C3-B82A-8FDF80CEF01A.html">TCPIP_TCP_ServerOpen Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E2A46EF2-2C2A-4D82-B4CB-CB48A6470410.html">TCPIP_TCP_SIGNAL_FUNCTION Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AB4B99E9-A0E7-437B-A009-10C66075F30C.html">TCPIP_TCP_SIGNAL_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0A3EFD43-F2CF-4057-8AAF-E8C18636D1A1.html">TCPIP_TCP_SIGNAL_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2B4E16B1-ABF8-474A-B4FD-DCF816BEB456.html">TCPIP_TCP_SignalHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58FF1B35-1905-43E3-BDBE-FDCAEB3C1108.html">TCPIP_TCP_SignalHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-83A3E9E6-DF80-4868-9CE4-AA5C67BD90F0.html">TCPIP_TCP_SocketInfoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DA99B668-971A-44F2-9FE4-E9A146633CB0.html">TCPIP_TCP_SocketNetGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E11BC382-BE0D-43B8-9E90-7F3679B1355F.html">TCPIP_TCP_SocketNetSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-05117C73-29E9-4EAD-847C-07F8848E637D.html">TCPIP_TCP_SocketsNumberGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FC9335FB-6AE1-4F4A-B484-45B19D882B5A.html">TCPIP_TCP_SocketTraceSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8D07D2FD-CA2E-4201-B376-AF770DA9A7EA.html">TCPIP_TCP_STATE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-008B6CD0-A768-4201-B068-1EBA909B9260.html">TCPIP_TCP_StringPut Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-082D9EB1-DD48-4638-A6D7-B09FAD68CFD1.html">TCPIP_TCP_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C7667A7A-5D60-4688-AC44-EFAB2C5DFC5C.html">TCPIP_TCP_WasReset Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

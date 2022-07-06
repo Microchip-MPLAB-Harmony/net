@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="DNS Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0E27BF3F-0F22-406F-B8BF-A06BB82B0681.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6CEFB266-0BD0-4C0E-AD2C-D054CA502682.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A02509EB-5D47-4F15-9624-DF4B347C58F2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CD63EC26-3D34-4898-901D-90B16F42BA0E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-32CEAFDF-9937-4EAA-80F8-4582953EB286.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4CC6E754-D7DA-499C-81A5-20DEFFB63D25.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FDCC89BA-55AA-441D-B734-CB3EA482EDE4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8E122275-7175-409E-920E-1C72D335CEEF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-608D53C9-C51D-405E-8113-C8B2AA011198.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0E293EBD-6A94-44B6-9917-EBA8F444F9DF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9EA99835-9E73-4F37-A1CB-D6E0B063F7E9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4D261A34-344C-4CF2-8AF9-3C32257BA720.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4E3E9377-68EA-48AA-98EB-46D8991416A5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B1D8044C-E1A5-4436-8E8E-38D34314BE07.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-18AFB3BA-C9CD-4F3A-ADCA-2B80AFE88533.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-35E80DC1-C40F-40AE-88AB-4316ADEF228A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ADB87FB8-A110-467D-9863-27F5B113A7C2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4642776A-7413-4A77-9C0C-9A2E5789B1BE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-20C3F443-5880-4DC7-BC60-D32CC338D577.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2B48A7AD-86F6-4711-93E4-E9A1118EDFC0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7820ED03-0BDB-4786-AB0E-75F76144F569.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-25CE1982-3A3C-4B85-9E3D-AA4B7E4B6FB4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4C6B8A89-9CD3-4698-BF46-0AD17288090B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8C9E82DC-7C04-4972-8DBD-089F22E171B0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AD5DAF5B-5EA9-4CA5-92A2-2AD3E1473A93.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58077ADE-51A1-4E08-B1F4-BF617D2F3518.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4DF2541D-DF50-45F1-A4E8-1233E5161579.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AAA58362-D612-464F-940A-A03BDA302B48.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D059B873-04CB-4F6C-B2D7-2D87A82824D6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-610DA949-0CAF-4DC7-AA73-F73300E87110.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-47111128-D371-4827-B15C-7E852623495C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4E898CC0-B8B1-4130-9FC4-86CBA68A57C1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4B19C888-F3A6-4680-8508-BBC4BA473F08.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-669AB372-B432-43BD-9DF2-76C13A93F1CD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6CBFB260-A020-4046-9311-CA8D9CB62FC8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-46C3BA25-A36F-4BA7-82B4-19DB6A5DAC82.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C3770C12-D928-4ACF-97E7-B80D6EB08DCE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9A3C3F1A-4F48-40BD-B84C-C6EF22144F74.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3D0BA10F-4BC9-4755-9042-7B7A1861E748.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="dns-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>DNS Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-dns-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-D15C8F84-C30C-451F-8AB7-F8E62AD494C2"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="dns-module">
+<h1 class="title topictitle1" id="ariaid-title1">DNS Module</h1><div class="body"><p class="p">The Domain Name Service associates host names (i.e., www.microchip.com) with IP addresses (i.e., 10.0.54.2). The DNS Client module provides DNS resolution capabilities to the stack. As illustrated in the figure, a typical resolution process is as follows:</p>
+<ul class="ul"><li class="li"><p class="p">The DNS Client, also known as the DNS Resolver, will try to resolve the IP address from its local resources, which includes the Name to Address mappings in the local DNS cache. DNS clients are capable of caching the previous DNS query results and this module supports a maximum number of cached entries configured with the DNS_CLIENT_CACHE_ENTRIES parameter. Each cache entry is capable of storing the maximum number of IPv4 and IPv6 address, which is configured using the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters. The DNS resolver will use these available local resources and if it cannot find the IP Address corresponding to the requested DNS Record type, it will then query a DNS server for the IP Address.</p>
+</li>
+<li class="li"><p class="p">The DNS server will directly answer the query if it is the authoritative server for the particular domain (ex.: www.microchip.com); otherwise, it will check its local cache of the previous queries. If it cannot find the IP Address, it will then query the DNS servers on the Internet.</p>
+</li>
+<li class="li"><p class="p">Next, the DNS Server will query one of the root servers requesting a list of Authoritative servers for the .COM domain. The Root server will respond with the list of servers addresses hosting the .COM domain.</p>
+</li>
+<li class="li"><p class="p">The Authoritative DNS server will then respond with the IP Address or a list of IP Address (if more than one server hosts the website www.microchip.com) for www.microchip.com.</p>
+</li>
+<li class="li"><p class="p">The address that the DNS server returns back to the DNS client is then passed to the DNS application, which initially requested the IP Address information.</p>
+</li>
+<li class="li"><p class="p">DNS resolver clients are both internal stack modules (SNTP, for example), as well as applications using the TCP/IP stack.</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-33C64E61-290B-4E59-8FA1-A6650D3016EE-low.png" alt="DNS Figure 1" /><br /><p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">DNS is part of the Application Layer. Following is a description of how the DNS Client works and how it should be used.</p>
+<ul class="ul"><li class="li"><p class="p">By default, the DNS client is enabled and included in the TCP/IP stackbuild.</p>
+</li>
+<li class="li"><p class="p">The DNS Client module will use a UDP socket on port number 53 to contact the DNS server.</p>
+</li>
+<li class="li"><p class="p">The DNS client can be enabled/disabled dynamically at run time.</p>
+</li>
+<li class="li"><p class="p">When the TCP/IP commands module is built in the stack, commands for manipulation of the DNS module are available:</p>
+<ul class="ul"><li class="li"><p class="p">The DNS module can be enabled using the command "dns eth0 on".</p>
+</li>
+<li class="li"><p class="p">The DNS client module can be disabled from the command prompt using "dns eth0 off".</p>
+</li>
+<li class="li"><p class="p">In the above examples the first Ethernet interface is used. Any valid network interface can be used.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">Applications or demonstrations such as berkeley_tcp_client, berkeley_udp_client, tcpip_tcp_client, and tcpip_udp_client, use the TCPIP_DNS_Resolve function with Host name and Record type as arguments to resolve the domain host name. The DNS module supports the Record type of "A" for IPv4 addresses and "AAAA" for IPv6.</p>
+</li>
+<li class="li"><p class="p">The resolved domain name and the mapped IPv4 or IPv6 address will be stored in a table with the expiration time, which is calculated from the DNS server response.</p>
+</li>
+<li class="li"><p class="p">The server supplied IPv4 and IPv6 addresses will be cached internally (see the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters).</p>
+</li>
+<li class="li"><p class="p">The TCPIP_DNS_IsResolved function will return DNS_RES_OK if the domain name resolve is successful.</p>
+</li>
+<li class="li"><p class="p">The TCPIP_DNS_GetNumberOfIPAddresses function can be used to obtain the number of the IPv4 or IPv6 addresses present in the DNS Resolver tables.</p>
+</li>
+<li class="li"><p class="p">The DNS Resolver table (cache) stores the dcorresponding name, the IP address and the expiration time returned by the server.</p>
+</li>
+<li class="li"><p class="p">The functions, TCPIP_DNS_GetIPv4Address and TCPIP_DNS_GetIPv6Address, can be used to obtain the IPv4 or Ipv6 addresses for a resolved name entry.</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-775ECF91-9F8A-4378-B051-877BE6BB6DAF-low.png" alt="dnsClientFlowChart" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d17742e95"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d17742e97"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span><strong class="ph b">General Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_HandlerDeRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Deregisters a previously registered DNS client handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_HandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Registers a DNS client Handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_IsEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Determines if the DNS client is enabled on that specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_ClientInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Get the current DNS client parameters.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_ClientTask</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_Disable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Disables the DNS Client for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_Enable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Enables the DNS Client for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_EntryQuery</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Queries a DNS Resolver specific entry.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_GetIPAddressesNumber</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Get the count of resolved IPv4 and/or IPv6 address for a host name.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_GetIPv4Addresses</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Get IPV4 addresses for a DNS resolved name.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_GetIPv6Addresses</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Get IPV6 addresses for a DNS resolved name.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_IsNameResolved</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Determines if the DNS resolution is complete and provides the host IP address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_IsResolved</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Determines if the DNS resolution is complete and provides the host IP address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_RemoveAll</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Removes all the cached entries from DNS resolver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_RemoveEntry</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Remove a hostname from the DNS Hash entry.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_Resolve</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Begins resolution of an address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_Send_Query</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Forces resolution of an address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_EVENT_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Notification handler that can be called when a specific entry is resolved and entry is timed out.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>This enumeration is used to notify DNS client applications.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS client handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS client result codes.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>General DNS client info.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Provides a place holder for DNS client configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_ENABLE_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Flags for enabling the DNS service on an interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_ENTRY_QUERY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS module query data for both IPv4 and IPv6 .</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_RESOLVE_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS query record type.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_ADDRESS_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>This parameter can be used to choose ithe type of IP connection for the DNS client: IPv4 or IPv6. Currently only IPv4 is supported and this parameter is not used. Reserved for future development</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Default TTL time for a solved entry in the cache This value will be used when the DNS server TTL value for an entry is 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_ENTRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Number of DNS resolver entries</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS client cache entry time-out. If this symbol is zero then the entry time-out will be the one specified by the DNS server when the name was solved. Otherwise this value will be used as the cache entry time-out. Default should be 0.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Maximum and default number of IPv4 answers to be considered while processing DNS response from server for a query.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Maximum and default number of IPv6 answers to be considered while processing DNS response from server for a query.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Time-out for the a unsolved name, in seconds. The name resolution will be aborted if the TMO elapsed and the name could not be solved Should be greater than TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Retry lookup for a unsolved entry in the cache, in seconds. If the TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO seconds elapsed and the name has not been solved then the name entry will be marked with server timeout and the resolution will be retried. Should be less than TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Max DNS host name size Use an appropriate value, depending on the names that need to be solved</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>Max number of interfaces to take part in the DNS selection algorithm Should be always greater than 1:</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>the</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>default interface should always be considered for DNS resolution</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>Depending</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>on how many active interfaces select those to be considered for DNS resolution</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_SERVER_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>When the DNS Client connected to the DNS Server this is the elapsed time after which an the communication is considered to have timed failed if there was no reply from the server In seconds</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_TASK_PROCESS_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>DNS Client task processing rate, in milliseconds. The DNS Client module will process a timer event with this rate for processing its own state machine, etc. The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e95 "><span>TCPIP_DNS_CLIENT_USER_NOTIFICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d17742e97 "><span>allow DNS client user notification if enabled, the TCPIP_DNS_HandlerRegister/TCPIP_DNS_HandlerDeRegister functions exist and can be used</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-0E27BF3F-0F22-406F-B8BF-A06BB82B0681.html">TCPIP_DNS_CLIENT_ADDRESS_TYPE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6CEFB266-0BD0-4C0E-AD2C-D054CA502682.html">TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A02509EB-5D47-4F15-9624-DF4B347C58F2.html">TCPIP_DNS_CLIENT_CACHE_ENTRIES Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CD63EC26-3D34-4898-901D-90B16F42BA0E.html">TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-32CEAFDF-9937-4EAA-80F8-4582953EB286.html">TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4CC6E754-D7DA-499C-81A5-20DEFFB63D25.html">TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FDCC89BA-55AA-441D-B734-CB3EA482EDE4.html">TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8E122275-7175-409E-920E-1C72D335CEEF.html">TCPIP_DNS_CLIENT_INFO Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-608D53C9-C51D-405E-8113-C8B2AA011198.html">TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0E293EBD-6A94-44B6-9917-EBA8F444F9DF.html">TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9EA99835-9E73-4F37-A1CB-D6E0B063F7E9.html">TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4D261A34-344C-4CF2-8AF9-3C32257BA720.html">TCPIP_DNS_CLIENT_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4E3E9377-68EA-48AA-98EB-46D8991416A5.html">TCPIP_DNS_CLIENT_SERVER_TMO Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B1D8044C-E1A5-4436-8E8E-38D34314BE07.html">TCPIP_DNS_CLIENT_TASK_PROCESS_RATE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-18AFB3BA-C9CD-4F3A-ADCA-2B80AFE88533.html">TCPIP_DNS_CLIENT_USER_NOTIFICATION Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-35E80DC1-C40F-40AE-88AB-4316ADEF228A.html">TCPIP_DNS_ClientInfoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ADB87FB8-A110-467D-9863-27F5B113A7C2.html">TCPIP_DNS_ClientTask Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4642776A-7413-4A77-9C0C-9A2E5789B1BE.html">TCPIP_DNS_Disable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-20C3F443-5880-4DC7-BC60-D32CC338D577.html">TCPIP_DNS_Enable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2B48A7AD-86F6-4711-93E4-E9A1118EDFC0.html">TCPIP_DNS_ENABLE_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7820ED03-0BDB-4786-AB0E-75F76144F569.html">TCPIP_DNS_ENTRY_QUERY Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-25CE1982-3A3C-4B85-9E3D-AA4B7E4B6FB4.html">TCPIP_DNS_EntryQuery Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4C6B8A89-9CD3-4698-BF46-0AD17288090B.html">TCPIP_DNS_EVENT_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8C9E82DC-7C04-4972-8DBD-089F22E171B0.html">TCPIP_DNS_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AD5DAF5B-5EA9-4CA5-92A2-2AD3E1473A93.html">TCPIP_DNS_GetIPAddressesNumber Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58077ADE-51A1-4E08-B1F4-BF617D2F3518.html">TCPIP_DNS_GetIPv4Addresses Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4DF2541D-DF50-45F1-A4E8-1233E5161579.html">TCPIP_DNS_GetIPv6Addresses Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AAA58362-D612-464F-940A-A03BDA302B48.html">TCPIP_DNS_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D059B873-04CB-4F6C-B2D7-2D87A82824D6.html">TCPIP_DNS_HandlerDeRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-610DA949-0CAF-4DC7-AA73-F73300E87110.html">TCPIP_DNS_HandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-47111128-D371-4827-B15C-7E852623495C.html">TCPIP_DNS_IsEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4E898CC0-B8B1-4130-9FC4-86CBA68A57C1.html">TCPIP_DNS_IsNameResolved Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4B19C888-F3A6-4680-8508-BBC4BA473F08.html">TCPIP_DNS_IsResolved Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-669AB372-B432-43BD-9DF2-76C13A93F1CD.html">TCPIP_DNS_RemoveAll Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6CBFB260-A020-4046-9311-CA8D9CB62FC8.html">TCPIP_DNS_RemoveEntry Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-46C3BA25-A36F-4BA7-82B4-19DB6A5DAC82.html">TCPIP_DNS_Resolve Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C3770C12-D928-4ACF-97E7-B80D6EB08DCE.html">TCPIP_DNS_RESOLVE_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9A3C3F1A-4F48-40BD-B84C-C6EF22144F74.html">TCPIP_DNS_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3D0BA10F-4BC9-4755-9042-7B7A1861E748.html">TCPIP_DNS_Send_Query Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

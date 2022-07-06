@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="DNS Server Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C06046DF-729E-4D4F-9E86-FB915B181195.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B5B66C8F-584E-4375-B51E-6EBEBAFAE841.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E2E8B3F6-F88A-4869-9429-FB7C7B050578.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8F0815F6-929D-4B80-9547-C7035B35D7B1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-56D47863-AE1C-4329-B74E-94172AF0D4F1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D2E8B76C-19A7-4B1D-9DA1-735E139DB379.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FBBEF335-E6EC-41FA-A1D2-0FBC410116DE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6011D21B-FB7C-4248-A6F2-038D1D0E7DE6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2064EE48-95D8-4992-996D-4279F6E5C32F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9E580BCC-6867-4F1F-9FD8-FE486EF6BCEE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EF8AE58F-3351-4E3E-AE4B-E3A4517DCEB8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6A6C2AF6-6618-41DE-8AFA-493D780C7823.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C75ABC2F-EA35-400D-839B-EDEF4F05E892.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-37B0B645-1F9E-4705-8666-626A7FFDED10.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5771D5D7-6DD6-4FD4-A195-E0CFD94A9AAE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E3B76693-13F4-4614-93C6-B8679E7B4982.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-10455BA3-2082-4058-923C-B15397D8799C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2F42CC18-01BE-49A7-9B22-5A7799D26839.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9C5742A6-7A5F-4DA2-A10B-3E6827E3466B.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="dns-server-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>DNS Server Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-dns-server-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-987D1913-E20A-467D-9E57-DEC60B2EBE5D"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="dns-server-module">
+<h1 class="title topictitle1" id="ariaid-title1">DNS Server Module</h1><div class="body"><p class="p">A step-by-step analysis of the DNS Server is as follows:</p>
+<ul class="ul"><li class="li"><p class="p">DNS server can be enabled or disabled at run time.</p>
+</li>
+<li class="li"><p class="p">If the TCP/IP commands module is built in, it contains a "dnss" command that could be used for interfacing with the DNSS module.</p>
+</li>
+<li class="li"><p class="p">A client sends some query to the DNS Server of the TCP/IP stack for a name resolution.</p>
+</li>
+<li class="li"><p class="p">The DNS Server of the TCP/IP Stack first checks the configuration value of replyBoardAddr.</p>
+<ul class="ul"><li class="li"><p class="p">This Boolean flag is passed to the DNSS module at initialization time.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">If replyBoardAddr is true, the DNS server will reply to the client query with its own board address.</p>
+</li>
+<li class="li"><p class="p">If replyBoardAddr is false, the DNSS will check its cache for an entry for that name.</p>
+<ul class="ul"><li class="li"><p class="p">If a valid entry is found, the reply is sent to the client requesting the info.</p>
+</li>
+<li class="li"><p class="p">Otherwise no reply is provided.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">To update the DNSS cache, new entries can be added either using the DNSS API or directly from the console, using the "dnss" command.</p>
+</li>
+<li class="li"><p class="p">The dnsserv command is used to add, delete and display the DNS server details</p>
+</li>
+<li class="li"><p class="p">Authoritative Name servers and Addition Name servers are not processed.</p>
+</li>
+<li class="li"><p class="p">The client may store the answer to the DNS query in it's own cache for future use.</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-CDB7CA24-F904-4EC5-ADA3-954FB56F79E7-low.png" alt="DNSS Figure 1" /><br /><p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">DNSS is part of the Application Layer, as illustrated in the following figure</p>
+<br /><img class="image" src="GUID-6F52FFD0-2AC1-4DB0-998A-6A79E14F4648-low.png" alt="DNSS_tcpip_stack_diagram" /><br /><p class="p">DNSS resolution operations follow a simple state machine, as indicated in the following diagram</p>
+<br /><img class="image" src="GUID-B2942C6E-1E64-4D0D-9CDF-33C9DB7122ED-low.png" alt="dns server flow chart" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d25234e79"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d25234e81"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span><strong class="ph b">General Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_AddressCntGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Get DNS Server IPv4 or IPv4 Address count details for the Input value of Index</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_CacheEntryRemove</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Remove DNS server cache entry by Hostname and IP Type and IP(v4 or v6) address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_Disable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Disables the DNS Server for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_Enable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Enables the DNS server for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_EntryAdd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Add a IPv4 or IPv6 entry to the DNS server table.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_IsEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Determines if the DNS Server is enabled on the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_EntryGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Get DNS server IP address details from resolver pool entry.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Provides a place holder for DNS server configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>DNS result codes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_CACHE_MAX_SERVER_ENTRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Maximum DNS server Cache entries. It is the sum of TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS and TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Maximum and default number of IPv4 entries will be allowed to be configured from command prompt. and these many entries will be allowed to be sent in response for the DNS query with record type TCPIP_DNS_TYPE_A.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Maximum and default number of IPv6 entries will be allowed to be configured from command prompt. and these many entries will be allowed to be sent in response for the DNS query with record type TCPIP_DNS_TYPE_AAAA.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_HOST_NAME_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Default DNS host name length</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_REPLY_BOARD_ADDR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Reply DNS info with Board info only if the requested DNS host name is not present if TCPIP_DNSS_REPLY_BOARD_ADDR != 1 , then return no such name This is used for a boolean variable . the value should be 0 or 1</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_TASK_PROCESS_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>DNS Server time out task processing rate, in milliseconds. The DNS Server module will process a timer event with this rate for processing its own state machine, etc. The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>TCPIP_DNSS_TTL_TIME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>Default TTL time for a IP address is 10 minutes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span>__DNSS_H</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>This is macro __DNSS_H.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e79 "><span><em class="ph i">DNSS_CONFIG_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25234e81 "><span>This is macro <em class="ph i">DNSS_CONFIG_H</em>.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-C06046DF-729E-4D4F-9E86-FB915B181195.html">__DNSS_H Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B5B66C8F-584E-4375-B51E-6EBEBAFAE841.html">_DNSS_CONFIG_H_ Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E2E8B3F6-F88A-4869-9429-FB7C7B050578.html">TCPIP_DNSS_AddressCntGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8F0815F6-929D-4B80-9547-C7035B35D7B1.html">TCPIP_DNSS_CACHE_MAX_SERVER_ENTRIES Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-56D47863-AE1C-4329-B74E-94172AF0D4F1.html">TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D2E8B76C-19A7-4B1D-9DA1-735E139DB379.html">TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FBBEF335-E6EC-41FA-A1D2-0FBC410116DE.html">TCPIP_DNSS_CacheEntryRemove Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6011D21B-FB7C-4248-A6F2-038D1D0E7DE6.html">TCPIP_DNSS_Disable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2064EE48-95D8-4992-996D-4279F6E5C32F.html">TCPIP_DNSS_Enable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9E580BCC-6867-4F1F-9FD8-FE486EF6BCEE.html">TCPIP_DNSS_EntryAdd Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EF8AE58F-3351-4E3E-AE4B-E3A4517DCEB8.html">TCPIP_DNSS_EntryGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6A6C2AF6-6618-41DE-8AFA-493D780C7823.html">TCPIP_DNSS_HOST_NAME_LEN Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C75ABC2F-EA35-400D-839B-EDEF4F05E892.html">TCPIP_DNSS_IsEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-37B0B645-1F9E-4705-8666-626A7FFDED10.html">TCPIP_DNSS_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5771D5D7-6DD6-4FD4-A195-E0CFD94A9AAE.html">TCPIP_DNSS_REPLY_BOARD_ADDR Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E3B76693-13F4-4614-93C6-B8679E7B4982.html">TCPIP_DNSS_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-10455BA3-2082-4058-923C-B15397D8799C.html">TCPIP_DNSS_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2F42CC18-01BE-49A7-9B22-5A7799D26839.html">TCPIP_DNSS_TASK_PROCESS_RATE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9C5742A6-7A5F-4DA2-A10B-3E6827E3466B.html">TCPIP_DNSS_TTL_TIME Macro</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="ARP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7161C177-734B-469A-9143-4C88FC11C85D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C6B8DB57-E903-42F6-9515-21BB0F5E1070.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-234EC358-0CE1-43BF-BA84-993715DE198D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-65CE7526-616B-443D-9B42-44FA26F81697.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2F3E4434-0B2E-4059-AF87-A2F5B95E7938.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AAD576E7-85F8-4C15-88C1-266019B0D71B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-08E039FC-538F-40F5-85D1-987205EDA6D6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EE09064C-478A-4CE7-85A7-5D304FE2A8D4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-79671133-697D-41F2-B607-BFA7F86B1F10.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0D2E65B8-EE01-4CE7-BA12-3A7355A87596.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E8EEC0F0-1924-451B-ABCF-1BBAD449C4F5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9E113802-9285-489D-859D-4D21BD2E186E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A9EE533F-5EAF-4E72-93FB-1AE557FE2B9E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7CD7785A-0273-4BB7-A83B-BA45E6B1D424.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C726B4C4-41B2-43E9-BCD1-E6268F980E7E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4FC75886-D79B-4FCD-8122-4737B2FDEF8F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BD72E118-CD30-4DC9-B225-7D7070380635.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8F283FF4-09EC-49BD-AE31-9E558EA3E4C9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-700B1BDA-09F9-4346-8F0B-D98C6BB5161E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BF9C82C4-9CAB-4E2B-971A-737BFB1E43B1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A9CD3E3D-0BF0-4167-B5CF-DAF2B1C9577E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EB4703E7-B19F-4204-B20F-7806F4FECFEC.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="arp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>ARP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-arp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-3DCBF1EB-5623-4419-B244-DDD9B01704EE"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="arp-module">
+<h1 class="title topictitle1" id="ariaid-title1">ARP Module</h1><div class="body"><p class="p">The Address Resolution Protocol, or ARP, is a foundation layer_of TCP/IP. It translates IP addresses to physical MAC addresses</p>
+<p class="p">TCP and UDP applications will not need to access ARP directly. The IPv4 module will handle the ARP operations transparently.</p>
+<p class="p">Responses to incoming ARP requests are processed automatically. Resolution of ARP requests follows a simple state machine, as indicated in the following diagram.</p>
+<br /><img class="image" src="GUID-06983D92-13DD-4513-92B7-6EDD3F2F43BD-low.png" alt="arp_diagram" /><br /><p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">This module provides software abstraction of the ARP module existent in any TCP/IP Stack implementation. It removes the overhead of address resolution from all other modules in the stack.</p>
+<br /><img class="image" src="GUID-174DF0D4-0F5A-46C6-8BA8-5347C61F5D98-low.png" alt="arp_resolution_process" /><br /><p class="p"><strong class="ph b">How the Library Works</strong></p>
+<p class="p">The ARP module provides address resolution capabilities for the TCP/IP stack.</p>
+<p class="p">The ARP module is an independent module that maintains its state across calls and updates its state machine. A data storage (cache) is maintained and updated internally for each interface existent in the system. The number of entries in each cache is configurable at initialization time.</p>
+<p class="p">The ARP state machine can remove entries from the cache and can provide signals when a specific entry has been resolved or has timed out. The purging of the cache is done internally base on a time-out parameter that is dynamically configurable.</p>
+<p class="p">The module provides a notification mechanism which simplifies the design of the ARP clients. The most important client of the ARP module is the IPv4_layer.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d76886e48"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d76886e50"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>ARP_CACHE_DELETE_OLD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>On initialization, delete the old cache if still in place Else don't re-initialize Default should be 1</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_ENTRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Number of entries in the cache. Default number of entries per interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_ENTRY_RETRIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Number of ARP requests generated for resolving an entry.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_PENDING_ENTRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Timeout for a cache entry pending to be solved, in seconds. The entry will be removed if the tmo elapsed and the entry has not been solved. A solved entry moves to the solved entries timeout.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_PENDING_RETRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Timeout for resending an ARP request for a pending entry. In order to prevent the ARP flooding the standard recommends it to be greater than 1 sec. It should be less than TCPIP_ARP_CACHE_PENDING_ENTRY_TMO</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_PERMANENT_QUOTA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Max percentage of permanent entries in the cache. Note that since permanent entries cannot be removed they tend to degrade the efficiency of the cache look up.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_PURGE_QUANTA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>The number of entries to delete, once the threshold is reached.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_PURGE_THRESHOLD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Default purge threshold, percentage Once the number of resolved entries in the cache gets beyond the threshold some resolved entries will be purged.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Timeout for a solved entry in the cache, in seconds. The entry will be removed if the tmo elapsed and the entry has not been referenced again</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_GRATUITOUS_PROBE_COUNT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Number of ARP requests generated when sending a gratuitous ARP probe. Default value should be 1.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_TASK_PROCESS_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>ARP task processing rate, in milliseconds. The ARP module will process a timer event with this rate for maintaining its own queues, processing timeouts, etc. Choose it so that the other ARP_CACHE_xxx_TMO are multiple of this The default value is 2 seconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_PRIMARY_CACHE_ONLY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>ARP caches configuration for aliases. If this symbol is true, then the alias interfaces share the cache with the primary interface. Otherwise each interface uses its own cache. Default value should be 1 if the alias interfaces are in the same network with the primary interface</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span><strong class="ph b">General Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_HandlerDeRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Deregisters the event handler</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_HandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Register an ARP resolve handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntryGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Gets the current mapping for an IP address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntryRemove</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Removes the mapping of an address, even a permanent one</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntryRemoveNet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Removes all the entries belonging to a network interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntrySet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Adds an ARP cache entry for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_IsResolved</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Determines if an ARP request has been resolved yet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_Probe</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Transmits an ARP probe to resolve an IP address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_Resolve</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Transmits an ARP request to resolve an IP address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span><strong class="ph b">Cache Manipulation Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CacheEntriesNoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Used to retrieve the number of entries for a specific interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_CacheThresholdSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Sets the cache threshold for the specified interface in percent.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntryQuery</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Queries an ARP cache entry using the index of the cache line.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EntryRemoveAll</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Removes all the mapping belonging to an interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_ENTRY_QUERY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>ARP entry query.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_ENTRY_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Type of ARP entry.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EVENT_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Notification handler that can be called when a specific entry is resolved.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Events reported by ARP.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>ARP handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_OPERATION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>Type of ARP operation.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>ARP results (success and failure codes).</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span>TCPIP_ARP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span>This is type TCPIP_ARP_MODULE_CONFIG.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e48 "><span> </span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d76886e50 "><span> </span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-7161C177-734B-469A-9143-4C88FC11C85D.html">TCPIP_ARP_CacheEntriesNoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C6B8DB57-E903-42F6-9515-21BB0F5E1070.html">TCPIP_ARP_CacheThresholdSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-234EC358-0CE1-43BF-BA84-993715DE198D.html">TCPIP_ARP_ENTRY_QUERY Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-65CE7526-616B-443D-9B42-44FA26F81697.html">TCPIP_ARP_ENTRY_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2F3E4434-0B2E-4059-AF87-A2F5B95E7938.html">TCPIP_ARP_EntryGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AAD576E7-85F8-4C15-88C1-266019B0D71B.html">TCPIP_ARP_EntryQuery Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-08E039FC-538F-40F5-85D1-987205EDA6D6.html">TCPIP_ARP_EntryRemove Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EE09064C-478A-4CE7-85A7-5D304FE2A8D4.html">TCPIP_ARP_EntryRemoveAll Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-79671133-697D-41F2-B607-BFA7F86B1F10.html">TCPIP_ARP_EntryRemoveNet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0D2E65B8-EE01-4CE7-BA12-3A7355A87596.html">TCPIP_ARP_EntrySet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E8EEC0F0-1924-451B-ABCF-1BBAD449C4F5.html">TCPIP_ARP_EVENT_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9E113802-9285-489D-859D-4D21BD2E186E.html">TCPIP_ARP_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A9EE533F-5EAF-4E72-93FB-1AE557FE2B9E.html">TCPIP_ARP_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7CD7785A-0273-4BB7-A83B-BA45E6B1D424.html">TCPIP_ARP_HandlerDeRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C726B4C4-41B2-43E9-BCD1-E6268F980E7E.html">TCPIP_ARP_HandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4FC75886-D79B-4FCD-8122-4737B2FDEF8F.html">TCPIP_ARP_IsResolved Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BD72E118-CD30-4DC9-B225-7D7070380635.html">TCPIP_ARP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8F283FF4-09EC-49BD-AE31-9E558EA3E4C9.html">TCPIP_ARP_OPERATION_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-700B1BDA-09F9-4346-8F0B-D98C6BB5161E.html">TCPIP_ARP_Probe Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BF9C82C4-9CAB-4E2B-971A-737BFB1E43B1.html">TCPIP_ARP_Resolve Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A9CD3E3D-0BF0-4167-B5CF-DAF2B1C9577E.html">TCPIP_ARP_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EB4703E7-B19F-4204-B20F-7806F4FECFEC.html">TCPIP_ARP_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

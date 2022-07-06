@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="TCPIP_HTTP_NET_EVENT_TYPE Enumeration" />
+<meta name="DC.relation" scheme="URI" content="GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="tcpip-http-net-event-type-enumeration" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TCPIP_HTTP_NET_EVENT_TYPE Enumeration</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tcpip-http-net-event-type-enumeration" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-678252B9-1A23-48D6-8843-1AED6826E8BB"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="tcpip-http-net-event-type-enumeration">
+<h1 class="title topictitle1" id="ariaid-title1">TCPIP_HTTP_NET_EVENT_TYPE Enumeration</h1><div class="body"></div>
+<div class="related-links">
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845.html">HTTP Net Module</a></div>
+</div>
+</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d226591e21', this);">Copy</button><code id="d226591e21" content="typedef enum {&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_NONE = 0,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_OPEN,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CLOSE_DONE,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_OPEN,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_CLOSE,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR = -1,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR = -2,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR = -3,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR = -4,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR = -5,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR = -6,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DEPTH_ERROR = -7,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR = -8,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR = -9,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR = -10,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR = -11,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR = -12,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR = -13,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR = -14,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR = -15,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR = -16,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR = -17,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR = -18,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR = -19,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR = -20,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED = 0x8001,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED = 0x8002,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED = 0x8003,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED = 0x8004,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN = 0x8005,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH = 0x8006,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED = 0x8007,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN = 0x8008,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID = 0x8009,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED = 0x800a,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED = 0x800b,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY = 0x8020,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY = 0x8021,&#xD;&#xA;    TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED = 0x8030&#xD;&#xA;} TCPIP_HTTP_NET_EVENT_TYPE;&#xD;">typedef enum {&#xD;
+    TCPIP_HTTP_NET_EVENT_NONE = 0,&#xD;
+    TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE,&#xD;
+    TCPIP_HTTP_NET_EVENT_OPEN,&#xD;
+    TCPIP_HTTP_NET_EVENT_CLOSE_DONE,&#xD;
+    TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT,&#xD;
+    TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR,&#xD;
+    TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_OPEN,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_CLOSE,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR = -1,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR = -2,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR = -3,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR = -4,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR = -5,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR = -6,&#xD;
+    TCPIP_HTTP_NET_EVENT_DEPTH_ERROR = -7,&#xD;
+    TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR = -8,&#xD;
+    TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR = -9,&#xD;
+    TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR = -10,&#xD;
+    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR = -11,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR = -12,&#xD;
+    TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR = -13,&#xD;
+    TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR = -14,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR = -15,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR = -16,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR = -17,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR = -18,&#xD;
+    TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR = -19,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR = -20,&#xD;
+    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED = 0x8001,&#xD;
+    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED = 0x8002,&#xD;
+    TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED = 0x8003,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED = 0x8004,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN = 0x8005,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH = 0x8006,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED = 0x8007,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN = 0x8008,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID = 0x8009,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED = 0x800a,&#xD;
+    TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED = 0x800b,&#xD;
+    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY = 0x8020,&#xD;
+    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY = 0x8021,&#xD;
+    TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED = 0x8030&#xD;
+} TCPIP_HTTP_NET_EVENT_TYPE;&#xD;</code></pre></div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="title topictitle2" id="ariaid-title3">Description</h2><div class="body"><p class="p">Enumeration: TCPIP_HTTP_NET_EVENT_TYPE</p>
+<p class="p">This enumeration defines the types of the HTTP reported events when processing dynamic variables, files, etc.</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title4" id="members"><h2 class="title topictitle2" id="ariaid-title4">Members</h2><div class="body">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d226591e41"><span>Members</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d226591e43"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_NONE = 0</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>No event.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Notification that a FS upload operation was completed successfully.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_OPEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>An attempt to open the connection was made, data received.  - Subject to parsing and other validation, it may result into a valid connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CLOSE_DONE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The non-persistent connection was done and closed.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The connection was closed due to a client timeout.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The connection was closed due to a POST processing error.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The connection was closed by the client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_OPEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A HTTP file was successfully opened.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_CLOSE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A HTTP file was closed.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR = -1</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>An error occurred when opening a HTTP file.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR = -2</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A file name was not specified.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR = -3</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A file name was longer than the HTTP storage space.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR = -4</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>File size error.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR = -5</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>File read error.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR = -6</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>File parse error: line too long.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DEPTH_ERROR = -7</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The depth allowed for a recursive call was exceeded.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR = -8</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>An error occurred when parsing: dynamic variable name terminator could not be found, for example.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR = -9</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A write error was supported while performing an FS upload.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR = -10</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A write error was reported while mounting after an FS upload.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR = -11</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The number of retries for getting a chunk from the pool has been exceeded.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR = -12</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>The number of retries for getting a file buffer has been exceeded.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR = -13</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Out of memory when trying to allocate space for a dynamic variable descriptor. Note that dynamic allocation is used for the dynamic variable descriptor.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR = -14</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Out of memory when trying to allocate space for a file upload. Note that dynamic allocation is used for the file upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR = -15</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>An error occurred when parsing an SSI command: SSI terminator could not be found, for example.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR = -16</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>An unknown/unsupported SSI command.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR = -17</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>A SSI attribute error: command w/o attribute, etc.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR = -18</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Out of memory when trying to allocate space for a SSI command descriptor. Not that dynamic allocation is used for the SSI commands.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR = -19</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Out of memory when trying to allocate memory for the peek buffer. The peek operation failed.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR = -20</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Out of memory when trying to allocate memory for the SSI echo buffer. The echo operation failed.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED = 0x8001</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: a dynamic variable argument name too long; truncated.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED = 0x8002</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: too many arguments for a dynamic variable; truncated.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED = 0x8003</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: too many retries for a dynamic variable; stopped.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED = 0x8004</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: too many attributes for a SSI command; truncated.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN = 0x8005</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: unrecognized/unsupported SSI command attribute.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH = 0x8006</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: wrong number of SSI command attributes.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED = 0x8007</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: number of SSI set variables exceeded.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN = 0x8008</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: SSI variable does not exist.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID = 0x8009</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: SSI variable is void - not echoed.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED = 0x800a</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: SSI variable hash could not be created, allocation failed. There will be no run time SSI variable support.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED = 0x800b</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Event: SSI variable deleted.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY = 0x8020</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: allocation from the HTTP chunk pool failed (the allocation will be retried).</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY = 0x8021</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: allocation from the HTTP file buffers pool failed (the allocation will be retried).</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e41 "><span>TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED = 0x8030</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d226591e43 "><span>Warning: the HTTP peek buffer is too small and cannot contain all the data available in the transport socket buffer and a HTTP search operation may fail. This will happen only for transport sockets that do not support peek operation with an offset parameter.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title5" id="remarks"><h2 class="title topictitle2" id="ariaid-title5">Remarks</h2><div class="body"><p class="p">Multiple warnings can be set simultaneously.</p>
+</div>
+</div>
+</body>
+</html>

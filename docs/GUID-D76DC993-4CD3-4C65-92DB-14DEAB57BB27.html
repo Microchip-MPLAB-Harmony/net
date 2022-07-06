@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="TFTP Server Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4F773C2C-C548-4F4B-841F-2C2C5900FBDF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-39087128-B789-43C2-9051-FF6B16C602D8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-696B5441-B8C4-4CC1-BCCC-A0BF436D411C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-05688223-4365-4430-8F45-21B54F07FFB5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7DA9A0EF-BA77-4B60-A11F-B908DEAD1BE7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B6CFE3F9-30F7-4067-B4FD-735253EC028E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7CCB132F-5845-4C15-AB31-EECB0F5A5723.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0924570F-F980-46E8-AC04-3891920C141E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4FB260C5-55E6-4E39-85B4-DD70BB05B922.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-52D042FB-F60D-4A4F-94A4-103128DEF604.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A4D852FB-4A68-4096-8395-1AA3B2DC9FAA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-00731900-7B6C-42F1-A7BD-F9F7450D3600.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-60DFB271-66B4-4042-9D04-C8BA5BFBF391.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A2F2FCBB-C950-48DE-953A-1042AE6F5FB3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-34F80898-63A3-46F7-B5EC-669CC0A89DAE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-612707E0-4C71-40F1-B820-B44CFC4A2573.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-78138D90-0366-4702-91C7-86ADDC7DCC13.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9BD25F40-82F5-447B-AED0-BD21FC7D0681.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E36D97BD-C847-4199-95DA-E0AF04A11C0D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B37F9580-01DC-4D9C-862B-D001EE912110.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="tftp-server-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TFTP Server Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tftp-server-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-D76DC993-4CD3-4C65-92DB-14DEAB57BB27"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="tftp-server-module">
+<h1 class="title topictitle1" id="ariaid-title1">TFTP Server Module</h1><div class="body"><p class="p">The TCP/IP Stack Library Trivial File Transfer Protocol (TFTP) module is a simple protocol used to transfer files.</p>
+<p class="p">The TFTP server waits for client requests to read and write files.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">The TFTP communication is based on a client/server model. The process of transferring a file consists of three main phases. In highly generalized terms, these phases are:</p>
+<ul class="ul"><li class="li"><p class="p">Initial Connection:</p>
+<ul class="ul"><li class="li"><p class="p">The TFTP client establishes the connection by sending an initial request to the server.</p>
+</li>
+<li class="li"><p class="p">The server responds back to the client and the connection is effectively opened.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">Data Transfer:</p>
+<ul class="ul"><li class="li"><p class="p">Once the connection has been established, the client and server exchange TFTP messages. One device sends data and the other sends acknowledgments.</p>
+</li>
+</ul>
+</li>
+<li class="li"><p class="p">Connection Termination:</p>
+<ul class="ul"><li class="li"><p class="p">When the last TFTP message containing data has been sent and acknowledged, the connection is terminated.</p>
+</li>
+</ul>
+</li>
+</ul>
+<br /><img class="image" src="GUID-80B572B8-A68C-400D-8CDE-1C23753F195D-low.png" alt="TFT_client_server_comm" /><br /><p class="p"><strong class="ph b">How the Library Works</strong></p>
+<p class="p">Any transfer begins with a request from a client to read or write a file. If the server grants the request, the connection is opened and the file is sent usually in fixed length blocks of 512 bytes. Each data packet contains one block of data, and must be acknowledged by an acknowledgment packet before the next packet can be sent. A data packet of less than 512 bytes, signals termination of a transfer. If a packet gets lost in the network, the intended recipient will time out and may retransmit the last packet (which may be data or an acknowledgment), thus causing the sender of the lost packet to retransmit that lost packet.</p>
+<p class="p"><em class="ph i">TFTP Transfer Set up</em></p>
+<ul class="ul"><li class="li"><p class="p">To set up a TFTP transfer, a TFTP client device can request (get) files from the server and also transfer (put) files to the server.</p>
+</li>
+<li class="li"><p class="p">The File System on the server is transparent. Currently the Microchip Harmony devices support MPFS or FAT file systems.</p>
+</li>
+<li class="li"><p class="p">The Microchip TFTP server implementation allows the user to start and stop the service dynamically by using the TFTP Application Programming Interface ( API) function.</p>
+</li>
+</ul>
+<p class="p"><em class="ph i">TFTP Transfer Options</em></p>
+<p class="p">The following options are supported in the current TFTP server implementation (see RFC 2348, 2349):</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d52204e78"><span>TFTP Option Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d52204e80"><span>TFTP Option Code (Used in Request Messages)</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d52204e82"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e78 "><span>Block Size</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e80 "><span>blksize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e82 "><span>The option allows the Client and the Server to send data blocks of a size different than 512 bytes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e78 "><span>Timeout Interval</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e80 "><span>interval</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e82 "><span>The option permits the client /server to agree on a specified number of seconds to use for their retransmission.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e78 "><span>Transfer Size</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e80 "><span>tsize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e82 "><span>The option allows the side receiving the file to determine the ultimate size of the transfer before it begins.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">TFTP Client Server Communication</strong></p>
+<p class="p"><em class="ph i">TFTP Write Request (WRQ)</em></p>
+<p class="p">The following diagram illustrates a write request</p>
+<br /><img class="image" src="GUID-23C771ED-99E8-4691-8E03-2A33FBB0DA03-low.png" alt="TFT_client_write_req" /><br /><p class="p"><em class="ph i">TFTP Read Request (RRQ)</em></p>
+<p class="p">The following diagram illustrates a read request</p>
+<br /><img class="image" src="GUID-73724EB7-D583-412A-96EF-9A45816FC909-low.png" alt="TFT_client_read_req" /><br /><p class="p"><em class="ph i">Flow chart for the TFTP server processing incoming requests</em></p>
+<br /><img class="image" src="GUID-18F372DF-2890-4D13-940D-35C5BF3BDB42-low.png" alt="TFT_server_read_write_flowchart" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d52204e141"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d52204e143"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_CLIENT_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The number of Clients requests will be processed for the TFTP server stack.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_DEFAULT_BLOCK_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The maximum value for the file name size. Even though the RFC allows blocks of up to 65464 bytes, In practice the limit is set to 1468 bytes: the size of an Ethernet MTU minus the headers of TFTP (4 bytes), UDP (8 bytes) and IP (20 bytes)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_DEFAULT_FILESIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The maximum size for a file in bytes to be accepted.TFTP Opcode defined by RFC 2347.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_DEFAULT_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>This time is used during the TFTP retransmission and TFTP Client wait for these many seconds before retransmitting .</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_RETRANSMIT_COUNT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The number of attempts to retransmit the previous packet before declaring a TIMEOUT error.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The TFTP server task rate in milliseconds. The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_FILENAME_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>The default length of the file name is defined to 64 bytes.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_USER_NOTIFICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>allow TFTP Server user notification if enabled, the TCPIP_TFTPS_HandlerRegister/TCPIP_TFTPS_HandlerDeRegister functions exist and can be used</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_ClientsNumber</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Determines the number of clients running for this server.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_Disable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Disables the TFTP server for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_Enable</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Enables the TFTP server for the specified interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_HandlerDeRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>De-registers a previously registered TFTP Server handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_HandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Registers a TFTP Server Handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_IsEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Determines if a TFTP server is active or not.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_EVENT_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>List of events for the TFTPS module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Provides a list of possible results for the TFTPS module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Placeholder for TFTPS Module Configuration</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_EVENT_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>Notification handler that can be called when there is a TFTP process for a client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e141 "><span>TCPIP_TFTPS_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d52204e143 "><span>TFTP server handle.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-4F773C2C-C548-4F4B-841F-2C2C5900FBDF.html">TCPIP_TFTPS_CLIENT_NUMBER Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-39087128-B789-43C2-9051-FF6B16C602D8.html">TCPIP_TFTPS_ClientsNumber Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-696B5441-B8C4-4CC1-BCCC-A0BF436D411C.html">TCPIP_TFTPS_DEFAULT_BLOCK_SIZE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-05688223-4365-4430-8F45-21B54F07FFB5.html">TCPIP_TFTPS_DEFAULT_FILESIZE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7DA9A0EF-BA77-4B60-A11F-B908DEAD1BE7.html">TCPIP_TFTPS_DEFAULT_TIMEOUT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B6CFE3F9-30F7-4067-B4FD-735253EC028E.html">TCPIP_TFTPS_Disable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7CCB132F-5845-4C15-AB31-EECB0F5A5723.html">TCPIP_TFTPS_Enable Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0924570F-F980-46E8-AC04-3891920C141E.html">TCPIP_TFTPS_EVENT_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4FB260C5-55E6-4E39-85B4-DD70BB05B922.html">TCPIP_TFTPS_EVENT_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-52D042FB-F60D-4A4F-94A4-103128DEF604.html">TCPIP_TFTPS_FILENAME_LEN Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A4D852FB-4A68-4096-8395-1AA3B2DC9FAA.html">TCPIP_TFTPS_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-00731900-7B6C-42F1-A7BD-F9F7450D3600.html">TCPIP_TFTPS_HandlerDeRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-60DFB271-66B4-4042-9D04-C8BA5BFBF391.html">TCPIP_TFTPS_HandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A2F2FCBB-C950-48DE-953A-1042AE6F5FB3.html">TCPIP_TFTPS_IsEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-34F80898-63A3-46F7-B5EC-669CC0A89DAE.html">TCPIP_TFTPS_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-612707E0-4C71-40F1-B820-B44CFC4A2573.html">TCPIP_TFTPS_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-78138D90-0366-4702-91C7-86ADDC7DCC13.html">TCPIP_TFTPS_RETRANSMIT_COUNT Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9BD25F40-82F5-447B-AED0-BD21FC7D0681.html">TCPIP_TFTPS_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E36D97BD-C847-4199-95DA-E0AF04A11C0D.html">TCPIP_TFTPS_TASK_TICK_RATE Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B37F9580-01DC-4D9C-862B-D001EE912110.html">TCPIP_TFTPS_USER_NOTIFICATION Macro</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

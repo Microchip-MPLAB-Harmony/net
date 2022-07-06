@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="NDP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-54C4E5DE-AFB8-4B83-95AF-215BE1947787.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ndp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>NDP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ndp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-5FBC9524-1287-42EB-B1A1-6F4C3C9980FD"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ndp-module">
+<h1 class="title topictitle1" id="ariaid-title1">NDP Module</h1><div class="body"><p class="p">The NDP (Neighbor Discovery Protocol) for IP version 6 is used by IPv6 nodes on the same link to discover each other's presence. RFC - 4861.</p>
+<p class="p">NDP module is responsible for:</p>
+<ul class="ul"><li class="li"><p class="p">Address Auto configuration of nodes</p>
+</li>
+<li class="li"><p class="p">Discovery of other nodes in the link (It can be a Router Discovery or Neighbor Discovery)</p>
+</li>
+<li class="li"><p class="p">Determining the link-layer_address of other nodes</p>
+</li>
+<li class="li"><p class="p">Duplicate address detection (DAD)</p>
+</li>
+<li class="li"><p class="p">Finding available routers and Domain Name System (DNS) servers</p>
+</li>
+<li class="li"><p class="p">Address Prefix discovery</p>
+</li>
+<li class="li"><p class="p">Parameter Discovery (Such as Link MTU or Hop limit)</p>
+</li>
+</ul>
+<p class="p"><em class="ph i">Comparing with IPv4:</em></p>
+<ul class="ul"><li class="li"><p class="p">NDP is a substitute of ARP (Address Resolution protocol ). This new mechanism uses a mix of ICMPv6 and multicast addresses to discover the IPv6 node on same link.</p>
+</li>
+<li class="li"><p class="p">NDP includes Neighbor Unreachability Detection (NUD) , thus improving the robustness of packet delivery.</p>
+</li>
+<li class="li"><p class="p">Unlike IPv4 broadcast addresses, IPv6 address resolution multicasts are spread over 4 billion (2^32) multicast addresses, greatly reducing address resolution-related interrupts on nodes other than the target. Moreover, non-IPv6 machines should not be interrupted at all.</p>
+</li>
+<li class="li"><p class="p">Neighbor Discovery defines five different ICMPv6 packet types.</p>
+</li>
+</ul>
+<p class="p"><em class="ph i">Five Different ICMPv6 Packet Types:</em></p>
+<ul class="ul"><li class="li"><p class="p">Router Solicitation - Hosts inquire with Router Solicitation message to locate routers on the attached link</p>
+</li>
+<li class="li"><p class="p">Router Advertisement - Router advertise their presence periodically to all the nodes or in response to the Router Solicitation message</p>
+</li>
+<li class="li"><p class="p">Neighbor Solicitation - Neighbor solicitations are used by nodes to determine the Link Layer address of a neighbor, or to verify that a neighbor is still reachable via a cached Link Layer address</p>
+</li>
+<li class="li"><p class="p">Neighbor Advertisement - Neighbor advertisements are used by nodes to respond to a Neighbor Solicitation message</p>
+</li>
+<li class="li"><p class="p">Redirect - Routers may inform hosts of a better first hop router for a destination</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">This module provides software abstraction of the IPv6 module existent in any TCP/IP Stack implementation. It removes the overhead of address resolution from all other modules in the stack.</p>
+<br /><img class="image" src="GUID-AE7D212F-B3CD-4078-A1CD-CB312292E663-low.png" alt="IPv6" /><br /><p class="p"><em class="ph i">Link Layer Neighbor Discovery</em></p>
+<ul class="ul"><li class="li"><p class="p">Using the address FEC0::1:0:0:1 :A, node A wants to deliver packets to destination node B using the IPv6 address FEC0::1 :0:0:1 :B on the same local link. However, node A does not know node B's link-layer address. Node A sends an ICMPv6 Type</p>
+</li>
+</ul>
+<p class="p">135 message (neighbor solicitation) on the local link using its site-local address FEC0::1:0:0:1:A as the IPv6 source address, the solicited-node multicast address FF02::1 :FF01:B corresponding to the target address FEC0::1 :0:0:1 :B as the destination IPv6 address, and the source link-layer address 00:04:a3:13:12:b4 of the sender, node A, as data of the ICMPv6 message. The source link-layer address of this frame is the link-layer address 00:04:a3:13:12:b4 of node A. The destination link-layer address 33:33:FF:01 :00:0B of this frame uses multicast mapping of the destination IPv6 address FF02::1 :FF01 :B.</p>
+<ul class="ul"><li class="li"><p class="p">Node B, which is listening to the local link for multicast addresses, intercepts the neighbor solicitation message because the destination IPv6 address FF02::1:FF01:B represents the solicited-node multicast address corresponding to its IPv6 address FEC0::1:0:0:1:B.</p>
+</li>
+<li class="li"><p class="p">Node B replies by sending a neighbor advertisement message using its site-local address FEC0::1 :0:0:1 :B as the IPv6 source address and the site-local address FEC0::1 :0:0:1 :A as the destination IPv6 address. It also includes its link-layer address 00:04:a3:13:12:b5 in the ICMPv6 message. After receiving neighbor solicitation and neighbor advertisement messages, node A and node B know each other's link-layer addresses.</p>
+</li>
+</ul>
+<p class="p">Learned link-layer addresses are kept in a neighbor discovery table (neighbor cache). Therefore, the nodes can communicate on the local link. The neighbor solicitation message is also used by nodes to verify the reachability of neighbor nodes in the neighbor discovery table (neighbor cache). However, the unicast addresses of the neighbor nodes are used as destination IPv6 addresses in ICMPv6 messages instead of solicited-node multicast addresses in this situation. It is possible for a node that changes its link-layer address to inform all other neighbor nodes on the local link by sending a neighbor advertisement message using the all-nodes multicast address FF02::1 . The neighbor discovery table of the nodes on the local link is updated with the new link-layer address.</p>
+<br /><img class="image" src="GUID-37E3C65F-1AFD-44E9-995F-12189B76AEFE-low.png" alt="ndp" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d139483e110"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d139483e112"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_MTU_INCREASE_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>600 seconds</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_DELAY_FIRST_PROBE_TIME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>5 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>1 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_MULTICAST_SOLICIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>3 transmissions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_NEIGHBOR_ADVERTISEMENT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>3 transmissions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>1 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_RTR_SOLICITATIONS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>3 transmissions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>3 transmissions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_REACHABLE_TIME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>30 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_RETRANS_TIMER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>1 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_RTR_SOLICITATION_INTERVAL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>4 s</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_TASK_TIMER_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>The NDP task rate, milliseconds The default value is 32 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_IPV6_NDP_VALID_LIFETIME_TWO_HOURS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>Sets the lifetime to 2 hours</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span><strong class="ph b">Reachability Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e110 "><span>TCPIP_NDP_NborReachConfirm</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d139483e112 "><span>Confirms that a neighbor is reachable</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-54C4E5DE-AFB8-4B83-95AF-215BE1947787.html">TCPIP_NDP_NborReachConfirm Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

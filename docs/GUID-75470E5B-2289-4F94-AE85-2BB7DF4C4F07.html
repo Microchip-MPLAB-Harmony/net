@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Networking Presentation Layer" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9F99FA2F-E094-41F2-8A2A-AC62313B0A62.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8D40C273-579B-431C-8350-F9A2B709D259.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-16E9830E-54F2-4688-B1E4-9B92F761DC5E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AFECA098-E4EC-4847-AC64-921868BB48BA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-606205B5-997A-4AA8-BB6E-08429D855CA7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-36D5D72A-D963-4A8C-8012-D552407D8AB0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E64B3C2D-C626-4B06-B081-9BECE00C6AD2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1334BC43-35EF-48EF-877B-770E61118974.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4EEA334F-2FEB-44C1-A9DF-D5ADFE6717A8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-20567716-31DC-461C-B196-A643797C90DB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-85F57BC3-AB6F-4F15-AFE1-99791B84C799.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-452D786F-6D8D-4201-BB10-6483F678465E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C0360366-50E8-4421-B1F3-A8D7A3FC81E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2C33D70C-FEB0-4467-BBDD-91FABD33F0F8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-59104AE1-2716-4892-A5C5-8D1C643E81C1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1EE89A71-63B4-4674-B669-A8726597917D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-68556710-752A-4812-8AD1-86673574C3E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4FDEB3AD-E2FB-4041-B5EC-3DB621AF809B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D8D0D1D6-ECAA-40CF-B09C-90F06AE6107F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5FE0E246-65E8-4D1D-AD2B-A0998C58F0D7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-524962B7-0E09-4846-8F53-7213CA71FF2D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AA37C1CF-735E-41C1-99D3-ADDED9199035.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F54F388D-F63E-44C5-8F04-CC6ADEE3E514.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E8BBC278-0227-40A6-AD91-354FC3A588EC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B1B95E81-E580-41FE-97B9-4C5A476C550D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EC147DB3-37CB-4CFA-9AE2-2396C7F3E8C9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-02895CBF-4E55-4E31-817E-11206B95FDE1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D8879307-6878-418A-9A76-492EB5093D5D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5D83E6FA-5BCD-43DC-9CC3-5583A0FF7197.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B809DB24-044F-4E28-A7B5-594461FB06EE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AE3AD187-8B6D-4C12-95E4-57C2C14D5CF1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-298A4190-0B65-4FC5-BEFA-8536001B4168.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8C8739A7-EB00-469C-AFED-6DB457E65D96.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-06EF50DE-6188-426E-90FE-9CA7BC8D7114.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-96055254-A7FF-4F59-982B-4086005F2E29.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AFDF4187-9B0B-4C3C-9324-7C1F3B0301B7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-10FF60D8-3CB1-45C2-A2ED-D638B2839331.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ED554FEC-7E5C-4C06-AC60-077D458A16B1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6421739B-0ECE-4F81-93DF-4F9790E03278.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-26F6675F-2B57-4AAE-9982-52DE60FA97FD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ECBD9274-F169-4E39-A7B9-378AF111097E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ACECEC62-5566-449B-A63D-70C15556BF2B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-78B04367-8967-496E-BF27-437D88F7CBFE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9A9F54F8-09FE-483F-BA62-886871114B72.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-867EDFFC-8900-463A-8E2C-F342C9DFFC67.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C9EC53A2-372C-4EE3-8093-316236CFDA93.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1E9FBEFE-AB48-4348-A53B-035ACA2FCA79.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5B2BC038-DFCD-4BA2-9DA9-CC9178C93B8B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4D01713E-3500-4C3B-B5BB-3D12C3FC3157.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7428463B-358F-43F8-8965-2DFEB7CD1C31.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1491B842-4921-4322-AB69-E29C7B1790C5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-86C5EC0B-8A2C-453C-8D10-AE1E66E1DF51.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E88A18CC-16AB-4D37-9942-356483BC10D0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7A0113E3-4E70-4523-AEED-41E98ED0DD57.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DEBA081A-E861-4901-8C83-D90C5C05A50D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-EC1B96C9-CB91-4719-A5FC-CEA7FD9CCFC8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9AC4FEC0-84BA-4E2C-93EF-35B3F6C91518.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0727B400-CC9C-4F2B-87C8-1FC91E4C62F8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-51BE11D4-8D24-43BA-9300-1B1382FE077D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E374AB9C-2664-4786-B6FC-5B5C88311005.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-655618AA-5876-4320-9ED2-DFECE543BB57.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-43CB853B-06D8-4F48-80BD-46E29145B2F0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F77D6148-BF49-4712-B38A-0A482554D783.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3D7BA57F-823F-46C0-9F35-1FDCFD750061.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3EF78452-3F4A-4D80-8100-8AF7E15C89BE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-966381B9-C7A1-4570-9ADD-C5455814FC42.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B786C127-6FE1-408B-A56B-C61770D1B058.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2D2E1AE8-AEC5-4CD4-9F65-E871C14090AE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-44EE1044-2000-4DDE-843F-49D8120E3A07.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-81ADA0CF-346C-463C-9D5A-D721C3A7E2AA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-72A42486-DE9F-4B4F-AA49-1940C08D83C6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AD92D49B-6FE0-4B29-9BE9-A77D7F7B3357.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C43FFD81-6662-48D3-9E17-6FD5778DA7BB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-08FBA7C3-98EE-43B2-B6CE-54B88FFFD70B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-12A479F7-B8AD-42B6-8E62-D188E3688AB2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-78AA9C7F-FB18-42D9-9091-9623B7566BB0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-617D683D-30A5-461F-A7B4-109568A59E47.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-51877883-0A3E-4AF6-963B-F733F4FE68CD.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="networking-presentation-layer" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Networking Presentation Layer</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-networking-presentation-layer" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-75470E5B-2289-4F94-AE85-2BB7DF4C4F07"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="networking-presentation-layer">
+<h1 class="title topictitle1" id="ariaid-title1">Networking Presentation Layer</h1><div class="body"><p class="p">The MPLAB Harmony Networking Presentation Layer is an abstracted middleware layer that provides an encrypted channel. There are three interfaces for the layer:</p>
+<p class="p">Client - this interface starts a network session and reads and writes clear text data
+Provider - this interface encrypts the clear text into cipher text, and decrypts cipher text into clear text
+Transport - this interface transmits and receives the cipher text
+The linkage to the provider interface is done through function pointers to isolate it from the rest of MPLAB Harmony. This allows for any provider to be used. Please note that Microchip does not supply a commercially licensed TLS provider. wolfSSL (formerly CyaSSL) is supported as a provider for evaluation purposes only.</p>
+<p class="p">The transport interface is abstracted to function pointers as well, to allow for any transport to be used. Currently, only the MPLAB Harmony TCP/IP Stack is used as a transport; however, other transports can be created, such as UART transport, which can be used instead.</p>
+<p class="p">The MPLAB Harmony Networking Presentation Layer has a Tasks function that is used to continuously call the provider's connect and accept functions until they run to success of failure, thereby hiding this job from the application.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-BE527761-A48E-4373-A705-16163821D205-low.png" alt="NET PRES Abstraction Model" /><br /><p class="p"><strong class="ph b">Library Overview</strong></p>
+<p class="p">The Library Interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the Networking Presentation Layer.</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d280621e35"><span>Library Interface Section</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d280621e37"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e35 "><span>System Functions</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e37 "><span>Provides "initialize" functions and a "tasks" function for performing general presentation layer tasks.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e35 "><span>Socket Functions</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e37 "><span>Provides various socket-related functions for the purpose of connecting, flushing, and setting options, among others.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e35 "><span>Certificate Store Functions</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e37 "><span>Provides certificate-related functions for the purpose of obtaining certificates and keys.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="p"><strong class="ph b">Configuring the Library</strong></p>
+<p class="p">The configuration of the Networking Presentation Layer is done as part of the MPLAB Harmony TCP/IP Stack configuration and specific NET_PRES parameters are generated in the configuration.h.</p>
+<p class="p">This header file contains the configuration selection for the Networking Presentation Layer. Based on the selections made, the Networking Presentation Layer may support the selected features. These configuration settings will apply to all instances of the Networking Presentation Layer.</p>
+<p class="p">This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the TCP/IP Demonstrations Help section for more details.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+<p class="p">This section describes the Application Programming Interface (API) functions of the Networking Presentation Layer.</p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d280621e76"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d280621e78"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><strong class="ph b">System Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_Deinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Deinitializes the Network Presentation Layer Instance.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_Initialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Initializes the Network Presentation Layer sub-system with the configuration data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_Reinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Reinitializes the instance of the presentation layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_Tasks</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>MPLAB Harmony tasks function used for general presentation layer tasks.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Provides the current status of the MPLAB Harmony Networking Presentation Layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><strong class="ph b">Socket Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketBind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Binds a socket to a local address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketClose</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Disconnects an open socket and destroys the socket handle, releasing the associated resources.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketConnect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Connects a client socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketDiscard</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Discards any pending data in the RX FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketDisconnect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Disconnects an open socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketEncryptSocket</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function turns an insecure socket into a secure socket.  Details: This function will turn an unencrypted socket into an encrypted socket and starts encryption negotiation.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketFlush</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Immediately transmits all pending TX data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketGetTransportHandle</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function returns the transport layer handle.  Details: This function returns the transport layer handle for a valid socket</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Obtains information about a currently open socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketIsConnected</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Determines whether a socket has an established connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketIsNegotiatingEncryption</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function checks if encryption negotiation is still in progress.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketIsOpenModeSupported</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Checks to see if a mode is supported by open.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketIsSecure</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function checks whether a connection is secure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketLastError</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function returns the last error code for this socket.  Details: This function will return the last error code that was set for this socket and it will clear the current error code. An error code is set whenever a socket operation fails for some missing functionality, bad parameter, etc.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketOpen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Opens a presentation socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketOptionsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Allows the options for a socket such as, current RX/TX buffer size, etc., to be obtained.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketOptionsSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Allows setting options to a socket like adjust RX/TX buffer size, etc.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketPeek</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Reads a specified number of data bytes from the RX buffer/FIFO without removing them from the buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Reads an array of data bytes from a socket's RX buffer/FIFO.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketReadIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Determines how many bytes can be read from the RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketRemoteBind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Binds a socket to a remote local address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketSignalHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Deregisters a previously registered socket signal handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketSignalHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Registers a socket signal handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketWasReset</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Self-clearing semaphore indicating socket reset.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketWrite</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Takes a buffer and sends it to the encryption provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SocketWriteIsReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Determines how much free space is available in the TX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><strong class="ph b">Certificate Store Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_CertStoreGetCACerts</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function gets the CA certificates from the store,</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_CertStoreGetServerCert</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This function gets a server certificate and key from the certificate store.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>_NET_PRES_EncProviderObject</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the data that the presentation layer needs from the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>_NET_PRES_TransportObject</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the data that the transport layer needs to provide to the Networking Presentation Layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_INDEX</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Sets the type for the presentation layer index.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_INIT_DATA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Initializes a Presentation layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_INST_DATA</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Initializes a Presentation layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SIGNAL_FUNCTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>MPLAB Harmony Networking Presentation Layer Signal function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SIGNAL_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Sets the type for the presentation layer signal handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_HANDLE_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Sets the type for the presentation layer socket handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>NET_PRES address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderConnect</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Connects the function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderConnectionClose</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the close function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderDeinit</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the deinitialization function for the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderInit</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the initialization function to the encryption provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderIsInitialized</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Determines whether the encryption provider has been initialized.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderObject</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the data that the presentation layer needs from the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderOpen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the open connection function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the read function to the provider</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderWrite</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the write function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncSessionStatus</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the enumeration for the state and status of the encrypted portion of a connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_ADDR_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>NET_PRES address type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_ERROR_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>NET_PRES error type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_OPTION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>NET_PRES option type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_PORT_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Sets the type for the presentation layer port.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_SKT_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>NET_PRES socket type</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TRANS_ADDR_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines a generic address structure to pass to the transport layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TRANS_ADDRESS_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the enumeration for the type of address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TRANS_OPTION_T</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the enumeration for the type of options.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransBind</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Binds a socket to a local address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransBool</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Generic function prototype for functions that return a bool.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransClose</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype for functions that closes a socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransDiscard</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype for functions that clears a socket's RX buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype that registers a handler with a socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransOpen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Opens a presentation socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransOption</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Sets of gets a socket's options.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransPeek</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype for functions that peeks on the socket's buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransportObject</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the data that the transport layer needs to provide to the Networking Presentation Layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the read function provided by the transport layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the ready function provided by the transport layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransSignalHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype that deregisters a handler with a socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransSocketInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Function prototype for functions that gets the information on a socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransWrite</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the write function provided by the transport layer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_INVALID_SOCKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Invalid socket indicator macro.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><em class="ph i">NET_PRES_CERTSTORE_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This is macro <em class="ph i">NET_PRES_CERTSTORE_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><em class="ph i">NET_PRES_ENCRYPTION_PROVIDER_API_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This is macro <em class="ph i">NET_PRES_ENCRYPTION_PROVIDER_API_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><em class="ph i">NET_PRES_SOCKET_API</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This is macro <em class="ph i">NET_PRES_SOCKET_API</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><em class="ph i">NET_PRES_TRANSPORT_API_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This is macro <em class="ph i">NET_PRES_TRANSPORT_API_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span><em class="ph i">NET_PRES_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>This is macro <em class="ph i">NET_PRES_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderReadReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the read ready function to the provider</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderWriteReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the write ready function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_TransIsPortDefaultSecured</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Checks to see if a port is encrypted by default.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderMaxOutputSize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the maximum output size function to the provider.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e76 "><span>NET_PRES_EncProviderOutputSize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d280621e78 "><span>Defines the output size function to the provider.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-9F99FA2F-E094-41F2-8A2A-AC62313B0A62.html">NET_PRES_ADDRESS Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8D40C273-579B-431C-8350-F9A2B709D259.html">NET_PRES_CertStoreGetCACerts Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-16E9830E-54F2-4688-B1E4-9B92F761DC5E.html">NET_PRES_CertStoreGetServerCert Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AFECA098-E4EC-4847-AC64-921868BB48BA.html">NET_PRES_Deinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-606205B5-997A-4AA8-BB6E-08429D855CA7.html">NET_PRES_EncProviderConnect Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-36D5D72A-D963-4A8C-8012-D552407D8AB0.html">NET_PRES_EncProviderConnectionClose Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E64B3C2D-C626-4B06-B081-9BECE00C6AD2.html">NET_PRES_EncProviderDeinit Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1334BC43-35EF-48EF-877B-770E61118974.html">NET_PRES_EncProviderInit Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4EEA334F-2FEB-44C1-A9DF-D5ADFE6717A8.html">NET_PRES_EncProviderIsInitialized Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-20567716-31DC-461C-B196-A643797C90DB.html">NET_PRES_EncProviderMaxOutputSize Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-85F57BC3-AB6F-4F15-AFE1-99791B84C799.html">NET_PRES_EncProviderObject Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-452D786F-6D8D-4201-BB10-6483F678465E.html">NET_PRES_EncProviderOpen Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C0360366-50E8-4421-B1F3-A8D7A3FC81E2.html">NET_PRES_EncProviderOutputSize Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2C33D70C-FEB0-4467-BBDD-91FABD33F0F8.html">NET_PRES_EncProviderRead Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-59104AE1-2716-4892-A5C5-8D1C643E81C1.html">NET_PRES_EncProviderReadReady Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1EE89A71-63B4-4674-B669-A8726597917D.html">NET_PRES_EncProviderWrite Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-68556710-752A-4812-8AD1-86673574C3E2.html">NET_PRES_EncProviderWriteReady Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4FDEB3AD-E2FB-4041-B5EC-3DB621AF809B.html">NET_PRES_EncSessionStatus Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D8D0D1D6-ECAA-40CF-B09C-90F06AE6107F.html">NET_PRES_INDEX Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5FE0E246-65E8-4D1D-AD2B-A0998C58F0D7.html">NET_PRES_INIT_DATA Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-524962B7-0E09-4846-8F53-7213CA71FF2D.html">NET_PRES_Initialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AA37C1CF-735E-41C1-99D3-ADDED9199035.html">NET_PRES_INST_DATA Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F54F388D-F63E-44C5-8F04-CC6ADEE3E514.html">NET_PRES_INVALID_SOCKET Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E8BBC278-0227-40A6-AD91-354FC3A588EC.html">NET_PRES_Reinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B1B95E81-E580-41FE-97B9-4C5A476C550D.html">NET_PRES_SIGNAL_FUNCTION Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EC147DB3-37CB-4CFA-9AE2-2396C7F3E8C9.html">NET_PRES_SIGNAL_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-02895CBF-4E55-4E31-817E-11206B95FDE1.html">NET_PRES_SKT_ADDR_T Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D8879307-6878-418A-9A76-492EB5093D5D.html">NET_PRES_SKT_ERROR_T Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5D83E6FA-5BCD-43DC-9CC3-5583A0FF7197.html">NET_PRES_SKT_HANDLE_T Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B809DB24-044F-4E28-A7B5-594461FB06EE.html">NET_PRES_SKT_OPTION_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AE3AD187-8B6D-4C12-95E4-57C2C14D5CF1.html">NET_PRES_SKT_PORT_T Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-298A4190-0B65-4FC5-BEFA-8536001B4168.html">NET_PRES_SKT_T Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8C8739A7-EB00-469C-AFED-6DB457E65D96.html">NET_PRES_SocketBind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-06EF50DE-6188-426E-90FE-9CA7BC8D7114.html">NET_PRES_SocketClose Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-96055254-A7FF-4F59-982B-4086005F2E29.html">NET_PRES_SocketConnect Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AFDF4187-9B0B-4C3C-9324-7C1F3B0301B7.html">NET_PRES_SocketDiscard Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-10FF60D8-3CB1-45C2-A2ED-D638B2839331.html">NET_PRES_SocketDisconnect Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ED554FEC-7E5C-4C06-AC60-077D458A16B1.html">NET_PRES_SocketEncryptSocket Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6421739B-0ECE-4F81-93DF-4F9790E03278.html">NET_PRES_SocketFlush Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-26F6675F-2B57-4AAE-9982-52DE60FA97FD.html">NET_PRES_SocketGetTransportHandle Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ECBD9274-F169-4E39-A7B9-378AF111097E.html">NET_PRES_SocketInfoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ACECEC62-5566-449B-A63D-70C15556BF2B.html">NET_PRES_SocketIsConnected Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-78B04367-8967-496E-BF27-437D88F7CBFE.html">NET_PRES_SocketIsNegotiatingEncryption Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9A9F54F8-09FE-483F-BA62-886871114B72.html">NET_PRES_SocketIsOpenModeSupported Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-867EDFFC-8900-463A-8E2C-F342C9DFFC67.html">NET_PRES_SocketIsSecure Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C9EC53A2-372C-4EE3-8093-316236CFDA93.html">NET_PRES_SocketLastError Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1E9FBEFE-AB48-4348-A53B-035ACA2FCA79.html">NET_PRES_SocketOpen Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5B2BC038-DFCD-4BA2-9DA9-CC9178C93B8B.html">NET_PRES_SocketOptionsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4D01713E-3500-4C3B-B5BB-3D12C3FC3157.html">NET_PRES_SocketOptionsSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7428463B-358F-43F8-8965-2DFEB7CD1C31.html">NET_PRES_SocketPeek Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1491B842-4921-4322-AB69-E29C7B1790C5.html">NET_PRES_SocketRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-86C5EC0B-8A2C-453C-8D10-AE1E66E1DF51.html">NET_PRES_SocketReadIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E88A18CC-16AB-4D37-9942-356483BC10D0.html">NET_PRES_SocketRemoteBind Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7A0113E3-4E70-4523-AEED-41E98ED0DD57.html">NET_PRES_SocketSignalHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DEBA081A-E861-4901-8C83-D90C5C05A50D.html">NET_PRES_SocketSignalHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-EC1B96C9-CB91-4719-A5FC-CEA7FD9CCFC8.html">NET_PRES_SocketWasReset Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9AC4FEC0-84BA-4E2C-93EF-35B3F6C91518.html">NET_PRES_SocketWrite Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0727B400-CC9C-4F2B-87C8-1FC91E4C62F8.html">NET_PRES_SocketWriteIsReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-51BE11D4-8D24-43BA-9300-1B1382FE077D.html">NET_PRES_Status Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E374AB9C-2664-4786-B6FC-5B5C88311005.html">NET_PRES_Tasks Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-655618AA-5876-4320-9ED2-DFECE543BB57.html">NET_PRES_TRANS_ADDR_T Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-43CB853B-06D8-4F48-80BD-46E29145B2F0.html">NET_PRES_TRANS_ADDRESS_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F77D6148-BF49-4712-B38A-0A482554D783.html">NET_PRES_TRANS_OPTION_T Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3D7BA57F-823F-46C0-9F35-1FDCFD750061.html">NET_PRES_TransBind Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3EF78452-3F4A-4D80-8100-8AF7E15C89BE.html">NET_PRES_TransBool Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-966381B9-C7A1-4570-9ADD-C5455814FC42.html">NET_PRES_TransClose Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B786C127-6FE1-408B-A56B-C61770D1B058.html">NET_PRES_TransDiscard Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2D2E1AE8-AEC5-4CD4-9F65-E871C14090AE.html">NET_PRES_TransHandlerRegister Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-44EE1044-2000-4DDE-843F-49D8120E3A07.html">NET_PRES_TransIsPortDefaultSecured Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-81ADA0CF-346C-463C-9D5A-D721C3A7E2AA.html">NET_PRES_TransOpen Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-72A42486-DE9F-4B4F-AA49-1940C08D83C6.html">NET_PRES_TransOption Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AD92D49B-6FE0-4B29-9BE9-A77D7F7B3357.html">NET_PRES_TransPeek Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C43FFD81-6662-48D3-9E17-6FD5778DA7BB.html">NET_PRES_TransportObject Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-08FBA7C3-98EE-43B2-B6CE-54B88FFFD70B.html">NET_PRES_TransRead Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-12A479F7-B8AD-42B6-8E62-D188E3688AB2.html">NET_PRES_TransReady Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-78AA9C7F-FB18-42D9-9091-9623B7566BB0.html">NET_PRES_TransSignalHandlerDeregister Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-617D683D-30A5-461F-A7B4-109568A59E47.html">NET_PRES_TransSocketInfoGet Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-51877883-0A3E-4AF6-963B-F733F4FE68CD.html">NET_PRES_TransWrite Type</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

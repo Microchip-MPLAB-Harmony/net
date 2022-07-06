@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="SMTP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CF54D5B4-557D-4E4B-9457-2F3D6EC15888.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-30EBF323-A268-4755-8D7E-DF208F3CE0E3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A803C6A5-EE2D-445A-B1B2-A30DEEAB7D00.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BBC4E95F-45E6-4D2A-9D01-67BB71ACABA2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CF8FE4AC-0E2A-43A4-AC57-4269D95998AA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1455B1B0-4DD6-4D0C-979A-B59E5251D8FA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0761CBDB-640F-47E5-9E91-A7B90B83295C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DADB5E8F-E2DC-4576-A61F-0BC748BE85A9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CB39E466-3E36-452E-8B5A-301229849483.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AD6ED500-C4C5-4750-9EC0-188C0359646D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7DA6C173-4517-4C9C-AB16-876BEE857AF8.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="smtp-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>SMTP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-smtp-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-2B9B587D-5018-4CA9-AA8D-2395A2D004A5"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="smtp-module">
+<h1 class="title topictitle1" id="ariaid-title1">SMTP Module</h1><div class="body"><p class="p">The SMTP client module in the TCP/IP Stack lets applications send e-mails to any recipient worldwide. These message could include status information or important alerts. Using the e-mail to SMS gateways provided by most cell phone carriers, these messages can also be delivered directly to cell phone handsets</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-B247BCD9-14DA-4A81-AD9D-B3C4414FFFA2-low.png" alt="TCPIP SMTP Abstraction Model" /><br /><p class="p"><strong class="ph b">SMTP Client Short Message Example</strong></p>
+<p class="p">The SMTP client API is simplified when messages can be buffered entirely in RAM. This example sends a brief e-mail message indicating the current status of the board's buttons.</p>
+<p class="p">The following diagram provides an overview of the process:</p>
+<br /><img class="image" src="GUID-0558F9A5-6B17-4800-948F-8EB0FD8A49F7-low.png" alt="smtp_diagram" /><br /><ul class="ul"><li class="li"><p class="p">First, call TCPIP_SMTP_UsageBegin to verify that the SMTP client is available and to begin a new message. If FALSE is returned, the SMTP client is busy and the application must return to the main loop to allow StackTask to execute again.</p>
+</li>
+<li class="li"><p class="p">Next, set the local relay server to use as TCPIP_SMTP_CLIENT_MESSAGE.Server. If the local relay server requires a user name and password, set TCPIP_SMTP_CLIENT_MESSAGE.Username and TCPIP_SMTP_CLIENT_MESSAGE.Password to the appropriate credentials. If server parameters are not set, the stack will attempt to deliver the message directly to its destination host. This will likely fail due to SPAM prevention measures put in place by most ISPs and network administrators.</p>
+</li>
+<li class="li"><p class="p">Continue on to set the header strings as necessary for the message. This includes the subject line, from address, and any recipients you need to add. Finally, set TCPIP_SMTP_CLIENT_MESSAGE.Body to the message to be sent.</p>
+</li>
+<li class="li"><p class="p">At this point the message is ready to send. Call TCPIP_SMTP_MailSend to instruct the SMTP client to begin transmission.</p>
+</li>
+<li class="li"><p class="p">The application must now call TCPIP_SMTP_IsBusy until it returns FALSE. Each time TRUE is returned, return to the main loop and wait for the system tasks to be executed again. This allows the SMTP server to continue its work in a cooperative multitasking manner. Once FALSE is returned, call TCPIP_SMTP_UsageEnd to release the SMTP client. Check the return value of this function to determine if the message was successfully sent.</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">SMTP Client Long Message Example</strong></p>
+<p class="p">The SMTP client API is capable of sending messages that do not fit entirely in RAM. To do so, the application must manage its output state and only write as many bytes as are available in the buffer at a time. This example will walk through sending a longer message.</p>
+<p class="p">Sending longer messages is divided into three stages. The first stage configures the SMTP client to send the message. The second stage sends the message in small chunks as buffer space is available. The final stage finishes the transmission and determines whether or not the message was successful.</p>
+<p class="p">The following diagram illustrates the first stage:</p>
+<br /><img class="image" src="GUID-A9FB9CE5-411B-47D2-9102-D6203083D456-low.png" alt="smtp_diagram2" /><br /><ul class="ul"><li class="li"><p class="p">The first stage is largely similar to the first few steps in sending a short message. First, call TCPIP_SMTP_UsageBegin to verify that the SMTP client is available and to begin a new message. If FALSE is returned, the SMTP client is busy and the application must return to the main loop and wait to execute again.</p>
+</li>
+<li class="li"><p class="p">Next, set the local relay server to use as TCPIP_SMTP_CLIENT_MESSAGE.Server. If the local relay server requires a user name and password, set TCPIP_SMTP_CLIENT_MESSAGE.Username and TCPIP_SMTP_CLIENT_MESSAGE.Password to the appropriate credentials. If server parameters are not set, the stack will attempt to deliver the message directly to its destination host. This will likely fail due to SPAM prevention measures put in place by most ISPs and network administrators.</p>
+</li>
+<li class="li"><p class="p">Continue on to set the header strings as necessary for the message. This includes the subject line, from address, and any recipients you need to add.</p>
+</li>
+<li class="li"><p class="p">The next portion of the process differs. Ensure that TCPIP_SMTP_CLIENT_MESSAGE.Body remains set to its default (NULL). At this point, call TCPIP_SMTP_MailSend to open a connection to the remote server and transmit the headers. The application is now ready to proceed to the second stage and send the message body.</p>
+</li>
+</ul>
+<p class="p">The following diagram provides an overview of stage two and three:</p>
+<br /><img class="image" src="GUID-70CDB320-9494-45BC-985D-D81D03CDC559-low.png" alt="smtp_diagram3" /><br /><ul class="ul"><li class="li"><p class="p">Upon entering stage two, the application should call TCPIP_SMTP_IsBusy to verify that the connection to the remote server is active and has not been lost. If the call succeeds, call TCPIP_SMTP_IsPutReady to determine how many bytes are available in the TX buffer. If no bytes are available, return to the main loop so that StackTask can transmit the data to the remote node and free up the buffer.</p>
+</li>
+<li class="li"><p class="p">If space is available, any combination of the TCPIP_SMTP_Put, TCPIP_SMTP_ArrayPut and TCPIP_SMTP_StringPut functions may be called to transmit the message. These functions return the number of bytes successfully written. Use this value, along with the value originally returned from TCPIP_SMTP_IsPutReady to track how much free space remains in the TX buffer. Once the buffer is depleted, call TCPIP_SMTP_Flush to force the data written to be sent.</p>
+</li>
+<li class="li"><p class="p">The SMTP client module can_accept_as much data as the TCP TX FIFO can hold. This is determined by the socket TX buffer size.</p>
+</li>
+<li class="li"><p class="p">If the TX buffer is exhausted before the message is complete, return to the main loop so that stack may transmit the data to the remote node and free up the buffer. Upon return, go to the beginning of the second stage to transmit the next portion of the message.</p>
+</li>
+</ul>
+<p class="p">Once the message is complete, the application will move to the third stage. Call TCPIP_SMTP_PutIsDone to inform the SMTP client that no more data remains. Then call TCPIP_SMTP_IsBusy repeatedly. Each time TRUE is returned, return to the main loop and wait for stack to execute again. Once FALSE is returned, the message transmission has completed and the application must call TCPIP_SMTP_UsageEnd to release the SMTP client. Check the return value of this function to determine if the message was successfully sent.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d135500e99"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d135500e101"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_MAX_WRITE_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>the max size of data to be written in a discrete string/array email operation: TCPIP_SMTP_StringPut/TCPIP_SMTP_ArrayPut. Excess characters will be discarded. Note that the higher this value, the greater the size of the underlying TCP socket TX buffer Adjust as needed. Normally should not exceed 512 characters.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_SERVER_REPLY_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>How long to wait before assuming the connection has been dropped (default 8 seconds)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>SMTP task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_WRITE_READY_SPACE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>the minimum amount of data to ask from the transport/encryption layer when querying the write space</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>SMTP_CONNECT_ERROR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Connection to SMTP server failed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>SMTP_RESOLVE_ERROR</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>DNS lookup for SMTP server failed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>SMTP_SUCCESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Message was successfully sent</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span> </span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_ArrayPut</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Writes a series of bytes to the SMTP client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_Flush</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Flushes the SMTP socket and forces all data to be sent.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_IsBusy</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Determines if the SMTP client is busy.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_IsPutReady</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Determines how much data can be written to the SMTP client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_Put</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Writes a single byte to the SMTP client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_PutIsDone</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Indicates that the on-the-fly message is complete.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_StringPut</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Writes a string to the SMTP client.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_UsageBegin</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Requests control of the SMTP client module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_UsageEnd</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Releases control of the SMTP client module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_ClientTask</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_MailSend</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Initializes the message sending process.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span><strong class="ph b">Structures</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_CLIENT_MESSAGE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>Configures the SMTP client to send a message.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e99 "><span>TCPIP_SMTP_CLIENT_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d135500e101 "><span>This is type TCPIP_SMTP_CLIENT_MODULE_CONFIG.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-CF54D5B4-557D-4E4B-9457-2F3D6EC15888.html">TCPIP_SMTP_ArrayPut Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-30EBF323-A268-4755-8D7E-DF208F3CE0E3.html">TCPIP_SMTP_ClientTask Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A803C6A5-EE2D-445A-B1B2-A30DEEAB7D00.html">TCPIP_SMTP_Flush Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BBC4E95F-45E6-4D2A-9D01-67BB71ACABA2.html">TCPIP_SMTP_IsBusy Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CF8FE4AC-0E2A-43A4-AC57-4269D95998AA.html">TCPIP_SMTP_IsPutReady Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1455B1B0-4DD6-4D0C-979A-B59E5251D8FA.html">TCPIP_SMTP_MailSend Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0761CBDB-640F-47E5-9E91-A7B90B83295C.html">TCPIP_SMTP_Put Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DADB5E8F-E2DC-4576-A61F-0BC748BE85A9.html">TCPIP_SMTP_PutIsDone Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CB39E466-3E36-452E-8B5A-301229849483.html">TCPIP_SMTP_StringPut Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AD6ED500-C4C5-4750-9EC0-188C0359646D.html">TCPIP_SMTP_UsageBegin Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7DA6C173-4517-4C9C-AB16-876BEE857AF8.html">TCPIP_SMTP_UsageEnd Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

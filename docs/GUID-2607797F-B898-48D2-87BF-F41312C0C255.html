@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="IPV6_PACKET Structure" />
+<meta name="DC.relation" scheme="URI" content="GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ipv6-packet-structure" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>IPV6_PACKET Structure</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ipv6-packet-structure" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-2607797F-B898-48D2-87BF-F41312C0C255"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ipv6-packet-structure">
+<h1 class="title topictitle1" id="ariaid-title1">IPV6_PACKET Structure</h1><div class="body"></div>
+<div class="related-links">
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135.html">IPv6 Module</a></div>
+</div>
+</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d126745e21', this);">Copy</button><code id="d126745e21" content="typedef struct _IPV6_PACKET {&#xD;&#xA;struct _IPV6_PACKET * next;&#xD;&#xA;unsigned short payloadLen;&#xD;&#xA;unsigned short headerLen;&#xD;&#xA;unsigned short upperLayerHeaderLen;&#xD;&#xA;unsigned short upperLayerChecksumOffset;&#xD;&#xA;unsigned char upperLayerHeaderType;&#xD;&#xA;union {&#xD;&#xA;    struct {&#xD;&#xA;    unsigned char reserved : 3;&#xD;&#xA;    unsigned char useUnspecAddr : 1;&#xD;&#xA;    unsigned char sourceSpecified : 1;&#xD;&#xA;    unsigned char queued : 1;&#xD;&#xA;    unsigned char addressType : 2;&#xD;&#xA;    }&#xD;&#xA;    unsigned char val;&#xD;&#xA;} flags;&#xD;&#xA;TCPIP_MAC_ADDR remoteMACAddr;&#xD;&#xA;IPV6_PACKET_ACK_FNC ackFnc;&#xD;&#xA;TCPIP_MAC_PACKET_ACK_FUNC macAckFnc;&#xD;&#xA;void* ackParam;&#xD;&#xA;void* clientData;&#xD;&#xA;void * neighbor;&#xD;&#xA;unsigned short offsetInSegment;&#xD;&#xA;uint32_t queuedPacketTimeout;&#xD;&#xA;TCPIP_NET_HANDLE netIfH;&#xD;&#xA;IPV6_HEADER ipv6Header;&#xD;&#xA;IPV6_DATA_SEGMENT_HEADER payload;&#xD;&#xA;} IPV6_PACKET;&#xD;">typedef struct _IPV6_PACKET {&#xD;
+struct _IPV6_PACKET * next;&#xD;
+unsigned short payloadLen;&#xD;
+unsigned short headerLen;&#xD;
+unsigned short upperLayerHeaderLen;&#xD;
+unsigned short upperLayerChecksumOffset;&#xD;
+unsigned char upperLayerHeaderType;&#xD;
+union {&#xD;
+    struct {&#xD;
+    unsigned char reserved : 3;&#xD;
+    unsigned char useUnspecAddr : 1;&#xD;
+    unsigned char sourceSpecified : 1;&#xD;
+    unsigned char queued : 1;&#xD;
+    unsigned char addressType : 2;&#xD;
+    }&#xD;
+    unsigned char val;&#xD;
+} flags;&#xD;
+TCPIP_MAC_ADDR remoteMACAddr;&#xD;
+IPV6_PACKET_ACK_FNC ackFnc;&#xD;
+TCPIP_MAC_PACKET_ACK_FUNC macAckFnc;&#xD;
+void* ackParam;&#xD;
+void* clientData;&#xD;
+void * neighbor;&#xD;
+unsigned short offsetInSegment;&#xD;
+uint32_t queuedPacketTimeout;&#xD;
+TCPIP_NET_HANDLE netIfH;&#xD;
+IPV6_HEADER ipv6Header;&#xD;
+IPV6_DATA_SEGMENT_HEADER payload;&#xD;
+} IPV6_PACKET;&#xD;</code></pre></div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="title topictitle2" id="ariaid-title3">Description</h2><div class="body"><p class="p">Structure: IPV6_PACKET.</p>
+<p class="p">IPv6 packets are queued for future transmission.<em class="ph i">queuedPacketTimeout</em> is used to time-out IPv6 queued packets.</p>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title4" id="members"><h2 class="title topictitle2" id="ariaid-title4">Members</h2><div class="body">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d126745e44"><span>Members</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d126745e46"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>next</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Next packet in a queue.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>payloadLen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Amount of data in payload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>headerLen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Total header length (IP header + IPv6 extension headers).</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>upperLayerHeaderLen</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Total length of the upper layer header.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>upperLayerChecksumOffset</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Offset of the upper layer checksum.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>upperLayerHeaderType</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Type definition for the upper-layer header type.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>useUnspecAddr: 1;</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>This packet should use the unspecified address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>sourceSpecified: 1;</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>The upper layer or application layer specified a source address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>queued : 1;</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Packet has been queued.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>addressType : 2;</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>IP_ADDRESS_TYPE_IPV6 or IP_ADDRESS_TYPE_IPV4.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>remoteMACAddr</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>The packet's remote MAC address.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>ackFnc</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Function to be called when IPv6 is done with the packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>macAckFnc</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Function to be called when MAC is done with a TX packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>ackParam</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Parameter to be used.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>clientData</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Optional packet client data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>neighbor</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>The neighbor that the message was received from.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>offsetInSegment</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Offset used for storing fragment transmission information.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>queuedPacketTimeout</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Time out for IPv6 packets which are queued.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>netIfH</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>Packet network interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>ipv6Header</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>IPv6 header definition.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e44 "><span>payload</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d126745e46 "><span>IPv6 data segment payload.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="topic nested1" aria-labelledby="ariaid-title5" id="remarks"><h2 class="title topictitle2" id="ariaid-title5">Remarks</h2><div class="body"><p class="p">For IPv6 queuing the time out has to be 0. The queue is processed separately by the NDP.IPV6_PACKET_ACK_FNC() is called after the successful removal and inclusion of the packet.</p>
+</div>
+</div>
+</body>
+</html>

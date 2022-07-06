@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="HTTP Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F8590EEC-B394-4BEE-8F0A-6C4D04BDB52B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1296ADD5-28BD-4482-A85F-B0DC62C24C9C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D257BC7E-C3ED-427F-8A98-AF136AF09534.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1D3D9E04-C631-448B-B130-B17523874376.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D2B619C5-F5F0-4E41-93A6-87E3B886BE8E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-93387E84-709B-4C17-990D-C40C5A02738E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7C8119F3-BB7C-4628-84FD-28F840D4F76A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-57180070-C84B-44CE-848B-39793B28459A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F8369E46-D7EB-4FC0-810C-BC5641CFC4BA.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-272AB059-2FE4-4FF1-A32F-C791D4B47E36.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ADDDC06C-ACF4-450E-ADC3-4359BE293DBD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-48CB3F61-A4F6-4497-A547-8F85DA2D3500.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F0ACFDB6-C345-4549-A292-A001FFC4C503.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B615FBBA-3FC3-44D0-B68D-3089877C6720.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-AB48F72E-A95D-4BAB-9EB5-22E2A7B6DAFE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5665E20F-AE83-454B-906E-95A458C3854C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B78FDE15-1A3A-42F9-8937-4C7FA5E2D0A0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1ABC7F69-88BA-4F38-9006-04D20631CAC1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CDA81419-BA93-4763-804E-1DEB3222E05C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A66BAE9B-C0F6-410E-B59B-790ABE49043A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7EF0555E-936C-48E3-92FA-BA52D2EAD359.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-58B829B5-0010-44C5-8FD2-BA53884B60C1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C4336C08-C6A8-4798-8BD3-C5ACA7BA120C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FE739F59-787D-4D3E-8A4C-DD7DD7405D5E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0FA985FE-0D89-43F2-B84D-A75A26F89EC1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4B6DA909-656C-487D-91BC-12B0AB06A672.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BD9755D4-1089-4F9B-9EDC-84CFFD899191.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-42E17488-1EC2-4F8C-9919-30CC6D0F812F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B69B050F-701C-41A0-9C16-E6DD1B667FBE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FF74BB5A-2DAB-4D3B-847D-0D5CA0734D98.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6EA2118B-F0EF-4A59-9B7E-1A232F6CB4F5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D601F033-B6C7-4C41-A24D-D681019A86F4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FAB54690-5400-44CA-879C-52C16B4B9745.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7D6B1A4A-09BC-4B80-B426-B0614F5AF051.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-21A8F8C9-91C3-45AE-B61D-F1BD242CC08D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F684C26E-366D-47B0-8E91-BC5409837F2F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-472B1332-63C7-405D-9396-B75872D19FD7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-05F1C6C9-DEA3-4A98-AA37-BE58E0FD8548.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-2446C06E-6837-4E6C-8C7B-F62C758D480E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CCEB8932-DFFD-42B7-87B7-3CD138098D81.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0744D225-DBCC-460A-BBD9-5CC7B00686E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E7A711DE-6A93-43F1-8966-0205520C0CCE.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A477C6E3-0E32-4BBB-A50D-585BA9D587F9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E2791B70-E859-4754-A3CA-AACC0BFE9DF1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-450F196C-1A6C-4CFA-9C1B-EB42BD3F1E49.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-93867F57-950F-4F08-BC55-77CA37E43E4D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6DC8E96C-37D7-4D81-A29A-EF52BEF52F88.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E57BDE76-15C6-471D-9ED1-20BE3799E496.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="http-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>HTTP Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-http-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-25A4CF50-2F8F-47E7-A90C-ABFA52814459"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="http-module">
+<h1 class="title topictitle1" id="ariaid-title1">HTTP Module</h1><div class="body"><p class="p">The HTTP Web Server module allows a development board to act as a Web server. This facilitates an easy method to view status information and control applications using any standard Web browser.</p>
+<blockquote class="lq"><p class="p">Note:  The HTTP module is deprecated and it is maintained for backward compatibility only. It will be eventually removed from the TCP/IP Stack.
+New designs should use the HTTP_NET module.</p>
+</blockquote>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">Three main components are necessary to understand how the HTTP web server works: the web pages, the MPFS2 Utility, and the source files custom_http_app.c and http_print.h. An overview of the entire process is shown in the following diagram.</p>
+<br /><img class="image" src="GUID-C43A5803-FD0D-43B2-B0CA-BB15DD155F99-low.png" alt="TCPIP HTTP http_abstraction" /><br /><ul class="ul"><li class="li"><p class="p">Web Pages</p>
+<p class="p">This includes all the HTML and associated images, CSS style sheets, and JavaScript files necessary to display the website. A sample application including all these components is located in the web_pages folder.</p>
+</li>
+<li class="li"><p class="p">MPFS2 Utility</p>
+<p class="p">This program, supplied by Microchip, packages the web pages into a format that can be efficiently stored in either external non-volatile storage, or internal Flash program memory. This program also indexes dynamic variables found in the web pages and updates http_print.h with these indices. The MPFS2 Utility generates a SYS_FS compatible file image that can be directly uploaded on the development board or stored in the Flash program memory as a source file image to be included in the project.</p>
+<p class="p">When dynamic variables are added or removed from your application, the MPFS2 Utility will update http_print.h. When this happens, the project must be recompiled in the MPLAB X IDE to ensure that all the new variable indices get added into the application.</p>
+</li>
+<li class="li"><p class="p">custom_http_app.c</p>
+<p class="p">This file implements the Web application. It describes the output for dynamic variables (via TCPIP_HTTP_Print_varname callbacks), parses data submitted through forms (in TCPIP_HTTP_GetExecute and TCPIP_HTTP_PostExecutePost) and validates authorization credentials (in TCPIP_HTTP_FileAuthenticate and TCPIP_HTTP_UserAuthenticate).</p>
+<p class="p">The functionality of these callback functions is described within the demonstration application's web pages, and is also documented within the custom_http_app.c example that is distributed with the stack.</p>
+</li>
+<li class="li"><p class="p">http_print.h</p>
+<p class="p">This file is generated automatically by the MPFS2 Utility. It indexes all of the dynamic variables and provides the "glue" between the variables located in the Web pages and their associated TCPIP_HTTP_Print_varname callback functions defined in custom_http_app.c. This file does not require modification by the programmer.</p>
+</li>
+</ul>
+<p class="p"><strong class="ph b">HTTP Features</strong></p>
+<p class="p"><strong class="ph b">Dynamic Variables</strong></p>
+<p class="p"><em class="ph i">Basic Use</em></p>
+<p class="p">To create a dynamic variable, simply enclose the name of the variable inside a pair of tilde (~) characters within the web pages' HTML source code. (ex: ~myVariable~) When you run the MPFS2 Utility to generate the web pages, it will automatically index these variables in http_print.h. This index will instruct your application to invoke the function TCPIP_HTTP_Print_myVariable when this string is encountered.</p>
+<p class="p">Here is an example of using a dynamic variable to insert the build date of your application into the web pages:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e62', this);">Copy</button><code id="d94623e62" content="&lt;div class=&#34;examplebox code&#34;&gt;~builddate~&lt;/div&gt;&#xA;The associated callback will print the value into the web page:&#xA;void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)&#xA;{&#xA;    TCP_SOCKET sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);&#xA;    TCPIP_TCP_StringPut(sktHTTP, (const void*)__DATE__&#34; &#34;__TIME__);&#xA;}">&lt;div class="examplebox code"&gt;~builddate~&lt;/div&gt;
+The associated callback will print the value into the web page:
+void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)
+{
+    TCP_SOCKET sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+    TCPIP_TCP_StringPut(sktHTTP, (const void*)__DATE__" "__TIME__);
+}</code></pre><p class="p"><em class="ph i">Passing Parameters</em></p>
+<p class="p">You can also pass parameters to dynamic variables by placing numeric values inside of parenthesis after the variable name.</p>
+<p class="p">For example, ~led(2)~ will print the value of the second LED. The numeric values are passed as 16 bit values to your callback function. You can pass as many parameters as you wish to these functions, and if your C code has constants defined, those will be parsed as well. (ex: ~pair(3,TRUE)~).</p>
+<p class="p">The following code inserts the value of the push buttons into the web page, all using the same callback function:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e73', this);">Copy</button><code id="d94623e73" content="&lt;div class=&#34;examplebox code&#34;&gt;btn(3)~ btn(2)~ btn(1)~ btn(0)~&lt;/div&gt;&#xA;This associated callback will print the value of the requested button to the web page:&#xA;void TCPIP_HTTP_Print_btn(HTTP_CONN_HANDLE connHandle, uint16_t num)&#xA;{&#xA;    // Determine which button&#xA;    switch(num)&#xA;    {&#xA;        case 0:&#xA;            num = BUTTON0_IO;&#xA;            break;&#xA;        case 1:&#xA;            num = BUTTON1_IO;&#xA;            break;&#xA;        case 2:&#xA;            num = BUTTON2_IO;&#xA;            break;&#xA;        default:&#xA;            num = 0;&#xA;    }&#xA;&#xA;    // Print the output&#xA;    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (num ? &#34;up&#34; : &#34;down&#34;));&#xA;}">&lt;div class="examplebox code"&gt;btn(3)~ btn(2)~ btn(1)~ btn(0)~&lt;/div&gt;
+This associated callback will print the value of the requested button to the web page:
+void TCPIP_HTTP_Print_btn(HTTP_CONN_HANDLE connHandle, uint16_t num)
+{
+    // Determine which button
+    switch(num)
+    {
+        case 0:
+            num = BUTTON0_IO;
+            break;
+        case 1:
+            num = BUTTON1_IO;
+            break;
+        case 2:
+            num = BUTTON2_IO;
+            break;
+        default:
+            num = 0;
+    }
+
+    // Print the output
+    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (num ? "up" : "down"));
+}</code></pre><p class="p"><em class="ph i">Longer Outputs</em></p>
+<p class="p">The HTTP protocol operates in a fixed memory buffer for transmission, so not all data can be sent at once. Care must be taken inside of your callback function to avoid overrunning this buffer.</p>
+<p class="p">The callback functions must check how much space is available, write up to that many bytes, and then return. The callback will be invoked again when more space is free.</p>
+<blockquote class="lq"><p class="p">Note:  For increased throughput performance, it is recommended that the callback should always try to write as much data as possible in each call.</p>
+</blockquote>
+<p class="p">To manage the output state, callbacks should make use of the callbackPos variable that is maintained by the Web server for each individual connection. This 32-bit value can be manipulated with the TCPIP_HTTP_CurrentConnectionCallbackPosGet and TCPIP_HTTP_CurrentConnectionCallbackPosSet functions.</p>
+<p class="p">The callbackPos is set to zero when a callback is first invoked. If a callback is only writing part of its output, it should set this field to a non-zero value to indicate that it should be called again when more space is available. This value will be available to the callback during the next call, which allows the function to resume output where it left off. A common use is to store the number of bytes written, or remaining to be written, in this field. Once the callback is finished writing its output, it must set callbackPos back to zero to indicate completion.</p>
+<p class="p">The following code outputs the value of the build date of the application into the web pages:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e92', this);">Copy</button><code id="d94623e92" content="&lt;div class=&#34;examplebox code&#34;&gt;~builddate~&lt;/div&gt;&#xA;&#xA;void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)&#xA;{&#xA;    TCP_SOCKET sktHTTP;&#xA;    sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);&#xA;&#xA;    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x01);&#xA;    if(TCPIP_TCP_PutIsReady(sktHTTP) &lt; strlen((const char*)__DATE__&#34; &#34;__TIME__))&#xA;        return;&#xA;&#xA;    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);&#xA;    TCPIP_TCP_StringPut(sktHTTP, (const void*)__DATE__&#34; &#34;__TIME__);&#xA;}">&lt;div class="examplebox code"&gt;~builddate~&lt;/div&gt;
+
+void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)
+{
+    TCP_SOCKET sktHTTP;
+    sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+
+    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x01);
+    if(TCPIP_TCP_PutIsReady(sktHTTP) &lt; strlen((const char*)__DATE__" "__TIME__))
+        return;
+
+    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);
+    TCPIP_TCP_StringPut(sktHTTP, (const void*)__DATE__" "__TIME__);
+}</code></pre><p class="p">The initial call to TCPIP_TCP_PutIsReady determines how many bytes can be written to the buffer right now. When there is not enough buffer space for performing the output operation the function sets the current value of the callbackPos and returns. Once the output operation is performed the callbackPos is cleared to '0'.</p>
+<p class="p"><em class="ph i">Including Files</em></p>
+<p class="p">Often it is useful to include the entire contents of another file in your output. Most web pages have at least some portion that does not change, such as the header, menu of links, and footer. These sections can be abstracted out into separate files which makes them easier to manage and conserves storage space.</p>
+<p class="p">To include the entire contents of another file, use a dynamic variable that starts with "inc:", such as ~inc:header.inc~.</p>
+<p class="p">This sequence will cause the file header.inc to be read from the file system and inserted at this location.</p>
+<p class="p">The following example indicates how to include a standard menu bar section into every page:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e107', this);">Copy</button><code id="d94623e107" content="&lt;div id=&#34;menu&#34;&gt;~inc:menu.inc~&lt;/div&gt;">&lt;div id="menu"&gt;~inc:menu.inc~&lt;/div&gt;</code></pre><p class="p">At this time, dynamic variables are not recursive, so any variables located inside files included in this manner are not parsed.</p>
+<p class="p"><strong class="ph b">Form Processing</strong></p>
+<p class="p"><em class="ph i">The GET Method</em></p>
+<p class="p">The GET method appends the data to the end of the URI. This data follows the question mark (?) in the browser's address bar. (ex: http://mchpboard/form.htm?led1=0&amp;led2=1&amp;led3=0) Data sent via GET is automatically decoded and stored in the current connection data buffer. Since it is to be stored in memory, this data is limited to the size of the connection data buffer which by default is 100 bytes (configurable by HTTP_MAX_DATA_LEN build time symbol or by the run time data passed at the HTTP module initialization).</p>
+<p class="p">It is generally easier to process data received in this manner.</p>
+<p class="p">The callback function TCPIP_HTTP_GetExecute is implemented by the application developer to process this data and perform any necessary actions. The function TCPIP_HTTP_ArgGet provides an easy method to retrieve submitted values for processing.</p>
+<p class="p">See the custom _http_app.c for an example of TCPIP_HTTP_GetExecute implementation.</p>
+<p class="p"><em class="ph i">The POST Method</em></p>
+<p class="p">The POST method transmits data after all the request headers have been sent. This data is not visible in the browser's address bar, and can only be seen with a packet capture tool. It does however use the same URL encoding method.</p>
+<p class="p">The HTTP server does not perform any preparsing of this data. All POST data is left in the TCP buffer, so the custom application will need to access the TCP buffer directly to retrieve and decode it. The functions TCPIP_HTTP_PostNameRead and TCPIP_HTTP_PostValueRead have been provided to assist with these requirements. However, these functions can only be used when at least entire variables are expected to fit in the TCP buffer at once. Most POST processing functions will be implemented as state machines to use these functions. There is a status variable per each connection that stores the current state accessible with TCPIP_HTTP_CurrentConnectionPostSmGet and TCPIP_HTTP_CurrentConnectionPostSmSet functions. This state machine variable is reset to zero with each new request. Functions should generally implement a state to read a variable name, and another to read an expected value. Additional states may be helpful depending on the application.</p>
+<p class="p">The following example form accepts an e-mail address, a subject, and a message body. Since this data will likely total over the size of the internal connection data buffer, it should be submitted via POST.</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e135', this);">Copy</button><code id="d94623e135" content="&lt;form method=&#34;post&#34; action=&#34;/email.htm&#34;&gt;&#xA;To: &lt;input type=&#34;text&#34; name=&#34;to&#34; maxlength=&#34;50&#34; /&gt;&lt;br /&gt;&#xA;Subject: &lt;input type=&#34;text&#34; name=&#34;subject&#34; maxlength=&#34;50&#34; /&gt;&lt;br /&gt;&#xA;Message:&lt;br /&gt;&#xA;&lt;textarea name=&#34;msg&#34; rows=&#34;6&#34;&gt;&lt;/textarea&gt;&lt;br /&gt;&#xA;&lt;input type=&#34;submit&#34; value=&#34;Send Message&#34; /&gt;&lt;/div&gt;&#xA;&lt;/form&gt;">&lt;form method="post" action="/email.htm"&gt;
+To: &lt;input type="text" name="to" maxlength="50" /&gt;&lt;br /&gt;
+Subject: &lt;input type="text" name="subject" maxlength="50" /&gt;&lt;br /&gt;
+Message:&lt;br /&gt;
+&lt;textarea name="msg" rows="6"&gt;&lt;/textarea&gt;&lt;br /&gt;
+&lt;input type="submit" value="Send Message" /&gt;&lt;/div&gt;
+&lt;/form&gt;</code></pre><p class="p">Suppose a user enters the following data into this form:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e140', this);">Copy</button><code id="d94623e140" content="To: joe@picsaregood.com &#xD;&#xA;Subject: Sent by a PIC &#xD;&#xA;Message: I sent this message using my development board! &#xD;">To: joe@picsaregood.com &#xD;
+Subject: Sent by a PIC &#xD;
+Message: I sent this message using my development board! &#xD;</code></pre><p class="p">The TCPIP_HTTP_PostExecute function will be called with the following data still in the TCP buffer:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e144', this);">Copy</button><code id="d94623e144" content="to=joe%40picsaregood.com&amp;subject=Sent+by+a+PIC&amp;msg=I+sent+this+message+using+my+development+board%21 &#xD;">to=joe%40picsaregood.com&amp;subject=Sent+by+a+PIC&amp;msg=I+sent+this+message+using+my+development+board%21 &#xD;</code></pre><p class="p">To use the e-mail module, the application needs to read in the address and the subject, store those in RAM, and then send the message. However, since the message is not guaranteed to fit in RAM all at once, it must be read as space is available and passed to the e-mail module. A state machine, coupled with the TCPIP_HTTP_PostNameRead and</p>
+<p class="p">TCPIP_HTTP_PostValueRead functions can simplify this greatly.</p>
+<p class="p">See the TCPIP_HTTP_PostExecute and HTTPPostEmail functions in the supplied custom_http_app.c for a complete implementation of this example.</p>
+<p class="p"><strong class="ph b">Authentication</strong></p>
+<p class="p">Authentication functionality is supported by two user-provided callback functions. The first, TCPIP_HTTP_FileAuthenticate, determines if the requested page requires valid credentials to proceed. The second, TCPIP_HTTP_UserAuthenticate, checks the user name and password against an accepted list and determines whether to grant or deny access. The connection stores the current authorization setting which can be manipulated by using the TCPIP_HTTP_CurrentConnectionIsAuthorizedGet and TCPIP_HTTP_CurrentConnectionIsAuthorizedSet functions.</p>
+<blockquote class="lq"><p class="p">Note:  The HTTP authentication is NOT secure! The passwords are sent in clear over the network. For a secure approach, the HTTP_NET module with TLS enabled should be used.</p>
+</blockquote>
+<p class="p"><em class="ph i">Requiring Authentication</em></p>
+<p class="p">When a request is first made, the function TCPIP_HTTP_FileAuthenticate is called to determine if that page needs password protection. This function returns a value to instruct the HTTP server how to proceed. The most significant bit indicates whether or not access is granted. That is, values 0x80 and higher allow access unconditionally, while values 0x79 and lower will require a user name and password at a later point. The value returned is stored in the connection data so that it can be accessed by future callback functions.</p>
+<p class="p">The following example is the simplest case, in which all files require a password for access:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e168', this);">Copy</button><code id="d94623e168" content="uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)&#xA;{&#xA;return 0;&#xA;}">uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
+{
+return 0;
+}</code></pre><p class="p">In some cases, only certain files will need to be protected. The second example requires a password for any file located in the /treasure folder:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e172', this);">Copy</button><code id="d94623e172" content="uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)&#xA;{&#xA;    // Compare to &#34;/treasure&#34; folder. Don't use strcmp here, because&#xA;    // cFile has additional path info such as &#34;/treasure/gold.htm&#34;&#xA;    if(memcmp(cFile, (const void*)&#34;treasure&#34;, 8) == 0)&#xA;    {   // Authentication will be needed later&#xA;        return 0;&#xA;    }&#xA;&#xA;    // No authentication required&#xA;    return 0x80;&#xA;}">uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
+{
+    // Compare to "/treasure" folder. Don't use strcmp here, because
+    // cFile has additional path info such as "/treasure/gold.htm"
+    if(memcmp(cFile, (const void*)"treasure", 8) == 0)
+    {   // Authentication will be needed later
+        return 0;
+    }
+
+    // No authentication required
+    return 0x80;
+}</code></pre><p class="p">More complex uses could require an administrative user to access the /admin folder, while any authenticated user can access the rest of the site. This requires the TCPIP_HTTP_FileAuthenticate to return different authentication values for a different file.</p>
+<p class="p"><em class="ph i">Validating Credentials</em></p>
+<p class="p">The TCPIP_HTTP_UserAuthenticate function determines if the supplied user name and password are valid to access the specific resource. Again, the most significant bit indicates whether or not access is granted. The value returned is also stored in the connection internal data and it can be accessed by future callback functions.</p>
+<p class="p">The following example is the simplest case, in which one user/password pair is accepted for all pages:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e183', this);">Copy</button><code id="d94623e183" content="uint8_t TCPIP_HTTP_UserAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cUser, uint8_t* cPass)&#xA;{&#xA;    if(!strcmp((char*)cUser, (const char*)&#34;AliBaba&#34;) &amp;&amp;&#xA;    !strcmp((char*)cPass, (const char*)&#34;Open Sesame!&#34;) )&#xA;    {&#xA;        return 0x80;&#xA;    }&#xA;&#xA;    return 0;&#xA;}">uint8_t TCPIP_HTTP_UserAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cUser, uint8_t* cPass)
+{
+    if(!strcmp((char*)cUser, (const char*)"AliBaba") &amp;&amp;
+    !strcmp((char*)cPass, (const char*)"Open Sesame!") )
+    {
+        return 0x80;
+    }
+
+    return 0;
+}</code></pre><p class="p">More complex uses are certainly feasible. Many applications may choose to store the user names and passwords in protected files so that they may be updated by a privileged user. In some cases, you may have multiple users with various levels of access. The application may wish to return various values above 0x80 in TCPIP_HTTP_UserAuthenticate so that later callback functions can determine which user logged in.</p>
+<p class="p"><strong class="ph b">Cookies</strong></p>
+<p class="p">Cookies were added to the protocol description to solve this problem. This feature allows a web server to store small bits of text in a user's browser. These values will be returned to the server with every request, allowing the server to associate session variables with a request. Cookies are typically used for more advanced authentication systems.</p>
+<p class="p">Best practice is generally to store the bulk of the data on the server, and store only a unique identifier with the browser. This cuts down on data overhead and ensures that the user cannot modify the values stored with the session. However, logic must be implemented in the server to expire old sessions and allocate memory for new ones. If sensitive data is being stored, it is also important that the identifier be random enough so as to prevent stealing or spoofing another user's cookies.</p>
+<p class="p"><em class="ph i">Retrieving Cookies</em></p>
+<p class="p">In the HTTP server, cookies are retrieved automatically. They are stored in the connection internal data buffer just as any other GET form argument or URL parameter would be. The proper place to parse these values is therefore in the TCPIP_HTTP_GetExecute callback using the TCPIP_HTTP_ArgGet.</p>
+<p class="p">This model consumes some of the limited space available for URL parameters. Ensure that cookies do not consume more space than is available (as defined by HTTP_MAX_DATA_LEN) and that they will fit after any data that may be submitted via a GET form. If enough space is not available, the cookies will be truncated.</p>
+<p class="p"><em class="ph i">Setting Cookies</em></p>
+<p class="p">Cookies can be set in TCPIP_HTTP_GetExecute or TCPIP_HTTP_PostExecute. To set a cookie, store the name/value pairs in the connection internal buffer data as a series of null-terminated strings. Then, call TCPIP_HTTP_CurrentConnectionHasArgsSet with a parameter equal to the number of name/value pairs to be set. For example, the following code sets a cookie indicating a user's preference for a type of cookie:</p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d94623e207', this);">Copy</button><code id="d94623e207" content="void TCPIP_HTTP_GetExecute(void)&#xA;{&#xA;...&#xA;// Set a cookie&#xA;uint8_t* connData = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);&#xA;uint16_t httpBuffSize  = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);&#xA;if(strlen(“flavor”) + strlen(“oatmeal raisin) + 2 &lt;= httpBuffSize)&#xA;    {&#xA;    strcpy((char*)connData, &#34;flavor&#34;);&#xA;    strcpy((char*)connData + strlen(&#34;flavor&#34;) + 1, &#34;oatmeal raisin&#34;);&#xA;&#xA;    TCPIP_HTTP_CurrentConnectionHasArgsSet(connHandle, 1);&#xA;    }&#xA;&#xA;...&#xA;}">void TCPIP_HTTP_GetExecute(void)
+{
+...
+// Set a cookie
+uint8_t* connData = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
+uint16_t httpBuffSize  = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);
+if(strlen(“flavor”) + strlen(“oatmeal raisin) + 2 &lt;= httpBuffSize)
+    {
+    strcpy((char*)connData, "flavor");
+    strcpy((char*)connData + strlen("flavor") + 1, "oatmeal raisin");
+
+    TCPIP_HTTP_CurrentConnectionHasArgsSet(connHandle, 1);
+    }
+
+...
+}</code></pre><p class="p">After this, all future requests from this browser will include the parameter "flavor" in the connection data along with the associated value of "oatmeal raisin".</p>
+<p class="p"><strong class="ph b">Compression</strong></p>
+<p class="p">The MPFS2 Utility will automatically determine which files can benefit from GZIP compression, and will store the compressed file in the MPFS2 image when possible. This generally includes all JavaScript and CSS files. (Images are typically already compressed, so the MPFS2 Utility will generally decide it is better to store them uncompressed.) This HTTP server will then seamlessly return this compressed file to the browser. Less non-volatile storage space will be required for storing the pages image, and faster transfers back to the client will result. No special configuration is required for this feature.</p>
+<p class="p">To prevent certain extensions from being compressed, use the Advanced Settings dialog in the MPFS2 Utility.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d94623e228"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d94623e230"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_STACK_USE_BASE64_DECODE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Authentication requires Base64 decoding Enable basic authentication support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span><em class="ph i">HTTP_CONFIG_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>This is macro <em class="ph i">HTTP_CONFIG_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CACHE_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Max lifetime (sec) of static responses as string</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CONFIG_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define the HTTP module configuration flags Use 0 for default See HTTP_MODULE_FLAGS definition for possible values</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_DEFAULT_FILE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Indicate what HTTP file to serve when no specific one is requested</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_DEFAULT_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>For buffer overrun protection. Set to longest length of above two strings.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_FILE_UPLOAD_ENABLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Configure MPFS over HTTP updating Comment this line to disable updating via HTTP</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_FILE_UPLOAD_NAME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>This is macro TCPIP_HTTP_FILE_UPLOAD_NAME.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MAX_CONNECTIONS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Maximum numbers of simultaneous supported HTTP connections.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MAX_DATA_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define the maximum data length for reading cookie and GET/POST arguments (bytes)</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MAX_HEADER_LEN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set to length of longest string above</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MIN_CALLBACK_FREE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define the minimum number of bytes free in the TX FIFO before executing callbacks</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_NO_AUTH_WITHOUT_SSL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Uncomment to require secure connection before requesting a password</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_SKT_RX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define the size of the RX buffer for the HTTP socket Use 0 for default TCP socket value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_SKT_TX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define the size of the TX buffer for the HTTP socket Use 0 for default TCP socket value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_TASK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>The HTTP task rate, ms The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Max time (sec) to await more data before timing out and disconnecting the socket</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_USE_AUTHENTICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Enable basic authentication support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_USE_COOKIES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Enable cookie support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_USE_POST</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Define which HTTP modules to use If not using a specific module, comment it to save resources Enable POST support</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_FREE_FUNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>HTTP corresponding deallocation function, free style This is the function the HTTP will call for freeing the allocated memory Use standard C library 'free' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MALLOC_FUNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>HTTP allocation function, malloc style This is the function the HTTP will call to allocate memory needed for file uploads. Use standard C library 'malloc' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_ArgGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Locates a form field value in a given data array.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_FileInclude</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Writes a file byte-for-byte to the currently loaded TCP socket.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_PostNameRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Reads a name from a URL encoded string in the TCP buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_PostValueRead</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Reads a value from a URL encoded string in the TCP buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_URLDecode</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Parses a string from URL encoding to plain-text.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionByteCountDec</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Decrements the connection byte count.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionByteCountGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Returns how many bytes are available to be read.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionByteCountSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets how many bytes are available to be read.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionCallbackPosGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Returns the callback position indicator.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionCallbackPosSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets the callback position indicator.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionDataBufferGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Returns pointer to connection general purpose data buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionFileGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Get handle to current connection's file.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionPostSmGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Get the POST state machine state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionSocketGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Get the socket for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionStatusSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets HTTP status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionIsAuthorizedGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the authorized state for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionIsAuthorizedSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets the authorized state for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUserDataGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the user data parameter for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUserDataSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets the user data parameter for the current connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionHasArgsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Checks whether there are get or cookie arguments.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionPostSmSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set the POST state machine state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionStatusGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets HTTP status.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_FileAuthenticate</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Determines if a given file name requires authentication</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_GetExecute</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Processes GET form field variables and cookies.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_PostExecute</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Processes POST form variables and data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_Print_varname</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Inserts dynamic content into a web page</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_UserAuthenticate</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Performs validation on a specific user name and password.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_ActiveConnectionCountGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the number of active connections.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionHandleGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the connection handle of a HTTP connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionIndexGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the index of the HTTP connection.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionDataBufferSizeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Returns the size of the connection general purpose data buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionSMSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set the HTTP current connection state Machine.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the current address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferCurrSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set the current address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferEndGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the end address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferEndSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set the end address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferStartGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Gets the start address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionUploadBufferStartSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Set the start address of current connection upload buffer.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span><strong class="ph b">Data Types and ConstantsEnumerations</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_MODULE_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>HTTP module configuration flags Multiple flags can be OR-ed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_IO_RESULT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Result states for execution callbacks</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_FILE_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>File type definitions</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_READ_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Result states for TCPIP_HTTP_PostNameRead, TCPIP_HTTP_PostValueRead and TCPIP_HTTP_PostReadPair</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_STATUS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Supported Commands and Server Response Codes</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_CurrentConnectionHasArgsSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>Sets whether there are get or cookie arguments.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>TCPIP_HTTP_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>HTTP module dynamic configuration data</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e228 "><span>HTTP_CONN_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d94623e230 "><span>HTTP connection identifier, handle of a HTTP connection</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-F8590EEC-B394-4BEE-8F0A-6C4D04BDB52B.html">HTTP_CONN_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1296ADD5-28BD-4482-A85F-B0DC62C24C9C.html">HTTP_FILE_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D257BC7E-C3ED-427F-8A98-AF136AF09534.html">HTTP_IO_RESULT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1D3D9E04-C631-448B-B130-B17523874376.html">HTTP_MODULE_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D2B619C5-F5F0-4E41-93A6-87E3B886BE8E.html">HTTP_READ_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-93387E84-709B-4C17-990D-C40C5A02738E.html">HTTP_STATUS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7C8119F3-BB7C-4628-84FD-28F840D4F76A.html">TCPIP_HTTP_ActiveConnectionCountGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-57180070-C84B-44CE-848B-39793B28459A.html">TCPIP_HTTP_ArgGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F8369E46-D7EB-4FC0-810C-BC5641CFC4BA.html">TCPIP_HTTP_CurrentConnectionByteCountDec Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-272AB059-2FE4-4FF1-A32F-C791D4B47E36.html">TCPIP_HTTP_CurrentConnectionByteCountGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ADDDC06C-ACF4-450E-ADC3-4359BE293DBD.html">TCPIP_HTTP_CurrentConnectionByteCountSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-48CB3F61-A4F6-4497-A547-8F85DA2D3500.html">TCPIP_HTTP_CurrentConnectionCallbackPosGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F0ACFDB6-C345-4549-A292-A001FFC4C503.html">TCPIP_HTTP_CurrentConnectionCallbackPosSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B615FBBA-3FC3-44D0-B68D-3089877C6720.html">TCPIP_HTTP_CurrentConnectionDataBufferGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-AB48F72E-A95D-4BAB-9EB5-22E2A7B6DAFE.html">TCPIP_HTTP_CurrentConnectionDataBufferSizeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5665E20F-AE83-454B-906E-95A458C3854C.html">TCPIP_HTTP_CurrentConnectionFileGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B78FDE15-1A3A-42F9-8937-4C7FA5E2D0A0.html">TCPIP_HTTP_CurrentConnectionHandleGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1ABC7F69-88BA-4F38-9006-04D20631CAC1.html">TCPIP_HTTP_CurrentConnectionHasArgsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CDA81419-BA93-4763-804E-1DEB3222E05C.html">TCPIP_HTTP_CurrentConnectionHasArgsSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A66BAE9B-C0F6-410E-B59B-790ABE49043A.html">TCPIP_HTTP_CurrentConnectionIndexGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7EF0555E-936C-48E3-92FA-BA52D2EAD359.html">TCPIP_HTTP_CurrentConnectionIsAuthorizedGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-58B829B5-0010-44C5-8FD2-BA53884B60C1.html">TCPIP_HTTP_CurrentConnectionIsAuthorizedSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C4336C08-C6A8-4798-8BD3-C5ACA7BA120C.html">TCPIP_HTTP_CurrentConnectionPostSmGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FE739F59-787D-4D3E-8A4C-DD7DD7405D5E.html">TCPIP_HTTP_CurrentConnectionPostSmSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0FA985FE-0D89-43F2-B84D-A75A26F89EC1.html">TCPIP_HTTP_CurrentConnectionSMSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4B6DA909-656C-487D-91BC-12B0AB06A672.html">TCPIP_HTTP_CurrentConnectionSocketGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BD9755D4-1089-4F9B-9EDC-84CFFD899191.html">TCPIP_HTTP_CurrentConnectionStatusGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-42E17488-1EC2-4F8C-9919-30CC6D0F812F.html">TCPIP_HTTP_CurrentConnectionStatusSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B69B050F-701C-41A0-9C16-E6DD1B667FBE.html">TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FF74BB5A-2DAB-4D3B-847D-0D5CA0734D98.html">TCPIP_HTTP_CurrentConnectionUploadBufferCurrSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6EA2118B-F0EF-4A59-9B7E-1A232F6CB4F5.html">TCPIP_HTTP_CurrentConnectionUploadBufferEndGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D601F033-B6C7-4C41-A24D-D681019A86F4.html">TCPIP_HTTP_CurrentConnectionUploadBufferEndSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FAB54690-5400-44CA-879C-52C16B4B9745.html">TCPIP_HTTP_CurrentConnectionUploadBufferStartGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7D6B1A4A-09BC-4B80-B426-B0614F5AF051.html">TCPIP_HTTP_CurrentConnectionUploadBufferStartSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-21A8F8C9-91C3-45AE-B61D-F1BD242CC08D.html">TCPIP_HTTP_CurrentConnectionUserDataGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F684C26E-366D-47B0-8E91-BC5409837F2F.html">TCPIP_HTTP_CurrentConnectionUserDataSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-472B1332-63C7-405D-9396-B75872D19FD7.html">TCPIP_HTTP_FileAuthenticate Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-05F1C6C9-DEA3-4A98-AA37-BE58E0FD8548.html">TCPIP_HTTP_FileInclude Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-2446C06E-6837-4E6C-8C7B-F62C758D480E.html">TCPIP_HTTP_GetExecute Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CCEB8932-DFFD-42B7-87B7-3CD138098D81.html">TCPIP_HTTP_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0744D225-DBCC-460A-BBD9-5CC7B00686E2.html">TCPIP_HTTP_PostExecute Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E7A711DE-6A93-43F1-8966-0205520C0CCE.html">TCPIP_HTTP_PostNameRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A477C6E3-0E32-4BBB-A50D-585BA9D587F9.html">TCPIP_HTTP_PostReadPair Macro</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E2791B70-E859-4754-A3CA-AACC0BFE9DF1.html">TCPIP_HTTP_PostValueRead Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-450F196C-1A6C-4CFA-9C1B-EB42BD3F1E49.html">TCPIP_HTTP_Print_varname Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-93867F57-950F-4F08-BC55-77CA37E43E4D.html">TCPIP_HTTP_Task Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6DC8E96C-37D7-4D81-A29A-EF52BEF52F88.html">TCPIP_HTTP_URLDecode Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E57BDE76-15C6-471D-9ED1-20BE3799E496.html">TCPIP_HTTP_UserAuthenticate Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

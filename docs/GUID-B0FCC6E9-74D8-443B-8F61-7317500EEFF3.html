@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Telnet Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C642CB71-CF06-46CC-9922-1407077E1B3B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CAC0E3EC-B120-4A6A-8574-F17455A01A5E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DEE3AF7D-97B4-4A2D-8A1E-279868DC0C5B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4B5D0D38-3E38-4109-A20A-66A18773B272.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F6B8C2BE-93BB-482F-9546-12FB7912C865.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7F49124A-639B-485B-8548-282953AF9BDB.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0C213E95-1D72-4D87-A542-8C403169905A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D2E00968-3614-40B6-80DE-4CF03F6EA822.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-05ED5A83-621B-4753-9A98-747A4B51D0ED.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-15B2929A-D9FD-4BE9-B460-EACF37CB766A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-228CD50D-67DE-41BE-BD4D-D877D5667C9C.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="telnet-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Telnet Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-telnet-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="telnet-module">
+<h1 class="title topictitle1" id="ariaid-title1">Telnet Module</h1><div class="body"><p class="p">Telnet, which runs over a TCP connection, provides bidirectional, interactive communication between two nodes on the Internet or on a Local Area Network. The Telnet code included with Harmony TCP/IP stack is a demonstration of the possible utilization of a Telnet server module. The server listens for a Telnet connection. When a client attempts to make one, the server will prompt the client for a username and password, and if the correct one is provided, it will_connect_the client.</p>
+<p class="p">The server registers itself with the system command processor and acts as a communication channel capable of issuing commands and receiving replies.</p>
+<p class="p">From this moment on, the Telnet connection can be used for various system and TCP/IP related commands, just as the regular system console is used.</p>
+<p class="p">The commands currently implemented and processed by the command processor can be dynamically updated, new commands can be added, etc. See the tcpip_commands.c file for the list of TCP/IP-related commands.</p>
+<p class="p">Based on this skeleton Telnet code, completely new behavior can be implemented for the Telnet server.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">Currently, the Telnet TCP/IP Library runs in the background as a server and does not expose any API functions.</p>
+<p class="p">It serves incoming connections by sending the received data string to the command processor, which outputs each command reply to the Telnet channel.</p>
+<br /><img class="image" src="GUID-E50DE4FC-A444-4A00-863E-A980EBD10805-low.png" alt="TCPIP TELNET telnet_flow" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d152471e39"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d152471e41"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_MAX_CONNECTIONS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Maximum number of Telnet connections</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_LISTEN_PORT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Port on which the telnet server is listening Default is TCPIP_TELNET_SERVER_PORT (23) or TCPIP_TELNET_SERVER_SECURE_PORT (992). Adjust as needed</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_SKT_RX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Size of the telnet socket RX buffer If long messages are sent over the telnet connection the socket should have a large enough buffer to receive the data. Leave 0 for default TCP RX buffer size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_SKT_TX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Size of the telnet socket TX buffer if long messages are sent over the telnet connection the socket should have a large enough buffer to write the data at once. Leave 0 for default TCP TX buffer size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_PRINT_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Size of the internal print buffer This buffer is used when the telnet console printf style function is called Adjust based on the length of the messages to be formatted with print statements. This buffer is created in the automatic stack. Make sure that there's enough stack space for this buffer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_LINE_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Size of the internal line buffer This buffer is used for receiving and assembling the password, authentication and regular characters Adjust based on the length of the commands sent to the telnet server. This buffer is created in the automatic stack. Make sure that there's enough stack space for this buffer</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>telnet task rate, milliseconds. The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained. The value cannot be lower than the TCPIP_STACK_TICK_RATE.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_USERNAME_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Maximum size of the internal buffer to store the user name Adjust based on the length of the user names allowed for the telnet connections. A buffer of this size if allocated for each connection to store the login user name. Longer user names will be truncated to this size</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_OBSOLETE_AUTHENTICATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>telnet obsolete authentication method disable/enable. If false This is the default and the PREFERRED case! The telnet module will call a registrated callback to authenticate the users. Is is the preferred authentication method. It requires the run time registration of an authentication handler. Until the moment the authentication handler is registered any login attempts will fail!. If true The old OBSOLETE authentication method using the build symbols TCPIP_TELNET_USERNAME and TCPIP_TELNET_PASSWORD is used This method is DEPRECATED and it will be eventually removed!. It is recommended that you leave the setting to false!</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_AUTHENTICATION_CONN_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Use the telnet connection information data as part of the authentication callback. If false no connection info data is provided to the authentication callback This is useful for the default case when all connections will use the same username/password.. If true the authentication callback will contain the connection info data to allow different processing based on the source of the authentication request. This flag is relevant only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == false</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_USERNAME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Default Telnet user name. DEPRECATED. this is used only when there's no authentication callback defined!. Use only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == true</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_PASSWORD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Default Telnet password DEPRECATED. this is used only when there's no authentication callback defined!. Use only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == true</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_AuthenticationDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Deregisters a previously registered authentication handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_AuthenticationRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Sets a new telnet authentication handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_ConnectionInfoGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Gets information about a telnet connection</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_ConnectionsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Gets the number of the telnet connections</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>telnet module run time configuration/initialization data.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_AUTH_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Pointer to a function (handler) that will get called to process telnet authentication</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_CONN_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>telnet connection information.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>telnet configuration flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Defines a telnet handle.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e39 "><span>TCPIP_TELNET_STATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d152471e41 "><span>Telnet connection state.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-C642CB71-CF06-46CC-9922-1407077E1B3B.html">TCPIP_TELNET_AUTH_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CAC0E3EC-B120-4A6A-8574-F17455A01A5E.html">TCPIP_TELNET_AuthenticationDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-DEE3AF7D-97B4-4A2D-8A1E-279868DC0C5B.html">TCPIP_TELNET_AuthenticationRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4B5D0D38-3E38-4109-A20A-66A18773B272.html">TCPIP_TELNET_CONN_INFO Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F6B8C2BE-93BB-482F-9546-12FB7912C865.html">TCPIP_TELNET_ConnectionInfoGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7F49124A-639B-485B-8548-282953AF9BDB.html">TCPIP_TELNET_ConnectionsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0C213E95-1D72-4D87-A542-8C403169905A.html">TCPIP_TELNET_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D2E00968-3614-40B6-80DE-4CF03F6EA822.html">TCPIP_TELNET_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-05ED5A83-621B-4753-9A98-747A4B51D0ED.html">TCPIP_TELNET_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-15B2929A-D9FD-4BE9-B460-EACF37CB766A.html">TCPIP_TELNET_STATE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-228CD50D-67DE-41BE-BD4D-D877D5667C9C.html">TCPIP_TELNET_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

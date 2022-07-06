@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="MAC Driver Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F1036B24-FE86-4897-BC92-70F7118DECB1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A3992A9B-88BD-4049-AA62-38DC5FDECE42.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B0009EA6-72FB-445C-A8EE-5129D9684EA5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6270C381-E98B-4BAB-BA01-B32A743BC23F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8CC6912D-FBFC-4CC0-8562-9B9D199A55AD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F4967D82-E900-429B-900D-A7C6E07A5E11.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5DFFD672-0F33-4E85-8496-3D6436EF56C4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-82848107-4CE4-436A-9B50-75B5767E03FD.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ED921CF6-88DA-4AA8-95D6-66595A339764.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-240F79CF-4468-4AB3-9D4E-E23C2E281EBC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-CFC1B350-191B-49F9-9623-D76D3191F19C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ACB6878A-9028-4D7E-A354-7D97A8659D2B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-99C3B0B4-7B5A-4987-90BD-81B3DDA72693.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-9D764E72-812D-4552-AA42-553CD03EF776.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E66A0D7F-2E87-45A4-9EBE-6EC9E53E76EF.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-435E5152-700F-47EC-ABAB-B2E33D885E55.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-66C50FB3-A837-493C-ABA8-EE47D795A3F4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BB9A0D7A-5766-47C0-8A90-0915F9673A3D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-83ADCBF6-480E-4531-B0EE-9B20CCA80F24.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-63FAACBB-2EBB-417D-A026-9E80B2A3E1F5.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F993B8B1-BE2B-42E7-85BC-D5D6D2EA611B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5B11FD5C-585A-4122-B97D-C79FCAEEFD1D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-ED1CD7AF-39DA-44D2-9B94-837CA0567DC6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A83F474A-DE5B-4880-B658-1F57D6076DC3.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1B433A94-8264-4250-B59C-CA1CBCDA1A29.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0C9F3261-AB84-44F4-88C6-DE1B62F1ECCC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3B3A4A57-7E7D-4FE9-8838-B9C0CB9816CC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B9C2FD26-9793-4F5D-AC70-6D230309EFD0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-80F5FFAB-C6FD-41C2-AC19-85BDD5D274E4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0BACDF8E-626D-4123-A257-F504D698660F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B2F1424A-5396-49FB-89C2-77A497BEF5ED.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-940DE310-D484-4698-B02D-714E9D9DC366.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1339D3C8-2300-49CC-8764-D48BA075046E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-617EB7BE-435D-467D-950C-0C06E88C12F6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7B4519E8-35DC-42A1-AA46-A7C1B15DB5EC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8C6170E5-0E7A-49D1-959C-07B748E4F398.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C3D5ADDA-C160-4FA9-A43C-02EC4D2B1F17.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-64650216-4E2E-417F-8C9D-8C10AE03E7D4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C3415D33-F49B-4FAE-8D75-AD7F15A0B60C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-391BB945-3CE5-41D7-8678-43CA3010FF3D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-95D7899C-A605-4BFE-9465-472B8982B8E1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0B22E607-0077-4838-8920-8CA7DC7EEC31.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C54433C1-2180-430D-953B-46C028083162.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-BF936DCC-3D24-4119-A9C0-64BCB4DCA45E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-891D7233-73AB-4DBB-AFC9-428A7531FAA9.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8220824F-9A66-4AC1-9AFC-ED4D12C1B54C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1980D629-290B-40FF-9F0B-53EFB5590951.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1BD642EC-B24E-4589-9473-BF0EB35C1FCC.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B7731681-A36F-473A-AA6E-E35653662542.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4AD197E5-65ED-4509-A821-E27387114EE0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-34C8E0E9-2425-480C-9FF0-72C5E55B3F34.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FB1FB11A-61F5-4B63-9F79-57A68BD28438.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-5F0D6218-4F51-4152-8122-EF952E394EE6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1E150278-093E-400D-9828-68D108F78FB8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-17ECBC22-66EA-4544-B1EB-4ADD77C15F73.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-749C3475-16E5-4047-A835-95F9A8471691.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-8809CAF2-BA3B-4D2C-8EDE-CD19481195A8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-395EDA67-22AD-40AC-AF69-BFA3D8B61F6F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-38D8B7F7-F948-49E9-ADC6-58D7EC45CA41.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6B6C990B-1359-470E-AC2C-11771DEC02D1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0B60C5DD-9B61-49A7-83B2-7792F425BEF6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-C26A1C84-59C1-434B-AB56-3FF3DE15FA3F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1C6C58A7-003E-4C91-8385-E762D4CA7F79.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="mac-driver-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>MAC Driver Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-mac-driver-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-0C1AF471-66D4-472F-84AF-212E9E18B21D"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="mac-driver-module">
+<h1 class="title topictitle1" id="ariaid-title1">MAC Driver Module</h1><div class="body"><p class="p">In the seven-layer OSI model of computer networking, media access control (MAC) data communication protocol is a sub-layer of the data link_layer, which itself is layer_2. The MAC sub-layer provides addressing and channel access control mechanisms that make it possible for several terminals or network nodes to communicate within a multiple access network that incorporates a shared medium (e.g., Ethernet). The hardware that implements the MAC is referred to as a medium access controller.</p>
+<p class="p">The MAC sub-layer acts as an interface between the logical link control (LLC) sub-layer and the network's physical_layer. The MAC_layer emulates a full-duplex logical communication channel in a multi-point network. This channel may provide unicast, multicast or broadcast communication service.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<br /><img class="image" src="GUID-6758599C-0B84-4D66-9E4B-0E7462584207-low.png" alt="TCPIP MAC mac_abstraction" /><br /><p class="p">How the Library WorksThe MAC layer_(together with the Logical Link Control – LLC) is intended to have the functionality described in the OSI model for the Data Link Layer.</p>
+<p class="p">There are two important functions to be performed in the MAC layer_as part of the Data Link Layer:</p>
+<p class="p"><em class="ph i">Data Encapsulation (Transmit and Receive)</em></p>
+<ul class="ul"><li class="li"><p class="p">Framing (frame boundary detection, frame synchronization)</p>
+</li>
+<li class="li"><p class="p">Addressing (control of the source and destination addresses)</p>
+</li>
+<li class="li"><p class="p">Error detection (detection of transmission errors occurring in the physical medium)</p>
+</li>
+</ul>
+<p class="p"><em class="ph i">Media Access Management</em></p>
+<ul class="ul"><li class="li"><p class="p">Medium allocation (collision avoidance)</p>
+</li>
+<li class="li"><p class="p">Contention resolution (collision handling)</p>
+</li>
+</ul>
+<p class="p">Beside this, the receive packet filtering is another important functionality that is usually integrated in the MAC_layer.</p>
+<p class="p">The functionality previously presented is handled by the hardware itself as an intrinsic part of the data exchange that’s performed with the PHY.</p>
+<p class="p">From the software point of view the MAC driver exposes an API that’s focused on efficient data transfer routines. Control of the driver and access to the transferred data is given by using regular driver client access functions.</p>
+<p class="p">Please note that the MAC model described here corresponds to a virtual MAC driver that the TCP/IP stack uses. All the implementations of the physical MAC drivers (Ethernet, Wi-Fi, etc.) must adhere and implement this API required by the virtual MAC API. This is how the TCP/IP stack achieves virtualization of the operation over multiple network interfaces. The TCP/IP stack makes no assumption about the specifics of an actual implementation and expects all MACs to behave identically</p>
+<p class="p"><strong class="ph b">Core Functionality</strong></p>
+<br /><img class="image" src="GUID-3515839E-2DAF-4D6C-9D34-F5FADA222E44-low.png" alt="TCPIP MAC mac_flow" /><br /><p class="p">The MAC driver is used internally by the TCP/IP Stack Manager and its API is not normally exposed outside the stack. There is little need to interface directly with the MAC from the application level. The TCP/IP Stack provides all the data interface functions to the application by exposing the_socket_API (TCP and UDP) and also low level IPv4 and IPv6 API. However, the functionality of the MAC driver is important for having a thorough understanding of how the TCP/IP Stack works or for integrating the MPLAB Harmony MAC driver into a third-party TCP/IP Stack.</p>
+<p class="p">The MAC driver needs to be initialized by a call to TCPIP_MAC_Initialize() with both stack and module specific initialization data. The stack initialization data contains absolutely necessary data for the MAC driver to operate (memory allocation functions, packet allocation functions, event notification functions, etc.) Note that the module initialization data could be different from one MAC module to another and, if missing, normally the MAC driver should use some default values specified in the tcpip_mac_config.h file.</p>
+<p class="p">Once the initialization process succeeds, a MAC client handle is obtained by using TCPIP_MAC_Open.</p>
+<p class="p">Other parameters can be set, like the active events and receive filters by calling TCPIP_MAC_EventMaskSet, TCPIP_MAC_RxFilterHashTableEntrySet, etc.</p>
+<p class="p">By default the MAC driver operates in interrupts and the events are reported to the TCP/IP stack by using the event notification function that’s passed in at the MAC driver initialization. However, by using the TCPIP_MAC_EventPendingGet function, it is possible to use the MAC driver in a polling manner.</p>
+<p class="p">To send a packet, a MAC driver client has to obtain a TCPIP_MAC_PACKET data structure, either statically or dynamically. Note that the Harmony TCP/IP Stack uses dynamic packet allocation and has a packet allocation module that the Stack Manager calls for this purpose. The packet has to be properly formatted with all the required fields before being passed to the MAC driver for transmission. The MAC driver will perform a minimum sanity check and will try to transmit the packet over the network. Once the corresponding interrupt signals to the driver that the packet was (successfully/non-successfully) transmitted the MAC driver will call the packet acknowledge function. This will indicate to the owner of the packet (the module that created/allocated the packet) that the packet is no longer in use and it can be reused, discarded, etc.</p>
+<p class="p">The receive process is configured as part of the MAC driver initialization procedure. Usually the MAC driver needs some buffers for storing the received network traffic. How exactly this is done is driver specific and not part of this specification. The Harmony Ethernet MAC driver, for example, allocates multiple receive buffers at initialization and uses those for the whole duration of the driver life. Other implementations may choose to free the receive buffers once they are processed and allocate new ones, as needed.</p>
+<p class="p">The receive process is initiated by the hardware indicating through an interrupt that a packet is pending. This will trigger a notification event to the MAC client (the TCP/IP stack) and the actual packet receive function can be called. Alternatively the MAC client can call the TCPIP_MAC_EventPendingGet function which can be used in a polling manner.</p>
+<p class="p">To actually receive the packet the TCP/IP stack should call the TCPIP_MAC_PacketRx function. This function, besides returning a pointer to the newly received packet will provide additional info about the packet status. Also, some MAC drivers have the possibility to mark the packet being received as being unicast, multicast or broadcast.</p>
+<p class="p">Once a packet is obtained, the stack has to dispatch it accordingly, based on the info contained within the packet (ARP, IPv4, IPv6, etc.). Note that in the Harmony TCP/IP stack it’s the Stack Manager that performs the receiving and dispatching function of the packets. The recipient of the packet will be called to process the incoming packet and may forward the packet for further processing (TCP, UDP, ICMP). Note that during all this processing time this packet can no longer be used by the MAC driver for storing newly receive data. Therefore once the final recipient of the received packet has processed the data it has to call the packet acknowledge function, so that the packet can be returned to its owner, the MAC driver in this case. If the MAC driver reuses the packet (as the Harmony Ethernet MAC driver does) or simply discards it is driver implementation specific.</p>
+<p class="p">Once the data transfer of packets over the network is no longer needed the TCPIP_MAC_Close function can be called and also TCPIP_MAC_Deinitialize. This is part of the normal procedure that the Harmony stack uses for shutting down and restarting a network interface dynamically.</p>
+<p class="p">For detailed information about the MAC layer_requirements and functionality, please consult the IEEE 802.3 specifications.</p>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d25955e96"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d25955e98"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_ETH_OPEN_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Flags to use for the Ethernet connection A TCPIP_ETH_OPEN_FLAGS value. Set to TCPIP_ETH_OPEN_DEFAULT unless very good reason to use different value</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_PHY_ADDRESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>The PHY address, as configured on the board. By default all the PHYs respond to address 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_PHY_CONFIG_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Flags to configure the MAC -&gt;PHY connection a DRV_ETHPHY_CONFIG_FLAGS This depends on the actual connection (MII/RMII, default/alternate I/O) The DRV_ETHPHY_CFG_AUTO value will use the configuration fuses setting</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_PHY_LINK_INIT_DELAY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>The value of the delay for the link initialization, ms This insures that the PHY is ready to transmit after it is reset A usual value is &gt; 500 ms up to 2000 ms. The longer the delay, the less chance that the PHY drops packets when the link is established Adjust to your needs.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_BUFF_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Size of a RX packet buffer. Should be multiple of 16. This is the size of all receive packet buffers processed by the ETHC. The size should be enough to accommodate any network received packet. If the packets are larger, they will have to take multiple RX buffers and the packet manipulation is less efficient. #define TCPIP_EMAC_RX_BUFF_SIZE 512 Together with TCPIP_EMAC_RX_DEDICATED_BUFFERS it has impact on TCPIP_STACK_DRAM_SIZE setting.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_DEDICATED_BUFFERS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Number of MAC dedicated RX packet buffers. These buffers are always owned by the MAC. Note that the MAC driver allocates these buffers for storing the incoming network packets. The bigger the storage capacity, the higher data throughput can be obtained. Note that these packet buffers are allocated from the private TCP/IP heap that is specified by the TCPIP_STACK_DRAM_SIZE setting.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_DESCRIPTORS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Number of the RX descriptors to be created. If not using the run time replenish mechanism (see below) it should match the number of dedicated buffers: TCPIP_EMAC_RX_DEDICATED_BUFFERS; Otherwise it should be bigger than the sum of dedicated + non-dedicated buffers: TCPIP_EMAC_RX_DESCRIPTORS &gt; TCPIP_EMAC_RX_DEDICATED_BUFFERS + replenish_buffers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_FRAGMENTS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC maximum number of supported RX fragments. Based on the values of TCPIP_EMAC_MAX_FRAME and TCPIP_EMAC_RX_BUFF_SIZE an incoming frame may span multiple RX buffers (fragments). Note that excessive fragmentation leads to performance degradation. The default and recommended value should be 1. #define TCPIP_EMAC_RX_FRAGMENTS 1 Alternatively you can use the calculation of the number of fragments based on the selected RX sizes:</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_INIT_BUFFERS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Number of non-dedicated buffers for the MAC initialization Buffers allocated at the MAC driver initialization.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_LOW_FILL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Number of RX buffers to allocate when below threshold condition is detected. If 0, the MAC driver will allocate (scheduled buffers - rxThres) If !0, the MAC driver will allocate exactly TCPIP_EMAC_RX_LOW_FILL buffers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_LOW_THRESHOLD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Minumum threshold for the buffer replenish process. Whenever the number of RX scheduled buffers is &lt;= than this threshold the MAC driver will allocate new non-dedicated buffers (meaning that they will be released to the TCP/IP heap once they are processed). Setting this value to 0 disables the buffer replenishing process.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_TX_DESCRIPTORS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Number of the TX descriptors to be created. Because a TCP packet can span at most 3 buffers, the value should always be &gt;= 4 The amount of memory needed per descriptor is not high (around 24 bytes) so when high MAC TX performance is needed make sure that this number is &gt;= 8.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_RX_FILTERS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC RX Filters These filters define the packets that are accepted and rejected by the MAC driver Adjust to your needs The default value allows the processing of unicast, multicast and broadcast packets that have a valid CRC</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_LINK_MTU</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Link Maximum Transmission Unit (MTU) This symbol defines the largest network protocol data unit that can be transmitted over this link in a single frame. It relates to the TCPIP_EMAC_MAX_FRAME value - see above. The default value for an Ethernet link should be 1500. The minimum value for an Eternet link should be 576. If need to change this, make sure that the TCPIP_EMAC_MAX_FRAME &gt;= TCPIP_EMAC_LINK_MTU + 18 where the value 18 represents the Ethernet frame header: 12 bytes - destination + source address 2 bytes - frame type 4 bytes - FCS</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_MAX_FRAME</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Maximum MAC supported RX/TX frame size. The default value is 1536 (allows for VLAN tagged frames, although the VLAN tagged frames are discarded on RX). On RX: any incoming ETH frame that's longer than this size will be discarded. On TX: any frame that's longer than this size will be aborted by the MAC. Normally there's no need to touch this value unless you know exactly the maximum size of the frames you want to process on your network.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This symbol enables/disables the auto flow control When in full-duplex mode and the auto flow control is enabled, the MAC will send pause frames whenever the number of pending RX packets reached the full watermark. Once this number drops to the empty watermark, a pause frame with pause value of 0 is transmitted, resuming the normal traffic Use 1 to enable, 0 to disable Default should be enabled</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>An 8 bit value representing the empty water mark, in number of packets When the auto flow control is active and the number of pending received packets falls reaching this threshold the auto flow control pause frames will stop Always TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK &gt; TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK Used only when auto flow control is enabled Default value could be 0: resume normal traffic when there is no pending RX packet</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>An 8 bit value representing the full water mark, in number of packets When the number of pending received packets reaches this threshold the auto flow control kicks in A good rule to use for avoiding any packet overflow is to have enough receive room for at least 2 maximum packets, i.e. fullWMMark = (rxScheduledBuffers x rxBuffSize) / TCPIP_EMAC_MAX_FRAME - (2 x TCPIP_EMAC_MAX_FRAME ) / rxBuffSize; Always TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK &gt; TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK Used only when auto flow control is enabled Adjust to your own value #define TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK 2 Default value should use the calculation of the watermark based on the selected RX... more</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Pause Time Value for the Auto Flow Control, in bytes This represents the number of bytes to request the pause for when the auto flow control kicks in. It is normally thought of in terms of RX packets: pauseBytes / rxBuffSize = pausePackets Using bytes instead of packets allows better granularity The value should be a multiple of 64 bytes The range is : 64 bytes &lt;= TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES &lt;= (4 MB - 64) bytes (0x3fffc0) An usual value is 2 full packets. For example 2 * 1536 bytes Used only when flow control is enabled</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Initialization Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Deinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver deinitialization function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Initialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver initialization function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_ConfigGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Gets the current MAC driver configuration.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_LinkCheck</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC link checking function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Process</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC periodic processing function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Reinitialize</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver reinitialization function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Status</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Provides the current status of the MAC driver module.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Tasks</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Maintains the MAC driver's state machine.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Client Control and Status Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Close</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver close function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_Open</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver open function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_EventPendingGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Returns the currently pending MAC events.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_ParametersGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC parameter get function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_RegisterStatisticsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Gets the current MAC hardware statistics registers.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_StatisticsGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Gets the current MAC statistics.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Event Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_EventAcknowledge</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This function acknowledges a previously reported MAC event.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_EventMaskSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC events report enable/disable function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Filter Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_RxFilterHashTableEntrySet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Sets the current MAC hash table receive filter.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Data Transfer Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PacketRx</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>A packet is returned if such a pending packet exists.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PacketTx</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC driver transmit function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_POWER_MODE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Supported MAC power mode state.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MODULE_MAC_PIC32INT_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Data that's passed to the MAC at initialization time as part of the TCPIP_MAC_INIT data structure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_ACTION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Network interface action for initialization/deinitialization</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_DATA_SEGMENT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>A data segment that's part of a TX/RX packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_EVENT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Defines the possible MAC event types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_EventF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC event notification handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_CallocF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC allocation function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_FreeF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC allocation function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>A handle used for memory allocation functions.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_MallocF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC allocation function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_MODULE_CTRL</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Data structure that's passed to the MAC at the initialization time.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PACKET_ACK_FUNC</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Prototype of a MAC packet acknowledge function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PACKET_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Flags belonging to MAC packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PACKET_RX_STAT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Status of a received packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_ACK_RES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>List of MAC return codes for a packet acknowledge function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_AckF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC packet acknowledge function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_AllocF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC packet allocation function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_FreeF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC packet free function prototype.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PROCESS_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>List of the MAC processing flags.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_SEGMENT_FLAGS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Flags belonging to MAC data segment.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_RX_STATISTICS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC receive statistics data gathered at run time.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_TX_STATISTICS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC transmit statistics data gathered at run time.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_CallocFDbg</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This is type TCPIP_MAC_HEAP_CallocFDbg.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_FreeFDbg</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This is type TCPIP_MAC_HEAP_FreeFDbg.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HEAP_MallocFDbg</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This is type TCPIP_MAC_HEAP_MallocFDbg.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_INIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Contains all the data necessary to initialize the MAC device.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PARAMETERS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Data structure that tells the MAC run time parameters.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_AllocFDbg</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This is type TCPIP_MAC_PKT_AllocFDbg.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PKT_FreeFDbg</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>This is type TCPIP_MAC_PKT_FreeFDbg.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_STATISTICS_REG_ENTRY</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Describes a MAC hardware statistics register.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_SYNCH_REQUEST</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Defines the possible MAC synchronization request types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_SynchReqF</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MAC synchronization request function definition.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>List of the MAC types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MODULE_MAC_ID</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>IDs of the MAC module supported by the stack.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_RX_FILTER_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Defines the possible MAC RX filter types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_LINK_MTU</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>MTU size correspondig to the MAC types.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Handle to a MAC driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_RES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>List of return codes from MAC functions.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PACKET_RX_STAT_PIC32C</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Status of a received packet for PIC32C MAC driver.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MAC_PACKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Forward reference to a MAC packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MODULE_GMAC_QUEUE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Configuration Structure for Queues in GMAC.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e96 "><span>TCPIP_MODULE_MAC_PIC32C_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d25955e98 "><span>Data that's passed to the GMAC at initialization time as part of TCPIP_MAC_INIT data structure.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-F1036B24-FE86-4897-BC92-70F7118DECB1.html">_tag_MAC_DATA_SEGMENT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A3992A9B-88BD-4049-AA62-38DC5FDECE42.html">_tag_TCPIP_MAC_PACKET Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B0009EA6-72FB-445C-A8EE-5129D9684EA5.html">TCPIP_MAC_ACTION Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6270C381-E98B-4BAB-BA01-B32A743BC23F.html">TCPIP_MAC_Close Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8CC6912D-FBFC-4CC0-8562-9B9D199A55AD.html">TCPIP_MAC_ConfigGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F4967D82-E900-429B-900D-A7C6E07A5E11.html">TCPIP_MAC_DATA_SEGMENT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5DFFD672-0F33-4E85-8496-3D6436EF56C4.html">TCPIP_MAC_Deinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-82848107-4CE4-436A-9B50-75B5767E03FD.html">TCPIP_MAC_EVENT Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ED921CF6-88DA-4AA8-95D6-66595A339764.html">TCPIP_MAC_EventAcknowledge Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-240F79CF-4468-4AB3-9D4E-E23C2E281EBC.html">TCPIP_MAC_EventF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-CFC1B350-191B-49F9-9623-D76D3191F19C.html">TCPIP_MAC_EventMaskSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ACB6878A-9028-4D7E-A354-7D97A8659D2B.html">TCPIP_MAC_EventPendingGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-99C3B0B4-7B5A-4987-90BD-81B3DDA72693.html">TCPIP_MAC_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-9D764E72-812D-4552-AA42-553CD03EF776.html">TCPIP_MAC_HEAP_CallocF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E66A0D7F-2E87-45A4-9EBE-6EC9E53E76EF.html">TCPIP_MAC_HEAP_CallocFDbg Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-435E5152-700F-47EC-ABAB-B2E33D885E55.html">TCPIP_MAC_HEAP_FreeF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-66C50FB3-A837-493C-ABA8-EE47D795A3F4.html">TCPIP_MAC_HEAP_FreeFDbg Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BB9A0D7A-5766-47C0-8A90-0915F9673A3D.html">TCPIP_MAC_HEAP_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-83ADCBF6-480E-4531-B0EE-9B20CCA80F24.html">TCPIP_MAC_HEAP_MallocF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-63FAACBB-2EBB-417D-A026-9E80B2A3E1F5.html">TCPIP_MAC_HEAP_FreeFDbg Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F993B8B1-BE2B-42E7-85BC-D5D6D2EA611B.html">TCPIP_MAC_INIT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5B11FD5C-585A-4122-B97D-C79FCAEEFD1D.html">TCPIP_MAC_Initialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-ED1CD7AF-39DA-44D2-9B94-837CA0567DC6.html">TCPIP_MAC_LINK_MTU Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A83F474A-DE5B-4880-B658-1F57D6076DC3.html">TCPIP_MAC_LinkCheck Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1B433A94-8264-4250-B59C-CA1CBCDA1A29.html">TCPIP_MAC_MODULE_CTRL Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0C9F3261-AB84-44F4-88C6-DE1B62F1ECCC.html">TCPIP_MAC_Open Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3B3A4A57-7E7D-4FE9-8838-B9C0CB9816CC.html">TCPIP_MAC_PACKET Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B9C2FD26-9793-4F5D-AC70-6D230309EFD0.html">TCPIP_MAC_PACKET_ACK_FUNC Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-80F5FFAB-C6FD-41C2-AC19-85BDD5D274E4.html">TCPIP_MAC_PACKET_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0BACDF8E-626D-4123-A257-F504D698660F.html">TCPIP_MAC_PACKET_RX_STAT Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B2F1424A-5396-49FB-89C2-77A497BEF5ED.html">TCPIP_MAC_PACKET_RX_STAT_PIC32C Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-940DE310-D484-4698-B02D-714E9D9DC366.html">TCPIP_MAC_PacketRx Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1339D3C8-2300-49CC-8764-D48BA075046E.html">TCPIP_MAC_PacketTx Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-617EB7BE-435D-467D-950C-0C06E88C12F6.html">TCPIP_MAC_PARAMETERS Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7B4519E8-35DC-42A1-AA46-A7C1B15DB5EC.html">TCPIP_MAC_ParametersGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8C6170E5-0E7A-49D1-959C-07B748E4F398.html">TCPIP_MAC_PKT_ACK_RES Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C3D5ADDA-C160-4FA9-A43C-02EC4D2B1F17.html">TCPIP_MAC_PKT_AckF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-64650216-4E2E-417F-8C9D-8C10AE03E7D4.html">TCPIP_MAC_PKT_AllocF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C3415D33-F49B-4FAE-8D75-AD7F15A0B60C.html">TCPIP_MAC_PKT_AllocFDbg Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-391BB945-3CE5-41D7-8678-43CA3010FF3D.html">TCPIP_MAC_PKT_FreeF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-95D7899C-A605-4BFE-9465-472B8982B8E1.html">TCPIP_MAC_PKT_FreeFDbg Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0B22E607-0077-4838-8920-8CA7DC7EEC31.html">TCPIP_MAC_POWER_MODE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C54433C1-2180-430D-953B-46C028083162.html">TCPIP_MAC_Process Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-BF936DCC-3D24-4119-A9C0-64BCB4DCA45E.html">TCPIP_MAC_PROCESS_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-891D7233-73AB-4DBB-AFC9-428A7531FAA9.html">TCPIP_MAC_RegisterStatisticsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8220824F-9A66-4AC1-9AFC-ED4D12C1B54C.html">TCPIP_MAC_Reinitialize Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1980D629-290B-40FF-9F0B-53EFB5590951.html">TCPIP_MAC_RES Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1BD642EC-B24E-4589-9473-BF0EB35C1FCC.html">TCPIP_MAC_RX_FILTER_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B7731681-A36F-473A-AA6E-E35653662542.html">TCPIP_MAC_RX_STATISTICS Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4AD197E5-65ED-4509-A821-E27387114EE0.html">TCPIP_MAC_RxFilterHashTableEntrySet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-34C8E0E9-2425-480C-9FF0-72C5E55B3F34.html">TCPIP_MAC_SEGMENT_FLAGS Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FB1FB11A-61F5-4B63-9F79-57A68BD28438.html">TCPIP_MAC_STATISTICS_REG_ENTRY Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-5F0D6218-4F51-4152-8122-EF952E394EE6.html">TCPIP_MAC_StatisticsGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1E150278-093E-400D-9828-68D108F78FB8.html">TCPIP_MAC_Status Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-17ECBC22-66EA-4544-B1EB-4ADD77C15F73.html">TCPIP_MAC_SYNCH_REQUEST Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-749C3475-16E5-4047-A835-95F9A8471691.html">TCPIP_MAC_SynchReqF Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-8809CAF2-BA3B-4D2C-8EDE-CD19481195A8.html">TCPIP_MAC_Tasks Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-395EDA67-22AD-40AC-AF69-BFA3D8B61F6F.html">TCPIP_MAC_TX_STATISTICS Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-38D8B7F7-F948-49E9-ADC6-58D7EC45CA41.html">TCPIP_MAC_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6B6C990B-1359-470E-AC2C-11771DEC02D1.html">TCPIP_MODULE_GMAC_QUEUE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0B60C5DD-9B61-49A7-83B2-7792F425BEF6.html">TCPIP_MODULE_MAC_ID Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-C26A1C84-59C1-434B-AB56-3FF3DE15FA3F.html">TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1C6C58A7-003E-4C91-8385-E762D4CA7F79.html">TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

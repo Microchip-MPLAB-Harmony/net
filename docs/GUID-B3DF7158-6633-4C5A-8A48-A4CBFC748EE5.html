@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Getting Started with TCP/IP Configurator" />
+<meta name="DC.relation" scheme="URI" content="GUID-F4E4B0BB-BCBC-45A1-8F5B-7E4D76C83CF3.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5" />
+<meta name="DC.language" content="en-US" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Getting Started with TCP/IP Configurator</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-GUID-F4E4B0BB-BCBC-45A1-8F5B-7E4D76C83CF3" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5">
+
+<h1 class="title topictitle1" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-56315E5B-2933-43B0-9D7D-5BFF47143413">Getting Started with TCP/IP Configurator</h1>
+<div class="body">
+    <ul class="ul">
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-703A84F0-640F-45D4-9FAB-6B00DC9F4F7B"><p class="p">Open MPLAB X IDE</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-620AC5A9-08AB-4516-A978-E95E23C6F2A4"><p class="p">Open existing MCC project / Create MCC project</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-E2F25D14-D79A-42F6-80FC-4B82B09A05B9"><p class="p">Start MCC</p>
+</li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-9F4311B6-7317-4598-A50C-521FD7650D78">
+                                <p class="p">Select TCP/IP Configurator from plugin drop-down menu</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_OKF_KBG_15B" src="GUID-EE29F0A8-3FF1-4FDB-B933-F818F8C6C1EF-low.png" /><br />
+                        </li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-B236B125-A6D7-4BD1-BE9B-0DB9DB9FFA02"><p class="p">TCP/IP Configurator starting with Overview</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_RP3_ZCG_15B" src="GUID-DD1BF080-7ECD-43CB-8392-D438C5E7F19D-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-6D1D0687-3493-461F-9BE1-DF71248F9D5C"><p class="p">Click 'Application' to add Application Layer Components</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_ON3_GDG_15B" src="GUID-1A7C69E9-A041-45A1-8F4F-FD9F2410FDCE-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-D1C4FA5C-0785-4927-9691-CE4659C35764"><p class="p">Select from 'Available Components'. Click '+' or drag and drop to add
+                selected components</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_G25_GDG_15B" src="GUID-88840E66-7C42-4B95-A146-F2A8CF56B322-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-EEDDC79E-3372-4C30-8176-7890A867F15B"><p class="p">This window popup, if Harmony Core module is not yet added to the project.
+                Click 'Yes' to add HarmonyCore</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_I1C_HDG_15B" src="GUID-65B45460-BCC1-43EB-8564-47C6281B8DBE-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-017CB9E1-0D2C-45AF-B577-44DF47378538"><p class="p">Add TCP/IP modules from different layers. For example, to add from Transport
+                Layer, select Transport</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_HRJ_HDG_15B" src="GUID-FFB2083C-2229-4FE4-8053-B065A0C73AA9-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-87B2ECC3-D923-45E8-93A5-F31A5DABC362"><p class="p">Add from Network Layer</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_LCS_HDG_15B" src="GUID-4BF2E899-FC25-43CC-B032-3E5A9FB47AE5-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-05487AD8-CC18-4107-B055-CD75A620B265"><p class="p">Select Data Link Layer</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_ZZZ_HDG_15B" src="GUID-81938370-7598-4A43-B7CB-BBE28FF9340F-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-DC481174-D945-4279-82CB-4B299B302385"><p class="p">Click '+' on Network Interface to add an interface</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_LBK_3DG_15B" src="GUID-FA4C6047-36A5-4742-AFE0-8F47DC90AC18-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-31B35A31-DF67-4FCB-BADC-629431DFC0C5"><p class="p">Add MAC and PHY Components</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_RKT_3DG_15B" src="GUID-24CDD05C-3CCB-4DC2-A990-423ABEAF74ED-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-BFC38F39-2BDC-481A-AD60-C6689EA09476"><p class="p">Connect MAC, PHY and Network Interface. (MIIM Driver should be added with PHY
+                modules)</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_SYC_JDG_15B" src="GUID-6A40CBC3-3F6F-4BDA-A473-F465BB57E793-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-E8807164-67E4-4405-8CA1-C792710CEA5D"><p class="p">Select Basic Config layer to add components. TCP/IP Core will be added by
+                default</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_CBL_JDG_15B" src="GUID-B99A6694-588C-44BD-A7AB-C1EB9BBDB375-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-8C279DC2-D0DD-4660-8E5A-870CFA13DD39"><p class="p">Select Configuration Summary to verify missing dependencies.</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_KST_JDG_15B" src="GUID-35B901A8-AFC0-4DA7-B549-E2C1955759AC-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-64525FFC-F6B7-462E-A7CD-467E9AAA9858"><p class="p">Select Overview to verify the complete TCP/IP configuration</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_MXC_KDG_15B" src="GUID-31E30961-4937-4645-B1FD-C984ADF96B69-low.png" /><br /></li>
+
+        <li class="li with-image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-B041A546-E080-4DAD-A060-9C09F8A111FA"><p class="p">Select any added TCP/IP Components. Configure the module from 'Configuration
+                Options'</p>
+
+                                <br /><img class="image" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__IMAGE_HV4_KDG_15B" src="GUID-3A12766B-A90C-4ED2-98D0-8EFB29856B1D-low.png" /><br /></li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-731B84F5-A8A8-4631-B8E9-EB06BC95396D"><p class="p">After completing TCP/IP Configuration, switch to MCC project graph</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-3E27AA93-0B61-4E24-BF12-22D7C1153BFE"><p class="p">Add dependencies like SYS_Console, SYS_TIME, SYS_COMMAND in Root Layer of
+                project graph</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-2B0E004A-7840-431E-965C-3051FC5E5D85"><p class="p">Save Configuration</p>
+</li>
+
+    </ul>
+
+    <p class="p">The user needs to configure all the modules outside TCP/IP Stack using project graph.
+        Other configurations required for any TCP/IP application demo to work are,</p>
+
+    <ul class="ul">
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-D15A0E40-F849-4CC0-BADD-E3D4464045ED"><p class="p">Clock Configuration</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-02647C51-ECFA-43F8-8146-E0145C9034A8"><p class="p">Pin Configuration</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-D3C51D09-8E4C-465F-8C29-787300DC50DD"><p class="p">System Heap Configuration</p>
+</li>
+
+        <li class="li" id="GUID-B3DF7158-6633-4C5A-8A48-A4CBFC748EE5__GUID-8C3A79EE-081E-4692-A167-9EE506459AE6"><p class="p">MPU Configuration for Non-Cacheable memory region. This is applicable only
+                for SAME70/V71 projects</p>
+</li>
+
+    </ul>
+
+    <p class="p">After these configurations, 'Generate' the code from MCC. Build the code and program
+        it to target board. Now you are ready to test your TCP/IP application.</p>
+
+    <p class="p">The demos created using MHC can be migrated to TCP/IP Configurator. Follow the steps
+        to <a class="xref" href="GUID-3A0DFD6E-F6BC-4FE9-BAE4-BE22C34C21C0.html">Migrate MHC based TCP/IP Demos to TCP/IP Configurator</a></p>
+
+</div>
+
+<div class="related-links">
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-F4E4B0BB-BCBC-45A1-8F5B-7E4D76C83CF3.html">TCPIP Configurator</a></div>
+</div>
+</div></body>
+</html>

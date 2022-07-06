@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="Iperf Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-DDDF381F-DB67-450E-92F3-E5811C712FC6.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="iperf-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>Iperf Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-iperf-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-338BE6D4-6407-4074-804F-803059F7212B"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="iperf-module">
+<h1 class="title topictitle1" id="ariaid-title1">Iperf Module</h1><div class="body"><p class="p">Iperf is a networking tool that helps to measure networking bandwidth and performance.</p>
+<p class="p"><strong class="ph b">Using Iperf</strong></p>
+<p class="p">Iperf is a networking tool that helps to measure networking bandwidth and performance. The Iperf module can act as both a client and server for testing. Iperf has the ability to test both UDP and TCP. In the case of UDP, you can specify the size of the UDP datagrams. For TCP, Iperf measures the throughput of the payload.</p>
+<p class="p">To run Iperf, you will need a personal computer that has an Iperf application installed. There is an open source version that is maintained, as well as many other variants across the Internet.</p>
+<p class="p">Iperf is meant to be run on the command line. On the MPLAB Harmony TCP/IP Stack device side, there is also a built-in command console that can accept your different Iperf settings from a system console, such as the UART.</p>
+<p class="p">Iperf measures performance data in a unidirectional format. Therefore, the side that the server is running on is considered the receiver, and provides the most accurate performance values</p>
+<p class="p"><strong class="ph b">Command Synopsis</strong></p>
+<pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d11256e26', this);">Copy</button><code id="d11256e26" content="iperf [ -s|-c &lt;IP addr&gt; ]&#xA;[ -u ]&#xA;[ -i &lt;sec&gt; ]&#xA;[ -b &lt;bandwidth&gt; ]&#xA;[ -t &lt;time&gt; ]    &#xA;&#xA;-s                  Runs the Iperf server. No IP address needs to be specified.  &#xA;-c &lt;IP addr&gt;        Runs the Iperf client. The IP address is the IP address of the server.  &#xA;-u                  Sends UDP datagrams.  &#xA;-i &lt;sec&gt;            Specified the time interval, in seconds, that the display will be updated.  &#xA;-b &lt;bandwidth&gt;      Specifies the amount of data to try and send. This option is only valid with UDP datagrams.  &#xA;-t &lt;time&gt;           Amount of time, in seconds, to run the test.  ">iperf [ -s|-c &lt;IP addr&gt; ]
+[ -u ]
+[ -i &lt;sec&gt; ]
+[ -b &lt;bandwidth&gt; ]
+[ -t &lt;time&gt; ]    
+
+-s                  Runs the Iperf server. No IP address needs to be specified.  
+-c &lt;IP addr&gt;        Runs the Iperf client. The IP address is the IP address of the server.  
+-u                  Sends UDP datagrams.  
+-i &lt;sec&gt;            Specified the time interval, in seconds, that the display will be updated.  
+-b &lt;bandwidth&gt;      Specifies the amount of data to try and send. This option is only valid with UDP datagrams.  
+-t &lt;time&gt;           Amount of time, in seconds, to run the test.  </code></pre><blockquote class="lq"><p class="p">Note: The_socket_size of TCP/UDP (especially TCP) will affect the benchmark result. In addition, activated TCP/IP modules will also consume CPU and Ethernet load. The traffic load in your test network environment will also affect the benchmark test.</p>
+</blockquote>
+<p class="p">To get a reasonable maximum benchmark/evaluation data for a device target, it is recommended to disable other modules, such as HTTP, client example, server example, etc., and find a uncongested network.</p>
+<p class="p"><strong class="ph b">Running the Demonstration</strong></p>
+<ol class="ol"><li class="li"><span class="indent-level-default">1.</span><p class="p">First, make sure the Iperf module and the System Console are enabled in your project.</p>
+</li>
+<li class="li"><span class="indent-level-default">2.</span><p class="p">Then, rebuild and program your project into target board.</p>
+</li>
+<li class="li"><span class="indent-level-default">3.</span><p class="p">After powering on the development board and associating the connected network, start the server side Iperf application first. If you start Iperf as a server on the development board in the console, this implies that you are trying to measure the device Ethernet receiver performance. If you start the Iperf server on a personal computer, you will be measuring MCHP device Ethernet transmit performance.</p>
+</li>
+</ol>
+<p class="p"><strong class="ph b">Iperf Running Example</strong></p>
+<p class="p">The following tests show receiver and transmitter performance, respectively with the following settings:</p>
+<ul class="ul"><li class="li"><p class="p">TCP TX and RX Socket Size = 512</p>
+</li>
+<li class="li"><p class="p">UDP TX and RX Socket Size = 512</p>
+</li>
+<li class="li"><p class="p">Built by MPLAB XC32 C/C++ Compiler without any optimization</p>
+</li>
+<li class="li"><p class="p">Personal Computer IP Address: 172.16.175.86</p>
+</li>
+<li class="li"><p class="p">Device IP Address: 172.16.175.54</p>
+</li>
+</ul>
+<blockquote class="lq"><p class="p">Note: The data does NOT show the maximum throughput of the device under test as the settings are not optimized for that. Only the DHCP client, and the TCP and UDP modules are enabled in this example.</p>
+</blockquote>
+<p class="p">Device under test as UDP server (receive):</p>
+<ul class="ul"><li class="li"><p class="p">Command on the device: iperf -s -u -i 1</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-F5D14BB6-F707-462E-8C31-96CBAA6B7D06-low.png" alt="IPERF Figure 1" /><br /><ul class="ul"><li class="li"><p class="p">Command on personal computer: iperf -c 172.16.175.54 -b 10M -i 1 -t 5</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-0798C1C1-6128-4907-A0B6-4DE4D2796908-low.png" alt="IPERF Figure 2" /><br /><p class="p">Personal computer as UDP server (device transmit)</p>
+<ul class="ul"><li class="li"><p class="p">Command on personal computer: iperf -s -u -i 1</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-4F974DEB-22D4-4512-8070-F1712B7FF86D-low.png" alt="IPERF Figure 3" /><br /><ul class="ul"><li class="li"><p class="p">Command on the device: iperf -c 172.16.175.86 -b 50M -i 1 -t 5</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-AF797333-821E-4411-A291-4C8ADEE30A0E-low.png" alt="IPERF Figure 4" /><br /><p class="p">Device as TCP server (receiving):</p>
+<ul class="ul"><li class="li"><p class="p">Command on the device under test: iperf -s -i 1</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-8B34A6C9-DC1D-4FCF-AFA0-A2C374BB46F5-low.png" alt="IPERF Figure 5" /><br /><ul class="ul"><li class="li"><p class="p">Command on personal computer: iperf -c 172.16.175.54 -i 1 -t 5</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-6413226B-446A-4B91-A8B5-5F9273408AFE-low.png" alt="IPERF Figure 6" /><br /><p class="p">Personal computer as TCP server (device transmit):</p>
+<ul class="ul"><li class="li"><p class="p">Command on personal computer: iperf -s -i 1</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-9BEAA13D-6B8D-46A4-A7D7-377AC1F0D401-low.png" alt="IPERF Figure 7" /><br /><ul class="ul"><li class="li"><p class="p">Command on the device: iperf -c 172.16.175.86 -x 10M -i 1 -t 5</p>
+</li>
+</ul>
+<br /><img class="image" src="GUID-F5D92CF4-39B2-498F-B054-36830D67B19D-low.png" alt="IPERF Figure 8" /><br /><p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d11256e146"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d11256e148"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_RX_BUFFER_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>Default size of the Iperf RX buffer The default value is 4KB. The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_TX_BUFFER_SIZE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>Default size of the Iperf TX buffer The default value is 4KB. The performance of a socket is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_TX_QUEUE_LIMIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>for Iperf UDP client, the limit to set to avoid memory allocation overflow on slow connections</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_TX_WAIT_TMO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>timeout to wait for TX channel to be ready to transmit a new packet; ms depends on the channel bandwidth</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_MAX_INSTANCES</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>maximum number of simultaneously running iperf instances</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_TIMING_ERROR_MARGIN</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>iperf timing error, ms. Accounts for timing uncertainty The higher the value, the more relaxed is the iperf timing Lower limit is 0</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_TX_BW_LIMIT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>Default TCP Tx Bandwidth</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span>TCPIP_IPERF_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e146 "><span> </span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d11256e148 "><span> </span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-DDDF381F-DB67-450E-92F3-E5811C712FC6.html">TCPIP_IPERF_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>

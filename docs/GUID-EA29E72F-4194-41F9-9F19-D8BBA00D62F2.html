@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
+<meta name="DC.rights.owner" content="(C) Copyright 2022" />
+<meta name="DC.type" content="topic" />
+<meta name="DC.title" content="IPv4 Module" />
+<meta name="DC.relation" scheme="URI" content="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-294A1E08-C9B5-46B6-A6AD-3ED80AC102E0.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7E1845C5-6129-448A-B724-95B5568EAE8E.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-010C57FD-E0AA-4ACD-B266-4E88CACE7E12.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6C8B6BC1-3D96-4634-A4FB-A3204D833C70.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-6F5F61EF-AA8B-483C-84B0-D79136FFF642.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-3B98E7AD-FA02-4354-B414-567671FF81C8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-A0A662A8-3004-4630-A785-8E75E56AAAE8.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-1ACCD0A5-886F-4EDC-AA64-CE28D24B1B05.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-62D66294-D55A-4B90-88E6-1985A474CA1D.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7349956C-2B03-47E9-ADA4-9BA8092B9CC7.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-045814CB-0269-4B52-A4DD-AADA86648D1B.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4616AADB-34DF-45A4-9EFB-954AE15A3F90.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-26C19D35-294B-4543-89ED-C1418AF48EB2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-E4DF3595-C450-47FD-A097-39A8A57C54F6.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-927AA99C-9ACD-4B21-ABCA-71378BD4823C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-FE08C0E8-8C57-4909-A9B7-CED7BD8CBDC4.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0F26FB06-082B-49F7-A822-BF9F1D0E5414.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-D0E31302-0F9D-4BFD-AE81-A5EFB7F8D7E2.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-4B92A36F-F27E-44A4-8CA7-9CAF2B84559C.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-401DB0EE-4E91-43C7-B2F8-C95944BFE726.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-92B34162-C30A-4FB4-8382-30FBF4922B9F.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-69AEA514-74C4-495D-9033-9ED0078BBB71.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-24C32539-9847-4830-B5FF-D2D02A6C052A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0318BF37-F1D9-4AE0-8BD4-8A2F5096747A.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-B4BA04F1-F65B-4233-989A-6E18C8EC1CF1.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-21CF9F9F-F67F-4388-94AE-D77E1D631214.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-F3938B34-ED7E-4E29-BA14-7A320B60F587.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-0ABA3B87-C37C-49F9-A042-67FCEBE28854.html" />
+<meta name="DC.relation" scheme="URI" content="GUID-7E47881C-C806-4CAC-89B0-99E15F8FD5DE.html" />
+<meta name="DC.format" content="XHTML" />
+<meta name="DC.identifier" content="ipv4-module" />
+<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
+<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>IPv4 Module</title>
+<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-ipv4-module" />
+<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
+<meta name="Microsoft.Help.TocOrder" content="0" />
+<meta name="Microsoft.Help.Locale" content="en-US" />
+<meta name="Microsoft.Help.TopicLocale" content="en-US" />
+<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
+<script language="javascript">
+       
+       if (window.parent.location.protocol != 'file:') {
+				document.addEventListener('click', function(e) {
+				    if (e.target) {
+               if (e.target.nodeName == "A" ) {
+                    if (!e.target.target) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                              
+                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
+                      if (origUrl.length === 0) {
+                          origUrl = window.parent.location.href;
+                      }
+                      var href= e.target.getAttribute("href");
+                      var parts = href.split("#");
+          
+                      var url = "";
+                      if (parts.length == 2 ) {
+                        if (!parts[0].length) {
+                            url = window.parent.location.search.replace('?','')
+                        } else {
+                            url = parts[0].replace('.html','');
+                        }
+                      } else {
+                        url = parts[0].replace('.html','');
+                      }
+
+                      if (parts.length == 2) {
+                          url += "#" + parts[1];
+                      }
+    
+                      window.parent.location.href = origUrl + "?" + url;
+
+                      return false;
+                    }
+               }
+            }
+				});
+			}
+
+		</script><script language="javascript">
+        function cpy(id, button) {
+        
+            var element = document.getElementById(id);
+            var content = element.getAttribute("content");
+            var textArea = document.createElement("textarea");
+            
+            // Place in the top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+            
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+            
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            
+            // Avoid flash of the white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+            
+            
+            textArea.value = content;
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+               var successful = document.execCommand('copy');
+               var msg = successful ? 'successful' : 'unsuccessful';
+               if (!button.classList.contains("copied")){
+                  button.textContent = "Copied";
+                  button.classList.add("copied");
+                  setTimeout(function(){
+                    button.textContent = "Copy";
+                    button.classList.remove("copied");
+                  },1000);
+               }
+            } catch (err) {
+              console.log('Oops, unable to copy');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+      </script><script language="javascript">
+          
+          // Add the MathML namespace to html
+          var html = document.getElementsByTagName("html")[0],
+          head = document.getElementsByTagName("head")[0];
+          
+          var mathJax = document.createElement("script");
+          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
+          head.appendChild(mathJax);
+          
+          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
+          
+          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
+          
+          if (!inIframe()) { 
+          
+          var Default = "index.html?GUID-EA29E72F-4194-41F9-9F19-D8BBA00D62F2"; 
+          
+          var displaylocation = "value" + window.location.href;
+          
+          var GUIDS = displaylocation.split('GUID');          
+          
+          if (displaylocation.indexOf('#GUID') != -1) {            
+          var First = GUIDS[1].split('.html');  
+          if (GUIDS[3]){First = GUIDS[2].split('.html');}
+          if (GUIDS[4]){First = GUIDS[3].split('.html');}
+          if (GUIDS[5]){First = GUIDS[4].split('.html');}
+          
+          var Second = GUIDS[2].split('#');   
+          if (GUIDS[3]){Second = GUIDS[3].split('#');}
+          if (GUIDS[4]){Second = GUIDS[4].split('#');}
+          if (GUIDS[5]){Second = GUIDS[5].split('#');}
+          
+          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
+          }                    
+          window.top.location = Default;
+          }       
+          
+        </script><style xml:space="">
+        
+          button.copy-code{
+            display:none;
+            padding:0.7em 1.4em;
+            margin:0 0.3em 0.3em 0;
+            border-radius:0.15em;
+            box-sizing: border-box;
+            text-decoration:none;
+            font-family:'Roboto',sans-serif;
+            text-transform:uppercase;
+            font-weight:400;
+            color:#FFFFFF;
+            background-color:#9c9c9c;
+            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+            text-align:center;
+            position:relative;
+            border: 0;
+            float: right;
+            border-radius: .5em;
+            cursor: pointer;
+          }
+          button.copy-code:active{
+            top:0.1em;
+          }
+          
+          pre:hover button.copy-code{
+            display: inline-block !important;
+          }
+          button.copy-code.copied {
+            cursor: default !important;
+          }
+          
+          
+          @media all and (max-width:30em){
+            button.copy-code{
+              display:block;
+              margin:0.4em auto;
+            }
+          }
+        
+        
+      </style></head>
+<body id="ipv4-module">
+<h1 class="title topictitle1" id="ariaid-title1">IPv4 Module</h1><div class="body"><p class="p">IP is the workhorse protocol of the TCP/IP protocol suite. All TCP, UDP, and ICMP data gets transmitted as IP datagrams. IP provides an unreliable, connectionless datagram delivery service.</p>
+<p class="p">IP provides a best effort service. When something goes wrong, such as a router temporarily running out of buffers, IP has a simple error handling algorithm: throw away the datagram and try to send an ICMP message back to the source. Any required reliability must be provided by the upper layers (e.g., TCP).</p>
+<p class="p">The term connectionless means that IP does not maintain any state information about successive datagrams. Each datagram is handled independently from all other datagrams. This also means that IP datagrams can get delivered out of order. If a source sends two consecutive datagrams (first A, and then B) to the same destination, each is routed independently and can take different routes, with B arriving before A.</p>
+<p class="p"><strong class="ph b">Abstraction Model</strong></p>
+<p class="p">This module provides software abstraction of the IPv4 module existent in any TCP/IP Stack implementation.</p>
+<p class="p">The typical usage of the IP layer_in a TCP/IP stack for transmitting a packet is shown in the following diagram:</p>
+<br /><img class="image" src="GUID-6196A351-F99D-4408-A08D-DCCD4366AEB7-low.png" alt="TCPIP IPv4 ip_abstraction" /><br /><p class="p"><strong class="ph b">Core Functionality</strong></p>
+<br /><img class="image" src="GUID-EC24582E-1523-47AD-825A-93C4629088C7-low.png" alt="TCPIP IPV4 ip_flow" /><br /><p class="p">To transmit an IP packet over the network, the application has to prepare an IPV4_PACKET data structure and properly format it so that the recipients of this packet (the IP and the MAC layers) can process the packet.</p>
+<p class="p">The TCP/IP Stack modules allocate the IPV4_PACKET data structures dynamically using the TCP/IP Stack private heap using packet allocation functions.</p>
+<blockquote class="lq"><p class="p">Note:  Currently, the packet and heap allocation functions are not exposed as public APIs as they are meant for stack’s private usage. This may change in the future.</p>
+</blockquote>
+<p class="p">The IPV4_PACKET packet can be allocated statically by the application.</p>
+<p class="p">When the IPV4_PACKET is constructed an important thing to remember is to fill in the appropriate packet acknowledge function. Once the MAC layer/driver is done with processing the packet (successfully or not) it will call the IPV4_PACKET acknowledge function, indicating that the packet is now available (and could be freed or reused).</p>
+<p class="p">The next step is to fill in the packet source and destination addresses, as well as the outgoing interface (please keep in mind that the TCP/IP stack supports multiple network interfaces).</p>
+<p class="p">This could be done with a call to TCPIP_IPV4_SelectSourceInterface or the application can select all these addresses manually.</p>
+<p class="p">All that’s left before handing the packet is to call TCPIP_IPV4_PacketFormatTx. This call fills in the supplied packet with the IP header structure and updates the IP checksum. Please note that this function expects a properly formatted packet, with the source and destination addresses filled in.</p>
+<p class="p">After this, the application can call TCPIP_IPV4_PacketTransmit. This function does some basic packet checks and expects that the packet has a valid network interface selected otherwise the call will fail.</p>
+<p class="p">After further formatting (with the MAC required headers), the IP layer_will try to send the packet over the network. If the destination hardware address is known (the ARP resolve call succeeds) the packet is handed over to the MAC. Otherwise, the IP will insert the packet into a queue, waiting for the ARP resolution. When ARP signals that the request is done (either success or timeout) the IP layer_intercepts the signal and removes the packet from the wait queue: either hands it over to the MAC for transmission or it discards it if the ARP resolution failed.</p>
+<p class="p">The MAC layer/driver in its turn can transmit it immediately, queue the packet for transmission or discard it (if, for example the network link is down). Regardless, once the packet is processed, the packet acknowledge function is called with an updated acknowledge result. This informs the owner of the packet about the result of the operation and also that the packet is no longer in traffic.</p>
+<blockquote class="lq"><p class="p">Note:  Transmission of chained packets is not supported. Each packet has to be transmitted individually.</p>
+</blockquote>
+<p class="p"><strong class="ph b">How the Library Works</strong></p>
+<p class="p">On the transmit side, the IP layer_is responsible for routing and forwarding the IP datagrams to the required destination host. To do that, the IP layer_has internal functionality that allows the selection of the proper network interface and destination hardware address of a packet.</p>
+<p class="p">Based on the destination of a packet/datagram, the IP layer_will send the packet to either a host on the network or to a gateway if either is available. To accomplish this, the IP module works closely with the ARP layer_from which it requests the destination hardware addresses for outgoing packets. If the destination address of a packet is not known, the IP module will request an ARP probe and will wait for the ARP module reply. Whenever ARP signals that the solicited address is available, the IP module will send the packet over the network. If a time-out is reported (no such host could be found on that particular network), the packet is silently discarded.</p>
+<p class="p">On the receive side, the IP module processes all the incoming IPv4 packets and performs a basic sanity check of the packet checksum and other attributes. If the packet check fails, the packet is simply discarded. Otherwise, it is dispatched for further processing to the appropriate module (UDP, TCP, ICMP, etc.).</p>
+<p class="p">The IP layer_operation within the TCP/IP stack is transparent to the applications using the preferred_socket_API (MCHP UDP, TCP or BSD). This means that normally an application does not need to interface directly to the IP_layer. However, the IP module exposes an API that can be used by the application for sending IP datagrams directly, bypassing the normal higher layer_protocols (UDP, TCP).</p>
+<blockquote class="lq"><p class="p">Notes:</p>
+<ul class="ul"><li class="li"><p class="p">Currently, it is not possible for an application to intercept the incoming IP datagrams and interfere with the default IP processing. However, this may change in the future and support can be added for the receive side.</p>
+</li>
+<li class="li"><p class="p">For a detailed description of the IP layer_functionality, please consult RFC 791, RFC 1122, RFC 2474, etc.</p>
+</li>
+<li class="li"><p class="p">This implementation supports packet fragmentation both on transmit and receive side.</p>
+</li>
+</ul>
+</blockquote>
+<p class="p"><strong class="ph b">Library Interface</strong></p>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d217661e93"><span>Name</span></th>
+<th class="entry cellrowborder" style="vertical-align:middle;" id="d217661e95"><span>Description</span></th>
+</tr>
+</thead>
+<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span><strong class="ph b">Macros</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_FRAGMENT_MAX_NUMBER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Upper limit for the number of fragments in a fragmented stream This also imposes a limit on how large a packet could be depending on the MTU and fragmentations that occur If more fragments received for a certain stream, the stream will be discarded</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_FRAGMENT_MAX_STREAMS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Upper limit for the number of fragmented streams that could be handled simultaneously</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_FRAGMENT_TIMEOUT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Initial fragment timeout, in seconds Timer Lower Bound (RFC 791) The RFC states this value to be 15 seconds</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_FRAGMENTATION</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>If 1, enable IPv4 fragmentation processing, RX + TX If 0 (default), IPv4 fragmentation not supported</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_TASK_TICK_RATE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>The IP task processing rate: number of milliseconds to generate an IP tick. This is the tick that advances the IP state machine. The default value is around 30 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the TCPIP_STACK_TICK_RATE. The IP state machine tick is used only when fragmentation is enabled.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span><em class="ph i">IP_CONFIG_H</em></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>This is macro <em class="ph i">IP_CONFIG_H</em>.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_EXTERN_PACKET_PROCESS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>This setting enables/disables the processing of the RX packets by an external handler The user of the IPv4 can register an external function to process the incoming packets If true, the functionality is built in and could be used by the application If false, the functionality does not exist and the generated code is slightly smaller</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span><strong class="ph b">Functions</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketGetDestAddress</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Returns the IPv4 destination address associated with a TCPIP_MAC_PACKET</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketGetSourceAddress</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Returns the IPv4 source address associated with a TCPIP_MAC_PACKET</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketTransmit</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Transmits an IPV4 packet over the network.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_SelectSourceInterface</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Selects a source address and an interface based on the IPv4 destination address</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketFilterClear</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Clears the IPV4 packet filters</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketFilterSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Sets the IPV4 packet filters</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_Task</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Standard TCP/IP stack module task function.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_MacPacketTransmit</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Transmits a fully constructed MAC packet over the network.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketAlloc</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Allocates an IPv4 packet for transmission over the network.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketFormatTx</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Formats an IPV4 packet and makes it ready for transmission.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketOptionFieldSet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Helper to set an IPv4 packet option field.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketOptionGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Helper to get the options that a IPv4 receive packet has.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketOptionListGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Helper to get the options that a IPv4 receive packet has.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_IsFragmentationEnabled</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Helper to get the IPv4 fragmentation support.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_MaxDatagramDataSizeGet</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Helper to get the maximum datagream data size (MDDS) on a specific interface.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketHandlerDeregister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Deregisters a previously registered packet handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PacketHandlerRegister</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Sets a new packet processing handler.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span><strong class="ph b">Data Types and Constants</strong></span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span> </span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>IPV4_HEADER_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>List of supported protocols.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>IPV4_PACKET</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>IPv4 packet structure.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_FILTER_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>List of supported IPv4 packet filters.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_MODULE_CONFIG</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Initialization parameters supported by IPv4</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>IPV4_FRAGMENT_INFO</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Structure of an IPv4 fragment info.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>IPV4_OPTION_FIELD</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Structure of an IPv4 option.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>IPV4_TYPE_OF_SERVICE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Structure of an IPv4 type of service field.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_OPTION_DCPT</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Structure describing the options for an IPv4 packet</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_OPTION_TYPE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>List of supported IPv4 options</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PACKET_PARAMS</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>IPv4 packet formatting parameters</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PACKET_HANDLER</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Pointer to a function(handler) that will get called to process an incoming IPv4 packet.</span></td>
+</tr>
+<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e93 "><span>TCPIP_IPV4_PROCESS_HANDLE</span></td>
+<td class="entry cellrowborder" style="vertical-align:middle;" headers="d217661e95 "><span>Defines a IPv4 packet processing handle.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="related-links">
+<ul class="ullinks">
+<li class="link ulchildlink"><strong><a href="GUID-294A1E08-C9B5-46B6-A6AD-3ED80AC102E0.html">IPV4_FRAGMENT_INFO Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7E1845C5-6129-448A-B724-95B5568EAE8E.html">IPV4_HEADER_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-010C57FD-E0AA-4ACD-B266-4E88CACE7E12.html">IPV4_OPTION_FIELD Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6C8B6BC1-3D96-4634-A4FB-A3204D833C70.html">IPV4_PACKET Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-6F5F61EF-AA8B-483C-84B0-D79136FFF642.html">IPV4_TYPE_OF_SERVICE Union</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-3B98E7AD-FA02-4354-B414-567671FF81C8.html">TCPIP_IPV4_FILTER_TYPE Enumeration</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-A0A662A8-3004-4630-A785-8E75E56AAAE8.html">TCPIP_IPV4_IsFragmentationEnabled Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-1ACCD0A5-886F-4EDC-AA64-CE28D24B1B05.html">TCPIP_IPV4_MacPacketTransmit Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-62D66294-D55A-4B90-88E6-1985A474CA1D.html">TCPIP_IPV4_MaxDatagramDataSizeGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7349956C-2B03-47E9-ADA4-9BA8092B9CC7.html">TCPIP_IPV4_MODULE_CONFIG Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-045814CB-0269-4B52-A4DD-AADA86648D1B.html">TCPIP_IPV4_OPTION_DCPT Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4616AADB-34DF-45A4-9EFB-954AE15A3F90.html">TCPIP_IPV4_OPTION_TYPE Enumeraion</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-26C19D35-294B-4543-89ED-C1418AF48EB2.html">TCPIP_IPV4_PACKET_HANDLER Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-E4DF3595-C450-47FD-A097-39A8A57C54F6.html">TCPIP_IPV4_PACKET_PARAMS Structure</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-927AA99C-9ACD-4B21-ABCA-71378BD4823C.html">TCPIP_IPV4_PacketAlloc Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-FE08C0E8-8C57-4909-A9B7-CED7BD8CBDC4.html">TCPIP_IPV4_PacketFilterClear Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0F26FB06-082B-49F7-A822-BF9F1D0E5414.html">TCPIP_IPV4_PacketFilterSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-D0E31302-0F9D-4BFD-AE81-A5EFB7F8D7E2.html">TCPIP_IPV4_PacketFormatTx Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-4B92A36F-F27E-44A4-8CA7-9CAF2B84559C.html">TCPIP_IPV4_PacketGetDestAddress Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-401DB0EE-4E91-43C7-B2F8-C95944BFE726.html">TCPIP_IPV4_PacketGetSourceAddress Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-92B34162-C30A-4FB4-8382-30FBF4922B9F.html">TCPIP_IPV4_PacketHandlerDeregister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-69AEA514-74C4-495D-9033-9ED0078BBB71.html">TCPIP_IPV4_PacketHandlerRegister Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-24C32539-9847-4830-B5FF-D2D02A6C052A.html">TCPIP_IPV4_PacketOptionFieldSet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0318BF37-F1D9-4AE0-8BD4-8A2F5096747A.html">TCPIP_IPV4_PacketOptionGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-B4BA04F1-F65B-4233-989A-6E18C8EC1CF1.html">TCPIP_IPV4_PacketOptionListGet Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-21CF9F9F-F67F-4388-94AE-D77E1D631214.html">TCPIP_IPV4_PacketTransmit Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-F3938B34-ED7E-4E29-BA14-7A320B60F587.html">TCPIP_IPV4_PROCESS_HANDLE Type</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-0ABA3B87-C37C-49F9-A042-67FCEBE28854.html">TCPIP_IPV4_SelectSourceInterface Function</a></strong><br />
+</li>
+<li class="link ulchildlink"><strong><a href="GUID-7E47881C-C806-4CAC-89B0-99E15F8FD5DE.html">TCPIP_IPV4_Task Function</a></strong><br />
+</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html">MPLAB® Harmony TCP/IP Library</a></div>
+</div>
+</div></body>
+</html>
