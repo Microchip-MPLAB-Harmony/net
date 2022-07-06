@@ -1,5 +1,5 @@
 # Microchip MPLAB Harmony 3 Release Notes
-## Net Release v3.8.0 (April, 2022)
+## Net Release v3.8.0 (July, 2022)
 ### ADDITIONS AND UPDATES FOR  3.8.0:
 
 - **New features**
@@ -152,6 +152,11 @@ The current known issues are as follows:
         - Reason: Under investigation
         - Workaround: Remove SYS_CONSOLE from project graph. Add the SYS_CONSOLE back to project graph. Connect the dependencies.
 
+* Stack down/up issues:
+    - When using xc32 v4.00 there is the possibility that executing the sequence stack down and then up, the stack up fails because of an allocation error.
+    - This occurs even if the stack down was successful and all the memory was released.
+    - The issue is currently under investigation.
+    - Use xc32 v3.01 as a workaround.
 
 ## Net Release v3.7.4 (October, 2021)
 ### ADDITIONS AND UPDATES FOR  3.7.4:
