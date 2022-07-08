@@ -2279,7 +2279,15 @@ static void ftpc_process_pasv_response(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {    
     int i;
     char * buff; 
+<<<<<<< HEAD
+<<<<<<< HEAD
     char pasv_response[6];
+=======
+    char pasv_response[6] = {0, 0, 0, 0, 0, 0};
+>>>>>>> d3fa7cdc7 ([MH3-62000] - Fix MISRA violations)
+=======
+    char pasv_response[6];
+>>>>>>> 96ceb1465 ([MH3-62000] - Fix MISRA violations)
     
     memset(pasv_response, 0, sizeof(pasv_response));
     for(i = 6; i>0; i--)
