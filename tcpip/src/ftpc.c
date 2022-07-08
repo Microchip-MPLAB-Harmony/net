@@ -2279,7 +2279,7 @@ static void ftpc_process_pasv_response(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {    
     int i;
     char * buff; 
-    char pasv_response[6] = {0};
+    char pasv_response[6] = {0, 0, 0, 0, 0, 0};
     
     for(i = 6; i>0; i--)
     {
