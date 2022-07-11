@@ -608,7 +608,12 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
 {
 	DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
     TCPIP_MAC_PACKET* pPkt = 0;
-    DRV_GMAC_TX_FRAME_INFO tx_frame_state = {0};
+    DRV_GMAC_TX_FRAME_INFO tx_frame_state =
+    {
+        .startIndex = 0,
+        .endIndex = 0,
+        .buffer_count = 0,
+    };
     uint8_t* pbuff = 0;    
     uint16_t buffer_count = 0;
 	uint16_t buffer_start_index;
