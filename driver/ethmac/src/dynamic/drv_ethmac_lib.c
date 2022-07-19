@@ -1187,4 +1187,13 @@ void  DRV_ETHMAC_SingleListTailAdd(DRV_ETHMAC_SGL_LIST* pL, DRV_ETHMAC_SGL_LIST_
     pL->nNodes++;
 }
 
+void  DRV_ETHMAC_SingleListAppend(DRV_ETHMAC_SGL_LIST* pDstL, DRV_ETHMAC_SGL_LIST* pAList)
+{
+	DRV_ETHMAC_SGL_LIST_NODE* pN;
+	while((pN = DRV_ETHMAC_SingleListHeadRemove(pAList)))
+	{
+		DRV_ETHMAC_SingleListTailAdd(pDstL, pN);
+	}
+}
+
 

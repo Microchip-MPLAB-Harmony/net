@@ -493,6 +493,10 @@ static __inline__ int __attribute__((always_inline)) DRV_ETHMAC_SingleListCount(
 // removes the head node
 DRV_ETHMAC_SGL_LIST_NODE*  DRV_ETHMAC_SingleListHeadRemove(DRV_ETHMAC_SGL_LIST* pL);
 
+// add tail
 void  DRV_ETHMAC_SingleListTailAdd(DRV_ETHMAC_SGL_LIST* pL, DRV_ETHMAC_SGL_LIST_NODE* pN);
+
+// append a list
+void  DRV_ETHMAC_SingleListAppend(DRV_ETHMAC_SGL_LIST* pDstL, DRV_ETHMAC_SGL_LIST* pAList);
 
 #endif //  __ETH_DCPT_LISTS_H_
