@@ -121,6 +121,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define HTTP_APP_USE_EMAIL  0
 #endif
 
+// Use authentication for MPFS upload
+//#define HTTP_MPFS_UPLOAD_REQUIRES_AUTH
+
 /****************************************************************************
 Section:
 Function Prototypes and Memory Globalizers
@@ -1324,7 +1327,7 @@ uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
         return 0x00;        // Authentication will be needed later
 
     #if defined(HTTP_MPFS_UPLOAD_REQUIRES_AUTH)
-    if(memcmp(cFile, "mpfsupload", 10) == 0)
+    if(memcmp(cFile, TCPIP_HTTP_NET_FILE_UPLOAD_NAME, sizeof(TCPIP_HTTP_NET_FILE_UPLOAD_NAME)) == 0)
         return 0x00;
     #endif
     // You can match additional strings here to password protect other files.
