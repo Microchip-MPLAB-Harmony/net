@@ -107,27 +107,52 @@ typedef enum
 // socket flags 
 typedef union
 {
-    uint16_t     Val;
+    uint32_t     Val;
     struct
     {
-        uint16_t    bcastForceType   : 2;   // destination forced to broadcast, if any
-        uint16_t    looseRemPort     : 1;   // allows receiving data from any socket having the same destination Port
-        // but irrespective its local port
-        uint16_t    looseNetIf       : 1;   // allows receiving data on any interface        
-        uint16_t    looseRemAddress  : 1;   // allows receiving data from any host address        
-        uint16_t    srcSet           : 1;   // source address is set/forced
-        uint16_t    srcValid         : 1;   // source address is valid (could be even 0) 
-        uint16_t    srcSolved        : 1;   // source address map to network interface is solved 
+        uint32_t    bcastForceType   : 2;   // destination forced to broadcast, if any
+        uint32_t    looseRemPort     : 1;   // allows receiving data from any socket having the same destination Port
+                                            // but irrespective its local port
+        uint32_t    looseNetIf       : 1;   // allows receiving data on any interface        
+        uint32_t    looseRemAddress  : 1;   // allows receiving data from any host address        
+        uint32_t    srcSet           : 1;   // source address is set/forced
+        uint32_t    srcValid         : 1;   // source address is valid (could be even 0) 
+        uint32_t    srcSolved        : 1;   // source address map to network interface is solved 
 
-        uint16_t    destSet          : 1;   // destination address is set/forced
-        uint16_t    txSplitAlloc     : 1;   // if set, will perform a split (ZC) TX allocation
-        uint16_t    usePool          : 1;   // allows allocating from the private pool        
-        uint16_t    stackConfig      : 1;   // socket allocated by some stack configuration module
-        uint16_t    openAddType      : 2;   // the address type used at open
-        uint16_t    openBindIf       : 1;   // socket is bound to interface when opened 
-        uint16_t    openBindAdd      : 1;   // socket is bound to address when opened 
+        uint32_t    destSet          : 1;   // destination address is set/forced
+        uint32_t    txSplitAlloc     : 1;   // if set, will perform a split (ZC) TX allocation
+        uint32_t    usePool          : 1;   // allows allocating from the private pool        
+        uint32_t    stackConfig      : 1;   // socket allocated by some stack configuration module
+        uint32_t    openAddType      : 2;   // the address type used at open
+        uint32_t    openBindIf       : 1;   // socket is bound to interface when opened 
+        uint32_t    openBindAdd      : 1;   // socket is bound to address when opened 
+        
+        uint32_t    rxAutoAdvance    : 1;   // automatic RX socket advance
+        uint32_t    rxEnable         : 1;   // enable socket receive
+        uint32_t    mcastLoop        : 1;   // loop internally the multicast traffic
+        uint32_t    mcastSkipCheck   : 1;   // skip the checking of the incoming multicast traffic
+        uint32_t    fixedDestAddress;       // ignore packet source address
+        uint32_t    fixedDestPort    : 1;   // ignore packet source port
+        uint32_t    mcastOnly        : 1;   // ignore non multicast packets
+        uint32_t    serverSkt        : 1;   // socket opened as server
+        uint32_t    tos              : 6;   // Type of Service: 6 bits!
+        uint32_t    df               : 1;   // Don't Fragment bit
+        uint32_t    noNetStrict      : 1;   // do not enforce net strictness
     };
 }TCPIP_UDP_SKT_FLAGS;
+
+// additional socket flags
+typedef union
+{
+    uint8_t Val;
+    struct
+    {
+        uint8_t     stickyLooseRemPort: 1;      // the looseRemPort is sticky, not changed by:
+        uint8_t     stickyLooseNetIf: 1;        // the looseNetIf is sticky, not changed by:
+        uint8_t     stickyLooseRemAddress: 1;   // the looseRemAddress is sticky, not changed by:
+        uint8_t     reserved:5;                 // not used
+    };
+}TCPIP_UDP_SKT_EXT_FLAGS;
 
 
 
@@ -212,29 +237,11 @@ typedef struct
     uint16_t        rxTotLen;       // total remaining data length, across segments 
     uint8_t*        rxCurr;         // current RX pointer 
     // socket info + flags
-    uint16_t        addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
+    uint8_t         addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
     uint8_t         txAllocLimit;   // max number of packets that can be queued/allocated at a certain time
     uint8_t         txAllocCnt;     // current number of packets that are allocated for TX
-    TCPIP_UDP_SKT_FLAGS flags;      // current socket flags
-    union
-    {
-        struct
-        {
-            uint16_t    rxAutoAdvance    : 1;   // automatic RX socket advance
-            uint16_t    rxEnable         : 1;   // enable socket receive
-            uint16_t    mcastLoop        : 1;   // loop internally the multicast traffic
-            uint16_t    mcastSkipCheck   : 1;   // skip the checking of the incoming multicast traffic
-            uint16_t    ignoreSrcAdd     : 1;   // ignore packet source address
-            uint16_t    ignoreSrcPort    : 1;   // ignore packet source port
-            uint16_t    mcastOnly        : 1;   // ignore non multicast packets
-            uint16_t    serverSkt        : 1;   // socket opened as server
-            uint16_t    tos              : 6;   // Type of Service: 6 bits!
-            uint16_t    df               : 1;   // Don't Fragment bit
-            uint16_t    noNetStrict      : 1;   // do not enforce net strictness
-        };
-        uint16_t     Val;
-    }extFlags;      // additional socket flags
-
+    TCPIP_UDP_SKT_EXT_FLAGS extFlags; // additional socket flags; 8 bit value
+    TCPIP_UDP_SKT_FLAGS flags;      // current socket flags; 32 bit value
     SINGLE_LIST     rxQueue;        // queued RX packets belonging to this socket
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;  // socket event handler
     const void*     sigParam;               // event handler parameter

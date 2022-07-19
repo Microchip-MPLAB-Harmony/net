@@ -99,7 +99,37 @@ typedef int16_t UDP_SOCKET;
 
 
 #define INVALID_UDP_SOCKET      (-1)		// Indicates a UDP socket that is not valid
- 
+
+// *****************************************************************************
+/*
+  Enumeration:
+    UDP_SOCKET_FLAGS
+
+  Summary:
+    UDP socket flags
+
+  Description:
+    List of flags for a UDP socket info
+
+  Remarks:
+    Multiple flags can be simultaneously set
+
+*/
+typedef enum
+{
+    UDP_SOCKET_FLAG_NONE        = 0x00,     // no flag set
+    UDP_SOCKET_FLAG_STRICT_PORT = 0x01,     // the UDP_OPTION_STRICT_PORT option is set
+    UDP_SOCKET_FLAG_STICKY_PORT = 0x02,     // the port UDP_OPTION_STRICT_SET_STICKY  is set
+
+    UDP_SOCKET_FLAG_STRICT_NET  = 0x04,     // the UDP_OPTION_STRICT_NET option is set
+    UDP_SOCKET_FLAG_STICKY_NET  = 0x08,     // the port UDP_OPTION_STRICT_SET_STICKY  is set
+
+    UDP_SOCKET_FLAG_STRICT_ADD  = 0x10,     // the UDP_OPTION_STRICT_ADDRESS option is set
+    UDP_SOCKET_FLAG_STICKY_ADD  = 0x20,     // the port UDP_OPTION_STRICT_SET_STICKY  is set
+
+}UDP_SOCKET_FLAGS;
+
+
 // *****************************************************************************
 /*
   Structure:
@@ -134,6 +164,7 @@ typedef struct
     TCPIP_NET_HANDLE    hNet;               // associated interface
     uint16_t            rxQueueSize;        // packets waiting in the rx queue
     uint16_t            txSize;             // tx buffer size
+    UDP_SOCKET_FLAGS    flags;              // associated flags
 } UDP_SOCKET_INFO;
 
 
@@ -208,8 +239,33 @@ typedef enum
     UDP_OPTION_MULTICAST,           // Sets the multicast options for a socket by using UDP_OPTION_MULTICAST_DATA value
     UDP_OPTION_TOS,     			// Sets the Type of Service (TOS) for IPv4 packets sent by the socket
     UDP_OPTION_DF,     			    // Sets the Don't Fragment (DF) option for IPv4 packets sent by the socket
+    UDP_OPTION_FIXED_DEST_ADDRESS,  // If set, then the destination address won't change to reply to the latest host that sent the packet
+                                    // The socket will reply to the set destination address. 
+                                    // Note that if a destination address is not set, the socket will select the host that sent the packet but only the first time
+                                    // Useful when all the replies need to go to a specific address.
+                                    // If cleared (default case) the socket will reply to the latest host that sent the message.
+                                    // 
+    UDP_OPTION_FIXED_DEST_PORT,     // If set, ignore the source port of a packet and reply to the currently set destination port.
+                                    // Normally a socket would reply to the sender of the packet using the source port of the sender.
+                                    // This option allows the socket to reply using the current destination/remote port
+                                    // no matter the source port of the received traffic
+                                    // If cleared (default) then the socket will reply to the source port of the sender
+
     UDP_OPTION_ENFORCE_STRICT_NET,  // Do enforce the UDP_OPTION_STRICT_NET status when using TCPIP_UDP_Bind/TCPIP_UDP_SocketNetSet operations
                                     // Option enabled by default; these operations will enforce the UDP_OPTION_STRICT_NET 
+                                    // Note: this option is obsolete and it will be eventually removed!
+                                    //  Use the UDP_OPTION_STRICT_SET_STICKY/UDP_OPTION_STRICT_CLR_STICKY flags instead
+
+    //
+    //
+    UDP_OPTION_STRICT_CLR_STICKY = 0x4000,  // a flag to clear the STICKY option setting
+                                            // see the UDP_OPTION_STRICT_SET_STICKY flag
+                                            // Note: UDP_OPTION_STRICT_SET_STICKY and UDP_OPTION_STRICT_CLR_STICKY are mutually exclusive, cannot be both set
+    UDP_OPTION_STRICT_SET_STICKY = 0x8000,  // a flag for the UDP_OPTION_STRICT_PORT/UDP_OPTION_STRICT_NET/UDP_OPTION_STRICT_ADDRESS
+                                            // if this flag is set when changing an option, then the option will not be changed by other operations
+                                            // that might normally affect the setting
+                                            //      For example, TCPIP_UDP_RemoteBind normally enforces UDP_OPTION_STRICT_PORT
+                                            //      However, if the UDP_OPTION_STRICT_SET_STICKY flag is set, the UDP_OPTION_STRICT_PORT setting won't be touched
 }UDP_SOCKET_OPTION;
 
 
@@ -268,12 +324,14 @@ typedef enum
                                                         // This option allows the socket to reply to the multicast group instead, no matter
                                                         // from what source it received the multicast traffic.
                                                         // This option is disabled by default when a socket is created and should be enforced when needed.
+                                                        // The same effect with using the regular socket option UDP_OPTION_FIXED_DEST_ADDRESS
     UDP_MCAST_FLAG_IGNORE_SOURCE_PORT       = 0x0004,   // Ignore the source port of a packet and reply to the currently set destination port.
                                                         // Normally a socket would reply to the sender of the packet using the source port of the sender.
                                                         // This option allows the socket to reply using the current destination/remote port
                                                         // no matter the source port of the received multicast traffic - which would be the expected
                                                         // behavior from a multicast socket. 
                                                         // This option is disabled by default when a socket is created and should be enforced when needed.
+                                                        // The same effect with using the regular socket option UDP_OPTION_FIXED_DEST_PORT
     UDP_MCAST_FLAG_IGNORE_UNICAST           = 0x0008,   // Ignore a packet if its destination is not multicast
     UDP_MCAST_FLAG_LOOP                     = 0x0010,   // When set, the multicast packets sent by the UDP socket will be routed on the internal multicast interface as well.
                                                         // Default is cleared.
@@ -794,6 +852,8 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_OPTION_MULTICAST_DATA structure
 					  - UDP_OPTION_TOS				- 8-bit value of the TOS
 					  - UDP_OPTION_DF				- boolean - true: no fragmentation allowed; false: fragmentation allowed
+					  - UDP_OPTION_FIXED_DEST_ADDRESS - boolean - true: set fixed destination address; false: clear the fixed destination address
+					  - UDP_OPTION_FIXED_DEST_PORT  - boolean - true: set fixed destination port; false: clear the fixed destination port
 					  - UDP_OPTION_ENFORCE_STRICT_NET	- boolean - true: enforce strictness (default); false: do not enforce strictness 
 
   Returns:
@@ -803,6 +863,8 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
   Remarks:  
     This function provides the run-time functionality
     required to implement some of the standard BSD socket options API.
+
+    The option parameter may be flagged with UDP_OPTION_STRICT_SET_STICKY or UDP_OPTION_STRICT_CLR_STICKY
 
   */	
 bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
@@ -843,6 +905,8 @@ bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION opti
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_MULTICAST_FLAGS value to receive the current socket settings
 			 		  - UDP_OPTION_TOS				- pointer to an 8 bit value to receive the TOS
 					  - UDP_OPTION_DF				- pointer to boolean - true: no fragmentation allowed; false: fragmentation allowed
+					  - UDP_OPTION_FIXED_DEST_ADDRESS - pointer boolean - true: fixed destination address is set; false: fixed destination address is cleared
+					  - UDP_OPTION_FIXED_DEST_PORT  - pointer boolean - true: fixed destination port is set; false: fixed destination port is cleared
 					  - UDP_OPTION_ENFORCE_STRICT_NET - pointer to boolean - false:  strictness not enforced; true: strictness enforced (default)
 
   Returns:

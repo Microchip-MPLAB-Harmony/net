@@ -188,18 +188,18 @@ static __inline__ void  __attribute__((always_inline))          _UserGblUnlock(v
 
 static __inline__ void  __attribute__((always_inline))      _RxSktLock(UDP_SOCKET_DCPT* pSkt)
 {
-    pSkt->extFlags.rxEnable = 0;
+    pSkt->flags.rxEnable = 0;
 }
 
 // unlocks/enables the socket RX process
 static __inline__ void  __attribute__((always_inline))      _RxSktUnlock(UDP_SOCKET_DCPT* pSkt)
 {
-    pSkt->extFlags.rxEnable = 1;
+    pSkt->flags.rxEnable = 1;
 }
 
 static __inline__ bool  __attribute__((always_inline))      _RxSktIsLocked(UDP_SOCKET_DCPT* pSkt)
 {
-    return (pSkt->extFlags.rxEnable == 0);
+    return (pSkt->flags.rxEnable == 0);
 }
 
 // protected access to the socket RX queue
@@ -299,7 +299,7 @@ static void _UDPsetPacketInfo(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
     {
         uint32_t pktSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt)->Val;
         pSkt->pktSrcAddress.Val = pktSrcAdd;
-        if(pSkt->extFlags.ignoreSrcAdd == 0 && pSkt->flags.destSet == 0)
+        if(pSkt->flags.destSet == 0 || pSkt->flags.fixedDestAddress == 0)
         {
             pSkt->destAddress.Val = pktSrcAdd;
         }
@@ -320,7 +320,7 @@ static void _UDPsetPacketInfo(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
             }
         }
         pSkt->pSktNet = (TCPIP_NET_IF*)pRxPkt->pktIf;    // bind it
-        if(pSkt->extFlags.ignoreSrcPort == 0 )
+        if(pSkt->remotePort == 0 || pSkt->flags.fixedDestPort == 0 )
         {
             pSkt->remotePort = _UDPRxPktSourcePort(pRxPkt); 
         }
@@ -330,7 +330,7 @@ static void _UDPsetPacketInfo(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
 #if defined (TCPIP_STACK_USE_IPV6)
     if(pRxPkt != 0 && pSkt->addType == IP_ADDRESS_TYPE_IPV6)
     {
-        if(pSkt->flags.destSet == 0)
+        if(pSkt->flags.destSet == 0 || pSkt->flags.fixedDestAddress == 0)
         {
             TCPIP_IPV6_DestAddressSet(pSkt->pV6Pkt, TCPIP_IPV6_PacketGetSourceAddress(pRxPkt));
         }
@@ -341,7 +341,10 @@ static void _UDPsetPacketInfo(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
             TCPIP_IPV6_SourceAddressSet(pSkt->pV6Pkt, TCPIP_IPV6_PacketGetDestAddress(pRxPkt));
         }
         pSkt->pSktNet = (TCPIP_NET_IF*)pRxPkt->pktIf;    // bind it
-        pSkt->remotePort = _UDPRxPktSourcePort(pRxPkt); 
+        if(pSkt->remotePort == 0 || pSkt->flags.fixedDestPort == 0 )
+        {
+            pSkt->remotePort = _UDPRxPktSourcePort(pRxPkt); 
+        }
         pSkt->pV6Pkt->netIfH = (TCPIP_NET_IF*)pRxPkt->pktIf;
         TCPIP_IPV6_PacketIPProtocolSet (pSkt->pV6Pkt);
     }
@@ -465,9 +468,12 @@ static bool             _UDPSetSourceAddress(UDP_SOCKET_DCPT* pSkt, IP_ADDRESS_T
 
 static  bool _UDPSocketBind(UDP_SOCKET_DCPT* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_ADDRESS* srcAddress)
 {
-    if((pSkt->pSktNet = pNet) != 0 && pSkt->extFlags.noNetStrict == 0)
+    if((pSkt->pSktNet = pNet) != 0 && pSkt->flags.noNetStrict == 0)
     {   // specific bind requested
-        pSkt->flags.looseNetIf = 0;
+        if(pSkt->extFlags.stickyLooseNetIf == 0)
+        {
+            pSkt->flags.looseNetIf = 0;
+        }
     }
 #if defined (TCPIP_STACK_USE_IPV6)
     if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
@@ -1067,7 +1073,7 @@ static UDP_SOCKET _UDPOpen(IP_ADDRESS_TYPE addType, UDP_OPEN_TYPE opType, UDP_PO
 
         // default non strict connections for server
         pSkt->flags.looseRemPort = pSkt->flags.looseNetIf = pSkt->flags.looseRemAddress = 1; 
-        pSkt->extFlags.serverSkt = 1;
+        pSkt->flags.serverSkt = 1;
     }
     else
     {   // UDP_OPEN_CLIENT
@@ -1569,7 +1575,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         }
 
 #if defined(TCPIP_STACK_USE_IGMP)    
-        if(pSkt->extFlags.mcastSkipCheck == 0)
+        if(pSkt->flags.mcastSkipCheck == 0)
         {   // don't skip check multicast traffic
             if(TCPIP_Helper_IsMcastAddress(pPktDstAdd))
             {   // need to check
@@ -1582,7 +1588,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         }
 #endif  // defined(TCPIP_STACK_USE_IGMP)    
     
-        if(pSkt->extFlags.mcastOnly != 0)
+        if(pSkt->flags.mcastOnly != 0)
         {   // let through multicast traffic only
             if(!TCPIP_Helper_IsMcastAddress(pPktDstAdd))
             {   // don't let it through
@@ -1606,7 +1612,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 
     // log 
 #if (TCPIP_PACKET_LOG_ENABLE)
-    uint32_t logPort = (pSkt != 0) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)pUDPHdr->DestinationPort << 16) | pUDPHdr->SourcePort;
+    uint32_t logPort = ((uint32_t)pUDPHdr->DestinationPort << 16) | pUDPHdr->SourcePort;
     TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != 0 ? pSkt->sktIx: 0xffff);
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
@@ -1706,14 +1712,14 @@ static uint16_t _UDPv4Flush(UDP_SOCKET_DCPT* pSkt)
         pktParams.ttl = pSkt->ttl;
     }
 
-    pktParams.tosFlags = pSkt->extFlags.tos;
-    pktParams.df = pSkt->extFlags.df;
+    pktParams.tosFlags = pSkt->flags.tos;
+    pktParams.df = pSkt->flags.df;
 
     // and we're done
     TCPIP_IPV4_PacketFormatTx(pv4Pkt, IP_PROT_UDP, udpTotLen, &pktParams);
     pv4Pkt->macPkt.next = 0;    // single packet
 
-    if(isMcastDest && pSkt->extFlags.mcastLoop)
+    if(isMcastDest && pSkt->flags.mcastLoop)
     {
         pv4Pkt->macPkt.modPktData = 1;
     }
@@ -1896,8 +1902,14 @@ static void _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
     {
         OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
     }
-
+#if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
+    // this packet was actually allocated by IPv6
+    // trace will fail if UDP wants to free it
+    _TCPIP_PKT_PacketFreeDebug(pPkt, TCPIP_MODULE_IPV6);
+#else
     TCPIP_PKT_PacketFree(pPkt);
+#endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
+
     
     if(sigHandler)
     {   // notify socket user
@@ -2091,7 +2103,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     }
 
 #if (TCPIP_PACKET_LOG_ENABLE)
-    uint32_t logPort = (pSkt != 0) ? ((uint32_t)pSkt->localPort << 16) | pSkt->remotePort : ((uint32_t)h->DestinationPort << 16) | h->SourcePort;
+    uint32_t logPort = ((uint32_t)h->DestinationPort << 16) | h->SourcePort;
     TCPIP_PKT_FlightLogRxSkt(pRxPkt, TCPIP_MODULE_LAYER3, logPort, pSkt != 0 ? pSkt->sktIx: 0xffff);
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
@@ -2255,7 +2267,7 @@ bool TCPIP_UDP_Disconnect(UDP_SOCKET s, bool flushRxQueue)
             pSkt->flags.srcValid = pSkt->flags.srcSolved = 0;
         }
 
-        if(pSkt->extFlags.serverSkt != 0 && pSkt->flags.looseRemPort != 0)
+        if(pSkt->flags.serverSkt != 0 && pSkt->flags.looseRemPort != 0)
         {   // stop server connection on the remote port if looseRemPort (rbind was not performed);
             pSkt->remotePort = 0;
         }
@@ -2404,6 +2416,32 @@ bool TCPIP_UDP_SocketInfoGet(UDP_SOCKET s, UDP_SOCKET_INFO* pInfo)
     pInfo->hNet = pSkt->pSktNet;
     pInfo->rxQueueSize = TCPIP_Helper_SingleListCount(&pSkt->rxQueue);
     pInfo->txSize = pSkt->txEnd - pSkt->txStart;
+
+    pInfo->flags = 0;
+    if(pSkt->flags.looseRemPort == 0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STRICT_PORT;
+    }
+    if(pSkt->extFlags.stickyLooseRemPort !=0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STICKY_PORT;
+    }
+    if(pSkt->flags.looseNetIf == 0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STRICT_NET;
+    }
+    if(pSkt->extFlags.stickyLooseNetIf !=0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STICKY_NET;
+    }
+    if(pSkt->flags.looseRemAddress == 0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STRICT_ADD;
+    }
+    if(pSkt->extFlags.stickyLooseRemAddress !=0)
+    {
+        pInfo->flags |= UDP_SOCKET_FLAG_STICKY_ADD;
+    }
 
 	return true;
 
@@ -2631,7 +2669,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET s, uint8_t *cData, uint16_t reqBytes)
         return 0;
     }
     
-    if(pSkt->pCurrRxSeg == 0 && pSkt->extFlags.rxAutoAdvance != 0)
+    if(pSkt->pCurrRxSeg == 0 && pSkt->flags.rxAutoAdvance != 0)
     {   // no more data in this packet 
         _UDPUpdatePacketLock(pSkt);
     }
@@ -2689,7 +2727,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET s, uint8_t *cData, uint16_t reqBytes)
         // else more data in this segment
     }
 
-    if(pSkt->rxTotLen == 0 && pSkt->extFlags.rxAutoAdvance != 0)
+    if(pSkt->rxTotLen == 0 && pSkt->flags.rxAutoAdvance != 0)
     {   // done with this packet
         _UDPUpdatePacketLock(pSkt);
     }
@@ -2959,9 +2997,12 @@ bool TCPIP_UDP_SocketNetSet(UDP_SOCKET s, TCPIP_NET_HANDLE hNet)
         // user can clear the assigned interface
 
         _RxSktLock(pSkt);
-        if((pSkt->pSktNet = pIf) != 0 && pSkt->extFlags.noNetStrict == 0)
+        if((pSkt->pSktNet = pIf) != 0 && pSkt->flags.noNetStrict == 0)
         {   // specific bind requested
-            pSkt->flags.looseNetIf = 0;
+            if(pSkt->extFlags.stickyLooseNetIf == 0)
+            {
+                pSkt->flags.looseNetIf = 0;
+            }
         }
 
 
@@ -3168,11 +3209,17 @@ bool TCPIP_UDP_RemoteBind(UDP_SOCKET s, IP_ADDRESS_TYPE addType, UDP_PORT remote
             _RxSktUnlock(pSkt);
             return false;
         }
-        pSkt->flags.looseRemAddress = 0;
+        if(pSkt->extFlags.stickyLooseRemAddress == 0)
+        {
+            pSkt->flags.looseRemAddress = 0;
+        }
     }
 
     pSkt->remotePort = remotePort;
-    pSkt->flags.looseRemPort = 0;
+    if(pSkt->extFlags.stickyLooseRemPort == 0)
+    {
+        pSkt->flags.looseRemPort = 0;
+    }
     _RxSktUnlock(pSkt);
     return true;
 }
@@ -3184,19 +3231,42 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
 
     if(pSkt)
     {
+        int stickyOp = 0;   // 0 = no op; 1 = set; 2 = clr  
+        if((option & UDP_OPTION_STRICT_SET_STICKY) != 0)
+        {
+            stickyOp = 1;
+        }
+        else if((option & UDP_OPTION_STRICT_CLR_STICKY) != 0)
+        {
+            stickyOp = 2;
+        }
+
+        option &= ~(UDP_OPTION_STRICT_SET_STICKY | UDP_OPTION_STRICT_CLR_STICKY);
         switch(option)
         {
             case UDP_OPTION_STRICT_PORT:
                 pSkt->flags.looseRemPort = (optParam == 0);
+                if(stickyOp)
+                {
+                    pSkt->extFlags.stickyLooseRemPort = (stickyOp == 1) ? 1 : 0; 
+                }
                 return true;
 
 
             case UDP_OPTION_STRICT_NET:
                 pSkt->flags.looseNetIf = (optParam == 0);
+                if(stickyOp)
+                {
+                    pSkt->extFlags.stickyLooseNetIf = (stickyOp == 1) ? 1 : 0; 
+                }
                 return true;
 
             case UDP_OPTION_STRICT_ADDRESS:
                 pSkt->flags.looseRemAddress = (optParam == 0);
+                if(stickyOp)
+                {
+                    pSkt->extFlags.stickyLooseRemAddress = (stickyOp == 1) ? 1 : 0; 
+                }
                 return true;
 
             case UDP_OPTION_BROADCAST:
@@ -3248,7 +3318,7 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case UDP_OPTION_RX_AUTO_ADVANCE:
-                pSkt->extFlags.rxAutoAdvance = (optParam != 0);
+                pSkt->flags.rxAutoAdvance = (optParam != 0);
                 return true;
 
             case UDP_OPTION_TX_TTL:
@@ -3268,23 +3338,23 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                         }
                         if((pMcOpt->flagsMask & UDP_MCAST_FLAG_IGNORE_SOURCE_ADD) != 0)
                         {
-                            pSkt->extFlags.ignoreSrcAdd = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_SOURCE_ADD) != 0;
+                            pSkt->flags.fixedDestAddress = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_SOURCE_ADD) != 0;
                         }
                         if((pMcOpt->flagsMask & UDP_MCAST_FLAG_IGNORE_SOURCE_PORT) != 0)
                         {
-                            pSkt->extFlags.ignoreSrcPort = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_SOURCE_PORT) != 0;
+                            pSkt->flags.fixedDestPort = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_SOURCE_PORT) != 0;
                         }
                         if((pMcOpt->flagsMask & UDP_MCAST_FLAG_IGNORE_UNICAST) != 0)
                         {
-                            pSkt->extFlags.mcastOnly = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_UNICAST) != 0;
+                            pSkt->flags.mcastOnly = (pMcOpt->flagsValue & UDP_MCAST_FLAG_IGNORE_UNICAST) != 0;
                         }
                         if((pMcOpt->flagsMask & UDP_MCAST_FLAG_LOOP) != 0)
                         {
-                            pSkt->extFlags.mcastLoop = (pMcOpt->flagsValue & UDP_MCAST_FLAG_LOOP) != 0;
+                            pSkt->flags.mcastLoop = (pMcOpt->flagsValue & UDP_MCAST_FLAG_LOOP) != 0;
                         }
                         if((pMcOpt->flagsMask & UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK) != 0)
                         {
-                            pSkt->extFlags.mcastSkipCheck = (pMcOpt->flagsValue & UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK) != 0;
+                            pSkt->flags.mcastSkipCheck = (pMcOpt->flagsValue & UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK) != 0;
                         }
 
                         return true;
@@ -3294,15 +3364,23 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 }
 
             case UDP_OPTION_TOS:
-                pSkt->extFlags.tos = (uint8_t)(unsigned int)optParam;
+                pSkt->flags.tos = (uint8_t)(unsigned int)optParam;
                 return true;
                 
             case UDP_OPTION_DF:
-                pSkt->extFlags.df = (optParam != 0);
+                pSkt->flags.df = (optParam != 0);
+                return true;
+                
+            case UDP_OPTION_FIXED_DEST_ADDRESS:
+                pSkt->flags.fixedDestAddress = (optParam != 0);
+                return true;
+                
+            case UDP_OPTION_FIXED_DEST_PORT:
+                pSkt->extFlags.fixedDestPort = (optParam != 0);
                 return true;
                 
             case UDP_OPTION_ENFORCE_STRICT_NET:
-                pSkt->extFlags.noNetStrict = (optParam == 0);
+                pSkt->flags.noNetStrict = (optParam == 0);
                 return true;
                 
             default:
@@ -3355,7 +3433,7 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case UDP_OPTION_RX_AUTO_ADVANCE:
-                *(bool*)optParam = pSkt->extFlags.rxAutoAdvance != 0;
+                *(bool*)optParam = pSkt->flags.rxAutoAdvance != 0;
                 return true;
 
             case UDP_OPTION_TX_TTL:
@@ -3373,23 +3451,23 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                         {
                             mcFlags |= UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT;
                         }
-                        if(pSkt->extFlags.ignoreSrcAdd != 0)
+                        if(pSkt->flags.fixedDestAddress != 0)
                         {
                             mcFlags |= UDP_MCAST_FLAG_IGNORE_SOURCE_ADD;
                         }
-                        if(pSkt->extFlags.ignoreSrcPort != 0)
+                        if(pSkt->flags.fixedDestPort != 0)
                         {
                             mcFlags |= UDP_MCAST_FLAG_IGNORE_SOURCE_PORT;
                         }
-                        if(pSkt->extFlags.mcastOnly != 0)
+                        if(pSkt->flags.mcastOnly != 0)
                         {
                             mcFlags |= UDP_MCAST_FLAG_IGNORE_UNICAST;
                         }
-                        if(pSkt->extFlags.mcastLoop != 0)
+                        if(pSkt->flags.mcastLoop != 0)
                         {
                             mcFlags |= UDP_MCAST_FLAG_LOOP;
                         }
-                        if(pSkt->extFlags.mcastSkipCheck != 0)
+                        if(pSkt->flags.mcastSkipCheck != 0)
                         {
                             mcFlags |= UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK;
                         }
@@ -3403,15 +3481,23 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
 
 
              case UDP_OPTION_TOS:
-                *(uint8_t*)optParam = pSkt->extFlags.tos;
+                *(uint8_t*)optParam = pSkt->flags.tos;
                 return true;
                 
              case UDP_OPTION_DF:
-                *(bool*)optParam = pSkt->extFlags.df != 0;
+                *(bool*)optParam = pSkt->flags.df != 0;
+                return true;
+
+            case UDP_OPTION_FIXED_DEST_ADDRESS:
+                *(bool*)optParam = pSkt->flags.fixedDestAddress != 0;
+                return true;
+                
+            case UDP_OPTION_FIXED_DEST_PORT:
+                *(bool*)optParam = pSkt->extFlags.fixedDestPort != 0;
                 return true;
                 
              case UDP_OPTION_ENFORCE_STRICT_NET:
-                *(bool*)optParam = pSkt->extFlags.noNetStrict == 0;
+                *(bool*)optParam = pSkt->flags.noNetStrict == 0;
                 return true;
                 
            default:
