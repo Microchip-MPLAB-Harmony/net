@@ -3376,7 +3376,7 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
                 
             case UDP_OPTION_FIXED_DEST_PORT:
-                pSkt->extFlags.fixedDestPort = (optParam != 0);
+                pSkt->flags.fixedDestPort = (optParam != 0);
                 return true;
                 
             case UDP_OPTION_ENFORCE_STRICT_NET:
@@ -3493,7 +3493,7 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
                 
             case UDP_OPTION_FIXED_DEST_PORT:
-                *(bool*)optParam = pSkt->extFlags.fixedDestPort != 0;
+                *(bool*)optParam = pSkt->flags.fixedDestPort != 0;
                 return true;
                 
              case UDP_OPTION_ENFORCE_STRICT_NET:
