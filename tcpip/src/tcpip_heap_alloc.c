@@ -147,6 +147,11 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_Create(const TCPIP_STACK_HEAP_CONFIG* initDat
     return 0;
 }
 
+TCPIP_STACK_HEAP_RES TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
+{
+    return (*((TCPIP_HEAP_OBJECT*)heapH)->TCPIP_HEAP_Delete)(heapH);
+}
+
 // functions needed when not inlined
 void* TCPIP_HEAP_MallocOutline(TCPIP_STACK_HEAP_HANDLE h, size_t nBytes)
 {
@@ -300,6 +305,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_Create(const TCPIP_STACK_HEAP_CONFIG* initDat
     return newH;
 }
 
+
 static TCPIP_HEAP_DBG_DCPT* _TCPIP_HEAP_FindDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     int hIx;
@@ -313,6 +319,28 @@ static TCPIP_HEAP_DBG_DCPT* _TCPIP_HEAP_FindDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
     }
 
     return 0;
+}
+
+TCPIP_STACK_HEAP_RES TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
+{
+    TCPIP_STACK_HEAP_RES res;
+    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+
+    if(pDcpt)
+    {
+        res =  ((TCPIP_HEAP_OBJECT*)heapH)->TCPIP_HEAP_Delete(heapH);
+        if(res >= 0)
+        {   // success, deleted
+            pDcpt->heapH = 0;
+        }
+    }
+    else
+    {
+        res = TCPIP_STACK_HEAP_RES_NO_HEAP;
+    }
+
+    return res; 
+
 }
 
 void* TCPIP_HEAP_MallocDebug(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes, int moduleId, int lineNo)
@@ -481,6 +509,7 @@ static void TCPIP_HEAP_AddToEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size
 
     if(pEntry)
     {
+        pEntry->nAllocs++;
         if(ptr)
         {   // successful
             pEntry->totAllocated += nBytes;
@@ -503,7 +532,9 @@ static void TCPIP_HEAP_RemoveFromEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId,
 
     if(pEntry)
     {
+        pEntry->nFrees++;
         pEntry->currAllocated -= nBytes;
+        _TCPIPStack_Assert(pEntry->currAllocated >= 0 && pEntry->nFrees <= pEntry->nAllocs, __FILE__, __func__, __LINE__);
     }
 }
 
@@ -531,6 +562,11 @@ bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryI
 unsigned int TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool getUsed)
 {
     TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+
+    if(pDcpt == 0)
+    {
+        return 0;
+    }
 
     if(getUsed)
     {

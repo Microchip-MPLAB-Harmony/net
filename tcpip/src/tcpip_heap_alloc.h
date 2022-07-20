@@ -60,10 +60,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef struct
 {
     int         moduleId;           // info belonging to this module; <0 means slot free
-    uint32_t    totAllocated;       // total number of bytes allocated successfully by this module
-    uint32_t    currAllocated;      // number of bytes still allocated by this module
-    uint32_t    totFailed;          // total number of bytes that failed for this module
-    uint32_t    maxFailed;          // maximum number of bytes that could not be allocated
+    int32_t     nAllocs;            // total number of alloc operations
+    int32_t     nFrees;             // total number of free operations
+    int32_t     totAllocated;       // total number of bytes allocated successfully by this module
+    int32_t     currAllocated;      // number of bytes still allocated by this module
+    int32_t     totFailed;          // total number of bytes that failed for this module
+    int32_t     maxFailed;          // maximum number of bytes that could not be allocated
 }TCPIP_HEAP_TRACE_ENTRY;
 
 // heap distribution entry
@@ -521,12 +523,6 @@ size_t TCPIP_HEAP_FreeOutline(TCPIP_STACK_HEAP_HANDLE h, const void* ptr);
 
 // general mappings
 //
-
-static __inline__ TCPIP_STACK_HEAP_RES __attribute__((always_inline)) TCPIP_HEAP_DeleteInline(TCPIP_STACK_HEAP_HANDLE h)
-{
-    return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_Delete)(h);
-}
-#define TCPIP_HEAP_Delete(h) TCPIP_HEAP_DeleteInline(h)
 
 static __inline__ size_t __attribute__((always_inline)) TCPIP_HEAP_SizeInline(TCPIP_STACK_HEAP_HANDLE h)
 {

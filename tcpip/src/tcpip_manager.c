@@ -1232,7 +1232,35 @@ static void TCPIP_STACK_KillStack(void)
         TCPIP_HEAP_Free(tcpip_stack_ctrl_data.memH, tcpipNetIf);
         if(TCPIP_HEAP_Delete(tcpip_stack_ctrl_data.memH) < 0)     // destroy the heap
         {
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Heap Delete fail!\r\n");
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
+            int     ix, nEntries, nTraces;
+            TCPIP_HEAP_TRACE_ENTRY    tEntry;
+
+            TCPIP_STACK_HEAP_HANDLE heapH = tcpip_stack_ctrl_data.memH;
+            nTraces = TCPIP_HEAP_TraceGetEntriesNo(heapH, true);
+            if(nTraces)
+            {
+                SYS_CONSOLE_PRINT(TCPIP_STACK_HDR_MESSAGE "Heap Delete fail! Trace info: \r\n");
+                nEntries = TCPIP_HEAP_TraceGetEntriesNo(heapH, false);
+                for(ix = 0; ix < nEntries; ix++)
+                {
+                    if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
+                    {
+                        if(tEntry.currAllocated != 0)
+                        {
+                            SYS_CONSOLE_PRINT("\tModule: %4d, nAllocs: %6d, nFrees: %6d\r\n", tEntry.moduleId, tEntry.nAllocs, tEntry.nFrees);
+                            SYS_CONSOLE_PRINT("\t\ttotAllocated: %6d, currAllocated: %6d, totFailed: %6d, maxFailed: %6d\r\n", tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                SYS_CONSOLE_PRINT(TCPIP_STACK_HDR_MESSAGE "Heap Delete fail! No trace exists\r\n");
+            }
+#else
+            SYS_CONSOLE_PRINT(TCPIP_STACK_HDR_MESSAGE "Heap Delete fail! No trace exists\r\n");
+#endif // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
         }
     }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -4589,4 +4617,46 @@ uint64_t TCPIP_STACK_TimeMeasureGet(bool stop)
 }
 
 #endif // defined(TCPIP_STACK_TIME_MEASUREMENT)
+
+#if ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+#if (_TCPIP_STACK_ENABLE_ASSERT_LOOP != 0)
+volatile int _TCPIP_Stack_LeaveAssertLoop = 0;
+#endif  // (_TCPIP_STACK_ENABLE_ASSERT_LOOP != 0)
+void _TCPIPStack_Assert(bool cond, const char* fileName, const char* funcName, int lineNo)
+{
+    if(cond == false)
+    {
+        // remove the path from the fileName
+        const char* lastPath = strrchr(fileName, '/');
+        if(lastPath == 0)
+        {   // try windows style
+            lastPath = strrchr(fileName, '\\');
+        }
+        if(lastPath != 0)
+        {
+            lastPath++;
+        }
+        else
+        {   // no luck
+            lastPath = fileName;
+        }
+        SYS_CONSOLE_PRINT("TCPIP Stack Assert: in file: %s, func: %s, line: %d, \r\n", lastPath, funcName, lineNo);
+#if (_TCPIP_STACK_ENABLE_ASSERT_LOOP != 0)
+        while(_TCPIP_Stack_LeaveAssertLoop == 0);
+#endif  // (_TCPIP_STACK_ENABLE_ASSERT_LOOP != 0)
+    }
+}
+
+volatile int _TCPIP_Stack_LeaveCondLoop = 0;
+void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName, int lineNo)
+{
+    if(cond == false)
+    {
+        SYS_CONSOLE_PRINT("TCPIP Stack Cond: in file: %s, func: %s, line: %d, \r\n", fileName, funcName, lineNo);
+#if (_TCPIP_STACK_ENABLE_COND_LOOP != 0)
+        while(_TCPIP_Stack_LeaveCondLoop == 0);
+#endif // (_TCPIP_STACK_ENABLE_COND_LOOP != 0)
+    }
+}
+#endif  // ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
 

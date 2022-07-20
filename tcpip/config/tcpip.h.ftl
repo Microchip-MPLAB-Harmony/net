@@ -150,7 +150,7 @@ typedef union
     This type describes the supported IP address types.
 
   Remarks:
-    None.
+    8 bit value only.
 */
 
 typedef enum

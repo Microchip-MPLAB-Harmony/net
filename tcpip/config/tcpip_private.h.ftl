@@ -78,6 +78,28 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     0
 #endif  // defined(TCPIP_STACK_USE_IPV4) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
 
+// debug symbols
+
+#define _TCPIP_STACK_DEBUG_MASK_BASIC       0x01    // enable the _TCPIPStack_Assert and _TCPIPStack_Condition calls
+#define _TCPIP_STACK_ENABLE_ASSERT_LOOP     0       // if !0, then an assert call will loop forever 
+                                                    // should be 0 for a release build
+#define _TCPIP_STACK_ENABLE_COND_LOOP       0       // if !0, then an condition call will loop forever 
+                                                    // should be 0 for a release build
+
+// enabled debugging masks 
+#define _TCPIP_STACK_DEBUG_LEVEL            (_TCPIP_STACK_DEBUG_MASK_BASIC)  // usually the basic debugging is enabled so asserts are not ignored
+
+
+// assert and condition functions that all stack modules could use
+#if ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+void _TCPIPStack_Assert(bool cond, const char* fileName, const char* funcName, int lineNo);
+void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName, int lineNo);
+#else
+#define _TCPIPStack_Assert(cond, fileName, funcName, lineNo)
+#define _TCPIPStack_Condition(cond, fileName, funcName, lineNo)
+#endif  // ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+
+
 // public module interface
 #include "tcpip/tcpip.h"
 
