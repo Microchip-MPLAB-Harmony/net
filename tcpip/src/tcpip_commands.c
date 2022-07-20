@@ -153,7 +153,7 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_TFTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -204,11 +204,11 @@ static int _CommandMail(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 
 #if (TCPIP_UDP_COMMANDS)
-static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_Udp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_UDP_COMMANDS)
 
 #if (TCPIP_TCP_COMMANDS)
-static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_Tcp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_TCP_COMMANDS)
 
@@ -465,7 +465,7 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
     {"tftps",       (SYS_CMD_FNC)_Command_TFTPServerOnOff,        ": TFTP Server Service"},
 #endif
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {"dhcpv6",      (SYS_CMD_FNC)_CommandDhcpv6Options,         ": DHCPV6 client commands"},
+    {"dhcp6",      _CommandDhcpv6Options,                       ": DHCPV6 client commands"},
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
     {"http",        (SYS_CMD_FNC)_Command_HttpInfo,             ": HTTP information"},
@@ -480,10 +480,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 	{"miim", 	    (SYS_CMD_FNC)_CommandMiim,			       ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
-    {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
+    {"udp",         _Command_Udp,                               ": UDP commands"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     _Command_TcpInfo,                           ": Check TCP statistics"},
+    {"tcp",         _Command_Tcp,                               ": TCP commands"},
     {"tcptrace",    _Command_TcpTrace,                          ": Enable TCP trace"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
@@ -1380,69 +1380,85 @@ static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
 
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     TCPIP_NET_HANDLE netH;
+    TCPIP_DHCPV6_CLIENT_RES res;
+    const char* msg;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
+    char printBuff[100];
 
     if (argc < 3)
     {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> <[on/off/renew/request/]info/ia n> \r\n", argv[0]);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> on/off/info\r\n", argv[0]);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> ia state ix \r\n", argv[0]);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Ex: %s eth0 on \r\n", argv[0]);
-        return false;
+        return;
     }
 
     netH = TCPIP_STACK_NetHandleGet(argv[1]);
     if (netH == 0)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface\r\n");
-        return false;
+        return;
     }
 
     if (strcmp(argv[2], "info") == 0)
     {   // DHCPV6 info
         TCPIP_DHCPV6_CLIENT_INFO dhcpv6Info;
-        char dhcpv6StatusBuff[40];
         IPV6_ADDR dhcpv6DnsBuff[1];
 
-        dhcpv6Info.statusBuff = dhcpv6StatusBuff;
-        dhcpv6Info.statusBuffSize = sizeof(dhcpv6StatusBuff);
+        dhcpv6Info.statusBuff = printBuff;
+        dhcpv6Info.statusBuffSize = sizeof(printBuff);
         dhcpv6Info.dnsBuff = dhcpv6DnsBuff;
         dhcpv6Info.dnsBuffSize = sizeof(dhcpv6DnsBuff);
         dhcpv6Info.domainBuff = 0;
         dhcpv6Info.domainBuffSize = 0;
 
 
-        if(TCPIP_DHCPV6_ClientInfoGet(netH, &dhcpv6Info))
+        res = TCPIP_DHCPV6_ClientInfoGet(netH, &dhcpv6Info);
+        if(res >= 0) 
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 status: %d ( %d == Run), time: %d\r\n", dhcpv6Info.clientState, TCPIP_DHCPV6_CLIENT_STATE_RUN, dhcpv6Info.dhcpTime);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IANAs: %d, IATAs: %d, Free IAa: %d\r\n", dhcpv6Info.nIanas, dhcpv6Info.nIatas, dhcpv6Info.nFreeIas);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 status: %d ( %d == Run), tot Buffs: %d, free Buffs: %d, time: %d\r\n", dhcpv6Info.clientState, TCPIP_DHCPV6_CLIENT_STATE_RUN, dhcpv6Info.totBuffers, dhcpv6Info.freeBuffers, dhcpv6Info.dhcpTime);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 tot IANAs: %d, tot IATAs: %d, IANAs: %d, IATAs %d: Free IAs: %d\r\n", dhcpv6Info.totIanas, dhcpv6Info.totIatas, dhcpv6Info.nIanas, dhcpv6Info.nIatas, dhcpv6Info.nFreeIas);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 sol IAs: %d, req IAs: %d, dad IAs %d: decline IAs: %d, bound IAs: %d\r\n", dhcpv6Info.solIas, dhcpv6Info.reqIas, dhcpv6Info.dadIas, dhcpv6Info.declineIas, dhcpv6Info.boundIas);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 renew IAs: %d, rebind IAs: %d, confirm IAs %d: release IAs: %d, trans IAs: %d\r\n", dhcpv6Info.renewIas, dhcpv6Info.rebindIas, dhcpv6Info.confirmIas, dhcpv6Info.releaseIas, dhcpv6Info.transIas);
         }
         else
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: failed to get client info\r\n");
         }
     }
-    else if (strcmp(argv[2], "ia") == 0)
+    else if(strcmp(argv[2], "ia") == 0)
     {
-        if (argc < 4)
+        if (argc < 5)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: provide an IA number\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: provide an IA state and index\r\n");
         }
         else
         {
-            int iaIx = atoi(argv[3]);
+            int iaState = atoi(argv[3]);
+            int iaIx = atoi(argv[4]);
             TCPIP_DHCPV6_IA_INFO iaInfo;
-            char ipv6AddBuff[42];
 
-            if(TCPIP_DHCPV6_IaInfoGet(netH, iaIx, &iaInfo))
+            memset(&iaInfo, 0, sizeof(iaInfo));
+            iaInfo.iaState = iaState;
+            iaInfo.iaIndex = iaIx;
+
+            res = TCPIP_DHCPV6_IaInfoGet(netH, &iaInfo);
+            if(res >= 0) 
             {
                 const char* typeMsg = (iaInfo.iaType == TCPIP_DHCPV6_IA_TYPE_IANA) ? "iana" : (iaInfo.iaType == TCPIP_DHCPV6_IA_TYPE_IATA) ? "iata" : "unknown";
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA type: %s, index: %d, id: %d\r\n", typeMsg, iaInfo.iaIndex, iaInfo.iaId);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA type: %s, index: %d, id: %d, next: %d\r\n", typeMsg, iaInfo.iaIndex, iaInfo.iaId, iaInfo.nextIndex);
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA status: %d ( %d == Bound), sub state: %d\r\n", iaInfo.iaState, TCPIP_DHCPV6_IA_STATE_BOUND, iaInfo.iaSubState);
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA tAcquire: %d, t1: %d, t2: %d\r\n", iaInfo.tAcquire, iaInfo.t1, iaInfo.t2);
-                TCPIP_Helper_IPv6AddressToString(&iaInfo.ipv6Addr, ipv6AddBuff, sizeof(ipv6AddBuff));
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA address: %s, pref LTime: %d, valid LTime: %d\r\n", ipv6AddBuff, iaInfo.prefLTime, iaInfo.validLTime);
+                TCPIP_Helper_IPv6AddressToString(&iaInfo.ipv6Addr, printBuff, sizeof(printBuff));
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA address: %s, pref LTime: %d, valid LTime: %d\r\n", printBuff, iaInfo.prefLTime, iaInfo.validLTime);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 IA msgBuffer: 0x%08x\r\n", iaInfo.msgBuffer);
+            }
+            else if(res == TCPIP_DHCPV6_CLIENT_RES_IX_ERR)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: no such IA\r\n");
             }
             else
             {
@@ -1450,13 +1466,44 @@ static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
             }
         }
     }
+    else if (strcmp(argv[2], "on") == 0)
+    {
+        res = TCPIP_DHCPV6_Enable(netH);
+        msg = (res == TCPIP_DHCPV6_CLIENT_RES_OK) ? "ok" : (res == TCPIP_DHCPV6_CLIENT_RES_BUSY) ? "busy" : "err";
 
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 on: %s, res: %d\r\n", msg, res);
+    }
+    else if (strcmp(argv[2], "off") == 0)
+    {
+        res = TCPIP_DHCPV6_Disable(netH);
+        msg = (res == TCPIP_DHCPV6_CLIENT_RES_OK) ? "ok" : (res == TCPIP_DHCPV6_CLIENT_RES_BUSY) ? "busy" : "err";
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 off: %s, res: %d\r\n", msg, res);
+    }
+#if defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)
+    else if (strcmp(argv[2], "stat") == 0)
+    {
+        TCPIP_DHCPV6_CLIENT_STATISTICS stat;
+        res = TCPIP_DHCPV6_Statistics(netH, &stat);
+        if(res == TCPIP_DHCPV6_CLIENT_RES_OK)
+        {
+            sprintf(printBuff, "DHCPV6 buffers: %zu, free: %zu, pend rx: %zu, pend tx: %zu, advertise: %zu, reply: %zu\r\n", stat.msgBuffers, stat.freeBuffers, stat.rxMessages, stat.txMessages, stat.advMessages, stat.replyMessages);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s", printBuff);
+
+
+            sprintf(printBuff, "DHCPV6 failures - tx Buff: %zu, tx Space: %zu, tx Flush: %zu, rx Buff: %zu, rx Space: %zu\r\n", stat.txBuffFailCnt, stat.txSpaceFailCnt, stat.txSktFlushFailCnt, stat.rxBuffFailCnt, stat.rxBuffSpaceFailCnt);    
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s", printBuff);
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 stats - failed: %d\r\n", res);
+        }
+    }
+#endif  // defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)
     else
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: Unknown option\r\n");
     }
 
-    return true;
 }
 #endif  // defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
 
@@ -2949,7 +2996,7 @@ static int _Command_StackOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 #if defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
             tcpipCmdPreserveSavedInfo = false;          // make sure it doesn't work the next time
 #endif  // defined(_TCPIP_STACK_COMMANDS_STORAGE_ENABLE)
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Stack down succeeded\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Stack down done\r\n");
         }
     }
 
@@ -3029,7 +3076,8 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             {
                 if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
                 {
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Module: %4d, totAllocated: %5d, currAllocated: %5d, totFailed: %5d, maxFailed: %5d \r\n", tEntry.moduleId, tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tModule: %4d, nAllocs: %6d, nFrees: %6d\r\n", tEntry.moduleId, tEntry.nAllocs, tEntry.nFrees);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t\ttotAllocated: %6d, currAllocated: %6d, totFailed: %6d, maxFailed: %6d\r\n", tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
                 }
 
             }
@@ -3535,11 +3583,11 @@ static int _Command_IPv6_Ping(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     icmpReqDelay = 0;
     if(icmpReqNo == 0)
     {
-        icmpReqNo = TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS;
+        icmpReqNo = TCPIP_STACK_COMMANDS_ICMPV6_ECHO_REQUESTS;
     }
     if(icmpReqDelay == 0)
     {
-        icmpReqDelay = TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY;
+        icmpReqDelay = TCPIP_STACK_COMMANDS_ICMPV6_ECHO_REQUEST_DELAY;
     }
 
     // convert to ticks
@@ -3804,7 +3852,7 @@ static void TCPIPCmdPingTask(void)
         case TCPIP_SEND_ECHO_REQUEST_IPV6:
             if(icmpReqCount != 0 && icmpAckRecv == 0)
             {   // no reply received;
-                if(SYS_TMR_TickCountGet() - icmpStartTick > (SYS_TMR_TickCounterFrequencyGet() * TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT) / 1000)
+                if(SYS_TMR_TickCountGet() - icmpStartTick > (SYS_TMR_TickCounterFrequencyGet() * TCPIP_STACK_COMMANDS_ICMPV6_ECHO_TIMEOUT) / 1000)
                 {   // timeout
                     (*pTcpipCmdDevice->pCmdApi->print)(icmpCmdIoParam, "ping6: request timeout.\r\n");
                     killIcmp = true;
@@ -4661,62 +4709,105 @@ static void TCPIPCmdMiimTask(void)
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 
 #if (TCPIP_UDP_COMMANDS)
-static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void _Command_Udp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    int  sktNo, ix;
+    // udp info
+    int  sktNo, ix, startIx, stopIx;
     UDP_SOCKET_INFO sktInfo;
+    char flagsBuff[80];
 
     const void* cmdIoParam = pCmdIO->cmdIoParam;
  
-    sktNo = TCPIP_UDP_SocketsNumberGet();
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "UDP sockets: %d \r\n", sktNo);
-    for(ix = 0; ix < sktNo; ix++)
+    if(argc > 1)
     {
-        if(TCPIP_UDP_SocketInfoGet(ix, &sktInfo))
+        if(strcmp("info", argv[1]) == 0)
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, rxQueueSize: %d, txSize: %d\r\n",
-                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.rxQueueSize, sktInfo.txSize);
+            sktNo = TCPIP_UDP_SocketsNumberGet();
+            if(argc > 2)
+            {
+                startIx = atoi(argv[2]);
+                stopIx = startIx + 1;
+            }
+            else
+            {
+                startIx = 0;
+                stopIx = sktNo;
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "UDP sockets: %d \r\n", sktNo);
+            for(ix = startIx; ix < stopIx; ix++)
+            {
+                if(TCPIP_UDP_SocketInfoGet(ix, &sktInfo))
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, rxQueueSize: %d, txSize: %d\r\n",
+                            ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.rxQueueSize, sktInfo.txSize);
+
+                    static const char* sticky_tbl[] = {"Non-", " "};
+                    static const char* strict_tbl[] = {"Loose", "Strict"};
+                    int n = 0;
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "'%sSticky ", sticky_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STICKY_PORT) != 0]);
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "%s Port', ", strict_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STRICT_PORT) != 0]);
+
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "'%sSticky ", sticky_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STICKY_NET) != 0]);
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "%s Net',", strict_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STRICT_NET) != 0]);
+
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "'%sSticky ", sticky_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STICKY_ADD) != 0]);
+                    n += snprintf(flagsBuff + n, sizeof(flagsBuff) - n, "%s Add'", strict_tbl[(sktInfo.flags & UDP_SOCKET_FLAG_STRICT_ADD) != 0]);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t flags: %s\r\n", flagsBuff);
+                }
+            }
+            return;
         }
     }
 
-    return true;
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: udp info <n>\r\n");
 }
 
 #endif  // (TCPIP_UDP_COMMANDS)
 
 
 #if (TCPIP_TCP_COMMANDS)
-static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
-{   // tcpinfo <n>
+static void _Command_Tcp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   // tcp info <n>
     int  sktNo, ix, startIx, stopIx;
     TCP_SOCKET_INFO sktInfo;
 
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    sktNo = TCPIP_TCP_SocketsNumberGet();
-    
     if(argc > 1)
     {
-        startIx = atoi(argv[1]);
-        stopIx = startIx + 1;
-    }
-    else
-    {
-        startIx = 0;
-        stopIx = sktNo;
-    }
-
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "TCP sockets: %d \r\n", sktNo);
-    for(ix = startIx; ix < stopIx; ix++)
-    {
-        if(TCPIP_TCP_SocketInfoGet(ix, &sktInfo))
+        if(strcmp("info", argv[1]) == 0)
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, flags: 0x%02x\r\n",
-                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.flags);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\trxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
-                    sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
+            sktNo = TCPIP_TCP_SocketsNumberGet();
+    
+            if(argc > 2)
+            {
+                startIx = atoi(argv[2]);
+                stopIx = startIx + 1;
+            }
+            else
+            {
+                startIx = 0;
+                stopIx = sktNo;
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "TCP sockets: %d \r\n", sktNo);
+            for(ix = startIx; ix < stopIx; ix++)
+            {
+                if(TCPIP_TCP_SocketInfoGet(ix, &sktInfo))
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, flags: 0x%02x\r\n",
+                            ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.flags);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\trxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
+                            sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
+                }
+            }
+
+            return;
         }
     }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: tcp info <n>\r\n");
 }
 
 static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)

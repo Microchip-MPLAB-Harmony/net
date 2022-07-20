@@ -69,6 +69,31 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 // *****************************************************************************
+/* Enumeration: TCPIP_DHCPV6_CLIENT_RES
+
+  Summary:
+    DHCPv6 Operation Result
+
+  Description:
+    This enumeration lists the return codes for a DHCPv6 module operation.
+ */
+typedef enum
+{
+    TCPIP_DHCPV6_CLIENT_RES_OK         = 0,    // operation successful
+    TCPIP_DHCPV6_CLIENT_RES_BUSY       = 1,    // module currently busy
+                                        // operation could be retried
+
+    // errors
+    TCPIP_DHCPV6_CLIENT_RES_DOWN       = -1,   // service is down
+    TCPIP_DHCPV6_CLIENT_RES_IF_DOWN    = -2,   // interface is down
+    TCPIP_DHCPV6_CLIENT_RES_ARG_ERR    = -3,   // bad argument supplied
+    TCPIP_DHCPV6_CLIENT_RES_IX_ERR     = -4,   // bad index supplied
+
+    
+
+}TCPIP_DHCPV6_CLIENT_RES;
+
+// *****************************************************************************
 /* Enumeration: TCPIP_DHCPV6_CLIENT_STATE
 
   Summary:
@@ -80,13 +105,15 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  */
 typedef enum
 {
-    TCPIP_DHCPV6_CLIENT_STATE_INIT = 0,            // initialization state/unknown
-    TCPIP_DHCPV6_CLIENT_STATE_IDLE,                // idle/inactive state
+    TCPIP_DHCPV6_CLIENT_STATE_INIT = 0,         // initialization state
+    TCPIP_DHCPV6_CLIENT_STATE_IDLE,             // idle/inactive state
+    TCPIP_DHCPV6_CLIENT_STATE_START,            // service start state
 
-    TCPIP_DHCPV6_CLIENT_STATE_RUN,                 // up and running in one of the run states
-    TCPIP_DHCPV6_CLIENT_STATE_WAIT_LINK,           // up and running, waiting for a connection
+    TCPIP_DHCPV6_CLIENT_STATE_RUN,              // up and running in one of the run states
+    TCPIP_DHCPV6_CLIENT_STATE_WAIT_LINK,        // up and running, waiting for a connection
+    TCPIP_DHCPV6_CLIENT_STATE_REINIT,           // re-initialization state
 
-    TCPIP_DHCPV6_CLIENT_STATE_NUMBER               // number of states
+    TCPIP_DHCPV6_CLIENT_STATE_NUMBER            // number of states
 }TCPIP_DHCPV6_CLIENT_STATE;
 
 
@@ -293,10 +320,20 @@ typedef union
 
 typedef struct
 {
+    // input parameters
+    int                         iaIndex;        // index of the IA to look for
+                                                // if < 0, it will just return the 1st index available
+    TCPIP_DHCPV6_IA_STATE       iaState;        // IA state to look for
+                                                // if < 0 the search will look into the free (not currently used) IA list
+    void*                       statusBuff;     //  buffer to copy the latest status message associated with this IA
+    size_t                      statusBuffSize; // size of this buffer
+
+    // output parameters
+    int                         nextIndex;      // the next index that could be used to query for
+                                                // Note that this is transient since the IAs can dynamically change
+                                                // If < 0, no other entry exists
     TCPIP_DHCPV6_IA_TYPE        iaType;         // IA type 
-    TCPIP_DHCPV6_IA_STATE       iaState;        // IA state
     TCPIP_DHCPV6_IA_SUBSTATE    iaSubState;     // IA substate 
-    int                         iaIndex;        // index of this IA for this client
     uint32_t                    iaId;           // ID of this IA
     // the following fields are meaningful only for iaState >= TCPIP_DHCPV6_IA_STATE_BOUND
     uint32_t                    tAcquire;       // time of which the address was acquired
@@ -305,10 +342,9 @@ typedef struct
     IPV6_ADDR                   ipv6Addr;       // 16 bytes IPV6 address associated with this IA
     uint32_t                    prefLTime;      // preferred life time for the IPv6 address; seconds
     uint32_t                    validLTime;     // valid life time for the IPv6 address; seconds
+    // other info
     TCPIP_DHCPV6_SERVER_STATUS_CODE lastStatusCode; // last status code for this IA
-    void*                       statusBuff;     //  buffer to copy the latest status message associated with this IA
-    size_t                      statusBuffSize; // size of this buffer
-    
+    void*                       msgBuffer;      // if an associated message buffer exists
 }TCPIP_DHCPV6_IA_INFO;
 
 // *****************************************************************************
@@ -317,12 +353,41 @@ typedef struct
 {
     // client state at the moment of the call
     TCPIP_DHCPV6_CLIENT_STATE   clientState;
-    // number of IANA the client has
-    int                         nIanas;
-    // number of IATA the client has
-    int                         nIatas;
-    // number of free IAs the client has
-    int                         nFreeIas;
+    // total number of IANAs
+    size_t                      totIanas;
+    // total number of IATAs
+    size_t                      totIatas;
+    // current number of bound IANAs
+    size_t                      nIanas;
+    // current number of bound IATAs
+    size_t                      nIatas;
+    // current number of free IAs the client has
+    size_t                      nFreeIas;
+    // number of solicit IAs
+    size_t                      solIas;
+    // number of request IAs
+    size_t                      reqIas;
+    // number of DAD IAs
+    size_t                      dadIas;
+    // number of decline IAs
+    size_t                      declineIas;
+    // number of bound IAs
+    size_t                      boundIas;
+    // number of renew IAs
+    size_t                      renewIas;
+    // number of rebind IAs
+    size_t                      rebindIas;
+    // number of confirm IAs
+    size_t                      confirmIas;
+    // number of release IAs
+    size_t                      releaseIas;
+    // number of transient error IAs
+    size_t                      transIas;
+
+    // total number of message buffers
+    size_t                      totBuffers;
+    // current number of free message buffers
+    size_t                      freeBuffers;
     // current DHCPV6 time; seconds
     uint32_t                    dhcpTime;
     // last status code for the client
@@ -332,13 +397,13 @@ typedef struct
     // size of this buffer
     size_t                      statusBuffSize;
     // number of DNS servers
-    int                         nDnsServers;
+    size_t                      nDnsServers;
     // buffer to copy the DNS Servers obtained from the DHCPV6 server
     IPV6_ADDR*                  dnsBuff;
     // size of this buffer
     size_t                      dnsBuffSize;
     // size of domainSearchList
-    int                         domainSearchListSize;
+    size_t                      domainSearchListSize;
     // buffer to store the domain Search list obtained from the DHCPv6 server
     void*                       domainBuff;
     // size of this buffer
@@ -372,6 +437,37 @@ typedef void    (*TCPIP_DHCPV6_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV
 typedef const void* TCPIP_DHCPV6_HANDLE;
 
 
+// *****************************************************************************
+// DHCPv6 client statistics
+// Note: all members should be uint32_t!
+typedef struct
+{
+    // number of total message buffers
+    uint32_t    msgBuffers;
+    // number of free buffers
+    uint32_t    freeBuffers;
+    // number of pending RX messages
+    uint32_t    rxMessages;
+    // number of pending TX messages
+    uint32_t    txMessages;
+    // number of advertise messages
+    uint32_t    advMessages;
+    // number of pending reply messages
+    uint32_t    replyMessages;
+
+    // failed TX operations due to missing buffers
+    uint32_t    txBuffFailCnt;
+    // failed TX operations due to not enough space in the socket TX buffer
+    uint32_t    txSpaceFailCnt;
+    // failed TX operations: amount of data written less than submitted 
+    uint32_t    txSktFlushFailCnt;
+
+    // failed RX operations due to missing buffers
+    uint32_t    rxBuffFailCnt;
+    // failed RX operations due packets larger than the received message
+    uint32_t    rxBuffSpaceFailCnt;
+    
+}TCPIP_DHCPV6_CLIENT_STATISTICS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -382,12 +478,12 @@ typedef const void* TCPIP_DHCPV6_HANDLE;
 
 // *****************************************************************************
 // client status reporting
-bool TCPIP_DHCPV6_ClientInfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_CLIENT_INFO* pClientInfo);
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_ClientInfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_CLIENT_INFO* pClientInfo);
 
 
 // *****************************************************************************
 // IA status reporting
-bool TCPIP_DHCPV6_IaInfoGet(TCPIP_NET_HANDLE hNet, int iaIx, TCPIP_DHCPV6_IA_INFO* pIaInfo);
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_IaInfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_IA_INFO* pIaInfo);
 
 
 // DHCPV6 event registration
@@ -396,6 +492,22 @@ TCPIP_DHCPV6_HANDLE TCPIP_DHCPV6_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DH
 
 // DHCPV6 event deregistration
 bool TCPIP_DHCPV6_HandlerDeRegister(TCPIP_DHCPV6_HANDLE hDhcp);
+
+// *****************************************************************************
+// Disables the service at run time for an interface
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Disable(TCPIP_NET_HANDLE hNet);
+
+
+// *****************************************************************************
+// Enables the service at run time for an interface
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Enable(TCPIP_NET_HANDLE hNet);
+
+
+
+// *****************************************************************************
+// Get the server statistics for an interface
+// Note: exists only if the TCPIP_DHCPV6_STATISTICS_ENABLE is defined and !0 
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Statistics(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_CLIENT_STATISTICS* pStat);
 
 
 // *****************************************************************************

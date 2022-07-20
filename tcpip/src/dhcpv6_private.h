@@ -101,24 +101,27 @@ typedef enum
 #define TCPIP_DHCPV6_DEBUG_MASK_OUT             (0x0004)
 // report changes in the current client state
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE    (0x0008)
-// report current client statistics: buffers lists and statistics counters 
-#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATS    (0x0010)
 // report client state when user notification is made
-#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0020)
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0010)
 // advanced: report changes in the current IA state
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0040)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0020)
 // advanced: report changes in the current IA state or substate
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE     (0x0080)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE     (0x0040)
+// display the Server status code (if != OK)
+#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0080)
+// display a message when the IA timeouts
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0100)
+
 // advanced: additional state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0100)
+#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0200)
 // advanced: use static debugging lists
-#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0400)
 // advanced: print buffers traces
 #define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x0800)
 
 
 // enable DHCP debugging levels
-#define TCPIP_DHCPV6_DEBUG_LEVEL  (0)
+#define TCPIP_DHCPV6_DEBUG_LEVEL  (0x0001)
 
 
 // don't spit out IAs that don't have valid IAs...?
@@ -203,6 +206,9 @@ typedef enum
 
 // minimum value accepted for the buffer size
 #define TCPIP_DHCPV6_MESSAGE_MIN_BUFFER_SIZE    128
+
+// minimum value for the socket RX queue limit
+#define TCPIP_DHCPV6_MIN_RX_QUEUE_LIMIT         6
 
 
 // DHCPv6 message types
@@ -325,10 +331,15 @@ typedef struct __attribute__((aligned(2), packed))
  * A network interface's Link layer address.
  * A globally unique link-layer address for
  * the link type.
- * 20 bytes for the Ethernet address.
+ * Max 20 bytes for the Ethernet address, minimum 6 bytes.
+ * Currently use only 6
  */
+#define TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN     6
 
-#define TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_LEN      20
+// minimum length for the link layer address
+// some servers use 0 bytes for this (!)
+#define TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_MIN_LEN 0
+
 
 // DUID based on Link Layer + time: DUID-LLT
 typedef struct __attribute__((aligned(2), packed))
@@ -387,6 +398,14 @@ typedef struct __attribute__((aligned(2), packed))
     //    on which the DHCP client is running!
     // 
 }TCPIP_DHCPV6_DUID_LL;
+
+// minimum accepted size DUID_LL
+typedef struct __attribute__((aligned(2), packed))
+{
+    uint16_t    duid_type;      // == TCPIP_DHCPV6_DUID_TYPE_LL
+    uint16_t    hw_type;        // hardware type: TCPIP_DHCPV6_HW_TYPE
+    uint8_t     ll_address[TCPIP_DHCPV6_DUID_LINKLAYER_ADDRESS_MIN_LEN];  // 6 bytes MAC address for ETH
+}TCPIP_DHCPV6_DUID_LL_MIN;
 
 // union of all DUID supported types
 typedef union
@@ -1202,7 +1221,7 @@ struct _tag_TCPIP_DHCPV6_IA_DCPT;
 typedef struct _tag_TCPIP_DHCPV6_MSG_BUFFER
 {
     struct _tag_TCPIP_DHCPV6_MSG_BUFFER*    next;       // safecast to SGL_LIST_NODE
-    struct _tag_TCPIP_DHCPV6_IA_DCPT*       owner;      // IA that owns of the message
+    struct _tag_TCPIP_DHCPV6_IA_DCPT*       txOwner;    // IA that owns this TX message
     uint16_t                                bufferSize; // allocated size of the buffer 
     uint16_t                                msgLen;     // size of the carried message 
     uint8_t*                                pMsgData;   // pointing to message payload: normally to msgData
@@ -1340,14 +1359,14 @@ typedef struct _tag_TCPIP_DHCPV6_CLIENT_DCPT
     DOUBLE_LIST                         iaStateList[TCPIP_DHCPV6_IA_STATE_NUMBER];    // queue of IAs in one of the corresponding run state
     DOUBLE_LIST                         iaFreeList;     // queue of free/unused IAs (failed DAD, released, etc.)
 
-    SINGLE_LIST                         advertiseList;  // queue of advertisments received from servers: TCPIP_DHCPV6_MSG_BUFFER
+    SINGLE_LIST                         advertiseList;  // queue of advertisements received from servers: TCPIP_DHCPV6_MSG_BUFFER
                                                         // the TCPIP_DHCPV6_MSG_BUFFER::buffer contains the TCPIP_DHCPV6_MESSAGE_HEADER structures. 
-                                                        // these are global advertisments, for all IAs!
+                                                        // these are global advertisements, for all IAs!
     SINGLE_LIST                         replyList;      // queue of replies received from servers: TCPIP_DHCPV6_MSG_BUFFER
                                                         // the TCPIP_DHCPV6_MSG_BUFFER::buffer contains the TCPIP_DHCPV6_MESSAGE_HEADER structures. 
                                                         // these are global replies, for all IAs!
 
-    TCPIP_MAC_EVENT                     connEvent;      // serialized connection event
+    TCPIP_MAC_EVENT                     connEvent;      // serialized connection event: not used 
                                                         // makes sure that CONN_LOST and CONN_ESTABLISHED are 
                                                         // always executed in sequence
     int                                 nDnsServers;    // how many DNS servers we have
@@ -1358,21 +1377,21 @@ typedef struct _tag_TCPIP_DHCPV6_CLIENT_DCPT
     TCPIP_DHCPV6_SERVER_STATUS_CODE     lastStatusCode; // last status code for the client
     uint8_t                             lastStatusMsg[TCPIP_DHCPV6_STATUS_CODE_MESSAGE_LEN];// latest status message associated with the client
     
-    // statistics counters
-    uint32_t                            txBuffFailCnt;  // failed to get a TX buffer count
-    uint32_t                            txSktSpaceCnt;  // not enough room in the socket TX buffer count; message was discarded!
-    uint32_t                            txSktFlushFailCnt;  // failed to flush the UDP message counter
-    uint32_t                            rxBuffFailCnt;  // failed to get a RX buffer count
-    uint32_t                            rxBuffSmallCnt; // RX buffer too small for a DHCP packet count
-
-
+#if defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)
     union
     {
-        uint16_t    val;
+        TCPIP_DHCPV6_CLIENT_STATISTICS  stat;           // client statistic counters
+        uint32_t                        statArray[sizeof(TCPIP_DHCPV6_CLIENT_STATISTICS) / sizeof(uint32_t)];    // counters array
+    };
+#endif  // defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)
+    union
+    {
+        uint16_t    val;    // TCPIP_DHCPV6_RUN_FLAGS
         struct
         {
-            uint16_t    dhcpEnabled:    1;
-            uint16_t    connLost:       1;  // CONN_LOST event received
+            uint16_t    wasEnabled:     1;  // service is/was enabled; for restart of the interface
+            uint16_t    busy:           1;  // operation in progress
+            uint16_t    rxDisabled:     1;  // RX disabled - when closing, etc
         };
     }flags;
     
@@ -1380,7 +1399,27 @@ typedef struct _tag_TCPIP_DHCPV6_CLIENT_DCPT
 }TCPIP_DHCPV6_CLIENT_DCPT;
 
 
+// discrete values for flags
+typedef enum
+{
+    TCPIP_DHCPV6_RUN_FLAG_NONE          = 0x0000,
+    TCPIP_DHCPV6_RUN_FLAG_WAS_ENABLED   = 0x0001,
+    TCPIP_DHCPV6_RUN_FLAG_BUSY          = 0x0002,
+    TCPIP_DHCPV6_RUN_FLAG_RX_DISABLED   = 0x0004,
+    //
+}TCPIP_DHCPV6_RUN_FLAGS;
 
+
+// close operation flags
+typedef enum
+{
+    TCPIP_DHCPV6_CLOSE_FLAG_NONE        = 0x0000,
+    TCPIP_DHCPV6_CLOSE_FLAG_RELEASE     = 0x0001,
+    TCPIP_DHCPV6_CLOSE_FLAG_CLEANUP     = 0x0002,
+    //
+
+    TCPIP_DHCPV6_CLOSE_FLAG_CLOSE_ALL   = 0x0003,
+}TCPIP_DHCPV6_CLOSE_FLAGS;
 
 
 
