@@ -70,6 +70,23 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 // *****************************************************************************
+/* ICMPv6 Module Configuration Data Structure
+
+  Summary:
+    Placeholder for ICMPv6 module configuration data.
+
+  Description:
+    Provides a placeholder for ICMPv6 module configuration data.
+
+  Remarks:
+    None.
+*/
+typedef struct
+{
+    void*   reserved;
+} TCPIP_ICMPV6_MODULE_CONFIG;
+
+// *****************************************************************************
 /*
   Type:
     ICMPV6_HANDLE

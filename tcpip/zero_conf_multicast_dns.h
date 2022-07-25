@@ -64,24 +64,41 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 // DOM-IGNORE-END  
 
-// ****************************************************************************
-// ****************************************************************************
-// Section: Function Prototypes and Data Structures
-// ****************************************************************************
-// ****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
+// Section: MDNS Data Types and Constants
+// *****************************************************************************
+// *****************************************************************************
 
-//void DisplayHostName(uint8_t *HostName);
+// *****************************************************************************
+/* MDNS Module Configuration Data Structure
 
-typedef enum {
-    MDNSD_SUCCESS =  0,
-    MDNSD_ERR_BUSY =     1, /* Already Being used for another Service */
-    MDNSD_ERR_CONFLICT = 2, /* Name Conflict */
-    MDNSD_ERR_INVAL =    3, /* Invalid Parameter */
-} MDNSD_ERR_CODE;
+  Summary:
+    Placeholder for MDNS module configuration data.
+
+  Description:
+    Provides a placeholder for MDNS module configuration data.
+
+  Remarks:
+    None.
+*/
+typedef struct
+{
+    void*   reserved;
+} TCPIP_MDNS_MODULE_CONFIG;
+
+
+typedef enum
+{
+    MDNSD_SUCCESS       = 0,
+    MDNSD_ERR_BUSY      = 1,    /* Already Being used for another Service */
+    MDNSD_ERR_CONFLICT  = 2,    /* Name Conflict */
+    MDNSD_ERR_INVAL     = 3,    /* Invalid Parameter */
+}MDNSD_ERR_CODE;
 
 // ****************************************************************************
 // ****************************************************************************
-// Section: DNS Service Discovery Functions
+// Section: MDNS Service Discovery Functions
 // ****************************************************************************
 // ****************************************************************************
 
