@@ -203,7 +203,7 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttNetConfigFtl.setType("STRING")
     
     wolfMqttPath = wolfmqttComponent.createSettingSymbol("WOLFMQTT_INCLUDE_PATH", None)
-    wolfMqttPath.setValue("../src/third_party/wolfmqtt;../src/config/"+configName+ "/third_party_adapter/wolfMQTT/src/")
+    wolfMqttPath.setValue("../src/third_party/wolfMQTT;../src/config/"+configName+ "/third_party_adapter/wolfMQTT/src/")
     wolfMqttPath.setCategory("C32")
     wolfMqttPath.setKey("extra-include-directories")
     wolfMqttPath.setAppend(True, ";")
