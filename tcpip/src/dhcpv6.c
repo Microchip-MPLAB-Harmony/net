@@ -600,8 +600,6 @@ static void         _DHCPV6Ia_Remove(TCPIP_DHCPV6_IA_DCPT* pIa);
 
 static void         _DHCPV6Ia_ReleaseMsgBuffer(TCPIP_DHCPV6_IA_DCPT* pIa);
 
-static void*        _DHCPV6Ia_InMsgBuffer(TCPIP_DHCPV6_MSG_BUFFER* pSrcBuffer, TCPIP_DHCPV6_IA_DCPT* pIa, bool serverMatch);
-
 static void         _DHCPV6Ia_MsgInvalidate(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer);
 
 
@@ -2035,7 +2033,7 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_SubStateRenewStart(TCPIP_DHCPV6
 // TCPIP_DHCPV6_IA_STATE_REBIND, TCPIP_DHCPV6_IA_SUBSTATE_START
 static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_SubStateRebindStart(TCPIP_DHCPV6_IA_DCPT* pIa)
 {
-    TCPIP_DHCPV6_IA_SUBSTATE_RESULT subRes = _DHCPV6Ia_TxMsgSetup(pIa, TCPIP_DHCPV6_CLIENT_MSG_TYPE_RENEW);
+    TCPIP_DHCPV6_IA_SUBSTATE_RESULT subRes = _DHCPV6Ia_TxMsgSetup(pIa, TCPIP_DHCPV6_CLIENT_MSG_TYPE_REBIND);
     if(subRes == TCPIP_DHCPV6_IA_SUBSTATE_RES_OK)
     {
         _DHCPV6Ia_MsgListPurge(&pIa->pParent->replyList, pIa);
@@ -3445,11 +3443,13 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
     _DHCPV6DbgDeclareList(otherIaList);
     _DHCPV6DbgDeclareList (thisIaList);
     _DHCPV6DbgDeclareList (thisIaPriList);
+    _DHCPV6DbgDeclareList (discardIaList);
 
 
     _DHCPV6DbgCheckEmptyList(&otherIaList);
     _DHCPV6DbgCheckEmptyList(&thisIaList);
     _DHCPV6DbgCheckEmptyList(&thisIaPriList);
+    _DHCPV6DbgCheckEmptyList(&discardIaList);
 
     TCPIP_DHCPV6_CLIENT_DCPT* pParent = pIa->pParent;
     
@@ -3469,12 +3469,19 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
 
     while((pMsgBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(&pParent->advertiseList)) != 0)
     {
-        // check this message concerns this IA
-        if(_DHCPV6Ia_InMsgBuffer(pMsgBuffer, pIa, false) == 0)
+        if(!_DHCPV6MsgCheck_TransactionId(pIa, pMsgBuffer))
         {   // not this IA
             TCPIP_Helper_SingleListTailAdd(&otherIaList, (SGL_LIST_NODE*)pMsgBuffer);
             continue;
         }
+
+        // find the IA in the message
+        if(_DHCPV6OptionFind_Ia(pMsgBuffer, pIa, false) == 0)
+        {   // no IA in the message?
+            TCPIP_Helper_SingleListTailAdd(&discardIaList, (SGL_LIST_NODE*)pMsgBuffer);
+            continue;
+        }
+
 
         // belongs to this IA 
         // check the IA for a status code option
@@ -3561,6 +3568,7 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
     }
 
     // re-add the remaining messages
+    _DHCPV6_MsgListForcePurge(pParent, &discardIaList);
     TCPIP_Helper_SingleListAppend(&pParent->advertiseList, &otherIaList);
     TCPIP_Helper_SingleListAppend(&pParent->advertiseList, &thisIaList);
     TCPIP_Helper_SingleListAppend(&pParent->advertiseList, &thisIaPriList);
@@ -3569,6 +3577,7 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
     _DHCPV6DbgCheckEmptyList(&otherIaList);
     _DHCPV6DbgCheckEmptyList(&thisIaList);
     _DHCPV6DbgCheckEmptyList(&thisIaPriList);
+    _DHCPV6DbgCheckEmptyList(&discardIaList);
 
     if(subRes < 0)
     {   // some error
@@ -3629,48 +3638,52 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyMsgSrvMatchProcess(TCPIP_D
 
     while((pMsgBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(&pParent->replyList)) != 0)
     {
-        // check this message concerns this IA
-        if((pOptIa = _DHCPV6Ia_InMsgBuffer(pMsgBuffer, pIa, true)) == 0)
-        {   // not this IA
+        // check is this IA id
+        if(!_DHCPV6MsgCheck_TransactionId(pIa, pMsgBuffer))
+        {   // not ours
             TCPIP_Helper_SingleListTailAdd(&otherIaList, (SGL_LIST_NODE*)pMsgBuffer);
             continue;
         }
 
-        // message belonging to this IA 
+        // correct transaction ID: message belonging to this IA 
+        // find the IA in the message
         processMsg = false;
-        if(pIa->iaState == TCPIP_DHCPV6_IA_STATE_RELEASE || pIa->iaState == TCPIP_DHCPV6_IA_STATE_DECLINE)
-        {   // any reply is just fine
-            _DHCPV6Ia_Remove(pIa);
-            subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_NO_ACTION;
-            _DHCPV6DbgIAIn_PrintPassed("Reply Rel/Decl", pMsgBuffer, pIa, 0);
-        }
-        else if((serverStatCode = _DHCPV6MsgGet_StatusCode(0, pMsgBuffer, pIa, 0, 0)) != TCPIP_DHCPV6_SERVER_STAT_EXT_ERROR)
-        {   // check if we have a server status code
-            pParent->lastStatusCode = serverStatCode;
-            if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_UNSPEC_FAIL)
-            {
-                subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
-                _DHCPV6DbgSetFailReason(failReason, "Unspec Fail");
+        if((pOptIa = _DHCPV6OptionFind_Ia(pMsgBuffer, pIa, true)) != 0)
+        {
+            if(pIa->iaState == TCPIP_DHCPV6_IA_STATE_RELEASE || pIa->iaState == TCPIP_DHCPV6_IA_STATE_DECLINE)
+            {   // any reply is just fine
+                _DHCPV6Ia_Remove(pIa);
+                subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_NO_ACTION;
+                _DHCPV6DbgIAIn_PrintPassed("Reply Rel/Decl", pMsgBuffer, pIa, 0);
             }
-            else if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_USE_MULTICAST)
-            {
-                pIa->flags.iaUnicast = 0;
-                subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
-                _DHCPV6DbgSetFailReason(failReason, "Unicast Fail");
-            }
-            else if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_NOT_ON_LINK)
-            {   // for REQUEST
-                subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_RESTART;
-                _DHCPV6DbgSetFailReason(failReason, "Not on Link");
+            else if((serverStatCode = _DHCPV6MsgGet_StatusCode(0, pMsgBuffer, pIa, 0, 0)) != TCPIP_DHCPV6_SERVER_STAT_EXT_ERROR)
+            {   // check if we have a server status code
+                pParent->lastStatusCode = serverStatCode;
+                if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_UNSPEC_FAIL)
+                {
+                    subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
+                    _DHCPV6DbgSetFailReason(failReason, "Unspec Fail");
+                }
+                else if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_USE_MULTICAST)
+                {
+                    pIa->flags.iaUnicast = 0;
+                    subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
+                    _DHCPV6DbgSetFailReason(failReason, "Unicast Fail");
+                }
+                else if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_NOT_ON_LINK)
+                {   // for REQUEST
+                    subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_RESTART;
+                    _DHCPV6DbgSetFailReason(failReason, "Not on Link");
+                }
+                else
+                {   // can process further
+                    processMsg = true;
+                }
             }
             else
-            {   // can process further
+            {   // if no status code then process further
                 processMsg = true;
             }
-        }
-        else
-        {   // if no status code then process further
-            processMsg = true;
         }
 
         while(processMsg)
@@ -3889,25 +3902,32 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyRebindProcess(TCPIP_DHCPV6
 
     while((pMsgBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(&pParent->replyList)) != 0)
     {
-        // check this message concerns this IA
-        if((pOptIa = _DHCPV6Ia_InMsgBuffer(pMsgBuffer, pIa, false)) == 0)
+        if(!_DHCPV6MsgCheck_TransactionId(pIa, pMsgBuffer))
         {   // not this IA
             TCPIP_Helper_SingleListTailAdd(&otherIaList, (SGL_LIST_NODE*)pMsgBuffer);
             continue;
         }
 
-        // message belonging to this IA 
-        nProcMsgs++;
-        procMessage = true;
+        // correct transaction ID: message belonging to this IA 
+        // find the IA in the message
+        if((pOptIa = _DHCPV6OptionFind_Ia(pMsgBuffer, pIa, false)) != 0)
+        {   // message belonging to this IA 
+            nProcMsgs++;
+            procMessage = true;
 
-        if((serverStatCode = _DHCPV6MsgGet_StatusCode(0, pMsgBuffer, pIa, 0, 0)) != TCPIP_DHCPV6_SERVER_STAT_EXT_ERROR)
-        {   // check if we have a server status code
-            pParent->lastStatusCode = serverStatCode;
-            if(serverStatCode != TCPIP_DHCPV6_SERVER_STAT_SUCCESS)
-            {
-                subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_RESTART;
-                procMessage = false;
+            if((serverStatCode = _DHCPV6MsgGet_StatusCode(0, pMsgBuffer, pIa, 0, 0)) != TCPIP_DHCPV6_SERVER_STAT_EXT_ERROR)
+            {   // check if we have a server status code
+                pParent->lastStatusCode = serverStatCode;
+                if(serverStatCode != TCPIP_DHCPV6_SERVER_STAT_SUCCESS)
+                {
+                    subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_RESTART;
+                    procMessage = false;
+                }
             }
+        }
+        else
+        {   // not our IA ? 
+            procMessage = false;
         }
 
         while(procMessage)
@@ -5052,17 +5072,6 @@ static bool _DHCPV6MsgCheck_TransactionId(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV
     transId.v[3] = 0;
 
     return (transId.Val == pIa->transactionId.Val);
-}
-
-
-static void* _DHCPV6Ia_InMsgBuffer(TCPIP_DHCPV6_MSG_BUFFER* pSrcBuffer, TCPIP_DHCPV6_IA_DCPT* pIa, bool serverMatch)
-{
-    if(_DHCPV6MsgCheck_TransactionId(pIa, pSrcBuffer))
-    {
-        return _DHCPV6OptionFind_Ia(pSrcBuffer, pIa, serverMatch);
-    }
-
-    return 0;
 }
 
 static void _DHCPV6MsgGet_Options(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer)
