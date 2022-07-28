@@ -322,6 +322,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //
 //#define TCPIP_STACK_APP_EXECUTE_MODULE_TASKS
 
+
+// Stack modules run-time initialization based on the initialization data
+// This option allows that only the stack modules that are listed in the stack
+// initialization data (TCPIP_STACK_INIT::pModConfig) will be started when the
+// TCPIP_STACK_Initialize() is called.
+// Of course the modules need to be part of the build.
+// This is meant for high level modules: ex HTTP_NET, FTP, etc.
+// Should be used with care for low level modules (UDP, TCP, etc., even DHCP) 
+// because this may have unintended impact on other modules that depend on them
+// Default value should be false
+#define TCPIP_STACK_RUN_TIME_INIT   false
+
 #endif  // __TCPIP_CONFIG_H_
 
 

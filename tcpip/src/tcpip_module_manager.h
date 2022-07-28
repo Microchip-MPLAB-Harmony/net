@@ -82,6 +82,33 @@ typedef bool    (*tcpipModuleInitFunc)(const TCPIP_STACK_MODULE_CTRL* const, con
 // cleaned up.
 typedef void    (*tcpipModuleDeInitFunc)(const TCPIP_STACK_MODULE_CTRL * const);
 
+// perform module initialization at run time based on the initialization data
+#if defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+#define _TCPIP_STACK_RUN_TIME_INIT       1
+#else
+#define _TCPIP_STACK_RUN_TIME_INIT       0
+#endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+
+// module run time flags
+// 8 bit only
+typedef union
+{
+    uint8_t    val;
+    struct
+    {
+        uint8_t isRunning:  1;  // module is part of this run
+        uint8_t reserved:   7;  // not used       
+    };
+}TCPIP_MODULE_RUN_DCPT;
+
+// discrete values for the module flags
+typedef enum
+{
+    TCPIP_MODULE_RUN_FLAG_NONE          = 0x00,
+    TCPIP_MODULE_RUN_FLAG_IS_RUNNING    = 0x01,
+    //
+
+}TCPIP_MODULE_RUN_FLAGS;
 
 // descriptor of an TCPIP stack module entry
 // module that's part of the stack
@@ -89,10 +116,11 @@ typedef void    (*tcpipModuleDeInitFunc)(const TCPIP_STACK_MODULE_CTRL * const);
 // 
 typedef struct
 {
-    TCPIP_STACK_MODULE       moduleId;           // module identification
-    tcpipModuleInitFunc      initFunc;           // initialization function
+    uint16_t                moduleId;           // TCPIP_STACK_MODULE value: module identification
+    uint16_t                reserved;           // not used
+    tcpipModuleInitFunc     initFunc;           // initialization function
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-    tcpipModuleDeInitFunc    deInitFunc;         // deinitialization function
+    tcpipModuleDeInitFunc   deInitFunc;         // deinitialization function
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 }TCPIP_STACK_MODULE_ENTRY;
 

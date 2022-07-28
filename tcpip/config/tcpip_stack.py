@@ -503,6 +503,15 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
     tcpipStackInitCback.setDefaultValue("TCPIP_STACK_InitCallback")
     tcpipStackInitCback.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_ENABLE_INIT_CALLBACK"])
+
+    # Enable stack modules run based on initialization data
+    tcpipStackRunInit = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_RUN_TIME_INIT", tcpipStackAdvSettings)
+    tcpipStackRunInit.setHelp("mcc_h3_manager_configurations")
+    tcpipStackRunInit.setLabel("Enable Stack Modules Run-time Initialization")
+    tcpipStackRunInit.setVisible(True)
+    tcpipStackRunInit.setDescription("Enable TCP/IP stack modules based on Initialization data")
+    tcpipStackRunInit.setDefaultValue(False)
+
     ###################################################################################################
     #################           Symbols for Configuration Summary                     #################
     ####### Device Configuration

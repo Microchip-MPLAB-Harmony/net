@@ -303,7 +303,7 @@ typedef const void*   IPV6_ADDR_HANDLE;
     by the TCP/IP stack.
 
   Remarks:
-    None.
+    16 bit values only.
 */
 
 typedef enum

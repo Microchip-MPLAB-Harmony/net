@@ -69,7 +69,7 @@ typedef struct
    
 
 bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_IPV4_MODULE_CONFIG* pIpInit);
-void TCPIP_IPV4_DeInitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit);
+void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit);
 
 
 // Interface functions

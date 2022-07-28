@@ -82,6 +82,7 @@ static const char* TCPIP_STACK_IF_ALIAS_NAME_TBL[TCPIP_MAC_TYPES] =
 // Since the modules that need connection notification is
 // known to the stack manager no dynamic approach is taken.
 // But simply a call table is maintained.
+#if (_TCPIP_STACK_RUN_TIME_INIT == 0)
 static const tcpipModuleConnHandler  TCPIP_STACK_CONN_EVENT_TBL [] =
 {
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
@@ -94,6 +95,35 @@ static const tcpipModuleConnHandler  TCPIP_STACK_CONN_EVENT_TBL [] =
 
     // add other needed handlers here
 };
+#else
+static void _TCPIP_DHCP_RunConnectionHandler(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT connEvent)
+{
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
+    if(_TCPIPStack_ModuleIsRunning(TCPIP_MODULE_DHCP_CLIENT))
+    {
+        TCPIP_DHCP_ConnectionHandler(pNetIf, connEvent);
+    }   
+#endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
+}
+
+static void _TCPIP_DHCPV6_RunConnectionHandler(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT connEvent)
+{
+#if defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
+    if(_TCPIPStack_ModuleIsRunning(TCPIP_MODULE_DHCPV6_CLIENT))
+    {
+        TCPIP_DHCPV6_ConnectionHandler(pNetIf, connEvent);
+    }   
+#endif  // defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
+}
+
+static const tcpipModuleConnHandler  TCPIP_STACK_CONN_EVENT_TBL [] =
+{
+    _TCPIP_DHCP_RunConnectionHandler,
+    _TCPIP_DHCPV6_RunConnectionHandler,
+
+    // add other needed handlers here
+};
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT == 0)
 
 
 // variables
@@ -173,6 +203,11 @@ static SINGLE_LIST      TCPIP_MODULES_QUEUE_TBL [TCPIP_MODULE_LAYER3] =
 
 };
 
+
+// table keeping track of the currently running modules
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+static TCPIP_MODULE_RUN_DCPT TCPIP_MODULES_RUN_TBL[TCPIP_MODULES_NUMBER] = { {0}}; 
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
 
 #if (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 // table containing the recipients of the TCPIP_MODULE_SIGNAL_INTERFACE_CHANGE signal
@@ -309,6 +344,7 @@ static __inline__ void __attribute__((always_inline)) _TCPIPStackSetConfig(TCPIP
 static __inline__ void __attribute__((always_inline)) _TCPIPInsertMacRxPacket(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt)
 {
     pRxPkt->pktIf = pNetIf;
+    // insertion into the manager queue should always succeed - manager is always running
     _TCPIPStackModuleRxInsert(TCPIP_MODULE_MANAGER, pRxPkt, 0);
 }
 
@@ -378,113 +414,113 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_StackSetDefaultDns(
 static bool    _TCPIP_StackSyncFunction(void* synchHandle, TCPIP_MAC_SYNCH_REQUEST req);
 
 // table with stack's modules
-static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
+static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 {
     // ModuleID                  // InitFunc                                        // DeInitFunc                
 #if defined(TCPIP_STACK_USE_IPV4)
-    {TCPIP_MODULE_ARP,           (tcpipModuleInitFunc)TCPIP_ARP_Initialize,         TCPIP_ARP_Deinitialize},            // TCPIP_MODULE_ARP
-    {TCPIP_MODULE_IPV4,          (tcpipModuleInitFunc)TCPIP_IPV4_Initialize,        TCPIP_IPV4_DeInitialize},           // TCPIP_MODULE_IPV4
+    {.moduleId = TCPIP_MODULE_ARP,           .initFunc = (tcpipModuleInitFunc)TCPIP_ARP_Initialize,         .deInitFunc = TCPIP_ARP_Deinitialize},            // TCPIP_MODULE_ARP
+    {.moduleId = TCPIP_MODULE_IPV4,          .initFunc = (tcpipModuleInitFunc)TCPIP_IPV4_Initialize,        .deInitFunc = TCPIP_IPV4_Deinitialize},           // TCPIP_MODULE_IPV4
 #endif
 #if defined(TCPIP_STACK_USE_IPV6)
-    {TCPIP_MODULE_IPV6,          (tcpipModuleInitFunc)TCPIP_IPV6_Initialize,        TCPIP_IPV6_Deinitialize},           // TCPIP_MODULE_IPV6
-    {TCPIP_MODULE_ICMPV6,        (tcpipModuleInitFunc)TCPIP_ICMPV6_Initialize,      TCPIP_ICMPV6_Deinitialize},         // TCPIP_MODULE_ICMPV6
-    {TCPIP_MODULE_NDP,           (tcpipModuleInitFunc)TCPIP_NDP_Initialize,         TCPIP_NDP_Deinitialize},            // TCPIP_MODULE_NDP
+    {.moduleId = TCPIP_MODULE_IPV6,          .initFunc = (tcpipModuleInitFunc)TCPIP_IPV6_Initialize,        .deInitFunc = TCPIP_IPV6_Deinitialize},           // TCPIP_MODULE_IPV6
+    {.moduleId = TCPIP_MODULE_ICMPV6,        .initFunc = (tcpipModuleInitFunc)TCPIP_ICMPV6_Initialize,      .deInitFunc = TCPIP_ICMPV6_Deinitialize},         // TCPIP_MODULE_ICMPV6
+    {.moduleId = TCPIP_MODULE_NDP,           .initFunc = (tcpipModuleInitFunc)TCPIP_NDP_Initialize,         .deInitFunc = TCPIP_NDP_Deinitialize},            // TCPIP_MODULE_NDP
 #endif
 #if defined(TCPIP_STACK_USE_LLDP)
-    {TCPIP_MODULE_LLDP,          (tcpipModuleInitFunc)TCPIP_LLDP_Initialize,        TCPIP_LLDP_Deinitialize},           // TCPIP_MODULE_LLDP
+    {.moduleId = TCPIP_MODULE_LLDP,          .initFunc = (tcpipModuleInitFunc)TCPIP_LLDP_Initialize,        .deInitFunc = TCPIP_LLDP_Deinitialize},           // TCPIP_MODULE_LLDP
 #endif    
 #if defined(TCPIP_STACK_USE_IPV4) && (defined(TCPIP_STACK_USE_ICMP_CLIENT) || defined(TCPIP_STACK_USE_ICMP_SERVER))
-    {TCPIP_MODULE_ICMP,          (tcpipModuleInitFunc)TCPIP_ICMP_Initialize,        TCPIP_ICMP_Deinitialize},           // TCPIP_MODULE_ICMP
+    {.moduleId = TCPIP_MODULE_ICMP,          .initFunc = (tcpipModuleInitFunc)TCPIP_ICMP_Initialize,        .deInitFunc = TCPIP_ICMP_Deinitialize},           // TCPIP_MODULE_ICMP
 #endif
 #if defined(TCPIP_STACK_USE_UDP)
-    {TCPIP_MODULE_UDP,           (tcpipModuleInitFunc)TCPIP_UDP_Initialize,         TCPIP_UDP_Deinitialize},            // TCPIP_MODULE_UDP
+    {.moduleId = TCPIP_MODULE_UDP,           .initFunc = (tcpipModuleInitFunc)TCPIP_UDP_Initialize,         .deInitFunc = TCPIP_UDP_Deinitialize},            // TCPIP_MODULE_UDP
 #endif
 #if defined(TCPIP_STACK_USE_TCP)
-    {TCPIP_MODULE_TCP,           (tcpipModuleInitFunc)TCPIP_TCP_Initialize,         TCPIP_TCP_Deinitialize},            //  TCPIP_MODULE_TCP
+    {.moduleId = TCPIP_MODULE_TCP,           .initFunc = (tcpipModuleInitFunc)TCPIP_TCP_Initialize,         .deInitFunc = TCPIP_TCP_Deinitialize},            //  TCPIP_MODULE_TCP
 #endif    
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    {TCPIP_MODULE_DHCP_CLIENT,   (tcpipModuleInitFunc)TCPIP_DHCP_Initialize,        TCPIP_DHCP_Deinitialize},           // TCPIP_MODULE_DHCP_CLIENT
+    {.moduleId = TCPIP_MODULE_DHCP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_DHCP_Initialize,        .deInitFunc = TCPIP_DHCP_Deinitialize},           // TCPIP_MODULE_DHCP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
-    {TCPIP_MODULE_DHCP_SERVER,   (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize,       TCPIP_DHCPS_Deinitialize},          // TCPIP_MODULE_DHCP_SERVER
+    {.moduleId = TCPIP_MODULE_DHCP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize,       .deInitFunc = TCPIP_DHCPS_Deinitialize},          // TCPIP_MODULE_DHCP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ANNOUNCE)
-    {TCPIP_MODULE_ANNOUNCE,      (tcpipModuleInitFunc)TCPIP_ANNOUNCE_Initialize,    TCPIP_ANNOUNCE_Deinitialize},       // TCPIP_MODULE_ANNOUNCE
+    {.moduleId = TCPIP_MODULE_ANNOUNCE,      .initFunc = (tcpipModuleInitFunc)TCPIP_ANNOUNCE_Initialize,    .deInitFunc = TCPIP_ANNOUNCE_Deinitialize},       // TCPIP_MODULE_ANNOUNCE
 #endif
 #if defined(TCPIP_STACK_USE_NBNS)
-    {TCPIP_MODULE_NBNS,          (tcpipModuleInitFunc)TCPIP_NBNS_Initialize,        TCPIP_NBNS_Deinitialize},           // TCPIP_MODULE_NBNS
+    {.moduleId = TCPIP_MODULE_NBNS,          .initFunc = (tcpipModuleInitFunc)TCPIP_NBNS_Initialize,        .deInitFunc = TCPIP_NBNS_Deinitialize},           // TCPIP_MODULE_NBNS
 #endif
 #if defined(TCPIP_STACK_USE_FTP_SERVER)
-    {TCPIP_MODULE_FTP_SERVER,    (tcpipModuleInitFunc)TCPIP_FTP_ServerInitialize,   TCPIP_FTP_ServerDeinitialize},      // TCPIP_MODULE_FTP_SERVER
+    {.moduleId = TCPIP_MODULE_FTP_SERVER,    .initFunc = (tcpipModuleInitFunc)TCPIP_FTP_ServerInitialize,   .deInitFunc = TCPIP_FTP_ServerDeinitialize},      // TCPIP_MODULE_FTP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
-    {TCPIP_MODULE_DYNDNS_CLIENT, (tcpipModuleInitFunc)TCPIP_DDNS_Initialize,        TCPIP_DDNS_Deinitialize},           // TCPIP_MODULE_DYNDNS_CLIENT
+    {.moduleId = TCPIP_MODULE_DYNDNS_CLIENT, .initFunc = (tcpipModuleInitFunc)TCPIP_DDNS_Initialize,        .deInitFunc = TCPIP_DDNS_Deinitialize},           // TCPIP_MODULE_DYNDNS_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_REBOOT_SERVER)
-    {TCPIP_MODULE_REBOOT_SERVER, (tcpipModuleInitFunc)TCPIP_REBOOT_Initialize,      TCPIP_REBOOT_Deinitialize},         // TCPIP_MODULE_REBOOT_SERVER
+    {.moduleId = TCPIP_MODULE_REBOOT_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_REBOOT_Initialize,      .deInitFunc = TCPIP_REBOOT_Deinitialize},         // TCPIP_MODULE_REBOOT_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
-    {TCPIP_MODULE_ZCLL,          (tcpipModuleInitFunc)TCPIP_ZCLL_Initialize,        TCPIP_ZCLL_Deinitialize},           // TCPIP_MODULE_ZCLL
+    {.moduleId = TCPIP_MODULE_ZCLL,          .initFunc = (tcpipModuleInitFunc)TCPIP_ZCLL_Initialize,        .deInitFunc = TCPIP_ZCLL_Deinitialize},           // TCPIP_MODULE_ZCLL
 #if defined(TCPIP_STACK_USE_ZEROCONF_MDNS_SD)
-    {TCPIP_MODULE_MDNS,          (tcpipModuleInitFunc)TCPIP_MDNS_Initialize,        TCPIP_MDNS_Deinitialize},           // TCPIP_MODULE_MDNS
+    {.moduleId = TCPIP_MODULE_MDNS,          .initFunc = (tcpipModuleInitFunc)TCPIP_MDNS_Initialize,        .deInitFunc = TCPIP_MDNS_Deinitialize},           // TCPIP_MODULE_MDNS
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_CLIENT)
-    {TCPIP_MODULE_TFTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_TFTPC_Initialize,       TCPIP_TFTPC_Deinitialize},          // TCPIP_MODULE_TFTP_CLIENT
+    {.moduleId = TCPIP_MODULE_TFTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_TFTPC_Initialize,       .deInitFunc = TCPIP_TFTPC_Deinitialize},          // TCPIP_MODULE_TFTP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_IGMP)
-    {TCPIP_MODULE_IGMP,        (tcpipModuleInitFunc)TCPIP_IGMP_Initialize,        TCPIP_IGMP_Deinitialize},          // TCPIP_MODULE_IGMP
+    {.moduleId = TCPIP_MODULE_IGMP,        .initFunc = (tcpipModuleInitFunc)TCPIP_IGMP_Initialize,        .deInitFunc = TCPIP_IGMP_Deinitialize},          // TCPIP_MODULE_IGMP
 #endif
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
-    {TCPIP_MODULE_SMTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_SMTP_ClientInitialize,  TCPIP_SMTP_ClientDeinitialize},     // TCPIP_MODULE_SMTP_CLIENT
+    {.moduleId = TCPIP_MODULE_SMTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_SMTP_ClientInitialize,  .deInitFunc = TCPIP_SMTP_ClientDeinitialize},     // TCPIP_MODULE_SMTP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_SNTP_CLIENT)
-    {TCPIP_MODULE_SNTP,          (tcpipModuleInitFunc)TCPIP_SNTP_Initialize,        TCPIP_SNTP_Deinitialize},           // TCPIP_MODULE_SNTP
+    {.moduleId = TCPIP_MODULE_SNTP,          .initFunc = (tcpipModuleInitFunc)TCPIP_SNTP_Initialize,        .deInitFunc = TCPIP_SNTP_Deinitialize},           // TCPIP_MODULE_SNTP
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
-    {TCPIP_MODULE_DNS_CLIENT,    (tcpipModuleInitFunc)TCPIP_DNS_ClientInitialize,   TCPIP_DNS_ClientDeinitialize},      // TCPIP_MODULE_DNS_CLIENT
+    {.moduleId = TCPIP_MODULE_DNS_CLIENT,    .initFunc = (tcpipModuleInitFunc)TCPIP_DNS_ClientInitialize,   .deInitFunc = TCPIP_DNS_ClientDeinitialize},      // TCPIP_MODULE_DNS_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
-    {TCPIP_MODULE_BERKELEY,      (tcpipModuleInitFunc)BerkeleySocketInit,           BerkeleySocketDeInit},              // TCPIP_MODULE_BERKELEY
+    {.moduleId = TCPIP_MODULE_BERKELEY,      .initFunc = (tcpipModuleInitFunc)BerkeleySocketInitialize,     .deInitFunc = BerkeleySocketDeinitialize},       // TCPIP_MODULE_BERKELEY
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
-    {TCPIP_MODULE_HTTP_SERVER,   (tcpipModuleInitFunc)TCPIP_HTTP_Initialize,        TCPIP_HTTP_Deinitialize},           // TCPIP_MODULE_HTTP_SERVER
+    {.moduleId = TCPIP_MODULE_HTTP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_Initialize,        .deInitFunc = TCPIP_HTTP_Deinitialize},           // TCPIP_MODULE_HTTP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {TCPIP_MODULE_HTTP_NET_SERVER, (tcpipModuleInitFunc)TCPIP_HTTP_NET_Initialize,  TCPIP_HTTP_NET_Deinitialize},      // TCPIP_MODULE_HTTP_NET_SERVER
+    {.moduleId = TCPIP_MODULE_HTTP_NET_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_NET_Initialize,  .deInitFunc = TCPIP_HTTP_NET_Deinitialize},      // TCPIP_MODULE_HTTP_NET_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
-    {TCPIP_MODULE_TELNET_SERVER, (tcpipModuleInitFunc)TCPIP_TELNET_Initialize,      TCPIP_TELNET_Deinitialize},         // TCPIP_MODULE_TELNET_SERVER
+    {.moduleId = TCPIP_MODULE_TELNET_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_TELNET_Initialize,      .deInitFunc = TCPIP_TELNET_Deinitialize},         // TCPIP_MODULE_TELNET_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_SNMP_SERVER)
-    {TCPIP_MODULE_SNMP_SERVER,   (tcpipModuleInitFunc)TCPIP_SNMP_Initialize,        TCPIP_SNMP_Deinitialize},           // TCPIP_MODULE_SNMP_SERVER
+    {.moduleId = TCPIP_MODULE_SNMP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_SNMP_Initialize,        .deInitFunc = TCPIP_SNMP_Deinitialize},           // TCPIP_MODULE_SNMP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_DNS_SERVER)
-    {TCPIP_MODULE_DNS_SERVER,    (tcpipModuleInitFunc)TCPIP_DNSS_Initialize,        TCPIP_DNSS_Deinitialize},           // TCPIP_MODULE_DNS_SERVER
+    {.moduleId = TCPIP_MODULE_DNS_SERVER,    .initFunc = (tcpipModuleInitFunc)TCPIP_DNSS_Initialize,        .deInitFunc = TCPIP_DNSS_Deinitialize},           // TCPIP_MODULE_DNS_SERVER
 #endif
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
-    {TCPIP_MODULE_COMMAND,       (tcpipModuleInitFunc)TCPIP_Commands_Initialize,    TCPIP_Commands_Deinitialize},       // TCPIP_MODULE_COMMAND
+    {.moduleId = TCPIP_MODULE_COMMAND,       .initFunc = (tcpipModuleInitFunc)TCPIP_Commands_Initialize,    .deInitFunc = TCPIP_Commands_Deinitialize},       // TCPIP_MODULE_COMMAND
 #endif
 #if defined(TCPIP_STACK_USE_IPERF)
-    {TCPIP_MODULE_IPERF,         (tcpipModuleInitFunc)TCPIP_IPERF_Initialize,       TCPIP_IPERF_Deinitialize},          // TCPIP_MODULE_IPERF
+    {.moduleId = TCPIP_MODULE_IPERF,         .initFunc = (tcpipModuleInitFunc)TCPIP_IPERF_Initialize,       .deInitFunc = TCPIP_IPERF_Deinitialize},          // TCPIP_MODULE_IPERF
 #endif
 #if defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {TCPIP_MODULE_DHCPV6_CLIENT, (tcpipModuleInitFunc)TCPIP_DHCPV6_Initialize,      TCPIP_DHCPV6_Deinitialize},          // TCPIP_MODULE_DHCPV6_CLIENT
+    {.moduleId = TCPIP_MODULE_DHCPV6_CLIENT, .initFunc = (tcpipModuleInitFunc)TCPIP_DHCPV6_Initialize,      .deInitFunc = TCPIP_DHCPV6_Deinitialize},          // TCPIP_MODULE_DHCPV6_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC)
-    {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize,        TCPIP_SMTPC_Deinitialize},          // TCPIP_MODULE_SMTPC
+    {.moduleId = TCPIP_MODULE_SMTPC,        .initFunc = (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize,        .deInitFunc = TCPIP_SMTPC_Deinitialize},          // TCPIP_MODULE_SMTPC
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+    {.moduleId = TCPIP_MODULE_TFTP_SERVER,  .initFunc = (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        .deInitFunc = TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
 #endif   
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)
-    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+    {.moduleId = TCPIP_MODULE_FTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        .deInitFunc = TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
 #endif 
 #if defined(TCPIP_STACK_USE_MAC_BRIDGE)
-    {TCPIP_MODULE_MAC_BRIDGE,   (tcpipModuleInitFunc)TCPIP_MAC_Bridge_Initialize,  TCPIP_MAC_Bridge_Deinitialize},      // TCPIP_MODULE_MAC_BRIDGE
+    {.moduleId = TCPIP_MODULE_MAC_BRIDGE,   .initFunc = (tcpipModuleInitFunc)TCPIP_MAC_Bridge_Initialize,  .deInitFunc = TCPIP_MAC_Bridge_Deinitialize},      // TCPIP_MODULE_MAC_BRIDGE
 #endif 
     // Add other stack modules here
      
@@ -493,105 +529,105 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 {
     // ModuleID                  // InitFunc                                        
 #if defined(TCPIP_STACK_USE_IPV4)
-    {TCPIP_MODULE_ARP,           (tcpipModuleInitFunc)TCPIP_ARP_Initialize},            // TCPIP_MODULE_ARP
-    {TCPIP_MODULE_IPV4,          (tcpipModuleInitFunc)TCPIP_IPV4_Initialize},           // TCPIP_MODULE_IPV4
+    {.moduleId = TCPIP_MODULE_ARP,           .initFunc = (tcpipModuleInitFunc)TCPIP_ARP_Initialize},            // TCPIP_MODULE_ARP
+    {.moduleId = TCPIP_MODULE_IPV4,          .initFunc = (tcpipModuleInitFunc)TCPIP_IPV4_Initialize},           // TCPIP_MODULE_IPV4
 #endif
 #if defined(TCPIP_STACK_USE_IPV6)
-    {TCPIP_MODULE_IPV6,          (tcpipModuleInitFunc)TCPIP_IPV6_Initialize},           // TCPIP_MODULE_IPV6
-    {TCPIP_MODULE_ICMPV6,        (tcpipModuleInitFunc)TCPIP_ICMPV6_Initialize},         // TCPIP_MODULE_ICMPV6
-    {TCPIP_MODULE_NDP,           (tcpipModuleInitFunc)TCPIP_NDP_Initialize},            // TCPIP_MODULE_NDP
+    {.moduleId = TCPIP_MODULE_IPV6,          .initFunc = (tcpipModuleInitFunc)TCPIP_IPV6_Initialize},           // TCPIP_MODULE_IPV6
+    {.moduleId = TCPIP_MODULE_ICMPV6,        .initFunc = (tcpipModuleInitFunc)TCPIP_ICMPV6_Initialize},         // TCPIP_MODULE_ICMPV6
+    {.moduleId = TCPIP_MODULE_NDP,           .initFunc = (tcpipModuleInitFunc)TCPIP_NDP_Initialize},            // TCPIP_MODULE_NDP
 #endif
 #if defined(TCPIP_STACK_USE_LLDP)
-    {TCPIP_MODULE_LLDP,          (tcpipModuleInitFunc)TCPIP_LLDP_Initialize},           // TCPIP_MODULE_LLDP
+    {.moduleId = TCPIP_MODULE_LLDP,          .initFunc = (tcpipModuleInitFunc)TCPIP_LLDP_Initialize},           // TCPIP_MODULE_LLDP
 #endif    
 #if defined(TCPIP_STACK_USE_IPV4) && (defined(TCPIP_STACK_USE_ICMP_CLIENT) || defined(TCPIP_STACK_USE_ICMP_SERVER))
-    {TCPIP_MODULE_ICMP,          (tcpipModuleInitFunc)TCPIP_ICMP_Initialize},           // TCPIP_MODULE_ICMP
+    {.moduleId = TCPIP_MODULE_ICMP,          .initFunc = (tcpipModuleInitFunc)TCPIP_ICMP_Initialize},           // TCPIP_MODULE_ICMP
 #endif
 #if defined(TCPIP_STACK_USE_UDP)
-    {TCPIP_MODULE_UDP,           (tcpipModuleInitFunc)TCPIP_UDP_Initialize},            // TCPIP_MODULE_UDP
+    {.moduleId = TCPIP_MODULE_UDP,           .initFunc = (tcpipModuleInitFunc)TCPIP_UDP_Initialize},            // TCPIP_MODULE_UDP
 #endif
 #if defined(TCPIP_STACK_USE_TCP)
-    {TCPIP_MODULE_TCP,           (tcpipModuleInitFunc)TCPIP_TCP_Initialize},            //  TCPIP_MODULE_TCP
+    {.moduleId = TCPIP_MODULE_TCP,           .initFunc = (tcpipModuleInitFunc)TCPIP_TCP_Initialize},            //  TCPIP_MODULE_TCP
 #endif    
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    {TCPIP_MODULE_DHCP_CLIENT,   (tcpipModuleInitFunc)TCPIP_DHCP_Initialize},           // TCPIP_MODULE_DHCP_CLIENT
+    {.moduleId = TCPIP_MODULE_DHCP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_DHCP_Initialize},           // TCPIP_MODULE_DHCP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
-    {TCPIP_MODULE_DHCP_SERVER,   (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize},          // TCPIP_MODULE_DHCP_SERVER
+    {.moduleId = TCPIP_MODULE_DHCP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_DHCPS_Initialize},          // TCPIP_MODULE_DHCP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ANNOUNCE)
-    {TCPIP_MODULE_ANNOUNCE,      (tcpipModuleInitFunc)TCPIP_ANNOUNCE_Initialize},       // TCPIP_MODULE_ANNOUNCE
+    {.moduleId = TCPIP_MODULE_ANNOUNCE,      .initFunc = (tcpipModuleInitFunc)TCPIP_ANNOUNCE_Initialize},       // TCPIP_MODULE_ANNOUNCE
 #endif
 #if defined(TCPIP_STACK_USE_NBNS)
-    {TCPIP_MODULE_NBNS,          (tcpipModuleInitFunc)TCPIP_NBNS_Initialize},           // TCPIP_MODULE_NBNS
+    {.moduleId = TCPIP_MODULE_NBNS,          .initFunc = (tcpipModuleInitFunc)TCPIP_NBNS_Initialize},           // TCPIP_MODULE_NBNS
 #endif
 #if defined(TCPIP_STACK_USE_FTP_SERVER)
-    {TCPIP_MODULE_FTP_SERVER,    (tcpipModuleInitFunc)TCPIP_FTP_ServerInitialize},      // TCPIP_MODULE_FTP_SERVER
+    {.moduleId = TCPIP_MODULE_FTP_SERVER,    .initFunc = (tcpipModuleInitFunc)TCPIP_FTP_ServerInitialize},      // TCPIP_MODULE_FTP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
-    {TCPIP_MODULE_DYNDNS_CLIENT, (tcpipModuleInitFunc)TCPIP_DDNS_Initialize},           // TCPIP_MODULE_DYNDNS_CLIENT
+    {.moduleId = TCPIP_MODULE_DYNDNS_CLIENT, .initFunc = (tcpipModuleInitFunc)TCPIP_DDNS_Initialize},           // TCPIP_MODULE_DYNDNS_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_REBOOT_SERVER)
-    {TCPIP_MODULE_REBOOT_SERVER, (tcpipModuleInitFunc)TCPIP_REBOOT_Initialize},         // TCPIP_MODULE_REBOOT_SERVER
+    {.moduleId = TCPIP_MODULE_REBOOT_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_REBOOT_Initialize},         // TCPIP_MODULE_REBOOT_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
-    {TCPIP_MODULE_ZCLL,          (tcpipModuleInitFunc)TCPIP_ZCLL_Initialize},           // TCPIP_MODULE_ZCLL
+    {.moduleId = TCPIP_MODULE_ZCLL,          .initFunc = (tcpipModuleInitFunc)TCPIP_ZCLL_Initialize},           // TCPIP_MODULE_ZCLL
 #if defined(TCPIP_STACK_USE_ZEROCONF_MDNS_SD)
-    {TCPIP_MODULE_MDNS,          (tcpipModuleInitFunc)TCPIP_MDNS_Initialize},           // TCPIP_MODULE_MDNS
+    {.moduleId = TCPIP_MODULE_MDNS,          .initFunc = (tcpipModuleInitFunc)TCPIP_MDNS_Initialize},           // TCPIP_MODULE_MDNS
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_CLIENT)
-    {TCPIP_MODULE_TFTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_TFTPC_Initialize},          // TCPIP_MODULE_TFTP_CLIENT
+    {.moduleId = TCPIP_MODULE_TFTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_TFTPC_Initialize},          // TCPIP_MODULE_TFTP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_IGMP)
-    {TCPIP_MODULE_IGMP,        (tcpipModuleInitFunc)TCPIP_IGMP_Initialize},          // TCPIP_MODULE_IGMP
+    {.moduleId = TCPIP_MODULE_IGMP,          .initFunc = (tcpipModuleInitFunc)TCPIP_IGMP_Initialize},          // TCPIP_MODULE_IGMP
 #endif
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
-    {TCPIP_MODULE_SMTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_SMTP_ClientInitialize},     // TCPIP_MODULE_SMTP_CLIENT
+    {.moduleId = TCPIP_MODULE_SMTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_SMTP_ClientInitialize},     // TCPIP_MODULE_SMTP_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_SNTP_CLIENT)
-    {TCPIP_MODULE_SNTP,          (tcpipModuleInitFunc)TCPIP_SNTP_Initialize},           // TCPIP_MODULE_SNTP
+    {.moduleId = TCPIP_MODULE_SNTP,          .initFunc = (tcpipModuleInitFunc)TCPIP_SNTP_Initialize},           // TCPIP_MODULE_SNTP
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
-    {TCPIP_MODULE_DNS_CLIENT,    (tcpipModuleInitFunc)TCPIP_DNS_ClientInitialize},      // TCPIP_MODULE_DNS_CLIENT
+    {.moduleId = TCPIP_MODULE_DNS_CLIENT,    .initFunc = (tcpipModuleInitFunc)TCPIP_DNS_ClientInitialize},      // TCPIP_MODULE_DNS_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
-    {TCPIP_MODULE_BERKELEY,      (tcpipModuleInitFunc)BerkeleySocketInit},              // TCPIP_MODULE_BERKELEY
+    {.moduleId = TCPIP_MODULE_BERKELEY,      .initFunc = (tcpipModuleInitFunc)BerkeleySocketInitialize},        // TCPIP_MODULE_BERKELEY
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
-    {TCPIP_MODULE_HTTP_SERVER,   (tcpipModuleInitFunc)TCPIP_HTTP_Initialize},           // TCPIP_MODULE_HTTP_SERVER
+    {.moduleId = TCPIP_MODULE_HTTP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_Initialize},           // TCPIP_MODULE_HTTP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {TCPIP_MODULE_HTTP_NET_SERVER, (tcpipModuleInitFunc)TCPIP_HTTP_NET_Initialize},      // TCPIP_MODULE_HTTP_NET_SERVER
+    {.moduleId = TCPIP_MODULE_HTTP_NET_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_NET_Initialize},      // TCPIP_MODULE_HTTP_NET_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
-    {TCPIP_MODULE_TELNET_SERVER, (tcpipModuleInitFunc)TCPIP_TELNET_Initialize},         // TCPIP_MODULE_TELNET_SERVER
+    {.moduleId = TCPIP_MODULE_TELNET_SERVER, .initFunc = (tcpipModuleInitFunc)TCPIP_TELNET_Initialize},         // TCPIP_MODULE_TELNET_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_SNMP_SERVER)
-    {TCPIP_MODULE_SNMP_SERVER,   (tcpipModuleInitFunc)TCPIP_SNMP_Initialize},           // TCPIP_MODULE_SNMP_SERVER
+    {.moduleId = TCPIP_MODULE_SNMP_SERVER,   .initFunc = (tcpipModuleInitFunc)TCPIP_SNMP_Initialize},           // TCPIP_MODULE_SNMP_SERVER
 #endif
 #if defined(TCPIP_STACK_USE_DNS_SERVER)
-    {TCPIP_MODULE_DNS_SERVER,    (tcpipModuleInitFunc)TCPIP_DNSS_Initialize},           // TCPIP_MODULE_DNS_SERVER
+    {.moduleId = TCPIP_MODULE_DNS_SERVER,    .initFunc = (tcpipModuleInitFunc)TCPIP_DNSS_Initialize},           // TCPIP_MODULE_DNS_SERVER
 #endif
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
-    {TCPIP_MODULE_COMMAND,       (tcpipModuleInitFunc)TCPIP_Commands_Initialize},       // TCPIP_MODULE_COMMAND
+    {.moduleId = TCPIP_MODULE_COMMAND,       .initFunc = (tcpipModuleInitFunc)TCPIP_Commands_Initialize},       // TCPIP_MODULE_COMMAND
 #endif
 #if defined(TCPIP_STACK_USE_IPERF)
-    {TCPIP_MODULE_IPERF,         (tcpipModuleInitFunc)TCPIP_IPERF_Initialize},          // TCPIP_MODULE_IPERF
+    {.moduleId = TCPIP_MODULE_IPERF,         .initFunc = (tcpipModuleInitFunc)TCPIP_IPERF_Initialize},          // TCPIP_MODULE_IPERF
 #endif
 #if defined(TCPIP_STACK_USE_IPV6) && defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {TCPIP_MODULE_DHCPV6_CLIENT, (tcpipModuleInitFunc)TCPIP_DHCPV6_Initialize},          // TCPIP_MODULE_DHCPV6_CLIENT
+    {.moduleId = TCPIP_MODULE_DHCPV6_CLIENT, .initFunc = (tcpipModuleInitFunc)TCPIP_DHCPV6_Initialize},          // TCPIP_MODULE_DHCPV6_CLIENT
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC)
-    {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
+    {.moduleId = TCPIP_MODULE_SMTPC,        .initFunc = (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+    {.moduleId = TCPIP_MODULE_TFTP_SERVER,  .initFunc = (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize},          // TCPIP_MODULE_TFTP_SERVER
 #endif   
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)
-    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+    {.moduleId = TCPIP_MODULE_FTP_CLIENT,   .initFunc = (tcpipModuleInitFunc)TCPIP_FTPC_Initialize},          // TCPIP_MODULE_FTP_CLIENT
 #endif 
     // Add other stack modules here
      
@@ -825,6 +861,12 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
             TCPIP_Helper_SingleListInitialize(TCPIP_MODULES_QUEUE_TBL + ix);
         }
 
+        // initialize the run time table
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+        memset(&TCPIP_MODULES_RUN_TBL, 0, sizeof(TCPIP_MODULES_RUN_TBL));
+        TCPIP_MODULES_RUN_TBL[TCPIP_MODULE_MANAGER].val = TCPIP_MODULE_RUN_FLAG_IS_RUNNING; 
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
         // start per interface initializing
         tcpip_stack_ctrl_data.stackAction = TCPIP_STACK_ACTION_INIT;
 
@@ -1011,10 +1053,20 @@ static bool TCPIP_STACK_BringNetUp(TCPIP_STACK_MODULE_CTRL* stackCtrlData, const
         }
 
         // start stack initialization per module
+        // #if (_TCPIP_STACK_RUN_TIME_INIT == 0)
+        //          then all modules from the build time TCPIP_STACK_MODULE_ENTRY_TBL will be initialized
+        // #if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+        //          then only modules that have initialization data will be started and initialized
+        //          at stack start-up (pModConfig != 0) we determine the modules that need to run
+        //          at interface up (pModConfig == 0) we call only the running modules
+
         int modIx;
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+        TCPIP_MODULE_RUN_DCPT* pRDcpt;
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
         const TCPIP_STACK_MODULE_ENTRY*  pEntry = TCPIP_STACK_MODULE_ENTRY_TBL + 0;
 
-        for(modIx = 0; modIx < sizeof(TCPIP_STACK_MODULE_ENTRY_TBL)/sizeof(*TCPIP_STACK_MODULE_ENTRY_TBL); modIx++)
+        for(modIx = 0; modIx < sizeof(TCPIP_STACK_MODULE_ENTRY_TBL) / sizeof(*TCPIP_STACK_MODULE_ENTRY_TBL); modIx++)
         {
             configData = 0;
             if (pModConfig != 0)
@@ -1022,18 +1074,31 @@ static bool TCPIP_STACK_BringNetUp(TCPIP_STACK_MODULE_CTRL* stackCtrlData, const
                 pConfig = _TCPIP_STACK_FindModuleData(pEntry->moduleId, pModConfig, nModules);
                 if(pConfig != 0)
                 {
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+                    pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
+                    pRDcpt->isRunning = 1;  // module should be started
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
                     configData = pConfig->configData;
                 }
             }
 
-            if(!pEntry->initFunc(stackCtrlData, configData))
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+            pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
+            if(pRDcpt->isRunning)
             {
-                SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Module no: %d Initialization failed\r\n", pEntry->moduleId);
-                netUpFail = 1;
-                break;
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+                if(!pEntry->initFunc(stackCtrlData, configData))
+                {
+                    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Module no: %d Initialization failed\r\n", pEntry->moduleId);
+                    netUpFail = 1;
+                    break;
+                }
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
             }
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
             pEntry++;
         }
+
 
         if(!netUpFail && pNetIf->hIfMac != 0)
         {
@@ -1913,16 +1978,18 @@ static uint32_t _TCPIPProcessMacPackets(bool signal)
                 pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_TYPE_MASK;
                 pRxPkt->pktFlags |= pFrameEntry->pktTypeFlags;
 
-                _TCPIPStackModuleRxInsert(pFrameEntry->moduleId, pRxPkt, 0);
-                if(signal)
-                {   // signal to the module that RX is pending; if not already done so
-                    if((procFrameMask & (1 << frameIx)) == 0)
-                    {   // set the frame mask so we don't signal again
-                        procFrameMask |= 1 << frameIx;
-                        _TCPIPModuleSignalSetNotify(pFrameEntry->moduleId, TCPIP_MODULE_SIGNAL_RX_PENDING);
+                if(_TCPIPStackModuleRxInsert(pFrameEntry->moduleId, pRxPkt, 0))
+                {
+                    if(signal)
+                    {   // signal to the module that RX is pending; if not already done so
+                        if((procFrameMask & (1 << frameIx)) == 0)
+                        {   // set the frame mask so we don't signal again
+                            procFrameMask |= 1 << frameIx;
+                            _TCPIPModuleSignalSetNotify(pFrameEntry->moduleId, TCPIP_MODULE_SIGNAL_RX_PENDING);
+                        }
                     }
+                    frameFound = true;
                 }
-                frameFound = true;
                 break;
             }
         }
@@ -4262,8 +4329,16 @@ static void _TCPIPStackSignalTmo(void)
 
 // insert a packet into a module RX queue
 // signal should be false when modId == TCPIP_MODULE_MANAGER !
-void _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal)
+bool _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal)
 {
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + modId;
+    if(pRDcpt->isRunning == 0)
+    {
+        return false;
+    }
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
     SINGLE_LIST* pQueue = TCPIP_MODULES_QUEUE_TBL + modId;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     TCPIP_Helper_SingleListTailAdd(pQueue, (SGL_LIST_NODE*)pRxPkt);
@@ -4273,6 +4348,7 @@ void _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPk
     {
         _TCPIPModuleSignalSetNotify(modId, TCPIP_MODULE_SIGNAL_RX_PENDING);
     }
+    return true;
 }
 
 //
@@ -4590,6 +4666,20 @@ bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROC
 }
 
 #endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+
+// run time module initialization
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId)
+{
+    if(moduleId < sizeof(TCPIP_MODULES_RUN_TBL) / sizeof(*TCPIP_MODULES_RUN_TBL))
+    {
+        TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + moduleId;
+        return pRDcpt->isRunning != 0;
+    }
+    return false;
+}
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
 
 // debugging features
 //

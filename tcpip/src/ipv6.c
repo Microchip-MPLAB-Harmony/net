@@ -3246,8 +3246,17 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 pRxPkt->totTransportLen = dataCount;
                 pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
-                _TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true);
-                return;
+                if(_TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true))
+                {
+                    return;
+                }
+                else
+                {   // failed to insert
+                    cIPFrameType = IPV6_PROT_NONE;
+                    action = 0;
+                    pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR; 
+                    break;
+                }
 #else
                 cIPFrameType = IPV6_PROT_NONE;
                 action = 0;
@@ -3267,8 +3276,17 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 pRxPkt->totTransportLen = dataCount;
                 pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
-                _TCPIPStackModuleRxInsert(TCPIP_MODULE_UDP, pRxPkt, true);
-                return;
+                if(_TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true))
+                {
+                    return;
+                }
+                else
+                {   // failed to insert
+                    cIPFrameType = IPV6_PROT_NONE;
+                    action = 0;
+                    pRxPkt->ipv6PktData = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR; 
+                    break;
+                }
 #else
                 cIPFrameType = IPV6_PROT_NONE;
                 action = 0;

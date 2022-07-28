@@ -122,5 +122,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 </#if>
+<#if TCPIP_STACK_RUN_TIME_INIT == true>
+#define TCPIP_STACK_RUN_TIME_INIT   true
+<#else>
+#define TCPIP_STACK_RUN_TIME_INIT   false
+</#if>
 
 </#if>

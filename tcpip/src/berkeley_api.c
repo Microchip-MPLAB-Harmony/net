@@ -145,7 +145,7 @@ void _cfgBsdSocket(struct BSDSocket * socketInfo)
 
 /*****************************************************************************
   Function:
-	void BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
+	void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_GONFIG* berkeleyData)
 
   Summary:
@@ -167,7 +167,7 @@ void _cfgBsdSocket(struct BSDSocket * socketInfo)
   Remarks:
 	None.
   ***************************************************************************/
-bool BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
+bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_CONFIG* berkeleyData)
 {
     unsigned int s;
@@ -258,7 +258,7 @@ bool BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
 	None.
   ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-void BerkeleySocketDeInit(const TCPIP_STACK_MODULE_CTRL* const stackData)
+void BerkeleySocketDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
 {
     uint8_t s;
     struct BSDSocket *socket;
@@ -330,7 +330,7 @@ Description:
     BSD operations.
 
 Precondition:
-    BerkeleySocketInit function should be called.
+    BerkeleySocketInitialize function should be called.
 
 Parameters:
     af - address family - AF_INET.

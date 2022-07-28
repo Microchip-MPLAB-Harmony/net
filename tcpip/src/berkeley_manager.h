@@ -119,7 +119,7 @@ struct BSDSocket
 
 /*****************************************************************************
   Function:
-    void BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
+    void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_CONFIG* berkeleyData)
 
   Summary:
@@ -141,13 +141,13 @@ struct BSDSocket
   Remarks:
     None.
  */
-bool BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
+bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_CONFIG* berkeleyData);
 
 
 /*****************************************************************************
   Function:
-    void BerkeleySocketDeInit(void)
+    void BerkeleySocketDeinitialize(void)
 
   Summary:
     De-Initializes the Berkeley socket structure array.
@@ -168,7 +168,7 @@ bool BerkeleySocketInit(const TCPIP_STACK_MODULE_CTRL* const stackData,
   Remarks:
     None.
  */
-void BerkeleySocketDeInit(const TCPIP_STACK_MODULE_CTRL* const stackData);
+void BerkeleySocketDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
 
 
 

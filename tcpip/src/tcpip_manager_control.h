@@ -66,14 +66,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // it should clear the pending status
 typedef void    (*tcpipModuleSignalHandler)(void);
 
-typedef enum
-{
-    TCPIP_MODULE_FLAG_NONE              = 0x0000,       // no flag set
-                                                        //
-
-
-}TCPIP_MODULE_FLAGS;
-
 // types of packets/frames processed by this stack
 typedef struct
 {
@@ -96,8 +88,8 @@ typedef enum
     TCPIP_STACK_ADDRESS_SERVICE_ZCLL,           // ZCLL
     TCPIP_STACK_ADDRESS_SERVICE_DHCPS,          // DHCP server
     //
-    TCPIP_STACK_ADDRESS_SERVICE_MASK    = 0x7,     // mask of address services
-                                                // hast to match the position in the TCPIP_STACK_NET_IF_FLAGS!!!
+    TCPIP_STACK_ADDRESS_SERVICE_MASK    = 0x7,  // mask of address services
+                                                // has to to match the position in the TCPIP_STACK_NET_IF_FLAGS!!!
 }TCPIP_STACK_ADDRESS_SERVICE_TYPE;
 
 typedef enum
@@ -106,7 +98,7 @@ typedef enum
     TCPIP_STACK_DNS_SERVICE_CLIENT,             // DNS Client
     TCPIP_STACK_DNS_SERVICE_SERVER,             // DNS Server
     TCPIP_STACK_DNS_SERVICE_MASK    = 0x18,     // mask of DNS services
-                                                // hast to match the position in the TCPIP_STACK_NET_IF_FLAGS!!!
+                                                // has to to match the position in the TCPIP_STACK_NET_IF_FLAGS!!!
 }TCPIP_STACK_DNS_SERVICE_TYPE;
 
 typedef enum
@@ -600,7 +592,10 @@ TCPIP_MAC_PACKET*   _TCPIPStackModuleRxExtract(TCPIP_STACK_MODULE modId);
 
 // inserts a packet into a module queue
 // and signals if necessary
-void _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal);
+// returns:
+//      true is packet inserted
+//      false if the insertion failed (the module is not running, for example)
+bool _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal);
 
 
 // purges the packets from a module RX queue
@@ -687,6 +682,11 @@ static __inline__ uint8_t __attribute__((always_inline))  _TCPIPStack_BridgeGetI
 {
     return pNetIf->bridgePort;
 }
+
+// run time module initialization
+// Note: function exists only if (_TCPIP_STACK_RUN_TIME_INIT != 0)!
+bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId);
+
 
 
 // debugging, tracing, etc.

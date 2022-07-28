@@ -666,7 +666,7 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
 
 /*****************************************************************************
   Function:
-	void TCPIP_IPV4_DeInitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+	void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
 	Deinitializes the IP module.
@@ -687,7 +687,7 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
 	None
   ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-void TCPIP_IPV4_DeInitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 {
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT) // stack shut down
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN) // interface down
@@ -1936,7 +1936,7 @@ static void TCPIP_IPV4_ForwardAckFunc(TCPIP_MAC_PACKET* pkt,  const void* param)
     isReinsert = TCPIP_IPV4_Forward_DequeuePacket(pFwdNode, true);
 
     if(isReinsert)
-    {   // re-insert for process...
+    {   // re-insert for process...re-insert to ourselves should succeed, since we're running!
         _TCPIPStackModuleRxInsert(TCPIP_MODULE_IPV4, pkt, true);
     }
     else
@@ -2643,7 +2643,10 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_DispatchPacket(TCPIP_MAC_PACKET* pRxPkt)
 
     if(!isFragment)
     {   // forward this packet and signal
-        _TCPIPStackModuleRxInsert(destId, pRxPkt, true);
+        if(!_TCPIPStackModuleRxInsert(destId, pRxPkt, true))
+        {
+            return TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
+        }
     }
 
     return TCPIP_MAC_PKT_ACK_NONE;
