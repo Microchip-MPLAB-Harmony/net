@@ -3325,26 +3325,41 @@ TCPIP_STACK_ADDRESS_SERVICE_TYPE TCPIP_STACK_AddressServiceSelect(TCPIP_NET_IF* 
     // Set up the address service on this interface
     // Priority (high to low): DHCPc, ZCLL, DHCPS, static IP address
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    if((configFlags & TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON) != 0 )
-    { 
-        pNetIf->Flags.bIsDHCPEnabled = 1;
-        return TCPIP_STACK_ADDRESS_SERVICE_DHCPC;
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    if(_TCPIPStack_ModuleIsRunning(TCPIP_MODULE_DHCP_CLIENT))
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    {
+        if((configFlags & TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON) != 0 )
+        { 
+            pNetIf->Flags.bIsDHCPEnabled = 1;
+            return TCPIP_STACK_ADDRESS_SERVICE_DHCPC;
+        }
     }
 #endif  // defined(TCPIP_STACK_USE_DHCP_CLIENT)
 
 #if defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
-    if((configFlags & TCPIP_NETWORK_CONFIG_ZCLL_ON) != 0 )
-    { 
-        pNetIf->Flags.bIsZcllEnabled = 1;
-        return TCPIP_STACK_ADDRESS_SERVICE_ZCLL;
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    if(_TCPIPStack_ModuleIsRunning(TCPIP_MODULE_ZCLL))
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    {
+        if((configFlags & TCPIP_NETWORK_CONFIG_ZCLL_ON) != 0 )
+        { 
+            pNetIf->Flags.bIsZcllEnabled = 1;
+            return TCPIP_STACK_ADDRESS_SERVICE_ZCLL;
+        }
     }
 #endif  // defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
 
 #if defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
-    if((configFlags & TCPIP_NETWORK_CONFIG_DHCP_SERVER_ON) != 0 )
-    { 
-        pNetIf->Flags.bIsDHCPSrvEnabled = 1;
-        return TCPIP_STACK_ADDRESS_SERVICE_DHCPS;
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    if(_TCPIPStack_ModuleIsRunning(TCPIP_MODULE_DHCP_SERVER))
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+    {
+        if((configFlags & TCPIP_NETWORK_CONFIG_DHCP_SERVER_ON) != 0 )
+        { 
+            pNetIf->Flags.bIsDHCPSrvEnabled = 1;
+            return TCPIP_STACK_ADDRESS_SERVICE_DHCPS;
+        }
     }
 #endif  // defined(TCPIP_STACK_USE_DHCP_SERVER) || defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 
