@@ -105,19 +105,17 @@ typedef enum
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0010)
 // advanced: report changes in the current IA state
 #define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0020)
-// advanced: report changes in the current IA state or substate
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_SUBSTATE     (0x0040)
 // display the Server status code (if != OK)
-#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0080)
+#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0040)
 // display a message when the IA timeouts
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0100)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0080)
 
 // advanced: additional state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0100)
 // advanced: use static debugging lists
-#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0400)
+#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0200)
 // advanced: print buffers traces
-#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x0800)
+#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x0400)
 
 
 // enable DHCP debugging levels
@@ -1265,8 +1263,8 @@ typedef struct _tag_TCPIP_DHCPV6_IA_DCPT
     TCPIP_DHCPV6_MSG_WRITE_DCPT             wrDcpt;         // current write descriptor
     TCPIP_DHCPV6_MSG_BUFFER*                msgBuffer;      // buffer for the DHCP message to be assembled
     // status
-    volatile TCPIP_DHCPV6_IA_STATE          iaState;
-    volatile TCPIP_DHCPV6_IA_SUBSTATE       iaSubState;
+    volatile uint16_t                       iaState;        // TCPIP_DHCPV6_IA_STATE: current IA state
+    volatile uint16_t                       iaSubState;     // TCPIP_DHCPV6_IA_SUBSTATE: current IA sub-state
 
     //int16_t                                 nAddrs;     // how many addresses associated with this IA_NA
                                                         // Kame: "The primary goal of IAs is to define multiple identities
@@ -1291,7 +1289,7 @@ typedef struct _tag_TCPIP_DHCPV6_IA_DCPT
     uint32_t                                lastPrefLTime;  // last known preferred life time for the IPv6 address; seconds
     uint32_t                                lastValidLTime; // last known valid life time for the IPv6 address; seconds
  
-    TCPIP_DHCPV6_SERVER_STATUS_CODE         lastStatusCode; // last status code for the IA
+    uint16_t                                lastStatusCode; // TCPIP_DHCPV6_SERVER_STATUS_CODE: last status code for the IA
     uint8_t                                 lastStatusMsg[TCPIP_DHCPV6_STATUS_CODE_MESSAGE_LEN];// latest status message associated with the IA
                                                             // status Code message    
 }TCPIP_DHCPV6_IA_DCPT;
@@ -1374,7 +1372,7 @@ typedef struct _tag_TCPIP_DHCPV6_CLIENT_DCPT
     int                                 domainSearchListSize;   // size of domainSearchList
     uint8_t                             domainSearchList[TCPIP_DHCPV6_DOMAIN_SEARCH_LIST_SIZE]; // Domain Search list storage 
 
-    TCPIP_DHCPV6_SERVER_STATUS_CODE     lastStatusCode; // last status code for the client
+    uint16_t                            lastStatusCode; // TCPIP_DHCPV6_SERVER_STATUS_CODE last status code for the client
     uint8_t                             lastStatusMsg[TCPIP_DHCPV6_STATUS_CODE_MESSAGE_LEN];// latest status message associated with the client
     
 #if defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)

@@ -133,6 +133,7 @@ typedef enum
 
 // *****************************************************************************
 // IA run states
+// 16 bits only
 typedef enum
 {
     TCPIP_DHCPV6_IA_STATE_SOLICIT,         // solicitation 
@@ -156,6 +157,7 @@ typedef enum
 // *****************************************************************************
 // IA run substates
 // most IA run states that must send a message go through these substates
+// 16 bits only
 typedef enum
 {
     TCPIP_DHCPV6_IA_SUBSTATE_START,        // message start/preparation
@@ -184,6 +186,7 @@ typedef enum
 
 // *****************************************************************************
 // DHCPV6  server status code
+// 16 bits only
 typedef enum
 {
     TCPIP_DHCPV6_SERVER_STAT_SUCCESS           = 0,     // success
