@@ -3276,7 +3276,7 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 pRxPkt->totTransportLen = dataCount;
                 pRxPkt->ipv6PktData = extensionHeaderLen;
                 // forward this packet and signal
-                if(_TCPIPStackModuleRxInsert(TCPIP_MODULE_TCP, pRxPkt, true))
+                if(_TCPIPStackModuleRxInsert(TCPIP_MODULE_UDP, pRxPkt, true))
                 {
                     return;
                 }
