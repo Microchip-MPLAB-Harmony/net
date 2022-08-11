@@ -2226,6 +2226,7 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
     }
 
 #if (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+    TCPIP_DHCPV6_IA_EVENT iaEvent;
     const TCPIP_DHCPV6_IA_EVENT* pDhcpIaEv = 0;
     TCPIP_DHCPV6_LIST_NODE* dNode;
 
@@ -2234,13 +2235,10 @@ static void _DHCPV6Client_Notify(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHCPV6
 
     if(pIa != 0)
     {
-        TCPIP_DHCPV6_IA_EVENT iaEvent;
-
         iaEvent.iaType = pIa->iaBody.type;
         iaEvent.iaSubState = pIa->iaSubState;
         iaEvent.iaState = pIa->iaState;
         iaEvent.iaIndex = pIa->parentIx;
-
         pDhcpIaEv = &iaEvent;
     }
 
@@ -2695,8 +2693,8 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
 
         if(pDcpt->waitTick == 0)
-        {   // set up the waiting period
-            pDcpt->waitTick = tickCurr + (((pDcpt->bounds.iDelay * 1000 - TCPIP_DHCPV6_EXP_RAND_FUZZ) * sysFreq) + SYS_RANDOM_PseudoGet() % ((2 * TCPIP_DHCPV6_EXP_RAND_FUZZ) * sysFreq)) / 1000;
+        {   // set up the waiting period: RAND [0, iDelay] 
+            pDcpt->waitTick = tickCurr + ((SYS_RANDOM_PseudoGet() % (pDcpt->bounds.iDelay * 1000 + 1)) * sysFreq) / 1000;
             return TCPIP_DHCPV6_MSG_TX_RES_PENDING;
         }
 
@@ -2760,10 +2758,13 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         tBase = tFuzz = pDcpt->bounds.mrt;
     }
 
+    // retry tmo, ms
+    uint32_t rtmo = tBase * 1000 + ((tFuzz * 1000 - tFuzzMinus) + SYS_RANDOM_PseudoGet() % (tFuzzPlus));
+    pDcpt->waitTick = tickCurr + (rtmo * sysFreq) / 1000;
 
-    pDcpt->waitTick = tickCurr + (tBase * sysFreq) + (((tFuzz * 1000 - tFuzzMinus) * sysFreq) + SYS_RANDOM_PseudoGet() % (tFuzzPlus * sysFreq)) / 1000;
     pDcpt->rt = tBase;
     pDcpt->rc++;
+
 
     // message needs to be transmitted
     return TCPIP_DHCPV6_MSG_TX_RES_OK;
