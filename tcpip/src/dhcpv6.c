@@ -119,7 +119,8 @@ static PROTECTED_SINGLE_LIST        dhcpv6RegisteredUsers = { {0} };
 #endif  // (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 
-static uint32_t                     dhcpv6SecondCount = 0;    // DHCP time keeping, in seconds
+static uint32_t                     dhcpv6SecondCount = 0;      // DHCP time keeping, in seconds
+static uint32_t                     dhcpv6MsecCount = 0;        // DHCP time keeping, in milliseconds
 
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_BASIC) != 0)
 TCPIP_DHCPV6_CLIENT_DCPT*           dhcpv6ClientDcpt = 0;   
@@ -546,6 +547,8 @@ static void         _DHCPV6_LeasesCleanup(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
 static UDP_SOCKET   _DHCPV6OpenSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
+static void         _DHCPv6FlushSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
+
 // client specific functions
 static bool         _DHCPV6Client_Init(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
@@ -729,11 +732,23 @@ static __inline__ uint32_t __attribute__((always_inline)) _DHCPV6SecondCountGet(
     return dhcpv6SecondCount;
 }
 
+static __inline__ uint32_t __attribute__((always_inline)) _DHCPV6MsecCountGet(void)
+{
+    return dhcpv6MsecCount;
+}
+
 static __inline__ void __attribute__((always_inline)) _DHCPV6SecondCountSet(void)
 {
+    uint32_t tmrFreq = SYS_TMR_SystemCountFrequencyGet();
     // use a 64 bit count to avoid roll over
-    dhcpv6SecondCount = SYS_TMR_SystemCountGet() / SYS_TMR_SystemCountFrequencyGet(); 
+    uint64_t tmrCount = SYS_TMR_SystemCountGet();
+
+    dhcpv6SecondCount = tmrCount / tmrFreq; 
+    dhcpv6MsecCount = tmrCount / (tmrFreq / 1000); 
 }
+
+
+
 
 // DHCPv6 lock for shared access
 static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) _DHCPv6_Lock(void)
@@ -869,28 +884,32 @@ static void _DHCPV6DbgValidate_Print(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_
 static void _DHCPV6DbgMsgIn_PrintPassed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_TYPE msgType)
 {
     char dhcpBuff[100];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, passed\r\n", task, (uint32_t)pMsgBuffer, msgType);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, passed, time: %zu\r\n", task, (uint32_t)pMsgBuffer, msgType, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 
 static void _DHCPV6DbgMsgIn_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_TYPE msgType, const char* reason)
 {
     char dhcpBuff[100];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, failed: %s\r\n", task, (uint32_t)pMsgBuffer, msgType, reason);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, failed: %s, time: %zu\r\n", task, (uint32_t)pMsgBuffer, msgType, reason, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 
 static void _DHCPV6DbgIAIn_PrintPassed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t param)
 {
     char dhcpBuff[100];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, IA: %d, state: %d, param: 0x%x\r\n", task, (uint32_t)pMsgBuffer, pIa->parentIx, pIa->iaState, param);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, IA: %d, state: %d, param: 0x%x, time: %zu\r\n", task, (uint32_t)pMsgBuffer, pIa->parentIx, pIa->iaState, param, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 
 static void _DHCPV6DbgIAIn_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_IA_DCPT* pIa, const char* reason)
 {
     char dhcpBuff[100];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, IA: %d, state: %d, failed: %s\r\n", task, (uint32_t)pMsgBuffer, pIa->parentIx, pIa->iaState, reason);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, IA: %d, state: %d, failed: %s, time: %zu\r\n", task, (uint32_t)pMsgBuffer, pIa->parentIx, pIa->iaState, reason, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 
@@ -913,14 +932,16 @@ static void _DHCPV6DbgIAIn_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFFER
 static void _DHCPV6DbgMsgOut_PrintPassed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_TYPE msgType, TCPIP_DHCPV6_IA_DCPT* pIa)
 {
     char dhcpBuff[100];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, IA ix: %d, state: %d, passed\r\n", task, (uint32_t)pMsgBuffer, msgType, pIa->parentIx, pIa->iaState);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, IA ix: %d, state: %d, passed, time: %zu\r\n", task, (uint32_t)pMsgBuffer, msgType, pIa->parentIx, pIa->iaState, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 
 static void _DHCPV6DbgMsgOut_PrintFailed(const char* task, TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_TYPE msgType, TCPIP_DHCPV6_IA_DCPT* pIa, const char* reason)
 {
     char dhcpBuff[128];
-    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, IA ix: %d, state: %d, failed: %s\r\n", task, (uint32_t)pMsgBuffer, msgType, pIa->parentIx, pIa->iaState, reason);
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 task: %s, Msg: 0x%8x, type: %d, IA ix: %d, state: %d, failed: %s, time: %zu\r\n", task, (uint32_t)pMsgBuffer, msgType, pIa->parentIx, pIa->iaState, reason, currTime);
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 }
 #else
@@ -946,7 +967,7 @@ static void     _DHCPV6DbgStatePrint_Client(TCPIP_DHCPV6_CLIENT_DCPT* pClient, b
     if(ignoreCurrent || pClient->state != pClient->prevState)
     {
         char dhcpBuff[100];
-        uint32_t currTime = _DHCPV6SecondCountGet();
+        uint32_t currTime = _DHCPV6MsecCountGet();
         snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 Client - state: %s, time: %zu\r\n", _DHCPV6_CLIENT_STATE_NAME[pClient->state], currTime);
         SYS_CONSOLE_PRINT("%s", dhcpBuff);
 
@@ -961,7 +982,7 @@ static void     _DHCPV6DbgStatePrint_Client(TCPIP_DHCPV6_CLIENT_DCPT* pClient, b
 
 
 // IA state debugging
-#if ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_TMO)) != 0) || (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_TMO | TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO)) != 0) || (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 static const char* _DHCPV6_IA_STATE_NAME[TCPIP_DHCPV6_IA_STATE_NUMBER] = 
 {
     "solicit",      // TCPIP_DHCPV6_IA_STATE_SOLICIT,         
@@ -976,7 +997,7 @@ static const char* _DHCPV6_IA_STATE_NAME[TCPIP_DHCPV6_IA_STATE_NUMBER] =
     "err-trans",    // TCPIP_DHCPV6_IA_STATE_ERROR_TRANSIENT, 
     "err-fatal",    // TCPIP_DHCPV6_IA_STATE_ERROR_FATAL,     
 };
-#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_TMO)) != 0) || (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
+#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & (TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_IA_TMO | TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO)) != 0) || (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_STATE) != 0) || (_TCPIP_DHCPV6_USER_NOTIFICATION != 0)
 
@@ -1001,7 +1022,7 @@ static void     _DHCPV6DbgStatePrint_Ia(TCPIP_DHCPV6_IA_DCPT* pIa, bool iaSubNot
     if(pIa != 0)
     {
         char dhcpBuff[100];
-        uint32_t currTime = _DHCPV6SecondCountGet();
+        uint32_t currTime = _DHCPV6MsecCountGet();
         snprintf(dhcpBuff, sizeof(dhcpBuff), "DHCPV6 IA: %s, ix: %d, state: %s, sub-state: %s, time: %d\r\n",_DHCPV6_IA_TYPE_NAME[pIa->iaBody.type], pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], _DHCPV6_IA_SUBSTATE_NAME[pIa->iaSubState], currTime);
         SYS_CONSOLE_PRINT("%s", dhcpBuff);
     }
@@ -1016,7 +1037,8 @@ static void _DHCPV6DbgMsg_ServerStatus(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_S
 {
     if(statCode != TCPIP_DHCPV6_SERVER_STAT_SUCCESS && pIa != 0)
     {
-        SYS_CONSOLE_PRINT("Server Code: %d, IA ix: %d, IA state: %d\r\n", statCode, pIa->parentIx, pIa->iaState);
+        uint32_t currTime = _DHCPV6MsecCountGet();
+        SYS_CONSOLE_PRINT("Server Code: %d, IA ix: %d, IA state: %d, time: %zu\r\n", statCode, pIa->parentIx, pIa->iaState, currTime);
     }
 }
 
@@ -1025,15 +1047,41 @@ static void _DHCPV6DbgMsg_ServerStatus(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_S
 #endif // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE) != 0)
 
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_TMO) != 0)
-static void _DHCPV6DbgMsg_IaTimeout(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_MSG_TX_RESULT txResult)
+static void _DHCPV6DbgMsg_IaTxExceed(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_MSG_TX_RESULT txResult, uint32_t iTime)
 {
-    uint32_t currTime = _DHCPV6SecondCountGet();
-    SYS_CONSOLE_PRINT("IA tmo result: %d, IA ix: %d, IA state: %s, time: %d\r\n", txResult, pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], currTime);
+    const char* resMsg = txResult == TCPIP_DHCPV6_MSG_TX_RES_TIME_EXCEEDED ? "timeXcs" : txResult == TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED ? "retryXcs" : "unkXcs";
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    SYS_CONSOLE_PRINT("IA TX exceed - result: %s, IA ix: %d, IA state: %s, iTime: %zu, time: %zu\r\n", resMsg, pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], iTime, currTime);
 }
 
 #else
-#define _DHCPV6DbgMsg_IaTimeout(pIa, txResult)
+#define _DHCPV6DbgMsg_IaTxExceed(pIa, txResult, iTime)
 #endif // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_TMO) != 0)
+
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO) != 0)
+static void _DHCPV6DbgMsg_IaRTmo(TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t rtmoMs,  uint32_t tBase, uint32_t rc)
+{
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    SYS_CONSOLE_PRINT("IA tmo - IA ix: %d, IA state: %s, rtmoMs: %zu, tBase: %zu, rc: %zu, time: %zu\r\n", pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], rtmoMs, tBase, rc, currTime);
+}
+
+static void _DHCPV6DbgMsg_IaIDelay(TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t idelayMs)
+{
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    SYS_CONSOLE_PRINT("IA set IDELAY - IA ix: %d, IA state: %s, idelayMs: %zu, time: %zu\r\n", pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], idelayMs, currTime);
+}
+
+static void _DHCPV6DbgMsg_IaIDelayTmo(TCPIP_DHCPV6_IA_DCPT* pIa)
+{
+    uint32_t currTime = _DHCPV6MsecCountGet();
+    SYS_CONSOLE_PRINT("IA IDELAY tmo - IA ix: %d, IA state: %s, time: %zu\r\n", pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], currTime);
+}
+
+#else
+#define _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, rc)
+#define _DHCPV6DbgMsg_IaIDelay(pIa, idelayMs)
+#define _DHCPV6DbgMsg_IaIDelayTmo(pIa)
+#endif // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO) != 0)
 
 // additional status prints
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE) != 0)
@@ -1470,6 +1518,7 @@ static void   _DHCPV6Client_StateProcInit(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 static void   _DHCPV6Client_StateProcIdle(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 {
     // inactive
+    _DHCPv6FlushSocket(pClient);
 }
 
 // TCPIP_DHCPV6_CLIENT_STATE_REINIT
@@ -2137,7 +2186,7 @@ static void _DHCPV6_Release(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
     {
         for(pIaDcpt = (TCPIP_DHCPV6_IA_DCPT*)pClient->iaStateList[listIx].head; pIaDcpt != 0; pIaDcpt = pIaDcpt->next)
         {
-            if(pIaDcpt->iaState >= TCPIP_DHCPV6_IA_STATE_BOUND)
+            if(TCPIP_DHCPV6_IA_STATE_BOUND <= pIaDcpt->iaState && pIaDcpt->iaState < TCPIP_DHCPV6_IA_STATE_ERROR_TRANSIENT)
             {
                 TCPIP_DHCPV6_IA_SUBSTATE_RESULT subRes = _DHCPV6Ia_SubStateReleaseStart(pIaDcpt); // pIaDcpt->msgBuffer = from (pParent->buffFreeList)
                 _DHCPV6Assert(subRes == TCPIP_DHCPV6_IA_SUBSTATE_RES_OK, __func__, __LINE__);
@@ -2415,6 +2464,20 @@ static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
     return dhcpSkt;
 }
 
+static void _DHCPv6FlushSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
+{
+    UDP_SOCKET dhcpSkt = pClient->dhcpSkt;
+
+    // simply discard any messages
+    if(dhcpSkt != INVALID_SOCKET)
+    {
+        while(TCPIP_UDP_GetIsReady(dhcpSkt) != 0)
+        {
+            TCPIP_UDP_Discard(dhcpSkt);
+        }
+    }
+}
+
 
 
 // status reporting
@@ -2670,31 +2733,21 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     
     TCPIP_DHCPV6_MSG_TRANSMIT_DCPT* pDcpt = &pIa->msgTxDcpt;
 
-
-    while(pDcpt->rc != 0 && (int32_t)(tickCurr - pDcpt->waitTick) < 0)
-    {   // not yet time for retransmission
-        // however check that MRD is not exceeded
-        if(pDcpt->rc != 0 && pDcpt->bounds.mrd != 0)
-        {
-            if(secCurr - pDcpt->iTime >= pDcpt->bounds.mrd) 
-            {   // MRD exceeded
-                break;
-            }
-        }
-
-        return TCPIP_DHCPV6_MSG_TX_RES_PENDING;
-    }
-
+    // check if first attempt
     while(pDcpt->rc == 0)
     {   // message just starts to be transmitted
         if(pDcpt->bounds.iDelay == 0)
         {   // no initial delay, go straight ahead
+            pDcpt->rc++;
+            pDcpt->waitTick = 0;
             break;
         }
 
         if(pDcpt->waitTick == 0)
         {   // set up the waiting period: RAND [0, iDelay] 
-            pDcpt->waitTick = tickCurr + ((SYS_RANDOM_PseudoGet() % (pDcpt->bounds.iDelay * 1000 + 1)) * sysFreq) / 1000;
+            uint32_t idelayMs = SYS_RANDOM_PseudoGet() % (pDcpt->bounds.iDelay * 1000 + 1);
+            pDcpt->waitTick = tickCurr + (idelayMs * sysFreq) / 1000;
+            _DHCPV6DbgMsg_IaIDelay(pIa, idelayMs);
             return TCPIP_DHCPV6_MSG_TX_RES_PENDING;
         }
 
@@ -2705,26 +2758,39 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
 
         // iDelay passed; go ahead and transmit
-        break;
+        pDcpt->rc++;
+        pDcpt->waitTick = 0;
+        _DHCPV6DbgMsg_IaIDelayTmo(pIa);
+        return TCPIP_DHCPV6_MSG_TX_RES_OK;
     }
 
+    _DHCPV6Assert(pDcpt->rc > 0, __func__, __LINE__);
 
+    if(pDcpt->waitTick != 0)
+    {   // we're waiting for timeout
+        while((int32_t)(tickCurr - pDcpt->waitTick) < 0)
+        {   // not yet time for retransmission
+            return TCPIP_DHCPV6_MSG_TX_RES_PENDING;
+        }
+    }
 
     // message needs retransmission
-    if(pDcpt->bounds.mrc != 0)
+    // set the timeouts
+    
+    if(pDcpt->rc > 1 && pDcpt->bounds.mrc != 0)
     {
         if(pDcpt->rc >= pDcpt->bounds.mrc)
         {   // message exceeded the number of retries
-            _DHCPV6DbgMsg_IaTimeout(pIa, TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED);
+            _DHCPV6DbgMsg_IaTxExceed(pIa, TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED, pDcpt->iTime);
             return TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED;
         }
     }
 
-    if(pDcpt->rc != 0 && pDcpt->bounds.mrd != 0)
+    if(pDcpt->rc > 1 && pDcpt->bounds.mrd != 0)
     {   // avoid doing the test for the 1st transmission
         if(secCurr - pDcpt->iTime >= pDcpt->bounds.mrd)
         {   // message exceeded the allocated time
-            _DHCPV6DbgMsg_IaTimeout(pIa, TCPIP_DHCPV6_MSG_TX_RES_TIME_EXCEEDED);
+            _DHCPV6DbgMsg_IaTxExceed(pIa, TCPIP_DHCPV6_MSG_TX_RES_TIME_EXCEEDED, pDcpt->iTime);
             return TCPIP_DHCPV6_MSG_TX_RES_TIME_EXCEEDED;
         }
     }
@@ -2734,7 +2800,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     tFuzzPlus = 2 * TCPIP_DHCPV6_EXP_RAND_FUZZ;
 
     // calculate the next retransmission time/timeouts
-    if(pDcpt->rc == 0)
+    if(pDcpt->rc == 1)
     {   // first message
         tBase = tFuzz = pDcpt->bounds.irt;
         pDcpt->iTime = secCurr;
@@ -2759,15 +2825,28 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     }
 
     // retry tmo, ms
-    uint32_t rtmo = tBase * 1000 + ((tFuzz * 1000 - tFuzzMinus) + SYS_RANDOM_PseudoGet() % (tFuzzPlus));
-    pDcpt->waitTick = tickCurr + (rtmo * sysFreq) / 1000;
+    uint32_t oldWaitTick = pDcpt->waitTick;
+    uint32_t rtmoMs = tBase * 1000 + ((tFuzz - tFuzzMinus) + SYS_RANDOM_PseudoGet() % (tFuzzPlus));
+    if(pDcpt->bounds.mrd != 0)
+    {
+        uint32_t currMs = _DHCPV6MsecCountGet(); 
+        uint32_t tExpMs = (pDcpt->iTime + pDcpt->bounds.mrd) * 1000; 
+        if(currMs + rtmoMs >= tExpMs) 
+        {   // don't exceed the MRD
+            rtmoMs = tExpMs - currMs;
+        }
+    } 
+
+    pDcpt->waitTick = tickCurr + (rtmoMs * sysFreq) / 1000;
+
+    _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, pDcpt->rc);
 
     pDcpt->rt = tBase;
     pDcpt->rc++;
 
 
-    // message needs to be transmitted
-    return TCPIP_DHCPV6_MSG_TX_RES_OK;
+    // message needs to be transmitted if we'actually timed out
+    return oldWaitTick != 0 ? TCPIP_DHCPV6_MSG_TX_RES_OK : TCPIP_DHCPV6_MSG_TX_RES_PENDING;
 
 }
 
@@ -3325,6 +3404,8 @@ static bool _DHCPV6Client_Reinit(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
         return false;
     }
 
+    // clean up any old pending messages
+    _DHCPv6FlushSocket(pClient);
 
     // clean-up in case we don't get here from TCPIP_DHCPV6_Disable
     _DHCPV6_LeasesCleanup(pClient);
@@ -4324,20 +4405,16 @@ static void _DHCPV6Client_TransmitTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 // sets pClient->state for error
 static void _DHCPV6Client_ReceiveTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 {
-    uint16_t pktSize;
-    UDP_SOCKET dhcpSkt = pClient->dhcpSkt;
-
-
     if(pClient->flags.rxDisabled)
     {   // simply discard messages
-        while((pktSize = TCPIP_UDP_GetIsReady(dhcpSkt)) != 0)
-        {
-            TCPIP_UDP_Discard(dhcpSkt);
-        }
+        _DHCPv6FlushSocket(pClient);
         return;
     }
 
     // else process packets
+    uint16_t pktSize;
+    UDP_SOCKET dhcpSkt = pClient->dhcpSkt;
+
     TCPIP_DHCPV6_MESSAGE_HEADER* pHdr;
     bool      rxAbort = false;
     TCPIP_DHCPV6_MSG_BUFFER* pRxBuffer = 0;
