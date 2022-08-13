@@ -2774,7 +2774,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
     }
 
-    // message needs retransmission
+    // message needs (re)transmission
     // set the timeouts
     
     if(pDcpt->rc > 1 && pDcpt->bounds.mrc != 0)
@@ -2825,13 +2825,12 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     }
 
     // retry tmo, ms
-    uint32_t oldWaitTick = pDcpt->waitTick;
     uint32_t rtmoMs = tBase * 1000 + ((tFuzz - tFuzzMinus) + SYS_RANDOM_PseudoGet() % (tFuzzPlus));
     if(pDcpt->bounds.mrd != 0)
     {
         uint32_t currMs = _DHCPV6MsecCountGet(); 
         uint32_t tExpMs = (pDcpt->iTime + pDcpt->bounds.mrd) * 1000; 
-        if(currMs + rtmoMs >= tExpMs) 
+        if((int32_t)((currMs + rtmoMs) - tExpMs) > 0) 
         {   // don't exceed the MRD
             rtmoMs = tExpMs - currMs;
         }
@@ -2845,8 +2844,8 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     pDcpt->rc++;
 
 
-    // message needs to be transmitted if we'actually timed out
-    return oldWaitTick != 0 ? TCPIP_DHCPV6_MSG_TX_RES_OK : TCPIP_DHCPV6_MSG_TX_RES_PENDING;
+    // message needs to be transmitted
+    return TCPIP_DHCPV6_MSG_TX_RES_OK;
 
 }
 
