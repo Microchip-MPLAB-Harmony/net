@@ -2332,7 +2332,7 @@ TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Disable(TCPIP_NET_HANDLE hNet)
         {
             pClient = dhcpv6ClientDcpt + _TCPIPStackNetIxGet(pNetIf);
 
-            if(pClient->flags.busy)
+            if(pClient->state == TCPIP_DHCPV6_CLIENT_STATE_INIT || pClient->flags.busy)
             {
                 res = TCPIP_DHCPV6_CLIENT_RES_BUSY;
             }
