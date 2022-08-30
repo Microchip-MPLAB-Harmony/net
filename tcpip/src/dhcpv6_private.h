@@ -112,12 +112,15 @@ typedef enum
 // display the IA retransmission tmo
 #define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0100)
 
+// display the link up/down changes
+#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0200)
+
 // advanced: additional state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0400)
 // advanced: use static debugging lists
-#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0400)
+#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0800)
 // advanced: print buffers traces
-#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x0800)
+#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x1000)
 
 
 // enable DHCP debugging levels
