@@ -2728,7 +2728,7 @@ static bool _DHCPV6Duid_Generate(TCPIP_DHCPV6_DUID_TYPE duidType, TCPIP_DHCPV6_D
 static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_IA_DCPT* pIa)
 {
     uint32_t    tBase;
-    uint32_t    tFuzz, tFuzzMinus, tFuzzPlus;
+    uint32_t    tFuzz, tFuzzMin, tFuzzMax;
     uint32_t    tickCurr;  // current sys tick
     uint32_t    secCurr;  // current second
     uint32_t    sysFreq = SYS_TMR_TickCounterFrequencyGet();
@@ -2800,9 +2800,9 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
     }
 
-    // adjust tFuzzMinus, tFuzzPlus to get a delay (-1, 1) * TCPIP_DHCPV6_EXP_RAND_FUZZ
-    tFuzzMinus = TCPIP_DHCPV6_EXP_RAND_FUZZ;
-    tFuzzPlus = 2 * TCPIP_DHCPV6_EXP_RAND_FUZZ;
+    // adjust tFuzzMin, tFuzzMax to get a delay (-1, 1) * TCPIP_DHCPV6_EXP_RAND_FUZZ
+    tFuzzMin = TCPIP_DHCPV6_EXP_RAND_FUZZ;
+    tFuzzMax = 2 * TCPIP_DHCPV6_EXP_RAND_FUZZ;
 
     // calculate the next retransmission time/timeouts
     if(pDcpt->rc == 1)
@@ -2813,8 +2813,8 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         pDcpt->elapsedTime = 0;
         if(pIa->iaState == TCPIP_DHCPV6_IA_STATE_SOLICIT)
         {   // solicit has to be greater than IRT! 
-            tFuzzMinus = 0;
-            tFuzzPlus = TCPIP_DHCPV6_EXP_RAND_FUZZ;
+            tFuzzMin = 0;
+            tFuzzMax = TCPIP_DHCPV6_EXP_RAND_FUZZ;
         }
     }
     else
@@ -2830,7 +2830,10 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     }
 
     // retry tmo, ms
-    uint32_t rtmoMs = tBase * 1000 + ((tFuzz * 1000 - tFuzzMinus) + SYS_RANDOM_PseudoGet() % (tFuzzPlus));
+    uint32_t randVal = SYS_RANDOM_PseudoGet() % tFuzzMax;
+    int randOffset = (int)randVal - tFuzzMin;
+    uint32_t rtmoMs = tBase * 1000 + tFuzz * randOffset;
+
     if(pDcpt->bounds.mrd != 0)
     {
         uint32_t currMs = _DHCPV6MsecCountGet(); 
