@@ -391,7 +391,7 @@ typedef struct
     size_t                      totBuffers;
     // current number of free message buffers
     size_t                      freeBuffers;
-    // current DHCPV6 time; seconds
+    // current DHCPV6 time; milli-seconds
     uint32_t                    dhcpTime;
     // last status code for the client
     TCPIP_DHCPV6_SERVER_STATUS_CODE lastStatusCode;

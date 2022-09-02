@@ -1059,10 +1059,10 @@ static void _DHCPV6DbgMsg_IaTxExceed(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_MSG
 #endif // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_TMO) != 0)
 
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO) != 0)
-static void _DHCPV6DbgMsg_IaRTmo(TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t rtmoMs,  uint32_t tBase, uint32_t rc)
+static void _DHCPV6DbgMsg_IaRTmo(TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t rtmoMs,  uint32_t tBase, TCPIP_DHCPV6_MSG_TRANSMIT_DCPT* pDcpt)
 {
     uint32_t currTime = _DHCPV6MsecCountGet();
-    SYS_CONSOLE_PRINT("IA RTMO - IA ix: %d, IA state: %s, rtmoMs: %zu, tBase: %zu, rc: %zu, time: %zu\r\n", pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], rtmoMs, tBase, rc, currTime);
+    SYS_CONSOLE_PRINT("IA RTMO - IA ix: %d, IA state: %s, rtmoMs: %zu, tBase: %zu, rc: %zu, elapsed: %zu, time: %zu\r\n", pIa->parentIx, _DHCPV6_IA_STATE_NAME[pIa->iaState], rtmoMs, tBase, pDcpt->rc, pDcpt->elapsedTime, currTime);
 }
 
 static void _DHCPV6DbgMsg_IaIDelay(TCPIP_DHCPV6_IA_DCPT* pIa, uint32_t idelayMs)
@@ -1078,7 +1078,7 @@ static void _DHCPV6DbgMsg_IaIDelayTmo(TCPIP_DHCPV6_IA_DCPT* pIa)
 }
 
 #else
-#define _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, rc)
+#define _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, pDcpt)
 #define _DHCPV6DbgMsg_IaIDelay(pIa, idelayMs)
 #define _DHCPV6DbgMsg_IaIDelayTmo(pIa)
 #endif // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO) != 0)
@@ -2539,7 +2539,7 @@ TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_ClientInfoGet(TCPIP_NET_HANDLE hNet, TCPIP_
         pClientInfo->totBuffers = pClient->nMsgBuffers;
         pClientInfo->freeBuffers = TCPIP_Helper_SingleListCount(&pClient->buffFreeList);
 
-        pClientInfo->dhcpTime = _DHCPV6SecondCountGet();
+        pClientInfo->dhcpTime = _DHCPV6MsecCountGet();
         pClientInfo->lastStatusCode = pClient->lastStatusCode;
         if(sizeof(pClient->lastStatusMsg) != 0 && pClientInfo->statusBuff != 0)
         {
@@ -2730,11 +2730,9 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     uint32_t    tBase;
     uint32_t    tFuzz, tFuzzMin, tFuzzMax;
     uint32_t    tickCurr;  // current sys tick
-    uint32_t    secCurr;  // current second
     uint32_t    sysFreq = SYS_TMR_TickCounterFrequencyGet();
 
     tickCurr = SYS_TMR_TickCountGet();
-    secCurr = _DHCPV6SecondCountGet();
     
     TCPIP_DHCPV6_MSG_TRANSMIT_DCPT* pDcpt = &pIa->msgTxDcpt;
 
@@ -2781,6 +2779,8 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
 
     // message needs (re)transmission
     // set the timeouts
+    uint32_t secCurr = _DHCPV6SecondCountGet(); // current second
+    uint32_t msecCurr = _DHCPV6MsecCountGet();  // current ms
     
     if(pDcpt->rc > 1 && pDcpt->bounds.mrc != 0)
     {
@@ -2809,7 +2809,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     {   // first message
         tBase = tFuzz = pDcpt->bounds.irt;
         pDcpt->iTime = secCurr;
-        pDcpt->iTickTime = tickCurr;
+        pDcpt->iTimeMs = msecCurr;
         pDcpt->elapsedTime = 0;
         if(pIa->iaState == TCPIP_DHCPV6_IA_STATE_SOLICIT)
         {   // solicit has to be greater than IRT! 
@@ -2821,7 +2821,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     {   // subsequent retry
         tBase = 2 * pDcpt->rt;
         tFuzz = pDcpt->rt;
-        pDcpt->elapsedTime = ((tickCurr - pDcpt->iTickTime) * 100) / sysFreq;   // convert to 10^-2 sec
+        pDcpt->elapsedTime = (msecCurr - pDcpt->iTimeMs) / 10;   // convert to 10^-2 sec 
     }
 
     if(pDcpt->bounds.mrt != 0 && tBase > pDcpt->bounds.mrt)
@@ -2846,7 +2846,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
 
     pDcpt->waitTick = tickCurr + (rtmoMs * sysFreq) / 1000;
 
-    _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, pDcpt->rc);
+    _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tBase, pDcpt);
 
     pDcpt->rt = tBase;
     pDcpt->rc++;

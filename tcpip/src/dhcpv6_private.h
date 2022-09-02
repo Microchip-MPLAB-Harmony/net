@@ -1146,7 +1146,7 @@ typedef struct
     // current values
     uint32_t    rc;     // current retransmission count: 0 ->mrc; initialize to 0!
     uint32_t    iTime;  // time of the initial message transmission; seconds
-    uint32_t    iTickTime;// time of the initial message transmission; ticks
+    uint32_t    iTimeMs;// time of the initial message transmission - ms
     uint32_t    rt;     // current retramsmission timeout; seconds
     uint32_t    waitTick;   // tick when timeout occurs; corresponds to rt + rand();   
 
