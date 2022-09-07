@@ -134,12 +134,21 @@ typedef enum
 
 // DHCPV6 Parameter Default value/description
 //
+// make it 1 for a certification that does not have the RFC 7083 update
+#define TCPIP_DHCPV6_CERTIFICATION      0
+
 // IRT, MRT, MRC, MRD values
 // constants for all client messages
 // order: iDelay, irt, mrt, mrc, mrd
 #define TCPIP_DHCPV6_SOLICIT_IDELAY         1       // sec Max delay of first Solicit
 #define TCPIP_DHCPV6_SOLICIT_IRT            1       // sec Initial Solicit timeout
+
+#if (TCPIP_DHCPV6_CERTIFICATION != 0)
+#define TCPIP_DHCPV6_SOLICIT_MRT         120        // secs Max Solicit timeout value - RFC 3315
+#else
 #define TCPIP_DHCPV6_SOLICIT_MRT         3600       // secs Max Solicit timeout value - RFC 7083 update
+#endif  // (TCPIP_DHCPV6_CERTIFICATION != 0)
+
 #define TCPIP_DHCPV6_SOLICIT_MRC            0
 #define TCPIP_DHCPV6_SOLICIT_MRD            0
 #define TCPIP_DHCPV6_SOLICIT_MRT_MIN       60       // RFC 7083 _ min/max values for SOL_MAX_RT
@@ -1147,7 +1156,7 @@ typedef struct
     uint32_t    rc;     // current retransmission count: 0 ->mrc; initialize to 0!
     uint32_t    iTime;  // time of the initial message transmission; seconds
     uint32_t    iTimeMs;// time of the initial message transmission - ms
-    uint32_t    rt;     // current retramsmission timeout; seconds
+    int32_t     rt;     // current retramsmission timeout; milliseconds
     uint32_t    waitTick;   // tick when timeout occurs; corresponds to rt + rand();   
 
     uint32_t    elapsedTime;    // time from the beginning of this DHCP transaction
@@ -1156,9 +1165,15 @@ typedef struct
 }TCPIP_DHCPV6_MSG_TRANSMIT_DCPT;
 
 
-// random variation for retries timing, miliseconds
-// Standard sets it to 0.1 second 
-#define TCPIP_DHCPV6_EXP_RAND_FUZZ     100
+// random variation range for retries timing
+// variation range will be [-TCPIP_DHCPV6_RAND_FUZZ_RANGE, +TCPIP_DHCPV6_RAND_FUZZ_RANGE]
+// currently 8 bits int value
+#define TCPIP_DHCPV6_RAND_FUZZ_RANGE        100
+
+// Divide factor to obtain the standard required value [-0.1, +0.1] from the TCPIP_DHCPV6_RAND_FUZZ_RANGE
+// currently 16 bits int value
+#define TCPIP_DHCPV6_FUZZ_RANGE_DIV         1000
+
 
 // IA address descriptor: address + internal flags
 //
