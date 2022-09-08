@@ -2728,8 +2728,8 @@ static bool _DHCPV6Duid_Generate(TCPIP_DHCPV6_DUID_TYPE duidType, TCPIP_DHCPV6_D
 static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_IA_DCPT* pIa)
 {
     int32_t     tBaseMs, tPrevMs;   // milliseconds
-    int8_t      tFuzzMin;           // lower bound random fuzz factor: -TCPIP_DHCPV6_RAND_FUZZ_RANGE or 0
-    uint8_t     tFuzzMax;           // upper bound random fuzz factor: 2 * or TCPIP_DHCPV6_RAND_FUZZ_RANGE
+    uint16_t    randMin, randMax;   // range of random values
+    int16_t     randOffset;         // applied offset
     uint32_t    tickCurr;           // current sys tick
     uint32_t    sysFreq = SYS_TMR_TickCounterFrequencyGet();
 
@@ -2801,9 +2801,10 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
     }
 
-    // tFuzzMin, tFuzzMax to get a delay (-0.1, 0.1) * tPrev
-    tFuzzMin = TCPIP_DHCPV6_RAND_FUZZ_RANGE;
-    tFuzzMax = 2 * TCPIP_DHCPV6_RAND_FUZZ_RANGE;
+    // random ranges
+    randMin = TCPIP_DHCPV6_RAND_MIN_RANGE;
+    randMax = TCPIP_DHCPV6_RAND_MAX_RANGE;
+    randOffset = TCPIP_DHCPV6_RAND_OFSSET; 
 
     // calculate the next retransmission time/timeouts
     if(pDcpt->rc == 1)
@@ -2813,9 +2814,10 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         pDcpt->iTimeMs = msecCurr;
         pDcpt->elapsedTime = 0;
         if(pIa->iaState == TCPIP_DHCPV6_IA_STATE_SOLICIT)
-        {   // solicit has to be greater than IRT! 
-            tFuzzMin = 0;
-            tFuzzMax = TCPIP_DHCPV6_RAND_FUZZ_RANGE;
+        {   // solicit RT has to be greater than IRT! 
+            randMin = TCPIP_DHCPV6_SOL_RAND_MIN_RANGE;
+            randMax = TCPIP_DHCPV6_SOL_RAND_MAX_RANGE;
+            randOffset = TCPIP_DHCPV6_SOL_RAND_OFSSET; 
         }
     }
     else
@@ -2830,10 +2832,11 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         tBaseMs = tPrevMs = (int32_t)pDcpt->bounds.mrt * 1000;
     }
 
-    // retry tmo, ms
-    uint8_t randVal = (uint8_t)(SYS_RANDOM_PseudoGet() % tFuzzMax);
-    int8_t randMul = (int8_t)randVal - tFuzzMin;
-    int32_t rtmoMs = tBaseMs + (tPrevMs * randMul) / (int16_t)TCPIP_DHCPV6_FUZZ_RANGE_DIV;
+    // get a random value [randMin, randMax]
+    uint16_t randVal = randMin + (uint16_t)(SYS_RANDOM_PseudoGet() % (randMax - randMin + 1));
+    // get the (negative) multiplication factor by adjusting with randOffset
+    int16_t randMul = (int16_t)randVal - randOffset;
+    int32_t rtmoMs = tBaseMs + (tPrevMs * randMul) / (int16_t)TCPIP_DHCPV6_RAND_DIV;
 
     if(pDcpt->bounds.mrd != 0)
     {

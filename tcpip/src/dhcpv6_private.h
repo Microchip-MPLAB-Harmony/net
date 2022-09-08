@@ -1165,14 +1165,31 @@ typedef struct
 }TCPIP_DHCPV6_MSG_TRANSMIT_DCPT;
 
 
-// random variation range for retries timing
-// variation range will be [-TCPIP_DHCPV6_RAND_FUZZ_RANGE, +TCPIP_DHCPV6_RAND_FUZZ_RANGE]
-// currently 8 bits int value
-#define TCPIP_DHCPV6_RAND_FUZZ_RANGE        100
+// random variation range for retries timing RT
+// random value generated in the positive range [TCPIP_DHCPV6_RAND_MIN_RANGE, TCPIP_DHCPV6_RAND_MAX_RANGE]
+// random value will be adjusted with - TCPIP_DHCPV6_RAND_OFSSET if negative values needed
+// so the obtained range is [0, 200] - 100 == [-100, +100]
+// currently 16 bits int values
+#define TCPIP_DHCPV6_RAND_MIN_RANGE     0
+#define TCPIP_DHCPV6_RAND_MAX_RANGE     200
+#define TCPIP_DHCPV6_RAND_OFSSET        100
 
-// Divide factor to obtain the standard required value [-0.1, +0.1] from the TCPIP_DHCPV6_RAND_FUZZ_RANGE
+// special values for the solicitation 1st message which has to have the random factor strictly positive
+// (the first RT needs to be strictly greater than IRT)
+// the obtained range is [10, 100] - 0 == [10, 100]
+#define TCPIP_DHCPV6_SOL_RAND_MIN_RANGE     10
+#if (TCPIP_DHCPV6_CERTIFICATION != 0)
+// for certification choose the range as [10, 90] to comnpensate for the transmission delays
+#define TCPIP_DHCPV6_SOL_RAND_MAX_RANGE     90
+#else
+#define TCPIP_DHCPV6_SOL_RAND_MAX_RANGE     100
+#endif  // (TCPIP_DHCPV6_CERTIFICATION != 0)
+#define TCPIP_DHCPV6_SOL_RAND_OFSSET        0
+
+
+// the obtained value will be finally divided by TCPIP_DHCPV6_RAND_DIV to normalize between the required range - usually [-0.1, +0.1]
 // currently 16 bits int value
-#define TCPIP_DHCPV6_FUZZ_RANGE_DIV         1000
+#define TCPIP_DHCPV6_RAND_DIV           1000
 
 
 // IA address descriptor: address + internal flags
