@@ -142,6 +142,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigLAN8740.setDescription("Enable LAN8740")
     tcpipAutoConfigLAN8740.setDependencies(tcpipAutoConfigLAN8740Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8740"])       
     
+    # Enable LAN8742a
+    tcpipAutoConfigLAN8742a = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8742A", tcpipAutoConfigPhyMenu)
+    tcpipAutoConfigLAN8742a.setLabel("LAN8742A")
+    tcpipAutoConfigLAN8742a.setVisible(True)
+    tcpipAutoConfigLAN8742a.setDescription("Enable LAN8742A")
+    tcpipAutoConfigLAN8742a.setDependencies(tcpipAutoConfigLAN8742aEnable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8742A"])       
+    
     # Enable LAN8700
     tcpipAutoConfigLAN8700 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8700", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigLAN8700.setLabel("LAN8700")
@@ -370,6 +377,15 @@ def tcpipAutoConfigLAN8740Enable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyLan8740"])
+        
+def tcpipAutoConfigLAN8742aEnable(symbol, event):
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvExtPhyLan8742a"],"DRIVER LAYER")  
+        if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+            Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
+    else:
+        res = Database.deactivateComponents(["drvExtPhyLan8742a"])
         
 def tcpipAutoConfigLAN8700Enable(symbol, event):
     enableTcpipAutoConfigDrv(True)

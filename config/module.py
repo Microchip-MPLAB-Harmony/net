@@ -331,6 +331,12 @@ def loadModule():
     drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8740Component.setDisplayType("PHY Layer")
     
+    #Driver for SMSC LAN8742A PHY
+    drvExtPhyLan8742aComponent = Module.CreateComponent("drvExtPhyLan8742a", "LAN8742A", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8742a.py")
+    drvExtPhyLan8742aComponent.addCapability("libdrvExtPhyLan8742a","PHY",False)   
+    drvExtPhyLan8742aComponent.addDependency("LAN8742a_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyLan8742aComponent.setDisplayType("PHY Layer")
+    
     #Driver for SMSC LAN9303PHY
     drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
     drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",False)   
