@@ -65,21 +65,21 @@ def instantiateComponent(drvExtPhyLan8742aComponent):
     drvExtPhyLan8742aConfigRmii.setDescription("RMII Data Interface")
     drvExtPhyLan8742aConfigRmii.setReadOnly(True)
     
-        # Configuration Fuses Is ALT
-        drvExtPhyLan8742aConfigAlt = drvExtPhyLan8742aComponent.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyLan8742aConnFlag)
-        drvExtPhyLan8742aConfigAlt.setHelp("mcc_h3_phy_configurations")
-        drvExtPhyLan8742aConfigAlt.setLabel("Configuration Fuses Is ALT")
-        drvExtPhyLan8742aConfigAlt.setVisible(True)
-        drvExtPhyLan8742aConfigAlt.setDescription("Configuration Fuses Is ALT")
-        drvExtPhyLan8742aConfigAlt.setDefaultValue(False)
-        
-        # Use The Fuses Configuration
-        drvExtPhyLan8742aConfigAuto = drvExtPhyLan8742aComponent.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_AUTO", drvExtPhyLan8742aConnFlag)
-        drvExtPhyLan8742aConfigAuto.setHelp("mcc_h3_phy_configurations")
-        drvExtPhyLan8742aConfigAuto.setLabel("Use The Fuses Configuration")
-        drvExtPhyLan8742aConfigAuto.setVisible(True)
-        drvExtPhyLan8742aConfigAuto.setDescription("Use The Fuses Configuration")
-        drvExtPhyLan8742aConfigAuto.setDefaultValue(True)
+    # Configuration Fuses Is ALT
+    drvExtPhyLan8742aConfigAlt = drvExtPhyLan8742aComponent.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_ALTERNATE", drvExtPhyLan8742aConnFlag)
+    drvExtPhyLan8742aConfigAlt.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8742aConfigAlt.setLabel("Configuration Fuses Is ALT")
+    drvExtPhyLan8742aConfigAlt.setVisible(True)
+    drvExtPhyLan8742aConfigAlt.setDescription("Configuration Fuses Is ALT")
+    drvExtPhyLan8742aConfigAlt.setDefaultValue(False)
+    
+    # Use The Fuses Configuration
+    drvExtPhyLan8742aConfigAuto = drvExtPhyLan8742aComponent.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_AUTO", drvExtPhyLan8742aConnFlag)
+    drvExtPhyLan8742aConfigAuto.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8742aConfigAuto.setLabel("Use The Fuses Configuration")
+    drvExtPhyLan8742aConfigAuto.setVisible(True)
+    drvExtPhyLan8742aConfigAuto.setDescription("Use The Fuses Configuration")
+    drvExtPhyLan8742aConfigAuto.setDefaultValue(True)
     
     # Advanced Settings
     drvExtPhyLan8742aAdvSettings = drvExtPhyLan8742aComponent.createMenuSymbol("TCPIP_INTMAC_PHY_ADV_SETTING", None)
