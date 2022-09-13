@@ -672,7 +672,7 @@ static bool         _DHCPV6MsgGet_IaOptBuffer(TCPIP_DHCPV6_MSG_BUFFER* pDstBuffe
 
 static bool         _DHCPV6MsgGet_IaAddress(TCPIP_DHCPV6_OPTION_IA_ADDR_BODY* pAddBody, TCPIP_DHCPV6_MSG_BUFFER* pSrcBuffer, TCPIP_DHCPV6_IA_DCPT* pIa);
 
-static int16_t      _DHCPV6MsgGet_ServerPref(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer);
+static uint16_t     _DHCPV6MsgGet_ServerPref(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer);
 
 static bool         _DHCPV6MsgCheck_TransactionId(TCPIP_DHCPV6_IA_DCPT* pIa, TCPIP_DHCPV6_MSG_BUFFER* pSrcBuffer);
 
@@ -854,7 +854,8 @@ static void _DHCPV6DbgDUID_Print(TCPIP_DHCPV6_DUID_DCPT* pDuid)
 
 static void _DHCPV6DbgValidate_Print(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6_MSG_VALID_MASK msgMask, TCPIP_DHCPV6_MSG_TYPE msgType, TCPIP_DHCPV6_DUID_DCPT* pSrvDuid)
 {
-    char dhcpBuff[100];
+    char dhcpBuff[160];
+    uint32_t currTime = _DHCPV6MsecCountGet();
 
     if(pSrvDuid != 0)
     {
@@ -872,11 +873,11 @@ static void _DHCPV6DbgValidate_Print(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_
 
     if(msgMask == TCPIP_DHCPV6_MSG_VALIDATION_MASK)
     {   // all's well
-        snprintf(dhcpBuff, sizeof(dhcpBuff), " DHCPV6_V Msg valid - mask: 0x%2x\r\n", msgMask);
+        snprintf(dhcpBuff, sizeof(dhcpBuff), " DHCPV6_V Msg valid - mask: 0x%2x, time: %zu\r\n", msgMask, currTime);
     }
     else
     {   // failed
-        snprintf(dhcpBuff, sizeof(dhcpBuff), " DHCPV6_V Msg invalid - mask: 0x%2x\r\n", msgMask);
+        snprintf(dhcpBuff, sizeof(dhcpBuff), " DHCPV6_V Msg invalid - mask: 0x%2x, time: %zu\r\n", msgMask, currTime);
     }
     SYS_CONSOLE_PRINT("%s", dhcpBuff);
 } 
@@ -2742,7 +2743,6 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     {   // message just starts to be transmitted
         if(pDcpt->bounds.iDelay == 0)
         {   // no initial delay, go straight ahead
-            pDcpt->rc++;
             pDcpt->waitTick = 0;
             break;
         }
@@ -2762,7 +2762,6 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
 
         // iDelay passed; go ahead: calculate the next tmo and transmit
-        pDcpt->rc++;
         pDcpt->waitTick = 0;
         _DHCPV6DbgMsg_IaIDelayTmo(pIa);
         break;
@@ -2778,6 +2777,9 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         }
     }
 
+    // retransmission count: [1, MRC]
+    pDcpt->rc++;
+
     // message needs (re)transmission
     // set the timeouts
     uint32_t secCurr = _DHCPV6SecondCountGet(); // current second
@@ -2785,7 +2787,7 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     
     if(pDcpt->rc > 1 && pDcpt->bounds.mrc != 0)
     {
-        if(pDcpt->rc >= pDcpt->bounds.mrc)
+        if(pDcpt->rc > pDcpt->bounds.mrc)
         {   // message exceeded the number of retries
             _DHCPV6DbgMsg_IaTxExceed(pIa, TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED, pDcpt->iTime);
             return TCPIP_DHCPV6_MSG_TX_RES_RETRY_EXCEEDED;
@@ -2853,8 +2855,6 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     _DHCPV6DbgMsg_IaRTmo(pIa, rtmoMs, tPrevMs, pDcpt);
 
     pDcpt->rt = rtmoMs;
-    pDcpt->rc++;
-
 
     // message needs to be transmitted
     return TCPIP_DHCPV6_MSG_TX_RES_OK;
@@ -3601,13 +3601,11 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
         // process this advertisement
         TCPIP_Helper_SingleListTailAdd(&thisIaList, (SGL_LIST_NODE*)pMsgBuffer);
 
-        if((serverPref = _DHCPV6MsgGet_ServerPref(pMsgBuffer)) >= 0)
-        {
-            if(serverPref >= TCPIP_DHCPV6_FORCED_SERVER_PREFERENCE)
-            {   // found server; copy all the info from this message to the IA
-                pSelMsg = pMsgBuffer;
-                break;
-            }
+        serverPref = (int16_t)_DHCPV6MsgGet_ServerPref(pMsgBuffer);
+        if(serverPref >= TCPIP_DHCPV6_FORCED_SERVER_PREFERENCE)
+        {   // found server; copy all the info from this message to the IA
+            pSelMsg = pMsgBuffer;
+            break;
         }
         else if(isRapidCommit)
         {
@@ -3628,11 +3626,10 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
 
             while((pMsgBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(&thisIaList)) != 0)
             {
-                serverPref = _DHCPV6MsgGet_ServerPref(pMsgBuffer);
-                currPref = serverPref >= 0 ? serverPref : 0;
+                currPref = (int16_t)_DHCPV6MsgGet_ServerPref(pMsgBuffer);
                 if(currPref >= maxPref)
                 {
-                    maxPref = currPref;
+                    serverPref = maxPref = currPref;
                     pMaxMsg = pMsgBuffer;
                 }
                 TCPIP_Helper_SingleListTailAdd(&thisIaPriList, (SGL_LIST_NODE*)pMsgBuffer);
@@ -4906,9 +4903,9 @@ static TCPIP_DHCPV6_SERVER_STATUS_CODE _DHCPV6MsgGet_IaOptStatusCode(uint8_t* st
 }
 
 
-// returns -1 if not found/error
 // >= 0 if success
-static int16_t _DHCPV6MsgGet_ServerPref(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer)
+// returns 0 if preference not found (RFC 3315 pg 34/101)
+static uint16_t _DHCPV6MsgGet_ServerPref(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer)
 {
     TCPIP_DHCPV6_OPTION_PREFERENCE* pOptPref;
 
@@ -4918,11 +4915,11 @@ static int16_t _DHCPV6MsgGet_ServerPref(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer)
         uint16_t optLen = TCPIP_Helper_ntohs(pOptPref->optLen);
         if(optLen == sizeof(pOptPref->prefValue))
         {
-            return (int16_t)pOptPref->prefValue;
+            return (uint16_t)pOptPref->prefValue;
         }
     }
 
-    return -1;
+    return 0;
 }
 
 // search for a rapid commit option in the message
