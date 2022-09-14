@@ -923,7 +923,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_MAC_PIC32C_1,     &tcpipGMAC1InitData},           // TCPIP_MODULE_MAC_PIC32C_1
 </#if>
 <#if checkInterface("GMAC")>
-    {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
+    {TCPIP_MODULE_MAC_PIC32C,     &tcpipGMACInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
 <#if checkInterface("EMAC0")>
     {TCPIP_MODULE_MAC_SAM9X60_0,    &tcpipEMAC0InitData},           // TCPIP_MODULE_MAC_SAM9X60_0

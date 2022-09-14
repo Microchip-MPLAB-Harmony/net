@@ -30,7 +30,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .nRxInitBuffers         = TCPIP_EMAC_RX_INIT_BUFFERS,
     .rxLowThreshold         = TCPIP_EMAC_RX_LOW_THRESHOLD,
     .rxLowFill              = TCPIP_EMAC_RX_LOW_FILL,
-    .linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+    .linkInitDelay          = DRV_${DRV_INTMAC_PHY_TYPE}_PHY_LINK_INIT_DELAY, 
     .ethFlags               = TCPIP_EMAC_ETH_OPEN_FLAGS,
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
 <#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">

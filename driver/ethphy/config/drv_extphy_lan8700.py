@@ -155,12 +155,12 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhyLan8700IndexNum.setReadOnly(True)
     
     # Driver PHY Peripheral ID
-    drvExtPhyLan8700PeripheralId= drvExtPhyLan8700Component.createIntegerSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyLan8700AdvSettings)
+    drvExtPhyLan8700PeripheralId= drvExtPhyLan8700Component.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyLan8700AdvSettings)
     drvExtPhyLan8700PeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyLan8700PeripheralId.setLabel("PHY Peripheral ID") 
     drvExtPhyLan8700PeripheralId.setVisible(True)
     drvExtPhyLan8700PeripheralId.setDescription("Driver PHY Peripheral ID")
-    drvExtPhyLan8700PeripheralId.setDefaultValue(1)
+    drvExtPhyLan8700PeripheralId.setDefaultValue("")
     drvExtPhyLan8700PeripheralId.setReadOnly(True)
 
     # External MAC Name

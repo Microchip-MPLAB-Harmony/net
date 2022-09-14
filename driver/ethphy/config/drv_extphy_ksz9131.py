@@ -143,7 +143,7 @@ def instantiateComponent(drvExtPhyKsz9131Component):
     drvExtPhyKsz9131ResetClearTimeout.setDefaultValue(500)
     
     # Driver PHY Peripheral ID
-    drvExtPhyKsz9131PeripheralId= drvExtPhyKsz9131Component.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz9131AdvSettings) #todo# convert it to string for other PHYs too
+    drvExtPhyKsz9131PeripheralId= drvExtPhyKsz9131Component.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyKsz9131AdvSettings)
     drvExtPhyKsz9131PeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyKsz9131PeripheralId.setLabel("PHY Peripheral ID") 
     drvExtPhyKsz9131PeripheralId.setVisible(True)

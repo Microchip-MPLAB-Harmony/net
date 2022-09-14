@@ -152,7 +152,6 @@ TCPIP_MODULE_GMAC_QUEUE_CONFIG  ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_con
     <#lt></#list>
 };
 
-
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
 { 
     <#lt>       .gmac_queue_config = ${GMAC_PERIPHERAL_INSTANCE?lower_case}_queue_config,
@@ -160,7 +159,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
     <#lt>       .txPrioNumToQueIndx = txPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},
     <#lt>       .rxPrioNumToQueIndx = rxPrioNumToQueIndx${GMAC_PERIPHERAL_INSTANCE?lower_case?cap_first},
     <#lt>       .ethFlags               = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_ETH_OPEN_FLAGS,    
-    <#lt>       .linkInitDelay          = DRV_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]}_PHY_LINK_INIT_DELAY, // #todo# : do for all internal MACS
+    <#lt>       .linkInitDelay          = DRV_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]}_PHY_LINK_INIT_DELAY,
     <#lt>       .ethModuleId            = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_MODULE_ID,
     <#lt><#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303, 
@@ -169,7 +168,10 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
     <#lt><#else>
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     <#lt></#if>
-    <#lt>       .pPhyInit               = &tcpipPhyInitData_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]}, // #todo# : do for all internal MACS
+    <#lt>       .pPhyInit               = &tcpipPhyInitData_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]},
+	<#lt><#if ((TCPIP_INTMAC_DEVICE) == "SAMA7G")> 
+		<#lt>       .macRefClkSrc           = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]},
+	<#lt></#if>
     <#lt>       .checksumOffloadRx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_RX_CHKSM_OFFLOAD,
     <#lt>       .checksumOffloadTx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_TX_CHKSM_OFFLOAD,
     <#lt>       .macTxPrioNum           = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_TX_PRIO_COUNT,

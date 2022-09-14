@@ -77,22 +77,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 // *****************************************************************************
-/* Ethernet Driver Module Index Count
-
-  Summary:
-    Number of valid Ethernet driver indices.
-
-  Description:
-    This constant identifies number of valid Ethernet driver indices.
-
-  Remarks:
-    This constant should be used in place of hard-coded numeric literals.
-
-    This value is derived from part-specific header files defined as part of the
-    peripheral libraries.
-*/
-
-#define DRV_GMAC_INDEX_COUNT  GMAC_NUMBER_OF_MODULES
 
 /**
  * Configuration Structure for Queues in GMAC.
@@ -130,6 +114,12 @@ typedef struct
     INT_SOURCE   queueIntSrc;
 } TCPIP_MODULE_GMAC_QUEUE_CONFIG;
 
+/* GMAC Reference Clock Source options */
+typedef enum  
+{
+	GMAC_REF_INTERNAL_GCLK = 0,
+	GMAC_REF_EXTERNAL_GCLK = 1,
+} GMAC_REFCLK_SRC;
 
 /**
  * Configuration structure for GMAC Rx Queue Filter Type1
@@ -213,6 +203,7 @@ typedef struct DRV_GMAC_RXQUE_FILTER_INIT
 typedef struct
 {
 	TCPIP_MAC_ADDR                  macAddress;
+    
 	/* Configuration for each GMAC queues*/
 	TCPIP_MODULE_GMAC_QUEUE_CONFIG  * gmac_queue_config;    
 
@@ -234,25 +225,31 @@ typedef struct
 
     /* Non-volatile pointer to the PHY initialization data */
     const struct DRV_ETHPHY_INIT*   pPhyInit;  
+    
+    /* reference clock source */
+    GMAC_REFCLK_SRC macRefClkSrc;
+    
 	/* Rx Checksum offload Enable */
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadRx;
+    
     /* Tx Checksum offload Enable */
     TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
         
     /* number of Tx priorities supported by MAC*/
     uint8_t macTxPrioNum;
+    
     /* array to translate Transmit priority to  queue index */
     uint8_t * txPrioNumToQueIndx;
     
     /* number of Rx priorities supported by MAC*/
     uint8_t macRxPrioNum;
+    
     /* array to translate receive priority to  queue index */
     uint8_t * rxPrioNumToQueIndx;
     
     TCPIP_MAC_RX_FILTER_TYPE macRxFilt;
     /* Configuration for GMAC RX Filters*/
-    const struct DRV_GMAC_RXQUE_FILTER_INIT*   pRxQueFiltInit; 
-    
+    const struct DRV_GMAC_RXQUE_FILTER_INIT*   pRxQueFiltInit;     
    
 }TCPIP_MODULE_MAC_PIC32C_CONFIG;
 

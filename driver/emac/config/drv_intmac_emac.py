@@ -136,6 +136,7 @@ def onAttachmentConnected( source, target ):
         Database.setSymbolValue( macComponentId, "DRV_MAC_PHY_TYPE", target['component'].getDisplayName() )
         extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
         setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", atdfMacInstanceName)
+        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", atdfMacInstanceName + "_BASE_ADDRESS") 
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
@@ -151,6 +152,7 @@ def onAttachmentDisconnected( source, target ):
         Database.clearSymbolValue( macComponentId, 'DRV_MAC_PHY_TYPE' )
         extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
         setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "")
+        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", "")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)

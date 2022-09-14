@@ -36,7 +36,7 @@ const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpip${MAC_PERIPHERAL_INSTANCE}InitData =
     .nRxBuffAllocCnt                   = DRV_${MAC_PERIPHERAL_INSTANCE}_RX_BUFF_ALLOC_COUNT_QUE0,
     .ethModuleId                       = DRV_${MAC_PERIPHERAL_INSTANCE}_BASE_ADDRESS,
     .ethFlags                          = DRV_${MAC_PERIPHERAL_INSTANCE}_ETH_OPEN_FLAGS,
-    .linkInitDelay                     = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+    .linkInitDelay                     = DRV_${DRV_MAC_PHY_TYPE}_PHY_LINK_INIT_DELAY,
 <#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
 <#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">

@@ -21,6 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 interfaceNum = []
+ethmacComponentName = ""
 def instantiateComponent(drvPic32mEthmacComponent):
     global tcpipEthmacInterruptVector
     global tcpipEthmacInterruptHandlerLock
@@ -28,10 +29,12 @@ def instantiateComponent(drvPic32mEthmacComponent):
     global tcpipEthmacInterruptVectorUpdate
     global tcpipEthmacInterruptEnable
     global tcpipEthmacEthRmii
+    global ethmacComponentName
     
     print("PIC32M Internal Ethernet MAC Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
     
+    ethmacComponentName = drvPic32mEthmacComponent.getDisplayName()
     #Clock enable
     Database.setSymbolValue("core", "ETH" + "_CLOCK_ENABLE", True, 1)
     
@@ -724,10 +727,12 @@ def getIRQnumber(string):
     
 def onAttachmentConnected(source, target):
     global tcpipEthmacEthRmii
+    global ethmacComponentName
     if (source["id"] == "ETHMAC_PHY_Dependency"): 
         Database.setSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE", target["component"].getDisplayName(),2)
         extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
-        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "ETHMAC")
+        setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", ethmacComponentName)
+        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", ethmacComponentName + "_BASE_ADDRESS") 
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
@@ -739,6 +744,7 @@ def onAttachmentDisconnected(source, target):
         Database.clearSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE")
         extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
         setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", "")
+        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", "")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)

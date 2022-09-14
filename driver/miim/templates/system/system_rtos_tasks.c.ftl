@@ -26,10 +26,12 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim);
-             <#if DRV_MIIM_RTOS_USE_DELAY >
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt>       </#list>
+    <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
     <#lt>        vTaskDelay(${DRV_MIIM_RTOS_DELAY} / portTICK_PERIOD_MS);
-             </#if>
+    <#lt>       </#if>
     <#lt>    }
     <#lt>}
 <#elseif (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX">
@@ -40,7 +42,9 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim);
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt>       </#list>
              <#if DRV_MIIM_RTOS_USE_DELAY >
     <#lt>        tx_thread_sleep((ULONG)(${DRV_MIIM_RTOS_DELAY} / (TX_TICK_PERIOD_MS)));
              </#if>

@@ -24,7 +24,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
 <#if HarmonyCore.SELECT_RTOS == "BareMetal">
-    <#lt>TCPIP_STACK_Task(sysObj.tcpip);
+    <#lt>   TCPIP_STACK_Task(sysObj.tcpip);
 <#elseif HarmonyCore.SELECT_RTOS == "FreeRTOS">
     <#lt>    xTaskCreate( _TCPIP_STACK_Task,
     <#lt>        "TCPIP_STACK_Tasks",

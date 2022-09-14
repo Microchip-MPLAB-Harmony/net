@@ -330,6 +330,8 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackDramTraceSlotsNum.setDependencies(tcpipStackHeapStackTraceSlotsNumVisible, ["TCPIP_STACK_DRAM_TRACE_ENABLE"])
     
     tcpipHeapRecommendlist = [  "drvGmac.TCPIP_USE_ETH_MAC", "drvGmac.DRV_GMAC_HEAP_SIZE",
+                                "drvGmac0.TCPIP_USE_ETH_MAC", "drvGmac.DRV_GMAC0_HEAP_SIZE",
+                                "drvGmac1.TCPIP_USE_ETH_MAC", "drvGmac.DRV_GMAC1_HEAP_SIZE",
                                 "drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvPic32mEthmac.DRV_ETHMAC_HEAP_SIZE",
                                 "drvEmac0.TCPIP_USE_EMAC0", "drvEmac0.DRV_EMAC_HEAP_SIZE",
                                 "drvEmac1.TCPIP_USE_EMAC1", "drvEmac1.DRV_EMAC_HEAP_SIZE",
@@ -2291,12 +2293,12 @@ def tcpipHeapCalc():
             heapsize = heapsize + Database.getSymbolValue("drvGmac","DRV_GMAC_HEAP_SIZE")
     # GMAC0        
     if((Database.getSymbolValue("drvGmac0", "TCPIP_USE_ETH_MAC") == True)): 
-        if(Database.getSymbolValue("drvGmac0","DRV_GMAC_HEAP_SIZE") != None):        
-            heapsize = heapsize + Database.getSymbolValue("drvGmac0","DRV_GMAC_HEAP_SIZE")
+        if(Database.getSymbolValue("drvGmac0","DRV_GMAC0_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvGmac0","DRV_GMAC0_HEAP_SIZE")
     # GMAC1        
     if((Database.getSymbolValue("drvGmac1", "TCPIP_USE_ETH_MAC") == True)): 
-        if(Database.getSymbolValue("drvGmac1","DRV_GMAC_HEAP_SIZE") != None):        
-            heapsize = heapsize + Database.getSymbolValue("drvGmac1","DRV_GMAC_HEAP_SIZE")        
+        if(Database.getSymbolValue("drvGmac1","DRV_GMAC1_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvGmac1","DRV_GMAC1_HEAP_SIZE")        
     # ETHMAC    
     if((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
         if(Database.getSymbolValue("drvPic32mEthmac","DRV_ETHMAC_HEAP_SIZE") != None): 

@@ -46,34 +46,29 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 //DOM-IGNORE-END
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
-
 #include "driver/ethphy/src/drv_ethphy_local.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/debug/sys_debug.h"
-
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: File Scope Variables
 // *****************************************************************************
 // *****************************************************************************
-
-
 // Local Definitions
 //
 #define PROT_802_3  0x01    // IEEE 802.3 capability
 // all comm capabilities our MAC supports
-#define PHY_STD_CPBL_MASK       (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK | \
-                                _BMSTAT_BASE100TX_HDX_MASK |_BMSTAT_BASE100TX_FDX_MASK | \
+#define PHY_STD_CPBL_MASK       (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK | 			\
+                                _BMSTAT_BASE100TX_HDX_MASK |_BMSTAT_BASE100TX_FDX_MASK | 		\
                                 _BMSTAT_EXTSTAT_MASK)
-#define PHY_EXT_CPBL_MASK  (_EXTSTAT_1000BASEX_FDX_MASK | _EXTSTAT_1000BASEX_HDX_MASK | \
-                            _EXTSTAT_1000BASET_FDX_MASK | _EXTSTAT_1000BASET_HDX_MASK)
+								
+#define PHY_EXT_CPBL_MASK  		(_EXTSTAT_1000BASEX_FDX_MASK | _EXTSTAT_1000BASEX_HDX_MASK | 	\
+								_EXTSTAT_1000BASET_FDX_MASK | _EXTSTAT_1000BASET_HDX_MASK)
 
 
 // local prototypes
@@ -1344,47 +1339,47 @@ static void _DRV_ETHPHY_SetupPhaseReset(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
 }
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1_1(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_1(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_2(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Ext_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MII(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MDIX(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_ANAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_1000B_Ctrl(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_1000B_Ctrl(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_AutoNeg_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start_AutoNeg(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Finish(DRV_ETHPHY_CLIENT_OBJ * hClientObj);
 
 typedef enum
 {
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_0 = 0,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_1,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_1_1,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_2,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_3,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_4,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_4_1,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_4_2,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_5,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_6,
-    DRV_ETHPHY_SETUP_NEG_SUBPHASE_7,    
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_START = 0,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_STD_STATUS,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_EXT_STATUS,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_CONFIG_MII,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_CONFIG_MDIX,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_WRITE_ANAD,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_1000B_CTRL,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_WRITE_1000B_CTRL,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_AN_STATUS,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_START_AN,
+    DRV_ETHPHY_SETUP_NEG_SUBPHASE_FINISH,
 } DRV_ETHPHY_SETUP_NEG_PHASE;
 
 
 static const _DRV_PHY_OperPhaseF _DRV_PHY_SetupPhaseNegotiateSubPhaseTbl[] = 
 {
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1_1,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_1,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_2,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6,
-    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7,  
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Ext_Status,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MII,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MDIX,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_ANAD,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_1000B_Ctrl,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_1000B_Ctrl,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_AutoNeg_Status,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start_AutoNeg,
+    _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Finish,
 };
 
 static void _DRV_ETHPHY_SetupPhaseNegotiate(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
@@ -1399,11 +1394,9 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     }
 }
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS  openFlags;      // flags required at open time
-    uint16_t  stdReqs = 0;
-    uint16_t  extReqs = 0;
     
     // provide some defaults
     openFlags = hClientObj->hDriver->openFlags;
@@ -1416,75 +1409,17 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase0(DRV_ETHPHY_CLIENT_OBJ * hC
         openFlags |= TCPIP_ETH_OPEN_10;
     }
 
-    if(openFlags & TCPIP_ETH_OPEN_AUTO)
-    {   // advertise auto negotiation
-        stdReqs = _BMSTAT_AN_ABLE_MASK;
-
-        if(openFlags & TCPIP_ETH_OPEN_1000)
-        {
-            if(openFlags & TCPIP_ETH_OPEN_FDUPLEX)
-            {
-                extReqs |= _EXTSTAT_1000BASET_FDX_MASK;
-            }
-            if(openFlags & TCPIP_ETH_OPEN_HDUPLEX)
-            {
-                extReqs |= _EXTSTAT_1000BASET_HDX_MASK;
-            }
-        }
-        
-        if(openFlags & TCPIP_ETH_OPEN_100)
-        {
-            if(openFlags & TCPIP_ETH_OPEN_FDUPLEX)
-            {
-                stdReqs |= _BMSTAT_BASE100TX_FDX_MASK;
-            }
-            if(openFlags & TCPIP_ETH_OPEN_HDUPLEX)
-            {
-                stdReqs |= _BMSTAT_BASE100TX_HDX_MASK;
-            }
-        }
-
-        if(openFlags & TCPIP_ETH_OPEN_10)
-        {
-            if(openFlags & TCPIP_ETH_OPEN_FDUPLEX)
-            {
-                stdReqs |= _BMSTAT_BASE10T_FDX_MASK;
-            }
-            if(openFlags & TCPIP_ETH_OPEN_HDUPLEX)
-            {
-                stdReqs |= _BMSTAT_BASE10T_HDX_MASK;
-            }
-        }
-    }
-    else
-    {   // no auto negotiation
-        if(openFlags & TCPIP_ETH_OPEN_1000)
-        {
-            extReqs = (openFlags & TCPIP_ETH_OPEN_FDUPLEX) ? _EXTSTAT_1000BASET_FDX_MASK : _EXTSTAT_1000BASET_HDX_MASK;
-        }
-        else if(openFlags & TCPIP_ETH_OPEN_100)
-        {
-            stdReqs = (openFlags & TCPIP_ETH_OPEN_FDUPLEX) ? _BMSTAT_BASE100TX_FDX_MASK : _BMSTAT_BASE100TX_HDX_MASK;
-        }
-        else
-        {
-            stdReqs = (openFlags & TCPIP_ETH_OPEN_FDUPLEX) ? _BMSTAT_BASE10T_FDX_MASK : _BMSTAT_BASE10T_HDX_MASK;
-        }
-    }
-
-    hClientObj->hDriver->openFlags = openFlags;
-    hClientObj->operReg[0] = stdReqs;
-    hClientObj->operReg[1] = extReqs;
+    hClientObj->hDriver->openFlags = openFlags;   
     // try to match the openFlags with the PHY capabilities
     // initiate the read of the PHY capabilities
     if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMSTAT))
     {
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_1);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_STD_STATUS);
     }
 
 }
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS  openFlags;      // flags required at open time
     uint16_t  stdReqs = 0;
@@ -1566,17 +1501,17 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1(DRV_ETHPHY_CLIENT_OBJ * hC
     {
         if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_EXTSTAT))
         {
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_1_1);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_EXT_STATUS);
         }
     }
     else
     {
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_2);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_CONFIG_MII);
     }
 
 }
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1_1(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Ext_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS  openFlags;      // flags required at open time
     static uint16_t phyExtCpbl = 0;
@@ -1618,12 +1553,12 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase1_1(DRV_ETHPHY_CLIENT_OBJ * 
     
     hClientObj->operReg[1] = matchExtCpbl;
     hClientObj->vendorData = 0;
-    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_2);  
+    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_CONFIG_MII);  
     
 }
 
 // MII/RMII configuration phase
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MII(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_ETHPHY_INSTANCE *hDriver;
     DRV_ETHPHY_RESULT res = DRV_ETHPHY_RES_PENDING;
@@ -1635,7 +1570,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2(DRV_ETHPHY_CLIENT_OBJ * hC
     {   // success, advance
         // next phase: configure the MDIX
         hClientObj->vendorData = 0;
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_3);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_CONFIG_MDIX);
     }
     else if(res != DRV_ETHPHY_RES_PENDING)
     {   // some error occurred
@@ -1646,7 +1581,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase2(DRV_ETHPHY_CLIENT_OBJ * hC
 
 
 // MDIX configure
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Config_MDIX(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_ETHPHY_RESULT res;
     DRV_ETHPHY_INSTANCE *hDriver = hClientObj->hDriver;
@@ -1664,11 +1599,11 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase3(DRV_ETHPHY_CLIENT_OBJ * hC
     }
 
     // success, advance;
-    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_4);
+    _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_WRITE_ANAD);
 }
 
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_ANAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_ETHPHY_INSTANCE *hDriver = hClientObj->hDriver;
 
@@ -1697,11 +1632,11 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
         {   // advertise our capabilities
             if (matchExtCpbl  && (openFlags & TCPIP_ETH_OPEN_1000))
             {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_4_1);
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_1000B_CTRL);
             }
             else
             {
-                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_5);
+                _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_AN_STATUS);
             }
         }
     }
@@ -1728,13 +1663,13 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4(DRV_ETHPHY_CLIENT_OBJ * hC
 
         if(_DRV_PHY_SMIWriteStart(hClientObj, PHY_REG_BMCON, ctrlReg))
         {   
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_7);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_FINISH);
         }
     }
 
 }
 
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_1(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_1000B_Ctrl(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
@@ -1743,11 +1678,11 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_1(DRV_ETHPHY_CLIENT_OBJ * 
     
     if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_1000BASECON))
     {
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_4_2);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_WRITE_1000B_CTRL);
     }    
     
 }
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_2(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_1000B_Ctrl(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     uint16_t ext1000baseCtrl = 0, matchExtStat = 0;
     
@@ -1777,7 +1712,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_2(DRV_ETHPHY_CLIENT_OBJ * 
     
     if(_DRV_PHY_SMIWriteStart( hClientObj, PHY_REG_1000BASECON, ext1000baseCtrl))
     {
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_5);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_READ_AN_STATUS);
     }
     
 }
@@ -1785,7 +1720,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase4_2(DRV_ETHPHY_CLIENT_OBJ * 
 
 
 // advertise, negotiation restart phase
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_AutoNeg_Status(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
     {
@@ -1794,12 +1729,12 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase5(DRV_ETHPHY_CLIENT_OBJ * hC
     
     if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_BMSTAT))
     {   // read capabilities initiate
-        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_6);
+        _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_START_AN);
     }
 }
     
 // auto-negotiation perform
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Start_AutoNeg(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait the PHY_REG_BMSTAT read to complete
     if(!_DRV_PHY_SMITransfer_Wait(hClientObj))
@@ -1816,7 +1751,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hC
         // restart negotiation and we'll have to wait
         if(_DRV_PHY_SMIWriteStart( hClientObj, PHY_REG_BMCON, _BMCON_AN_ENABLE_MASK | _BMCON_AN_RESTART_MASK))
         {
-            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_7);
+            _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_NEGOTIATE, DRV_ETHPHY_SETUP_NEG_SUBPHASE_FINISH);
         }
     }
     else
@@ -1826,7 +1761,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase6(DRV_ETHPHY_CLIENT_OBJ * hC
 }
 
 // final update stage
-static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase7(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
+static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Finish(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     TCPIP_ETH_OPEN_FLAGS openFlags = TCPIP_ETH_OPEN_DEFAULT;
     uint16_t  matchStdCpbl = hClientObj->operReg[0];
@@ -2053,6 +1988,7 @@ static void _DRV_ETHPHY_NegRestartPhaseWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags )
 {
+	//#todo# remove direct MAC register access from this function 
     DRV_ETHPHY_CONFIG_FLAGS hwFlags = DRV_ETHPHY_CFG_RMII;
     DRV_ETHPHY_RESULT ethRes = DRV_ETHPHY_RES_CFG_ERR;
 

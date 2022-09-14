@@ -27,13 +27,12 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-//#include "driver/gmac/src/dynamic/drv_gmac_lib.h"
-#include "driver/gmac/src/drv_gmac_local.h"
+#include "driver/gmac/src/dynamic/drv_gmac_lib.h"
 /** D E F I N I T I O N S ****************************************************/
 //PIC32C internal GMAC peripheral
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_MAC_PIC32C
-
+// Active GMAC Instances
+#define DRV_GMAC_INSTANCES    TCPIP_STACK_INTMAC_COUNT
 // All pause capabilities our MAC supports
 #define DRV_GMAC_PAUSE_CPBL_MASK     (TCPIP_ETH_PAUSE_TYPE_ALL)
 /******************************************************************************
@@ -68,55 +67,6 @@ static void _DRV_GMAC_LinkStateWaitLinkUp(DRV_GMAC_DRIVER * pMACDrv);
 static void _DRV_GMAC_LinkStateNegComplete(DRV_GMAC_DRIVER * pMACDrv);
 static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv);
 
-/*
-//GMAC Statistics Register access
-static uint32_t _DRV_GMAC_GetTxOctetLow(void);
-static uint32_t _DRV_GMAC_GetTxOctetHigh(void);
-static uint32_t _DRV_GMAC_GetTxFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxBCastFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxMCastFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxPauseFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx64ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx127ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx255ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx511ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx1023ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTx1518ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxGT1518ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxUnderRunFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxSingleCollFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxMultiCollFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxExcessCollFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxLateCollFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxDeferFrameCount(void);
-static uint32_t _DRV_GMAC_GetTxCSErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxOctetLow(void);
-static uint32_t _DRV_GMAC_GetRxOctetHigh(void);
-static uint32_t _DRV_GMAC_GetRxFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxBCastFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxMCastFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxPauseFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx64ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx127ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx255ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx511ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx1023ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRx1518ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxGT1518ByteFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxUnderSizeFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxOverSizeFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxJabberFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxFCSErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxLFErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxSymErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxAlignErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxResErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxOverRunFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxIPHdrCSErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxTCPCSErrorFrameCount(void);
-static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void);
-*/
-
 //Transform TCPIP MAC filters to GMAC filters
 static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
    
@@ -124,95 +74,131 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
  * PIC32C GMAC object implementation
  ******************************************************************************/
 // the embedded PIC32 MAC object
-#if defined(DRV_GMAC0) || defined(DRV_GMAC)
-/*static*/ const TCPIP_MAC_OBJECT DRV_GMAC0_Object =  
-{
-    .macId                                  = TCPIP_MODULE_MAC_PIC32C_0,
-    .macType                                = TCPIP_MAC_TYPE_ETH,
-#ifdef  DRV_GMAC0   
-    .macName                                = "GMAC0",   
-#elif DRV_GMAC
-    .macName                                = "GMAC",  
-#endif
-    .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
-#if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
-    .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
-#else
-    .TCPIP_MAC_Deinitialize                 = 0,
-    .TCPIP_MAC_Reinitialize                 = 0,
-#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
-    .TCPIP_MAC_Status                       = DRV_GMAC_Status,
-    .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
-    .TCPIP_MAC_Open                         = DRV_GMAC_Open,
-    .TCPIP_MAC_Close                        = DRV_GMAC_Close,
-    .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
-    .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
-    .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
-    .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
-    .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
-    .TCPIP_MAC_Process                      = DRV_GMAC_Process,
-    .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
-    .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
-    .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
-    .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
-    .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
-    .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
-    .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
-};
-           
-bool interruptStat_q0[DRV_GMAC0_NUMBER_OF_QUEUES];
+#ifdef DRV_GMAC
+    const TCPIP_MAC_OBJECT DRV_GMAC_Object =  
+    {
+        .macId                                  = TCPIP_MODULE_MAC_PIC32C_0,
+        .macType                                = TCPIP_MAC_TYPE_ETH, 
+        .macName                                = "GMAC",  
+        .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
+    #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
+        .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
+        .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
+    #else
+        .TCPIP_MAC_Deinitialize                 = 0,
+        .TCPIP_MAC_Reinitialize                 = 0,
+    #endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
+        .TCPIP_MAC_Status                       = DRV_GMAC_Status,
+        .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
+        .TCPIP_MAC_Open                         = DRV_GMAC_Open,
+        .TCPIP_MAC_Close                        = DRV_GMAC_Close,
+        .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
+        .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
+        .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
+        .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
+        .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
+        .TCPIP_MAC_Process                      = DRV_GMAC_Process,
+        .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
+        .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
+        .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
+        .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
+        .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
+        .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
+        .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
+    };
 
+    bool interruptStat_mac0[DRV_GMAC_NUMBER_OF_QUEUES];
 #endif
+    
+#ifdef DRV_GMAC0
+    const TCPIP_MAC_OBJECT DRV_GMAC0_Object =  
+    {
+        .macId                                  = TCPIP_MODULE_MAC_PIC32C_0,
+        .macType                                = TCPIP_MAC_TYPE_ETH, 
+        .macName                                = "GMAC0",  
+        .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
+    #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
+        .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
+        .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
+    #else
+        .TCPIP_MAC_Deinitialize                 = 0,
+        .TCPIP_MAC_Reinitialize                 = 0,
+    #endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
+        .TCPIP_MAC_Status                       = DRV_GMAC_Status,
+        .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
+        .TCPIP_MAC_Open                         = DRV_GMAC_Open,
+        .TCPIP_MAC_Close                        = DRV_GMAC_Close,
+        .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
+        .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
+        .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
+        .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
+        .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
+        .TCPIP_MAC_Process                      = DRV_GMAC_Process,
+        .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
+        .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
+        .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
+        .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
+        .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
+        .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
+        .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
+    };         
+
+    bool interruptStat_mac0[DRV_GMAC0_NUMBER_OF_QUEUES];
+#endif
+    
 #ifdef DRV_GMAC1           
-/*static*/ const TCPIP_MAC_OBJECT DRV_GMAC1_Object =  
-{
-    .macId                                  = TCPIP_MODULE_MAC_PIC32C_1,
-    .macType                                = TCPIP_MAC_TYPE_ETH,    
-    .macName                                = "GMAC1",   
-    .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
-#if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
-    .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
-    .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
-#else
-    .TCPIP_MAC_Deinitialize                 = 0,
-    .TCPIP_MAC_Reinitialize                 = 0,
-#endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
-    .TCPIP_MAC_Status                       = DRV_GMAC_Status,
-    .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
-    .TCPIP_MAC_Open                         = DRV_GMAC_Open,
-    .TCPIP_MAC_Close                        = DRV_GMAC_Close,
-    .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
-    .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
-    .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
-    .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
-    .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
-    .TCPIP_MAC_Process                      = DRV_GMAC_Process,
-    .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
-    .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
-    .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
-    .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
-    .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
-    .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
-    .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
-};
-           
-bool interruptStat_q1[DRV_GMAC1_NUMBER_OF_QUEUES];
+    const TCPIP_MAC_OBJECT DRV_GMAC1_Object =  
+    {
+        .macId                                  = TCPIP_MODULE_MAC_PIC32C_1,
+        .macType                                = TCPIP_MAC_TYPE_ETH,    
+        .macName                                = "GMAC1",   
+        .TCPIP_MAC_Initialize                   = DRV_GMAC_Initialize,
+    #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
+        .TCPIP_MAC_Deinitialize                 = DRV_GMAC_Deinitialize,
+        .TCPIP_MAC_Reinitialize                 = DRV_GMAC_Reinitialize, 
+    #else
+        .TCPIP_MAC_Deinitialize                 = 0,
+        .TCPIP_MAC_Reinitialize                 = 0,
+    #endif  // (TCPIP_STACK_DOWN_OPERATION != 0) 
+        .TCPIP_MAC_Status                       = DRV_GMAC_Status,
+        .TCPIP_MAC_Tasks                        = DRV_GMAC_Tasks,
+        .TCPIP_MAC_Open                         = DRV_GMAC_Open,
+        .TCPIP_MAC_Close                        = DRV_GMAC_Close,
+        .TCPIP_MAC_LinkCheck                    = DRV_GMAC_LinkCheck,
+        .TCPIP_MAC_RxFilterHashTableEntrySet    = DRV_GMAC_RxFilterHashTableEntrySet,
+        .TCPIP_MAC_PowerMode                    = DRV_GMAC_PowerMode,
+        .TCPIP_MAC_PacketTx                     = DRV_GMAC_PacketTx,
+        .TCPIP_MAC_PacketRx                     = DRV_GMAC_PacketRx,
+        .TCPIP_MAC_Process                      = DRV_GMAC_Process,
+        .TCPIP_MAC_StatisticsGet                = DRV_GMAC_StatisticsGet,
+        .TCPIP_MAC_ParametersGet                = DRV_GMAC_ParametersGet,
+        .TCPIP_MAC_RegisterStatisticsGet        = DRV_GMAC_RegisterStatisticsGet,
+        .TCPIP_MAC_ConfigGet                    = DRV_GMAC_ConfigGet,
+        .TCPIP_MAC_EventMaskSet                 = DRV_GMAC_EventMaskSet,
+        .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
+        .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
+    };
+
+    bool interruptStat_mac1[DRV_GMAC1_NUMBER_OF_QUEUES];
 #endif                      
 // the embedded PIC32 MAC descriptor
 // to support multiple instances
 // create an array/list of MAC_DCPT structures
 // or allocate dynamically
-//#define DRV_GMAC_INSTANCES     1
 static DRV_GMAC_DRIVER _gmac_drv_dcpt[] = 
 {
-    #if defined(DRV_GMAC0) || defined(DRV_GMAC)  
+    #if defined(DRV_GMAC)  
+	{
+		&DRV_GMAC_Object,
+		{0},
+	},
+    #elif defined(DRV_GMAC0)  
 	{
 		&DRV_GMAC0_Object,
 		{0},
 	},
     #endif 
-    #ifdef DRV_GMAC1    
+    #if defined(DRV_GMAC1)   
     {
 		&DRV_GMAC1_Object,
 		{0},
@@ -273,13 +259,12 @@ static const DRV_PIC32CGMAC_HW_REG_DCPT macPIC32CHwRegDcpt[] =
 //table of different Link startup
 static const _DRV_GMAC_LinkStateF _DRV_GMAC_LinkStateTbl[] =
 {
-	_DRV_GMAC_LinkStateStartLink,     // DRV_PIC32CGMAC_LINK_CHECK_START_LINK
-	_DRV_GMAC_LinkStateGetLink,       // DRV_PIC32CGMAC_LINK_CHECK_GET_LINK
-	_DRV_GMAC_LinkStateWaitLinkUp,       // DRV_PIC32CGMAC_LINK_CHECK_WAIT_LINK_UP
-	_DRV_GMAC_LinkStateNegComplete,   // DRV_PIC32CGMAC_LINK_CHECK_NEG_COMPLETE
-	_DRV_GMAC_LinkStateNegResult,     // DRV_PIC32CGMAC_LINK_CHECK_NEG_RESULT
+	_DRV_GMAC_LinkStateStartLink,     	// DRV_PIC32CGMAC_LINK_CHECK_START_LINK
+	_DRV_GMAC_LinkStateGetLink,       	// DRV_PIC32CGMAC_LINK_CHECK_GET_LINK
+	_DRV_GMAC_LinkStateWaitLinkUp,   	// DRV_PIC32CGMAC_LINK_CHECK_WAIT_LINK_UP
+	_DRV_GMAC_LinkStateNegComplete,   	// DRV_PIC32CGMAC_LINK_CHECK_NEG_COMPLETE
+	_DRV_GMAC_LinkStateNegResult,     	// DRV_PIC32CGMAC_LINK_CHECK_NEG_RESULT
 };
-
 
 //convert mac id to index
 static __inline__ int __attribute__((always_inline)) _GmacIdToIndex(TCPIP_MODULE_MAC_ID macId)
@@ -314,7 +299,6 @@ static __inline__ DRV_GMAC_DRIVER* __attribute__((always_inline)) _GmacHandleToM
 }
 #else
 // multiple instances version
-// could be refined more
 static DRV_GMAC_DRIVER* _GmacHandleToMacInst(uintptr_t handle)
 {
     DRV_GMAC_DRIVER* pMacD = (DRV_GMAC_DRIVER*)handle;
@@ -430,7 +414,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_RX);
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_TX);
     
-	for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++) //niyas todo : change for all GMAC drivers (SAMV71, E54, A5D2)
+	for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
 	{
 		if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt < DRV_GMAC_MIN_TX_DESCRIPTORS)
 		{
@@ -1117,7 +1101,6 @@ static void _DRV_GMAC_LinkStateNegComplete(DRV_GMAC_DRIVER * pMACDrv)
    
 }
 
-
 static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)  
 {
 	DRV_ETHPHY_CLIENT_STATUS phyStat;
@@ -1147,6 +1130,10 @@ static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
         if((phyCfgFlags & DRV_ETHPHY_CFG_GMII))
         {
             pMACDrv->sGmacData._negResult.linkFlags |= TCPIP_ETH_OPEN_GMII;
+        }
+		else if((phyCfgFlags & DRV_ETHPHY_CFG_RGMII))
+        {
+            pMACDrv->sGmacData._negResult.linkFlags |= TCPIP_ETH_OPEN_RGMII;
         }
         else if((phyCfgFlags & DRV_ETHPHY_CFG_MII))
         {
@@ -1515,7 +1502,6 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 	
 }
 
-
 #else
 static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 {
@@ -1832,13 +1818,13 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 #if defined(DRV_GMAC0) || defined(DRV_GMAC)       
         if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
         {
-            intStat = interruptStat_q0;
+            intStat = interruptStat_mac0;
         }
 #endif
 #ifdef DRV_GMAC1             
         if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_1)
         {
-            intStat = interruptStat_q1;
+            intStat = interruptStat_mac1;
         }
 #endif
         
@@ -1937,13 +1923,13 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 #if defined(DRV_GMAC0) || defined(DRV_GMAC)     
     if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
     {
-        intStat = interruptStat_q0;
+        intStat = interruptStat_mac0;
     }
 #endif
 #ifdef DRV_GMAC1             
     if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_1)
     {
-        intStat = interruptStat_q1;
+        intStat = interruptStat_mac1;
     }
 #endif
     
@@ -2103,280 +2089,6 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents)
 
 }
 
-/*****************************************************************************
- ********************* GMAC Statistics Register Access routines **************
- *****************************************************************************/
-/*
-static uint32_t _DRV_GMAC_GetTxOctetLow(void)
-{
-		
-	return GMAC_REGS->GMAC_OTLO;	
-}
-
-static uint32_t _DRV_GMAC_GetTxOctetHigh(void)
-{
-	
-	return GMAC_REGS->GMAC_OTHI;
-}
-
-static uint32_t _DRV_GMAC_GetTxFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_FT;
-}
-
-static uint32_t _DRV_GMAC_GetTxBCastFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_BCFT;
-}
-
-static uint32_t _DRV_GMAC_GetTxMCastFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_MFT;
-}
-
-static uint32_t _DRV_GMAC_GetTxPauseFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_PFT;
-}
-
-static uint32_t _DRV_GMAC_GetTx64ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_BFT64;
-}
-
-static uint32_t _DRV_GMAC_GetTx127ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFT127;
-}
-
-static uint32_t _DRV_GMAC_GetTx255ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFT255;
-}
-
-static uint32_t _DRV_GMAC_GetTx511ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFT511;
-}
-
-static uint32_t _DRV_GMAC_GetTx1023ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFT1023;
-}
-
-static uint32_t _DRV_GMAC_GetTx1518ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFT1518;
-}
-
-static uint32_t _DRV_GMAC_GetTxGT1518ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_GTBFT1518;
-}
-
-static uint32_t _DRV_GMAC_GetTxUnderRunFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TUR;
-}
-
-static uint32_t _DRV_GMAC_GetTxSingleCollFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_SCF;
-}
-
-static uint32_t _DRV_GMAC_GetTxMultiCollFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_MCF;
-}
-
-static uint32_t _DRV_GMAC_GetTxExcessCollFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_EC;
-}
-
-static uint32_t _DRV_GMAC_GetTxLateCollFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_LC;
-}
-
-static uint32_t _DRV_GMAC_GetTxDeferFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_DTF;
-}
-
-static uint32_t _DRV_GMAC_GetTxCSErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_CSE;
-}
-
-static uint32_t _DRV_GMAC_GetRxOctetLow(void)
-{
-	
-	return GMAC_REGS->GMAC_ORLO;
-}
-
-static uint32_t _DRV_GMAC_GetRxOctetHigh(void)
-{
-	
-	return GMAC_REGS->GMAC_ORHI;
-}
-
-static uint32_t _DRV_GMAC_GetRxFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_FR;
-}
-
-static uint32_t _DRV_GMAC_GetRxBCastFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_BCFR;
-}
-
-static uint32_t _DRV_GMAC_GetRxMCastFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_MFR;
-}
-
-static uint32_t _DRV_GMAC_GetRxPauseFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_PFR;
-}
-
-static uint32_t _DRV_GMAC_GetRx64ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_BFR64;
-}
-
-static uint32_t _DRV_GMAC_GetRx127ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFR127;
-}
-
-static uint32_t _DRV_GMAC_GetRx255ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFR255;
-}
-
-static uint32_t _DRV_GMAC_GetRx511ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFR511;
-}
-
-static uint32_t _DRV_GMAC_GetRx1023ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFR1023;
-}
-
-static uint32_t _DRV_GMAC_GetRx1518ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TBFR1518;
-}
-
-static uint32_t _DRV_GMAC_GetRxGT1518ByteFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TMXBFR;
-}
-
-static uint32_t _DRV_GMAC_GetRxUnderSizeFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_UFR;
-}
-
-static uint32_t _DRV_GMAC_GetRxOverSizeFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_OFR;
-}
-
-static uint32_t _DRV_GMAC_GetRxJabberFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_JR;
-}
-
-static uint32_t _DRV_GMAC_GetRxFCSErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_FCSE;
-}
-
-static uint32_t _DRV_GMAC_GetRxLFErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_LFFE;
-}
-
-static uint32_t _DRV_GMAC_GetRxSymErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_RSE;
-}
-
-static uint32_t _DRV_GMAC_GetRxAlignErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_AE;
-}
-
-static uint32_t _DRV_GMAC_GetRxResErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_RRE;
-}
-
-static uint32_t _DRV_GMAC_GetRxOverRunFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_ROE;
-}
-
-static uint32_t _DRV_GMAC_GetRxIPHdrCSErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_IHCE;
-}
-
-static uint32_t _DRV_GMAC_GetRxTCPCSErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_TCE;
-}
-
-static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void)
-{
-	
-	return GMAC_REGS->GMAC_UCE;
-}
-*/
 /****************************************************************************
  * Function:        _DRV_GMAC_PHYInitialise
  * Summary: PHY initialization 
@@ -2425,4 +2137,3 @@ static SYS_MODULE_OBJ _DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv)
 	initRes = TCPIP_MAC_RES_OK;
 	return initRes;
 }
-
