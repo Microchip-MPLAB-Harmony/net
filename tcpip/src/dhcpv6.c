@@ -2767,8 +2767,6 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
         break;
     }
 
-    _DHCPV6Assert(pDcpt->rc > 0, __func__, __LINE__);
-
     if(pDcpt->waitTick != 0)
     {   // we're waiting for timeout
         while((int32_t)(tickCurr - pDcpt->waitTick) < 0)
@@ -3856,7 +3854,6 @@ static bool _DHCPV6MsgGet_LeaseParams(TCPIP_DHCPV6_IA_DCPT* pDstIa, TCPIP_DHCPV6
     // get the IA and address 
     if(!_DHCPV6MsgGet_IaAddress(&pDstIa->addBody, pSrcBuffer, pDstIa) || !_DHCPV6MsgGet_IaBody(&pDstIa->iaBody, pSrcBuffer, pDstIa, serverMatch))
     {
-        _DHCPV6DbgCond(false, __func__, __LINE__);
         return false;
     }
 
@@ -4101,7 +4098,7 @@ static bool _DHCPV6OptionGet_IaAddress(TCPIP_DHCPV6_OPTION_IA_ADDR_BODY* pAddBod
     pAddBody->validLTime = TCPIP_Helper_ntohl(pAddBody->validLTime);
 
     // discard addresses which have a invalid lifetimes
-    return (pAddBody->validLTime != 0 && pAddBody->prefLTime <= pAddBody->validLTime);
+    return (pAddBody->validLTime != 0 && pAddBody->prefLTime != 0 && pAddBody->prefLTime <= pAddBody->validLTime);
 } 
 
 // gets the IA body from a IA Option
@@ -4118,8 +4115,8 @@ static bool _DHCPV6OptionGet_IaBody(TCPIP_DHCPV6_IA_BODY* pIaBody, void* pSrcOpt
         if(t1 > 0 && t2 > 0)
         {
             if(t1 > t2)
-            {   // will use defaults if nonvalid
-                t1 = t2 = 0;
+            {   // RFC 3315 pg 74/101: invalid, discard the IANA option
+                return false;
             }
         }
 
@@ -4313,7 +4310,6 @@ static bool _DHCPV6MsgGet_IaBody(TCPIP_DHCPV6_IA_BODY* pIaBody, TCPIP_DHCPV6_MSG
     void* pOptIa = _DHCPV6OptionFind_Ia(pSrcBuffer, pIa, serverMatch);
     if(pOptIa == 0 || !_DHCPV6OptionGet_IaBody(pIaBody, pOptIa, pIa->iaBody.type))
     {
-        _DHCPV6DbgCond(false, __func__, __LINE__);
         return false;
     }
 
@@ -4326,7 +4322,6 @@ static bool _DHCPV6MsgGet_IaAddress(TCPIP_DHCPV6_OPTION_IA_ADDR_BODY* pAddBody, 
     TCPIP_DHCPV6_OPTION_IA_ADDR* pIaAddr = (TCPIP_DHCPV6_OPTION_IA_ADDR*)_DHCPV6OptionFind_IaOpt(pSrcBuffer, pIa, TCPIP_DHCPV6_OPT_CODE_IA_ADDR);
     if(pIaAddr == 0 || !_DHCPV6OptionGet_IaAddress(pAddBody, pIaAddr))
     {
-        _DHCPV6DbgCond(false, __func__, __LINE__);
         return false;
     }
 
