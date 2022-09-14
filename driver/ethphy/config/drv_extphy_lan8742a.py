@@ -22,7 +22,7 @@
 *****************************************************************************"""
 
 def instantiateComponent(drvExtPhyLan8742aComponent):
-    print("LAN8742a PHY Driver Component")
+    print("LAN8742A PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
 
     # PHY Address
@@ -100,7 +100,7 @@ def instantiateComponent(drvExtPhyLan8742aComponent):
     #drvExtPhyLan8742aPhyType.setLabel("External PHY Type")
     drvExtPhyLan8742aPhyType.setVisible(False)
     #drvExtPhyLan8742aPhyType.setDescription("External PHY Type")
-    drvExtPhyLan8742aPhyType.setDefaultValue("LAN8742a")
+    drvExtPhyLan8742aPhyType.setDefaultValue("LAN8742A")
     
     # Driver PHY Negotiation Time-out - ms
     drvExtPhyLan8742aNegInitTimeout= drvExtPhyLan8742aComponent.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8742aAdvSettings)
