@@ -78,7 +78,6 @@ typedef enum
     // results that affect the run state 
     TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_NEXT,      // processing done, need to advance to the next run state
                                                 // this is usually returned by the Wait substate functions
-    TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_PREV,      // go back to the previous run state
     TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_JUMP,      // processing done, advance is done to a new run state
                                                 // this is usually returned by the substate jumping to a new run state
     TCPIP_DHCPV6_IA_SUBSTATE_RES_RUN_RESTART,   // process needs to be restarted with the 1st run state:
@@ -111,16 +110,16 @@ typedef enum
 #define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0080)
 // display the IA retransmission tmo
 #define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0100)
-
+// display the IA pass/fail messages
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_IN           (0x0200)
 // display the link up/down changes
-#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0400)
 
-// advanced: additional state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_ADD_STATE       (0x0400)
-// advanced: use static debugging lists
-#define TCPIP_DHCPV6_DEBUG_MASK_LISTS           (0x0800)
+// advanced: additional IA state prints
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_ADD_STATE    (0x0800)
+
 // advanced: print buffers traces
-#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x1000)
+#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x2000)
 
 
 // enable DHCP debugging levels
@@ -311,21 +310,6 @@ typedef enum
     TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER                 // number of messages
 
 }TCPIP_DHCPV6_CLIENT_MSG_TYPE;
-
-
-// list of DHCPv6 messages sent by the server side only
-// that the client expects
-typedef enum
-{
-    TCPIP_DHCPV6_SERVER_MSG_TYPE_ADVERTISE,         // -> TCPIP_DHCPV6_MSG_TYPE_ADVERTISE
-    TCPIP_DHCPV6_SERVER_MSG_TYPE_REPLY,             // -> TCPIP_DHCPV6_MSG_TYPE_REPLY
-    TCPIP_DHCPV6_SERVER_MSG_TYPE_RECONFIGURE,       // -> TCPIP_DHCPV6_MSG_TYPE_RECONFIGURE
-
-    //
-    TCPIP_DHCPV6_SERVER_MSG_TYPE_NUMBER                 // number of messages
-
-}TCPIP_DHCPV6_SEVER_MSG_TYPE_TYPE;
-
 
 
 // generic DHCPv6 message header

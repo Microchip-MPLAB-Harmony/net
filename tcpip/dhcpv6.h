@@ -85,9 +85,11 @@ typedef enum
 
     // errors
     TCPIP_DHCPV6_CLIENT_RES_DOWN       = -1,   // service is down
-    TCPIP_DHCPV6_CLIENT_RES_IF_DOWN    = -2,   // interface is down
-    TCPIP_DHCPV6_CLIENT_RES_ARG_ERR    = -3,   // bad argument supplied
-    TCPIP_DHCPV6_CLIENT_RES_IX_ERR     = -4,   // bad index supplied
+    TCPIP_DHCPV6_CLIENT_RES_DISABLED   = -2,   // service is disabled, not active
+    TCPIP_DHCPV6_CLIENT_RES_IF_DOWN    = -3,   // interface is down
+    TCPIP_DHCPV6_CLIENT_RES_ARG_ERR    = -4,   // bad argument supplied
+    TCPIP_DHCPV6_CLIENT_RES_IX_ERR     = -5,   // bad index supplied
+    TCPIP_DHCPV6_CLIENT_RES_NO_ADDR    = -6,   // no such address
 
     
 
@@ -505,7 +507,10 @@ TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Disable(TCPIP_NET_HANDLE hNet);
 // Enables the service at run time for an interface
 TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_Enable(TCPIP_NET_HANDLE hNet);
 
-
+// *****************************************************************************
+// Releases a DHCPv6 IPv6 address for an interface
+// Note: the address type could be IANA or IATA
+TCPIP_DHCPV6_CLIENT_RES TCPIP_DHCPV6_AddrRelease(TCPIP_NET_HANDLE hNet, const IPV6_ADDR* addr);
 
 // *****************************************************************************
 // Get the server statistics for an interface

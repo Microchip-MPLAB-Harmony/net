@@ -1392,6 +1392,7 @@ static void _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> on/off/info\r\n", argv[0]);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> ia state ix \r\n", argv[0]);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Usage: %s <interface> release addr\r\n", argv[0]);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Ex: %s eth0 on \r\n", argv[0]);
         return;
     }
@@ -1499,6 +1500,19 @@ static void _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         }
     }
 #endif  // defined(TCPIP_DHCPV6_STATISTICS_ENABLE) && (TCPIP_DHCPV6_STATISTICS_ENABLE != 0)
+    else if (strcmp(argv[2], "release") == 0)
+    {
+        IPV6_ADDR relAddr;
+        if (argc < 4 || !TCPIP_Helper_StringToIPv6Address(argv[3], &relAddr))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: provide an IPv6 address\r\n");
+        }
+        else
+        {
+            res = TCPIP_DHCPV6_AddrRelease(netH, &relAddr);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCPV6 release returned: %d\r\n", res);
+        }
+    }
     else
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "DHCPV6: Unknown option\r\n");
