@@ -637,6 +637,10 @@ def instantiateComponent(tcpipStackComponent):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
+    elif "PIC32CZ" in processor:   
+        macName = "ETH"
+        intStringStart = "core.NVIC_"
+        intStringEnd = "_0_ENABLE"
     elif ("SAMA5" in processor) or ("SAMA7G" in processor):
         macName = "GMAC"
         intStringStart = "core."
@@ -653,6 +657,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "ETH"
         intStringStart = "core.EVIC_"
         intStringEnd = "_ENABLE" 
+        
         
     if macName != "None":
         interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()

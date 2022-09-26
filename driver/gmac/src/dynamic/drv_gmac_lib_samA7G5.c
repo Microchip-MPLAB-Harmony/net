@@ -57,7 +57,8 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,
        DRV_PIC32CGMAC_RX_FRAME_INFO *rx_frame_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx);  
 static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag);
 static uint16_t _GetPktSegCount(TCPIP_MAC_DATA_SEGMENT * pktHead);
-
+static void _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value);
+static  uint64_t  _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv);
 //GMAC TX and RX Descriptor structure with multiple Queues	
 typedef struct
 {
@@ -605,13 +606,14 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
     
     if (txDesc_free >= pktSegCnt)
     {
+		// perform cache maintenance
+        DCACHE_CLEAN_ALL() ;
         while (pPktDSeg)
         {
             //check for enough number of tx descriptors available
             if(pTxDesc[wTxIndex].tx_desc_buffaddr == 0)
             {
-                // perform cache maintenance
-                DCACHE_CLEAN_ALL() ;
+                
                 pTxDesc[wTxIndex].tx_desc_status.val &= (GMAC_TX_WRAP_BIT |GMAC_TX_USED_BIT); //clear all Tx Status except Wrap Bit and Used Bit
                 pTxDesc[wTxIndex].tx_desc_buffaddr = (uint32_t)((uint8_t *)pPktDSeg->segLoad);	//set the buffer address
                 pTxDesc[wTxIndex].tx_desc_status.val |= (pPktDSeg->segLen) & GMAC_LENGTH_FRAME; //Set Length for each frame
@@ -642,7 +644,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
         //memory barrier to ensure all the memories updated before enabling transmission
         __DMB();
         //Enable Transmission
-    pGmacRegs->GMAC_NCR |= GMAC_NCR_TSTART_Msk;	
+    	pGmacRegs->GMAC_NCR |= GMAC_NCR_TSTART_Msk;	
 
         res = DRV_PIC32CGMAC_RES_OK;
     }
@@ -2132,3 +2134,27 @@ uint32_t DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount(DRV_GMAC_DRIVER* pMACDrv)
 	return pGmacRegs->GMAC_UCE;
 }
 
+
+/****************************************************************************
+ * Function:        _DRV_GMAC_HashValueSet
+ * Summary: Set Hash Value in GMAC register
+ *****************************************************************************/
+static void _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
+{
+    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
+    pGmacRegs->GMAC_HRB = hash_value & 0xffffffff;
+    pGmacRegs->GMAC_HRT = (hash_value >> 32) & 0xffffffff;    
+}
+
+/****************************************************************************
+ * Function:        _DRV_GMAC_HashValueGet
+ * Summary: Read Hash Value in GMAC register
+ *****************************************************************************/
+static  uint64_t  _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv)
+{
+    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
+    uint64_t hash_value = 0;    
+    hash_value = pGmacRegs->GMAC_HRT;
+    hash_value = (hash_value << 32) | pGmacRegs->GMAC_HRB;
+    return hash_value;
+}

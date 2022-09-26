@@ -62,6 +62,7 @@ tcpipGmacScreen2Que = []
 tcpipGmacRxQueScreen2EnableComment = []
 
 interfaceNum = []
+macInterruptList = []
 
 gmacComponentId = ""
 gmacComponentName = ""
@@ -77,6 +78,7 @@ def instantiateComponent(drvGmacComponent):
     global gmacComponentId
     global gmacComponentName
     global processor
+    global macInterruptList
     
     gmacComponentId = drvGmacComponent.getID()
     gmacComponentName = drvGmacComponent.getDisplayName()
@@ -113,7 +115,7 @@ def instantiateComponent(drvGmacComponent):
     
     if "PIC32CZ" in processor: # PIC32CZ    
         # Enable ETH_TX clock
-        Database.setSymbolValue("core", "ETH_TX_CLOCK_ENABLE", True)
+        Database.setSymbolValue("core", "ETH_TX_CLOCK_ENABLE", True) #todo# : verify this clock 
     else:
         # Enable GMAC clock
         Database.setSymbolValue("core", gmacComponentName + "_CLOCK_ENABLE", True)
@@ -154,7 +156,7 @@ def instantiateComponent(drvGmacComponent):
         coreComponent = Database.getComponentByID("core")
         clkdivSymbol = coreComponent.getSymbolByID("CONF_MCLK_CLKDIV1")
         main_clock = int(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
-        clock_div = int(clkdivSymbol.getSelectedValue(), 16)
+        clock_div = int(clkdivSymbol.getSelectedValue(), 16) #todo# verify this
         peripheral_clock = main_clock/clock_div
         drvGmacClock.setDefaultValue(peripheral_clock)
         drvGmacClock.setDependencies(tcpipPic32CZGmacClockUpdate, ["core.MAIN_CLOCK_FREQUENCY","core.CONF_MCLK_CLKDIV1"])
@@ -172,14 +174,12 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacMaxQueCnt = drvGmacComponent.createIntegerSymbol("TCPIP_"+ gmacComponentName + "_MAX_MAC_QUE_CNT", None)
     tcpipGmacMaxQueCnt.setLabel("Maximum Number of Queues")
     tcpipGmacMaxQueCnt.setVisible(True)
-    if (("SAME7" in processor) or ("SAMV7" in processor)):  
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor)):  
         tcpipGmacMaxQueCnt.setDefaultValue(6)
     elif ("SAME5" in processor):
         tcpipGmacMaxQueCnt.setDefaultValue(1)
     elif ("SAMA5" in processor):      
         tcpipGmacMaxQueCnt.setDefaultValue(3)
-    elif ("PIC32CZ" in processor): 
-        tcpipGmacMaxQueCnt.setDefaultValue(6)
     elif ("SAMA7G" in processor):
         if(gmacComponentName == "GMAC0"):
             tcpipGmacMaxQueCnt.setDefaultValue(6)
@@ -300,16 +300,20 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacRxBuffAllocCountQue0.setDefaultValue(2)
     tcpipGmacRxBuffAllocCountQue0.setMin(1)
     tcpipGmacRxBuffAllocCountQue0.setDependencies(tcpipGmacRxBuffAllocCountQue0CallBack, ["TCPIP_"+ gmacComponentName + "_TRAFFIC"])    
-
-    if "PIC32CZ" in processor:
-        int_name = "ETH_PRI_Q_0"
-    else:
-        int_name = gmacComponentName
-        
+    
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    for interrupt in range (0, len(interruptsChildrenList)): 
+        if gmacComponentName in str(interruptsChildrenList[interrupt].getAttribute("name")):
+            interruptDict = {}
+            interruptDict["index"] = int(interruptsChildrenList[interrupt].getAttribute("index"))
+            interruptDict["name"] = str(interruptsChildrenList[interrupt].getAttribute("name"))
+            interruptDict["caption"] = str(interruptsChildrenList[interrupt].getAttribute("caption"))
+            macInterruptList.append(interruptDict)
+    
+    int_name =  macInterruptList[0]['name']
     interruptVector = int_name + "_INTERRUPT_ENABLE"
     interruptHandler = int_name + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = int_name + "_INTERRUPT_HANDLER_LOCK"
-    
+    interruptHandlerLock = int_name + "_INTERRUPT_HANDLER_LOCK"    
     
     drvGmacIntSrcQue0 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE0", None)
     drvGmacIntSrcQue0.setLabel(int_name + " Interrupt Source")
@@ -662,9 +666,14 @@ def instantiateComponent(drvGmacComponent):
         
         drvGmacIntSrcQue1 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE1", None)
         drvGmacIntSrcQue1.setVisible(False)
-        drvGmacIntSrcQue1.setDefaultValue(gmacComponentName + "_Q1_IRQn")
-        drvGmacIntSrcQue1.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_1"])
+        for interrupt in macInterruptList:
+            if "Queue 1" in interrupt['caption']:
+                intName = interrupt['name']
+                drvGmacIntSrcQue1.setDefaultValue(intName + "_IRQn")
+                break
         
+        drvGmacIntSrcQue1.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_1"])
+
     if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ or SAMA7G5-GMAC0
         # GMAC Queue 2
         tcpipGmacQue2 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_QUEUE_2", tcpipGmacPrioQueues)
@@ -778,9 +787,12 @@ def instantiateComponent(drvGmacComponent):
                 
         drvGmacIntSrcQue2 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE2", None)
         drvGmacIntSrcQue2.setVisible(False)
-        drvGmacIntSrcQue2.setDefaultValue(gmacComponentName + "_Q2_IRQn")
+        for interrupt in macInterruptList:
+            if "Queue 2" in interrupt['caption']:
+                intName = interrupt['name']
+                drvGmacIntSrcQue2.setDefaultValue(intName + "_IRQn")
+                break
         drvGmacIntSrcQue2.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_2"])
-        
     if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or SAMRH71 or PIC32CZ or SAMA7G5-GMAC0      
         # GMAC Queue 3
         tcpipGmacQue3 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_QUEUE_3", tcpipGmacPrioQueues)
@@ -891,7 +903,11 @@ def instantiateComponent(drvGmacComponent):
         
         drvGmacIntSrcQue3 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE3", None)
         drvGmacIntSrcQue3.setVisible(False)
-        drvGmacIntSrcQue3.setDefaultValue(gmacComponentName + "_Q3_IRQn")
+        for interrupt in macInterruptList:
+            if "Queue 3" in interrupt['caption']:
+                intName = interrupt['name']
+                drvGmacIntSrcQue3.setDefaultValue(intName + "_IRQn")
+                break
         drvGmacIntSrcQue3.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_3"])
         # GMAC Queue 4
         tcpipGmacQue4 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_QUEUE_4", tcpipGmacPrioQueues)
@@ -1002,7 +1018,11 @@ def instantiateComponent(drvGmacComponent):
         
         drvGmacIntSrcQue4 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE4", None)
         drvGmacIntSrcQue4.setVisible(False)
-        drvGmacIntSrcQue4.setDefaultValue(gmacComponentName + "_Q4_IRQn")
+        for interrupt in macInterruptList:
+            if "Queue 4" in interrupt['caption']:
+                intName = interrupt['name']
+                drvGmacIntSrcQue4.setDefaultValue(intName + "_IRQn")
+                break
         drvGmacIntSrcQue4.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_4"])
         
         # GMAC Queue 5
@@ -1114,7 +1134,11 @@ def instantiateComponent(drvGmacComponent):
         
         drvGmacIntSrcQue5 = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "_INT_SRC_QUE5", None)
         drvGmacIntSrcQue5.setVisible(False)
-        drvGmacIntSrcQue5.setDefaultValue(gmacComponentName + "_Q5_IRQn")
+        for interrupt in macInterruptList:
+            if "Queue 5" in interrupt['caption']:
+                intName = interrupt['name']
+                drvGmacIntSrcQue5.setDefaultValue(intName + "_IRQn")
+                break
         drvGmacIntSrcQue5.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_5"])
         
         # Number of Tx Priority Queues enabled
@@ -1494,15 +1518,27 @@ def instantiateComponent(drvGmacComponent):
     drvGmacDcptHeaderFile.setOverwrite(True)
     #drvGmacDcptHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
-    # Add drv_gmac_lib_sam.h file to project
-    drvGmacLibSamHeaderFile = drvGmacComponent.createFileSymbol(None, None)
-    drvGmacLibSamHeaderFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib_sam.h")
-    drvGmacLibSamHeaderFile.setOutputName("drv_gmac_lib_sam.h")
-    drvGmacLibSamHeaderFile.setDestPath("driver/gmac/src/dynamic/")
-    drvGmacLibSamHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
-    drvGmacLibSamHeaderFile.setType("HEADER")
-    drvGmacLibSamHeaderFile.setOverwrite(True)
-
+    if("PIC32CZ" in processor):
+        # Add drv_gmac_lib_pic32cz.h file to project
+        drvGmacLibPic32czHeaderFile = drvGmacComponent.createFileSymbol(None, None)
+        drvGmacLibPic32czHeaderFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h")
+        drvGmacLibPic32czHeaderFile.setOutputName("drv_gmac_lib_pic32cz.h")
+        drvGmacLibPic32czHeaderFile.setDestPath("driver/gmac/src/dynamic/")
+        drvGmacLibPic32czHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
+        drvGmacLibPic32czHeaderFile.setType("HEADER")
+        drvGmacLibPic32czHeaderFile.setOverwrite(True)
+    else:    
+        # Add drv_gmac_lib_sam.h file to project
+        drvGmacLibSamHeaderFile = drvGmacComponent.createFileSymbol(None, None)
+        drvGmacLibSamHeaderFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib_sam.h")
+        drvGmacLibSamHeaderFile.setOutputName("drv_gmac_lib_sam.h")
+        drvGmacLibSamHeaderFile.setDestPath("driver/gmac/src/dynamic/")
+        drvGmacLibSamHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
+        drvGmacLibSamHeaderFile.setType("HEADER")
+        drvGmacLibSamHeaderFile.setOverwrite(True)
+    
+    
+    
     # file TCPIP_MAC_LIB_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac_lib.h" to     "$PROJECT_HEADER_FILES/framework/driver/gmac/src/dynamic/drv_gmac_lib.h"
     # Add drv_gmac_lib.h file to project
     drvGmacLibHeaderFile = drvGmacComponent.createFileSymbol(None, None)
@@ -2208,14 +2244,15 @@ def drvGmacHeapUpdate(symbol, event):
 
 def drvGmacIntSrcEnable(symbol, event):
     global gmacComponentName
-    global processor 
+    global processor     
+    global macInterruptList
     
-    que_index = int(event["id"].strip("TCPIP_"+ gmacComponentName + "_QUEUE_"))
-    
-    if "PIC32CZ" in processor :#PIC32CZ
-        int_name = "ETH_PRI_Q_" + str(que_index)
-    else:
-        int_name = gmacComponentName + "_Q" + str(que_index)
+    eventIdStr = event["id"]
+    que_index = int(eventIdStr[-1])
+    for interrupt in macInterruptList:
+        if ("Queue " + str(que_index)) in interrupt['caption']:
+            int_name = interrupt['name']
+            break
         
     interruptVector = int_name + "_INTERRUPT_ENABLE"
     interruptHandlerLock = int_name + "_INTERRUPT_HANDLER_LOCK"
@@ -2270,47 +2307,14 @@ def destroyComponent(drvGmacComponent):
     global noCache_MPU_index
     global gmacComponentId
     global gmacComponentName
+    global macInterruptList
     
-    Database.setSymbolValue(gmacComponentId, "TCPIP_USE_ETH_MAC", False, 2)    
-    if "PIC32CZ" in processor:
-        int_name = "ETH_PRI_Q_0"
-    else:
-        int_name = gmacComponentName
-        
-    interruptVector = int_name + "_INTERRUPT_ENABLE"    
-    setVal("core", interruptVector, False)
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or ("SAMA7G" in processor): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ or SAMA7G
-        if "PIC32CZ" in processor :#PIC32CZ
-            int_name = "ETH_PRI_Q_1"
-        else:
-            int_name = gmacComponentName + "_Q1"
-        interruptVector = int_name + "_INTERRUPT_ENABLE"      
+    Database.setSymbolValue(gmacComponentId, "TCPIP_USE_ETH_MAC", False, 2)   
+    
+    for interrupt in macInterruptList:
+        interruptVector = interrupt['name'] + "_INTERRUPT_ENABLE"    
         setVal("core", interruptVector, False)
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ or SAMA7G-GMAC0
-        if "PIC32CZ" in processor :#PIC32CZ
-            int_name = "ETH_PRI_Q_2"
-        else:
-            int_name = gmacComponentName + "_Q2"
-        interruptVector = int_name + "_INTERRUPT_ENABLE"      
-        setVal("core", interruptVector, False)
+
     if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor): # SAME70, SAMV71, SAMRH71, PIC32CZ   
-        if "PIC32CZ" in processor :#PIC32CZ
-            int_name = "ETH_PRI_Q_3"
-        else:
-            int_name = gmacComponentName + "_Q3"
-        interruptVector = int_name + "_INTERRUPT_ENABLE"      
-        setVal("core", interruptVector, False)
-        if "PIC32CZ" in processor :#PIC32CZ
-            int_name = "ETH_PRI_Q_4"
-        else:
-            int_name = gmacComponentName + "_Q4"
-        interruptVector = int_name + "_INTERRUPT_ENABLE"      
-        setVal("core", interruptVector, False)
-        if "PIC32CZ" in processor :#PIC32CZ
-            int_name = "ETH_PRI_Q_5"
-        else:
-            int_name = gmacComponentName + "_Q5"
-        interruptVector = int_name + "_INTERRUPT_ENABLE"      
-        setVal("core", interruptVector, False)
         setVal("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), False)
         

@@ -239,6 +239,7 @@ def tcpipNetHostNameUpdate(symbol, event):
         'GMAC':         'MCHPBOARD_C',
         'GMAC0':        'MCHPGMAC_0',
         'GMAC1':        'MCHPGMAC_1',
+        'ETH':          'MCHPBOARD_ETH',
         'ENCX24J600':   'MCHPENCX24_E',
         'ENC28J60':     'MCHPENC28_E',
         'EMAC0':        'SAM9X60_EK',
@@ -260,6 +261,7 @@ def tcpipNetMacAddrUpdate(symbol, event):
         'GMAC':         '00:04:25:1C:A0:02',
         'GMAC0':        '00:04:25:1C:A0:02',
         'GMAC1':        '00:04:25:1C:A0:03',
+        'ETH':          '00:04:25:1C:A0:02',
         'EMAC0':        '00:04:25:1C:A0:03',
         'EMAC1':        '00:04:25:1C:A0:04',
         'ENC28J60':     '00:04:a3:12:34:56',
@@ -284,6 +286,7 @@ def tcpipNetIpAddrUpdate(symbol, event):
         'GMAC':         '192.168.100.11',
         'GMAC0':        '192.168.100.11',
         'GMAC1':        '192.168.100.12',
+        'ETH':          '192.168.100.11',
         'ENCX24J600':   '192.168.100.12',
         'ENC28J60':     '192.168.100.13',
         'EMAC0':        '192.168.100.14',
@@ -314,8 +317,9 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
     interfaceToIpAddress = {
         'ETHMAC':       '192.168.100.1',
         'GMAC':         '192.168.100.1',
-        'GMAC0':         '192.168.100.1',
-        'GMAC1':         '192.168.100.1',
+        'GMAC0':        '192.168.100.1',
+        'GMAC1':        '192.168.100.1',
+        'ETH':          '192.168.100.1',
         'ENCX24J600':   '192.168.100.1',
         'ENC28J60':     '192.168.100.2',
         'EMAC0':        '192.168.100.1',
@@ -324,7 +328,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
         'WINC':         '192.168.1.1',
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
-        'PIC32MZW1':   '192.168.1.1',
+        'PIC32MZW1':    '192.168.1.1',
     }
     print "tcpipNetGatewayIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -338,6 +342,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
         'GMAC':         '192.168.100.1',
         'GMAC0':        '192.168.100.1',
         'GMAC1':        '192.168.100.1',
+        'ETH':          '192.168.100.1',
         'ENCX24J600':   '192.168.100.1',
         'ENC28J60':     '192.168.100.2',
         'EMAC0':        '192.168.100.1',
@@ -346,7 +351,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
         'WINC':         '192.168.1.1',
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
-        'PIC32MZW1':   '192.168.1.1',
+        'PIC32MZW1':    '192.168.1.1',
     }
     print "tcpipNetPrimDnsIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -360,6 +365,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'GMAC':         'DRV_GMAC_Object',
         'GMAC0':        'DRV_GMAC0_Object',
         'GMAC1':        'DRV_GMAC1_Object',
+        'ETH':          'DRV_GMAC_Object',
         'ENCX24J600':   'DRV_ENCX24J600_MACObject',
         'ENC28J60':     'DRV_ENC28J60_MACObject',
         'EMAC0':        'DRV_EMAC0_Object',
@@ -368,7 +374,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'WINC':         'WDRV_WINC_MACObject',
         'WINC1500':     'WDRV_WINC1500_MACObject',
         'WILC1000':     'WDRV_WILC1000_MACObject',
-        'PIC32MZW1':   'WDRV_PIC32MZW1_MACObject',
+        'PIC32MZW1':    'WDRV_PIC32MZW1_MACObject',
     }
     print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()

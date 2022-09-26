@@ -57,7 +57,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
-#include "driver/gmac/src/dynamic/drv_gmac_lib_sam.h"
+#if defined (DRV_ETH)
+	#include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h"
+#else
+	#include "driver/gmac/src/dynamic/drv_gmac_lib_sam.h"
+#endif
 #include "driver/gmac/src/drv_gmac_local.h"
 #include "device.h"
 

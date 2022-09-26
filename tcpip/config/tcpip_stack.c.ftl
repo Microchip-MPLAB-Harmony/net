@@ -925,6 +925,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("GMAC")>
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipGMACInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
+<#if checkInterface("ETH")>
+    {TCPIP_MODULE_MAC_PIC32C,     &tcpipETHInitData},     // TCPIP_MODULE_MAC_PIC32C
+</#if>
 <#if checkInterface("EMAC0")>
     {TCPIP_MODULE_MAC_SAM9X60_0,    &tcpipEMAC0InitData},           // TCPIP_MODULE_MAC_SAM9X60_0
 </#if>

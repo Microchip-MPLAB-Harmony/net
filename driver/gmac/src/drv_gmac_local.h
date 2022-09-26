@@ -693,29 +693,7 @@ __STATIC_INLINE int fixed_mod(int a, int b)
 /** Clear circular buffer */
 #define GCIRC_CLEAR(head, tail)  (head = tail = 0)
 
-/****************************************************************************
- * Function:        _DRV_GMAC_HashValueSet
- * Summary: Set Hash Value in GMAC register
- *****************************************************************************/
-static __inline__ void __attribute__((always_inline)) _DRV_GMAC_HashValueSet(DRV_GMAC_DRIVER* pMACDrv, uint64_t hash_value)
-{
-    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
-    pGmacRegs->GMAC_HRB = hash_value & 0xffffffff;
-    pGmacRegs->GMAC_HRT = (hash_value >> 32) & 0xffffffff;    
-}
 
-/****************************************************************************
- * Function:        _DRV_GMAC_HashValueGet
- * Summary: Read Hash Value in GMAC register
- *****************************************************************************/
-static __inline__ uint64_t __attribute__((always_inline)) _DRV_GMAC_HashValueGet(DRV_GMAC_DRIVER* pMACDrv)
-{
-    gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
-    uint64_t hash_value = 0;    
-    hash_value = pGmacRegs->GMAC_HRT;
-    hash_value = (hash_value << 32) | pGmacRegs->GMAC_HRB;
-    return hash_value;
-}
 /*******************************************************************************
  End of File
 */

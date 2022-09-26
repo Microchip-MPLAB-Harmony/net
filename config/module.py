@@ -272,9 +272,9 @@ def loadModule():
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent.setDisplayType("MAC Layer")
     elif ("PIC32CZ" in Variables.get("__PROCESSOR")) and (Peripheral.moduleExists("ETH")):
-        drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
+        drvGmacComponent = Module.CreateComponent("drvGmac", "ETH", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
-        drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
+        drvGmacComponent.addDependency("ETH_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent.setDisplayType("MAC Layer")    
     elif Peripheral.moduleExists("EMAC"):
         aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")

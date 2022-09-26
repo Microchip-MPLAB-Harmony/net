@@ -74,7 +74,7 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
  * PIC32C GMAC object implementation
  ******************************************************************************/
 // the embedded PIC32 MAC object
-#ifdef DRV_GMAC
+#if defined(DRV_GMAC) || defined(DRV_ETH)
     const TCPIP_MAC_OBJECT DRV_GMAC_Object =  
     {
         .macId                                  = TCPIP_MODULE_MAC_PIC32C_0,
@@ -106,8 +106,12 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
         .TCPIP_MAC_EventAcknowledge             = DRV_GMAC_EventAcknowledge,
         .TCPIP_MAC_EventPendingGet              = DRV_GMAC_EventPendingGet,
     };
-
+    
+#if defined(DRV_GMAC)
     bool interruptStat_mac0[DRV_GMAC_NUMBER_OF_QUEUES];
+#elif defined(DRV_ETH)
+    bool interruptStat_mac0[DRV_ETH_NUMBER_OF_QUEUES];    
+#endif    
 #endif
     
 #ifdef DRV_GMAC0
@@ -187,7 +191,7 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
 // or allocate dynamically
 static DRV_GMAC_DRIVER _gmac_drv_dcpt[] = 
 {
-    #if defined(DRV_GMAC)  
+    #if defined(DRV_GMAC)  || defined(DRV_ETH)
 	{
 		&DRV_GMAC_Object,
 		{0},
@@ -1815,7 +1819,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 	else
 	{   // disable some events
 		GMAC_EVENTS  ethClrEvents;
-#if defined(DRV_GMAC0) || defined(DRV_GMAC)       
+#if defined(DRV_GMAC0) || defined(DRV_GMAC) || defined(DRV_ETH)      
         if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
         {
             intStat = interruptStat_mac0;
@@ -1920,7 +1924,7 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
         return false;
     }
 	    
-#if defined(DRV_GMAC0) || defined(DRV_GMAC)     
+#if defined(DRV_GMAC0) || defined(DRV_GMAC) || defined(DRV_ETH)       
     if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
     {
         intStat = interruptStat_mac0;
