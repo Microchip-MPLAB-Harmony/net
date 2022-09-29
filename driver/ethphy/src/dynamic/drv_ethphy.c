@@ -911,7 +911,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
 
     if(pSetUp->resetFunction)
     {
-        (*pSetUp->resetFunction)(gDrvEthBaseObj);
+        (*pSetUp->resetFunction)(gDrvEthBaseObj, handle);
     }
     DRV_MIIM_SETUP  miimSetup;
 

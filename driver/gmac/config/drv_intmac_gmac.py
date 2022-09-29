@@ -115,7 +115,8 @@ def instantiateComponent(drvGmacComponent):
     
     if "PIC32CZ" in processor: # PIC32CZ    
         # Enable ETH_TX clock
-        Database.setSymbolValue("core", "ETH_TX_CLOCK_ENABLE", True) #todo# : verify this clock 
+        Database.setSymbolValue("core", "ETH_TSU_CLOCK_ENABLE", True)
+        Database.setSymbolValue("core", "ETH_TX_CLOCK_ENABLE", True)
     else:
         # Enable GMAC clock
         Database.setSymbolValue("core", gmacComponentName + "_CLOCK_ENABLE", True)
@@ -156,7 +157,7 @@ def instantiateComponent(drvGmacComponent):
         coreComponent = Database.getComponentByID("core")
         clkdivSymbol = coreComponent.getSymbolByID("CONF_MCLK_CLKDIV1")
         main_clock = int(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
-        clock_div = int(clkdivSymbol.getSelectedValue(), 16) #todo# verify this
+        clock_div = int(clkdivSymbol.getSelectedValue(), 16)
         peripheral_clock = main_clock/clock_div
         drvGmacClock.setDefaultValue(peripheral_clock)
         drvGmacClock.setDependencies(tcpipPic32CZGmacClockUpdate, ["core.MAIN_CLOCK_FREQUENCY","core.CONF_MCLK_CLKDIV1"])

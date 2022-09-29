@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
+phyName = "KSZ8091"
 def instantiateComponent(drvExtPhyKsz8091Component):
     print("KSZ8091 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -48,7 +48,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     drvExtPhyKsz8091ResetCallback.setLabel("App Function")
     drvExtPhyKsz8091ResetCallback.setVisible(False)
     drvExtPhyKsz8091ResetCallback.setDescription("App Function")
-    drvExtPhyKsz8091ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyKsz8091ResetCallback.setDefaultValue("App" + phyName + "ResetFunction")
     drvExtPhyKsz8091ResetCallback.setDependencies(drvExtPhyKsz8091MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
     # External PHY Connection Flags
@@ -102,7 +102,7 @@ def instantiateComponent(drvExtPhyKsz8091Component):
     # External PHY Type
     drvExtPhyKsz8091PhyType = drvExtPhyKsz8091Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyKsz8091AdvSettings)
     drvExtPhyKsz8091PhyType.setVisible(False)   
-    drvExtPhyKsz8091PhyType.setDefaultValue("KSZ8091")
+    drvExtPhyKsz8091PhyType.setDefaultValue(phyName)
     
     # Driver PHY Negotiation Time-out - ms
     drvExtPhyKsz8091NegInitTimeout= drvExtPhyKsz8091Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyKsz8091AdvSettings)

@@ -47,6 +47,7 @@ def instantiateComponent(drvMiimComponent):
     drvMiimInstnNum.setDescription("Number of Driver Instances")
     if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM") != None):
         drvMiimInstnNum.setDefaultValue(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")) 
+    drvMiimInstnNum.setReadOnly(True)
     drvMiimInstnNum.setDependencies(drvMiimSetIntMacCnt,["tcpipStack.TCPIP_STACK_INTMAC_INTERFACE_NUM"])
 
     for index in range(0,drvMiimInstMaxNum):  

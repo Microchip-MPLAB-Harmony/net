@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
+phyName = "LAN8700"
 def instantiateComponent(drvExtPhyLan8700Component):
     print("LAN8700 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -48,7 +48,7 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhyLan8700ResetCallback.setLabel("App Function")
     drvExtPhyLan8700ResetCallback.setVisible(False)
     drvExtPhyLan8700ResetCallback.setDescription("App Function")
-    drvExtPhyLan8700ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyLan8700ResetCallback.setDefaultValue("App" + phyName + "ResetFunction")
     drvExtPhyLan8700ResetCallback.setDependencies(drvExtPhyLan8700MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
     
     # External PHY Connection Flags
@@ -101,7 +101,7 @@ def instantiateComponent(drvExtPhyLan8700Component):
     # External PHY Type
     drvExtPhyLan8700PhyType = drvExtPhyLan8700Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyLan8700AdvSettings)
     drvExtPhyLan8700PhyType.setVisible(False)   
-    drvExtPhyLan8700PhyType.setDefaultValue("LAN8700")
+    drvExtPhyLan8700PhyType.setDefaultValue(phyName)
         
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyLan8700NegInitTimeout= drvExtPhyLan8700Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyLan8700AdvSettings)

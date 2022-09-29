@@ -29,12 +29,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 <#if USE_TCPIP_STACK == true>
 <#if (((net_Pres.NET_PRES_USE)?has_content) && ((net_Pres.NET_PRES_USE)  == true))>
-	<#lt>/* Network Presentation Layer Initialization */
-	<#lt>sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
+    <#lt>   /* Network Presentation Layer Initialization */
+    <#lt>   sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 </#if>
-    <#lt>/* TCPIP Stack Initialization */
-    <#lt>sysObj.tcpip = TCPIP_STACK_Init();
-    <#lt>SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
+    <#lt>   /* TCPIP Stack Initialization */
+    <#lt>   sysObj.tcpip = TCPIP_STACK_Init();
+    <#lt>   SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 </#if>
 
 <#--

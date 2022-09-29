@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
+phyName = "DP83640"
 def instantiateComponent(drvExtPhyDp83640Component):
     print("DP83640 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -48,7 +48,7 @@ def instantiateComponent(drvExtPhyDp83640Component):
     drvExtPhyDp83640ResetCallback.setLabel("App Function")
     drvExtPhyDp83640ResetCallback.setVisible(False)
     drvExtPhyDp83640ResetCallback.setDescription("App Function")
-    drvExtPhyDp83640ResetCallback.setDefaultValue("AppPhyResetFunction")
+    drvExtPhyDp83640ResetCallback.setDefaultValue("App" + phyName + "ResetFunction")
     drvExtPhyDp83640ResetCallback.setDependencies(drvExtPhyDp83640MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
     # External PHY Connection Flags
@@ -101,7 +101,7 @@ def instantiateComponent(drvExtPhyDp83640Component):
     # External PHY Type
     drvExtPhyDp83640PhyType = drvExtPhyDp83640Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", drvExtPhyDp83640AdvSettings)
     drvExtPhyDp83640PhyType.setVisible(False)   
-    drvExtPhyDp83640PhyType.setDefaultValue("DP83640")
+    drvExtPhyDp83640PhyType.setDefaultValue(phyName)
     
     # Driver PHY Negotiation Time-out (mSec)
     drvExtPhyDp83640NegInitTimeout= drvExtPhyDp83640Component.createIntegerSymbol("DRV_ETHPHY_NEG_INIT_TMO", drvExtPhyDp83640AdvSettings)

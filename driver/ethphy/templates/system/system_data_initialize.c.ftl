@@ -45,7 +45,7 @@
 <#lt>/*** ETH PHY Initialization Data ***/
 <#if use_phy_reset_callback == true>
     <#if phy_reset_callback?has_content>
-        <#lt>extern void ${phy_reset_callback}( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+        <#lt>extern void ${phy_reset_callback}(const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE handle);
     </#if>
 </#if>
 <#lt>const DRV_ETHPHY_INIT tcpipPhyInitData_${emac_phy_type} =
@@ -59,7 +59,7 @@
 <#else>
     <#lt>    .resetFunction          = 0,
 </#if>
-<#lt>    .ethphyTmo          = &drv${emac_phy_type?lower_case}Tmo,
+<#lt>    .ethphyTmo              = &drv${emac_phy_type?lower_case}Tmo,
 <#if drvMiim.DRV_MIIM_USE_DRIVER?has_content && drvMiim.DRV_MIIM_USE_DRIVER == true >
     <#lt>    .pMiimObject            = &${drvMiim.DRV_MIIM_DRIVER_OBJECT},
     <#lt>    .pMiimInit              = &drvMiimInitData_${miimIdx},

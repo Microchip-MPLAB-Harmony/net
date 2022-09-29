@@ -571,7 +571,7 @@ typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY
 
 // *****************************************************************************
 /* Pointer to Function:
-    typedef void (* DRV_ETHPHY_RESET_FUNCTION) ( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+    typedef void (* DRV_ETHPHY_RESET_FUNCTION) (const struct DRV_ETHPHY_OBJECT_BASE_TYPE*, DRV_HANDLE handle);
 
   Summary:
     Pointer to a function to perform an additional PHY reset
@@ -588,7 +588,7 @@ typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY
   Parameters:
     - pBaseObj- pointer to the PHY Base object that calls this function as a result of 
       performing its initialization procedure.
-
+	- handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
 
   Returns:
     None
@@ -604,7 +604,7 @@ typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY
     It is meant just for short I/O operations, not for lengthy processing.
 */
 
-typedef void (* DRV_ETHPHY_RESET_FUNCTION) ( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+typedef void (* DRV_ETHPHY_RESET_FUNCTION) (const struct DRV_ETHPHY_OBJECT_BASE_TYPE*, DRV_HANDLE handle);
 
 
 // *****************************************************************************
