@@ -401,6 +401,8 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_ALIAS_ETH       "eth"
 /* alias for Wi-Fi interface */
 #define TCPIP_STACK_IF_NAME_ALIAS_WLAN      "wlan"
+/* alias for PPP interface */
+#define TCPIP_STACK_IF_NAME_ALIAS_PPP       "ppp"
 
 // *****************************************************************************
 /* Configuration Power Modes

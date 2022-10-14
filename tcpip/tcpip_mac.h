@@ -173,6 +173,11 @@ typedef enum
     TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100,   // first mac instance
     TCPIP_MODULE_MAC_SAM9X60_1      = 0x1101,   // second mac instance
 
+    // Internal/Embedded PPP MAC:
+    TCPIP_MODULE_MAC_PPP            = 0x1200,   // instance base
+    TCPIP_MODULE_MAC_PPP_0          = 0x1200,   // first mac instance
+
+
     // External, non MCHP, MAC modules
     TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
 }TCPIP_MODULE_MAC_ID;
@@ -651,17 +656,20 @@ typedef enum
     /* RX: memory allocation error */
     TCPIP_MAC_PKT_ACK_ALLOC_ERR         = -18,  
 
+    /* Write error in the underlying driver when trying to write the data */
+    TCPIP_MAC_PKT_ACK_WRITE_ERR         = -19,  
+
     /* RX/TX: Packet was rejected by the IP layer */
-    TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -19,  
+    TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -20,  
 
     /* RX: packet was dropped because it was processed externally */
-    TCPIP_MAC_PKT_ACK_EXTERN            = -20,
+    TCPIP_MAC_PKT_ACK_EXTERN            = -21,
 
     /* RX: packet was directly processed successfuly by the bridge */
-    TCPIP_MAC_PKT_ACK_BRIDGE_DONE       = -21,
+    TCPIP_MAC_PKT_ACK_BRIDGE_DONE       = -22,
 
     /* RX: packet was dropped by the bridge */
-    TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD    = -22,
+    TCPIP_MAC_PKT_ACK_BRIDGE_DISCARD    = -23,
 }TCPIP_MAC_PKT_ACK_RES;
 
 
@@ -850,7 +858,7 @@ struct _tag_TCPIP_MAC_PACKET
 
     /* Pointer to the network layer data.
        On TX: the sending higher layer protocol updates this field.
-            The MAC driver shouldn't need this field.
+            The PPP MAC driver needs this field. Other MAC drivers do not use the field.
        On RX: the MAC driver updates this field before handing over the packet.
        (MCHP TCP/IP stack note: The packet allocation function updates this field automatically. But not for IPv6!). */
     uint8_t*                        pNetLayer;
@@ -967,24 +975,54 @@ typedef enum
     /*  memory allocation error */
     TCPIP_MAC_RES_ALLOC_ERR         = -7,   
 
+    /*  not enough descriptors */
+    TCPIP_MAC_RES_DCPT_ERR         = -8,   
+
     /*  already instantiated, initialized error */
-    TCPIP_MAC_RES_INSTANCE_ERR      = -8,   
+    TCPIP_MAC_RES_INSTANCE_ERR      = -9,   
 
     /*  too fragmented, RX buffer too small */
-    TCPIP_MAC_RES_FRAGMENT_ERR      = -9,   
+    TCPIP_MAC_RES_FRAGMENT_ERR      = -10,   
 
     /*  unsupported/corrupted packet error */
-    TCPIP_MAC_RES_PACKET_ERR        = -10,  
+    TCPIP_MAC_RES_PACKET_ERR        = -11,  
 
     /*  TX queue exceeded the limit */
-    TCPIP_MAC_RES_QUEUE_TX_FULL     = -11,  
+    TCPIP_MAC_RES_QUEUE_TX_FULL     = -12,  
 
     /* Synchronization object lock failed */
     /* Could not get a lock */
-    TCPIP_MAC_RES_SYNCH_LOCK_FAIL   = -12,  
+    TCPIP_MAC_RES_SYNCH_LOCK_FAIL   = -13,  
 
     /* MAC is not ready for the operation */
-    TCPIP_MAC_RES_NOT_READY_ERR     = -13,  
+    TCPIP_MAC_RES_NOT_READY_ERR     = -14,  
+
+    /* incorrect argument supplied */
+    TCPIP_MAC_RES_BAD_ARG           = -15,  
+
+    /* The driver requires TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2
+       flag to be set */ 
+    TCPIP_MAC_RES_PAYLOAD_OFFSET_ERR = -16,
+
+    /* The size of the MAC gapDcptSize is too small */
+    TCPIP_MAC_RES_GAP_SIZE_ERR      = -17,
+
+    /* the packet has too many segments and it is not supported
+       The TX was rejected */    
+    TCPIP_MAC_RES_PACKET_SEG_ERR    = -18,
+
+    /* No driver object supplied
+       This is when the MAC driver itself needs another
+       driver for its operation */
+    TCPIP_MAC_RES_NO_DRIVER         = -19,
+
+    /* Driver write error.
+       The write operation was truncated or otherwise not completed successfully */
+    TCPIP_MAC_RES_DRIVER_WRITE_ERR  = -20,
+
+    /* Driver internal error. Should not happen */
+    TCPIP_MAC_RES_INTERNAL_ERR      = -21,
+
 
 }TCPIP_MAC_RES;
 
@@ -1504,7 +1542,7 @@ typedef bool    (*TCPIP_MAC_SynchReqF)(void* synchHandle, TCPIP_MAC_SYNCH_REQUES
     The user of the MAC driver, the TCP/IP stack, can implement a fast mechanism for maintaining
     the packet <-> buffer association.
 
-    The MAC driver will call th efunction to retrieve the TCPIP_MAC_PACKET that corresponds 
+    The MAC driver will call the function to retrieve the TCPIP_MAC_PACKET that corresponds 
     to a transmitted/received segment buffer.
 
 
@@ -1556,6 +1594,9 @@ typedef enum
 
     /*  wireless, Wi-Fi type MAC*/
     TCPIP_MAC_TYPE_WLAN,
+
+    /*  PPP/serial MAC type */
+    TCPIP_MAC_TYPE_PPP,
 
 
     /* supported types */

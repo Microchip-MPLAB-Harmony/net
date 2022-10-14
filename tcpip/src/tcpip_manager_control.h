@@ -461,6 +461,11 @@ static __inline__ const char*  __attribute__((always_inline)) _TCPIPStack_NetBIO
     return pNetIf ? (char*)pNetIf->NetBIOSName : 0;
 }
 
+static __inline__ TCPIP_MAC_TYPE __attribute__((always_inline)) _TCPIPStack_NetMacType(TCPIP_NET_IF* pNetIf)
+{
+    return pNetIf ? (TCPIP_MAC_TYPE)pNetIf->macType : 0;
+}
+
 // checks for valid up interface
 static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackHandleToNetUp(TCPIP_NET_HANDLE hNet)
 {

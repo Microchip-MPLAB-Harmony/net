@@ -1507,6 +1507,35 @@ bool                TCPIP_STACK_InitializeDataGet(SYS_MODULE_OBJ object, TCPIP_S
  */
 TCPIP_STACK_MODULE  TCPIP_STACK_NetMACIdGet(TCPIP_NET_HANDLE netH);
 
+//*********************************************************************
+/*
+   Function:        
+    TCPIP_MAC_TYPE      TCPIP_STACK_NetMACTypeGet(TCPIP_NET_HANDLE netH);
+  
+   Summary:
+    Get the MAC type of the network interface.
+
+   Description:
+    This function returns the type of the MAC that's attached to the
+    specified network interface.
+  
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+    The network interface should be up and running.
+  
+   Parameters:      
+    netH    - handle of the interface to use
+  
+   Returns:         
+    A TCPIP_MAC_TYPE type for the MAC of that network interface.
+                    
+  
+   Remarks:            
+    None
+ */
+TCPIP_MAC_TYPE      TCPIP_STACK_NetMACTypeGet(TCPIP_NET_HANDLE netH);
+
 
 //*********************************************************************
 /*

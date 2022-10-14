@@ -51,6 +51,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip_module_manager.h"
 
+#if defined(TCPIP_STACK_USE_PPP_INTERFACE)
+#include "driver/ppp/drv_ppp.h"
+#endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE)
+
 #if defined(TCPIP_STACK_TIME_MEASUREMENT)
 #include <cp0defs.h>
 #endif // defined(TCPIP_STACK_TIME_MEASUREMENT)
@@ -72,9 +76,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // table with TCPIP interfaces alias names per MAC type
 static const char* TCPIP_STACK_IF_ALIAS_NAME_TBL[TCPIP_MAC_TYPES] = 
 {
-    TCPIP_STACK_IF_NAME_ALIAS_UNK,
-    TCPIP_STACK_IF_NAME_ALIAS_ETH,  
-    TCPIP_STACK_IF_NAME_ALIAS_WLAN,
+    TCPIP_STACK_IF_NAME_ALIAS_UNK,      // TCPIP_MAC_TYPE_NONE
+    TCPIP_STACK_IF_NAME_ALIAS_ETH,      // TCPIP_MAC_TYPE_ETH
+    TCPIP_STACK_IF_NAME_ALIAS_WLAN,     // TCPIP_MAC_TYPE_WLAN
+    TCPIP_STACK_IF_NAME_ALIAS_PPP,      // TCPIP_MAC_TYPE_PPP
+
 };
 
 
@@ -1613,7 +1619,22 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
 
         if(pNetIf->exFlags.connEvent != 0)
         {   // connection related event
-            activeEvents |= pNetIf->exFlags.connEventType ? TCPIP_MAC_EV_CONN_ESTABLISHED : TCPIP_MAC_EV_CONN_LOST;
+            if(pNetIf->exFlags.connEventType != 0)
+            {
+                activeEvents |= TCPIP_MAC_EV_CONN_ESTABLISHED;
+#if defined(TCPIP_STACK_USE_PPP_INTERFACE)
+                if(_TCPIPStack_NetMacType(pNetIf) == TCPIP_MAC_TYPE_PPP)
+                {   // for a PPP interface we set the IP address obtained from negotiation
+                    IPV4_ADDR lclIpAddr;
+                    lclIpAddr.Val = PPP_GetLocalIpv4Addr(pNetIf->hIfMac);
+                    _TCPIPStackSetIpAddress(pNetIf, &lclIpAddr, 0, 0, false);
+                }
+#endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE)
+            }
+            else
+            {
+                activeEvents |= TCPIP_MAC_EV_CONN_LOST;
+            } 
             pNetIf->exFlags.connEvent = 0;
 
             for(pAliasIf = _TCPIPStackNetGetPrimary(pNetIf); pAliasIf != 0; pAliasIf = _TCPIPStackNetGetAlias(pAliasIf))
@@ -1734,6 +1755,15 @@ static bool _TCPIPStackIsRunState(void)
                     pNetIf->Flags.bInterfaceEnabled = true;
                     pNetIf->Flags.bMacInitialize = false;
                     pNetIf->Flags.bMacInitDone = true;
+
+#if defined(TCPIP_STACK_USE_PPP_INTERFACE)
+                    if(_TCPIPStack_NetMacType(pNetIf) == TCPIP_MAC_TYPE_PPP)
+                    {   // for a PPP interface we set the IP address obtained from negotiation
+                        IPV4_ADDR lclIpAddr;
+                        lclIpAddr.Val = 0;
+                        _TCPIPStackSetIpAddress(pNetIf, &lclIpAddr, 0, 0, true);
+                    }
+#endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE)
 
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
                     for(pAliasIf = _TCPIPStackNetGetAlias(pNetIf), aliasIx = 0; pAliasIf != 0; pAliasIf = _TCPIPStackNetGetAlias(pAliasIf), aliasIx++)
@@ -2950,6 +2980,17 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACIdGet(TCPIP_NET_HANDLE netH)
     }
 
     return TCPIP_MODULE_NONE;
+}
+
+TCPIP_MAC_TYPE TCPIP_STACK_NetMACTypeGet(TCPIP_NET_HANDLE netH)
+{
+    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
+    if(pNetIf)
+    {
+        return _TCPIPStack_NetMacType(pNetIf);
+    }
+
+    return TCPIP_MAC_TYPE_NONE;
 }
 
 bool TCPIP_STACK_NetMACStatisticsGet(TCPIP_NET_HANDLE netH, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
@@ -4443,9 +4484,23 @@ void _TCPIPStackInsertRxPacket(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, b
 
 TCPIP_MAC_RES _TCPIPStackPacketTx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET * ptrPacket)
 {
+    TCPIP_MAC_RES res;
+
     TCPIP_PKT_FlightLogTx(ptrPacket, TCPIP_THIS_MODULE_ID);
     TCPIP_PKT_FlightLogTx(ptrPacket, pNetIf->macId);    // MAC doesn't call the log function
-    return pNetIf->hIfMac != 0 ? (*pNetIf->pMacObj->TCPIP_MAC_PacketTx)(pNetIf->hIfMac, ptrPacket) : TCPIP_MAC_RES_NOT_READY_ERR;
+
+    if(pNetIf->hIfMac != 0)
+    {
+        res = pNetIf->pMacObj->TCPIP_MAC_PacketTx(pNetIf->hIfMac, ptrPacket);
+        // stack should always use well formatted packets!
+        _TCPIPStack_Assert(res >= 0, __FILE__, __func__, __LINE__);
+    }
+    else
+    {
+        res = TCPIP_MAC_RES_NOT_READY_ERR;
+    }
+
+    return res;
 }
 
 static bool _TCPIP_StackSyncFunction(void* synchHandle, TCPIP_MAC_SYNCH_REQUEST req)

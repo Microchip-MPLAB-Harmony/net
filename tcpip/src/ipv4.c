@@ -924,6 +924,12 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_FwdPktMacDestination(TCPIP_MAC_PACKET* pF
             destType = TCPIP_IPV4_DEST_NETWORK; 
             break;
         }
+        else if(_TCPIPStack_NetMacType(pNetIf) == TCPIP_MAC_TYPE_PPP)
+        {   // no MAC address or ARP resolution needed for a serial link
+            memset(pMacDst, 0x0, sizeof(*pMacDst));
+            destType = TCPIP_IPV4_DEST_NETWORK; 
+            break;
+        }
 
         // check IP multicast address range from 224.0.0.0 to 239.255.255.255
         // can be done locally; No need for an ARP request.
@@ -2112,6 +2118,7 @@ bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersi
 
     // properly format the packet
     TCPIP_PKT_PacketMACFormat(pMacPkt, pMacDst, (const TCPIP_MAC_ADDR*)_TCPIPStack_NetMACAddressGet(pNetIf), TCPIP_ETHER_TYPE_IPV4);
+
     if(destType != TCPIP_IPV4_DEST_SELF)
     {   // get the payload w/o the MAC frame
         pktPayload = TCPIP_PKT_PayloadLen(pMacPkt) - sizeof(TCPIP_MAC_ETHERNET_HEADER);
@@ -3088,6 +3095,11 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_PktMacDestination(IPV4_PACKET* pPkt, cons
     if(pIpAdd->Val == 0xffffffff || pIpAdd->Val == TCPIP_STACK_NetAddressBcast(pNetIf))
     {
         memset(pMacDst, 0xff, sizeof(*pMacDst));
+        return TCPIP_IPV4_DEST_NETWORK;
+    }
+    else if(_TCPIPStack_NetMacType(pNetIf) == TCPIP_MAC_TYPE_PPP)
+    {   // no MAC address or ARP resolution needed for a serial link
+        memset(pMacDst, 0x0, sizeof(*pMacDst));
         return TCPIP_IPV4_DEST_NETWORK;
     }
 
