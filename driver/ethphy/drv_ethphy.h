@@ -736,9 +736,6 @@ typedef struct DRV_ETHPHY_INIT
     /* Function to be called when the PHY is reset/initialized. */
     /* Could be NULL if no special reset functionality needed - default */
     DRV_ETHPHY_RESET_FUNCTION   resetFunction;
-    
-    /* PHY Initialization Time-outs */
-	DRV_ETHPHY_TMO *            ethphyTmo;       
 
     /* Non-volatile pointer to the DRV_MIIM object providing MIIM access for this PHY */
     /* Could be NULL if the MIIM driver is not used */
@@ -751,6 +748,9 @@ typedef struct DRV_ETHPHY_INIT
     /* MIIM module index to be used */
     /* Not needed if the MIIM driver is not used */
     SYS_MODULE_INDEX            miimIndex; 
+            
+    /* PHY Initialization Time-outs */
+	DRV_ETHPHY_TMO *            ethphyTmo; 
 
 } DRV_ETHPHY_INIT;
 
@@ -1992,14 +1992,14 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
 
 // *****************************************************************************
 /* Function:
-    DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteIsComplete(DRV_HANDLE handle)
+    DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIOperationIsComplete(DRV_HANDLE handle)
 
   Summary:
-    Check the SMI write transfer is complete
+    Check the SMI Operation is complete
 	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
-    This function will return the status of SMI write transfer.
+    This function will return the status of SMI transfer.
 
   Precondition:
     - The DRV_ETHPHY_Initialize routine must have been called.
@@ -2014,7 +2014,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
 
   Returns:
 
-    DRV_ETHPHY_RES_OK      -  write transaction complete.   
+    DRV_ETHPHY_RES_OK      -   transaction complete.   
 
     DRV_ETHPHY_RES_PENDING  - if the vendor transaction is still ongoing
                               The call needs to be retried.
@@ -2029,7 +2029,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
     None
 */
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteIsComplete(DRV_HANDLE handle);
+DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIOperationIsComplete(DRV_HANDLE handle);
 
 // *****************************************************************************
 /* Ethernet PHY Driver Base Object
@@ -2099,7 +2099,7 @@ typedef struct DRV_ETHPHY_OBJECT_BASE_TYPE
 
     DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteStart)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
     
-    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteIsComplete)( DRV_HANDLE handle);
+    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIOperationIsComplete)( DRV_HANDLE handle);
     
 
 }DRV_ETHPHY_OBJECT_BASE;

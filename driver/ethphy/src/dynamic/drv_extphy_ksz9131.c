@@ -172,7 +172,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
 
         case DRV_KSZ9131_SKEW_CLK_2:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
                 return res;
@@ -193,7 +193,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
 
         case DRV_KSZ9131_SKEW_CLK_3:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
                 return res;
@@ -214,7 +214,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
             
         case DRV_KSZ9131_SKEW_CLK_4:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
                 return res;
@@ -235,7 +235,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
             
         case DRV_KSZ9131_SKEW_CLK_5:
             // wait for write complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteIsComplete(hClientObj);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
                 return res;

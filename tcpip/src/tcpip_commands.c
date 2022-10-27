@@ -386,6 +386,7 @@ static unsigned int         miimRegStart = 0; // start for a dump
 static unsigned int         miimRegEnd = 0;   // end for a dump
 static unsigned int         miimRegIx = 0;    // current Reg index to read
 static unsigned int         miimAdd = 0;    // PHY address
+static unsigned int         miimInt = 0;    // Network Interface Number
 static uint16_t             miimWrData = 0; // write data
 
 static const void*          miimCmdIoParam = 0;
@@ -4487,7 +4488,7 @@ static int  _CommandMiim(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if(argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: miim <add a> - Sets the PHY address\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: miim <int n> <add a> - Set the network interface and PHY address\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: miim <start r> <end r> - Sets the start and end register for a dump op\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: miim <wdata x> - Sets the data for a write op\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: miim <read rix> - Reads register rix\r\n");
@@ -4532,10 +4533,24 @@ static int  _CommandMiim(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             return false;  // no more parameters
         }
 
+        
         if(strcmp(param, "add") == 0)
         {
             miimAdd = atoi(paramVal);
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "miim: Set Add to: %d\r\n", miimAdd);
+        }
+        else if(strcmp(param, "int") == 0)
+        {
+            miimInt = atoi(paramVal);
+            if (miimInt >= DRV_MIIM_INSTANCES_NUMBER)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "miim: Incorrect Interface Number \r\n");
+            }
+            else
+            {
+                miimObjIx = miimInt;
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "miim: Set Network Interface to: %d\r\n", miimInt);
+            }
         }
         else if(strcmp(param, "start") == 0)
         {
@@ -4694,7 +4709,7 @@ static void TCPIPCmdMiimTask(void)
 
     if(opRes == DRV_MIIM_RES_OK)
     {   // success
-        (*pTcpipCmdDevice->pCmdApi->print)(miimCmdIoParam, "Miim %s: %d, add: %d, val: 0x%4x\r\n", opMsg, miimRegIx, miimAdd, opData);
+        (*pTcpipCmdDevice->pCmdApi->print)(miimCmdIoParam, "Miim %s: %d, int: %d, add: %d, val: 0x%4x\r\n", opMsg, miimRegIx, miimInt, miimAdd, opData);
          
         if(tcpipCmdStat == TCPIP_PHY_DUMP)
         {

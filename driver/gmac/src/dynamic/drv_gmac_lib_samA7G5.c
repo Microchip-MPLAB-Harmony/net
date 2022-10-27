@@ -164,21 +164,22 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     {
         pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | GMAC_UR_MIM_RGMII | 
-                                                (pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0;
+                                                ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
+        
         pGmacRegs->GMAC_NCFGR |= GMAC_NCFGR_GBE_Msk;
     }
 	else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_MII)//MII Mode
 	{
         pGmacRegs->GMAC_NCR |= GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | GMAC_UR_MIM_MII | 
-                                                (pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0;
+                                               ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }
     else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RMII)//RMII Mode
 	{
         pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | GMAC_UR_MIM_RMII | 
-                                                (pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0;
+                                                ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }    
 }
@@ -194,13 +195,16 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     uint16_t wTxDescCnt_temp =      pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt;
     uint16_t wRxBufferSize_temp =   pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
 	uint32_t queIntEnable = 0;
-        
-
-    if (wRxDescCnt_temp < 1 || wTxDescCnt_temp < 1)
+    
+	if (wRxDescCnt_temp < 1 || wTxDescCnt_temp < 1)
+    {
         return DRV_PIC32CGMAC_RES_DESC_CNT_ERR;
+    }
 
     if (!wRxBufferSize_temp || wRxBufferSize_temp > DRV_GMAC_RX_MAX_FRAME)
+    {
         return DRV_PIC32CGMAC_RES_RX_SIZE_ERR;
+    }
 
     if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueRxEnable == true)
     {
@@ -295,20 +299,30 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
 	ncfgr = pGmacRegs->GMAC_NCFGR;
 	
 	if(oFlags & TCPIP_ETH_OPEN_FDUPLEX)
+    {
 		ncfgr |= GMAC_NCFGR_FD_Msk ;
+    }
 	else
+    {
 		ncfgr &= ~GMAC_NCFGR_FD_Msk ;	
-	
+    }
     if(oFlags & (TCPIP_ETH_OPEN_1000 | TCPIP_ETH_OPEN_100))
+    {
 		ncfgr |= GMAC_NCFGR_SPD_Msk ;
+    }
 	else
+    {
 		ncfgr &= ~GMAC_NCFGR_SPD_Msk ;
+    }
 		
 	if(pauseType & TCPIP_ETH_PAUSE_TYPE_EN_RX)
+    {
 		ncfgr |= GMAC_NCFGR_PEN_Msk ;
+    }
 	else
+    {
 		ncfgr &= ~GMAC_NCFGR_PEN_Msk ;		
-	
+    }
 	pGmacRegs->GMAC_NCFGR = ncfgr;
 	
 	// Select MII interface mode 

@@ -1664,22 +1664,23 @@ def tcpipEthMacMIIMode(symbol, event):
     global gmacComponentName
     global interfaceNum
     interface = 0
-    if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") != None):
-        global tcpipGmacEthRmii
-        if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") == True):
-            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII")      
-    if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") != None):
-        global tcpipGmacEthMii
-        if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") == True):
-            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "MII")
-    if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") != None):
-        global tcpipGmacEthGmii
-        if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") == True):
-            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "GMII")
-    if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") != None):
-        global tcpipGmacEthRgmii
-        if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") == True):
-            setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RGMII")
+    if len(interfaceNum):
+        if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") != None):
+            global tcpipGmacEthRmii
+            if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") == True):
+                setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII")      
+        if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") != None):
+            global tcpipGmacEthMii
+            if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") == True):
+                setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "MII")
+        if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") != None):
+            global tcpipGmacEthGmii
+            if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") == True):
+                setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "GMII")
+        if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") != None):
+            global tcpipGmacEthRgmii
+            if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") == True):
+                setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RGMII")
             
 def tcpipGmacClockUpdate(symbol, event): 
     setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(event["value"]))

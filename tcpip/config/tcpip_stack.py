@@ -47,6 +47,8 @@ tcpipStackIntMacInterface = []
 tcpipStackMiiMode = []
 tcpipStackOthInterface = []
 configSummaryVisible = True
+
+symbol_value = 0
 #########################################################################################
 
 def instantiateComponent(tcpipStackComponent):
@@ -2457,6 +2459,7 @@ def setVal(component, symbol, value):
 
 #Handle messages from other components
 def handleMessage(messageID, args):
+    global symbol_value
     retDict= {}
     if (messageID == "SET_SYMBOL"):
         print "handleMessage: Set Symbol"
@@ -2464,12 +2467,15 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
     elif (messageID == "INC_SYMBOL"):
         print "handleMessage: Increment Symbol"
-        symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
-        Database.setSymbolValue(args["Component"], args["Id"], symbol_value + 1)
+        # symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
+        symbol_value = symbol_value + 1
+        Database.setSymbolValue(args["Component"], args["Id"], symbol_value)
         retDict= {"Return": "Success"}
     elif (messageID == "DEC_SYMBOL"):
-        symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
-        Database.setSymbolValue(args["Component"], args["Id"], symbol_value - 1)
+        # symbol_value = Database.getSymbolValue(args["Component"], args["Id"])
+        if (symbol_value >= 1) :
+            symbol_value = symbol_value - 1
+        Database.setSymbolValue(args["Component"], args["Id"], symbol_value)
         retDict= {"Return": "Success"}
     else:
         retDict= {"Return": "UnImplemented Command"}

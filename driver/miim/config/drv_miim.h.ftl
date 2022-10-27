@@ -44,17 +44,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 /*** MIIM Driver Configuration ***/
 <#lt><#assign intMac_array = [] />
 <#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
-	<#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval>
-	<#lt><#if (isIntMac == true)>
-	<#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>	
-		<#lt><#assign intMac_array = intMac_array + [intMacName] />
-	<#lt></#if>	
+    <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval>
+    <#lt><#if (isIntMac == true)>
+    <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>    
+        <#lt><#assign intMac_array = intMac_array + [intMacName] />
+    <#lt></#if> 
 <#lt></#list>
-<#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
-	<#lt>#define DRV_MIIM_ETH_MODULE_ID_${i}              ${intMac_array[i]}_BASE_ADDRESS
-	<#lt>#define DRV_MIIM_DRIVER_INDEX_${i}        			${.vars["DRV_MIIM_DRIVER_INDEX" + i?string]}
-<#lt></#list>
-
+<#lt><#assign miim_count = 0 />
+<#list intMac_array as mac>
+    <#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${mac}_BASE_ADDRESS
+    <#lt>#define DRV_MIIM_DRIVER_INDEX_${miim_count}                 ${.vars["DRV_MIIM_DRIVER_INDEX" + miim_count?string]}
+    <#lt><#assign miim_count = miim_count + 1 />
+</#list>
 #define DRV_MIIM_INSTANCES_NUMBER           ${DRV_MIIM_INSTANCES_NUMBER}
 #define DRV_MIIM_INSTANCE_OPERATIONS        ${DRV_MIIM_INSTANCE_OPERATIONS}
 #define DRV_MIIM_INSTANCE_CLIENTS           ${DRV_MIIM_INSTANCE_CLIENTS}
