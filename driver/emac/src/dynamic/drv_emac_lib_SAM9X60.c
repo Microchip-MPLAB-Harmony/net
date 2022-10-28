@@ -244,7 +244,7 @@ void macDrvrLibInitializeEmac( MAC_DRIVER * pMacDrvr )
         hash.calculate = false;             // No hash calculation; directly set hash register
         macDrvrLibRxFilterHashCalculate( pMacDrvr, &hash );
     }
-    if( ((TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII) )
+    if( (pMacDrvr->config.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RMII) )   
     {
         pMacRegs->EMAC_USRIO = EMAC_USRIO_RMII( 1 ); // initial mode set as RMII
     }

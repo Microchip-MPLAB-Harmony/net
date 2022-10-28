@@ -49,7 +49,7 @@ void                        macDrvrTaskIsr(             SYS_MODULE_OBJ object );
 void                        EMAC0_InterruptHandler(     void );
 void                        EMAC1_InterruptHandler(     void );
 // PHY related Initialization
-static SYS_MODULE_OBJ       macDrvrPhyInitialize(       MAC_DRIVER * pMacDrvr );
+static TCPIP_MAC_RES        macDrvrPhyInitialize(       MAC_DRIVER * pMacDrvr );
 static void                 macDrvrDeInit(              MAC_DRIVER * pMacDrvr );
 static void                 macDrvrTxAcknowledge(       MAC_DRIVER * pMacDrvr );
 static TCPIP_MAC_RES        macDrvrTxPendingPackets(    MAC_DRIVER * pMacDrvr );
@@ -1526,7 +1526,7 @@ void macDrvrTaskIsr( SYS_MODULE_OBJ sysObjHandle )
  * Function:    macDrvrPhyInitialize
  * Summary:     PHY initialization
  ******************************************************************************/
-static SYS_MODULE_OBJ
+static TCPIP_MAC_RES
 macDrvrPhyInitialize( MAC_DRIVER * pMacDrvr )
 {
     DRV_HANDLE                      hPhyClient;

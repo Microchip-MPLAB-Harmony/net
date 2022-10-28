@@ -23,7 +23,7 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 <#if HarmonyCore.SELECT_RTOS == "BareMetal">    
-	<#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+	<#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
     <#lt>	DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt></#list>	
 <#elseif HarmonyCore.SELECT_RTOS == "FreeRTOS">

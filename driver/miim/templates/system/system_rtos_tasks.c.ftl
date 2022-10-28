@@ -26,7 +26,7 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
     <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
     <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
@@ -42,7 +42,7 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER -1) as i >
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
     <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
              <#if DRV_MIIM_RTOS_USE_DELAY >
