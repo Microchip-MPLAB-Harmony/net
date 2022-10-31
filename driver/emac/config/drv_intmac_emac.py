@@ -141,6 +141,7 @@ def onAttachmentConnected( source, target ):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
+        incVal("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")
         setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipMacEthRmii.getValue() == True else "MII")
 
 def onAttachmentDisconnected( source, target ):
@@ -157,6 +158,7 @@ def onAttachmentDisconnected( source, target ):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
+        decVal("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")
         setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "")
 
 
@@ -317,6 +319,24 @@ def setVal(component, symbol, value):
     else:
         return True
 
+#Increment symbols of other components
+def incVal(component, symbol):
+    triggerDict = {"Component":component,"Id":symbol}
+    if(Database.sendMessage(component, "INC_SYMBOL", triggerDict) == None):
+        print "Increment Symbol Failure" + component + ":" + symbol
+        return False
+    else:
+        return True
+
+#Increment symbols of other components
+def decVal(component, symbol):
+    triggerDict = {"Component":component,"Id":symbol}
+    if(Database.sendMessage(component, "DEC_SYMBOL", triggerDict) == None):
+        print "Decrement Symbol Failure" + component + ":" + symbol
+        return False
+    else:
+        return True
+        
 #Handle messages from other components
 def handleMessage(messageID, args):
     retDict= {}

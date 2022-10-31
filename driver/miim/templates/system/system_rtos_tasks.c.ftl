@@ -26,9 +26,11 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
-    <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt>       <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
+    <#lt>       DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
+    <#lt>       </#if>
     <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
     <#lt>        vTaskDelay(${DRV_MIIM_RTOS_DELAY} / portTICK_PERIOD_MS);
     <#lt>       </#if>
@@ -42,12 +44,14 @@
     <#lt>{
     <#lt>    while(1)
     <#lt>    {
-    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
+    <#lt>       <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
+    <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
     <#lt>        DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
-             <#if DRV_MIIM_RTOS_USE_DELAY >
+    <#lt>       </#if>
+    <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
     <#lt>        tx_thread_sleep((ULONG)(${DRV_MIIM_RTOS_DELAY} / (TX_TICK_PERIOD_MS)));
-             </#if>
+    <#lt>       </#if>
     <#lt>    }
     <#lt>}
 </#if>

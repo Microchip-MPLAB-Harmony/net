@@ -52,7 +52,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#lt></#list>
 <#lt><#assign miim_count = 0 />
 <#list intMac_array as mac>
-    <#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${mac}_BASE_ADDRESS
+	<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
+		<#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${drvPic32mEthmac.TCPIP_EMAC_MODULE_ID}
+	<#else>
+		<#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${mac}_BASE_ADDRESS
+	</#if>
     <#lt>#define DRV_MIIM_DRIVER_INDEX_${miim_count}                 ${.vars["DRV_MIIM_DRIVER_INDEX" + miim_count?string]}
     <#lt><#assign miim_count = miim_count + 1 />
 </#list>

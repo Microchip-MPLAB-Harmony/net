@@ -27,7 +27,11 @@
 <#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
     <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval> 
     <#lt><#if (isIntMac == true)>   
-        <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>
+        <#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
+            <#lt><#assign intMacName = "_ETH">
+        <#else>
+            <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>
+        </#if>  
         <#lt><#if intMacName + "_BASE_ADDRESS" == "${DRV_ETHPHY_PERIPHERAL_ID}">
             <#lt><#assign miimIdx = count>
         <#lt></#if>             

@@ -22,6 +22,7 @@
 *****************************************************************************"""
 interfaceNum = []
 ethmacComponentName = ""
+tcpipEmacModuleId = ""
 def instantiateComponent(drvPic32mEthmacComponent):
     global tcpipEthmacInterruptVector
     global tcpipEthmacInterruptHandlerLock
@@ -30,6 +31,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     global tcpipEthmacInterruptEnable
     global tcpipEthmacEthRmii
     global ethmacComponentName
+    global tcpipEmacModuleId
     
     print("PIC32M Internal Ethernet MAC Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -728,15 +730,18 @@ def getIRQnumber(string):
 def onAttachmentConnected(source, target):
     global tcpipEthmacEthRmii
     global ethmacComponentName
+    global tcpipEmacModuleId
+    
     if (source["id"] == "ETHMAC_PHY_Dependency"): 
         Database.setSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE", target["component"].getDisplayName(),2)
         extPhyComponent = "drvExtPhy" + target['component'].getDisplayName().capitalize()
         setVal(extPhyComponent, "DRV_ETHPHY_MAC_NAME", ethmacComponentName)
-        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", ethmacComponentName + "_BASE_ADDRESS") 
+        setVal(extPhyComponent, "DRV_ETHPHY_PERIPHERAL_ID", tcpipEmacModuleId.getValue()) 
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
+        incVal("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")
         setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipEthmacEthRmii.getValue() == True else "MII")
         
 def onAttachmentDisconnected(source, target):
@@ -750,6 +755,7 @@ def onAttachmentDisconnected(source, target):
         interfaceNum.remove(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
         setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "")
+        decVal("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")
        
 
 def tcpipEthmacHeapCalc(): 
@@ -783,6 +789,24 @@ def setVal(component, symbol, value):
     else:
         return True
 
+#Increment symbols of other components
+def incVal(component, symbol):
+    triggerDict = {"Component":component,"Id":symbol}
+    if(Database.sendMessage(component, "INC_SYMBOL", triggerDict) == None):
+        print "Increment Symbol Failure" + component + ":" + symbol
+        return False
+    else:
+        return True
+
+#Increment symbols of other components
+def decVal(component, symbol):
+    triggerDict = {"Component":component,"Id":symbol}
+    if(Database.sendMessage(component, "DEC_SYMBOL", triggerDict) == None):
+        print "Decrement Symbol Failure" + component + ":" + symbol
+        return False
+    else:
+        return True
+        
 #Handle messages from other components
 def handleMessage(messageID, args):
     retDict= {}

@@ -21,8 +21,10 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ---------------------------------------------------------------------------->
 <#if DRV_MIIM_USE_DRIVER == true>
-    <#lt><#list 0..(DRV_MIIM_INSTANCES_NUMBER) as i >
-    <#lt>/* Forward declaration of MIIM ${i} initialization data */
-    <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i};
-    <#lt></#list>
+    <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
+        <#lt><#list 0..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
+        <#lt>/* Forward declaration of MIIM ${i} initialization data */
+        <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i};
+        <#lt></#list>
+    </#if>
 </#if>

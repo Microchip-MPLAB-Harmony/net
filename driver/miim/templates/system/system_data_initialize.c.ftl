@@ -41,11 +41,13 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 <#if DRV_MIIM_USE_DRIVER>
-    <#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER) as i >
-        <#lt>/*** MIIM Driver Instance ${i} Configuration ***/
-        <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i} =
-        <#lt>{
-        <#lt>   .ethphyId = DRV_MIIM_ETH_MODULE_ID_${i},
-        <#lt>};
-    <#lt></#list>
+    <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
+        <#lt><#list 0 ..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
+            <#lt>/*** MIIM Driver Instance ${i} Configuration ***/
+            <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i} =
+            <#lt>{
+            <#lt>   .ethphyId = DRV_MIIM_ETH_MODULE_ID_${i},
+            <#lt>};
+        <#lt></#list>
+    </#if>
 </#if>
