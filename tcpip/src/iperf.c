@@ -2533,12 +2533,6 @@ static void CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
 
-    if (argc < 3)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: iperfs <-tx size> <-rx size> <-i index>\r\n");
-        return;
-    }
-
     setTx = setRx = 0;
     txBuffSize = rxBuffSize = 0;
     iperfIndex = 0;     // assume index 0 if not specified
@@ -2565,7 +2559,7 @@ static void CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
         else
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "iperfi: Unknown parameter\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: iperfs <-tx size> <-rx size> <-i index>\r\n");
         }
 
         currIx += 2;
@@ -2588,14 +2582,15 @@ static void CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(setTx)
     {
         pIState->txBuffSize = txBuffSize;
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfs: OK, set instance %d tx size to %d\r\n", iperfIndex, txBuffSize);
     }
 
     if(setRx)
     {
         pIState->rxBuffSize = rxBuffSize;
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfs: OK, set instance %d rx size to %d\r\n", iperfIndex, rxBuffSize);
     }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfs: OK, instance %d tx size is %d\r\n", iperfIndex, pIState->txBuffSize);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfs: OK, instance %d rx size is %d\r\n", iperfIndex, pIState->rxBuffSize);
 
 }
 
