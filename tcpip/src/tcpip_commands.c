@@ -313,7 +313,7 @@ static TCPIP_COMMANDS_STAT  tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
 static int commandInitCount = 0;        // initialization count
 
 #if defined(TCPIP_STACK_USE_DNS)
-static char                 dnslookupTargetHost[31];     // current target host name
+static char                 dnslookupTargetHost[TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN + 1];     // current target host name
 static TCPIP_DNS_RESOLVE_TYPE     dnsType=TCPIP_DNS_TYPE_A;
 static const void*          dnsLookupCmdIoParam = 0;
 static uint32_t             dnsLookUpStartTick;
