@@ -1039,6 +1039,7 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         for(connIx = 0; connIx < nConns; connIx++)
         {
             pHttpCon->connState = TCPIP_HTTP_CONN_STATE_IDLE;
+            pHttpCon->listenPort = httpInitData->listenPort;
             pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, httpInitData->listenPort, 0, 0);
             if(pHttpCon->socket == NET_PRES_INVALID_SOCKET)
             {   // failed to open the socket
@@ -5675,8 +5676,31 @@ static void _HTTP_Report_ConnectionEvent(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HT
 }
 
 
+bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo)
+{
+    TCPIP_HTTP_NET_CONN* pHttpCon;
+
+    if(connIx >= httpConnNo)
+    {
+        return false;
+    }
+
+    pHttpCon = httpConnCtrl + connIx;
+    if(pHttpInfo)
+    {
+        pHttpInfo->httpStatus = pHttpCon->httpStatus;
+        pHttpInfo->listenPort = pHttpCon->listenPort;
+        pHttpInfo->connStatus = pHttpCon->connState;
+        pHttpInfo->nChunks = TCPIP_Helper_SingleListCount(&pHttpCon->chunkList);
+        pHttpInfo->chunkPoolEmpty = pHttpCon->chunkPoolEmpty;
+        pHttpInfo->fileBufferPoolEmpty = pHttpCon->fileBufferPoolEmpty;
+    }
+
+    return true;
+}
+
 #if ((TCPIP_HTTP_NET_DEBUG_LEVEL & TCPIP_HTTP_NET_DEBUG_MASK_CHUNK_INFO) != 0)
-bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos)
+bool TCPIP_HTTP_NET_ChunkInfoGet(int connIx, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos);
 {
     TCPIP_HTTP_NET_CONN* pHttpCon;
     TCPIP_HTTP_CHUNK_DCPT* pChDcpt;
@@ -5688,14 +5712,6 @@ bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo, TCP
     }
 
     pHttpCon = httpConnCtrl + connIx;
-    if(pHttpInfo)
-    {
-        pHttpInfo->httpStatus = pHttpCon->httpStatus;
-        pHttpInfo->connStatus = pHttpCon->connState;
-        pHttpInfo->nChunks = TCPIP_Helper_SingleListCount(&pHttpCon->chunkList);
-        pHttpInfo->chunkPoolEmpty = pHttpCon->chunkPoolEmpty;
-        pHttpInfo->fileBufferPoolEmpty = pHttpCon->fileBufferPoolEmpty;
-    }
 
     if(pChunkInfo)
     {   // fill data for each chunk
@@ -5724,9 +5740,8 @@ bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo, TCP
 
     return true;
 }
-
 #else
-bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos)
+bool TCPIP_HTTP_NET_ChunkInfoGet(int connIx, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos)
 {
     return false;
 }

@@ -4092,7 +4092,7 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/disconnect\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/chunk/disconnect\r\n");
         return false;
     }
 
@@ -4104,21 +4104,37 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
         for(connIx = 0; connIx < httpOpenConn; connIx++)
         {
-            if(TCPIP_HTTP_NET_InfoGet(connIx, &httpInfo, httpChunkInfo, sizeof(httpChunkInfo)/sizeof(*httpChunkInfo)))
+            if(TCPIP_HTTP_NET_InfoGet(connIx, &httpInfo))
             {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP conn: %d status: 0x%4x, sm: 0x%4x, chunks: %d, chunk empty: %d, file empty: %d\r\n",
-                       connIx, httpInfo.httpStatus, httpInfo.connStatus, httpInfo.nChunks, httpInfo.chunkPoolEmpty, httpInfo.fileBufferPoolEmpty);
-                pChunkInfo = httpChunkInfo;
-                for(chunkIx = 0; chunkIx < httpInfo.nChunks; chunkIx++, pChunkInfo++)
-                {
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: %d flags: 0x%4x, status: 0x%4x, fName: %s\r\n", chunkIx, pChunkInfo->flags, pChunkInfo->status, pChunkInfo->chunkFName);
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: dyn buffers: %d, var Name: %s\r\n", pChunkInfo->nDynBuffers, pChunkInfo->dynVarName);
-                }
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP conn: %d status: 0x%4x, port: %d, sm: 0x%4x, chunks: %d, chunk empty: %d, file empty: %d\r\n",
+                       connIx, httpInfo.httpStatus, httpInfo.listenPort, httpInfo.connStatus, httpInfo.nChunks, httpInfo.chunkPoolEmpty, httpInfo.fileBufferPoolEmpty);
             }
             else
             {
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP: failed to get info for conn: %d\r\n", connIx);
             }
+        }
+    }
+    else if(strcmp(argv[1], "chunk") == 0)
+    {
+        for(connIx = 0; connIx < httpOpenConn; connIx++)
+        {
+            if(TCPIP_HTTP_NET_InfoGet(connIx, &httpInfo))
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP conn: %d, chunks: %d\r\n",  connIx, httpInfo.nChunks);
+                if(TCPIP_HTTP_NET_ChunkInfoGet(connIx, httpChunkInfo, sizeof(httpChunkInfo)/sizeof(*httpChunkInfo)))
+                {
+                    pChunkInfo = httpChunkInfo;
+                    for(chunkIx = 0; chunkIx < httpInfo.nChunks; chunkIx++, pChunkInfo++)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: %d flags: 0x%4x, status: 0x%4x, fName: %s\r\n", chunkIx, pChunkInfo->flags, pChunkInfo->status, pChunkInfo->chunkFName);
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: dyn buffers: %d, var Name: %s\r\n", pChunkInfo->nDynBuffers, pChunkInfo->dynVarName);
+                    }
+                    continue;
+                }
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP: failed to get info for conn: %d\r\n", connIx);
         }
     }
     else if(strcmp(argv[1], "stat") == 0)

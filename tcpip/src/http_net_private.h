@@ -426,6 +426,7 @@ typedef struct _tag_TCPIP_HTTP_NET_CONN
     uint16_t                    connIx;                         // index of this connection in the HTTP server
     uint16_t                    uploadSectNo;                   // current sector number for upload
     uint16_t                    smPost;                         // POST state machine variable  
+    uint16_t                    listenPort;                     // server listening port
     uint8_t                     hasArgs;                        // True if there were get or cookie arguments
     uint8_t                     isAuthorized;                   // 0x00-0x79 on fail, 0x80-0xff on pass
     uint16_t                    chunkPoolEmpty;                 // counter for dynamic chunks empty condition

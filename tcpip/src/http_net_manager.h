@@ -131,6 +131,7 @@ typedef struct
     uint16_t    nChunks;        // currently active chunks
     uint16_t    chunkPoolEmpty; // counter for the dynamic chunk pool empty condition
     uint16_t    fileBufferPoolEmpty; // counter for file buffer empty condition
+    uint16_t    listenPort;
 }TCPIP_HTTP_NET_CONN_INFO;
 
 // HTTP statistics info
@@ -148,13 +149,18 @@ typedef struct
 
 
 // return info about a specific connection
-// pChunkInfo points to an array of TCPIP_HTTP_NET_CHUNK_INFO, nInfos in size; could be 0 if not needed
 // returns true if conenction ix found and info updated, false if failed
-bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos);
+bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo);
 
 
 // return HTTP statistics
 void TCPIP_HTTP_NET_StatGet(TCPIP_HTTP_NET_STAT_INFO* pStatInfo);
+
+// return advanced chunk info about a specific connection
+// pChunkInfo points to an array of TCPIP_HTTP_NET_CHUNK_INFO, nInfos in size;
+// returns true if conenction ix found and info updated, false if failed
+// debug purpose only
+bool TCPIP_HTTP_NET_ChunkInfoGet(int connIx, TCPIP_HTTP_NET_CHUNK_INFO* pChunkInfo, int nInfos);
 
 
 #endif // __HTTP_NET_MANAGER_H_
