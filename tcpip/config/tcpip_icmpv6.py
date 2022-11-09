@@ -51,6 +51,33 @@ def instantiateComponent(tcpipIcmpv6Component):
     tcpipIcmpv6ClientCommand.setDefaultValue(True)
     tcpipIcmpv6ClientCommand.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_STACK_USE_ICMPV6_CLIENT"])
     
+    # Number of ICMPv6 Echo requests send
+    tcpipIcmpv6EchoReqNum = tcpipIcmpv6Component.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMPV6_ECHO_REQUESTS", tcpipIcmpv6ClientCommand)
+    tcpipIcmpv6EchoReqNum.setHelp("mcc_h3_icmpv6_configurations")
+    tcpipIcmpv6EchoReqNum.setLabel("Number of ICMPv6 Echo requests")
+    tcpipIcmpv6EchoReqNum.setVisible(False)
+    tcpipIcmpv6EchoReqNum.setDescription("Number of ICMPv6 Echo requests")
+    tcpipIcmpv6EchoReqNum.setDefaultValue(4)
+    tcpipIcmpv6EchoReqNum.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_ICMPV6_CLIENT_CONSOLE_CMD"])
+
+    # ICMPV6 Reply Time-out in ms
+    tcpipIcmpv6EchoReqDelay = tcpipIcmpv6Component.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMPV6_ECHO_REQUEST_DELAY", tcpipIcmpv6ClientCommand)
+    tcpipIcmpv6EchoReqDelay.setHelp("mcc_h3_icmpv6_configurations")
+    tcpipIcmpv6EchoReqDelay.setLabel("ICMPv6 Request Delay (in msec)")
+    tcpipIcmpv6EchoReqDelay.setVisible(False)
+    tcpipIcmpv6EchoReqDelay.setDescription("ICMPv6 Request delay in ms")
+    tcpipIcmpv6EchoReqDelay.setDefaultValue(1000)
+    tcpipIcmpv6EchoReqDelay.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_ICMPV6_CLIENT_CONSOLE_CMD"])
+    
+    # ICMPv6 Give Up Time-out in ms
+    tcpipIcmpv6EchoTimeout= tcpipIcmpv6Component.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMPV6_ECHO_TIMEOUT", tcpipIcmpv6ClientCommand)
+    tcpipIcmpv6EchoTimeout.setHelp("mcc_h3_icmp_configurations")
+    tcpipIcmpv6EchoTimeout.setLabel("ICMPv6 Give Up Time-out (in msec)")
+    tcpipIcmpv6EchoTimeout.setVisible(False)
+    tcpipIcmpv6EchoTimeout.setDescription("ICMPv6 Give Up Time-out in ms")
+    tcpipIcmpv6EchoTimeout.setDefaultValue(5000)
+    tcpipIcmpv6EchoTimeout.setDependencies(tcpipIcmpv6MenuVisible, ["TCPIP_ICMPV6_CLIENT_CONSOLE_CMD"])
+    
     # Add icmpv6.c file
     tcpipICMPv6SourceFile = tcpipIcmpv6Component.createFileSymbol(None, None)
     tcpipICMPv6SourceFile.setSourcePath("tcpip/src/icmpv6.c")
