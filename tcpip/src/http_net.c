@@ -1040,7 +1040,7 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         {
             pHttpCon->connState = TCPIP_HTTP_CONN_STATE_IDLE;
             pHttpCon->listenPort = httpInitData->listenPort;
-            pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, httpInitData->listenPort, 0, 0);
+            pHttpCon->socket =  NET_PRES_SocketOpen(0, sktType, IP_ADDRESS_TYPE_ANY, pHttpCon->listenPort, 0, 0);
             if(pHttpCon->socket == NET_PRES_INVALID_SOCKET)
             {   // failed to open the socket
                 SYS_ERROR(SYS_ERROR_ERROR, " HTTP: Socket creation failed\r\n");
