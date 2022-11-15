@@ -56,13 +56,19 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpv4Client.setLabel("Use ICMPv4 Client")
     tcpipIcmpv4Client.setVisible(True)
     tcpipIcmpv4Client.setDescription("Use ICMPv4 Client")
-    tcpipIcmpv4Client.setDefaultValue(False)
+    tcpipDhcpsComp = Database.getComponentByID("tcpipDhcps")
+    tcpipDhcpServerV2Comp = Database.getComponentByID("tcpipDhcpServer")
+    if (tcpipDhcpsComp != None) or (tcpipDhcpServerV2Comp != None):
+        dfltVal = True
+    else:
+        dfltVal = False
+    tcpipIcmpv4Client.setDefaultValue(dfltVal)
 
     # ICMP task rate in ms
     tcpipIcmpTskTickRate = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_TASK_TICK_RATE", tcpipIcmpv4Client)
     tcpipIcmpTskTickRate.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpTskTickRate.setLabel("ICMP Client Task Rate (in msec)")
-    tcpipIcmpTskTickRate.setVisible(False)
+    tcpipIcmpTskTickRate.setVisible(dfltVal)
     tcpipIcmpTskTickRate.setDescription("ICMP task rate in ms")
     tcpipIcmpTskTickRate.setDefaultValue(33)
     tcpipIcmpTskTickRate.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])    
@@ -71,7 +77,7 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpMaxClientReqNum = tcpipIcmpComponent.createIntegerSymbol("TCPIP_STACK_MAX_CLIENT_ECHO_REQUESTS", tcpipIcmpv4Client)
     tcpipIcmpMaxClientReqNum.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpMaxClientReqNum.setLabel("Maximum Number of Supported Client Requests")
-    tcpipIcmpMaxClientReqNum.setVisible(False)
+    tcpipIcmpMaxClientReqNum.setVisible(dfltVal)
     tcpipIcmpMaxClientReqNum.setDescription("Maximum Number of Parallel ICMP Echo requests")
     tcpipIcmpMaxClientReqNum.setDefaultValue(4)
     tcpipIcmpMaxClientReqNum.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
@@ -80,7 +86,7 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpCommandEnable = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_COMMAND_ENABLE", tcpipIcmpv4Client)
     tcpipIcmpCommandEnable.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpCommandEnable.setLabel("Enable ICMP Client Console Commands")
-    tcpipIcmpCommandEnable.setVisible(False)
+    tcpipIcmpCommandEnable.setVisible(dfltVal)
     tcpipIcmpCommandEnable.setDescription("Enable ICMP Client Console Commands")
     tcpipIcmpCommandEnable.setDefaultValue(False)
     tcpipIcmpCommandEnable.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
@@ -134,7 +140,7 @@ def instantiateComponent(tcpipIcmpComponent):
     tcpipIcmpEchoReqTimeout = tcpipIcmpComponent.createIntegerSymbol("TCPIP_ICMP_ECHO_REQUEST_TIMEOUT", tcpipIcmpv4Client)
     tcpipIcmpEchoReqTimeout.setHelp("mcc_h3_icmp_configurations")
     tcpipIcmpEchoReqTimeout.setLabel("Echo request timeout (in msec)")
-    tcpipIcmpEchoReqTimeout.setVisible(False)
+    tcpipIcmpEchoReqTimeout.setVisible(dfltVal)
     tcpipIcmpEchoReqTimeout.setDescription("Echo request timeout in ms")
     tcpipIcmpEchoReqTimeout.setDefaultValue(500)
     tcpipIcmpEchoReqTimeout.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])

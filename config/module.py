@@ -98,6 +98,7 @@ def loadModule():
     net_PresComponent = Module.CreateComponent("net_Pres", "Presentation Layer", "/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/net_pres.py")
     net_PresComponent.addCapability("libNet_Pres","net_pres",True)    
     net_PresComponent.addDependency("Net_Pres_Crypto_Dependency", "TLS Provider", None, False, False)
+    net_PresComponent.addDependency("Net_Pres_SNTP_Dependency", "SNTP", None, True, True)
     net_PresComponent.setDisplayType("Presentation Layer")
     
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   

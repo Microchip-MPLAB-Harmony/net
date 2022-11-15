@@ -296,29 +296,10 @@ def tcpipDhcpsMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
         tcpipDependentSymbol.setVisible(False)
 
 def tcpipDhcpsICMPClientEnable():
-    tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
-    print(tcpipIcmpComp)
-    if(tcpipIcmpComp == None):
-        # Enable ICMP Dependency 
-        if(Database.getComponentByID("tcpip_network_config") == None):
-            res = Database.activateComponents(["tcpip_network_config"])
-        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4") != True):
-            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv4", True)
-        else:
-            tcpipIcmpComp = Database.activateComponents(["tcpipIcmp"])
-            print(tcpipIcmpComp)
-
-        tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")
-        print(tcpipIcmpComp)
+    tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")        
     if(tcpipIcmpComp != None):
         tcpipICMPClientSymbol = tcpipIcmpComp.getSymbolByID("TCPIP_STACK_USE_ICMP_CLIENT")
-        print(tcpipICMPClientSymbol)
-        print("DHCP Server ICMP Client Menu visible.")
-    #if(tcpipIcmpClient):
-    #tcpipIcmpClient.setVisible(True)
-    #tcpipIcmpClient.setEnabled(True)
         tcpipICMPClientSymbol.setValue(True)
-    print("DHCP Server ICMP Client Enabled.")
     
     
   

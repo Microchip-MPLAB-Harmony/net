@@ -60,7 +60,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             <#lt>#define TCPIP_IF_PIC32CZ_GMAC
         <#elseif ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("SAM9X7"))>
             <#lt>#define TCPIP_IF_GMAC_SAM9X7  
-        <#else 
+        <#else>
             <#lt>#define TCPIP_IF_GMAC  
         </#if>
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC0">

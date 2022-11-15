@@ -62,6 +62,7 @@ tcpipNetConfigNumMax = 5  # hard coded value
 def instantiateComponent(tcpipDhcpServerComponent):
     print("TCPIP DHCP Server V2 Component")
     configName = Variables.get("__CONFIGURATION_NAME")
+    tcpipDhcpServerICMPClientEnable()
     
     # Enable DHCP Server
     tcpipDhcpServer = tcpipDhcpServerComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_SERVER_V2", None)
@@ -615,6 +616,12 @@ def tcpipDhcpServerInstnCount(symbol, event):
     
 def tcpipDhcpServerInstnMenuVisible(symbol, event):
     symbol.setVisible(event["value"])
+
+def tcpipDhcpServerICMPClientEnable():
+    tcpipIcmpComp = Database.getComponentByID("tcpipIcmp")        
+    if(tcpipIcmpComp != None):
+        tcpipICMPClientSymbol = tcpipIcmpComp.getSymbolByID("TCPIP_STACK_USE_ICMP_CLIENT")
+        tcpipICMPClientSymbol.setValue(True)
 
 #Set symbols of other components
 def setVal(component, symbol, value):

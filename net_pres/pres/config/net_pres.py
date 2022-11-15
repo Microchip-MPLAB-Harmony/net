@@ -157,6 +157,8 @@ def instantiateComponent(net_PresComponent):
     netPresUseWolfSSL.setDefaultValue((netPresEncryptionProvider.getSelectedKey() == "WolfSSL"))
     netPresUseWolfSSL.setDependencies(netPresEncProviderMenu, ["NET_PRES_ENC_PROVIDE"])     
     
+    net_PresComponent.setDependencyEnabled("Net_Pres_SNTP_Dependency", False)
+    
     # Generate Encryption Provider Stub Code?
     netPresGenEncryptStub = net_PresComponent.createBooleanSymbol("NET_PRES_GENERATE_ENC_STUBS", netPresEncryptEnable)
     netPresGenEncryptStub.setLabel("Generate Encryption Provider Stub Code?")
@@ -656,8 +658,13 @@ def genRtosTask(symbol, event):
     symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
 
 def netPresEncryptMenuVisible(symbol, event):
+    localComponent = symbol.getComponent() 
     symbol.setVisible(event["value"])
-
+    if(event["value"] == False):
+        localComponent.setDependencyEnabled("Net_Pres_SNTP_Dependency", False)
+    elif (localComponent.getSymbolValue("NET_PRES_ENC_PROVIDE") == 0):
+        localComponent.setDependencyEnabled("Net_Pres_SNTP_Dependency", True)
+    
 def netPresEncProviderMenu(symbol, event):
     data = symbol.getComponent() 
     if (event["value"] == 0):      
@@ -679,12 +686,8 @@ def netPresEncProviderMenu(symbol, event):
             res = Database.connectDependencies(autoConnectTableWolfssl) 
         if crypto_connect == True :
             res = Database.connectDependencies(autoConnectTableCrypto)  
-        # Enable SNTP Dependency 
-        if(Database.getComponentByID("tcpip_apps_config") == None):
-            res = Database.activateComponents(["tcpip_apps_config"])
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNTP") != True):
-            setVal("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNTP", True)
-            
+         
+        data.setDependencyEnabled("Net_Pres_SNTP_Dependency", True)
         #Todo: change to Database.sendMessage(); but need handleMessage() in lib_wolfssl
         Database.setSymbolValue("lib_wolfssl","wolfssl", True) 
         data.setSymbolValue("NET_PRES_BLOB_CERT", 0)
@@ -712,6 +715,7 @@ def netPresEncProviderMenu(symbol, event):
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL", False)
         data.setSymbolValue("NET_PRES_BLOB_CERT", 1)
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS", True)
+        data.setDependencyEnabled("Net_Pres_SNTP_Dependency", False)
    
 def netPresWolfSSLDebugEnable(symbol, event):
     data = symbol.getComponent()
