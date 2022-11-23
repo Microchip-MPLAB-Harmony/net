@@ -179,6 +179,11 @@ typedef enum
     TCPIP_MODULE_MAC_PPP_0          = 0x1200,   // first mac instance
 
 
+    // External LAN865X device: room for 16 LAN865X devices
+    TCPIP_MODULE_MAC_LAN865X         = 0x1110,
+    TCPIP_MODULE_MAC_LAN865X_0       = 0x1110,   // first mac instance
+    TCPIP_MODULE_MAC_LAN865X_1       = 0x1111,   // second mac instance
+
     // External, non MCHP, MAC modules
     TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
 }TCPIP_MODULE_MAC_ID;
