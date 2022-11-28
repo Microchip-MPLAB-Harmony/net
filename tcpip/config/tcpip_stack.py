@@ -643,7 +643,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "ETH"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
-    elif ("SAMA5" in processor) or ("SAMA7G" in processor):
+    elif ("SAMA5" in processor) or ("SAMA7G" in processor) or ("SAM9X7" in processor):
         macName = "GMAC"
         intStringStart = "core."
         intStringEnd = "_INTERRUPT_ENABLE"
@@ -685,7 +685,7 @@ def instantiateComponent(tcpipStackComponent):
             tcpipStackMacIntEnable[intIndex].setLabel("Interrupt " + str(intIndex))
             tcpipStackMacIntEnable[intIndex].setVisible(configSummaryVisible) 
             tcpipStackMacIntEnable[intIndex].setReadOnly(True) 
-            if ("SAMA5" in processor) or ("SAMA7G" in processor) or ("SAM9X60" in processor):
+            if ("SAMA5" in processor) or ("SAMA7G" in processor) or ("SAM9X60" in processor) or ("SAM9X7" in processor):
                 tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["name"]) + intStringEnd]) 
             else:
                 tcpipStackMacIntEnable[intIndex].setDependencies(tcpipStackMacIntUpdate, [intStringStart + str(macInterruptStruct[intIndex]["index"]) + intStringEnd]) 

@@ -2027,11 +2027,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
             }
            
             ethRes = DRV_ETHPHY_RES_OK;
-#elif defined(TCPIP_IF_GMAC0) || defined(TCPIP_IF_GMAC1)
+#elif defined(TCPIP_IF_GMAC0) || defined(TCPIP_IF_GMAC1) || defined(TCPIP_IF_GMAC_SAM9X7)
             gmac_registers_t *  pGmacRegs = (gmac_registers_t *) hClientObj->ethphyId;
             if(pGmacRegs->GMAC_NCR & GMAC_NCR_MIIONRGMII_Msk)
             {
-                if ((pGmacRegs->GMAC_UR & GMAC_UR_MIM_Msk) == GMAC_UR_MIM_MII)
+                if ((pGmacRegs->GMAC_UR & GMAC_UR_MIM_Msk) == 0) //GMAC_UR_MIM_MII
                 {
                     hwFlags = DRV_ETHPHY_CFG_MII;
                     ethRes = DRV_ETHPHY_RES_OK;

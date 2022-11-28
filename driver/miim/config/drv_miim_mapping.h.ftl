@@ -428,6 +428,7 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
         GMAC_MIIM_SYSCLK_DIV_BY_48  /*DOM-IGNORE-BEGIN*/ = 0x03 /*DOM-IGNORE-END*/ ,
         GMAC_MIIM_SYSCLK_DIV_BY_64  /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/ ,
         GMAC_MIIM_SYSCLK_DIV_BY_96  /*DOM-IGNORE-BEGIN*/ = 0x05 /*DOM-IGNORE-END*/ ,
+        GMAC_MIIM_SYSCLK_DIV_ABOVE_96  /*DOM-IGNORE-BEGIN*/ = 0x06 /*DOM-IGNORE-END*/ ,
 
     } GMAC_MIIM_CLK;
     
@@ -565,7 +566,7 @@ static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(u
         } 
         else 
         { 
-            clock_dividor = 0; 
+            clock_dividor = GMAC_MIIM_SYSCLK_DIV_ABOVE_96; 
         } 
         
         //disable tx if it is already enabled

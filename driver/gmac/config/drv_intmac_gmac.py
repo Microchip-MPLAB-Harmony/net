@@ -112,6 +112,8 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacDevName.setDefaultValue("PIC32CZ")   
     elif ("SAMA7G" in processor): # SAMA7G4
         tcpipGmacDevName.setDefaultValue("SAMA7G")   
+    elif ("SAM9X7" in processor): # SAM9X7
+        tcpipGmacDevName.setDefaultValue("SAM9X7")  
     
     if "PIC32CZ" in processor: # PIC32CZ    
         # Enable ETH_TX clock
@@ -169,13 +171,17 @@ def instantiateComponent(drvGmacComponent):
     elif ("SAMA7G" in processor):
         drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "MCK1_FREQUENCY")))
         drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MCK1_FREQUENCY"])
-        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MCK1_FREQUENCY")))  
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MCK1_FREQUENCY"))) 
+    elif ("SAM9X7" in processor):
+        drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "MCK_FREQUENCY")))
+        drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MCK_FREQUENCY"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MCK_FREQUENCY")))         
  
     # Maximum Number MAC Queues
     tcpipGmacMaxQueCnt = drvGmacComponent.createIntegerSymbol("TCPIP_"+ gmacComponentName + "_MAX_MAC_QUE_CNT", None)
     tcpipGmacMaxQueCnt.setLabel("Maximum Number of Queues")
     tcpipGmacMaxQueCnt.setVisible(True)
-    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor)):  
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor) or ("SAM9X7" in processor)):  
         tcpipGmacMaxQueCnt.setDefaultValue(6)
     elif ("SAME5" in processor):
         tcpipGmacMaxQueCnt.setDefaultValue(1)
@@ -328,7 +334,7 @@ def instantiateComponent(drvGmacComponent):
         Database.setSymbolValue("core", interruptHandler, gmacComponentName + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor)or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")):
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor)or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor):
         gmacheapdependency = [  "TCPIP_"+ gmacComponentName + "_QUEUE_0","TCPIP_"+ gmacComponentName + "_RX_EN_QUE0","TCPIP_"+ gmacComponentName + "_RX_DESCRIPTORS_COUNT_QUE0",
                                 "TCPIP_"+ gmacComponentName + "_RX_ADDL_BUFF_COUNT_QUE0","TCPIP_"+ gmacComponentName + "_RX_BUFF_COUNT_THRESHOLD_QUE0","TCPIP_"+ gmacComponentName + "_RX_BUFF_SIZE_QUE0",
                                 "TCPIP_"+ gmacComponentName + "_TX_EN_QUE0","TCPIP_"+ gmacComponentName + "_TX_DESCRIPTORS_COUNT_QUE0","TCPIP_"+ gmacComponentName + "_QUEUE_1","TCPIP_"+ gmacComponentName + "_RX_EN_QUE1",
@@ -465,7 +471,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthHalfDuplex.setDescription("Use Half Duplex")
     tcpipGmacEthHalfDuplex.setDefaultValue(True)
     
-    if ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # PIC32CZ or GMAC0 of SAMA7G54
+    if ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor): # PIC32CZ / GMAC0 of SAMA7G54 /  SAM9X7
         # Use 1000MBps
         tcpipGmacEthUse1000 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_ETH_OF_1000", tcpipEthConnFlag)
         tcpipGmacEthUse1000.setHelp("mcc_h3_gmac_configurations")
@@ -513,7 +519,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthRmii.setLabel("RMII Connection")
     tcpipGmacEthRmii.setVisible(True)
     tcpipGmacEthRmii.setDescription("RMII Connection")
-    if (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # GMAC0 of SAMA7G54
+    if (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor): # GMAC0 of SAMA7G54  /  SAM9X7
         tcpipGmacEthRmii.setDefaultValue(False)
     else:
         tcpipGmacEthRmii.setDefaultValue(True)
@@ -537,7 +543,7 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacEthGmii.setDescription("GMII Connection")
         tcpipGmacEthGmii.setDefaultValue(False)
         tcpipGmacEthGmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_"+ gmacComponentName + "_ETH_OF_GMII"] )
-    elif (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # GMAC0 of SAMA7G54
+    elif (("SAMA7G" in processor) and (gmacComponentName == "GMAC0"))  or ("SAM9X7" in processor): # GMAC0 of SAMA7G54 /  SAM9X7
         # RGMII Connection
         tcpipGmacEthRgmii = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII", tcpipEthConnFlag)
         tcpipGmacEthRgmii.setHelp("mcc_h3_gmac_configurations")
@@ -556,7 +562,7 @@ def instantiateComponent(drvGmacComponent):
     # SAM E70/V71/RH71 has 6 Priority Queue
     # SAM A5D2 has 3 Priority Queue
     # SAM E54 has only 1 Queue
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or ("SAMA7G" in processor): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ or SAMA7G5
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or ("SAMA7G" in processor)  or ("SAM9X7" in processor): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ or SAMA7G5  or  SAM9X7
         tcpipGmacPrioQueues = drvGmacComponent.createMenuSymbol("TCPIP_"+ gmacComponentName + "_PRIORITY_QUEUES", tcpipGmacAdvSettings)
         tcpipGmacPrioQueues.setHelp("mcc_h3_gmac_configurations")
         tcpipGmacPrioQueues.setLabel(gmacComponentName + " Priority Queues")
@@ -675,7 +681,7 @@ def instantiateComponent(drvGmacComponent):
         
         drvGmacIntSrcQue1.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_1"])
 
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ or SAMA7G5-GMAC0
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0"))  or ("SAM9X7" in processor): # SAME70 or SAMV71 or SAMRH71 or SAMA5D2 or PIC32CZ or SAMA7G5-GMAC0  or  SAM9X7
         # GMAC Queue 2
         tcpipGmacQue2 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_QUEUE_2", tcpipGmacPrioQueues)
         tcpipGmacQue2.setHelp("mcc_h3_gmac_configurations")
@@ -794,7 +800,7 @@ def instantiateComponent(drvGmacComponent):
                 drvGmacIntSrcQue2.setDefaultValue(intName + "_IRQn")
                 break
         drvGmacIntSrcQue2.setDependencies(drvGmacIntSrcEnable, ["TCPIP_"+ gmacComponentName + "_QUEUE_2"])
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or SAMRH71 or PIC32CZ or SAMA7G5-GMAC0      
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0"))  or ("SAM9X7" in processor): # SAME70 or SAMV71 or SAMRH71 or PIC32CZ or SAMA7G5-GMAC0 or  SAM9X7     
         # GMAC Queue 3
         tcpipGmacQue3 = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_QUEUE_3", tcpipGmacPrioQueues)
         tcpipGmacQue3.setHelp("mcc_h3_gmac_configurations")
@@ -1224,7 +1230,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthFilterJumboFrameAccept.setDescription("Accept Jumbo Packets (upto 10240 bytes)")
     tcpipGmacEthFilterJumboFrameAccept.setDefaultValue(False)   
 
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or ("SAMA7G" in processor): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ or SAMA7G5
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAMA5" in processor) or ("PIC32CZ" in processor) or ("SAMA7G" in processor)  or ("SAM9X7" in processor): # SAME70 or SAMV71 or SAMA5D2 or PIC32CZ or SAMA7G5  or  SAM9X7
         # Advanced Rx Queue Filters
         tcpipGmacRxQueFilterEnable = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_RX_QUE_FILTER_EN", tcpipGmacRxFilterMenu)
         tcpipGmacRxQueFilterEnable.setHelp("mcc_h3_gmac_configurations")
@@ -1284,7 +1290,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthPhyLoopBack.setDescription("Loopbacked At The PHY Level")
     tcpipGmacEthPhyLoopBack.setDefaultValue(False)
     
-    if("SAMA7G" in processor): # Option only for SAMA7G5 
+    if("SAMA7G" in processor) or ("SAM9X7" in processor): # Option for SAMA7G5 or SAM9X7
         drvGmacRefClkSrc = drvGmacComponent.createKeyValueSetSymbol("DRV_"+ gmacComponentName + "_REF_CLK_SRC",tcpipGmacAdvSettings)
         drvGmacRefClkSrc.setVisible(True)
         drvGmacRefClkSrc.setLabel("Reference Clock Source")
@@ -1352,7 +1358,7 @@ def instantiateComponent(drvGmacComponent):
     drvGmacQueueNum.setLabel(gmacComponentName + " Instances Number")
     drvGmacQueueNum.setVisible(False)
     drvGmacQueueNum.setDescription("Number of GMAC Queues")
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70, SAMV71, PIC32CZ, SAMA7G5-GMAC0
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor): # SAME70, SAMV71, PIC32CZ, SAMA7G5-GMAC0, SAM9X7
         drvGmacQueueNum.setDefaultValue(6)  
     elif (("SAMA7G" in processor) and (gmacComponentName == "GMAC1")): # SAMA7G5-GMAC1
         drvGmacQueueNum.setDefaultValue(2)
@@ -1577,6 +1583,8 @@ def instantiateComponent(drvGmacComponent):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32CZ"
     elif ("SAMA7G" in processor):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_samA7G5"
+    elif ("SAM9X7" in processor):
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_sam9X7" 
 
     drvGmacLibSourceFile = drvGmacComponent.createFileSymbol(None, None)
     drvGmacLibSourceFile.setSourcePath("driver/gmac/src/dynamic/" + drvGmacLibCFileStem + ".c")
@@ -1715,7 +1723,7 @@ def onAttachmentConnected(source, target):
         interfaceNum.append(interface_number)
         setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
         incVal("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")
-        if (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # GMAC0 of SAMA7G54
+        if (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor): # GMAC0 of SAMA7G54 or SAM9X7
             setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RGMII")
         else:
             setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipGmacEthRmii.getValue() == True else "MII")
@@ -1890,7 +1898,7 @@ def tcpipGmacType2Filter(parent,menu):
         tcpipGmacScreen2Que[index].addKey(gmacComponentName + "_QUE_1", "1", "Rx Queue 1")
         if not (("SAMA7G" in processor) and (gmacComponentName == "GMAC1")): # SAMA7G5-GMAC1 only support Q0 and Q1     
             tcpipGmacScreen2Que[index].addKey(gmacComponentName + "_QUE_2", "2", "Rx Queue 2")
-        if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")): # SAME70 or SAMV71 or PIC32CZ or SAMA7G5-GMAC0   
+        if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor) or (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAM9X7" in processor): # SAME70 or SAMV71 or PIC32CZ or SAMA7G5-GMAC0 or  SAM9X7  
             tcpipGmacScreen2Que[index].addKey(gmacComponentName + "_QUE_3", "3", "Rx Queue 3")
             tcpipGmacScreen2Que[index].addKey(gmacComponentName + "_QUE_4", "4", "Rx Queue 4")
             tcpipGmacScreen2Que[index].addKey(gmacComponentName + "_QUE_5", "5", "Rx Queue 5")
