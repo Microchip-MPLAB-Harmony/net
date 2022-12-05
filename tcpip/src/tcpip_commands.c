@@ -69,9 +69,23 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _TCPIP_COMMANDS_MIIM
 #endif
 
-#if defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM)
+#if defined(TCPIP_STACK_USE_PPP_INTERFACE) && (TCPIP_STACK_PPP_COMMANDS != 0)
+#include "driver/ppp/drv_ppp_mac.h"
+#include "driver/ppp/drv_ppp.h"
+#include "driver/ppp/drv_hdlc_obj.h"
+#define _TCPIP_STACK_PPP_COMMANDS
+#if defined(PPP_ECHO_REQUEST_ENABLE) && (PPP_ECHO_REQUEST_ENABLE != 0)
+#define _TCPIP_STACK_PPP_ECHO_COMMAND 
+#endif  // defined(PPP_ECHO_REQUEST_ENABLE) && (PPP_ECHO_REQUEST_ENABLE != 0)
+#endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE) && (TCPIP_STACK_PPP_COMMANDS != 0)
+
+#if defined(TCPIP_STACK_USE_PPP_INTERFACE) && (TCPIP_STACK_HDLC_COMMANDS != 0)
+#define _TCPIP_STACK_HDLC_COMMANDS
+#endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE) && (TCPIP_STACK_HDLC_COMMANDS != 0)
+
+#if defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
 #define _TCPIP_STACK_COMMAND_TASK
-#endif  // defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM)
+#endif // defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
 
 
 #if defined(TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (TCPIP_STACK_CONFIGURATION_SAVE_RESTORE != 0)
@@ -300,6 +314,11 @@ typedef enum
     TCPIP_PHY_READ,                 // read a PHY register command
     TCPIP_PHY_WRITE,                // write a PHY register command
     TCPIP_PHY_DUMP,                 // dump a range of PHY registers command
+
+    // PPP echo status
+    TCPIP_CMD_STAT_PPP_START,       // ppp echo start
+    TCPIP_PPP_CMD_DO_ECHO,          // do the job
+    TCPIP_CMD_STAT_PPP_STOP = TCPIP_PPP_CMD_DO_ECHO,    // pppp echo stop
 }TCPIP_COMMANDS_STAT;
 
 static SYS_CMD_DEVICE_NODE* pTcpipCmdDevice = 0;
@@ -393,6 +412,34 @@ static const void*          miimCmdIoParam = 0;
 
 #define         TCPIP_MIIM_COMMAND_TASK_RATE  100   // milliseconds
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
+
+#if defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+
+#define TCPIP_COMMAND_PPP_ECHO_REQUEST_MIN_DELAY 5  // minimum delay between successive echo requests
+
+static void                 _PPPEchoHandler(const PPP_ECHO_REQUEST* pEchoReq, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result, const void* param);
+
+static void                 _PPPEchoStop(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoParam);
+
+static PPP_REQUEST_HANDLE   pppReqHandle;     // current transaction handle
+
+static uint16_t             pppSeqNo;         // current sequence number
+
+static const void*          pppCmdIoParam = 0;
+static int                  pppReqNo;              // number of requests to send
+static int                  pppReqCount;           // current request counter
+static int                  pppAckRecv;            // number of acks
+static int                  pppReqDelay;
+
+uint32_t                    pppStartTick;
+
+static uint8_t  pppEchoBuff[TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE];
+static int      pppEchoSize = TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE;
+
+#endif
+
+
+
 #if defined(TCPIP_STACK_USE_FTP_CLIENT) && defined(TCPIP_FTPC_COMMANDS)
 static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
@@ -411,6 +458,16 @@ static void _CommandPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
 static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+
+#if defined(_TCPIP_STACK_HDLC_COMMANDS)
+static void _CommandHdlc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif  // defined(_TCPIP_STACK_HDLC_COMMANDS)
+#if defined(_TCPIP_STACK_PPP_COMMANDS)
+static void _CommandPpp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#if defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+static void TCPIPCmd_PppEchoTask(void);
+#endif  // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+#endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
 
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
@@ -511,6 +568,12 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
     {"bridge", _CommandBridge,   ": Bridge"},
 #endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
+#if defined(_TCPIP_STACK_HDLC_COMMANDS)
+    {"hdlc", _CommandHdlc,   ": Hdlc"},
+#endif  // defined(_TCPIP_STACK_HDLC_COMMANDS)
+#if defined(_TCPIP_STACK_PPP_COMMANDS)
+    {"ppp", _CommandPpp,   ": ppp"},
+#endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -689,6 +752,17 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         pMac = (const TCPIP_MAC_ADDR*)TCPIP_STACK_NetAddressMac(netH);
         TCPIP_Helper_MACAddressToString(pMac, addrBuff, sizeof(addrBuff));
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "MAC Address: %s\r\n", addrBuff);
+
+#if defined(_TCPIP_STACK_PPP_COMMANDS)
+        TCPIP_MAC_TYPE macType = TCPIP_STACK_NetMACTypeGet(netH);
+        if(macType == TCPIP_MAC_TYPE_PPP)
+        { 
+            DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+            ipAddr.Val = PPP_GetRemoteIpv4Addr(hPPP);
+            TCPIP_Helper_IPAddressToString(&ipAddr, addrBuff, sizeof(addrBuff));
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Peer address: %s\r\n", addrBuff);
+        }
+#endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
 
         // display IPv6 addresses
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -3942,9 +4016,14 @@ void TCPIP_COMMAND_Task(void)
             TCPIPCmdMiimTask();
         }
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
+#if defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+        if(TCPIP_CMD_STAT_PPP_START <= tcpipCmdStat && tcpipCmdStat <= TCPIP_CMD_STAT_PPP_STOP)
+        {
+            TCPIPCmd_PppEchoTask();
+        }
+#endif  // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
     }
 }
-
 
 
 
@@ -6932,6 +7011,569 @@ static void _CommandBridge(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 }
 #endif // defined(TCPIP_STACK_USE_MAC_BRIDGE) && (TCPIP_STACK_MAC_BRIDGE_COMMANDS != 0)
 
+
+#if defined(_TCPIP_STACK_PPP_COMMANDS)
+
+// PPP commands
+static const char* pppStatNames[] = 
+{
+    "lcpPkts",        
+    "ipcpPkts",
+    "ipPkts",         
+    "tcpPkts",        
+    "pppQueued",
+    "netQueued",
+    "echoReqFree",
+    "echoReqQueued",
+    "echoDiscardPkts",
+    "echoReqPkts",
+    "echoReplyPkts",
+    "discardPkts", 
+    "protoErr",   
+    "lengthErr", 
+    "mruErr",   
+    "codeErr", 
+    "formatErr",      
+    "rcaMatchErr",
+    "rcrIdentErr",
+    "rucErr",         
+    "rxrErr",    
+    "rxjErr",   
+    "rxjProtoErr",
+    "rxjCodeErr",
+    "crossedErr",
+    "peerMagicErr", 
+    "loopbackErr", 
+    "lcpCodeErr", 
+    "optionErr", 
+    "hdlcWriteErr",   
+    "illegalEvents",
+    "buffFail", 
+};
+
+static union
+{
+    PPP_STATISTICS  stat;
+    uint32_t        statReg[sizeof(PPP_STATISTICS) / sizeof(uint32_t)];
+}
+pppStatValues;
+
+
+
+static void DoPppStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    bool statClr = false;
+    bool statShort = false;
+
+    int currIx = 2;
+
+    while(currIx + 1 < argc)
+    { 
+        char* param = argv[currIx];
+        if(strcmp(param, "clr") == 0)
+        {
+            statClr = true;
+        }
+        else if(strcmp(param, "short") == 0)
+        {
+            statShort = true;
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp stat: Unknown parameter\r\n");
+            return;
+        }
+
+        currIx += 1;
+    }
+
+    DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+    bool res = PPP_StatisticsGet(hPPP, &pppStatValues.stat, statClr);
+    if(res == false)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp stat: failed to get statistics!\r\n");
+        return;
+    }
+
+    // if statShort display only members != 0
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp stats: \r\n");
+    int ix;
+    uint32_t* pStat = pppStatValues.statReg;
+    for(ix = 0; ix < sizeof(pppStatValues.statReg) / sizeof(*pppStatValues.statReg); ix++, pStat++)
+    {
+        uint32_t statVal = *pStat;
+        if(statShort == false || statVal != 0)
+        {
+            const char* statName = pppStatNames[ix];
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tstat %s: %ld\r\n", statName, statVal);
+        }
+    }
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp stats end\r\n");
+
+}
+
+// normally event should be Open/Close only!
+static void DoPppAdmin(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, PPP_EVENT event)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    PPP_CTRL_PROTO ctlProt = PPP_CTRL_PROTO_LCP;
+    char* ctlName = "lcp";
+
+    if(argc > 2)
+    {
+        ctlName = argv[2];
+        if(strcmp(argv[2], "lcp") == 0)
+        {
+            ctlProt = PPP_CTRL_PROTO_LCP;
+        }
+        else if(strcmp(argv[2], "ipcp") == 0)
+        {
+            ctlProt = PPP_CTRL_PROTO_IPCP;
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "ppp unknown protocol: %s\r\n", argv[2]);
+            return;
+        }
+    }
+    DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+    
+    bool res = PPP_SendAdminEvent(hPPP, event, ctlProt);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "ppp sent event %s, to: %s, res: %d\r\n", argv[1], ctlName, res);
+}
+
+
+static void DoPppAddr(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    char lclAddrBuff[20];
+    char remAddrBuff[20];
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+    
+    IPV4_ADDR lclAddr, remAddr;
+    lclAddr.Val = PPP_GetLocalIpv4Addr(hPPP);
+    remAddr.Val = PPP_GetRemoteIpv4Addr(hPPP);
+
+    TCPIP_Helper_IPAddressToString(&lclAddr, lclAddrBuff, sizeof(lclAddrBuff));
+    TCPIP_Helper_IPAddressToString(&remAddr, remAddrBuff, sizeof(remAddrBuff));
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "ppp local address: %s, remote: %s\r\n", lclAddrBuff, remAddrBuff);
+}
+
+static void DoPppState(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    PPP_STATE state[2];
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+    
+    bool res = PPP_GetState(hPPP, state);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "ppp state - LCP: %d, IPCP: %d, res: %d\r\n", state[0], state[1], res);
+}
+
+static void DoPppEcho(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    int     currIx;    
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if (argc < 2)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Echo Usage: ppp echo <stop> <n nEchoes> <t msPeriod> <s size>\r\n");
+        return;
+    }
+
+    if(argc > 2 && strcmp(argv[2], "stop") == 0)
+    {
+        if(tcpipCmdStat != TCPIP_CMD_STAT_IDLE)
+        {
+            _PPPEchoStop(pCmdIO, cmdIoParam);
+        }
+        return;
+    }
+
+    if(tcpipCmdStat != TCPIP_CMD_STAT_IDLE)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp echo: command in progress. Retry later.\r\n");
+        return;
+    }
+
+    // get additional parameters, if any
+    //
+    pppReqNo = 0;
+    pppReqDelay = 0;
+
+    currIx = 2;
+
+    while(currIx + 1 < argc)
+    { 
+        char* param = argv[currIx];
+        char* paramVal = argv[currIx + 1];
+
+        if(strcmp(param, "n") == 0)
+        {
+            pppReqNo = atoi(paramVal);
+        }
+        else if(strcmp(param, "t") == 0)
+        {
+            pppReqDelay = atoi(paramVal);
+        }
+        else if(strcmp(param, "s") == 0)
+        {
+            int echoSize = atoi(paramVal);
+            if(echoSize <= sizeof(pppEchoBuff))
+            {
+                pppEchoSize = echoSize;
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "ppp echo: Data size too big. Max: %d. Retry\r\n", sizeof(pppEchoBuff));
+                return;
+            }
+
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "ppp echo: Unknown parameter\r\n");
+        }
+
+        currIx += 2;
+    }
+
+
+    tcpipCmdStat = TCPIP_CMD_STAT_PPP_START;
+    pppSeqNo = SYS_RANDOM_PseudoGet();
+
+    if(pppReqNo == 0)
+    {
+        pppReqNo = TCPIP_STACK_COMMANDS_PPP_ECHO_REQUESTS;
+    }
+    if(pppReqDelay == 0)
+    {
+        pppReqDelay = TCPIP_STACK_COMMANDS_PPP_ECHO_REQUEST_DELAY;
+    }
+
+    // convert to ticks
+    if(pppReqDelay < TCPIP_COMMAND_ICMP_ECHO_REQUEST_MIN_DELAY)
+    {
+        pppReqDelay = TCPIP_COMMAND_ICMP_ECHO_REQUEST_MIN_DELAY;
+    }
+
+    pTcpipCmdDevice = pCmdIO;
+    pppCmdIoParam = cmdIoParam; 
+    pppAckRecv = 0;
+    pppReqCount = 0;
+
+    _TCPIPStackSignalHandlerSetParams(TCPIP_THIS_MODULE_ID, tcpipCmdSignalHandle, pppReqDelay);
+
+}
+
+static void _CommandPpp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // ppp stat <short> <clr> 
+    // ppp open/close/addr/state
+    // ppp echo n x
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(argc > 1)
+    {
+        if(strcmp(argv[1], "stat") == 0)
+        {
+            DoPppStat( pCmdIO, argc, argv);
+            return;
+        }
+        else if(strcmp(argv[1], "open") == 0)
+        {
+            DoPppAdmin( pCmdIO, argc, argv, PPP_EVENT_OPEN);
+            return;
+        }
+        else if(strcmp(argv[1], "close") == 0)
+        {
+            DoPppAdmin( pCmdIO, argc, argv, PPP_EVENT_CLOSE);
+            return;
+        }
+        else if(strcmp(argv[1], "addr") == 0)
+        {
+            DoPppAddr( pCmdIO, argc, argv);
+            return;
+        }
+        else if(strcmp(argv[1], "state") == 0)
+        {
+            DoPppState( pCmdIO, argc, argv);
+            return;
+        }
+        else if(strcmp(argv[1], "echo") == 0)
+        {
+            DoPppEcho( pCmdIO, argc, argv);
+            return;
+        }
+    }
+
+
+   (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: ppp open/close/addr/stat/state <short> <clr>\r\n");
+
+}
+
+#if defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+static void TCPIPCmd_PppEchoTask(void)
+{
+    PPP_ECHO_RESULT echoRes;
+    PPP_ECHO_REQUEST echoRequest;
+    bool cancelReq, newReq;
+    bool killPpp = false;
+       
+    switch(tcpipCmdStat)
+    {
+        case TCPIP_CMD_STAT_PPP_START:
+            pppStartTick = 0;  // try to start as quickly as possible
+            tcpipCmdStat = TCPIP_PPP_CMD_DO_ECHO;            
+            // no break needed here!
+
+        case TCPIP_PPP_CMD_DO_ECHO:
+            if(pppReqCount == pppReqNo)
+            {   // no more requests to send
+                killPpp = true;
+                break;
+            }
+
+            // check if time for another request
+            cancelReq = newReq = false;
+            if(SYS_TMR_TickCountGet() - pppStartTick > (SYS_TMR_TickCounterFrequencyGet() * pppReqDelay) / 1000)
+            {
+                cancelReq = pppReqCount != pppAckRecv && pppReqHandle != 0;    // cancel if there is another one ongoing
+                newReq = true;
+            }
+            else if(pppReqCount != pppAckRecv)
+            {   // no reply received to the last ping 
+                if(SYS_TMR_TickCountGet() - pppStartTick > (SYS_TMR_TickCounterFrequencyGet() * TCPIP_STACK_COMMANDS_PPP_ECHO_TIMEOUT) / 1000)
+                {   // timeout
+                    cancelReq = pppReqHandle != 0;    // cancel if there is another one ongoing
+                    newReq = true;
+                }
+                // else wait some more
+            }
+
+            if(cancelReq)
+            {
+                PPP_EchoRequestCancel(pppReqHandle);
+            }
+
+            if(!newReq)
+            {   // nothing else to do
+                break;
+            }
+
+            // send another request
+            echoRequest.pData = pppEchoBuff;
+            echoRequest.dataSize = pppEchoSize;
+            echoRequest.seqNumber = ++pppSeqNo;
+            echoRequest.callback = _PPPEchoHandler;
+            echoRequest.param = 0;
+
+            // fill the buffer
+            int ix;
+            uint8_t* pBuff = pppEchoBuff;
+            for(ix = 0; ix < pppEchoSize; ix++)
+            {
+                *pBuff++ = SYS_RANDOM_PseudoGet();
+            }
+
+            DRV_HANDLE hPPP = DRV_PPP_MAC_Open(TCPIP_MODULE_MAC_PPP_0, 0);
+            echoRes = PPP_EchoRequest (hPPP, &echoRequest, &pppReqHandle);
+
+            if(echoRes >= 0 )
+            {
+                pppStartTick = SYS_TMR_TickCountGet();
+                pppReqCount++;
+            }
+            else
+            {
+                killPpp = true;
+            }
+
+            break;
+
+        default:
+            killPpp = true;
+            break;
+
+    }
+
+    if(killPpp)
+    {
+        _PPPEchoStop(pTcpipCmdDevice, icmpCmdIoParam);
+    }
+}
+
+static void _PPPEchoHandler(const PPP_ECHO_REQUEST* pEchoReq, PPP_REQUEST_HANDLE pppHandle, PPP_ECHO_RESULT result, const void* param)
+{
+    if(result == PPP_ECHO_OK)
+    {   // reply has been received
+        uint32_t errorMask = 0;     // error mask:
+        // 0x1: wrong seq
+        // 0x2: wrong size
+        // 0x4: wrong data
+        //
+        if(pEchoReq->seqNumber != pppSeqNo)
+        {
+            errorMask |= 0x1;
+        }
+
+        if(pEchoReq->dataSize != pppEchoSize)
+        {
+            errorMask |= 0x2;
+        }
+
+        // check the data
+        int ix;
+        int checkSize = pEchoReq->dataSize < pppEchoSize ? pEchoReq->dataSize : pppEchoSize;
+        uint8_t* pSrc = pppEchoBuff;
+        uint8_t* pDst = pEchoReq->pData;
+        for(ix = 0; ix < checkSize; ix++)
+        {
+            if(*pSrc++ != *pDst++)
+            {
+                errorMask |= 0x04;
+                break;
+            }
+        }
+
+        if(errorMask != 0)
+        {   // some errors
+            (*pTcpipCmdDevice->pCmdApi->print)(pppCmdIoParam, "Echo: wrong reply received. Mask: 0x%2x\r\n", errorMask);
+        }
+        else
+        {   // good reply
+            uint32_t echoTicks = SYS_TMR_TickCountGet() - pppStartTick;
+            int echoMs = (echoTicks * 1000) / SYS_TMR_TickCounterFrequencyGet();
+            if(echoMs == 0)
+            {
+                echoMs = 1;
+            }
+
+            (*pTcpipCmdDevice->pCmdApi->print)(pppCmdIoParam, "Echo: reply[%d], time = %dms\r\n", ++pppAckRecv, echoMs);
+        }
+    }
+    else
+    {
+        pTcpipCmdDevice->pCmdApi->print(pppCmdIoParam, "Echo error: %d\r\n", result);
+    }
+    // one way or the other, request is done
+    pppReqHandle = 0;
+}
+
+static void _PPPEchoStop(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoParam)
+{
+    if(pppReqHandle != 0)
+    {
+        PPP_EchoRequestCancel(pppReqHandle);
+
+        pppReqHandle = 0;
+    }
+
+    _TCPIPStackSignalHandlerSetParams(TCPIP_THIS_MODULE_ID, tcpipCmdSignalHandle, 0);
+    tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
+    if(pCmdIO)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "PPP Echo: done. Sent %d requests, received %d replies.\r\n", pppReqCount, pppAckRecv);
+    }
+    pTcpipCmdDevice = 0;
+}
+
+
+#endif  // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+#endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
+
+#if defined(_TCPIP_STACK_HDLC_COMMANDS)
+static const char* hdlcStatNames[] =
+{
+    "txFrames",
+    "txTotChars",
+    "rxFrames",
+    "rxChainedFrames",
+    "rxTotChars",
+    "freeFrames",
+    "busyFrames",
+    "pendFrames",
+    "rxBuffNA",
+    "txAllocErr",
+    "serialWrSpaceErr",
+    "serialWrErr",
+    "rxShortFrames",
+    "rxLongFrames",
+    "rxFormatErr",
+    "rxFcsErr",
+};
+
+static union
+{
+    DRV_HDLC_STATISTICS stat;
+    uint32_t            statReg[sizeof(DRV_HDLC_STATISTICS) / sizeof(uint32_t)];
+}hdlcStatValues;
+
+
+static void DoHdlcStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    extern const DRV_HDLC_OBJECT DRV_HDLC_AsyncObject;
+    
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool statClr = false;
+    if(argc > 2)
+    {
+        if(strcmp(argv[2], "clr") == 0)
+        {
+            statClr = true;
+        }
+    }
+
+    DRV_HANDLE hHdlc = DRV_HDLC_AsyncObject.open(0, 0);
+    
+    bool res = DRV_HDLC_AsyncObject.getStatistics(hHdlc, &hdlcStatValues.stat, statClr);
+
+    if(res == false)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "hdlc stat: failed to get statistics!\r\n");
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "hdlc stats: \r\n");
+    int ix;
+    uint32_t* pStat = hdlcStatValues.statReg;
+    for(ix = 0; ix < sizeof(hdlcStatValues.statReg) / sizeof(*hdlcStatValues.statReg); ix++, pStat++)
+    {
+        const char* statName = hdlcStatNames[ix];
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tstat %s: %ld\r\n", statName, *pStat);
+    }
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "hdlc stats end\r\n");
+    
+
+}
+
+static void _CommandHdlc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // hdlc stat <clr>; HDLC statistics
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc > 1)
+    {
+        if(strcmp(argv[1], "stat") == 0)
+        {
+            DoHdlcStat(pCmdIO, argc, argv);
+            return;
+        }
+
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "HDLC usage: hdlc stat <clr>\r\n");
+}
+#endif  // defined(_TCPIP_STACK_HDLC_COMMANDS)
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
