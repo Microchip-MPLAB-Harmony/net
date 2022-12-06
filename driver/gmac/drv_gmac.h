@@ -62,6 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/tcpip_mac.h"
 #include "tcpip/tcpip_ethernet.h"
+#include "system/int/sys_int.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
