@@ -1,4 +1,69 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.9.0 (December, 2022)
+### ADDITIONS AND UPDATES FOR  3.9.0:
+
+- **New features**
+
+    - This release adds Beta support for the PIC32CZ_CA family of devices
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+
+- **New Features and Bug Fixes**
+
+The following table provides the list of new features and bug fixes in the 3.9.0 release:
+
+| Module                | Description     |
+| ------ | -------- |
+| Manager   | TCP/IP stack option to start only the modules presented in the initialization data |
+| PHY Driver| Added LAN8742A and KSZ9031 support files |
+| MAC Driver| Updates to the EMAC, ETHMAC and GMAC drivers |
+| UDP       | Added fixed destination address/port for the socket |
+| UDP       | Added socket sticky  options |
+| IPv4      | Updates for IPv4 checking the TX packet result |
+| Manager   | Added global assert/condition functions that could be used by all modules |
+| Manager   | When the heap delete operation fails - at stack deinit - and the DRAM debugging is enabled, display the offending module |
+| Manager   | The heap debug now stores the number of allocation/free operations |
+| Manager   | Added checking of the running services for the AddressServiceSelect functionality |
+| DHCPv6    | Added DHCPv6 Enable/Disable API |
+| DHCPv6    | Fix for DHCPv6 confirm/not-on-link reply |
+| DHCPv6    | Updated the reply processing to separately check for the transaction ID |
+| DHCPv6    | Various other fixes |
+| iperf     | Updated the iperfs command to display the RX/TX buffer size |
+| HTTP_NET  | Added the listening port to the http info command |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.05](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.20](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, 3.9.0
+- Harmony net demo apps repositories, 3.9.0
+- MPLAB Code Configurator (MCC), 5.2.1
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, 3.11.1
+- Harmony csp repository, 3.14.0
+- Harmony bsp repository, 3.14.0
+- Harmony dev_packs repository, 3.14.0
+- Harmony crypto repository, 3.7.6
+- Harmony usb repository, 3.10.0 for demos requiring USB
+- wolfSSL  v4.7.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v4.7.0-stable) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS 10.3.1 (https://github.com/Microchip-MPLAB-Harmony/CMSIS-FreeRTOS/tree/v10.3.1) for demos requiring FreeRTOS support
+
+
+
+### KNOWN ISSUES
+* See the applications release notes in [product family specific repository](apps/release_notes.md)
+
+
 ## Net Release v3.8.0 (July, 2022)
 ### ADDITIONS AND UPDATES FOR  3.8.0:
 
