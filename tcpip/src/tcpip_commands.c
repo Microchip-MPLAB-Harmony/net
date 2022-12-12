@@ -632,7 +632,7 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
 #if defined(_TCPIP_COMMANDS_MIIM)
         // get the MIIM driver object
         miimObj = &DRV_MIIM_OBJECT_BASE_Default;
-        miimObjIx = DRV_MIIM_DRIVER_INDEX_0;// #todo# : extend it for multiple instance of MIIM
+        miimObjIx = DRV_MIIM_DRIVER_INDEX_0;
         miimHandle = 0;
         miimOpHandle = 0;
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
