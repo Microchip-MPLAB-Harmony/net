@@ -1,6 +1,6 @@
 # coding: utf-8
 ##############################################################################
-# Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+# Copyright (C) 2022 Microchip Technology Inc. and its subsidiaries.
 #
 # Subject to your compliance with these terms, you may use Microchip software
 # and any derivatives exclusively with Microchip products. It is your
@@ -204,6 +204,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigIP101GR.setVisible(True)
     tcpipAutoConfigIP101GR.setDescription("Enable IP101GR")
     tcpipAutoConfigIP101GR.setDependencies(tcpipAutoConfigIP101GREnable, ["TCPIP_AUTOCONFIG_ENABLE_IP101GR"])     
+
+    # Enable VSC8540
+    tcpipAutoConfigVSC8540 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_VSC8540", tcpipAutoConfigPhyMenu)
+    tcpipAutoConfigVSC8540.setLabel("VSC8540")
+    tcpipAutoConfigVSC8540.setVisible(True)
+    tcpipAutoConfigVSC8540.setDescription("Enable VSC8540")
+    tcpipAutoConfigVSC8540.setDependencies(tcpipAutoConfigVSC8540Enable, ["TCPIP_AUTOCONFIG_ENABLE_VSC8540"])  
     
     # Enable LAN867x
     tcpipAutoConfigLAN867x = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN867x", tcpipAutoConfigPhyMenu)
@@ -473,6 +480,15 @@ def tcpipAutoConfigIP101GREnable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyIp101gr"])
+
+def tcpipAutoConfigVSC8540Enable(symbol, event):
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvExtPhyVsc8540"],"DRIVER LAYER")  
+        if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+            Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
+    else:
+        res = Database.deactivateComponents(["drvExtPhyVsc8540"])
 
 def tcpipAutoConfigLAN867xEnable(symbol, event):
     enableTcpipAutoConfigDrv(True)

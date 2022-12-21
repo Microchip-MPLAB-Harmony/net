@@ -298,6 +298,12 @@ def loadModule():
     drvMiimComponent.setDisplayType("PHY Layer")
     
     ################# ETHERNET PHY Driver ##############################################
+    #Driver for Microchip VSC8540 PHY
+    drvExtPhyVsc8540Component = Module.CreateComponent("drvExtPhyVsc8540", "VSC8540", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_vsc8540.py")
+    drvExtPhyVsc8540Component.addCapability("libdrvExtPhyVsc8540","PHY",False)   
+    drvExtPhyVsc8540Component.addDependency("VSC8540_MIIM_Dependency", "MIIM", None, True, True)    
+    drvExtPhyVsc8540Component.setDisplayType("PHY Layer")
+
     #Driver for Micrel KSZ8041 PHY
     drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
     drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",False)   
