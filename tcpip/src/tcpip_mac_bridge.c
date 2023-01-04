@@ -59,7 +59,7 @@ static TCPIP_MAC_BRIDGE_RESULT      _MAC_Bridge_SetFDBFromPerm(MAC_BRIDGE_DCPT* 
 static void     _MAC_Bridge_ForwardPacket(TCPIP_MAC_PACKET* pFwdPkt, MAC_BRIDGE_HASH_ENTRY* hEntry);
 
 static void     _MAC_Bridge_PacketCopy(TCPIP_MAC_PACKET* pSrcPkt, TCPIP_MAC_PACKET* pFwdPkt, uint16_t pktLen, MAC_BRIDGE_HASH_ENTRY* hEntry);
-static bool     _MAC_Bridge_PacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+static void     _MAC_Bridge_PacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 
 static void     _MAC_Bridge_SetHashDynamicEntry(MAC_BRIDGE_HASH_ENTRY* hE, uint8_t port, MAC_BRIDGE_HASH_FLAGS clrFlags, MAC_BRIDGE_HASH_FLAGS setFlags);
 static void     _MAC_Bridge_SetHashStaticEntry(MAC_BRIDGE_HASH_ENTRY* hE, MAC_BRIDGE_HASH_FLAGS flags, bool clearOutMap);
@@ -1660,13 +1660,12 @@ static void _MAC_Bridge_PacketCopy(TCPIP_MAC_PACKET* pSrcPkt, TCPIP_MAC_PACKET* 
 }
 
 // acknowledges a bridge packet once it's been transmitted
-static bool _MAC_Bridge_PacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
+static void _MAC_Bridge_PacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
     _MAC_Bridge_StatUpdate(gBridgeDcpt, MAC_BRIDGE_STAT_TYPE_ACK_PKTS, 1);
 
     // keep forwarding to the other interfaces
     _MAC_Bridge_ForwardPacket(pkt, (MAC_BRIDGE_HASH_ENTRY*)param);
-    return false;
 }
 
 // returns the number of the ports that are part of the bridge and their port map
