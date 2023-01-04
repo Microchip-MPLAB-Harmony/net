@@ -693,6 +693,10 @@ static __inline__ uint8_t __attribute__((always_inline))  _TCPIPStack_BridgeGetI
 bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId);
 
 
+// local time keeping
+uint32_t _TCPIP_SecCountGet(void);
+uint32_t _TCPIP_MsecCountGet(void);
+
 
 // debugging, tracing, etc.
 

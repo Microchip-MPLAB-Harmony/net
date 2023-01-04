@@ -139,25 +139,6 @@ static uint32_t TCPIP_SNTP_CurrTime(uint32_t* pMs);
 
 static void     TCPIP_SNTP_Event(TCPIP_SNTP_EVENT evType, const void* param);
 
-#if (TCPIP_SNTP_DEBUG_LEVEL != 0)
-static uint32_t _SntpSecond(void)
-{
-    static uint32_t sysFreq = 0;
-
-    if(sysFreq == 0)
-    {
-        sysFreq = SYS_TMR_SystemCountFrequencyGet();
-    }
-
-    if(sysFreq != 0)
-    {
-        return SYS_TMR_SystemCountGet() / sysFreq; 
-    }
-
-    return 0;
-}
-#endif
-
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_BASIC) != 0)
 volatile int _SNTPStayAssertLoop = 0;
 static void _SNTPAssertCond(bool cond, const char* message, int lineNo)
@@ -205,7 +186,7 @@ static void _SNTP_DbgNewState(TCPIP_SNTP_STATE newState)
 {
     if(newState != oldState)
     {
-        uint32_t sntpSecond = _SntpSecond(); 
+        uint32_t sntpSecond = _TCPIP_SecCountGet(); 
         oldState = newState;
         if(newState >= 0 && newState < sizeof(_SNTP_DbgState_Tbl) / sizeof(*_SNTP_DbgState_Tbl))
         {
@@ -264,7 +245,7 @@ static void _SNTP_DbgNewError(TCPIP_SNTP_RESULT newError)
         tblEntries = sizeof(_SNTP_DbgResError_Tbl) / sizeof(*_SNTP_DbgResError_Tbl);
     }
 
-    uint32_t sntpSecond = _SntpSecond(); 
+    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
     if(newError >= 0 && newError < tblEntries)
     {
         SYS_CONSOLE_PRINT("SNTP Error: %d - %s, time: %d\r\n", newError, pTbl[newError], sntpSecond);
@@ -281,7 +262,7 @@ static void _SNTP_DbgNewError(TCPIP_SNTP_RESULT newError)
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_TIME_STAMP) != 0)
 static __inline__ void __attribute__((always_inline)) _SNTP_DbgNewTimeStamp(uint32_t tStamp)
 {
-    uint32_t sntpSecond = _SntpSecond(); 
+    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
     SYS_CONSOLE_PRINT("SNTP new TStamp: %d, time: %d\r\n", tStamp, sntpSecond);
 }
 #else
@@ -315,7 +296,7 @@ static void _SNTP_DbgNewDns(const char* srvName, const IP_MULTI_ADDRESS* srvAdd)
 #endif  // defined (TCPIP_STACK_USE_IPV4)           
     }
 
-    uint32_t sntpSecond = _SntpSecond(); 
+    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
     if(srvAdd)
     {
         SYS_CONSOLE_PRINT("SNTP solved DNS: %s, address: %s, time: %d\r\n", srvName, addBuff, sntpSecond);

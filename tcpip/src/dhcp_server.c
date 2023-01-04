@@ -59,9 +59,6 @@ static uint8_t                  gDhcpProcPacket[_TCPIP_DHCPS_PROCESS_BUFFER_SIZE
 static TCPIP_DHCPS_RX_OPTIONS   gRxOptions;             // parsed RX options;
                                                         // this buffer increases as we add more options
 
-static uint32_t                 gDhcpSecCount;        // rough time keeping - sec
-static uint32_t                 gDhcpMsecCount;       // rough time keeping - ms
-
 static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER *Header, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
@@ -376,33 +373,10 @@ static __inline__ void __attribute__((always_inline)) _DHCPS_AccessUnlock(void)
 }
 #endif  // (_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
 
-
-static __inline__ uint32_t __attribute__((always_inline)) _DHCPS_SecCount(void)
-{
-    return gDhcpSecCount;
-}
-
-static __inline__ uint32_t __attribute__((always_inline)) _DHCPS_MsecCount(void)
-{
-    return gDhcpMsecCount;
-}
-
-static __inline__ uint32_t __attribute__((always_inline)) _DHCPS_SecondCountSet(void)
-{
-    uint32_t tmrFreq = SYS_TMR_SystemCountFrequencyGet();
-    // use a 64 bit count to avoid roll over
-    uint64_t tmrCount = SYS_TMR_SystemCountGet();
-
-    gDhcpSecCount = tmrCount / tmrFreq; 
-    gDhcpMsecCount = tmrCount / (tmrFreq / 1000); 
-
-    return gDhcpSecCount;
-}
-
 static __inline__ void __attribute__((always_inline)) _DHCPS_LeaseRestart(DHCPS_HASH_ENTRY* he, uint32_t leaseTime)
 {
     he->cliLeaseTime = leaseTime;
-    he->leaseStartTime = _DHCPS_SecCount();
+    he->leaseStartTime = _TCPIP_SecCountGet();
     he->leaseEndTime = he->leaseStartTime + he->cliLeaseTime;
 }
 
@@ -990,7 +964,7 @@ static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evT
 
        memset(&evData, 0, sizeof(evData));
        evData.hNet = (TCPIP_NET_HANDLE)pktIf;
-       evData.evTime = _DHCPS_SecCount();
+       evData.evTime = _TCPIP_SecCountGet();
        evData.evType = (int16_t)evType;
        if(evInfo)
        {
@@ -1851,7 +1825,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
     */
 
     uint32_t cliReqTime;
-    uint32_t currTime = _DHCPS_SecCount();
+    uint32_t currTime = _TCPIP_SecCountGet();
     if(_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
     {   // client wants specific time; restart the lease
         _DHCPS_LeaseRestart(he, cliReqTime);
@@ -2172,7 +2146,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
 
     TCPIP_DHCPS_LEASE_STATE newState = he->state;
 
-    uint32_t currTime = _DHCPS_SecCount();
+    uint32_t currTime = _TCPIP_SecCountGet();
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
 
@@ -2883,7 +2857,7 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
         else
         {
             he->runFlags |= DHCPS_RUN_FLAG_ARP_INJECT;
-            he->injectTimeMs = _DHCPS_MsecCount();
+            he->injectTimeMs = _TCPIP_MsecCountGet();
             he->injectAdd.Val = destAdd.v4Add.Val;
 #if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIDcpt->statData.arpInjectCount++;
@@ -3019,7 +2993,7 @@ static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTR
 
     if(echoRes >= 0)
     {
-        he->probeStartTimeMs = _DHCPS_MsecCount(); 
+        he->probeStartTimeMs = _TCPIP_MsecCountGet(); 
         he->probeHandle = echoHandle;
         evType = TCPIP_DHCPS_EVENT_ECHO_PROBE_SENT;
 #if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
@@ -3068,15 +3042,13 @@ static void _DHCPS_ProcessTick(void)
     int ifIx, bktIx;
     OA_HASH_DCPT    *pOH;
 
-    _DHCPS_SecondCountSet();
-
     if(_DHCPS_AccessLock() == false)
     {
         _DHCPS_NotifyClients(0, TCPIP_DHCPS_EVENT_TICK_LOCK, 0, 0);
         return;
     } 
 
-    uint32_t currMsec = _DHCPS_MsecCount();
+    uint32_t currMsec = _TCPIP_MsecCountGet();
 
     TCPIP_DHCPS_DCPT* pDcpt = gDhcpDcpt;
 
@@ -3163,7 +3135,7 @@ static void _DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he)
 // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
 static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
 {
-    uint32_t currMs = _DHCPS_MsecCount(); 
+    uint32_t currMs = _TCPIP_MsecCountGet(); 
     if((currMs - he->probeStartTimeMs) >= gDhcpDcpt->probeTmoMs)
     {   // timeout expired and no reply; 
         // check if we need more probes...
@@ -3245,7 +3217,7 @@ static void _DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he)
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
     if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_KEEP_UNREQ_OFFERS) == 0)
     {
-        uint32_t currTime = _DHCPS_SecCount();
+        uint32_t currTime = _TCPIP_SecCountGet();
         if((currTime - he->leaseStartTime) >= pIDcpt->unreqOfferTmo)
         {
             // remove and mark the IP address as available
@@ -3257,7 +3229,7 @@ static void _DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he)
 // TCPIP_DHCPS_LEASE_STATE_BOUND
 static void _DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he)
 {
-    uint32_t currTime = _DHCPS_SecCount();
+    uint32_t currTime = _TCPIP_SecCountGet();
 
     if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
     {
@@ -3385,7 +3357,7 @@ static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_IN
 
             if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
             {
-                uint32_t currTime = _DHCPS_SecCount();
+                uint32_t currTime = _TCPIP_SecCountGet();
                 _DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
                 pLeaseInfo->leaseTime = he->leaseEndTime - currTime;
             }

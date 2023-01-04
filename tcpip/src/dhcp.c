@@ -220,10 +220,6 @@ static const void*      dhcpMemH = 0;        // memory handle
 static PROTECTED_SINGLE_LIST      dhcpRegisteredUsers = { {0} };
 
 
-static uint32_t         dhcpSecondCount = 0;    // DHCP time keeping, in seconds
-static uint32_t         dhcpMillisecCount = 0;  // DHCP time keeping, in milliseconds
-
-
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAKE_TMO) != 0
 // these values override the parameters received from the server 
 volatile uint32_t    _dhcpDbgBaseTmo =  2;    // DHCP base timeout; >= TCPIP_DHCP_EXP_BACKOFF_FUZZ + 1 ! 
@@ -347,30 +343,12 @@ static const uint8_t _DHCPRequestParamsTbl[] =
     // Add more parameters here if needed
 };
 
-
-static __inline__ uint32_t __attribute__((always_inline)) _DHCPSecondCountGet(void)
-{
-    return dhcpSecondCount;
-}
-
-static __inline__ void __attribute__((always_inline)) _DHCPSecondCountSet(void)
-{
-    // use a 64 bit count to avoid roll over
-    dhcpSecondCount = SYS_TMR_SystemCountGet() / SYS_TMR_SystemCountFrequencyGet(); 
-    dhcpMillisecCount = SYS_TMR_SystemCountGet() / (SYS_TMR_SystemCountFrequencyGet() / 1000); 
-}
-
-static __inline__ uint32_t __attribute__((always_inline)) _DHCPMillisecCountGet(void)
-{
-    return dhcpMillisecCount;
-}
-
 static __inline__ void __attribute__((always_inline)) _DHCPSetFailTimeout(DHCP_CLIENT_VARS* pClient, bool resetTmo, bool isRunTime)
 {
     pClient->flags.bReportFail = 1;
     if(resetTmo || pClient->tOpStart == 0)
     {
-        pClient->tOpStart = _DHCPSecondCountGet();
+        pClient->tOpStart = _TCPIP_SecCountGet();
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAIL_TMO_EVENT) != 0
         SYS_CONSOLE_PRINT("DHCP cli: %d, set fail tmo: %d, xid: 0x%8x, at: %s, reset: %s\r\n", pClient - DHCPClients, pClient->tOpStart, TCPIP_Helper_htonl(pClient->transactionID.Val), isRunTime ? "run" : "init", resetTmo ? "y" : "n");
 #endif  // TCPIP_DHCP_DEBUG_MASK
@@ -400,7 +378,7 @@ static void _DHCPDbgStatus(DHCP_CLIENT_VARS* pClient)
 {
     if(pClient->smState != pClient->prevState)
     {
-        SYS_CONSOLE_PRINT("DHCP cli: %d, state: %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, _DHCPStatTbl[pClient->smState], TCPIP_Helper_htonl(pClient->transactionID.Val), _DHCPMillisecCountGet());
+        SYS_CONSOLE_PRINT("DHCP cli: %d, state: %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, _DHCPStatTbl[pClient->smState], TCPIP_Helper_htonl(pClient->transactionID.Val), _TCPIP_MsecCountGet());
         pClient->prevState = pClient->smState;
     }
 }
@@ -446,7 +424,7 @@ static void _DHCPDbgAddServiceEvent(DHCP_CLIENT_VARS* pClient, TCPIP_STACK_ADDRE
             break;
     }
 
-    SYS_CONSOLE_PRINT("DHCP cli: %d, address event: %s, extra: %s, msec: %d\r\n", pClient - DHCPClients, evMsg, extraMsg ? extraMsg : "none", _DHCPMillisecCountGet());
+    SYS_CONSOLE_PRINT("DHCP cli: %d, address event: %s, extra: %s, msec: %d\r\n", pClient - DHCPClients, evMsg, extraMsg ? extraMsg : "none", _TCPIP_MsecCountGet());
 }
 
 #else
@@ -480,7 +458,7 @@ static void _DHCPDbgRxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType, i
 
     const char* dhcpMsg = _DHCPMsgTypeTbl[msgType];
 
-    SYS_CONSOLE_PRINT("DHCP cli: %d, Rx: %s, xid: 0x%8x, error: %d, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, TCPIP_Helper_htonl(pClient->transactionID.Val), rxErrCode, _DHCPMillisecCountGet());
+    SYS_CONSOLE_PRINT("DHCP cli: %d, Rx: %s, xid: 0x%8x, error: %d, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, TCPIP_Helper_htonl(pClient->transactionID.Val), rxErrCode, _TCPIP_MsecCountGet());
 }
 
 #else
@@ -497,7 +475,7 @@ static void _DHCPDebugTxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType,
 
     const char* dhcpMsg = _DHCPMsgTypeTbl[msgType];
 
-    SYS_CONSOLE_PRINT("DHCP cli: %d, Tx: %s %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, success ? "Sent" : "Failed", TCPIP_Helper_htonl(pClient->transactionID.Val), _DHCPMillisecCountGet());
+    SYS_CONSOLE_PRINT("DHCP cli: %d, Tx: %s %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, success ? "Sent" : "Failed", TCPIP_Helper_htonl(pClient->transactionID.Val), _TCPIP_MsecCountGet());
 }
 #else
 #define _DHCPDebugTxDisplay(pClient, msgType, success)
@@ -1136,11 +1114,6 @@ static void TCPIP_DHCP_Process(bool isTmo)
     int                 netIx, nNets;
     TCPIP_NET_IF*       pNetIf;
 
-    if(isTmo)
-    {   // update DHCP time keeping
-        _DHCPSecondCountSet();
-    }
-
     nNets = TCPIP_STACK_NumberOfNetworksGet();
     for(netIx = 0; netIx < nNets; netIx++) 
     {
@@ -1247,7 +1220,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     break;
                 }
                 // store the request time
-                pClient->tRequest = _DHCPSecondCountGet();
+                pClient->tRequest = _TCPIP_SecCountGet();
                 _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST);
                 // Start a timer and begin looking for a response
                 _DHCPSetTimeout(pClient);
@@ -1286,7 +1259,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     {   // oooops, someone else with this address!
                         arpChkFail = true;
                     }
-                    else if((_DHCPMillisecCountGet() - pClient->startWait) >= pClient->tLeaseCheck)
+                    else if((_TCPIP_MsecCountGet() - pClient->startWait) >= pClient->tLeaseCheck)
                     {   // no ARP conflict
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAIL_ARP) != 0
                         if(_dhcpDbgFailArpCheckCnt != 0)
@@ -1313,7 +1286,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     {   // fail
                         _DHCPSend(pClient, pNetIf, TCPIP_DHCP_DECLINE_MESSAGE, TCPIP_DHCP_FLAG_SEND_ZERO_ADD | TCPIP_DHCP_FLAG_SEND_BCAST);
                         _DHCPClientStateSet(pClient, TCPIP_DHCP_WAIT_LEASE_RETRY);
-                        pClient->startWait = _DHCPSecondCountGet();
+                        pClient->startWait = _TCPIP_SecCountGet();
                         _DHCPNotifyClients(pNetIf, DHCP_EVENT_DECLINE);
                     }
                 }
@@ -1321,7 +1294,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
 
             case TCPIP_DHCP_WAIT_LEASE_RETRY:
                 // wait before we can attempt another retry
-                if((_DHCPSecondCountGet() - pClient->startWait) >= TCPIP_DHCP_WAIT_ARP_FAIL_CHECK_TMO)
+                if((_TCPIP_SecCountGet() - pClient->startWait) >= TCPIP_DHCP_WAIT_ARP_FAIL_CHECK_TMO)
                 {
                     _DHCPSetRunFail(pClient, TCPIP_DHCP_SEND_DISCOVERY, false);
                 }
@@ -1334,7 +1307,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
 
             case TCPIP_DHCP_BOUND:
                 // check for T1 timeout
-                if((_DHCPSecondCountGet() - pClient->tRequest) < pClient->t1Seconds)
+                if((_TCPIP_SecCountGet() - pClient->tRequest) < pClient->t1Seconds)
                 {   // within BOUND state
                     break;
                 }
@@ -1349,7 +1322,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     break;
                 }
                 // store the request time
-                pClient->tRenewRequest = _DHCPSecondCountGet();
+                pClient->tRenewRequest = _TCPIP_SecCountGet();
                 _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_RENEW);
                 pClient->flags.bOfferReceived = false;
 
@@ -1359,7 +1332,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 {
                     pClient->t3Seconds = TCPIP_DHCP_RENEW_RETRY_TIMEOUT;
                 }
-                pClient->startWait = _DHCPSecondCountGet();
+                pClient->startWait = _TCPIP_SecCountGet();
                 _DHCPClientStateSet(pClient, TCPIP_DHCP_GET_RENEW_ACK);
                 break;
 
@@ -1368,11 +1341,11 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 if(_DHCPProcessReceiveData(pClient, pNetIf) == TCPIP_DHCP_TIMEOUT_MESSAGE)
                 {   // no data available
                     // check first for T2 timeout
-                    if((_DHCPSecondCountGet() - pClient->tRequest) >= pClient->t2Seconds)
+                    if((_TCPIP_SecCountGet() - pClient->tRequest) >= pClient->t2Seconds)
                     {   // RENEWING state expired; move to REBIND!
                         _DHCPClientStateSet(pClient, TCPIP_DHCP_SEND_REBIND);
                     }
-                    else if((_DHCPSecondCountGet() - pClient->startWait) >= pClient->t3Seconds)
+                    else if((_TCPIP_SecCountGet() - pClient->startWait) >= pClient->t3Seconds)
                     {   // check if there's time for retransmission of another DHCP request
                         _DHCPClientStateSet(pClient, TCPIP_DHCP_SEND_RENEW);
                     }
@@ -1388,7 +1361,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     break;
                 }
                 // store the request time
-                pClient->tRenewRequest = _DHCPSecondCountGet();
+                pClient->tRenewRequest = _TCPIP_SecCountGet();
                 _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_REBIND);
                 pClient->flags.bOfferReceived = false;
 
@@ -1398,7 +1371,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 {
                     pClient->t3Seconds = TCPIP_DHCP_REBIND_RETRY_TIMEOUT;
                 }
-                pClient->startWait = _DHCPSecondCountGet();
+                pClient->startWait = _TCPIP_SecCountGet();
                 _DHCPClientStateSet(pClient, TCPIP_DHCP_GET_REBIND_ACK);
                 break;
 
@@ -1407,12 +1380,12 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 if(_DHCPProcessReceiveData(pClient, pNetIf) == TCPIP_DHCP_TIMEOUT_MESSAGE)
                 {   // no data available
                     // check first for Texp timeout
-                    if((_DHCPSecondCountGet() - pClient->tRequest) >= pClient->tExpSeconds)
+                    if((_TCPIP_SecCountGet() - pClient->tRequest) >= pClient->tExpSeconds)
                     {   // REBIND state expired; restart
                         _DHCPSetRunFail(pClient, TCPIP_DHCP_SEND_DISCOVERY, false);
                         _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT);
                     }
-                    else if((_DHCPSecondCountGet() - pClient->startWait) >= pClient->t3Seconds)
+                    else if((_TCPIP_SecCountGet() - pClient->startWait) >= pClient->t3Seconds)
                     {   // check if there's time for retransmission of another DHCP request
                         _DHCPClientStateSet(pClient, TCPIP_DHCP_SEND_REBIND);
                     }
@@ -1980,7 +1953,7 @@ static unsigned int _DHCPProcessReceiveData(DHCP_CLIENT_VARS* pClient, TCPIP_NET
 #endif  // TCPIP_DHCP_DEBUG_MASK
                     // not really  ARP_OPERATION_GRATUITOUS but only one single probe needs to go out
                     TCPIP_ARP_Probe(pNetIf, &arpCheck, &zeroAdd, ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE |  ARP_OPERATION_GRATUITOUS);
-                    pClient->startWait = _DHCPMillisecCountGet();
+                    pClient->startWait = _TCPIP_MsecCountGet();
                     newState = TCPIP_DHCP_WAIT_LEASE_CHECK;
                 }
                 _DHCPClientStateSet(pClient, newState);
@@ -2705,7 +2678,7 @@ static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evTyp
                 message = "unk";
                 break;
         }
-        SYS_CONSOLE_PRINT("DHCP cli: %d event: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _DHCPMillisecCountGet());
+        SYS_CONSOLE_PRINT("DHCP cli: %d event: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _TCPIP_MsecCountGet());
     }
 #endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS) != 0
 
@@ -2726,7 +2699,7 @@ static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evTyp
 
     if(message)
     {
-        SYS_CONSOLE_PRINT("DHCP cli: %d connection: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _DHCPMillisecCountGet());
+        SYS_CONSOLE_PRINT("DHCP cli: %d connection: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _TCPIP_MsecCountGet());
     }
 
 #endif
@@ -2835,7 +2808,7 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
             if(pDhcpInfo)
             {
                 pDhcpInfo->status = pClient->smState;
-                pDhcpInfo->dhcpTime = _DHCPSecondCountGet();
+                pDhcpInfo->dhcpTime = _TCPIP_SecCountGet();
                 pDhcpInfo->leaseStartTime = pClient->tRequest;
                 pDhcpInfo->leaseDuration = pClient->tExpSeconds;
                 pDhcpInfo->renewTime = pClient->tRequest + pClient->t1Seconds;
@@ -2881,7 +2854,7 @@ static void _DHCPCheckRunFailEvent(TCPIP_NET_IF* pNetIf, DHCP_CLIENT_VARS* pClie
     {   // don't have a current lease
         if(pClient->flags.bReportFail && pClient->tOpStart != 0)
         {
-            if((_DHCPSecondCountGet() - pClient->tOpStart) >= pClient->tOpFailTmo)
+            if((_TCPIP_SecCountGet() - pClient->tOpStart) >= pClient->tOpFailTmo)
             {   // initialization time out
                 TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPC, TCPIP_STACK_ADDRESS_SERVICE_EVENT_RUN_FAIL);
                 _DHCPDbgAddServiceEvent(pClient, TCPIP_STACK_ADDRESS_SERVICE_EVENT_RUN_FAIL, "init tmo");

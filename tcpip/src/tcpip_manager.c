@@ -272,6 +272,9 @@ static TCPIP_STACK_INIT_CALLBACK tcpip_stack_init_cb;    // callback to be calle
 
 static TCPIP_STACK_HEAP_CONFIG  tcpip_heap_config = { 0 };      // copy of the heap that the stack uses
 
+static uint32_t _tcpip_SecCount;            // current second value
+static uint32_t _tcpip_MsecCount;           // current millisecond value
+static void _TCPIP_SecondCountSet(void);    // local time keeping
 
 #if defined(TCPIP_STACK_TIME_MEASUREMENT)
 static uint64_t         tcpip_stack_time = 0;
@@ -1916,6 +1919,8 @@ static void _TCPIP_ProcessTickEvent(void)
     bool    linkCurr, linkPrev;
 
     newTcpipTickAvlbl = 0;
+
+    _TCPIP_SecondCountSet();    // update time
 
     for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
     {
@@ -4749,6 +4754,29 @@ bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId)
     return false;
 }
 #endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
+// local time keeping
+// reverts to a sys service, when available
+
+static void _TCPIP_SecondCountSet(void)
+{
+    uint32_t tmrFreq = SYS_TIME_FrequencyGet();
+    // use a 64 bit count to avoid roll over
+    uint64_t tmrCount = SYS_TIME_Counter64Get();
+
+    _tcpip_SecCount = tmrCount / tmrFreq; 
+    _tcpip_MsecCount = tmrCount / (tmrFreq / 1000); 
+}
+
+uint32_t _TCPIP_SecCountGet(void)
+{
+    return _tcpip_SecCount;
+}
+
+uint32_t _TCPIP_MsecCountGet(void)
+{
+    return _tcpip_MsecCount;
+}
 
 
 // debugging features
