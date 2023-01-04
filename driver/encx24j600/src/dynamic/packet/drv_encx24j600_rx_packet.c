@@ -43,11 +43,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/debug/sys_debug.h"
 
 
-bool    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
+void    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
      struct _DRV_ENCX24J600_DriverInfo *pDrvInst = ( struct _DRV_ENCX24J600_DriverInfo *)param;
      TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
-     return true;
 }
 
 static CACHE_ALIGN DRV_ENCx24J600_RSV_EXT rsv_temp_ext;

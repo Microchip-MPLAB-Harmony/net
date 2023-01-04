@@ -924,7 +924,7 @@ static TCPIP_IPV4_DEST_TYPE TCPIP_IPV4_FwdPktMacDestination(TCPIP_MAC_PACKET* pF
             destType = TCPIP_IPV4_DEST_NETWORK; 
             break;
         }
-        else if(_TCPIPStack_NetMacType(pNetIf) == TCPIP_MAC_TYPE_PPP)
+        else if(_TCPIPStack_NetMacType(pDestIf) == TCPIP_MAC_TYPE_PPP)
         {   // no MAC address or ARP resolution needed for a serial link
             memset(pMacDst, 0x0, sizeof(*pMacDst));
             destType = TCPIP_IPV4_DEST_NETWORK; 

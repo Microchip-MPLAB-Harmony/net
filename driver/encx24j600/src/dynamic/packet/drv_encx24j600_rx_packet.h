@@ -82,7 +82,7 @@ typedef struct _DRV_ENCX24J600_RX_PACKET_INFO
     struct _DRV_ENCX24J600_DriverInfo * pDrvInst;
 
 }DRV_ENCX24J600_RX_PACKET_INFO;
-bool    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
+void    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
 
 int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt);
 int32_t DRV_ENCX24J600_RxPacketEnter(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt);

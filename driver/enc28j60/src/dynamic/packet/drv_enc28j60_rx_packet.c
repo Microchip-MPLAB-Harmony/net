@@ -42,11 +42,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "../bus/drv_enc28j60_bus.h"
 
 
-bool    DRV_ENC28J60_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
+void    DRV_ENC28J60_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
 {
      struct _DRV_ENC28J60_DriverInfo *pDrvInst = ( struct _DRV_ENC28J60_DriverInfo *)param;
      TCPIP_Helper_ProtectedSingleListTailAdd(&pDrvInst->rxFreePackets, (SGL_LIST_NODE*)pkt);
-     return true;
 }
 
 static CACHE_ALIGN DRV_ENC28J60_RSV_EXT rsv_temp_ext;
