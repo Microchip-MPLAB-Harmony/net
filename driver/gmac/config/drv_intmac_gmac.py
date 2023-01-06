@@ -155,6 +155,10 @@ def instantiateComponent(drvGmacComponent):
         drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
         setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+    elif ("SAMVRH" in processor):
+        drvGmacClock.setDefaultValue(int(Database.getSymbolValue("core", "CLK_MCK_FREQ")))
+        drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.CLK_MCK_FREQ"])
+        setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", int(Database.getSymbolValue("core", "CLK_MCK_FREQ")))
     elif ("PIC32CZ" in processor):     
         coreComponent = Database.getComponentByID("core")
         clkdivSymbol = coreComponent.getSymbolByID("CONF_MCLK_CLKDIV1")
@@ -181,7 +185,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacMaxQueCnt = drvGmacComponent.createIntegerSymbol("TCPIP_"+ gmacComponentName + "_MAX_MAC_QUE_CNT", None)
     tcpipGmacMaxQueCnt.setLabel("Maximum Number of Queues")
     tcpipGmacMaxQueCnt.setVisible(True)
-    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor) or ("SAM9X7" in processor)):  
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor) or ("SAM9X7" in processor) or ("SAMRH" in processor)):
         tcpipGmacMaxQueCnt.setDefaultValue(6)
     elif ("SAME5" in processor):
         tcpipGmacMaxQueCnt.setDefaultValue(1)
@@ -328,6 +332,7 @@ def instantiateComponent(drvGmacComponent):
     drvGmacIntSrcQue0.setDefaultValue(int_name + "_IRQn")
     
     Database.clearSymbolValue("core", interruptVector)
+
     Database.setSymbolValue("core", interruptVector, True, 2)
     if not "PIC32CZ" in processor : 
         Database.clearSymbolValue("core", interruptHandler)
@@ -1573,7 +1578,7 @@ def instantiateComponent(drvGmacComponent):
     # Add drv_gmac_lib.c file
     drvGmacLibCFileStem = "drv_gmac_lib"
 
-    if (("SAME7" in processor) or ("SAMV7" in processor)):  
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("SAMRH" in processor)):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_samE7x_V7x"
     elif ("SAME5" in processor):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_samE5x"
