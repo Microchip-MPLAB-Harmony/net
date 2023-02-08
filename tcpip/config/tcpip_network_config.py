@@ -249,6 +249,7 @@ def tcpipNetHostNameUpdate(symbol, event):
         'WINC1500':     'MCHPBOARD_W',
         'WILC1000':     'MCHPBOARD_W',
         'PIC32MZW1':   'MCHPBOARD_W',
+        'LAN865x':      'MCHPBOARD_LAN865x',
     }
     print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -265,6 +266,7 @@ def tcpipNetMacAddrUpdate(symbol, event):
         'EMAC0':        '00:04:25:1C:A0:03',
         'EMAC1':        '00:04:25:1C:A0:04',
         'ENC28J60':     '00:04:a3:12:34:56',
+        'LAN865x':      '00:04:25:1C:A0:02',
     }
     print "tcpipNetMacAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     tcpipInterfaceName = event["value"]
@@ -296,6 +298,7 @@ def tcpipNetIpAddrUpdate(symbol, event):
         'WINC1500':     '192.168.1.2',
         'WILC1000':     '192.168.1.2',
         'PIC32MZW1':    '192.168.1.2',
+        'LAN865x':      '192.168.100.11',
     }
     ipAddress = interfaceToIpAddress.get( tcpipInterfaceName, '0.0.0.0' )
     print "tcpipNetIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
@@ -329,6 +332,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
         'PIC32MZW1':    '192.168.1.1',
+        'LAN865x':      '192.168.100.1',
     }
     print "tcpipNetGatewayIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -352,6 +356,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
         'WINC1500':     '192.168.1.1',
         'WILC1000':     '192.168.1.1',
         'PIC32MZW1':    '192.168.1.1',
+        'LAN865x':      '192.168.100.1',
     }
     print "tcpipNetPrimDnsIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -375,6 +380,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'WINC1500':     'WDRV_WINC1500_MACObject',
         'WILC1000':     'WDRV_WILC1000_MACObject',
         'PIC32MZW1':    'WDRV_PIC32MZW1_MACObject',
+        'LAN865x':      'DRV_LAN865X_MACObject',
     }
     print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
