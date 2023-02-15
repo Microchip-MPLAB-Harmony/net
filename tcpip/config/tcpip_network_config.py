@@ -249,7 +249,7 @@ def tcpipNetHostNameUpdate(symbol, event):
         'WINC1500':     'MCHPBOARD_W',
         'WILC1000':     'MCHPBOARD_W',
         'PIC32MZW1':   'MCHPBOARD_W',
-        'LAN865x':      'MCHPBOARD_LAN865x',
+        'LAN865x':      'MCHP_LAN865x',
     }
     print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
