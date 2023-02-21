@@ -102,6 +102,7 @@ bool NET_PRES_EncProviderDataGramClientInit${INST_NUMBER}(struct _NET_PRES_Trans
 bool NET_PRES_EncProviderDataGramClientDeinit${INST_NUMBER}(void);
 bool NET_PRES_EncProviderDataGramClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER}(void);
+bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format);
             </#if>
         </#if>
         <#assign netPresSuppServer= "NET_PRES_SUPPORT_SERVER_ENC"?eval>
