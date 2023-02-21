@@ -45,6 +45,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/logging.h"
 #include "wolfssl/wolfcrypt/random.h"
 
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX0>	
+#include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX0}"
+</#if>
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX1>	
+#include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX1}"
+</#if>
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
+#include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX2}"
+</#if>
+
 extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
 <#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
 #include "wolfssl/wolfcrypt/port/atmel/atmel.h"
@@ -251,6 +261,50 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX0>
+	{	
+		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX0};
+		int32_t tmpCaCertsLen = ${NET_PRES_BLOB_MORE_CLIENT_CERT_LEN_VARIABLE_IDX0};
+
+		if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, tmpCaCertsPtr, tmpCaCertsLen, SSL_FILETYPE_${NET_PRES_BLOB_MORE_CLIENT_CERT_FORMAT_IDX0}) != SSL_SUCCESS)
+		{
+			// Couldn't load the CA certificates
+			//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
+			wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
+			return false;
+		}
+	}
+</#if>
+
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX1>	
+	{
+		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX1};
+		int32_t tmpCaCertsLen = ${NET_PRES_BLOB_MORE_CLIENT_CERT_LEN_VARIABLE_IDX1};
+
+		if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, tmpCaCertsPtr, tmpCaCertsLen, SSL_FILETYPE_${NET_PRES_BLOB_MORE_CLIENT_CERT_FORMAT_IDX1}) != SSL_SUCCESS)
+		{
+			// Couldn't load the CA certificates
+			//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
+			wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
+			return false;
+		}
+	}
+</#if>
+
+<#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
+	{
+		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX2};
+		int32_t tmpCaCertsLen = ${NET_PRES_BLOB_MORE_CLIENT_CERT_LEN_VARIABLE_IDX2};
+
+		if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, tmpCaCertsPtr, tmpCaCertsLen, SSL_FILETYPE_${NET_PRES_BLOB_MORE_CLIENT_CERT_FORMAT_IDX2}) != SSL_SUCCESS)
+		{
+			// Couldn't load the CA certificates
+			//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
+			wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
+			return false;
+		}
+	}
+</#if>
 			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
 <#if NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN>

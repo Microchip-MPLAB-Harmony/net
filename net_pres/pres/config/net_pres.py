@@ -22,6 +22,13 @@
 *****************************************************************************"""
 autoConnectTableCrypto = [["lib_crypto", "LIB_CRYPTO_WOLFCRYPT_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
 autoConnectTableWolfssl = [["lib_wolfssl", "WolfSSL_Crypto_Dependency", "lib_wolfcrypt", "lib_wolfcrypt"]] 
+netPresMaxCaCertNum = 3
+netPresMoreClientCertConfigNumPrev = 0
+netPresMaxCaCertConfigIdx = []
+netPresBlobMoreClientCertFormat = []
+netPresBlobMoreClientCertFileName = []
+netPresBlobMoreClientCertVar = []
+netPresBlobMoreClientCertLenVar = []
 
 def instantiateComponent(net_PresComponent):
 
@@ -310,7 +317,68 @@ def instantiateComponent(net_PresComponent):
     netPresBlobClientCertLenVar.setDefaultValue("caCert_len")
     netPresBlobClientCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
 
-    # Support X509 TLS Mutual Authentication?
+
+    # Maximum Community Support
+    netPresBlobMoreClientCertMax = net_PresComponent.createIntegerSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT", netPresBlobClientSupport)
+    netPresBlobMoreClientCertMax.setHelp("mcc_h3_more_client_cert_configurations")
+    netPresBlobMoreClientCertMax.setLabel("More CA Certificate Entries")
+    netPresBlobMoreClientCertMax.setMax(netPresMaxCaCertNum)
+    netPresBlobMoreClientCertMax.setMin(0)
+    netPresBlobMoreClientCertMax.setVisible(True)
+    netPresBlobMoreClientCertMax.setDescription("Maximum Client Certificate Support")
+    netPresBlobMoreClientCertMax.setDefaultValue(netPresMoreClientCertConfigNumPrev)
+    
+####-----------------------------------------------------------------------------------------##########
+    for index in range(0,netPresMaxCaCertNum):  
+        netPresMaxCaCertConfigIdx.append(net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX"+str(index),netPresBlobMoreClientCertMax))
+        netPresMaxCaCertConfigIdx[index].setHelp("mcc_h3_more_client_cert_configurations")
+        netPresMaxCaCertConfigIdx[index].setLabel("Client Certificate "+ str(index))
+        netPresMaxCaCertConfigIdx[index].setVisible(True)
+        if (index < netPresBlobMoreClientCertMax.getValue()):  
+            netPresMaxCaCertConfigIdx[index].setDefaultValue(True)
+        else:
+            netPresMaxCaCertConfigIdx[index].setDefaultValue(False)
+            
+        netPresMaxCaCertConfigIdx[index].setDependencies(netPresMoreClientCertConfig, ["NET_PRES_BLOB_CLIENT_SUPPORT", "NET_PRES_BLOB_MORE_CLIENT_CERT"])
+#        netPresMaxCaCertConfigIdx[index].setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_MORE_CLIENT_CERT"])
+            
+        # File Type for Client CA Certificate?
+        netPresBlobMoreClientCertFormat.append(net_PresComponent.createKeyValueSetSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT_FORMAT_IDX" + str(index),netPresMaxCaCertConfigIdx[index]))
+        netPresBlobMoreClientCertFormat[index].setVisible(True)
+        netPresBlobMoreClientCertFormat[index].setLabel("CA Certificate Format")
+        netPresBlobMoreClientCertFormat[index].addKey("PEM", "0", "PEM")
+        netPresBlobMoreClientCertFormat[index].addKey("ASN1", "1", "ASN1")
+        netPresBlobMoreClientCertFormat[index].setDisplayMode("Key")
+        netPresBlobMoreClientCertFormat[index].setOutputMode("Key")
+        netPresBlobMoreClientCertFormat[index].setDefaultValue(0)
+        netPresBlobMoreClientCertFormat[index].setDependencies(netPresMenuVisible, [netPresMaxCaCertConfigIdx[index].getID()])
+        
+        # File Type for Client CA Certificate Dummy?
+        netPresBlobMoreClientCertFileName.append(net_PresComponent.createStringSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX" + str(index),netPresMaxCaCertConfigIdx[index]))
+        netPresBlobMoreClientCertFileName[index].setVisible(True)
+        netPresBlobMoreClientCertFileName[index].setLabel("CA Certificate definition file name")
+        netPresBlobMoreClientCertFileName[index].setDefaultValue("ca-certs.h")
+        netPresBlobMoreClientCertFileName[index].setDependencies(netPresMenuVisible, [netPresMaxCaCertConfigIdx[index].getID()])
+        
+        # Variable Name Containing Data for Client Certificates?
+        netPresBlobMoreClientCertVar.append(net_PresComponent.createStringSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX" + str(index), netPresMaxCaCertConfigIdx[index])) 
+        netPresBlobMoreClientCertVar[index].setLabel("CA Certificate data variable name")
+        netPresBlobMoreClientCertVar[index].setVisible(True)
+        netPresBlobMoreClientCertVar[index].setDescription("CA Certificate Data variable name")
+        netPresBlobMoreClientCertVar[index].setDefaultValue("caCert")
+        netPresBlobMoreClientCertVar[index].setDependencies(netPresMenuVisible, [netPresMaxCaCertConfigIdx[index].getID()])  
+
+        # Variable Name Containing Size of Client Certificates?
+        netPresBlobMoreClientCertLenVar.append(net_PresComponent.createStringSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT_LEN_VARIABLE_IDX" + str(index), netPresMaxCaCertConfigIdx[index])) 
+        netPresBlobMoreClientCertLenVar[index].setLabel("CA Certificate Size variable name")
+        netPresBlobMoreClientCertLenVar[index].setVisible(True)
+        netPresBlobMoreClientCertLenVar[index].setDescription("CA Certificate Size variable name")
+        netPresBlobMoreClientCertLenVar[index].setDefaultValue("caCert_len")
+        netPresBlobMoreClientCertLenVar[index].setDependencies(netPresMenuVisible, [netPresMaxCaCertConfigIdx[index].getID()])
+####-----------------------------------------------------------------------------------------##########    
+
+
+     # Support X509 TLS Mutual Authentication?
     netPresBlobClientMutualAuthSupport = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT", netPresBlobClientSupport)
     netPresBlobClientMutualAuthSupport.setLabel("Support X509 TLS Mutual Authentication?")
     netPresBlobClientMutualAuthSupport.setVisible(True)
@@ -756,6 +824,47 @@ def netPresWolfSSLSNI(symbol, event):
 def netPresWolfSSLALPN(symbol, event):
     Database.setSymbolValue("lib_wolfssl","wolfsslTlsAlpn",event["value"])
 
+
+def netPresMoreClientCertConfig(symbol, event):
+    global netPresMoreClientCertConfigNumPrev
+    print("Start netPresMoreClientCertConfig")
+    if(event["id"] == "NET_PRES_BLOB_CLIENT_SUPPORT" ):
+        netPresClientSupportEnable = Database.getSymbolValue("netPresBlobClientSupport","NET_PRES_BLOB_CLIENT_SUPPORT")
+        netPresIndex = int(symbol.getID().strip("NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX"))
+        print("NetPres Index: " + str(netPresIndex) )
+        print(netPresMoreClientCertConfigNumPrev)
+        if(netPresClientSupportEnable == True):
+            if(netPresIndex < netPresMoreClientCertConfigNumPrev ):
+                symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+        
+    else:       
+        print(symbol.getID())
+        print(event["id"])
+        netPresMoreClientCertConfigNumberValue = event["value"]
+        print(netPresMoreClientCertConfigNumberValue)
+        print(netPresMoreClientCertConfigNumPrev)
+        if(netPresMoreClientCertConfigNumberValue > netPresMoreClientCertConfigNumPrev ):
+            netPresMaxCaCertConfigIdx[netPresMoreClientCertConfigNumPrev].setVisible(True)
+            netPresMaxCaCertConfigIdx[netPresMoreClientCertConfigNumPrev].setValue(True, 1)
+            print("Set TRUE"+ str(netPresMoreClientCertConfigNumPrev))
+            netPresMoreClientCertConfigNumPrev = netPresMoreClientCertConfigNumPrev + 1
+            #Add more network configurations
+        else:
+            if(netPresMoreClientCertConfigNumberValue < netPresMoreClientCertConfigNumPrev ):
+                #Reduce network configurations
+                netPresMoreClientCertConfigNumPrev = netPresMoreClientCertConfigNumPrev - 1
+                netPresMaxCaCertConfigIdx[netPresMoreClientCertConfigNumPrev].setVisible(False)
+                netPresMaxCaCertConfigIdx[netPresMoreClientCertConfigNumPrev].setValue(False, 1)
+                print("Set FALSE"+ str(netPresMoreClientCertConfigNumPrev))
+                
+            else:
+                print("Do Nothing: "+ str(netPresMoreClientCertConfigNumPrev))
+                #Do Nothing
+            
+    print("END netPresMoreClientCertConfig")
+    
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}
