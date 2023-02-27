@@ -62,6 +62,8 @@ typedef enum
 	PHY_REG_ANNPTR		= 7,
 	PHY_REG_ANLPRNP		= 8,
 	*/
+    PHY_MMD_ACCESS_CONTROL = 13,
+	PHY_MMD_ACCESS_DATA_ADDR = 14,
 	// specific vendor registers: 16-31
 	PHY_REG_SILICON_REV	= 16,
 	PHY_REG_MODE_CTRL	= 17,
@@ -70,9 +72,7 @@ typedef enum
 	PHY_REG_SPECIAL_CTRL	= 27,
 	PHY_REG_INT_SOURCE	= 29,
 	PHY_REG_INT_MASK	= 30,
-	PHY_REG_PHY_CTRL	= 31,
-	PHY_MMD_ACCESS_CONTROL = 13,
-	PHY_MMD_ACCESS_DATA_ADDR = 14,
+	PHY_REG_PHY_CTRL	= 31,	
 	//
 	//PHY_REGISTERS		= 32	// total number of registers
 }ePHY_VENDOR_REG;
@@ -251,6 +251,11 @@ typedef union {
   };
 } __MMDACCESSCONTROLbits_t;	// Index 13: 
 
+typedef enum
+{	// MMD Register under Device Address 0
+    PHY_MMD_DEV0_AN_FLP_BURST_TX_LO_REG = 3,
+	PHY_MMD_DEV0_AN_FLP_BURST_TX_HI_REG = 4,
+}PHY_MMD_DEV0_REG;
 
 #define _PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000 // 15 and 14th is 00
 #define _PHY_MMD_CNTL_ACCESS_DATA_MASK  0x4000 // 15 and 14 th is 01
