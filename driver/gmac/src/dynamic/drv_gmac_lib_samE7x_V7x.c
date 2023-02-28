@@ -1656,7 +1656,7 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
             _DRV_GMAC_RxUnlock(pMACDrv);
 
             // perform cache maintenance
-            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)(*pRxPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen);
+            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)(*pRxPkt)->pDSeg->segBuffer, (*pRxPkt)->pDSeg->segLen + pMACDrv->sGmacData._dataOffset);
 
             //more Rx buffers needed for Rx packet
             if(frameSize)
