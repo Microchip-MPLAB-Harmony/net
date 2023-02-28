@@ -18,7 +18,7 @@ Refer to the following links for release notes, training materials, and interfac
 reference information.
 
  - [Release Notes](./release_notes.md)
- - [MPLAB Harmony License](mplab_harmony_license.md)
+ - [Microchip Software License Agreement](Microchip_SLA001.md)
  - [MPLAB Harmony 3 Net Wiki](https://github.com/Microchip-MPLAB-Harmony/net/wiki)
  - [MPLAB Harmony 3 Net API Help](https://microchip-mplab-harmony.github.io/net)
 
