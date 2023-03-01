@@ -60,17 +60,6 @@ extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
 #include "wolfssl/wolfcrypt/port/atmel/atmel.h"
 </#if>
 
-<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
-<#if netPresSuppStream?has_content && netPresSuppStream == true>
-<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
-<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-#define NET_PRES_MAX_CERT_LEN	4096
-unsigned char g_NewCertFile[NET_PRES_MAX_CERT_LEN];
-long g_NewCertSz = 0;
-int g_NewCertFormat;
-</#if>
-</#if>
-
 <#assign needSysConsole=false/>
 <#assign numInstance= 1>
 <#list 0..(numInstance-1) as idx>	
@@ -173,6 +162,7 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
         </#if>
     </#if>
 </#macro>
+
 <#macro NET_PRES_ENC_GLUE_INIT
         INST
         CONNECTION
@@ -197,6 +187,40 @@ void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * 
 		bufNum = 0;
 	}
 }
+</#if>
+		
+<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
+<#if netPresSuppStream?has_content && netPresSuppStream == true>
+<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
+<#if netPresSuppClient?has_content && netPresSuppClient == true>            
+#define NET_PRES_MAX_CERT_LEN	4096
+unsigned char g_NewCertFile[NET_PRES_MAX_CERT_LEN];
+long g_NewCertSz = 0;
+int g_NewCertFormat;
+bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
+{
+    int ret = 0;
+    if(net_pres_wolfSSLInfoStreamClient0.context == NULL)
+    {
+		if(sz > NET_PRES_MAX_CERT_LEN)
+			return false;
+			
+        memcpy(g_NewCertFile, in, sz);
+        g_NewCertSz = sz;
+		g_NewCertFormat = format;
+        return true;
+    }
+    
+    ret = wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfoStreamClient0.context, in, sz, format);
+    if (ret != SSL_SUCCESS)
+    {
+        // Couldn't load the CA certificates
+        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        return false;
+    }
+    return true;
+}
+</#if>
 </#if>
 		
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObject * transObject)
@@ -317,6 +341,10 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 	}
 </#if>
 
+<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
+<#if netPresSuppStream?has_content && netPresSuppStream == true>
+<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
+<#if netPresSuppClient?has_content && netPresSuppClient == true>            
 		if(g_NewCertSz)
 		{
 			if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfoStreamClient0.context, g_NewCertFile, g_NewCertSz, g_NewCertFormat) != SSL_SUCCESS)
@@ -328,6 +356,8 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 			}
 			g_NewCertSz = 0;
 		}
+</#if>
+</#if>
 
 			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
@@ -894,34 +924,3 @@ int  InitRng(RNG* rng)
     </#if>
 </#list>
 
-
-<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
-<#if netPresSuppStream?has_content && netPresSuppStream == true>
-<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
-<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
-{
-    int ret = 0;
-    if(net_pres_wolfSSLInfoStreamClient0.context == NULL)
-    {
-		if(sz > NET_PRES_MAX_CERT_LEN)
-			return false;
-			
-        memcpy(g_NewCertFile, in, sz);
-        g_NewCertSz = sz;
-		g_NewCertFormat = format;
-        return true;
-    }
-    
-    ret = wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfoStreamClient0.context, in, sz, format);
-    if (ret != SSL_SUCCESS)
-    {
-        // Couldn't load the CA certificates
-        SYS_CONSOLE_PRINT("Something went wrong (%d) loading the CA certificates\r\n", ret);
-        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
-        return false;
-    }
-    return true;
-}
-</#if>
-</#if>
