@@ -32,6 +32,7 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
+
 #include "net_pres_enc_glue.h"
 #include "net_pres/pres/net_pres_transportapi.h"
 #include "net_pres/pres/net_pres_certstore.h"
@@ -920,4 +921,3 @@ int  InitRng(RNG* rng)
         <@NET_PRES_ENC_GLUE_FUNCTIONS idx/>
     </#if>
 </#list>
-

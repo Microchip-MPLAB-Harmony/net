@@ -19,7 +19,7 @@
 	protocols  and encryption is implemented with AES protocol.
 	These credentials and other user information are stored in the global array. 
 	The user of the SNMPv3 stack can decide on the number of user names in the
-	User’s data base to be stored with the Server. According to the SNMPv3 
+	User data base to be stored with the Server. According to the SNMPv3 
 	recommendation, SNMPv3 server should not be configured with the 
 	authentication and privacy passwords. Instead could be configured with the 
 	respective localized keys of the password. Microchip SNMPv3 agent is 

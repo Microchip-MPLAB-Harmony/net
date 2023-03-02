@@ -1,4 +1,3 @@
-<#--
 /***************************************************************
 MPFS image source file 
 
@@ -19,7 +18,6 @@ ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS2 GENERATOR
 Generated Fri Nov 15 2019 07:05:05 
 
 ***************************************************************/
--->
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

@@ -1,4 +1,3 @@
-<#--
 /***************************************************************
 * MPFS image source file 
 * 
@@ -19,7 +18,6 @@
 * Generated Fri Sep 27 2019 01:25:55 
 * 
 ***************************************************************/
--->
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

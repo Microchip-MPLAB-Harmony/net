@@ -1,4 +1,3 @@
-<#--
 /*******************************************************************
 * FileName: mib.h
 * This file was automatically generated on Fri Dec 14 2018 05:58:28 
@@ -8,7 +7,6 @@
 * Include this file in your application source file that handles SNMP callbacks and TRAP.
 
 *******************************************************************/
---> 
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

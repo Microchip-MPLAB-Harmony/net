@@ -1,4 +1,3 @@
-<#--
 /*********************************************************************
 HTTP Application callback source file 
 
@@ -16,7 +15,6 @@ Description:
    ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS GENERATOR
    
 *********************************************************************/
---> 
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

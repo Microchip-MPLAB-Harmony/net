@@ -1,4 +1,3 @@
-<#--
 /*******************************************************************************
   Application to Demo SNMP Server
 
@@ -8,7 +7,6 @@
   Description:
     - Implements the SNMP application
 *******************************************************************************/
--->
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

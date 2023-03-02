@@ -1,4 +1,3 @@
-<#--
 /*******************************************************************************
   Application to Demo HTTP Server
 
@@ -9,7 +8,6 @@
     -Implements the application
     -Reference: RFC 1002
  *******************************************************************************/
--->
 
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.

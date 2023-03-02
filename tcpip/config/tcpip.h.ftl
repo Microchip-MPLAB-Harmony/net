@@ -17,7 +17,6 @@
   
 
 *******************************************************************************/
-
 //DOM-IGNORE-BEGIN
 /*
 Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
