@@ -1,4 +1,16 @@
 <#--
+/*******************************************************************
+* FileName: mib.h
+* This file was automatically generated on Fri Dec 14 2018 05:58:28 
+* by mib2bib utility.
+* This file contains 'C' defines for dynamic OIDs and AgentID only.
+* Do not modify this file manually.
+* Include this file in your application source file that handles SNMP callbacks and TRAP.
+
+*******************************************************************/
+--> 
+
+/*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
@@ -19,39 +31,7 @@ for any third-party software incorporated in the software and any applicable ope
 source software license terms, no license or other rights, whether express or
 implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
---> /*******************************************************************
-* FileName: mib.h
-* This file was automatically generated on Fri Dec 14 2018 05:58:28 
-* by mib2bib utility.
-* This file contains 'C' defines for dynamic OIDs and AgentID only.
-* Do not modify this file manually.
-* Include this file in your application source file that handles SNMP callbacks and TRAP.
-
-*******************************************************************/
-/*****************************************************************************
-Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
-
- Microchip Technology Inc. and its subsidiaries.
-
-Subject to your compliance with these terms, you may use Microchip software
-and any derivatives exclusively with Microchip products. It is your
-responsibility to comply with third party license terms applicable to your
-use of third party software (including open source software) that may 
-accompany Microchip software.
-
-THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
-WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
-PURPOSE.
-
-IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
-BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
-FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
-ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
-THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*****************************************************************************/
+*/
 
 #define MICROCHIP      255		// This is an Agent ID for use in SNMPNotify() only.
 #define SYS_UP_TIME      250			//43.6.1.2.1.1.3 :  READONLY TIME_TICKS.
