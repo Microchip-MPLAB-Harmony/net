@@ -264,9 +264,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
-<#if INST=0>
-<#if TYPE="Stream">
-<#if CONNECTION="Client">
+<#if INST == 0>
+<#if TYPE == "Stream">
+<#if CONNECTION == "Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX0>
 	{	
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX0};
@@ -284,9 +284,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 </#if>
 </#if>
 </#if>
-<#if INST=0>
-<#if TYPE="Stream">
-<#if CONNECTION="Client">
+<#if INST == 0>
+<#if TYPE == "Stream">
+<#if CONNECTION == "Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX1>	
 	{
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX1};
@@ -304,9 +304,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 </#if>
 </#if>
 </#if>
-<#if INST=0>
-<#if TYPE="Stream">
-<#if CONNECTION="Client">
+<#if INST == 0>
+<#if TYPE == "Stream">
+<#if CONNECTION == "Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
 	{
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX2};
@@ -325,9 +325,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 </#if>
 </#if>
 <#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
-<#if INST=0>
-<#if TYPE="Stream">
-<#if CONNECTION="Client">
+<#if INST == 0>
+<#if TYPE == "Stream">
+<#if CONNECTION == "Client">
 	if(g_NewCertSz)
 	{
 		if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, g_NewCertFile, g_NewCertSz, g_NewCertFormat) != SSL_SUCCESS)
@@ -796,7 +796,7 @@ static uint8_t _net_pres_wolfsslUsers = 0;
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "Stream"/>                
-				<#if INST=0>
+				<#if INST == 0>
 					<@NET_PRES_ENC_SET_CERT_FUNCTION INST "Client" "Stream"/>
 				</#if>	
             </#if>
