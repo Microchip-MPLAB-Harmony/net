@@ -334,7 +334,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		{
 			// Couldn't load the CA certificates
 			//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
-			wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+			wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
 			return false;
 		}
 		g_NewCertSz = 0;
@@ -766,7 +766,7 @@ bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
     if (ret != SSL_SUCCESS)
     {
         // Couldn't load the CA certificates
-        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
     return true;
