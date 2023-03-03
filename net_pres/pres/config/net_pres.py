@@ -318,6 +318,14 @@ def instantiateComponent(net_PresComponent):
     netPresBlobClientCertLenVar.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
 
 
+    # Support Runtime Addition of Certificates?
+    netPresBlobRuntimeCertAdd = net_PresComponent.createBooleanSymbol("NET_PRES_BLOB_RUNTIME_CERT_SUPPORT", netPresBlobClientSupport)
+    netPresBlobRuntimeCertAdd.setLabel("Support Runtime Certificates Addition?")
+    netPresBlobRuntimeCertAdd.setVisible(True)
+    netPresBlobRuntimeCertAdd.setDescription("Support Runtime Certificates Addition?")
+    netPresBlobRuntimeCertAdd.setDefaultValue(False)  
+    netPresBlobRuntimeCertAdd.setDependencies(netPresMenuVisible, ["NET_PRES_BLOB_CLIENT_SUPPORT"])
+
     # Maximum Community Support
     netPresBlobMoreClientCertMax = net_PresComponent.createIntegerSymbol("NET_PRES_BLOB_MORE_CLIENT_CERT", netPresBlobClientSupport)
     netPresBlobMoreClientCertMax.setHelp("mcc_h3_more_client_cert_configurations")

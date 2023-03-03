@@ -52,7 +52,6 @@ Microchip or any third party.
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
 #include "${NET_PRES_BLOB_MORE_CLIENT_CERT_FILENAME_IDX2}"
 </#if>
-
 extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
 <#if (lib_wolfssl.wolfsslLoadTNGTLSCert)?has_content && ((lib_wolfssl.wolfsslLoadTNGTLSCert) == true)>
 #include "wolfssl/wolfcrypt/port/atmel/atmel.h"
@@ -160,7 +159,12 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
         </#if>
     </#if>
 </#macro>
-
+<#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
+#define NET_PRES_MAX_CERT_LEN	4096
+unsigned char g_NewCertFile[NET_PRES_MAX_CERT_LEN];
+long g_NewCertSz = 0;
+int g_NewCertFormat;
+</#if>
 <#macro NET_PRES_ENC_GLUE_INIT
         INST
         CONNECTION
@@ -185,40 +189,6 @@ void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * 
 		bufNum = 0;
 	}
 }
-</#if>
-		
-<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
-<#if netPresSuppStream?has_content && netPresSuppStream == true>
-<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
-<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-#define NET_PRES_MAX_CERT_LEN	4096
-unsigned char g_NewCertFile[NET_PRES_MAX_CERT_LEN];
-long g_NewCertSz = 0;
-int g_NewCertFormat;
-bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
-{
-    int ret = 0;
-    if(net_pres_wolfSSLInfoStreamClient0.context == NULL)
-    {
-		if(sz > NET_PRES_MAX_CERT_LEN)
-			return false;
-			
-        memcpy(g_NewCertFile, in, sz);
-        g_NewCertSz = sz;
-		g_NewCertFormat = format;
-        return true;
-    }
-    
-    ret = wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfoStreamClient0.context, in, sz, format);
-    if (ret != SSL_SUCCESS)
-    {
-        // Couldn't load the CA certificates
-        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
-        return false;
-    }
-    return true;
-}
-</#if>
 </#if>
 		
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObject * transObject)
@@ -294,6 +264,9 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         return false;
     }
+<#if INST=0>
+<#if TYPE="Stream">
+<#if CONNECTION="Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX0>
 	{	
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX0};
@@ -308,7 +281,12 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		}
 	}
 </#if>
-
+</#if>
+</#if>
+</#if>
+<#if INST=0>
+<#if TYPE="Stream">
+<#if CONNECTION="Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX1>	
 	{
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX1};
@@ -323,7 +301,12 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		}
 	}
 </#if>
-
+</#if>
+</#if>
+</#if>
+<#if INST=0>
+<#if TYPE="Stream">
+<#if CONNECTION="Client">
 <#if NET_PRES_BLOB_MORE_CLIENT_CERT_CONFIG_IDX2>	
 	{
 		const uint8_t *tmpCaCertsPtr = ${NET_PRES_BLOB_MORE_CLIENT_CERT_VARIABLE_IDX2};
@@ -338,25 +321,28 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
 		}
 	}
 </#if>
-
-<#assign netPresSuppStream = "NET_PRES_SUPPORT_STREAM_ENC"?eval>
-<#if netPresSuppStream?has_content && netPresSuppStream == true>
-<#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
-<#if netPresSuppClient?has_content && netPresSuppClient == true>            
-		if(g_NewCertSz)
+</#if>
+</#if>
+</#if>
+<#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
+<#if INST=0>
+<#if TYPE="Stream">
+<#if CONNECTION="Client">
+	if(g_NewCertSz)
+	{
+		if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, g_NewCertFile, g_NewCertSz, g_NewCertFormat) != SSL_SUCCESS)
 		{
-			if (wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfoStreamClient0.context, g_NewCertFile, g_NewCertSz, g_NewCertFormat) != SSL_SUCCESS)
-			{
-				// Couldn't load the CA certificates
-				//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
-				wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
-				return false;
-			}
-			g_NewCertSz = 0;
+			// Couldn't load the CA certificates
+			//SYS_CONSOLE_MESSAGE("Something went wrong loading the CA certificates\r\n");
+			wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+			return false;
 		}
+		g_NewCertSz = 0;
+	}
 </#if>
 </#if>
-
+</#if>
+</#if>
 			<#if NET_PRES_BLOB_CERT_REPO>
                 <#if NET_PRES_BLOB_CLIENT_MUTUAL_AUTH_SUPPORT>
 <#if NET_PRES_BLOB_CLIENT_IS_DEVICE_CERT_CHAIN>
@@ -757,6 +743,36 @@ net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
         </#if>
     </#if>
 </#macro>
+<#macro NET_PRES_ENC_SET_CERT_FUNCTION
+        INST
+        CONNECTION
+        TYPE>
+<#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
+bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format)
+{
+    int ret = 0;
+    if(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context == NULL)
+    {
+		if(sz > NET_PRES_MAX_CERT_LEN)
+			return false;
+			
+        memcpy(g_NewCertFile, in, sz);
+        g_NewCertSz = sz;
+		g_NewCertFormat = format;
+        return true;
+    }
+    
+    ret = wolfSSL_CTX_load_verify_buffer(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context, in, sz, format);
+    if (ret != SSL_SUCCESS)
+    {
+        // Couldn't load the CA certificates
+        wolfSSL_CTX_free(net_pres_wolfSSLInfoStreamClient0.context);
+        return false;
+    }
+    return true;
+}
+</#if>
+</#macro>		
 <#macro NET_PRES_ENC_GLUE_FUNCTIONS
     INST>
 	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION"?eval>
@@ -780,6 +796,9 @@ static uint8_t _net_pres_wolfsslUsers = 0;
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "Stream"/>                
+				<#if INST=0>
+					<@NET_PRES_ENC_SET_CERT_FUNCTION INST "Client" "Stream"/>
+				</#if>	
             </#if>
         </#if>
         <#assign netPresSuppDatagram= "NET_PRES_SUPPORT_DATAGRAM_ENC"?eval>
