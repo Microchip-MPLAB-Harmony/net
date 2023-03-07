@@ -1767,7 +1767,7 @@ static TCPIP_MAC_RES DRV_GMAC_EventDeInit(DRV_HANDLE hMac)
 bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable) 
 {
 	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
-    bool *intStat;
+    bool *intStat = 0;
 	DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;	
 	GMAC_QUE_LIST queIdx;
     GMAC_EVENTS ethEvents;
@@ -1914,7 +1914,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv) 
 {
 	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
-    bool *intStat;
+    bool *intStat = 0;
 	DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
     GMAC_QUE_LIST queIdx;
     if(pMACDrv == 0)

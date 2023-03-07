@@ -1611,7 +1611,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntryQuery(TCPIP_NET_HANDLE hNet, size_t index, TCPIP
     OA_HASH_ENTRY   *hE;
     ARP_HASH_ENTRY  *arpHE;
     ARP_CACHE_DCPT  *pArpDcpt;
-    TCPIP_MAC_ADDR        noHwAdd = {{0}};
+    TCPIP_MAC_ADDR        noHwAdd = {{0, 0, 0, 0, 0, 0}};
     TCPIP_NET_IF  *pIf;
 
     pIf = _TCPIPStackHandleToNetUp(hNet);

@@ -812,7 +812,7 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLIENT_OPTIONS* pCl
 // if pCliOpt != 0, it actually stores the data; otherwise just parse
 static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig)
 {
-    int nSets;
+    int nSets = 0;
 
     TCPIP_DHCPS_RES res = TCPIP_DHCPS_RES_OK;
 
@@ -938,7 +938,7 @@ static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evT
 
    _DhcpsAssert(evType != 0, __func__, __LINE__);
 
-    bool doNotify;
+    bool doNotify = false;
 
 #if (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
     if(evType < 0)
@@ -1282,8 +1282,8 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
     UDP_SOCKET_INFO     udpSockInfo;
     uint32_t            dhcpCookie;
     int                 ifIx;       // DHCPs interface index
-    BOOTP_HEADER*       pHeader;
     uint8_t*            rxPtr;
+    BOOTP_HEADER*       pHeader = 0;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE;
     bool processPkt = false;
     bool accessLocked = false;
