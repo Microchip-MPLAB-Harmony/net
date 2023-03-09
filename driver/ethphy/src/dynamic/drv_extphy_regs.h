@@ -87,7 +87,7 @@ typedef union
     struct
     {
         uint16_t             :6;
-        uint16_t SPEED1000    :1;
+        uint16_t SPEED1000   :1;
         uint16_t COLTEST     :1;
         uint16_t DUPLEX      :1;
         uint16_t AN_RESTART  :1;

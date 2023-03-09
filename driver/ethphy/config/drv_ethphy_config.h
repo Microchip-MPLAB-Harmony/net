@@ -130,7 +130,7 @@ Microchip or any third party.
 
   Remarks:
     The MAC driver is the only client of the PHY driver
-    and the number of clients should always be 1.
+    and the number of clients is always 1.
 
   *************************************************************************/
 

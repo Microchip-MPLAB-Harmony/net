@@ -52,7 +52,7 @@ Microchip or any third party.
 // *****************************************************************************
 
 #include "driver/miim/src/drv_miim_local.h"
-#include "driver/miim/src/dynamic/drv_miim_mapping.h"
+#include "drv_miim_device.h"
 
 #include "system/sys_time_h2_adapter.h"
 #include "system/debug/sys_debug.h"
@@ -71,7 +71,7 @@ static void _MIIMAssertCond(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
-        SYS_CONSOLE_PRINT("MIIM Assert: %s, in line: %d, \r\n", message, lineNo);
+        SYS_CONSOLE_PRINT("dMIIM Assert: %s, in line: %d, \r\n", message, lineNo);
         while(_MIIMStayAssertLoop != 0);
     }
 }
@@ -82,7 +82,7 @@ static void _MIIMDebugCond(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
-        SYS_CONSOLE_PRINT("MIIM Cond: %s, in line: %d, \r\n", message, lineNo);
+        SYS_CONSOLE_PRINT("dMIIM Cond: %s, in line: %d, \r\n", message, lineNo);
         while(_MIIMStayCondLoop != 0);
     }
 }
@@ -93,7 +93,62 @@ static void _MIIMDebugCond(bool cond, const char* message, int lineNo)
 #endif  // (DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_BASIC)
 
 
-static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE_DATA* pSchedData);
+#if ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_OPER) != 0)
+static void _MIIM_Debug_Oper(DRV_MIIM_OP_DCPT* pOpDcpt, const char* msg)
+{
+    SYS_CONSOLE_PRINT("dMIIM oper %s - opType: %d, reg: %d, stat: %d, data: 0x%04x\r\n", msg, pOpDcpt->opType,  pOpDcpt->regIx, pOpDcpt->txferStat, pOpDcpt->opData);
+}
+
+#else
+#define _MIIM_Debug_Oper(pOpDcpt, msg)
+#endif  // ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_OPER) != 0)
+
+#if ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_RW) != 0)
+static void _MIIM_Debug_Write(DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    SYS_CONSOLE_PRINT("dMIIM write - reg: %d, add: 0x%04x, wdata: 0x%04x\r\n", pOpDcpt->regIx, pOpDcpt->phyAdd, pOpDcpt->opData);
+}
+
+static void _MIIM_Debug_Read(DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    SYS_CONSOLE_PRINT("dMIIM read - op reg: %d, add: 0x%04x\r\n", pOpDcpt->regIx, pOpDcpt->phyAdd);
+}
+
+static void _MIIM_Debug_ReadData(DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    SYS_CONSOLE_PRINT("dMIIM read data - op reg: %d, data: 0x%04x\r\n", pOpDcpt->regIx, pOpDcpt->opData);
+}
+
+#else
+#define _MIIM_Debug_Write(pOpDcpt)
+#define _MIIM_Debug_Read(pOpDcpt)
+#define _MIIM_Debug_ReadData(pOpDcpt)
+#endif  // ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_RW) != 0)
+
+#if ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_EXT_SMI_RW) != 0)
+static void _MIIM_Debug_ExtSMIWrite(DRV_MIIM_OP_DCPT* pOpDcpt, uint8_t phyAdd, uint8_t regVal, uint16_t wData, int seq)
+{
+    SYS_CONSOLE_PRINT("dMIIM Ext-SMI write - op reg: 0x%04x, add: 0x%04x, reg: 0x%04x, wdata: 0x%04x, seq: %d\r\n", pOpDcpt->regIx, phyAdd, regVal, wData, seq);
+}
+
+static void _MIIM_Debug_ExtSMIRead(DRV_MIIM_OP_DCPT* pOpDcpt, uint8_t phyAdd, uint8_t regVal, int seq)
+{
+    SYS_CONSOLE_PRINT("dMIIM Ext-SMI read - op reg: 0x%04x, add: 0x%04x, reg: 0x%04x, seq: %d\r\n", pOpDcpt->regIx, phyAdd, regVal, seq);
+}
+
+static void _MIIM_Debug_ExtSMIReadData(DRV_MIIM_OP_DCPT* pOpDcpt, int seq, uint16_t rdData)
+{
+    SYS_CONSOLE_PRINT("dMIIM Ext-SMI read data (%s): 0x%04x\r\n", seq == 0 ? "low" : "high", rdData);
+}
+
+#else
+#define _MIIM_Debug_ExtSMIWrite(pOpDcpt, phyAdd, regVal, wData, seq)
+#define _MIIM_Debug_ExtSMIRead(pOpDcpt, phyAdd, regVal, seq)
+#define _MIIM_Debug_ExtSMIReadData(pOpDcpt, seq, rdData)
+#endif  // ((DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_EXT_SMI_RW) != 0)
+
+
+static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, uint16_t regIx, uint16_t phyAdd, uint32_t opData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult, DRV_MIIM_OP_TYPE opType);
 
 static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
 
@@ -109,12 +164,12 @@ static DRV_MIIM_CLIENT_DCPT* _DRV_MIIM_ClientAllocate( DRV_MIIM_OBJ* pMiimObj, i
 
 static void _DRV_MIIM_ClientDeallocate( DRV_MIIM_CLIENT_DCPT* pClient);
 
-static void _DRV_MIIM_SMIClockSet(uintptr_t ethphyId, uint32_t hostClock, uint32_t maxMIIMClock );
+static void _DRV_MIIM_ReadStartExt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt, int seq);
+
+static void _DRV_MIIM_WriteDataExt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt, int seq);
+
 
 static void _DRV_MIIM_PurgeClientOp(DRV_MIIM_CLIENT_DCPT* pClient);
-
-static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t opData,
-                                                   DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult, DRV_MIIM_OP_TYPE opType);
 
 // locks access to object lists and resources
 // between user threads and task thread
@@ -209,6 +264,58 @@ static __inline__ DRV_MIIM_OP_DCPT* __attribute__((always_inline)) _DRV_MIIM_OpL
     return pOpDcpt;
 }
 
+// Extended SMI address from a register value
+static __inline__ uint16_t __attribute__((always_inline)) _ExtSMI_Address(uint16_t regVal)
+{
+    return ((regVal >> 6) & 0x0f) | 0x10;
+}
+
+// Extended SMI register from a register value
+static __inline__ uint16_t __attribute__((always_inline)) _ExtSMI_Register(uint16_t regVal, int seq)
+{
+    uint16_t reg = (regVal >> 1) & 0x1f;
+    if(seq != 0)
+    {
+        reg |= 0x01;
+    }
+    return reg;
+}
+
+// Extended SMI 16 bit data from 32 bit data
+static __inline__ uint16_t __attribute__((always_inline)) _ExtSMI_Data(uint32_t opData, int seq)
+{
+    uint16_t wData;
+    if(seq == 0)
+    {
+        wData = (uint16_t)opData;
+    }
+    else
+    {
+        wData = (uint16_t)(opData >> 16);
+    }
+    return wData;
+}
+
+// processing function per MIIM operation table
+static void MIIM_Process_Read(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+static void MIIM_Process_Write(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+static void MIIM_Process_Scan(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+static void MIIM_Process_ReadExt(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+static void MIIM_Process_WriteExt(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+
+// table with operations processing functions
+static const DRV_MIIM_PROCESS_OP_FNC miim_process_op_tbl[] =
+{
+    MIIM_Process_Read,      // DRV_MIIM_OP_READ
+    MIIM_Process_Write,     // DRV_MIIM_OP_WRITE
+    MIIM_Process_Scan,      // DRV_MIIM_OP_SCAN
+    MIIM_Process_ReadExt,   // DRV_MIIM_OP_READ_EXT
+    MIIM_Process_WriteExt,  // DRV_MIIM_OP_WRITE_EXT
+};
+
+
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Driver Interface Function Definitions
@@ -220,24 +327,26 @@ static __inline__ DRV_MIIM_OP_DCPT* __attribute__((always_inline)) _DRV_MIIM_OpL
 const DRV_MIIM_OBJECT_BASE  DRV_MIIM_OBJECT_BASE_Default = 
 {
     // system level object functions
-    DRV_MIIM_Initialize,
-    DRV_MIIM_Reinitialize,
-    DRV_MIIM_Deinitialize,
-    DRV_MIIM_Status,
-    DRV_MIIM_Tasks,
-    DRV_MIIM_Open,
+    .DRV_MIIM_Initialize = DRV_MIIM_Initialize,
+    .DRV_MIIM_Reinitialize = DRV_MIIM_Reinitialize,
+    .DRV_MIIM_Deinitialize = DRV_MIIM_Deinitialize,
+    .DRV_MIIM_Status = DRV_MIIM_Status,
+    .DRV_MIIM_Tasks = DRV_MIIM_Tasks,
+    .DRV_MIIM_Open = DRV_MIIM_Open,
     // client specific functions
-    DRV_MIIM_Setup,
-    DRV_MIIM_Close,
-    DRV_MIIM_ClientStatus,
-    DRV_MIIM_RegisterCallback,
-    DRV_MIIM_DeregisterCallback,
+    .DRV_MIIM_Setup = DRV_MIIM_Setup,
+    .DRV_MIIM_Close = DRV_MIIM_Close,
+    .DRV_MIIM_ClientStatus = DRV_MIIM_ClientStatus,
+    .DRV_MIIM_RegisterCallback = DRV_MIIM_RegisterCallback,
+    .DRV_MIIM_DeregisterCallback = DRV_MIIM_DeregisterCallback,
     // client operation functions
-    DRV_MIIM_Read,
-    DRV_MIIM_Write,
-    DRV_MIIM_Scan,
-    DRV_MIIM_OperationResult,
-    DRV_MIIM_OperationAbort,
+    .DRV_MIIM_Read = DRV_MIIM_Read,
+    .DRV_MIIM_Write = DRV_MIIM_Write,
+    .DRV_MIIM_Scan = DRV_MIIM_Scan,
+    .DRV_MIIM_OperationResult = DRV_MIIM_OperationResult,
+    .DRV_MIIM_OperationAbort = DRV_MIIM_OperationAbort,
+    .DRV_MIIM_WriteExt = DRV_MIIM_WriteExt,
+    .DRV_MIIM_ReadExt = DRV_MIIM_ReadExt,
 };
 
 
@@ -278,7 +387,7 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
     pMiimObj->objFlags = DRV_MIIM_OBJ_FLAG_IN_USE;      // Set object to be in use
     pMiimObj->objStatus = SYS_STATUS_READY; // Set module state
     pMiimObj->iModule  = iModule;  // Store driver instance
-    pMiimObj->ethphyId = miimInit->ethphyId; // Store PLIB ID
+    pMiimObj->miimId = miimInit->miimId; // Store PLIB ID
 
     // initialize the operation lists
     DRV_MIIM_OP_DCPT* pOpDcpt = pMiimObj->opPool;
@@ -434,7 +543,6 @@ DRV_MIIM_RESULT DRV_MIIM_Setup(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp)
 {
     DRV_MIIM_CLIENT_DCPT* pClient;
     DRV_MIIM_OBJ* pMiimObj;
-    uintptr_t   ethphyId; 
     
     DRV_MIIM_RESULT res;
 
@@ -450,23 +558,9 @@ DRV_MIIM_RESULT DRV_MIIM_Setup(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp)
     }
 
     pMiimObj = pClient->parentObj;
-    ethphyId = pMiimObj->ethphyId;
     
-    // check that the ETH module is enabled!
-    res = DRV_MIIM_RES_OK;
-
-    res =  _DRV_MIIM_ETH_ENABLE(ethphyId);
-    // make sure the MAC MII is not held in reset
-    
-	_DRV_MIIM_MII_RELEASE_RESET(ethphyId);
-	
-    // setup the clock
-    _DRV_MIIM_SMIClockSet(ethphyId, pSetUp->hostClockFreq, pSetUp->maxBusFreq);
-
- 
-    _DRV_MIIM_SETUP_PREAMBLE(ethphyId, pSetUp);
-
-    _DRV_MIIM_SCAN_INCREMENT(ethphyId, pSetUp);
+    // setup the device
+    res = DRV_MIIM_DeviceSetup(pMiimObj->miimId, pSetUp);
     
     pMiimObj->objFlags |= DRV_MIIM_OBJ_FLAG_SETUP_DONE;
 
@@ -489,7 +583,7 @@ void DRV_MIIM_Tasks( SYS_MODULE_OBJ hSysObj )
     while((pOpDcpt = (DRV_MIIM_OP_DCPT*)pMiimObj->busyOpList.head) != 0)
     {
         _DRV_MIIM_ProcessOp(pMiimObj, pOpDcpt);
-        if(pOpDcpt->opStat >= DRV_MIIM_TXFER_REPORT_STATE)
+        if(pOpDcpt->txferStat >= DRV_MIIM_TXFER_REPORT_STATE)
         {   // somehow complete
             repAct = _DRV_MIIM_ReportOp(pMiimObj, pOpDcpt);
             if(repAct == DRV_MIIM_REPORT_ACT_DELETE)
@@ -514,56 +608,32 @@ void DRV_MIIM_Tasks( SYS_MODULE_OBJ hSysObj )
     _DRV_MIIM_ObjUnlock(pMiimObj);
 } 
 
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
 {
-    return _DRV_MIIM_StartOp(handle, rIx, phyAdd, 0xffff, opFlags, pOpResult, DRV_MIIM_OP_READ);
+    return _DRV_MIIM_ScheduleOp(handle, rIx, phyAdd, 0, opFlags, pOpResult, DRV_MIIM_OP_READ);
 }
 
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
 {
-    return _DRV_MIIM_StartOp(handle, rIx, phyAdd, wData, opFlags, pOpResult, DRV_MIIM_OP_WRITE);
+    return _DRV_MIIM_ScheduleOp(handle, rIx, phyAdd, wData, opFlags, pOpResult, DRV_MIIM_OP_WRITE);
 }
 
-
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
 {
-    return _DRV_MIIM_StartOp(handle, rIx, phyAdd, 0xffff, opFlags, pOpResult, DRV_MIIM_OP_SCAN);
+    return _DRV_MIIM_ScheduleOp(handle, rIx, phyAdd, 0, opFlags, pOpResult, DRV_MIIM_OP_SCAN);
 }
 
-static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t opData,
-                                                   DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult, DRV_MIIM_OP_TYPE opType)
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_ReadExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
 {
-    DRV_MIIM_RESULT opRes;
-    DRV_MIIM_OPERATION_HANDLE opHandle;
-    DRV_MIIM_SCHEDULE_DATA schedData;
-
-    schedData.regIx = rIx;
-    schedData.phyAdd = phyAdd;
-    schedData.opData = opData;
-    schedData.opFlags = (uint8_t)opFlags;
-    schedData.opType = opType;
-    schedData.opHandle = 0;
-
-
-    opRes = _DRV_MIIM_ScheduleOp(handle, &schedData);
-    if(opRes == DRV_MIIM_RES_OK)
-    {   // success
-        opHandle = schedData.opHandle;
-    }
-    else
-    {
-        opHandle = 0;
-    }
-    
-    if(pOpResult)
-    {
-        *pOpResult = opRes;
-    }
-
-    return opHandle;
+    return _DRV_MIIM_ScheduleOp(handle, rIx, phyAdd, 0, opFlags, pOpResult, DRV_MIIM_OP_READ_EXT);
 }
 
-DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint16_t* pOpData)
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_WriteExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult)
+{
+    return _DRV_MIIM_ScheduleOp(handle, rIx, phyAdd, wData, opFlags, pOpResult, DRV_MIIM_OP_WRITE_EXT);
+}
+
+DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData)
 {
     DRV_MIIM_CLIENT_DCPT* pClient;
     DRV_MIIM_OP_DCPT* pOpDcpt;
@@ -590,7 +660,7 @@ DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_H
         // now this is either an ongoing operation or a completed one with no signal handler
         if(pOpData != 0)
         {   // when scanning, we update the user data even if stale
-            if(DRV_MIIM_TXFER_SCAN_STALE <= pOpDcpt->opStat &&  pOpDcpt->opStat <= DRV_MIIM_TXFER_DONE)
+            if(DRV_MIIM_TXFER_SCAN_STALE <= pOpDcpt->txferStat &&  pOpDcpt->txferStat <= DRV_MIIM_TXFER_DONE)
             {
                 *pOpData = pOpDcpt->opData;
             }
@@ -598,8 +668,9 @@ DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_H
 
         miimRes = _DRV_MIIM_OpResult(pOpDcpt, true);
 
-        if(pOpDcpt->opStat >= DRV_MIIM_TXFER_DONE)
+        if(pOpDcpt->txferStat >= DRV_MIIM_TXFER_DONE)
         {   // this should be in the complete list
+            _MIIM_Debug_Oper(pOpDcpt, "release");
             _DRV_MIIM_ReleaseOpDcpt(pMiimObj, pOpDcpt,  &pClient->parentObj->completeOpList, DRV_MIIM_QTYPE_COMPLETE);
         }
 
@@ -642,7 +713,7 @@ DRV_MIIM_RESULT DRV_MIIM_OperationAbort(DRV_HANDLE handle, DRV_MIIM_OPERATION_HA
         }
 
         // now this is either an ongoing operation or a completed one with no signal handler
-        if(pOpDcpt->opStat >= DRV_MIIM_TXFER_DONE)
+        if(pOpDcpt->txferStat >= DRV_MIIM_TXFER_DONE)
         {
             pList = &pMiimObj->completeOpList;
             qType = DRV_MIIM_QTYPE_COMPLETE;
@@ -759,7 +830,8 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
 
 // checks and schedules an operation
 // returns DRV_MIIM_RES_OK if success
-static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE_DATA* pSchedData)
+static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, uint16_t regIx, uint16_t phyAdd, uint32_t opData,
+                                                   DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult, DRV_MIIM_OP_TYPE opType)
 {
     DRV_MIIM_RESULT res;
     DRV_MIIM_OPERATION_HANDLE opHandle = 0;
@@ -768,25 +840,31 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
 
     while(true)
     {
+        // sanity check
+        if(opType != DRV_MIIM_OP_READ_EXT && opType != DRV_MIIM_OP_WRITE_EXT)
+        {
+           if(regIx > DRV_MIIM_MAX_REG_INDEX_VALUE)
+           {
+               res = DRV_MIIM_RES_REGISTER_ERR;
+               break;
+           }
+
+           if(phyAdd > DRV_MIIM_MAX_ADDRESS_VALUE)
+           {
+               res = DRV_MIIM_RES_ADDRESS_ERR;
+               break;
+           }
+        }
+
+        // get client for this operation
         if((pClient = _DRV_MIIM_GetClientAndLock(handle, true)) == 0)
         {
             res = DRV_MIIM_RES_HANDLE_ERR;
             break;
         }
 
+        // get MIIM object
         pMiimObj = pClient->parentObj;
-
-        if(pSchedData->regIx > DRV_MIIM_MAX_REG_INDEX_VALUE)
-        {
-            res = DRV_MIIM_RES_REGISTER_ERR;
-            break;
-        }
-
-        if(pSchedData->phyAdd > DRV_MIIM_MAX_ADDRESS_VALUE)
-        {
-            res = DRV_MIIM_RES_ADDRESS_ERR;
-            break;
-        }
 
         if((pMiimObj->objFlags & DRV_MIIM_OBJ_FLAG_SETUP_DONE) == 0)
         {
@@ -799,7 +877,8 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
             res = DRV_MIIM_RES_OP_SCAN_ERR;
             break;
         }
-
+        
+        // get an operation descriptor
         DRV_MIIM_OP_DCPT* pOpDcpt = _DRV_MIIM_OpListRemove(&pMiimObj->freeOpList, DRV_MIIM_QTYPE_FREE);
 
         if(pOpDcpt == 0)
@@ -809,6 +888,7 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         }
 
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
+        // get client operation stamp
         DRV_MIIM_CLI_OP_STAMP* pCliStamp = (DRV_MIIM_CLI_OP_STAMP*)Helper_SingleListHeadRemove(&pMiimObj->freeStampList);
 
         if(pCliStamp == 0)
@@ -820,13 +900,14 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         }
 #endif  // (DRV_MIIM_CLIENT_OP_PROTECTION)
 
+        // all good
         // populate the operation to schedule
-        pOpDcpt->opType = pSchedData->opType;
-        pOpDcpt->regIx = (uint8_t)pSchedData->regIx;
-        pOpDcpt->phyAdd = (uint8_t)pSchedData->phyAdd;
-        pOpDcpt->opFlags = pSchedData->opFlags;
-        pOpDcpt->opData = pSchedData->opData;
-        pOpDcpt->opStat = DRV_MIIM_TXFER_START;
+        pOpDcpt->opType = opType;
+        pOpDcpt->regIx = regIx;
+        pOpDcpt->phyAdd = phyAdd;
+        pOpDcpt->opFlags = opFlags;
+        pOpDcpt->opData = opData;
+        pOpDcpt->txferStat = DRV_MIIM_TXFER_START;
         pOpDcpt->pOwner = pClient;
 
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
@@ -851,11 +932,6 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         _DRV_MIIM_OpListAdd(&pMiimObj->busyOpList, pOpDcpt, DRV_MIIM_QTYPE_BUSY);
 
         res = DRV_MIIM_RES_OK;
-        // set output data
-        pSchedData->pObj = pMiimObj;
-        pSchedData->pOpDcpt = pOpDcpt;
-        pSchedData->opHandle = opHandle;
-        
         break;
     }
 
@@ -864,93 +940,264 @@ static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE
         _DRV_MIIM_ObjUnlock(pMiimObj);
     }
     
-    return res;
+    if(pOpResult)
+    {
+        *pOpResult = res;
+    }
+    return opHandle;
 }
 
 // Process SMI bus operations. One at a time!
 static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
 {
-    bool checkDiscard;
-    DRV_MIIM_TXFER_STAT newStat = DRV_MIIM_TXFER_NONE;
 
     _MIIMAssertCond(pOpDcpt->pOwner->parentObj == pMiimObj, __func__, __LINE__);
-    _MIIMAssertCond(pOpDcpt->opType != DRV_MIIM_OP_NONE, __func__, __LINE__);
     _MIIMAssertCond(pOpDcpt->qType == DRV_MIIM_QTYPE_BUSY, __func__, __LINE__);
 
-	uintptr_t ethphyId = pMiimObj->ethphyId;    
-    
-    switch(pOpDcpt->opStat)
+    if(pOpDcpt->opType > DRV_MIIM_OP_NONE && pOpDcpt->opType < sizeof(miim_process_op_tbl) / sizeof(*miim_process_op_tbl) + 1)
+    {   // process operation
+        if(pOpDcpt->txferStat == DRV_MIIM_TXFER_START)
+        {
+            DRV_MIIM_PortEnable(pMiimObj->miimId);
+        }
+        miim_process_op_tbl[pOpDcpt->opType - 1](pMiimObj, pOpDcpt);
+    }
+    else
+    {
+        _MIIMAssertCond(false, __func__, __LINE__);
+        pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
+    }
+
+    if(pOpDcpt->txferStat >= DRV_MIIM_TXFER_DONE)
+    {
+        DRV_MIIM_PortDisable(pMiimObj->miimId);
+    }
+    _MIIM_Debug_Oper(pOpDcpt, "proc");
+}
+
+// operation processing functions
+static void MIIM_Process_Read(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    switch(pOpDcpt->txferStat)
     {
         case DRV_MIIM_TXFER_START:
-            _DRV_MIIM_MNGMNT_PORT_ENABLE(ethphyId);
-            if( _DRV_MIIM_IS_BUSY(ethphyId) )
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
             {   // some previous operation; wait
                 break;
             }
 
-            _DRV_MIIM_PHYADDR_SET(ethphyId, pOpDcpt);
-            checkDiscard = false;
-            if(pOpDcpt->opType == DRV_MIIM_OP_SCAN)
-            {   // scan
-                newStat = _DRV_MIIM_OP_SCAN_ENABLE(ethphyId);
-            }
-            else if(pOpDcpt->opType == DRV_MIIM_OP_WRITE)
-            {   // write
-                _DRV_MIIM_OP_WRITE_DATA(ethphyId, pOpDcpt);
-                checkDiscard = true;
-            }
-            else if(pOpDcpt->opType == DRV_MIIM_OP_READ)
-            {   // read
-				_DRV_MIIM_OP_READ_START(ethphyId, pOpDcpt);
-                checkDiscard = true;
-            }
-            else
-            {
-                _MIIMAssertCond(false, __func__, __LINE__);
-                pOpDcpt->opStat = DRV_MIIM_TXFER_ERROR; 
-                break;
-            }
+            // start read
+            _MIIM_Debug_Oper(pOpDcpt, "start");
+            _MIIM_Debug_Read(pOpDcpt);
+            DRV_MIIM_ReadStart(pMiimObj->miimId, pOpDcpt->phyAdd, pOpDcpt->regIx);
 
-            if(checkDiscard)
-            {   // for read/write operations
-                newStat = ((pOpDcpt->opFlags & DRV_MIIM_OPERATION_FLAG_DISCARD) == 0) ? DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE : DRV_MIIM_TXFER_DONE;
-            }
-
-            pOpDcpt->opStat = newStat;
+            // for read/write operations
+            pOpDcpt->txferStat = ((pOpDcpt->opFlags & DRV_MIIM_OPERATION_FLAG_DISCARD) == 0) ? DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE : DRV_MIIM_TXFER_DONE;
             break;
 
         case DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE:
-            if( _DRV_MIIM_IS_BUSY(ethphyId) )
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
             {   // wait op to complete
                 break;
             }
 
-            if(pOpDcpt->opType == DRV_MIIM_OP_READ)
-            {
-                _DRV_MIIM_WRITE_START(ethphyId); 
-                pOpDcpt->opData = _DRV_MIIM_OP_READ_DATA_GET(ethphyId); // get the read register
-            }
-			_DRV_MIIM_MNGMNT_PORT_DISABLE(ethphyId);
+            pOpDcpt->opData = DRV_MIIM_ReadDataGet(pMiimObj->miimId); // get the read register
+            _MIIM_Debug_ReadData(pOpDcpt);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_DONE;
+            break;
 
-            pOpDcpt->opStat = DRV_MIIM_TXFER_DONE;
+        default:
+            _MIIMAssertCond(false, __func__, __LINE__);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
+            break;
+    }
+}
+
+static void MIIM_Process_Write(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    switch(pOpDcpt->txferStat)
+    {
+        case DRV_MIIM_TXFER_START:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // some previous operation; wait
+                break;
+            }
+
+            _MIIM_Debug_Write(pOpDcpt);
+            DRV_MIIM_WriteData(pMiimObj->miimId, pOpDcpt->phyAdd, pOpDcpt->regIx, pOpDcpt->opData);
+
+            pOpDcpt->txferStat = ((pOpDcpt->opFlags & DRV_MIIM_OPERATION_FLAG_DISCARD) == 0) ? DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE : DRV_MIIM_TXFER_DONE;
+            break;
+
+        case DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // wait op to complete
+                break;
+            }
+
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_DONE;
             break;
 
 
+        default:
+            _MIIMAssertCond(false, __func__, __LINE__);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
+            break;
+    }
+}
+
+static void MIIM_Process_Scan(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    switch(pOpDcpt->txferStat)
+    {
+        case DRV_MIIM_TXFER_START:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // some previous operation; wait
+                break;
+            }
+
+            // scan
+            pOpDcpt->txferStat = DRV_MIIM_ScanEnable(pMiimObj->miimId, pOpDcpt->phyAdd, pOpDcpt->regIx);
+            break;
+
         case DRV_MIIM_TXFER_SCAN_STALE:
         case DRV_MIIM_TXFER_SCAN_VALID:           
-            if(_DRV_MIIM_IS_DATA_VALID(ethphyId))
-            {   // there's data available
-                pOpDcpt->opData = _DRV_MIIM_OP_READ_DATA_GET(ethphyId);
-                _DRV_MIIM_CLEAR_DATA_VALID(ethphyId);
-                pOpDcpt->opStat = DRV_MIIM_TXFER_SCAN_VALID;
+            if(DRV_MIIM_GetScanData(pMiimObj->miimId, &pOpDcpt->opData))
+            {
+                pOpDcpt->txferStat = DRV_MIIM_TXFER_SCAN_VALID;
             }
             break;
 
         default:
             _MIIMAssertCond(false, __func__, __LINE__);
-            pOpDcpt->opStat = DRV_MIIM_TXFER_ERROR;
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
             break;
     }
+}
+
+static void MIIM_Process_ReadExt(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    uint16_t rdData;
+
+    switch(pOpDcpt->txferStat)
+    {
+        case DRV_MIIM_TXFER_START:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // some previous operation; wait
+                break;
+            }
+
+            // read 1st part of the extended frame: low 16 bits
+            _DRV_MIIM_ReadStartExt(pMiimObj, pOpDcpt, 0);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_EXT_WAIT_PHASE1;
+            
+            break;
+
+        case DRV_MIIM_TXFER_EXT_WAIT_PHASE1:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // wait op to complete
+                break;
+            }
+
+            rdData = DRV_MIIM_ReadDataGet(pMiimObj->miimId); // get the read register low 16 bits
+            _MIIM_Debug_ExtSMIReadData(pOpDcpt, 0, rdData);
+            pOpDcpt->opData = rdData;
+
+            // read 2nd part of the extended frame: high 16 bits
+            _DRV_MIIM_ReadStartExt(pMiimObj, pOpDcpt, 1);
+            pOpDcpt->txferStat = ((pOpDcpt->opFlags & DRV_MIIM_OPERATION_FLAG_DISCARD) == 0) ? DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE : DRV_MIIM_TXFER_DONE;
+
+            break;
+
+        case DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // wait op to complete
+                break;
+            }
+
+            rdData = DRV_MIIM_ReadDataGet(pMiimObj->miimId); // get the read register high 16 bits
+            _MIIM_Debug_ExtSMIReadData(pOpDcpt, 1, rdData);
+            pOpDcpt->opData |= (uint32_t)rdData << 16;
+
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_DONE;
+            break;
+
+        default:
+            _MIIMAssertCond(false, __func__, __LINE__);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
+            break;
+    }
+}
+
+static void MIIM_Process_WriteExt(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt)
+{
+    switch(pOpDcpt->txferStat)
+    {
+        case DRV_MIIM_TXFER_START:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // some previous operation; wait
+                break;
+            }
+
+            // write 1st part of the extended frame: low 16 bits
+            _DRV_MIIM_WriteDataExt(pMiimObj, pOpDcpt, 0);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_EXT_WAIT_PHASE1;
+            break;
+
+        case DRV_MIIM_TXFER_EXT_WAIT_PHASE1:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // wait op to complete
+                break;
+            }
+
+            // write 2nd part of the extended frame: high 16 bits
+            _DRV_MIIM_WriteDataExt(pMiimObj, pOpDcpt, 1);
+
+            pOpDcpt->txferStat = ((pOpDcpt->opFlags & DRV_MIIM_OPERATION_FLAG_DISCARD) == 0) ? DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE : DRV_MIIM_TXFER_DONE;
+            break;
+
+
+        case DRV_MIIM_TXFER_RDWR_WAIT_COMPLETE:
+            if( DRV_MIIM_PortBusy(pMiimObj->miimId) )
+            {   // wait op to complete
+                break;
+            }
+
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_DONE;
+            break;
+
+
+        default:
+            _MIIMAssertCond(false, __func__, __LINE__);
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_ERROR;
+            break;
+    }
+}
+
+// seq == 0 means low 16 bits
+// seq == 1 means high 16 bits
+static void _DRV_MIIM_WriteDataExt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt, int seq)
+{
+    // construct the SMI frame
+    uint16_t phyAdd = _ExtSMI_Address(pOpDcpt->regIx);
+    uint16_t regIx = _ExtSMI_Register(pOpDcpt->regIx, seq);
+    uint16_t wData = _ExtSMI_Data(pOpDcpt->opData, seq);
+    _MIIM_Debug_ExtSMIWrite(pOpDcpt, phyAdd, regIx, wData, seq);
+
+    DRV_MIIM_WriteData(pMiimObj->miimId, phyAdd, regIx, wData);
+}
+
+    
+// seq == 0 means low 16 bits
+// seq == 1 means high 16 bits
+static void _DRV_MIIM_ReadStartExt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt, int seq)
+{
+    // construct the SMI frame
+    uint16_t phyAdd = _ExtSMI_Address(pOpDcpt->regIx);
+    uint16_t regIx = _ExtSMI_Register(pOpDcpt->regIx, seq);
+    _MIIM_Debug_ExtSMIRead(pOpDcpt, phyAdd, regIx, seq);
+
+    DRV_MIIM_ReadStart(pMiimObj->miimId, phyAdd, regIx);
 }
 
 // reports the result of an operation
@@ -999,25 +1246,21 @@ static DRV_MIIM_REPORT_ACT _DRV_MIIM_ReportOp(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_
     return repAct;
 }
 
-// translate an operation current opStat to a client DRV_MIIM_RESULT
+// translate an operation current txferStat to a client DRV_MIIM_RESULT
 // object should be locked
 static DRV_MIIM_RESULT _DRV_MIIM_OpResult(DRV_MIIM_OP_DCPT* pOpDcpt, bool scanAck)
 {
-    if(DRV_MIIM_TXFER_START <= pOpDcpt->opStat &&  pOpDcpt->opStat < DRV_MIIM_TXFER_SCAN_VALID)
+    if(DRV_MIIM_TXFER_START <= pOpDcpt->txferStat &&  pOpDcpt->txferStat < DRV_MIIM_TXFER_SCAN_VALID)
     {
         return DRV_MIIM_RES_PENDING;
     }
-    else if(pOpDcpt->opStat <= DRV_MIIM_TXFER_DONE)
+    else if(pOpDcpt->txferStat <= DRV_MIIM_TXFER_DONE)
     {
-        if(scanAck && pOpDcpt->opStat == DRV_MIIM_TXFER_SCAN_VALID)
+        if(scanAck && pOpDcpt->txferStat == DRV_MIIM_TXFER_SCAN_VALID)
         {
-            pOpDcpt->opStat = DRV_MIIM_TXFER_SCAN_STALE;
+            pOpDcpt->txferStat = DRV_MIIM_TXFER_SCAN_STALE;
         }
         return DRV_MIIM_RES_OK;
-    }
-    else if(pOpDcpt->opStat == DRV_MIIM_TXFER_TMO_START || pOpDcpt->opStat == DRV_MIIM_TXFER_TMO_END)
-    {
-        return DRV_MIIM_RES_OP_TIMEOUT_ERR;
     }
 
     // should not happen
@@ -1051,7 +1294,7 @@ static DRV_MIIM_OP_DCPT* _DRV_MIIM_GetOpDcpt(DRV_MIIM_CLIENT_DCPT* pClient, DRV_
 
     if(pOpDcpt != 0 && (pOpDcpt->qType == DRV_MIIM_QTYPE_BUSY || pOpDcpt->qType == DRV_MIIM_QTYPE_COMPLETE))
     {
-        if(pOpDcpt->opStat < DRV_MIIM_TXFER_DONE)
+        if(pOpDcpt->txferStat < DRV_MIIM_TXFER_DONE)
         {
             _MIIMAssertCond(pOpDcpt->qType == DRV_MIIM_QTYPE_BUSY, __func__, __LINE__);
         }
@@ -1106,10 +1349,14 @@ static void _DRV_MIIM_ReleaseOpDcpt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pO
 
     if(wasScan)
     {        
-		 _DRV_MIIM_SCAN_DISABLE(pMiimObj->ethphyId);
+        DRV_MIIM_ScanDisable(pMiimObj->miimId);
         pMiimObj->objFlags &= ~DRV_MIIM_OBJ_FLAG_IS_SCANNING;
     }
     
+    if(qType == DRV_MIIM_QTYPE_BUSY)
+    {
+        DRV_MIIM_PortDisable(pMiimObj->miimId);
+    }
 }
 
 static DRV_MIIM_CLIENT_DCPT* _DRV_MIIM_ClientAllocate( DRV_MIIM_OBJ* pMiimObj, int* pCliIx )
@@ -1140,12 +1387,6 @@ static void _DRV_MIIM_ClientDeallocate( DRV_MIIM_CLIENT_DCPT* pClient)
     pClient->parentObj->numClients--;
     pClient->parentObj->objFlags &= ~DRV_MIIM_OBJ_FLAG_EXCLUSIVE;
 }
-
-
-static void _DRV_MIIM_SMIClockSet(uintptr_t ethphyId, uint32_t hostClock, uint32_t maxMIIMClock )
-{
-    _DRV_MIIM_SMI_CLOCK_SET(ethphyId, hostClock, maxMIIMClock );
-} 
 
 
 // search the busy and complete lists and remove
@@ -1276,8 +1517,6 @@ SGL_LIST_NODE*  Helper_SingleListNodeRemove(SINGLE_LIST* pL, SGL_LIST_NODE* pN)
 }
 
  
-
-
 
 /*******************************************************************************
 End of File

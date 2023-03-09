@@ -168,10 +168,6 @@ typedef enum
     /* A MIIM scan operation is ongoing. A new operation could not be started */
     DRV_MIIM_RES_OP_SCAN_ERR            /*DOM-IGNORE-BEGIN*/    =  -8, /*DOM-IGNORE-END*/
 
-    /* A MIIM operation has timed out and it's going to be discarded */
-    DRV_MIIM_RES_OP_TIMEOUT_ERR         /*DOM-IGNORE-BEGIN*/    =  -9, /*DOM-IGNORE-END*/
-
-
     /* Internal MIIM driver error has occurred. Should not happen */
     DRV_MIIM_RES_OP_INTERNAL_ERR        /*DOM-IGNORE-BEGIN*/    =  -20, /*DOM-IGNORE-END*/
 
@@ -239,16 +235,33 @@ typedef const void* DRV_MIIM_OPERATION_HANDLE;
 typedef enum
 {
     /* No flag specified */
-    DRV_MIIM_OPERATION_FLAG_NONE   /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/,
+    DRV_MIIM_OPERATION_FLAG_NONE    /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/,
 
     /* Upon completion discard the operation result. */
     /* The client will not poll to check the result nor will need notification */
     /* This allows dummy operations, discarded as they complete */
-    DRV_MIIM_OPERATION_FLAG_DISCARD  /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/,
+    DRV_MIIM_OPERATION_FLAG_DISCARD /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/,
+
+    /* This flag selects an extended MIIM SMI_SLAVE operation:
+
+       The SMI Slave Controller is used for CPU management of the device via the MII pins
+       and allows CPU access to all system CSRs
+       See the LAN9303, LAN9354  MII MANAGEMENT - SMI Slave Controller.
+       Currently only the MIIM SMI_SLAVE operation is supported.
+      
+       Notes:
+            - This flag applies only to WriteEx/ReadEx operations.
+            - It is currently the only supported exttended operation and does not need to be set
+              (it is assumed by default)
+            - In the SMI SLAVE mode the PHY address is not used but access is made using the register index
+            - The rIx is a 16 bit value
+            - The phyAdd value is not used
+            */
+    DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/,
 
     /* Other flags could be eventually added */
 
-
+        
 } DRV_MIIM_OPERATION_FLAGS;
 
 // *****************************************************************************
@@ -323,10 +336,10 @@ typedef void    (*DRV_MIIM_OPERATION_CALLBACK)(DRV_HANDLE cliHandle, DRV_MIIM_OP
 typedef struct DRV_MIIM_INIT 
 {
     /* System module initialization */
-    SYS_MODULE_INIT             moduleInit;
+    SYS_MODULE_INIT     moduleInit;
 
     /* Identifies peripheral (PLIB-level) ID */
-    uintptr_t               ethphyId;
+    uintptr_t           miimId;
 
 } DRV_MIIM_INIT;
 
@@ -872,7 +885,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
 
 // *****************************************************************************
 /* Function:
-    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
   
   Summary:
     Initiates a SMI/MIIM read transaction.
@@ -923,14 +936,18 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
     A completed non-discardable operation will remain available for returning the result until the client is somehow
     notified of the operation result.
     When polling is used, DRV_MIIM_OperationResult() needs to be called to free the operation associated resources.
+
+    The function does not timeout.
+    It should read 0xffff as a result if reading the device failed.
+
 */
 
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 
 // *****************************************************************************
 /* Function:
-    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
   
   Summary:
     Initiates a SMI/MIIM write transaction.
@@ -984,13 +1001,14 @@ DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Read(DRV_HANDLE handle, unsigned int rIx, uns
 
     A write operation normally uses DRV_MIIM_OPERATION_FLAG_DISCARD if it is not interested when the operation has completed.
 
+    The function does not timeout.
 */
 
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 
 /* Function:
-    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
   
   Summary:
     Initiates a SMI/MIIM scan (periodic read)transaction.
@@ -1043,14 +1061,15 @@ DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Write(DRV_HANDLE handle, unsigned int rIx, un
     While scan is active all other transactions (including from other clients) will be inhibited!
     Use carefully!
 
+    The function does not timeout.
 */
 
-DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 
 /***************************************************************************
   Function:
-       DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint16_t* pOpData)
+       DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData)
     
   Summary:
     Gets the result of a client operation initiated by the MIIM driver.
@@ -1089,9 +1108,12 @@ DRV_MIIM_OPERATION_HANDLE DRV_MIIM_Scan(DRV_HANDLE handle, unsigned int rIx, uns
     Note that for a scan operation DRV_MIIM_RES_PENDING will be returned
     when there's no new scan data available. DRV_MIIM_RES_OK means the
     scan data is fresh.
+
+    The operation data is 16 bit for standard MIIM operations
+    However for extended operations it could be 32 bits
   ***************************************************************************/
 
-DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint16_t* pOpData);
+DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData);
 
 /***************************************************************************
   Function:
@@ -1129,6 +1151,145 @@ DRV_MIIM_RESULT DRV_MIIM_OperationResult(DRV_HANDLE handle, DRV_MIIM_OPERATION_H
 
 DRV_MIIM_RESULT DRV_MIIM_OperationAbort(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle);  
 
+// *****************************************************************************
+/*
+  Function:
+       DRV_MIIM_OPERATION_HANDLE   DRV_MIIM_WriteExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    
+  Summary:
+    A function for the MIIM extended write operation.
+
+  Description:
+    Function performing an extended MIIM write depending on the selected opFlags.
+    
+  Precondition:
+    - The DRV_MIIM_Initialize routine must have been called.
+    - DRV_MIIM_Open must have been called to obtain a valid opened device
+      handle.
+
+  Parameters:
+    - handle    - A valid instance handle, returned from the driver's open routine
+    - rIx       - register index to be used.
+                  See notes.
+    - phyAdd    - PHY address to be used.
+                  See notes.
+    - opFlags   - operation flags                  
+                  See notes.
+    - pOpResult - address to store the operation result
+                  Could be NULL if not needed.
+
+  Returns:
+    A not NULL DRV_MIIM_OPERATION_HANDLE if the operation was successfully scheduled.
+    NULL if the operation failed. More details in pOpResult.
+
+
+  Example:
+    <code>
+    </code>
+
+  Remarks:
+
+    If operation was scheduled successfully, the result will be DRV_MIIM_RES_OK.
+    Otherwise an error code will be returned.
+
+    Upon the operation completion:
+        - If the operation is to be discarded (DRV_MIIM_OPERATION_FLAG_DISCARD is set) there will be no notification to the client.
+          The operation associated resources will be released.
+
+        - If the operation is not to be discarded, then:
+            - if the client has registered an operation notification callback (DRV_MIIM_RegisterCallback)
+              then the notification callback will be called.
+              After that the operation associated resources will be released.
+           - if there is no notification callback the MIIM driver will wait for the client to poll and 
+             read the operation result using DRV_MIIM_OperationResult().
+             Only then the operation will be released.
+
+    A completed non-discardable operation will remain available for returning the result until the client is somehow
+    notified of the operation result.
+    When polling is used, DRV_MIIM_OperationResult() needs to be called to free the operation associated resources.
+
+    A write operation normally uses DRV_MIIM_OPERATION_FLAG_DISCARD if it is not interested when the operation has completed.
+
+    The extended operation is a MIIM SMI_SLAVE operation:
+         Two MIIM frames are set, using the rIx to construct both the register index and PHY address of the frame
+         (see the  LAN9303, LAN9354  MII MANAGEMENT - SMI SLAVE COMMAND FORMAT).
+         The 32 bit wData value is used:
+            first MIIM frame contains the wData low 16 bit value
+            the second the high 16 bit value. 
+         The phyAdd value is not used.
+         The rIx is a 16 bit value
+
+       - Flag DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE is assumed if not set.
+  ***************************************************************************/
+DRV_MIIM_OPERATION_HANDLE   DRV_MIIM_WriteExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+
+// *****************************************************************************
+/* Function:
+    DRV_MIIM_OPERATION_HANDLE DRV_MIIM_ReadExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+  
+  Summary:
+    Pointer to a function that initiates a SMI/MIIM extended read transaction.
+
+  Description:
+    This function initiates a SMI/MIIM read extended transaction for a given MIIM register.
+
+  Precondition:
+    - The DRV_MIIM_Initialize routine must have been called.
+    - DRV_MIIM_Open must have been called to obtain a valid opened device
+      handle.
+
+  Parameters:
+    - handle    - client's driver handle (returned from DRV_MIIM_Open)
+    - rIx       - MIIM register to be accessed
+                  See Notes.
+    - phyAdd    - MIIM PHY address to use
+                  See Notes.
+    - opFlags   - additional operation flags
+                  See the DRV_MIIM_OPERATION_FLAGS definition.
+                  See Notes.
+    - pOpResult - address to store the operation result
+                  Could be NULL if not needed.
+
+  Returns:
+    A not NULL DRV_MIIM_OPERATION_HANDLE if the operation was successfully scheduled.
+    NULL if the operation failed. More details in pOpResult.
+
+
+  Example:
+    <code>
+    </code>
+
+  Remarks:
+
+    If operation was scheduled successfully, the result will be DRV_MIIM_RES_OK.
+    Otherwise an error code will be returned.
+
+    Upon the operation completion:
+        - If the operation is to be discarded (DRV_MIIM_OPERATION_FLAG_DISCARD is set) there will be no notification to the client.
+          The operation associated resources will be released.
+
+        - If the operation is not to be discarded, then:
+            - if the client has registered an operation notification callback (DRV_MIIM_RegisterCallback)
+              then the callback will be called.
+              After that the operation associated resources will be released.
+            - if there is no notification callback the MIIM driver will wait for the client to poll and 
+              read the operation result using DRV_MIIM_OperationResult().
+              Only then the operation will be released.
+
+    A completed non-discardable operation will remain available for returning the result until the client is somehow
+    notified of the operation result.
+    When polling is used, DRV_MIIM_OperationResult() needs to be called to free the operation associated resources.
+
+    The extended operation is a MIIM SMI_SLAVE operation:
+         Two MIIM frames are set, using the rIx to construct both the register index and PHY address of the frame
+         (see the  LAN9303, LAN9354  MII MANAGEMENT - SMI SLAVE COMMAND FORMAT).
+         The phyAdd value is not used.
+         The rIx is a 16 bit value
+         The result will be a 32 bit value
+
+       - Flag DRV_MIIM_OPERATION_FLAG_EXT_SMI_SLAVE is assumed if not set.
+*/
+DRV_MIIM_OPERATION_HANDLE   DRV_MIIM_ReadExt(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 // *****************************************************************************
 /* MIIM Driver Base Object
@@ -1143,6 +1304,8 @@ DRV_MIIM_RESULT DRV_MIIM_OperationAbort(DRV_HANDLE handle, DRV_MIIM_OPERATION_HA
   Remarks:
     This object provides the basic MIIM functionality.
     Any derived driver can override the basic functionality while maintaining the required interface.
+
+    The functions are public and (some of them) can be used in a different object implementation.
 
 */
 
@@ -1171,15 +1334,19 @@ typedef struct DRV_MIIM_OBJECT_BASE
 
     DRV_MIIM_RESULT             (*DRV_MIIM_DeregisterCallback)(DRV_HANDLE handle, DRV_MIIM_CALLBACK_HANDLE cbHandle);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Read)(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Read)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Write)(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Write)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint16_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Scan)(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_Scan)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
-    DRV_MIIM_RESULT             (*DRV_MIIM_OperationResult)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint16_t* pOpData);  
+    DRV_MIIM_RESULT             (*DRV_MIIM_OperationResult)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle, uint32_t* pOpData);  
 
     DRV_MIIM_RESULT             (*DRV_MIIM_OperationAbort)(DRV_HANDLE handle, DRV_MIIM_OPERATION_HANDLE opHandle);  
+
+    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_WriteExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, uint32_t wData, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
+
+    DRV_MIIM_OPERATION_HANDLE   (*DRV_MIIM_ReadExt)(DRV_HANDLE handle, uint16_t rIx, uint16_t phyAdd, DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult);
 
 }DRV_MIIM_OBJECT_BASE;
 

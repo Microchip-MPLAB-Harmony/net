@@ -137,7 +137,7 @@ def instantiateComponent(drvMiimComponent):
     drvMiimOpsInstnNum.setLabel("Maximum Number of Queued Operations")
     drvMiimOpsInstnNum.setVisible(True)
     drvMiimOpsInstnNum.setDescription("Maximum Number of Queued Operations per Instance")
-    # H3_ToDo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+    # H3_ToDo default 8 if TCPIP_EMAC_PHY_TYPE = "LAN9303"
     drvMiimOpsInstnNum.setDefaultValue(4)
     
     # Enable Client Operation Protection Feature
@@ -192,14 +192,15 @@ def instantiateComponent(drvMiimComponent):
     drvMiimLocalHeaderFile.setType("HEADER")
     drvMiimLocalHeaderFile.setOverwrite(True)
     
-    #add "<#include \"/framework/driver/miim/config/drv_miim_mapping.h.ftl\">"  to "$PROJECT_HEADER_FILES/framework/driver/miim/src/dynamic/drv_miim_mapping.h"
-    drvMiimMappingHeaderFtl = drvMiimComponent.createFileSymbol(None, None)
-    drvMiimMappingHeaderFtl.setSourcePath("driver/miim/config/drv_miim_mapping.h.ftl")
-    drvMiimMappingHeaderFtl.setOutputName("drv_miim_mapping.h")
-    drvMiimMappingHeaderFtl.setDestPath("driver/miim/src/dynamic/")
-    drvMiimMappingHeaderFtl.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
-    drvMiimMappingHeaderFtl.setType("HEADER")
-    drvMiimMappingHeaderFtl.setMarkup(True)
+    #file DRV_MIIM_DEVICE_H "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim_device.h" to "$PROJECT_HEADER_FILES/framework/driver/miim/src/dynamic/drv_miim_device.h"
+    drvMiimDeviceHeaderFile = drvMiimComponent.createFileSymbol(None, None)
+    drvMiimDeviceHeaderFile.setSourcePath("driver/miim/src/dynamic/drv_miim_device.h")
+    drvMiimDeviceHeaderFile.setOutputName("drv_miim_device.h")
+    drvMiimDeviceHeaderFile.setDestPath("driver/miim/src/dynamic")
+    drvMiimDeviceHeaderFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
+    drvMiimDeviceHeaderFile.setType("HEADER")
+    drvMiimDeviceHeaderFile.setOverwrite(True)
+
     
     #file DRV_MIIM_C "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim.c" to "$PROJECT_SOURCE_FILES/framework/driver/miim/src/dynamic/drv_miim.c"
     drvMiimSourceFile = drvMiimComponent.createFileSymbol(None, None)
@@ -212,6 +213,33 @@ def instantiateComponent(drvMiimComponent):
     drvMiimSourceFile.setEnabled(True)
     #drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
     
+    #file DRV_MIIM_XXX_C "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim_xxx.c" to "$PROJECT_SOURCE_FILES/framework/driver/miim/src/dynamic/drv_miim_xxx.c"
+    processor =  Variables.get("__PROCESSOR")  
+    if (("SAME7" in processor) or ("SAMV7" in processor)):
+        drv_miim_xxx_file = "drv_miim_gmac.c"
+    elif (("SAME5" in processor) or ("SAMA5D2" in processor)):
+        drv_miim_xxx_file = "drv_miim_gmac.c"
+    elif (("SAMA7G" in processor) or ("SAM9X7" in processor)):
+        drv_miim_xxx_file = "drv_miim_gmac.c"
+    elif ("SAMRH" in processor): 
+        drv_miim_xxx_file = "drv_miim_gmac.c"
+    elif ("PIC32CZ" in processor): 
+        drv_miim_xxx_file = "drv_miim_pic32cz.c"
+    elif ("SAM9X6" in processor): 
+        drv_miim_xxx_file = "drv_miim_emac.c"
+    elif (("PIC32MZ" in processor) or ("PIC32MX" in processor)): 
+        drv_miim_xxx_file = "drv_miim_pic32m.c"
+
+    drvMiimPlatformFile = drvMiimComponent.createFileSymbol(None, None)
+    drvMiimPlatformFile.setSourcePath("driver/miim/src/dynamic/" + drv_miim_xxx_file)
+    drvMiimPlatformFile.setOutputName(drv_miim_xxx_file)
+    drvMiimPlatformFile.setOverwrite(True)
+    drvMiimPlatformFile.setDestPath("driver/miim/src/dynamic/")
+    drvMiimPlatformFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
+    drvMiimPlatformFile.setType("SOURCE")
+    drvMiimPlatformFile.setEnabled(True)
+    #drvMiimPlatformFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
+
     #Add forward declaration to initialization.c
     drvMiimInitDataSourceFtl = drvMiimComponent.createFileSymbol(None, None)
     drvMiimInitDataSourceFtl.setType("STRING")

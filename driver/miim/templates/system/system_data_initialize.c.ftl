@@ -44,7 +44,7 @@ Microchip or any third party.
             <#lt>/*** MIIM Driver Instance ${i} Configuration ***/
             <#lt>static const DRV_MIIM_INIT drvMiimInitData_${i} =
             <#lt>{
-            <#lt>   .ethphyId = DRV_MIIM_ETH_MODULE_ID_${i},
+            <#lt>   .miimId = DRV_MIIM_ETH_MODULE_ID_${i},
             <#lt>};
         <#lt></#list>
     </#if>

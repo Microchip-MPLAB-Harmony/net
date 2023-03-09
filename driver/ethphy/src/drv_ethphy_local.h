@@ -62,12 +62,16 @@ Microchip or any third party.
 
 // debugging
 #define DRV_PHY_DEBUG_MASK_BASIC            (0x0001)    // basic assert/condition
-#define DRV_PHY_DEBUG_MASK_DETECT_PHASE     (0x0002)    // display detect phases/states
-#define DRV_PHY_DEBUG_MASK_DETECT_VALUES    (0x0004)    // display detect register read/write values
+#define DRV_PHY_DEBUG_MASK_OP_FAIL          (0x0002)    // display failed operations
+#define DRV_PHY_DEBUG_MASK_DETECT_PHASE     (0x0004)    // display detect phases/states
+#define DRV_PHY_DEBUG_MASK_DETECT_VALUES    (0x0008)    // display detect register read/write values
+#define DRV_PHY_DEBUG_MASK_SETUP            (0x0010)    // display setup process
+#define DRV_PHY_DEBUG_MASK_MDIX             (0x0020)    // display MDIX process
+#define DRV_PHY_DEBUG_MASK_LINK             (0x0040)    // display link process
 
 
 // enable IPV4 debugging levels
-#define DRV_PHY_DEBUG_LEVEL  (0)
+#define DRV_PHY_DEBUG_LEVEL  (0x03)
 
 
 // *****************************************************************************
@@ -331,9 +335,8 @@ typedef enum
 typedef struct 
 {
     uint16_t                    clientInUse;// True if in use
-    uint16_t                    clientIx;   // client number
+    uint16_t                    status;     // Client Status: DRV_ETHPHY_CLIENT_STATUS value
     uintptr_t                   ethphyId;   // The peripheral Id associated with the object
-    DRV_ETHPHY_CLIENT_STATUS    status;     // Client Status
     struct _DRV_ETHPHY_INSTANCE* hDriver;   // Handle of driver that owns the client
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     DRV_HANDLE                  miimHandle; // MMIM client handle
@@ -389,14 +392,35 @@ typedef struct _DRV_ETHPHY_INSTANCE
     DRV_ETHPHY_CONFIG_FLAGS     configFlags;    // ETHPHY MII/RMII configuration flags
     TCPIP_ETH_PAUSE_TYPE        macPauseType;   // MAC supported pause type
     int                         phyAddress;     // PHY SMI address
-    const DRV_ETHPHY_OBJECT*    pPhyObj;    // PHY object, vendor specific functions	
-    DRV_ETHPHY_CLIENT_OBJ       objClients[DRV_ETHPHY_CLIENTS_NUMBER]; // array of clients
-    const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
-    SYS_MODULE_INDEX            miimIndex;  // MIIM object index 
-    DRV_ETHPHY_TMO *            ethphyTmo;  //PHY Initialization Time-outs 
+    const DRV_ETHPHY_OBJECT*    pPhyObj;        // PHY object, vendor specific functions	
+    const DRV_ETHPHY_OBJECT_BASE* pBaseObj;     // PHY base: this object
+    DRV_ETHPHY_CLIENT_OBJ       objClient;      // the one and only PHY client: the MAC driver
+    const DRV_MIIM_OBJECT_BASE* pMiimBase;      // MIIM driver base object to use   
+    SYS_MODULE_INDEX            miimIndex;      // MIIM object index 
+    DRV_ETHPHY_TMO *            ethphyTmo;      // PHY Initialization Time-outs 
 } DRV_ETHPHY_INSTANCE;
 
 
+
+// driver functions that could be used by derived objects
+
+// return an DRV PHY instance from a handle
+DRV_ETHPHY_INSTANCE* _DRV_ETHPHY_HandleToInst(void * handle);
+
+// starts a driver operations and sets the right state
+void _DRV_ETHPHY_SetOperStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, DRV_ETHPHY_CLIENT_OP_TYPE opType, DRV_ETHPHY_RESULT res);
+
+
+// sets an operation completion state and result
+void _DRV_ETHPHY_SetOperDoneResult(DRV_ETHPHY_CLIENT_OBJ * hClientObj, DRV_ETHPHY_RESULT res);
+
+// debug support
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC) != 0)
+void _DRV_ETHPHY_AssertCond(bool cond, const char* message, int lineNo);
+#else
+#define _DRV_ETHPHY_AssertCond(cond, message, lineNo)
+#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC)
+        //
 #endif //#ifndef _DRV_ETHPHY_LOCAL_H
 
 /*******************************************************************************
