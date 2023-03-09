@@ -165,7 +165,8 @@ static TCPIP_STACK_INIT     tcpip_init_data = { {0} };
 //
 static SYS_TMR_HANDLE       tcpip_stack_tickH = SYS_TMR_HANDLE_INVALID;      // tick handle
 
-static uint32_t             stackTaskRate;   // actual task running rate
+static uint32_t             stackTaskRate;  // actual task running rate, ms
+static int32_t              stackLinkTmo;   // timeout for checking the link status, ms
 
 static uint32_t             stackAsyncSignalCount;   // global counter of the number of times the modules requested a TCPIP_MODULE_SIGNAL_ASYNC
                                                     // whenever !=0, it means that async signal requests are active!
@@ -660,7 +661,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
     newTcpipErrorEventCnt = 0;
     newTcpipStackEventCnt = 0;
     newTcpipTickAvlbl = 0;
-    stackTaskRate = 0;
+    stackTaskRate = stackLinkTmo = 0;
 
     memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
 
@@ -1465,6 +1466,8 @@ static bool _TCPIPStackCreateTimer(void)
         // SYS_TMR_CallbackPeriodicSetRate(tcpip_stack_tickH, rateMs);
         // adjust module timeouts
         createRes = _TCPIPStack_AdjustTimeouts();
+        // adjust the link rate to be a multiple of the stack task rate
+        stackLinkTmo = ((_TCPIP_STACK_LINK_RATE + stackTaskRate - 1) / stackTaskRate) * stackTaskRate; 
     }
 
     if(createRes == false)
@@ -1919,19 +1922,23 @@ static void _TCPIP_ProcessTickEvent(void)
     newTcpipTickAvlbl = 0;
 
     _TCPIP_SecondCountSet();    // update time
-
-    for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
-    {
-        if(pNetIf->Flags.bInterfaceEnabled)
+    stackLinkTmo -= stackTaskRate;
+    if(stackLinkTmo <= 0)
+    {   // timeout exceeded 
+        stackLinkTmo += _TCPIP_STACK_LINK_RATE; 
+        for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
         {
-            linkCurr = (*pNetIf->pMacObj->TCPIP_MAC_LinkCheck)(pNetIf->hIfMac);     // check link status
-            linkPrev = pNetIf->exFlags.linkPrev != 0;
-            if(linkPrev != linkCurr)
-            {   // link status changed
-                // just set directly the events, and do not involve the MAC notification mechanism
-                pNetIf->exFlags.connEvent = 1;
-                pNetIf->exFlags.connEventType = linkCurr ? 1 : 0 ;
-                pNetIf->exFlags.linkPrev = linkCurr;
+            if(pNetIf->Flags.bInterfaceEnabled)
+            {
+                linkCurr = (*pNetIf->pMacObj->TCPIP_MAC_LinkCheck)(pNetIf->hIfMac);     // check link status
+                linkPrev = pNetIf->exFlags.linkPrev != 0;
+                if(linkPrev != linkCurr)
+                {   // link status changed
+                    // just set directly the events, and do not involve the MAC notification mechanism
+                    pNetIf->exFlags.connEvent = 1;
+                    pNetIf->exFlags.connEventType = linkCurr ? 1 : 0 ;
+                    pNetIf->exFlags.linkPrev = linkCurr;
+                }
             }
         }
     }

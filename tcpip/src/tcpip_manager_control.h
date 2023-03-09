@@ -58,6 +58,16 @@ Microchip or any third party.
 #define TCPIP_ETHER_TYPE_LLDP     	(0x88CCu)
 #define TCPIP_ETHER_TYPE_UNKNOWN    (0xFFFFu)
 
+// minimum timeout (maximum rate) for link check, ms
+// 5 times per second should be frequent enough
+#define _TCPIP_STACK_LINK_MIN_TMO       200 
+// adjust it vs the stack rate
+
+#if (!defined(TCPIP_STACK_LINK_RATE) || TCPIP_STACK_LINK_RATE < TCPIP_STACK_TICK_RATE || TCPIP_STACK_LINK_RATE < _TCPIP_STACK_LINK_MIN_TMO) 
+#define _TCPIP_STACK_LINK_RATE  _TCPIP_STACK_LINK_MIN_TMO   // use the minimum value
+#else
+#define _TCPIP_STACK_LINK_RATE  TCPIP_STACK_LINK_RATE       // user value
+#endif
 
 // module signal/timeout/asynchronous event handler
 // the stack manager calls it when there's an signal/tmo/asynchronous event pending

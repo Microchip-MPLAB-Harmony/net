@@ -302,6 +302,15 @@ Microchip or any third party.
 // Default is disabled.
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT         0
 
+
+// Link checking rate, ms
+// This is the timeout (frequency) for checking the PHY link status
+// Since this is a relatively slow event, usually 3 times per second should suffice
+// Currently the minimum enforced value is 200 ms (5 times per second)
+// (the internal value _TCPIP_STACK_LINK_MIN_TMO)
+// Default value is 333 ms
+#define TCPIP_STACK_LINK_RATE   333
+
 // =======================================================================
 //   Stack Modules Execution Options
 // =======================================================================

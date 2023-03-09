@@ -88,7 +88,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackEnable.setDefaultValue(True)
     tcpipStackEnable.setVisible(False)
     
-    # Define number of network Configurations
+    # Define the task executing rate
     tcpipStackTickRate = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_TICK_RATE", None)
     tcpipStackTickRate.setHelp("mcc_h3_manager_configurations")
     tcpipStackTickRate.setLabel("TCP/IP Stack State Machine Tick Rate, ms.")
@@ -96,7 +96,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTickRate.setDescription("TCP/IP Stack State Machine Tick Rate")
     tcpipStackTickRate.setDefaultValue(5)
     
-        
     # RTOS Configuration
     tcpipStackRtosMenu = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_RTOS_MENU", None)
     tcpipStackRtosMenu.setLabel("RTOS Configuration")
@@ -516,6 +515,14 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackRunInit.setDescription("Enable TCP/IP stack modules based on Initialization data")
     tcpipStackRunInit.setDefaultValue(False)
 
+    # Define the link check rate
+    tcpipStackLinkRate = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_LINK_RATE", tcpipStackAdvSettings)
+    tcpipStackLinkRate.setHelp("mcc_h3_manager_configurations")
+    tcpipStackLinkRate.setLabel("TCP/IP Stack Link Check Rate, ms.")
+    tcpipStackLinkRate.setVisible(True)
+    tcpipStackLinkRate.setDescription("TCP/IP Stack Link Check Rate")
+    tcpipStackLinkRate.setDefaultValue(333)
+        
     ###################################################################################################
     #################           Symbols for Configuration Summary                     #################
     ####### Device Configuration
