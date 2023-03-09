@@ -346,53 +346,59 @@ def loadModule():
     drvExtPhyKsz9131Component.addDependency("KSZ9131_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz9131Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC LAN8700 PHY
+    #Driver for LAN8700 PHY
     drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
     drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",False)   
     drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)       
     drvExtPhyLan8700Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC LAN8720PHY
+    #Driver for LAN8720PHY
     drvExtPhyLan8720Component = Module.CreateComponent("drvExtPhyLan8720", "LAN8720", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8720.py")
     drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",False)   
     drvExtPhyLan8720Component.addDependency("LAN8720_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan8720Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC LAN8740 PHY
+    #Driver for LAN8740 PHY
     drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
     drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",False)   
     drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8740Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC LAN8742A PHY
+    #Driver for LAN8742A PHY
     drvExtPhyLan8742aComponent = Module.CreateComponent("drvExtPhyLan8742a", "LAN8742A", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8742a.py")
     drvExtPhyLan8742aComponent.addCapability("libdrvExtPhyLan8742a","PHY",False)   
     drvExtPhyLan8742aComponent.addDependency("LAN8742a_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8742aComponent.setDisplayType("PHY Layer")
     
-    #Driver for SMSC LAN9303PHY
+    #Driver for LAN9303PHY
     drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
     drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",False)   
     drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan9303Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC DP83640PHY
+    #Driver for DP83640PHY
     drvExtPhyDp83640Component = Module.CreateComponent("drvExtPhyDp83640", "DP83640", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83640.py")
     drvExtPhyDp83640Component.addCapability("libdrvExtPhyDp83640","PHY",False)   
     drvExtPhyDp83640Component.addDependency("DP83640_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83640Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC DP83848PHY
+    #Driver for DP83848PHY
     drvExtPhyDp83848Component = Module.CreateComponent("drvExtPhyDp83848", "DP83848", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83848.py")
     drvExtPhyDp83848Component.addCapability("libdrvExtPhyDp83848","PHY",False)   
     drvExtPhyDp83848Component.addDependency("DP83848_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83848Component.setDisplayType("PHY Layer")
     
-    #Driver for SMSC IP101GRPHY
+    #Driver for IP101GRPHY
     drvExtPhyIp101grComponent = Module.CreateComponent("drvExtPhyIp101gr", "IP101GR", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ip101gr.py")
     drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",False)   
     drvExtPhyIp101grComponent.addDependency("IP101GR_MIIM_Dependency", "MIIM", None, True, True)     
     drvExtPhyIp101grComponent.setDisplayType("PHY Layer")
+
+    #Driver for LAN9354 PHY
+    drvExtPhyLan9354Component = Module.CreateComponent("drvExtPhyLan9354", "LAN9354", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9354.py")
+    drvExtPhyLan9354Component.addCapability("libdrvExtPhyLan9354","PHY",False)   
+    drvExtPhyLan9354Component.addDependency("LAN9354_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyLan9354Component.setDisplayType("PHY Layer")
     
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")

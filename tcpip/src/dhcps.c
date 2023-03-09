@@ -145,7 +145,7 @@ static void _DhcpsICMPDebugMessage(char* icmpMessage)
 #else
 #define _DhcpsICMPDebugPrint(requestCount,icmpMessage)
 #define _DhcpsICMPDebugMessage(icmpMessage)
-#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE)
+#endif  // (TCPIP_DHCPS_DEBUG_LEVEL & TCPIP_DHCPS_DEBUG_MASK_ICMP)
 
 /*static __inline__*/static  void /*__attribute__((always_inline))*/ _DHCPSSetHashEntry(DHCPS_HASH_ENTRY* dhcpsHE, DHCPS_ENTRY_FLAGS newFlags, TCPIP_MAC_ADDR* hwAdd, const uint8_t* pIPAddr)
 {
