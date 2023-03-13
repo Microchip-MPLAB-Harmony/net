@@ -832,7 +832,7 @@ typedef struct
     
     // Populate the Ethernet PHY initialization structure
     init.phyId  = ETHPHY_ID_2;
-    init.pPhyObject  = &DRV_ETHPHY_OBJECT_SMSC_LAN8720;
+    init.pPhyObject  = &DRV_ETHPHY_OBJECT_LAN8720;
     
     // Do something
     
@@ -891,7 +891,7 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        index,
 
     // Populate the Ethernet PHY initialization structure
     init.phyId  = ETHPHY_ID_2;
-    init.pPhyObject  = &DRV_ETHPHY_OBJECT_SMSC_LAN8720;
+    init.pPhyObject  = &DRV_ETHPHY_OBJECT_LAN8720;
 
     DRV_ETHPHY_Reinitialize(objectHandle, (SYS_MODULE_INIT*)&init);
 
@@ -2054,7 +2054,7 @@ typedef struct DRV_ETHPHY_OBJECT_BASE_TYPE
 
 */
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default;
-extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_smsc9303;
+extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303;
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_ksz8863;
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9354;
 

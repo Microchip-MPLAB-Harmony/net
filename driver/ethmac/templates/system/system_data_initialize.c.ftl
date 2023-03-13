@@ -34,7 +34,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .ethFlags               = TCPIP_EMAC_ETH_OPEN_FLAGS,
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
 <#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "LAN9303">
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_LAN9303,
 <#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#elseif (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE) == "LAN9354">

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  SMSC LAN8720 PHY API for Microchip TCP/IP Stack
+  LAN8720 PHY API for Microchip TCP/IP Stack
 *******************************************************************************/
 
 /*
@@ -28,7 +28,7 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_smsc8720.h"
+#include "driver/ethphy/src/dynamic/drv_extphy_lan8720.h"
 
 /****************************************************************************
  *                 interface functions
@@ -55,7 +55,7 @@ Microchip or any third party.
  *
  * Overview:        This function configures the PHY in one of MII/RMII operation modes.
  *
- * Note:            SMSC 8720 supports RMII  mode only!
+ * Note:            LAN8720 supports RMII  mode only!
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {

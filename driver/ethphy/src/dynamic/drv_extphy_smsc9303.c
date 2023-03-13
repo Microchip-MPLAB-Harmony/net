@@ -1,5 +1,5 @@
 /*******************************************************************************
-  SMSC LAN9303 PHY API for Microchip TCP/IP Stack
+  LAN9303 PHY API for Microchip TCP/IP Stack
 *******************************************************************************/
 
 /*
@@ -27,20 +27,20 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "drv_extphy_smsc9303.h"
+#include "drv_extphy_lan9303.h"
 #include "driver/miim/drv_miim.h"
 
 /****************************************************************************
  *                 Driver Overrides                                         *
  ****************************************************************************/
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh );
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress);
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex );
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete );
 
 
-const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_smsc9303 = 
+const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_LAN9303 = 
 {
     DRV_ETHPHY_Initialize,
     DRV_ETHPHY_Reinitialize,
@@ -52,13 +52,13 @@ const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_smsc9303 =
     DRV_ETHPHY_ClientStatus,
     DRV_ETHPHY_ClientOperationResult,
     DRV_ETHPHY_ClientOperationAbort,
-    DRV_ETHPHY_Smsc9303PhyAddressGet,
+    DRV_ETHPHY_Lan9303PhyAddressGet,
     DRV_ETHPHY_Setup,
-    DRV_ETHPHY_Smsc9303RestartNegotiation,
+    DRV_ETHPHY_Lan9303RestartNegotiation,
     DRV_ETHPHY_HWConfigFlagsGet,
-    DRV_ETHPHY_Smsc9303NegotiationIsComplete,
+    DRV_ETHPHY_Lan9303NegotiationIsComplete,
     DRV_ETHPHY_NegotiationResultGet,
-    DRV_ETHPHY_Smsc9303LinkStatusGet,
+    DRV_ETHPHY_Lan9303LinkStatusGet,
     DRV_ETHPHY_Reset,
     DRV_ETHPHY_VendorDataGet,
     DRV_ETHPHY_VendorDataSet,
@@ -107,10 +107,10 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_O
 
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj,DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-#if SMSC_9303_CMD_PROCESSOR
+#if LAN9303_CMD_PROCESSOR
     sHClientObj = hClientObj;
 #endif
-        __SMSC9303_LED_CFG_t led;
+        __LAN9303_LED_CFG_t led;
         led.d = 0;
         led.LED_EN0 = 1;
         led.LED_EN1 = 1;
@@ -200,7 +200,7 @@ static DRV_ETHPHY_RESULT DRV_ETHPHY_SMC9303_VendorSMIExtWrite(const DRV_ETHPHY_O
 
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, DRV_ETHPHY_LINK_STATUS* pLinkStat, bool refresh )
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 
@@ -286,7 +286,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPH
 }
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
     if (portIndex > DRV_ETHPHY_INF_IDX_PORT_2)
@@ -310,7 +310,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303PhyAddressGet( DRV_HANDLE handle, DRV_ETHPH
     return DRV_ETHPHY_RES_OK; 
 }
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex )
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex )
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
     __BMSTATbits_t b1, b2;
@@ -337,7 +337,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303RestartNegotiation( DRV_HANDLE handle, DRV_
     
     return DRV_ETHPHY_RES_PENDING;
 }
-DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete )
+DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, bool waitComplete )
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
 

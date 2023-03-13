@@ -224,10 +224,10 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhyLan8700RegHeaderFile.setOverwrite(True)
     drvExtPhyLan8700RegHeaderFile.setEnabled(True)
 
-    # Add drv_extphy_smsc8700.h file to project
+    # Add drv_extphy_lan8700.h file to project
     drvExtPhyLan8700HeaderFile = drvExtPhyLan8700Component.createFileSymbol(None, None)
-    drvExtPhyLan8700HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8700.h")
-    drvExtPhyLan8700HeaderFile.setOutputName("drv_extphy_smsc8700.h")
+    drvExtPhyLan8700HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8700.h")
+    drvExtPhyLan8700HeaderFile.setOutputName("drv_extphy_lan8700.h")
     drvExtPhyLan8700HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8700HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyLan8700HeaderFile.setType("HEADER")
@@ -246,10 +246,10 @@ def instantiateComponent(drvExtPhyLan8700Component):
     drvExtPhySourceFile.setType("SOURCE")
     drvExtPhySourceFile.setEnabled(True)
 
-    # Add drv_extphy_smsc8700.c file
+    # Add drv_extphy_lan8700.c file
     drvExtPhyLan8700SourceFile = drvExtPhyLan8700Component.createFileSymbol(None, None)
-    drvExtPhyLan8700SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8700.c")
-    drvExtPhyLan8700SourceFile.setOutputName("drv_extphy_smsc8700.c")
+    drvExtPhyLan8700SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8700.c")
+    drvExtPhyLan8700SourceFile.setOutputName("drv_extphy_lan8700.c")
     drvExtPhyLan8700SourceFile.setOverwrite(True)
     drvExtPhyLan8700SourceFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8700SourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")

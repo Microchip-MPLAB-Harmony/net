@@ -227,11 +227,11 @@ def instantiateComponent(drvExtPhyLan8740Component):
     drvExtPhyLan8740RegHeaderFile.setOverwrite(True)
     drvExtPhyLan8740RegHeaderFile.setEnabled(True)
 
-    # file TCPIP_MAC_PHY_LAN8740_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h"
-    # Add drv_extphy_smsc8740.h file to project
+    # file TCPIP_MAC_PHY_LAN8740_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_lan8740.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_lan8740.h"
+    # Add drv_extphy_lan8740.h file to project
     drvExtPhyLan8740HeaderFile = drvExtPhyLan8740Component.createFileSymbol(None, None)
-    drvExtPhyLan8740HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8740.h")
-    drvExtPhyLan8740HeaderFile.setOutputName("drv_extphy_smsc8740.h")
+    drvExtPhyLan8740HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8740.h")
+    drvExtPhyLan8740HeaderFile.setOutputName("drv_extphy_lan8740.h")
     drvExtPhyLan8740HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8740HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyLan8740HeaderFile.setType("HEADER")
@@ -251,13 +251,13 @@ def instantiateComponent(drvExtPhyLan8740Component):
     drvExtPhySourceFile.setEnabled(True)
 
     
-    # ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8740"
-    # file TCPIP_MAC_PHY_LAN8740_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8740.c"
+    # ifblock TCPIP_EMAC_PHY_TYPE = "LAN8740"
+    # file TCPIP_MAC_PHY_LAN8740_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_lan8740.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_lan8740.c"
     # endif
-    # Add drv_extphy_smsc8740.c file
+    # Add drv_extphy_lan8740.c file
     drvExtPhyLan8740SourceFile = drvExtPhyLan8740Component.createFileSymbol(None, None)
-    drvExtPhyLan8740SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8740.c")
-    drvExtPhyLan8740SourceFile.setOutputName("drv_extphy_smsc8740.c")
+    drvExtPhyLan8740SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8740.c")
+    drvExtPhyLan8740SourceFile.setOutputName("drv_extphy_lan8740.c")
     drvExtPhyLan8740SourceFile.setOverwrite(True)
     drvExtPhyLan8740SourceFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8740SourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")

@@ -1,17 +1,17 @@
 /*******************************************************************************
-  SMSC LAN8740 definitions
+  LAN8740 definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    eth_pic32_ext_phy_smsc8740.h
+    eth_pic32_ext_phy_lan8740.h
 
   Summary:
-    SMSC LAN8740 definitions
+    LAN8740 definitions
 
   Description:
-    This file provides the SMSC LAN8740 definitions.
+    This file provides the LAN8740 definitions.
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
@@ -39,9 +39,9 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMSC_8700_H_
+#ifndef _LAN_8700_H_
 
-#define _SMSC_8700_H_
+#define _LAN_8700_H_
 
 typedef enum
 {
@@ -404,5 +404,5 @@ typedef enum
 #define WOL_WAKEUP_BYTEMASK_REG6 0x0000
 #define WOL_WAKEUP_BYTEMASK_REG7 0x0000
 
-#endif	// _SMSC_8700_H_
+#endif	// _LAN_8700_H_
 

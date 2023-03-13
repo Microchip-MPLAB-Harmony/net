@@ -224,10 +224,10 @@ def instantiateComponent(drvExtPhyLan9303Component):
     drvExtPhyLan9303RegHeaderFile.setOverwrite(True)
     drvExtPhyLan9303RegHeaderFile.setEnabled(True)
 
-    # Add drv_extphy_smsc9303.h file to project
+    # Add drv_extphy_lan9303.h file to project
     drvExtPhyLan9303HeaderFile = drvExtPhyLan9303Component.createFileSymbol(None, None)
-    drvExtPhyLan9303HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc9303.h")
-    drvExtPhyLan9303HeaderFile.setOutputName("drv_extphy_smsc9303.h")
+    drvExtPhyLan9303HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan9303.h")
+    drvExtPhyLan9303HeaderFile.setOutputName("drv_extphy_lan9303.h")
     drvExtPhyLan9303HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan9303HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyLan9303HeaderFile.setType("HEADER")
@@ -246,10 +246,10 @@ def instantiateComponent(drvExtPhyLan9303Component):
     drvExtPhySourceFile.setType("SOURCE")
     drvExtPhySourceFile.setEnabled(True)
 
-    # Add drv_extphy_smsc9303.c file
+    # Add drv_extphy_lan9303.c file
     drvExtPhyLan9303SourceFile = drvExtPhyLan9303Component.createFileSymbol(None, None)
-    drvExtPhyLan9303SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc9303.c")
-    drvExtPhyLan9303SourceFile.setOutputName("drv_extphy_smsc9303.c")
+    drvExtPhyLan9303SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan9303.c")
+    drvExtPhyLan9303SourceFile.setOutputName("drv_extphy_lan9303.c")
     drvExtPhyLan9303SourceFile.setOverwrite(True)
     drvExtPhyLan9303SourceFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan9303SourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")

@@ -1,17 +1,17 @@
 /*******************************************************************************
-  SMSC LAN9303 definitions
+  LAN9303 definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    drv_extphy_smsc9303.h
+    drv_extphy_lan9303.h
 
   Summary:
-    SMSC LAN9303 definitions
+    LAN9303 definitions
 
   Description:
-    This file provides the SMSC LAN9303 definitions.
+    This file provides the LAN9303 definitions.
  *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
@@ -39,9 +39,9 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMSC_9303_H_
+#ifndef _LAN_9303_H_
 
-#define _SMSC_9303_H_
+#define _LAN_9303_H_
 #include "system_config.h"
 
 #include "driver/driver_common.h"
@@ -396,7 +396,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_IRQ_CRG_t;
+} __LAN9303_IRQ_CRG_t;
 
 // Interrupt Status Register (INT_STS) 13.2.1.2
 
@@ -419,7 +419,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_IRQ_STS_t;
+} __LAN9303_IRQ_STS_t;
 
 // Interrupt Enable Register (INT_EN) 13.2.1.3
 
@@ -442,7 +442,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_IRQ_EN_t;
+} __LAN9303_IRQ_EN_t;
 
 
 //General Purpose I/O Configuration Register 13.2.2.1
@@ -469,7 +469,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_GPIO_CFG_t;
+} __LAN9303_GPIO_CFG_t;
 
 //General Purpose I/O DATA & Direction Register 13.2.2.2
 
@@ -495,7 +495,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_GPIO_DATA_DIR_t; // 
+} __LAN9303_GPIO_DATA_DIR_t; // 
 
 //General Purpose I/O Interrupt Status and Enable Register 13.2.2.3
 
@@ -520,7 +520,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_GPIO_INT_STS_EN_t; //
+} __LAN9303_GPIO_INT_STS_EN_t; //
 
 
 //LED Configuration Register 13.2.2.4
@@ -542,7 +542,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_LED_CFG_t;
+} __LAN9303_LED_CFG_t;
 
 // EEPROM Command Register 13.2.3.1
 
@@ -561,7 +561,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_E2P_CMD_t;
+} __LAN9303_E2P_CMD_t;
 
 //EEPROM Data Register 13.2.3.2
 
@@ -575,7 +575,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_E2P_DATA_t;
+} __LAN9303_E2P_DATA_t;
 
 //Port 1 Manual Flow Control Register 13.2.4.1
 
@@ -595,7 +595,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MANUAL_FC_1_t;
+} __LAN9303_MANUAL_FC_1_t;
 
 //Port 2 Manual Flow Control Register 13.2.4.2
 
@@ -615,7 +615,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MANUAL_FC_2_t;
+} __LAN9303_MANUAL_FC_2_t;
 
 //Port 0 Manual Flow Control Register 13.2.4.3
 
@@ -635,7 +635,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MANUAL_FC_0_t;
+} __LAN9303_MANUAL_FC_0_t;
 
 //Switch Fabric CSR Interface Data Register 13.2.4.4
 
@@ -648,7 +648,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWITCH_CSR_DATA_t;
+} __LAN9303_SWITCH_CSR_DATA_t;
 
 //Switch Fabric CSR Interface Command Register 13.2.4.5
 
@@ -667,7 +667,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWITCH_CSR_CMD_t;
+} __LAN9303_SWITCH_CSR_CMD_t;
 
 //Switch Fabric MAC Address High Register  13.2.4.6
 
@@ -685,7 +685,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWITCH_MAC_ADDRH_t;
+} __LAN9303_SWITCH_MAC_ADDRH_t;
 
 //Switch Fabric MAC Address Low Regiser 13.2.4.7
 
@@ -698,7 +698,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWITCH_MAC_ADDRL_t;
+} __LAN9303_SWITCH_MAC_ADDRL_t;
 
 //Switch Fabric CSR Interface Direct Data Registers 13.2.4.7
 
@@ -711,7 +711,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWITCH_CSR_DIRECT_DATA_t;
+} __LAN9303_SWITCH_CSR_DIRECT_DATA_t;
 
 //PHY Management Interface 13.2.5.1
 
@@ -725,7 +725,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_PMI_t;
+} __LAN9303_PMI_t;
 
 //PHY Management Interface Access Register 13.2.5.2
 
@@ -743,7 +743,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_PMI_ACCESS_t;
+} __LAN9303_PMI_ACCESS_t;
 
 //Virtual PHY Basic Control Register 13.2.6.1
 
@@ -767,7 +767,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_BASIC_CTRL_t;
+} __LAN9303_VPHY_BASIC_CTRL_t;
 
 //virtual PHY Basic Status Register 13.2.6.2
 
@@ -797,7 +797,7 @@ typedef union {
         uint32_t d : 32;
     };
 
-} __SMSC9303_VPHY_BASIC_STATUS_t;
+} __LAN9303_VPHY_BASIC_STATUS_t;
 
 
 //virtual PHY Identification MSB Register 13.2.6.3
@@ -812,7 +812,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_ID_MSB_t;
+} __LAN9303_VPHY_ID_MSB_t;
 
 //virtual PHY Identification LSB Register 13.2.6.4
 
@@ -828,7 +828,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_ID_LSB_t;
+} __LAN9303_VPHY_ID_LSB_t;
 
 //Virtual PHY Auto-Negotiation Advertisement Register 13.2.8.5
 
@@ -853,7 +853,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_AN_ADV_t;
+} __LAN9303_VPHY_AN_ADV_t;
 
 //Virtual PHY Auto-Negotiation Link Partner Base Page Ability Register 13.2.6.6
 
@@ -878,7 +878,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_AN_LP_BASE_ABILITY_t;
+} __LAN9303_VPHY_AN_LP_BASE_ABILITY_t;
 
 
 //Virtual PHY Auto-Negotation Expansion Register 13.2.6.7
@@ -897,7 +897,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_AN_EXP_t;
+} __LAN9303_VPHY_AN_EXP_t;
 
 //Virtual PHY Special Control/Status REgister 13.2.6.8
 
@@ -920,7 +920,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_VPHY_SPECIAL_CONTROL_STATUS_t;
+} __LAN9303_VPHY_SPECIAL_CONTROL_STATUS_t;
 
 // Chip ID and Revision 13.2.7.1
 
@@ -934,7 +934,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_ID_REV_t;
+} __LAN9303_ID_REV_t;
 
 //Byte Order Test Register 13.2.7.2
 
@@ -947,7 +947,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BYTE_TEST_t;
+} __LAN9303_BYTE_TEST_t;
 
 //Hardware Configuration Register 13.2.7.3
 
@@ -964,7 +964,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_HW_CFG_t;
+} __LAN9303_HW_CFG_t;
 
 //General Purpose Time Configuration Register 13.2.7.4
 
@@ -980,7 +980,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_GPT_CFG_t;
+} __LAN9303_GPT_CFG_t;
 
 //General Purpose Timer Count Register 13.2.7.5
 
@@ -994,7 +994,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_GPT_CNT_t;
+} __LAN9303_GPT_CNT_t;
 
 //Free Running 25MHz Counter Register 13.2.7.6
 
@@ -1007,7 +1007,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_FREE_RUN_t;
+} __LAN9303_FREE_RUN_t;
 
 
 //Reset Control Register 13.2.7.7
@@ -1025,7 +1025,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_RESET_CTL_t;
+} __LAN9303_RESET_CTL_t;
 
 //Switch Device ID Register 13.4.1.1
 
@@ -1041,7 +1041,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SW_DEV_ID_t;
+} __LAN9303_SW_DEV_ID_t;
 
 //Switch Reset Register 13.4.1.2
 
@@ -1055,7 +1055,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SW_RESET_t;
+} __LAN9303_SW_RESET_t;
 
 
 //Switch Global Interrupt Mask Register  13.4.1.3
@@ -1076,7 +1076,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SW_IMR_t;
+} __LAN9303_SW_IMR_t;
 
 // Switch Global Interrup Pending Register 13.4.1.4
 
@@ -1095,7 +1095,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SW_IPR_t;
+} __LAN9303_SW_IPR_t;
 
 //Port x MAC Version ID register 13.4.2.1
 
@@ -1111,7 +1111,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MAC_VERSION_ID_x_t;
+} __LAN9303_MAC_VERSION_ID_x_t;
 
 
 //Poirt x MAC REceive Configuration REgister
@@ -1132,7 +1132,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MAC_RX_CFG_x_t;
+} __LAN9303_MAC_RX_CFG_x_t;
 
 
 // Port x MAC Receive Undersized Count Register 13.4.2.3
@@ -1195,57 +1195,57 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_Count_t,
-__SMSC9303_MAC_RX_UNDSZE_CNT_x_t,
-__SMSC9303_MAC_RX_64_CNT_x_t,
-__SMSC9303_MAC_RX_65_TO_127_CNT_x_t,
-__SMSC9303_MAC_RX_128_TO_255_CNT_x_t,
-__SMSC9303_MAC_RX_256_TO_511_CNT_x_t,
-__SMSC9303_MAC_RX_512_TO_1023_CNT_x_t,
-__SMSC9303_MAC_RX_1024_TO_MAX_CNT_x_t,
-__SMSC9303_MAC_RX_OVRSZE_CNT_x_t,
-__SMSC9303_MAC_RX_PKTOK_CNT_x_t,
-__SMSC9303_MAC_RX_CRCERR_CNT_x_t,
-__SMSC9303_MAC_RX_MULCST_CNT_x_t,
-__SMSC9303_MAC_RX_BRDCST_CNT_x_t,
-__SMSC9303_MAC_RX_PAUSE_CNT_x_t,
-__SMSC9303_MAC_RX_FRAG_CNT_x_t,
-__SMSC9303_MAC_RX_JABB_CNT_x_t,
-__SMSC9303_MAC_RX_ALIGN_CNT_x_t,
-__SMSC9303_MAC_RX_PKTLEN_CNT_x_t,
-__SMSC9303_MAC_RX_GOODPKTLEN_CNT_x_t,
-__SMSC9303_MAC_RX_SYMBOL_CNT_x_t,
-__SMSC9303_MAC_RX_CTLFRM_CNT_x_t,
-__SMSC9303_MAC_TX_DEFER_CNT_x_t,
-__SMSC9303_MAC_TX_PAUSE_CNT_x_t,
-__SMSC9303_MAC_TX_PKTOK_CNT_x_t,
-__SMSC9303_MAC_TX_64_CNT_x_t,
-__SMSC9303_MAC_TX_65_TO_127_CNT_x_t,
-__SMSC9303_MAC_TX_128_TO_255_CNT_x_t,
-__SMSC9303_MAC_TX_256_TO_511_CNT_x_t,
-__SMSC9303_MAC_TX_512_TO_1023_CNT_x_t,
-__SMSC9303_MAC_TX_1024_TO_MAX_CNT_x_t,
-__SMSC9303_MAC_TX_UNDSZE_CNT_x_t,
-__SMSC9303_MAC_TX_PKTLEN_CNT_x_t,
-__SMSC9303_MAC_TX_BRDCST_CNT_x_t,
-__SMSC9303_MAC_TX_MULCST_CNT_x_t,
-__SMSC9303_MAC_TX_LATECOL_CNT_x_t,
-__SMSC9303_MAC_TX_EXCCOL_CNT_x_t,
-__SMSC9303_MAC_TX_SNGLECOL_CNT_x_t,
-__SMSC9303_MAC_TX_MULTICOL_CNT_x_t,
-__SMSC9303_MAC_TX_TOTALCOL_CNT_x_t,
-__SMSC9303_FILTERED_CNT_0_t,
-__SMSC9303_FILTERED_CNT_1_t,
-__SMSC9303_FILTERED_CNT_2_t,
-__SMSC9303_LRN_DISCRD_CNT_0_t,
-__SMSC9303_LRN_DISCRD_CNT_1_t,
-__SMSC9303_LRN_DISCRD_CNT_2_t,
-__SMSC9303_BM_DRP_CNT_SRC_0_t,
-__SMSC9303_BM_DRP_CNT_SRC_1_t,
-__SMSC9303_BM_DRP_CNT_SRC_2_t,
-__SMSC9303_BM_RATE_DRP_CNT_SRC_0_t,
-__SMSC9303_BM_RATE_DRP_CNT_SRC_1_t,
-__SMSC9303_BM_RATE_DRP_CNT_SRC_2_t;
+} __LAN9303_Count_t,
+__LAN9303_MAC_RX_UNDSZE_CNT_x_t,
+__LAN9303_MAC_RX_64_CNT_x_t,
+__LAN9303_MAC_RX_65_TO_127_CNT_x_t,
+__LAN9303_MAC_RX_128_TO_255_CNT_x_t,
+__LAN9303_MAC_RX_256_TO_511_CNT_x_t,
+__LAN9303_MAC_RX_512_TO_1023_CNT_x_t,
+__LAN9303_MAC_RX_1024_TO_MAX_CNT_x_t,
+__LAN9303_MAC_RX_OVRSZE_CNT_x_t,
+__LAN9303_MAC_RX_PKTOK_CNT_x_t,
+__LAN9303_MAC_RX_CRCERR_CNT_x_t,
+__LAN9303_MAC_RX_MULCST_CNT_x_t,
+__LAN9303_MAC_RX_BRDCST_CNT_x_t,
+__LAN9303_MAC_RX_PAUSE_CNT_x_t,
+__LAN9303_MAC_RX_FRAG_CNT_x_t,
+__LAN9303_MAC_RX_JABB_CNT_x_t,
+__LAN9303_MAC_RX_ALIGN_CNT_x_t,
+__LAN9303_MAC_RX_PKTLEN_CNT_x_t,
+__LAN9303_MAC_RX_GOODPKTLEN_CNT_x_t,
+__LAN9303_MAC_RX_SYMBOL_CNT_x_t,
+__LAN9303_MAC_RX_CTLFRM_CNT_x_t,
+__LAN9303_MAC_TX_DEFER_CNT_x_t,
+__LAN9303_MAC_TX_PAUSE_CNT_x_t,
+__LAN9303_MAC_TX_PKTOK_CNT_x_t,
+__LAN9303_MAC_TX_64_CNT_x_t,
+__LAN9303_MAC_TX_65_TO_127_CNT_x_t,
+__LAN9303_MAC_TX_128_TO_255_CNT_x_t,
+__LAN9303_MAC_TX_256_TO_511_CNT_x_t,
+__LAN9303_MAC_TX_512_TO_1023_CNT_x_t,
+__LAN9303_MAC_TX_1024_TO_MAX_CNT_x_t,
+__LAN9303_MAC_TX_UNDSZE_CNT_x_t,
+__LAN9303_MAC_TX_PKTLEN_CNT_x_t,
+__LAN9303_MAC_TX_BRDCST_CNT_x_t,
+__LAN9303_MAC_TX_MULCST_CNT_x_t,
+__LAN9303_MAC_TX_LATECOL_CNT_x_t,
+__LAN9303_MAC_TX_EXCCOL_CNT_x_t,
+__LAN9303_MAC_TX_SNGLECOL_CNT_x_t,
+__LAN9303_MAC_TX_MULTICOL_CNT_x_t,
+__LAN9303_MAC_TX_TOTALCOL_CNT_x_t,
+__LAN9303_FILTERED_CNT_0_t,
+__LAN9303_FILTERED_CNT_1_t,
+__LAN9303_FILTERED_CNT_2_t,
+__LAN9303_LRN_DISCRD_CNT_0_t,
+__LAN9303_LRN_DISCRD_CNT_1_t,
+__LAN9303_LRN_DISCRD_CNT_2_t,
+__LAN9303_BM_DRP_CNT_SRC_0_t,
+__LAN9303_BM_DRP_CNT_SRC_1_t,
+__LAN9303_BM_DRP_CNT_SRC_2_t,
+__LAN9303_BM_RATE_DRP_CNT_SRC_0_t,
+__LAN9303_BM_RATE_DRP_CNT_SRC_1_t,
+__LAN9303_BM_RATE_DRP_CNT_SRC_2_t;
 
 
 // Port x MAC Transmit Configuration Register 13.4.2.23
@@ -1263,7 +1263,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MAX_TX_CFG_x_t;
+} __LAN9303_MAX_TX_CFG_x_t;
 
 // Port x MAC Transmit Flow Control Settigns Register 13.4.2.24
 
@@ -1278,7 +1278,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_MAC_TX_FC_SETTINGS_x_t;
+} __LAN9303_MAC_TX_FC_SETTINGS_x_t;
 
 // Switch Engine ALR Command Register 13.4.3.1
 
@@ -1294,7 +1294,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_CMD_t;
+} __LAN9303_SWE_ALR_CMD_t;
 
 //Switch Engine ALR Write Data 0 Register 13.4.3.2
 
@@ -1307,7 +1307,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_WR_DAT_0_t;
+} __LAN9303_SWE_ALR_WR_DAT_0_t;
 
 //Switch Engine ALR Write Data 1 Register 13.4.3.3
 
@@ -1328,7 +1328,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_WR_DAT_1_t;
+} __LAN9303_SWE_ALR_WR_DAT_1_t;
 
 //Switch Engine ALR Read Data 0 Register 13.4.3.4
 
@@ -1341,7 +1341,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_RD_DAT_0_t;
+} __LAN9303_SWE_ALR_RD_DAT_0_t;
 
 //Switch Engine ALR Read Data 1 Register 13.4.3.3
 
@@ -1362,7 +1362,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_RD_DAT_1_t;
+} __LAN9303_SWE_ALR_RD_DAT_1_t;
 
 
 //Switch Engine ALR Command Status Register  13.4.3.6
@@ -1378,7 +1378,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ALR_CMD_STS_t;
+} __LAN9303_SWE_ALR_CMD_STS_t;
 
 //swtich Engine ALR Configuration Register 13.4.3.7
 
@@ -1392,7 +1392,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC_SWE_ALR_CFG_t;
+} __LAN_SWE_ALR_CFG_t;
 
 //Switch Engine VLAN Command Register 13.4.3.8
 
@@ -1408,7 +1408,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_VLAN_CMD_t;
+} __LAN9303_SWE_VLAN_CMD_t;
 
 //Switch Engine VLAN Write Data Register 13.4.3.9
 //Switch Engine VLAN Read Data Register 13.4.3.10
@@ -1440,8 +1440,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_VLAN_WR_DATA_t,
-__SMSC9303_SWE_VLAN_RD_DATA_t;
+} __LAN9303_SWE_VLAN_WR_DATA_t,
+__LAN9303_SWE_VLAN_RD_DATA_t;
 
 //Switch Engine VLAN Command Status Register 13.4.3.11
 //Switch Engine DIFFSERV Command Status Register 13.4.3.15
@@ -1457,9 +1457,9 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_VLAN_CMD_STS_t,
-__SMSC9303_SWE_DIFFSERV_TBL_CMD_STS_t,
-__SMSC9303_SWE_INGRSS_RATE_CMD_STS_t;
+} __LAN9303_SWE_VLAN_CMD_STS_t,
+__LAN9303_SWE_DIFFSERV_TBL_CMD_STS_t,
+__LAN9303_SWE_INGRSS_RATE_CMD_STS_t;
 
 //Switch Engine DIFFSERV Table Command Register 13.4.3.12
 
@@ -1475,7 +1475,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_DIFFSERV_TBL_CFG_t;
+} __LAN9303_SWE_DIFFSERV_TBL_CFG_t;
 
 //Switch Engine DIFFSERV Table Write Data Register 13.4.3.13
 //Switch Engine DIFFSERV Table Read Data Register 13.4.3.14
@@ -1490,8 +1490,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_DIFFSERV_TBL_WR_DATA_t,
-__SMSC9303_SWE_DIFFSERV_TBL_RD_DATA_t;
+} __LAN9303_SWE_DIFFSERV_TBL_WR_DATA_t,
+__LAN9303_SWE_DIFFSERV_TBL_RD_DATA_t;
 
 
 //Switch Engine Global Ingress Coniguration Register 13.4.3.16
@@ -1519,7 +1519,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_GLOBAL_INGRESS_CFG_t;
+} __LAN9303_SWE_GLOBAL_INGRESS_CFG_t;
 
 //Switch Engine Port Ingress Configuiration Register 13.4.3.17
 
@@ -1534,7 +1534,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_PORT_INGRESS_CFG_t;
+} __LAN9303_SWE_PORT_INGRESS_CFG_t;
 
 //Switch Engine Admit Only VLAN Register  13.4.3.18
 
@@ -1548,7 +1548,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ADMT_ONLY_VLAN_t;
+} __LAN9303_SWE_ADMT_ONLY_VLAN_t;
 
 //Switch Engine Port State Register 13.4.3.19
 
@@ -1564,7 +1564,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_PORT_STATE_t;
+} __LAN9303_SWE_PORT_STATE_t;
 
 //Switch Engine Priority to Queue Register 13.4.3.20
 
@@ -1585,7 +1585,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_PRI_TO_QUE_t;
+} __LAN9303_SWE_PRI_TO_QUE_t;
 
 //Switch Engine Port Mirroring Register 13.4.3.21
 
@@ -1603,7 +1603,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_PORT_MIRROR_t;
+} __LAN9303_SWE_PORT_MIRROR_t;
 
 // Switch Engine Ingress Port Type Register 13.4.3.22
 
@@ -1619,7 +1619,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_INGRESS_PORT_TYP_t;
+} __LAN9303_SWE_INGRESS_PORT_TYP_t;
 
 //Switch Engine Broadcast Throttling Register 13.4.3.23
 
@@ -1638,7 +1638,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_BCST_THROT_t;
+} __LAN9303_SWE_BCST_THROT_t;
 
 // Switch Engine Admit Non Member Register 13.4.3.24
 
@@ -1652,7 +1652,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_ADMT_N_MEMBER_t;
+} __LAN9303_SWE_ADMT_N_MEMBER_t;
 
 // Switch Engine Ingress Rate Configuration Register 13.4.3.25
 
@@ -1667,7 +1667,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_INGRSS_RATE_CFG_t;
+} __LAN9303_SWE_INGRSS_RATE_CFG_t;
 
 // Switch Engine Ingress Rate Command Register 13.4.3.26
 
@@ -1683,7 +1683,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_INGRSS_RATE_CMD_t;
+} __LAN9303_SWE_INGRSS_RATE_CMD_t;
 
 
 // Switch Engine Ingress Rate Write Data Register 13.4.3.28
@@ -1699,8 +1699,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_INGRSS_RATE_WR_DATA_t,
-__SMSC9303_SWE_INGRSS_RATE_RD_DATA_t;
+} __LAN9303_SWE_INGRSS_RATE_WR_DATA_t,
+__LAN9303_SWE_INGRSS_RATE_RD_DATA_t;
 
 typedef union {
 
@@ -1711,7 +1711,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_FILTERED_CNT_t;
+} __LAN9303_SWE_FILTERED_CNT_t;
 
 //Switch Engine Port 0 Ingress VLAN Priority Regeneration Table Register  13.4.3.33
 //Switch Engine Port 1 Ingress VLAN Priority Regeneration Table Register  13.4.3.34
@@ -1733,9 +1733,9 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_INGRSS_REGEN_TBL_0_t,
-__SMSC9303_SWE_INGRSS_REGEN_TBL_1_t,
-__SMSC9303_SWE_INGRSS_REGEN_TBL_2_t;
+} __LAN9303_SWE_INGRSS_REGEN_TBL_0_t,
+__LAN9303_SWE_INGRSS_REGEN_TBL_1_t,
+__LAN9303_SWE_INGRSS_REGEN_TBL_2_t;
 
 // Switch Engine Interrupt Mask Register 13.4.3.39
 // Buffer Manager Interrupt Mask Register 13.4.4.26
@@ -1750,8 +1750,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_IMR_t,
-__SMSC9303_BM_IMR_t;
+} __LAN9303_SWE_IMR_t,
+__LAN9303_BM_IMR_t;
 
 //Switch Engine Interrupt Pending Register 13.4.3.40
 
@@ -1771,7 +1771,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_SWE_IPR_t;
+} __LAN9303_SWE_IPR_t;
 
 //Buffer Manager Congifuration Register  13.4.4.1
 
@@ -1789,7 +1789,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_CFG_t;
+} __LAN9303_BM_CFG_t;
 
 //Buffer Manager Drop Level Register 13.4.4.2
 
@@ -1804,7 +1804,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_DROP_LVL_t;
+} __LAN9303_BM_DROP_LVL_t;
 
 // Buffer Manager Flow Control Pause Level Register 13.4.4.3
 
@@ -1819,7 +1819,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_FC_PAUSE_LVL_t;
+} __LAN9303_FC_PAUSE_LVL_t;
 
 // Buffer Manager Flow Control Resume Level Register 13.4.4.4
 
@@ -1834,7 +1834,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC_FC_PAUSE_LVL_t;
+} __LAN_FC_PAUSE_LVL_t;
 
 
 //Buffer Manager Broadcast Buffer Level 13.4.4.5
@@ -1848,7 +1848,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_BCST_LEVEL_t;
+} __LAN9303_BM_BCST_LEVEL_t;
 
 //Buffer Manager Random Discard Table Write Data Register 13.4.4.11
 //Buffer Manager Random Discard Table Read Data Register 13.4.4.12
@@ -1862,8 +1862,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_RNDM_DSCRD_TBL_WDATA_t,
-__SMSC9303_BM_RNDM_DSCRD_TBL_RDATA_t;
+} __LAN9303_BM_RNDM_DSCRD_TBL_WDATA_t,
+__LAN9303_BM_RNDM_DSCRD_TBL_RDATA_t;
 
 //Buffer Manager Egress Port Type Register 13.4.4.13
 
@@ -1897,7 +1897,7 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_EGRSS_PORT_TYPE_t;
+} __LAN9303_BM_EGRSS_PORT_TYPE_t;
 
 
 // Buffer Manager Port 0 Egress Rate Priorituy Queue 0/1 Register  13.4.4.14
@@ -1915,9 +1915,9 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} _SMSC9303_BM_EGRSS_RATE_00_01_t,
-_SMSC9303_BM_EGRSS_RATE_10_11_t,
-_SMSC9303_BM_EGRSS_RATE_20_21_t;
+} _LAN9303_BM_EGRSS_RATE_00_01_t,
+_LAN9303_BM_EGRSS_RATE_10_11_t,
+_LAN9303_BM_EGRSS_RATE_20_21_t;
 
 // Buffer Manager Port 0 Egress Rate Priorituy Queue 2/3 Register  13.4.4.16
 // Buffer Manager Port 1 Egress Rate Priorituy Queue 2/3 Register  13.4.4.17
@@ -1934,9 +1934,9 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} _SMSC9303_BM_EGRSS_RATE_02_03_t,
-_SMSC9303_BM_EGRSS_RATE_12_13_t,
-_SMSC9303_BM_EGRSS_RATE_22_23_t;
+} _LAN9303_BM_EGRSS_RATE_02_03_t,
+_LAN9303_BM_EGRSS_RATE_12_13_t,
+_LAN9303_BM_EGRSS_RATE_22_23_t;
 
 // Buffer Manager Port 0 Devault VLAN ID and PRiority Register 13.4.4.20
 // Buffer Manager Port 1 Devault VLAN ID and PRiority Register 13.4.4.21
@@ -1953,9 +1953,9 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_VLAN_0_t,
-__SMSC9303_BM_VLAN_1_t,
-__SMSC9303_BM_VLAN_2_t;
+} __LAN9303_BM_VLAN_0_t,
+__LAN9303_BM_VLAN_1_t,
+__LAN9303_BM_VLAN_2_t;
 
 // Buffer Manager Interrupt Pending Register 13.4.4.27
 
@@ -1974,8 +1974,8 @@ typedef union {
     struct {
         uint32_t d : 32;
     };
-} __SMSC9303_BM_IPR;
+} __LAN9303_BM_IPR;
 
-#endif	// _SMSC_9303_H_
+#endif	// _LAN_9303_H_
 
 

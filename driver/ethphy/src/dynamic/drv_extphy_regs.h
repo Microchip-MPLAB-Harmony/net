@@ -210,7 +210,7 @@ typedef union
         uint16_t BASE100TX      :1;
         uint16_t BASE100TX_FDX  :1;
         uint16_t BASE100T4      :1;
-        uint16_t PAUSE          :1; // NOTE: the PAUSE fields coding for SMSC is reversed!
+        uint16_t PAUSE          :1; // NOTE: the PAUSE fields coding LAN8xxx PHYs may be reversed!
         uint16_t ASM_DIR        :1; // typo in the data sheet?
         uint16_t                :1;
         uint16_t REM_FAULT      :1;

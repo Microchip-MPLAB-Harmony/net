@@ -1,17 +1,17 @@
 /*******************************************************************************
-  SMSC LAN8700 definitions
+  LAN8700 definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    drv_extphy_smsc8700.h
+    drv_extphy_lan8700.h
 
   Summary:
-    SMSC LAN8700 definitions
+    LAN8700 definitions
 
   Description:
-    This file provides the SMSC LAN8700 definitions.
+    This file provides the LAN8700 definitions.
 
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
@@ -40,9 +40,9 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMSC_8700_H_
+#ifndef _LAN_8700_H_
 
-#define _SMSC_8700_H_
+#define _LAN_8700_H_
 
 typedef enum
 {
@@ -234,5 +234,5 @@ typedef union {
 
 
 
-#endif  // _SMSC_8700_H_
+#endif  // _LAN_8700_H_
 

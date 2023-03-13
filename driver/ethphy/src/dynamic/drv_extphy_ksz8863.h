@@ -8,10 +8,10 @@
     eth_pic32_ext_phy_ksz8863.h
 
   Summary:
-    SMSC KSZ8863 definitions
+    KSZ8863 definitions
 
   Description:
-    This file provides the SMSC KSZ8863 definitions.
+    This file provides the KSZ8863 definitions.
  *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*

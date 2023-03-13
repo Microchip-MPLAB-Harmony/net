@@ -1,5 +1,5 @@
 /*******************************************************************************
-  SMSC LAN8740 PHY API for Microchip TCP/IP Stack
+  LAN8740 PHY API for Microchip TCP/IP Stack
 *******************************************************************************/
 
 /*
@@ -27,7 +27,7 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_smsc8740.h"
+#include "driver/ethphy/src/dynamic/drv_extphy_lan8740.h"
 
 
 /****************************************************************************

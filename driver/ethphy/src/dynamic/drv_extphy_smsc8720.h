@@ -1,17 +1,17 @@
 /*******************************************************************************
-  SMSC LAN8720 definitions
+  LAN8720 definitions
 
   Company:
     Microchip Technology Inc.
     
   File Name:
-    drv_extphy_smsc8720.h
+    drv_extphy_lan8720.h
 
   Summary:
-    SMSC LAN8720 definitions
+    LAN8720 definitions
 
   Description:
-    This file provides the SMSC LAN8720 definitions.
+    This file provides the LAN8720 definitions.
 
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
@@ -40,9 +40,9 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMSC_8720_H_
+#ifndef _LAN_8720_H_
 
-#define _SMSC_8720_H_
+#define _LAN_8720_H_
 
 typedef enum
 {
@@ -57,8 +57,8 @@ typedef enum
     PHY_REG_ANLPAD      = 5,
     PHY_REG_ANLPADNP    = 5,
     PHY_REG_ANEXP       = 6,
-    // PHY_REG_ANNPTR       = 7,    not defined for SMSC 8720
-    // PHY_REG_ANLPRNP      = 8,    not defined for SMSC 8720
+    // PHY_REG_ANNPTR       = 7,    not defined for LAN8720
+    // PHY_REG_ANLPRNP      = 8,    not defined for LAN8720
     */
     // specific vendor registers: 16-31
     PHY_REG_MODE_CTRL       = 17,
@@ -206,5 +206,5 @@ typedef union {
 
 
 
-#endif  // _SMSC_8720_H_
+#endif  // _LAN_8720_H_
 

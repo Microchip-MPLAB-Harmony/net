@@ -224,10 +224,10 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyLan8720RegHeaderFile.setOverwrite(True)
     drvExtPhyLan8720RegHeaderFile.setEnabled(True)
 
-    # Add drv_extphy_smsc8720.h file to project
+    # Add drv_extphy_lan8720.h file to project
     drvExtPhyLan8720HeaderFile = drvExtPhyLan8720Component.createFileSymbol(None, None)
-    drvExtPhyLan8720HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8720.h")
-    drvExtPhyLan8720HeaderFile.setOutputName("drv_extphy_smsc8720.h")
+    drvExtPhyLan8720HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8720.h")
+    drvExtPhyLan8720HeaderFile.setOutputName("drv_extphy_lan8720.h")
     drvExtPhyLan8720HeaderFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8720HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyLan8720HeaderFile.setType("HEADER")
@@ -246,10 +246,10 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhySourceFile.setType("SOURCE")
     drvExtPhySourceFile.setEnabled(True)
 
-    # Add drv_extphy_smsc8720.c file
+    # Add drv_extphy_lan8720.c file
     drvExtPhyLan8720SourceFile = drvExtPhyLan8720Component.createFileSymbol(None, None)
-    drvExtPhyLan8720SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_smsc8720.c")
-    drvExtPhyLan8720SourceFile.setOutputName("drv_extphy_smsc8720.c")
+    drvExtPhyLan8720SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_lan8720.c")
+    drvExtPhyLan8720SourceFile.setOutputName("drv_extphy_lan8720.c")
     drvExtPhyLan8720SourceFile.setOverwrite(True)
     drvExtPhyLan8720SourceFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyLan8720SourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")

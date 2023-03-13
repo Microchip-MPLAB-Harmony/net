@@ -1,5 +1,5 @@
 /*******************************************************************************
-  SMSC LAN8700 PHY API for Microchip TCP/IP Stack
+  LAN8700 PHY API for Microchip TCP/IP Stack
 *******************************************************************************/
 
 /*
@@ -28,7 +28,7 @@ Microchip or any third party.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "driver/ethphy/src/dynamic/drv_extphy_smsc8700.h"
+#include "driver/ethphy/src/dynamic/drv_extphy_lan8700.h"
 
 /****************************************************************************
  *                 interface functions
