@@ -74,8 +74,7 @@ typedef enum
     PHY_REG_WOL_STATUS = 17, // page 17
     
 	
-}ePHY_VENDOR_REG;
-// updated version of ePHY_REG
+}IP101GR_VENDOR_REG;
 
 
 // vendor registers

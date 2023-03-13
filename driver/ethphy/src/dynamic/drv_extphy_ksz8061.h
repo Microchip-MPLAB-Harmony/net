@@ -73,8 +73,7 @@ typedef enum
 	PHY_MMD_ACCESS_DATA_ADDR = 14,
 	//
 	//PHY_REGISTERS		= 32	// total number of registers
-}ePHY_VENDOR_REG;
-// updated version of ePHY_REG
+}KSZ8061_VENDOR_REG;
 
 
 // vendor registers

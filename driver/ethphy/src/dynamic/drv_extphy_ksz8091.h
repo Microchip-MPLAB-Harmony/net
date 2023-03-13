@@ -75,8 +75,7 @@ typedef enum
 	PHY_REG_PHY_CONTROL_2       = 0x1f,
 	//
 	//PHY_REGISTERS		= 32	// total number of registers
-}ePHY_VENDOR_REG_KSZ8091;
-// updated version of ePHY_REG
+}KSZ8091_VENDOR_REG;
 
 
 // vendor registers

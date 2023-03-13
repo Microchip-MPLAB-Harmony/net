@@ -79,8 +79,7 @@ typedef enum
 	PHY_REG_PHY_CTRL	= 31,
 	//
 	//PHY_REGISTERS		= 32	// total number of registers
-}ePHY_VENDOR_REG;
-// updated version of ePHY_REG
+}KSZ9131_VENDOR_REG;
 
 
 

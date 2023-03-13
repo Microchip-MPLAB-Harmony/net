@@ -366,8 +366,7 @@ typedef enum {
     PHY_REG_SF_IA_BM_RATE_DRP_CNT_SRC_2 = 0x1C18, //Buffer Manager Port 0 Ingress Rate Drop Count Register
     PHY_REG_SF_IA_BM_IMR = 0x1C20, // Buffer Manager Interrupt Mask Register
     PHY_REG_SF_IA_BM_IPR = 0x1C21, // Buffer Manger Interrupt Pending Register
-} ePHY_VENDOR_REG;
-// updated version of ePHY_REG
+} LAN9303_VENDOR_REG;
 
 
 

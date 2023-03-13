@@ -70,8 +70,7 @@ typedef enum
 	
 	//
 	//PHY_REGISTERS		= 32	// total number of registers
-}ePHY_VENDOR_REG;
-// updated version of ePHY_REG
+}KSZ8041_VENDOR_REG;
 
 
 // vendor registers

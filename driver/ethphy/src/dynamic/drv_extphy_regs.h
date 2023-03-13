@@ -73,7 +73,7 @@ typedef enum
     //
     //
     PHY_REGISTERS       = 32    // total number of registers
-} ePHY_BASIC_REG;
+} PHY_BASIC_REG;
 
 // MIIM registers definitions
 //
