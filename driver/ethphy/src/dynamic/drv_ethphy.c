@@ -58,15 +58,17 @@ Microchip or any third party.
 // *****************************************************************************
 // Local Definitions
 //
-#define PROT_802_3  0x01    // IEEE 802.3 capability
+#define _PHY_PROT_802_3         0x01    // IEEE 802.3 capability
 // all comm capabilities our MAC supports
-#define PHY_STD_CPBL_MASK       (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK | 			\
+#define _PHY_STD_CPBL_MASK      (_BMSTAT_BASE10T_HDX_MASK | _BMSTAT_BASE10T_FDX_MASK | 			\
                                 _BMSTAT_BASE100TX_HDX_MASK |_BMSTAT_BASE100TX_FDX_MASK | 		\
                                 _BMSTAT_EXTSTAT_MASK)
 								
-#define PHY_EXT_CPBL_MASK  		(_EXTSTAT_1000BASEX_FDX_MASK | _EXTSTAT_1000BASEX_HDX_MASK | 	\
+#define _PHY_EXT_CPBL_MASK  		(_EXTSTAT_1000BASEX_FDX_MASK | _EXTSTAT_1000BASEX_HDX_MASK | 	\
 								_EXTSTAT_1000BASET_FDX_MASK | _EXTSTAT_1000BASET_HDX_MASK)
 
+
+#define _PHY_BMCON_DETECT_MASK  (_BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK) 
 
 // local prototypes
 // debug
@@ -96,7 +98,7 @@ static void _PhyDebugCond(bool cond, const char* message, int lineNo)
 #endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC)
 
 #if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE) != 0)
-static void _PhyDbg_DetectPhase(uint16_t detectPhase)
+void _DRV_ETHPHY_Dbg_DetectPhase(uint16_t detectPhase)
 {
     static uint16_t prevState = 0xffff;
     if(detectPhase != prevState)
@@ -105,16 +107,15 @@ static void _PhyDbg_DetectPhase(uint16_t detectPhase)
         SYS_CONSOLE_PRINT("PHY detect phase: %d\r\n", detectPhase);
     }
 }
-#else
-#define _PhyDbg_DetectPhase(detectPhase)
 #endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE)
 
 #if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES) != 0)
-static void _PhyDbg_DetectWriteValue(int rIx, uint16_t rVal)
+void _DRV_ETHPHY_Dbg_DetectWriteValue(int rIx, uint16_t rVal)
 {
     SYS_CONSOLE_PRINT("PHY detect write - reg: %d, val: 0x%04x\r\n", rIx, rVal);
 }
-static void _PhyDbg_DetectReadValue(int rIx, uint16_t rVal, uint16_t valMask, uint16_t chkMask)
+
+void _DRV_ETHPHY_Dbg_DetectReadValue(int rIx, uint16_t rVal, uint16_t valMask, uint16_t chkMask)
 {
     uint16_t chkVal = rVal & valMask;   // keep only bits to be checked
     uint16_t xorVal = chkVal ^ chkMask; 
@@ -127,9 +128,6 @@ static void _PhyDbg_DetectReadValue(int rIx, uint16_t rVal, uint16_t valMask, ui
         SYS_CONSOLE_PRINT("PHY detect read Fail - reg: %d, got: 0x%04x, fail mask: 0x%04x\r\n", rIx, rVal, xorVal);
     }
 }
-#else
-#define _PhyDbg_DetectWriteValue(rIx, rVal)
-#define _PhyDbg_DetectReadValue(rIx, rVal, valMask, chkMask)
 #endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES)
 
 
@@ -662,8 +660,6 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
     hSysObj->miimIndex = ethphyInit->miimIndex;
 
     hSysObj->objInUse = true;      // Set object to be in use
-    hSysObj->busInUse = 0;
-    hSysObj->numClients = 0;
     hSysObj->status = SYS_STATUS_READY; // Set module state
     hSysObj->iModule  = iModule;  // Store driver instance
     hSysObj->ethphyId = ethphyInit->ethphyId; // Store PLIB ID
@@ -675,6 +671,12 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
     hSysObj->ethphyTmo = ethphyInit->ethphyTmo;
     
     hSysObj->objClient.clientInUse = 0;
+    hSysObj->objClient.detectMask = hSysObj->pPhyObj->bmconDetectMask;
+    if(hSysObj->objClient.detectMask == 0)
+    {   // use a default value...
+       hSysObj->objClient.detectMask = _PHY_BMCON_DETECT_MASK;
+    }
+    hSysObj->objClient.capabMask = hSysObj->pPhyObj->bmstatCpblMask;
 
     // hush compiler warning
     _DRV_ETHPHY_AssertCond(true, __func__, __LINE__);
@@ -695,7 +697,6 @@ void DRV_ETHPHY_Reinitialize( SYS_MODULE_OBJ        object ,
     {
         DRV_ETHPHY_INIT * ethphyInit = (DRV_ETHPHY_INIT *)init;
 
-        phyInst->numClients = 0;
         phyInst->status = SYS_STATUS_READY; // Set module state
         phyInst->ethphyId = ethphyInit->ethphyId; // Store PLIB ID
 
@@ -827,7 +828,6 @@ DRV_HANDLE  DRV_ETHPHY_Open ( const SYS_MODULE_INDEX iModule,
         hClientObj->operType = DRV_ETHPHY_CLIENT_OP_TYPE_NONE;
         hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
         _DRV_PHY_SetOperPhase(hClientObj, 0, 0);
-        phyInst->numClients++;
 
         /* Update the Client Status */
         hClientObj->status = DRV_ETHPHY_CLIENT_STATUS_READY;
@@ -873,7 +873,6 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle )
 
             /* Free the Client Instance */
             hClientObj->clientInUse = false ;
-            hClientObj->hDriver->numClients--;
 
             /* Update the Client Status */
             hClientObj->status = DRV_ETHPHY_CLIENT_STATUS_CLOSED;
@@ -1020,6 +1019,7 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 }
 
     
+
 static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_ETHPHY_VENDOR_DETECT detectF;
@@ -1074,6 +1074,10 @@ static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 
 
 // default PHY detection procedure
+// the DRV_ETHPHY_OBJECT can specify a BMCON detectMask
+//      if this mask == 0, then the default procedure will use the BMCON.RESET and BMCON.LOOPBACK bits
+//      i.e. the corresponding BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK BMCON mask
+// else the DRV_ETHPHY_OBJECT::bmconDetectMask will be used!
 static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj, DRV_HANDLE hClientObj)
 {
     union
@@ -1087,6 +1091,7 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
     }vendorData;
 
     __BMCONbits_t bmcon;
+    uint16_t    detectMask;
     uint16_t    phyReg = 0;
     uint16_t    detectPhase = 0;
     int         phyAddress = 0;
@@ -1102,7 +1107,7 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
 
     detectPhase = vendorData.low;
 
-    _PhyDbg_DetectPhase(detectPhase);
+    _DRV_ETHPHY_Dbg_DetectPhase(detectPhase);
 
     // try to detect the PHY and reset it
 
@@ -1140,7 +1145,7 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
 
             // got BMCON result
             bmcon.w =  phyReg;
-            _PhyDbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, _BMCON_RESET_MASK, 0);
+            _DRV_ETHPHY_Dbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, _BMCON_RESET_MASK, 0);
             if(bmcon.RESET == 0)
             {   // all good;advance to the next phase
                 vendorData.low = ++detectPhase;
@@ -1157,10 +1162,9 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
 
         case 2:
             // try to see if we can write smth to the PHY
-            // we use BMCON::Loopback and duplex bits
-            bmcon.w = _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK;
+            bmcon.w = ((DRV_ETHPHY_CLIENT_OBJ*)hClientObj)->detectMask;
             res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, bmcon.w, phyAddress);
-            _PhyDbg_DetectWriteValue(PHY_REG_BMCON, bmcon.w);
+            _DRV_ETHPHY_Dbg_DetectWriteValue(PHY_REG_BMCON, bmcon.w);
             if(res < 0)
             {   // some error
                 return res;
@@ -1203,8 +1207,9 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
             }
 
             bmcon.w = phyReg;
-            _PhyDbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK, _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK);
-            if( (bmcon.LOOPBACK == 0) || (bmcon.DUPLEX == 0) )
+            detectMask = ((DRV_ETHPHY_CLIENT_OBJ*)hClientObj)->detectMask;
+            _DRV_ETHPHY_Dbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, detectMask, detectMask);
+            if((bmcon.w & detectMask) != detectMask)
             {   // failed to set
                 return DRV_ETHPHY_RES_DTCT_ERR; 
             }
@@ -1217,9 +1222,9 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
         case 5:
             // clear bits and write
             bmcon.w = vendorData.high;
-            bmcon.w ^= _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK;
+            bmcon.w ^= ((DRV_ETHPHY_CLIENT_OBJ*)hClientObj)->detectMask;
             res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_REG_BMCON, bmcon.w, phyAddress);
-            _PhyDbg_DetectWriteValue(PHY_REG_BMCON, bmcon.w);
+            _DRV_ETHPHY_Dbg_DetectWriteValue(PHY_REG_BMCON, bmcon.w);
             if(res < 0)
             {   // some error
                 return res;
@@ -1262,8 +1267,9 @@ static DRV_ETHPHY_RESULT _DRV_ETHPHY_DefaultDetect( const struct DRV_ETHPHY_OBJE
             }
 
             bmcon.w = phyReg;
-            _PhyDbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, _BMCON_LOOPBACK_MASK | _BMCON_DUPLEX_MASK, 0);
-            if(bmcon.LOOPBACK || bmcon.DUPLEX)
+            detectMask = ((DRV_ETHPHY_CLIENT_OBJ*)hClientObj)->detectMask;
+            _DRV_ETHPHY_Dbg_DetectReadValue(PHY_REG_BMCON, bmcon.w, detectMask, 0);
+            if((bmcon.w & detectMask) != 0)
             {   // failed to clear
                 return DRV_ETHPHY_RES_DTCT_ERR;
             }
@@ -1422,7 +1428,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_
 {
     TCPIP_ETH_OPEN_FLAGS  openFlags;      // flags required at open time
     uint16_t  stdReqs = 0;
-    uint16_t  phyStdCpbl;
+    uint16_t  phyBmstatCpbl;
     uint16_t  matchStdCpbl = 0;
     
     // wait the BMCON PHY_REG_BMSTAT read to complete
@@ -1430,7 +1436,8 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_
     {
         return;
     }
-    phyStdCpbl   = hClientObj->smiData;
+    phyBmstatCpbl = hClientObj->smiData; // BMSTAT value
+    phyBmstatCpbl |= hClientObj->capabMask; // use vendor bmstatCpblMask 
     
     // provide some defaults
     openFlags = hClientObj->hDriver->openFlags;
@@ -1483,9 +1490,9 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_
         }
     }
 
-    matchStdCpbl = (stdReqs & (PHY_STD_CPBL_MASK | _BMSTAT_AN_ABLE_MASK)) & phyStdCpbl; // common features
+    matchStdCpbl = (stdReqs & (_PHY_STD_CPBL_MASK | _BMSTAT_AN_ABLE_MASK)) & phyBmstatCpbl; // common features
     
-    if(!matchStdCpbl && !(phyStdCpbl & _BMSTAT_EXTSTAT_MASK) )
+    if(!matchStdCpbl && !(phyBmstatCpbl & _BMSTAT_EXTSTAT_MASK) )
     {   // no match?
         _DRV_ETHPHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_CPBL_ERR);
         return;
@@ -1496,7 +1503,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Std_Status(DRV_ETHPHY_
     hClientObj->operReg[0] = matchStdCpbl;
     hClientObj->vendorData = 0;
     
-    if (phyStdCpbl & _BMSTAT_EXTSTAT_MASK)
+    if (phyBmstatCpbl & _BMSTAT_EXTSTAT_MASK)
     {
         if(_DRV_PHY_SMIReadStart(hClientObj, PHY_REG_EXTSTAT))
         {
@@ -1549,7 +1556,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Read_Ext_Status(DRV_ETHPHY_
         }
     }
     
-    matchExtCpbl = (extReqs & PHY_EXT_CPBL_MASK) & phyExtCpbl;
+    matchExtCpbl = (extReqs & _PHY_EXT_CPBL_MASK) & phyExtCpbl;
     
     hClientObj->operReg[1] = matchExtCpbl;
     hClientObj->vendorData = 0;
@@ -1619,7 +1626,7 @@ static void _DRV_ETHPHY_SetupPhaseNegotiate_SubPhase_Write_ANAD(DRV_ETHPHY_CLIEN
     {   // ok, we can perform auto negotiation
         uint16_t anadReg;
 
-        anadReg = (((matchStdCpbl >> _BMSTAT_CAPABILITY_POS) << _ANAD_CAPABLITY_POS) & _ANAD_NEGOTIATION_MASK) | PROT_802_3;
+        anadReg = (((matchStdCpbl >> _BMSTAT_CAPABILITY_POS) << _ANAD_CAPABLITY_POS) & _ANAD_NEGOTIATION_MASK) | _PHY_PROT_802_3;
         
         //Errata: Do not set asymmetric pause for KSZ9031 PHY        
         if(hDriver->macPauseType & TCPIP_ETH_PAUSE_TYPE_PAUSE)

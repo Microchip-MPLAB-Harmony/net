@@ -747,6 +747,8 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9354 =
     .smiClockGet = DRV_LAN9354_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
     .phyDetect = 0,                         // default detection performed
+    .bmconDetectMask = 0,                   // standard detection mask
+    .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
 /*******************************************************************************

@@ -113,6 +113,7 @@ static unsigned int DRV_LAN8770_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseO
     return 4000000;     //  4 MHz max clock supported
 }
 
+
 // the DRV_ETHPHY_OBJECT
 
 const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8770 = 
@@ -121,6 +122,8 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8770 =
     .mdixConfigure = DRV_LAN8770_MDIXConfigure,
     .smiClockGet = DRV_LAN8770_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
-    .phyDetect = 0,                         // default detection performed
+    .phyDetect = 0,                         // default detection function
+    .bmconDetectMask = _BMCON_LOOPBACK_MASK,        // no support for the DUPLEX mask! 
+    .bmstatCpblMask = _BMSTAT_BASE100TX_FDX_MASK,   // show 100 Mbps FD capability
 };
 

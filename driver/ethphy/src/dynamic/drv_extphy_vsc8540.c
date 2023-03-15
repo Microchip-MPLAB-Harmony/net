@@ -526,10 +526,12 @@ static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE *pBaseOb
 }
 
 const DRV_ETHPHY_OBJECT DRV_ETHPHY_OBJECT_VSC8540 =
-    {
-        .miiConfigure = DRV_EXTPHY_MIIConfigure,
-        .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
-        .smiClockGet = DRV_EXTPHY_SMIClockGet,
-        .wolConfigure = 0,
-        .phyDetect = 0, // default detection performed
+{
+    .miiConfigure = DRV_EXTPHY_MIIConfigure,
+    .mdixConfigure = DRV_EXTPHY_MDIXConfigure,
+    .smiClockGet = DRV_EXTPHY_SMIClockGet,
+    .wolConfigure = 0,
+    .phyDetect = 0, // default detection performed
+    .bmconDetectMask = 0,                   // standard detection mask
+    .bmstatCpblMask = 0,                    // standard capabilities mask
 };

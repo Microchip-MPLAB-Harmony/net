@@ -442,6 +442,8 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_IP101GR =
     .smiClockGet = DRV_EXTPHY_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
     .phyDetect = 0,                         // default detection performed
+    .bmconDetectMask = 0,                   // standard detection mask
+    .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
 

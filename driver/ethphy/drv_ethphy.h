@@ -586,6 +586,22 @@ typedef struct
      * see the DRV_ETHPHY_VENDOR_DETECT definition */
     DRV_ETHPHY_VENDOR_DETECT            phyDetect;
 
+    /* Detect mask to be used by the detection procedure.
+     * This mask represents read/write bits in the BMCON that can be manipulated
+     * to detect that the SMI communication with the PHY works correctly.
+     * If 0, then a default mask of BMCON_LOOPBACK_MASK | BMCON_DUPLEX_MASK BMCON will be used.
+     * Drivers that need special processing can use their own detection mask for the default detection procedure
+     * or use a specific detect procedure */
+    uint16_t                            bmconDetectMask;     // @@@@ all PHY objects need this added!!!
+
+    /* Extra capability mask to be used by the PHY setup procedure.
+     * Some PHYs need to be able to use extra bits set if their
+     * BMSTAT register doesn't advertise the standard capabilities
+     * (for example there is no 100Base-T1 FD support in the BMSTAT for LAN8770).
+     * By default this value should be 0.
+     * The BMSTAT OR-ed with this mask will be used for checking the PHY capabilities.
+     * Note: this should be limited to 10/100 FD/HD capabilities mask! */
+    uint16_t                            bmstatCpblMask;     //  @@@@ all PHY objects need this added!!!
 }DRV_ETHPHY_OBJECT;
 
 
@@ -2082,6 +2098,7 @@ extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN867x;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8742A;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_VSC8540;
 extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9354;
+extern const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8770;
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

@@ -121,5 +121,7 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_KSZ8061 =
     .smiClockGet = DRV_EXTPHY_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
     .phyDetect = 0,                         // default detection performed
+    .bmconDetectMask = 0,                   // standard detection mask
+    .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 

@@ -180,6 +180,7 @@ typedef enum
     The pause type is mainly supported over Ethernet links and takes part
     in the PHY link negotiation process.
 
+    8 bits mask supported only!
 */
 
 typedef enum

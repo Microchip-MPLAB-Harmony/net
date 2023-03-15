@@ -334,33 +334,38 @@ typedef enum
 
 typedef struct 
 {
-    uint16_t                    clientInUse;// True if in use
-    uint16_t                    status;     // Client Status: DRV_ETHPHY_CLIENT_STATUS value
-    uintptr_t                   ethphyId;   // The peripheral Id associated with the object
-    struct _DRV_ETHPHY_INSTANCE* hDriver;   // Handle of driver that owns the client
-    const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
-    DRV_HANDLE                  miimHandle; // MMIM client handle
+    uint8_t                     clientInUse;    // True if in use
+    uint8_t                     reserved;       // padding, not used                                                
+    int16_t                     status;         // Client Status: DRV_ETHPHY_CLIENT_STATUS value
+
+    uintptr_t                   ethphyId;       // The peripheral Id associated with the object
+    struct _DRV_ETHPHY_INSTANCE* hDriver;       // Handle of driver that owns the client
+    const DRV_MIIM_OBJECT_BASE* pMiimBase;      // MIIM driver base object to use   
+    DRV_HANDLE                  miimHandle;     // MMIM client handle
     DRV_MIIM_OPERATION_HANDLE   miimOpHandle;   // current MIIM op in progress; 
+
     // current operation performed by the driver
-    uint16_t                    operType;     // DRV_ETHPHY_CLIENT_OP_TYPE: current operation type
-    uint16_t                    operPhase;    // current phase; operation dependent
-                                              // - DRV_ETHPHY_SETUP_PHASE  for set up
-                                              //
-    uint16_t                    operSubPhase; // extra sub-phase counter
-    uint16_t                    operReg[4];   // scratch operation registers 
-    uint32_t                    operTStamp;   // tick value for timing purposes 
-    DRV_ETHPHY_RESULT           operRes;      // last operation result
-    uintptr_t                   operParam;    // operation parameter
+    uint16_t                    operType;       // DRV_ETHPHY_CLIENT_OP_TYPE: current operation type
+    uint16_t                    operPhase;      // current phase; operation dependent
+                                                // - DRV_ETHPHY_SETUP_PHASE  for set up
+                                                //
+    uint16_t                    operSubPhase;   // extra sub-phase counter
+    int16_t                     operRes;        // DRV_ETHPHY_RESULT: last operation result
+    uint16_t                    operReg[4];     // scratch operation registers 
+    uintptr_t                   operParam;      // operation parameter
+    uint32_t                    operTStamp;     // tick value for timing purposes 
 
 
     // low level SMI transfer operations data
-    uint16_t                    smiTxferStatus;   // DRV_ETHPHY_SMI_TXFER_OP_STATUS: current operation status
-    uint16_t                    smiTxferType;     // DRV_ETHPHY_SMI_XFER_TYPE: current operation type
-    uint16_t                    smiRIx;      // current SMI operation register involved
-    uint16_t                    smiData;     // current SMI operation data: I/O for read/write
-    int                         smiPhyAddress;  // PHY SMI address to use for the transaction
-
+    uint8_t                     smiTxferStatus; // DRV_ETHPHY_SMI_TXFER_OP_STATUS: current operation status
+    uint8_t                     smiTxferType;   // DRV_ETHPHY_SMI_XFER_TYPE: current operation type
+    uint16_t                    smiRIx;         // current SMI operation register involved
+    uint16_t                    smiData;        // current SMI operation data: I/O for read/write
+    uint16_t                    smiPhyAddress;  // PHY SMI address to use for the transaction
+                                                
     // vendor specific data
+    uint16_t                    detectMask;     // the pPhyObj->bmconDetectMask value 
+    uint16_t                    capabMask;      // the pPhyObj->bmstatCpblMask value 
     uintptr_t                   vendorData;
     DRV_ETHPHY_VENDOR_DETECT    vendorDetect;
 
@@ -383,21 +388,20 @@ typedef struct
 typedef struct _DRV_ETHPHY_INSTANCE
 {
     uint8_t                     objInUse;       // True if in use
-    uint8_t                     busInUse;       // True if SMI bus in use;
-    uint16_t                    numClients;     // Number of active clients
-    SYS_STATUS                  status;         // Status of module
-    SYS_MODULE_INDEX            iModule;        // Module instance number
+    uint8_t                     macPauseType;   // TCPIP_ETH_PAUSE_TYPE: MAC supported pause type
+    uint16_t                    phyAddress;     // PHY SMI address
+
+    int16_t                     status;         // SYS_STATUS: Status of module
+    uint16_t                    miimIndex;      // SYS_MODULE_INDEX: MIIM object index 
+    uint16_t                    iModule;        // SYS_MODULE_INDEX: Module instance number
+    uint16_t                    configFlags;    // DRV_ETHPHY_CONFIG_FLAGS: ETHPHY MII/RMII configuration flags
     uintptr_t                   ethphyId;       // The peripheral Id associated with the object
-    TCPIP_ETH_OPEN_FLAGS        openFlags;      // flags required at open time
-    DRV_ETHPHY_CONFIG_FLAGS     configFlags;    // ETHPHY MII/RMII configuration flags
-    TCPIP_ETH_PAUSE_TYPE        macPauseType;   // MAC supported pause type
-    int                         phyAddress;     // PHY SMI address
+    uint32_t                    openFlags;      // TCPIP_ETH_OPEN_FLAGS: flags required at open time
     const DRV_ETHPHY_OBJECT*    pPhyObj;        // PHY object, vendor specific functions	
     const DRV_ETHPHY_OBJECT_BASE* pBaseObj;     // PHY base: this object
-    DRV_ETHPHY_CLIENT_OBJ       objClient;      // the one and only PHY client: the MAC driver
     const DRV_MIIM_OBJECT_BASE* pMiimBase;      // MIIM driver base object to use   
-    SYS_MODULE_INDEX            miimIndex;      // MIIM object index 
     DRV_ETHPHY_TMO *            ethphyTmo;      // PHY Initialization Time-outs 
+    DRV_ETHPHY_CLIENT_OBJ       objClient;      // the one and only PHY client: the MAC driver
 } DRV_ETHPHY_INSTANCE;
 
 
@@ -420,7 +424,21 @@ void _DRV_ETHPHY_AssertCond(bool cond, const char* message, int lineNo);
 #else
 #define _DRV_ETHPHY_AssertCond(cond, message, lineNo)
 #endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC)
-        //
+
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE) != 0)
+void _DRV_ETHPHY_Dbg_DetectPhase(uint16_t detectPhase);
+#else
+#define _DRV_ETHPHY_Dbg_DetectPhase(detectPhase)
+#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_PHASE)
+
+#if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES) != 0)
+void _DRV_ETHPHY_Dbg_DetectWriteValue(int rIx, uint16_t rVal);
+void _DRV_ETHPHY_Dbg_DetectReadValue(int rIx, uint16_t rVal, uint16_t valMask, uint16_t chkMask);
+#else
+#define _DRV_ETHPHY_Dbg_DetectWriteValue(rIx, rVal)
+#define _DRV_ETHPHY_Dbg_DetectReadValue(rIx, rVal, valMask, chkMask)
+#endif  // (DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_DETECT_VALUES)
+
 #endif //#ifndef _DRV_ETHPHY_LOCAL_H
 
 /*******************************************************************************

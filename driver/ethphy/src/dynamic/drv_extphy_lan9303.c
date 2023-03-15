@@ -183,6 +183,8 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN9303 =
     .smiClockGet = DRV_EXTPHY_SMIClockGet,
     .wolConfigure = 0,                      // no WOL functionality yet
     .phyDetect = 0,                         // default detection performed
+    .bmconDetectMask = 0,                   // standard detection mask
+    .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
 #define DRV_ETHPHY_SMC32_PhyAddr(reg) (((reg >> 6) & 0xf) | 0x10)
