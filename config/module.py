@@ -400,6 +400,12 @@ def loadModule():
     drvExtPhyLan9354Component.addDependency("LAN9354_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan9354Component.setDisplayType("PHY Layer")
     
+    #Driver for LAN8770 PHY
+    drvExtPhyLan8770Component = Module.CreateComponent("drvExtPhyLan8770", "LAN8770", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8770.py")
+    drvExtPhyLan8770Component.addCapability("libdrvExtPhyLan8770","PHY",False)   
+    drvExtPhyLan8770Component.addDependency("LAN8770_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyLan8770Component.setDisplayType("PHY Layer")
+    
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
     drvExtMacEncx24j600Component.addMultiCapability("libdrvExtMacEncx24j600","MAC",None)   

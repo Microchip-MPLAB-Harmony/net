@@ -226,6 +226,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigLAN9354.setDescription("Enable LAN9354")
     tcpipAutoConfigLAN9354.setDependencies(tcpipAutoConfigLAN9354Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN9354"]) 
     
+    # Enable LAN8770
+    tcpipAutoConfigLAN8770 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8770", tcpipAutoConfigPhyMenu)
+    tcpipAutoConfigLAN8770.setLabel("LAN8770")
+    tcpipAutoConfigLAN8770.setVisible(True)
+    tcpipAutoConfigLAN8770.setDescription("Enable LAN8770")
+    tcpipAutoConfigLAN8770.setDependencies(tcpipAutoConfigLAN8770Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8770"]) 
+    
     # External Ethernet Controller driver menu
     tcpipAutoConfigExtEthControllerMenu = tcpipAutoConfigDriverComponent.createMenuSymbol("TCPIP_AUTOCONFIG_EXT_ETH_CTRL_MENU", None)
     tcpipAutoConfigExtEthControllerMenu.setLabel("External Ethernet Controllers")
@@ -514,6 +521,15 @@ def tcpipAutoConfigLAN9354Enable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyLan9354"])
+        
+def tcpipAutoConfigLAN8770Enable(symbol, event):
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvExtPhyLan8770"],"DRIVER LAYER")  
+        if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+            Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
+    else:
+        res = Database.deactivateComponents(["drvExtPhyLan8770"])
         
 def tcpipAutoConfigENCX24J600Enable(symbol, event):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
