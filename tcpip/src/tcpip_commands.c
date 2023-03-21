@@ -2520,7 +2520,6 @@ static void _Command_DnsServService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
             break;
         default:
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "Invalid Input Command :[ %s ] \r\n", argv[1]);
-            return false;
     }
 }
 
