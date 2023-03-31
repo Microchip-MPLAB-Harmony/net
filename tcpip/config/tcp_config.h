@@ -95,7 +95,7 @@ Microchip or any third party.
 // Note that this setting can affect modules that use TCP sockets
 #define TCPIP_TCP_DYNAMIC_OPTIONS               1
 
-// Timeout to retransmit unacked data, ms
+// Timeout to syn retransmit, data retry - ms
 #define TCPIP_TCP_START_TIMEOUT_VAL   	(1000ul)
 
 // Timeout for delayed-acknowledgment algorithm, ms
@@ -200,5 +200,10 @@ Microchip or any third party.
 // Note: For applications that use use the crypto library anyway (TLS for example),
 // the impact in the resources when using the Crypto RNG is minimal and should be preferred
 #define TCPIP_TCP_DISABLE_CRYPTO_USAGE  false
+
+
+// Retransmission timeout for unacknowledged packets, ms
+// Default is 1.5 seconds
+#define TCP_RETRANSMISSION_TMO      1500
 
 #endif  // _TCP_CONFIG_H_
