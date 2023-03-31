@@ -3999,9 +3999,8 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         {
             // Begin copying any application data over to the TX space
             maxPayload = pSkt->wRemoteMSS;
-            if(pSkt->txHead == pSkt->txUnackedTail)
-            {
-                // All caught up on data TX, no real data for this packet
+            if(pSkt->txHead == pSkt->txUnackedTail || pSkt->remoteWindow == 0)
+            {   // either all caught up on data TX or cannot send anything
                 len = 0;
             }
             else
@@ -5149,7 +5148,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 dwTemp -= pSkt->txEnd - pSkt->txStart;
             }
 
-            // Calcluate how many bytes were ACKed with this packet
+            // Calculate how many bytes were ACKed with this packet
             dwTemp = localAckNumber - dwTemp;
             if(((int32_t)(dwTemp) > 0) && (dwTemp <= pSkt->txEnd - pSkt->txStart))
             {

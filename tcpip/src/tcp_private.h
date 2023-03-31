@@ -107,15 +107,33 @@ typedef struct
 // TCP Control Block (TCB) stub data storage. 
 typedef struct
 {
-	uint8_t*            txStart;		            // First byte of TX buffer
-	uint8_t*            txEnd;			            // Last byte of TX buffer
+	uint8_t*            txStart;		            // First byte of skt TX buffer
+	uint8_t*            txEnd;			            // Last byte of skt TX buffer
 	uint8_t*            txHead;			            // Head pointer for TX - user write pointer
 	uint8_t*            txTail;			            // Tail pointer for TX - socket read pointer
 	uint8_t*	        txUnackedTail;	            // TX tail pointer for data that is not yet acked
-	uint8_t*            rxStart;		            // First byte of RX buffer.
-	uint8_t*            rxEnd;			            // Last byte of RX buffer
+                                                    // Note: This TX buffer is for the user/app to write data, and the skt to read and transmit it
+                                                    // So:
+                                                    //      - tx total size: txEnd - rxStart
+                                                    //      - txBuffSize = txEnd - txStart - 1;     usable size  
+                                                    //      - put space = txTail - txHead - 1 (+ txEnd - txStart; if txHead is behind txTail)
+                                                    //      - unack data = txUnackedTail - txTail
+                                                    //      - can send data = txHead - txUnackedTail
+                                                    //      - init: txBuff = alloc txBuffSize + 1)
+                                                    //              txStart = txBuff; txEnd = txBuff + txBuffSize + 1;
+                                                    //
+	uint8_t*            rxStart;		            // First byte of the socket RX buffer.
+	uint8_t*            rxEnd;			            // Last byte of the socket RX buffer
 	uint8_t*            rxHead;			            // Head pointer for RX - socket write pointer
 	uint8_t*            rxTail;			            // Tail pointer for RX - user read pointer
+                                                    // Note: This RX buffer is for the skt to write data (as it receives), and the user/app to read it
+                                                    // So:
+                                                    //      - rx total size: rxEnd - rxStart + 1 (created with 1 extra byte) 
+                                                    //      - rxBuffSize = avlbl slots =  rxEnd - rxStart;     usable size  
+                                                    //      - avlbl read bytes == rxHead - rxTail (+ rxEnd - rxStart + 1; if rxHead is behind rxTail)
+                                                    //      - init: rxBuff = alloc(rxBuffSize + 1);
+                                                    //              rxStart = rxBuff; rxEnd = rxBuff + rxBuffSize; 
+                                                    //
     uint32_t            eventTime;			        // Packet retransmissions, state changes
 	uint32_t            eventTime2;		            // Window updates, automatic transmission
     uint32_t            delayedACKTime;             // Delayed Acknowledgment timer
