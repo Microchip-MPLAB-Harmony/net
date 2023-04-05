@@ -40,6 +40,7 @@ Microchip or any third party.
 <#if TCPIP_USE_ETH_MAC == true> 
     <#lt>/*** ${GMAC_PERIPHERAL_INSTANCE} Configuration ***/
     <#lt>#define DRV_${GMAC_PERIPHERAL_INSTANCE}
+    <#lt>#define DRV_${TCPIP_INTMAC_DEVICE}
     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_TX_DESCRIPTORS_COUNT_DUMMY    ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_TX_DESCRIPTORS_COUNT_DUMMY"]}
     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_DESCRIPTORS_COUNT_DUMMY    ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_DESCRIPTORS_COUNT_DUMMY"]}
     <#lt>#define TCPIP_${GMAC_PERIPHERAL_INSTANCE}_RX_BUFF_SIZE_DUMMY            ${.vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_BUFF_SIZE_DUMMY"]}
@@ -301,6 +302,8 @@ Microchip or any third party.
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK1_FREQUENCY}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAM9X7">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK_FREQUENCY}
+        <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CK">
+            <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
         <#lt></#if>
     <#lt></#if>
 

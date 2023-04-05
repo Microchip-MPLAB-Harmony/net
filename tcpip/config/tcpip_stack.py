@@ -646,7 +646,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
-    elif "PIC32CZ" in processor:   
+    elif ("PIC32CZ" in processor) or ("PIC32CK" in processor):   
         macName = "ETH"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"

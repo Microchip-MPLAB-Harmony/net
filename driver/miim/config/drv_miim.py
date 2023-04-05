@@ -229,7 +229,9 @@ def instantiateComponent(drvMiimComponent):
         drv_miim_xxx_file = "drv_miim_emac.c"
     elif (("PIC32MZ" in processor) or ("PIC32MX" in processor)): 
         drv_miim_xxx_file = "drv_miim_pic32m.c"
-
+    elif ("PIC32CK" in processor): 
+        drv_miim_xxx_file = "drv_miim_pic32ck.c"
+        
     drvMiimPlatformFile = drvMiimComponent.createFileSymbol(None, None)
     drvMiimPlatformFile.setSourcePath("driver/miim/src/dynamic/" + drv_miim_xxx_file)
     drvMiimPlatformFile.setOutputName(drv_miim_xxx_file)
@@ -340,7 +342,7 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
         
 def drvMiimSetIntMacId(symbol, event):
     if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):
-        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ")):  
+        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ") or (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CK")):  
             symbol.setValue("ETH_BASE_ADDRESS") 
         else:
             symbol.setValue("GMAC_BASE_ADDRESS")

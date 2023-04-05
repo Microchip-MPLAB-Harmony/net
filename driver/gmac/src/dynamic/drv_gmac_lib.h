@@ -56,7 +56,11 @@ Microchip or any third party.
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
 #if defined (DRV_ETH)
-	#include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h"
+    #if defined (DRV_PIC32CZ)
+        #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h"
+    #elif defined (DRV_PIC32CK)
+        #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32ck.h"
+    #endif
 #else
 	#include "driver/gmac/src/dynamic/drv_gmac_lib_sam.h"
 #endif
