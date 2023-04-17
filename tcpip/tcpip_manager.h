@@ -2378,7 +2378,7 @@ bool    TCPIP_MODULE_SignalFunctionDeregister(TCPIP_MODULE_SIGNAL_HANDLE signalH
 
   Example:
     <code>
-    TCPIP_MODULE_SIGNAL currSIgnal = TCPIP_MODULE_SignalGet(TCPIP_MODULE_HTTP_SERVER);
+    TCPIP_MODULE_SIGNAL currSignal = TCPIP_MODULE_SignalGet(TCPIP_MODULE_HTTP_SERVER);
     </code>
 
   Remarks:
@@ -2388,6 +2388,84 @@ bool    TCPIP_MODULE_SignalFunctionDeregister(TCPIP_MODULE_SIGNAL_HANDLE signalH
   */
 TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
 
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_MODULE_Deinitialize(TCPIP_STACK_MODULE moduleId);
+
+  Summary:
+    Deinitializes the stack module
+
+  Description:
+    This function will deinitialize the selected stack module.
+    After this call the module will no longer run in the stack
+
+  Precondition:
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+
+  Parameters:
+    moduleId        - module ID
+
+  Returns:
+    true    - if the call succeeded
+    false   - if the call failed: no such module running, etc.
+
+  Example:
+    <code>
+    bool res = TCPIP_MODULE_Deinitialize(TCPIP_MODULE_HTTP_SERVER);
+    </code>
+
+  Remarks:
+    The call will permanently disable the module.
+    The module will no longer run in the stack.
+
+    There is currently no way to re-initialize the module.
+    The TCPIP_STACK_Deinitialize, TCPIP_STACK_Initialize() sequence needs to be called for that.
+
+    The call is intended for high level (application) modules.
+    Deinitializing core modules (like ARP, IPv4, IPv6, etc.) will cause depending higher level modules to stop working too.
+    The TCPIP_MODULE_MANAGER cannot be initialized. 
+
+
+    The symbol TCPIP_STACK_RUN_TIME_INIT needs to be defined for this API and functionality to exist.
+  */
+bool    TCPIP_MODULE_Deinitialize(TCPIP_STACK_MODULE moduleId);
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_MODULE_IsRunning(TCPIP_STACK_MODULE moduleId);
+
+  Summary:
+    Returns the current running status of the module
+
+  Description:
+    This function will query the running status of the selected stack module.
+
+  Precondition:
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+
+  Parameters:
+    moduleId        - module ID
+
+  Returns:
+    true    - if the selected module is running
+    false   - no such module running, etc.
+
+  Example:
+    <code>
+    bool res = TCPIP_MODULE_IsRunning(TCPIP_MODULE_HTTP_SERVER);
+    </code>
+
+  Remarks:
+    The TCPIP_MODULE_MANAGER is always running in the stack
+
+    The symbol TCPIP_STACK_RUN_TIME_INIT needs to be defined for this API and functionality to exist.
+  */
+bool    TCPIP_MODULE_IsRunning(TCPIP_STACK_MODULE moduleId);
 
 
 //*******************************************************************************

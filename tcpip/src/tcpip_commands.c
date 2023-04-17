@@ -477,6 +477,11 @@ static void TCPIPCmd_PppEchoTask(void);
 #endif  // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
 #endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
 
+#if defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+static void _CommandModDeinit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _CommandModRunning(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -582,6 +587,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(_TCPIP_STACK_PPP_COMMANDS)
     {"ppp",         _CommandPpp,                    ": ppp"},
 #endif  // defined(_TCPIP_STACK_PPP_COMMANDS)
+#if defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+    {"deinit",         _CommandModDeinit,          ": deinit"},
+    {"runstat",       _CommandModRunning,          ": runstat"},
+#endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -4200,10 +4209,15 @@ static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     }
     else if(strcmp(argv[1], "stat") == 0)
     {
-        TCPIP_HTTP_NET_StatGet(&httpStat);
-        
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+        if(TCPIP_HTTP_NET_StatGet(&httpStat))
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "HTTP: Failed to get status!\r\n");
+        }
     }
     else if(strcmp(argv[1], "disconnect") == 0)
     {
@@ -7607,6 +7621,38 @@ static void _CommandHdlc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "HDLC usage: hdlc stat <clr>\r\n");
 }
 #endif  // defined(_TCPIP_STACK_HDLC_COMMANDS)
+
+#if defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+static void _CommandModDeinit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // deinit moduleId
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc > 1)
+    {
+        size_t modId = (size_t)atoi(argv[1]);
+        bool res = TCPIP_MODULE_Deinitialize(modId);
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "deinit module: %d returned: %d\r\n", modId, res);
+    }
+}
+
+static void _CommandModRunning(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // runstat moduleId
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc > 1)
+    {
+        size_t modId = (size_t)atoi(argv[1]);
+        bool res = TCPIP_MODULE_IsRunning(modId);
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "runstat module: %d returned: %d\r\n", modId, res);
+    }
+}
+#endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 

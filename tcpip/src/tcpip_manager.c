@@ -769,6 +769,25 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
             break;
         }
 
+        // initialize the run time table
+        // select the running modules
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+        memset(&TCPIP_MODULES_RUN_TBL, 0, sizeof(TCPIP_MODULES_RUN_TBL));
+        TCPIP_MODULES_RUN_TBL[TCPIP_MODULE_MANAGER].val = TCPIP_MODULE_RUN_FLAG_IS_RUNNING; 
+        TCPIP_MODULE_RUN_DCPT* pRDcpt;
+        size_t modIx;
+        const TCPIP_STACK_MODULE_ENTRY* pEntry = TCPIP_STACK_MODULE_ENTRY_TBL + 0;
+
+        for(modIx = 0; modIx < sizeof(TCPIP_STACK_MODULE_ENTRY_TBL) / sizeof(*TCPIP_STACK_MODULE_ENTRY_TBL); modIx++, pEntry++)
+        {
+            if(_TCPIP_STACK_FindModuleData(pEntry->moduleId, pModConfig, nModules) != 0)
+            {
+                pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
+                pRDcpt->isRunning = 1;  // module should be started
+            }
+        }
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
 
         tcpip_stack_ctrl_data.nIfs = nNets;
         tcpip_stack_ctrl_data.nModules = nModules;
@@ -868,12 +887,6 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
         {
             TCPIP_Helper_SingleListInitialize(TCPIP_MODULES_QUEUE_TBL + ix);
         }
-
-        // initialize the run time table
-#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
-        memset(&TCPIP_MODULES_RUN_TBL, 0, sizeof(TCPIP_MODULES_RUN_TBL));
-        TCPIP_MODULES_RUN_TBL[TCPIP_MODULE_MANAGER].val = TCPIP_MODULE_RUN_FLAG_IS_RUNNING; 
-#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
 
         // start per interface initializing
         tcpip_stack_ctrl_data.stackAction = TCPIP_STACK_ACTION_INIT;
@@ -1070,7 +1083,6 @@ static bool TCPIP_STACK_BringNetUp(TCPIP_STACK_MODULE_CTRL* stackCtrlData, const
 
         int modIx;
 #if (_TCPIP_STACK_RUN_TIME_INIT != 0)
-        TCPIP_MODULE_RUN_DCPT* pRDcpt;
 #endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
         const TCPIP_STACK_MODULE_ENTRY*  pEntry = TCPIP_STACK_MODULE_ENTRY_TBL + 0;
 
@@ -1082,16 +1094,12 @@ static bool TCPIP_STACK_BringNetUp(TCPIP_STACK_MODULE_CTRL* stackCtrlData, const
                 pConfig = _TCPIP_STACK_FindModuleData(pEntry->moduleId, pModConfig, nModules);
                 if(pConfig != 0)
                 {
-#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
-                    pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
-                    pRDcpt->isRunning = 1;  // module should be started
-#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
                     configData = pConfig->configData;
                 }
             }
 
 #if (_TCPIP_STACK_RUN_TIME_INIT != 0)
-            pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
+            TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + pEntry->moduleId;
             if(pRDcpt->isRunning)
             {
 #endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
@@ -4614,6 +4622,71 @@ TCPIP_MODULE_SIGNAL TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE modId)
     return TCPIP_MODULE_SIGNAL_NONE; 
 }
 
+#if (_TCPIP_STACK_RUN_TIME_INIT != 0)
+bool TCPIP_MODULE_Deinitialize(TCPIP_STACK_MODULE moduleId)
+{
+    size_t  netIx, entryIx;
+    TCPIP_NET_IF   *pNetIf;
+    TCPIP_STACK_MODULE_CTRL stackCtrlData;        
+    const TCPIP_STACK_MODULE_ENTRY  *pEntry, *pModEntry;
+
+    if(tcpipNetIf != 0)
+    {
+        if(1 < moduleId && moduleId < sizeof(TCPIP_MODULES_RUN_TBL) / sizeof(*TCPIP_MODULES_RUN_TBL))
+        {
+            TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + moduleId;
+            if(pRDcpt->isRunning != 0)
+            {   // this module up and running
+                //
+                //
+                stackCtrlData.stackAction = TCPIP_STACK_ACTION_DEINIT;
+                stackCtrlData.powerMode = TCPIP_MAC_POWER_NONE;
+                // find the corresponding module entry
+                pModEntry = 0;
+                pEntry = TCPIP_STACK_MODULE_ENTRY_TBL;
+                for(entryIx = 0; entryIx < sizeof(TCPIP_STACK_MODULE_ENTRY_TBL)/sizeof(*TCPIP_STACK_MODULE_ENTRY_TBL); entryIx++, pEntry++)
+                {
+                    if(pEntry->moduleId == moduleId)
+                    {   // found entry
+                        pModEntry = pEntry;
+                        break;
+                    }
+                }
+
+                if(pModEntry != 0)
+                {
+                    for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
+                    {
+                        stackCtrlData.pNetIf = pNetIf;
+                        stackCtrlData.netIx = pNetIf->netIfIx;
+                        pEntry->deInitFunc(&stackCtrlData);
+                    }
+
+                    pRDcpt->isRunning = 0;
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool TCPIP_MODULE_IsRunning(TCPIP_STACK_MODULE moduleId)
+{
+    if(tcpipNetIf != 0)
+    {
+        if(1 < moduleId && moduleId < sizeof(TCPIP_MODULES_RUN_TBL) / sizeof(*TCPIP_MODULES_RUN_TBL))
+        {
+            TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + moduleId;
+            return (pRDcpt->isRunning != 0);
+        }
+    }
+
+    return false;
+}
+#endif  // (_TCPIP_STACK_RUN_TIME_INIT != 0)
+
 TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType, int heapIndex)
 {
     return (heapType == tcpip_stack_ctrl_data.heapType) ? tcpip_stack_ctrl_data.memH : 0;
@@ -4751,7 +4824,7 @@ bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROC
 #if (_TCPIP_STACK_RUN_TIME_INIT != 0)
 bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId)
 {
-    if(moduleId < sizeof(TCPIP_MODULES_RUN_TBL) / sizeof(*TCPIP_MODULES_RUN_TBL))
+    if(0 < moduleId && moduleId < sizeof(TCPIP_MODULES_RUN_TBL) / sizeof(*TCPIP_MODULES_RUN_TBL))
     {
         TCPIP_MODULE_RUN_DCPT* pRDcpt = TCPIP_MODULES_RUN_TBL + moduleId;
         return pRDcpt->isRunning != 0;
