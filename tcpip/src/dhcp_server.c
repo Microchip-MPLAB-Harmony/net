@@ -945,12 +945,13 @@ static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evT
     {
         doNotify = true;
     }
-#elif (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
+#endif  // (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
+#if (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
     if(evType > 0)
     {
         doNotify = true;
     }
-#endif
+#endif  // (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
 
    if(doNotify)
    {
