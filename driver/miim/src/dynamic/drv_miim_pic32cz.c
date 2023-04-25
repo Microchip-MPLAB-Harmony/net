@@ -84,6 +84,7 @@ typedef enum {
     GMAC_MIIM_SYSCLK_DIV_BY_48      = 0x03,
     GMAC_MIIM_SYSCLK_DIV_BY_64      = 0x04,
     GMAC_MIIM_SYSCLK_DIV_BY_96      = 0x05,
+    GMAC_MIIM_SYSCLK_DIV_ABOVE_96   = 0x06,
 } GMAC_MIIM_CLK;
 
 
