@@ -387,6 +387,7 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_MRF24WN         "MRF24WN"
 #define TCPIP_STACK_IF_NAME_WINC	        "WINC"
 #define TCPIP_STACK_IF_NAME_WILC1000        "WILC1000"
+#define TCPIP_STACK_IF_NAME_G3ADP           "G3ADPMAC"
 
 /* alias for unknown interface */
 #define TCPIP_STACK_IF_NAME_ALIAS_UNK       "unk"
@@ -396,6 +397,8 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_ALIAS_WLAN      "wlan"
 /* alias for PPP interface */
 #define TCPIP_STACK_IF_NAME_ALIAS_PPP       "ppp"
+/* alias for G3 ADP interface */
+#define TCPIP_STACK_IF_NAME_ALIAS_G3ADP     "g3adp"
 
 // *****************************************************************************
 /* Configuration Power Modes

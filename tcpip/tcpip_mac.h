@@ -182,6 +182,10 @@ typedef enum
     TCPIP_MODULE_MAC_LAN865X_0       = 0x1110,   // first mac instance
     TCPIP_MODULE_MAC_LAN865X_1       = 0x1111,   // second mac instance
 
+    // Internal/Embedded G3 ADP MAC
+    TCPIP_MODULE_MAC_G3ADP           = 0x10B0,
+    TCPIP_MODULE_MAC_G3ADP_0         = 0x10B0,   // alternate numbered name
+
     // External, non MCHP, MAC modules
     TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
 }TCPIP_MODULE_MAC_ID;
@@ -1602,6 +1606,8 @@ typedef enum
     /*  PPP/serial MAC type */
     TCPIP_MAC_TYPE_PPP,
 
+    /*  G3 ADP MAC type */
+    TCPIP_MAC_TYPE_G3ADP,
 
     /* supported types */
     TCPIP_MAC_TYPES,
@@ -1636,6 +1642,8 @@ typedef enum
     /*  wireless, Wi-Fi type MAC*/
     TCPIP_MAC_LINK_MTU_WLAN     = 1500,
 
+    /*  G3 ADP MAC type */
+    TCPIP_MAC_LINK_MTU_G3ADP    = 1280,
 
 }TCPIP_MAC_LINK_MTU;
 

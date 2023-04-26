@@ -921,10 +921,10 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_MAC_PIC32C_1,     &tcpipGMAC1InitData},           // TCPIP_MODULE_MAC_PIC32C_1
 </#if>
 <#if checkInterface("GMAC")>
-    {TCPIP_MODULE_MAC_PIC32C,     &tcpipGMACInitData},     // TCPIP_MODULE_MAC_PIC32C
+    {TCPIP_MODULE_MAC_PIC32C,       &tcpipGMACInitData},            // TCPIP_MODULE_MAC_PIC32C
 </#if>
 <#if checkInterface("ETH")>
-    {TCPIP_MODULE_MAC_PIC32C,     &tcpipETHInitData},     // TCPIP_MODULE_MAC_PIC32C
+    {TCPIP_MODULE_MAC_PIC32C,       &tcpipETHInitData},             // TCPIP_MODULE_MAC_PIC32C
 </#if>
 <#if checkInterface("EMAC0")>
     {TCPIP_MODULE_MAC_SAM9X60_0,    &tcpipEMAC0InitData},           // TCPIP_MODULE_MAC_SAM9X60_0
@@ -936,11 +936,14 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_MAC_WINC,         0},                             // TCPIP_MODULE_MAC_WINC
 </#if>
 <#if checkInterface("ENCX24J600")>
-    {TCPIP_MODULE_MAC_ENCJ600,      drvEncX24j600InitData},    // TCPIP_MODULE_MAC_ENCJ600
+    {TCPIP_MODULE_MAC_ENCJ600,      drvEncX24j600InitData},         // TCPIP_MODULE_MAC_ENCJ600
 </#if>
 
 <#if checkInterface("ENC28J60")>
-    {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitData},      // TCPIP_MODULE_MAC_ENCJ60
+    {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitData},          // TCPIP_MODULE_MAC_ENCJ60
+</#if>
+<#if checkInterface("G3ADPMAC")>
+    {TCPIP_MODULE_MAC_G3ADP,        0},                             // TCPIP_MODULE_MAC_G3ADP
 </#if>
 </#if>
 <#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>

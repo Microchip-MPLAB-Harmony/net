@@ -176,6 +176,8 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackDeviceFamily.setDefaultValue("SAMA5")
     elif "SAM9X6" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAM9X6")
+    elif ("MTSH" in processor) or ("MTC" in processor) or ("MTG" in processor):
+        tcpipStackDeviceFamily.setDefaultValue("PIC32CXMT")
         
     ###########################################################################################
     ###########################################################################################
@@ -677,8 +679,8 @@ def instantiateComponent(tcpipStackComponent):
     elif "PIC32MX" in processor:
         macName = "ETH"
         intStringStart = "core.EVIC_"
-        intStringEnd = "_ENABLE" 
-        
+        intStringEnd = "_ENABLE"
+
         
     if macName != "None":
         interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()

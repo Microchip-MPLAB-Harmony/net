@@ -248,8 +248,9 @@ def tcpipNetHostNameUpdate(symbol, event):
         'WINC':         'MCHPBOARD_W',
         'WINC1500':     'MCHPBOARD_W',
         'WILC1000':     'MCHPBOARD_W',
-        'PIC32MZW1':   'MCHPBOARD_W',
+        'PIC32MZW1':    'MCHPBOARD_W',
         'LAN865x':      'MCHP_LAN865x',
+        'G3ADPMAC':     'MCHPBOARD_PLC',
     }
     print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
@@ -381,6 +382,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'WILC1000':     'WDRV_WILC1000_MACObject',
         'PIC32MZW1':    'WDRV_PIC32MZW1_MACObject',
         'LAN865x':      'DRV_LAN865X_MACObject',
+        'G3ADPMAC':     'DRV_G3ADP_MACObject',
     }
     print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
