@@ -1,228 +1,344 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
-<meta name="DC.rights.owner" content="(C) Copyright 2022" />
-<meta name="DC.type" content="topic" />
-<meta name="DC.title" content="TCPIP_UDP_IsConnected Function" />
-<meta name="DC.relation" scheme="URI" content="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html" />
-<meta name="DC.format" content="XHTML" />
-<meta name="DC.identifier" content="tcpip-udp-isconnected-function" />
-<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
-<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
-<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TCPIP_UDP_IsConnected Function</title>
-<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tcpip-udp-isconnected-function" />
-<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
-<meta name="Microsoft.Help.TocOrder" content="0" />
-<meta name="Microsoft.Help.Locale" content="en-US" />
-<meta name="Microsoft.Help.TopicLocale" content="en-US" />
-<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
-<script language="javascript">
-       
-       if (window.parent.location.protocol != 'file:') {
-				document.addEventListener('click', function(e) {
-				    if (e.target) {
-               if (e.target.nodeName == "A" ) {
-                    if (!e.target.target) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                              
-                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
-                      if (origUrl.length === 0) {
-                          origUrl = window.parent.location.href;
-                      }
-                      var href= e.target.getAttribute("href");
-                      var parts = href.split("#");
-          
-                      var url = "";
-                      if (parts.length == 2 ) {
-                        if (!parts[0].length) {
-                            url = window.parent.location.search.replace('?','')
-                        } else {
-                            url = parts[0].replace('.html','');
-                        }
-                      } else {
-                        url = parts[0].replace('.html','');
-                      }
-
-                      if (parts.length == 2) {
-                          url += "#" + parts[1];
-                      }
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" data-whc_version="24.1">
+    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP); This function determines if a socket has an established connection to a remote node. Call this function after calling ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.2.3.2.16 TCPIP_UDP_IsConnected Function</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;&lt;?workdir /D:\InfoShare\Data\Publish\Data\g03rya0jylh\work\temp?&gt;&lt;?workdir-uri file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/temp/?&gt;&lt;?path2project?&gt;&lt;?path2project-uri ./?&gt;&lt;?path2rootmap-uri ./?&gt;&lt;topic xmlns:dita-ot=&#34;http://dita-ot.sourceforge.net/ns/201007/dita-ot&#34; xmlns:ditaarch=&#34;http://dita.oasis-open.org/architecture/2005/&#34; class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;tcpip-udp-isconnected-function&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:1;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:1;184:15&#34;&gt;TCPIP_UDP_IsConnected Function&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:1;184:15&#34;/&gt;&lt;related-links class=&#34;- topic/related-links &#34;&gt;&lt;linkpool class=&#34;- topic/linkpool &#34; mapkeyref=&#34;GUID-130F5D4D-BB11-4FFF-ACAA-35396D81EB4A&#34; xtrc=&#34;topicref:17;6:2600&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-4F64DDA1-6E0A-4696-AE97-FB40F09FECCF.ditamap&#34;&gt;&lt;link class=&#34;- topic/link &#34; format=&#34;dita&#34; href=&#34;GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.md&#34; mapclass=&#34;- map/topicref &#34; role=&#34;parent&#34; scope=&#34;local&#34; type=&#34;topic&#34; xtrc=&#34;topicref:1;6:99&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-4F64DDA1-6E0A-4696-AE97-FB40F09FECCF.ditamap&#34;&gt;&lt;?ditaot usertext?&gt;&lt;linktext class=&#34;- topic/linktext &#34;&gt;&lt;?ditaot gentext?&gt;UDP Module&lt;/linktext&gt;&lt;/link&gt;&lt;/linkpool&gt;&lt;/related-links&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;c&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:2;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:2;184:15&#34;&gt;C&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:2;184:15&#34;&gt;&lt;codeblock class=&#34;+ topic/pre pr-d/codeblock &#34; xml:space=&#34;preserve&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;codeblock:1;184:15&#34;&gt;bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP); &lt;/codeblock&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;description&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:3;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:3;184:15&#34;&gt;Description&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:3;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;p:1;184:15&#34;&gt;This function determines if a socket has an established connection to a remote node. Call this function after calling TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen to determine when the connection is set up and ready for use.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;remarks&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:4;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:4;184:15&#34;&gt;Remarks&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:4;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;p:2;184:15&#34;&gt;An UDP server or client socket can always send data, as long as it has a valid destination address, even if there's no remote socket connected to it. This function will return true if the socket is opened and currently has a valid destination. Note that this is true if a client socket was opened with a remote host address, a socket received data from a remote host, or a explicit remote bind was done.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;preconditions&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:5;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:5;184:15&#34;&gt;Preconditions&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:5;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;p:3;184:15&#34;&gt;None.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;parameters&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;topic:6;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;title:6;184:15&#34;&gt;Parameters&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;body:6;184:15&#34;&gt;&lt;table class=&#34;- topic/table &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;table:1;184:15&#34;&gt;&lt;tgroup class=&#34;- topic/tgroup &#34; cols=&#34;2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;tgroup:1;184:15&#34;&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col1&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;colspec:1;184:15&#34; colnum=&#34;1&#34;/&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;colspec:2;184:15&#34; colnum=&#34;2&#34;/&gt;&lt;thead class=&#34;- topic/thead &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;thead:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;row:1;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;entry:1;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;1&#34;&gt;Parameters&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;entry:2;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;1&#34;&gt;Description&lt;/entry&gt;&lt;/row&gt;&lt;/thead&gt;&lt;tbody class=&#34;- topic/tbody &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;tbody:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;row:2;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;entry:3;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;2&#34;&gt;hUDP&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md&#34; xtrc=&#34;entry:4;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;2&#34;&gt;The socket to check.&lt;/entry&gt;&lt;/row&gt;&lt;/tbody&gt;&lt;/tgroup&gt;&lt;/table&gt;&lt;/body&gt;&lt;/topic&gt;&lt;/topic&gt;"/><meta name="wh-source-relpath" content="GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.md"/><meta name="wh-out-relpath" content="GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.html"/>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
     
-                      window.parent.location.href = origUrl + "?" + url;
+    <link rel="stylesheet" href="./oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css"/>
+    
+    <!-- Template default styles  -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/app/topic-page.css?buildId=2022062014"/>
+    
+    
+    <script src="./oxygen-webhelp/lib/jquery/jquery-3.5.1.min.js"></script>
+    
+    <script data-main="./oxygen-webhelp/app/topic-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
+<link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+<script src="mchp-context-help.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+</head>
 
-                      return false;
-                    }
-               }
-            }
-				});
-			}
+    <body id="tcpip-udp-isconnected-function" class="wh_topic_page frmBody">
+        <a href="#wh_topic_body" class="sr-only sr-only-focusable">
+            Jump to main content
+        </a>
+        
+        
+        
+        
+        <header class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container navbar-nav navbar-expand-md navbar-dark">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <a href="index.html" class=" wh_logo d-none d-sm-block "><img src="oxygen-webhelp\template\resources/images/microchip.png" alt="MPLAB® Harmony TCP/IP Library "/></a>
+                    <div class=" wh_publication_title "><a href="index.html">MPLAB® Harmony TCP/IP Library </a></div>
+                    
+                </div>
+                
+                
+            </div>
 
-		</script><script language="javascript">
-        function cpy(id, button) {
-        
-            var element = document.getElementById(id);
-            var content = element.getAttribute("content");
-            var textArea = document.createElement("textarea");
-            
-            // Place in the top-left corner of screen regardless of scroll position.
-            textArea.style.position = 'fixed';
-            textArea.style.top = 0;
-            textArea.style.left = 0;
-            
-            // Ensure it has a small width and height. Setting to 1px / 1em
-            // doesn't work as this gives a negative w/h on some browsers.
-            textArea.style.width = '2em';
-            textArea.style.height = '2em';
-            
-            // We don't need padding, reducing the size if it does flash render.
-            textArea.style.padding = 0;
-            
-            // Clean up any borders.
-            textArea.style.border = 'none';
-            textArea.style.outline = 'none';
-            textArea.style.boxShadow = 'none';
-            
-            // Avoid flash of the white box if rendered for any reason.
-            textArea.style.background = 'transparent';
-            
-            
-            textArea.value = content;
-            
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-               var successful = document.execCommand('copy');
-               var msg = successful ? 'successful' : 'unsuccessful';
-               if (!button.classList.contains("copied")){
-                  button.textContent = "Copied";
-                  button.classList.add("copied");
-                  setTimeout(function(){
-                    button.textContent = "Copy";
-                    button.classList.remove("copied");
-                  },1000);
-               }
-            } catch (err) {
-              console.log('Oops, unable to copy');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-      </script><script language="javascript">
-          
-          // Add the MathML namespace to html
-          var html = document.getElementsByTagName("html")[0],
-          head = document.getElementsByTagName("head")[0];
-          
-          var mathJax = document.createElement("script");
-          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
-          head.appendChild(mathJax);
-          
-          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
-          
-          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
-          
-          if (!inIframe()) { 
-          
-          var Default = "index.html?GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332"; 
-          
-          var displaylocation = "value" + window.location.href;
-          
-          var GUIDS = displaylocation.split('GUID');          
-          
-          if (displaylocation.indexOf('#GUID') != -1) {            
-          var First = GUIDS[1].split('.html');  
-          if (GUIDS[3]){First = GUIDS[2].split('.html');}
-          if (GUIDS[4]){First = GUIDS[3].split('.html');}
-          if (GUIDS[5]){First = GUIDS[4].split('.html');}
-          
-          var Second = GUIDS[2].split('#');   
-          if (GUIDS[3]){Second = GUIDS[3].split('#');}
-          if (GUIDS[4]){Second = GUIDS[4].split('#');}
-          if (GUIDS[5]){Second = GUIDS[5].split('#');}
-          
-          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
-          }                    
-          window.top.location = Default;
-          }       
-          
-        </script><style xml:space="">
-        
-          button.copy-code{
-            display:none;
-            padding:0.7em 1.4em;
-            margin:0 0.3em 0.3em 0;
-            border-radius:0.15em;
-            box-sizing: border-box;
-            text-decoration:none;
-            font-family:'Roboto',sans-serif;
-            text-transform:uppercase;
-            font-weight:400;
-            color:#FFFFFF;
-            background-color:#9c9c9c;
-            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
-            text-align:center;
-            position:relative;
-            border: 0;
-            float: right;
-            border-radius: .5em;
-            cursor: pointer;
-          }
-          button.copy-code:active{
-            top:0.1em;
-          }
-          
-          pre:hover button.copy-code{
-            display: inline-block !important;
-          }
-          button.copy-code.copied {
-            cursor: default !important;
-          }
-          
-          
-          @media all and (max-width:30em){
-            button.copy-code{
-              display:block;
-              margin:0.4em auto;
-            }
-          }
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse" id="wh_top_menu_and_indexterms_link">
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</header>
         
         
-      </style></head>
-<body id="tcpip-udp-isconnected-function">
-<h1 class="title topictitle1" id="ariaid-title1">TCPIP_UDP_IsConnected Function</h1><div class="body"></div>
-<div class="related-links">
-<div class="familylinks">
-<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html">UDP Module</a></div>
+         
+        
+        <div class=" wh_search_input navbar-form wh_topic_page_search search " role="form">
+            
+            
+            
+            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            
+            <div class="mchp-color-stripe-grid-container">
+  <div class="mchp-main-bar mchp-orange-bar"></div>
+  <div class="mchp-main-bar mchp-blue-bar"></div>
+  <div class="mchp-main-bar mchp-green-bar"></div>
 </div>
-</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d134278e21', this);">Copy</button><code id="d134278e21" content="bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP); ">bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP); </code></pre></div>
+            
+        </div>
+        
+        <div class="container-fluid" id="wh_topic_container">
+            <div class="row">
+
+                <nav class="wh_tools d-print-none navbar-expand-md" aria-label="Tools">
+                    
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol class="d-print-none"><li><span class="home"><a href="index.html"><span>Home</span></a></span></li><li><div class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0"><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div></li><li><div class="topicref" data-id="mplab-harmony-tcpip-library"><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div></li><li><div class="topicref" data-id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B"><div class="title"><a href="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3</ph>
+Transport Layer</a></div></div></li><li><div class="topicref" data-id="udp-module"><div class="title"><a href="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2</ph>
+UDP Module</a></div></div></li><li class="active"><div class="topicref" data-id="tcpip-udp-isconnected-function"><div class="title"><a href="GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.16</ph>
+TCPIP_UDP_IsConnected Function</a></div></div></li></ol></div>
+                    
+                    
+                    
+                    <div class="wh_right_tools">
+                        <button class="wh_hide_highlight" aria-label="Toggle search highlights" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" aria-label="Collapse sections" title="Collapse sections"></button>
+                        
+                        
+                        
+                        
+                        <div class=" wh_print_link print d-none d-md-inline-block "><button onClick="window.print()" title="Print this page" aria-label="Print this page"></button></div>
+                        
+                        <button type="button" id="wh_toc_button" class="custom-toggler navbar-toggler collapsed wh_toggle_button navbar-light" aria-expanded="false" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    
+                </nav>
+            </div>
+            
+            
+            
+            
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-12 d-md-block d-none d-print-none" aria-label="Table of Contents Container">
+                            <div id="wh_publication_toc_content">
+		                        
+                            	<div class=" wh_publication_toc " data-tooltip-position="right"><span class="expand-button-action-labels"><span id="button-expand-action" role="button" aria-label="Expand"></span><span id="button-collapse-action" role="button" aria-label="Collapse"></span><span id="button-pending-action" role="button" aria-label="Pending"></span></span><ul role="tree" aria-label="Table of Contents"><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11" class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html" id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19" class="topicref" data-id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html" id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.1</ph>
+TCP/IP Stack Library Overview</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="mplab-harmony-tcpip-library-d9776e67" class="topicref" data-id="mplab-harmony-tcpip-library" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action mplab-harmony-tcpip-library-d9776e67-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" id="mplab-harmony-tcpip-library-d9776e67-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75" class="topicref" data-id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-6005945E-6669-486E-AA57-092C4EC0AD73.html" id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1</ph>
+Application Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010" class="topicref" data-id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578.html" id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.2</ph>
+Presentation Layer</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657" class="topicref" data-id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B.html" id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3</ph>
+Transport Layer</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="tcp-module-d9776e5665" class="topicref" data-id="tcp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action tcp-module-d9776e5665-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-9461917B-27CE-44ED-80DB-67D963896E8F.html" id="tcp-module-d9776e5665-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.1</ph>
+TCP Module</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="udp-module-d9776e6134" class="topicref" data-id="udp-module" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action udp-module-d9776e6134-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D2D8E9C8-0778-41E2-8F0B-194954B92250.html" id="udp-module-d9776e6134-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2</ph>
+UDP Module</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem"><div data-tocid="tcpip-udp-arrayget-function-d9776e6142" class="topicref" data-id="tcpip-udp-arrayget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0C4D983F-50CF-4CFD-8FFB-CA51C091820D.html" id="tcpip-udp-arrayget-function-d9776e6142-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.1</ph>
+TCPIP_UDP_ArrayGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-arrayput-function-d9776e6150" class="topicref" data-id="tcpip-udp-arrayput-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C80E17FD-6D59-47C4-A5A2-69318E6F9E3E.html" id="tcpip-udp-arrayput-function-d9776e6150-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.2</ph>
+TCPIP_UDP_ArrayPut Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-bcastipv4addressset-function-d9776e6158" class="topicref" data-id="tcpip-udp-bcastipv4addressset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-7BF1C11D-B1A1-4E29-A69A-085FC0721254.html" id="tcpip-udp-bcastipv4addressset-function-d9776e6158-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.3</ph>
+TCPIP_UDP_BcastIPV4AddressSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-bind-function-d9776e6166" class="topicref" data-id="tcpip-udp-bind-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-EB26FB22-0929-4685-BB76-2AA971E75DB0.html" id="tcpip-udp-bind-function-d9776e6166-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.4</ph>
+TCPIP_UDP_Bind Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-clientopen-function-d9776e6174" class="topicref" data-id="tcpip-udp-clientopen-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-24D38A62-4632-4530-8DFA-B39ADBEC5A3D.html" id="tcpip-udp-clientopen-function-d9776e6174-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.5</ph>
+TCPIP_UDP_ClientOpen Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-close-function-d9776e6182" class="topicref" data-id="tcpip-udp-close-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-44B4E502-12AB-42ED-80DE-226809A1A6A6.html" id="tcpip-udp-close-function-d9776e6182-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.6</ph>
+TCPIP_UDP_Close Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-commands-macro-d9776e6190" class="topicref" data-id="tcpip-udp-commands-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-A90536A8-B111-481A-9CAE-2D4C8CFB3D5E.html" id="tcpip-udp-commands-macro-d9776e6190-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.7</ph>
+TCPIP_UDP_COMMANDS Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-destinationipaddressset-function-d9776e6198" class="topicref" data-id="tcpip-udp-destinationipaddressset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-2AB03677-A266-4087-B18B-A00FBE472751.html" id="tcpip-udp-destinationipaddressset-function-d9776e6198-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.8</ph>
+TCPIP_UDP_DestinationIPAddressSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-destinationportset-function-d9776e6206" class="topicref" data-id="tcpip-udp-destinationportset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-11351408-A186-4464-B00D-D711D33FC0F5.html" id="tcpip-udp-destinationportset-function-d9776e6206-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.9</ph>
+TCPIP_UDP_DestinationPortSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-discard-function-d9776e6214" class="topicref" data-id="tcpip-udp-discard-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-8514B06D-F1ED-472C-B8E5-E09980DDCA00.html" id="tcpip-udp-discard-function-d9776e6214-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.10</ph>
+TCPIP_UDP_Discard Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-disconnect-function-d9776e6223" class="topicref" data-id="tcpip-udp-disconnect-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-607EFC92-CC2D-4A1E-BC1C-A8D334FDAE13.html" id="tcpip-udp-disconnect-function-d9776e6223-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.11</ph>
+TCPIP_UDP_Disconnect Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-extern-packet-process-macro-d9776e6231" class="topicref" data-id="tcpip-udp-extern-packet-process-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-FFA052F9-19D3-42BA-8C32-2844E4D7AF9E.html" id="tcpip-udp-extern-packet-process-macro-d9776e6231-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.12</ph>
+TCPIP_UDP_EXTERN_PACKET_PROCESS Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-flush-function-d9776e6239" class="topicref" data-id="tcpip-udp-flush-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-F7821B0E-C02F-483A-9E79-51A96DA28785.html" id="tcpip-udp-flush-function-d9776e6239-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.13</ph>
+TCPIP_UDP_Flush Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-get-function-d9776e6247" class="topicref" data-id="tcpip-udp-get-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-A75B09DD-709D-4B79-9757-6361C2F83560.html" id="tcpip-udp-get-function-d9776e6247-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.14</ph>
+TCPIP_UDP_Get Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-getisready-function-d9776e6255" class="topicref" data-id="tcpip-udp-getisready-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-8D01FBAB-A5FA-4897-80E7-90310958BE9C.html" id="tcpip-udp-getisready-function-d9776e6255-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.15</ph>
+TCPIP_UDP_GetIsReady Function</a></div></div></li><li role="treeitem" class="active"><div data-tocid="tcpip-udp-isconnected-function-d9776e6263" class="topicref" data-id="tcpip-udp-isconnected-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-6EDD246F-4BDF-4E35-BEF8-9DFB602D9332.html" id="tcpip-udp-isconnected-function-d9776e6263-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.16</ph>
+TCPIP_UDP_IsConnected Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-isopened-macro-d9776e6271" class="topicref" data-id="tcpip-udp-isopened-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-855F6FEA-7CD6-4760-8C90-58D7F7963A9E.html" id="tcpip-udp-isopened-macro-d9776e6271-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.17</ph>
+TCPIP_UDP_IsOpened Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-max-sockets-macro-d9776e6279" class="topicref" data-id="tcpip-udp-max-sockets-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-72E6650E-1C11-4917-8C93-F45EF0D59244.html" id="tcpip-udp-max-sockets-macro-d9776e6279-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.18</ph>
+TCPIP_UDP_MAX_SOCKETS Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-module-config-structure-d9776e6287" class="topicref" data-id="tcpip-udp-module-config-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-BAB3F33C-010D-4328-836A-D7A6955CD441.html" id="tcpip-udp-module-config-structure-d9776e6287-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.19</ph>
+TCPIP_UDP_MODULE_CONFIG Structure</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-optionsget-function-d9776e6295" class="topicref" data-id="tcpip-udp-optionsget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-A7616A65-D919-403D-B052-4EAE887FF5AF.html" id="tcpip-udp-optionsget-function-d9776e6295-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.20</ph>
+TCPIP_UDP_OptionsGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-optionsset-function-d9776e6303" class="topicref" data-id="tcpip-udp-optionsset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-4D80AFEC-3292-477F-8723-54C9434853F4.html" id="tcpip-udp-optionsset-function-d9776e6303-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.21</ph>
+TCPIP_UDP_OptionsSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-packet-handler-type-d9776e6312" class="topicref" data-id="tcpip-udp-packet-handler-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-EF627C2D-2775-4DFF-B619-37C3AE56660C.html" id="tcpip-udp-packet-handler-type-d9776e6312-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.22</ph>
+TCPIP_UDP_PACKET_HANDLER Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-packethandlerderegister-function-d9776e6320" class="topicref" data-id="tcpip-udp-packethandlerderegister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-277E5494-5371-4991-9BEB-EF1616D8BC68.html" id="tcpip-udp-packethandlerderegister-function-d9776e6320-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.23</ph>
+TCPIP_UDP_PacketHandlerDeregister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-packethandlerregister-function-d9776e6328" class="topicref" data-id="tcpip-udp-packethandlerregister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-40F3DA06-6EB0-4FEA-AAD2-08EC8DA5DE2F.html" id="tcpip-udp-packethandlerregister-function-d9776e6328-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.24</ph>
+TCPIP_UDP_PacketHandlerRegister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-process-handle-type-d9776e6336" class="topicref" data-id="tcpip-udp-process-handle-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-BC874760-4FE7-4B02-80FC-AAFC15D4CE0B.html" id="tcpip-udp-process-handle-type-d9776e6336-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.25</ph>
+TCPIP_UDP_PROCESS_HANDLE Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-put-function-d9776e6344" class="topicref" data-id="tcpip-udp-put-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-389D1A67-F892-4990-87E8-7E1C06C09CCB.html" id="tcpip-udp-put-function-d9776e6344-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.26</ph>
+TCPIP_UDP_Put Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-putisready-function-d9776e6352" class="topicref" data-id="tcpip-udp-putisready-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-2F15E45D-79E7-4621-89BD-A96670B171E4.html" id="tcpip-udp-putisready-function-d9776e6352-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.27</ph>
+TCPIP_UDP_PutIsReady Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-remotebind-function-d9776e6360" class="topicref" data-id="tcpip-udp-remotebind-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-B04887D6-7666-4F11-9279-9613EC0EF8F8.html" id="tcpip-udp-remotebind-function-d9776e6360-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.28</ph>
+TCPIP_UDP_RemoteBind Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-rxoffsetset-function-d9776e6368" class="topicref" data-id="tcpip-udp-rxoffsetset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-60144950-D944-4668-82FC-94FBCF339CB9.html" id="tcpip-udp-rxoffsetset-function-d9776e6368-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.29</ph>
+TCPIP_UDP_RxOffsetSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-serveropen-function-d9776e6376" class="topicref" data-id="tcpip-udp-serveropen-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-81FAF9B7-AD7E-4768-B973-A45BD959EF44.html" id="tcpip-udp-serveropen-function-d9776e6376-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.30</ph>
+TCPIP_UDP_ServerOpen Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-signal-function-type-d9776e6384" class="topicref" data-id="tcpip-udp-signal-function-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-53BDB6A6-65FE-405C-813A-19E29863B79F.html" id="tcpip-udp-signal-function-type-d9776e6384-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.31</ph>
+TCPIP_UDP_SIGNAL_FUNCTION Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-signal-handle-type-d9776e6392" class="topicref" data-id="tcpip-udp-signal-handle-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-72D7337D-8BF6-4A88-876B-5322355A45E6.html" id="tcpip-udp-signal-handle-type-d9776e6392-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.32</ph>
+TCPIP_UDP_SIGNAL_HANDLE Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-signal-type-enumeration-d9776e6401" class="topicref" data-id="tcpip-udp-signal-type-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-2B79AD6C-CBD1-4FBD-A8AF-C2606E6B90DE.html" id="tcpip-udp-signal-type-enumeration-d9776e6401-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.33</ph>
+TCPIP_UDP_SIGNAL_TYPE Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-signalhandlerderegister-function-d9776e6409" class="topicref" data-id="tcpip-udp-signalhandlerderegister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-F61FBFCB-7367-4392-A4CE-28F4D9281FAA.html" id="tcpip-udp-signalhandlerderegister-function-d9776e6409-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.34</ph>
+TCPIP_UDP_SignalHandlerDeregister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-signalhandlerregister-function-d9776e6417" class="topicref" data-id="tcpip-udp-signalhandlerregister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-D7AE1DC7-DE3F-4CFC-9D48-10072E5BB3D2.html" id="tcpip-udp-signalhandlerregister-function-d9776e6417-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.35</ph>
+TCPIP_UDP_SignalHandlerRegister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socket-default-rx-queue-limit-macro-d9776e6425" class="topicref" data-id="tcpip-udp-socket-default-rx-queue-limit-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-CC405A6D-A3DB-437D-8A1A-A05672F88B06.html" id="tcpip-udp-socket-default-rx-queue-limit-macro-d9776e6425-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.36</ph>
+TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socket-default-tx-queue-limit-macro-d9776e6433" class="topicref" data-id="tcpip-udp-socket-default-tx-queue-limit-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-423D57AB-1732-46C4-B8B8-76A3483D6CB9.html" id="tcpip-udp-socket-default-tx-queue-limit-macro-d9776e6433-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.37</ph>
+TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socket-default-tx-size-macro-d9776e6441" class="topicref" data-id="tcpip-udp-socket-default-tx-size-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-87954F50-A1D5-4E59-810C-09DC91AB81FA.html" id="tcpip-udp-socket-default-tx-size-macro-d9776e6441-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.38</ph>
+TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socket-pool-buffer-size-macro-d9776e6449" class="topicref" data-id="tcpip-udp-socket-pool-buffer-size-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-92ADB2C2-D9EA-491D-9BB2-893468E4E0F4.html" id="tcpip-udp-socket-pool-buffer-size-macro-d9776e6449-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.39</ph>
+TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socket-pool-buffers-macro-d9776e6457" class="topicref" data-id="tcpip-udp-socket-pool-buffers-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C6A2D6A0-39E1-4427-A87F-128F016036D5.html" id="tcpip-udp-socket-pool-buffers-macro-d9776e6457-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.40</ph>
+TCPIP_UDP_SOCKET_POOL_BUFFERS Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socketinfoget-function-d9776e6465" class="topicref" data-id="tcpip-udp-socketinfoget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-AC567D86-BC0E-4E7F-B148-0685C3E92119.html" id="tcpip-udp-socketinfoget-function-d9776e6465-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.41</ph>
+TCPIP_UDP_SocketInfoGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socketnetget-function-d9776e6473" class="topicref" data-id="tcpip-udp-socketnetget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-624C0988-7A11-41A9-B55F-805AA1A0AFB3.html" id="tcpip-udp-socketnetget-function-d9776e6473-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.42</ph>
+TCPIP_UDP_SocketNetGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socketnetset-function-d9776e6481" class="topicref" data-id="tcpip-udp-socketnetset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-843764D1-5960-4D99-9D2D-ABFB2785D009.html" id="tcpip-udp-socketnetset-function-d9776e6481-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.43</ph>
+TCPIP_UDP_SocketNetSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-socketsnumberget-function-d9776e6490" class="topicref" data-id="tcpip-udp-socketsnumberget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0160A87C-BE6B-4735-A05B-E1DEC439ACDD.html" id="tcpip-udp-socketsnumberget-function-d9776e6490-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.44</ph>
+TCPIP_UDP_SocketsNumberGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-sourceipaddressset-function-d9776e6498" class="topicref" data-id="tcpip-udp-sourceipaddressset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-8C16F14A-E7F7-4847-8379-4C16511FDF66.html" id="tcpip-udp-sourceipaddressset-function-d9776e6498-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.45</ph>
+TCPIP_UDP_SourceIPAddressSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-stringput-function-d9776e6506" class="topicref" data-id="tcpip-udp-stringput-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-4EE34331-4DE8-4322-AF41-210B5E7F1979.html" id="tcpip-udp-stringput-function-d9776e6506-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.46</ph>
+TCPIP_UDP_StringPut Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-task-function-d9776e6514" class="topicref" data-id="tcpip-udp-task-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-33D0C8D6-8824-4440-A3A8-E418A64B524B.html" id="tcpip-udp-task-function-d9776e6514-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.47</ph>
+TCPIP_UDP_Task Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-txcountget-function-d9776e6522" class="topicref" data-id="tcpip-udp-txcountget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-689276FE-78AE-42FA-B58E-34E65D8314A5.html" id="tcpip-udp-txcountget-function-d9776e6522-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.48</ph>
+TCPIP_UDP_TxCountGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-txoffsetset-function-d9776e6530" class="topicref" data-id="tcpip-udp-txoffsetset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-1E6ACF42-8F3E-4A77-9989-9771A1236357.html" id="tcpip-udp-txoffsetset-function-d9776e6530-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.49</ph>
+TCPIP_UDP_TxOffsetSet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-txputisready-function-d9776e6538" class="topicref" data-id="tcpip-udp-txputisready-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-18A082A5-9260-4B1B-8364-967857B88A37.html" id="tcpip-udp-txputisready-function-d9776e6538-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.50</ph>
+TCPIP_UDP_TxPutIsReady Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-use-pool-buffers-macro-d9776e6546" class="topicref" data-id="tcpip-udp-use-pool-buffers-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-D439489A-2A5E-4B7A-A234-0F06CC87FB08.html" id="tcpip-udp-use-pool-buffers-macro-d9776e6546-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.51</ph>
+TCPIP_UDP_USE_POOL_BUFFERS Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-use-rx-checksum-macro-d9776e6554" class="topicref" data-id="tcpip-udp-use-rx-checksum-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0CF7A0B0-BDFA-4B6C-AE1E-7F61E9CFA6FA.html" id="tcpip-udp-use-rx-checksum-macro-d9776e6554-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.52</ph>
+TCPIP_UDP_USE_RX_CHECKSUM Macro</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-udp-use-tx-checksum-macro-d9776e6562" class="topicref" data-id="tcpip-udp-use-tx-checksum-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-5C1324DB-8950-4E87-B3C1-2635E868B24D.html" id="tcpip-udp-use-tx-checksum-macro-d9776e6562-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.53</ph>
+TCPIP_UDP_USE_TX_CHECKSUM Macro</a></div></div></li><li role="treeitem"><div data-tocid="udp-multicast-flags-enumeration-d9776e6570" class="topicref" data-id="udp-multicast-flags-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-D5B3BDBA-488D-457F-B721-83161B869C1D.html" id="udp-multicast-flags-enumeration-d9776e6570-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.54</ph>
+UDP_MULTICAST_FLAGS Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="udp-option-multicast-data-structure-d9776e6579" class="topicref" data-id="udp-option-multicast-data-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-BC9D600E-E3DA-4EF2-BF9F-24D088A072E2.html" id="udp-option-multicast-data-structure-d9776e6579-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3.2.55</ph>
+UDP_OPTION_MULTICAST_DATA Structure</a></div></div></li></ul></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587" class="topicref" data-id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520.html" id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4</ph>
+Network Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919" class="topicref" data-id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029.html" id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5</ph>
+Data Link Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881" class="topicref" data-id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90.html" id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.6</ph>
+TCP/IP Stack Core</a></div></div></li></ul></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760" class="topicref" data-id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html" id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">2</ph>
+Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li></ul></div>
+		                        
+                            </div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-7 col-md-9 col-sm-12" id="wh_topic_body">
+                        <button id="wh_close_publication_toc_button" class="close-toc-button d-none" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        <button id="wh_close_topic_toc_button" class="close-toc-button d-none" aria-label="Toggle topic table of content" aria-controls="wh_topic_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><h1 class="- topic/title title topictitle1" id="ariaid-title1" style="">1.2.3.2.16 TCPIP_UDP_IsConnected Function</h1><div class="- topic/body body"></div><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="- topic/title title topictitle2" id="ariaid-title2" style=""> C</h2><div class="- topic/body body"><pre class="+ topic/pre pr-d/codeblock pre codeblock"><code>bool TCPIP_UDP_IsConnected(UDP_SOCKET hUDP); </code></pre></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="- topic/title title topictitle2" id="ariaid-title3" style=""> Description</h2><div class="- topic/body body"><p class="- topic/p p">This function determines if a socket has an established connection to a remote node. Call this function after calling TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen to determine when the connection is set up and ready for use.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title4" id="remarks"><h2 class="- topic/title title topictitle2" id="ariaid-title4" style=""> Remarks</h2><div class="- topic/body body"><p class="- topic/p p">An UDP server or client socket can always send data, as long as it has a valid destination address, even if there's no remote socket connected to it. This function will return true if the socket is opened and currently has a valid destination. Note that this is true if a client socket was opened with a remote host address, a socket received data from a remote host, or a explicit remote bind was done.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title5" id="preconditions"><h2 class="- topic/title title topictitle2" id="ariaid-title5" style=""> Preconditions</h2><div class="- topic/body body"><p class="- topic/p p">None.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title6" id="parameters"><h2 class="- topic/title title topictitle2" id="ariaid-title6" style=""> Parameters</h2><div class="- topic/body body"><div class="table-container"><table class="- topic/table table" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__1">Parameters</th><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__2">Description</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__1">hUDP</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__2">The socket to check.</td></tr></tbody></table></div></div></article></article></main></div>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                    
+                        <nav role="navigation" id="wh_topic_toc" aria-label="On this page" class="col-lg-2 d-none d-lg-block navbar d-print-none"> 
+                            <div id="wh_topic_toc_content">
+		                        
+	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="topic-item"><a href="#c" data-tocid="c"> C</a></li><li class="topic-item"><a href="#description" data-tocid="description"> Description</a></li><li class="topic-item"><a href="#remarks" data-tocid="remarks"> Remarks</a></li><li class="topic-item"><a href="#preconditions" data-tocid="preconditions"> Preconditions</a></li><li class="topic-item"><a href="#parameters" data-tocid="parameters"> Parameters</a></li></ul></div>
+	                        	
+                        	</div>
+                        </nav>
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div> 
+        <footer class="navbar navbar-default wh_footer">
+  <div class=" footer-container mx-auto ">
+    <div class="footer">
+  <div class="mchp-wh-footer">
+    <div class="mchp-footer">
+      <div class="mchp-footer-tier1">
+        <div class="spacer"></div>
+        <div class="mchp-footer-container">
+          <div class="mchp-footer-links mchp-social-media-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.facebook.com/pages/Microchip-Technology-Inc/20320981741" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Facebook" src="oxygen-webhelp/template/resources/images/201016-corp-facebook.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.linkedin.com/company/microchip-technology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip LinkedIn" src="oxygen-webhelp/template/resources/images/201016-corp-linkedin.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://twitter.com/MicrochipTech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Twitter" src="oxygen-webhelp/template/resources/images/201016-corp-twitter.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.youtube.com/user/MicrochipTechnology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip YouTube" src="oxygen-webhelp/template/resources/images/201016-corp-youtube.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.instagram.com/microchiptechnologyinc/" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Instagram" src="oxygen-webhelp/template/resources/images/201016-corp-instagram.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.weibo.com/microchiptech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Weibo" src="oxygen-webhelp/template/resources/images/201016-corp-weibo.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.microchip.com/en-us/about/blog" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Blog" src="oxygen-webhelp/template/resources/images/201016-corp-blog.png"/>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://www.microchip.com/about-us/contact-us" class="mchp-link__link">Contact</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information" class="mchp-link__link">Legal</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/privacy-policy" class="mchp-link__link">Privacy Policy</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/microchip-cookie-statement" class="mchp-link__link">Cookies</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://careers.microchip.com/" class="mchp-link__link">Careers</a>
+                  <span class="mchp-link__separator"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-newsletter">
+            <div class="cmp-text">
+              <p>Stay on the leading edge with our blog</p>
+            </div>
+            <div class="mchp-button-wrapper">
+              <a role="button" href="https://www.microchip.com/en-us/about/blog" class="mchp-button mchp-button-regular solid">
+                <span class="mchp-button__span">MicroSolutions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="graphic">
+          <img src="oxygen-webhelp/template/resources/images/footer-graphic.png"/>
+        </div>
+      </div>
+      <div class="mchp-footer-tier2">
+        <p class="mchp-copyright">© Copyright 1998-2022 Microchip Technology Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-2724382-19"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());   
+    gtag('config', 'UA-2724382-19');
+  </script>
 </div>
-<div class="topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="title topictitle2" id="ariaid-title3">Description</h2><div class="body"><p class="p">This function determines if a socket has an established connection to a remote node. Call this function after calling TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen to determine when the connection is set up and ready for use.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title4" id="remarks"><h2 class="title topictitle2" id="ariaid-title4">Remarks</h2><div class="body"><p class="p">An UDP server or client socket can always send data, as long as it has a valid destination address, even if there's no remote socket connected to it. This function will return true if the socket is opened and currently has a valid destination. Note that this is true if a client socket was opened with a remote host address, a socket received data from a remote host, or a explicit remote bind was done.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title5" id="preconditions"><h2 class="title topictitle2" id="ariaid-title5">Preconditions</h2><div class="body"><p class="p">None.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title6" id="parameters"><h2 class="title topictitle2" id="ariaid-title6">Parameters</h2><div class="body">
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d134278e51"><span>Parameters</span></th>
-<th class="entry cellrowborder" style="vertical-align:middle;" id="d134278e53"><span>Description</span></th>
-</tr>
-</thead>
-<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d134278e51 "><span>hUDP</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d134278e53 "><span>The socket to check.</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</body>
+  </div>
+</footer>
+        
+        <div id="go2top" class="d-print-none">
+            <span class="oxy-icon oxy-icon-up"></span>
+        </div>
+        
+        <div id="modal_img_large" class="modal">
+            <span class="close oxy-icon oxy-icon-remove"></span>
+            <div id="modal_img_container"></div>
+            <div id="caption"></div>
+        </div>
+        
+        
+        
+    </body>
 </html>

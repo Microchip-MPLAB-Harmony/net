@@ -1,236 +1,326 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
-<meta name="DC.rights.owner" content="(C) Copyright 2022" />
-<meta name="DC.type" content="topic" />
-<meta name="DC.title" content="TCPIP_TELNET_FLAGS Enumeration" />
-<meta name="DC.relation" scheme="URI" content="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html" />
-<meta name="DC.format" content="XHTML" />
-<meta name="DC.identifier" content="tcpip-telnet-flags-enumeration" />
-<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
-<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
-<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TCPIP_TELNET_FLAGS Enumeration</title>
-<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tcpip-telnet-flags-enumeration" />
-<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
-<meta name="Microsoft.Help.TocOrder" content="0" />
-<meta name="Microsoft.Help.Locale" content="en-US" />
-<meta name="Microsoft.Help.TopicLocale" content="en-US" />
-<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
-<script language="javascript">
-       
-       if (window.parent.location.protocol != 'file:') {
-				document.addEventListener('click', function(e) {
-				    if (e.target) {
-               if (e.target.nodeName == "A" ) {
-                    if (!e.target.target) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                              
-                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
-                      if (origUrl.length === 0) {
-                          origUrl = window.parent.location.href;
-                      }
-                      var href= e.target.getAttribute("href");
-                      var parts = href.split("#");
-          
-                      var url = "";
-                      if (parts.length == 2 ) {
-                        if (!parts[0].length) {
-                            url = window.parent.location.search.replace('?','')
-                        } else {
-                            url = parts[0].replace('.html','');
-                        }
-                      } else {
-                        url = parts[0].replace('.html','');
-                      }
-
-                      if (parts.length == 2) {
-                          url += "#" + parts[1];
-                      }
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" data-whc_version="24.1">
+    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="typedef enum { TCPIP_TELNET_FLAG_NONE = 0x0000, TCPIP_TELNET_FLAG_NO_DELAY = 0x0001, TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002 } TCPIP_TELNET_FLAGS; Enumeration: TCPIP_TELNET_FLAGS. Flags for the ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.2.1.21.7 TCPIP_TELNET_FLAGS Enumeration</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;&lt;?workdir /D:\InfoShare\Data\Publish\Data\g03rya0jylh\work\temp?&gt;&lt;?workdir-uri file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/temp/?&gt;&lt;?path2project?&gt;&lt;?path2project-uri ./?&gt;&lt;?path2rootmap-uri ./?&gt;&lt;topic xmlns:dita-ot=&#34;http://dita-ot.sourceforge.net/ns/201007/dita-ot&#34; xmlns:ditaarch=&#34;http://dita.oasis-open.org/architecture/2005/&#34; class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;tcpip-telnet-flags-enumeration&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;topic:1;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;title:1;184:15&#34;&gt;TCPIP_TELNET_FLAGS Enumeration&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;body:1;184:15&#34;/&gt;&lt;related-links class=&#34;- topic/related-links &#34;&gt;&lt;linkpool class=&#34;- topic/linkpool &#34; mapkeyref=&#34;GUID-130F5D4D-BB11-4FFF-ACAA-35396D81EB4A&#34; xtrc=&#34;topicref:8;6:1187&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-80A6DA45-93AA-40D1-AAC0-F376ADC9E590.ditamap&#34;&gt;&lt;link class=&#34;- topic/link &#34; format=&#34;dita&#34; href=&#34;GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.md&#34; mapclass=&#34;- map/topicref &#34; role=&#34;parent&#34; scope=&#34;local&#34; type=&#34;topic&#34; xtrc=&#34;topicref:1;6:99&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-80A6DA45-93AA-40D1-AAC0-F376ADC9E590.ditamap&#34;&gt;&lt;?ditaot usertext?&gt;&lt;linktext class=&#34;- topic/linktext &#34;&gt;&lt;?ditaot gentext?&gt;Telnet Module&lt;/linktext&gt;&lt;/link&gt;&lt;/linkpool&gt;&lt;/related-links&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;c&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;topic:2;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;title:2;184:15&#34;&gt;C&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;body:2;184:15&#34;&gt;&lt;codeblock class=&#34;+ topic/pre pr-d/codeblock &#34; xml:space=&#34;preserve&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;codeblock:1;184:15&#34;&gt;typedef enum {&amp;#xD; TCPIP_TELNET_FLAG_NONE = 0x0000,&amp;#xD; TCPIP_TELNET_FLAG_NO_DELAY = 0x0001,&amp;#xD; TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002&amp;#xD; } TCPIP_TELNET_FLAGS;&amp;#xD;&lt;/codeblock&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;description&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;topic:3;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;title:3;184:15&#34;&gt;Description&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;body:3;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;p:1;184:15&#34;&gt;Enumeration: TCPIP_TELNET_FLAGS.&lt;/p&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;p:2;184:15&#34;&gt;Flags for the configuration of the telnet module.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;members&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;topic:4;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;title:4;184:15&#34;&gt;Members&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;body:4;184:15&#34;&gt;&lt;table class=&#34;- topic/table &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;table:1;184:15&#34;&gt;&lt;tgroup class=&#34;- topic/tgroup &#34; cols=&#34;2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;tgroup:1;184:15&#34;&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col1&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;colspec:1;184:15&#34; colnum=&#34;1&#34;/&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;colspec:2;184:15&#34; colnum=&#34;2&#34;/&gt;&lt;thead class=&#34;- topic/thead &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;thead:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;row:1;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:1;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;1&#34;&gt;Members&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:2;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;1&#34;&gt;Description&lt;/entry&gt;&lt;/row&gt;&lt;/thead&gt;&lt;tbody class=&#34;- topic/tbody &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;tbody:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;row:2;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:3;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;2&#34;&gt;TCPIP_TELNET_FLAG_NONE = 0x0000&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:4;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;2&#34;&gt;No flag set.&lt;/entry&gt;&lt;/row&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;row:3;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:5;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;3&#34;&gt;TCPIP_TELNET_FLAG_NO_DELAY = 0x0001&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:6;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;3&#34;&gt;Create the telnet sockets with NO_DELAY option.&lt;/entry&gt;&lt;/row&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;row:4;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:7;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;4&#34;&gt;TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;entry:8;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;4&#34;&gt;Pass the telnet commands, options, controls, etc. within the messages to the console by default they are removed and only printable characters are sent to the console Enable only for debug or special purposes.&lt;/entry&gt;&lt;/row&gt;&lt;/tbody&gt;&lt;/tgroup&gt;&lt;/table&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;remarks&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;topic:5;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;title:5;184:15&#34;&gt;Remarks&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;body:5;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C213E95-1D72-4D87-A542-8C403169905A.md&#34; xtrc=&#34;p:3;184:15&#34;&gt;Only 16 bits are supported.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;/topic&gt;"/><meta name="wh-source-relpath" content="GUID-0C213E95-1D72-4D87-A542-8C403169905A.md"/><meta name="wh-out-relpath" content="GUID-0C213E95-1D72-4D87-A542-8C403169905A.html"/>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
     
-                      window.parent.location.href = origUrl + "?" + url;
+    <link rel="stylesheet" href="./oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css"/>
+    
+    <!-- Template default styles  -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/app/topic-page.css?buildId=2022062014"/>
+    
+    
+    <script src="./oxygen-webhelp/lib/jquery/jquery-3.5.1.min.js"></script>
+    
+    <script data-main="./oxygen-webhelp/app/topic-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
+<link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+<script src="mchp-context-help.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+</head>
 
-                      return false;
-                    }
-               }
-            }
-				});
-			}
+    <body id="tcpip-telnet-flags-enumeration" class="wh_topic_page frmBody">
+        <a href="#wh_topic_body" class="sr-only sr-only-focusable">
+            Jump to main content
+        </a>
+        
+        
+        
+        
+        <header class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container navbar-nav navbar-expand-md navbar-dark">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <a href="index.html" class=" wh_logo d-none d-sm-block "><img src="oxygen-webhelp\template\resources/images/microchip.png" alt="MPLAB® Harmony TCP/IP Library "/></a>
+                    <div class=" wh_publication_title "><a href="index.html">MPLAB® Harmony TCP/IP Library </a></div>
+                    
+                </div>
+                
+                
+            </div>
 
-		</script><script language="javascript">
-        function cpy(id, button) {
-        
-            var element = document.getElementById(id);
-            var content = element.getAttribute("content");
-            var textArea = document.createElement("textarea");
-            
-            // Place in the top-left corner of screen regardless of scroll position.
-            textArea.style.position = 'fixed';
-            textArea.style.top = 0;
-            textArea.style.left = 0;
-            
-            // Ensure it has a small width and height. Setting to 1px / 1em
-            // doesn't work as this gives a negative w/h on some browsers.
-            textArea.style.width = '2em';
-            textArea.style.height = '2em';
-            
-            // We don't need padding, reducing the size if it does flash render.
-            textArea.style.padding = 0;
-            
-            // Clean up any borders.
-            textArea.style.border = 'none';
-            textArea.style.outline = 'none';
-            textArea.style.boxShadow = 'none';
-            
-            // Avoid flash of the white box if rendered for any reason.
-            textArea.style.background = 'transparent';
-            
-            
-            textArea.value = content;
-            
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-               var successful = document.execCommand('copy');
-               var msg = successful ? 'successful' : 'unsuccessful';
-               if (!button.classList.contains("copied")){
-                  button.textContent = "Copied";
-                  button.classList.add("copied");
-                  setTimeout(function(){
-                    button.textContent = "Copy";
-                    button.classList.remove("copied");
-                  },1000);
-               }
-            } catch (err) {
-              console.log('Oops, unable to copy');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-      </script><script language="javascript">
-          
-          // Add the MathML namespace to html
-          var html = document.getElementsByTagName("html")[0],
-          head = document.getElementsByTagName("head")[0];
-          
-          var mathJax = document.createElement("script");
-          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
-          head.appendChild(mathJax);
-          
-          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
-          
-          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
-          
-          if (!inIframe()) { 
-          
-          var Default = "index.html?GUID-0C213E95-1D72-4D87-A542-8C403169905A"; 
-          
-          var displaylocation = "value" + window.location.href;
-          
-          var GUIDS = displaylocation.split('GUID');          
-          
-          if (displaylocation.indexOf('#GUID') != -1) {            
-          var First = GUIDS[1].split('.html');  
-          if (GUIDS[3]){First = GUIDS[2].split('.html');}
-          if (GUIDS[4]){First = GUIDS[3].split('.html');}
-          if (GUIDS[5]){First = GUIDS[4].split('.html');}
-          
-          var Second = GUIDS[2].split('#');   
-          if (GUIDS[3]){Second = GUIDS[3].split('#');}
-          if (GUIDS[4]){Second = GUIDS[4].split('#');}
-          if (GUIDS[5]){Second = GUIDS[5].split('#');}
-          
-          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
-          }                    
-          window.top.location = Default;
-          }       
-          
-        </script><style xml:space="">
-        
-          button.copy-code{
-            display:none;
-            padding:0.7em 1.4em;
-            margin:0 0.3em 0.3em 0;
-            border-radius:0.15em;
-            box-sizing: border-box;
-            text-decoration:none;
-            font-family:'Roboto',sans-serif;
-            text-transform:uppercase;
-            font-weight:400;
-            color:#FFFFFF;
-            background-color:#9c9c9c;
-            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
-            text-align:center;
-            position:relative;
-            border: 0;
-            float: right;
-            border-radius: .5em;
-            cursor: pointer;
-          }
-          button.copy-code:active{
-            top:0.1em;
-          }
-          
-          pre:hover button.copy-code{
-            display: inline-block !important;
-          }
-          button.copy-code.copied {
-            cursor: default !important;
-          }
-          
-          
-          @media all and (max-width:30em){
-            button.copy-code{
-              display:block;
-              margin:0.4em auto;
-            }
-          }
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse" id="wh_top_menu_and_indexterms_link">
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</header>
         
         
-      </style></head>
-<body id="tcpip-telnet-flags-enumeration">
-<h1 class="title topictitle1" id="ariaid-title1">TCPIP_TELNET_FLAGS Enumeration</h1><div class="body"></div>
-<div class="related-links">
-<div class="familylinks">
-<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html">Telnet Module</a></div>
+         
+        
+        <div class=" wh_search_input navbar-form wh_topic_page_search search " role="form">
+            
+            
+            
+            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            
+            <div class="mchp-color-stripe-grid-container">
+  <div class="mchp-main-bar mchp-orange-bar"></div>
+  <div class="mchp-main-bar mchp-blue-bar"></div>
+  <div class="mchp-main-bar mchp-green-bar"></div>
 </div>
-</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d41044e21', this);">Copy</button><code id="d41044e21" content="typedef enum {&#xD;&#xA;TCPIP_TELNET_FLAG_NONE = 0x0000,&#xD;&#xA;TCPIP_TELNET_FLAG_NO_DELAY = 0x0001,&#xD;&#xA;TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002&#xD;&#xA;} TCPIP_TELNET_FLAGS;&#xD;">typedef enum {&#xD;
+            
+        </div>
+        
+        <div class="container-fluid" id="wh_topic_container">
+            <div class="row">
+
+                <nav class="wh_tools d-print-none navbar-expand-md" aria-label="Tools">
+                    
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol class="d-print-none"><li><span class="home"><a href="index.html"><span>Home</span></a></span></li><li><div class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0"><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div></li><li><div class="topicref" data-id="mplab-harmony-tcpip-library"><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div></li><li><div class="topicref" data-id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73"><div class="title"><a href="GUID-6005945E-6669-486E-AA57-092C4EC0AD73.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1</ph>
+Application Layer</a></div></div></li><li><div class="topicref" data-id="telnet-module"><div class="title"><a href="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21</ph>
+Telnet Module</a></div></div></li><li class="active"><div class="topicref" data-id="tcpip-telnet-flags-enumeration"><div class="title"><a href="GUID-0C213E95-1D72-4D87-A542-8C403169905A.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.7</ph>
+TCPIP_TELNET_FLAGS Enumeration</a></div></div></li></ol></div>
+                    
+                    
+                    
+                    <div class="wh_right_tools">
+                        <button class="wh_hide_highlight" aria-label="Toggle search highlights" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" aria-label="Collapse sections" title="Collapse sections"></button>
+                        
+                        
+                        
+                        
+                        <div class=" wh_print_link print d-none d-md-inline-block "><button onClick="window.print()" title="Print this page" aria-label="Print this page"></button></div>
+                        
+                        <button type="button" id="wh_toc_button" class="custom-toggler navbar-toggler collapsed wh_toggle_button navbar-light" aria-expanded="false" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    
+                </nav>
+            </div>
+            
+            
+            
+            
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-12 d-md-block d-none d-print-none" aria-label="Table of Contents Container">
+                            <div id="wh_publication_toc_content">
+		                        
+                            	<div class=" wh_publication_toc " data-tooltip-position="right"><span class="expand-button-action-labels"><span id="button-expand-action" role="button" aria-label="Expand"></span><span id="button-collapse-action" role="button" aria-label="Collapse"></span><span id="button-pending-action" role="button" aria-label="Pending"></span></span><ul role="tree" aria-label="Table of Contents"><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11" class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html" id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19" class="topicref" data-id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html" id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.1</ph>
+TCP/IP Stack Library Overview</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="mplab-harmony-tcpip-library-d9776e67" class="topicref" data-id="mplab-harmony-tcpip-library" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action mplab-harmony-tcpip-library-d9776e67-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" id="mplab-harmony-tcpip-library-d9776e67-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75" class="topicref" data-id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-6005945E-6669-486E-AA57-092C4EC0AD73.html" id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1</ph>
+Application Layer</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="announce-module-d9776e83" class="topicref" data-id="announce-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action announce-module-d9776e83-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-2561DB16-7947-4C02-97DC-A0BFC17070C9.html" id="announce-module-d9776e83-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.1</ph>
+Announce Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="berkeley-module-d9776e147" class="topicref" data-id="berkeley-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action berkeley-module-d9776e147-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5F35C98C-EC8E-40FF-9B62-3B31D508F820.html" id="berkeley-module-d9776e147-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.2</ph>
+Berkeley Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dhcp-client-module-d9776e972" class="topicref" data-id="dhcp-client-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dhcp-client-module-d9776e972-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-9356D53B-4F42-4E1E-B051-90F7C4D448E6.html" id="dhcp-client-module-d9776e972-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.3</ph>
+DHCP Client Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dhcp-server-module-d9776e1149" class="topicref" data-id="dhcp-server-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dhcp-server-module-d9776e1149-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-27C514CD-DE28-4215-BB75-6C8EA971E12E.html" id="dhcp-server-module-d9776e1149-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.4</ph>
+DHCP Server Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dhcp-server-module-v2-d9776e1262" class="topicref" data-id="dhcp-server-module-v2" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dhcp-server-module-v2-d9776e1262-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EE292D18-2DE6-478E-AAE1-74C69A31459E.html" id="dhcp-server-module-v2-d9776e1262-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.5</ph>
+DHCP Server Module (V2)</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dhcpv6-module-d9776e1504" class="topicref" data-id="dhcpv6-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dhcpv6-module-d9776e1504-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-0B7ADACD-E078-4FE5-BC6A-B7CABFE390D3.html" id="dhcpv6-module-d9776e1504-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.6</ph>
+DHCPv6 Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dns-module-d9776e1665" class="topicref" data-id="dns-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dns-module-d9776e1665-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D15C8F84-C30C-451F-8AB7-F8E62AD494C2.html" id="dns-module-d9776e1665-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.7</ph>
+DNS Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dns-server-module-d9776e1988" class="topicref" data-id="dns-server-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dns-server-module-d9776e1988-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-987D1913-E20A-467D-9E57-DEC60B2EBE5D.html" id="dns-server-module-d9776e1988-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.8</ph>
+DNS Server Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="dynamic-dns-module-d9776e2149" class="topicref" data-id="dynamic-dns-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action dynamic-dns-module-d9776e2149-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-2F39A35D-A741-49F8-BAA9-3B3C9B665486.html" id="dynamic-dns-module-d9776e2149-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.9</ph>
+Dynamic DNS Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ftp-client-module-d9776e2254" class="topicref" data-id="ftp-client-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ftp-client-module-d9776e2254-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-CE11EBFA-49BD-4D91-86C5-FFD24810B03C.html" id="ftp-client-module-d9776e2254-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.10</ph>
+FTP Client Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ftp-server-module-d9776e2610" class="topicref" data-id="ftp-server-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ftp-server-module-d9776e2610-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-3FB7E1A3-E2CF-43D2-B8BB-8E306C170FF3.html" id="ftp-server-module-d9776e2610-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.11</ph>
+FTP Server Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="http-module-d9776e2642" class="topicref" data-id="http-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action http-module-d9776e2642-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-25A4CF50-2F8F-47E7-A90C-ABFA52814459.html" id="http-module-d9776e2642-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.12</ph>
+HTTP Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="http-net-module-d9776e3038" class="topicref" data-id="http-net-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action http-net-module-d9776e3038-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-4EFEB885-ECF8-44B5-8F23-1D05952E1845.html" id="http-net-module-d9776e3038-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.13</ph>
+HTTP Net Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="iperf-module-d9776e3566" class="topicref" data-id="iperf-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action iperf-module-d9776e3566-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-338BE6D4-6407-4074-804F-803059F7212B.html" id="iperf-module-d9776e3566-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.14</ph>
+Iperf Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="nbns-module-d9776e3582" class="topicref" data-id="nbns-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action nbns-module-d9776e3582-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-60817292-D657-471A-86CE-25D068933506.html" id="nbns-module-d9776e3582-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.15</ph>
+NBNS Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="reboot-module-d9776e3606" class="topicref" data-id="reboot-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action reboot-module-d9776e3606-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-FC6E0701-F309-47D1-9F2D-0253AADF48FC.html" id="reboot-module-d9776e3606-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.16</ph>
+Reboot Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="smtp-module-d9776e3630" class="topicref" data-id="smtp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action smtp-module-d9776e3630-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-2B9B587D-5018-4CA9-AA8D-2395A2D004A5.html" id="smtp-module-d9776e3630-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.17</ph>
+SMTP Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="smtpc-module-d9776e3727" class="topicref" data-id="smtpc-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action smtpc-module-d9776e3727-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-1477C704-4A26-476C-8E70-7514FAF123F4.html" id="smtpc-module-d9776e3727-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.18</ph>
+SMTPC Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="snmp-module-d9776e3888" class="topicref" data-id="snmp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action snmp-module-d9776e3888-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-7764E81C-8FC9-4B3E-8830-255BDE678AA0.html" id="snmp-module-d9776e3888-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.19</ph>
+SNMP Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="sntp-module-d9776e4397" class="topicref" data-id="sntp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action sntp-module-d9776e4397-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-832A1C71-21E8-4386-BFCE-18B19538AC01.html" id="sntp-module-d9776e4397-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.20</ph>
+SNTP Module</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="telnet-module-d9776e4542" class="topicref" data-id="telnet-module" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action telnet-module-d9776e4542-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-B0FCC6E9-74D8-443B-8F61-7317500EEFF3.html" id="telnet-module-d9776e4542-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21</ph>
+Telnet Module</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem"><div data-tocid="tcpip-telnet-auth-handler-type-d9776e4550" class="topicref" data-id="tcpip-telnet-auth-handler-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C642CB71-CF06-46CC-9922-1407077E1B3B.html" id="tcpip-telnet-auth-handler-type-d9776e4550-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.1</ph>
+TCPIP_TELNET_AUTH_HANDLER Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-authenticationderegister-function-d9776e4558" class="topicref" data-id="tcpip-telnet-authenticationderegister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-CAC0E3EC-B120-4A6A-8574-F17455A01A5E.html" id="tcpip-telnet-authenticationderegister-function-d9776e4558-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.2</ph>
+TCPIP_TELNET_AuthenticationDeregister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-authenticationregister-function-d9776e4566" class="topicref" data-id="tcpip-telnet-authenticationregister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-DEE3AF7D-97B4-4A2D-8A1E-279868DC0C5B.html" id="tcpip-telnet-authenticationregister-function-d9776e4566-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.3</ph>
+TCPIP_TELNET_AuthenticationRegister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-conn-info-structure-d9776e4574" class="topicref" data-id="tcpip-telnet-conn-info-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-4B5D0D38-3E38-4109-A20A-66A18773B272.html" id="tcpip-telnet-conn-info-structure-d9776e4574-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.4</ph>
+TCPIP_TELNET_CONN_INFO Structure</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-connectioninfoget-function-d9776e4582" class="topicref" data-id="tcpip-telnet-connectioninfoget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-F6B8C2BE-93BB-482F-9546-12FB7912C865.html" id="tcpip-telnet-connectioninfoget-function-d9776e4582-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.5</ph>
+TCPIP_TELNET_ConnectionInfoGet Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-connectionsget-function-d9776e4590" class="topicref" data-id="tcpip-telnet-connectionsget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-7F49124A-639B-485B-8548-282953AF9BDB.html" id="tcpip-telnet-connectionsget-function-d9776e4590-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.6</ph>
+TCPIP_TELNET_ConnectionsGet Function</a></div></div></li><li role="treeitem" class="active"><div data-tocid="tcpip-telnet-flags-enumeration-d9776e4598" class="topicref" data-id="tcpip-telnet-flags-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0C213E95-1D72-4D87-A542-8C403169905A.html" id="tcpip-telnet-flags-enumeration-d9776e4598-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.7</ph>
+TCPIP_TELNET_FLAGS Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-handle-type-d9776e4606" class="topicref" data-id="tcpip-telnet-handle-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-D2E00968-3614-40B6-80DE-4CF03F6EA822.html" id="tcpip-telnet-handle-type-d9776e4606-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.8</ph>
+TCPIP_TELNET_HANDLE Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-module-config-structure-d9776e4614" class="topicref" data-id="tcpip-telnet-module-config-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-05ED5A83-621B-4753-9A98-747A4B51D0ED.html" id="tcpip-telnet-module-config-structure-d9776e4614-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.9</ph>
+TCPIP_TELNET_MODULE_CONFIG Structure</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-state-enumeration-d9776e4622" class="topicref" data-id="tcpip-telnet-state-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-15B2929A-D9FD-4BE9-B460-EACF37CB766A.html" id="tcpip-telnet-state-enumeration-d9776e4622-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.10</ph>
+TCPIP_TELNET_STATE Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-telnet-task-function-d9776e4631" class="topicref" data-id="tcpip-telnet-task-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-228CD50D-67DE-41BE-BD4D-D877D5667C9C.html" id="tcpip-telnet-task-function-d9776e4631-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.21.11</ph>
+TCPIP_TELNET_Task Function</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="tftp-client-module-d9776e4640" class="topicref" data-id="tftp-client-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action tftp-client-module-d9776e4640-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5AE30EFB-7B7C-4B4E-8BCF-FAB8D8FB9A89.html" id="tftp-client-module-d9776e4640-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.22</ph>
+TFTP Client Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="tftp-server-module-d9776e4753" class="topicref" data-id="tftp-server-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action tftp-server-module-d9776e4753-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D76DC993-4CD3-4C65-92DB-14DEAB57BB27.html" id="tftp-server-module-d9776e4753-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.23</ph>
+TFTP Server Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="zeroconf-module-d9776e4922" class="topicref" data-id="zeroconf-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action zeroconf-module-d9776e4922-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-1076C2EA-7DC5-419E-A3E7-BBA92CFF5CFB.html" id="zeroconf-module-d9776e4922-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1.24</ph>
+Zeroconf Module</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010" class="topicref" data-id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578.html" id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.2</ph>
+Presentation Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657" class="topicref" data-id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B.html" id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3</ph>
+Transport Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587" class="topicref" data-id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520.html" id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4</ph>
+Network Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919" class="topicref" data-id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029.html" id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5</ph>
+Data Link Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881" class="topicref" data-id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90.html" id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.6</ph>
+TCP/IP Stack Core</a></div></div></li></ul></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760" class="topicref" data-id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html" id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">2</ph>
+Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li></ul></div>
+		                        
+                            </div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-7 col-md-9 col-sm-12" id="wh_topic_body">
+                        <button id="wh_close_publication_toc_button" class="close-toc-button d-none" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        <button id="wh_close_topic_toc_button" class="close-toc-button d-none" aria-label="Toggle topic table of content" aria-controls="wh_topic_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><h1 class="- topic/title title topictitle1" id="ariaid-title1" style="">1.2.1.21.7 TCPIP_TELNET_FLAGS Enumeration</h1><div class="- topic/body body"></div><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="- topic/title title topictitle2" id="ariaid-title2" style=""> C</h2><div class="- topic/body body"><pre class="+ topic/pre pr-d/codeblock pre codeblock"><code>typedef enum {&#xD;
 TCPIP_TELNET_FLAG_NONE = 0x0000,&#xD;
 TCPIP_TELNET_FLAG_NO_DELAY = 0x0001,&#xD;
 TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002&#xD;
-} TCPIP_TELNET_FLAGS;&#xD;</code></pre></div>
+} TCPIP_TELNET_FLAGS;&#xD;</code></pre></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="- topic/title title topictitle2" id="ariaid-title3" style=""> Description</h2><div class="- topic/body body"><p class="- topic/p p">Enumeration: TCPIP_TELNET_FLAGS.</p><p class="- topic/p p">Flags for the configuration of the telnet module.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title4" id="members"><h2 class="- topic/title title topictitle2" id="ariaid-title4" style=""> Members</h2><div class="- topic/body body"><div class="table-container"><table class="- topic/table table" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-0 rowsep-0" id="members__entry__1">Members</th><th class="- topic/entry entry colsep-0 rowsep-0" id="members__entry__2">Description</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__1">TCPIP_TELNET_FLAG_NONE = 0x0000</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__2">No flag set.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__1">TCPIP_TELNET_FLAG_NO_DELAY = 0x0001</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__2">Create the telnet sockets with NO_DELAY option.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__1">TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="members__entry__2">Pass the telnet commands, options, controls, etc. within the messages to the console by default they are removed and only printable characters are sent to the console Enable only for debug or special purposes.</td></tr></tbody></table></div></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title5" id="remarks"><h2 class="- topic/title title topictitle2" id="ariaid-title5" style=""> Remarks</h2><div class="- topic/body body"><p class="- topic/p p">Only 16 bits are supported.</p></div></article></article></main></div>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                    
+                        <nav role="navigation" id="wh_topic_toc" aria-label="On this page" class="col-lg-2 d-none d-lg-block navbar d-print-none"> 
+                            <div id="wh_topic_toc_content">
+		                        
+	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="topic-item"><a href="#c" data-tocid="c"> C</a></li><li class="topic-item"><a href="#description" data-tocid="description"> Description</a></li><li class="topic-item"><a href="#members" data-tocid="members"> Members</a></li><li class="topic-item"><a href="#remarks" data-tocid="remarks"> Remarks</a></li></ul></div>
+	                        	
+                        	</div>
+                        </nav>
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div> 
+        <footer class="navbar navbar-default wh_footer">
+  <div class=" footer-container mx-auto ">
+    <div class="footer">
+  <div class="mchp-wh-footer">
+    <div class="mchp-footer">
+      <div class="mchp-footer-tier1">
+        <div class="spacer"></div>
+        <div class="mchp-footer-container">
+          <div class="mchp-footer-links mchp-social-media-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.facebook.com/pages/Microchip-Technology-Inc/20320981741" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Facebook" src="oxygen-webhelp/template/resources/images/201016-corp-facebook.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.linkedin.com/company/microchip-technology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip LinkedIn" src="oxygen-webhelp/template/resources/images/201016-corp-linkedin.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://twitter.com/MicrochipTech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Twitter" src="oxygen-webhelp/template/resources/images/201016-corp-twitter.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.youtube.com/user/MicrochipTechnology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip YouTube" src="oxygen-webhelp/template/resources/images/201016-corp-youtube.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.instagram.com/microchiptechnologyinc/" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Instagram" src="oxygen-webhelp/template/resources/images/201016-corp-instagram.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.weibo.com/microchiptech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Weibo" src="oxygen-webhelp/template/resources/images/201016-corp-weibo.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.microchip.com/en-us/about/blog" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Blog" src="oxygen-webhelp/template/resources/images/201016-corp-blog.png"/>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://www.microchip.com/about-us/contact-us" class="mchp-link__link">Contact</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information" class="mchp-link__link">Legal</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/privacy-policy" class="mchp-link__link">Privacy Policy</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/microchip-cookie-statement" class="mchp-link__link">Cookies</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://careers.microchip.com/" class="mchp-link__link">Careers</a>
+                  <span class="mchp-link__separator"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-newsletter">
+            <div class="cmp-text">
+              <p>Stay on the leading edge with our blog</p>
+            </div>
+            <div class="mchp-button-wrapper">
+              <a role="button" href="https://www.microchip.com/en-us/about/blog" class="mchp-button mchp-button-regular solid">
+                <span class="mchp-button__span">MicroSolutions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="graphic">
+          <img src="oxygen-webhelp/template/resources/images/footer-graphic.png"/>
+        </div>
+      </div>
+      <div class="mchp-footer-tier2">
+        <p class="mchp-copyright">© Copyright 1998-2022 Microchip Technology Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-2724382-19"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());   
+    gtag('config', 'UA-2724382-19');
+  </script>
 </div>
-<div class="topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="title topictitle2" id="ariaid-title3">Description</h2><div class="body"><p class="p">Enumeration: TCPIP_TELNET_FLAGS.</p>
-<p class="p">Flags for the configuration of the telnet module.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title4" id="members"><h2 class="title topictitle2" id="ariaid-title4">Members</h2><div class="body">
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d41044e41"><span>Members</span></th>
-<th class="entry cellrowborder" style="vertical-align:middle;" id="d41044e43"><span>Description</span></th>
-</tr>
-</thead>
-<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e41 "><span>TCPIP_TELNET_FLAG_NONE = 0x0000</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e43 "><span>No flag set.</span></td>
-</tr>
-<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e41 "><span>TCPIP_TELNET_FLAG_NO_DELAY = 0x0001</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e43 "><span>Create the telnet sockets with NO_DELAY option.</span></td>
-</tr>
-<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e41 "><span>TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS = 0x0002</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d41044e43 "><span>Pass the telnet commands, options, controls, etc. within the messages to the console by default they are removed and only printable characters are sent to the console Enable only for debug or special purposes.</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title5" id="remarks"><h2 class="title topictitle2" id="ariaid-title5">Remarks</h2><div class="body"><p class="p">Only 16 bits are supported.</p>
-</div>
-</div>
-</body>
+  </div>
+</footer>
+        
+        <div id="go2top" class="d-print-none">
+            <span class="oxy-icon oxy-icon-up"></span>
+        </div>
+        
+        <div id="modal_img_large" class="modal">
+            <span class="close oxy-icon oxy-icon-remove"></span>
+            <div id="modal_img_container"></div>
+            <div id="caption"></div>
+        </div>
+        
+        
+        
+    </body>
 </html>

@@ -1,239 +1,320 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
-<meta name="DC.rights.owner" content="(C) Copyright 2022" />
-<meta name="DC.type" content="topic" />
-<meta name="DC.title" content="DRV_ENCX24J600_PacketTx Function" />
-<meta name="DC.relation" scheme="URI" content="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html" />
-<meta name="DC.format" content="XHTML" />
-<meta name="DC.identifier" content="drv-encx24j600-packettx-function" />
-<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
-<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
-<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>DRV_ENCX24J600_PacketTx Function</title>
-<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-drv-encx24j600-packettx-function" />
-<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
-<meta name="Microsoft.Help.TocOrder" content="0" />
-<meta name="Microsoft.Help.Locale" content="en-US" />
-<meta name="Microsoft.Help.TopicLocale" content="en-US" />
-<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
-<script language="javascript">
-       
-       if (window.parent.location.protocol != 'file:') {
-				document.addEventListener('click', function(e) {
-				    if (e.target) {
-               if (e.target.nodeName == "A" ) {
-                    if (!e.target.target) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                              
-                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
-                      if (origUrl.length === 0) {
-                          origUrl = window.parent.location.href;
-                      }
-                      var href= e.target.getAttribute("href");
-                      var parts = href.split("#");
-          
-                      var url = "";
-                      if (parts.length == 2 ) {
-                        if (!parts[0].length) {
-                            url = window.parent.location.search.replace('?','')
-                        } else {
-                            url = parts[0].replace('.html','');
-                        }
-                      } else {
-                        url = parts[0].replace('.html','');
-                      }
-
-                      if (parts.length == 2) {
-                          url += "#" + parts[1];
-                      }
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" data-whc_version="24.1">
+    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket); TCPIP_MAC_RES_OP_ERR - if the client handle is invalid TCPIP_MAC_RES_IS_BUSY - if the driver is not in the run ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.2.5.3.15 DRV_ENCX24J600_PacketTx Function</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;&lt;?workdir /D:\InfoShare\Data\Publish\Data\g03rya0jylh\work\temp?&gt;&lt;?workdir-uri file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/temp/?&gt;&lt;?path2project?&gt;&lt;?path2project-uri ./?&gt;&lt;?path2rootmap-uri ./?&gt;&lt;topic xmlns:dita-ot=&#34;http://dita-ot.sourceforge.net/ns/201007/dita-ot&#34; xmlns:ditaarch=&#34;http://dita.oasis-open.org/architecture/2005/&#34; class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;drv-encx24j600-packettx-function&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:1;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:1;184:15&#34;&gt;DRV_ENCX24J600_PacketTx Function&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:1;184:15&#34;/&gt;&lt;related-links class=&#34;- topic/related-links &#34;&gt;&lt;linkpool class=&#34;- topic/linkpool &#34; mapkeyref=&#34;GUID-130F5D4D-BB11-4FFF-ACAA-35396D81EB4A&#34; xtrc=&#34;topicref:16;6:2443&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-78BE9B57-B2C4-4116-B33C-1A23274F8C36.ditamap&#34;&gt;&lt;link class=&#34;- topic/link &#34; format=&#34;dita&#34; href=&#34;GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.md&#34; mapclass=&#34;- map/topicref &#34; role=&#34;parent&#34; scope=&#34;local&#34; type=&#34;topic&#34; xtrc=&#34;topicref:1;6:99&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-78BE9B57-B2C4-4116-B33C-1A23274F8C36.ditamap&#34;&gt;&lt;?ditaot usertext?&gt;&lt;linktext class=&#34;- topic/linktext &#34;&gt;&lt;?ditaot gentext?&gt;ENCx24J600 Driver Library&lt;/linktext&gt;&lt;/link&gt;&lt;/linkpool&gt;&lt;/related-links&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;c&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:2;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:2;184:15&#34;&gt;C&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:2;184:15&#34;&gt;&lt;codeblock class=&#34;+ topic/pre pr-d/codeblock &#34; xml:space=&#34;preserve&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;codeblock:1;184:15&#34;&gt;TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket); &lt;/codeblock&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;returns&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:3;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:3;184:15&#34;&gt;Returns&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:3;184:15&#34;&gt;&lt;ul class=&#34;- topic/ul &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;ul:1;184:15&#34;&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;li:1;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:1;184:15&#34;&gt;TCPIP_MAC_RES_OP_ERR - if the client handle is invalid&lt;/p&gt;&lt;/li&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;li:2;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:2;184:15&#34;&gt;TCPIP_MAC_RES_IS_BUSY - if the driver is not in the run state&lt;/p&gt;&lt;/li&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;li:3;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:3;184:15&#34;&gt;TCPIP_MAC_RES_QUEUE_TX_FULL - if there are no free descriptors&lt;/p&gt;&lt;/li&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;li:4;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:4;184:15&#34;&gt;TCPIP_MAC_RES_OK - on successful queuing of the packet&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;description&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:4;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:4;184:15&#34;&gt;Description&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:4;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:5;184:15&#34;&gt;ENCX24J600 Packet Transmit This function will take a packet and add it to the queue for transmission. When the packet has finished transmitting the driver will call the packets acknowledge function. When that acknowledge function is complete the driver will forget about the packet.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;preconditions&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:5;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:5;184:15&#34;&gt;Preconditions&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:5;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;p:6;184:15&#34;&gt;The client had to be successfully opened with DRV_ENCX24J600_Open.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;parameters&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;topic:6;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;title:6;184:15&#34;&gt;Parameters&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;body:6;184:15&#34;&gt;&lt;table class=&#34;- topic/table &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;table:1;184:15&#34;&gt;&lt;tgroup class=&#34;- topic/tgroup &#34; cols=&#34;2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;tgroup:1;184:15&#34;&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col1&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;colspec:1;184:15&#34; colnum=&#34;1&#34;/&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;colspec:2;184:15&#34; colnum=&#34;2&#34;/&gt;&lt;thead class=&#34;- topic/thead &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;thead:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;row:1;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:1;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;1&#34;&gt;Parameters&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:2;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;1&#34;&gt;Description&lt;/entry&gt;&lt;/row&gt;&lt;/thead&gt;&lt;tbody class=&#34;- topic/tbody &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;tbody:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;row:2;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:3;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;2&#34;&gt;hMac&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:4;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;2&#34;&gt;the successfully opened handle&lt;/entry&gt;&lt;/row&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;row:3;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:5;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;3&#34;&gt;ptrPacket&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md&#34; xtrc=&#34;entry:6;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;3&#34;&gt;pointer to the packet&lt;/entry&gt;&lt;/row&gt;&lt;/tbody&gt;&lt;/tgroup&gt;&lt;/table&gt;&lt;/body&gt;&lt;/topic&gt;&lt;/topic&gt;"/><meta name="wh-source-relpath" content="GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.md"/><meta name="wh-out-relpath" content="GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.html"/>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
     
-                      window.parent.location.href = origUrl + "?" + url;
+    <link rel="stylesheet" href="./oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css"/>
+    
+    <!-- Template default styles  -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/app/topic-page.css?buildId=2022062014"/>
+    
+    
+    <script src="./oxygen-webhelp/lib/jquery/jquery-3.5.1.min.js"></script>
+    
+    <script data-main="./oxygen-webhelp/app/topic-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
+<link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+<script src="mchp-context-help.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+</head>
 
-                      return false;
-                    }
-               }
-            }
-				});
-			}
+    <body id="drv-encx24j600-packettx-function" class="wh_topic_page frmBody">
+        <a href="#wh_topic_body" class="sr-only sr-only-focusable">
+            Jump to main content
+        </a>
+        
+        
+        
+        
+        <header class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container navbar-nav navbar-expand-md navbar-dark">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <a href="index.html" class=" wh_logo d-none d-sm-block "><img src="oxygen-webhelp\template\resources/images/microchip.png" alt="MPLAB® Harmony TCP/IP Library "/></a>
+                    <div class=" wh_publication_title "><a href="index.html">MPLAB® Harmony TCP/IP Library </a></div>
+                    
+                </div>
+                
+                
+            </div>
 
-		</script><script language="javascript">
-        function cpy(id, button) {
-        
-            var element = document.getElementById(id);
-            var content = element.getAttribute("content");
-            var textArea = document.createElement("textarea");
-            
-            // Place in the top-left corner of screen regardless of scroll position.
-            textArea.style.position = 'fixed';
-            textArea.style.top = 0;
-            textArea.style.left = 0;
-            
-            // Ensure it has a small width and height. Setting to 1px / 1em
-            // doesn't work as this gives a negative w/h on some browsers.
-            textArea.style.width = '2em';
-            textArea.style.height = '2em';
-            
-            // We don't need padding, reducing the size if it does flash render.
-            textArea.style.padding = 0;
-            
-            // Clean up any borders.
-            textArea.style.border = 'none';
-            textArea.style.outline = 'none';
-            textArea.style.boxShadow = 'none';
-            
-            // Avoid flash of the white box if rendered for any reason.
-            textArea.style.background = 'transparent';
-            
-            
-            textArea.value = content;
-            
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-               var successful = document.execCommand('copy');
-               var msg = successful ? 'successful' : 'unsuccessful';
-               if (!button.classList.contains("copied")){
-                  button.textContent = "Copied";
-                  button.classList.add("copied");
-                  setTimeout(function(){
-                    button.textContent = "Copy";
-                    button.classList.remove("copied");
-                  },1000);
-               }
-            } catch (err) {
-              console.log('Oops, unable to copy');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-      </script><script language="javascript">
-          
-          // Add the MathML namespace to html
-          var html = document.getElementsByTagName("html")[0],
-          head = document.getElementsByTagName("head")[0];
-          
-          var mathJax = document.createElement("script");
-          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
-          head.appendChild(mathJax);
-          
-          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
-          
-          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
-          
-          if (!inIframe()) { 
-          
-          var Default = "index.html?GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8"; 
-          
-          var displaylocation = "value" + window.location.href;
-          
-          var GUIDS = displaylocation.split('GUID');          
-          
-          if (displaylocation.indexOf('#GUID') != -1) {            
-          var First = GUIDS[1].split('.html');  
-          if (GUIDS[3]){First = GUIDS[2].split('.html');}
-          if (GUIDS[4]){First = GUIDS[3].split('.html');}
-          if (GUIDS[5]){First = GUIDS[4].split('.html');}
-          
-          var Second = GUIDS[2].split('#');   
-          if (GUIDS[3]){Second = GUIDS[3].split('#');}
-          if (GUIDS[4]){Second = GUIDS[4].split('#');}
-          if (GUIDS[5]){Second = GUIDS[5].split('#');}
-          
-          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
-          }                    
-          window.top.location = Default;
-          }       
-          
-        </script><style xml:space="">
-        
-          button.copy-code{
-            display:none;
-            padding:0.7em 1.4em;
-            margin:0 0.3em 0.3em 0;
-            border-radius:0.15em;
-            box-sizing: border-box;
-            text-decoration:none;
-            font-family:'Roboto',sans-serif;
-            text-transform:uppercase;
-            font-weight:400;
-            color:#FFFFFF;
-            background-color:#9c9c9c;
-            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
-            text-align:center;
-            position:relative;
-            border: 0;
-            float: right;
-            border-radius: .5em;
-            cursor: pointer;
-          }
-          button.copy-code:active{
-            top:0.1em;
-          }
-          
-          pre:hover button.copy-code{
-            display: inline-block !important;
-          }
-          button.copy-code.copied {
-            cursor: default !important;
-          }
-          
-          
-          @media all and (max-width:30em){
-            button.copy-code{
-              display:block;
-              margin:0.4em auto;
-            }
-          }
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse" id="wh_top_menu_and_indexterms_link">
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</header>
         
         
-      </style></head>
-<body id="drv-encx24j600-packettx-function">
-<h1 class="title topictitle1" id="ariaid-title1">DRV_ENCX24J600_PacketTx Function</h1><div class="body"></div>
-<div class="related-links">
-<div class="familylinks">
-<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html">ENCx24J600 Driver Library</a></div>
+         
+        
+        <div class=" wh_search_input navbar-form wh_topic_page_search search " role="form">
+            
+            
+            
+            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            
+            <div class="mchp-color-stripe-grid-container">
+  <div class="mchp-main-bar mchp-orange-bar"></div>
+  <div class="mchp-main-bar mchp-blue-bar"></div>
+  <div class="mchp-main-bar mchp-green-bar"></div>
 </div>
-</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d225208e21', this);">Copy</button><code id="d225208e21" content="TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket); ">TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket); </code></pre></div>
+            
+        </div>
+        
+        <div class="container-fluid" id="wh_topic_container">
+            <div class="row">
+
+                <nav class="wh_tools d-print-none navbar-expand-md" aria-label="Tools">
+                    
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol class="d-print-none"><li><span class="home"><a href="index.html"><span>Home</span></a></span></li><li><div class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0"><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div></li><li><div class="topicref" data-id="mplab-harmony-tcpip-library"><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div></li><li><div class="topicref" data-id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029"><div class="title"><a href="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5</ph>
+Data Link Layer</a></div></div></li><li><div class="topicref" data-id="encx24j600-driver-library"><div class="title"><a href="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3</ph>
+ENCx24J600 Driver Library</a></div></div></li><li class="active"><div class="topicref" data-id="drv-encx24j600-packettx-function"><div class="title"><a href="GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.15</ph>
+DRV_ENCX24J600_PacketTx Function</a></div></div></li></ol></div>
+                    
+                    
+                    
+                    <div class="wh_right_tools">
+                        <button class="wh_hide_highlight" aria-label="Toggle search highlights" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" aria-label="Collapse sections" title="Collapse sections"></button>
+                        
+                        
+                        
+                        
+                        <div class=" wh_print_link print d-none d-md-inline-block "><button onClick="window.print()" title="Print this page" aria-label="Print this page"></button></div>
+                        
+                        <button type="button" id="wh_toc_button" class="custom-toggler navbar-toggler collapsed wh_toggle_button navbar-light" aria-expanded="false" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    
+                </nav>
+            </div>
+            
+            
+            
+            
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-12 d-md-block d-none d-print-none" aria-label="Table of Contents Container">
+                            <div id="wh_publication_toc_content">
+		                        
+                            	<div class=" wh_publication_toc " data-tooltip-position="right"><span class="expand-button-action-labels"><span id="button-expand-action" role="button" aria-label="Expand"></span><span id="button-collapse-action" role="button" aria-label="Collapse"></span><span id="button-pending-action" role="button" aria-label="Pending"></span></span><ul role="tree" aria-label="Table of Contents"><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11" class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html" id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19" class="topicref" data-id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html" id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.1</ph>
+TCP/IP Stack Library Overview</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="mplab-harmony-tcpip-library-d9776e67" class="topicref" data-id="mplab-harmony-tcpip-library" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action mplab-harmony-tcpip-library-d9776e67-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" id="mplab-harmony-tcpip-library-d9776e67-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75" class="topicref" data-id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-6005945E-6669-486E-AA57-092C4EC0AD73.html" id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1</ph>
+Application Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010" class="topicref" data-id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578.html" id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.2</ph>
+Presentation Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657" class="topicref" data-id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B.html" id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3</ph>
+Transport Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587" class="topicref" data-id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520.html" id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4</ph>
+Network Layer</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919" class="topicref" data-id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029.html" id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5</ph>
+Data Link Layer</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="mac-driver-module-d9776e7927" class="topicref" data-id="mac-driver-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action mac-driver-module-d9776e7927-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-0C1AF471-66D4-472F-84AF-212E9E18B21D.html" id="mac-driver-module-d9776e7927-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.1</ph>
+MAC Driver Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="enc28j60-driver-library-d9776e8444" class="topicref" data-id="enc28j60-driver-library" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action enc28j60-driver-library-d9776e8444-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-58EA08F2-E38D-48FD-BD75-C2972C0EE761.html" id="enc28j60-driver-library-d9776e8444-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.2</ph>
+ENC28J60 Driver Library</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="encx24j600-driver-library-d9776e8662" class="topicref" data-id="encx24j600-driver-library" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action encx24j600-driver-library-d9776e8662-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-F35BADF5-5469-4970-B3C5-52AB1E2287AB.html" id="encx24j600-driver-library-d9776e8662-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3</ph>
+ENCx24J600 Driver Library</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem"><div data-tocid="drv-encx24j600-client-instances-idxx-macro-d9776e8670" class="topicref" data-id="drv-encx24j600-client-instances-idxx-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-89D86BB6-4035-47CA-BEE8-9509684519BE.html" id="drv-encx24j600-client-instances-idxx-macro-d9776e8670-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.1</ph>
+DRV_ENCX24J600_CLIENT_INSTANCES_IDXx Macro</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-close-function-d9776e8678" class="topicref" data-id="drv-encx24j600-close-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-73B3319C-B2E2-4C0B-9815-3FA51662F8C9.html" id="drv-encx24j600-close-function-d9776e8678-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.2</ph>
+DRV_ENCX24J600_Close Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-configget-function-d9776e8686" class="topicref" data-id="drv-encx24j600-configget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0AC195CC-AEA5-4BC7-AE1F-36C2A8091348.html" id="drv-encx24j600-configget-function-d9776e8686-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.3</ph>
+DRV_ENCX24J600_ConfigGet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-configuration-type-d9776e8694" class="topicref" data-id="drv-encx24j600-configuration-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-3806976C-025D-4412-BB7F-DD4D8E0339C8.html" id="drv-encx24j600-configuration-type-d9776e8694-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.4</ph>
+DRV_ENCX24J600_Configuration Type</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-deinitialize-function-d9776e8702" class="topicref" data-id="drv-encx24j600-deinitialize-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C658EE89-DDA0-4B5F-B8B7-B22FF916284D.html" id="drv-encx24j600-deinitialize-function-d9776e8702-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.5</ph>
+DRV_ENCX24J600_Deinitialize Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-eventacknowledge-function-d9776e8710" class="topicref" data-id="drv-encx24j600-eventacknowledge-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-001E5E58-B454-4492-AEDC-707190DDE737.html" id="drv-encx24j600-eventacknowledge-function-d9776e8710-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.6</ph>
+DRV_ENCX24J600_EventAcknowledge Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-eventmaskset-function-d9776e8718" class="topicref" data-id="drv-encx24j600-eventmaskset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-A87AA6B1-5247-4991-8A28-D960E97CCD32.html" id="drv-encx24j600-eventmaskset-function-d9776e8718-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.7</ph>
+DRV_ENCX24J600_EventMaskSet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-eventpendingget-function-d9776e8726" class="topicref" data-id="drv-encx24j600-eventpendingget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C68AEB26-6C98-47BD-89FB-92838F04FEC7.html" id="drv-encx24j600-eventpendingget-function-d9776e8726-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.8</ph>
+DRV_ENCX24J600_EventPendingGet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-initialize-function-d9776e8734" class="topicref" data-id="drv-encx24j600-initialize-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-85B5B225-55A6-4F12-9278-A77CB7B62498.html" id="drv-encx24j600-initialize-function-d9776e8734-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.9</ph>
+DRV_ENCX24J600_Initialize Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-instances-number-macro-d9776e8742" class="topicref" data-id="drv-encx24j600-instances-number-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-7FD47E3C-3456-4CFE-8D66-8B7730C8E061.html" id="drv-encx24j600-instances-number-macro-d9776e8742-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.10</ph>
+DRV_ENCX24J600_INSTANCES_NUMBER Macro</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-linkcheck-function-d9776e8751" class="topicref" data-id="drv-encx24j600-linkcheck-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-2637DA0B-1EF0-4C66-B28A-E1A7622E7A0C.html" id="drv-encx24j600-linkcheck-function-d9776e8751-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.11</ph>
+DRV_ENCX24J600_LinkCheck Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-mdix-type-type-d9776e8759" class="topicref" data-id="drv-encx24j600-mdix-type-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C5BA9616-28D3-4E7F-A8A3-93DB479CA06C.html" id="drv-encx24j600-mdix-type-type-d9776e8759-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.12</ph>
+DRV_ENCX24J600_MDIX_TYPE Type</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-open-function-d9776e8767" class="topicref" data-id="drv-encx24j600-open-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-EA8A7724-BE94-4AB6-8E67-B271C3019D9D.html" id="drv-encx24j600-open-function-d9776e8767-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.13</ph>
+DRV_ENCX24J600_Open Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-packetrx-function-d9776e8775" class="topicref" data-id="drv-encx24j600-packetrx-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-819F34A6-7D1C-4A8B-9FEC-936F5C2E2951.html" id="drv-encx24j600-packetrx-function-d9776e8775-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.14</ph>
+DRV_ENCX24J600_PacketRx Function</a></div></div></li><li role="treeitem" class="active"><div data-tocid="drv-encx24j600-packettx-function-d9776e8783" class="topicref" data-id="drv-encx24j600-packettx-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-6290C00F-2621-42B2-8E9C-F2DB53C224E8.html" id="drv-encx24j600-packettx-function-d9776e8783-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.15</ph>
+DRV_ENCX24J600_PacketTx Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-parametersget-function-d9776e8791" class="topicref" data-id="drv-encx24j600-parametersget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-7F9010E2-A1A6-4DCA-AEA8-6DF09A3372E2.html" id="drv-encx24j600-parametersget-function-d9776e8791-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.16</ph>
+DRV_ENCX24J600_ParametersGet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-powermode-function-d9776e8799" class="topicref" data-id="drv-encx24j600-powermode-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-45A57DE2-98BB-4151-984C-801E985F191D.html" id="drv-encx24j600-powermode-function-d9776e8799-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.17</ph>
+DRV_ENCX24J600_PowerMode Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-process-function-d9776e8807" class="topicref" data-id="drv-encx24j600-process-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-DB15F232-017B-45BE-9812-DC886F1B7F10.html" id="drv-encx24j600-process-function-d9776e8807-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.18</ph>
+DRV_ENCX24J600_Process Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-registerstatisticsget-function-d9776e8815" class="topicref" data-id="drv-encx24j600-registerstatisticsget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-963C11C1-03DB-43E1-AD4A-F6D968F0EB64.html" id="drv-encx24j600-registerstatisticsget-function-d9776e8815-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.19</ph>
+DRV_ENCX24J600_RegisterStatisticsGet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-reinitialize-function-d9776e8823" class="topicref" data-id="drv-encx24j600-reinitialize-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-DE5D0B5D-ED16-49B2-88CB-1E28C0CFF915.html" id="drv-encx24j600-reinitialize-function-d9776e8823-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.20</ph>
+DRV_ENCX24J600_Reinitialize Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-rxfilterhashtableentryset-function-d9776e8831" class="topicref" data-id="drv-encx24j600-rxfilterhashtableentryset-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-26AAC335-D816-4F4B-83E3-4B902E4492CA.html" id="drv-encx24j600-rxfilterhashtableentryset-function-d9776e8831-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.21</ph>
+DRV_ENCX24J600_RxFilterHashTableEntrySet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-setmacctrlinfo-function-d9776e8840" class="topicref" data-id="drv-encx24j600-setmacctrlinfo-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-6B9089D6-DD0B-4E85-B6EE-86300657170B.html" id="drv-encx24j600-setmacctrlinfo-function-d9776e8840-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.22</ph>
+DRV_ENCX24J600_SetMacCtrlInfo Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-stackinitialize-function-d9776e8848" class="topicref" data-id="drv-encx24j600-stackinitialize-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-B44DE12A-2EE8-40DC-AE07-B8614CEA9C7C.html" id="drv-encx24j600-stackinitialize-function-d9776e8848-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.23</ph>
+DRV_ENCX24J600_StackInitialize Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-statisticsget-function-d9776e8856" class="topicref" data-id="drv-encx24j600-statisticsget-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-C9B010A5-19EF-4EB3-A7B4-4FC0DC3E1EC4.html" id="drv-encx24j600-statisticsget-function-d9776e8856-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.24</ph>
+DRV_ENCX24J600_StatisticsGet Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-status-function-d9776e8864" class="topicref" data-id="drv-encx24j600-status-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-B5F52A34-E409-47D9-A8F9-BBF6FAAF4250.html" id="drv-encx24j600-status-function-d9776e8864-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.25</ph>
+DRV_ENCX24J600_Status Function</a></div></div></li><li role="treeitem"><div data-tocid="drv-encx24j600-tasks-function-d9776e8872" class="topicref" data-id="drv-encx24j600-tasks-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-A0B1BF22-A91B-4E6B-AC59-D65298341076.html" id="drv-encx24j600-tasks-function-d9776e8872-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.3.26</ph>
+DRV_ENCX24J600_Tasks Function</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="ethernet-gmac-driver-library-d9776e8880" class="topicref" data-id="ethernet-gmac-driver-library" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ethernet-gmac-driver-library-d9776e8880-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-A24BDAD2-C63E-40B1-894D-1DC3CC6CB66A.html" id="ethernet-gmac-driver-library-d9776e8880-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.4</ph>
+Ethernet GMAC Driver Library</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ethernet-mac-driver-library-d9776e9057" class="topicref" data-id="ethernet-mac-driver-library" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ethernet-mac-driver-library-d9776e9057-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-A4DC3D07-DDAD-4748-A855-304CA3439336.html" id="ethernet-mac-driver-library-d9776e9057-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.5</ph>
+Ethernet MAC Driver Library</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ethernet-phy-driver-library-d9776e9243" class="topicref" data-id="ethernet-phy-driver-library" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ethernet-phy-driver-library-d9776e9243-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-F4DF749A-0F8C-4482-8661-C005A0BE0CF4.html" id="ethernet-phy-driver-library-d9776e9243-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.6</ph>
+Ethernet PHY Driver Library</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="miim-driver-library-d9776e9623" class="topicref" data-id="miim-driver-library" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action miim-driver-library-d9776e9623-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-A8906C8D-A608-4572-AE74-1E517DD2B0BE.html" id="miim-driver-library-d9776e9623-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5.7</ph>
+MIIM Driver Library</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881" class="topicref" data-id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90.html" id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.6</ph>
+TCP/IP Stack Core</a></div></div></li></ul></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760" class="topicref" data-id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html" id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">2</ph>
+Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li></ul></div>
+		                        
+                            </div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-7 col-md-9 col-sm-12" id="wh_topic_body">
+                        <button id="wh_close_publication_toc_button" class="close-toc-button d-none" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        <button id="wh_close_topic_toc_button" class="close-toc-button d-none" aria-label="Toggle topic table of content" aria-controls="wh_topic_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><h1 class="- topic/title title topictitle1" id="ariaid-title1" style="">1.2.5.3.15 DRV_ENCX24J600_PacketTx Function</h1><div class="- topic/body body"></div><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="- topic/title title topictitle2" id="ariaid-title2" style=""> C</h2><div class="- topic/body body"><pre class="+ topic/pre pr-d/codeblock pre codeblock"><code>TCPIP_MAC_RES DRV_ENCX24J600_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket); </code></pre></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title3" id="returns"><h2 class="- topic/title title topictitle2" id="ariaid-title3" style=""> Returns</h2><div class="- topic/body body"><ul class="- topic/ul ul"><li class="- topic/li li"><p class="- topic/p p">TCPIP_MAC_RES_OP_ERR - if the client handle is invalid</p></li><li class="- topic/li li"><p class="- topic/p p">TCPIP_MAC_RES_IS_BUSY - if the driver is not in the run state</p></li><li class="- topic/li li"><p class="- topic/p p">TCPIP_MAC_RES_QUEUE_TX_FULL - if there are no free descriptors</p></li><li class="- topic/li li"><p class="- topic/p p">TCPIP_MAC_RES_OK - on successful queuing of the packet</p></li></ul></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title4" id="description"><h2 class="- topic/title title topictitle2" id="ariaid-title4" style=""> Description</h2><div class="- topic/body body"><p class="- topic/p p">ENCX24J600 Packet Transmit This function will take a packet and add it to the queue for transmission. When the packet has finished transmitting the driver will call the packets acknowledge function. When that acknowledge function is complete the driver will forget about the packet.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title5" id="preconditions"><h2 class="- topic/title title topictitle2" id="ariaid-title5" style=""> Preconditions</h2><div class="- topic/body body"><p class="- topic/p p">The client had to be successfully opened with DRV_ENCX24J600_Open.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title6" id="parameters"><h2 class="- topic/title title topictitle2" id="ariaid-title6" style=""> Parameters</h2><div class="- topic/body body"><div class="table-container"><table class="- topic/table table" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__1">Parameters</th><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__2">Description</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__1">hMac</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__2">the successfully opened handle</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__1">ptrPacket</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__2">pointer to the packet</td></tr></tbody></table></div></div></article></article></main></div>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                    
+                        <nav role="navigation" id="wh_topic_toc" aria-label="On this page" class="col-lg-2 d-none d-lg-block navbar d-print-none"> 
+                            <div id="wh_topic_toc_content">
+		                        
+	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="topic-item"><a href="#c" data-tocid="c"> C</a></li><li class="topic-item"><a href="#returns" data-tocid="returns"> Returns</a></li><li class="topic-item"><a href="#description" data-tocid="description"> Description</a></li><li class="topic-item"><a href="#preconditions" data-tocid="preconditions"> Preconditions</a></li><li class="topic-item"><a href="#parameters" data-tocid="parameters"> Parameters</a></li></ul></div>
+	                        	
+                        	</div>
+                        </nav>
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div> 
+        <footer class="navbar navbar-default wh_footer">
+  <div class=" footer-container mx-auto ">
+    <div class="footer">
+  <div class="mchp-wh-footer">
+    <div class="mchp-footer">
+      <div class="mchp-footer-tier1">
+        <div class="spacer"></div>
+        <div class="mchp-footer-container">
+          <div class="mchp-footer-links mchp-social-media-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.facebook.com/pages/Microchip-Technology-Inc/20320981741" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Facebook" src="oxygen-webhelp/template/resources/images/201016-corp-facebook.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.linkedin.com/company/microchip-technology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip LinkedIn" src="oxygen-webhelp/template/resources/images/201016-corp-linkedin.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://twitter.com/MicrochipTech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Twitter" src="oxygen-webhelp/template/resources/images/201016-corp-twitter.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.youtube.com/user/MicrochipTechnology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip YouTube" src="oxygen-webhelp/template/resources/images/201016-corp-youtube.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.instagram.com/microchiptechnologyinc/" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Instagram" src="oxygen-webhelp/template/resources/images/201016-corp-instagram.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.weibo.com/microchiptech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Weibo" src="oxygen-webhelp/template/resources/images/201016-corp-weibo.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.microchip.com/en-us/about/blog" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Blog" src="oxygen-webhelp/template/resources/images/201016-corp-blog.png"/>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://www.microchip.com/about-us/contact-us" class="mchp-link__link">Contact</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information" class="mchp-link__link">Legal</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/privacy-policy" class="mchp-link__link">Privacy Policy</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/microchip-cookie-statement" class="mchp-link__link">Cookies</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://careers.microchip.com/" class="mchp-link__link">Careers</a>
+                  <span class="mchp-link__separator"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-newsletter">
+            <div class="cmp-text">
+              <p>Stay on the leading edge with our blog</p>
+            </div>
+            <div class="mchp-button-wrapper">
+              <a role="button" href="https://www.microchip.com/en-us/about/blog" class="mchp-button mchp-button-regular solid">
+                <span class="mchp-button__span">MicroSolutions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="graphic">
+          <img src="oxygen-webhelp/template/resources/images/footer-graphic.png"/>
+        </div>
+      </div>
+      <div class="mchp-footer-tier2">
+        <p class="mchp-copyright">© Copyright 1998-2022 Microchip Technology Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-2724382-19"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());   
+    gtag('config', 'UA-2724382-19');
+  </script>
 </div>
-<div class="topic nested1" aria-labelledby="ariaid-title3" id="returns"><h2 class="title topictitle2" id="ariaid-title3">Returns</h2><div class="body"><ul class="ul"><li class="li"><p class="p">TCPIP_MAC_RES_OP_ERR - if the client handle is invalid</p>
-</li>
-<li class="li"><p class="p">TCPIP_MAC_RES_IS_BUSY - if the driver is not in the run state</p>
-</li>
-<li class="li"><p class="p">TCPIP_MAC_RES_QUEUE_TX_FULL - if there are no free descriptors</p>
-</li>
-<li class="li"><p class="p">TCPIP_MAC_RES_OK - on successful queuing of the packet</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title4" id="description"><h2 class="title topictitle2" id="ariaid-title4">Description</h2><div class="body"><p class="p">ENCX24J600 Packet Transmit This function will take a packet and add it to the queue for transmission. When the packet has finished transmitting the driver will call the packets acknowledge function. When that acknowledge function is complete the driver will forget about the packet.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title5" id="preconditions"><h2 class="title topictitle2" id="ariaid-title5">Preconditions</h2><div class="body"><p class="p">The client had to be successfully opened with DRV_ENCX24J600_Open.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title6" id="parameters"><h2 class="title topictitle2" id="ariaid-title6">Parameters</h2><div class="body">
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d225208e62"><span>Parameters</span></th>
-<th class="entry cellrowborder" style="vertical-align:middle;" id="d225208e64"><span>Description</span></th>
-</tr>
-</thead>
-<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d225208e62 "><span>hMac</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d225208e64 "><span>the successfully opened handle</span></td>
-</tr>
-<tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d225208e62 "><span>ptrPacket</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d225208e64 "><span>pointer to the packet</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</body>
+  </div>
+</footer>
+        
+        <div id="go2top" class="d-print-none">
+            <span class="oxy-icon oxy-icon-up"></span>
+        </div>
+        
+        <div id="modal_img_large" class="modal">
+            <span class="close oxy-icon oxy-icon-remove"></span>
+            <div id="modal_img_container"></div>
+            <div id="caption"></div>
+        </div>
+        
+        
+        
+    </body>
 </html>

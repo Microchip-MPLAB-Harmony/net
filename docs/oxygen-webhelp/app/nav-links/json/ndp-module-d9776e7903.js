@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.2.4.7.1<\/ph>\nTCPIP_NDP_NborReachConfirm Function","href":"GUID-54C4E5DE-AFB8-4B83-95AF-215BE1947787.html","attributes":{"data-id":"tcpip-ndp-nborreachconfirm-function"},"menu":{"hasChildren":false},"tocID":"tcpip-ndp-nborreachconfirm-function-d9776e7911","topics":[]}]});

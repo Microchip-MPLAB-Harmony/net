@@ -1,239 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11" /><meta name="copyright" content="(C) Copyright 2022" />
-<meta name="DC.rights.owner" content="(C) Copyright 2022" />
-<meta name="DC.type" content="topic" />
-<meta name="DC.title" content="TCPIP_ICMP_CallbackDeregister Function" />
-<meta name="DC.relation" scheme="URI" content="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html" />
-<meta name="DC.format" content="XHTML" />
-<meta name="DC.identifier" content="tcpip-icmp-callbackderegister-function" />
-<link rel="stylesheet" type="text/css" href="stylesheets/commonltr.css" />
-<link rel="stylesheet" type="text/css" href="stylesheets/atmel.css" />
-<link rel="stylesheet" type="text/css" href="./stylesheets/common-extended.css" /><title>TCPIP_ICMP_CallbackDeregister Function</title>
-<meta name="Microsoft.Help.Id" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437-tcpip-icmp-callbackderegister-function" />
-<meta name="Microsoft.Help.TocParent" content="GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437" />
-<meta name="Microsoft.Help.TocOrder" content="0" />
-<meta name="Microsoft.Help.Locale" content="en-US" />
-<meta name="Microsoft.Help.TopicLocale" content="en-US" />
-<meta name="Microsoft.Help.DisplayVersion" content="MPLAB® Harmony TCP/IP Library Reference A 10/2021" />
-<script language="javascript">
-       
-       if (window.parent.location.protocol != 'file:') {
-				document.addEventListener('click', function(e) {
-				    if (e.target) {
-               if (e.target.nodeName == "A" ) {
-                    if (!e.target.target) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                              
-                      var origUrl = window.parent.location.href.substr(0, window.parent.location.href.indexOf("?"));
-                      if (origUrl.length === 0) {
-                          origUrl = window.parent.location.href;
-                      }
-                      var href= e.target.getAttribute("href");
-                      var parts = href.split("#");
-          
-                      var url = "";
-                      if (parts.length == 2 ) {
-                        if (!parts[0].length) {
-                            url = window.parent.location.search.replace('?','')
-                        } else {
-                            url = parts[0].replace('.html','');
-                        }
-                      } else {
-                        url = parts[0].replace('.html','');
-                      }
-
-                      if (parts.length == 2) {
-                          url += "#" + parts[1];
-                      }
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" data-whc_version="24.1">
+    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="bool TCPIP_ICMP_CallbackDeregister( ICMP_HANDLE hIcmp ); This function notifies a stack client to remove its former registered notification handler. After this operation the client will no longer be ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.2.4.2.4 TCPIP_ICMP_CallbackDeregister Function</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;&lt;?workdir /D:\InfoShare\Data\Publish\Data\g03rya0jylh\work\temp?&gt;&lt;?workdir-uri file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/temp/?&gt;&lt;?path2project?&gt;&lt;?path2project-uri ./?&gt;&lt;?path2rootmap-uri ./?&gt;&lt;topic xmlns:dita-ot=&#34;http://dita-ot.sourceforge.net/ns/201007/dita-ot&#34; xmlns:ditaarch=&#34;http://dita.oasis-open.org/architecture/2005/&#34; class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;tcpip-icmp-callbackderegister-function&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:1;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:1;184:15&#34;&gt;TCPIP_ICMP_CallbackDeregister Function&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:1;184:15&#34;/&gt;&lt;related-links class=&#34;- topic/related-links &#34;&gt;&lt;linkpool class=&#34;- topic/linkpool &#34; mapkeyref=&#34;GUID-130F5D4D-BB11-4FFF-ACAA-35396D81EB4A&#34; xtrc=&#34;topicref:5;6:716&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-4C178D28-C7A2-47EC-9391-D2FF998D952F.ditamap&#34;&gt;&lt;link class=&#34;- topic/link &#34; format=&#34;dita&#34; href=&#34;GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.md&#34; mapclass=&#34;- map/topicref &#34; role=&#34;parent&#34; scope=&#34;local&#34; type=&#34;topic&#34; xtrc=&#34;topicref:1;6:99&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-4C178D28-C7A2-47EC-9391-D2FF998D952F.ditamap&#34;&gt;&lt;?ditaot usertext?&gt;&lt;linktext class=&#34;- topic/linktext &#34;&gt;&lt;?ditaot gentext?&gt;ICMP Module&lt;/linktext&gt;&lt;/link&gt;&lt;/linkpool&gt;&lt;/related-links&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;c&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:2;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:2;184:15&#34;&gt;C&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:2;184:15&#34;&gt;&lt;codeblock class=&#34;+ topic/pre pr-d/codeblock &#34; xml:space=&#34;preserve&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;codeblock:1;184:15&#34;&gt;bool TCPIP_ICMP_CallbackDeregister(&amp;#xD; ICMP_HANDLE hIcmp&amp;#xD; );&amp;#xD;&lt;/codeblock&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;description&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:3;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:3;184:15&#34;&gt;Description&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:3;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;p:1;184:15&#34;&gt;This function notifies a stack client to remove its former registered notification handler. After this operation the client will no longer be notified about the receiving of replies to the ICMP requests.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;preconditions&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:4;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:4;184:15&#34;&gt;Preconditions&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:4;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;p:2;184:15&#34;&gt;The TCP/IP Stack must be initialized and up and running. A previous successful call to TCPIP_ICMP_CallbackRegister has been done.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;parameters&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:5;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:5;184:15&#34;&gt;Parameters&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:5;184:15&#34;&gt;&lt;table class=&#34;- topic/table &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;table:1;184:15&#34;&gt;&lt;tgroup class=&#34;- topic/tgroup &#34; cols=&#34;2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;tgroup:1;184:15&#34;&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col1&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;colspec:1;184:15&#34; colnum=&#34;1&#34;/&gt;&lt;colspec class=&#34;- topic/colspec &#34; colname=&#34;col2&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;colspec:2;184:15&#34; colnum=&#34;2&#34;/&gt;&lt;thead class=&#34;- topic/thead &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;thead:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;row:1;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;entry:1;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;1&#34;&gt;Parameters&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;entry:2;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;1&#34;&gt;Description&lt;/entry&gt;&lt;/row&gt;&lt;/thead&gt;&lt;tbody class=&#34;- topic/tbody &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;tbody:1;184:15&#34;&gt;&lt;row class=&#34;- topic/row &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;row:2;184:15&#34;&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;entry:3;184:15&#34; colname=&#34;col1&#34; dita-ot:x=&#34;1&#34; dita-ot:y=&#34;2&#34;&gt;hIcmp&lt;/entry&gt;&lt;entry class=&#34;- topic/entry &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;entry:4;184:15&#34; colname=&#34;col2&#34; dita-ot:x=&#34;2&#34; dita-ot:y=&#34;2&#34;&gt;An ICMP handle obtained by TCPIP_ICMP_CallbackRegister.&lt;/entry&gt;&lt;/row&gt;&lt;/tbody&gt;&lt;/tgroup&gt;&lt;/table&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;returns&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:6;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:6;184:15&#34;&gt;Returns&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:6;184:15&#34;&gt;&lt;ul class=&#34;- topic/ul &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;ul:1;184:15&#34;&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;li:1;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;p:3;184:15&#34;&gt;True - If the notification handler has bee successfully removed.&lt;/p&gt;&lt;/li&gt;&lt;li class=&#34;- topic/li &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;li:2;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;p:4;184:15&#34;&gt;False - If such a notification handler could not be found.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;remarks&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:7;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:7;184:15&#34;&gt;Remarks&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:7;184:15&#34;&gt;&lt;p class=&#34;- topic/p &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;p:5;184:15&#34;&gt;None.&lt;/p&gt;&lt;/body&gt;&lt;/topic&gt;&lt;topic class=&#34;- topic/topic &#34; ditaarch:DITAArchVersion=&#34;2.0&#34; specializations=&#34;@props/audience @props/deliveryTarget @props/otherprops @props/platform @props/product&#34; id=&#34;example&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;topic:8;184:15&#34; domains=&#34;a(props audience) a(props deliveryTarget) a(props otherprops) a(props platform) a(props product)&#34;&gt;&lt;title class=&#34;- topic/title &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;title:8;184:15&#34;&gt;Example&lt;/title&gt;&lt;body class=&#34;- topic/body &#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;body:8;184:15&#34;&gt;&lt;codeblock class=&#34;+ topic/pre pr-d/codeblock &#34; xml:space=&#34;preserve&#34; xtrf=&#34;file:/D:/InfoShare/Data/Publish/Data/g03rya0jylh/work/1/en-US/GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md&#34; xtrc=&#34;codeblock:2;184:15&#34;&gt;void MyICMPCallbackFunction(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);&amp;#xD; ICMP_HANDLE hIcmp = TCPIP_ICMP_CallbackRegister(&amp;amp;MyICMPCallbackFunction);&amp;#xD; if(hIcmp != 0)&amp;#xD; {&amp;#xD; // successfully registered my handler&amp;#xD; // send requests and process the incoming results&amp;#xD; // ...&amp;#xD; // later on, once we're done, remove the notification handler&amp;#xD; TCPIP_ICMP_CallbackDeregister(hIcmp);&amp;#xD; }&amp;#xD;&lt;/codeblock&gt;&lt;/body&gt;&lt;/topic&gt;&lt;/topic&gt;"/><meta name="wh-source-relpath" content="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.md"/><meta name="wh-out-relpath" content="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.html"/>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
     
-                      window.parent.location.href = origUrl + "?" + url;
+    <link rel="stylesheet" href="./oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css"/>
+    
+    <!-- Template default styles  -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/app/topic-page.css?buildId=2022062014"/>
+    
+    
+    <script src="./oxygen-webhelp/lib/jquery/jquery-3.5.1.min.js"></script>
+    
+    <script data-main="./oxygen-webhelp/app/topic-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
+<link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+<script src="mchp-context-help.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+</head>
 
-                      return false;
-                    }
-               }
-            }
-				});
-			}
+    <body id="tcpip-icmp-callbackderegister-function" class="wh_topic_page frmBody">
+        <a href="#wh_topic_body" class="sr-only sr-only-focusable">
+            Jump to main content
+        </a>
+        
+        
+        
+        
+        <header class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container navbar-nav navbar-expand-md navbar-dark">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <a href="index.html" class=" wh_logo d-none d-sm-block "><img src="oxygen-webhelp\template\resources/images/microchip.png" alt="MPLAB® Harmony TCP/IP Library "/></a>
+                    <div class=" wh_publication_title "><a href="index.html">MPLAB® Harmony TCP/IP Library </a></div>
+                    
+                </div>
+                
+                
+            </div>
 
-		</script><script language="javascript">
-        function cpy(id, button) {
-        
-            var element = document.getElementById(id);
-            var content = element.getAttribute("content");
-            var textArea = document.createElement("textarea");
-            
-            // Place in the top-left corner of screen regardless of scroll position.
-            textArea.style.position = 'fixed';
-            textArea.style.top = 0;
-            textArea.style.left = 0;
-            
-            // Ensure it has a small width and height. Setting to 1px / 1em
-            // doesn't work as this gives a negative w/h on some browsers.
-            textArea.style.width = '2em';
-            textArea.style.height = '2em';
-            
-            // We don't need padding, reducing the size if it does flash render.
-            textArea.style.padding = 0;
-            
-            // Clean up any borders.
-            textArea.style.border = 'none';
-            textArea.style.outline = 'none';
-            textArea.style.boxShadow = 'none';
-            
-            // Avoid flash of the white box if rendered for any reason.
-            textArea.style.background = 'transparent';
-            
-            
-            textArea.value = content;
-            
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-               var successful = document.execCommand('copy');
-               var msg = successful ? 'successful' : 'unsuccessful';
-               if (!button.classList.contains("copied")){
-                  button.textContent = "Copied";
-                  button.classList.add("copied");
-                  setTimeout(function(){
-                    button.textContent = "Copy";
-                    button.classList.remove("copied");
-                  },1000);
-               }
-            } catch (err) {
-              console.log('Oops, unable to copy');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-      </script><script language="javascript">
-          
-          // Add the MathML namespace to html
-          var html = document.getElementsByTagName("html")[0],
-          head = document.getElementsByTagName("head")[0];
-          
-          var mathJax = document.createElement("script");
-          mathJax.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML";
-          head.appendChild(mathJax);
-          
-          html.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
-          
-          function inIframe() { try { return window.self !== window.top; } catch (e) { return true; } }
-          
-          if (!inIframe()) { 
-          
-          var Default = "index.html?GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26"; 
-          
-          var displaylocation = "value" + window.location.href;
-          
-          var GUIDS = displaylocation.split('GUID');          
-          
-          if (displaylocation.indexOf('#GUID') != -1) {            
-          var First = GUIDS[1].split('.html');  
-          if (GUIDS[3]){First = GUIDS[2].split('.html');}
-          if (GUIDS[4]){First = GUIDS[3].split('.html');}
-          if (GUIDS[5]){First = GUIDS[4].split('.html');}
-          
-          var Second = GUIDS[2].split('#');   
-          if (GUIDS[3]){Second = GUIDS[3].split('#');}
-          if (GUIDS[4]){Second = GUIDS[4].split('#');}
-          if (GUIDS[5]){Second = GUIDS[5].split('#');}
-          
-          Default = "index.html?" + "GUID" + First[0] + "GUID" + Second[0];     
-          }                    
-          window.top.location = Default;
-          }       
-          
-        </script><style xml:space="">
-        
-          button.copy-code{
-            display:none;
-            padding:0.7em 1.4em;
-            margin:0 0.3em 0.3em 0;
-            border-radius:0.15em;
-            box-sizing: border-box;
-            text-decoration:none;
-            font-family:'Roboto',sans-serif;
-            text-transform:uppercase;
-            font-weight:400;
-            color:#FFFFFF;
-            background-color:#9c9c9c;
-            box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
-            text-align:center;
-            position:relative;
-            border: 0;
-            float: right;
-            border-radius: .5em;
-            cursor: pointer;
-          }
-          button.copy-code:active{
-            top:0.1em;
-          }
-          
-          pre:hover button.copy-code{
-            display: inline-block !important;
-          }
-          button.copy-code.copied {
-            cursor: default !important;
-          }
-          
-          
-          @media all and (max-width:30em){
-            button.copy-code{
-              display:block;
-              margin:0.4em auto;
-            }
-          }
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse" id="wh_top_menu_and_indexterms_link">
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</header>
         
         
-      </style></head>
-<body id="tcpip-icmp-callbackderegister-function">
-<h1 class="title topictitle1" id="ariaid-title1">TCPIP_ICMP_CallbackDeregister Function</h1><div class="body"></div>
-<div class="related-links">
-<div class="familylinks">
-<div class="parentlink"><strong>Parent topic:</strong> <a class="link" href="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html">ICMP Module</a></div>
+         
+        
+        <div class=" wh_search_input navbar-form wh_topic_page_search search " role="form">
+            
+            
+            
+            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            
+            <div class="mchp-color-stripe-grid-container">
+  <div class="mchp-main-bar mchp-orange-bar"></div>
+  <div class="mchp-main-bar mchp-blue-bar"></div>
+  <div class="mchp-main-bar mchp-green-bar"></div>
 </div>
-</div><div class="topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="title topictitle2" id="ariaid-title2">C</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d167537e21', this);">Copy</button><code id="d167537e21" content="bool TCPIP_ICMP_CallbackDeregister(&#xD;&#xA;    ICMP_HANDLE hIcmp&#xD;&#xA;);&#xD;">bool TCPIP_ICMP_CallbackDeregister(&#xD;
+            
+        </div>
+        
+        <div class="container-fluid" id="wh_topic_container">
+            <div class="row">
+
+                <nav class="wh_tools d-print-none navbar-expand-md" aria-label="Tools">
+                    
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol class="d-print-none"><li><span class="home"><a href="index.html"><span>Home</span></a></span></li><li><div class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0"><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div></li><li><div class="topicref" data-id="mplab-harmony-tcpip-library"><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div></li><li><div class="topicref" data-id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520"><div class="title"><a href="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4</ph>
+Network Layer</a></div></div></li><li><div class="topicref" data-id="icmp-module"><div class="title"><a href="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2</ph>
+ICMP Module</a></div></div></li><li class="active"><div class="topicref" data-id="tcpip-icmp-callbackderegister-function"><div class="title"><a href="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.html"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.4</ph>
+TCPIP_ICMP_CallbackDeregister Function</a></div></div></li></ol></div>
+                    
+                    
+                    
+                    <div class="wh_right_tools">
+                        <button class="wh_hide_highlight" aria-label="Toggle search highlights" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" aria-label="Collapse sections" title="Collapse sections"></button>
+                        
+                        
+                        
+                        
+                        <div class=" wh_print_link print d-none d-md-inline-block "><button onClick="window.print()" title="Print this page" aria-label="Print this page"></button></div>
+                        
+                        <button type="button" id="wh_toc_button" class="custom-toggler navbar-toggler collapsed wh_toggle_button navbar-light" aria-expanded="false" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    
+                </nav>
+            </div>
+            
+            
+            
+            
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-12 d-md-block d-none d-print-none" aria-label="Table of Contents Container">
+                            <div id="wh_publication_toc_content">
+		                        
+                            	<div class=" wh_publication_toc " data-tooltip-position="right"><span class="expand-button-action-labels"><span id="button-expand-action" role="button" aria-label="Expand"></span><span id="button-collapse-action" role="button" aria-label="Collapse"></span><span id="button-pending-action" role="button" aria-label="Pending"></span></span><ul role="tree" aria-label="Table of Contents"><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11" class="topicref" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html" id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1</ph>
+TCP/IP Stack Libraries Help</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19" class="topicref" data-id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html" id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9-d9776e19-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.1</ph>
+TCP/IP Stack Library Overview</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="mplab-harmony-tcpip-library-d9776e67" class="topicref" data-id="mplab-harmony-tcpip-library" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action mplab-harmony-tcpip-library-d9776e67-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" id="mplab-harmony-tcpip-library-d9776e67-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75" class="topicref" data-id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-6005945E-6669-486E-AA57-092C4EC0AD73.html" id="GUID-6005945E-6669-486E-AA57-092C4EC0AD73-d9776e75-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.1</ph>
+Application Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010" class="topicref" data-id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578.html" id="GUID-7E7ACF17-49E1-4FC5-A860-4268A671D578-d9776e5010-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.2</ph>
+Presentation Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657" class="topicref" data-id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B.html" id="GUID-E1DDC267-1A89-4277-9F1F-90D0C7AE6C9B-d9776e5657-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.3</ph>
+Transport Layer</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587" class="topicref" data-id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520.html" id="GUID-DBB5E017-A0FD-400E-BB4C-E19495836520-d9776e6587-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4</ph>
+Network Layer</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem" aria-expanded="false"><div data-tocid="arp-module-d9776e6595" class="topicref" data-id="arp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action arp-module-d9776e6595-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-3DCBF1EB-5623-4419-B244-DDD9B01704EE.html" id="arp-module-d9776e6595-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.1</ph>
+ARP Module</a></div></div></li><li role="treeitem" aria-expanded="true"><div data-tocid="icmp-module-d9776e6781" class="topicref" data-id="icmp-module" data-state="expanded"><span role="button" tabindex="0" aria-labelledby="button-collapse-action icmp-module-d9776e6781-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-F3E078F7-6F1D-4D25-A999-F0F3E40A5971.html" id="icmp-module-d9776e6781-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2</ph>
+ICMP Module</a></div></div><ul role="group" class="navbar-nav nav-list"><li role="treeitem"><div data-tocid="--icmp-h-macro-d9776e6789" class="topicref" data-id="--icmp-h-macro" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-544C3F55-CCD8-4195-BD7B-86B26C43512E.html" id="--icmp-h-macro-d9776e6789-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.1</ph>
+__ICMP_H Macro</a></div></div></li><li role="treeitem"><div data-tocid="icmp-echo-result-enumeration-d9776e6797" class="topicref" data-id="icmp-echo-result-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-8D0E3797-6098-4DFD-9992-850020D09858.html" id="icmp-echo-result-enumeration-d9776e6797-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.2</ph>
+ICMP_ECHO_RESULT Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="icmp-handle-type-d9776e6805" class="topicref" data-id="icmp-handle-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-516D5B0D-BD25-459C-B12E-2FDDADAADBDC.html" id="icmp-handle-type-d9776e6805-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.3</ph>
+ICMP_HANDLE Type</a></div></div></li><li role="treeitem" class="active"><div data-tocid="tcpip-icmp-callbackderegister-function-d9776e6813" class="topicref" data-id="tcpip-icmp-callbackderegister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-0C5C3BCE-72E8-4053-B164-937B308F8E26.html" id="tcpip-icmp-callbackderegister-function-d9776e6813-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.4</ph>
+TCPIP_ICMP_CallbackDeregister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-callbackregister-function-d9776e6821" class="topicref" data-id="tcpip-icmp-callbackregister-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-45C0E86E-9D4C-416C-80EA-B3C01158086A.html" id="tcpip-icmp-callbackregister-function-d9776e6821-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.5</ph>
+TCPIP_ICMP_CallbackRegister Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-echo-request-structure-d9776e6829" class="topicref" data-id="tcpip-icmp-echo-request-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-E0BAEEB0-E90D-43E5-80F6-B01432C82D69.html" id="tcpip-icmp-echo-request-structure-d9776e6829-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.6</ph>
+TCPIP_ICMP_ECHO_REQUEST Structure</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-echo-request-result-enumeration-d9776e6837" class="topicref" data-id="tcpip-icmp-echo-request-result-enumeration" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-1C75AA10-811B-4F46-A428-19F9A50F4F57.html" id="tcpip-icmp-echo-request-result-enumeration-d9776e6837-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.7</ph>
+TCPIP_ICMP_ECHO_REQUEST_RESULT Enumeration</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-echorequest-function-d9776e6845" class="topicref" data-id="tcpip-icmp-echorequest-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-16262C6E-46B3-47F5-A6DB-23BC83862AAF.html" id="tcpip-icmp-echorequest-function-d9776e6845-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.8</ph>
+TCPIP_ICMP_EchoRequest Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-echorequestcancel-function-d9776e6853" class="topicref" data-id="tcpip-icmp-echorequestcancel-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-BC8B9023-E991-4837-87BE-790B9EFA8D2D.html" id="tcpip-icmp-echorequestcancel-function-d9776e6853-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.9</ph>
+TCPIP_ICMP_EchoRequestCancel Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-echorequestsend-function-d9776e6861" class="topicref" data-id="tcpip-icmp-echorequestsend-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-27C6EDE2-7EE7-404E-A08E-B56360F7D44D.html" id="tcpip-icmp-echorequestsend-function-d9776e6861-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.10</ph>
+TCPIP_ICMP_EchoRequestSend Function</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-module-config-structure-d9776e6870" class="topicref" data-id="tcpip-icmp-module-config-structure" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-F498D777-A055-406B-9DF6-6F0AA6502AED.html" id="tcpip-icmp-module-config-structure-d9776e6870-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.11</ph>
+TCPIP_ICMP_MODULE_CONFIG Structure</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-request-handle-type-d9776e6878" class="topicref" data-id="tcpip-icmp-request-handle-type" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-2DEBAEA2-8E8F-4B37-B9F5-648F6D47C436.html" id="tcpip-icmp-request-handle-type-d9776e6878-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.12</ph>
+TCPIP_ICMP_REQUEST_HANDLE Type</a></div></div></li><li role="treeitem"><div data-tocid="tcpip-icmp-task-function-d9776e6886" class="topicref" data-id="tcpip-icmp-task-function" data-state="leaf"><span role="button" class="wh-expand-btn"></span><div class="title"><a href="GUID-8D907A4D-1C8C-4857-B0AD-4F6CB8F7C4E9.html" id="tcpip-icmp-task-function-d9776e6886-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.2.13</ph>
+TCPIP_ICMP_Task Function</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="icmpv6-module-d9776e6894" class="topicref" data-id="icmpv6-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action icmpv6-module-d9776e6894-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-4C21649D-F597-4151-8607-5281DF9F04CC.html" id="icmpv6-module-d9776e6894-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.3</ph>
+ICMPv6 Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="igmp-module-d9776e6950" class="topicref" data-id="igmp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action igmp-module-d9776e6950-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-DCB13BC6-B7A2-45CA-89E7-9474EAF05EFB.html" id="igmp-module-d9776e6950-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.4</ph>
+IGMP Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ipv4-module-d9776e7111" class="topicref" data-id="ipv4-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ipv4-module-d9776e7111-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EA29E72F-4194-41F9-9F19-D8BBA00D62F2.html" id="ipv4-module-d9776e7111-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.5</ph>
+IPv4 Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ipv6-module-d9776e7353" class="topicref" data-id="ipv6-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ipv6-module-d9776e7353-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-F2484EF9-7914-43EE-A5B7-4FFDC27C8135.html" id="ipv6-module-d9776e7353-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.6</ph>
+IPv6 Module</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="ndp-module-d9776e7903" class="topicref" data-id="ndp-module" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action ndp-module-d9776e7903-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-5FBC9524-1287-42EB-B1A1-6F4C3C9980FD.html" id="ndp-module-d9776e7903-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.4.7</ph>
+NDP Module</a></div></div></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919" class="topicref" data-id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029.html" id="GUID-250DB789-3EBA-4CB9-9E89-A7FA70666029-d9776e7919-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.5</ph>
+Data Link Layer</a></div></div></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881" class="topicref" data-id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90.html" id="GUID-EC8A3595-7DFF-45A8-8617-C0FD34EC5F90-d9776e9881-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">1.2.6</ph>
+TCP/IP Stack Core</a></div></div></li></ul></li></ul></li><li role="treeitem" aria-expanded="false"><div data-tocid="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760" class="topicref" data-id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0" data-state="not-ready"><span role="button" tabindex="0" aria-labelledby="button-expand-action GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link" class="wh-expand-btn"></span><div class="title"><a href="GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html" id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-link"><ph xmlns="http://www.oxygenxml.com/ns/webhelp/toc">2</ph>
+Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li></ul></div>
+		                        
+                            </div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-7 col-md-9 col-sm-12" id="wh_topic_body">
+                        <button id="wh_close_publication_toc_button" class="close-toc-button d-none" aria-label="Toggle publishing table of content" aria-controls="wh_publication_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        <button id="wh_close_topic_toc_button" class="close-toc-button d-none" aria-label="Toggle topic table of content" aria-controls="wh_topic_toc" aria-expanded="true">
+                            <span class="close-toc-icon-container">
+                                <span class="close-toc-icon"></span>     
+                            </span>
+                        </button>
+                        
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><h1 class="- topic/title title topictitle1" id="ariaid-title1" style="">1.2.4.2.4 TCPIP_ICMP_CallbackDeregister Function</h1><div class="- topic/body body"></div><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title2" id="c"><h2 class="- topic/title title topictitle2" id="ariaid-title2" style=""> C</h2><div class="- topic/body body"><pre class="+ topic/pre pr-d/codeblock pre codeblock"><code>bool TCPIP_ICMP_CallbackDeregister(&#xD;
     ICMP_HANDLE hIcmp&#xD;
-);&#xD;</code></pre></div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="title topictitle2" id="ariaid-title3">Description</h2><div class="body"><p class="p">This function notifies a stack client to remove its former registered notification handler. After this operation the client will no longer be notified about the receiving of replies to the ICMP requests.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title4" id="preconditions"><h2 class="title topictitle2" id="ariaid-title4">Preconditions</h2><div class="body"><p class="p">The TCP/IP Stack must be initialized and up and running. A previous successful call to TCPIP_ICMP_CallbackRegister has been done.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title5" id="parameters"><h2 class="title topictitle2" id="ariaid-title5">Parameters</h2><div class="body">
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all"><col style="width:" /><col style="width:" /><thead class="thead" style="text-align:left;"><tr class="row"><th class="entry cellrowborder" style="vertical-align:middle;" id="d167537e45"><span>Parameters</span></th>
-<th class="entry cellrowborder" style="vertical-align:middle;" id="d167537e47"><span>Description</span></th>
-</tr>
-</thead>
-<tbody class="tbody"><tr class="row"><td class="entry cellrowborder" style="vertical-align:middle;" headers="d167537e45 "><span>hIcmp</span></td>
-<td class="entry cellrowborder" style="vertical-align:middle;" headers="d167537e47 "><span>An ICMP handle obtained by TCPIP_ICMP_CallbackRegister.</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title6" id="returns"><h2 class="title topictitle2" id="ariaid-title6">Returns</h2><div class="body"><ul class="ul"><li class="li"><p class="p">True - If the notification handler has bee successfully removed.</p>
-</li>
-<li class="li"><p class="p">False - If such a notification handler could not be found.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title7" id="remarks"><h2 class="title topictitle2" id="ariaid-title7">Remarks</h2><div class="body"><p class="p">None.</p>
-</div>
-</div>
-<div class="topic nested1" aria-labelledby="ariaid-title8" id="example"><h2 class="title topictitle2" id="ariaid-title8">Example</h2><div class="body"><pre class="pre codeblock"><button title="Copy Code" class="copy-code" onclick="cpy('d167537e76', this);">Copy</button><code id="d167537e76" content="void MyICMPCallbackFunction(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);&#xD;&#xA;ICMP_HANDLE hIcmp = TCPIP_ICMP_CallbackRegister(&amp;MyICMPCallbackFunction);&#xD;&#xA;if(hIcmp != 0)&#xD;&#xA;{&#xD;&#xA;    // successfully registered my handler&#xD;&#xA;    // send requests and process the incoming results&#xD;&#xA;    // ...&#xD;&#xA;    // later on, once we're done, remove the notification handler&#xD;&#xA;    TCPIP_ICMP_CallbackDeregister(hIcmp);&#xD;&#xA;}&#xD;">void MyICMPCallbackFunction(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);&#xD;
+);&#xD;</code></pre></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title3" id="description"><h2 class="- topic/title title topictitle2" id="ariaid-title3" style=""> Description</h2><div class="- topic/body body"><p class="- topic/p p">This function notifies a stack client to remove its former registered notification handler. After this operation the client will no longer be notified about the receiving of replies to the ICMP requests.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title4" id="preconditions"><h2 class="- topic/title title topictitle2" id="ariaid-title4" style=""> Preconditions</h2><div class="- topic/body body"><p class="- topic/p p">The TCP/IP Stack must be initialized and up and running. A previous successful call to TCPIP_ICMP_CallbackRegister has been done.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title5" id="parameters"><h2 class="- topic/title title topictitle2" id="ariaid-title5" style=""> Parameters</h2><div class="- topic/body body"><div class="table-container"><table class="- topic/table table" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__1">Parameters</th><th class="- topic/entry entry colsep-0 rowsep-0" id="parameters__entry__2">Description</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__1">hIcmp</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="parameters__entry__2">An ICMP handle obtained by TCPIP_ICMP_CallbackRegister.</td></tr></tbody></table></div></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title6" id="returns"><h2 class="- topic/title title topictitle2" id="ariaid-title6" style=""> Returns</h2><div class="- topic/body body"><ul class="- topic/ul ul"><li class="- topic/li li"><p class="- topic/p p">True - If the notification handler has bee successfully removed.</p></li><li class="- topic/li li"><p class="- topic/p p">False - If such a notification handler could not be found.</p></li></ul></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title7" id="remarks"><h2 class="- topic/title title topictitle2" id="ariaid-title7" style=""> Remarks</h2><div class="- topic/body body"><p class="- topic/p p">None.</p></div></article><article class="- topic/topic topic nested1" aria-labelledby="ariaid-title8" id="example"><h2 class="- topic/title title topictitle2" id="ariaid-title8" style=""> Example</h2><div class="- topic/body body"><pre class="+ topic/pre pr-d/codeblock pre codeblock"><code>void MyICMPCallbackFunction(TCPIP_NET_HANDLE hNetIf, IPV4_ADDR * remoteIP, void * data);&#xD;
 ICMP_HANDLE hIcmp = TCPIP_ICMP_CallbackRegister(&amp;MyICMPCallbackFunction);&#xD;
 if(hIcmp != 0)&#xD;
 {&#xD;
@@ -242,7 +166,153 @@ if(hIcmp != 0)&#xD;
     // ...&#xD;
     // later on, once we're done, remove the notification handler&#xD;
     TCPIP_ICMP_CallbackDeregister(hIcmp);&#xD;
-}&#xD;</code></pre></div>
+}&#xD;</code></pre></div></article></article></main></div>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                    
+                        <nav role="navigation" id="wh_topic_toc" aria-label="On this page" class="col-lg-2 d-none d-lg-block navbar d-print-none"> 
+                            <div id="wh_topic_toc_content">
+		                        
+	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="topic-item"><a href="#c" data-tocid="c"> C</a></li><li class="topic-item"><a href="#description" data-tocid="description"> Description</a></li><li class="topic-item"><a href="#preconditions" data-tocid="preconditions"> Preconditions</a></li><li class="topic-item"><a href="#parameters" data-tocid="parameters"> Parameters</a></li><li class="topic-item"><a href="#returns" data-tocid="returns"> Returns</a></li><li class="topic-item"><a href="#remarks" data-tocid="remarks"> Remarks</a></li><li class="topic-item"><a href="#example" data-tocid="example"> Example</a></li></ul></div>
+	                        	
+                        	</div>
+                        </nav>
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div> 
+        <footer class="navbar navbar-default wh_footer">
+  <div class=" footer-container mx-auto ">
+    <div class="footer">
+  <div class="mchp-wh-footer">
+    <div class="mchp-footer">
+      <div class="mchp-footer-tier1">
+        <div class="spacer"></div>
+        <div class="mchp-footer-container">
+          <div class="mchp-footer-links mchp-social-media-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.facebook.com/pages/Microchip-Technology-Inc/20320981741" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Facebook" src="oxygen-webhelp/template/resources/images/201016-corp-facebook.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.linkedin.com/company/microchip-technology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip LinkedIn" src="oxygen-webhelp/template/resources/images/201016-corp-linkedin.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://twitter.com/MicrochipTech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Twitter" src="oxygen-webhelp/template/resources/images/201016-corp-twitter.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.youtube.com/user/MicrochipTechnology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip YouTube" src="oxygen-webhelp/template/resources/images/201016-corp-youtube.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.instagram.com/microchiptechnologyinc/" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Instagram" src="oxygen-webhelp/template/resources/images/201016-corp-instagram.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.weibo.com/microchiptech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Weibo" src="oxygen-webhelp/template/resources/images/201016-corp-weibo.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.microchip.com/en-us/about/blog" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Blog" src="oxygen-webhelp/template/resources/images/201016-corp-blog.png"/>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://www.microchip.com/about-us/contact-us" class="mchp-link__link">Contact</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information" class="mchp-link__link">Legal</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/privacy-policy" class="mchp-link__link">Privacy Policy</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/microchip-cookie-statement" class="mchp-link__link">Cookies</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://careers.microchip.com/" class="mchp-link__link">Careers</a>
+                  <span class="mchp-link__separator"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-newsletter">
+            <div class="cmp-text">
+              <p>Stay on the leading edge with our blog</p>
+            </div>
+            <div class="mchp-button-wrapper">
+              <a role="button" href="https://www.microchip.com/en-us/about/blog" class="mchp-button mchp-button-regular solid">
+                <span class="mchp-button__span">MicroSolutions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="graphic">
+          <img src="oxygen-webhelp/template/resources/images/footer-graphic.png"/>
+        </div>
+      </div>
+      <div class="mchp-footer-tier2">
+        <p class="mchp-copyright">© Copyright 1998-2022 Microchip Technology Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-2724382-19"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());   
+    gtag('config', 'UA-2724382-19');
+  </script>
 </div>
-</body>
+  </div>
+</footer>
+        
+        <div id="go2top" class="d-print-none">
+            <span class="oxy-icon oxy-icon-up"></span>
+        </div>
+        
+        <div id="modal_img_large" class="modal">
+            <span class="close oxy-icon oxy-icon-remove"></span>
+            <div id="modal_img_container"></div>
+            <div id="caption"></div>
+        </div>
+        
+        
+        
+    </body>
 </html>

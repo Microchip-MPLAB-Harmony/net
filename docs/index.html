@@ -1,16 +1,220 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:axf="http://www.antennahouse.com/names/XSL/Extensions">
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>MPLAB® Harmony TCP/IP Library</title>
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-      <link rel="stylesheet" type="text/css" href="webhelplayout.css"><script language="javascript" type="text/javascript" src="start.js"></script></head>
-   <frameset rows="80,*" onload="LoadDocument('contentframe');">
-      <frame name="headerwin" src="header.html" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" noresize>
-      <frameset cols="325,*" borderColor="#e0e0e0" frameborder="1">
-         <frame name="navigationwin" src="toc.html" scrolling="auto" frameborder="0" marginwidth="0" marginheight="0" target="contentwin" borderColor="#e0e0e0" style="overflow:auto">
-         <frame id="contentframe" name="contentwin" frameborder="0" marginwidth="6" marginheight="0" borderColor="#e0e0e0" style="overflow:auto">
-      </frameset>
-   </frameset>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" data-whc_version="24.1" lang="en-US" dir="ltr">
+    <script src="mchp-context-help.js"></script><head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="wh-path2root" content=""/><title>MPLAB® Harmony TCP/IP Library </title>
+        
+        
+                
+        
+    <link rel="stylesheet" href="./oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css"/>
+    
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
+    
+    <!-- Template default styles  -->
+    <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/app/main-page.css?buildId=2022062014"/>
+    
+    
+    <script src="./oxygen-webhelp/lib/jquery/jquery-3.5.1.min.js"></script>
+    
+    <script data-main="./oxygen-webhelp/app/main-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
+    
+
+        <link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+        
+        
+<script src="mchp-context-help.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+
+        
+    </head>
+    <body class="wh_main_page">
+        <a href="#content" class="sr-only sr-only-focusable">
+            Jump to main content
+        </a>
+        
+        
+        
+        
+        
+        <header class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container navbar-nav navbar-expand-md navbar-dark">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <a href="index.html" class=" wh_logo d-none d-sm-block "><img src="oxygen-webhelp\template\resources/images/microchip.png" alt="MPLAB® Harmony TCP/IP Library "/></a>
+                    <div class=" wh_publication_title "><a href="index.html">MPLAB® Harmony TCP/IP Library </a></div>
+                    
+                </div>
+                
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse" id="wh_top_menu_and_indexterms_link">
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</header>
+        
+        
+                
+        
+        <div class=" wh_search_input navbar-form wh_main_page_search search " role="form">
+            
+            
+            
+            
+            <div class="wh_welcome"></div>          
+            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            <div class="mchp-color-stripe-grid-container">
+  <div class="mchp-main-bar mchp-orange-bar"></div>
+  <div class="mchp-main-bar mchp-blue-bar"></div>
+  <div class="mchp-main-bar mchp-green-bar"></div>
+</div>
+            
+            
+            
+        </div>
+        
+        <span></span>
+        
+        
+        <div class="wh_content_area " id="content">
+            
+            <div class="container-fluid wh_content_flex_container">
+                
+                <div class=" wh_main_page_toc "><div class=" wh_main_page_toc_accordion_header "><span role="heading" aria-level="1" id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-heading"><span role="button" aria-expanded="false" class="header-button" aria-controls="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-entries" tabindex="0"></span><span class="topicref"><a href="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html" data-id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0"><ph xmlns="">1</ph>
+TCP/IP Stack Libraries Help</a></span></span></div><div class=" wh_main_page_toc_accordion_entries " id="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-entries" role="region" aria-labelledby="GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0-d9776e11-heading"><div class=" wh_main_page_toc_entry "><span class="topicref"><a href="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html" data-id="GUID-5324F446-60A4-4815-82AA-571C61BA6DE9"><ph xmlns="">1.1</ph>
+TCP/IP Stack Library Overview</a></span></div><div class=" wh_main_page_toc_entry "><span class="topicref"><a href="GUID-01A0A1D8-EC9B-4EFF-B8E4-D154B555FEF2.html" data-id="mplab-harmony-tcpip-library"><ph xmlns="">1.2</ph>
+MPLAB® Harmony TCP/IP Library</a></span></div></div><div class=" wh_main_page_toc_accordion_header "><span role="heading" aria-level="1" id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-heading"><span role="button" aria-expanded="false" class="header-button" aria-controls="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-entries" tabindex="0"></span><span class="topicref"><a href="GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html" data-id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0"><ph xmlns="">2</ph>
+Getting started with MPLAB® Harmony TCP/IP Stack </a></span></span></div><div class=" wh_main_page_toc_accordion_entries " id="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-entries" role="region" aria-labelledby="GUID-75BD1A70-4576-4266-8274-1F18619A98A0-d9776e10760-heading"><div class=" wh_main_page_toc_entry "><span class="topicref"><a href="GUID-60A0C5B2-638B-4B28-9F43-745322863B88.html" data-id="GUID-60A0C5B2-638B-4B28-9F43-745322863B88"><ph xmlns="">2.1</ph>
+Create your first TCP/IP Application</a></span></div><div class=" wh_main_page_toc_entry "><span class="topicref"><a href="GUID-3A0DFD6E-F6BC-4FE9-BAE4-BE22C34C21C0.html" data-id="GUID-3A0DFD6E-F6BC-4FE9-BAE4-BE22C34C21C0"><ph xmlns="">2.2</ph>
+Migrate MHC based TCP/IP Demos to TCP/IP Configurator</a></span></div></div></div>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <footer class="navbar navbar-default wh_footer">
+  <div class=" footer-container mx-auto ">
+    <div class="footer">
+  <div class="mchp-wh-footer">
+    <div class="mchp-footer">
+      <div class="mchp-footer-tier1">
+        <div class="spacer"></div>
+        <div class="mchp-footer-container">
+          <div class="mchp-footer-links mchp-social-media-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.facebook.com/pages/Microchip-Technology-Inc/20320981741" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Facebook" src="oxygen-webhelp/template/resources/images/201016-corp-facebook.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.linkedin.com/company/microchip-technology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip LinkedIn" src="oxygen-webhelp/template/resources/images/201016-corp-linkedin.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://twitter.com/MicrochipTech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Twitter" src="oxygen-webhelp/template/resources/images/201016-corp-twitter.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.youtube.com/user/MicrochipTechnology" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip YouTube" src="oxygen-webhelp/template/resources/images/201016-corp-youtube.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.instagram.com/microchiptechnologyinc/" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Instagram" src="oxygen-webhelp/template/resources/images/201016-corp-instagram.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.weibo.com/microchiptech" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Weibo" src="oxygen-webhelp/template/resources/images/201016-corp-weibo.png"/>
+                </a>
+              </div>
+              <div class="mchp-component-item">
+                <a class="cmp-image__link" href="https://www.microchip.com/en-us/about/blog" target="_blank">
+                  <img class="cmp-image__image" alt="Microchip Blog" src="oxygen-webhelp/template/resources/images/201016-corp-blog.png"/>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-links">
+            <div class="mchp-component-items">
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://www.microchip.com/about-us/contact-us" class="mchp-link__link">Contact</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information" class="mchp-link__link">Legal</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/privacy-policy" class="mchp-link__link">Privacy Policy</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item ">
+                <div class="link">
+                  <a href="https://www.microchip.com/en-us/about/legal-information/microchip-cookie-statement" class="mchp-link__link">Cookies</a>
+                  <span class="mchp-link__separator">|</span>
+                </div>
+              </div>
+              <div class="mchp-component-item">
+                <div class="link">
+                  <a href="https://careers.microchip.com/" class="mchp-link__link">Careers</a>
+                  <span class="mchp-link__separator"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mchp-footer-newsletter">
+            <div class="cmp-text">
+              <p>Stay on the leading edge with our blog</p>
+            </div>
+            <div class="mchp-button-wrapper">
+              <a role="button" href="https://www.microchip.com/en-us/about/blog" class="mchp-button mchp-button-regular solid">
+                <span class="mchp-button__span">MicroSolutions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="graphic">
+          <img src="oxygen-webhelp/template/resources/images/footer-graphic.png"/>
+        </div>
+      </div>
+      <div class="mchp-footer-tier2">
+        <p class="mchp-copyright">© Copyright 1998-2022 Microchip Technology Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-2724382-19"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];  
+    function gtag(){dataLayer.push(arguments);}  
+    gtag('js', new Date());   
+    gtag('config', 'UA-2724382-19');
+  </script>
+</div>
+  </div>
+</footer>
+        
+        
+        
+    </body>
 </html>

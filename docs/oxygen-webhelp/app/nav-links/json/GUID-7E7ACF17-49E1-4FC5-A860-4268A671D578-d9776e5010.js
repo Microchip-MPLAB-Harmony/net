@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.2.2.1<\/ph>\nNetworking Presentation Layer","href":"GUID-75470E5B-2289-4F94-AE85-2BB7DF4C4F07.html","attributes":{"data-id":"networking-presentation-layer"},"menu":{"hasChildren":false},"tocID":"networking-presentation-layer-d9776e5018","next":"networking-presentation-layer-d9776e5018"}]});
