@@ -50,13 +50,26 @@ configSummaryVisible = True
 
 symbol_value = 0
 #########################################################################################
+def get_processor():
+    import re
+
+    processor =  Variables.get("__PROCESSOR")  
+
+    if (re.match("PIC32CX\d*SG41", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG60", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG61", processor) != None):
+        processor = "PIC32CXSG41"
+
+    return processor
 
 def instantiateComponent(tcpipStackComponent):
     print("TCPIP main Stack Component")
     configName = Variables.get("__CONFIGURATION_NAME")
     res = Database.activateComponents(["HarmonyCore"])
     
-    processor = Variables.get("__PROCESSOR")
+    processor = get_processor()
     
     # Enable dependent Harmony core components
     # Enable "Generate Harmony Driver Common Files" option in MHC
@@ -151,17 +164,17 @@ def instantiateComponent(tcpipStackComponent):
     
     tcpipStackDeviceFamily = tcpipStackComponent.createStringSymbol("TCPIP_DEVICE_FAMILY", None)
     tcpipStackDeviceFamily.setVisible(False)
-    if "SAME70" in Variables.get("__PROCESSOR"):
+    if "SAME70" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAME70")
-    elif "SAMV71" in Variables.get("__PROCESSOR"):
+    elif "SAMV71" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAMV71")
-    elif "SAME54" in Variables.get("__PROCESSOR"):
+    elif "SAME54" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAME54")
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    elif "PIC32M" in processor:
         tcpipStackDeviceFamily.setDefaultValue("PIC32M")
-    elif "SAMA5" in Variables.get("__PROCESSOR"):
+    elif "SAMA5" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAMA5")
-    elif "SAM9X6" in Variables.get("__PROCESSOR"):
+    elif "SAM9X6" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAM9X6")
         
     ###########################################################################################
@@ -640,9 +653,8 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackMpuNoCacheSize.setReadOnly(True)
     
     # Interrupt Configuration Summary
-    processor =  Variables.get("__PROCESSOR")    
     macName = "None"
-    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor):
+    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor) or ("PIC32CXSG41" in processor):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
@@ -2030,7 +2042,7 @@ def instantiateComponent(tcpipStackComponent):
     # ifblock !DSTBDPIC32CZ
     # file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
     # endif
-    if "PIC32M" in Variables.get("__PROCESSOR"):
+    if "PIC32M" in processor:
         tcpipStackTcpipHelpersC32SourceFile = tcpipStackComponent.createFileSymbol(None, None)
         tcpipStackTcpipHelpersC32SourceFile.setSourcePath("tcpip/src/tcpip_helper_c32.S")
         tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")

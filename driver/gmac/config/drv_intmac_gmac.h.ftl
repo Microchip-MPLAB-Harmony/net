@@ -304,6 +304,8 @@ Microchip or any third party.
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK_FREQUENCY}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CK">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
+        <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CXSG41">
+            <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
         <#lt></#if>
     <#lt></#if>
 

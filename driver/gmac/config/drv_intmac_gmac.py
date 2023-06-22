@@ -68,6 +68,20 @@ gmacComponentId = ""
 gmacComponentName = ""
 processor = ""
 
+def get_processor():
+    import re
+
+    processor =  Variables.get("__PROCESSOR")  
+
+    if (re.match("PIC32CX\d*SG41", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG60", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG61", processor) != None):
+        processor = "PIC32CXSG41"
+
+    return processor
+
 def instantiateComponent(drvGmacComponent):
     global gmac_periphID
     global drvGmacNoCacheMemRegSize
@@ -89,7 +103,7 @@ def instantiateComponent(drvGmacComponent):
     device_node = ATDF.getNode('/avr-tools-device-file/devices/device')
     dev_family = str(device_node.getAttribute("family"))
     dev_series = str(device_node.getAttribute("series"))   
-    processor =  Variables.get("__PROCESSOR")  
+    processor =  get_processor()
     if (("PIC32CZ" in dev_series) or ("PIC32CK" in dev_series)):
         gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="ETH"]')
     else:
@@ -115,8 +129,10 @@ def instantiateComponent(drvGmacComponent):
     elif ("SAM9X7" in processor): # SAM9X7
         tcpipGmacDevName.setDefaultValue("SAM9X7")  
     elif ("PIC32CK" in processor):  # PIC32CK
-        tcpipGmacDevName.setDefaultValue("PIC32CK")  
-    
+        tcpipGmacDevName.setDefaultValue("PIC32CK") 
+    elif ("PIC32CXSG41" in processor):  # PIC32CXSG41
+        tcpipGmacDevName.setDefaultValue("PIC32CXSG41")     # SG41 driver
+
     if ("PIC32CZ" in processor) or ("PIC32CK" in processor): # PIC32CZ or PIC32CK    
         # Enable ETH_TX clock
         Database.setSymbolValue("core", "ETH_TSU_CLOCK_ENABLE", True)
@@ -149,7 +165,7 @@ def instantiateComponent(drvGmacComponent):
     drvGmacClock = drvGmacComponent.createIntegerSymbol("DRV_"+ gmacComponentName + "_CLOCK", drvGmacConfigSummary)
     drvGmacClock.setLabel("Internal Ethernet MAC Clock")
     drvGmacClock.setVisible(False)    
-    if ("SAME5" in processor):
+    if ("SAME5" in processor) or ("PIC32CXSG41" in processor):
         drvGmacClock.setDefaultValue(Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
         drvGmacClock.setDependencies(tcpipGmacClockUpdate, ["core.MAIN_CLOCK_FREQUENCY"])
         setVal("tcpipStack", "TCPIP_STACK_MAC_CLOCK", Database.getSymbolValue("core", "MAIN_CLOCK_FREQUENCY"))
@@ -193,7 +209,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacMaxQueCnt.setVisible(True)
     if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZ" in processor) or ("SAM9X7" in processor) or ("SAMRH" in processor)):
         tcpipGmacMaxQueCnt.setDefaultValue(6)
-    elif ("SAME5" in processor):
+    elif (("SAME5" in processor) or ("PIC32CXSG41" in processor)):
         tcpipGmacMaxQueCnt.setDefaultValue(1)
     elif ("SAMA5" in processor):      
         tcpipGmacMaxQueCnt.setDefaultValue(3)
@@ -378,7 +394,7 @@ def instantiateComponent(drvGmacComponent):
                                 "TCPIP_"+ gmacComponentName + "_RX_BUFF_SIZE_QUE2","TCPIP_"+ gmacComponentName + "_TX_EN_QUE2","TCPIP_"+ gmacComponentName + "_TX_DESCRIPTORS_COUNT_QUE2",
                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
     
-    if(("SAME5" in processor) or ("PIC32CK" in processor)): # SAME54 or PIC32CK
+    if(("SAME5" in processor) or ("PIC32CK" in processor) or ("PIC32CXSG41" in processor)): # SAME54 or PIC32CK or PIC32CXSG41
         gmacheapdependency = [  "TCPIP_"+ gmacComponentName + "_QUEUE_0","TCPIP_"+ gmacComponentName + "_RX_EN_QUE0","TCPIP_"+ gmacComponentName + "_RX_DESCRIPTORS_COUNT_QUE0","TCPIP_"+ gmacComponentName + "_RX_ADDL_BUFF_COUNT_QUE0",
                                 "TCPIP_"+ gmacComponentName + "_RX_BUFF_COUNT_THRESHOLD_QUE0","TCPIP_"+ gmacComponentName + "_RX_BUFF_SIZE_QUE0","TCPIP_"+ gmacComponentName + "_TX_EN_QUE0",
                                 "TCPIP_"+ gmacComponentName + "_TX_DESCRIPTORS_COUNT_QUE0", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
@@ -1373,7 +1389,7 @@ def instantiateComponent(drvGmacComponent):
         drvGmacQueueNum.setDefaultValue(6)  
     elif (("SAMA7G" in processor) and (gmacComponentName == "GMAC1")): # SAMA7G5-GMAC1
         drvGmacQueueNum.setDefaultValue(2)
-    elif (("SAME5" in processor)  or ("PIC32CK" in processor)): # SAME54 or PIC32CK
+    elif (("SAME5" in processor)  or ("PIC32CK" in processor) or ("PIC32CXSG41" in processor)): # SAME54 or PIC32CK or PIC32CXSG41
         drvGmacQueueNum.setDefaultValue(1)
     elif ("SAMA5" in processor): # SAMA5D2
         drvGmacQueueNum.setDefaultValue(3)
@@ -1382,7 +1398,7 @@ def instantiateComponent(drvGmacComponent):
     drvGmacRmiiVal = drvGmacComponent.createIntegerSymbol("DRV_"+ gmacComponentName + "_RMII_VALUE", None)
     drvGmacRmiiVal.setHelp("mcc_h3_gmac_configurations")
     drvGmacRmiiVal.setVisible(False)
-    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) :  # SAME70, SAMV71, SAMRH, SAME54
+    if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or ("PIC32CXSG41" in processor) :  # SAME70, SAMV71, SAMRH, SAME54, PIC32CXSG41
         drvGmacRmiiVal.setDefaultValue(0) 
     elif ("SAMA5" in processor): # SAMA5D2
         drvGmacRmiiVal.setDefaultValue(1)
@@ -1540,7 +1556,6 @@ def instantiateComponent(drvGmacComponent):
         dev_name = tcpipGmacDevName.getValue()
         # Add drv_gmac_lib_pic32cz.h file to project
         drvGmacLibPic32czHeaderFile = drvGmacComponent.createFileSymbol(None, None)
-        # drvGmacLibPic32czHeaderFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib_pic32cz.h")
         drvGmacLibPic32czHeaderFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib_" + dev_name.lower() + ".h")
         drvGmacLibPic32czHeaderFile.setOutputName("drv_gmac_lib_" + dev_name.lower() + ".h")
         drvGmacLibPic32czHeaderFile.setDestPath("driver/gmac/src/dynamic/")
@@ -1600,6 +1615,8 @@ def instantiateComponent(drvGmacComponent):
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_sam9X7" 
     elif ("PIC32CK" in processor): 
         drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32ck"
+    elif ("PIC32CXSG41" in processor): 
+        drvGmacLibCFileStem = drvGmacLibCFileStem + "_pic32cxsg41"
 
     drvGmacLibSourceFile = drvGmacComponent.createFileSymbol(None, None)
     drvGmacLibSourceFile.setSourcePath("driver/gmac/src/dynamic/" + drvGmacLibCFileStem + ".c")

@@ -24,6 +24,21 @@ drvMiimInstMaxNum = 2
 drvMiimInstMenu = []
 drvMiimDrvIndex = []
 drvMiimModuleId = []
+
+def get_processor():
+    import re
+
+    processor =  Variables.get("__PROCESSOR")  
+
+    if (re.match("PIC32CX\d*SG41", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG60", processor) != None):
+        processor = "PIC32CXSG41"
+    elif (re.match("PIC32CX\d*SG61", processor) != None):
+        processor = "PIC32CXSG41"
+
+    return processor
+
 def instantiateComponent(drvMiimComponent):
     print("MIIM Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -214,10 +229,10 @@ def instantiateComponent(drvMiimComponent):
     #drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
     
     #file DRV_MIIM_XXX_C "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim_xxx.c" to "$PROJECT_SOURCE_FILES/framework/driver/miim/src/dynamic/drv_miim_xxx.c"
-    processor =  Variables.get("__PROCESSOR")  
+    processor =  get_processor()  
     if (("SAME7" in processor) or ("SAMV7" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
-    elif (("SAME5" in processor) or ("SAMA5D2" in processor)):
+    elif (("SAME5" in processor) or ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif (("SAMA7G" in processor) or ("SAM9X7" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
