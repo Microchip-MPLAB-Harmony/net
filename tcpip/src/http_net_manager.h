@@ -152,7 +152,7 @@ bool TCPIP_HTTP_NET_InfoGet(int connIx, TCPIP_HTTP_NET_CONN_INFO* pHttpInfo);
 
 
 // return HTTP statistics
-void TCPIP_HTTP_NET_StatGet(TCPIP_HTTP_NET_STAT_INFO* pStatInfo);
+bool TCPIP_HTTP_NET_StatGet(TCPIP_HTTP_NET_STAT_INFO* pStatInfo);
 
 // return advanced chunk info about a specific connection
 // pChunkInfo points to an array of TCPIP_HTTP_NET_CHUNK_INFO, nInfos in size;

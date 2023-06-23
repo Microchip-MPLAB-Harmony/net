@@ -5726,16 +5726,21 @@ bool TCPIP_HTTP_NET_ChunkInfoGet(int connIx, TCPIP_HTTP_NET_CHUNK_INFO* pChunkIn
 }
 #endif  // (TCPIP_HTTP_NET_DEBUG_LEVEL & TCPIP_HTTP_NET_DEBUG_MASK_CHUNK_INFO)
 
-void TCPIP_HTTP_NET_StatGet(TCPIP_HTTP_NET_STAT_INFO* pStatInfo)
+bool TCPIP_HTTP_NET_StatGet(TCPIP_HTTP_NET_STAT_INFO* pStatInfo)
 {
-    if(pStatInfo)
-    {
-        pStatInfo->nConns = httpConnNo;
-        pStatInfo->nActiveConns = TCPIP_HTTP_NET_ActiveConnectionCountGet(&pStatInfo->nOpenConns);
-        pStatInfo->dynPoolEmpty = httpDynPoolEmpty;
-        pStatInfo->maxRecurseDepth = httpMaxRecurseDepth;
-        pStatInfo->dynParseRetry = httpDynParseRetry;
+    if(httpConnCtrl != NULL)
+    {   // we're up and running
+        if(pStatInfo)
+        {
+            pStatInfo->nConns = httpConnNo;
+            pStatInfo->nActiveConns = TCPIP_HTTP_NET_ActiveConnectionCountGet(&pStatInfo->nOpenConns);
+            pStatInfo->dynPoolEmpty = httpDynPoolEmpty;
+            pStatInfo->maxRecurseDepth = httpMaxRecurseDepth;
+            pStatInfo->dynParseRetry = httpDynParseRetry;
+        }
+        return true;
     }
+    return false;
 }
 
 
