@@ -1470,6 +1470,7 @@ minimum packet that needs to be accepted: 236 + 312 = 548 bytes (RFC)
     while(true)
     {
         // get the HDCP header
+        dhcpHdr.op = 0;
         TCPIP_UDP_ArrayGet(s, &dhcpHdr.op, sizeof(dhcpHdr));
 
         // Make sure this is TCPIP_BOOT_REPLY.
@@ -2037,6 +2038,7 @@ static void _DHCPSetBoundState(DHCP_CLIENT_VARS* pClient)
     UDP_SOCKET_INFO sktInfo;
 
     // store the address of the server that gave us the lease
+    sktInfo.sourceIPaddress.v4Add.Val = 0;
     TCPIP_UDP_SocketInfoGet(dhcpClientSocket , &sktInfo);
     pClient->serverAddress.Val = sktInfo.sourceIPaddress.v4Add.Val;
 
@@ -2472,7 +2474,7 @@ static int _DHCPFormatHostName(char* destBuffer, const char* srcBuffer, int dest
         for(ix = 0; ix < len; ix++)
         {
             currC = *d;
-            if(currC != '-' && currC != '.' && !isalnum(currC))
+            if(currC != '-' && currC != '.' && !isalnum((uint8_t)currC))
             {
                 *d = TCPIP_DHCP_HOST_REPLACE_CHAR;
             }
@@ -2486,7 +2488,7 @@ static int _DHCPFormatHostName(char* destBuffer, const char* srcBuffer, int dest
             destBuffer[0] = TCPIP_DHCP_HOST_REPLACE_CHAR;
         }
         currC = destBuffer[len - 1];
-        if(!isalnum(currC))
+        if(!isalnum((uint8_t)currC))
         {
             destBuffer[len - 1] = TCPIP_DHCP_HOST_REPLACE_CHAR;
         }
@@ -2582,6 +2584,7 @@ TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_E
     if(handler && dhcpMemH)
     {
         TCPIP_DHCP_LIST_NODE dhcpNode;
+        dhcpNode.next = 0;
         dhcpNode.handler = handler;
         dhcpNode.hParam = hParam;
         dhcpNode.hNet = hNet;

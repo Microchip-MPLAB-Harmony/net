@@ -346,7 +346,7 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
         shiftIndex = 0;
     }
 
-    if(!isxdigit(*str))
+    if(!isxdigit((uint8_t)*str))
     {
         return false;
     }
@@ -562,7 +562,7 @@ bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
     pAdd = convAddr;
     for(ix=0; ix<6; ix++)
     {
-        if(!isxdigit(beg[0]) || !isxdigit(beg[1]))
+        if(!isxdigit((uint8_t)beg[0]) || !isxdigit((uint8_t)beg[1]))
         {
             return false;
         }

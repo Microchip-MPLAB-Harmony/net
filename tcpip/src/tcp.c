@@ -2407,7 +2407,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 {
     CRYPT_MD5_CTX md5Ctx;
-    uint32_t secretKey[16 / 4];   // 128 bits secret key
+    uint32_t secretKey[16 / 4] = {0};   // 128 bits secret key
 
     size_t dataSize = 0;    // actual data size
 
@@ -2422,7 +2422,7 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 #if defined (TCPIP_STACK_USE_IPV4)
         uint32_t    ipv4HashData[28 / 4];   // 4B srcAdd, 4B destAdd, 4B ports, 16B secret key
 #endif    
-    }hashData;
+    }hashData = {0};
         
     // get secret key
     SYS_RANDOM_CryptoBlockGet(secretKey, sizeof(secretKey));
@@ -3186,7 +3186,7 @@ uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, u
   ***************************************************************************/
 uint8_t TCPIP_TCP_Peek(TCP_SOCKET hTCP, uint16_t wStart)
 {
-	uint8_t i;
+	uint8_t i = 0;
 	
 	TCPIP_TCP_ArrayPeek(hTCP, &i, 1, wStart);
 	return i;

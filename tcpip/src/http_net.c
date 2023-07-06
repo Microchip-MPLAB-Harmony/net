@@ -4308,6 +4308,7 @@ static bool  _HTTP_DynVarExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK
 
                 if(nArgs < sizeof(dynArgDcpt) / sizeof(*dynArgDcpt))
                 {
+                    argInt = 0;
                     argType = _HTTP_ArgType(argStr, &argInt);
                     if(argType == TCPIP_HTTP_DYN_ARG_TYPE_INVALID)
                     {   // ignore void arguments

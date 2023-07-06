@@ -869,6 +869,7 @@ TCPIP_ARP_HANDLE TCPIP_ARP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_ARP_EVEN
     if(handler && arpMod.memH)
     {
         ARP_LIST_NODE arpNode;
+        arpNode.next = 0;
         arpNode.handler = handler;
         arpNode.hParam = hParam;
         arpNode.hNet = hNet;
