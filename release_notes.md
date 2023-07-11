@@ -1,4 +1,69 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.10.0 (July, 2023)
+### ADDITIONS AND UPDATES FOR  3.10.0:
+
+- **New features**
+
+    - The release adds support for PIC32CX\_SG41.
+    - The release adds new PHY support: LAN9354 and LAN8770 
+    - The release updates the MCC Net plugin.
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+
+- **New Features and Bug Fixes**
+
+The following table provides the list of new features and fixes in the 3.10.0 release:
+
+| Module                | Description     |
+| ------ | -------- |
+| MCC net plugin| Support for the PIC32CX\_SG41, PIC32CK\_GC configuration has been added |
+|               | Configured heap size is set to blank when heap type is other than external. |
+|               | Available components and active components are sorted in alphabetical order in Layers, Overview and configuration Summary |
+| MIIM driver   | Provided extended operation support |
+|               | Solved MIIM build issue for PIC32CZ\_CA demos |
+| PHY driver    | Add LAN9354, LAN8770 support |
+|               | Removed obsolete SMSC naming from the PHY files |
+| GMAC driver   | Add drivers for PIC32CK\_GC, PIC32CX\_SG41 GMAC |                
+| DHCP server   | Allowed serving of errors and client events simultaneously |
+| Manager       | MAC check link frequency has been added as a parameter |
+|               | APIs for modules de-initialization and running status have been added to the stack manager |
+| TCP           | Fixed application lock-up  when remote window == 0 and there's data to be sent |
+|               | Added re-transmission timers for the unacknowledged data to the TCP state machine |
+| HTTP          | Beta support for HTTP server to support multiple instances with multiple ports and access/redirection rules |
+| IPv6          | ICMPv6 template is corrected when ICMPV6 console command is not enabled |
+| IPv4          | Fixed the calculation of leading ones/trailing zeroes in the forwarding table|
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.10](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.20](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, 3.10.0
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), 5.2.1 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.13.0
+- Harmony csp repository, v3.17.0
+- Harmony bsp repository, v3.16.0
+- Harmony dev\_packs repository, v3.17.0
+- Harmony crypto repository, 3.8.0
+- Harmony usb repository, 3.11.0-E2 for demos requiring USB
+- wolfSSL  v5.4.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
+
+
+### KNOWN ISSUES
+* See the applications release notes in [product family specific repository](apps/release_notes.md)
+
 ## Net Release v3.9.2 (May, 2023)
 ### ADDITIONS AND UPDATES FOR  3.9.2:
 
