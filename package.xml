@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="v3.12.0-E1"/>
-        <Dependency name="csp" version="v3.15.0"/>
-        <Dependency name="bsp" version="v3.15.0"/>
-        <Dependency name="dev_packs" version="v3.15.1"/>
-        <Dependency name="crypto" version="v3.7.6"/>
-        <Dependency name="usb" version="v3.11.0-E1"/>
-        <Dependency name="wolfssl" version="v4.7.0"/>
+        <Dependency name="core" version="v3.13.0"/>
+        <Dependency name="csp" version="v3.17.0"/>
+        <Dependency name="bsp" version="v3.16.0"/>
+        <Dependency name="dev_packs" version="v3.17.0"/>
+        <Dependency name="crypto" version="v3.8.0"/>
+        <Dependency name="usb" version="v3.11.0-E2"/>
+        <Dependency name="wolfssl" version="v5.4.0"/>
         <Dependency name="wolfMQTT" version="v1.11.1"/>
-        <Dependency name="CMSIS-FreeRTOS" version="v10.4.6"/>
+        <Dependency name="CMSIS-FreeRTOS" version="v10.5.1"/>
     </Dependencies>
 </Package>

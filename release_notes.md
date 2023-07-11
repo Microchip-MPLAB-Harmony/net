@@ -56,7 +56,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - Harmony dev\_packs repository, v3.17.0
 - Harmony crypto repository, 3.8.0
 - Harmony usb repository, 3.11.0-E2 for demos requiring USB
-- wolfSSL  v5.4.0-stable (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
+- wolfSSL  v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
 - wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
 - CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
 
