@@ -46,7 +46,7 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 - [MPLAB® XC32 C/C++ Compiler v4.20](https://www.microchip.com/mplab/compilers) or later
 - Harmony net repository, 3.10.0
 - Harmony net demo apps repositories
-- MPLAB Code Configurator (MCC), 5.2.1 or later
+- MPLAB Code Configurator (MCC), 5.3.7 or later
 
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
 
