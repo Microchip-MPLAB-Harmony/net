@@ -405,7 +405,7 @@ static void TCPIP_NBNS_NameGet(UDP_SOCKET s, uint8_t *String)
 {
     uint8_t i, j, k;
 
-    uint8_t encodedString[33]; // NetBIOS strings are 16 characters long, encoded 32 bytes, 1 byte for length
+    uint8_t encodedString[33] = {0}; // NetBIOS strings are 16 characters long, encoded 32 bytes, 1 byte for length
     TCPIP_UDP_ArrayGet(s, encodedString, sizeof (encodedString));
 
     if (String == NULL)

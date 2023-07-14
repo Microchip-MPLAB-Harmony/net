@@ -2516,6 +2516,8 @@ void TCPIP_IPV6_FragmentTask (void)
     TCPIP_MAC_PACKET     rxPkt;
     TCPIP_MAC_PACKET*    pRxPkt = &rxPkt;
 
+    pRxPkt->pMacLayer = 0;
+    pRxPkt->pNetLayer = 0;
     for (netIx = 0; netIx < nStackIfs; netIx++)
     {
         pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
@@ -3464,6 +3466,7 @@ IPV6_HANDLE TCPIP_IPV6_HandlerRegister(TCPIP_NET_HANDLE hNet, IPV6_EVENT_HANDLER
     if(handler && ipv6MemH)
     {
         IPV6_LIST_NODE ipv6Node;
+        ipv6Node.next = 0;
         ipv6Node.handler = handler;
         ipv6Node.hParam = hParam;
         ipv6Node.hNet = hNet;

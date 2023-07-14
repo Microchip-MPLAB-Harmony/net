@@ -1333,7 +1333,7 @@ static TCPIP_SMTPC_STATUS smtpDcptMailMsgSubject(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt
 static TCPIP_SMTPC_STATUS smtpDcptMailMsgMessageId(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt)
 {
     // create a message ID: <mailCounter@IPaddress>
-    char addBuff[20];
+    char addBuff[20] = "";
     char msgIdBuff[40];
     TCP_SOCKET_INFO sktInfo;
 

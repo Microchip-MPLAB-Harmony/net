@@ -1664,7 +1664,7 @@ static void StateMachineTcpListen(tIperfState* pIState)
 
    if( TCPIP_TCP_IsConnected(pIState->tcpServerSock) )
    {
-      TCP_SOCKET_INFO tcpSocketInfo;
+      TCP_SOCKET_INFO tcpSocketInfo = {0};
 	  TCPIP_TCP_SocketInfoGet( pIState->tcpServerSock, &tcpSocketInfo);
       memcpy ( (void *) &pIState->remoteSide, &tcpSocketInfo, sizeof ( TCP_SOCKET_INFO) );
       IperfSetState(pIState, IPERF_TCP_RX_STATE);
@@ -2123,7 +2123,7 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     uint8_t i, tos, len;
     char *ptr;
     uint32_t tickFreq;
-    uint32_t values[4], bw=0;
+    uint32_t values[4] = {0}, bw=0;
     
     float pktRate;
     uint16_t payloadSize = 0, asciTos;

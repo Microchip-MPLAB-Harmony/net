@@ -190,6 +190,7 @@ ICMPV6_HANDLE TCPIP_ICMPV6_CallbackRegister (void (*callback)(TCPIP_NET_HANDLE h
     if(callback && icmpv6MemH)
     {
         ICMPV6_LIST_NODE icmpNode;
+        icmpNode.next = 0;
         icmpNode.callback = callback;
 
         return (ICMPV6_LIST_NODE*)TCPIP_Notification_Add(&icmpv6RegisteredUsers, icmpv6MemH, &icmpNode, sizeof(icmpNode));
