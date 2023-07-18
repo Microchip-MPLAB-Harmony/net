@@ -1416,7 +1416,10 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
             else
             {
                 memset(fileNameList,0,sizeof(fileNameList));
-                strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
+                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                {
+                    strcpy((char*)fileNameList, fileHeaderStr);
+                }
                 if(wCount > strlen((char *)fileNameList))
                 {
                     remainingBytes =0;
@@ -2050,7 +2053,10 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             else
             {
                 memset(fileNameList,0,sizeof(fileNameList));
-                strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
+                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                {
+                    strcpy((char*)fileNameList,fileHeaderStr);
+                }
                 if(wCount > strlen((char *)fileNameList))
                 {
                     NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
@@ -2146,7 +2152,10 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             else
             {
                 memset(fileNameList,0,sizeof(fileNameList));
-                strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
+                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                {
+                    strcpy((char*)fileNameList, fileHeaderStr);
+                }
                 if(wCount > strlen((char *)fileNameList))
                 {
                     NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
