@@ -70,7 +70,7 @@ def webPagePathParsing(path):
     ORG_PATH = path
     clearFileSymbols()
     #split webpage curent web page path
-    webPagePath = path.split("\\")
+    webPagePath = path.split(os.path.sep)
     #get the last directory from the given web page path
     lastDirectory = webPagePath[len(webPagePath)-1]
     #get the current root web page directory path
