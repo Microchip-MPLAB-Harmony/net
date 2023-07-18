@@ -75,8 +75,6 @@ def webPagePathParsing(path):
     lastDirectory = webPagePath[len(webPagePath)-1]
     #get the current root web page directory path
     webPageRootPath = ORG_PATH.split(lastDirectory)[0]
-    print("webpageRootPath: ")
-    print(webPageRootPath)
     
     for (root, dirs, fileNames) in os.walk(ORG_PATH):
         for fileName in fileNames:
@@ -107,7 +105,6 @@ def webPagePathParsing(path):
             webpageListFile.setType("SOURCE")
             webpageListFile.setMarkup(False)
             webpageListFile.setEnabled(True)
-            print("SourceFile: " + htmFile)
             webpageListFile.setDependencies(webpageGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
             count += 1
 
