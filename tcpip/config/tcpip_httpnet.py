@@ -610,6 +610,8 @@ def instantiateComponent(tcpipHttpNetComponent):
     tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
     tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])    
 
+    print("Module.getPath(): ")
+    print(Module.getPath())
     execfile(Module.getPath() + "/tcpip/config/webpage.py")
 
 # make Http Net Server option visible
