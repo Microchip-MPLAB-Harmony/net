@@ -43,7 +43,7 @@ The following table provides the list of new features and fixes in the 3.10.0 re
 Before using MPLAB Harmony Net, ensure that the following are installed:
 
 - [MPLAB® X IDE v6.10](https://www.microchip.com/mplab/mplab-x-ide) or later
-- [MPLAB® XC32 C/C++ Compiler v4.20](https://www.microchip.com/mplab/compilers) or later
+- [MPLAB® XC32 C/C++ Compiler v4.30](https://www.microchip.com/mplab/compilers) or later
 - Harmony net repository, 3.10.0
 - Harmony net demo apps repositories
 - MPLAB Code Configurator (MCC), 5.3.7 or later
