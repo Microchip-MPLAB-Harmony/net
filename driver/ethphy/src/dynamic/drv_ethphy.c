@@ -369,7 +369,7 @@ static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMITransferWaitComplete(DRV_ETHPHY_CLIE
         return DRV_ETHPHY_SMI_TXFER_RES_ILLEGAL;
     } 
 
-    miimRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, hClientObj->miimOpHandle, &opData);
+    miimRes = hClientObj->pMiimBase->DRV_MIIM_OperationResult(hClientObj->miimHandle, hClientObj->miimOpHandle, &opData);
     if(miimRes == DRV_MIIM_RES_PENDING)
     {   // wait op to complete
         return DRV_ETHPHY_SMI_TXFER_RES_WAIT;
