@@ -28,7 +28,7 @@ Microchip or any third party.
     <#lt>    {
     <#lt>       <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
     <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
-    <#lt>       DRV_MIIM_DRIVER_OBJECT.DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt>       ${DRV_MIIM_DRIVER_OBJECT}.DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
     <#lt>       </#if>
     <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
@@ -46,7 +46,7 @@ Microchip or any third party.
     <#lt>    {
     <#lt>       <#if DRV_MIIM_INSTANCES_NUMBER gte 1>
     <#lt>       <#list 0 ..(DRV_MIIM_INSTANCES_NUMBER - 1) as i >
-    <#lt>        DRV_MIIM_DRIVER_OBJECT.DRV_MIIM_Tasks(sysObj.drvMiim_${i});
+    <#lt>        ${DRV_MIIM_DRIVER_OBJECT}.DRV_MIIM_Tasks(sysObj.drvMiim_${i});
     <#lt>       </#list>
     <#lt>       </#if>
     <#lt>       <#if DRV_MIIM_RTOS_USE_DELAY >
