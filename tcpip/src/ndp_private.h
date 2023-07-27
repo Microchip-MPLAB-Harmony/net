@@ -62,14 +62,22 @@ Microchip or any third party.
 #define DAD_PENDING                             2
 #define DAD_BAD_ARGUMENT                        3
 
+// Router advertisement constatnts
+// G3-PLC support only
+#define TCPIP_IPV6_MAX_INITIAL_RTR_ADVERTISEMENTS   3       // number
+#define TCPIP_IPV6_MAX_INITIAL_RTR_ADVERT_INTERVAL  16      // seconds
+// min/max router advertisement interval
+#define TCPIP_IPV6_MIN_RTR_ADV_INTERVAL             200         // seconds
+#define TCPIP_IPV6_MAX_RTR_ADV_INTERVAL             600         // seconds
+
 //**************
 // Private APIs
 //**************
-void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, unsigned char prefixLength, unsigned char usePrefixLength);
+void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t prefixLength, uint8_t usePrefixLength);
 
 char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer);
 
-void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, unsigned char prefixLength);
+void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength);
 
 IPV6_ADDR_STRUCT * TCPIP_NDP_TentativeAddressPromote (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * entryLocation);
 

@@ -3820,7 +3820,7 @@ static const TCPIP_STACK_MODULE_CONFIG* _TCPIP_STACK_FindModuleData(TCPIP_STACK_
 }
 
 
-int  TCPIP_STACK_NetIxGet(TCPIP_NET_IF* pNetIf)
+int  TCPIP_STACK_NetIxGet(const TCPIP_NET_IF* pNetIf)
 {
     if(pNetIf)
     {

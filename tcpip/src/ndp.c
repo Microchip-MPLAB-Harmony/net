@@ -88,7 +88,6 @@ static int              nStackIfs = 0;      // max number of interfaces
 enum
 {
     RS_STATE_INACTIVE = 0,
-    RS_STATE_INIT,
     RS_STATE_TRANSMIT,
     RS_STATE_WAIT
 } ROUTER_SOLICITATION_STATE;
@@ -105,6 +104,9 @@ static void TCPIP_NDP_RouterSolicitTask (void);
 
 static void TCPIP_NDP_NborUnreachDetectTask (void);
 
+#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+static void TCPIP_NDP_G3RouterAdvertiseTask (void);
+#endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 
 /*****************************************************************************
   Function:
@@ -244,8 +246,8 @@ static void _TCPIP_NDP_Cleanup(void)
   Function:
     IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (
         TCPIP_NET_IF * pNetIf, IPV6_ADDR * remoteIPAddr,
-        TCPIP_MAC_ADDR * remoteMACAddr, unsigned char initialState,
-        unsigned char routerFlag, IPV6_ADDR_STRUCT * preferredSource)
+        const TCPIP_MAC_ADDR * remoteMACAddr, uint8_t initialState,
+        uint8_t routerFlag, IPV6_ADDR_STRUCT * preferredSource)
 
   Summary:
     Creates an entry in the neighbor cache.
@@ -274,7 +276,7 @@ static void _TCPIP_NDP_Cleanup(void)
   Remarks:
     None
   ***************************************************************************/
-IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddr, TCPIP_MAC_ADDR * remoteMACAddr, unsigned char initialState, unsigned char routerFlag, IPV6_ADDR_STRUCT * preferredSource)
+IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddr, const TCPIP_MAC_ADDR * remoteMACAddr, uint8_t initialState, uint8_t routerFlag, IPV6_ADDR_STRUCT * preferredSource)
 {
     IPV6_HEAP_NDP_NC_ENTRY * neighborPointer;
 
@@ -284,18 +286,27 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const
     {
         memcpy (&(neighborPointer->remoteIPAddress), remoteIPAddr, sizeof (IPV6_ADDR));
         if (remoteMACAddr != NULL)
+        {
             memcpy(&(neighborPointer->remoteMACAddr), remoteMACAddr, sizeof (TCPIP_MAC_ADDR));
+        }
         else
+        {
             memset (&(neighborPointer->remoteMACAddr), 0x00, sizeof (TCPIP_MAC_ADDR));
+        }
 
         TCPIP_NDP_ReachabilitySet (pNetIf, neighborPointer, initialState);
         neighborPointer->unansweredProbes = 0;
         neighborPointer->nextNUDTime = 0;
+        neighborPointer->flags.val = 0;
         TCPIP_Helper_SingleListInitialize (&neighborPointer->queuedPackets);
         if (routerFlag)
+        {
             neighborPointer->flags.bIsRouter = true;
+        }
         else
+        {
             neighborPointer->flags.bIsRouter = false;
+        }
 
         neighborPointer->preferredSource = preferredSource;
 
@@ -314,7 +325,7 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const
   Function:
     IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (
         TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighbor,
-        unsigned long invalidationTime)
+        uint32_t invalidationTime)
 
   Summary:
     Creates an entry in the default router list.
@@ -338,7 +349,7 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryCreate (TCPIP_NET_IF * pNetIf, const
   Remarks:
     None
   ***************************************************************************/
-IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighbor, unsigned long invalidationTime)
+IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_HEAP_NDP_NC_ENTRY * neighbor, uint32_t invalidationTime)
 {
     IPV6_HEAP_NDP_DR_ENTRY * routerPointer;
 
@@ -359,7 +370,7 @@ IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (TCPIP_NET_IF * pNet
   Function:
     IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (
         TCPIP_NET_IF * pNetIf, IPV6_ADDR * remoteIPAddress,
-        unsigned long linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor)
+        uint32_t linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor)
 
   Summary:
     Creates an entry in the destination cache.
@@ -384,7 +395,7 @@ IPV6_HEAP_NDP_DR_ENTRY * TCPIP_NDP_DefaultRouterEntryCreate (TCPIP_NET_IF * pNet
   Remarks:
     None
   ***************************************************************************/
-IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddress, unsigned long linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor)
+IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIPAddress, uint32_t linkMTU, IPV6_HEAP_NDP_NC_ENTRY * neighbor)
 {
     IPV6_HEAP_NDP_DC_ENTRY * destinationPointer;
 
@@ -409,7 +420,7 @@ IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (TCPIP_NET_IF * pNetIf, 
   Function:
     IPV6_HEAP_NDP_PL_ENTRY * TCPIP_NDP_PrefixListEntryCreate (
         TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix,
-        unsigned char prefixLength, unsigned long validLifetime)
+        uint8_t prefixLength, uint32_t validLifetime)
 
   Summary:
     Creates an entry in the prefix list.
@@ -434,7 +445,7 @@ IPV6_HEAP_NDP_DC_ENTRY * TCPIP_NDP_DestCacheEntryCreate (TCPIP_NET_IF * pNetIf, 
   Remarks:
     None
   ***************************************************************************/
-IPV6_HEAP_NDP_PL_ENTRY * TCPIP_NDP_PrefixListEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, unsigned char prefixLength, unsigned long validLifetime)
+IPV6_HEAP_NDP_PL_ENTRY * TCPIP_NDP_PrefixListEntryCreate (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t prefixLength, uint32_t validLifetime)
 {
     IPV6_HEAP_NDP_PL_ENTRY * entryPointer;
 
@@ -666,6 +677,9 @@ void TCPIP_NDP_Task (void)
     TCPIP_NDP_DupAddrDiscoveryTask();
     TCPIP_NDP_RouterSolicitTask();
     TCPIP_NDP_NborUnreachDetectTask();
+#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+    TCPIP_NDP_G3RouterAdvertiseTask();
+#endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 }
 
 /*****************************************************************************
@@ -756,7 +770,7 @@ static void TCPIP_NDP_DupAddrDiscoveryTask (void)
   ***************************************************************************/
 char TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * localAddressPointer)
 {
-    unsigned i;
+    size_t i;
 
     for (i = 0; i < DUPLICATE_ADDR_DISCOVERY_THREADS; i++)
     {
@@ -1007,6 +1021,7 @@ static void TCPIP_NDP_RouterSolicitTask (void)
     RS_STATIC_VARS* pRs;
     IPV6_ADDR_STRUCT* pRsStruct; 
     IPV6_ADDR* pRsAdd;
+    const IPV6_ADDR* remSolicitAdd;
 
     for(netIx=0; netIx< nStackIfs; netIx++)
     {
@@ -1016,9 +1031,23 @@ static void TCPIP_NDP_RouterSolicitTask (void)
         switch (pRs->state)
         {
             case RS_STATE_INACTIVE:
-
                 break;
+
             case RS_STATE_TRANSMIT:
+                if((pNetIf->startFlags & TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS) != 0)
+                {
+                    remSolicitAdd = TCPIP_IPV6_DefaultRouterGet(pNetIf);
+                    if(remSolicitAdd == NULL)
+                    {   // cannot send the RS w/o an address
+                        break;
+                    }
+                } 
+                else
+                {
+                    remSolicitAdd = &IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST;
+                }
+
+
                 if ((pRs->address == NULL) || (pRs->address->flags.scope != IPV6_ADDR_SCOPE_LINK_LOCAL))
                 {
                     // Note: Addresses in this list are all unicast, so we can skip that check
@@ -1032,7 +1061,7 @@ static void TCPIP_NDP_RouterSolicitTask (void)
                     if (pRs->address == NULL)
                     {
                         // If no address can be found, send the solicitation with the unspecified address
-                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, (IPV6_ADDR *)&IPV6_FIXED_ADDR_UNSPECIFIED, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
+                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, (IPV6_ADDR *)&IPV6_FIXED_ADDR_UNSPECIFIED, remSolicitAdd);
                         TCPIP_ICMPV6_Flush (pkt);
                     }
                     else
@@ -1043,7 +1072,7 @@ static void TCPIP_NDP_RouterSolicitTask (void)
 
                         pRsStruct = pRs->address; 
                         pRsAdd = (IPV6_ADDR*)((uint8_t*)pRsStruct + offsetof(struct _IPV6_ADDR_STRUCT, address));
-                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
+                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, remSolicitAdd);
                         if (pkt == NULL)
                             return;
                         if (TCPIP_IPV6_TxIsPutReady(pkt, sizeof(NDP_OPTION_LLA)))
@@ -1066,7 +1095,7 @@ static void TCPIP_NDP_RouterSolicitTask (void)
                     // The previously selected IP address is still valid; use it
                     pRsStruct = pRs->address; 
                     pRsAdd = (IPV6_ADDR*)((uint8_t*)pRsStruct + offsetof(struct _IPV6_ADDR_STRUCT, address));
-                    pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
+                    pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, remSolicitAdd);
                     if (pkt == NULL)
                         return;
                     if (TCPIP_IPV6_TxIsPutReady(pkt, sizeof(NDP_OPTION_LLA)))
@@ -1147,8 +1176,8 @@ void TCPIP_NDP_RouterSolicitStop (TCPIP_NET_IF * pNetIf)
 /*****************************************************************************
   Function:
     void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix,
-                                    unsigned char prefixLength,
-                                    unsigned char usePrefixList)
+                                    uint8_t prefixLength,
+                                    uint8_t usePrefixList)
 
   Summary:
     Finds a prefix.
@@ -1174,7 +1203,7 @@ void TCPIP_NDP_RouterSolicitStop (TCPIP_NET_IF * pNetIf)
   Remarks:
     None
   ***************************************************************************/
-void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, unsigned char prefixLength, unsigned char usePrefixList)
+void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t prefixLength, uint8_t usePrefixList)
 {
     IPV6_HEAP_NDP_PL_ENTRY * prefixPointer;
     IPV6_ADDR_STRUCT * localAddressPointer;
@@ -1273,7 +1302,9 @@ void * TCPIP_NDP_RemoteNodeFind (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * source
             {
                 if (((IPV6_HEAP_NDP_DR_ENTRY *)nodePointer)->neighborInfo != NULL)
                     if (!memcmp ((void *) source, (void *)&(((IPV6_HEAP_NDP_DR_ENTRY *)nodePointer)->neighborInfo->remoteIPAddress), sizeof (IPV6_ADDR)))
+                    {
                         return nodePointer;
+                    }
                 nodePointer = ((IPV6_HEAP_NDP_DR_ENTRY *)nodePointer)->next;
             }
             break;
@@ -1282,7 +1313,9 @@ void * TCPIP_NDP_RemoteNodeFind (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * source
             while (nodePointer != NULL)
             {
                 if (!memcmp ((void *) source, (void *)&(((IPV6_HEAP_NDP_NC_ENTRY *)nodePointer)->remoteIPAddress), sizeof (IPV6_ADDR)))
+                {
                     return nodePointer;
+                }
                 nodePointer = ((IPV6_HEAP_NDP_NC_ENTRY *)nodePointer)->next;
             }
             break;
@@ -1291,7 +1324,9 @@ void * TCPIP_NDP_RemoteNodeFind (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * source
             while (nodePointer != NULL)
             {
                 if (!memcmp ((void *) source, (void *)&(((IPV6_HEAP_NDP_DC_ENTRY *)nodePointer)->remoteIPAddress), sizeof (IPV6_ADDR)))
+                {
                     return nodePointer;
+                }
                 nodePointer = ((IPV6_HEAP_NDP_DC_ENTRY *)nodePointer)->next;
             }
             break;
@@ -1437,6 +1472,43 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NextHopGet (TCPIP_NET_IF * pNetIf, const IPV6
         }
     }
 }
+
+#if defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+// if address is a G3_PLC neighbor address it returns true, and if pMacAdd != 0, it will fill it with the neighbor's MAC address
+// otherwise returns false
+bool TCPIP_NDP_IsG3PLC_Neighbor(const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * address, TCPIP_MAC_ADDR* pMacAdd)
+{
+    IPV6_INTERFACE_CONFIG*  pIpv6Config;
+
+    if (address->v[0] == 0xFF)
+    {   // multicast address, not unicast
+        return false;
+    }
+
+    pIpv6Config = TCPIP_IPV6_InterfaceConfigGet(pNetIf);
+
+    if((pNetIf->startFlags & TCPIP_NETWORK_CONFIG_IPV6_G3_NET) != 0)
+    {   // G3-PLC interface
+        uint8_t g3LLAddress[8] = {0xFE, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        if(memcmp(address->v, g3LLAddress, sizeof(g3LLAddress)) == 0)
+        {   // LLA: potential G3-PLC neighbor address if PAN_Id matches
+            if(pIpv6Config->g3PanIdSet != 0)
+            {   // check that the address host part is 'PAN_id:00ff:fe00:xxxx'; the last 2 bytes are the 'G3 Short Address'
+                if(TCPIP_Helper_ntohs(address->w[4]) == pIpv6Config->g3PanId && TCPIP_Helper_ntohs(address->w[5]) == 0x00ff && TCPIP_Helper_ntohs(address->w[6]) == 0xfe00)
+                {   // proper G3-PLC neighbor address
+                    if(pMacAdd != NULL)
+                    {   // the MAC address is the last 6 bytes of the IPv6 address!
+                        memcpy(pMacAdd->v, address->v + (16 - 6), sizeof(TCPIP_MAC_ADDR));
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+#endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
 
 
 /*****************************************************************************
@@ -1624,7 +1696,7 @@ uint8_t TCPIP_NDP_PrefixOnLinkStatusGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR 
   Function:
     void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf,
         IPV6_ADDR * destination, IPV6_ADDR * prefix,
-        unsigned char prefixLength)
+        uint8_t prefixLength)
 
   Summary:
     Constructs an IPv6 address from a given prefix.
@@ -1647,7 +1719,7 @@ uint8_t TCPIP_NDP_PrefixOnLinkStatusGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR 
   Remarks:
     None
   ***************************************************************************/
-void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, unsigned char prefixLength)
+void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength)
 {
     uint8_t offset = prefixLength >> 3;
 
@@ -1792,10 +1864,13 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                     neighborPointer = TCPIP_NDP_NborEntryDelete (pNetIf, neighborPointer);
                     break;
                 case NDP_STATE_REACHABLE:
-                    if ((long)(time - neighborPointer->nextNUDTime) > 0)
+                    if(neighborPointer->flags.bIsPerm == 0)
                     {
-                        TCPIP_NDP_ReachabilitySet (pNetIf, neighborPointer, NDP_STATE_STALE);
-                        break;
+                        if ((long)(time - neighborPointer->nextNUDTime) > 0)
+                        {
+                            TCPIP_NDP_ReachabilitySet (pNetIf, neighborPointer, NDP_STATE_STALE);
+                            break;
+                        }
                     }
                     while (neighborPointer->queuedPackets.nNodes != 0)
                     {
@@ -2002,6 +2077,99 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
         }
     }
 }
+
+/*****************************************************************************
+  Function:
+    void TCPIP_NDP_G3RouterAdvertiseTask (void)
+
+  Summary:
+    G3-PLC border router advertise task.
+
+  Description:
+    Router advertisement task for G3-PLC networks
+
+  Remarks:
+    - IP fields:
+        - Source Address MUST be the link-local address assigned to the interface from which this message is sent.
+        - Destination Address Typically the Source Address of an invoking Router Solicitation or the all-nodes multicast address.
+
+    - Rather than iterating everytime through the unicast list,
+      the LL and global unicast addresses could be memorated.
+      However this is a low frequency event   
+  ***************************************************************************/
+#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+// set the advertisement timeout
+static void TCPIP_NDP_AdvTimeSet(TCPIP_NET_IF* pNetIf, bool advCount)
+{
+    uint16_t advTmo = TCPIP_IPV6_MIN_RTR_ADV_INTERVAL + SYS_RANDOM_PseudoGet() % (TCPIP_IPV6_MAX_RTR_ADV_INTERVAL + 1 - TCPIP_IPV6_MIN_RTR_ADV_INTERVAL); 
+    if(pNetIf->advInitCount < TCPIP_IPV6_MAX_INITIAL_RTR_ADVERTISEMENTS)
+    {
+        if(advTmo > TCPIP_IPV6_MAX_INITIAL_RTR_ADVERT_INTERVAL)
+        {
+            advTmo = TCPIP_IPV6_MAX_INITIAL_RTR_ADVERT_INTERVAL;
+        } 
+    }
+
+    pNetIf->advTmo = advTmo;
+    if(advCount)
+    {
+        pNetIf->advInitCount++;
+    }
+}
+
+static void TCPIP_NDP_G3RouterAdvertiseTask (void)
+{
+    TCPIP_NET_IF* pNetIf;
+    const IPV6_ADDR_STRUCT* llNode;   // link local address of the interface
+    const IPV6_ADDR_STRUCT* advNode;  // address to be advertised
+    TCPIP_UINT32_VAL deltaTmo;
+
+    int netIx;
+
+    for(netIx = 0; netIx < nStackIfs; netIx++)
+    {
+        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+        if(!TCPIP_IPV6_InterfaceIsReady(pNetIf))
+        {   // not ready yet
+            continue;
+        }
+
+        if((pNetIf->startFlags & (TCPIP_NETWORK_CONFIG_IPV6_ROUTER | TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED)) != (TCPIP_NETWORK_CONFIG_IPV6_ROUTER | TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED))
+        {   // no advertise on this interface
+            continue;
+        }
+
+        // interface needs to advertise 
+        uint32_t currSec = _TCPIP_SecCountGet(); 
+        if(pNetIf->advInitCount == 0 && pNetIf->advTmo == 0)
+        {   // this is the 1st time; just set the timeouts
+            pNetIf->advLastSec = currSec;
+            TCPIP_NDP_AdvTimeSet(pNetIf, false);
+            continue;
+        }
+
+        // check if it's time to advertise
+        deltaTmo.Val = currSec - pNetIf->advLastSec;
+        // should be < than 65535 seconds!  
+        _TCPIPStack_Assert(deltaTmo.word.HW == 0U, __FILE__, __func__, __LINE__);
+        pNetIf->advLastSec = currSec;   // update the last eval time
+        if(pNetIf->advTmo > deltaTmo.word.LW)
+        {   // not timeout yet
+            pNetIf->advTmo -= deltaTmo.word.LW;
+            continue;
+        }
+
+        // time to advertise
+        TCPIP_ICMPV6_G3AdvertisementSelect(pNetIf, &llNode, &advNode);
+        if(advNode != NULL && llNode != NULL)
+        {   // advertise
+            TCPIP_ICMPV6_G3RouterAdvertisementPut(pNetIf, &llNode->address, &IPV6_FIXED_ADDR_ALL_NODES_MULTICAST, advNode);
+            // adjust the timeout
+            TCPIP_NDP_AdvTimeSet(pNetIf, true);
+        }
+    }
+}
+#endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 
 /*****************************************************************************
   Function:

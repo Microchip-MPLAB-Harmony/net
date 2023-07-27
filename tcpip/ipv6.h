@@ -450,7 +450,8 @@ typedef struct
   Remarks:
     None.
  */
-typedef enum {
+typedef enum
+{
     IPV6_EVENT_ADDRESS_ADDED = 1,  // Event is generated when IPv6 added to the list
     IPV6_EVENT_ADDRESS_REMOVED, // Event is generated when IPv6 address removed from the list
     //
@@ -475,7 +476,6 @@ typedef enum {
 */
 typedef const void * IPV6_HANDLE; // Pointer to IPv6 object
 
-
 // *****************************************************************************
 /* 
   Structure:
@@ -492,10 +492,9 @@ typedef const void * IPV6_HANDLE; // Pointer to IPv6 object
  */
 typedef struct
 {
-    uint32_t        rxfragmentBufSize;  // RX fragmented buffer size
-    uint32_t        fragmentPktRxTimeout;  // fragmented packet time out value
+    uint32_t        rxfragmentBufSize;      // RX fragmented buffer size
+    uint32_t        fragmentPktRxTimeout;   // fragmented packet time out value
 }TCPIP_IPV6_MODULE_CONFIG;
-
 
 // *****************************************************************************
 /* 
@@ -656,6 +655,65 @@ typedef enum
 
 } IPV6_ULA_RESULT;
 
+// *****************************************************************************
+/* 
+  Enumeration:
+	TCPIP_IPV6_RESULT
+
+  Summary:
+    Provides a list of possible generic IPv6 results.
+
+  Description:
+    This enumeration provides a list of possible results for the IPv6 API
+
+  Remarks:
+    None.
+ */
+typedef enum
+{
+    // success codes
+    TCPIP_IPV6_RES_OK               = 0,    // the IPv6 operation was completed successfuly
+
+    // error codes
+    TCPIP_IPV6_RES_BAD_ARG          = -1,   // a bad argument was provided
+    TCPIP_IPV6_RES_IF_ERR           = -2,   // interface non existent
+    TCPIP_IPV6_RES_MCAST_ERR        = -3,   // a multicast address was provided
+    TCPIP_IPV6_RES_ALLOC_ERR        = -4,   // memory allocation failed
+    TCPIP_IPV6_RES_ADDRESS_ERR      = -5,   // no such address found, address error
+    TCPIP_IPV6_RES_BAD_IF           = -6,   // bad interface selected for the operation
+
+    // other error codes will be added
+    TCPIP_IPV6_RES_INTERNAL_ERR     = -20,   // internal/unexpected error; should not happen
+
+} TCPIP_IPV6_RESULT;
+
+// *****************************************************************************
+/* 
+  Enumeration:
+	TCPIP_IPV6_NEIGHBOR_FLAGS
+
+  Summary:
+    Provides a list of possible generic IPv6 neighbor flags.
+
+  Description:
+    This enumeration provides a list of possible flags for the IPv6 neighbor API
+
+  Remarks:
+    None.
+ */
+typedef enum
+{
+    // success codes
+    TCPIP_IPV6_NEIGHBOR_FLAG_NONE       = 0,        // none, default
+    TCPIP_IPV6_NEIGHBOR_FLAG_PERM       = 0x01,     // a permanent address is provided, no need to be validated
+                                                    // otherwise address is a temporary one, needs to be validated (DAD, etc.)
+    TCPIP_IPV6_NEIGHBOR_FLAG_ROUTER     = 0x02,     // the added neighbor is a router
+                                                    // otherwise a regular host (default)
+
+    // other flags will be eventually added
+
+} TCPIP_IPV6_NEIGHBOR_FLAGS;
+
 
 // *****************************************************************************
 /*
@@ -761,7 +819,7 @@ bool TCPIP_IPV6_InterfaceIsReady(TCPIP_NET_HANDLE netH);
 /*
   Function:
     IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect (TCPIP_NET_HANDLE hNetIf, 
-	                               IPV6_ADDR * dest, IPV6_ADDR * requestedSource)
+	                               const IPV6_ADDR * dest, const IPV6_ADDR * requestedSource)
 
   Summary:
     Determines the appropriate source address for a given destination
@@ -795,7 +853,7 @@ bool TCPIP_IPV6_InterfaceIsReady(TCPIP_NET_HANDLE netH);
     None.
   */
 IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect(TCPIP_NET_HANDLE hNetIf, 
-                       const IPV6_ADDR * dest, IPV6_ADDR * requestedSource);
+                       const IPV6_ADDR * dest, const IPV6_ADDR * requestedSource);
 
 
 //*****************************************************************************
@@ -1228,7 +1286,7 @@ IPV6_ADDR *  TCPIP_IPV6_SourceAddressGet(IPV6_PACKET * p);
 /*
   Function:
     IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, 
-				IPV6_ADDR * address, int prefixLen, uint8_t skipProcessing)
+				const IPV6_ADDR * address, int prefixLen, uint8_t skipProcessing)
 
   Summary:
     Adds a unicast address to a specified interface
@@ -1262,7 +1320,7 @@ IPV6_ADDR *  TCPIP_IPV6_SourceAddressGet(IPV6_PACKET * p);
 
 */
 IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd(TCPIP_NET_HANDLE netH, 
-            IPV6_ADDR * address, int prefixLen, uint8_t skipProcessing);
+            const IPV6_ADDR * address, int prefixLen, uint8_t skipProcessing);
 
 
 //*****************************************************************************
@@ -1296,7 +1354,7 @@ void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * ad
 //*****************************************************************************
 /*
   Function:
-    IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd(TCPIP_NET_HANDLE hNet, IPV6_ADDR * address)
+    IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd(TCPIP_NET_HANDLE hNet, const IPV6_ADDR * address)
 
   Summary:
     Adds a multicast listener to an interface.
@@ -1320,13 +1378,13 @@ void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * ad
   Remarks:
     None.
 */
-IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd(TCPIP_NET_HANDLE hNet, IPV6_ADDR * address);
+IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd(TCPIP_NET_HANDLE hNet, const IPV6_ADDR * address);
 
 
 //*****************************************************************************
 /*
   Function:
-    void TCPIP_IPV6_MulticastListenerRemove (TCPIP_NET_HANDLE netH, IPV6_ADDR * address)
+    void TCPIP_IPV6_MulticastListenerRemove (TCPIP_NET_HANDLE netH, const IPV6_ADDR * address)
 
   Summary:
     Removes a multicast listener from a given interface.
@@ -1348,7 +1406,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_MulticastListenerAdd(TCPIP_NET_HANDLE hNet, IPV6_A
   Remarks:
     None.
 */
-void TCPIP_IPV6_MulticastListenerRemove(TCPIP_NET_HANDLE netH, IPV6_ADDR * address);
+void TCPIP_IPV6_MulticastListenerRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * address);
 
 
 //****************************************************************************
@@ -1423,7 +1481,7 @@ IPV6_ULA_RESULT    TCPIP_IPV6_UniqueLocalUnicastAddressAdd (TCPIP_NET_HANDLE net
 //*****************************************************************************
 /*
   Function:
-    bool    TCPIP_IPV6_RouterAddressAdd(TCPIP_NET_HANDLE netH, IPV6_ADDR * rAddress, 
+    bool    TCPIP_IPV6_RouterAddressAdd(TCPIP_NET_HANDLE netH, const IPV6_ADDR * rAddress, 
 	                                         unsigned long validTime, int flags);
 
   Summary:
@@ -1452,7 +1510,7 @@ IPV6_ULA_RESULT    TCPIP_IPV6_UniqueLocalUnicastAddressAdd (TCPIP_NET_HANDLE net
     If such router does not exist the stack will eventually discard the entry automatically.
 
 */
-bool    TCPIP_IPV6_RouterAddressAdd(TCPIP_NET_HANDLE netH, IPV6_ADDR * rAddress, 
+bool    TCPIP_IPV6_RouterAddressAdd(TCPIP_NET_HANDLE netH, const IPV6_ADDR * rAddress, 
                                     unsigned long validTime, int flags);
 
 //*****************************************************************************
@@ -1707,6 +1765,108 @@ TCPIP_IPV6_PROCESS_HANDLE     TCPIP_IPV6_PacketHandlerRegister(TCPIP_IPV6_PACKET
 bool    TCPIP_IPV6_PacketHandlerDeregister(TCPIP_IPV6_PROCESS_HANDLE pktHandle);
 
 
+//*****************************************************************************
+/*
+  Function:
+    TCPIP_IPV6_RESULT TCPIP_IPV6_NeighborAddressAdd(TCPIP_NET_HANDLE netH, const IPV6_ADDR * nAddress, const TCPIP_MAC_ADDR* nMacAddr, TCPIP_IPV6_NEIGHBOR_FLAGS flags);
+
+  Summary:
+    Adds a new neighbor address to a specified interface.
+
+  Description:
+    This function adds a unicast address as a neighbor/host address to a specified interface.
+
+  Precondition:
+    nAddress pointer to a valid IPv6 address
+    nMacAddr pointer to a valid MAC address
+    IPv6 stack initialized, interface up and configured
+
+  Parameters:
+    netH            - The interface to which the address is to be added
+                        Must be valid
+    nAddress        - The neighbor address to add
+                        Must be valid, != NULL, unicast
+    nMacAddr        - The neighbor MAC address
+                        Must be valid, != NULL
+    flags           - neighbor address creation flags
+                       currently only TCPIP_IPV6_NEIGHBOR_FLAG_PERM and TCPIP_IPV6_NEIGHBOR_FLAG_ROUTER are used
+
+  Returns:
+    - TCPIP_IPV6_RES_OK  - operation succeeded
+    - a TCPIP_IPV6_RESULT result < 0 if operation failed
+
+  Remarks:
+    This API will add a regular neighbor host/router address
+    when the MAC address is known and needs to be specified
+
+    TCPIP_IPV6_RouterAddressAdd could also be used to add a router address.
+
+    By default the created address will be a temporary one, that needs to be validated
+    unless the TCPIP_IPV6_NEIGHBOR_FLAG_PERM is specified
+    A permanent address will not be validated on the link but it will be used as it is.
+    A temporary address will have to be validated before used
+
+    If a router entry is created with this call, the entry will be valid forever!
+
+    API is useful for G3-PLC networks support.
+*/
+TCPIP_IPV6_RESULT TCPIP_IPV6_NeighborAddressAdd(TCPIP_NET_HANDLE netH, const IPV6_ADDR * nAddress, const TCPIP_MAC_ADDR* nMacAddr, TCPIP_IPV6_NEIGHBOR_FLAGS flags);
+
+//*****************************************************************************
+/*
+  Function:
+    TCPIP_IPV6_RESULT TCPIP_IPV6_NeighborAddressDelete(TCPIP_NET_HANDLE netH, const IPV6_ADDR * nAddress);
+
+  Summary:
+    Deletes a neighbor address from the specified interface.
+
+  Description:
+    This function deletes a unicast address that was added to the specified interface.
+
+  Precondition:
+    nAddress pointer to a valid IPv6 address
+    IPv6 stack initialized, interface up and configured
+
+  Parameters:
+    netH            - The interface from which the address is to be deleted
+    nAddress        - The neighbor/host address to delete
+
+  Returns:
+    - TCPIP_IPV6_RES_OK  - operation succeeded
+    - a TCPIP_IPV6_RESULT result < 0 if operation failed
+
+  Remarks:
+    None
+*/
+TCPIP_IPV6_RESULT TCPIP_IPV6_NeighborAddressDelete(TCPIP_NET_HANDLE netH, const IPV6_ADDR * nAddress);
+
+//*****************************************************************************
+/*
+  Function:
+    TCPIP_IPV6_RESULT TCPIP_IPV6_G3PLC_PanIdSet(TCPIP_NET_HANDLE netH, uint16_t panId);
+
+  Summary:
+    Sets the PANId for a G3-PLC interface
+
+  Description:
+    This function will set the PANId to be used in the G3-PLC network for the specified interface.
+
+  Precondition:
+    IPv6 stack initialized, interface up and configured
+    netH configured as a G3-PLC interface
+
+  Parameters:
+    netH            - The interface for which the PANId is to be set
+    panId           - the value of the PANId
+
+  Returns:
+    - TCPIP_IPV6_RES_OK  - operation succeeded
+    - a TCPIP_IPV6_RESULT result < 0 if operation failed
+
+  Remarks:
+    None
+*/
+TCPIP_IPV6_RESULT TCPIP_IPV6_G3PLC_PanIdSet(TCPIP_NET_HANDLE netH, uint16_t panId);
 
 // *****************************************************************************
 /*

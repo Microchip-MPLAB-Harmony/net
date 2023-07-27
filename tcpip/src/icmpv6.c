@@ -225,7 +225,14 @@ bool TCPIP_ICMPV6_EchoRequestSend(TCPIP_NET_HANDLE netH, IPV6_ADDR * targetAddr,
     int count=0;
     TCPIP_NET_IF  *pNetIf;
 
-    pNetIf = _TCPIPStackHandleToNetUp(netH);
+    if(netH != 0)
+    {
+        pNetIf = _TCPIPStackHandleToNetUp(netH);
+    }
+    else
+    {
+        pNetIf =  _TCPIPStackAnyNetLinked(true);
+    }
 
     if(localAddress == NULL)
     {
@@ -309,7 +316,7 @@ static void _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param)
 
 /*****************************************************************************
   Function:
-    IPV6_PACKET * TCPIP_ICMPV6_Open (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP,
+    IPV6_PACKET * TCPIP_ICMPV6_Open (const TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP,
         IPV6_ADDR * remoteIP)
 
   Summary:
@@ -334,7 +341,7 @@ static void _ICMPV6_AckPacket (void * pktPointer, bool sent, const void * param)
   Remarks:
     None
   ***************************************************************************/
-IPV6_PACKET * TCPIP_ICMPV6_Open (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP)
+IPV6_PACKET * TCPIP_ICMPV6_Open (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP)
 {
     IPV6_PACKET * pkt = TCPIP_IPV6_TxPacketAllocate(pNetIf, _ICMPV6_AckPacket, 0);
 
@@ -508,7 +515,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderEchoRequestPut (TCPIP_NET_HANDLE hNetIf, const 
   Remarks:
     None
   ***************************************************************************/
-IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP)
+IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP)
 {
     ICMPV6_HEADER_ROUTER_SOLICITATION header;
     IPV6_PACKET * pkt;
@@ -535,6 +542,165 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (TCPIP_NET_IF * pNetIf, I
 
     return pkt;
 }
+
+#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+// searches for proper address structures to be used for a G3-PLC router advertisement message
+// populates pLclStruct with a local IP struct to be used (unicast, link local scope)
+// populates pAdvStruct with a local IP struct to be used (unicast, global scope) 
+void TCPIP_ICMPV6_G3AdvertisementSelect(TCPIP_NET_IF * pNetIf, const IPV6_ADDR_STRUCT** pLclStruct, const IPV6_ADDR_STRUCT** pAdvStruct)
+{   
+    IPV6_ADDR_STRUCT* llNode;   // link local address of the interface
+    IPV6_ADDR_STRUCT* advNode;  // address to be advertised
+    IPV6_ADDR_STRUCT* addrNode; // node pointer
+
+    IPV6_INTERFACE_CONFIG*  pIpv6Config = TCPIP_IPV6_InterfaceConfigGet(pNetIf);
+
+    // iterate through the unicast list
+    advNode = llNode = NULL;
+    for(addrNode = (IPV6_ADDR_STRUCT *)pIpv6Config->listIpv6UnicastAddresses.head; addrNode != NULL; addrNode = addrNode->next)
+    {
+        if(addrNode->flags.type == IPV6_ADDR_TYPE_UNICAST)
+        {
+            if(addrNode->flags.scope == IPV6_ADDR_SCOPE_GLOBAL && advNode == NULL)
+            {   // Note: advertise just the 1st unicast gbl address;
+                advNode = addrNode;
+            }
+            else if(addrNode->flags.scope == IPV6_ADDR_SCOPE_LINK_LOCAL && llNode == NULL)
+            {
+                llNode = addrNode;
+            }
+        }
+
+        if(advNode != NULL && llNode != NULL)
+        {   // have all we need
+            break;
+        }
+    }
+
+    if(pLclStruct)
+    {
+        *pLclStruct = llNode;
+    }
+    if(pAdvStruct)
+    {
+        *pAdvStruct = advNode;
+    }
+}
+
+
+
+/*****************************************************************************
+  Function:
+    bool TCPIP_ICMPV6_G3RouterAdvertisementPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, const IPV6_ADDR_STRUCT* advIP)
+
+  Summary:
+    Transmits an ICMPv6 router advertisement packet.
+
+  Description:
+    The routine allocates a packet, sets the proper IPv6 Header, and upper-layer header for an ICMPv6
+    router advertisement.
+    It transmits the packet over the network.
+
+  Precondition:
+    None
+
+  Parameters:
+    pNetIf - The interface for the outgoing packet.
+    localIP - The local address that should be used for the advertisement
+    remoteIP - The packet's destination address
+    advIP - the IPv6 address to be advertised
+                Used fields:
+                    IPV6_ADDR address;
+                    prefixLen;
+
+  Returns:
+    true - if the call succeeded and th epacket transmitted over the network
+    false - if the call failed (allocation error, not enough space for all options)
+
+  Remarks:
+        // IP fields:
+        //      Source Address MUST be the link-local address assigned to the interface from which this message is sent.
+        //      Destination Address Typically the Source Address of an invoking Router Solicitation or the all-nodes multicast address.
+        //      Hop Limit      255
+        // ICMP fields:
+        //      Type           134
+        //      Code           0
+        //      Checksum       The ICMP checksum.
+        //      Cur Hop Limit  8-bit unsigned integer.  The default value that should be placed in the Hop Count field of the IP
+        //                     header for outgoing IP packets.  A value of zero means unspecified (by this router).
+        //
+    
+  ***************************************************************************/
+bool TCPIP_ICMPV6_G3RouterAdvertisementPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, const IPV6_ADDR_STRUCT* advIP)
+{
+    ICMPV6_HEADER_ROUTER_ADVERTISEMENT header;
+    NDP_OPTION_PREFIX_INFO prefixOption;
+    NDP_OPTION_6LoWPAN_CONTEXT wpanContext;
+    IPV6_PACKET * pkt;
+
+    pkt = TCPIP_ICMPV6_Open (pNetIf, localIP, remoteIP);
+    if (pkt == NULL)
+    {
+        return false;
+    }
+
+    memset(&header, 0, sizeof(header));
+    header.vType = ICMPV6_INFO_ROUTER_ADVERTISEMENT;
+    
+    header.routerLifetime = 0xffff; // max value allowed by RFC 6775
+
+    TCPIP_IPV6_HeaderPut(pkt, IPV6_PROT_ICMPV6);
+
+    TCPIP_IPV6_HopLimitSet(pkt, 255);
+
+    // Put the ICMPv6 Header
+    if (TCPIP_IPV6_UpperLayerHeaderPut (pkt, (void *)&header, sizeof (ICMPV6_HEADER_ROUTER_ADVERTISEMENT), IPV6_PROT_ICMPV6, ICMPV6_CHECKSUM_OFFSET) == NULL)
+    {
+        TCPIP_IPV6_PacketFree(pkt);
+        return false;
+    }
+
+    if (TCPIP_IPV6_TxIsPutReady(pkt, sizeof(prefixOption) + sizeof(wpanContext)))
+    {
+        // set the prefixOption
+        memset(&prefixOption, 0, sizeof(prefixOption));
+        prefixOption.vType = NDP_OPTION_TYPE_PREFIX_INFO;
+        prefixOption.vLength = sizeof(prefixOption) / 8;     // == 4 for G3-PLC;
+        prefixOption.vPrefixLen = advIP->prefixLen;
+        prefixOption.flags.bA = 1;
+        prefixOption.flags.bL = 1;
+        prefixOption.dValidLifetime = 0xFFFFFFFFU;
+        prefixOption.dPreferredLifetime = 0xFFFFFFFFU;
+        memcpy(prefixOption.aPrefix.v, advIP->address.v, (advIP->prefixLen + 7) / 8);   // round up to M8
+
+        // set the NDP_OPTION_6LoWPAN_CONTEXT
+        memset(&wpanContext, 0, sizeof(wpanContext));
+        wpanContext.vType = NDP_OPTION_TYPE_6LOWPAN_CONTEXT;
+        wpanContext.vLength = sizeof(wpanContext) / 8;     // == 2 for G3-PLC 
+        wpanContext.vContextLen = advIP->prefixLen; 
+        wpanContext.flags.bC = 1;
+        // wpanContext.flags.bCID = 0;
+        wpanContext.dValidLifetime = 0xFFFF;
+        memcpy(wpanContext.dContextPrefix, advIP->address.v, (advIP->prefixLen + 7) / 8);   // round up to M8
+
+        // set the options
+        TCPIP_IPV6_PutArray(pkt, (uint8_t*)&prefixOption, sizeof(prefixOption));
+        TCPIP_IPV6_PutArray(pkt, (uint8_t*)&wpanContext, sizeof(wpanContext));
+
+        // done
+        TCPIP_ICMPV6_Flush (pkt);
+        return true;
+    }
+
+    TCPIP_IPV6_PacketFree(pkt);
+    return false;
+}
+#else
+bool TCPIP_ICMPV6_G3RouterAdvertisementPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, const IPV6_ADDR_STRUCT* advIP)
+{
+    return false;
+}
+#endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 
 /*****************************************************************************
   Function:
@@ -854,6 +1020,13 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             TCPIP_IPV6_ArrayGet(pRxPkt, (uint8_t *)&h + 1, sizeof (h.header_NS) - 1);
             break;
         case ICMPV6_INFO_REDIRECT:
+#if defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+            if((pNetIf->startFlags & TCPIP_NETWORK_CONFIG_IPV6_G3_NET) != 0)
+            {   // unexpected for a G3-PLC network!
+                _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+                return;
+            }
+#endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
             if (addrType == IPV6_ADDR_TYPE_UNICAST_TENTATIVE)
                 return;
             TCPIP_IPV6_ArrayGet(pRxPkt, (uint8_t *)&h + 1, sizeof (h.header_Rd) - 1);
@@ -946,12 +1119,25 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
             TCPIP_IPV6_RxBufferSet (pRxPkt, sizeof (ICMPV6_HEADER_ECHO) + headerLen);
 
-            neighborPointer = TCPIP_NDP_NextHopGet (pNetIf, remoteIP);
+#if defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+            bool isG3Host = TCPIP_NDP_IsG3PLC_Neighbor(pNetIf, remoteIP, NULL);
+            if(!isG3Host)
+            {
+                neighborPointer = TCPIP_NDP_NextHopGet (pNetIf, remoteIP);
+            }
 
+            if (!isG3Host && neighborPointer == NULL)
+            {   // couldn't find the neighbor
+                return;
+            }
+#else
+            neighborPointer = TCPIP_NDP_NextHopGet (pNetIf, remoteIP);
             if (neighborPointer == NULL)
             {
                 return;
             }
+#endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+
 
             pLclAdd = (const IPV6_ADDR*)((uint8_t*)localIPStruct + offsetof(struct _IPV6_ADDR_STRUCT, address));
             if (addrType == IPV6_ADDR_TYPE_UNICAST)
@@ -968,7 +1154,13 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                 }
 
                 TCPIP_IPV6_ArrayPutHelper(pkt, pRxPkt, IPV6_DATA_NETWORK_FIFO, dataLen - 8);
+#if defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
+                // for a G3-PLC host we do not have an NDP neighbor record
+                // set always pkt->neighbor = 0, so it gets set in TCPIP_ICMPV6_Flush!
+                pkt->neighbor = isG3Host ? NULL : neighborPointer;
+#else
                 pkt->neighbor = neighborPointer;
+#endif  // defined(TCPIP_IPV6_G3_PLC_SUPPORT) && (TCPIP_IPV6_G3_PLC_SUPPORT != 0)
                 TCPIP_ICMPV6_Flush(pkt);
             }
             else if ((addrType == IPV6_ADDR_TYPE_MULTICAST) || (addrType == IPV6_ADDR_TYPE_SOLICITED_NODE_MULTICAST))
@@ -1002,7 +1194,38 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             TCPIP_NDP_NborReachConfirm (pNetIf, remoteIP);
             break;
         case ICMPV6_INFO_ROUTER_SOLICITATION:
+#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+            if((pNetIf->startFlags & TCPIP_NETWORK_CONFIG_IPV6_ROUTER) == 0)
+            {   // not a router interface
+                return;
+            }
 
+            tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);
+            if ((tempAddressType.bits.scope != IPV6_ADDR_SCOPE_LINK_LOCAL) || (dataLen <= 8))
+            {   // ignore corrupted packet
+                return;
+            }
+
+            if(addrType == IPV6_ADDR_TYPE_UNICAST)
+            {   // expected RS type
+#if ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+                _TCPIPStack_Assert(localIPStruct->flags.type == addrType, __FILE__, __func__, __LINE__);
+                if(memcmp(localIPStruct->address.v, localIP->v, sizeof(localIP->v)) != 0)
+                {
+                    _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+                }
+#endif // ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+                if(localIPStruct->flags.scope == IPV6_ADDR_SCOPE_LINK_LOCAL)
+                {   // reply to this solicitation
+                    const IPV6_ADDR_STRUCT* advNode;  // address to be advertised
+                    TCPIP_ICMPV6_G3AdvertisementSelect(pNetIf, 0, &advNode);
+                    if(advNode != NULL)
+                    {
+                        TCPIP_ICMPV6_G3RouterAdvertisementPut(pNetIf, localIP, remoteIP, advNode);
+                    }
+                } 
+            }
+#endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
             break;
         case ICMPV6_INFO_ROUTER_ADVERTISEMENT:
             tempAddressType.byte = TCPIP_IPV6_AddressTypeGet (pNetIf, remoteIP);

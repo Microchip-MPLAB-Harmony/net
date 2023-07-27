@@ -114,6 +114,17 @@ Microchip or any third party.
 <#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${INDEX?string}"]>
                                                     TCPIP_NETWORK_CONFIG_IPV6_ADDRESS |\
 </#if>
+<#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_IDX${INDEX?string}"]>
+                                                    (TCPIP_NETWORK_CONFIG_IPV6_G3_NET | TCPIP_NETWORK_CONFIG_IPV6_NO_DAD) |\
+<#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_IDX${INDEX?string}"]>
+                                                    (TCPIP_NETWORK_CONFIG_IPV6_ROUTER | TCPIP_NETWORK_CONFIG_IPV6_NO_RS) |\
+<#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_ADV_IDX${INDEX?string}"]?has_content && .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_ADV_IDX${INDEX?string}"]>
+                                                    TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED |\
+</#if>
+<#else>
+                                                    TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS |\
+</#if>
+</#if>
                                                     TCPIP_NETWORK_CONFIG_IP_STATIC
                                                     
 #define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${INDEX?string}         ${.vars["TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${INDEX?string}"]}

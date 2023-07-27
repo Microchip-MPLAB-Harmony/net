@@ -186,6 +186,24 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIpv6ExtPktProcess.setDefaultValue(False)
     tcpipIPv6QueMcastPktTimeout.setDefaultValue(10)
     
+    # Enable G3-PLC Support
+    tcpipIPv6G3PlcEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_G3_PLC_SUPPORT", tcpipIPv6AdvSettings)
+    tcpipIPv6G3PlcEnable.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6G3PlcEnable.setLabel("Enable G3-PLC Support")
+    tcpipIPv6G3PlcEnable.setVisible(True)
+    tcpipIPv6G3PlcEnable.setDescription("Enable G3-PLC Network Support")
+    tcpipIPv6G3PlcEnable.setDefaultValue(False)
+
+    # G3-PLC router or device
+    tcpipIPv6G3PlcRouterEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_G3_PLC_BORDER_ROUTER", tcpipIPv6G3PlcEnable)
+    tcpipIPv6G3PlcRouterEnable.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6G3PlcRouterEnable.setLabel("Enable G3-PLC router support")
+    tcpipIPv6G3PlcRouterEnable.setVisible(False)
+    tcpipIPv6G3PlcRouterEnable.setDescription("Enable host to act as a G3-PLC router")
+    tcpipIPv6G3PlcRouterEnable.setDefaultValue(False)
+    tcpipIPv6G3PlcRouterEnable.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_G3_PLC_SUPPORT"])
+
+    
     tcpipIpv6heapdependency = ["tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
     # IPv6 Heap Size

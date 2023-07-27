@@ -72,20 +72,21 @@ typedef struct
     uint32_t mtuIncreaseTimer;
     uint16_t linkMTU;
     uint16_t multicastMTU;
-    uint8_t curHopLimit;
     SINGLE_LIST listNeighborCache;                // IPV6_HEAP_NDP_NC_ENTRY list
     SINGLE_LIST listDefaultRouter;                // IPV6_HEAP_NDP_DR_ENTRY list
     SINGLE_LIST listDestinationCache;             // IPV6_HEAP_NDP_DC_ENTRY list
     SINGLE_LIST listPrefixList;                   // IPV6_HEAP_NDP_PL_ENTRY list
     SINGLE_LIST rxFragments;                      // IPV6_RX_FRAGMENT_BUFFER list
+    uint8_t curHopLimit;
     uint8_t initState;
     uint8_t policyPreferTempOrPublic;
+    uint8_t g3PanIdSet;                         // The G3-PLC network PAN_Id has been set for this interface   
     // IPv6 runtime configuration parameters.
     uint32_t        rxfragmentBufSize;  // RX fragmented buffer size
     uint32_t        fragmentPktRxTimeout;  // fragmented packet timeout value
+    uint16_t        g3PanId;                  // PAN_Id for a G3 network
+    uint16_t        pad16;
 } IPV6_INTERFACE_CONFIG;
-
-
 
 // stack private API
 //
@@ -822,7 +823,7 @@ void TCPIP_IPV6_ErrorSend (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, cons
 void TCPIP_IPV6_ClientsNotify(TCPIP_NET_IF* pNetIf, IPV6_EVENT_TYPE evType, const void* evParam);
 
 
-IPV6_INTERFACE_CONFIG* TCPIP_IPV6_InterfaceConfigGet(TCPIP_NET_IF* pNetIf);
+IPV6_INTERFACE_CONFIG* TCPIP_IPV6_InterfaceConfigGet(const TCPIP_NET_IF* pNetIf);
 
 
 /*****************************************************************************

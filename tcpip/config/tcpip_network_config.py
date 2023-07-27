@@ -161,6 +161,28 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetIpv6GatewayAddr.setDefaultValue("")
     tcpipNetIpv6GatewayAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])     
 
+    # G3-PLC support for this interface
+    tcpipNetIpv6G3PlcNet = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_IDX"+str(index), tcpipNetStartupFlag)
+    tcpipNetIpv6G3PlcNet.setLabel("IPv6 G3-PLC network")
+    tcpipNetIpv6G3PlcNet.setVisible(False)
+    tcpipNetIpv6G3PlcNet.setDefaultValue(False)  
+    tcpipNetIpv6G3PlcNet.setDependencies(tcpipNetG3MenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6", "tcpipIPv6.TCPIP_IPV6_G3_PLC_SUPPORT"])  
+    
+    # G3-PLC router/device on this net
+    tcpipNetIpv6G3PlcRouter = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_IDX" + str(index), tcpipNetIpv6G3PlcNet)
+    tcpipNetIpv6G3PlcRouter.setLabel("G3-PLC router")
+    tcpipNetIpv6G3PlcRouter.setVisible(False)
+    tcpipNetIpv6G3PlcRouter.setDefaultValue(False)
+    tcpipNetIpv6G3PlcRouter.setDependencies(tcpipNetG3RouterMenuVisible, ["tcpipIPv6.TCPIP_IPV6_G3_PLC_BORDER_ROUTER", "TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_IDX"+str(index)])  
+
+    # G3-PLC router advertisements
+    tcpipNetIpv6G3Advertise = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_ADV_IDX" + str(index), tcpipNetIpv6G3PlcRouter)
+    tcpipNetIpv6G3Advertise.setLabel("G3-PLC router send advertisements")
+    tcpipNetIpv6G3Advertise.setVisible(False)
+    tcpipNetIpv6G3Advertise.setDefaultValue(False)
+    tcpipNetIpv6G3Advertise.setDependencies(tcpipNetConfigMenuVisible, ["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_IDX"+str(index)])  
+
+
     # Advanced Settings
     tcpipNetAdvSettings = tcpipNetConfigComponent.createMenuSymbol("TCPIP_NETWORK_ADV_SETTING_IDX" + str(index), None)
     tcpipNetAdvSettings.setLabel("Advanced Settings")
@@ -219,6 +241,23 @@ def tcpipNetConfigMenuVisible(symbol, event):
     else:
         symbol.setVisible(False)
         
+def tcpipNetG3MenuVisible(symbol, event):
+    useIpv6 = Database.getSymbolValue("tcpipIPv6","TCPIP_STACK_USE_IPV6")
+    useG3Plc = Database.getSymbolValue("tcpipIPv6","TCPIP_IPV6_G3_PLC_SUPPORT")
+    
+    if useIpv6 and useG3Plc:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipNetG3RouterMenuVisible(symbol, event):
+    useG3PlcRouter = Database.getSymbolValue("tcpipIPv6","TCPIP_IPV6_G3_PLC_BORDER_ROUTER")
+
+    if useG3PlcRouter:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def tcpipNetConfigAddMACBridge(symbol, event):
     if (event["value"] > 1):
         symbol.setVisible(True)

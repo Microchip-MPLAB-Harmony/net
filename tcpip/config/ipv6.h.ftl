@@ -68,4 +68,18 @@ Microchip or any third party.
 <#else>
 #define TCPIP_IPV6_EXTERN_PACKET_PROCESS   false
 </#if>
+
+
+<#if TCPIP_IPV6_G3_PLC_SUPPORT == true>
+#define TCPIP_IPV6_G3_PLC_SUPPORT                       true
+
+<#if TCPIP_IPV6_G3_PLC_BORDER_ROUTER == true>
+#define TCPIP_IPV6_G3_PLC_BORDER_ROUTER                 true
+<#else>
+#define TCPIP_IPV6_G3_PLC_BORDER_ROUTER                 false
+</#if>
+<#else>
+#define TCPIP_IPV6_G3_PLC_SUPPORT                       false
+</#if>
+
 </#if>
