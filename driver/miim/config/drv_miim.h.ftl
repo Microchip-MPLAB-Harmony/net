@@ -40,24 +40,45 @@ Microchip or any third party.
 -->
 <#if DRV_MIIM_USE_DRIVER>
 /*** MIIM Driver Configuration ***/
-<#lt><#assign intMac_array = [] />
-<#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
-    <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval>
-    <#lt><#if (isIntMac == true)>
-    <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>    
-        <#lt><#assign intMac_array = intMac_array + [intMacName] />
-    <#lt></#if> 
-<#lt></#list>
-<#lt><#assign miim_count = 0 />
-<#list intMac_array as mac>
-	<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
-		<#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${drvPic32mEthmac.TCPIP_EMAC_MODULE_ID}
-	<#else>
-		<#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${mac}_BASE_ADDRESS
-	</#if>
-    <#lt>#define DRV_MIIM_DRIVER_INDEX_${miim_count}                 ${.vars["DRV_MIIM_DRIVER_INDEX" + miim_count?string]}
-    <#lt><#assign miim_count = miim_count + 1 />
-</#list>
+<#if (tcpipStack??) >
+    <#lt><#assign intMac_array = [] />
+    <#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
+        <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval>
+        <#lt><#if (isIntMac == true)>
+        <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>    
+            <#lt><#assign intMac_array = intMac_array + [intMacName] />
+        <#lt></#if> 
+    <#lt></#list>
+    <#lt><#assign miim_count = 0 />
+    <#list intMac_array as mac>
+        <#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
+            <#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${drvPic32mEthmac.TCPIP_EMAC_MODULE_ID}
+        <#else>
+            <#lt>#define DRV_MIIM_ETH_MODULE_ID_${miim_count}                ${mac}_BASE_ADDRESS
+        </#if>
+        <#lt>#define DRV_MIIM_DRIVER_INDEX_${miim_count}                 ${.vars["DRV_MIIM_DRIVER_INDEX" + miim_count?string]}
+        <#lt><#assign miim_count = miim_count + 1 />
+    </#list>
+<#else>
+    <#if ((drvPic32mEthmac??) && (drvPic32mEthmac.TCPIP_USE_ETH_MAC  == true))>
+        <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              _ETH_BASE_ADDRESS
+    <#elseif ((drvGmac0??) && (drvGmac0.TCPIP_USE_ETH_MAC  == true))>
+        <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              GMAC0_BASE_ADDRESS
+    <#elseif ((drvGmac1??) && (drvGmac1.TCPIP_USE_ETH_MAC  == true))>
+        <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              GMAC1_BASE_ADDRESS
+    <#elseif ((drvEmac0??) && (drvEmac0.TCPIP_USE_ETH_MAC  == true))>
+        <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              EMAC0_BASE_ADDRESS
+    <#elseif ((drvEmac1??) && (drvEmac1.TCPIP_USE_ETH_MAC  == true))>
+        <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              EMAC1_BASE_ADDRESS
+    <#elseif ((drvGmac??) && (drvGmac.TCPIP_USE_ETH_MAC  == true))>
+        <#if ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CZ")) || ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CK"))>
+            <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              ETH_BASE_ADDRESS
+        <#else>
+            <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              GMAC_BASE_ADDRESS
+        </#if>    
+    </#if>
+    <#lt>#define DRV_MIIM_DRIVER_INDEX_0                 0
+</#if>
 #define DRV_MIIM_INSTANCES_NUMBER           ${DRV_MIIM_INSTANCES_NUMBER}
 #define DRV_MIIM_INSTANCE_OPERATIONS        ${DRV_MIIM_INSTANCE_OPERATIONS}
 #define DRV_MIIM_INSTANCE_CLIENTS           ${DRV_MIIM_INSTANCE_CLIENTS}

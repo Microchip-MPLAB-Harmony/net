@@ -24,20 +24,24 @@ Microchip or any third party.
 <#assign use_phy_reset_callback = DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = DRV_ETHPHY_RESET_CALLBACK>
 <#lt><#assign count = 0 >
-<#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
-    <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval> 
-    <#lt><#if (isIntMac == true)>   
-        <#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
-            <#lt><#assign intMacName = "_ETH">
-        <#else>
-            <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>
-        </#if>  
-        <#lt><#if intMacName + "_BASE_ADDRESS" == "${DRV_ETHPHY_PERIPHERAL_ID}">
-            <#lt><#assign miimIdx = count>
-        <#lt></#if>             
-        <#lt><#assign count++ >
-    <#lt></#if> 
-<#lt></#list>
+<#if (tcpipStack??) >    
+    <#lt><#list 0 ..(tcpipStack.TCPIP_STACK_NET_INTERFACE_NUM -1) as i >
+        <#lt><#assign isIntMac = "tcpipStack.TCPIP_STACK_INT_MAC_IDX${i}"?eval> 
+        <#lt><#if (isIntMac == true)>   
+            <#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))>
+                <#lt><#assign intMacName = "_ETH">
+            <#else>
+                <#lt><#assign intMacName = "tcpipStack.TCPIP_STACK_NET_INTERFACE_NAME_IDX${i}"?eval>
+            </#if>  
+            <#lt><#if intMacName + "_BASE_ADDRESS" == "${DRV_ETHPHY_PERIPHERAL_ID}">
+                <#lt><#assign miimIdx = count>
+            <#lt></#if>             
+            <#lt><#assign count++ >
+        <#lt></#if> 
+    <#lt></#list>
+<#else>
+    <#lt><#assign miimIdx = count>
+</#if>    
 <#lt>/*** ${emac_phy_type} PHY Driver Time-Out Initialization Data ***/
 <#lt>DRV_ETHPHY_TMO drv${emac_phy_type?lower_case}Tmo = 
 <#lt>{

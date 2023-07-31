@@ -62,6 +62,9 @@ def instantiateComponent(drvMiimComponent):
     drvMiimInstnNum.setDescription("Number of Driver Instances")
     if(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM") != None):
         drvMiimInstnNum.setDefaultValue(Database.getSymbolValue("tcpipStack", "TCPIP_STACK_INTMAC_INTERFACE_NUM")) 
+    else:
+        drvMiimInstnNum.setDefaultValue( 1 )
+        
     drvMiimInstnNum.setReadOnly(True)
     drvMiimInstnNum.setDependencies(drvMiimSetIntMacCnt,["tcpipStack.TCPIP_STACK_INTMAC_INTERFACE_NUM"])
 
@@ -178,7 +181,6 @@ def instantiateComponent(drvMiimComponent):
     drvMiimDrvObj.setVisible(True)
     drvMiimDrvObj.setDescription("MIIM Driver Object")
     drvMiimDrvObj.setDefaultValue("DRV_MIIM_OBJECT_BASE_Default") 
-
 
     # Maximum Number of Clients per Instance
     drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", drvMiimAdvSettings)

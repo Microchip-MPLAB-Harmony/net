@@ -510,7 +510,11 @@ static void _DRV_PHY_SetOperPhase(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t o
     Not all modes are available on all micro-controllers.
 */
 
-#define _DRV_ETHPHY_INSTANCES_NUMBER    TCPIP_STACK_INTMAC_COUNT
+#ifndef TCPIP_STACK_INTMAC_COUNT
+    #define _DRV_ETHPHY_INSTANCES_NUMBER    1
+#else
+    #define _DRV_ETHPHY_INSTANCES_NUMBER    TCPIP_STACK_INTMAC_COUNT
+#endif
 
 static DRV_ETHPHY_INSTANCE              gPhyDrvInst[_DRV_ETHPHY_INSTANCES_NUMBER];
 
