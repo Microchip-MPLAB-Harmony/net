@@ -1459,7 +1459,7 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
     TCPIP_MAC_PACKET* pRxPkt;
     DRV_GMAC_QUEUE gmac_queue;
     GMAC_QUE_LIST queueIdx;
-	uint8_t index = 0;
+	uint16_t index = 0;
     
 	//free all the Rx packets linked to New and Ack Queues.
 	for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)

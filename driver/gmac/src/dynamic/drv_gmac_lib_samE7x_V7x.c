@@ -330,7 +330,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
     DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
     TCPIP_MAC_PACKET *  pPacket;
     uint16_t nRxDescCnt = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt;
-    uint8_t desc_idx = start_index;
+	uint16_t desc_idx = start_index;
 
     while (nDesc_Cnt--)
     {
@@ -354,6 +354,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
                 pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_status.val = 0;
 
                 uint32_t segBuffer = (uint32_t)(pPacket->pDSeg->segBuffer) & GMAC_RX_ADDRESS_MASK;   // should be 4-byte aligned
+                
+                // Invalidate Cache : at address 'segBuffer' and for length 'segSize'
+                // 'segBuffer' is a Cache Aligned address
+                DCACHE_INVALIDATE_BY_ADDR((uint32_t *)segBuffer, pPacket->pDSeg->segSize);
                 if (desc_idx == pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt - 1)
                     pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_buffaddr.val =  segBuffer | GMAC_RX_WRAP_BIT;
                 else
@@ -389,7 +393,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
-    uint8_t queue_idx, desc_idx;
+    uint16_t queue_idx, desc_idx;
     TCPIP_MAC_PACKET **pRxPcktAlloc;
 
     for(queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
@@ -542,7 +546,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
-    uint8_t queue_idx, desc_idx;
+    uint16_t queue_idx, desc_idx;
 
     for(queue_idx=0; queue_idx < pMACDrv->sGmacData.gmacConfig.macQueNum; queue_idx++)
     {
@@ -582,21 +586,21 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv, 
     uint16_t wTxDescCount =pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt;
     uint16_t txDesc_free = 0;
     uint16_t pktSegCnt = 0;
-    uint8_t nLoopCnt =0;
+    uint16_t nLoopCnt =0;
     DRV_PIC32CGMAC_RESULT res = DRV_PIC32CGMAC_RES_NO_DESCRIPTORS;
-
     txDesc_free = _DRV_GMAC_DescSpace(wTxIndex, pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail, wTxDescCount);
     pktSegCnt = _GetPktSegCount(pPktDSeg);
 
     if (txDesc_free >= pktSegCnt)
     {
-        // perform cache maintenance
-        DCACHE_CLEAN() ;
         while (pPktDSeg)
         {
             //check for enough number of tx descriptors available
             if(pTxDesc[wTxIndex].tx_desc_buffaddr == 0)
             {
+                // Clean Cache : at address 'segload' and for length 'seglen'
+                // 'segload' need not be Cache Aligned; the cache maintenance routine will take care of it.
+                DCACHE_CLEAN_BY_ADDR((uint32_t*)pPktDSeg->segLoad, pPktDSeg->segLen);
                 pTxDesc[wTxIndex].tx_desc_status.val &= (GMAC_TX_WRAP_BIT |GMAC_TX_USED_BIT); //clear all Tx Status except Wrap Bit and Used Bit
                 pTxDesc[wTxIndex].tx_desc_buffaddr = (uint32_t)((uint8_t *)pPktDSeg->segLoad);	//set the buffer address
                 pTxDesc[wTxIndex].tx_desc_status.val |= (pPktDSeg->segLen) & GMAC_LENGTH_FRAME; //Set Length for each frame
@@ -744,9 +748,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             //memory barrier
             __DMB();
             res = DRV_PIC32CGMAC_RES_OK;
-        }
-    }
-    return res;
+		}				
+	}	
+	return res;	
 } //DRV_PIC32CGMAC_LibTxAckPacket
 /****************************************************************************
  * Function: DRV_PIC32CGMAC_LibTxAckPendPacket
@@ -1653,8 +1657,9 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,DRV_PIC32CGM
             gmac_queue.pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_RX_ADDRESS_MASK;
             _DRV_GMAC_RxUnlock(pMACDrv);
 
-            // perform cache maintenance
-            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)(*pRxPkt)->pDSeg->segBuffer, (*pRxPkt)->pDSeg->segLen + pMACDrv->sGmacData._dataOffset);
+            // Invalidate Cache : at address 'segload' and for length 'seglen'
+            // 'segload' need not be Cache Aligned; the cache maintenance routine will take care of it.
+            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)(*pRxPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen);
 
             //more Rx buffers needed for Rx packet
             if(frameSize)
@@ -1692,19 +1697,19 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
 {
     TCPIP_MAC_PACKET* pRxPkt;
     DRV_PIC32CGMAC_RESULT gmacAllocRes = DRV_PIC32CGMAC_RES_OK;
-    uint8_t rxbuff_idx;
-
-    for(rxbuff_idx=0; rxbuff_idx < buffer_count; rxbuff_idx++)
-    {
-        //allocated packet will be cache-aligned (32-byte aligned)
-        pRxPkt = (*pMACDrv->sGmacData.pktAllocF)(sizeof(*pRxPkt), pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].rxBufferSize   - sizeof(TCPIP_MAC_ETHERNET_HEADER), 0);
-        if(pRxPkt == NULL)
-        {
-            //rx pkt allocation failed
-            gmacAllocRes = DRV_PIC32CGMAC_RES_OUT_OF_MEMORY;
-            break;
-        }
-
+	uint16_t rxbuff_idx;
+	
+	for(rxbuff_idx=0; rxbuff_idx < buffer_count; rxbuff_idx++)
+	{      
+		//allocated packet will be cache-aligned (32-byte aligned)
+		pRxPkt = (*pMACDrv->sGmacData.pktAllocF)(sizeof(*pRxPkt), pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].rxBufferSize   - sizeof(TCPIP_MAC_ETHERNET_HEADER), 0);
+		if(pRxPkt == NULL)
+		{   
+			//rx pkt allocation failed
+			gmacAllocRes = DRV_PIC32CGMAC_RES_OUT_OF_MEMORY;
+			break;
+		}
+		
         if(sticky_flag)
         {
             pRxPkt->pDSeg->segFlags |=  TCPIP_MAC_SEG_FLAG_RX_STICKY;
