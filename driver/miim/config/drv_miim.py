@@ -248,16 +248,19 @@ def instantiateComponent(drvMiimComponent):
         drv_miim_xxx_file = "drv_miim_pic32m.c"
     elif ("PIC32CK" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32ck.c"
+    else:
+        drv_miim_xxx_file = None
         
-    drvMiimPlatformFile = drvMiimComponent.createFileSymbol(None, None)
-    drvMiimPlatformFile.setSourcePath("driver/miim/src/dynamic/" + drv_miim_xxx_file)
-    drvMiimPlatformFile.setOutputName(drv_miim_xxx_file)
-    drvMiimPlatformFile.setOverwrite(True)
-    drvMiimPlatformFile.setDestPath("driver/miim/src/dynamic/")
-    drvMiimPlatformFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
-    drvMiimPlatformFile.setType("SOURCE")
-    drvMiimPlatformFile.setEnabled(True)
-    #drvMiimPlatformFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
+    if drv_miim_xxx_file != None: 
+        drvMiimPlatformFile = drvMiimComponent.createFileSymbol(None, None)
+        drvMiimPlatformFile.setSourcePath("driver/miim/src/dynamic/" + drv_miim_xxx_file)
+        drvMiimPlatformFile.setOutputName(drv_miim_xxx_file)
+        drvMiimPlatformFile.setOverwrite(True)
+        drvMiimPlatformFile.setDestPath("driver/miim/src/dynamic/")
+        drvMiimPlatformFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
+        drvMiimPlatformFile.setType("SOURCE")
+        drvMiimPlatformFile.setEnabled(True)
+        #drvMiimPlatformFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
 
     #Add forward declaration to initialization.c
     drvMiimInitDataSourceFtl = drvMiimComponent.createFileSymbol(None, None)
