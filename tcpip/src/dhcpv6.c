@@ -631,6 +631,8 @@ static int          _DHCPV6OptionSet_CodesNo(const uint32_t* pOptionSet, int nSe
 // 
 static void         _DHCPV6_MsgListForcePurge(TCPIP_DHCPV6_CLIENT_DCPT* pClient, SINGLE_LIST* pL);
 
+static void         _DHCPV6_MsgListForceRemove(TCPIP_DHCPV6_CLIENT_DCPT* pClient, SINGLE_LIST* pL);
+
 static void         _DHCPV6_MsgListPurgeAll(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
 
 static TCPIP_DHCPV6_OPTION_GENERIC*     _DHCPV6OptionFind_OptCode(TCPIP_DHCPV6_MSG_SEARCH_DCPT* pSrchDcpt, TCPIP_DHCPV6_OPTION_CODE srchCode);
@@ -5008,6 +5010,7 @@ static void _DHCPV6Ia_MsgListPurge(SINGLE_LIST* pL, TCPIP_DHCPV6_IA_DCPT* pIa)
 }
 
 // forcibly purges a list of messages
+// the messages are added back to the buffFreeList
 static void _DHCPV6_MsgListForcePurge(TCPIP_DHCPV6_CLIENT_DCPT* pClient, SINGLE_LIST* pL)
 {
     TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer;
@@ -5018,12 +5021,25 @@ static void _DHCPV6_MsgListForcePurge(TCPIP_DHCPV6_CLIENT_DCPT* pClient, SINGLE_
     }
 }
 
+// forcibly removes a list of messages
+// this is used for the TCPIP_DHCPV6_CLIENT_DCPT::txMsgList
+//      the buffers still belong to the IaDcpt!
+static void _DHCPV6_MsgListForceRemove(TCPIP_DHCPV6_CLIENT_DCPT* pClient, SINGLE_LIST* pL)
+{
+    TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer;
+
+    while((pMsgBuffer = (TCPIP_DHCPV6_MSG_BUFFER*)TCPIP_Helper_SingleListHeadRemove(pL)) != 0)
+    {
+        // do nothing
+    }
+}
+
 // forcibly purges all client IA lists 
 static void _DHCPV6_MsgListPurgeAll(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 {
     _DHCPV6_MsgListForcePurge(pClient, &pClient->advertiseList);
     _DHCPV6_MsgListForcePurge(pClient, &pClient->replyList);
-    _DHCPV6_MsgListForcePurge(pClient, &pClient->txMsgList);
+    _DHCPV6_MsgListForceRemove(pClient, &pClient->txMsgList);
 }
 
 // invalidates a IA in a message so that a search operation won't find it again
