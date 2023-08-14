@@ -98,21 +98,24 @@ typedef enum
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE    (0x0008)
 // report client state when user notification is made
 #define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0010)
+// report client events 
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_EVENT (0x0020)
+
 // advanced: report changes in the current IA state
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0020)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0040)
 // display the Server status code (if != OK)
-#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0040)
+#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0080)
 // display a message when the IA timeouts
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0080)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0100)
 // display the IA retransmission tmo
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0100)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0200)
 // display the IA pass/fail messages
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_IN           (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_IN           (0x0400)
 // display the link up/down changes
-#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0400)
+#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0800)
 
 // advanced: additional IA state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_ADD_STATE    (0x0800)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_ADD_STATE    (0x1000)
 
 // advanced: print buffers traces
 #define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x2000)
