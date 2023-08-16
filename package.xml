@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="v3.13.0"/>
+        <Dependency name="core" version="v3.13.1"/>
         <Dependency name="csp" version="v3.17.0"/>
-        <Dependency name="bsp" version="v3.16.0"/>
+        <Dependency name="bsp" version="v3.16.1"/>
         <Dependency name="dev_packs" version="v3.17.0"/>
         <Dependency name="crypto" version="v3.8.0"/>
         <Dependency name="usb" version="v3.11.0-E2"/>
