@@ -2898,7 +2898,10 @@ static UDP_SOCKET_DCPT* _UDPFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, UDP_HEA
         {
             if(_pSktNet == pPktIf)
             {
-                if(TCPIP_IPV6_AddressFind(pPktIf, TCPIP_IPV6_PacketGetDestAddress(pRxPkt), IPV6_ADDR_TYPE_UNICAST) != 0)
+                const IPV6_ADDR* pPktDstAddress = TCPIP_IPV6_PacketGetDestAddress(pRxPkt);
+                IPV6_ADDRESS_TYPE pktAddressType = (IPV6_ADDRESS_TYPE)TCPIP_IPV6_AddressTypeGet (pPktIf, pPktDstAddress);
+                
+                if(TCPIP_IPV6_AddressFind(pPktIf, pPktDstAddress, pktAddressType.bits.type) != 0)
                 {   // interface match
                     exactMatch |= TCPIP_UDP_PKT_MATCH_NET;
                 }
