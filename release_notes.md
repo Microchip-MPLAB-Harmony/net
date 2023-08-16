@@ -1,4 +1,62 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.10.1 (August, 2023)
+### ADDITIONS AND UPDATES FOR  3.10.1:
+
+- **New features**
+
+    - The release provides various bug fixes
+    - The release provides some additions for G3-PLC support
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+
+- **New Features and Bug Fixes**
+
+The following table provides the list of fixes in the 3.10.1 release:
+
+| Module                | Description     |
+| ------ | -------- |
+| MIIM driver   | Corrections for the usage of the MIIM driver |
+|               | Updated the MIIM and PHY driver to work without the Harmony TCP/IP stack |
+| GMAC driver   | iperf throughput improvement |
+| DHCPv6 server | Fixed the purging of the Tx message list |
+|               | Added debug mask for notification event |
+| UDP           | Fixed the UDP socket matching to use the correct type of the destination address |
+| IPv6          | Added G3 ADP MAC interface |
+|               | Added G3-PLC support |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.15](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.20](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, 3.10.1
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), 5.3.7 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.13.1
+- Harmony csp repository, v3.17.0
+- Harmony bsp repository, v3.16.1
+- Harmony dev\_packs repository, v3.17.0
+- Harmony crypto repository, 3.8.0
+- Harmony usb repository, 3.11.0-E2 for demos requiring USB
+- wolfSSL  v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
+
+
+### KNOWN ISSUES
+* See the applications release notes in [product family specific repository](apps/release_notes.md)
+
+
+
 ## Net Release v3.10.0 (July, 2023)
 ### ADDITIONS AND UPDATES FOR  3.10.0:
 
