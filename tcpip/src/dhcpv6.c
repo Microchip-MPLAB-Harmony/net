@@ -769,7 +769,12 @@ static void _DHCPV6Assert(bool cond, const char* message, int lineNo)
         while(_DHCPV6StayAssertLoop != 0);
     }
 }
-// a debug condition, not really assertion
+#else
+#define _DHCPV6Assert(cond, message, lineNo)
+#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_BASIC) != 0)
+
+// a debug run-time condition, not critical
+#if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_COND) != 0)
 volatile int _DHCPV6StayCondLoop = 0;
 static void _DHCPV6DbgCond(bool cond, const char* message, int lineNo)
 {
@@ -779,11 +784,9 @@ static void _DHCPV6DbgCond(bool cond, const char* message, int lineNo)
         while(_DHCPV6StayCondLoop != 0);
     }
 }
-
 #else
-#define _DHCPV6Assert(cond, message, lineNo)
 #define _DHCPV6DbgCond(cond, message, lineNo)
-#endif  // (TCPIP_DHCPV6_DEBUG_LEVEL)
+#endif  // ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_COND) != 0)
 
 // level In debugging
 #if ((TCPIP_DHCPV6_DEBUG_LEVEL & TCPIP_DHCPV6_DEBUG_MASK_IN) != 0)

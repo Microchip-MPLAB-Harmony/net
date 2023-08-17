@@ -88,37 +88,39 @@ typedef enum
 
 
 // DHCPV6 debugging levels/masks
-// basic debugging
+// basic debugging - asserts 
 #define TCPIP_DHCPV6_DEBUG_MASK_BASIC           (0x0001)
+// run-time conditions, not critical
+#define TCPIP_DHCPV6_DEBUG_MASK_COND            (0x0002) 
 // report in messages
-#define TCPIP_DHCPV6_DEBUG_MASK_IN              (0x0002)
+#define TCPIP_DHCPV6_DEBUG_MASK_IN              (0x0004)
 // report out messages
-#define TCPIP_DHCPV6_DEBUG_MASK_OUT             (0x0004)
+#define TCPIP_DHCPV6_DEBUG_MASK_OUT             (0x0008)
 // report changes in the current client state
-#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE    (0x0008)
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE    (0x0010)
 // report client state when user notification is made
-#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0010)
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_STATE (0x0020)
 // report client events 
-#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_EVENT (0x0020)
+#define TCPIP_DHCPV6_DEBUG_MASK_CLIENT_NOTIFY_EVENT (0x0040)
 
 // advanced: report changes in the current IA state
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0040)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_STATE        (0x0080)
 // display the Server status code (if != OK)
-#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0080)
+#define TCPIP_DHCPV6_DEBUG_MASK_SRV_STATUS_CODE (0x0100)
 // display a message when the IA timeouts
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0100)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_TMO          (0x0200)
 // display the IA retransmission tmo
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0200)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_RTMO         (0x0400)
 // display the IA pass/fail messages
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_IN           (0x0400)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_IN           (0x0800)
 // display the link up/down changes
-#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x0800)
+#define TCPIP_DHCPV6_DEBUG_MASK_LINK_STAT       (0x1000)
 
 // advanced: additional IA state prints
-#define TCPIP_DHCPV6_DEBUG_MASK_IA_ADD_STATE    (0x1000)
+#define TCPIP_DHCPV6_DEBUG_MASK_IA_ADD_STATE    (0x2000)
 
 // advanced: print buffers traces
-#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x2000)
+#define TCPIP_DHCPV6_DEBUG_MASK_BUFF_TRACE      (0x4000)
 
 
 // enable DHCP debugging levels
