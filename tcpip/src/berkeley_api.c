@@ -1742,6 +1742,12 @@ int gethostname(char* name, int namelen)
 	uint8_t v;
     TCPIP_NET_IF* pNetIf;
 
+	if(name == 0)
+    {
+        errno = EINVAL;
+        return SOCKET_ERROR;
+    }
+
     pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet();
     
 	wSourceLen = sizeof(pNetIf->NetBIOSName);
@@ -1758,7 +1764,12 @@ int gethostname(char* name, int namelen)
         return SOCKET_ERROR;
     }
 
-	memcpy((void*)name, (void*)pNetIf->NetBIOSName, wSourceLen);
+	for(w = 0; w < wSourceLen; w++)
+	{
+		v = pNetIf->NetBIOSName[w];
+		name[w] = v;
+	}
+
 	name[wSourceLen] = 0;
 
 	return 0;

@@ -971,6 +971,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
     uint32_t    bufferSize=sizeof(rxBuf);
     
     memset(rxBuf,0,bufferSize);
+    memset(&sktInfo, 0, sizeof(sktInfo));
     // get the received packet. Not require to check again the byte count. 
     // This has been already checked from the called function.
     // first packet
@@ -1502,6 +1503,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
     }
         
     memset(rxBuf,0,sizeof(rxBuf));
+    memset(&sktInfo, 0, sizeof(sktInfo));
     // collect the TFTP ack receive bytes
     TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,bytes_received);
     // opcode value

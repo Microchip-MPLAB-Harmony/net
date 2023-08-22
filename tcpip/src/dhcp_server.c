@@ -1297,6 +1297,7 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
     {
         evInfo.flags.val = 0;
 
+        memset(&udpSockInfo, 0, sizeof(udpSockInfo));
         TCPIP_UDP_SocketInfoGet(skt, &udpSockInfo);
         pktIf = (TCPIP_NET_IF*)udpSockInfo.hNet;
 
@@ -1884,7 +1885,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_INFORM;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
 
     evInfo.flags.infoIpValid = 1;
     evInfo.ipAddress = pHeader->ciaddr;
@@ -2139,7 +2140,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
@@ -2241,7 +2242,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
@@ -2363,7 +2364,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE
 static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
@@ -2848,7 +2849,7 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
             pIDcpt->statData.arpFailCount++;
 #endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-            evInfo.flags.val = 0;
+            memset(&evInfo, 0, sizeof(evInfo));
             evInfo.flags.infoTargetIp = 1;
             evInfo.data = destAdd.v4Add.Val;
             _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ARP_FAIL, he, &evInfo);
@@ -3010,7 +3011,7 @@ static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTR
 
     (void)evType;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
     evInfo.flags.infoTargetIp = 1;
     evInfo.data = echoRequest.targetAddr.Val;
 
@@ -3156,7 +3157,7 @@ static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
 static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    evInfo.flags.val = 0;
+    memset(&evInfo, 0, sizeof(evInfo));
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
     bool abort = false;

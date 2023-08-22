@@ -2509,7 +2509,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrReadDataSkt(TCPIP_FTPC_DCPT_TYPE
 static TCPIP_FTPC_RESULT_TYPE _ftpcStateRetrEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
-    uint16_t readLen;
+    uint16_t readLen = 0;
     
     //Read Data Socket
     if(ftpcReadDataSocket(pDcpt, &readLen) != TCPIP_FTPC_RES_ERROR)
@@ -2889,7 +2889,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstReadDataSkt(TCPIP_FTPC_DCPT_TYPE*
 static TCPIP_FTPC_RESULT_TYPE _ftpcStateLstEoT(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
-    uint16_t readLen;     
+    uint16_t readLen = 0;     
     
     //Read Data Socket
     if(ftpcReadDataSocket(pDcpt, &readLen) != TCPIP_FTPC_RES_ERROR)

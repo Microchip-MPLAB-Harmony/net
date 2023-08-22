@@ -78,7 +78,7 @@ static void _DNSSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, T
 
 
 // Server Need to parse the incoming hostname from client . replace Len with dot
-static uint8_t hostNameWithDot[TCPIP_DNSS_HOST_NAME_LEN+1]={0};
+static char hostNameWithDot[TCPIP_DNSS_HOST_NAME_LEN+1]={0};
 static uint16_t countWithDot=0;
 
 // Server Need to parse the incoming hostname from client . keep Len and this array will be 
@@ -742,6 +742,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryAdd(const char* name, IP_ADDRESS_TYPE type, IP
         return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
 
+    memset(&dnssCacheEntry, 0, sizeof(dnssCacheEntry));
     dnssCacheEntry.sHostNameData = (uint8_t *)name;
     dnssCacheEntry.recordType = type;
     dnssCacheEntry.entryTimeout.Val = entryTimeout;
