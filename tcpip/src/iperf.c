@@ -242,8 +242,14 @@ typedef struct
 // LOCAL GLOBALS                                                             
 //****************************************************************************
 
-#define MAX_BUFFER   (sizeof(tIperfPktInfo) + sizeof(tServerHdr))
-uint8_t  g_bfr[ MAX_BUFFER ];
+#define IPERF_HEADER_BUFFER   (sizeof(tIperfPktInfo) + sizeof(tServerHdr))
+uint8_t  g_bfr[ IPERF_HEADER_BUFFER ];
+
+// the transfer buffer size
+// make it bigger than the Ethernet packet size for efficient reading from the socket
+#define IPERF_TXFER_BUFFER_SIZE    1600
+uint8_t txfer_buffer[IPERF_TXFER_BUFFER_SIZE];
+
 
 static tIperfState gIperfState[TCPIP_IPERF_MAX_INSTANCES];
 
@@ -1277,9 +1283,9 @@ static tIperfTxResult GenericTxStart(tIperfState* pIState)
     {
 #if defined(TCPIP_STACK_USE_TCP)
         case TCP_PROTOCOL:
-            pIState->remainingTxData = (pIState->mMSS - MAX_BUFFER);
+            pIState->remainingTxData = (pIState->mMSS - IPERF_HEADER_BUFFER);
 
-            if (( TCPIP_TCP_ArrayPut(pIState->tcpClientSock, (uint8_t*) g_bfr, MAX_BUFFER) != MAX_BUFFER ) && (!iperfKilled))
+            if (( TCPIP_TCP_ArrayPut(pIState->tcpClientSock, (uint8_t*) g_bfr, IPERF_HEADER_BUFFER) != IPERF_HEADER_BUFFER ) && (!iperfKilled))
             {
                 (pIState->pCmdIO->pCmdApi->msg)(cmdIoParam, "iperf: Socket send failed\r\n");
                 pIState->errorCount++;
@@ -1293,9 +1299,9 @@ static tIperfTxResult GenericTxStart(tIperfState* pIState)
 #if defined(TCPIP_STACK_USE_UDP)
         case UDP_PROTOCOL:
 
-            pIState->remainingTxData = (pIState->mDatagramSize - MAX_BUFFER);
+            pIState->remainingTxData = (pIState->mDatagramSize - IPERF_HEADER_BUFFER);
 
-            if ( TCPIP_UDP_ArrayPut(pIState->udpSock, g_bfr, MAX_BUFFER) != MAX_BUFFER )
+            if ( TCPIP_UDP_ArrayPut(pIState->udpSock, g_bfr, IPERF_HEADER_BUFFER) != IPERF_HEADER_BUFFER )
             {
                 (pIState->pCmdIO->pCmdApi->msg)(cmdIoParam, "iperf: Socket send failed\r\n");
                 pIState->errorCount++;
@@ -1495,25 +1501,28 @@ static void StateMachineTcpTxSegment(tIperfState* pIState)
 /* This routine does a piecewise send, because the entire RAM buffer may not be available for putArray */
 static void TcpTxFillSegment(tIperfState* pIState)
 {
-  uint16_t chunk;
+    uint16_t chunk_size, sent_bytes;
 
-  /* Fill the buffer with ASCII char T */
-  memset( g_bfr, 0x54, MAX_BUFFER);
+    /* Fill the buffer with ASCII char T */
+    memset( txfer_buffer, 0x54, sizeof(txfer_buffer));
 
-  while( pIState->remainingTxData > 0u )
-  {
-    chunk = MAX_BUFFER;
+    while( pIState->remainingTxData > 0u )
+    {
+        chunk_size = pIState->remainingTxData;
+        if(chunk_size > sizeof(txfer_buffer))
+        {
+            chunk_size = sizeof(txfer_buffer);
+        }
 
-    /* finish case where we get more than is needed */
-    if ( pIState->remainingTxData < MAX_BUFFER )
-      chunk = pIState->remainingTxData;
 
-    pIState->remainingTxData -= chunk;
+        sent_bytes = TCPIP_TCP_ArrayPut( pIState->tcpClientSock, txfer_buffer, chunk_size);
+        pIState->remainingTxData -= sent_bytes;
 
-    if ( TCPIP_TCP_ArrayPut( pIState->tcpClientSock, (uint8_t *) g_bfr, chunk) != chunk )
-      return;
-
-  }
+        if(sent_bytes < chunk_size)
+        {
+            return;
+        }
+    }
 
 }
 
@@ -1624,15 +1633,19 @@ static void StateMachineTcpRx(tIperfState* pIState)
        /* a UdpDiscard would be disingenuous, because it would not reflect the bandwidth at L7 */
        while ( length > 0 )
        {
-          uint16_t chunk;
+           uint16_t chunk_size;
 
-          if ( length <  (uint16_t)MAX_BUFFER )
-            chunk = length;
-          else
-            chunk = MAX_BUFFER;
+           if ( length <  (uint16_t)sizeof(txfer_buffer) )
+           {
+               chunk_size = length;
+           }
+           else
+           {
+               chunk_size = sizeof(txfer_buffer);
+           }
 
-          TCPIP_TCP_ArrayGet( pIState->tcpServerSock, (uint8_t*)g_bfr, chunk);
-          length -= chunk;
+           TCPIP_TCP_ArrayGet( pIState->tcpServerSock, txfer_buffer, chunk_size);
+           length -= chunk_size;
        }
 
     }
@@ -1752,30 +1765,30 @@ static void StateMachineUdpTxDatagram(tIperfState* pIState)
 static uint16_t UdpTxFillDatagram(tIperfState* pIState)
 {
 
-    uint16_t chunk;
+    uint16_t chunk_size, sent_bytes;
     uint16_t remainingTxData;
     uint16_t txData = 0;
 
     /* Fill the buffer with ASCII char U */
-    memset( g_bfr, 0x55, MAX_BUFFER);
+    memset( txfer_buffer, 0x55, sizeof(txfer_buffer));
 
     remainingTxData = pIState->remainingTxData;
     while( remainingTxData > 0u )
     {
-        chunk = MAX_BUFFER;
+        chunk_size = remainingTxData;
+        if(chunk_size > sizeof(txfer_buffer))
+        {
+            chunk_size = sizeof(txfer_buffer);
+        }
 
-        /* finish case where we get more than is needed */
-        if ( remainingTxData < MAX_BUFFER )
-            chunk = remainingTxData;
+        sent_bytes = TCPIP_UDP_ArrayPut(pIState->udpSock, txfer_buffer, chunk_size);
+        txData += sent_bytes;
+        remainingTxData -= sent_bytes;
 
-        remainingTxData -= chunk;
-        txData += chunk;
-
-        if (  TCPIP_UDP_ArrayPut(pIState->udpSock, (uint8_t *) g_bfr, chunk) != chunk )
+        if (sent_bytes != chunk_size )
         {
             break;
         }
-
     }
 
     return txData;
@@ -1900,9 +1913,9 @@ static void StateMachineUdpRxDone(tIperfState* pIState)
       pServer_hdr->jitter1 = 0;
       pServer_hdr->jitter2 = 0;
 
-      TCPIP_UDP_ArrayPut(pIState->udpSock, (uint8_t*)g_bfr, MAX_BUFFER);
+      TCPIP_UDP_ArrayPut(pIState->udpSock, (uint8_t*)g_bfr, IPERF_HEADER_BUFFER);
 
-      uint8_t tmpBuffer[128-MAX_BUFFER];
+      uint8_t tmpBuffer[128-IPERF_HEADER_BUFFER];
       memset(tmpBuffer, 0, sizeof(tmpBuffer));
       TCPIP_UDP_ArrayPut(pIState->udpSock, tmpBuffer, sizeof(tmpBuffer));
       
@@ -2059,15 +2072,19 @@ static void StateMachineUdpRx(tIperfState* pIState)
       length -=  sizeof(tIperfPktInfo);
       while ( length > 0 )
       {
-         uint16_t chunk;
+          uint16_t chunk_size;
 
-         if ( length <  (uint16_t)MAX_BUFFER )
-            chunk = length;
-         else
-            chunk = MAX_BUFFER;
+          if ( length <  (uint16_t)sizeof(txfer_buffer) )
+          {
+              chunk_size = length;
+          }
+          else
+          {
+              chunk_size = sizeof(txfer_buffer);
+          }
 
-         TCPIP_UDP_ArrayGet(pIState->udpSock, (uint8_t*)g_bfr, chunk);
-         length -= chunk;
+          TCPIP_UDP_ArrayGet(pIState->udpSock, txfer_buffer, chunk_size);
+          length -= chunk_size;
       }
 
 
@@ -2335,9 +2352,9 @@ static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
             ptr = argv[i];
             ascii_to_u32s(ptr, values, 1);
 
-            if ( values[0] <  MAX_BUFFER  )
+            if ( values[0] <  IPERF_HEADER_BUFFER  )
             {
-               (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "iperf: The minimum datagram size is %d\r\n", (int)MAX_BUFFER);
+               (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "iperf: The minimum datagram size is %d\r\n", (int)IPERF_HEADER_BUFFER);
                return;
             }
 
