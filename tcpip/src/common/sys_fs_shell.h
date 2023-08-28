@@ -217,7 +217,6 @@ typedef enum
 const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, void*(*malloc_func)(size_t), void(*free_fnc)(void*), SYS_FS_SHELL_RES* pRes);
 
 
-// debug only function
 // returns a temporary pointer to the resulted file absolute path
 SYS_FS_SHELL_RES SYS_FS_Shell_GetPath(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, char* resBuff, size_t resBuffSize);
 

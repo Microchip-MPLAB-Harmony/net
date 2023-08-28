@@ -172,6 +172,13 @@ def loadModule():
     tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
     tcpipHttpNetComponent.setDisplayType("Application Layer")
 
+    tcpipHttpSrvV2Component = Module.CreateComponent("tcpipHttpSrvV2", "HTTP SERVER v2", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http_server.py")
+    tcpipHttpSrvV2Component.addCapability("libtcpipHttpV2","HTTP Server v2",True)   
+    tcpipHttpSrvV2Component.addDependency("HttpV2_TCP_Dependency", "TCP", None, True, True)  
+    tcpipHttpSrvV2Component.addDependency("HttpV2_TcpipFs_Dependency", "SYS_FS", None, True, True)
+    tcpipHttpSrvV2Component.addDependency("HttpV2_NetPres_Dependency", "net_pres", True, True)
+    tcpipHttpSrvV2Component.setDisplayType("Application Layer")
+
     if "SAMA5" not in processor:    
         tcpipHttpComponent = Module.CreateComponent("tcpipHttp", "HTTP SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http.py")
         tcpipHttpComponent.addCapability("libtcpipHttp","HTTP",True)

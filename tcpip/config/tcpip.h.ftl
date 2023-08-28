@@ -336,13 +336,14 @@ typedef enum
     TCPIP_MODULE_FTP_SERVER,
     TCPIP_MODULE_HTTP_SERVER,
     TCPIP_MODULE_HTTP_NET_SERVER,
+    TCPIP_MODULE_HTTP_SERVER_V2,    /* new HTTP server v2 module */
     TCPIP_MODULE_TELNET_SERVER,
     TCPIP_MODULE_SNMP_SERVER,
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
-    TCPIP_MODULE_BERKELEY,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 37 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 38 /*DOM-IGNORE-END*/
+    TCPIP_MODULE_BERKELEY,
     TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,
@@ -784,6 +785,9 @@ typedef struct TCPIP_STACK_INIT
 </#if>
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content &&  (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 #include "tcpip/http_net.h"
+</#if>
+<#if (tcpipHttpSrvV2.TCPIP_STACK_USE_HTTP_SERVER_V2)?has_content &&  (tcpipHttpSrvV2.TCPIP_STACK_USE_HTTP_SERVER_V2) == true>
+#include "tcpip/http_server.h"
 </#if>
 <#if ((tcpipSnmp.TCPIP_USE_SNMP)?has_content &&  (tcpipSnmp.TCPIP_USE_SNMP) == true) ||
 ((tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content &&  (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true)>

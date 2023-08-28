@@ -154,6 +154,9 @@ void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content &&  (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 #include "tcpip/src/http_net_manager.h"
 </#if>
+<#if (tcpipHttpSrvV2.TCPIP_STACK_USE_HTTP_SERVER_V2)?has_content &&  (tcpipHttpSrvV2.TCPIP_STACK_USE_HTTP_SERVER_V2) == true>
+#include "tcpip/src/http_server_manager.h"
+</#if>
 <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content &&  (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true>
 #include "tcpip/src/tcpip_commands_manager.h"
 </#if>

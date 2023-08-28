@@ -47,9 +47,21 @@ Microchip or any third party.
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
 
-#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER) && defined(TCPIP_HTTP_NET_CONSOLE_CMD)
 #include "net_pres/pres/net_pres_socketapi.h"
-#endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
+#define _TCPIP_COMMANDS_HTTP_NET_SERVER 
+#elif defined(TCPIP_STACK_USE_HTTP_SERVER_V2) && defined(TCPIP_HTTP_CONSOLE_CMD)
+// HTTP server V2 commands
+#include "net_pres/pres/net_pres_socketapi.h"
+#if defined(HTTP_SERVER_V2_NET_COMPATIBILITY)
+// use backward HTTP_NET compatibility
+#include "tcpip/http_server_transl.h"
+#define _TCPIP_COMMANDS_HTTP_NET_SERVER 
+#else
+// new HTTP server commands
+#define _TCPIP_COMMANDS_HTTP_SERVER 
+#endif  // defined(HTTP_SERVER_V2_NET_COMPATIBILITY)
+#endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER) && defined(TCPIP_HTTP_NET_CONSOLE_CMD)
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -203,9 +215,16 @@ static char tftpServerHost[TCPIP_TFTPC_SERVERADDRESS_LEN];     // current target
 static char tftpcFileName[TCPIP_TFTPC_FILENAME_LEN]; // TFTP file name that will be for PUT and GET command
 #endif
 
-#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#if defined(_TCPIP_COMMANDS_HTTP_NET_SERVER)
+static void _Command_HttpNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
+static void _Command_SsiNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif
+#elif defined(_TCPIP_COMMANDS_HTTP_SERVER)
+static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static size_t http_inst_ix  = 0;        // current HTTP instance number
+static size_t http_port_ix  = 0;        // current HTTP port number
+#if (TCPIP_HTTP_SSI_PROCESS != 0)
 static void _Command_SsiInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 #endif
@@ -538,10 +557,15 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
     {"dhcp6",      _CommandDhcpv6Options,          ": DHCPV6 client commands"},
 #endif
-#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {"http",        _Command_HttpInfo,             ": HTTP information"},
+#if defined(_TCPIP_COMMANDS_HTTP_NET_SERVER)
+    {"http",        _Command_HttpNetInfo,           ": HTTP information"},
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-    {"ssi",         _Command_SsiInfo,              ": SSI information"},
+    {"ssi",         _Command_SsiNetInfo,            ": SSI information"},
+#endif
+#elif defined(_TCPIP_COMMANDS_HTTP_SERVER)
+    {"http",        _Command_HttpInfo,              ": HTTP information"},
+#if (TCPIP_HTTP_SSI_PROCESS != 0)
+    {"ssi",         _Command_SsiInfo,               ": SSI information"},
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
@@ -4151,10 +4175,11 @@ static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif  // (TCPIP_ARP_COMMANDS != 0)
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
-#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+#if defined(_TCPIP_COMMANDS_HTTP_NET_SERVER)
+static void _Command_HttpNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    int     httpActiveConn, httpOpenConn, connIx, chunkIx;
+    int     httpActiveConn, connIx, chunkIx;
+    size_t httpOpenConn;
     TCPIP_HTTP_NET_CONN_INFO    httpInfo;
     TCPIP_HTTP_NET_CHUNK_INFO   httpChunkInfo[6];
     TCPIP_HTTP_NET_CHUNK_INFO*  pChunkInfo;
@@ -4241,9 +4266,10 @@ static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
 
 }
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-static void _Command_SsiInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void _Command_SsiNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    int nSSIVars, ssiEntries, ix;
+    int ssiEntries, ix;
+    size_t nSSIVars;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     const char* varStr;
@@ -4271,11 +4297,221 @@ static void _Command_SsiInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             }
         }
     }
-
 }
 #endif  // (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-#endif // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
+#endif // defined(_TCPIP_COMMANDS_HTTP_NET_SERVER)
 
+#if defined(_TCPIP_COMMANDS_HTTP_SERVER)
+static void _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    size_t argIx, argStep;
+    size_t instCount, portCount, ruleCount, instIx, ruleIx;
+    size_t httpActiveConn, connIx, chunkIx, httpOpenConn;
+    TCPIP_HTTP_CONN_INFO    httpInfo;
+    TCPIP_HTTP_CHUNK_INFO   httpChunkInfo[6];
+    TCPIP_HTTP_CHUNK_INFO*  pChunkInfo;
+    TCPIP_HTTP_STATISTICS   httpStat;
+    TCPIP_HTTP_ACCESS_RULE accRule;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if (argc < 2)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http <inst n> <port n> info/stat/chunk/disconnect/rules\r\n");
+        return;
+    }
+
+    argIx = 1;
+    while(argIx < argc)
+    { 
+        char* cmd = argv[argIx];
+
+        if(strcmp(cmd, "inst") == 0 && (argIx + 1) < argc)
+        {
+            http_inst_ix = atoi(argv[argIx + 1]); 
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "http: Set the instance to: %d\r\n", http_inst_ix);
+            argStep = 2;
+        }
+        else if(strcmp(cmd, "port") == 0 && (argIx + 1) < argc)
+        {
+            http_port_ix = atoi(argv[argIx + 1]);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "http: Set the port to: %d\r\n", http_port_ix);
+            argStep = 2;
+        }
+        else
+        {
+            httpActiveConn = TCPIP_HTTP_ActiveConnectionCountGet(http_inst_ix, http_port_ix, &httpOpenConn);
+
+            if(strcmp(cmd, "info") == 0)
+            {
+                instCount = TCPIP_HTTP_Instance_CountGet();
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instances: %d\r\n", instCount);
+                for(instIx = 0; instIx < instCount; instIx++)
+                {
+                    portCount = TCPIP_HTTP_Instance_PortCountGet(instIx); 
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance: %d, has %d port(s)\r\n", instIx, portCount);
+                }
+
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance: %d, port: %d connections info - active: %d, open: %d\r\n", http_inst_ix, http_port_ix, httpActiveConn, httpOpenConn);
+
+                for(connIx = 0; connIx < httpOpenConn; connIx++)
+                {
+                    if(TCPIP_HTTP_InfoGet(http_inst_ix, http_port_ix, connIx, &httpInfo))
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP conn: %d status: 0x%4x, port: %d, sm: 0x%4x, chunks: %d, chunk empty: %d, file empty: %d\r\n",
+                                connIx, httpInfo.httpStatus, httpInfo.listenPort, httpInfo.connStatus, httpInfo.nChunks, httpInfo.chunkPoolEmpty, httpInfo.fileBufferPoolEmpty);
+                    }
+                    else
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP: failed to get info for conn: %d\r\n", connIx);
+                    }
+                }
+            }
+            else if(strcmp(cmd, "chunk") == 0)
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance: %d, port: %d chunk info:\r\n", http_inst_ix, http_port_ix);
+                for(connIx = 0; connIx < httpOpenConn; connIx++)
+                {
+                    if(TCPIP_HTTP_InfoGet(http_inst_ix, http_port_ix, connIx, &httpInfo))
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP conn: %d, chunks: %d\r\n",  connIx, httpInfo.nChunks);
+                        if(TCPIP_HTTP_ChunkInfoGet(http_inst_ix, http_port_ix, connIx, httpChunkInfo, sizeof(httpChunkInfo)/sizeof(*httpChunkInfo)))
+                        {
+                            pChunkInfo = httpChunkInfo;
+                            for(chunkIx = 0; chunkIx < httpInfo.nChunks; chunkIx++, pChunkInfo++)
+                            {
+                                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: %d flags: 0x%4x, status: 0x%4x, fName: %s\r\n", chunkIx, pChunkInfo->flags, pChunkInfo->status, pChunkInfo->chunkFName);
+                                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tHTTP chunk: dyn buffers: %d, var Name: %s\r\n", pChunkInfo->nDynBuffers, pChunkInfo->dynVarName);
+                            }
+                            continue;
+                        }
+                    }
+
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP: failed to get info for conn: %d\r\n", connIx);
+                }
+            }
+            else if(strcmp(cmd, "stat") == 0)
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance: %d, port: %d statistics info:\r\n", http_inst_ix, http_port_ix);
+                if(TCPIP_HTTP_StatsticsGet(http_inst_ix, http_port_ix, &httpStat))
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+                }
+                else
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "HTTP: Failed to get status!\r\n");
+                }
+            }
+            else if(strcmp(cmd, "disconnect") == 0)
+            {
+                for(connIx = 0; connIx < httpOpenConn; connIx++)
+                {
+                    TCPIP_HTTP_CONN_HANDLE connHandle = TCPIP_HTTP_ConnectionHandleGet(http_inst_ix, http_port_ix, connIx);
+                    NET_PRES_SKT_HANDLE_T skt_h = TCPIP_HTTP_ConnectionSocketGet(connHandle);
+                    NET_PRES_SocketDisconnect(skt_h);
+                }
+
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance %d, port %d, disconnected %d connections, active: %d\r\n", http_inst_ix, http_port_ix, httpOpenConn, httpActiveConn);
+            }
+            else if(strcmp(cmd, "rules") == 0)
+            {
+                ruleCount = TCPIP_HTTP_PortRules_CountGet(http_inst_ix, http_port_ix); 
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance: %d, port: %d, rules: %d\r\n", http_inst_ix, http_port_ix, ruleCount);
+                for(ruleIx = 0; ruleIx < ruleCount; ruleIx++)
+                {
+                    if(TCPIP_HTTP_PortRuleGet(http_inst_ix, http_port_ix, ruleIx, &accRule))
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "rule: %d\r\n", ruleIx);
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tinPort: %d, intIfIx: %d, addType: %d\r\n", accRule.inPort, accRule.inIfIx, accRule.inAddType);
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\taction: %d, ruleSize: %d\r\n", accRule.action, accRule.ruleSize);
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tdir: %s\r\n", accRule.dir);
+                        if(accRule.action == TCPIP_HTTP_ACCESS_ACTION_REDIRECT)
+                        {
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tredirURI: %s, redirServer: %s\r\n", accRule.redirURI, accRule.redirServer);
+                        }
+                    }
+                    else
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to get rule: %d\r\n", ruleIx);
+                    }
+                }
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP: unknown parameter '%s'\r\n", cmd);
+            }
+
+            argStep = 1;
+        }
+        argIx += argStep;
+    }
+}
+#if (TCPIP_HTTP_SSI_PROCESS != 0)
+static void _Command_SsiInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    size_t argIx, argStep;
+    size_t ssiEntries, ssiIx, nSSIVars;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    const char* varName;
+    TCPIP_HTTP_DYN_ARG_DCPT varDcpt;
+
+    if (argc < 2)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ssi <inst n> info\r\n");
+        return;
+    }
+
+    argIx = 1;
+    argStep = 1;
+    while(argIx < argc)
+    { 
+        char* cmd = argv[argIx];
+
+        if(strcmp(cmd, "inst") == 0 && (argIx + 1) < argc)
+        {
+            http_inst_ix = atoi(argv[argIx + 1]); 
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "http: Set the instance to: %d\r\n", http_inst_ix);
+            argStep = 2;
+        }
+        else if(strcmp(cmd, "info") == 0)
+        {
+            ssiEntries = TCPIP_HTTP_SSIVariablesNumberGet(http_inst_ix, &nSSIVars);
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP instance %d SSI variable slots - active: %d, total: %d\r\n", http_inst_ix, ssiEntries, nSSIVars);
+
+            for(ssiIx = 0; ssiIx < nSSIVars; ssiIx++)
+            {
+                bool varRes = TCPIP_HTTP_SSIVariableGetByIndex(http_inst_ix, ssiIx, &varName, &varDcpt);
+                if(varRes)
+                {
+                    if(varDcpt.argType == TCPIP_HTTP_DYN_ARG_TYPE_INT32)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "SSI variable %d name: %s, type: integer, value: %d\r\n", ssiIx, varName, varDcpt.argInt32);
+                    } 
+                    else
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "SSI variable %d name: %s, type: string, value: %s\r\n", ssiIx, varName, varDcpt.argStr);
+                    }
+                }
+                else
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "SSI info - failed to get variable: %s\r\n", varName);
+                }
+            }
+            argStep = 1;
+        }
+        else
+        {   // ignore unknown command
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "SSI: unknown parameter '%s'\r\n", cmd);
+            argStep = 1;
+        }
+
+        argIx += argStep;
+    }
+}
+#endif  // (TCPIP_HTTP_SSI_PROCESS != 0)
+#endif // defined(_TCPIP_COMMANDS_HTTP_SERVER)
 
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 
@@ -7654,6 +7890,7 @@ static void _CommandModRunning(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     }
 }
 #endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
+
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 

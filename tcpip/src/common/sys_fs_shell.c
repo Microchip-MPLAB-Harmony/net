@@ -755,7 +755,6 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
     return SYS_FS_SHELL_RES_OK;
 }
 
-#if (SYS_FS_SHELL_DEBUG != 0)
 SYS_FS_SHELL_RES SYS_FS_Shell_GetPath(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, char* resBuff, size_t resBuffSize)
 {
     if(fname == 0 || resBuff == 0 || resBuffSize == 0)
@@ -774,5 +773,4 @@ SYS_FS_SHELL_RES SYS_FS_Shell_GetPath(const struct _tag_SYS_FS_SHELL_OBJ* pObj, 
 
     return SYS_FS_SHELL_RES_NO_OBJECT;
 }
-#endif  // (SYS_FS_SHELL_DEBUG != 0)
 
