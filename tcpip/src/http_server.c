@@ -910,6 +910,12 @@ bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl
     while(httpInitCount == 0)
     {   // first time we're run
 
+        if(!_HTTP_VerifyConfig(httpInitData))
+        {
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, " HTTP: Configuration invalid data: %d\r\n", TCPIP_HTTP_INST_RES_BAD_DATA);
+            return false;
+        }
+
 #if (TCPIP_HTTP_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_SSI_PROCESS != 0) || defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
         // set the allocation functions
         http_mallocFnc = httpInitData->httpMallocFnc;
@@ -920,12 +926,6 @@ bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl
             http_freeFnc = _HTTP_Default_FreeFnc;
         }
 #endif  // (TCPIP_HTTP_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_SSI_PROCESS != 0) || defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
-
-        if(!_HTTP_VerifyConfig(httpInitData))
-        {
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, " HTTP: Configuration invalid data: %d\r\n", TCPIP_HTTP_INST_RES_BAD_DATA);
-            return false;
-        }
 
         // allocate instances array
         httpMemH = stackCtrl->memH;
