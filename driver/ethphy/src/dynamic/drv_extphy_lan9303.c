@@ -222,11 +222,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
     {
         if (lan9303OperationsHandles[x] != 0)
         {
-            uint16_t opResults;
+            uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
-                lan9303OperationResults[x] = opResults;
+                lan9303OperationResults[x] = (uint16_t)opResults;
                 lan9303OperationsHandles[x] = 0;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
@@ -359,11 +359,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Lan9303NegotiationIsComplete( DRV_HANDLE handle, DR
     {
         if (lan9303OperationsHandles[x] != 0)
         {
-            uint16_t opResults;
+            uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, lan9303OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
-                lan9303OperationResults[x] = opResults;
+                lan9303OperationResults[x] = (uint16_t)opResults;
                 lan9303OperationsHandles[x] = 0;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)

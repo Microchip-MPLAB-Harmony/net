@@ -184,11 +184,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Ksz8863LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY
     {
         if (ksz8863OperationsHandles[x] != 0)
         {
-            uint16_t opResults;
+            uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, ksz8863OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
-                ksz8863OperationResults[x] = opResults;
+                ksz8863OperationResults[x] = (uint16_t)opResults;
                 ksz8863OperationsHandles[x] = 0;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
@@ -310,11 +310,11 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Ksz8863NegotiationIsComplete( DRV_HANDLE handle, DR
     {
         if (ksz8863OperationsHandles[x] != 0)
         {
-            uint16_t opResults;
+            uint32_t opResults;
             DRV_MIIM_RESULT mmiRes = DRV_MIIM_OperationResult(hClientObj->miimHandle, ksz8863OperationsHandles[x], &opResults);
             if (mmiRes == DRV_MIIM_RES_OK)
             {
-                ksz8863OperationResults[x] = opResults;
+                ksz8863OperationResults[x] = (uint16_t)opResults;
                 ksz8863OperationsHandles[x] = 0;
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
