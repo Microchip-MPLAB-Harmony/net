@@ -299,6 +299,13 @@ def loadModule():
         drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, False, True)
         drvPic32mEthmacComponent.setDisplayType("MAC Layer")
             
+    # PPP driver            
+    if "PIC32MZ" in processor or "SAME5" in processor:
+        drvPPPComponent = Module.CreateComponent("PPP_MAC", "PPP", "/Drivers/MAC Driver/Internal/", "driver/ppp/config/drv_ppp.py")
+        drvPPPComponent.addMultiCapability("libdrvPPPMac","MAC", None)
+        drvPPPComponent.addDependency("PPP_Uart_Dependency", "UART", None, False, True)  
+        drvPPPComponent.setDisplayType("MAC Layer")
+
     ## MIIM Driver
     drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Drivers/", "driver/miim/config/drv_miim.py")
     drvMiimComponent.addCapability("libdrvMiim","MIIM",True)   

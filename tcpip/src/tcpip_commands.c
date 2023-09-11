@@ -4179,7 +4179,7 @@ static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 static void _Command_HttpNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int     httpActiveConn, connIx, chunkIx;
-    size_t httpOpenConn;
+    int httpOpenConn;
     TCPIP_HTTP_NET_CONN_INFO    httpInfo;
     TCPIP_HTTP_NET_CHUNK_INFO   httpChunkInfo[6];
     TCPIP_HTTP_NET_CHUNK_INFO*  pChunkInfo;
@@ -4269,7 +4269,7 @@ static void _Command_HttpNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 static void _Command_SsiNetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int ssiEntries, ix;
-    size_t nSSIVars;
+    int nSSIVars;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     const char* varStr;

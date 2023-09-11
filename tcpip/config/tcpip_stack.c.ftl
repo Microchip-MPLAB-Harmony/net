@@ -945,6 +945,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("G3ADPMAC")>
     {TCPIP_MODULE_MAC_G3ADP,        0},                             // TCPIP_MODULE_MAC_G3ADP
 </#if>
+<#if checkInterface("PPP")>
+    {TCPIP_MODULE_MAC_PPP_0,    &tcpip_PPP_InitData},           // TCPIP_MODULE_MAC_PPP_0
+</#if>
 </#if>
 <#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
     {TCPIP_MODULE_MAC_BRIDGE,       &tcpipBridgeInitData},      // TCPIP_MODULE_MAC_BRIDGE 

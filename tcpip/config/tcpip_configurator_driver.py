@@ -101,6 +101,15 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
         tcpipAutoConfigEMAC1.setDescription("Enable EMAC1")
         tcpipAutoConfigEMAC1.setDependencies(tcpipAutoConfigEMAC1Enable, ["TCPIP_AUTOCONFIG_ENABLE_EMAC1"]) 
         
+    # PPP driver menu
+    processor =  Variables.get("__PROCESSOR")  
+
+    if "PIC32MZ" in processor or "SAME5" in processor:
+        tcpipAutoConfigPPPMenu = tcpipAutoConfigDriverComponent.createMenuSymbol("TCPIP_AUTOCONFIG_PPP_MENU", None)
+        tcpipAutoConfigPPPMenu.setLabel("PPP Driver")
+        tcpipAutoConfigPPPMenu.setVisible(True)
+        tcpipAutoConfigPPPMenu.setDescription("PPP menu") 
+    
     # Enable MIIM_Driver
     tcpipAutoConfigMIIM_Driver = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", None)
     tcpipAutoConfigMIIM_Driver.setLabel("MIIM_Driver")

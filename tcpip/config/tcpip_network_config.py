@@ -422,6 +422,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
         'PIC32MZW1':    'WDRV_PIC32MZW1_MACObject',
         'LAN865x':      'DRV_LAN865X_MACObject',
         'G3ADPMAC':     'DRV_G3ADP_MACObject',
+        'PPP':     'DRV_PPP_MACObject',
     }
     print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()

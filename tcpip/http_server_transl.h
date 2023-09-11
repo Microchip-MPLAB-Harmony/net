@@ -190,7 +190,7 @@ Microchip or any third party.
 
 #define TCPIP_HTTP_NET_ConnectionHandleGet(connIx)  TCPIP_HTTP_ConnectionHandleGet(0, 0, connIx)
 
-#define TCPIP_HTTP_NET_ActiveConnectionCountGet(pOpenCount) (int)TCPIP_HTTP_ActiveConnectionCountGet(0, 0, pOpenCount)
+#define TCPIP_HTTP_NET_ActiveConnectionCountGet(pOpenCount) (int)TCPIP_HTTP_ActiveConnectionCountGet(0, 0, (size_t*)pOpenCount)
 
 #define TCPIP_HTTP_NET_USER_CALLBACK    TCPIP_HTTP_USER_CALLBACK
 #define _tag_TCPIP_HTTP_NET_USER_CALLBACK    _tag_TCPIP_HTTP_USER_CALLBACK
@@ -227,7 +227,7 @@ Microchip or any third party.
 
 #define TCPIP_HTTP_NET_SSIVariableDelete(varName) TCPIP_HTTP_SSIVariableDelete(0, varName)
 
-#define TCPIP_HTTP_NET_SSIVariablesNumberGet(pMaxNo) (int)TCPIP_HTTP_SSIVariablesNumberGet(0, pMaxNo)
+#define TCPIP_HTTP_NET_SSIVariablesNumberGet(pMaxNo) (int)TCPIP_HTTP_SSIVariablesNumberGet(0, (size_t*)pMaxNo)
 
 
 
