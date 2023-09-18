@@ -594,7 +594,8 @@ def onAttachmentConnected(source, target):
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.append(interface_number)
-        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), True)
+        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
+        setVal("tcpipStack", "TCPIP_STACK_OTH_INT_IDX" + str(interface_number), "UART")
         
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "PPP_Uart_Dependency"): 
@@ -605,8 +606,7 @@ def onAttachmentDisconnected(source, target):
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
         interface_number = int(target["component"].getID().strip("tcpipNetConfig_"))
         interfaceNum.remove(interface_number)
-        setVal("tcpipStack", "TCPIP_STACK_INT_MAC_IDX" + str(interface_number), False)
-        setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "")    
+        setVal("tcpipStack", "TCPIP_STACK_OTH_INT_IDX" + str(interface_number), "")   
 
 
 def destroyComponent(drvPPPComponent):
