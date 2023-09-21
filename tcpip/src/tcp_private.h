@@ -71,9 +71,13 @@ Microchip or any third party.
 #define TCP_CHECKSUM_OFFSET (16u)
 
 
-// The minimum value a RX or TX TCP buffer can have
-#define TCP_MIN_RX_BUFF_SIZE    (25)
-#define TCP_MIN_TX_BUFF_SIZE    (25)
+// The minimum/maximum value a RX or TX TCP buffer can have
+// (w/o window scaling)
+#define TCP_MIN_RX_BUFF_SIZE    (256U)
+#define TCP_MAX_RX_BUFF_SIZE    (65535U)
+
+#define TCP_MIN_TX_BUFF_SIZE    (256U)
+#define TCP_MAX_TX_BUFF_SIZE    (65535U)
 
 // for efficiency reasons, 
 // any request to change a TX/RX buffer size

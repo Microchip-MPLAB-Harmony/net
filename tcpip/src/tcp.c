@@ -6299,9 +6299,17 @@ bool TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
                 return false;
 
             case TCP_OPTION_RX_BUFF:
+                if((size_t)optParam > TCP_MAX_RX_BUFF_SIZE)
+                {
+                   return false;
+                } 
                 return TCPIP_TCP_FifoSizeAdjust(hTCP, (uint16_t)((unsigned int)optParam), 0, TCP_ADJUST_RX_ONLY | TCP_ADJUST_PRESERVE_RX);
 
             case TCP_OPTION_TX_BUFF:
+                if((size_t)optParam > TCP_MAX_TX_BUFF_SIZE)
+                {
+                   return false;
+                } 
                 return TCPIP_TCP_FifoSizeAdjust(hTCP, 0, (uint16_t)((unsigned int)optParam), TCP_ADJUST_TX_ONLY | TCP_ADJUST_PRESERVE_TX);
 
             case TCP_OPTION_NODELAY:

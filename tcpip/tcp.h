@@ -743,8 +743,8 @@ bool  TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT re
     optParam        - the option value; this is option dependent
                       - TCP_OPTION_LINGER               - pointer to a TCP_OPTION_LINGER_DATA structure
                       - TCP_OPTION_KEEP_ALIVE           - pointer to a TCP_OPTION_KEEP_ALIVE_DATA structure
-                      - TCP_OPTION_RX_BUFF              - size of the new RX buffer
-                      - TCP_OPTION_TX_BUFF              - size of the new TX buffer
+                      - TCP_OPTION_RX_BUFF              - size of the new RX buffer (<= 65535 bytes)
+                      - TCP_OPTION_TX_BUFF              - size of the new TX buffer (<= 65535 bytes)
                       - TCP_OPTION_RX_TMO               - not supported yet
                       - TCP_OPTION_TX_TMO               - not supported yet
                       - TCP_OPTION_NODELAY              - boolean to enable/disable the NO DELAY functionality
@@ -1714,6 +1714,11 @@ uint16_t  TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray,
     to be sent to the remote party or to be received by the socket user.
     Doing this may disrupt the communication, make the TCP algorithm fail or have an 
     unpredicted behavior!
+
+    This function is OBSOLETE and should NOT BE USED in new projects!
+    It will be removed from the API in the future.
+    The socket options TCP_OPTION_RX_BUFF and TCP_OPTION_TX_BUFF should be used to adjust the size of the socket buffers.
+
  */
 bool  TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMinTXSize, 
                                TCP_ADJUST_FLAGS vFlags);
