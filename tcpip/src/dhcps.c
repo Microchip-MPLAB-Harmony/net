@@ -74,7 +74,7 @@ uint32_t initTime ;
 static DHCPS_HASH_DCPT gPdhcpsHashDcpt = { 0,0};
 static TCPIP_NET_IF  *gpDhcpsNetH = 0;
 static DHCPS_MOD    dhcps_mod;
-static BOOTP_HEADER	gBOOTPHeader;
+static BOOTP_HEADER gBOOTPHeader;
 // DHCP is running on all interfaces
 static DHCP_SRVR_DCPT      *gPdhcpSDcpt=NULL;
 static const void*          dhcpSMemH = 0;        // memory handle
@@ -154,7 +154,7 @@ static void _DhcpsICMPDebugMessage(char* icmpMessage)
     
     if(hwAdd)
     {
-        dhcpsHE->hwAdd = *hwAdd;		
+        dhcpsHE->hwAdd = *hwAdd;        
         memcpy(dhcpsHE->ipAddress.v, pIPAddr, sizeof(dhcpsHE->ipAddress));
     }
     
@@ -178,12 +178,12 @@ static __inline__ void __attribute__((always_inline)) _DHCPSStateSet(TCPIP_DHCPS
 static  DHCPS_RESULT DHCPSRemoveHashEntry(TCPIP_MAC_ADDR* hwAdd, const uint8_t* pIPAddr)
 {
     DHCPS_HASH_DCPT *pDhcpsHashDcpt;
-    OA_HASH_ENTRY*	hE;
+    OA_HASH_ENTRY*  hE;
 
     pDhcpsHashDcpt = &gPdhcpsHashDcpt;
     if(hwAdd)
     {
-    	hE = TCPIP_OAHASH_EntryLookup(pDhcpsHashDcpt->hashDcpt,hwAdd);
+        hE = TCPIP_OAHASH_EntryLookup(pDhcpsHashDcpt->hashDcpt,hwAdd);
         if(hE != 0)
         {
             if(TCPIP_DHCPS_HashIPKeyCompare(pDhcpsHashDcpt->hashDcpt, hE, pIPAddr)== 0)
@@ -213,8 +213,8 @@ static void dhcpServPoolAddressValidation(const TCPIP_DHCPS_MODULE_CONFIG* pDhcp
     int ix=0;
     int tempPoolCnt=0;    
     const char *tempStr = {"0.0.0.0"};
-    IPV4_ADDR	serverIPAddress;
-    IPV4_ADDR	startIPv4PoolAddress;
+    IPV4_ADDR   serverIPAddress;
+    IPV4_ADDR   startIPv4PoolAddress;
     IPV4_ADDR   netMask;
     TCPIP_DHCPS_ADDRESS_CONFIG *pServer;
 
@@ -364,7 +364,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         dhcpSMemH = stackCtrl->memH;
         return true;
     }
-	
+    
     
     // stack init
     if(dhcpSInitCount == 0)
@@ -396,7 +396,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         hashDcpt = (OA_HASH_DCPT*)TCPIP_HEAP_Malloc(dhcpSMemH, hashMemSize);
 
         if(hashDcpt == 0)
-        {	// failed
+        {   // failed
         // Remove all the DHCPS lease entries.
             // Free DHCP server Pool entries
             TCPIP_HEAP_Free(dhcpSMemH,gPdhcpSDcpt);
@@ -421,10 +421,10 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         gPdhcpsHashDcpt.leaseDuartion = pDhcpsConfig->entrySolvedTmo;
 
         if(pDhcpsConfig->deleteOldLease)
-        {	// remove the old entries, if there
+        {   // remove the old entries, if there
             _DHCPSRemoveCacheEntries(&gPdhcpsHashDcpt);
         }
-		
+        
         dhcps_mod.signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DHCPS_Task, TCPIP_DHCPS_TASK_PROCESS_RATE);
         if(dhcps_mod.signalHandle == 0)
         {
@@ -442,7 +442,7 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         // copy the valid interface details to the global dhcps descriptor table
        _DHCPS_AddressPoolDescConfiguration(pDhcpsConfig);
     }
-	
+    
     if(stackCtrl->pNetIf->Flags.bIsDHCPSrvEnabled != 0)
     {   // override the pDhcpsConfig->dhcpEnable passed with the what the stack manager says
         _DHCPS_Enable(stackCtrl->pNetIf,false);
@@ -657,14 +657,14 @@ static void TCPIP_DHCPS_Process(void)
 static bool _DHCPS_ProcessGetPktandSendResponse(void)
 {
     uint32_t            buffsize=0;
-    uint8_t 		i;
-    uint8_t		Option, Len;    
-    uint32_t		dw;
-    bool		bAccept=false, bRenew=false;
+    uint8_t         i;
+    uint8_t     Option, Len;    
+    uint32_t        dw;
+    bool        bAccept=false, bRenew=false;
     UDP_SOCKET          s;
-    OA_HASH_ENTRY   	*hE;
-    DHCPS_HASH_DCPT  	*pdhcpsHashDcpt;
-    DHCP_SRVR_DCPT	*pDhcpsDcpt=NULL;
+    OA_HASH_ENTRY       *hE;
+    DHCPS_HASH_DCPT     *pdhcpsHashDcpt;
+    DHCP_SRVR_DCPT  *pDhcpsDcpt=NULL;
     UDP_SOCKET_INFO     udpSockInfo;
     TCPIP_NET_IF        *pNetIfFromDcpt=NULL;
     uint32_t            ix=0;
@@ -672,7 +672,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
     TCPIP_DHCPS_DATA    udpGetBufferData;
     IPV4_ADDR           ClientIP;
     TCPIP_DHCPS_STATE_STATUS dhcpsSmSate;
-    BOOTP_HEADER	   BOOTPHeader;
+    BOOTP_HEADER       BOOTPHeader;
     
     s = dhcps_mod.uSkt;
     dhcpsSmSate = dhcps_mod.smState;
@@ -1060,7 +1060,7 @@ static bool _DCHPS_FindRequestIPAddress(TCPIP_DHCPS_DATA *inputBuf,uint8_t *reqA
 static void DHCPReplyToDiscovery(TCPIP_NET_IF *pNetIf,BOOTP_HEADER *Header,DHCP_SRVR_DCPT * pDhcpsDcpt,DHCPS_HASH_DCPT *pdhcpsHashDcpt,TCPIP_DHCPS_DATA *getBuf)
 {
     uint8_t         i;
-    DHCPS_RESULT	res;
+    DHCPS_RESULT    res;
     UDP_SOCKET      s;
     OA_HASH_ENTRY   *hE;
     TCPIP_DHCPS_DATA   putBuffer;
@@ -1137,7 +1137,7 @@ static void DHCPReplyToDiscovery(TCPIP_NET_IF *pNetIf,BOOTP_HEADER *Header,DHCP_
     TCPIP_DHCPS_CopyDataArrayToProcessBuff((uint8_t*)&rxHeader,&putBuffer,sizeof(BOOTP_HEADER));
 
     // Remaining 10 bytes of client hardware address, server host name: Null string (not used)
-    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)	
+    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)  
     {
         TCPIP_DHCPS_DataCopyToProcessBuffer(0,&putBuffer);
     }
@@ -1215,7 +1215,7 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
 {
     uint8_t         i;
     UDP_SOCKET      s;
-    OA_HASH_ENTRY   	*hE;
+    OA_HASH_ENTRY       *hE;
     TCPIP_DHCPS_DATA   putBuffer;
     BOOTP_HEADER    rxHeader;
     uint32_t magicCookie = 0x63538263;
@@ -1263,7 +1263,7 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
  
         if((Option == DHCP_PARAM_REQUEST_CLIENT_ID) && (Len == 7u))
         {
-            // Get the requested IP address and see if it is the one we have on offer.	
+            // Get the requested IP address and see if it is the one we have on offer.  
             // If not, we should send back a NAK, but since there could be some other
             // DHCP server offering this address, we'll just silently ignore this request.
             if(!TCPIP_DHCPS_GetDataFromUDPBuff(getBuf,(uint8_t *)&i))
@@ -1284,9 +1284,9 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
                     bAccept = true;
                 }
                 else
-				{
+                {
                     bAccept = false;
-				}
+                }
             }
             else
             {
@@ -1320,7 +1320,7 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
 
      //Get the write pointer:
     putBuffer.head=putBuffer.wrPtr = TCPIP_UDP_TxPointerGet(s);
-	// set the write and end pointer for DHCP server data
+    // set the write and end pointer for DHCP server data
     putBuffer.wrPtr = putBuffer.head;
     putBuffer.endPtr = putBuffer.head+DHCPS_MAX_REPONSE_PACKET_SIZE;
 
@@ -1369,8 +1369,8 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
 
     // copy the BOOT RX header contents to the processing Buffer
     TCPIP_DHCPS_CopyDataArrayToProcessBuff((uint8_t*)&rxHeader,&putBuffer,sizeof(BOOTP_HEADER));
-	
-    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
+    
+    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)  // Remaining 10 bytes of client hardware address, server host name: Null string (not used)
     {
         TCPIP_DHCPS_DataCopyToProcessBuffer(0,&putBuffer); // Boot filename: Null string (not used)
     }
@@ -1630,7 +1630,7 @@ static void DHCPReplyToRequest(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, b
 
     // copy the BOOT RX header contents to the processing Buffer
     TCPIP_DHCPS_CopyDataArrayToProcessBuff((uint8_t*)&rxHeader,&putBuffer,sizeof(BOOTP_HEADER));
-    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
+    for(i = 0; i < DHCPS_UNUSED_BYTES_FOR_TX; i++)  // Remaining 10 bytes of client hardware address, server host name: Null string (not used)
     {
         TCPIP_DHCPS_DataCopyToProcessBuffer(0,&putBuffer); // Boot filename: Null string (not used)
     }
@@ -1755,7 +1755,7 @@ static bool _DHCPSAddCompleteEntry(int intfIdx, const uint8_t* pIPAddr, TCPIP_MA
     
     if(dhcpsHE->hEntry.flags.newEntry != 0)
     {   // populate the new entry
-    	dhcpsHE->intfIdx = intfIdx;
+        dhcpsHE->intfIdx = intfIdx;
         _DHCPSSetHashEntry(dhcpsHE, entryFlag, hwAdd, pIPAddr);
     }
     else
@@ -1772,9 +1772,9 @@ static void TCPIP_DHCPS_TaskForLeaseTime(void)
     uint32_t current_timer = SYS_TMR_TickCountGet();
     DHCPS_HASH_ENTRY* dhcpsHE;
     DHCPS_HASH_DCPT  *pdhcpsDcpt;
-    OA_HASH_ENTRY	*hE;
+    OA_HASH_ENTRY   *hE;
     int bktIx=0;
-    OA_HASH_DCPT	*pOH;
+    OA_HASH_DCPT    *pOH;
     TCPIP_NET_IF* pNetIf;
 
     pdhcpsDcpt = &gPdhcpsHashDcpt;
@@ -1792,25 +1792,25 @@ static void TCPIP_DHCPS_TaskForLeaseTime(void)
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
         hE = TCPIP_OAHASH_EntryGet(pOH, bktIx);        
-    	if((hE->flags.busy != 0) && (hE->flags.value & DHCPS_FLAG_ENTRY_COMPLETE))
-    	{
+        if((hE->flags.busy != 0) && (hE->flags.value & DHCPS_FLAG_ENTRY_COMPLETE))
+        {
             dhcpsHE = (DHCPS_HASH_ENTRY*)hE;
             if((current_timer - dhcpsHE->Client_Lease_Time) >= pdhcpsDcpt->leaseDuartion* SYS_TMR_TickCounterFrequencyGet())
             {
                 dhcpsHE->Client_Lease_Time = 0;
                 TCPIP_OAHASH_EntryRemove(pOH,hE);
             }
-    	}// Check if there is any entry whose DHCPS flag is INCOMPLETE, 
+        }// Check if there is any entry whose DHCPS flag is INCOMPLETE, 
         // i,e DHCPS server did not receive the request from the client regarding that leased address.
         else if((hE->flags.busy != 0) && (hE->flags.value & DHCPS_FLAG_ENTRY_INCOMPLETE))
-    	{
+        {
             dhcpsHE = (DHCPS_HASH_ENTRY*)hE;
             if((current_timer - dhcpsHE->pendingTime) >= TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK* SYS_TMR_TickCounterFrequencyGet())
             {
                 dhcpsHE->pendingTime = 0;
                 TCPIP_OAHASH_EntryRemove(pOH,hE);
             }
-    	}
+        }
         // remove the entry if the link is down or Wifi Mac is not connected
         if(hE->flags.busy != 0)
         {
@@ -1827,8 +1827,8 @@ static void TCPIP_DHCPS_TaskForLeaseTime(void)
 
 static DHCPS_RESULT _DHCPS_FindValidAddressFromPool(BOOTP_HEADER *Header,DHCP_SRVR_DCPT * pDhcpsDcpt,DHCPS_HASH_DCPT *pdhcpsHashDcpt,IPV4_ADDR *reqIPAddress)
 {
-    OA_HASH_ENTRY   	*hE;
-    IPV4_ADDR		  tempIpv4Addr;
+    OA_HASH_ENTRY       *hE;
+    IPV4_ADDR         tempIpv4Addr;
     size_t bktIx = 0;
     
     if(reqIPAddress != 0)
@@ -1844,7 +1844,7 @@ static DHCPS_RESULT _DHCPS_FindValidAddressFromPool(BOOTP_HEADER *Header,DHCP_SR
     {
         return DHCPS_RES_NO_ENTRY;
     }
-	
+    
     // Find in Pool, look for the same MAC addr
     hE = TCPIP_OAHASH_EntryLookup(pdhcpsHashDcpt->hashDcpt, &Header->ClientMAC);
     if(hE !=0)
@@ -1885,15 +1885,15 @@ static DHCPS_RESULT _DHCPS_FindValidAddressFromPool(BOOTP_HEADER *Header,DHCP_SR
 
 static DHCPS_RESULT preAssignToDHCPClient(TCPIP_NET_IF  *pNetIf,BOOTP_HEADER *Header,DHCP_SRVR_DCPT * pDhcpsDcpt,DHCPS_HASH_DCPT *pdhcpsHashDcpt)
 {
-    OA_HASH_ENTRY   	*hE;
-    IPV4_ADDR		  tempIpv4Addr;
+    OA_HASH_ENTRY       *hE;
+    IPV4_ADDR         tempIpv4Addr;
     size_t bktIx = 0;
 
     if(false == isMacAddrEffective(&(Header->ClientMAC))) 
     {
         return DHCPS_RES_NO_ENTRY;
     }
-	
+    
     // Find in Pool, look for the same MAC addr
     hE = TCPIP_OAHASH_EntryLookup(pdhcpsHashDcpt->hashDcpt, &Header->ClientMAC);
     if(hE !=0)
@@ -1958,7 +1958,7 @@ OA_HASH_ENTRY* TCPIP_DHCPS_HashDeleteEntry(OA_HASH_DCPT* pOH)
     
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
-        pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);		
+        pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);       
         if(pBkt->flags.busy != 0)
         {
             pE = (DHCPS_HASH_ENTRY*)pBkt;
@@ -1981,11 +1981,11 @@ static size_t DHCPSgetFreeHashIndex(OA_HASH_DCPT* pOH,void* key,IPV4_ADDR *ipAdd
     TCPIP_UINT32_VAL   dw;
     TCPIP_UINT32_VAL   reqIP;
 
-	
+    
 #if defined(OA_DOUBLE_HASH_PROBING)
     probeStep = TCPIP_DHCPS_HashProbeHash(pOH, key);
     if(probeStep == 0)
-    {	// try to avoid probing the same bucket over and over again
+    {   // try to avoid probing the same bucket over and over again
             // when probeHash returns 0.
             probeStep = pOH->probeStep;
     }
@@ -2024,7 +2024,7 @@ static size_t DHCPSgetFreeHashIndex(OA_HASH_DCPT* pOH,void* key,IPV4_ADDR *ipAdd
         if((reqIP.Val == 0) || (reqIP.Val != dw.Val))
         {        
             if((pBkt->flags.busy == 0) &&(DHCPSLocateRequestedIpAddress((IPV4_ADDR*)&dw.Val)==DHCPS_RES_NO_ENTRY))
-            {	// found unused entry
+            {   // found unused entry
                 return bktIx;
             }
         }
@@ -2037,15 +2037,15 @@ static size_t DHCPSgetFreeHashIndex(OA_HASH_DCPT* pOH,void* key,IPV4_ADDR *ipAdd
 
         bkts++;
     }
-    return -1;	// cache full, not found
+    return -1;  // cache full, not found
 }
 
 static DHCPS_RESULT DHCPSLocateRequestedIpAddress(IPV4_ADDR *requestedIpAddr)
 {
     DHCPS_HASH_DCPT *pdhcpsDcpt;
-    OA_HASH_ENTRY	*hE;
-    int 			bktIx=0;
-    OA_HASH_DCPT	*pOH;
+    OA_HASH_ENTRY   *hE;
+    int             bktIx=0;
+    OA_HASH_DCPT    *pOH;
 
     pdhcpsDcpt = &gPdhcpsHashDcpt;
     pOH = pdhcpsDcpt->hashDcpt;
@@ -2068,8 +2068,8 @@ TCPIP_DHCPS_LEASE_HANDLE TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH, TCPIP_
     int                 entryIx;
     OA_HASH_DCPT*       pOH;
     DHCPS_HASH_ENTRY*   pDsEntry;
-    DHCPS_HASH_DCPT*	pDSHashDcpt;
-    uint32_t 		current_time = SYS_TMR_TickCountGet();
+    DHCPS_HASH_DCPT*    pDSHashDcpt;
+    uint32_t        current_time = SYS_TMR_TickCountGet();
     
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
   
@@ -2090,9 +2090,9 @@ TCPIP_DHCPS_LEASE_HANDLE TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH, TCPIP_
             if(pDsEntry && (pDsEntry->hEntry.flags.busy != 0) && (pDsEntry->hEntry.flags.value & DHCPS_FLAG_ENTRY_COMPLETE) )
             {                
                 if(pDsEntry->intfIdx != TCPIP_STACK_NetIxGet(pNetIf))
-            	{
+                {
                     continue;
-            	}
+                }
                 // found entry
                 if(pLeaseEntry)
                 {
@@ -2114,8 +2114,8 @@ int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYP
     int                 noOfEntries=0;
     OA_HASH_DCPT*       pOH;
     DHCPS_HASH_ENTRY*   pDsEntry;
-    DHCPS_HASH_DCPT*	pDSHashDcpt;
-	
+    DHCPS_HASH_DCPT*    pDSHashDcpt;
+    
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
     if(pNetIf == 0 || pNetIf->Flags.bIsDHCPSrvEnabled == 0)
     {
@@ -2165,9 +2165,9 @@ int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYP
 bool TCPIP_DHCPS_LeaseEntryRemove(TCPIP_NET_HANDLE netH, TCPIP_MAC_ADDR* hwAdd)
 {
     OA_HASH_DCPT*       pOH;
-    OA_HASH_ENTRY*	hE;
+    OA_HASH_ENTRY*  hE;
     DHCPS_HASH_ENTRY*   pDsEntry;
-    DHCPS_HASH_DCPT*	pDSHashDcpt;
+    DHCPS_HASH_DCPT*    pDSHashDcpt;
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
     if(pNetIf == 0 || pNetIf->Flags.bIsDHCPSrvEnabled == 0)
     {
@@ -2180,7 +2180,7 @@ bool TCPIP_DHCPS_LeaseEntryRemove(TCPIP_NET_HANDLE netH, TCPIP_MAC_ADDR* hwAdd)
 
     if(hwAdd)
     {
-    	hE = TCPIP_OAHASH_EntryLookup(pOH,hwAdd);
+        hE = TCPIP_OAHASH_EntryLookup(pOH,hwAdd);
         if(hE != 0)
         {
             pDsEntry = (DHCPS_HASH_ENTRY*)hE;
@@ -2199,8 +2199,8 @@ bool TCPIP_DHCPS_RemovePoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY
     int                 entryIx;
     OA_HASH_DCPT*       pOH;
     DHCPS_HASH_ENTRY*   pDsEntry;
-    DHCPS_HASH_DCPT*	pDSHashDcpt;
-	
+    DHCPS_HASH_DCPT*    pDSHashDcpt;
+    
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
     if(pNetIf == 0 || pNetIf->Flags.bIsDHCPSrvEnabled == 0)
     {
@@ -2425,22 +2425,22 @@ static bool _DHCPS_Enable(TCPIP_NET_HANDLE hNet,bool checkIfUp)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_DHCPS_IsEnabled(CPIP_NET_HANDLE hNet)
+    bool TCPIP_DHCPS_IsEnabled(CPIP_NET_HANDLE hNet)
 
   Summary:
-	Determins if the DHCP Server is enabled on the specified interface.
+    Determins if the DHCP Server is enabled on the specified interface.
 
   Description:
-	Determins if the DHCP Server is enabled on the specified interface.
+    Determins if the DHCP Server is enabled on the specified interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	 hNet- Interface to query.
+     hNet- Interface to query.
 
   Returns:
-	None
+    None
 ***************************************************************************/
 bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet)
 {

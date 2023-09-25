@@ -58,12 +58,12 @@ Microchip or any third party.
 
 /****************************************************************************
   Section:
-	SMTPC definitions
+    SMTPC definitions
   ***************************************************************************/
 
 /****************************************************************************
   Section:
-	SMTPC Internal Variables
+    SMTPC Internal Variables
   ***************************************************************************/
 
 static int          smtpcInitCount = 0;       // module initialization count
@@ -361,7 +361,7 @@ static const uint8_t smtpStatusTxlateTbl[] =
 
 /****************************************************************************
   Section:
-	SMTPC Internal Function Prototypes
+    SMTPC Internal Function Prototypes
   ***************************************************************************/
 
 static void TCPIP_SMTPC_Process(void);
@@ -575,7 +575,7 @@ static __inline__ TCPIP_SMTPC_DCPT_FLAGS __attribute__((always_inline)) smtpcSer
 
 /****************************************************************************
   Section:
-	SMTPC Function Implementations
+    SMTPC Function Implementations
   ***************************************************************************/
 
 

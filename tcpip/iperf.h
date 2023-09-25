@@ -3,14 +3,14 @@ iPerf Header File
 
  Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     iperf.h
-	
+    
   Summary:
     iPerf provides standard network benchmarking
     at run time for both TCP and UDP.
-	
+    
   Description:
     iPerf benchmarking tool.
 
@@ -103,4 +103,4 @@ void  TCPIP_IPERF_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif	//#ifndef __IPERF_H
+#endif  //#ifndef __IPERF_H

@@ -86,6 +86,6 @@ Microchip or any third party.
 #define TCPIP_IPERF_MAX_INSTANCES                1
 
 //Default TCP Tx Bandwidth
-#define TCPIP_IPERF_TX_BW_LIMIT  			1		
+#define TCPIP_IPERF_TX_BW_LIMIT             1       
 
 #endif /* __IPERFAPP_H__ */

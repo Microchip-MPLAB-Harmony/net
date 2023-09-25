@@ -73,10 +73,10 @@ uint16_t        TCPIP_Helper_PacketCopy(TCPIP_MAC_PACKET* pSrcPkt, uint8_t* pDes
 // the constant arrays in TCPIP_Helper_ExtractURLFields().
 typedef enum
 {
-	PROTOCOL_HTTP = 0u,
-	PROTOCOL_HTTPS,
-	PROTOCOL_MMS,
-	PROTOCOL_RTSP
+    PROTOCOL_HTTP = 0u,
+    PROTOCOL_HTTPS,
+    PROTOCOL_MMS,
+    PROTOCOL_RTSP
 } PROTOCOLS;
 
 uint8_t         TCPIP_Helper_ExtractURLFields(uint8_t *vURL, PROTOCOLS *protocol,

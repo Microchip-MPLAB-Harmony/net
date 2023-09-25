@@ -56,7 +56,7 @@ Microchip or any third party.
 // this is the elapsed time after which an the communication is considered
 // to have timed failed if there was no reply from the server
 // In seconds
-#define TCPIP_DNS_CLIENT_SERVER_TMO		(1*60)
+#define TCPIP_DNS_CLIENT_SERVER_TMO     (1*60)
 
 // DNS Client task processing rate, in milliseconds.
 // The DNS Client module will process a timer event with this rate
@@ -65,7 +65,7 @@ Microchip or any third party.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
-#define TCPIP_DNS_CLIENT_TASK_PROCESS_RATE	(200)
+#define TCPIP_DNS_CLIENT_TASK_PROCESS_RATE  (200)
 
 // Number of DNS resolver entries 
 #define TCPIP_DNS_CLIENT_CACHE_ENTRIES    5

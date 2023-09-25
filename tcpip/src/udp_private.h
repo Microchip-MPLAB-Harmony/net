@@ -49,7 +49,7 @@ Microchip or any third party.
 
 /****************************************************************************
   Section:
-	Debug Definitions
+    Debug Definitions
   ***************************************************************************/
 
 #define TCPIP_UDP_DEBUG_MASK_RX_CHECK       (0x0100)
@@ -61,7 +61,7 @@ Microchip or any third party.
 
 /****************************************************************************
   Section:
-	Type Definitions
+    Type Definitions
   ***************************************************************************/
 
 #define UDP_CHECKSUM_OFFSET     6u
@@ -209,7 +209,7 @@ typedef struct
                                     //  - TCPIP_UDP_SocketNetSet + looseNetIf = 0
                                     //
                                     //
-    UDP_PORT        remotePort;		// Remote node's UDP port number
+    UDP_PORT        remotePort;     // Remote node's UDP port number
                                     // Destination port of a tx packet
                                     // Used in socket match find against imcpming packet sourcePort
                                     // Set by:
@@ -218,7 +218,7 @@ typedef struct
                                     //  - Cleared in TCPIP_UDP_Disconnect() for a server socket
                                     //  - TCPIP_UDP_RemoteBind() + looseRemPort = 0!!!!
                                     //  - TCPIP_UDP_DestinationPortSet()
-    UDP_PORT        localPort;		// Local UDP port number, or 0 when free
+    UDP_PORT        localPort;      // Local UDP port number, or 0 when free
                                     // Source port for the tx packet
                                     // Used for skt match:  == h->DestinationPort 
                                     // Set by:

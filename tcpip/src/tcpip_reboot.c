@@ -49,7 +49,7 @@ Microchip or any third party.
 #include "system/sys_reset_h2_adapter.h"
 
 
-static UDP_SOCKET	    rebootSocket = INVALID_UDP_SOCKET;
+static UDP_SOCKET       rebootSocket = INVALID_UDP_SOCKET;
 static int              rebootInitCount = 0;
 static tcpipSignalHandle rebootSignalHandle = 0;
 
@@ -62,22 +62,22 @@ static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, 
     bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* pRebootConfig);
 
   Summary:
-	Resets the reboot server module for the specified interface.
+    Resets the reboot server module for the specified interface.
 
   Description:
-	Resets the reboot server module for the specified interface.
+    Resets the reboot server module for the specified interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackCtrl - pointer to stack structure specifying the interface to initialize
+    stackCtrl - pointer to stack structure specifying the interface to initialize
 
   Returns:
-	None
+    None
 
   Remarks:
-	This function should be called internally just once per interface 
+    This function should be called internally just once per interface 
     by the stack manager.
 ***************************************************************************/
 bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* pRebootConfig)
@@ -121,22 +121,22 @@ bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
     bool TCPIP_REBOOT_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
   Summary:
-	Turns off the reboot server module for the specified interface.
+    Turns off the reboot server module for the specified interface.
 
   Description:
-	Closes the reboot server.
+    Closes the reboot server.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackData - pointer to stack structure specifying the interface to deinitialize
+    stackData - pointer to stack structure specifying the interface to deinitialize
 
   Returns:
-	None
+    None
 
   Remarks:
-	This function should be called internally just once per interface 
+    This function should be called internally just once per interface 
     by the stack manager.
 ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)

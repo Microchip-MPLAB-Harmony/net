@@ -55,7 +55,7 @@ Microchip or any third party.
 // Client configuration options
 
 // Default CheckIP server for determining current IP address
-#define TCPIP_DDNS_CHECKIP_SERVER (const uint8_t*)"checkip.dyndns.com"		
+#define TCPIP_DDNS_CHECKIP_SERVER (const uint8_t*)"checkip.dyndns.com"      
 
 // dynDNS task rate, ms
 // The default value is hundreds of  milliseconds.

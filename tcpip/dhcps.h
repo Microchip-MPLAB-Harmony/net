@@ -13,8 +13,8 @@
   Description:
      The DHCP server assigns a free IP address to a requesting 
      client from the range defined in the dhcps_config.h  file.
-	 Lease time per IP address is decided as per the TMO configuration 
-	 which is defined in dhcps_config.h.
+     Lease time per IP address is decided as per the TMO configuration 
+     which is defined in dhcps_config.h.
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -77,7 +77,7 @@ Microchip or any third party.
 
   Description:
     DHCP server configuration and network initialization data. Configuration
-	is part of tcpip_stack_init.c.
+    is part of tcpip_stack_init.c.
 */
 typedef struct
 {
@@ -101,16 +101,16 @@ typedef struct
 
   Description:
     DHCP server configuration and initialization data . Configuration
-	is part of tcpip_stack_init.c.
+    is part of tcpip_stack_init.c.
 */
 typedef struct
 {
-    bool    enabled;   				    // enable DHCP server
-    bool    deleteOldLease;  		    // delete old cache if still in place,
+    bool    enabled;                    // enable DHCP server
+    bool    deleteOldLease;             // delete old cache if still in place,
     uint32_t dhcpServerCnt;             // Maximum number of DHCP server entries to be supported
     // specific DHCP parameters
-    size_t  leaseEntries;   		    // max number of lease entries
-    uint32_t     entrySolvedTmo; 		// solved entry removed after this tmo in seconds
+    size_t  leaseEntries;               // max number of lease entries
+    uint32_t     entrySolvedTmo;        // solved entry removed after this tmo in seconds
     TCPIP_DHCPS_ADDRESS_CONFIG *dhcpServer; // DHCP server lease address configuration details
     
 } TCPIP_DHCPS_MODULE_CONFIG;
@@ -143,7 +143,7 @@ typedef struct
 
   Description:
     DHCP_SERVER_POOL_ENTRY_ALL -  Get or Remove all the leased address which includes 
-	                              both solved and unsolved entries.
+                                  both solved and unsolved entries.
     DHCP_SERVER_POOL_ENTRY_IN_USE - Get or Remove only solved leased IP address.
 */
 
@@ -185,7 +185,7 @@ typedef const void* TCPIP_DHCPS_LEASE_HANDLE;
 
   Description:
     This function returns the current state of the DHCP Server on the specified 
-	interface.
+    interface.
 
   Precondition:
     The DHCP Server module must be initialized.
@@ -194,8 +194,8 @@ typedef const void* TCPIP_DHCPS_LEASE_HANDLE;
     hNet - Interface to query
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 */
 bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet);
 
@@ -209,7 +209,7 @@ bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet);
 
   Description:
     This function disables the DHCP Server for the specified interface.
-	If it is already disabled, no action is taken.
+    If it is already disabled, no action is taken.
 
   Precondition:
     The DHCP Server module must be initialized.
@@ -218,8 +218,8 @@ bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet);
     hNet - Interface on which to disable the DHCP Server
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 
   Remarks:
     When the interface continues using its old configuration, it is possible
@@ -238,7 +238,7 @@ bool TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet);
 
   Description:
     This function enables the DHCP Server for the specified interface, if it is 
-	disabled. If it is already enabled, nothing is done.
+    disabled. If it is already enabled, nothing is done.
 
   Precondition:
     The DHCP Server module must be initialized.
@@ -247,8 +247,8 @@ bool TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet);
     hNet - Interface on which to enable the DHCP Server
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 */
 bool TCPIP_DHCPS_Enable(TCPIP_NET_HANDLE hNet);
 
@@ -256,27 +256,27 @@ bool TCPIP_DHCPS_Enable(TCPIP_NET_HANDLE hNet);
 /*
   Function:
     TCPIP_DHCPS_LEASE_HANDLE  TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH, 
-		TCPIP_DHCPS_LEASE_ENTRY* pLeaseEntry, TCPIP_DHCPS_LEASE_HANDLE leaseHandle);
-		
+        TCPIP_DHCPS_LEASE_ENTRY* pLeaseEntry, TCPIP_DHCPS_LEASE_HANDLE leaseHandle);
+        
   Summary:
     Get the lease entry details as per TCPIP_DHCPS_LEASE_HANDLE and per interface.
 
   Description:
     This function returns a lease entry for the  TCPIP_DHCPS_LEASE_HANDLE. if the 
-	lease entry is not present for that TCPIP_DHCPS_LEASE_HANDLE, then it will 
-	return the next valid lease entry.
+    lease entry is not present for that TCPIP_DHCPS_LEASE_HANDLE, then it will 
+    return the next valid lease entry.
 
   Precondition:
     The DHCP Server module must be initialized.
 
   Parameters:
     netH - Lease entry for this Interface
-	pLeaseEntry - Client lease entry details
-	leaseHandle - Lease index 
+    pLeaseEntry - Client lease entry details
+    leaseHandle - Lease index 
 
   Returns:
     - non-zero TCPIP_DHCPS_LEASE_HANDLE - To be used in the subsequent calls 
-	- 0 - If end of list or wrong interface, or DHCP server is not running on that interface
+    - 0 - If end of list or wrong interface, or DHCP server is not running on that interface
 */
 TCPIP_DHCPS_LEASE_HANDLE  TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH, 
      TCPIP_DHCPS_LEASE_ENTRY* pLeaseEntry, TCPIP_DHCPS_LEASE_HANDLE leaseHandle);
@@ -288,24 +288,24 @@ TCPIP_DHCPS_LEASE_HANDLE  TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH,
 
   Summary:
     Removes all the entries or only used entries of a certain type belonging to 
-	a network interface.
+    a network interface.
 
   Description:
     This function is used to remove the DHCP server entries from the pool as per 
-	TCPIP_DHCPS_POOL_ENTRY_TYPE. 
-	
+    TCPIP_DHCPS_POOL_ENTRY_TYPE. 
+    
   Precondition:
     the DHCP Server module should have been initialized.
 
   Parameters:
     hNet    -   Interface handle to use
     type    -   type of entries to remove:
-				DHCP_SERVER_POOL_ENTRY_ALL,
-				DHCP_SERVER_POOL_ENTRY_IN_USE
+                DHCP_SERVER_POOL_ENTRY_ALL,
+                DHCP_SERVER_POOL_ENTRY_IN_USE
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 
   Remarks:
     None.
@@ -320,24 +320,24 @@ bool TCPIP_DHCPS_RemovePoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY
 
   Summary:
     Get all the entries or only used entries of a certain type belonging to a 
-	network interface.
+    network interface.
 
   Description:
     This function is used to get the DHCP server entries from the pool as per 
-	TCPIP_DHCPS_POOL_ENTRY_TYPE. 
-	
+    TCPIP_DHCPS_POOL_ENTRY_TYPE. 
+    
   Precondition:
     The DHCP server module should have been initialized.
 
   Parameters:
     hNet    -   Interface handle to use
     type    -   type of entries to remove:
-			    * DHCP_SERVER_POOL_ENTRY_ALL,
+                * DHCP_SERVER_POOL_ENTRY_ALL,
                 * DHCP_SERVER_POOL_ENTRY_IN_USE
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 
   Remarks:
     None.
@@ -355,7 +355,7 @@ int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYP
 
   Description:
     This function is used to remove one entry from the leased HASH table with 
-	respect to the interface and the MAC address.
+    respect to the interface and the MAC address.
 
   Precondition:
     The DHCP Server module should have been initialized.
@@ -365,12 +365,12 @@ int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYP
     hwAdd   -   MAC address that need to be removed from the HASH table
 
   Returns:
-    - true	- If successful
-    - false	- If unsuccessful
+    - true  - If successful
+    - false - If unsuccessful
 
   Remarks:
      This function is called from the command line to remove one entry and from 
-	 the Wi-FI Driver module to remove a node that is disconnected from the AP.
+     the Wi-FI Driver module to remove a node that is disconnected from the AP.
 */
 
 bool TCPIP_DHCPS_LeaseEntryRemove(TCPIP_NET_HANDLE netH, TCPIP_MAC_ADDR* hwAdd);

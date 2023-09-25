@@ -45,11 +45,11 @@ Microchip or any third party.
 
 /****************************************************************************
   Section:
-	FTPC Internal Variables
+    FTPC Internal Variables
   ***************************************************************************/
-static int          ftpcInitCount = 0;       			// module initialization count
+static int          ftpcInitCount = 0;                  // module initialization count
 static tcpipSignalHandle    ftpcSignalHandle = 0;
-static TCPIP_FTPC_DCPT_TYPE* ftpcDcptPool = 0;    		// allocated pool of descriptors
+static TCPIP_FTPC_DCPT_TYPE* ftpcDcptPool = 0;          // allocated pool of descriptors
 static TCPIP_FTPC_MODULE_DCPT_TYPE ftpcGlobalConfig;// global FTP Client configuration
 static SINGLE_LIST  ftpcDcptFreeList = { 0 };      // pool of free descriptors 
 static SINGLE_LIST  ftpcDcptBusyList = { 0 };      // pool of descriptors in use
@@ -117,7 +117,7 @@ static const TCPIP_FTPC_STATE_FUNC ftpcStateTbl[] =
     _ftpcStateStorWriteDataSkt,      //TCPIP_FTPC_STATE_STOR_WRITE_DATA_SOCKET
     _ftpcStateStorEoF,               //TCPIP_FTPC_STATE_STOR_EOF
     //Name List
-	_ftpcStateStartLst,				//TCPIP_FTPC_STATE_START_LST
+    _ftpcStateStartLst,             //TCPIP_FTPC_STATE_START_LST
     _ftpcStateSendLst,              //TCPIP_FTPC_STATE_SEND_LST,  
     _ftpcStateWaitLstCtrlResp,      //TCPIP_FTPC_STATE_WAIT_LST_CTRL_RESPONSE,
     _ftpcStateWaitLstReadDataSkt,   //TCPIP_FTPC_STATE_WAIT_LST_READ_DATA_SOCKET,
@@ -133,45 +133,45 @@ bool TCPIP_FTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
                                 const TCPIP_FTPC_MODULE_CONFIG_TYPE* pftpcConfig)
 {
     TCPIP_FTPC_DCPT_TYPE * pftpcDcpt;
-	int index;
-	
-	if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    int index;
+    
+    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
-	if(ftpcInitCount == 0)
+    if(ftpcInitCount == 0)
     {   // stack start up; initialize just once
         // check configuration data is not missing
         if(pftpcConfig == 0)
         {
             return false;
         }
-		
-		// create the FTPC timer
+        
+        // create the FTPC timer
         ftpcSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, 
                                         TCPIP_FTPC_Task, TCPIP_FTPC_TASK_TICK_RATE);
-		if(ftpcSignalHandle == 0)
+        if(ftpcSignalHandle == 0)
         {   // cannot create the FTPC timer
             return false;
         }
-		// initialize the in-use list
+        // initialize the in-use list
         TCPIP_Helper_SingleListInitialize(&ftpcDcptBusyList);
-		// initialize the free pool
+        // initialize the free pool
         TCPIP_Helper_SingleListInitialize(&ftpcDcptFreeList);
-		
-		// allocate the descriptors pool
+        
+        // allocate the descriptors pool
         ftpcDcptPool = (TCPIP_FTPC_DCPT_TYPE*)TCPIP_HEAP_Calloc(stackCtrl->memH, 
                                 pftpcConfig->nMaxClients, sizeof(*ftpcDcptPool));
-		if(ftpcDcptPool == 0)
+        if(ftpcDcptPool == 0)
         {   // cannot create the FTPC pool, so remove FTPC timer
             _TCPIPStackSignalHandlerDeregister(ftpcSignalHandle);
-			ftpcSignalHandle = 0;
+            ftpcSignalHandle = 0;
             return false;
         }
-		
-		pftpcDcpt = ftpcDcptPool;
-		
-		for(index = 0; index < pftpcConfig->nMaxClients; index++, pftpcDcpt++)
+        
+        pftpcDcpt = ftpcDcptPool;
+        
+        for(index = 0; index < pftpcConfig->nMaxClients; index++, pftpcDcpt++)
         {
             _ftpcDcptSetDefault(pftpcDcpt, index);
             TCPIP_Helper_SingleListTailAdd(&ftpcDcptFreeList, (SGL_LIST_NODE*)pftpcDcpt);
@@ -179,12 +179,12 @@ bool TCPIP_FTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         ftpcGlobalConfig.nMaxClients = pftpcConfig->nMaxClients;
         ftpcGlobalConfig.memH = stackCtrl->memH;
         ftpcGlobalConfig.ftpcTmo = pftpcConfig->ftpcTmo > TCPIP_FTPC_MIN_TMO ? 
-                                        pftpcConfig->ftpcTmo : TCPIP_FTPC_MIN_TMO;		
+                                        pftpcConfig->ftpcTmo : TCPIP_FTPC_MIN_TMO;      
         ftpcGlobalConfig.data_tx_buffsize_dflt = pftpcConfig->data_tx_buffsize_dflt;
         ftpcGlobalConfig.data_rx_buffsize_dflt = pftpcConfig->data_rx_buffsize_dflt;
-	}
-	
-	ftpcInitCount++;
+    }
+    
+    ftpcInitCount++;
     return true;
 }
 
@@ -249,7 +249,7 @@ void  TCPIP_FTPC_Task(void)
 
 static void TCPIP_FTPC_Process(void)
 {
-	TCPIP_FTPC_DCPT_TYPE* pCurrDcpt, *pNextDcpt;
+    TCPIP_FTPC_DCPT_TYPE* pCurrDcpt, *pNextDcpt;
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
 
     OSAL_CRITSECT_DATA_TYPE ftpcLock = ftpcEnterCritical();
@@ -257,7 +257,7 @@ static void TCPIP_FTPC_Process(void)
     pNextDcpt = pCurrDcpt? pCurrDcpt->next : 0;
     ftpcExitCritical(ftpcLock);
     
-	while(pCurrDcpt != 0)
+    while(pCurrDcpt != 0)
     {
         // process this descriptor
         if(pCurrDcpt->ftpcActive)
@@ -1049,7 +1049,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateHome(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 //FTP Client State Machine: Start Client-server connection process
 static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
-	TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
+    TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     uint16_t sktRxSize = 0;
     uint16_t sktTxSize = 0;
     
@@ -1129,19 +1129,19 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{	//connect process done
-			pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_CONNECT;
-			_ftpcStateDoneConnect(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {   //connect process done
+            pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_CONNECT;
+            _ftpcStateDoneConnect(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;   
             _ftpcCtrlDisconnect(pDcpt);
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1199,30 +1199,30 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitUser(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //530
     //500, 501, 421
     //331, 332
-	TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
+    TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response
+    {   //process the control response
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_INTRMDT_RESPONSE)
-		{   //send the password
-			pDcpt->ftpcState = TCPIP_FTPC_STATE_LOGIN_SEND_PASS;
-			_ftpcStateSendPass(pDcpt);
-		}
-		else if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{            
-			//no need of password; login is success
-			pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
-			_ftpcStateDoneLogin(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_INTRMDT_RESPONSE)
+        {   //send the password
+            pDcpt->ftpcState = TCPIP_FTPC_STATE_LOGIN_SEND_PASS;
+            _ftpcStateSendPass(pDcpt);
+        }
+        else if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {            
+            //no need of password; login is success
+            pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
+            _ftpcStateDoneLogin(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1268,31 +1268,31 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPass(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //202
     //530
     //500, 501, 503, 421
-	TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
+    TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_INTRMDT_RESPONSE)
-		{
-			//send the Account 
+        if(res == TCPIP_FTPC_SERVER_POS_INTRMDT_RESPONSE)
+        {
+            //send the Account 
             pDcpt->ftpcState = TCPIP_FTPC_STATE_LOGIN_SEND_ACCT;
             _ftpcStateSendAcct(pDcpt);
-		}
-		else if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{
-			//no need of account; login is success
-			pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
-			_ftpcStateDoneLogin(pDcpt);
-		}
-		else
-		{
+        }
+        else if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {
+            //no need of account; login is success
+            pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
+            _ftpcStateDoneLogin(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1338,23 +1338,23 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitAcct(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 503, 421
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{
-			//login is success
-			pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
-			_ftpcStateDoneLogin(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {
+            //login is success
+            pDcpt->ftpcState = TCPIP_FTPC_STATE_DONE_LOGIN;
+            _ftpcStateDoneLogin(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1412,22 +1412,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitCwd(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 530, 550    
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{
-			//no need of password; login is success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {
+            //no need of password; login is success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1472,22 +1472,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitCdup(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 530, 550
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//CDUP success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //CDUP success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1534,22 +1534,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitMkd(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//MKD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //MKD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1596,22 +1596,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRmd(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 530, 550
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//RMD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //RMD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1659,22 +1659,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitDele(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 530
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//RMD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //RMD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1721,24 +1721,24 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitQuit(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 530, 550
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//Quit success
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //Quit success
             // Remove flag to indicate FTP Client Logged Out 
             pDcpt->ftpcFlag  &= ~TCPIP_FTPC_FLAG_LOGGEDIN; 
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1784,22 +1784,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPwd(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 502, 421, 550
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//PWD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //PWD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -1877,22 +1877,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitType(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 504, 421, 530
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//TYPE success
-			_ftpcStateDoneType(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //TYPE success
+            _ftpcStateDoneType(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -1993,22 +1993,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitStru(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 504, 421, 530
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//RMD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //RMD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -2063,22 +2063,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitMode(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 504, 421, 530
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//RMD success
-			_ftpcDoneCmd(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //RMD success
+            _ftpcDoneCmd(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -2125,22 +2125,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPasv(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//PASV command success
-			_ftpcStateDonePasv(pDcpt);
-		}
-		else
-		{
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //PASV command success
+            _ftpcStateDonePasv(pDcpt);
+        }
+        else
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -2332,22 +2332,22 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPort(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     //500, 501, 421, 530
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
     
-	//Read Control Socket
+    //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{			
-			//PORT success
-			_ftpcStateDonePort(pDcpt);
-		}
-		else
-		{
-			pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {           
+            //PORT success
+            _ftpcStateDonePort(pDcpt);
+        }
+        else
+        {
+            pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
 
     }
     else
@@ -2429,8 +2429,8 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrCtrlResp(TCPIP_FTPC_DCPT_TYPE* p
     res = ftpcReadCtrlSocket(pDcpt);
 
     if (res == TCPIP_FTPC_RES_OK)
-    {	
-        //process the control response	
+    {   
+        //process the control response  
         res =   ftpcParseReplyCode(pDcpt);            
         if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
         {
@@ -2444,11 +2444,11 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrCtrlResp(TCPIP_FTPC_DCPT_TYPE* p
             _ftpcStateWaitRetrReadDataSkt(pDcpt);
         }  
         else
-		{
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -2485,7 +2485,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrReadDataSkt(TCPIP_FTPC_DCPT_TYPE
         //Read Control Socket
         res = ftpcReadCtrlSocket(pDcpt);
         if (res == TCPIP_FTPC_RES_OK)
-        {	//process the control response	
+        {   //process the control response  
             res =   ftpcParseReplyCode(pDcpt); 
             
             if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
@@ -2584,9 +2584,9 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitStorCtrlResp(TCPIP_FTPC_DCPT_TYPE* p
     
     //Process Control Socket response and switch the state
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if((res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)||(res == TCPIP_FTPC_SERVER_POS_PRELIM_RESPONSE))
+        if((res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)||(res == TCPIP_FTPC_SERVER_POS_PRELIM_RESPONSE))
         {
             //Read Data socket
             pDcpt->ftpcState = TCPIP_FTPC_STATE_STOR_WRITE_DATA_SOCKET;
@@ -2594,12 +2594,12 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitStorCtrlResp(TCPIP_FTPC_DCPT_TYPE* p
             
         }
         else
-		{
+        {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
             _ftpcCloseDataSkt(pDcpt);
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -2624,102 +2624,102 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateStorWriteDataSkt(TCPIP_FTPC_DCPT_TYPE* p
     //read file
     uint16_t   fileReadLen, writeLen, writeReadyLen;
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
-	
-	//Transfer File thru data socket, until end of file
-	if (NET_PRES_SocketIsConnected(pDcpt->ftpcSocket.ftpcDataSkt))
-	{
-		writeReadyLen = NET_PRES_SocketWriteIsReady(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataConnection.ftpcDataTxBuffSize, 0);
-		if(writeReadyLen > 0)
-		{
-			pDcpt->ftpcDataLength = writeReadyLen;
-			// Data Event
-			if(!ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_READY,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength)))
-			{
-				if(pDcpt->fileDescr == SYS_FS_HANDLE_INVALID)
-				{
-					pDcpt->fileDescr = SYS_FS_FileOpen(pDcpt->ftpcClientPathname,SYS_FS_FILE_OPEN_READ);
-					if( pDcpt->fileDescr == (int32_t) SYS_FS_HANDLE_INVALID )
-					{
-						pDcpt->error = TCPIP_FTPC_ERROR_FILE_OPEN;
-						_ftpcCloseDataSkt(pDcpt);
-						_ftpcErrorUpdate(pDcpt);            
-						res = TCPIP_FTPC_RES_ERROR;
-					}
-					
-				}	
-				// not reached end-of-file
-				if(SYS_FS_FileEOF(pDcpt->fileDescr ) == false)
-				{
-					// no file error
-					if(SYS_FS_Error() == SYS_FS_ERROR_OK)
-					{
-						// not end of file
-						fileReadLen = SYS_FS_FileRead(pDcpt->fileDescr,pDcpt->ftpcDataTxBuff,writeReadyLen);
-						if(fileReadLen > 0)
-						{
-							writeLen =  NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataTxBuff, fileReadLen);
-							pDcpt->ftpcDataTxLen += writeLen;
-						}
-					}
-					else
-					{
-						pDcpt->error = TCPIP_FTPC_ERROR_FILE_ACCESS;
-						_ftpcCloseDataSkt(pDcpt);
-						_ftpcErrorUpdate(pDcpt);            
-						res = TCPIP_FTPC_RES_ERROR;
-					}
-				}
-				else
-				{
-					//end of file; close file
-					SYS_FS_FileClose(pDcpt->fileDescr);  
-					//close data socket
-					_ftpcCloseDataSkt(pDcpt);
-					pDcpt->ftpcDataLength = 0;
-					ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_DONE,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength));
-					pDcpt->ftpcState = TCPIP_FTPC_STATE_STOR_EOF;
-					res = _ftpcStateStorEoF(pDcpt); 
-				}
-			}
-			else
-			{
-				if(pDcpt->ftpcDataLength > 0)
-				{
-					writeLen =  NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataTxBuff, pDcpt->ftpcDataLength);
-					pDcpt->ftpcDataTxLen += writeLen;
-				}
-				else
-				{
-					_ftpcCloseDataSkt(pDcpt);
-					pDcpt->ftpcDataLength = 0;
-					ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_DONE,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength));
-					pDcpt->ftpcState = TCPIP_FTPC_STATE_STOR_EOF;
-					res = _ftpcStateStorEoF(pDcpt);
-				}
-			}
-		}
-	}		
+    
+    //Transfer File thru data socket, until end of file
+    if (NET_PRES_SocketIsConnected(pDcpt->ftpcSocket.ftpcDataSkt))
+    {
+        writeReadyLen = NET_PRES_SocketWriteIsReady(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataConnection.ftpcDataTxBuffSize, 0);
+        if(writeReadyLen > 0)
+        {
+            pDcpt->ftpcDataLength = writeReadyLen;
+            // Data Event
+            if(!ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_READY,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength)))
+            {
+                if(pDcpt->fileDescr == SYS_FS_HANDLE_INVALID)
+                {
+                    pDcpt->fileDescr = SYS_FS_FileOpen(pDcpt->ftpcClientPathname,SYS_FS_FILE_OPEN_READ);
+                    if( pDcpt->fileDescr == (int32_t) SYS_FS_HANDLE_INVALID )
+                    {
+                        pDcpt->error = TCPIP_FTPC_ERROR_FILE_OPEN;
+                        _ftpcCloseDataSkt(pDcpt);
+                        _ftpcErrorUpdate(pDcpt);            
+                        res = TCPIP_FTPC_RES_ERROR;
+                    }
+                    
+                }   
+                // not reached end-of-file
+                if(SYS_FS_FileEOF(pDcpt->fileDescr ) == false)
+                {
+                    // no file error
+                    if(SYS_FS_Error() == SYS_FS_ERROR_OK)
+                    {
+                        // not end of file
+                        fileReadLen = SYS_FS_FileRead(pDcpt->fileDescr,pDcpt->ftpcDataTxBuff,writeReadyLen);
+                        if(fileReadLen > 0)
+                        {
+                            writeLen =  NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataTxBuff, fileReadLen);
+                            pDcpt->ftpcDataTxLen += writeLen;
+                        }
+                    }
+                    else
+                    {
+                        pDcpt->error = TCPIP_FTPC_ERROR_FILE_ACCESS;
+                        _ftpcCloseDataSkt(pDcpt);
+                        _ftpcErrorUpdate(pDcpt);            
+                        res = TCPIP_FTPC_RES_ERROR;
+                    }
+                }
+                else
+                {
+                    //end of file; close file
+                    SYS_FS_FileClose(pDcpt->fileDescr);  
+                    //close data socket
+                    _ftpcCloseDataSkt(pDcpt);
+                    pDcpt->ftpcDataLength = 0;
+                    ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_DONE,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength));
+                    pDcpt->ftpcState = TCPIP_FTPC_STATE_STOR_EOF;
+                    res = _ftpcStateStorEoF(pDcpt); 
+                }
+            }
+            else
+            {
+                if(pDcpt->ftpcDataLength > 0)
+                {
+                    writeLen =  NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcDataSkt, pDcpt->ftpcDataTxBuff, pDcpt->ftpcDataLength);
+                    pDcpt->ftpcDataTxLen += writeLen;
+                }
+                else
+                {
+                    _ftpcCloseDataSkt(pDcpt);
+                    pDcpt->ftpcDataLength = 0;
+                    ftpcDataEvent(pDcpt,TCPIP_FTPC_DATA_SEND_DONE,pDcpt->ftpcDataTxBuff, &(pDcpt->ftpcDataLength));
+                    pDcpt->ftpcState = TCPIP_FTPC_STATE_STOR_EOF;
+                    res = _ftpcStateStorEoF(pDcpt);
+                }
+            }
+        }
+    }       
     return res; 
 }
 
 static TCPIP_FTPC_RESULT_TYPE _ftpcStateStorEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt)
-{	
+{   
     TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_PENDING;
    
     //Read Control Socket
     res = ftpcReadCtrlSocket(pDcpt);
     if (res == TCPIP_FTPC_RES_OK)
-    {	//process the control response	
+    {   //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
-		{            
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        {            
             res = _ftpcDoneFileTransfer(pDcpt);
         }
         else
         {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
             _ftpcCloseDataSkt(pDcpt);
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
         }
     }    
@@ -2730,7 +2730,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateStorEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 //FTP Client State Machine: Send NLST/LIST Command to FTP server
 static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartLst(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {
-	TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
+    TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     TCP_SOCKET_INFO ctrlSktInfo, dataSktInfo;
     pDcpt->filePos = 0;
     pDcpt->ftpcDataRxLen = 0;
@@ -2810,16 +2810,16 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstCtrlResp(TCPIP_FTPC_DCPT_TYPE* pD
     
     //Process Control Socket response and switch the state    
     if (res == TCPIP_FTPC_RES_OK)
-    {	
-        //process the control response	
+    {   
+        //process the control response  
         res =   ftpcParseReplyCode(pDcpt); 
-		if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
+        if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
         {
             pDcpt->ftpcState = TCPIP_FTPC_STATE_LST_EOT; 
             _ftpcStateLstEoT(pDcpt); 
         }
         else if (res == TCPIP_FTPC_SERVER_POS_PRELIM_RESPONSE)
-		{
+        {
             //Read Data socket
             pDcpt->ftpcState = TCPIP_FTPC_STATE_WAIT_LST_READ_DATA_SOCKET;
             _ftpcStateWaitLstReadDataSkt(pDcpt); 
@@ -2828,9 +2828,9 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstCtrlResp(TCPIP_FTPC_DCPT_TYPE* pD
         {
             pDcpt->error = TCPIP_FTPC_ERROR_CTRL_RESPONSE;
             _ftpcCloseDataSkt(pDcpt);
-			_ftpcErrorUpdate(pDcpt);            
+            _ftpcErrorUpdate(pDcpt);            
             res = TCPIP_FTPC_RES_ERROR;
-		}
+        }
     }
     else
     {
@@ -2867,7 +2867,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstReadDataSkt(TCPIP_FTPC_DCPT_TYPE*
         res = ftpcReadCtrlSocket(pDcpt);
 
         if (res == TCPIP_FTPC_RES_OK)
-        {	//process the control response	
+        {   //process the control response  
             res =   ftpcParseReplyCode(pDcpt); 
             if(res == TCPIP_FTPC_SERVER_POS_COMPL_RESPONSE)
             {
@@ -3028,20 +3028,20 @@ static TCPIP_FTPC_RESULT_TYPE ftpcReadCtrlSocket(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 // Write to Control Socket 
 static TCPIP_FTPC_RESULT_TYPE ftpcWriteCtrlSocket(TCPIP_FTPC_DCPT_TYPE* pDcpt, uint16_t writeByte_count)
 {
-	TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
+    TCPIP_FTPC_RESULT_TYPE res = TCPIP_FTPC_RES_OK;
     
     pDcpt->ftpcCtrlTxLen = 0; 
-	if(NET_PRES_SocketWriteIsReady(pDcpt->ftpcSocket.ftpcCtrlSkt, writeByte_count, 0) > 0)
-	{
+    if(NET_PRES_SocketWriteIsReady(pDcpt->ftpcSocket.ftpcCtrlSkt, writeByte_count, 0) > 0)
+    {
         ftpcCtrlEvent(pDcpt,TCPIP_FTPC_CTRL_SEND,pDcpt->ftpcCtrlTxBuff, writeByte_count);
-		pDcpt->ftpcCtrlTxLen = NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcCtrlSkt, 
+        pDcpt->ftpcCtrlTxLen = NET_PRES_SocketWrite(pDcpt->ftpcSocket.ftpcCtrlSkt, 
                                                 pDcpt->ftpcCtrlTxBuff, writeByte_count); 
-	}
-	else
-	{
-		res = TCPIP_FTPC_RES_PENDING;
-	}
-	return res;
+    }
+    else
+    {
+        res = TCPIP_FTPC_RES_PENDING;
+    }
+    return res;
 }
 
 
@@ -3144,7 +3144,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcDoneCmd(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 
 //FTP Client data transfer command completed
 static TCPIP_FTPC_RESULT_TYPE _ftpcDoneFileTransfer(TCPIP_FTPC_DCPT_TYPE* pDcpt)
-{	
+{   
     _ftpcCloseDataSkt(pDcpt);
     //discard any data in control socket
     NET_PRES_SocketDiscard(pDcpt->ftpcSocket.ftpcCtrlSkt);

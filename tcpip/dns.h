@@ -67,14 +67,14 @@ Microchip or any third party.
 // *****************************************************************************
 /*  
   Enumeration:
-	TCPIP_DNS_EVENT_TYPE
+    TCPIP_DNS_EVENT_TYPE
 
   Summary:
     This enumeration is used  to notify DNS client applications.
 
   Description:
     These events are used while notifying to the registered applications.
-	
+    
   Remarks:
     None.
 */
@@ -93,16 +93,16 @@ typedef enum
 
 // *****************************************************************************
 /* Type:
-		TCPIP_DNS_EVENT_HANDLER
+        TCPIP_DNS_EVENT_HANDLER
 
   Summary:
     Notification handler that can be called when a specific entry is resolved
-	and entry is timed out.
+    and entry is timed out.
 
   Description:
     The format of a notification handler registered with the DNS module.
-	Once an DNS event occurs the DNS service will be called for the registered handler.
-	
+    Once an DNS event occurs the DNS service will be called for the registered handler.
+    
   Parameters:
     hNet    - the interface on which the DNS event occurred
     evType  - the DNS reported event
@@ -133,15 +133,15 @@ typedef const void* TCPIP_DNS_HANDLE;
 // *****************************************************************************
 /* 
   Enumeration:
-	TCPIP_DNS_RESOLVE_TYPE
+    TCPIP_DNS_RESOLVE_TYPE
 
   Summary:
     DNS query record type.
 
   Description:
     This enumeration lists the RecordType argument for TCPIP_DNS_Resolve.
-	The stack supports DNS_TYPE_A and DNS_TYPE_AAAA.
-	
+    The stack supports DNS_TYPE_A and DNS_TYPE_AAAA.
+    
   Remarks:
     None.
 */
@@ -157,7 +157,7 @@ typedef enum
 // *****************************************************************************
 /* 
   Enumeration:
-	TCPIP_DNS_ENABLE_FLAGS
+    TCPIP_DNS_ENABLE_FLAGS
 
   Summary:
     Flags for enabling the DNS service on an interface.
@@ -165,7 +165,7 @@ typedef enum
   Description:
     This enumeration lists the TCPIP_DNS_ENABLE_FLAGS argument
     for TCPIP_DNS_Enable.
-	
+    
   Remarks:
     See the TCPIP_DNS_Enable description for details
 */
@@ -238,7 +238,7 @@ typedef struct
     int             nIPv4Entries;       // Number of IPv4 entries per DNS name and Default value is 1.
     IP_ADDRESS_TYPE ipAddressType;      // IP protocol type to use for connecting to the DNS server:
                                         // IPv4 or IPv6
-	                                    // Currently only IPv4 is supported and this parameter is not used
+                                        // Currently only IPv4 is supported and this parameter is not used
                                         // Reserved for future improvements
     int             nIPv6Entries;       // Number of IPv6 address per DNS Name
                                         // Default value is 1 and is used only when IPv6 is enabled
@@ -327,7 +327,7 @@ typedef struct
 
   Precondition:
     DNS client module initialized.
-	
+    
   Parameters:
     hostName   - A pointer to the null terminated string specifying the
                  host for which to resolve an IP.
@@ -365,14 +365,14 @@ TCPIP_DNS_RESULT  TCPIP_DNS_Resolve(const char* hostName, TCPIP_DNS_RESOLVE_TYPE
   Parameters:
     hostName - A pointer to the null terminated string specifying the
                host for which to resolve an IP.
-  	hostIP   - A pointer to an IP_MULTI_ADDRESS structure in which to store the
-		       resolved IPv4/IPv6 address if resolution is complete.
+    hostIP   - A pointer to an IP_MULTI_ADDRESS structure in which to store the
+               resolved IPv4/IPv6 address if resolution is complete.
                Could be NULL if not needed.
-	type     - type of address needed: IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6/IP_ADDRESS_TYPE_ANY
+    type     - type of address needed: IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6/IP_ADDRESS_TYPE_ANY
 
   Return Values:
     - TCPIP_DNS_RES_OK - The DNS client has obtained an IP. hostIP will contain the 
-	               resolved address.
+                   resolved address.
     - TCPIP_DNS_RES_PENDING - The resolution process is still in progress
     - TCPIP_DNS_RES_SERVER_TMO - DNS server timed out
     - TCPIP_DNS_RES_NO_NAME_ENTRY - no such entry to be resolved exists
@@ -404,16 +404,16 @@ TCPIP_DNS_RESULT  TCPIP_DNS_IsResolved(const char* hostName, IP_MULTI_ADDRESS* h
   Parameters:
     hostName - A pointer to the null terminated string specifying the
                host for which to resolve an IP.
-  	hostIPv4 - A pointer to an IPV4_ADDR structure in which to store the
-		       resolved IPv4 address if resolution is complete.
+    hostIPv4 - A pointer to an IPV4_ADDR structure in which to store the
+               resolved IPv4 address if resolution is complete.
                Could be NULL if not needed.
-  	hostIPv6 - A pointer to an IPV6_ADDR structure in which to store the
-		       resolved IPv6 address if resolution is complete.
+    hostIPv6 - A pointer to an IPV6_ADDR structure in which to store the
+               resolved IPv6 address if resolution is complete.
                Could be NULL if not needed.
 
   Return Values:
     - TCPIP_DNS_RES_OK - The DNS client has obtained an IP. hostIP will contain the 
-	               resolved address.
+                   resolved address.
     - TCPIP_DNS_RES_PENDING - The resolution process is still in progress
     - TCPIP_DNS_RES_SERVER_TMO - DNS server timed out
     - TCPIP_DNS_RES_NO_NAME_ENTRY - no such entry to be resolved exists
@@ -431,19 +431,19 @@ TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* host
     int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* pIPv4Addr, int nIPv4Addresses);
 
   Summary:
-	Get IPV4 addresses for a DNS resolved name.
-	
+    Get IPV4 addresses for a DNS resolved name.
+    
   Description:
-	This function will return IPv4 addresses for a host name
+    This function will return IPv4 addresses for a host name
     if the DNS resolution has been completed.  
 
   Precondition:
-	TCPIP_DNS_Resolve has been called.
+    TCPIP_DNS_Resolve has been called.
 
   Parameters:
-	hostName    - A pointer to the null terminated string specifying the
-		          host name.
-	startIndex  - starting index of the IP address to be returned when multiple addresses
+    hostName    - A pointer to the null terminated string specifying the
+                  host name.
+    startIndex  - starting index of the IP address to be returned when multiple addresses
                   are available
                   The max number of addresses that can be stored for a host name is given by:
                   TCPIP_DNS_CLIENT_MODULE_CONFIG::nIPv4Entries.
@@ -452,9 +452,9 @@ TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* host
                   A valid index is [0, TCPIP_DNS_GetIPAddressesNumber(IP_ADDRESS_TYPE_IPV4));
     pIPv4Addr   - pointer to array of IPv4 addresses to store the host IPv4 addresses
     nIPv4Addresses  - number of IPv4 addresses in the pIPv4Addr array.
-		
+        
   Returns:
-  	> 0     - the number of addresses copied to the pIPv4Addr array
+    > 0     - the number of addresses copied to the pIPv4Addr array
     0       - if the host name was not found, invalid index, bad parameter, etc.
 
     
@@ -469,19 +469,19 @@ int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* 
     int TCPIP_DNS_GetIPv6Addresses(const char* hostName, int startIndex, IPV6_ADDR* pIPv6Addr, int nIPv6Addresses);
 
   Summary:
-	Get IPV6 addresses for a DNS resolved name.
-	
+    Get IPV6 addresses for a DNS resolved name.
+    
   Description:
-	This function will return IPv6 addresses for a host name
+    This function will return IPv6 addresses for a host name
     if the DNS resolution has been completed.  
 
   Precondition:
-	TCPIP_DNS_Resolve has been called.
+    TCPIP_DNS_Resolve has been called.
 
   Parameters:
-	hostName    - A pointer to the null terminated string specifying the
-		          host name.
-	startIndex  - starting index of the IP address to be returned when multiple addresses
+    hostName    - A pointer to the null terminated string specifying the
+                  host name.
+    startIndex  - starting index of the IP address to be returned when multiple addresses
                   are available
                   The max number of addresses that can be stored for a host name is given by:
                   TCPIP_DNS_CLIENT_MODULE_CONFIG::nIPv6Entries.
@@ -490,9 +490,9 @@ int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* 
                   A valid index is [0, TCPIP_DNS_GetIPAddressesNumber(IP_ADDRESS_TYPE_IPV6));
     pIPv6Addr   - pointer to array of IPv6 addresses to store the host IPv6 addresses
     nIPv6Addresses  - number of IPv6 addresses in the pIPv6Addr array.
-		
+        
   Returns:
-  	> 0     - the number of addresses copied to the pIPv6Addr array
+    > 0     - the number of addresses copied to the pIPv6Addr array
     0       - if the host name was not found, invalid index, bad parameter, etc.
 
     
@@ -507,22 +507,22 @@ int TCPIP_DNS_GetIPv6Addresses(const char* hostName, int startIndex, IPV6_ADDR* 
     int TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type)
 
   Summary:
-	Get the count of resolved IPv4 and/or IPv6 address for a host name.
-	
+    Get the count of resolved IPv4 and/or IPv6 address for a host name.
+    
   Description:
-	This function returns the total count of IPv4 and/or IPv6 addresses
+    This function returns the total count of IPv4 and/or IPv6 addresses
     that exist for a resolved host name.
    
   Precondition:
-	TCPIP_DNS_Resolve has been called.
+    TCPIP_DNS_Resolve has been called.
 
   Parameters:
-	hostName - A pointer to the null terminated string specifying the
-		       host name 
-	type     - IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6/IP_ADDRESS_TYPE_ANY
+    hostName - A pointer to the null terminated string specifying the
+               host name 
+    type     - IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6/IP_ADDRESS_TYPE_ANY
 
   Return Values:
-  	Number of resolved IPv4 and/or IPv6 addresses for the host name.
+    Number of resolved IPv4 and/or IPv6 addresses for the host name.
         
   Remarks:
     None.
@@ -532,49 +532,49 @@ int TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type);
 //****************************************************************************
 /*  
   Function:
-	bool TCPIP_DNS_IsEnabled(CPIP_NET_HANDLE hNet)
+    bool TCPIP_DNS_IsEnabled(CPIP_NET_HANDLE hNet)
 
   Summary:
-	Determines if the DNS client is enabled on that specified interface.
+    Determines if the DNS client is enabled on that specified interface.
 
   Description:
-	This function returns the current state of DNS Client on the specified interface.
+    This function returns the current state of DNS Client on the specified interface.
 
   Precondition:
-	The DNS module must be initialized.
+    The DNS module must be initialized.
 
   Parameters:
-	hNet - Interface to query.
+    hNet - Interface to query.
 
   Returns:
-	- true	- if the DNS client service is enabled on the specified interface
-    - false	- if the DNS client service is not enabled on the specified interface
+    - true  - if the DNS client service is enabled on the specified interface
+    - false - if the DNS client service is not enabled on the specified interface
 */
 bool TCPIP_DNS_IsEnabled(TCPIP_NET_HANDLE hNet);
 
 //****************************************************************************
 /*
   Function:
-	bool TCPIP_DNS_Enable(TCPIP_NET_HANDLE hNet, TCPIP_DNS_ENABLE_FLAGS flags)
+    bool TCPIP_DNS_Enable(TCPIP_NET_HANDLE hNet, TCPIP_DNS_ENABLE_FLAGS flags)
 
   Summary:
-	Enables the DNS Client for the specified interface.
+    Enables the DNS Client for the specified interface.
 
   Description:
-	This function enables the DNS Client name resolution for the specified interface.
+    This function enables the DNS Client name resolution for the specified interface.
     The additional flags give better control on how the name resolution is performed.
 
    
   Precondition:
-	The DNS module must be initialized.
+    The DNS module must be initialized.
 
   Parameters:
-	hNet    - Interface to enable the DNS Client on
+    hNet    - Interface to enable the DNS Client on
     flags   - specify further attributes for this interface: act as a strict, preferred or default interface
 
   Returns:
-	- true	- if successful
-    - false	- if unsuccessful: the requested interface could not be selected for DNS name resolving.
+    - true  - if successful
+    - false - if unsuccessful: the requested interface could not be selected for DNS name resolving.
 
   Remarks:
     The interface selection for the name resolution tries to find a valid interface, i.e. an interface that is up
@@ -599,25 +599,25 @@ bool TCPIP_DNS_Enable(TCPIP_NET_HANDLE hNet, TCPIP_DNS_ENABLE_FLAGS flags);
 //*****************************************************************************
 /*
   Function:
-	bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache)
+    bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache)
 
   Summary:
-	Disables the DNS Client for the specified interface.
+    Disables the DNS Client for the specified interface.
 
   Description:
-	This function disables the DNS Client for the specified interface.
+    This function disables the DNS Client for the specified interface.
 
   Precondition:
-	The DNS module must be initialized.
+    The DNS module must be initialized.
 
   Parameters:
-	hNet        - Interface for which to disable the DNS Client.
+    hNet        - Interface for which to disable the DNS Client.
     clearCache  - If true, all the existent name entries will be cleared from the cache
 
 
   Returns:
-    - true	- if successful
-    - false	- if unsuccessful
+    - true  - if successful
+    - false - if unsuccessful
 
   Remarks:
     When the DNS client is disabled on a requested interface
@@ -639,8 +639,8 @@ bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache);
 // *****************************************************************************
 /* 
   Function:
-	TCPIP_DNS_HANDLE 
-	TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVENT_HANDLER handler, const void* hParam);
+    TCPIP_DNS_HANDLE 
+    TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVENT_HANDLER handler, const void* hParam);
 
   Summary:
     Registers a DNS client Handler.
@@ -666,7 +666,7 @@ bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache);
 
   Returns:
     - Returns a valid handle if the call succeeds 
-	- Returns null handle if the call failed (out of memory, for example)
+    - Returns null handle if the call failed (out of memory, for example)
 
   Remarks:
     The handler has to be short and fast. It is meant for
@@ -676,7 +676,7 @@ TCPIP_DNS_HANDLE TCPIP_DNS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DNS_EVEN
 
 // *****************************************************************************
 /* Function:
-	bool TCPIP_DNS_HandlerDeRegister(TCPIP_DNS_HANDLE hDns);
+    bool TCPIP_DNS_HandlerDeRegister(TCPIP_DNS_HANDLE hDns);
 
   Summary:
     Deregisters a previously registered DNS client handler.
@@ -767,7 +767,7 @@ TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void);
   Parameters:
     pDnsQuery   - address to store the the query result
     queryIndex  - entry index to be selected; should start with 0
-	
+    
   Returns:
     - TCPIP_DNS_RES_OK - valid address for this index, successful
     
@@ -796,7 +796,7 @@ TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, int quer
 
   Precondition:
     The DNS client module must be initialized.
-	
+    
   Parameters:
     hostName   - A pointer to the null terminated string specifying the
                  host for which to resolve an IP.

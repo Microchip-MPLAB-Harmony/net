@@ -124,7 +124,7 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     DNSS_HASH_ENTRY     *pE=NULL;
 
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
-    {	// interface restart      
+    {   // interface restart      
         return true;
     }
 
@@ -148,13 +148,13 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
             hashMemSize = sizeof(OA_HASH_DCPT) + cacheEntries * sizeof(DNSS_HASH_ENTRY);
             hashDcpt = (OA_HASH_DCPT*)TCPIP_HEAP_Calloc(pDnsSDcpt->memH,1,hashMemSize);
             if(hashDcpt == 0)
-            {	// failed
+            {   // failed
                 return false;
             }
 
             // populate the entries
             hashDcpt->memBlk = hashDcpt + 1;
-            hashDcpt->hParam = hashDcpt;	// store the descriptor it belongs to
+            hashDcpt->hParam = hashDcpt;    // store the descriptor it belongs to
             hashDcpt->hEntrySize = sizeof(DNSS_HASH_ENTRY);
             hashDcpt->hEntries = cacheEntries;
             hashDcpt->probeStep = TCPIP_DNSS_HASH_PROBE_STEP;
@@ -183,7 +183,7 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
 
         if(pDnsSDcpt->dnsSSignalHandle == 0)
-        {	// once per service
+        {   // once per service
             pDnsSDcpt->dnsSSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DNSS_Task, TCPIP_DNSS_TASK_PROCESS_RATE);
             if(pDnsSDcpt->dnsSSignalHandle)
             {
@@ -255,7 +255,7 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     {
         _DNSS_Enable(stackCtrl->pNetIf,false);
     }
-	
+    
     return true;
 }
 
@@ -556,11 +556,11 @@ void TCPIP_DNSS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     DNSS_DCPT *pDnsSDcpt;
     pDnsSDcpt = &gDnsSrvDcpt;
     if(pDnsSDcpt->dnsSrvInitCount > 0)
-    {	// we're up and running        
+    {   // we're up and running        
         if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
         {
             if(--pDnsSDcpt->dnsSrvInitCount == 0)
-            {	// all closed
+            {   // all closed
                 // release resources
                 if(pDnsSDcpt->dnsSSignalHandle)
                 {
@@ -615,9 +615,9 @@ static  void _DNSSRemoveCacheEntries(void)
 TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount)
 {
     DNSS_HASH_ENTRY* pDnsSHE;
-    OA_HASH_ENTRY	*hE;
-    OA_HASH_DCPT	*pOH;
-    DNSS_DCPT*	pDnsSDcpt;
+    OA_HASH_ENTRY   *hE;
+    OA_HASH_DCPT    *pOH;
+    DNSS_DCPT*  pDnsSDcpt;
 
     pDnsSDcpt = &gDnsSrvDcpt;
     pOH = pDnsSDcpt->dnssHashDcpt;
@@ -736,7 +736,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryAdd(const char* name, IP_ADDRESS_TYPE type, IP
     TCPIP_DNSS_CACHE_ENTRY dnssCacheEntry;
     
     pDnsSDcpt = &gDnsSrvDcpt;
-	
+    
     if((name == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
         return TCPIP_DNSS_RES_MEMORY_FAIL;
@@ -755,7 +755,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryAdd(const char* name, IP_ADDRESS_TYPE type, IP
     {
         memcpy(&dnssCacheEntry.ip6Address,&pAdd->v6Add,sizeof(IPV6_ADDR));
     }
-#endif	
+#endif  
     else
     {
         return TCPIP_DNSS_RES_NO_ENTRY;
@@ -961,7 +961,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE 
 
 static uint8_t TCPIP_DNSS_DataGet(uint16_t pos)
 {
-	return (uint8_t)(dnsSrvRecvByte[pos]);
+    return (uint8_t)(dnsSrvRecvByte[pos]);
 }
 
 static bool TCPIP_DNSS_DataPut(uint8_t * buf,uint32_t pos,uint8_t val)
@@ -1118,23 +1118,23 @@ static bool TCPIP_DNSS_ValidateIf(TCPIP_NET_IF* pIf)
 
 /*****************************************************************************
   Function:
-	static void _DNSCopyRXNameToTX(UDP_SOCKET s)
+    static void _DNSCopyRXNameToTX(UDP_SOCKET s)
 
   Summary:
-	Copies a DNS hostname, possibly including name compression, from the RX 
-	packet to the TX packet (without name compression in TX case).
-	
+    Copies a DNS hostname, possibly including name compression, from the RX 
+    packet to the TX packet (without name compression in TX case).
+    
   Description:
-	None
+    None
 
   Precondition:
-	RX pointer is set to currently point to the DNS name to copy
+    RX pointer is set to currently point to the DNS name to copy
 
   Parameters:
-	None
+    None
 
   Returns:
-  	None
+    None
   ***************************************************************************/
 static void _DNSCopyRXNameToTX(UDP_SOCKET s)
 {
@@ -1149,9 +1149,9 @@ static void _DNSCopyRXNameToTX(UDP_SOCKET s)
     {
         // Get first byte which will tell us if this is a 16-bit pointer or the
         // length of the first of a series of labels
-        //	return;
+        //  return;
         i = TCPIP_DNSS_DataGet(gDnsSrvBytePos++);
-		
+        
         // Check if this is a pointer, if so, get the remaining 8 bits and seek to the pointer value
         if((i & 0xC0u) == 0xC0u)
         {
@@ -1173,8 +1173,8 @@ static void _DNSCopyRXNameToTX(UDP_SOCKET s)
             // when it reached the end of hostname , then '.' is not required
             if(len!=0)
                 hostNameWithDot[countWithDot++]='.';
-        }	
-		
+        }   
+        
         // Exit if we've reached a zero length label
         if(len == 0u)
         {
@@ -1203,10 +1203,10 @@ static void _DNSCopyRXNameToTX(UDP_SOCKET s)
 static void TCPIP_DNSS_CacheTimeTask(void)
 {
     DNSS_HASH_ENTRY* pDnsSHE;
-    OA_HASH_ENTRY	*hE;
-    int 		bktIx=0;
-    OA_HASH_DCPT	*pOH;
-    DNSS_DCPT*	pDnsSDcpt;
+    OA_HASH_ENTRY   *hE;
+    int         bktIx=0;
+    OA_HASH_DCPT    *pOH;
+    DNSS_DCPT*  pDnsSDcpt;
 
 
     
@@ -1223,8 +1223,8 @@ static void TCPIP_DNSS_CacheTimeTask(void)
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
         hE = TCPIP_OAHASH_EntryGet(pOH, bktIx);
-    	if((hE->flags.busy != 0) && (hE->flags.value & DNSS_FLAG_ENTRY_COMPLETE))
-    	{
+        if((hE->flags.busy != 0) && (hE->flags.value & DNSS_FLAG_ENTRY_COMPLETE))
+        {
             pDnsSHE = (DNSS_HASH_ENTRY*)hE;
             // only check the entries which has a valid validity time
             // if the entry has 0 validity time, then that entry is a permanent entry
@@ -1242,7 +1242,7 @@ static void TCPIP_DNSS_CacheTimeTask(void)
     #endif    
                 }
             }
-      	}       
+        }       
     }   
 }
 
@@ -1339,7 +1339,7 @@ bool TCPIP_DNSS_Disable(TCPIP_NET_HANDLE hNet)
         }
     }    
 
-    return true;	
+    return true;    
 }
 
 static void _DNSSGetRecordType(UDP_SOCKET s,TCPIP_UINT16_VAL *recordType)
@@ -1372,7 +1372,7 @@ OA_HASH_ENTRY* TCPIP_OAHASH_DNSS_EntryDelete(OA_HASH_DCPT* pOH)
     }
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
-        pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);		
+        pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);       
         if(pBkt->flags.busy != 0)
         {
             pE = (DNSS_HASH_ENTRY*)pBkt;

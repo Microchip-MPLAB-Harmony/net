@@ -84,19 +84,19 @@ typedef enum
 {
     DDNS_STATUS_GOOD = 0u,        // Update successful, hostname is now updated
     DDNS_STATUS_NOCHG,            // Update changed no setting and is considered abusive.  
-	                              // Additional 'nochg' updates will cause hostname to be blocked.
+                                  // Additional 'nochg' updates will cause hostname to be blocked.
 
     DDNS_STATUS_ABUSE,            // The hostname specified is blocked for update abuse.
     DDNS_STATUS_BADSYS,           // System parameter not valid. Should be dyndns, statdns or custom.
     DDNS_STATUS_BADAGENT,         // The user agent was blocked or not sent.
     DDNS_STATUS_BADAUTH,          // The username and password pair do not match a real user.
     DDNS_STATUS_NOT_DONATOR,      // An option available only to credited users 
-	                              // (such as offline URL) was specified, but the user is not a credited user. 
-								  // If multiple hosts were specified, only a single !donator will be returned.
+                                  // (such as offline URL) was specified, but the user is not a credited user. 
+                                  // If multiple hosts were specified, only a single !donator will be returned.
     DDNS_STATUS_NOT_FQDN,         // The hostname specified is not a fully-qualified domain name 
-	                              // (not in the form hostname.dyndns.org or domain.com).
+                                  // (not in the form hostname.dyndns.org or domain.com).
     DDNS_STATUS_NOHOST,           // The hostname specified does not exist in this user account 
-	                              // (or is not in the service specified in the system parameter).
+                                  // (or is not in the service specified in the system parameter).
     DDNS_STATUS_NOT_YOURS,        // The hostname specified does not belong to this user account.
     DDNS_STATUS_NUMHOST,          // Too many hosts specified in an update.
     DDNS_STATUS_DNSERR,           // Unspecified DNS error encountered by the DDNS service.
@@ -245,7 +245,7 @@ void         TCPIP_DDNS_UpdateForce(void);
 
   Returns:
     None.
-	
+    
 */
 void         TCPIP_DDNS_ServiceSet(DDNS_SERVICES svc);
 
@@ -268,7 +268,7 @@ void         TCPIP_DDNS_ServiceSet(DDNS_SERVICES svc);
 
   Returns:
     The last known external IP address of the device.
-	
+    
 */
 uint32_t    TCPIP_DDNS_LastIPGet(void);
 
@@ -292,7 +292,7 @@ uint32_t    TCPIP_DDNS_LastIPGet(void);
 
   Returns:
     DDNS_STATUS indicating the status code for the most recent update.
-	
+    
 */
 DDNS_STATUS  TCPIP_DDNS_LastStatusGet(void);
 

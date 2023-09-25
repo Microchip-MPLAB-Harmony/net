@@ -51,17 +51,17 @@ Microchip or any third party.
 // NBNS Header structure
 typedef struct __attribute__((packed)) _NBNS_HEADER
 {
-	TCPIP_UINT16_VAL TransactionID;
-	TCPIP_UINT16_VAL Flags;
-	TCPIP_UINT16_VAL Questions;
-	TCPIP_UINT16_VAL Answers;
-	TCPIP_UINT16_VAL AuthoritativeRecords;
-	TCPIP_UINT16_VAL AdditionalRecords;
+    TCPIP_UINT16_VAL TransactionID;
+    TCPIP_UINT16_VAL Flags;
+    TCPIP_UINT16_VAL Questions;
+    TCPIP_UINT16_VAL Answers;
+    TCPIP_UINT16_VAL AuthoritativeRecords;
+    TCPIP_UINT16_VAL AdditionalRecords;
 } NBNS_HEADER;
 
 typedef struct __attribute__((packed)) _NBNS_QUESTION
 {
-	uint8_t StringTerminator;
+    uint8_t StringTerminator;
         TCPIP_UINT16_VAL Type;
         TCPIP_UINT16_VAL Class;
 
@@ -163,9 +163,9 @@ bool TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
     
     // Reset per interface state machine and flags to default values
-	
+    
     nbnsInitCount++;
-	return true;
+    return true;
 }
 
 /*********************************************************************

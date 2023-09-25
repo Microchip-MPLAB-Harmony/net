@@ -53,7 +53,7 @@ Microchip or any third party.
 
 
 // Specifies the max length for user name
-#define TCPIP_FTP_USER_NAME_LEN		(10)
+#define TCPIP_FTP_USER_NAME_LEN     (10)
 
 // Specifies the max length of FTP login password
 #define TCPIP_FTP_PASSWD_LEN      (10)
@@ -62,7 +62,7 @@ Microchip or any third party.
 #define TCPIP_FTP_PUT_ENABLED
 
 // Maximum number of FTP connections allowed 
-#define TCPIP_FTP_MAX_CONNECTIONS		(1)
+#define TCPIP_FTP_MAX_CONNECTIONS       (1)
 
 
 // Define the size of the TX buffer for the FTP Data socket
@@ -90,6 +90,6 @@ Microchip or any third party.
 #define     TCPIP_FTPS_TASK_TICK_RATE       33
 
 // FTP timeout, seconds
-#define TCPIP_FTP_TIMEOUT                 	(1200ul)
+#define TCPIP_FTP_TIMEOUT                   (1200ul)
 
 #endif  // _FTP_CONFIG_H_

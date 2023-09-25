@@ -64,12 +64,12 @@ Microchip or any third party.
 
 typedef int16_t SOCKET;   //Socket descriptor
 
-#define AF_INET         2			// Internet Address Family - IPv4, UDP, TCP, etc.
+#define AF_INET         2           // Internet Address Family - IPv4, UDP, TCP, etc.
 #define AF_INET6        10          // Internet Address Family - IPv6
 #define AF_UNSPEC       0           // Ipv4 or IPv6
 
-#define IP_ADDR_ANY     0x01000000u			// IP Address for server binding
-#define INADDR_ANY      0x01000000u	// IP address for server binding.
+#define IP_ADDR_ANY     0x01000000u         // IP Address for server binding
+#define INADDR_ANY      0x01000000u // IP address for server binding.
 
 
 #define SOCK_STREAM 100  //Connection based byte streams. Use TCP for the Internet address family.
@@ -307,7 +307,7 @@ SOCKET  socket( int af, int type, int protocol );
    Parameters:
     s       - Socket descriptor returned from a previous call to socket
     name    - pointer to the sockaddr structure containing the local address of 
-	          the socket
+              the socket
     namelen - length of the sockaddr structure
 
    Returns:
@@ -348,7 +348,7 @@ int     bind( SOCKET s, const struct sockaddr* name, int namelen );
 
   Remarks:
     None.
-	
+    
  */
 int     listen( SOCKET s, int backlog );
 
@@ -421,7 +421,7 @@ SOCKET  accept( SOCKET s, struct sockaddr* addr, int* addrlen );
 
    Remarks:
     None.
-	
+    
  */
 int     connect( SOCKET s, struct sockaddr* name, int namelen );
 
@@ -456,7 +456,7 @@ int     connect( SOCKET s, struct sockaddr* name, int namelen );
 
   Remarks:
     None.
-	
+    
  */
 int     send( SOCKET s, const char* buf, int len, int flags );
 
@@ -482,7 +482,7 @@ int     send( SOCKET s, const char* buf, int len, int flags );
     len   - length of data in bytes.
     flags - message flags. Currently this field is not supported.
     to    - Optional pointer to the sockaddr structure containing the
-		    destination address.  If NULL, the currently bound remote port and IP
+            destination address.  If NULL, the currently bound remote port and IP
             address are used as the destination.
     tolen - length of the sockaddr structure.
 
@@ -492,7 +492,7 @@ int     send( SOCKET s, const char* buf, int len, int flags );
 
   Remarks:
     None.
-	
+    
  */
 int     sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen );
 
@@ -525,21 +525,21 @@ int     sendto( SOCKET s, const char* buf, int len, int flags, const struct sock
     flags - No significance in this implementation
 
    Returns:
-	If the recv function is successful, the socket is valid and it has pending data:
+    If the recv function is successful, the socket is valid and it has pending data:
     - The supplied buffer is non NULL and has non zero length, the function will return
       the number of bytes copied to the application buffer.
     - The supplied buffer is NULL or has zero length then no data will be copied and
       the function will return the number of bytes pending in the socket buffer.
 
     A return value of SOCKET_ERROR (-1)
-	indicates an error condition (and errno set accordingly).
+    indicates an error condition (and errno set accordingly).
     errno is set to EWOULDBLOCK if there is no data pending in the socket buffer.
 
     A value of zero indicates socket has been shutdown by the peer. 
 
   Remarks:
     None.
-	
+    
  */
 int     recv( SOCKET s, char* buf, int len, int flags );
 
@@ -579,7 +579,7 @@ int     recv( SOCKET s, char* buf, int len, int flags );
 
   Remarks:
     None.
-	
+    
  */
 int     recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, int* fromlen );
 
@@ -609,7 +609,7 @@ int     recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from
 
    Remarks:
     The function returns the host name as set on the default network interface.
-	
+    
  */
 int     gethostname(char* name, int namelen);
 
@@ -639,14 +639,14 @@ int     gethostname(char* name, int namelen);
 
   Remarks:
     None.
-	
+    
  */
 int     closesocket( SOCKET s );
 
 //******************************************************************************
 /* Function:
     int  setsockopt(SOCKET s, uint32_t level, uint32_t option_name, const uint8_t *option_value, 
-	                uint32_t option_length)
+                    uint32_t option_length)
 
    Summary:
     Allows setting options to a socket like adjust RX/TX buffer size, etc
@@ -668,13 +668,13 @@ int     closesocket( SOCKET s );
                       * IPPROTO_ICMPV6 - Applies to the ICMPv6 protocol layer (not yet supported)
     option_name     - The name of the option to be set:
                       * IPPROTO_TCP
-					  * TCP_NODELAY - Specifies whether or not the stack should use the Nagle algorithm
+                      * TCP_NODELAY - Specifies whether or not the stack should use the Nagle algorithm
                       * SOL_SOCKET
                       * SO_LINGER   - Specifies what the stack should do with unsent data on close()
                       * SO_RCVBUF   - Specifies the size of the Receive Buffer (TCP only)
                       * SO_SNDBUF   - Specifies the size of the Transmit Buffer
     option_value    - For all values of option_name this is a pointer to the data, which in most cases 
-	                  is an integer.  The only exception is SO_LINGER which points to a linger structure.
+                      is an integer.  The only exception is SO_LINGER which points to a linger structure.
     option_length   - The size of the data pointed to by option_value
 
    Returns:
@@ -713,13 +713,13 @@ int setsockopt(SOCKET s,
                       * IPPROTO_ICMPV6 - Applies to the ICMPv6 protocol layer (not yet supported)
     option_name     - The name of the option to be set:
                       * IPPROTO_TCP
-					  * TCP_NODELAY - Specifies whether or not the stack should use the Nagle algorithm
+                      * TCP_NODELAY - Specifies whether or not the stack should use the Nagle algorithm
                       * SOL_SOCKET
                       * SO_LINGER   - Specifies what the stack should do with unsent data on close()
                       * SO_RCVBUF   - Specifies the size of the Receive Buffer (TCP only)
                       * SO_SNDBUF   - Specifies the size of the Transmit Buffer
     option_value    - For all values of option_name this is a pointer to the data, which in most cases 
-	                  is an integer.  The only exception is SO_LINGER which points to a linger structure.
+                      is an integer.  The only exception is SO_LINGER which points to a linger structure.
     option_length   - The size of the data pointed to by option_value
 
   Returns:
@@ -823,7 +823,7 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen);
     The native TCP sockets are created after a call to listen (server sockets)
     or connect (client sockets).
     Please note that calling the TCPIP_BSD_Socket before one of these calls will 
-	return an INVALID_SOCKET.
+    return an INVALID_SOCKET.
 
     The BSD module uses the NET_PRES layer for supporting encrypted connections.
     This function returns the transport socket (TCP/UDP) associated with the NET_PRES
@@ -864,7 +864,7 @@ int TCPIP_BSD_Socket(SOCKET s);
     The NET_PRES TCP sockets are created after a call to listen (server sockets)
     or connect (client sockets).
     Calling the TCPIP_BSD_PresSocket before the sockets are created will
-	return an INVALID_SOCKET.
+    return an INVALID_SOCKET.
 
     The BSD module uses the NET_PRES layer for supporting encrypted connections.
     This function returns the NET_PRES socket used for the connection.
@@ -893,7 +893,7 @@ int TCPIP_BSD_PresSocket(SOCKET s);
     node         - The name of the server to look up.
     service      - Unused
     hints        - hints to the function.  Currently only ai_family is used.  
-	               Set to either 0, AF_INET or AF_INET6
+                   Set to either 0, AF_INET or AF_INET6
     res          - Memory location of where the results are.  Results must be freed with freeaddrinfo
 
    Returns:
@@ -901,7 +901,7 @@ int TCPIP_BSD_PresSocket(SOCKET s);
     - EAI_NONAME - When no name could be found
     - EAI_FAIL   - When a failure has occurred
     - EAI_AGAIN  - When the look-up is in progress.  Call the function again later 
-	               to check the results.
+                   to check the results.
 
   */
 int getaddrinfo(const char *node, const char *service,

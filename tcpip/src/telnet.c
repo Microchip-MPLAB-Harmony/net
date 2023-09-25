@@ -95,7 +95,7 @@ Microchip or any third party.
 // 0m is clear all attributes
 #define TELNET_START_MSG                "\x1b[2J\x1b[31m\x1b[1m" \
                                 "Microchip Telnet Server 1.1\x1b[0m\r\n" \
-								"Login: "
+                                "Login: "
 //
 // ask password message
 #define TELNET_ASK_PASSWORD_MSG     "Password: " TELNET_CMD_IAC TELNET_CMD_DO TELNET_OPT_SUPP_LOCAL_ECHO        // ask Suppress Local Echo
@@ -364,7 +364,7 @@ static void _Telnet_PUTC(const void* cmdIoParam, char c)
     }
 }
 
-// Telnet's message	
+// Telnet's message 
 static void _Telnet_MSG(const void* cmdIoParam, const char* str)
 {
     NET_PRES_SKT_HANDLE_T tSkt = (NET_PRES_SKT_HANDLE_T)(int)cmdIoParam;
@@ -485,7 +485,7 @@ static void TCPIP_TELNET_Process(void)
 {
     int         tIx;
     TELNET_DCPT* pDcpt;
-    NET_PRES_SKT_HANDLE_T	tSocket;
+    NET_PRES_SKT_HANDLE_T   tSocket;
     TCPIP_TELNET_STATE tState;
 
 
@@ -546,7 +546,7 @@ static void TCPIP_TELNET_Process(void)
                     NET_PRES_SocketDisconnect(tSocket);
                     tState = TCPIP_TELNET_IDLE;
                     break;
-                }	
+                }   
 
             case TCPIP_TELNET_CONNECTED:
                 // Check if you're disconnected and de-register from the command processor
@@ -588,7 +588,7 @@ static TCPIP_TELNET_STATE _Telnet_UserCheck(TELNET_DCPT* pDcpt)
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG, strlen(TELNET_BUFFER_OVFLOW_MSG));
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_FAIL_LOGON_MSG, strlen(TELNET_FAIL_LOGON_MSG));
         NET_PRES_SocketDisconnect(tSkt);
-        return TCPIP_TELNET_IDLE;	
+        return TCPIP_TELNET_IDLE;   
     }
 
     // TELNET_MSG_LINE_DONE
@@ -695,7 +695,7 @@ static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
     {
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_FAIL_LOGON_MSG, strlen(TELNET_FAIL_LOGON_MSG));
         NET_PRES_SocketDisconnect(tSkt);
-        return TCPIP_TELNET_IDLE;	
+        return TCPIP_TELNET_IDLE;   
     }
 
     // success
@@ -895,5 +895,5 @@ bool TCPIP_TELNET_AuthenticationDeregister(TCPIP_TELNET_HANDLE authHandle)
 
 #endif  // (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
 
-#endif	//#if defined(TCPIP_STACK_USE_TELNET_SERVER)
+#endif  //#if defined(TCPIP_STACK_USE_TELNET_SERVER)
 

@@ -146,7 +146,7 @@ typedef struct __attribute__((packed))
 
 typedef struct  _TAG_ARP_LIST_NODE
 {
-	struct _TAG_ARP_LIST_NODE*		next;		// next node in list
+    struct _TAG_ARP_LIST_NODE*      next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_ARP_EVENT_HANDLER               handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter

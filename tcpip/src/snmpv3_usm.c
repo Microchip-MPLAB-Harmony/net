@@ -2,9 +2,9 @@
  *  Summary:Simple Network Management Protocol (SNMP) Version 3 Agent 
  *  
  *  Module for Microchip TCP/IP Stack
- *	 -Provides SNMPv3 API for doing stuff
- *	
- *	-Reference: RFCs 3410, 3411, 3412, 3413, 3414 
+ *   -Provides SNMPv3 API for doing stuff
+ *  
+ *  -Reference: RFCs 3410, 3411, 3412, 3413, 3414 
 
 *******************************************************************************/
 
@@ -85,26 +85,26 @@ static uint8_t* _SNMPv3_ComputeHmacShaDigest(uint8_t * inData, uint32_t dataLen,
 
 /****************************************************************************
   Function:
-	void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
-	
+    void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
+    
   Summary:
-  	AES Encryption and decryption  init vector.(RFC 3826 )
-	
+    AES Encryption and decryption  init vector.(RFC 3826 )
+    
   Description:
-  	The IV is concatenated as : the 32-bit snmpEngineBoots is converted to the first 4 Octects and 
-  	the snmpEngineTime converted to subsequent four bytes.
-  	 		 		  	
+    The IV is concatenated as : the 32-bit snmpEngineBoots is converted to the first 4 Octects and 
+    the snmpEngineTime converted to subsequent four bytes.
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	inOutPdu - SNMP request PDU
-  	
+    inOutPdu - SNMP request PDU
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
 {
@@ -175,33 +175,33 @@ void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu)
 
 /****************************************************************************
   Function:
-	void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu)
-	
+    void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu)
+    
   Summary:
-  	DES Encryption and decryption  init vector.(RFC 3826 )
-	
+    DES Encryption and decryption  init vector.(RFC 3826 )
+    
   Description:
-  	The IV is concatenated as : the 32-bit snmpEngineBoots is converted to the first 4 Octects and 
-  	the snmpEngineTime (used as the 32 bit interger for the 'Salt') converted to subsequent four bytes.
-  	 		 		  	
+    The IV is concatenated as : the 32-bit snmpEngineBoots is converted to the first 4 Octects and 
+    the snmpEngineTime (used as the 32 bit interger for the 'Salt') converted to subsequent four bytes.
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	inOutPdu - SNMP request PDU
-  	
+    inOutPdu - SNMP request PDU
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu, uint8_t *preIV, uint8_t* snmpv3DesEncrptDcrptIV)
 {
     uint8_t cntr;
     uint8_t* prvParamInoutPduSaltPtr;
     //uint8_t privParamSalt[TCPIP_SNMPV3_DES_CRYPTO_KEY_LEN];
-	
+    
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
 
@@ -214,9 +214,9 @@ void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu, uint8_t *preIV, uint8
         prvParamInoutPduSaltPtr=snmpv3EngnDcptMemoryStubPtr->snmpInMsgPrvParamStrng;
 
         //RFC 3414 section 8.1.1.1 Page #64
-	//snmpv3DesEncrptDcrptIV=prvParamSaltPtr EX-OR preIV;
+    //snmpv3DesEncrptDcrptIV=prvParamSaltPtr EX-OR preIV;
 
-    	for(cntr=0;cntr<TCPIP_SNMPV3_DES_CRYPTO_KEY_LEN;cntr++)	
+        for(cntr=0;cntr<TCPIP_SNMPV3_DES_CRYPTO_KEY_LEN;cntr++) 
         {
            *(snmpv3DesEncrptDcrptIV + cntr) =(*(preIV + cntr) ^ *(prvParamInoutPduSaltPtr + cntr));            
         }
@@ -225,7 +225,7 @@ void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu, uint8_t *preIV, uint8
     {
         //prvParamInoutPduSaltPtr=privParamSalt;
         prvParamInoutPduSaltPtr = snmpv3EngnDcptMemoryStubPtr->SnmpOutMsgPrvParmStrng;
-		
+        
         snmpv3EngnDcptMemoryStubPtr->SnmpOutMsgPrivParmLen=TCPIP_SNMPV3_DES_CRYPTO_KEY_LEN;
 
         for(cntr=0;cntr<TCPIP_SNMPV3_DES_CRYPTO_KEY_LEN;cntr++)
@@ -237,25 +237,25 @@ void SNMPv3UsmDesEncryptDecrptInitVector(uint8_t inOutPdu, uint8_t *preIV, uint8
 
 /****************************************************************************
   Function:
-	void SNMPv3USMOutMsgPrivParam(void)
-	
+    void SNMPv3USMOutMsgPrivParam(void)
+    
   Summary:
-  	SNMP USM out message uses Privacy protocol (RFC 3826 )
-	
+    SNMP USM out message uses Privacy protocol (RFC 3826 )
+    
   Description:
-  	SNMPEngineTime is used to encrypt the outgoing message with a random value.
-  	 		 		  	
+    SNMPEngineTime is used to encrypt the outgoing message with a random value.
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	None
-  	
+    None
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 void SNMPv3USMOutMsgPrivParam(SNMPV3_PRIV_PROT_TYPE privType)
 {
@@ -266,24 +266,24 @@ void SNMPv3USMOutMsgPrivParam(SNMPV3_PRIV_PROT_TYPE privType)
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
-	
+    
 
-	//SNMP ENgine Time is 32 Bit counter. 64 Bit counter (Extended Data type) to be implemented.
+    //SNMP ENgine Time is 32 Bit counter. 64 Bit counter (Extended Data type) to be implemented.
     TCPIP_SNMPv3_AuthEngineTimeGet();
 
     prvParamPtr=snmpv3EngnDcptMemoryStubPtr->SnmpOutMsgPrvParmStrng;
     
     if(privType == SNMPV3_AES_PRIV)
     {
-	    *prvParamPtr++=0x00;
-	    *prvParamPtr++=0x00;
-	    *prvParamPtr++=0x00;
-	    *prvParamPtr++=0x00;
-	    //ORing is done to generate some random number from the snmp engine time SYS_RANDOM_PseudoGet() not used.
-	    *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>24)&0xFF)^0xFF;
-	    *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>16)&0xFF)^0xEE;
-	    *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>8)&0xFF)^0xDD;
-	    *prvParamPtr++=(snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime&0xFF)^0xCC;
+        *prvParamPtr++=0x00;
+        *prvParamPtr++=0x00;
+        *prvParamPtr++=0x00;
+        *prvParamPtr++=0x00;
+        //ORing is done to generate some random number from the snmp engine time SYS_RANDOM_PseudoGet() not used.
+        *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>24)&0xFF)^0xFF;
+        *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>16)&0xFF)^0xEE;
+        *prvParamPtr++=((snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime>>8)&0xFF)^0xDD;
+        *prvParamPtr++=(snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime&0xFF)^0xCC;
     }
     else if(privType == SNMPV3_DES_PRIV)
     {
@@ -300,31 +300,31 @@ void SNMPv3USMOutMsgPrivParam(SNMPV3_PRIV_PROT_TYPE privType)
     }
     else
         return;
-	
+    
 }
 
 /****************************************************************************
   Function:
-	void SNMPv3UsmOutMsgAuthParam(UINT8 hashType)
-	
+    void SNMPv3UsmOutMsgAuthParam(UINT8 hashType)
+    
   Summary:
-  	Both MD5 and SHA1 is used for the outgoing message authentication. 
-	
+    Both MD5 and SHA1 is used for the outgoing message authentication. 
+    
   Description:
-  	This routine prepares out message with HMAC-MD5 or HMAC-SHA1
-  	authentication protocol.(RFC- 3414 - section 6)
-  	 		 		  	
+    This routine prepares out message with HMAC-MD5 or HMAC-SHA1
+    authentication protocol.(RFC- 3414 - section 6)
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	hashType  - authentication protocol type
-  	
+    hashType  - authentication protocol type
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 
 void SNMPv3UsmOutMsgAuthParam(uint8_t hashType)
@@ -335,7 +335,7 @@ void SNMPv3UsmOutMsgAuthParam(uint8_t hashType)
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
-		
+        
 
     if(hashType == SNMPV3_HMAC_MD5)
     {
@@ -357,26 +357,26 @@ void SNMPv3UsmOutMsgAuthParam(uint8_t hashType)
 
 /****************************************************************************
   Function:
-	void SNMPv3USMAuthPrivPswdLocalization(UINT8 userDBIndex)
-	
+    void SNMPv3USMAuthPrivPswdLocalization(UINT8 userDBIndex)
+    
   Summary:
-  	Convert Auth and Priv  password to the localized Key using SNMPEngineID.
-	
+    Convert Auth and Priv  password to the localized Key using SNMPEngineID.
+    
   Description:
-  	This routine converts MD5 or SHA1 and AES privacy password key
-  	to localized key using snmpSngineID(RFC- 3414 - section 6).
-  	 		 		  	
+    This routine converts MD5 or SHA1 and AES privacy password key
+    to localized key using snmpSngineID(RFC- 3414 - section 6).
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	userDBIndex  - authentication protocol type
-  	
+    userDBIndex  - authentication protocol type
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 void SNMPv3USMAuthPrivPswdLocalization(uint8_t userDBIndex)
 {
@@ -424,21 +424,21 @@ void SNMPv3USMAuthPrivPswdLocalization(uint8_t userDBIndex)
 /****************************************************************************
   Function:
     static void SNMPv3PswdToLocalizedAuthKeyMD5Hashing(UINT8* pswdToLocalized, UINT8 pswdLen)
-	
+    
   Summary:
     Convert MD5 Auth password to the localized Key using SNMPEngineID.
-	
+    
   Description:
     This routine converts HMAC-MD5 authentication password key
     to localized key using snmpSngineID(RFC- 3414).
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     pswdToLocalized -  password storage poniter
     pswdLen - password length.
-  	
+    
   Return Values:
     None
 
@@ -493,27 +493,27 @@ static void _SNMPv3_PswdToLocalizedAuthKeyMD5Hashing(uint8_t* pswdToLocalized, u
 
 /****************************************************************************
   Function:
-	static void SNMPv3PswdToLocalizedAuthKeySHAHashing(UINT8* pswdToLocalized, UINT8 pswdLen)
-	
+    static void SNMPv3PswdToLocalizedAuthKeySHAHashing(UINT8* pswdToLocalized, UINT8 pswdLen)
+    
   Summary:
-  	Convert SHA Auth password to the localized Key using SNMPEngineID.
-	
+    Convert SHA Auth password to the localized Key using SNMPEngineID.
+    
   Description:
-  	This routine converts HMAC-SHA authentication password key
-  	to localized key using snmpSngineID(RFC- 3414).
-  	 		 		  	
+    This routine converts HMAC-SHA authentication password key
+    to localized key using snmpSngineID(RFC- 3414).
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	pswdToLocalized -  password storage poniter 
-  	pswdLen - password length.
-  	
+    pswdToLocalized -  password storage poniter 
+    pswdLen - password length.
+    
   Return Values:
-	None
+    None
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 static void _SNMPv3_PswdToLocalizedAuthKeySHAHashing(uint8_t* pswdToLocalized, uint8_t pswdLen)
 {
@@ -532,7 +532,7 @@ static void _SNMPv3_PswdToLocalizedAuthKeySHAHashing(uint8_t* pswdToLocalized, u
     pswdPtr=pswdToLocalized;
 
     CRYPT_SHA_Initialize(&sha1);
-	
+    
     while (count < 1048576)
     {
         compressionPtr = pswdBuf;
@@ -561,20 +561,20 @@ static void _SNMPv3_PswdToLocalizedAuthKeySHAHashing(uint8_t* pswdToLocalized, u
 /****************************************************************************
   Function:
     void SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(UINT8 userDBIndex)
-	
+    
   Summary:
     Compute HMAC inner and outer pad for authorization localized key.
-	
+    
   Description:
     This routine computes HMAC inner and outer pad strings for authorization localized key.
     RFC - 2104.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     userDBIndex -  password storage pointer
-  	  	
+        
   Return Values:
     None
 
@@ -621,22 +621,22 @@ void SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(uint8_t userDBIndex)
 /****************************************************************************
   Function:
     uint8_t SNMPv3AuthenticateRxedPduForDataIntegrity(void)
-	
+    
   Summary:
     Authenticate an incoming SNMPV3 USM PDU using MD5 or SHA
-	
+    
   Description:
     This routine authenticates SNMPV3 incoming report PDU message and also for different
     type of GET requests with both MD5 and SHA protocol.If the received PDU username is
     similar to "initial", then there should be report PDU.
     RFC - 3414.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     rxDataPtr -  incoming PDU
-  	  	
+        
   Return Values:
     SNMPV3_MSG_AUTH_PASS  - Authentication success
     SNMPV3_MSG_AUTH_FAIL - Authentication failure
@@ -645,7 +645,7 @@ void SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(uint8_t userDBIndex)
     None
 ***************************************************************************/
 uint8_t SNMPv3AuthenticateRxedPduForDataIntegrity(void)
-{	
+{   
     uint8_t reportMsgName[7]="initial";//response is "report" 0xa8 msg
     uint8_t* secNamePtr;
     uint8_t i;
@@ -658,7 +658,7 @@ uint8_t SNMPv3AuthenticateRxedPduForDataIntegrity(void)
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
-					
+                    
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
@@ -734,27 +734,27 @@ uint8_t SNMPv3AuthenticateRxedPduForDataIntegrity(void)
     }
 
     TCPIP_SNMP_SetRXOffset(tempRxOffset);
-    return SNMPV3_MSG_AUTH_PASS;	
+    return SNMPV3_MSG_AUTH_PASS;    
 
 }
 /****************************************************************************
   Function:
     uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txDataPtr)
-	
+    
   Summary:
     Authenticate to an outgoing SNMPV3 USM PDU using MD5 or SHA
-	
+    
   Description:
     This routine authenticates SNMPV3 outgoing report PDU message and also for GET
     Response PDU for whole message.
     RFC - 3414.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     txDataPtr -  outgoing PDU
-  	  	
+        
   Return Values:
     SNMPV3_MSG_AUTH_PASS  - Authentication success
     SNMPV3_MSG_AUTH_FAIL - Authentication failure
@@ -763,7 +763,7 @@ uint8_t SNMPv3AuthenticateRxedPduForDataIntegrity(void)
     None
 ***************************************************************************/
 uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txDataPtr)
-{	
+{   
     uint8_t* secNamePtr = 0;
     uint8_t i;
     static CRYPT_MD5_CTX md5;
@@ -773,7 +773,7 @@ uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txData
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
-				
+                
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
@@ -826,22 +826,22 @@ uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txData
 /****************************************************************************
   Function:
     uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
-	
+    
   Summary:
     Incoming SNMPv3 scoped PDU decryption using AES-CFB 128bit decryption protocol.
-	
+    
   Description:
     This routine decrypts SNMPV3 incoming PDU using AES-CFB protocol , but before this
     encrypted data length is verified.If the length of the encrypted OCTECT-STRING
     is not multiple of 8, then dryption will be halted.The data is decrypted in 
     Cipher Feedback mode with 128bit blocks. RFC - 3414. ( section 8)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     None
-  	  	
+        
   Return Values:
     SNMPV3_MSG_PRIV_FAIL - Failure
     SNMPV3_MSG_PRIV_PASS - Success
@@ -860,7 +860,7 @@ uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
     uint8_t decrypted_text[TCPIP_SNMP_MAX_MSG_SIZE];
     uint16_t temp;
     int  ret = 0;
-	
+    
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
 
@@ -897,22 +897,22 @@ uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
 /****************************************************************************
   Function:
     uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
-	
+    
   Summary:
     outGoing SNMPv3 scoped PDU Encryption using AES-CFB encryption protocol.
-	
+    
   Description:
     This routine encrypts SNMPV3 outgoing PDU using AES-CFB protocol to maintain the data
     confidentiality. The data is encrypted in Cipher Feedback mode with 128bit blocks. The length of the
     encrypted data should be multiple of 8 and it is not then then data is padded in the end if necessary.
     RFC - 3414. ( section 8)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     plain_text -  whole PDU message
-  	  	
+        
   Return Values:
     SNMPV3_MSG_PRIV_FAIL - Failure
     SNMPV3_MSG_PRIV_PASS - Success
@@ -921,7 +921,7 @@ uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
     None
 ***************************************************************************/
 uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
-{	
+{   
 #ifdef TCPIP_SNMPV3_SUPPORT_AES    
     Aes dec;
     uint8_t initVector[TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE];
@@ -970,22 +970,22 @@ uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
 /****************************************************************************
   Function:
     uint8_t SNMPv3DESDecryptRxedScopedPdu(void)
-	
+    
   Summary:
     Incoming SNMPv3 scoped PDU decryption using DES decryption protocol.
-	
+    
   Description:
     This routine decrypts SNMPV3 incoming PDU using DES protocol , but before this
     encrypted data length is verified.If the length of the encrypted OCTECT-STRING
     is not multiple of 8, then dryption will be halted.
     RFC - 3414. ( section 8)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     None
-  	  	
+        
   Return Values:
     SNMPV3_MSG_PRIV_FAIL - Failure
     SNMPV3_MSG_PRIV_PASS - Success
@@ -1005,7 +1005,7 @@ uint8_t SNMPv3DESDecryptRxedScopedPdu(void)
     uint8_t decrypted_text[TCPIP_SNMP_MAX_MSG_SIZE];
     uint16_t temp;
     Des dec;
-	
+    
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
@@ -1044,7 +1044,7 @@ uint8_t SNMPv3DESDecryptRxedScopedPdu(void)
     wc_Des_SetKey(&dec, cryptoKey, initVector, DES_DECRYPTION);
     wc_Des_CbcDecrypt(&dec, decrypted_text, snmpv3_cipher_text, cipherTextLen);
 
-    	
+        
     //Copy decrypted text to already allocated WholeMsg dynamic memory Buffer.
     memcpy(snmpv3_cipher_text,decrypted_text,cipherTextLen);
 #endif
@@ -1055,22 +1055,22 @@ uint8_t SNMPv3DESDecryptRxedScopedPdu(void)
 /****************************************************************************
   Function:
     uint8_t SNMPv3DESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
-	
+    
   Summary:
     outGoing SNMPv3 scoped PDU Encryption using DES encryption protocol.
-	
+    
   Description:
     This routine encrypts SNMPV3 outgoing PDU using DES protocol to maintain the data
     confidentiality. The data is encrypted in Cipher Block Chaining mode. The length of the
     encrypted data should be multiple of 8 and it is not then then data is padded in the end 
     if necessary.   RFC - 3414. ( section 8)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     plain_text -  whole PDU message
-  	  	
+        
   Return Values:
     SNMPV3_MSG_PRIV_FAIL - Failure
     SNMPV3_MSG_PRIV_PASS - Success
@@ -1079,7 +1079,7 @@ uint8_t SNMPv3DESDecryptRxedScopedPdu(void)
     None
 ***************************************************************************/
 uint8_t SNMPv3DESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
-{	
+{   
 #ifdef TCPIP_SNMPV3_SUPPORT_DES    
     uint8_t* plainText;
     uint16_t plaintextLen;
@@ -1132,19 +1132,19 @@ uint8_t SNMPv3DESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
 /****************************************************************************
   Function:
     BOOL SNMPv3ValidateSnmpEngnId(void)
-	
+    
   Summary:
     Validate engine ID.
-	
+    
   Description:
     This routine validates Engine ID.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     None
-  	  	
+        
   Return Values:
     false - Failure
     true  - Success
@@ -1197,26 +1197,26 @@ bool SNMPv3ValidateSnmpEngnId(void)
 
 /****************************************************************************
   Function:
-	BOOL SNMPv3ValidateUserSecurityName(void)
-	
+    BOOL SNMPv3ValidateUserSecurityName(void)
+    
   Summary:
-  	Validate SNMPV3 user name or security name.
-	
+    Validate SNMPV3 user name or security name.
+    
   Description:
-  	This routine validates user name.
-  	 		 		  	
+    This routine validates user name.
+                        
   Precondition:
-   	SNMPv3Init() and ProcessVariabels() are called.	
+    SNMPv3Init() and ProcessVariabels() are called. 
 
   Parameters:
-  	None
-  	  	
+    None
+        
   Return Values:
-	false - Failure
-	true - Success
+    false - Failure
+    true - Success
 
   Remarks:
-	None 
+    None 
 ***************************************************************************/
 
 bool SNMPv3ValidateUserSecurityName(void)
@@ -1263,25 +1263,25 @@ bool SNMPv3ValidateUserSecurityName(void)
 /****************************************************************************
   Function:
     uint8_t SNMPv3GetSecurityLevel(uint8_t userIndex)
-	
+    
   Summary:
     Get Security level from authentication and Privacy type.
-	
+    
   Description:
     This routine uses authenticationa dn privacy type to find out the exact
     security enum type.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     None
-  	  	
+        
   Return Values:
     NO_REPORT_PRIVACY_AND_AUTH_PROVIDED - Only Privacy and Authentication
     NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED -  Only Auth , no  privacy and no report
     NO_REPORT_NO_PRIVACY_NO_AUTH - No report, no Privacy and no Authentication
-	
+    
   Remarks:
     None
 ***************************************************************************/
@@ -1319,20 +1319,20 @@ uint8_t SNMPv3GetSecurityLevel(uint8_t userIndex)
 /****************************************************************************
   Function:
     BOOL SNMPv3ValidateSecNameAndSecLevel(void)
-	
+    
   Summary:
     Vaidate security name with Security level.
-	
+    
   Description:
     This routine validates secuirity name and secuirty level with SNMP global data base
     for an incoming PDU.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
     None
-  	  	
+        
   Return Values:
     true  - success
     false - failure
@@ -1351,7 +1351,7 @@ bool SNMPv3ValidateSecNameAndSecLevel(void)
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
-	
+    
     tempLen=snmpv3EngnDcptMemoryStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength;
     if(tempLen == 0x0u) // report is expected
     {
@@ -1393,18 +1393,18 @@ bool SNMPv3ValidateSecNameAndSecLevel(void)
 /****************************************************************************
   Function:
     static void SNMPv3ComputeMd5HmacCode(UINT8 xx_bits,UINT8* digestptr,
-						  UINT8 * indata, UINT32 dataLen,
-						  UINT8* userExtendedLclzdKeyIpad,
-						  UINT8* userExtendedLclzdKeyOpad)
-	
+                          UINT8 * indata, UINT32 dataLen,
+                          UINT8* userExtendedLclzdKeyIpad,
+                          UINT8* userExtendedLclzdKeyOpad)
+    
   Summary:
     Compute HMAC - MD5 authentication code
-	
+    
   Description:
     This routine supports data origin authentication and data integrity MD5 authentication .
     Both iPAD and OPAD is used to calculate the authencate digest string.
     RFC - 3414 ( section 6)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
@@ -1415,25 +1415,25 @@ bool SNMPv3ValidateSecNameAndSecLevel(void)
     dataLen - input data length
     userExtendedLclzdKeyIpad - IPAD
     userExtendedLclzdKeyOpad - OPAD
-  	  	
+        
   Return Values:
     None
   Remarks:
     None
 ***************************************************************************/
 static void _SNMPv3_ComputeMd5HmacCode(uint8_t xx_bits,uint8_t* digestptr,
-					  uint8_t * indata, uint32_t dataLen,
-					  uint8_t* userExtendedLclzdKeyIpad,
-					  uint8_t* userExtendedLclzdKeyOpad)
+                      uint8_t * indata, uint32_t dataLen,
+                      uint8_t* userExtendedLclzdKeyIpad,
+                      uint8_t* userExtendedLclzdKeyOpad)
 {
     uint8_t* hmacMd5DigestPtr;
     uint8_t i;
     uint8_t* dataPtr;
     dataPtr=indata;
 
-	
+    
     hmacMd5DigestPtr=_SNMPv3_ComputeHmacMD5Digest(dataPtr, dataLen,userExtendedLclzdKeyOpad,userExtendedLclzdKeyOpad);
-	
+    
     for(i=0;i<(xx_bits/8);i++)
     {
         digestptr[i]=*(hmacMd5DigestPtr+i);
@@ -1443,18 +1443,18 @@ static void _SNMPv3_ComputeMd5HmacCode(uint8_t xx_bits,uint8_t* digestptr,
 /****************************************************************************
   Function:
     static void SNMPv3ComputeShaHmacCode(UINT8 xx_bits,UINT8* digestptr,
-						  UINT8 * indata, UINT32 dataLen,
-						  UINT8* userExtendedLclzdKeyIpad,
-						  UINT8* userExtendedLclzdKeyOpad)
-	
+                          UINT8 * indata, UINT32 dataLen,
+                          UINT8* userExtendedLclzdKeyIpad,
+                          UINT8* userExtendedLclzdKeyOpad)
+    
   Summary:
     Compute HMAC - SHA authentication code
-	
+    
   Description:
     This routine supports data origin authentication and data integrity SHA authentication .
     Both iPAD and OPAD is used to calculate the authencate digest string.
     RFC - 3414 ( section 6)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
@@ -1465,7 +1465,7 @@ static void _SNMPv3_ComputeMd5HmacCode(uint8_t xx_bits,uint8_t* digestptr,
     dataLen - input data length
     userExtendedLclzdKeyIpad - IPAD
     userExtendedLclzdKeyOpad - OPAD
-  	  	
+        
   Return Values:
     None
   Remarks:
@@ -1473,9 +1473,9 @@ static void _SNMPv3_ComputeMd5HmacCode(uint8_t xx_bits,uint8_t* digestptr,
 ***************************************************************************/
 
 static void _SNMPv3_ComputeShaHmacCode(uint8_t xx_bits,uint8_t* digestptr,
-					uint8_t * indata, uint32_t dataLen,
-					uint8_t* userExtendedLclzdKeyIpad,
-					uint8_t* userExtendedLclzdKeyOpad)
+                    uint8_t * indata, uint32_t dataLen,
+                    uint8_t* userExtendedLclzdKeyIpad,
+                    uint8_t* userExtendedLclzdKeyOpad)
 {
     uint8_t* hmacSHADigestPtr;
     uint8_t i;
@@ -1494,13 +1494,13 @@ static void _SNMPv3_ComputeShaHmacCode(uint8_t xx_bits,uint8_t* digestptr,
 /****************************************************************************
   Function:
     static void SNMPv3AuthKeyZeroingToHmacBufLen64(UINT8* authKey, UINT8 authKeyLen,  UINT8 hashType)
-	
+    
   Summary:
     Pad zero to the authentication key localized buffer.
-	
+    
   Description:
     this routine will pad the (64-authKeyLen) number of zeros to the end of auth key localized buffer.
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
@@ -1508,7 +1508,7 @@ static void _SNMPv3_ComputeShaHmacCode(uint8_t xx_bits,uint8_t* digestptr,
     authkey - authentication key buffer
     authKeylen  - authentication key length
     hashType - authentication type
-  	  	
+        
   Return Values:
     None
   Remarks:
@@ -1518,7 +1518,7 @@ static void _SNMPv3_AuthKeyZeroingToHmacBufLen64(uint8_t* authKey, uint8_t authK
 {
     uint8_t* tempAuthKeyptr;
     uint8_t i;
-	
+    
     tempAuthKeyptr = authKey;
 
     if(authKeyLen > 64)
@@ -1552,12 +1552,12 @@ static void _SNMPv3_AuthKeyZeroingToHmacBufLen64(uint8_t* authKey, uint8_t authK
                                              UINT8* userExtendedLclzdKeyOpad)
   Summary:
     Compute HMAC - MD5 authentication code
-	
+    
   Description:
     This routine supports data origin authentication and data integrity MD5 authentication .
     Both iPAD and OPAD is used to calculate the authencate digest string.
     RFC - 3414 ( section 6)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
@@ -1567,7 +1567,7 @@ static void _SNMPv3_AuthKeyZeroingToHmacBufLen64(uint8_t* authKey, uint8_t authK
     dataLen - input data length
     userExtendedLclzdKeyIpad - IPAD
     userExtendedLclzdKeyOpad - OPAD
-  	  	
+        
   Return Values:
     UINT8 *  - HMAC MD5 digest string
   Remarks:
@@ -1588,7 +1588,7 @@ static uint8_t* _SNMPv3_ComputeHmacMD5Digest(uint8_t * inData,
     CRYPT_MD5_DataAdd(&md5, data2Hmac, (uint16_t)dataLen);
     CRYPT_MD5_Finalize(&md5, HmacMd5Digest);
 
-	
+    
     CRYPT_MD5_Initialize(&md5);
     CRYPT_MD5_DataAdd(&md5,userExtendedLclzdKeyOpad, (uint16_t)0x40);
     CRYPT_MD5_DataAdd(&md5,HmacMd5Digest,16);
@@ -1602,15 +1602,15 @@ static uint8_t* _SNMPv3_ComputeHmacMD5Digest(uint8_t * inData,
     UINT8* SNMPv3ComputeHmacShaDigest(UINT8 * inData, UINT32 dataLen,
                                      UINT8* userExtendedLclzdKeyIpad,
                                      UINT8* userExtendedLclzdKeyOpad)
-	
+    
   Summary:
     Compute HMAC - SHA authentication code
-	
+    
   Description:
     This routine supports data origin authentication and data integrity SHA authentication .
     Both iPAD and OPAD is used to calculate the authencate digest string.
     RFC - 3414 ( section 6)
-  	 		 		  	
+                        
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
 
@@ -1620,7 +1620,7 @@ static uint8_t* _SNMPv3_ComputeHmacMD5Digest(uint8_t * inData,
     dataLen - input data length
     userExtendedLclzdKeyIpad - IPAD
     userExtendedLclzdKeyOpad - OPAD
-  	  	
+        
   Return Values:
     UINT8 *  - HMAC SHA digest string
   Remarks:
@@ -1630,13 +1630,13 @@ static uint8_t* _SNMPv3_ComputeHmacShaDigest(uint8_t * inData,
                                              uint32_t dataLen,
                                              uint8_t* userExtendedLclzdKeyIpad,
                                              uint8_t* userExtendedLclzdKeyOpad)
-{	
+{   
     static CRYPT_SHA_CTX  sha1;
     uint8_t * data2Hmac;
 
     data2Hmac=inData;
 
-	CRYPT_SHA_Initialize(&sha1);
+    CRYPT_SHA_Initialize(&sha1);
     CRYPT_SHA_DataAdd(&sha1,authKey_iPad, (uint16_t)0x40);
     CRYPT_SHA_DataAdd(&sha1,data2Hmac, (uint16_t)dataLen);
     CRYPT_SHA_Finalize(&sha1, HmacSHADigest);    
@@ -1647,7 +1647,7 @@ static uint8_t* _SNMPv3_ComputeHmacShaDigest(uint8_t * inData,
     CRYPT_SHA_Finalize(&sha1,HmacSHADigest);
 
     return HmacSHADigest;
-	
+    
 }
 
 #endif // #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)

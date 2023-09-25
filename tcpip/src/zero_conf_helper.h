@@ -48,7 +48,7 @@ Microchip or any third party.
 #define __ZEROCONF_HELPER_H
 
 // Debugging levels
-//#define DEBUG_ZCLL  y	    /* Debug Enable for Zeroconf Link-Local Module */
+//#define DEBUG_ZCLL  y     /* Debug Enable for Zeroconf Link-Local Module */
 //#define INFO_ZCLL   y
 //#define WARN_ZCLL   y
 
@@ -60,26 +60,26 @@ Microchip or any third party.
 extern uint8_t zeroconf_dbg_level;
 
 #if defined(DEBUG_ZCLL) || defined(INFO_ZCLL) || defined(DEBUG_MDNS) || defined(INFO_MDNS)
-	/* defined(WARN_ZCLL) || defined(WARN_MDNS */
+    /* defined(WARN_ZCLL) || defined(WARN_MDNS */
 
-	#define NEED_TO_DEFINE_zeroconf_dbg_msg 	y
-	#define ZEROCONF_DBG_MSG_SIZE  256
-	
-	extern char zeroconf_dbg_msg[ZEROCONF_DBG_MSG_SIZE];
+    #define NEED_TO_DEFINE_zeroconf_dbg_msg     y
+    #define ZEROCONF_DBG_MSG_SIZE  256
+    
+    extern char zeroconf_dbg_msg[ZEROCONF_DBG_MSG_SIZE];
 
 #if defined(INFO_ZCLL)
-	extern void info_zcll_print(char * msg);
+    extern void info_zcll_print(char * msg);
 #endif
 #if defined(DEBUG_ZCLL)
-	extern void debug_zcll_print(char * msg);
+    extern void debug_zcll_print(char * msg);
 #endif
 
 #if defined(INFO_MDNS)
-	extern void info_mdns_print(char * msg);
+    extern void info_mdns_print(char * msg);
 #endif
 
 #if defined(DEBUG_MDNS)
-	extern void debug_mdns_print(char * msg);
+    extern void debug_mdns_print(char * msg);
 #endif
 
 #endif//#if defined(DEBUG_ZCLL) || defined(INFO_ZCLL) || defined(DEBUG_MDNS) || defined(INFO_MDNS)

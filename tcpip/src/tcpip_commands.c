@@ -139,8 +139,8 @@ typedef enum
 }DNS_SERVICE_COMD_TYPE;
 typedef struct 
 {
-	const char *command;
-	DNS_SERVICE_COMD_TYPE  val;
+    const char *command;
+    DNS_SERVICE_COMD_TYPE  val;
 }DNSS_COMMAND_MAP;
 
 
@@ -569,10 +569,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
-	{"mail", 	    _CommandMail,			       ": Send Mail Message"},
+    {"mail",        _CommandMail,                  ": Send Mail Message"},
 #endif  // defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 #if defined(_TCPIP_COMMANDS_MIIM)
-	{"miim", 	    _CommandMiim,			       ": MIIM commands"},
+    {"miim",        _CommandMiim,                  ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
     {"udp",         _Command_Udp,                  ": UDP commands"},
@@ -917,7 +917,7 @@ static void _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
         return;
     }
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam,"MAC Address		IPAddress		RemainingLeaseTime \r\n",0);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"MAC Address       IPAddress       RemainingLeaseTime \r\n",0);
 
     prevLease = 0;
     do
@@ -934,8 +934,8 @@ static void _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
             TCPIP_Helper_MACAddressToString(&leaseEntry.hwAdd, addrBuff, sizeof(addrBuff));
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s", addrBuff);
             TCPIP_Helper_IPAddressToString(&leaseEntry.ipAddress, addrBuff, sizeof(addrBuff));
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "	%s ", addrBuff);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "	%d Secs\r\n", leaseEntry.leaseTime/SYS_TMR_TickCounterFrequencyGet());
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, " %s ", addrBuff);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, " %d Secs\r\n", leaseEntry.leaseTime/SYS_TMR_TickCounterFrequencyGet());
 
             prevLease = nextLease;
         }
@@ -2031,10 +2031,10 @@ static void _Command_TFTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
     }
    
     if(TCPIP_TFTPC_SetCommand(&mAddr,ipType,cmdType,tftpcFileName) != TFTPC_ERROR_NONE)
-	{
-		(*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TFTPC:Command processing error.\r\n");
+    {
+        (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TFTPC:Command processing error.\r\n");
         return;
-	}
+    }
 }
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
@@ -2382,7 +2382,7 @@ static int _Command_DNSSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown option\r\n");
         return false;
     }
-	addFnc = svcEnable?TCPIP_DNSS_Enable:TCPIP_DNSS_Disable;
+    addFnc = svcEnable?TCPIP_DNSS_Enable:TCPIP_DNSS_Disable;
 
         msgOK   = svcEnable?"enabled":"disabled";
         msgFail = svcEnable?"enable":"disable";
@@ -2406,7 +2406,7 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
     uint8_t             *hostName;
     IP_MULTI_ADDRESS    ipDNS;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-    uint32_t		entryTimeout=0;
+    uint32_t        entryTimeout=0;
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t     addrBuf[44];
 #endif
@@ -2522,8 +2522,8 @@ static void _Command_DnsServService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
                 {"del",DNS_SERVICE_COMD_DEL,},
                 {"info",DNS_SERVICE_COMD_INFO,},
             }; 
-	
-	
+    
+    
     if (argc < 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: dnss <service/add/del/info> \r\n");
          return;
@@ -2581,7 +2581,7 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     hostName = (uint8_t*)argv[2];
     if(strcmp((char*)argv[2],"all")==0)
     {
-    	index = 0;
+        index = 0;
         (*pCmdIO->pCmdApi->msg)(cmdIoParam,"HostName        IPv4/IPv6Count\r\n");
 
         while(1)
@@ -6561,7 +6561,7 @@ static void _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
             {
                 strcpy(serverPathname, argv[opt_count + 2]);
                 fileOptions.serverPathName = serverPathname;
-            }		
+            }       
         }
 
         fileOptions.clientPathName = (char *)"name_list.txt";
@@ -6612,7 +6612,7 @@ static void _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
             {
                 strcpy(serverPathname, argv[opt_count + 2]);
                 fileOptions.serverPathName = serverPathname;
-            }		
+            }       
         }
         fileOptions.clientPathName = (char *)"list.txt";
         if (argc == (opt_count + 4))

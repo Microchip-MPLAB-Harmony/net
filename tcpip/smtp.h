@@ -71,10 +71,10 @@ Microchip or any third party.
 // *****************************************************************************
 // *****************************************************************************
 
-	#define SMTP_SUCCESS		(0x0000u)	// Message was successfully sent
-	#define SMTP_RESOLVE_ERROR	(0x8000u)	// DNS lookup for SMTP server failed
-	#define SMTP_CONNECT_ERROR	(0x8001u)	// Connection to SMTP server failed
-	
+    #define SMTP_SUCCESS        (0x0000u)   // Message was successfully sent
+    #define SMTP_RESOLVE_ERROR  (0x8000u)   // DNS lookup for SMTP server failed
+    #define SMTP_CONNECT_ERROR  (0x8001u)   // Connection to SMTP server failed
+    
 //****************************************************************************
 /*
   Function:
@@ -104,8 +104,8 @@ Microchip or any third party.
                     header, including the last one, must be terminated with
                     a CRLF pair.
     Body -          When sending a message from memory, the location of the
-    				body of this message in memory. Leave as NULL to build 
-    				a message on-the-fly.
+                    body of this message in memory. Leave as NULL to build 
+                    a message on-the-fly.
     UseSSL -        This flag causes the SMTP client to make a secure connection to the server.
     ServerPort -    (uint16_t value) Indicates the port on which to connect to the
                     remote SMTP server.
@@ -115,23 +115,23 @@ Microchip or any third party.
     printable name may be used. This format places the printable name in quotation
     marks, with the address following in pointed brackets, such as "John Smith"
     <john.smith@domain.com>.
-	
+    
 */
 typedef struct
 {
-	char* Server;
-	char* Username;
-	char* Password;
-	char* To;
-	char* CC;
-	char* BCC;
-	char* From;
-	char* Subject;
-	char* OtherHeaders;
-	char* Body;
-	bool  UseSSL;
-	uint16_t ServerPort;
-	
+    char* Server;
+    char* Username;
+    char* Password;
+    char* To;
+    char* CC;
+    char* BCC;
+    char* From;
+    char* Subject;
+    char* OtherHeaders;
+    char* Body;
+    bool  UseSSL;
+    uint16_t ServerPort;
+    
 } TCPIP_SMTP_CLIENT_MESSAGE;
 
 
@@ -174,7 +174,7 @@ typedef struct
     - true  - The application has successfully obtained control of the module
     - false - The SMTP module is in use by another application.  Call the
               TCPIP_SMTP_UsageBegin function again later, after returning to 
-			  the main program loop
+              the main program loop
  */
 bool TCPIP_SMTP_UsageBegin(void);
 
@@ -225,7 +225,7 @@ uint16_t TCPIP_SMTP_UsageEnd(void);
     TCPIP_SMTP_UsageBegin returned true on a previous call.
 
   Parameters:
-	smtpClientMessage   - pointer to a TCPIP_SMTP_CLIENT_MESSAGE structure that configures
+    smtpClientMessage   - pointer to a TCPIP_SMTP_CLIENT_MESSAGE structure that configures
                           the message to send
 
   Returns:

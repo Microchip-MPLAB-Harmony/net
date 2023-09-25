@@ -992,8 +992,8 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                     else
 #endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
                         c = TCPIP_HTTP_PostExecute(pHttpCon);
-					 // If waiting for asynchronous process, return to main app
-					if(c == (uint8_t)HTTP_IO_WAITING)	
+                     // If waiting for asynchronous process, return to main app
+                    if(c == (uint8_t)HTTP_IO_WAITING)   
                     {// return to main app and make sure we don't get stuck by the watchdog
                         pHttpCon->callbackPos = TCPIP_TCP_GetIsReady(pHttpCon->socket) - 1;
                         break;

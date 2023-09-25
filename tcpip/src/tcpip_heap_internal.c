@@ -67,15 +67,15 @@ typedef union __attribute__((aligned(CACHE_LINE_SIZE))) _tag_headNode
     _heap_Align x;
     struct
     {
-        union _tag_headNode*	next;
-        size_t			        units;
+        union _tag_headNode*    next;
+        size_t                  units;
     };
 }_headNode;
 
 
-#define	_TCPIP_HEAP_MIN_BLK_USIZE_  	2	// avoid tiny blocks having units <=  value. 
+#define _TCPIP_HEAP_MIN_BLK_USIZE_      2   // avoid tiny blocks having units <=  value. 
 
-#define	_TCPIP_HEAP_MIN_BLKS_           64	// efficiency reasons, the minimum heap size that can be handled. 
+#define _TCPIP_HEAP_MIN_BLKS_           64  // efficiency reasons, the minimum heap size that can be handled. 
 
 
 
@@ -331,55 +331,55 @@ static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 
 static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
-	_headNode	*ptr,*prev;
-	size_t      nunits;
+    _headNode   *ptr,*prev;
+    size_t      nunits;
     TCPIP_HEAP_DCPT*  hDcpt;
 
 
     hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
 
-	if(hDcpt == 0 || nBytes == 0)
-	{
-		return 0;
-	}
-	
-	nunits=(nBytes+sizeof(_headNode)-1)/sizeof(_headNode)+1;	// allocate units   
-	prev=0;
+    if(hDcpt == 0 || nBytes == 0)
+    {
+        return 0;
+    }
+    
+    nunits=(nBytes+sizeof(_headNode)-1)/sizeof(_headNode)+1;    // allocate units   
+    prev=0;
 
     (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
 
-	for(ptr = hDcpt->_heapHead; ptr != 0; prev = ptr, ptr = ptr->next)
-	{
-		if(ptr->units >= nunits)
-		{   // found block
-			if(ptr->units-nunits <= _TCPIP_HEAP_MIN_BLK_USIZE_)
-			{
-				nunits=ptr->units;	// get the whole block
-			}
+    for(ptr = hDcpt->_heapHead; ptr != 0; prev = ptr, ptr = ptr->next)
+    {
+        if(ptr->units >= nunits)
+        {   // found block
+            if(ptr->units-nunits <= _TCPIP_HEAP_MIN_BLK_USIZE_)
+            {
+                nunits=ptr->units;  // get the whole block
+            }
 
             if(ptr->units == nunits)
-			{   // exact match
-				if(prev)
-				{
-					prev->next = ptr->next;
-				}
-				else
-				{
-					hDcpt->_heapHead = ptr->next;
+            {   // exact match
+                if(prev)
+                {
+                    prev->next = ptr->next;
+                }
+                else
+                {
+                    hDcpt->_heapHead = ptr->next;
                     prev = hDcpt->_heapHead;
-				}
+                }
 
                 if(hDcpt->_heapTail == ptr)
                 {
                     hDcpt->_heapTail = prev;
                 }
-			}
-			else
-			{   // larger than we need
-				ptr->units -= nunits;
-				ptr += ptr->units;
-				ptr->units = nunits;
-			}
+            }
+            else
+            {   // larger than we need
+                ptr->units -= nunits;
+                ptr += ptr->units;
+                ptr->units = nunits;
+            }
 
             if((hDcpt->_heapAllocatedUnits += nunits) > hDcpt->_heapWatermark)
             {
@@ -387,8 +387,8 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
             }
             (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
             return ptr + 1;
-		}
-	}
+        }
+    }
 
     hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_NO_MEM;
     (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
@@ -410,14 +410,14 @@ static void* _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, si
 static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 {  
     TCPIP_HEAP_DCPT*  hDcpt;
-	_headNode	*hdr,*ptr;
+    _headNode   *hdr,*ptr;
     int         fail;
     size_t      freedUnits;
 
     hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
 
     if(hDcpt == 0 || pBuff == 0)
-	{
+    {
         return 0;
     }
 
@@ -585,7 +585,7 @@ static size_t _TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
 static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_HEAP_DCPT   *hDcpt;
-    _headNode	*ptr;
+    _headNode   *ptr;
     size_t      max_nunits;
 
     max_nunits = 0;

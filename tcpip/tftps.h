@@ -145,16 +145,16 @@ typedef enum
 
 // *****************************************************************************
 /* Type:
-		TCPIP_TFTPS_EVENT_HANDLER
+        TCPIP_TFTPS_EVENT_HANDLER
 
   Summary:
     Notification handler that can be called when there is a TFTP process for a client.
 
   Description:
     The format of a notification handler registered with the TFTP server module.
-	Once an TFTP server event occurs the TFTP server service will be called 
+    Once an TFTP server event occurs the TFTP server service will be called 
     for the registered handler.
-	
+    
   Parameters:
     hNet    - the interface on which the DNS event occurred
     evType  - the TFTP server reported event
@@ -282,8 +282,8 @@ uint8_t TCPIP_TFTPS_ClientsNumber(void);
     hNet   - Interface for which to disable.
 
   Returns:
-    - true	- if successful
-    - false	- if unsuccessful
+    - true  - if successful
+    - false - if unsuccessful
 
   Remarks:
     None.
@@ -310,8 +310,8 @@ bool TCPIP_TFTPS_Disable(TCPIP_NET_HANDLE hNet);
     ipType  - Interface address type. Depends on the enum type of IP_ADDRESS_TYPE
 
   Returns:
-    - true	- if successful
-    - false	- if unsuccessful, if server open fails for this interface.
+    - true  - if successful
+    - false - if unsuccessful, if server open fails for this interface.
 
   Remarks:
     None.
@@ -321,7 +321,7 @@ bool TCPIP_TFTPS_Enable(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType);
 // *****************************************************************************
 /* 
   Function:
-	TCPIP_TFTPS_HANDLE 
+    TCPIP_TFTPS_HANDLE 
     TCPIP_TFTPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTPS_EVENT_HANDLER handler, const void* hParam);
 
   Summary:
@@ -349,7 +349,7 @@ bool TCPIP_TFTPS_Enable(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType);
 
   Returns:
     - Returns a valid handle if the call succeeds 
-	- Returns null handle if the call failed (out of memory, for example)
+    - Returns null handle if the call failed (out of memory, for example)
 
   Remarks:
     The handler has to be short and fast. It is meant for
@@ -359,7 +359,7 @@ TCPIP_TFTPS_HANDLE TCPIP_TFTPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTP
 
 // *****************************************************************************
 /* Function:
-	bool TCPIP_TFTPS_HandlerDeRegister(TCPIP_TFTPS_HANDLE hTftps);
+    bool TCPIP_TFTPS_HandlerDeRegister(TCPIP_TFTPS_HANDLE hTftps);
 
   Summary:
     De-registers a previously registered TFTP Server handler.

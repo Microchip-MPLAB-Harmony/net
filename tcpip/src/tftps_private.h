@@ -109,15 +109,15 @@ typedef enum
 // result of an TFTP protocol error code enum value
 typedef enum
 {
-    TFTP_ERROR                		= 0,    // Not defined, see error message (if any)
+    TFTP_ERROR                      = 0,    // Not defined, see error message (if any)
     TFTP_FILE_NOT_FOUND_ERROR       = 1,   // File not found
     TFTP_ACCESS_VIOLATION_ERROR     = 2,   // Access violation
-    TFTP_ALLOCATION_ERROR    		= 3,   // Disk full or allocation exceeded
+    TFTP_ALLOCATION_ERROR           = 3,   // Disk full or allocation exceeded
     TFTP_ILLIGAL_OPERATION_ERROR    = 4,   // Illegal TFTP operation
     TFTP_UNKNOWN_ID_ERROR           = 5,   // Unknown transfer ID
-    TFTP_FILE_EXISTS_ERROR		    = 6,   // File already exists
-	TFTP_NO_SUCH_ERROR				= 7,	  // No such user
-	TFTP_BAD_TFTP_ERROR				= 8,	   // Bad TFTP Option
+    TFTP_FILE_EXISTS_ERROR          = 6,   // File already exists
+    TFTP_NO_SUCH_ERROR              = 7,      // No such user
+    TFTP_BAD_TFTP_ERROR             = 8,       // Bad TFTP Option
 }TFTP_ERROR_CODE;
 
 // The TFTP server state machine for each client
@@ -150,7 +150,7 @@ typedef struct
 
 typedef struct  _TAG_TFTPS_LIST_NODE
 {
-	struct _TAG_TFTPS_LIST_NODE*    next;		// next node in list
+    struct _TAG_TFTPS_LIST_NODE*    next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_TFTPS_EVENT_HANDLER       handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter

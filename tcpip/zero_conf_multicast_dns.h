@@ -159,7 +159,7 @@ typedef enum
 
     callback  - Callback function, which is user-application defined.
                 This callback gets invoked on completion of service 
-				advertisement. If an service name-conflict error is
+                advertisement. If an service name-conflict error is
                 detected and auto_rename is set to '0' callback gets
                 invoked with MDNSD_ERR_CONFLICT as error-code.
 
@@ -168,10 +168,10 @@ typedef enum
 
   Returns:
     MDNSD_ERR_CODE - Returns Error-code to indicate whether or not registration 
-	is successful:
+    is successful:
     - MDNSD_SUCCESS   - returns on success of call
     - MDNSD_ERR_BUSY  - When already some other service is being advertised using 
-	                    this DNS SD stack
+                        this DNS SD stack
     - MDNSD_ERR_INVAL - Invalid parameter
  */
 MDNSD_ERR_CODE
@@ -211,11 +211,11 @@ TCPIP_MDNS_ServiceRegister( TCPIP_NET_HANDLE netH
     netH - handle of the network to be deregistered
 
   Returns:
-	MDNSD_ERR_CODE - Returns an error code to indicate whether or not 
-	registration is successful:
+    MDNSD_ERR_CODE - Returns an error code to indicate whether or not 
+    registration is successful:
     - MDNSD_SUCCESS   - Returns on success of call
     - MDNSD_ERR_INVAL - When the input parameters are invalid or if the function
-	                    is invoked in an invalid state
+                        is invoked in an invalid state
  */
 MDNSD_ERR_CODE TCPIP_MDNS_ServiceDeregister(TCPIP_NET_HANDLE netH);
 
@@ -256,7 +256,7 @@ MDNSD_ERR_CODE TCPIP_MDNS_ServiceDeregister(TCPIP_NET_HANDLE netH);
 
   Returns:
     MDNSD_ERR_CODE - Returns an error code to indicate whether or not registration 
-	                  is successful:
+                      is successful:
     - MDNSD_SUCCESS   - returns on success of call
     - MDNSD_ERR_INVAL - When the input parameters are invalid or
                         if the function is invoked in invalid state

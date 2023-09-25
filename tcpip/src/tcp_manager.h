@@ -55,35 +55,35 @@ Microchip or any third party.
 // TCP Header Data Structure
 typedef struct
 {
-	uint16_t    SourcePort;		// Local port number
-	uint16_t    DestPort;		// Remote port number
-	uint32_t    SeqNumber;		// Local sequence number
-	uint32_t    AckNumber;		// Acknowledging remote sequence number
+    uint16_t    SourcePort;     // Local port number
+    uint16_t    DestPort;       // Remote port number
+    uint32_t    SeqNumber;      // Local sequence number
+    uint32_t    AckNumber;      // Acknowledging remote sequence number
 
-	struct
-	{
-		unsigned char Reserved3      : 4;
-		unsigned char Val            : 4;
-	} DataOffset;			// Data offset flags nibble
+    struct
+    {
+        unsigned char Reserved3      : 4;
+        unsigned char Val            : 4;
+    } DataOffset;           // Data offset flags nibble
 
-	union
-	{
-		struct
-		{
-			unsigned char flagFIN    : 1;
-			unsigned char flagSYN    : 1;
-			unsigned char flagRST    : 1;
-			unsigned char flagPSH    : 1;
-			unsigned char flagACK    : 1;
-			unsigned char flagURG    : 1;
-			unsigned char Reserved2  : 2;
-		} bits;
-		uint8_t byte;
-	} Flags;				// TCP Flags as defined in RFC
+    union
+    {
+        struct
+        {
+            unsigned char flagFIN    : 1;
+            unsigned char flagSYN    : 1;
+            unsigned char flagRST    : 1;
+            unsigned char flagPSH    : 1;
+            unsigned char flagACK    : 1;
+            unsigned char flagURG    : 1;
+            unsigned char Reserved2  : 2;
+        } bits;
+        uint8_t byte;
+    } Flags;                // TCP Flags as defined in RFC
 
-	uint16_t    Window;			// Local free RX buffer window
-	uint16_t    Checksum;		// Data payload checksum
-	uint16_t    UrgentPointer;	// Urgent pointer
+    uint16_t    Window;         // Local free RX buffer window
+    uint16_t    Checksum;       // Data payload checksum
+    uint16_t    UrgentPointer;  // Urgent pointer
 } TCP_HEADER;
 
 
@@ -97,15 +97,15 @@ typedef struct
     bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, TCPIP_TCP_MODULE_CONFIG* pTcpInit)
 
   Summary:
-	Initializes the TCP module.
+    Initializes the TCP module.
 
   Description:
-	Initializes the TCP module.  This function allocates memory for the TCP module
+    Initializes the TCP module.  This function allocates memory for the TCP module
     and registers itself with the stack manager.
     If the initialization failed it will return false.
 
   Precondition:
-	None
+    None
 
   Parameters:
     stackInit   - pointer to stack initialization data; contains heap, interfaces, etc
@@ -115,9 +115,9 @@ typedef struct
                     - sktTxBuffSize:    default TX buffer size
                     - sktRxBuffSize:    default RX buffer size
   Returns:
-  	true if initialization succeeded
+    true if initialization succeeded
     false otherwise
-  	
+    
   Remarks:
    Simple protection for calls to TCPIP_TCP_Initialize/TCPIP_TCP_Deinitialize
    from other threads is supported.

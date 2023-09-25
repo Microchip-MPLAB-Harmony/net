@@ -62,172 +62,172 @@ typedef union
 
 /*****************************************************************************
   Function:
-	void uitoa(uint16_t Value, uint8_t* Buffer)
+    void uitoa(uint16_t Value, uint8_t* Buffer)
 
   Summary:
-	Converts an unsigned integer to a decimal string.
-	
+    Converts an unsigned integer to a decimal string.
+    
   Description:
-	Converts a 16-bit unsigned integer to a null-terminated decimal string.
-	
+    Converts a 16-bit unsigned integer to a null-terminated decimal string.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	Value	- The number to be converted
-	Buffer	- Pointer in which to store the converted string
+    Value   - The number to be converted
+    Buffer  - Pointer in which to store the converted string
 
   Returns:
-  	None
+    None
   ***************************************************************************/
 void uitoa(uint16_t Value, uint8_t* Buffer)
 {
-	uint8_t i;
-	uint16_t Digit;
-	uint16_t Divisor;
-	bool Printed = false;
+    uint8_t i;
+    uint16_t Digit;
+    uint16_t Divisor;
+    bool Printed = false;
 
-	if(Value)
-	{
-		for(i = 0, Divisor = 10000; i < 5u; i++)
-		{
-			Digit = Value/Divisor;
-			if(Digit || Printed)
-			{
-				*Buffer++ = '0' + Digit;
-				Value -= Digit*Divisor;
-				Printed = true;
-			}
-			Divisor /= 10;
-		}
-	}
-	else
-	{
-		*Buffer++ = '0';
-	}
+    if(Value)
+    {
+        for(i = 0, Divisor = 10000; i < 5u; i++)
+        {
+            Digit = Value/Divisor;
+            if(Digit || Printed)
+            {
+                *Buffer++ = '0' + Digit;
+                Value -= Digit*Divisor;
+                Printed = true;
+            }
+            Divisor /= 10;
+        }
+    }
+    else
+    {
+        *Buffer++ = '0';
+    }
 
-	*Buffer = '\0';
-}			    
+    *Buffer = '\0';
+}               
 
 
 /*****************************************************************************
   Function:
-	uint8_t hexatob(uint16_t AsciiVal)
+    uint8_t hexatob(uint16_t AsciiVal)
 
   Summary:
-	Converts a hex string to a single byte.
-	
+    Converts a hex string to a single byte.
+    
   Description:
-	Converts a two-character ASCII hex string to a single packed byte.
-	
+    Converts a two-character ASCII hex string to a single packed byte.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	AsciiVal - uint16_t where the LSB is the ASCII value for the lower nibble
-					and MSB is the ASCII value for the upper nibble.  Each
-					must range from '0'-'9', 'A'-'F', or 'a'-'f'.
+    AsciiVal - uint16_t where the LSB is the ASCII value for the lower nibble
+                    and MSB is the ASCII value for the upper nibble.  Each
+                    must range from '0'-'9', 'A'-'F', or 'a'-'f'.
 
   Returns:
-  	Resulting packed byte 0x00 - 0xFF.
+    Resulting packed byte 0x00 - 0xFF.
   ***************************************************************************/
 uint8_t hexatob(uint16_t AsciiVal)
 {
     MCHP_UINT16_VAL AsciiChars;
     AsciiChars.Val = AsciiVal;
 
-	// Convert lowercase to uppercase
-	if(AsciiChars.v[1] > 'F')
-		AsciiChars.v[1] -= 'a'-'A';
-	if(AsciiChars.v[0] > 'F')
-		AsciiChars.v[0] -= 'a'-'A';
+    // Convert lowercase to uppercase
+    if(AsciiChars.v[1] > 'F')
+        AsciiChars.v[1] -= 'a'-'A';
+    if(AsciiChars.v[0] > 'F')
+        AsciiChars.v[0] -= 'a'-'A';
 
-	// Convert 0-9, A-F to 0x0-0xF
-	if(AsciiChars.v[1] > '9')
-		AsciiChars.v[1] -= 'A' - 10;
-	else
-		AsciiChars.v[1] -= '0';
+    // Convert 0-9, A-F to 0x0-0xF
+    if(AsciiChars.v[1] > '9')
+        AsciiChars.v[1] -= 'A' - 10;
+    else
+        AsciiChars.v[1] -= '0';
 
-	if(AsciiChars.v[0] > '9')
-		AsciiChars.v[0] -= 'A' - 10;
-	else
-		AsciiChars.v[0] -= '0';
+    if(AsciiChars.v[0] > '9')
+        AsciiChars.v[0] -= 'A' - 10;
+    else
+        AsciiChars.v[0] -= '0';
 
-	// Concatenate
-	return (AsciiChars.v[1]<<4) |  AsciiChars.v[0];
+    // Concatenate
+    return (AsciiChars.v[1]<<4) |  AsciiChars.v[0];
 }
 
 /*****************************************************************************
   Function:
-	uint8_t btohexa_high(uint8_t b)
+    uint8_t btohexa_high(uint8_t b)
 
   Summary:
-	Converts the upper nibble of a binary value to a hexadecimal ASCII byte.
+    Converts the upper nibble of a binary value to a hexadecimal ASCII byte.
 
   Description:
-	Converts the upper nibble of a binary value to a hexadecimal ASCII byte.
-	For example, btohexa_high(0xAE) will return 'a'.
+    Converts the upper nibble of a binary value to a hexadecimal ASCII byte.
+    For example, btohexa_high(0xAE) will return 'a'.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	b - the byte to convert
+    b - the byte to convert
 
   Returns:
-  	The upper hexadecimal ASCII byte '0'-'9' or 'a'-'f'.
+    The upper hexadecimal ASCII byte '0'-'9' or 'a'-'f'.
   ***************************************************************************/
 uint8_t btohexa_high(uint8_t b)
 {
-	b >>= 4;
-	return (b>0x9u) ? b+'a'-10:b+'0';
+    b >>= 4;
+    return (b>0x9u) ? b+'a'-10:b+'0';
 }
 
 /*****************************************************************************
   Function:
-	uint8_t btohexa_high(uint8_t b)
+    uint8_t btohexa_high(uint8_t b)
 
   Summary:
-	Converts the lower nibble of a binary value to a hexadecimal ASCII byte.
+    Converts the lower nibble of a binary value to a hexadecimal ASCII byte.
 
   Description:
-	Converts the lower nibble of a binary value to a hexadecimal ASCII byte.
-	For example, btohexa_high(0xAE) will return 'e'.
+    Converts the lower nibble of a binary value to a hexadecimal ASCII byte.
+    For example, btohexa_high(0xAE) will return 'e'.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	b - the byte to convert
+    b - the byte to convert
 
   Returns:
-  	The lower hexadecimal ASCII byte '0'-'9' or 'a'-'f'.
+    The lower hexadecimal ASCII byte '0'-'9' or 'a'-'f'.
   ***************************************************************************/
 uint8_t btohexa_low(uint8_t b)
 {
-	b &= 0x0F;
-	return (b>9u) ? b+'a'-10:b+'0';
+    b &= 0x0F;
+    return (b>9u) ? b+'a'-10:b+'0';
 }
 
 /*****************************************************************************
   Function:
-	char* strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
+    char* strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
 
   Summary:
-	Copies multiple strings to a destination
+    Copies multiple strings to a destination
 
   Description:
-	Copies multiple strings to a destination
+    Copies multiple strings to a destination
     but doesn't copy more than destSize characters.
     Useful where the destination is actually an array and an extra \0
     won't be appended to overflow the buffer
     
   Precondition:
-	- valid string pointers
+    - valid string pointers
     - destSize should be > 0
 
   Parameters:
-	destStr - Pointer to a string to be initialized with the multiple strings provided as arguments.
+    destStr - Pointer to a string to be initialized with the multiple strings provided as arguments.
 
     destSize    - the maximum size of the destStr field, that cannot be exceeded.
                   An \0 won't be appended if the resulting size is > destSize
@@ -236,9 +236,9 @@ uint8_t btohexa_low(uint8_t b)
 
     ...         - variable number of arguments
     
-	
+    
   Returns:
-	Length of the destination string, terminating \0 (if exists) not included
+    Length of the destination string, terminating \0 (if exists) not included
   ***************************************************************************/
 size_t strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
 {

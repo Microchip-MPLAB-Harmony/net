@@ -67,7 +67,7 @@ Microchip or any third party.
 // The amount of memory needed per descriptor is not high (around 24 bytes)
 // so when high MAC TX performance is needed
 // make sure that this number is >= 8.
-#define TCPIP_EMAC_TX_DESCRIPTORS	8
+#define TCPIP_EMAC_TX_DESCRIPTORS   8
 
 // Number of the RX descriptors to be created.
 // If not using the run time replenish mechanism (see below)
@@ -75,7 +75,7 @@ Microchip or any third party.
 // TCPIP_EMAC_RX_DEDICATED_BUFFERS;
 // Otherwise it should be bigger than the sum of dedicated + non-dedicated buffers:
 // TCPIP_EMAC_RX_DESCRIPTORS > TCPIP_EMAC_RX_DEDICATED_BUFFERS + replenish_buffers
-#define TCPIP_EMAC_RX_DESCRIPTORS	10
+#define TCPIP_EMAC_RX_DESCRIPTORS   10
 
 // Number of MAC dedicated RX packet buffers.
 // These buffers are always owned by the MAC.
@@ -139,9 +139,9 @@ Microchip or any third party.
 // The size should be enough to accommodate any network received packet.
 // If the packets are larger, they will have to take multiple RX buffers
 // and the packet manipulation is less efficient.
-//#define	TCPIP_EMAC_RX_BUFF_SIZE	512
+//#define   TCPIP_EMAC_RX_BUFF_SIZE 512
 // Together with TCPIP_EMAC_RX_DEDICATED_BUFFERS it has impact on TCPIP_STACK_DRAM_SIZE setting.
-#define	TCPIP_EMAC_RX_BUFF_SIZE	1536
+#define TCPIP_EMAC_RX_BUFF_SIZE 1536
 
 // MAC maximum number of supported RX fragments.
 // Based on the values of TCPIP_EMAC_MAX_FRAME and TCPIP_EMAC_RX_BUFF_SIZE

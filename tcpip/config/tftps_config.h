@@ -85,6 +85,6 @@ Microchip or any third party.
 #define TCPIP_TFTPS_DEFAULT_TIMEOUT           (10) 
 
 // The default length of the file name is defined to 64 bytes.
-#define TCPIP_TFTPS_FILENAME_LEN	64
+#define TCPIP_TFTPS_FILENAME_LEN    64
 
 #endif  // _TFTPS_CONFIG_H_

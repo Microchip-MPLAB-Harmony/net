@@ -79,7 +79,7 @@ Microchip or any third party.
 #define SET_REQUEST             (0xa3)
 #define TRAP                    (0xa4)
 #define GET_BULK_REQUEST        (0xa5)
-#define REPORT_RESPONSE		(0xa8)
+#define REPORT_RESPONSE     (0xa8)
 
 
 // Section:  SNMP UDP ports
@@ -112,26 +112,26 @@ Microchip or any third party.
 // Section:  SNMP specific errors
 typedef enum
 {
-    SNMP_NO_ERR = 0,			//SNMP no error
-    SNMP_TOO_BIG,			    //Value too big error
-    SNMP_NO_SUCH_NAME,			//No such name in MIB error
-    SNMP_BAD_VALUE,			    //Not assignable value for the var error
-    SNMP_READ_ONLY,			    //Read-only variable, write not allowed err
-    SNMP_GEN_ERR,			    //SNMP gen error
-    SNMP_NO_ACCESS,			    //Access to modify or read not granted err
-    SNMP_WRONG_TYPE,			//Variable data type wrong error
-    SNMP_WRONG_LENGTH,			//Wrong data length error
-    SNMP_WRONG_ENCODING,		//Wrong encoding error
-    SNMP_WRONG_VALUE,			//Wrong value for the var type
-    SNMP_NO_CREATION,			//No creating error
-    SNMP_INCONSISTENT_VAL,		//Inconsistent value error
+    SNMP_NO_ERR = 0,            //SNMP no error
+    SNMP_TOO_BIG,               //Value too big error
+    SNMP_NO_SUCH_NAME,          //No such name in MIB error
+    SNMP_BAD_VALUE,             //Not assignable value for the var error
+    SNMP_READ_ONLY,             //Read-only variable, write not allowed err
+    SNMP_GEN_ERR,               //SNMP gen error
+    SNMP_NO_ACCESS,             //Access to modify or read not granted err
+    SNMP_WRONG_TYPE,            //Variable data type wrong error
+    SNMP_WRONG_LENGTH,          //Wrong data length error
+    SNMP_WRONG_ENCODING,        //Wrong encoding error
+    SNMP_WRONG_VALUE,           //Wrong value for the var type
+    SNMP_NO_CREATION,           //No creating error
+    SNMP_INCONSISTENT_VAL,      //Inconsistent value error
     SNMP_RESOURCE_UNAVAILABE,   //Resource unavailable error
-    SNMP_COMMIT_FAILED,			//Modification update failed error
-    SNMP_UNDO_FAILED,			//Modification undo failed
-    SNMP_AUTH_ERROR,			//Authorization failed error
-    SNMP_NOT_WRITABLE,			//Variable read only
-    SNMP_INCONSISTENT_NAME,		//Inconsistent name
-    SNMP_NO_SUCH_OBJ=128,		//No such object error
+    SNMP_COMMIT_FAILED,         //Modification update failed error
+    SNMP_UNDO_FAILED,           //Modification undo failed
+    SNMP_AUTH_ERROR,            //Authorization failed error
+    SNMP_NOT_WRITABLE,          //Variable read only
+    SNMP_INCONSISTENT_NAME,     //Inconsistent name
+    SNMP_NO_SUCH_OBJ=128,       //No such object error
     SNMP_NO_SUCH_INSTANCE=129,  //No such instance error
     SNMP_END_OF_MIB_VIEW=130,   //Reached to end of MIB error
     SNMP_PRIVACY_ERROR          // SNMP Privacy error
@@ -141,25 +141,25 @@ typedef enum
 // Section:  SNMP specific data types
 typedef enum
 {
-    INT8_VAL		= 0x00, 	//8 bit integer value
-    INT16_VAL		= 0x01, 	//16 bit integer value
-    INT32_VAL		= 0x02, 	//32 bit integer value
-    BYTE_ARRAY		= 0x03, 	//Array of bytes
-    ASCII_STRING	= 0x04, 	//ASCII string type
-    IPADDRESS		= 0x05, 	//IP address variable
-    COUNTER32		= 0x06, 	//32 bit counter variable
-    TIME_TICKS_VAL	= 0x07, 	//Timer value counter variable
-    GAUGE32 		= 0x08, 	//32-bit guage variable
-    OID_VAL 		= 0x09, 	//Object id value var
-    DATA_TYPE_UNKNOWN			//Unknown data type
+    INT8_VAL        = 0x00,     //8 bit integer value
+    INT16_VAL       = 0x01,     //16 bit integer value
+    INT32_VAL       = 0x02,     //32 bit integer value
+    BYTE_ARRAY      = 0x03,     //Array of bytes
+    ASCII_STRING    = 0x04,     //ASCII string type
+    IPADDRESS       = 0x05,     //IP address variable
+    COUNTER32       = 0x06,     //32 bit counter variable
+    TIME_TICKS_VAL  = 0x07,     //Timer value counter variable
+    GAUGE32         = 0x08,     //32-bit guage variable
+    OID_VAL         = 0x09,     //Object id value var
+    DATA_TYPE_UNKNOWN           //Unknown data type
 } SNMP_DATA_TYPE;
 
 
 // Section:  ASN data type info
 typedef struct
 {
-    uint8_t asnType;	//ASN data type
-    uint8_t asnLen;	//ASN data length
+    uint8_t asnType;    //ASN data type
+    uint8_t asnLen; //ASN data length
 } SNMP_DATA_TYPE_INFO;
 
 typedef enum
@@ -173,14 +173,14 @@ typedef enum
 // Section:  SNMP PDU information database
 typedef struct
 {
-    uint32_t    requestID;		//SNMP request id
-    uint8_t	nonRepeators;	    //# non repeaters in the request
-    uint8_t	maxRepetitions;     //# max repeaters in the request
-    uint8_t	pduType;		    //SNMP PDU type
-    uint8_t	errorStatus;	    //PDU error status
-    uint8_t	erroIndex;		    //PDU error Index
-    uint8_t	snmpVersion;	    //SNMP version
-    uint16_t	pduLength;		//PDU length
+    uint32_t    requestID;      //SNMP request id
+    uint8_t nonRepeators;       //# non repeaters in the request
+    uint8_t maxRepetitions;     //# max repeaters in the request
+    uint8_t pduType;            //SNMP PDU type
+    uint8_t errorStatus;        //PDU error status
+    uint8_t erroIndex;          //PDU error Index
+    uint8_t snmpVersion;        //SNMP version
+    uint16_t    pduLength;      //PDU length
 } PDU_INFO;
 
 typedef struct
@@ -203,16 +203,16 @@ typedef struct
 typedef struct
 {
     char community[TCPIP_SNMP_NOTIFY_COMMUNITY_LEN]; //Community name array
-    uint8_t communityLen;		      //Community name length
-    SNMP_ID agentIDVar; 		      //Agent id for trap identification
-    uint8_t notificationCode;		  //Trap notification code
-    UDP_SOCKET socket;			      //UDP socket number
+    uint8_t communityLen;             //Community name length
+    SNMP_ID agentIDVar;               //Agent id for trap identification
+    uint8_t notificationCode;         //Trap notification code
+    UDP_SOCKET socket;                //UDP socket number
 #ifdef TCPIP_STACK_USE_IPV6
     UDP_SOCKET socketv6;
 #endif
-    uint32_t    timestamp;		      //Time stamp for trap
+    uint32_t    timestamp;            //Time stamp for trap
 //#if defined(SNMP_STACK_USE_V2_TRAP) || defined(SNMP_V1_V2_TRAP_WITH_SNMPV3)
-    SNMP_ID trapIDVar;			      // SNMPV2 specific trap
+    SNMP_ID trapIDVar;                // SNMPV2 specific trap
 //#endif
     TCPIP_NET_HANDLE snmpTrapInf;     // interface we use for the SNMP TRAP
 } SNMP_NOTIFY_INFO;
@@ -221,7 +221,7 @@ typedef struct
 
 /****************************************************************************
   Section:
-	Data Structures and Enumerations
+    Data Structures and Enumerations
   ***************************************************************************/
 
 // Section:  SNMP object information
@@ -230,14 +230,14 @@ typedef union
     struct
     {
         unsigned int bIsDistantSibling : 1; //Object has distant sibling node
-        unsigned int bIsConstant : 1;		//Object is constant
-        unsigned int bIsSequence : 1;		//Object is sequence
-        unsigned int bIsSibling : 1;		//Sibling node flag
+        unsigned int bIsConstant : 1;       //Object is constant
+        unsigned int bIsSequence : 1;       //Object is sequence
+        unsigned int bIsSibling : 1;        //Sibling node flag
 
-        unsigned int bIsParent : 1; 		//Node is parent flag
-        unsigned int bIsEditable : 1;		//Node is editable flag
-        unsigned int bIsAgentID : 1;		//Node has agent id flag
-        unsigned int bIsIDPresent : 1;		//Id present flag
+        unsigned int bIsParent : 1;         //Node is parent flag
+        unsigned int bIsEditable : 1;       //Node is editable flag
+        unsigned int bIsAgentID : 1;        //Node has agent id flag
+        unsigned int bIsIDPresent : 1;      //Id present flag
     } Flags;
     uint8_t Val;    //MIB Obj info as byte value
 } MIB_INFO;
@@ -260,9 +260,9 @@ typedef union
 {
     struct
     {
-        unsigned int bIsOID:1;	//value is OID/index int flag
+        unsigned int bIsOID:1;  //value is OID/index int flag
     } Flags;
-    uint8_t Val;					//value is OID/index byte flag
+    uint8_t Val;                    //value is OID/index byte flag
 } SNMP_INDEX_INFO;
 
 
@@ -271,10 +271,10 @@ typedef union
 //Max variable in a request supported 15
 typedef struct 
 {
-    uint16_t noSuchObjectErr;		//Var list no such obj errors flags
-    uint16_t noSuchNameErr; 		//Var list no such name error
-    uint16_t noSuchInstanceErr; 	//Var list no such instance error
-    uint16_t endOfMibViewErr;		//Var list end of MIB view error
+    uint16_t noSuchObjectErr;       //Var list no such obj errors flags
+    uint16_t noSuchNameErr;         //Var list no such name error
+    uint16_t noSuchInstanceErr;     //Var list no such instance error
+    uint16_t endOfMibViewErr;       //Var list end of MIB view error
 }reqVarErrStatus;  
 
 //This is the list of SNMP action a remote NMS can perform.
@@ -284,15 +284,15 @@ typedef struct
 //string.
 typedef enum
 {
-    SNMP_GET            = 0xa0,	//SNMP GET identifier
+    SNMP_GET            = 0xa0, //SNMP GET identifier
     SNMP_GET_NEXT       = 0xa1, //SNMP GET_NEXT identifier
-    SNMP_GET_RESPONSE   = 0xa2,	//SNMP GET_RESPONSE identifier
-    SNMP_SET            = 0xa3,	//SNMP SET identifier
-    SNMP_TRAP           = 0xa4,	//SNMP TRAP identifier
-    SNMP_V2C_GET_BULK	= 0xa5,	//SNMP GET_BULK identifier
-    SNMP_V2_TRAP		= 0xa7, //SNMP v2 Trap Identifier
-    SNMPV3_ENCRYPTION	= 0x04,
-    SNMP_ACTION_UNKNOWN = 0	//SNMP requested action unknown
+    SNMP_GET_RESPONSE   = 0xa2, //SNMP GET_RESPONSE identifier
+    SNMP_SET            = 0xa3, //SNMP SET identifier
+    SNMP_TRAP           = 0xa4, //SNMP TRAP identifier
+    SNMP_V2C_GET_BULK   = 0xa5, //SNMP GET_BULK identifier
+    SNMP_V2_TRAP        = 0xa7, //SNMP v2 Trap Identifier
+    SNMPV3_ENCRYPTION   = 0x04,
+    SNMP_ACTION_UNKNOWN = 0 //SNMP requested action unknown
 } SNMP_ACTION;
 
 
@@ -303,7 +303,7 @@ typedef enum
 }INOUT_SNMP_PDU;
 
 typedef struct 
-{	
+{   
     uint8_t* wholeMsgHead;
     uint8_t* snmpMsgHead;
     uint16_t wholeMsgLen;
@@ -320,17 +320,17 @@ typedef struct
 // Section:  SNMP MIB variable object information
 typedef struct
 {
-    uint32_t		hNode;		//Node location in the MIB
-    uint8_t		oid;		//Object Id
-    MIB_INFO		nodeInfo;	//Node info
-    SNMP_DATA_TYPE	dataType;	//Data type
-    SNMP_ID 		id; 		//SNMP Id
-    uint16_t    	dataLen;	//Data length
-    uint32_t		hData;		//Data
-    uint32_t		hSibling;	//Sibling info
-    uint32_t		hChild; 	//Child info
-    uint8_t		index;		//Index of object
-    uint8_t		indexLen;	//Index length
+    uint32_t        hNode;      //Node location in the MIB
+    uint8_t     oid;        //Object Id
+    MIB_INFO        nodeInfo;   //Node info
+    SNMP_DATA_TYPE  dataType;   //Data type
+    SNMP_ID         id;         //SNMP Id
+    uint16_t        dataLen;    //Data length
+    uint32_t        hData;      //Data
+    uint32_t        hSibling;   //Sibling info
+    uint32_t        hChild;     //Child info
+    uint8_t     index;      //Index of object
+    uint8_t     indexLen;   //Index length
 } OID_INFO;
 
 typedef struct
@@ -360,7 +360,7 @@ typedef struct
 
 /****************************************************************************
   Section:
-	Global Variables
+    Global Variables
   ***************************************************************************/
 
 typedef struct
@@ -368,7 +368,7 @@ typedef struct
     uint8_t gOIDCorrespondingSnmpMibID;
 
 //#if defined(SNMP_STACK_USE_V2_TRAP)
-    uint8_t	gSetTrapSendFlag;
+    uint8_t gSetTrapSendFlag;
 //#endif
 
     bool getZeroInstance;
@@ -513,24 +513,24 @@ bool TCPIP_SNMP_DataCopyToProcessBuffer(uint8_t val ,SNMP_BUFFER_DATA *putbuf);
 /*
   Function:
     IPV6_EVENT_TYPE TCPIP_SNMP_EventNotifyGet(TCPIP_NET_HANDLE hNet);
-	
+    
   Summary:
     To Get the IPv6 DHCP event notification.
-  	
+    
   Description:
     This routine is used to get the DHCP event with IPv6 notification if the IPv6 unicast address
     is updated.
-  	
-  Precondition	:
+    
+  Precondition  :
     TCPIP_SNMP_Initialize() is called.
-		
+        
   Parameters:
     hNet - Interface    
   Return Values:
     IPV6_EVENT_TYPE
-	
+    
   Remarks:
-  	None.
+    None.
 ***************************************************************************/
 
 IPV6_EVENT_TYPE TCPIP_SNMP_EventNotifyGet(TCPIP_NET_HANDLE hNet);

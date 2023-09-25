@@ -1467,7 +1467,7 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
 // all API operations need to access a lock/mutex!
 // since they mess with the global hash descriptor and some user threads add, other delete from this global hash!!!!
 TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize)
+                      TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize)
 {
     int  ifIx;
     bool isSsm;
@@ -1534,7 +1534,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
 }
 
 TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize)
+                      TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize)
 {
     int ifIx;
     TCPIP_IGMP_RESULT res;

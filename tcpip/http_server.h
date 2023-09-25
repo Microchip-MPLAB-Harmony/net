@@ -2047,7 +2047,7 @@ TCPIP_HTTP_IO_RESULT template_ConnectionGetExecute
     network transport buffer.
     The connection byteCount (see TCPIP_HTTP_ConnectionByteCountGet
     will indicate the number of bytes remaining to be read before the 
-	browser request is complete.
+    browser request is complete.
 
     Since data is still in the network transport buffer, the application must call
     TCPIP_HTTP_ConnectionRead in order to retrieve bytes.  When this is done,
@@ -2187,7 +2187,7 @@ uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_CONN_HANDLE connHandle,
     connection data and will be available with 
     TCPIP_HTTP_ConnectionIsAuthorizedGet in any of the 
     template_ConnectionGetExecute, template_ConnectionPostExecute, or 
-	TCPIP_HTTP_Print_varname callbacks.
+    TCPIP_HTTP_Print_varname callbacks.
 
   Precondition:
     None.
@@ -2293,7 +2293,7 @@ uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_CONN_HANDLE connHandle,
     especially when managing its output state.  Exercise caution when using
     global or static variables inside this routine.  Use the connection
     callbackPos or the connection data buffer for storage associated with 
-	individual requests.
+    individual requests.
 
     The varDcpt variable descriptor is valid only in the context of this call.
     Any parameters that are needed for further processing should be copied
@@ -2742,7 +2742,7 @@ uint16_t TCPIP_HTTP_ConnectionReadIsReady(TCPIP_HTTP_CONN_HANDLE connHandle);
 
   Description:
     This function reads an array of data bytes from the connection RX buffer.  
-	The data is removed from the FIFO in the process.
+    The data is removed from the FIFO in the process.
 
   Precondition:
     connHandle - a valid HTTP connection.
@@ -3161,7 +3161,7 @@ TCPIP_HTTP_USER_HANDLE    TCPIP_HTTP_UserHandlerRegister(size_t instIx,  const T
     hHttp   - A handle returned by a previous call to TCPIP_HTTP_UserHandlerRegister
 
   Returns:
-    - true	- if the call succeeded and the user handle was de-registered
+    - true  - if the call succeeded and the user handle was de-registered
     - false - if no such handler is registered 
 
   Remarks:

@@ -72,7 +72,7 @@ Microchip or any third party.
 
 typedef struct  _TAG_IPV4_FILTER_LIST_NODE
 {
-	struct _TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
+    struct _TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
                                                     // makes it valid SGL_LIST_NODE node
     IPV4_FILTER_FUNC                    handler;    // handler to be called for the filter
     uint8_t                             active;     // the filter is active

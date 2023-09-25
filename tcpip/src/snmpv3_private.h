@@ -87,13 +87,13 @@ pduType parameters.
 typedef struct  registerContextEngineID
 {
     uint8_t* contextEngineID; //take responsibility for this one
-    uint8_t pduType;			//the pduType(s) to be registered
+    uint8_t pduType;            //the pduType(s) to be registered
 }statusInformation; //success or errorIndication
 
 struct unregisterContextEngineID 
 {
     uint8_t* contextEngineID; //give up responsibility for this one
-    uint8_t pduType;			//the pduType(s) to be unregistered
+    uint8_t pduType;            //the pduType(s) to be unregistered
 };
 
 /* Snmp Message Processing Model */
@@ -101,16 +101,16 @@ struct unregisterContextEngineID
 typedef enum
 {
     /*Octet's Least significant three bits: Reportable, PrivFlag, AuthFlag */
-    NO_REPORT_NO_PRIVACY_NO_AUTH 			=0x00, /* 00000000b */
-    NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED		=0x01, /* 00000001b */
-    NO_REPORT_PRIVACY_PROVIDED_BUT_NO_AUTH		=0x02, /* 00000010b Priv without Auth is not allowed*/
-    NO_REPORT_PRIVACY_AND_AUTH_PROVIDED			=0x03, /* 00000011b */
+    NO_REPORT_NO_PRIVACY_NO_AUTH            =0x00, /* 00000000b */
+    NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED      =0x01, /* 00000001b */
+    NO_REPORT_PRIVACY_PROVIDED_BUT_NO_AUTH      =0x02, /* 00000010b Priv without Auth is not allowed*/
+    NO_REPORT_PRIVACY_AND_AUTH_PROVIDED         =0x03, /* 00000011b */
 
-    REPORT2REQ_NO_PRIVACY_NO_AUTH			=0x04, /* 00000100b */
-    REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED		=0x05, /* 00000101b */
-    REPORT2REQ_PRIVACY_PROVIDED_BUT_NO_AUTH		=0x06, /* 00000110b Priv without Auth is not allowed*/
-    REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED		=0x07, /* 00000111b */
-    INVALID_MSG						=0xFF
+    REPORT2REQ_NO_PRIVACY_NO_AUTH           =0x04, /* 00000100b */
+    REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED     =0x05, /* 00000101b */
+    REPORT2REQ_PRIVACY_PROVIDED_BUT_NO_AUTH     =0x06, /* 00000110b Priv without Auth is not allowed*/
+    REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED        =0x07, /* 00000111b */
+    INVALID_MSG                     =0xFF
 
 }REPORT_FLAG_AND_SECURITY_LEVEL_FLAGS;
 
@@ -144,22 +144,22 @@ typedef enum
 Generate Outgoing Request or Notification 
 
 statusInformation =  -- sendPduHandle if success
-				   -- errorIndication if failure
+                   -- errorIndication if failure
 */
 
 struct dispatcherStatusInfo
 {
-    uint8_t transportDomain;		//transport domain to be used
-    uint32_t transportAddress;	//transport address to be used
+    uint8_t transportDomain;        //transport domain to be used
+    uint32_t transportAddress;  //transport address to be used
     uint8_t messageProcessingModel;//typically, SNMP version
-    uint8_t securityModel; 		//Security Model to use
-    uint8_t* securityName; 		//on behalf of this principal
-    uint8_t securityLevel;			//Level of Security requested
-    uint8_t* contextEngineID; 	//data from/at this entity
-    uint8_t* contextName;			//data from/in this context
-    uint8_t pduVersion; 			//the version of the PDU
-    uint8_t* PDU; 					//SNMP Protocol Data Unit
-    bool expectResponse; 		//true or false
+    uint8_t securityModel;      //Security Model to use
+    uint8_t* securityName;      //on behalf of this principal
+    uint8_t securityLevel;          //Level of Security requested
+    uint8_t* contextEngineID;   //data from/at this entity
+    uint8_t* contextName;           //data from/in this context
+    uint8_t pduVersion;             //the version of the PDU
+    uint8_t* PDU;                   //SNMP Protocol Data Unit
+    bool expectResponse;        //true or false
 };
 
 /*
@@ -173,17 +173,17 @@ result = SUCCESS or FAILURE
 
 struct dispathcerReturnResponsePdu
 {
-    uint8_t messageProcessingModel;	//typically, SNMP version
-    uint8_t securityModel;				//Security Model in use
-    uint8_t* securityName;			//on behalf of this principal
-    uint8_t securityLevel;				//same as on incoming request
-    uint8_t* contextEngineID;			//data from/at this SNMP entity
-    uint8_t* contextName;				//data from/in this context
-    uint8_t pduVersion;				//the version of the PDU
-    uint8_t* PDU;						//SNMP Protocol Data Unit
+    uint8_t messageProcessingModel; //typically, SNMP version
+    uint8_t securityModel;              //Security Model in use
+    uint8_t* securityName;          //on behalf of this principal
+    uint8_t securityLevel;              //same as on incoming request
+    uint8_t* contextEngineID;           //data from/at this SNMP entity
+    uint8_t* contextName;               //data from/in this context
+    uint8_t pduVersion;             //the version of the PDU
+    uint8_t* PDU;                       //SNMP Protocol Data Unit
     uint32_t maxSizeResponseScopedPDU;//maximum size sender can accept
-    uint32_t stateReference;			//reference to state information as presented with the request
-    statusInformation statInfo;		//success or errorIndication, error counter OID/value if error
+    uint32_t stateReference;            //reference to state information as presented with the request
+    statusInformation statInfo;     //success or errorIndication, error counter OID/value if error
 };
 
 
@@ -197,16 +197,16 @@ incoming SNMP Response PDU to an application:
 
 struct processResponsePdu //process Response PDU
 { 
-    uint8_t messageProcessingModel;	//typically, SNMP version
-    uint8_t securityModel;				//Security Model in use
-    uint8_t* securityName;			//on behalf of this principal
-    uint8_t securityLevel;				//Level of Security
-    uint8_t* contextEngineID;			//data from/at this SNMP entity
-    uint8_t* contextName;				//data from/in this context
-    uint8_t pduVersion;				//the version of the PDU
-    uint8_t* PDU;						//SNMP Protocol Data Unit
-    statusInformation statInfo;		//success or errorIndication
-};			
+    uint8_t messageProcessingModel; //typically, SNMP version
+    uint8_t securityModel;              //Security Model in use
+    uint8_t* securityName;          //on behalf of this principal
+    uint8_t securityLevel;              //Level of Security
+    uint8_t* contextEngineID;           //data from/at this SNMP entity
+    uint8_t* contextName;               //data from/in this context
+    uint8_t pduVersion;             //the version of the PDU
+    uint8_t* PDU;                       //SNMP Protocol Data Unit
+    statusInformation statInfo;     //success or errorIndication
+};          
 
 /*=======================================================================================*/
 
@@ -229,20 +229,20 @@ preparing an outgoing SNMP Request or Notification Message
 
 struct MsgProcModPrepareOutgoingMessage
 {
-    uint8_t transportDomain;		//transport domain to be used
-    uint32_t transportAddress;	//transport address to be used
+    uint8_t transportDomain;        //transport domain to be used
+    uint32_t transportAddress;  //transport address to be used
     uint8_t messageProcessingModel;//typically, SNMP version
-    uint8_t securityModel;			//Security Model to use
-    uint8_t* securityName;		//on behalf of this principal
-    uint8_t securityLevel;			//Level of Security requested
-    uint8_t* contextEngineID;		//data from/at this entity
-    uint8_t* contextName;			//data from/in this context
-    uint8_t pduVersion;			//the version of the PDU
-    uint8_t* PDU;					//SNMP Protocol Data Unit
-    bool expectResponse;		//true or false
-    uint8_t destTransportDomain;	//destination transport domain
+    uint8_t securityModel;          //Security Model to use
+    uint8_t* securityName;      //on behalf of this principal
+    uint8_t securityLevel;          //Level of Security requested
+    uint8_t* contextEngineID;       //data from/at this entity
+    uint8_t* contextName;           //data from/in this context
+    uint8_t pduVersion;         //the version of the PDU
+    uint8_t* PDU;                   //SNMP Protocol Data Unit
+    bool expectResponse;        //true or false
+    uint8_t destTransportDomain;    //destination transport domain
     uint32_t destTransportAddress;//destination transport address
-    uint8_t* outgoingMessage;		//the message to send
+    uint8_t* outgoingMessage;       //the message to send
     uint32_t outgoingMessageLength; //its length
 };
 
@@ -258,21 +258,21 @@ result = -- SUCCESS or FAILURE
 */
 struct MsgProcModPrepareResponseMessage
 {
-    uint8_t messageProcessingModel;	//typically, SNMP version
-    uint8_t securityModel;  			//same as on incoming request
-    uint8_t* securityName;  			//same as on incoming request
-    uint8_t securityLevel;  			//same as on incoming request
-    uint8_t* contextEngineID;  		//data from/at this SNMP entity
-    uint8_t* contextName;  			//data from/in this context
-    uint8_t pduVersion;  				//the version of the PDU
-    uint8_t* PDU;  					//SNMP Protocol Data Unit
+    uint8_t messageProcessingModel; //typically, SNMP version
+    uint8_t securityModel;              //same as on incoming request
+    uint8_t* securityName;              //same as on incoming request
+    uint8_t securityLevel;              //same as on incoming request
+    uint8_t* contextEngineID;       //data from/at this SNMP entity
+    uint8_t* contextName;           //data from/in this context
+    uint8_t pduVersion;                 //the version of the PDU
+    uint8_t* PDU;                   //SNMP Protocol Data Unit
     uint32_t maxSizeResponseScopedPDU;//maximum size able to accept
-    uint32_t stateReference;  		//reference to state information as presented with the request
+    uint32_t stateReference;        //reference to state information as presented with the request
     statusInformation statInfo;//success or errorIndication, error counter OID/value if error
-    uint8_t destTransportDomain;  		//destination transport domain
-    uint32_t destTransportAddress;  	//destination transport address
-    uint8_t* outgoingMessage;  		//the message to send
-    uint32_t outgoingMessageLength;  	//its length
+    uint8_t destTransportDomain;        //destination transport domain
+    uint32_t destTransportAddress;      //destination transport address
+    uint8_t* outgoingMessage;       //the message to send
+    uint32_t outgoingMessageLength;     //its length
 };
 
 
@@ -287,22 +287,22 @@ result = -- SUCCESS or errorIndication
 */
 struct MsgProcModPrepareDataElements
 {
-    uint8_t transportDomain;		//origin transport domain
-    uint32_t transportAddress; 	//origin transport address
-    uint8_t* wholeMsg; 			//as received from the network
-    uint32_t wholeMsgLength; 		//as received from the network
+    uint8_t transportDomain;        //origin transport domain
+    uint32_t transportAddress;  //origin transport address
+    uint8_t* wholeMsg;          //as received from the network
+    uint32_t wholeMsgLength;        //as received from the network
     uint8_t messageProcessingModel;//typically, SNMP version
-    uint8_t securityModel; 		//Security Model to use
-    uint8_t* securityName; 		//on behalf of this principal
-    uint8_t securityLevel; 		//Level of Security requested
-    uint8_t* contextEngineID; 	//data from/at this entity
-    uint8_t* contextName; 		//data from/in this context
-    uint8_t pduVersion; 			//the version of the PDU
-    uint8_t* PDU ; 				//SNMP Protocol Data Unit
-    uint8_t pduType ; 				//SNMP PDU type
+    uint8_t securityModel;      //Security Model to use
+    uint8_t* securityName;      //on behalf of this principal
+    uint8_t securityLevel;      //Level of Security requested
+    uint8_t* contextEngineID;   //data from/at this entity
+    uint8_t* contextName;       //data from/in this context
+    uint8_t pduVersion;             //the version of the PDU
+    uint8_t* PDU ;              //SNMP Protocol Data Unit
+    uint8_t pduType ;               //SNMP PDU type
     uint32_t maxSizeResponseScopedPDU; //maximum size sender can accept
-    statusInformation statInfo; 	//success or errorIndication error counter OID/value if error
-    uint32_t stateReference; 		//reference to state information to be used for possible Response
+    statusInformation statInfo;     //success or errorIndication error counter OID/value if error
+    uint32_t stateReference;        //reference to state information to be used for possible Response
 };
 
 
@@ -323,12 +323,12 @@ statusInformation = -- success or errorIndication
 
 struct AccessCtrlSubSysIsAccessAllowed
 {
-    uint8_t securityModel; 	//Security Model in use
-    uint8_t* securityName;	//principal who wants to access
-    uint8_t securityLevel;	 	//Level of Security
-    uint8_t viewType; 			//read, write, or notify view
-    uint8_t* contextName; 	//context containing variableName
-    uint8_t* variableName; 	//OID for the managed object
+    uint8_t securityModel;  //Security Model in use
+    uint8_t* securityName;  //principal who wants to access
+    uint8_t securityLevel;      //Level of Security
+    uint8_t viewType;           //read, write, or notify view
+    uint8_t* contextName;   //context containing variableName
+    uint8_t* variableName;  //OID for the managed object
 };
 
 
@@ -361,21 +361,21 @@ typedef enum
     ADMIN_ASSIGNED_OCTETS=0x05,
     RESERVED_UNUSED=0x06, //6 to 127 are reserved and unused
     ENTERPRISE_DEFINED=128 //128 to 255 as defined by the enterprise maximum remaining length
-}SNMP_ENGNID_OCTET_IDENTIFIER_VAL;	//The fifth octet indicates how the rest (6th and following octets) are formatted. Refer to RFC3411 section5 Page# 41	
+}SNMP_ENGNID_OCTET_IDENTIFIER_VAL;  //The fifth octet indicates how the rest (6th and following octets) are formatted. Refer to RFC3411 section5 Page# 41   
 
 struct SecuritySysGenerateRequestMsg
 {
-    uint8_t messageProcessingModel; 	//typically, SNMP version
-    uint8_t* globalData; 				//message header, admin data
-    uint32_t maxMessageSize; 			//of the sending SNMP entity
-    uint8_t securityModel; 			//for the outgoing message
-    uint8_t* securityEngineID ; 		//authoritative SNMP entity
-    uint8_t* securityName;			//on behalf of this principal
-    uint8_t securityLevel; 			//Level of Security requested
-    uint8_t* scopedPDU; 				//message (plaintext) payload
-    //OUT securityParameters; 		//filled in by Security Module
-    uint8_t* wholeMsg ; 				//complete generated message
-    uint32_t wholeMsgLength; 			//length of the generated message
+    uint8_t messageProcessingModel;     //typically, SNMP version
+    uint8_t* globalData;                //message header, admin data
+    uint32_t maxMessageSize;            //of the sending SNMP entity
+    uint8_t securityModel;          //for the outgoing message
+    uint8_t* securityEngineID ;         //authoritative SNMP entity
+    uint8_t* securityName;          //on behalf of this principal
+    uint8_t securityLevel;          //Level of Security requested
+    uint8_t* scopedPDU;                 //message (plaintext) payload
+    //OUT securityParameters;       //filled in by Security Module
+    uint8_t* wholeMsg ;                 //complete generated message
+    uint32_t wholeMsgLength;            //length of the generated message
 };
 
 /*
@@ -388,16 +388,16 @@ Response message:
 
 struct SecuritySysGenerateResponseMsg
 {
-    uint8_t messageProcessingModel; 	//typically, SNMP version
-    uint8_t* globalData; 				//message header, admin data
-    uint32_t maxMessageSize; 			//of the sending SNMP entity
-    uint8_t securityModel; 			//for the outgoing message
-    uint8_t* securityEngineID; 		//authoritative SNMP entity
-    uint8_t* securityName;			//on behalf of this principal
-    uint8_t securityLevel; 			//for the outgoing message
-    uint8_t* scopedPDU; 				//message (plaintext) payload
-    uint8_t* wholeMsg;	 			//complete generated message
-    uint32_t wholeMsgLength; 		//length of the generated message
+    uint8_t messageProcessingModel;     //typically, SNMP version
+    uint8_t* globalData;                //message header, admin data
+    uint32_t maxMessageSize;            //of the sending SNMP entity
+    uint8_t securityModel;          //for the outgoing message
+    uint8_t* securityEngineID;      //authoritative SNMP entity
+    uint8_t* securityName;          //on behalf of this principal
+    uint8_t securityLevel;          //for the outgoing message
+    uint8_t* scopedPDU;                 //message (plaintext) payload
+    uint8_t* wholeMsg;              //complete generated message
+    uint32_t wholeMsgLength;        //length of the generated message
 };
 
 /* 
@@ -429,7 +429,7 @@ information
 
 struct StateRelease
 {
-    uint32_t stateReference; 	//handle of reference to be released
+    uint32_t stateReference;    //handle of reference to be released
 };
 
 // SNMPv3
@@ -484,31 +484,31 @@ Dispatcher provides the following primitive to pass an incoming SNMP PDU to an a
 
 typedef struct
 {
-    uint8_t messageProcessingModel;	//typically, SNMP version
-    uint8_t securityModel;				//Security Model in use
-    uint8_t* securityName;			//on behalf of this principal
-    uint8_t securityLevel;				//Level of Security
-    uint8_t* contextEngineID;			//data from/at this SNMP entity
-    uint8_t* contextName;				//data from/in this context
-    uint8_t pduVersion;				//the version of the PDU
-    uint8_t* PDU;						//SNMP Protocol Data Unit
+    uint8_t messageProcessingModel; //typically, SNMP version
+    uint8_t securityModel;              //Security Model in use
+    uint8_t* securityName;          //on behalf of this principal
+    uint8_t securityLevel;              //Level of Security
+    uint8_t* contextEngineID;           //data from/at this SNMP entity
+    uint8_t* contextName;               //data from/in this context
+    uint8_t pduVersion;             //the version of the PDU
+    uint8_t* PDU;                       //SNMP Protocol Data Unit
     uint32_t maxSizeResponseScopedPDU;// maximum size of the Response PDU
-    uint32_t stateReference;			//reference to state information needed when sending a response
+    uint32_t stateReference;            //reference to state information needed when sending a response
 }dispatcherProcessPdu;//process Request/Notification PDU
 
 typedef struct
 {
-    uint32_t maxMessageSize; 			//of the sending SNMP entity
-    uint32_t wholeMsgLength; 			//length as received on the wire
-    uint8_t* wholeMsg; 				//as received on the wire
-    uint8_t securityEngineID[32];	 		//authoritative SNMP entity
-    uint8_t securityName[TCPIP_SNMPV3_USER_SECURITY_NAME_LEN]; 			//identification of the principal
-    uint8_t* scopedPDU; 				//message (plaintext) payload
+    uint32_t maxMessageSize;            //of the sending SNMP entity
+    uint32_t wholeMsgLength;            //length as received on the wire
+    uint8_t* wholeMsg;              //as received on the wire
+    uint8_t securityEngineID[32];           //authoritative SNMP entity
+    uint8_t securityName[TCPIP_SNMPV3_USER_SECURITY_NAME_LEN];          //identification of the principal
+    uint8_t* scopedPDU;                 //message (plaintext) payload
     uint32_t maxSizeResponseScopedPDU;//maximum size sender can handle
-    uint8_t messageProcessingModel; 	//typically, SNMP version
-    uint8_t securityModel; 			//for the received message
-    uint8_t securityLevel; 			//Level of Security
-    uint8_t securityEngineIDLen;	 		//authoritative SNMP entity
+    uint8_t messageProcessingModel;     //typically, SNMP version
+    uint8_t securityModel;          //for the received message
+    uint8_t securityLevel;          //Level of Security
+    uint8_t securityEngineIDLen;            //authoritative SNMP entity
     uint8_t securityNameLength;
 }SecuritySysProcessIncomingMsg;
 

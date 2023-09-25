@@ -81,7 +81,7 @@ Microchip or any third party.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
-#define TCPIP_DNSS_TASK_PROCESS_RATE	(33)
+#define TCPIP_DNSS_TASK_PROCESS_RATE    (33)
 
 
 

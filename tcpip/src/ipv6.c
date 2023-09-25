@@ -368,26 +368,26 @@ static void TCPIP_IPV6_ProtectedSingleListFree (PROTECTED_SINGLE_LIST * list)
 
 /*****************************************************************************
   Function:
-	void TCPIP_IPV6_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+    void TCPIP_IPV6_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
-	Disables IPv6 functionality on the specified interface.
+    Disables IPv6 functionality on the specified interface.
 
   Description:
-	This function will disable IPv6 functionality on a specified interface. 
+    This function will disable IPv6 functionality on a specified interface. 
     It will free any dynamically allocated structures.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackCtrl - Stack initialization parameters
+    stackCtrl - Stack initialization parameters
 
   Returns:
-  	None
-  	
+    None
+    
   Remarks:
-	None
+    None
   ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 void TCPIP_IPV6_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
@@ -2768,7 +2768,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect (TCPIP_NET_HANDLE hNetIf, c
     uint8_t ruleCounter = ADDR_SEL_RULE_8;
     IPV6_INTERFACE_CONFIG*  pIpv6Config;
 
-	TCPIP_NET_IF * pNetIf = _TCPIPStackHandleToNetUp(hNetIf);
+    TCPIP_NET_IF * pNetIf = _TCPIPStackHandleToNetUp(hNetIf);
     if (pNetIf == NULL)
     {
         return NULL;
@@ -3977,38 +3977,38 @@ static void TCPIP_IPV6_MacPacketTxPutHeader(IPV6_PACKET* pkt, TCPIP_MAC_PACKET* 
 
 static TCPIP_MAC_PTR_TYPE MACSetBaseReadPtr(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PTR_TYPE address)
 {
-	unsigned char* oldPtr;
+    unsigned char* oldPtr;
 
-	oldPtr = pRxPkt->pMacLayer;
-	pRxPkt->pMacLayer = (unsigned char*)address;
-	return (TCPIP_MAC_PTR_TYPE)oldPtr;
+    oldPtr = pRxPkt->pMacLayer;
+    pRxPkt->pMacLayer = (unsigned char*)address;
+    return (TCPIP_MAC_PTR_TYPE)oldPtr;
 }
 
 static void MACSetReadPtrInRx(TCPIP_MAC_PACKET* pRxPkt, uint16_t offset)
 {
-	pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER) + offset;
+    pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER) + offset;
 }
 
 static TCPIP_MAC_PTR_TYPE MACSetReadPtr(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PTR_TYPE address)
 {
-	unsigned char* oldPtr;
+    unsigned char* oldPtr;
 
-	oldPtr = pRxPkt->pNetLayer;
-	pRxPkt->pNetLayer = (unsigned char*)address;
-	return (TCPIP_MAC_PTR_TYPE)oldPtr;
+    oldPtr = pRxPkt->pNetLayer;
+    pRxPkt->pNetLayer = (unsigned char*)address;
+    return (TCPIP_MAC_PTR_TYPE)oldPtr;
 }
 
 static uint16_t MACGetArray(TCPIP_MAC_PACKET* pRxPkt, uint8_t *address, uint16_t len)
 {
-	if(address)
-	{
-		memcpy(address, pRxPkt->pNetLayer, len);
-	}
+    if(address)
+    {
+        memcpy(address, pRxPkt->pNetLayer, len);
+    }
 
-	pRxPkt->pNetLayer += len;
-	pRxPkt->pTransportLayer = pRxPkt->pNetLayer;    // update transport layer pointer
+    pRxPkt->pNetLayer += len;
+    pRxPkt->pTransportLayer = pRxPkt->pNetLayer;    // update transport layer pointer
 
-	return len;
+    return len;
 }
 
 

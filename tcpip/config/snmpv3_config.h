@@ -52,7 +52,7 @@ Microchip or any third party.
 
 // Maximum number of SNMPv3 users.
 // User Security Model should have at least 1 user. Default is 3.
-#define TCPIP_SNMPV3_USM_MAX_USER	3
+#define TCPIP_SNMPV3_USM_MAX_USER   3
 
 // Maximum size for SNMPv3 User Security Name length.
 #define TCPIP_SNMPV3_USER_SECURITY_NAME_LEN (16)
@@ -61,13 +61,13 @@ Microchip or any third party.
 #define TCPIP_SNMPV3_USER_SECURITY_NAME_LEN_MEM_USE (TCPIP_SNMPV3_USER_SECURITY_NAME_LEN+1)
 
 // SNMPv3 Authentication Localized password key length size
-#define TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN	(20)
+#define TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN    (20)
 
 // SNMPv3 authentication localized Key length for memory validation
 #define TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE (TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN+1)
 
 // SNMPv3 Privacy Password key length size
-#define TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN	(20)
+#define TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN    (20)
 
 // SNMPv3 privacy key length size for memory validation
 #define TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE (TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN+1)

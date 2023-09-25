@@ -259,11 +259,11 @@ Microchip or any third party.
 // If false, these functions do not exist and the generated code is smaller 
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE           true
 
-//	The number of entries in the internally maintained secure port table
-//	This table is populated at stack initialization with default
-//	well-known port values
-//	Currently this number should be >= 10
-#define TCPIP_STACK_SECURE_PORT_ENTRIES 			(10)
+//  The number of entries in the internally maintained secure port table
+//  This table is populated at stack initialization with default
+//  well-known port values
+//  Currently this number should be >= 10
+#define TCPIP_STACK_SECURE_PORT_ENTRIES             (10)
 
 // Enable the packet logger
 // Simple module that logs the packets as they fly through the stack

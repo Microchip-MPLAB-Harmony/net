@@ -595,19 +595,19 @@ typedef enum
     TCPIP_DHCPV6_OPT_CODE_GEOCONF_CIVIC         = 36,       // 
 
     // RFC 4649
-    TCPIP_DHCPV6_OPT_CODE_REMOTE_ID             = 37,       // 	
+    TCPIP_DHCPV6_OPT_CODE_REMOTE_ID             = 37,       //  
 
     // RFC 4580
-    TCPIP_DHCPV6_OPT_CODE_RELAY_AGENT_SUBSCRIBER_ID = 38,   // Relay Agent Subscriber-ID.	
+    TCPIP_DHCPV6_OPT_CODE_RELAY_AGENT_SUBSCRIBER_ID = 38,   // Relay Agent Subscriber-ID.   
 
     // RFC 4704
-    TCPIP_DHCPV6_OPT_CODE_FQDN                  = 39,       // FQDN, Fully Qualified Domain Name.	
+    TCPIP_DHCPV6_OPT_CODE_FQDN                  = 39,       // FQDN, Fully Qualified Domain Name.   
 
     // RFC 5192
-    TCPIP_DHCPV6_OPT_CODE_PANA_AUTH_AGENT       = 40,       // PANA Authentication Agent.	
+    TCPIP_DHCPV6_OPT_CODE_PANA_AUTH_AGENT       = 40,       // PANA Authentication Agent.   
 
 
-    // 	RFC 4833 - 
+    //  RFC 4833 - 
     TCPIP_DHCPV6_OPT_CODE_NEW_POSIX_TIMEZONE   = 41,        // 
     TCPIP_DHCPV6_OPT_CODE_NEW_TZDB_TIMEZONE    = 42,        //
 
@@ -623,7 +623,7 @@ typedef enum
 
 
     // RFC 6610
-    TCPIP_DHCPV6_OPT_CODE_MIPV6_HOME_NETWORK_ID                 = 49,   // MIPv6 Home Network ID FQDN.	
+    TCPIP_DHCPV6_OPT_CODE_MIPV6_HOME_NETWORK_ID                 = 49,   // MIPv6 Home Network ID FQDN.  
     TCPIP_DHCPV6_OPT_CODE_MIPV6_HOME_NETWORK_INFO  = 50,                // MIPv6 Visited Home Network Information
 
     /* Options 64 - 95 */
@@ -635,29 +635,29 @@ typedef enum
     TCPIP_DHCPV6_OPT_CODE_MIPV6_HOME_AGENT_FQDN                 = 73,   // MIPv6 Home Agent FQDN
 
     // RFC 5223
-    TCPIP_DHCPV6_OPT_CODE_LOST_SERVER           = 51,       // LoST Server.	
+    TCPIP_DHCPV6_OPT_CODE_LOST_SERVER           = 51,       // LoST Server. 
 
-    // 	RFC 5417
+    //  RFC 5417
     TCPIP_DHCPV6_OPT_CODE_CAPWAP_ACCESS_CONTROLLER_ADDRESSES    = 52,   // CAPWAP Access Controller addresses.
 
 
     // RFC 5460
-    TCPIP_DHCPV6_OPT_CODE_RELAY_ID              = 53,       // 	
+    TCPIP_DHCPV6_OPT_CODE_RELAY_ID              = 53,       //  
 
     // RFC 5678
-    TCPIP_DHCPV6_OPT_CODE_IPV6_ADDRESS_MOS      = 54,       // 	
+    TCPIP_DHCPV6_OPT_CODE_IPV6_ADDRESS_MOS      = 54,       //  
     TCPIP_DHCPV6_OPT_CODE_IPV6_FQDN_MOS         = 55,       //
 
     // RFC 5908
     TCPIP_DHCPV6_OPT_CODE_NTP_SERVER            = 56,       // 
 
     // RFC 5986
-    TCPIP_DHCPV6_OPT_CODE_V6_ACCESS_DOMAIN      = 57,       // 	
+    TCPIP_DHCPV6_OPT_CODE_V6_ACCESS_DOMAIN      = 57,       //  
 
     // RFC 6011
-    TCPIP_DHCPV6_OPT_CODE_SIP_UA_CS_LIST        = 58,       // 	
+    TCPIP_DHCPV6_OPT_CODE_SIP_UA_CS_LIST        = 58,       //  
 
-    // 	RFC 5970
+    //  RFC 5970
 
     TCPIP_DHCPV6_OPT_CODE_BOOTFILE_URL          = 59,       // 
     TCPIP_DHCPV6_OPT_CODE_BOOTFILE_PARAM        = 60,       // 
@@ -665,22 +665,22 @@ typedef enum
     TCPIP_DHCPV6_OPT_CODE_NII                   = 62,       // 
 
     // RFC 6225
-    TCPIP_DHCPV6_OPT_CODE_GEOLOCATION           = 63,       // 	
+    TCPIP_DHCPV6_OPT_CODE_GEOLOCATION           = 63,       //  
 
     // RFC 6334
-    TCPIP_DHCPV6_OPT_CODE_AFTR_NAME             = 64,       // 	
+    TCPIP_DHCPV6_OPT_CODE_AFTR_NAME             = 64,       //  
 
     // RFC 6440
     TCPIP_DHCPV6_OPT_CODE_ERP_LOCAL_DOMAIN_NAME = 65,       // 
 
     // RFC 6422
-    TCPIP_DHCPV6_OPT_CODE_RSOO                  = 66,       // 	
+    TCPIP_DHCPV6_OPT_CODE_RSOO                  = 66,       //  
 
-    // 	RFC 6603
+    //  RFC 6603
     TCPIP_DHCPV6_OPT_CODE_PD_EXCLUDE            = 67,       // 
 
     // RFC 6607
-    TCPIP_DHCPV6_OPT_CODE_VIRTUAL_SUBNET_SELECTION = 68,    // 	
+    TCPIP_DHCPV6_OPT_CODE_VIRTUAL_SUBNET_SELECTION = 68,    //  
 
     // RFC 7083
     TCPIP_DHCPV6_OPT_CODE_MAX_RT                = 82,       // server->client; override the TCPIP_DHCPV6_SOLICIT_MRT (SOL_MAX_RT) value
@@ -1467,7 +1467,7 @@ typedef enum
 
 typedef struct  _TAG_DHCPV6_LIST_NODE
 {
-	struct _TAG_DHCPV6_LIST_NODE*   next;		// next node in list
+    struct _TAG_DHCPV6_LIST_NODE*   next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_DHCPV6_EVENT_HANDLER      handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter

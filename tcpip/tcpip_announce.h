@@ -3,13 +3,13 @@ Announce Service Module API Definitions Header File
 
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     tcpip_announce.h
-	
+    
   Summary:
     Announce provides a simple discovery mechanism for Microchip TCP/IP hosts.
-	
+    
   Description:
     Announce Service Module for Microchip TCP/IP Stack.
     It is a simple, proprietary discovery mechanism for Microchip TCP/IP hosts.
@@ -396,4 +396,4 @@ void  TCPIP_ANNOUNCE_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif	//#ifndef __TCPIP_ANNOUNCE_H
+#endif  //#ifndef __TCPIP_ANNOUNCE_H

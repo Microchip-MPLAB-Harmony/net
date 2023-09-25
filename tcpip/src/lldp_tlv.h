@@ -46,7 +46,7 @@ Microchip or any third party.
 // DOM-IGNORE-END
 
 #ifndef _LLDP_TLVS_H
-#define	_LLDP_TLVS_H
+#define _LLDP_TLVS_H
 
 
 typedef struct __attribute__((packed))
@@ -342,5 +342,5 @@ TCPIP_LLDP_TLV_PROCESS_RES      TCPIP_LLDP_TlvProcess(TCPIP_LLDP_TLV* pTlv, TCPI
 
 
 
-#endif	/* _LLDP_TLVS_H */
+#endif  /* _LLDP_TLVS_H */
 

@@ -53,7 +53,7 @@ Microchip or any third party.
 
 // Maximum number of UDP sockets that can be opened simultaneously
 // These sockets will be created when the module is initialized.
-#define TCPIP_UDP_MAX_SOCKETS			(10)
+#define TCPIP_UDP_MAX_SOCKETS           (10)
 
 // Default socket TX buffer size.
 // Note that this setting affects all UDP sockets that are created
@@ -61,7 +61,7 @@ Microchip or any third party.
 // the heap size that's used by the stack (see TCPIP_STACK_DRAM_SIZE setting).
 // When large TX bufferrs are needed, probably a dynamic, per socket approach,
 // is a better choice (see TCPIP_UDP_OptionsSet function).
-#define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE	512
+#define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE    512
 
 // Calculate and transmit a checksum when sending data.
 // Checksum is not mandatory for UDP packets but is highly recommended.

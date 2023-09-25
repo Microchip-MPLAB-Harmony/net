@@ -516,27 +516,27 @@ static IPV4_PKT_PROC_TYPE TCPIP_IPV4_VerifyPkt(TCPIP_NET_IF* pNetIf, IPV4_HEADER
 
 /*****************************************************************************
   Function:
-	bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, 
+    bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, 
         const TCPIP_IPV4_MODULE_CONFIG* pIpInit)
 
   Summary:
-	Initializes the IP module.
+    Initializes the IP module.
 
   Description:
-	Initializes the IP module.  Sets the dynamic heap used by this module.	
+    Initializes the IP module.  Sets the dynamic heap used by this module.  
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackInit - Stack initialization parameters
+    stackInit - Stack initialization parameters
     pIpInit - Unused supplementary data.
 
   Returns:
-  	true
-  	
+    true
+    
   Remarks:
-	None
+    None
   ***************************************************************************/
 bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_IPV4_MODULE_CONFIG* pIpInit)
 {
@@ -664,25 +664,25 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
 
 /*****************************************************************************
   Function:
-	void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+    void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
-	Deinitializes the IP module.
+    Deinitializes the IP module.
 
   Description:
-	Deinitializes the IP module.	
+    Deinitializes the IP module.    
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackCtrl - Stack control data
+    stackCtrl - Stack control data
 
   Returns:
-  	None
-  	
+    None
+    
   Remarks:
-	None
+    None
   ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
@@ -1188,7 +1188,7 @@ static uint32_t IPV4_32TrailZeros(uint32_t v)
             c += 2;
         }
         c -= v & 0x1;
-    }	
+    }   
 
     return c;
 }

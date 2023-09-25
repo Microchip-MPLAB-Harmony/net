@@ -55,18 +55,18 @@ Microchip or any third party.
 
 typedef struct _TAG_SGL_LIST_NODE
 {
-	struct _TAG_SGL_LIST_NODE*		next;		// next node in list
+    struct _TAG_SGL_LIST_NODE*      next;       // next node in list
     void*                           data[];     // generic payload    
-}SGL_LIST_NODE;	// generic linked list node definition
+}SGL_LIST_NODE; // generic linked list node definition
 
 
 typedef struct
 {
-	SGL_LIST_NODE*	head;	// list head
-	SGL_LIST_NODE*	tail;
+    SGL_LIST_NODE*  head;   // list head
+    SGL_LIST_NODE*  tail;
     int             nNodes; // number of nodes in the list
 
-}SINGLE_LIST;	// single linked list
+}SINGLE_LIST;   // single linked list
 
 
 /////  single linked lists manipulation ///////////
@@ -117,7 +117,7 @@ void  TCPIP_Helper_SingleListAppend(SINGLE_LIST* pDstL, SINGLE_LIST* pAList);
 // no memory de-allocation is performed, just removes the nodes from the list
 static __inline__ void __attribute__((always_inline)) TCPIP_Helper_SingleListRemoveAll(SINGLE_LIST* pL)
 {
-	while((TCPIP_Helper_SingleListHeadRemove(pL)));
+    while((TCPIP_Helper_SingleListHeadRemove(pL)));
 }
 
 // returns true if pN belongs to pL; false otherwise
@@ -199,18 +199,18 @@ bool TCPIP_Helper_ProtectedSingleListUnlock(PROTECTED_SINGLE_LIST* pL);
 
 typedef struct _TAG_DBL_LIST_NODE
 {
-	struct _TAG_DBL_LIST_NODE*		next;		// next node in list
-	struct _TAG_DBL_LIST_NODE*		prev;		// prev node in list
+    struct _TAG_DBL_LIST_NODE*      next;       // next node in list
+    struct _TAG_DBL_LIST_NODE*      prev;       // prev node in list
     void*                           data[];     // generic payload    
-}DBL_LIST_NODE;	// generic linked list node definition
+}DBL_LIST_NODE; // generic linked list node definition
 
 
 typedef struct
 {
-	DBL_LIST_NODE*	head;	// list head
-	DBL_LIST_NODE*	tail;   // list tail;
+    DBL_LIST_NODE*  head;   // list head
+    DBL_LIST_NODE*  tail;   // list tail;
     int             nNodes; // number of nodes in the list 
-}DOUBLE_LIST;	// double linked list
+}DOUBLE_LIST;   // double linked list
 
 
 void  TCPIP_Helper_DoubleListInitialize(DOUBLE_LIST* pL);
@@ -258,7 +258,7 @@ typedef struct
     DOUBLE_LIST list;
     OSAL_SEM_HANDLE_TYPE semaphore;
     bool semValid;
-}PROTECTED_DOUBLE_LIST;	// double linked list
+}PROTECTED_DOUBLE_LIST; // double linked list
 
 
 // creates an empty double linked list and associated semaphore

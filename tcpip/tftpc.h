@@ -12,16 +12,16 @@
     
   Description:
     The TFTP Client module implements the Trivial File Transfer Protocol (TFTP). 
-	By default, the module opens a client socket for the default interface 
-	configuration.
+    By default, the module opens a client socket for the default interface 
+    configuration.
     From the command prompt, the TFTP client module mode will be selected. At 
-	present only two modes are supported: Read and Write.
+    present only two modes are supported: Read and Write.
     * For Read mode - File will be fetched from the Server using the GET command.
     * For Write mode - Server will be able to fetch the file from the client using 
-	  the PUT command.
+      the PUT command.
     The TFTP module needs the file system for GET and PUT command operation.
     When one mode is in operation, access to the other mode or another server 
-	is not allowed.
+    is not allowed.
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
@@ -82,9 +82,9 @@ Microchip or any third party.
 typedef enum _TFTP_CMD_TYPE
 {
     TFTP_CMD_PUT_TYPE=0,   // TFTP client issues a PUT command to write a file 
-	                       // to the server
+                           // to the server
     TFTP_CMD_GET_TYPE,     // TFTP client issues a GET command to read the file 
-	                       // from the server
+                           // from the server
     TFTP_CMD_NONE,
 }TCPIP_TFTP_CMD_TYPE;
 
@@ -100,7 +100,7 @@ typedef enum _TFTP_CMD_TYPE
 
   Description:
     This enumeration defines the standard error codes for TFTP PUT and GET 
-	command operation.
+    command operation.
 */
 
 typedef enum 
@@ -117,7 +117,7 @@ typedef enum
     TFTPC_ERROR_DNS_RESOLVE_ERR = -8,    // TFTP client DNS resolve error
     TFTPC_ERROR_INVALID_INTERFACE = -9,    // TFTP client interface error
     TFTPC_ERROR_INVALID_FILE_LENGTH = -10, // TFTP client file length is more than 
-	                                     // the expected size, which should be
+                                         // the expected size, which should be
                                          // the size of SYS_FS_FILE_NAME_LEN
     TFTPC_ERROR_INVALID_SERVER_ADDR=-11,   // Invalid Server Address
 
@@ -270,7 +270,7 @@ typedef void    (*TCPIP_TFTPC_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_
 // *****************************************************************************
 /* Function:
     TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_TFTPC_EVENT_HANDLER handler,
-	                           const void* hParam)
+                               const void* hParam)
 
   Summary:
     Registers a TFTPC Handler.
@@ -325,7 +325,7 @@ TCPIP_TFTPC_HANDLE  TCPIP_TFTPC_HandlerRegister(TCPIP_NET_HANDLE hNet,
     htftpc   - A handle returned by a previous call to TCPIP_TFTPC_HandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
  */
 bool  TCPIP_TFTPC_HandlerDeRegister(TCPIP_TFTPC_HANDLE hDhcp);

@@ -143,27 +143,27 @@ void _cfgBsdSocket(struct BSDSocket * socketInfo)
 
 /*****************************************************************************
   Function:
-	void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
+    void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_GONFIG* berkeleyData)
 
   Summary:
-	Initializes the Berkeley socket structure array.
+    Initializes the Berkeley socket structure array.
 
   Description:
-	This function initializes the Berkeley socket array. This function should
-	be called before any BSD socket call.
+    This function initializes the Berkeley socket array. This function should
+    be called before any BSD socket call.
 
   Precondition:
-	None.
+    None.
 
   Parameters:
-	None.
+    None.
 
   Returns:
-	None
+    None
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                         const BERKELEY_MODULE_CONFIG* berkeleyData)
@@ -234,26 +234,26 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
 /*****************************************************************************
   Function:
-	void BerkeleySocketDeinit(void)
+    void BerkeleySocketDeinit(void)
 
   Summary:
-	De-Initializes the Berkeley socket structure array.
+    De-Initializes the Berkeley socket structure array.
 
   Description:
-	This function deinitializes the Berkeley socket array. This function should
-	be called when closing out any BSD socket call.
+    This function deinitializes the Berkeley socket array. This function should
+    be called when closing out any BSD socket call.
 
   Precondition:
-	None.
+    None.
 
   Parameters:
-	None.
+    None.
 
   Returns:
-	None
+    None
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 void BerkeleySocketDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
@@ -426,34 +426,34 @@ socket (int af, int type, int protocol)
 
 /*****************************************************************************
   Function:
-	int bind( SOCKET s, const struct sockaddr* name, int namelen )
+    int bind( SOCKET s, const struct sockaddr* name, int namelen )
 
   Summary:
-	This function assigns a name to the socket descriptor.
+    This function assigns a name to the socket descriptor.
 
   Description:
-	The bind function assigns a name to an unnamed socket. The
+    The bind function assigns a name to an unnamed socket. The
     name represents the local address of the communication
     endpoint. For sockets of type SOCK_STREAM, the name of the
     remote endpoint is assigned when a connect or accept function
     is executed.
 
   Precondition:
-	socket function should be called.
+    socket function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	name - pointer to the sockaddr structure containing the
-	local address of the socket.
-	namelen - length of the sockaddr structure.
+    s - Socket descriptor returned from a previous call to socket.
+    name - pointer to the sockaddr structure containing the
+    local address of the socket.
+    namelen - length of the sockaddr structure.
 
   Returns:
-	If bind is successful, a value of 0 is returned. A return
+    If bind is successful, a value of 0 is returned. A return
     value of SOCKET_ERROR indicates an error.
     (and errno set accordingly).
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int bind( SOCKET s, const struct sockaddr* name, int namelen )
 {
@@ -468,7 +468,7 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
     lAddr6.d[3] = 0;
 #endif
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0)
     {
@@ -581,34 +581,34 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 
 /*****************************************************************************
   Function:
-	int listen( SOCKET s, int backlog )
+    int listen( SOCKET s, int backlog )
 
   Summary:
-	The listen function sets the specified socket in a listen mode
+    The listen function sets the specified socket in a listen mode
 
   Description:
-	This function sets the specified socket in a listen
-	mode. Calling the listen function indicates that the
-	application is ready to accept connection requests arriving
-	at a socket of type SOCK_STREAM. The connection request is
-	queued (if possible) until accepted with an accept function.
-	The backlog parameter defines the maximum number of pending
-	connections that may be queued.
+    This function sets the specified socket in a listen
+    mode. Calling the listen function indicates that the
+    application is ready to accept connection requests arriving
+    at a socket of type SOCK_STREAM. The connection request is
+    queued (if possible) until accepted with an accept function.
+    The backlog parameter defines the maximum number of pending
+    connections that may be queued.
 
   Precondition:
-	bind() must have been called on the s socket first.
+    bind() must have been called on the s socket first.
 
   Parameters:
-	s - Socket identifier returned from a prior socket() call.
-	backlog - Maximum number of connection requests that can be queued.  Note 
-		that each backlog requires a TCP socket to be allocated.
-	
+    s - Socket identifier returned from a prior socket() call.
+    backlog - Maximum number of connection requests that can be queued.  Note 
+        that each backlog requires a TCP socket to be allocated.
+    
   Returns:
-	Returns 0 on success, else return SOCKET_ERROR.
+    Returns 0 on success, else return SOCKET_ERROR.
     (and errno set accordingly).
 
   Remarks:
-	None
+    None
   ***************************************************************************/
 int listen( SOCKET s, int backlog ) 
 {
@@ -720,38 +720,38 @@ int listen( SOCKET s, int backlog )
 
 /*****************************************************************************
   Function:
-	SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
+    SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
 
   Summary:
-	This function accepts connection requests queued for a listening socket.
+    This function accepts connection requests queued for a listening socket.
 
   Description:
-	The accept function is used to accept connection requests
-	queued for a listening socket. If a connection request is
-	pending, accept removes the request from the queue, and a new
-	socket is created for the connection. The original listening
-	socket remains open and continues to queue new connection
-	requests. The socket must be a SOCK_STREAM type socket.
+    The accept function is used to accept connection requests
+    queued for a listening socket. If a connection request is
+    pending, accept removes the request from the queue, and a new
+    socket is created for the connection. The original listening
+    socket remains open and continues to queue new connection
+    requests. The socket must be a SOCK_STREAM type socket.
 
   Precondition:
-	listen function should be called.
+    listen function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to
-	socket. must be bound to a local name and in listening mode.
-	addr - Optional pointer to a buffer that receives the address
-	of the connecting entity.
-	addrlen - Optional pointer to an integer that contains the
-	length of the address addr
+    s - Socket descriptor returned from a previous call to
+    socket. must be bound to a local name and in listening mode.
+    addr - Optional pointer to a buffer that receives the address
+    of the connecting entity.
+    addrlen - Optional pointer to an integer that contains the
+    length of the address addr
 
   Returns:
-	If the accept function succeeds, it returns a non-negative
-	integer that is a descriptor for the accepted socket.
-	Otherwise, the value SOCKET_ERROR is returned.
+    If the accept function succeeds, it returns a non-negative
+    integer that is a descriptor for the accepted socket.
+    Otherwise, the value SOCKET_ERROR is returned.
     (and errno set accordingly).
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
 {
@@ -848,37 +848,37 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
 
 /*****************************************************************************
   Function:
-	int connect( SOCKET s, struct sockaddr* name, int namelen )
+    int connect( SOCKET s, struct sockaddr* name, int namelen )
 
   Summary:
-	This function connects to the peer communications end point.
+    This function connects to the peer communications end point.
 
   Description:
-	The connect function assigns the address of the peer
-	communications endpoint. For stream sockets, connection is
-	established between the endpoints. For datagram sockets, an
-	address filter is established between the endpoints until
-	changed with another connect() function.
+    The connect function assigns the address of the peer
+    communications endpoint. For stream sockets, connection is
+    established between the endpoints. For datagram sockets, an
+    address filter is established between the endpoints until
+    changed with another connect() function.
 
   Precondition:
-	socket function should be called.
+    socket function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	name - pointer to the sockaddr structure containing the
-	peer address and port number.
-	namelen - length of the sockaddr structure.
+    s - Socket descriptor returned from a previous call to socket.
+    name - pointer to the sockaddr structure containing the
+    peer address and port number.
+    namelen - length of the sockaddr structure.
 
   Returns:
-	If the connect() function succeeds, it returns 0. Otherwise,
-	the value SOCKET_ERROR is returned to indicate an error
-	condition (and errno set accordingly).
+    If the connect() function succeeds, it returns 0. Otherwise,
+    the value SOCKET_ERROR is returned to indicate an error
+    condition (and errno set accordingly).
     For stream based socket, if the connection is not
-	established yet, connect returns SOCKET_ERROR and
+    established yet, connect returns SOCKET_ERROR and
     errno = EINPROGRESS.
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int connect( SOCKET s, struct sockaddr* name, int namelen ) 
 {
@@ -903,7 +903,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
     struct sockaddr_in6 * addr6;
 #endif
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
     if (socket == 0 || socket->bsdState < SKT_CREATED) 
     {
         errno = EBADF;
@@ -1165,73 +1165,73 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
 
 /*****************************************************************************
   Function:
-	int send( SOCKET s, const char* buf, int len, int flags )
-	
+    int send( SOCKET s, const char* buf, int len, int flags )
+    
   Summary:
-	The send function is used to send outgoing data on an already
-	connected socket.
+    The send function is used to send outgoing data on an already
+    connected socket.
 
   Description:
-	The send function is used to send outgoing data on an already
-	connected socket. This function is used to send a reliable,
-	ordered stream of data bytes on a socket of type SOCK_STREAM
-	but can also be used to send datagrams on a socket of type SOCK_DGRAM.
+    The send function is used to send outgoing data on an already
+    connected socket. This function is used to send a reliable,
+    ordered stream of data bytes on a socket of type SOCK_STREAM
+    but can also be used to send datagrams on a socket of type SOCK_DGRAM.
 
   Precondition:
-	connect function should be called for TCP and UDP sockets.
-	Server side, accept function should be called.
+    connect function should be called for TCP and UDP sockets.
+    Server side, accept function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	buf - application data buffer containing data to transmit.
-	len - length of data in bytes.
-	flags - message flags. Currently this field is not supported.
+    s - Socket descriptor returned from a previous call to socket.
+    buf - application data buffer containing data to transmit.
+    len - length of data in bytes.
+    flags - message flags. Currently this field is not supported.
 
   Returns:
-	On success, send returns number of bytes sent.
+    On success, send returns number of bytes sent.
     In case of error it returns SOCKET_ERROR 
     (and errno set accordingly).
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int send( SOCKET s, const char* buf, int len, int flags )
 {
-	return sendto(s, buf, len, flags, NULL, 0);
+    return sendto(s, buf, len, flags, NULL, 0);
 }
 
 /*****************************************************************************
   Function:
-	int sendto(SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
+    int sendto(SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 
   Summary:
-	This function used to send the data for both connection oriented and connection-less
-	sockets.
+    This function used to send the data for both connection oriented and connection-less
+    sockets.
 
   Description:
-	The sendto function is used to send outgoing data on a socket.
-	The destination address is given by to and tolen. Both 
-	Datagram and stream sockets are supported.
+    The sendto function is used to send outgoing data on a socket.
+    The destination address is given by to and tolen. Both 
+    Datagram and stream sockets are supported.
 
   Precondition:
-	socket function should be called.
+    socket function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	buf - application data buffer containing data to transmit.
-	len - length of data in bytes.
-	flags - message flags. Currently this field is not supported.
-	to - Optional pointer to the the sockaddr structure containing the
-		destination address.  If NULL, the currently bound remote port and IP 
-		address are used as the destination.
-	tolen - length of the sockaddr structure.
+    s - Socket descriptor returned from a previous call to socket.
+    buf - application data buffer containing data to transmit.
+    len - length of data in bytes.
+    flags - message flags. Currently this field is not supported.
+    to - Optional pointer to the the sockaddr structure containing the
+        destination address.  If NULL, the currently bound remote port and IP 
+        address are used as the destination.
+    tolen - length of the sockaddr structure.
 
   Returns:
-	On success, sendto returns number of bytes sent. In case of
-	error returns SOCKET_ERROR (and errno set accordingly).
+    On success, sendto returns number of bytes sent. In case of
+    error returns SOCKET_ERROR (and errno set accordingly).
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen )
 {
@@ -1249,7 +1249,7 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
     struct sockaddr_in6 local6;
 #endif
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
@@ -1411,73 +1411,73 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
 
 /*****************************************************************************
   Function:
-	int recv( SOCKET s, char* buf, int len, int flags )
+    int recv( SOCKET s, char* buf, int len, int flags )
 
   Summary:
-	The recv() function is used to receive incoming data that has
-	been queued for a socket.
+    The recv() function is used to receive incoming data that has
+    been queued for a socket.
 
   Description:
-	The recv() function is used to receive incoming data that has
-	been queued for a socket. This function can be used with both 
-	datagram and stream socket. If the available data
-	is too large to fit in the supplied application buffer buf,
-	excess bytes are discarded in case of SOCK_DGRAM type
-	sockets.  For SOCK_STREAM types, the data is buffered
-	internally so the application can retreive all data by
-	multiple calls of recvfrom.
+    The recv() function is used to receive incoming data that has
+    been queued for a socket. This function can be used with both 
+    datagram and stream socket. If the available data
+    is too large to fit in the supplied application buffer buf,
+    excess bytes are discarded in case of SOCK_DGRAM type
+    sockets.  For SOCK_STREAM types, the data is buffered
+    internally so the application can retreive all data by
+    multiple calls of recvfrom.
 
   Precondition:
-	connect function should be called for TCP and UDP sockets.
-	Server side, accept function should be called.
+    connect function should be called for TCP and UDP sockets.
+    Server side, accept function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	buf - application data receive buffer.
-	len - buffer length in bytes.
-	flags - no significance in this implementation
+    s - Socket descriptor returned from a previous call to socket.
+    buf - application data receive buffer.
+    len - buffer length in bytes.
+    flags - no significance in this implementation
 
   Returns:
-	If the recv function is successful, the socket is valid and it has pending data:
+    If the recv function is successful, the socket is valid and it has pending data:
     - if the supplied buffer is non NULL and has non zero length, the function will return
       the number of bytes copied to the application buffer.
     - if the supplied buffer is NULL or has zero length then no data will be copied and
       the function will return the number of bytes pending in the socket buffer.
 
     A return value of SOCKET_ERROR (-1)
-	indicates an error condition (and errno set accordingly).
+    indicates an error condition (and errno set accordingly).
     errno is set to EWOULDBLOCK if there is no data pendiding in the socket buffer.
 
     A value of zero indicates socket has been shutdown by the peer. 
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int recv( SOCKET s, char* buf, int len, int flags )
 {
     int     nBytes;
 
-	struct BSDSocket *socket = _getBsdSocket(s);
-	if( socket == 0 )
+    struct BSDSocket *socket = _getBsdSocket(s);
+    if( socket == 0 )
     {
         errno = EBADF;
-		return SOCKET_ERROR;
+        return SOCKET_ERROR;
     }
 
-	if(socket->SocketType == SOCK_STREAM) //TCP
-	{
-		if(socket->bsdState != SKT_EST)
+    if(socket->SocketType == SOCK_STREAM) //TCP
+    {
+        if(socket->bsdState != SKT_EST)
         {
             errno = ENOTCONN;
             return SOCKET_ERROR;
         }
 
-		if(TCP_SocketWasReset(s) || TCP_SocketWasDisconnected(s, false))
+        if(TCP_SocketWasReset(s) || TCP_SocketWasDisconnected(s, false))
         {
             return 0;
         }
 
-		nBytes = NET_PRES_SocketReadIsReady(socket->SocketID);
+        nBytes = NET_PRES_SocketReadIsReady(socket->SocketID);
         if(nBytes && buf && len)
         {   // copy available data to user buffer
             nBytes = NET_PRES_SocketRead(socket->SocketID, (uint8_t*)buf, len);
@@ -1489,10 +1489,10 @@ int recv( SOCKET s, char* buf, int len, int flags )
         }
         errno = EWOULDBLOCK;
         return SOCKET_ERROR;
-	}
-	else if(socket->SocketType == SOCK_DGRAM) //UDP
-	{
-		if(socket->bsdState != SKT_BOUND)
+    }
+    else if(socket->SocketType == SOCK_DGRAM) //UDP
+    {
+        if(socket->bsdState != SKT_BOUND)
         {
             errno = EINVAL;
             return SOCKET_ERROR;
@@ -1515,50 +1515,50 @@ int recv( SOCKET s, char* buf, int len, int flags )
         }
         errno = EWOULDBLOCK;
         return SOCKET_ERROR;
-	}
+    }
 
-	return 0;
+    return 0;
 }
 
 /*****************************************************************************
   Function:
-	int recvfrom(SOCKET s, char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
+    int recvfrom(SOCKET s, char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 
   Summary:
-	The recvfrom() function is used to receive incoming data that
-	has been queued for a socket.
+    The recvfrom() function is used to receive incoming data that
+    has been queued for a socket.
 
   Description:
-	The recvfrom() function is used to receive incoming data that
-	has been queued for a socket. This function can be used with
-	both datagram and stream type sockets. If the available data
-	is too large to fit in the supplied application buffer buf,
-	excess bytes are discarded in case of SOCK_DGRAM type
-	sockets. For SOCK_STREAM types, the data is buffered
-	internally so the application can retreive all data by
-	multiple calls of recvfrom.
+    The recvfrom() function is used to receive incoming data that
+    has been queued for a socket. This function can be used with
+    both datagram and stream type sockets. If the available data
+    is too large to fit in the supplied application buffer buf,
+    excess bytes are discarded in case of SOCK_DGRAM type
+    sockets. For SOCK_STREAM types, the data is buffered
+    internally so the application can retreive all data by
+    multiple calls of recvfrom.
 
   Precondition:
-	socket function should be called.
+    socket function should be called.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket.
-	buf - application data receive buffer.
-	len - buffer length in bytes.
-	flags - message flags. Currently this is not supported.
-	from - pointer to the sockaddr structure that will be
-	filled in with the destination address.
-	fromlen - size of buffer pointed by from.
+    s - Socket descriptor returned from a previous call to socket.
+    buf - application data receive buffer.
+    len - buffer length in bytes.
+    flags - message flags. Currently this is not supported.
+    from - pointer to the sockaddr structure that will be
+    filled in with the destination address.
+    fromlen - size of buffer pointed by from.
 
   Returns:
-	If recvfrom is successful, the number of bytes copied to
-	application buffer buf is returned.
-	A return value of SOCKET_ERROR (-1)
-	indicates an error condition (and errno set accordingly).
+    If recvfrom is successful, the number of bytes copied to
+    application buffer buf is returned.
+    A return value of SOCKET_ERROR (-1)
+    indicates an error condition (and errno set accordingly).
     A value of zero indicates socket has been shutdown by the peer. 
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, int* fromlen )
 {
@@ -1569,7 +1569,7 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
     TCP_SOCKET_INFO tcpSockInfo;
     int nBytes;
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
     if (socket == 0)
     {
         errno = EBADF;
@@ -1707,42 +1707,42 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
 
 /*****************************************************************************
   Function:
-	int gethostname(char* name, int namelen )
+    int gethostname(char* name, int namelen )
 
   Summary:
-	Returns the standard host name for the system.
+    Returns the standard host name for the system.
 
   Description:
-	This function returns the standard host name of the system which is 
-	calling this function.	The returned name is null-terminated.
+    This function returns the standard host name of the system which is 
+    calling this function.  The returned name is null-terminated.
 
   Precondition:
-	None.
+    None.
 
   Parameters:
-	name - Pointer to a buffer that receives the local host name.
-	namelen - size of the name array.
+    name - Pointer to a buffer that receives the local host name.
+    namelen - size of the name array.
 
   Returns:
-	Success will return a value of 0. 
-	If name is too short to hold the host name or any other error occurs, 
-	SOCKET_ERROR (-1) will be returned (and errno set accordingly).
+    Success will return a value of 0. 
+    If name is too short to hold the host name or any other error occurs, 
+    SOCKET_ERROR (-1) will be returned (and errno set accordingly).
     On error, *name will be unmodified 
-	and no null terminator will be generated.
+    and no null terminator will be generated.
 
   Remarks:
-	The function returns the host name as set on the default network interface.
+    The function returns the host name as set on the default network interface.
 
 
   ***************************************************************************/
 int gethostname(char* name, int namelen)
 {
-	uint16_t wSourceLen;
-	uint16_t w;
-	uint8_t v;
+    uint16_t wSourceLen;
+    uint16_t w;
+    uint8_t v;
     TCPIP_NET_IF* pNetIf;
 
-	if(name == 0)
+    if(name == 0)
     {
         errno = EINVAL;
         return SOCKET_ERROR;
@@ -1750,110 +1750,110 @@ int gethostname(char* name, int namelen)
 
     pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet();
     
-	wSourceLen = sizeof(pNetIf->NetBIOSName);
-	for(w = 0; w < wSourceLen; w++)
-	{
-		v = pNetIf->NetBIOSName[w];
-		if((v == ' ') || (v == 0u))
-			break;
-	}
-	wSourceLen = w;
-	if(namelen < (int)wSourceLen + 1)
+    wSourceLen = sizeof(pNetIf->NetBIOSName);
+    for(w = 0; w < wSourceLen; w++)
+    {
+        v = pNetIf->NetBIOSName[w];
+        if((v == ' ') || (v == 0u))
+            break;
+    }
+    wSourceLen = w;
+    if(namelen < (int)wSourceLen + 1)
     {
         errno = EINVAL;
         return SOCKET_ERROR;
     }
 
-	for(w = 0; w < wSourceLen; w++)
-	{
-		v = pNetIf->NetBIOSName[w];
-		name[w] = v;
-	}
+    for(w = 0; w < wSourceLen; w++)
+    {
+        v = pNetIf->NetBIOSName[w];
+        name[w] = v;
+    }
 
-	name[wSourceLen] = 0;
+    name[wSourceLen] = 0;
 
-	return 0;
+    return 0;
 }
 
 /*****************************************************************************
   Function:
-	int closesocket( SOCKET s )
-	
+    int closesocket( SOCKET s )
+    
   Summary:
-	The closesocket function closes an existing socket.
+    The closesocket function closes an existing socket.
 
   Description:
-	The closesocket function closes an existing socket.  
-	This function releases the socket descriptor s.  
-	Any data buffered at the socket is discarded.  If the 
-	socket s is no longer needed, closesocket() must be 
-	called in order to release all resources associated with s.
+    The closesocket function closes an existing socket.  
+    This function releases the socket descriptor s.  
+    Any data buffered at the socket is discarded.  If the 
+    socket s is no longer needed, closesocket() must be 
+    called in order to release all resources associated with s.
 
   Precondition:
-	None.
+    None.
 
   Parameters:
-	s - Socket descriptor returned from a previous call to socket
+    s - Socket descriptor returned from a previous call to socket
 
   Returns:
-	If closesocket is successful, a value of 0 is returned. 
-	A return value of SOCKET_ERROR (-1) indicates an error.
+    If closesocket is successful, a value of 0 is returned. 
+    A return value of SOCKET_ERROR (-1) indicates an error.
     (and errno set accordingly).
 
   Remarks:
-	None.
+    None.
   ***************************************************************************/
 int closesocket( SOCKET s )
-{	
-	uint8_t i;
+{   
+    uint8_t i;
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0)
     {
         errno = EBADF;
-		return SOCKET_ERROR;
+        return SOCKET_ERROR;
     }
 
-	if(socket->bsdState == SKT_CLOSED)
+    if(socket->bsdState == SKT_CLOSED)
     {
-		return 0;	// Nothing to do, so return success
+        return 0;   // Nothing to do, so return success
     }
 
-	if(socket->SocketType == SOCK_STREAM)
-	{
-		if(socket->bsdState == SKT_BSD_LISTEN)
-		{
-			// This is a listerner handle, so when we close it we also should 
-			// close all TCP sockets that were opened for backlog processing 
-			// but didn't actually get connected
-			for(i = 0; i < BSD_SOCKET_COUNT; i++)
-			{
-				if(BSDSocketArray[i].bsdState != SKT_LISTEN)
-					continue;
-				if(BSDSocketArray[i].localPort == socket->localPort)
-				{
-					NET_PRES_SocketClose(BSDSocketArray[i].SocketID);
+    if(socket->SocketType == SOCK_STREAM)
+    {
+        if(socket->bsdState == SKT_BSD_LISTEN)
+        {
+            // This is a listerner handle, so when we close it we also should 
+            // close all TCP sockets that were opened for backlog processing 
+            // but didn't actually get connected
+            for(i = 0; i < BSD_SOCKET_COUNT; i++)
+            {
+                if(BSDSocketArray[i].bsdState != SKT_LISTEN)
+                    continue;
+                if(BSDSocketArray[i].localPort == socket->localPort)
+                {
+                    NET_PRES_SocketClose(BSDSocketArray[i].SocketID);
                     socket->SocketID = NET_PRES_INVALID_SOCKET;
-					BSDSocketArray[i].bsdState = SKT_CLOSED;
-				}
-			}
-		}
-		else if(socket->bsdState >= SKT_LISTEN)
-		{
-			// For server sockets, if the parent listening socket is still open, 
-			// then return this socket to the queue for future backlog processing.
-			if(socket->isServer)
-			{
-				for(i = 0; i < BSD_SOCKET_COUNT; i++)
-				{
-					if(BSDSocketArray[i].bsdState != SKT_BSD_LISTEN)
-						continue;
-					if(BSDSocketArray[i].localPort == socket->localPort)
-					{
-						NET_PRES_SocketDisconnect(socket->SocketID);
-						
-						// Listener socket is still open, so wait for connection to close
+                    BSDSocketArray[i].bsdState = SKT_CLOSED;
+                }
+            }
+        }
+        else if(socket->bsdState >= SKT_LISTEN)
+        {
+            // For server sockets, if the parent listening socket is still open, 
+            // then return this socket to the queue for future backlog processing.
+            if(socket->isServer)
+            {
+                for(i = 0; i < BSD_SOCKET_COUNT; i++)
+                {
+                    if(BSDSocketArray[i].bsdState != SKT_BSD_LISTEN)
+                        continue;
+                    if(BSDSocketArray[i].localPort == socket->localPort)
+                    {
+                        NET_PRES_SocketDisconnect(socket->SocketID);
+                        
+                        // Listener socket is still open, so wait for connection to close
                         // and then return to the listening state so that the user must call accept()
                         // again to reuse this BSD socket
                         // If the other side has already closed, the signal may be already sent. So this is critical!
@@ -1869,80 +1869,80 @@ int closesocket( SOCKET s )
                 // reused.  Close it complete.
                 NET_PRES_SocketClose(socket->SocketID);
             }
-            else if(socket->bsdState != SKT_DISCONNECTED)	// this is a client socket that isn't already disconnected
-			{
-				NET_PRES_SocketClose(socket->SocketID);
-			}
-		}
-	}
-	else //udp sockets
-	{
-		if(socket->bsdState == SKT_BOUND)
+            else if(socket->bsdState != SKT_DISCONNECTED)   // this is a client socket that isn't already disconnected
+            {
+                NET_PRES_SocketClose(socket->SocketID);
+            }
+        }
+    }
+    else //udp sockets
+    {
+        if(socket->bsdState == SKT_BOUND)
         {
-			NET_PRES_SocketClose(socket->SocketID);
+            NET_PRES_SocketClose(socket->SocketID);
             socket->SocketID = NET_PRES_INVALID_SOCKET;
         }
-	}
+    }
 
     NET_PRES_SocketClose(socket->SocketID);
     socket->SocketID = NET_PRES_INVALID_SOCKET;
-	socket->bsdState = SKT_CLOSED;
+    socket->bsdState = SKT_CLOSED;
     socket->SocketID = INVALID_UDP_SOCKET;
     socket->w = 0;
-	return 0; //success
+    return 0; //success
 }
 
 
 /*****************************************************************************
   Function:
-	static bool TCP_SocketWasReset(SOCKET s)
-	
+    static bool TCP_SocketWasReset(SOCKET s)
+    
   Summary:
-	Internal function that checks for asynchronous TCP connection state 
+    Internal function that checks for asynchronous TCP connection state 
 
   Description:
-	Internal function that checks for the occurrence of a TCP connection reset 
+    Internal function that checks for the occurrence of a TCP connection reset 
     If reset occurred, it updates the BSD socket descriptor state to match. 
 
   Precondition:
-	None
+    None
 
   Parameters:
-	s - TCP type socket descriptor returned from a previous call to socket.  
-	    This socket must be in the SKT_LISTEN, SKT_IN_PROGRESS, SKT_EST, or 
-	    SKT_DISCONNECTED states.
+    s - TCP type socket descriptor returned from a previous call to socket.  
+        This socket must be in the SKT_LISTEN, SKT_IN_PROGRESS, SKT_EST, or 
+        SKT_DISCONNECTED states.
 
   Returns:
-	true - Socket has been reset
-	false - Socket has not been reset
+    true - Socket has been reset
+    false - Socket has not been reset
 
   ***************************************************************************/
 static bool TCP_SocketWasReset(SOCKET s)
 {
-	struct BSDSocket *socket;
-	uint8_t i;
+    struct BSDSocket *socket;
+    uint8_t i;
 
-	socket = BSDSocketArray + s;
+    socket = BSDSocketArray + s;
 
-	// Nothing to do if reset has already been handled
-	if(socket->bsdState == SKT_DISCONNECTED)
+    // Nothing to do if reset has already been handled
+    if(socket->bsdState == SKT_DISCONNECTED)
     {
-		return true;	
+        return true;    
     }
 
-	// Find out if a reset has occurred
-	if(!NET_PRES_SocketWasReset(socket->SocketID))
+    // Find out if a reset has occurred
+    if(!NET_PRES_SocketWasReset(socket->SocketID))
     {   // Nothing to do if a reset has not occurred
         return false;
     }
 
-	// For server sockets, if the parent listening socket is still open, 
-	// then return this socket to the queue for future backlog processing.
-	if(socket->isServer)
-	{
-		for(i = 0; i < BSD_SOCKET_COUNT; i++)
-		{
-			if(BSDSocketArray[i].bsdState == SKT_BSD_LISTEN)
+    // For server sockets, if the parent listening socket is still open, 
+    // then return this socket to the queue for future backlog processing.
+    if(socket->isServer)
+    {
+        for(i = 0; i < BSD_SOCKET_COUNT; i++)
+        {
+            if(BSDSocketArray[i].bsdState == SKT_BSD_LISTEN)
             {
                 if(BSDSocketArray[i].localPort == socket->localPort)
                 {   // Listener socket is still open, so just return to the 
@@ -1952,13 +1952,13 @@ static bool TCP_SocketWasReset(SOCKET s)
                     return true;
                 }
             }
-		}
-	}
-			
-	// If we get down here and the socket was reset, then this socket 
-	// should be closed so that no more clients can connect to it.  However, 
-	// we can't go to the BSD SKT_CLOSED state directly since the user still 
-	// has to call closesocket() with this s SOCKET descriptor first.
+        }
+    }
+            
+    // If we get down here and the socket was reset, then this socket 
+    // should be closed so that no more clients can connect to it.  However, 
+    // we can't go to the BSD SKT_CLOSED state directly since the user still 
+    // has to call closesocket() with this s SOCKET descriptor first.
     TCPIP_TCP_Abort(socket->nativeSkt, false);
     socket->bsdState = SKT_DISCONNECTED;
     return true;
@@ -1968,48 +1968,48 @@ static bool TCP_SocketWasReset(SOCKET s)
 /*****************************************************************************
   Function:
     static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort)
-	
+    
   Summary:
-	Internal function that checks for asynchronous TCP connection state 
+    Internal function that checks for asynchronous TCP connection state 
 
   Description:
-	Internal function that checks for the occurrence of a TCP disconnection 
+    Internal function that checks for the occurrence of a TCP disconnection 
     from the remote node.
     If disconnect occurred, it can abort the client connection
 
   Precondition:
-	None
+    None
 
   Parameters:
-	s - TCP type socket descriptor returned from a previous call to socket.  
+    s - TCP type socket descriptor returned from a previous call to socket.  
     cliAbort - if true and the disconnect condition detected, the client socket will be aborted
                Note: no action taken on a server socket!
 
   Returns:
-	true - Socket has been remotely disconnected
-	false - Socket has not been remotely disconnected
+    true - Socket has been remotely disconnected
+    false - Socket has not been remotely disconnected
 
   ***************************************************************************/
 static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort)
 {
-	struct BSDSocket *socket;
+    struct BSDSocket *socket;
 
-	socket = BSDSocketArray + s;
+    socket = BSDSocketArray + s;
 
-	if(socket->bsdState == SKT_DISCONNECTED)
+    if(socket->bsdState == SKT_DISCONNECTED)
     {   // Nothing to do if a disconnect has already been handled
-		return true;	
+        return true;    
     }
 
-	// Find out if a reset has occurred
-	if(!NET_PRES_SocketWasDisconnected(socket->SocketID))
+    // Find out if a reset has occurred
+    if(!NET_PRES_SocketWasDisconnected(socket->SocketID))
     {   // Nothing to do if a reset has not occurred
         return false;
     }
 
-	// For server sockets, if the parent listening socket is still open, 
-	// then return this socket to the queue for future backlog processing.
-	if(socket->isServer == 0 && cliAbort)
+    // For server sockets, if the parent listening socket is still open, 
+    // then return this socket to the queue for future backlog processing.
+    if(socket->isServer == 0 && cliAbort)
     {
         TCPIP_TCP_Abort(socket->nativeSkt, false);
         socket->bsdState = SKT_DISCONNECTED;
@@ -2175,7 +2175,7 @@ int setsockopt(SOCKET s,
                const uint8_t *option_value,
                uint32_t option_length)
 {
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0 || socket->bsdState == SKT_CLOSED) 
     {
@@ -2418,7 +2418,7 @@ int getsockopt(SOCKET s,
                uint8_t *option_value,
                uint32_t *option_length)
 {
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0 || socket->bsdState == SKT_CLOSED) 
     {
@@ -2536,7 +2536,7 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
         return SOCKET_ERROR;
     }
 
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
     if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
         errno = EBADF;
@@ -2570,7 +2570,7 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 
 int TCPIP_BSD_Socket(SOCKET s)
 {
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
@@ -2585,7 +2585,7 @@ int TCPIP_BSD_Socket(SOCKET s)
 
 int TCPIP_BSD_PresSocket(SOCKET s)
 {
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
 
     if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
@@ -3002,7 +3002,7 @@ static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDL
 #if (__BERKELEY_DEBUG != 0)
 bool TCPIP_BSD_State(SOCKET s, BSD_SKT_INFO* pInfo)
 {
-	struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *socket = _getBsdSocket(s);
     if( socket == 0 )
     {
         return false;

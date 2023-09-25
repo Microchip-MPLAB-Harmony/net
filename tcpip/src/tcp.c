@@ -50,32 +50,32 @@ Microchip or any third party.
 
 /****************************************************************************
   Section:
-	TCP Header Data Types
+    TCP Header Data Types
   ***************************************************************************/
 
-#define FIN             (0x01)		// FIN Flag as defined in RFC
-#define SYN             (0x02)		// SYN Flag as defined in RFC
-#define RST             (0x04)		// Reset Flag as defined in RFC
-#define PSH             (0x08)		// Push Flag as defined in RFC
-#define ACK             (0x10)		// Acknowledge Flag as defined in RFC
-#define URG             (0x20)		// Urgent Flag as defined in RFC
+#define FIN             (0x01)      // FIN Flag as defined in RFC
+#define SYN             (0x02)      // SYN Flag as defined in RFC
+#define RST             (0x04)      // Reset Flag as defined in RFC
+#define PSH             (0x08)      // Push Flag as defined in RFC
+#define ACK             (0x10)      // Acknowledge Flag as defined in RFC
+#define URG             (0x20)      // Urgent Flag as defined in RFC
 
 
 
-#define TCP_OPTIONS_END_OF_LIST     (0x00u)		// End of List TCP Option Flag
-#define TCP_OPTIONS_NO_OP           (0x01u)		// No Op TCP Option
-#define TCP_OPTIONS_MAX_SEG_SIZE    (0x02u)		// Maximum segment size TCP flag
+#define TCP_OPTIONS_END_OF_LIST     (0x00u)     // End of List TCP Option Flag
+#define TCP_OPTIONS_NO_OP           (0x01u)     // No Op TCP Option
+#define TCP_OPTIONS_MAX_SEG_SIZE    (0x02u)     // Maximum segment size TCP flag
 typedef struct
 {
-	uint8_t        Kind;							// Type of option
-	uint8_t        Length;							// Length
-	TCPIP_UINT16_VAL    MaxSegSize;						// Maximum segment size
-} TCP_OPTIONS;									// TCP Options data structure							
+    uint8_t        Kind;                            // Type of option
+    uint8_t        Length;                          // Length
+    TCPIP_UINT16_VAL    MaxSegSize;                     // Maximum segment size
+} TCP_OPTIONS;                                  // TCP Options data structure                           
 
 // Indicates if this packet is a retransmission (no reset) or a new packet (reset required)
-#define SENDTCP_RESET_TIMERS	0x01
+#define SENDTCP_RESET_TIMERS    0x01
 // Instead of transmitting normal data, a garbage octet is transmitted according to RFC 1122 section 4.2.3.6
-#define SENDTCP_KEEP_ALIVE		0x02
+#define SENDTCP_KEEP_ALIVE      0x02
 
 // Internal _TcpSend result
 typedef enum
@@ -102,7 +102,7 @@ typedef enum
 }_TCP_ABORT_FLAGS;
 /****************************************************************************
   Section:
-	TCB Definitions
+    TCB Definitions
   ***************************************************************************/
 
 static TCB_STUB** TCBStubs = 0;
@@ -134,7 +134,7 @@ static uint32_t             sysTickFreq;            // the system tick counter f
 
 /****************************************************************************
   Section:
-	Function Prototypes
+    Function Prototypes
   ***************************************************************************/
 
 static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags);
@@ -349,8 +349,8 @@ static const char* _tcpTraceStateName[] =
     "fwait-1",      // TCPIP_TCP_STATE_FIN_WAIT_1
     "fwait-2",      // TCPIP_TCP_STATE_FIN_WAIT_2
     "closing",      // TCPIP_TCP_STATE_CLOSING
-	"time-wait",    // TCPIP_TCP_STATE_TIME_WAIT
-	"close-wait",   // TCPIP_TCP_STATE_CLOSE_WAIT
+    "time-wait",    // TCPIP_TCP_STATE_TIME_WAIT
+    "close-wait",   // TCPIP_TCP_STATE_CLOSE_WAIT
     "last-ack",     // TCPIP_TCP_STATE_LAST_ACK
     "wait-discon",  // TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT
     "wait-conn",    // TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT
@@ -599,18 +599,18 @@ static void _TCP_LoadRetxTmo(TCB_STUB* pSkt, bool reload)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, TCPIP_TCP_MODULE_CONFIG* pTcpInit)
+    bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, TCPIP_TCP_MODULE_CONFIG* pTcpInit)
 
   Summary:
-	Initializes the TCP module.
+    Initializes the TCP module.
 
   Description:
-	Initializes the TCP module.  This function allocates memory for the TCP module
+    Initializes the TCP module.  This function allocates memory for the TCP module
     and registers itself with the stack manager.
     If the initialization failed it will return false.
 
   Precondition:
-	None
+    None
 
   Parameters:
     stackInit   - pointer to stack initialization data; contains heap, interfaces, etc
@@ -620,9 +620,9 @@ static void _TCP_LoadRetxTmo(TCB_STUB* pSkt, bool reload)
                     - sktTxBuffSize:    default TX buffer size
                     - sktRxBuffSize:    default RX buffer size
   Returns:
-  	true if initialization succeeded
+    true if initialization succeeded
     false otherwise
-  	
+    
   Remarks:
    Simple protection for calls to TCPIP_TCP_Initialize/TCPIP_TCP_Deinitialize
    from other threads is supported.
@@ -747,19 +747,19 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
 
 /*****************************************************************************
   Function:
-	void TCPIP_TCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit)
+    void TCPIP_TCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit)
 
   Summary:
-	De-Initializes the TCP module.
+    De-Initializes the TCP module.
 
   Description:
-	De-Initializes the TCP module.
+    De-Initializes the TCP module.
     This function initializes each socket to the CLOSED state.
     If dynamic memory was allocated for the TCP sockets, the function
-	will deallocate it.
+    will deallocate it.
 
   Precondition:
-	TCPIP_TCP_Initialize() should have been called
+    TCPIP_TCP_Initialize() should have been called
 
   Parameters:
     stackInit   - pointer to stack initialization data; contains heap, interfaces, etc
@@ -881,27 +881,27 @@ static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
 
 /*****************************************************************************
   Function:
-	 TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
+     TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
 
   Summary:
-	Opens a TCP socket as a server.
-	
+    Opens a TCP socket as a server.
+    
   Description:
-	Provides a unified method for opening TCP server sockets. 
+    Provides a unified method for opening TCP server sockets. 
 
-	Sockets are statically/dynamically allocated on boot, and can be claimed with this
+    Sockets are statically/dynamically allocated on boot, and can be claimed with this
     function and freed using TCPIP_TCP_Close.
 
   Precondition:
     TCP is initialized.
 
   Parameters:
-    IP_ADDRESS_TYPE addType			-	The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.
-    TCP_PORT localPort				-	TCP port to listen on for connections.
-    IP_MULTI_ADDRESS* localAddress	-	Local address to use.
-	
+    IP_ADDRESS_TYPE addType         -   The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.
+    TCP_PORT localPort              -   TCP port to listen on for connections.
+    IP_MULTI_ADDRESS* localAddress  -   Local address to use.
+    
   Returns:
- 	INVALID_SOCKET -  No sockets of the specified type were available to be
+    INVALID_SOCKET -  No sockets of the specified type were available to be
                       opened.
     Otherwise -       A TCP_SOCKET handle. Save this handle and use it when
                       calling all other TCP APIs. 
@@ -977,29 +977,29 @@ TCP_SOCKET TCPIP_TCP_ServerOpen(IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP
 
 /*****************************************************************************
   Function:
-	 TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP_MULTI_ADDRESS* remoteAddress)
+     TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP_MULTI_ADDRESS* remoteAddress)
 
   Summary:
-	Opens a TCP socket as a client.
-	
+    Opens a TCP socket as a client.
+    
   Description:
-	Provides a unified method for opening TCP client sockets. 
+    Provides a unified method for opening TCP client sockets. 
 
-	Sockets are statically/dynamically allocated on boot, and can be claimed with this
+    Sockets are statically/dynamically allocated on boot, and can be claimed with this
     function and freed using TCPIP_TCP_Abort or TCPIP_TCP_Close.
 
   Precondition:
     TCP is initialized.
 
   Parameters:
-    IP_ADDRESS_TYPE addType			-	The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.
-    TCP_PORT remotePort				-	TCP port to connect to.
-                         				  The local port for client sockets will be automatically picked
+    IP_ADDRESS_TYPE addType         -   The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.
+    TCP_PORT remotePort             -   TCP port to connect to.
+                                          The local port for client sockets will be automatically picked
                                           by the TCP module.
-    IP_MULTI_ADDRESS* remoteAddress	-	The remote address to be used.
-	
+    IP_MULTI_ADDRESS* remoteAddress -   The remote address to be used.
+    
   Returns:
- 	INVALID_SOCKET -  No sockets of the specified type were available to be
+    INVALID_SOCKET -  No sockets of the specified type were available to be
                       opened.
     Otherwise -       A TCP_SOCKET handle. Save this handle and use it when
                       calling all other TCP APIs. 
@@ -1048,13 +1048,13 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
 
 /****************************************************************************
   Section:
-	Connection Management Functions
+    Connection Management Functions
   ***************************************************************************/
 
 
 /*****************************************************************************
   Function:
-	TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address)
+    TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_PORT port, IP_MULTI_ADDRESS* address)
     
   Summary:
     Opens a TCP socket for listening or as a client.
@@ -1088,8 +1088,8 @@ TCP_SOCKET TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE addType, TCP_PORT remotePort, IP
                       calling all other TCP APIs.
 
   Remarks:
-	When finished using the TCP socket handle, call the TCPIP_TCP_Close() function to free the 
-	socket and delete the handle.
+    When finished using the TCP socket handle, call the TCPIP_TCP_Close() function to free the 
+    socket and delete the handle.
 
     IP_ADDRESS_TYPE_ANY is supported for server sockets only!
 
@@ -1250,7 +1250,7 @@ static TCP_SOCKET _TCP_Open(IP_ADDRESS_TYPE addType, TCP_OPEN_TYPE opType, TCP_P
         _TcpSocketSetState(pSkt, (_TcpClientSocketConnect(pSkt) >= 0) ? TCPIP_TCP_STATE_SYN_SENT : TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT);
     }
 
-    return hTCP;		
+    return hTCP;        
 
 }
 
@@ -1653,7 +1653,7 @@ static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, u
 
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
 {
-    TCP_HEADER*		    pTCPHdr;
+    TCP_HEADER*         pTCPHdr;
     uint16_t            tcpTotLength;
     uint16_t            optionsSize;
     const IPV4_ADDR*    pPktSrcAdd;
@@ -1678,7 +1678,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         // Calculate IP pseudoheader checksum.
         pseudoHdr.SourceAddress.Val = pPktSrcAdd->Val;
         pseudoHdr.DestAddress.Val = pPktDstAdd->Val;
-        pseudoHdr.Zero	= 0;
+        pseudoHdr.Zero  = 0;
         pseudoHdr.Protocol = IP_PROT_TCP;
         pseudoHdr.Length = TCPIP_Helper_ntohs(tcpTotLength);
 
@@ -1700,11 +1700,11 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     }
 
 
-	_TcpSwapHeader(pTCPHdr);
+    _TcpSwapHeader(pTCPHdr);
     TCPIP_TCP_CheckRxPkt(pTCPHdr);
 
-	// Skip over options to retrieve data bytes
-	optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
+    // Skip over options to retrieve data bytes
+    optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
 
     while(true)
     {
@@ -1900,7 +1900,7 @@ static void _Tcpv6AckFnc (void * pkt, bool success, const void * param)
         return;
     }
 
-	while(pSkt != 0)
+    while(pSkt != 0)
     {  
         // make sure the user threads don't mess with the socket right now
         status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
@@ -1948,7 +1948,7 @@ static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
     const void* sigParam = 0;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
-	while(pSkt != 0)
+    while(pSkt != 0)
     {  
         // make sure the user threads don't mess with the socket right now
         status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
@@ -1998,14 +1998,14 @@ static void _Tcpv6MacAckFnc (TCPIP_MAC_PACKET* pPkt,  const void* param)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
+    bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 
-	This function was added due to the possibility of ambiguity when checking the socket state
+    This function was added due to the possibility of ambiguity when checking the socket state
     reported by TCPIP_TCP_IsConnected.
-	If a socket is closed and then immediately reopened and a SYN received,
-	a call to TCPIP_TCP_IsConnected could still return true although the socket has been disconnected.
+    If a socket is closed and then immediately reopened and a SYN received,
+    a call to TCPIP_TCP_IsConnected could still return true although the socket has been disconnected.
     This can cause errors for protocols such as HTTP in which a client will 
-	immediately open a new connection upon closing of a prior one.
+    immediately open a new connection upon closing of a prior one.
   ***************************************************************************/
 bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
 {
@@ -2017,7 +2017,7 @@ bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
         {
             pSkt->Flags.bSocketReset = 0;
             return true;
-        }	
+        }   
         return false;
     }
 
@@ -2040,27 +2040,27 @@ bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_IsConnected(TCP_SOCKET hTCP)
+    bool TCPIP_TCP_IsConnected(TCP_SOCKET hTCP)
 
   Summary:
-	Determines if a socket has an established connection.
+    Determines if a socket has an established connection.
 
   Description:
-	This function determines if a socket has an established connection to 
-	a remote node.  Call this function after calling _TCP_Open to determine 
-	when the connection is set up and ready for use.  This function was 
-	historically used to check for disconnections, but TCPIP_TCP_WasReset is now a
-	more appropriate solution. 
+    This function determines if a socket has an established connection to 
+    a remote node.  Call this function after calling _TCP_Open to determine 
+    when the connection is set up and ready for use.  This function was 
+    historically used to check for disconnections, but TCPIP_TCP_WasReset is now a
+    more appropriate solution. 
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Return Values:
-  	true - The socket has an established connection to a remote node.
-  	false - The socket is not currently connected.
+    true - The socket has an established connection to a remote node.
+    false - The socket is not currently connected.
 
   Remarks:
     A socket is said to be connected only if it is in one of the states:
@@ -2082,7 +2082,7 @@ bool TCPIP_TCP_IsConnected(TCP_SOCKET hTCP)
 bool TCPIP_TCP_Disconnect(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt)
     {
         _TCP_SEND_RES sRes = _TcpDisconnect(pSkt, true);
@@ -2099,15 +2099,15 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
     bool            sendData;
     _TCP_SEND_RES   sendRes;
 
-	switch(pSkt->smState)
-	{
+    switch(pSkt->smState)
+    {
 
-		case TCPIP_TCP_STATE_SYN_RECEIVED:
-		case TCPIP_TCP_STATE_ESTABLISHED:
+        case TCPIP_TCP_STATE_SYN_RECEIVED:
+        case TCPIP_TCP_STATE_ESTABLISHED:
 
             // fall through
-		case TCPIP_TCP_STATE_CLOSE_WAIT:
-			// Send the FIN.
+        case TCPIP_TCP_STATE_CLOSE_WAIT:
+            // Send the FIN.
             // If the socket linger is on we should keep the socket opened (for the specified timeout)
             // until all the queued TX data can be sent in the background
             // Otherwise the queued TX data is discarded.
@@ -2145,7 +2145,7 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
             {
                 sendRes = _TCP_SEND_OK; 
             }
-			
+            
             if(sendRes < 0)
             {   
                 // let the user know
@@ -2158,26 +2158,26 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
                 pSkt->Flags.failedDisconnect = 0;
                 _TcpSocketSetState(pSkt, pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT ? TCPIP_TCP_STATE_LAST_ACK : TCPIP_TCP_STATE_FIN_WAIT_1);
             }
-			break;
+            break;
 
-		case TCPIP_TCP_STATE_FIN_WAIT_1:
-		case TCPIP_TCP_STATE_FIN_WAIT_2:
-		case TCPIP_TCP_STATE_CLOSING:
+        case TCPIP_TCP_STATE_FIN_WAIT_1:
+        case TCPIP_TCP_STATE_FIN_WAIT_2:
+        case TCPIP_TCP_STATE_CLOSING:
         case TCPIP_TCP_STATE_TIME_WAIT:
-		case TCPIP_TCP_STATE_LAST_ACK:
+        case TCPIP_TCP_STATE_LAST_ACK:
             sendRes = _TCP_SEND_OK;
             break;
-			
-		case TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT:
+            
+        case TCPIP_TCP_STATE_CLIENT_WAIT_DISCONNECT:
             // special client socket state
             _TcpCloseSocket(pSkt, 0);
             sendRes = _TCP_SEND_OK;
             break;
 
-		default:
+        default:
             sendRes = _TCP_SEND_NOT_CONN;
-			break;
-	}
+            break;
+    }
 
     return sendRes;
 
@@ -2187,7 +2187,7 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
 void TCPIP_TCP_Abort(TCP_SOCKET hTCP, bool killSocket)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt)
     {
         _TcpAbort(pSkt, killSocket ? _TCP_ABORT_FLAG_FORCE_CLOSE : _TCP_ABORT_FLAG_REGULAR, 0);
@@ -2200,16 +2200,16 @@ static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL
 {
     bool    sktReset = false;
 
-	switch(pSkt->smState)
-	{
-		case TCPIP_TCP_STATE_SYN_RECEIVED:
-		case TCPIP_TCP_STATE_ESTABLISHED:
-		case TCPIP_TCP_STATE_CLOSE_WAIT:
-		case TCPIP_TCP_STATE_FIN_WAIT_1:
-		case TCPIP_TCP_STATE_FIN_WAIT_2:
-		case TCPIP_TCP_STATE_LAST_ACK:
+    switch(pSkt->smState)
+    {
+        case TCPIP_TCP_STATE_SYN_RECEIVED:
+        case TCPIP_TCP_STATE_ESTABLISHED:
+        case TCPIP_TCP_STATE_CLOSE_WAIT:
+        case TCPIP_TCP_STATE_FIN_WAIT_1:
+        case TCPIP_TCP_STATE_FIN_WAIT_2:
+        case TCPIP_TCP_STATE_LAST_ACK:
             sktReset = true;
-			break;
+            break;
 
         case TCPIP_TCP_STATE_TIME_WAIT:
             if((abFlags & _TCP_ABORT_FLAG_SHUTDOWN) == 0)
@@ -2218,9 +2218,9 @@ static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL
             }
             break;
 
-		default:
-			break;
-	}
+        default:
+            break;
+    }
 
     if(sktReset)
     {
@@ -2242,7 +2242,7 @@ static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL
 bool TCPIP_TCP_Connect(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt && pSkt->smState == TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
     {
         if(_TcpClientSocketConnect(pSkt) >= 0)
@@ -2293,19 +2293,19 @@ bool TCPIP_TCP_Close(TCP_SOCKET hTCP)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
+    bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
 
   Summary:
-	Obtains information about a currently open socket.
+    Obtains information about a currently open socket.
 
   Description:
-	Fills the provided TCP_SOCKET_INFO structure associated with this socket.
+    Fills the provided TCP_SOCKET_INFO structure associated with this socket.
 
   Precondition:
-	TCP is initialized and the socket is connected.
+    TCP is initialized and the socket is connected.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Returns:
     true if the call succeeded
@@ -2315,7 +2315,7 @@ bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
 {
 
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt == 0)
     {
         return false;
@@ -2345,17 +2345,17 @@ bool TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* remoteInfo)
         break;
     }
 
-	remoteInfo->remotePort = pSkt->remotePort;
-	remoteInfo->localPort = pSkt->localPort;
-	remoteInfo->hNet = pSkt->pSktNet;
-	remoteInfo->state = (TCPIP_TCP_STATE)pSkt->smState;
+    remoteInfo->remotePort = pSkt->remotePort;
+    remoteInfo->localPort = pSkt->localPort;
+    remoteInfo->hNet = pSkt->pSktNet;
+    remoteInfo->state = (TCPIP_TCP_STATE)pSkt->smState;
     remoteInfo->rxSize = pSkt->rxEnd - pSkt->rxStart;
     remoteInfo->txSize = pSkt->txEnd - pSkt->txStart;
     remoteInfo->rxPending = _TCPIsGetReady(pSkt);
     remoteInfo->txPending = TCPIP_TCP_FifoTxFullGet(hTCP);
     remoteInfo->flags = _TCP_SktFlagsGet(pSkt);
 
-	return true;
+    return true;
 }
 
 TCP_SOCKET_FLAGS TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP)
@@ -2363,7 +2363,7 @@ TCP_SOCKET_FLAGS TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP)
     TCP_SOCKET_FLAGS flags = TCP_SOCKET_FLAG_NONE;
 
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt != 0)
     {
         flags = _TCP_SktFlagsGet(pSkt);
@@ -2500,30 +2500,30 @@ static uint32_t _TCP_SktSetSequenceNo(const TCB_STUB* pSkt)
 
 /****************************************************************************
   Section:
-	Transmit Functions
+    Transmit Functions
   ***************************************************************************/
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_Flush(TCP_SOCKET hTCP)
+    bool TCPIP_TCP_Flush(TCP_SOCKET hTCP)
 
   Summary:
-	Immediately transmits all pending TX data.
+    Immediately transmits all pending TX data.
 
   Description:
-	This function immediately transmits all pending TX data with a PSH 
-	flag.  If this function is not called, data will automatically be sent
-	when either a) the TX buffer is half full or b) the 
-	TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL (default: 40ms) has elapsed.
+    This function immediately transmits all pending TX data with a PSH 
+    flag.  If this function is not called, data will automatically be sent
+    when either a) the TX buffer is half full or b) the 
+    TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL (default: 40ms) has elapsed.
 
   Precondition:
-	TCP is initialized and the socket is connected.
+    TCP is initialized and the socket is connected.
 
   Parameters:
-	hTCP - The socket whose data is to be transmitted.
+    hTCP - The socket whose data is to be transmitted.
 
   Returns:
-	true if data is flushed from the socket
+    true if data is flushed from the socket
     false otherwise
 
   Remarks:
@@ -2560,30 +2560,30 @@ static void _TcpDiscardTx(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_PutIsReady(TCP_SOCKET hTCP)
+    uint16_t TCPIP_TCP_PutIsReady(TCP_SOCKET hTCP)
 
   Summary:
-	Determines how much free space is available in the TCP TX buffer.
+    Determines how much free space is available in the TCP TX buffer.
 
   Description:
-	Call this function to determine how many bytes can be written to the 
-	TCP TX buffer.  If this function returns zero, the application must 
-	return to the main stack loop before continuing in order to transmit
-	more data.
+    Call this function to determine how many bytes can be written to the 
+    TCP TX buffer.  If this function returns zero, the application must 
+    return to the main stack loop before continuing in order to transmit
+    more data.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Returns:
-	The number of bytes available to be written in the TCP TX buffer.
+    The number of bytes available to be written in the TCP TX buffer.
   ***************************************************************************/
 uint16_t TCPIP_TCP_PutIsReady(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     return pSkt ? _TCPIsPutReady(pSkt) : 0;
 }
 
@@ -2601,20 +2601,20 @@ static uint16_t _TCPIsPutReady(TCB_STUB* pSkt)
 
 static uint16_t _TCPSocketTxFreeSize(TCB_STUB* pSkt)
 {
-	// Unconnected sockets shouldn't be transmitting anything.
-	if(!( (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT) ))
+    // Unconnected sockets shouldn't be transmitting anything.
+    if(!( (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED) || (pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT) ))
     {
-		return 0;
+        return 0;
     }
-	
-	// Calculate the free space in this socket's TX FIFO
-	
-	if(pSkt->txHead >= pSkt->txTail)
+    
+    // Calculate the free space in this socket's TX FIFO
+    
+    if(pSkt->txHead >= pSkt->txTail)
     {
-		return (pSkt->txEnd - pSkt->txStart - 1) - (pSkt->txHead - pSkt->txTail);
+        return (pSkt->txEnd - pSkt->txStart - 1) - (pSkt->txHead - pSkt->txTail);
     }
 
-	return pSkt->txTail - pSkt->txHead - 1;
+    return pSkt->txTail - pSkt->txHead - 1;
 }
 
 uint16_t TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t byte)
@@ -2624,37 +2624,37 @@ uint16_t TCPIP_TCP_Put(TCP_SOCKET hTCP, uint8_t byte)
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
+    uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
 
   Description:
-	Writes an array from RAM to a TCP socket.
+    Writes an array from RAM to a TCP socket.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to which data is to be written.
-	data - Pointer to the array to be written.
-	len  - Number of bytes to be written.
+    hTCP - The socket to which data is to be written.
+    data - Pointer to the array to be written.
+    len  - Number of bytes to be written.
 
   Returns:
-	The number of bytes written to the socket.  If less than len, the
-	buffer became full or the socket is not conected.
+    The number of bytes written to the socket.  If less than len, the
+    buffer became full or the socket is not conected.
   ***************************************************************************/
 uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
 {
-	uint16_t wActualLen;
-	uint16_t wFreeTxSpace;
-	uint16_t wRightLen = 0;
+    uint16_t wActualLen;
+    uint16_t wFreeTxSpace;
+    uint16_t wRightLen = 0;
     TCB_STUB* pSkt; 
-	
+    
     if(len == 0 || data == 0 || (pSkt = _TcpSocketChk(hTCP)) == 0)
     {
         return 0;
     }
 
-	wFreeTxSpace = _TCPIsPutReady(pSkt);
-	if(wFreeTxSpace == 0)
+    wFreeTxSpace = _TCPIsPutReady(pSkt);
+    if(wFreeTxSpace == 0)
     {   // no room in the socket buffer
         if(_TCP_TxPktValid(pSkt))
         {
@@ -2666,18 +2666,18 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
     wActualLen = len >= wFreeTxSpace ? wFreeTxSpace : len;
     wFreeTxSpace -= wActualLen; // new free space
 
-	// See if we need a two part put
-	if(pSkt->txHead + wActualLen >= pSkt->txEnd)
-	{
-		wRightLen = pSkt->txEnd-pSkt->txHead;
+    // See if we need a two part put
+    if(pSkt->txHead + wActualLen >= pSkt->txEnd)
+    {
+        wRightLen = pSkt->txEnd-pSkt->txHead;
         TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wRightLen);
-		data += wRightLen;
-		wActualLen -= wRightLen;
-		pSkt->txHead = pSkt->txStart;
-	}
+        data += wRightLen;
+        wActualLen -= wRightLen;
+        pSkt->txHead = pSkt->txStart;
+    }
 
     TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wActualLen);
-	pSkt->txHead += wActualLen;
+    pSkt->txHead += wActualLen;
 
     bool    toFlush = false;
     bool    toSetFlag = false;
@@ -2708,16 +2708,16 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
             pSkt->Flags.bHalfFullFlush = true;
         }
     }
-	// If not already enabled, start a timer so this data will 
-	// eventually get sent even if the application doens't call
-	// TCPIP_TCP_Flush()
-	else if(!pSkt->Flags.bTimer2Enabled)
-	{
-		pSkt->Flags.bTimer2Enabled = true;
-		pSkt->eventTime2 = SYS_TMR_TickCountGet() + (TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL * sysTickFreq)/1000;
-	}
+    // If not already enabled, start a timer so this data will 
+    // eventually get sent even if the application doens't call
+    // TCPIP_TCP_Flush()
+    else if(!pSkt->Flags.bTimer2Enabled)
+    {
+        pSkt->Flags.bTimer2Enabled = true;
+        pSkt->eventTime2 = SYS_TMR_TickCountGet() + (TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL * sysTickFreq)/1000;
+    }
 
-	return wActualLen + wRightLen;
+    return wActualLen + wRightLen;
 }
 
 static bool _TCPNeedSend(TCB_STUB* pSkt)
@@ -2767,51 +2767,51 @@ static bool _TCPNeedSend(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-	const uint8_t* TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data)
+    const uint8_t* TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data)
 
   Description:
-	Writes a null-terminated string from RAM to a TCP socket.  The 
-	null-terminator is not copied to the socket.
+    Writes a null-terminated string from RAM to a TCP socket.  The 
+    null-terminator is not copied to the socket.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to which data is to be written.
-	data - Pointer to the string to be written.
+    hTCP - The socket to which data is to be written.
+    data - Pointer to the string to be written.
 
   Returns:
-	Pointer to the byte following the last byte written to the socket.  If
-	this pointer does not dereference to a NUL byte, the buffer became full
-	or the socket is not connected.
+    Pointer to the byte following the last byte written to the socket.  If
+    this pointer does not dereference to a NUL byte, the buffer became full
+    or the socket is not connected.
 
   Remarks:
-	The return value of this function differs from that of TCPIP_TCP_ArrayPut.  To
-	write long strings in a single state, initialize the *data pointer to the
-	first byte, then call this function repeatedly (breaking to the main 
-	stack loop after each call) until the return value dereferences to a NUL
-	byte.  Save the return value as the new starting *data pointer otherwise.
+    The return value of this function differs from that of TCPIP_TCP_ArrayPut.  To
+    write long strings in a single state, initialize the *data pointer to the
+    first byte, then call this function repeatedly (breaking to the main 
+    stack loop after each call) until the return value dereferences to a NUL
+    byte.  Save the return value as the new starting *data pointer otherwise.
   ***************************************************************************/
 const uint8_t* TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* data)
 {
-	return data + TCPIP_TCP_ArrayPut(hTCP, data, strlen((char*)data));
+    return data + TCPIP_TCP_ArrayPut(hTCP, data, strlen((char*)data));
 }
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_FifoTxFullGet(TCP_SOCKET hTCP)
+    uint16_t TCPIP_TCP_FifoTxFullGet(TCP_SOCKET hTCP)
 
   Description:
-	Determines how many bytes are pending in the TCP TX FIFO.
+    Determines how many bytes are pending in the TCP TX FIFO.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Returns:
-	Number of bytes pending to be flushed in the TCP TX FIFO.
+    Number of bytes pending to be flushed in the TCP TX FIFO.
   ***************************************************************************/
 uint16_t TCPIP_TCP_FifoTxFullGet(TCP_SOCKET hTCP)
 {
@@ -2853,24 +2853,24 @@ uint16_t TCPIP_TCP_FifoTxFreeGet(TCP_SOCKET hTCP)
 
 /****************************************************************************
   Section:
-	Receive Functions
+    Receive Functions
   ***************************************************************************/
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP)
+    uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP)
 
   Description:
-	Discards any pending data in the TCP RX FIFO.
+    Discards any pending data in the TCP RX FIFO.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket whose RX FIFO is to be cleared.
+    hTCP - The socket whose RX FIFO is to be cleared.
 
   Returns:
-	Number of bytes that have been discarded from the RX buffer.
+    Number of bytes that have been discarded from the RX buffer.
   ***************************************************************************/
 uint16_t TCPIP_TCP_Discard(TCP_SOCKET hTCP)
 {
@@ -2937,30 +2937,30 @@ static bool _TCPSendWinIncUpdate(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-	void uint16_t TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP)
+    void uint16_t TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP)
 
   Summary:
-	Determines how many bytes can be read from the TCP RX buffer.
+    Determines how many bytes can be read from the TCP RX buffer.
 
   Description:
-	Call this function to determine how many bytes can be read from the 
-	TCP RX buffer.  If this function returns zero, the application must 
-	return to the main stack loop before continuing in order to wait for
-	more data to arrive.
+    Call this function to determine how many bytes can be read from the 
+    TCP RX buffer.  If this function returns zero, the application must 
+    return to the main stack loop before continuing in order to wait for
+    more data to arrive.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Returns:
-	The number of bytes available to be read from the TCP RX buffer.
+    The number of bytes available to be read from the TCP RX buffer.
   ***************************************************************************/
 uint16_t TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt)
     {
         return _TCPIsGetReady(pSkt);
@@ -2970,10 +2970,10 @@ uint16_t TCPIP_TCP_GetIsReady(TCP_SOCKET hTCP)
 }
 
 static uint16_t _TCPIsGetReady(TCB_STUB* pSkt)
-{	
-	if(pSkt->rxHead >= pSkt->rxTail)
+{   
+    if(pSkt->rxHead >= pSkt->rxTail)
     {
-		return pSkt->rxHead - pSkt->rxTail;
+        return pSkt->rxHead - pSkt->rxTail;
     }
 
     return (pSkt->rxEnd - pSkt->rxTail + 1) + (pSkt->rxHead - pSkt->rxStart);
@@ -2987,41 +2987,41 @@ uint16_t TCPIP_TCP_Get(TCP_SOCKET hTCP, uint8_t* byte)
 
 uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
 {
-	uint16_t wGetReadyCount;
-	uint16_t RightLen = 0;
+    uint16_t wGetReadyCount;
+    uint16_t RightLen = 0;
     TCB_STUB* pSkt; 
-	
-	// See if there is any data which can be read
+    
+    // See if there is any data which can be read
     if(len == 0 || (pSkt= _TcpSocketChk(hTCP)) == 0 || (wGetReadyCount = _TCPIsGetReady(pSkt)) == 0)
     {
         return 0;
     }
 
-	// Make sure we don't try to read more data than is available
-	if(len > wGetReadyCount)
+    // Make sure we don't try to read more data than is available
+    if(len > wGetReadyCount)
     {
-		len = wGetReadyCount;
+        len = wGetReadyCount;
     }
 
-	// See if we need a two part get
-	if(pSkt->rxTail + len > pSkt->rxEnd)
-	{
-		RightLen = pSkt->rxEnd - pSkt->rxTail + 1;
-		if(buffer)
-		{
+    // See if we need a two part get
+    if(pSkt->rxTail + len > pSkt->rxEnd)
+    {
+        RightLen = pSkt->rxEnd - pSkt->rxTail + 1;
+        if(buffer)
+        {
             TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, RightLen);
-			buffer += RightLen;
-		}
-		len -= RightLen;
-		pSkt->rxTail = pSkt->rxStart;
-	}
+            buffer += RightLen;
+        }
+        len -= RightLen;
+        pSkt->rxTail = pSkt->rxStart;
+    }
 
-	if(buffer)
+    if(buffer)
     {
         TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, len);
     }
-	pSkt->rxTail += len;
-	len += RightLen;
+    pSkt->rxTail += len;
+    len += RightLen;
 
     if(!_TCPSendWinIncUpdate(pSkt))
     {   // not enough data freed to generate a window update
@@ -3038,32 +3038,32 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
         }
     }
 
-	return len;
+    return len;
 }
 
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_FifoRxFreeGet(TCP_SOCKET hTCP)
+    uint16_t TCPIP_TCP_FifoRxFreeGet(TCP_SOCKET hTCP)
 
   Description:
-	Determines how many bytes are free in the RX FIFO.
+    Determines how many bytes are free in the RX FIFO.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to check.
+    hTCP - The socket to check.
 
   Returns:
-	The number of bytes free in the TCP RX FIFO.  If zero, no additional 
-	data can be received until the application removes some data using one
-	of the TCPIP_TCP_Get family functions.
+    The number of bytes free in the TCP RX FIFO.  If zero, no additional 
+    data can be received until the application removes some data using one
+    of the TCPIP_TCP_Get family functions.
   ***************************************************************************/
 uint16_t TCPIP_TCP_FifoRxFreeGet(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt != 0)
     {
         return _TCPGetRxFIFOFree(pSkt);
@@ -3085,40 +3085,40 @@ static uint16_t _TCPGetRxFIFOFree(TCB_STUB* pSkt)
     // Find out how many data bytes are actually in the RX FIFO
     wDataLen = _TCPIsGetReady(pSkt);
 
-    // Perform the calculation	
+    // Perform the calculation  
     return wFIFOSize - wDataLen;
 }
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, uint16_t wStart)
+    uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, uint16_t wStart)
 
   Summary:
-  	Reads a specified number of data bytes from the TCP RX FIFO without 
-  	removing them from the buffer.
+    Reads a specified number of data bytes from the TCP RX FIFO without 
+    removing them from the buffer.
 
   Description:
-	Reads a specified number of data bytes from the TCP RX FIFO without 
-  	removing them from the buffer.  No TCP control actions are taken as a 
-  	result of this function (ex: no window update is sent to the remote node).
-  	
+    Reads a specified number of data bytes from the TCP RX FIFO without 
+    removing them from the buffer.  No TCP control actions are taken as a 
+    result of this function (ex: no window update is sent to the remote node).
+    
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to peak from (read without removing from stream).
-	vBuffer - Destination to write the peeked data bytes.
-	wLen - Length of bytes to peak from the RX FIFO and copy to vBuffer.
-	wStart - Zero-indexed starting position within the FIFO to start peeking 
-		from.
+    hTCP - The socket to peak from (read without removing from stream).
+    vBuffer - Destination to write the peeked data bytes.
+    wLen - Length of bytes to peak from the RX FIFO and copy to vBuffer.
+    wStart - Zero-indexed starting position within the FIFO to start peeking 
+        from.
 
   Return Values:
-	Number of bytes actually peeked from the stream and copied to vBuffer.  
-	This value can be less than wLen if wStart + wLen is greater than the 
-	deepest possible character in the RX FIFO.
+    Number of bytes actually peeked from the stream and copied to vBuffer.  
+    This value can be less than wLen if wStart + wLen is greater than the 
+    deepest possible character in the RX FIFO.
 
   Remarks:
-  	None
+    None
   ***************************************************************************/
 uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, uint16_t wStart)
 {
@@ -3167,112 +3167,112 @@ uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, u
 
 /*****************************************************************************
   Function:
-	uint8_t TCPIP_TCP_Peek(TCP_SOCKET hTCP, uint16_t wStart)
+    uint8_t TCPIP_TCP_Peek(TCP_SOCKET hTCP, uint16_t wStart)
 
   Summary:
-  	Peaks at one byte in the TCP RX FIFO without removing it from the buffer.
+    Peaks at one byte in the TCP RX FIFO without removing it from the buffer.
 
   Description:
-	Peaks at one byte in the TCP RX FIFO without removing it from the buffer.
-  	
+    Peaks at one byte in the TCP RX FIFO without removing it from the buffer.
+    
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to peak from (read without removing from stream).
-	wStart - Zero-indexed starting position within the FIFO to peek from.
+    hTCP - The socket to peak from (read without removing from stream).
+    wStart - Zero-indexed starting position within the FIFO to peek from.
 
   Return Values:
-	Byte peeked from the RX FIFO.  If there is no data in the buffer or an 
-	illegal wStart starting offset is given, then an indeterminate value is 
-	returned.  The caller must ensure that valid parameters are passed to avoid 
-	(i.e ensure that TCPIP_TCP_GetIsReady() returns a number that is less than wStart 
-	before calling TCPIP_TCP_Peek()).
+    Byte peeked from the RX FIFO.  If there is no data in the buffer or an 
+    illegal wStart starting offset is given, then an indeterminate value is 
+    returned.  The caller must ensure that valid parameters are passed to avoid 
+    (i.e ensure that TCPIP_TCP_GetIsReady() returns a number that is less than wStart 
+    before calling TCPIP_TCP_Peek()).
 
   Remarks:
-  	Use the TCPIP_TCP_ArrayPeek() function to read more than one byte.  It will 
-  	perform better than calling TCPIP_TCP_Peek() in a loop.
+    Use the TCPIP_TCP_ArrayPeek() function to read more than one byte.  It will 
+    perform better than calling TCPIP_TCP_Peek() in a loop.
   ***************************************************************************/
 uint8_t TCPIP_TCP_Peek(TCP_SOCKET hTCP, uint16_t wStart)
 {
-	uint8_t i = 0;
-	
-	TCPIP_TCP_ArrayPeek(hTCP, &i, 1, wStart);
-	return i;
+    uint8_t i = 0;
+    
+    TCPIP_TCP_ArrayPeek(hTCP, &i, 1, wStart);
+    return i;
 }
 
 
 /****************************************************************************
   Section:
-	Search Functions
+    Search Functions
   ***************************************************************************/
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, uint8_t* cFindArray, uint16_t wLen, 
-						uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
+    uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, uint8_t* cFindArray, uint16_t wLen, 
+                        uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
 
   Summary:
-  	Searches for a string in the TCP RX buffer.
+    Searches for a string in the TCP RX buffer.
 
   Description:
-	This function finds the first occurrance of an array of bytes in the
-	TCP RX buffer.  It can be used by an application to abstract searches 
-	out of their own application code.  For increased efficiency, the 
-	function is capable of limiting the scope of search to a specific
-	range of bytes.  It can also perform a case-insensitive search if
-	required.
-	
-	For example, if the buffer contains "I love PIC MCUs!" and the search
-	array is "love" with a length of 4, a value of 2 will be returned.
+    This function finds the first occurrance of an array of bytes in the
+    TCP RX buffer.  It can be used by an application to abstract searches 
+    out of their own application code.  For increased efficiency, the 
+    function is capable of limiting the scope of search to a specific
+    range of bytes.  It can also perform a case-insensitive search if
+    required.
+    
+    For example, if the buffer contains "I love PIC MCUs!" and the search
+    array is "love" with a length of 4, a value of 2 will be returned.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to search within.
-	cFindArray - The array of bytes to find in the buffer.
-	wLen - Length of cFindArray.
-	wStart - Zero-indexed starting position within the buffer.
-	wSearchLen - Length from wStart to search in the buffer.
-	bTextCompare - true for case-insensitive text search, false for binary search
+    hTCP - The socket to search within.
+    cFindArray - The array of bytes to find in the buffer.
+    wLen - Length of cFindArray.
+    wStart - Zero-indexed starting position within the buffer.
+    wSearchLen - Length from wStart to search in the buffer.
+    bTextCompare - true for case-insensitive text search, false for binary search
 
   Return Values:
-	0xFFFF - Search array not found
-	Otherwise - Zero-indexed position of the first occurrance
+    0xFFFF - Search array not found
+    Otherwise - Zero-indexed position of the first occurrance
 
   Remarks:
-	The performance of this function degrades when the buffer is full
+    The performance of this function degrades when the buffer is full
     and the array is not found.
     For better performance, try to search for characters that are expected to exist or
-	limit the scope of the search as much as possible.  The HTTP module, 
-	for example, uses this function to parse headers.  However, it searches 
-	for newlines, then the separating colon, then reads the header name to 
-	RAM for final comparison.  This has proven to be significantly faster  
-	than searching for full header name strings outright.
+    limit the scope of the search as much as possible.  The HTTP module, 
+    for example, uses this function to parse headers.  However, it searches 
+    for newlines, then the separating colon, then reads the header name to 
+    RAM for final comparison.  This has proven to be significantly faster  
+    than searching for full header name strings outright.
   ***************************************************************************/
 uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_t wLen, uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
 {
-	uint8_t* ptrRead;
-	uint16_t wDataLen;
-	uint16_t wBytesUntilWrap;
-	uint8_t* ptrLocation;
-	uint16_t wLenStart;
-	const uint8_t *cFindArrayStart;
-	uint8_t i, j, k;
-	bool isFinding;
-	uint8_t buffer[32];
+    uint8_t* ptrRead;
+    uint16_t wDataLen;
+    uint16_t wBytesUntilWrap;
+    uint8_t* ptrLocation;
+    uint16_t wLenStart;
+    const uint8_t *cFindArrayStart;
+    uint8_t i, j, k;
+    bool isFinding;
+    uint8_t buffer[32];
 
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt == 0 || wLen == 0)
     {
         return 0xFFFF;
     }
 
-	// Find out how many bytes are in the RX FIFO and return
-	// immediately if we won't possibly find a match
-	wDataLen = _TCPIsGetReady(pSkt) - wStart;
+    // Find out how many bytes are in the RX FIFO and return
+    // immediately if we won't possibly find a match
+    wDataLen = _TCPIsGetReady(pSkt) - wStart;
 
     if(wDataLen < wLen)
     {
@@ -3360,7 +3360,7 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
                         cFindArray = cFindArrayStart;
                         j = *cFindArray++;
                         if (j >= 'a' && j <= 'z') 
-						{
+                        {
                             j += 'A' - 'a';
                         }
                         isFinding = false;
@@ -3407,70 +3407,70 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_TCP_Find(TCP_SOCKET hTCP, uint8_t cFind,
-						uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
+    uint16_t TCPIP_TCP_Find(TCP_SOCKET hTCP, uint8_t cFind,
+                        uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
 
   Summary:
-  	Searches for a byte in the TCP RX buffer.
+    Searches for a byte in the TCP RX buffer.
 
   Description:
-	This function finds the first occurrance of a byte in the TCP RX
-	buffer.  It can be used by an application to abstract searches 
-	out of their own application code.  For increased efficiency, the 
-	function is capable of limiting the scope of search to a specific
-	range of bytes.  It can also perform a case-insensitive search if
-	required.
-	
-	For example, if the buffer contains "I love PIC MCUs!" and the cFind
-	byte is ' ', a value of 1 will be returned.
+    This function finds the first occurrance of a byte in the TCP RX
+    buffer.  It can be used by an application to abstract searches 
+    out of their own application code.  For increased efficiency, the 
+    function is capable of limiting the scope of search to a specific
+    range of bytes.  It can also perform a case-insensitive search if
+    required.
+    
+    For example, if the buffer contains "I love PIC MCUs!" and the cFind
+    byte is ' ', a value of 1 will be returned.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP - The socket to search within.
-	cFind - The byte to find in the buffer.
-	wStart - Zero-indexed starting position within the buffer.
-	wSearchLen - Length from wStart to search in the buffer.
-	bTextCompare - true for case-insensitive text search, false for binary search
+    hTCP - The socket to search within.
+    cFind - The byte to find in the buffer.
+    wStart - Zero-indexed starting position within the buffer.
+    wSearchLen - Length from wStart to search in the buffer.
+    bTextCompare - true for case-insensitive text search, false for binary search
 
   Return Values:
-	0xFFFF - Search array not found
-	Otherwise - Zero-indexed position of the first occurrance
+    0xFFFF - Search array not found
+    Otherwise - Zero-indexed position of the first occurrance
 
   Remarks:
-	For best performance try to search for characters that are expected to exist or
-	limit the scope of the search as much as possible.  The HTTP module, 
-	for example, uses this function to parse headers.  However, it searches 
-	for newlines, then the separating colon, then reads the header name to 
-	RAM for final comparison.  This has proven to be significantly faster  
-	than searching for full header name strings outright.
+    For best performance try to search for characters that are expected to exist or
+    limit the scope of the search as much as possible.  The HTTP module, 
+    for example, uses this function to parse headers.  However, it searches 
+    for newlines, then the separating colon, then reads the header name to 
+    RAM for final comparison.  This has proven to be significantly faster  
+    than searching for full header name strings outright.
   ***************************************************************************/
 uint16_t TCPIP_TCP_Find(TCP_SOCKET hTCP, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen, bool bTextCompare)
 {
-	return TCPIP_TCP_ArrayFind(hTCP, &cFind, sizeof(cFind), wStart, wSearchLen, bTextCompare);
+    return TCPIP_TCP_ArrayFind(hTCP, &cFind, sizeof(cFind), wStart, wSearchLen, bTextCompare);
 }
 
 
 
 /****************************************************************************
   Section:
-	Data Processing Functions
+    Data Processing Functions
   ***************************************************************************/
 
 // Performs periodic TCP tasks.
 static void TCPIP_TCP_Tick(void)
 {
-	TCP_SOCKET hTCP;
-	bool bRetransmit;
-	bool bCloseSocket;
-	uint8_t vFlags;
-	uint16_t w;
+    TCP_SOCKET hTCP;
+    bool bRetransmit;
+    bool bCloseSocket;
+    uint8_t vFlags;
+    uint16_t w;
     TCB_STUB* pSkt; 
 
-	// Periodically all "not closed" sockets must perform timed operations
-	for(hTCP = 0; hTCP < TcpSockets; hTCP++)
-	{
+    // Periodically all "not closed" sockets must perform timed operations
+    for(hTCP = 0; hTCP < TcpSockets; hTCP++)
+    {
         pSkt = TCBStubs[hTCP];
         if(pSkt != 0 && pSkt->smState != TCPIP_TCP_STATE_CLIENT_WAIT_CONNECT)
         {   // existing socket
@@ -3743,7 +3743,7 @@ static void TCPIP_TCP_Tick(void)
                     // retransmitted by moving the unacked tail pointer.
                     pSkt->MySEQ -= w;
                     pSkt->remoteWindow += w;
-                    pSkt->txUnackedTail = pSkt->txTail;		
+                    pSkt->txUnackedTail = pSkt->txTail;     
                     _TcpSend(pSkt, vFlags, 0);
                 }
                 else
@@ -3766,9 +3766,9 @@ static void TCPIP_TCP_Tick(void)
 #if defined (TCPIP_STACK_USE_IPV6)
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 {
-	TCP_HEADER      *pTCPHdr;
+    TCP_HEADER      *pTCPHdr;
     uint16_t        dataLen;
-	uint8_t         optionsSize;
+    uint8_t         optionsSize;
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
     TCB_STUB*       pSkt; 
@@ -3814,10 +3814,10 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         }
     }
 
-	_TcpSwapHeader(pTCPHdr);
+    _TcpSwapHeader(pTCPHdr);
 
-	// Skip over options to retrieve data bytes
-	optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
+    // Skip over options to retrieve data bytes
+    optionsSize = (pTCPHdr->DataOffset.Val << 2) - sizeof(*pTCPHdr);
 
     while(true)
     {
@@ -3862,34 +3862,34 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
 /*****************************************************************************
   Function:
-	static bool _TcpSend(pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
+    static bool _TcpSend(pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
 
   Summary:
-	Transmits a TPC segment.
+    Transmits a TPC segment.
 
   Description:
-	This function assembles and transmits a TCP segment, including any 
-	pending data.  It also supports retransmissions, keep-alives, and 
-	other packet types.
+    This function assembles and transmits a TCP segment, including any 
+    pending data.  It also supports retransmissions, keep-alives, and 
+    other packet types.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	vTCPFlags - Additional TCP flags to include
-	vSendFlags - Any combinations of SENDTCP_* constants to modify the
-				 transmit behavior or contents.
+    vTCPFlags - Additional TCP flags to include
+    vSendFlags - Any combinations of SENDTCP_* constants to modify the
+                 transmit behavior or contents.
 
   Returns:
-	_TCP_SEND_OK for success, a _TCP_SEND_RES code  < 0 otherwise
+    _TCP_SEND_OK for success, a _TCP_SEND_RES code  < 0 otherwise
   ***************************************************************************/
 static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFlags)
 {
     TCP_OPTIONS     options;
-    uint32_t 		len, lenStart, lenEnd;
-    uint16_t 		loadLen, hdrLen, maxPayload;
+    uint32_t        len, lenStart, lenEnd;
+    uint16_t        loadLen, hdrLen, maxPayload;
     void*           pSendPkt;
-    uint16_t 		mss = 0;
+    uint16_t        mss = 0;
     TCP_HEADER *    header = 0;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
     const void*         sigParam;
@@ -4155,7 +4155,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
             {
                 pSkt->retryCount = 0;
                 pSkt->retryInterval = (TCPIP_TCP_START_TIMEOUT_VAL * sysTickFreq)/1000;
-            }	
+            }   
 
             pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
             pSkt->Flags.bTimerEnabled = 1;
@@ -4189,13 +4189,13 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
             pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
         }
 
-        header->SourcePort			= pSkt->localPort;
-        header->DestPort			= pSkt->remotePort;
-        header->SeqNumber			= pSkt->MySEQ;
-        header->AckNumber			= pSkt->RemoteSEQ;
-        header->Flags.bits.Reserved2	= 0;
-        header->DataOffset.Reserved3	= 0;
-        header->Flags.byte			= vTCPFlags;
+        header->SourcePort          = pSkt->localPort;
+        header->DestPort            = pSkt->remotePort;
+        header->SeqNumber           = pSkt->MySEQ;
+        header->AckNumber           = pSkt->RemoteSEQ;
+        header->Flags.bits.Reserved2    = 0;
+        header->DataOffset.Reserved3    = 0;
+        header->Flags.byte          = vTCPFlags;
         header->UrgentPointer       = 0;
         header->Checksum            = 0;
 
@@ -4293,47 +4293,47 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
 /*****************************************************************************
   Function:
-	static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, void * remoteIP, void * localIP, IP_ADDRESS_TYPE addressType)
+    static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, void * remoteIP, void * localIP, IP_ADDRESS_TYPE addressType)
 
   Summary:
-	Finds a suitable socket for a TCP segment.
+    Finds a suitable socket for a TCP segment.
 
   Description:
-	This function searches through the sockets and attempts to match one with
-	a given TCP header.
+    This function searches through the sockets and attempts to match one with
+    a given TCP header.
     If a socket is found, a valid socket pointer it is returned. 
-	Otherwise, a 0 pointer is returned.
-	
+    Otherwise, a 0 pointer is returned.
+    
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
     pRxPkt - TCP packet
-	remote - The remote node who sent this header
-	localIP - The IP address of the interface that received this packet
+    remote - The remote node who sent this header
+    localIP - The IP address of the interface that received this packet
     addressTpe  - IPv4/IPv6
 
   Return Values:
-	a socket pointer - A match was found 
-	0 - No suitable socket was found 
+    a socket pointer - A match was found 
+    0 - No suitable socket was found 
   ***************************************************************************/
 static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * remoteIP, const void * localIP, IP_ADDRESS_TYPE addressType)
 {
-	TCP_SOCKET hTCP;
-	uint16_t hash;
+    TCP_SOCKET hTCP;
+    uint16_t hash;
     TCB_STUB* pSkt, *partialSkt;
     TCPIP_NET_IF* pPktIf;
 
     TCP_HEADER* h = (TCP_HEADER*)pRxPkt->pTransportLayer;
     pPktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
 
-	// Prevent connections on invalid port 0
-	if(h->DestPort == 0)
+    // Prevent connections on invalid port 0
+    if(h->DestPort == 0)
     {
-		return 0;
+        return 0;
     }
 
-	partialSkt = 0;
+    partialSkt = 0;
 
     switch(addressType)
     {
@@ -4353,9 +4353,9 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
             return 0;  // shouldn't happen
     }
 
-	// Loop through all sockets looking for a socket that is expecting this 
-	// packet or can handle it.
-	for(hTCP = 0; hTCP < TcpSockets; hTCP++)
+    // Loop through all sockets looking for a socket that is expecting this 
+    // packet or can handle it.
+    for(hTCP = 0; hTCP < TcpSockets; hTCP++)
     {
         pSkt = TCBStubs[hTCP];
 
@@ -4384,7 +4384,7 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
                 continue;
             }
 
-            while(	h->DestPort == pSkt->localPort && h->SourcePort == pSkt->remotePort )  
+            while(  h->DestPort == pSkt->localPort && h->SourcePort == pSkt->remotePort )  
             {
 
 #if defined (TCPIP_STACK_USE_IPV6)
@@ -4422,11 +4422,11 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
     }
 
 
-	// If there is a partial match, then a listening socket is currently 
-	// available.  Set up the extended TCB with the info needed 
-	// to establish a connection and return this socket to the 
-	// caller.
-	while(partialSkt != 0)
+    // If there is a partial match, then a listening socket is currently 
+    // available.  Set up the extended TCB with the info needed 
+    // to establish a connection and return this socket to the 
+    // caller.
+    while(partialSkt != 0)
     {
         pSkt = partialSkt;
 
@@ -4468,13 +4468,13 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
         pSkt->remoteHash = hash;
         pSkt->remotePort = h->SourcePort;
         pSkt->localPort = h->DestPort;
-        pSkt->txUnackedTail	= pSkt->txStart;
+        pSkt->txUnackedTail = pSkt->txStart;
 
         // All done, and we have a match
         return pSkt;
     }
-		
-	return 0;
+        
+    return 0;
 
 }
 
@@ -4482,32 +4482,32 @@ static TCB_STUB* _TcpFindMatchingSocket(TCPIP_MAC_PACKET* pRxPkt, const void * r
 
 /*****************************************************************************
   Function:
-	static void _TcpSwapHeader(TCP_HEADER* header)
+    static void _TcpSwapHeader(TCP_HEADER* header)
 
   Summary:
-	Swaps endian-ness of a TCP header.
+    Swaps endian-ness of a TCP header.
 
   Description:
-	This function changes the endian-ness of a given TCP header for comparison.
+    This function changes the endian-ness of a given TCP header for comparison.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	header - The TCP header that is to be swapped
+    header - The TCP header that is to be swapped
 
   Returns:
-	None
+    None
   ***************************************************************************/
 static void _TcpSwapHeader(TCP_HEADER* header)
 {
-	header->SourcePort      = TCPIP_Helper_ntohs(header->SourcePort);
-	header->DestPort        = TCPIP_Helper_ntohs(header->DestPort);
-	header->SeqNumber       = TCPIP_Helper_ntohl(header->SeqNumber);
-	header->AckNumber       = TCPIP_Helper_ntohl(header->AckNumber);
-	header->Window          = TCPIP_Helper_ntohs(header->Window);
-	header->Checksum        = TCPIP_Helper_ntohs(header->Checksum);
-	header->UrgentPointer   = TCPIP_Helper_ntohs(header->UrgentPointer);
+    header->SourcePort      = TCPIP_Helper_ntohs(header->SourcePort);
+    header->DestPort        = TCPIP_Helper_ntohs(header->DestPort);
+    header->SeqNumber       = TCPIP_Helper_ntohl(header->SeqNumber);
+    header->AckNumber       = TCPIP_Helper_ntohl(header->AckNumber);
+    header->Window          = TCPIP_Helper_ntohs(header->Window);
+    header->Checksum        = TCPIP_Helper_ntohs(header->Checksum);
+    header->UrgentPointer   = TCPIP_Helper_ntohs(header->UrgentPointer);
 }
 
 
@@ -4518,10 +4518,10 @@ static void _TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuf
     pSkt->sktIx = hTCP;     // hTCP is the index of this socket!
 
     // set all socket FIFO addresses
-    pSkt->txStart	= txBuff;
-    pSkt->txEnd	    = txBuff + txBuffSize + 1;
-    pSkt->rxStart	= rxBuff;
-    pSkt->rxEnd		= rxBuff + rxBuffSize;
+    pSkt->txStart   = txBuff;
+    pSkt->txEnd     = txBuff + txBuffSize + 1;
+    pSkt->rxStart   = rxBuff;
+    pSkt->rxEnd     = rxBuff + rxBuffSize;
 
     // Start out assuming worst case Maximum Segment Size (changes when MSS 
     // option is received from remote node)
@@ -4536,38 +4536,38 @@ static void _TcpSocketInitialize(TCB_STUB* pSkt, TCP_SOCKET hTCP, uint8_t* txBuf
 static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 {
 
-	pSkt->remoteHash = pSkt->localPort;
-	pSkt->txHead = pSkt->txStart;
-	pSkt->txTail = pSkt->txStart;
-	pSkt->txUnackedTail = pSkt->txStart;
-	pSkt->rxHead = pSkt->rxStart;
-	pSkt->rxTail = pSkt->rxStart;
-	pSkt->Flags.bTimerEnabled = 0;
-	pSkt->Flags.bTimer2Enabled = 0;
-	pSkt->Flags.bDelayedACKTimerEnabled = 0;
-	pSkt->Flags.bOneSegmentReceived = 0;
-	pSkt->Flags.bHalfFullFlush = 0;
-	pSkt->Flags.bTXASAP = 0;
-	pSkt->Flags.bTXASAPWithoutTimerReset = 0;
-	pSkt->Flags.bTXFIN = 0;
-	pSkt->Flags.bSocketReset = 1;
-	pSkt->Flags.bRxFin = 0;
+    pSkt->remoteHash = pSkt->localPort;
+    pSkt->txHead = pSkt->txStart;
+    pSkt->txTail = pSkt->txStart;
+    pSkt->txUnackedTail = pSkt->txStart;
+    pSkt->rxHead = pSkt->rxStart;
+    pSkt->rxTail = pSkt->rxStart;
+    pSkt->Flags.bTimerEnabled = 0;
+    pSkt->Flags.bTimer2Enabled = 0;
+    pSkt->Flags.bDelayedACKTimerEnabled = 0;
+    pSkt->Flags.bOneSegmentReceived = 0;
+    pSkt->Flags.bHalfFullFlush = 0;
+    pSkt->Flags.bTXASAP = 0;
+    pSkt->Flags.bTXASAPWithoutTimerReset = 0;
+    pSkt->Flags.bTXFIN = 0;
+    pSkt->Flags.bSocketReset = 1;
+    pSkt->Flags.bRxFin = 0;
 
 
-	pSkt->flags.bFINSent = 0;
+    pSkt->flags.bFINSent = 0;
     pSkt->flags.seqInc = 0;
-	pSkt->flags.bSYNSent = 0;
+    pSkt->flags.bSYNSent = 0;
     pSkt->retxTmo = pSkt->retxTime = 0;
     pSkt->MySEQ = 0;
-	pSkt->sHoleSize = -1;
-	pSkt->remoteWindow = 1;
+    pSkt->sHoleSize = -1;
+    pSkt->remoteWindow = 1;
     pSkt->maxRemoteWindow = 1;
 
 
     // Note : no result of the explicit binding is maintained!
     pSkt->remotePort = 0;
     pSkt->destAddress.Val = 0;
-	pSkt->keepAliveCount = 0;
+    pSkt->keepAliveCount = 0;
     // restore initial settings
     pSkt->addType = (IP_ADDRESS_TYPE)pSkt->flags.openAddType;
     if(pSkt->flags.openBindIf == 0)
@@ -4593,25 +4593,25 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-	static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
+    static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
   Summary:
-	Closes a TCP socket.
+    Closes a TCP socket.
 
   Description:
-	This function closes a TCP socket.  All socket state information is 
-	reset, and any buffered bytes are discarded.
+    This function closes a TCP socket.  All socket state information is 
+    reset, and any buffered bytes are discarded.
     If this is a server socket it will continue listening.
    
   Precondition:
-	None.
+    None.
 
   Parameters:
-	pSkt
+    pSkt
     tcpEvent
 
   Returns:
-	None
+    None
   ***************************************************************************/
 static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 {
@@ -4710,30 +4710,30 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
 /*****************************************************************************
   Function:
-	static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
+    static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
 
   Summary:
-	Obtains the Maximum Segment Size (MSS) TCP Option out of the TCP header 
-	for the current socket.
+    Obtains the Maximum Segment Size (MSS) TCP Option out of the TCP header 
+    for the current socket.
 
   Description:
-	Parses the current TCP packet header and extracts the Maximum Segment Size 
-	option.  
+    Parses the current TCP packet header and extracts the Maximum Segment Size 
+    option.  
 
   Precondition:
-	Must be called while a TCP packet is present and being processed via 
-	_TcpHandleSeg() and only if the the TCP SYN flag is set.
+    Must be called while a TCP packet is present and being processed via 
+    _TcpHandleSeg() and only if the the TCP SYN flag is set.
 
   Parameters:
-	h - pointer to the TCP header
+    h - pointer to the TCP header
 
   Returns:
-	Maximum segment size option value.  If illegal or not present, a failsafe 
-	value of TCP_MIN_DEFAULT_MTU is returned.  If the option is larger than the 
-	TCPIP_TCP_MAX_SEG_SIZE_TX upper limit, then TCPIP_TCP_MAX_SEG_SIZE_TX is returned.
+    Maximum segment size option value.  If illegal or not present, a failsafe 
+    value of TCP_MIN_DEFAULT_MTU is returned.  If the option is larger than the 
+    TCPIP_TCP_MAX_SEG_SIZE_TX upper limit, then TCPIP_TCP_MAX_SEG_SIZE_TX is returned.
 
   Remarks:
-	The internal MAC Read Pointer is moved but not restored.
+    The internal MAC Read Pointer is moved but not restored.
   ***************************************************************************/
 static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
 {
@@ -4743,7 +4743,7 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
     uint8_t* pOption, *pEnd;
 
 
-	vOptionsBytes = (h->DataOffset.Val << 2) - sizeof(*h);
+    vOptionsBytes = (h->DataOffset.Val << 2) - sizeof(*h);
     // Return minimum default Maximum Segment Size value if no options present
     if(vOptionsBytes == 0u)
         return TCP_MIN_DEFAULT_MTU;
@@ -4752,18 +4752,18 @@ static uint16_t _GetMaxSegSizeOption(TCP_HEADER* h)
     pOption = (uint8_t*)(h + 1);
     pEnd = pOption + vOptionsBytes;
 
-    // Search for the Maximum Segment Size option	
+    // Search for the Maximum Segment Size option   
     while(vOptionsBytes-- && pOption < pEnd)
     {
         vOption = *pOption++;
 
-        if(vOption == 0u)	// End of Options list
+        if(vOption == 0u)   // End of Options list
             break;
 
-        if(vOption == 1u)	// NOP option
+        if(vOption == 1u)   // NOP option
             continue;
 
-        if(vOption == 2u)	// Maximum Segment Size option
+        if(vOption == 2u)   // Maximum Segment Size option
         {
             if(vOptionsBytes < 3u)
                 break;
@@ -4830,31 +4830,31 @@ static void _TCPSetHalfFlushFlag(TCB_STUB* pSkt)
 
 /*****************************************************************************
   Function:
-	static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t len, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent)
+    static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t len, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent)
 
   Summary:
-	Processes an incoming TCP segment.
+    Processes an incoming TCP segment.
 
   Description:
-	Once an incoming segment has been matched to a socket, this function
-	performs the necessary processing with the data.  Depending on the 
-	segment and the state, this may include copying data to the TCP buffer,
-	re-assembling out-of order packets, continuing an initialization or 
-	closing handshake, or closing the socket altogether.
+    Once an incoming segment has been matched to a socket, this function
+    performs the necessary processing with the data.  Depending on the 
+    segment and the state, this may include copying data to the TCP buffer,
+    re-assembling out-of order packets, continuing an initialization or 
+    closing handshake, or closing the socket altogether.
 
   Precondition:
-	TCP is initialized and the current TCP stub is already synced.
+    TCP is initialized and the current TCP stub is already synced.
 
   Parameters:
     pSkt -  the TCP socket
-	h - The TCP header for this packet
-	tcpLen - The total buffer length of this segment
+    h - The TCP header for this packet
+    tcpLen - The total buffer length of this segment
     pRxPkt - incoming MAC packet
     pSktEvent - address to store the RX event, if any
 
 
   Returns:
-	None
+    None
   ***************************************************************************/
 static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_MAC_PACKET* pRxPkt, TCPIP_TCP_SIGNAL_TYPE* pSktEvent)
 {
@@ -4902,7 +4902,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             // First: check RST flag
             if(localHeaderFlags & RST)
             {
-                _TcpCloseSocket(pSkt, 0);	// Unbind remote IP address/port info
+                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
                 return;
             }
 
@@ -4912,7 +4912,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 // Use a believable sequence number and reset the remote node
                 pSkt->MySEQ = localAckNumber;
                 _TcpSend(pSkt, RST, 0);
-                _TcpCloseSocket(pSkt, 0);	// Unbind remote IP address/port info
+                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
                 return;
             }
 
@@ -4932,7 +4932,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             }
             else
             {
-                _TcpCloseSocket(pSkt, 0);	// Unbind remote IP address/port info
+                _TcpCloseSocket(pSkt, 0);   // Unbind remote IP address/port info
             }
 
             // Fourth: check for other text and control
@@ -4957,10 +4957,10 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 {
                     // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
                     // number for arivial of any other SYN+ACK packets
-                    localSeqNumber = pSkt->MySEQ;	// Save our original SEQ number
-                    pSkt->MySEQ = localAckNumber;	// Set SEQ = SEG.ACK
-                    _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);		// Send the RST
-                    pSkt->MySEQ = localSeqNumber;	// Restore original SEQ number
+                    localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
+                    pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
+                    _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
+                    pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
                     return;
                 }
             }
@@ -5143,10 +5143,10 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             {
                 // Send a RST packet with SEQ = SEG.ACK, but retain our SEQ 
                 // number for arival of any other correct packets
-                localSeqNumber = pSkt->MySEQ;	// Save our original SEQ number
-                pSkt->MySEQ = localAckNumber;	// Set SEQ = SEG.ACK
-                _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);		// Send the RST
-                pSkt->MySEQ = localSeqNumber;	// Restore original SEQ number
+                localSeqNumber = pSkt->MySEQ;   // Save our original SEQ number
+                pSkt->MySEQ = localAckNumber;   // Set SEQ = SEG.ACK
+                _TcpSend(pSkt, RST, SENDTCP_RESET_TIMERS);      // Send the RST
+                pSkt->MySEQ = localSeqNumber;   // Restore original SEQ number
                 return;
             }
             _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_ESTABLISHED);
@@ -5367,7 +5367,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             // Position packet read pointer to start of useful data area.
             // Protect against too old data is done by checking the actual number of copied bytes from the packet
             pSegSrc = (uint8_t*)h + ((h->DataOffset.Val << 2) - wMissingBytes);
-            len += wMissingBytes;		
+            len += wMissingBytes;       
 
             // Truncate packets that would overflow our TCP RX FIFO
             // and request a retransmit by sending a duplicate ACK
@@ -5419,7 +5419,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                         pSkt->rxHead += wTemp;
                         if(pSkt->rxHead > pSkt->rxEnd)
                         {
-                            pSkt->rxHead -= pSkt->rxEnd - pSkt->rxStart + 1;							
+                            pSkt->rxHead -= pSkt->rxEnd - pSkt->rxStart + 1;                            
                         }
                         pSkt->sHoleSize = -1;
                     }
@@ -5521,7 +5521,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
         }
         else
         {
-            pSkt->Flags.bOneSegmentReceived = true;	
+            pSkt->Flags.bOneSegmentReceived = true; 
 
             // Do not send an ACK immediately back.  Instead, we will 
             // perform delayed acknowledgements.  To do this, we will 
@@ -5624,50 +5624,50 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
 
 /****************************************************************************
   Section:
-	Buffer Management Functions
+    Buffer Management Functions
   ***************************************************************************/
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, 
-							uint16_t wMinTXSize, TCP_ADJUST_FLAGS vFlags)
+    bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, 
+                            uint16_t wMinTXSize, TCP_ADJUST_FLAGS vFlags)
 
   Summary:
-	Adjusts the relative sizes of the RX and TX buffers.
+    Adjusts the relative sizes of the RX and TX buffers.
 
   Description:
-	This function can be used to simultaneously adjust the sizes
+    This function can be used to simultaneously adjust the sizes
     of the RX and TX FIFOs.
 
     Adjusting the size of the TX/RX FIFO on the fly can allow for optimal transmission speed 
-	for one-sided application protocols.
+    for one-sided application protocols.
     For example, HTTP typically begins by receiving large amounts of data from the client,
     then switches to serving large amounts of data back.
     Adjusting the FIFO at these points can increase performance in systems that have 
     limited resources.
     Once the FIFOs are adjusted, a window update is sent.
-	
+    
     The TCP_ADJUST_FLAGS control the distribution of the remaining available space
     between the TX and RX FIFOs.
-	If neither or both of TCP_ADJUST_GIVE_REST_TO_TX and 
-	TCP_ADJUST_GIVE_REST_TO_RX are set, the function distributes the
-	remaining space (if any) equally.
+    If neither or both of TCP_ADJUST_GIVE_REST_TO_TX and 
+    TCP_ADJUST_GIVE_REST_TO_RX are set, the function distributes the
+    remaining space (if any) equally.
     If the new requested FIFOs space is greater that the old existing FIFOs space
     the TCP_ADJUST_GIVE_REST_TO_TX and TCP_ADJUST_GIVE_REST_TO_RX are ignored.
-	
+    
     TCP_ADJUST_PRESERVE_RX and TCP_ADJUST_PRESERVE_TX request the
     preserving of the existing data.
-	Existing data can be preserved as long as the old data in the buffer
+    Existing data can be preserved as long as the old data in the buffer
     does not exceed the capacity of the new buffer.
 
   Precondition:
-	TCP is initialized.
+    TCP is initialized.
 
   Parameters:
-	hTCP		- The socket to be adjusted
-	wMinRXSize	- Minimum number of bytes for the RX FIFO
-	wMinTXSize 	- Minimum number of bytes for the TX FIFO
-	vFlags		- If TCP_ADJUST_TX_ONLY or TCP_ADJUST_RX_ONLY  are not set,
+    hTCP        - The socket to be adjusted
+    wMinRXSize  - Minimum number of bytes for the RX FIFO
+    wMinTXSize  - Minimum number of bytes for the TX FIFO
+    vFlags      - If TCP_ADJUST_TX_ONLY or TCP_ADJUST_RX_ONLY  are not set,
                     then the TX and RX bufferrs are evaluated together and any
                     combination of the following flags is valid:
                     TCP_ADJUST_GIVE_REST_TO_RX, TCP_ADJUST_GIVE_REST_TO_TX
@@ -5680,12 +5680,12 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                    
 
   Return Values:
-	true - The FIFOs were adjusted successfully
-	false - New RX and/or TX buffers could not be allocated
+    true - The FIFOs were adjusted successfully
+    false - New RX and/or TX buffers could not be allocated
             and therefore the socket was left unchanged.
 
   Remarks:
-	The function will automatically maintain minimal values for both TX and RX buffers.
+    The function will automatically maintain minimal values for both TX and RX buffers.
 
     To avoid having a socket with no associated buffers, the function first
     allocates the new buffers and, if succeeded, it frees the old ones.
@@ -6016,7 +6016,7 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 
   Remarks:
     A NULL hNet can be passed (0) so that the current network interface selection 
-	will be cleared.
+    will be cleared.
 
     The persistent setting is applicable only to server sockets, as these sockets return to listen mode when a connection is closed.
     When a client socket connection is closed, the socket is destroyed and no information is maintained.
@@ -6025,7 +6025,7 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persist
 {
     TCPIP_NET_IF* pNetIf;
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt)
     {
         if(hNet != 0)
@@ -6067,28 +6067,28 @@ bool TCPIP_TCP_SocketNetSet(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, bool persist
 
 /*****************************************************************************
   Function:
-	TCPIP_NET_IF* TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
+    TCPIP_NET_IF* TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
 
   Summary:
-	Gets the MAC interface of an TCP socket
-	
+    Gets the MAC interface of an TCP socket
+    
   Description:
-	This function returns the MAC interface id of an TCP socket
+    This function returns the MAC interface id of an TCP socket
 
   Precondition:
-	TCP socket should have been opened with _TCP_Open().
+    TCP socket should have been opened with _TCP_Open().
     hTCP - valid socket
 
   Parameters:
-	hTCP - The TCP socket
-	
+    hTCP - The TCP socket
+    
   Returns:
     None.
   ***************************************************************************/
 TCPIP_NET_HANDLE  TCPIP_TCP_SocketNetGet(TCP_SOCKET hTCP)
 {
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
-	
+    
     if(pSkt == 0)
     {
         return 0;
@@ -6156,7 +6156,7 @@ static bool _TCP_PortIsAvailable(TCP_PORT port)
 
 /*****************************************************************************
   Function:
-	TCPIP_TCP_Bind(TCP_SOCKET s, IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
+    TCPIP_TCP_Bind(TCP_SOCKET s, IP_ADDRESS_TYPE addType, TCP_PORT localPort,  IP_MULTI_ADDRESS* localAddress)
 
   Summary:
     Bind a socket to a local address
@@ -6246,7 +6246,7 @@ bool TCPIP_TCP_Bind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT localPort
 
 /*****************************************************************************
   Function:
-	bool TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT remotePort,  IP_MULTI_ADDRESS* remoteAddress)
+    bool TCPIP_TCP_RemoteBind(TCP_SOCKET hTCP, IP_ADDRESS_TYPE addType, TCP_PORT remotePort,  IP_MULTI_ADDRESS* remoteAddress)
 
   Summary:
     Bind a socket to a remote address

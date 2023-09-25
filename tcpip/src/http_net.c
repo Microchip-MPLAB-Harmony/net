@@ -3280,7 +3280,7 @@ static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t 
     srchBuff[0] = cFind;
     srchBuff[1] = 0;
 
-	return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
+    return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
 }
 
 

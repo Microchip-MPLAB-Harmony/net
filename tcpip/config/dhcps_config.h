@@ -72,12 +72,12 @@ Microchip or any third party.
 
 // Timeout for a unsolved entry , in seconds and 
 //should be removed from the entry if there is no REQUEST after OFFER 
-#define TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK		(5)
+#define TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK        (5)
 
 // Timeout for a solved entry in the cache, in seconds
 // the entry will be removed if the TMO elapsed
 // and the entry has not been referenced again
-#define TCPIP_DHCPS_LEASE_DURATION	TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO
+#define TCPIP_DHCPS_LEASE_DURATION  TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO
 
 // These below IPv4 DHCP server address details are default address and it is assigned to the
 // network default network interface. for Other interfaces , tcpip_stack_init.c file
@@ -87,16 +87,16 @@ Microchip or any third party.
 //  Start of IP address Range , network_config.h ipaddress and this start of IP address should be in same SUBNET
 // RECOMENDED - network_config.h ipaddress should be 192.168.1.1 if DHCP server ip address range starts
 // from 192.168.1.100.
-#define TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START	"192.168.1.100"
+#define TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START  "192.168.1.100"
 
 // DHCP server Address per interface. DHCP server Address selection should  be in the same subnet.
-#define TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS	"192.168.1.1"
+#define TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS   "192.168.1.1"
 
-// DHCP server subnet Address  per interface. 															
-#define TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS	"255.255.255.0"
+// DHCP server subnet Address  per interface.                                                           
+#define TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS  "255.255.255.0"
 
 // DHCP server  DNS primary Address
-#define TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS	"192.168.1.1"
+#define TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS  "192.168.1.1"
 
 // DHCP server  DNS Secondary Address
 #define TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS   "192.168.1.1"

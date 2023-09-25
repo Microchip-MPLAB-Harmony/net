@@ -104,23 +104,23 @@ typedef enum
 // Unique variables per interface
 typedef struct
 {
-    UDP_SOCKET	hSocket; // Handle to TFTP client socket
-    TFTP_STATE	smState;  // TFTP client state machine variable
+    UDP_SOCKET  hSocket; // Handle to TFTP client socket
+    TFTP_STATE  smState;  // TFTP client state machine variable
     TFTP_COMM_STATE smCommSate; // TFTP Client Communication state
     TCPIP_NET_HANDLE    netH;   // interface handled
     IP_MULTI_ADDRESS tftpServerAddr;  // TFTP Server IP address
     IP_ADDRESS_TYPE  ipAddrType;
     TFTP_FILE_MODE modeType; // mode type either read or write
     char fileName[TCPIP_TFTP_CLIENT_MAX_HOSTNAME_LEN+1]; // file name for upload and download
-    int32_t		fileDescr; // File descriptor
-    uint32_t 		callbackPos;
+    int32_t     fileDescr; // File descriptor
+    uint32_t        callbackPos;
 } TFTP_CLIENT_VARS;
 
 // TFTP client event registration
 
 typedef struct  _TAG_TFTPC_LIST_NODE
 {
-	struct _TAG_TFTPC_LIST_NODE*		next;		// next node in list
+    struct _TAG_TFTPC_LIST_NODE*        next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_TFTPC_EVENT_HANDLER        handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter

@@ -64,10 +64,10 @@ Microchip or any third party.
 #define TCPIP_NTP_DEFAULT_CONNECTION_TYPE     (IP_ADDRESS_TYPE_IPV4)
 
 // Reference Epoch to use.  (default: 01-Jan-1970 00:00:00)
-#define TCPIP_NTP_EPOCH 				(86400ul * (365ul * 70ul + 17ul))
+#define TCPIP_NTP_EPOCH                 (86400ul * (365ul * 70ul + 17ul))
 
 // Defines how long to wait before assuming the query has failed, seconds
-#define TCPIP_NTP_REPLY_TIMEOUT		(6ul)
+#define TCPIP_NTP_REPLY_TIMEOUT     (6ul)
 
 // The maximum acceptable NTP stratum number
 // Should be less than 16 (unsynchronized server) 
@@ -85,13 +85,13 @@ Microchip or any third party.
 // if you use the global pool.ntp.org address or choose the wrong 
 // one or ship your embedded device to another geography.
 // A direct IP address works too
-#define TCPIP_NTP_SERVER	"pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"europe.pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"asia.pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"oceania.pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"north-america.pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"south-america.pool.ntp.org"
-//#define TCPIP_NTP_SERVER	"africa.pool.ntp.org"
+#define TCPIP_NTP_SERVER    "pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "europe.pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "asia.pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "oceania.pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "north-america.pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "south-america.pool.ntp.org"
+//#define TCPIP_NTP_SERVER  "africa.pool.ntp.org"
 
 
 // maximum number of characters allowed for the NTP server
@@ -99,11 +99,11 @@ Microchip or any third party.
 
 //
 // Defines how frequently to resynchronize the date/time, seconds (default: 10 minutes)
-#define TCPIP_NTP_QUERY_INTERVAL		(10ul*60ul)
+#define TCPIP_NTP_QUERY_INTERVAL        (10ul*60ul)
 
 // Defines how long to wait to retry an update after a failure, seconds.
 // Updates may take up to 6 seconds to fail, so this 14 second delay is actually only an 8-second retry.
-#define TCPIP_NTP_FAST_QUERY_INTERVAL	(14ul)
+#define TCPIP_NTP_FAST_QUERY_INTERVAL   (14ul)
 
 
 

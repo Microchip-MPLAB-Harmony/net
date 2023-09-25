@@ -409,16 +409,16 @@ static __inline__ void _PoolDcptDelete(TCPIP_HEAP_OBJ_INSTANCE* pInst)
 // get a buffer from a specified pool entry
 static __inline__ void* __attribute__((always_inline)) _PoolEntryGetBuff(TCPIP_POOL_ENTRY* pEntry)
 {
-	TCPIP_POOL_DATA_BLK* pN;
+    TCPIP_POOL_DATA_BLK* pN;
     
-	if(pEntry->freeList)
-	{
-		pN = pEntry->freeList;
-		pEntry->freeList = pN->next;
-		pEntry->freeBlocks--;
+    if(pEntry->freeList)
+    {
+        pN = pEntry->freeList;
+        pEntry->freeList = pN->next;
+        pEntry->freeBlocks--;
         pN->next = (TCPIP_POOL_DATA_BLK*)pEntry;  // store the entry we belong to!
         return pN + 1;
-	}
+    }
 
     return 0;
 }

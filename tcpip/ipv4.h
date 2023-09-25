@@ -3,13 +3,13 @@ IPv4 Header File
 
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     ipv4.h
-	
+    
   Summary:
     IPv4 definitions for the Microchip TCP/IP Stack.
-	
+    
   Description:
     IP is the workhorse protocol of the TCP/IP protocol suite. All TCP,
     UDP, and ICMP data gets transmitted as IP datagrams. IP provides an
@@ -869,7 +869,7 @@ bool    TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt);
 /*
   Function:
     TCPIP_NET_HANDLE TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH, 
-	         IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet)
+             IPV4_ADDR* pDestAddress, IPV4_ADDR* pSrcAddress, bool srcSet)
 
   Summary:
     Selects a source address and an interface based on the IPv4 destination address
@@ -878,7 +878,7 @@ bool    TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt);
     Updates the pSrcAddress and returns the needed interface, if successful:
     * if srcSet == 1 and netH != 0, the function will not change anything 
     * if srcSet == 1 and netH == 0, the call will never fail it will use whatever 
-	  value in pSrcAddress (even 0) and will try to come up with an appropriate interface
+      value in pSrcAddress (even 0) and will try to come up with an appropriate interface
     * if srcSet == 0 and netH == 0, it will use the destination address
     * if srcSet == 0 and netH != 0, it will use the address of that interface
 

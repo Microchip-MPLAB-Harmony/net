@@ -324,7 +324,7 @@ static TFTP_RESULT TFTPIsPutReady(void)
                     else
                     {
                         pClient->smState = SM_TFTP_WAIT;
-                        MutExVar.group2._tftpBlockNumber.Val--;	// Roll back by one so proper block number ID is sent for the next packet
+                        MutExVar.group2._tftpBlockNumber.Val--; // Roll back by one so proper block number ID is sent for the next packet
                         pClient->smState = SM_TFTP_FILE_OPEN_AND_SEND_REQUEST;
                         return TFTP_RETRY;
                     }
@@ -414,9 +414,9 @@ static TFTP_RESULT TFTPIsPutReady(void)
             _tftpPutCmdState = SM_TFTP_COMM_WAIT_FOR_ACK;
             TFTPC_DEBUG_PRINT("Transmitted Block Number : %d \r\n",MutExVar.group2._tftpBlockNumber.Val);
             return TFTP_OK;
-	// Suppress compiler warnings on unhandled SM_TFTP_COMM_WAIT_FOR_DATA,
-	// SM_TFTP_COMM_DUPLICATE_ACK, SM_TFTP_COMM_SEND_ACK, SM_TFTP_COMM_SEND_LAST_ACK enum
-	// states.
+    // Suppress compiler warnings on unhandled SM_TFTP_COMM_WAIT_FOR_DATA,
+    // SM_TFTP_COMM_DUPLICATE_ACK, SM_TFTP_COMM_SEND_ACK, SM_TFTP_COMM_SEND_LAST_ACK enum
+    // states.
         default:
             break;
     }
@@ -457,7 +457,7 @@ static void TCPIP_TFTPC_Process(void)
     bool res=true;
     bool bTimeout=false;
     uint32_t    replyPktSize=0;
-	bool bindRes = false;
+    bool bindRes = false;
     
     pClient = &gTFTPClientDcpt;
     pNetIf = _TCPIPStackAnyNetLinked(false);
@@ -631,7 +631,7 @@ static void TCPIP_TFTPC_Process(void)
             break;
         case SM_TFTP_GET_COMMAND:
             switch(TFTPIsGetReady(data,&wCount))
-			{
+            {
                 case TFTP_OK:
                     // Check if their is any byte need to be written to the FS or Buffer-
                     if(wCount == 0)
@@ -680,7 +680,7 @@ static void TCPIP_TFTPC_Process(void)
                     break;
                 case TFTP_NOT_READY:                
                     if(pClient->fileDescr != -1)
-    				{
+                    {
                         SYS_FS_FileClose(pClient->fileDescr);
                         pClient->fileDescr = -1;
                     }                
@@ -728,7 +728,7 @@ static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName)
 {
     uint8_t c;
     TFTP_CLIENT_VARS*   pClient;
-    pClient = &gTFTPClientDcpt;	
+    pClient = &gTFTPClientDcpt; 
 
     
     // Write opCode
@@ -760,7 +760,7 @@ static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
     int32_t fp;
     TFTP_CLIENT_VARS*   pClient;
     
-    pClient = &gTFTPClientDcpt;	
+    pClient = &gTFTPClientDcpt; 
     
     fp = pClient->fileDescr;
 
@@ -971,10 +971,10 @@ static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int32_t *len)
         }
         break;
 
-	// Suppress compiler warnings on unhandled SM_TFTP_WAIT and
-	// SM_TFTP_WAIT_FOR_ACK states.
+    // Suppress compiler warnings on unhandled SM_TFTP_WAIT and
+    // SM_TFTP_WAIT_FOR_ACK states.
     default:
-    	break;
+        break;
     }
     return TFTP_NOT_READY;
 }

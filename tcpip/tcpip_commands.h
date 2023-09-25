@@ -3,13 +3,13 @@ TCP/IP Stack Run-time Commands API Definitions Header File
 
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     tcpip_commands.h
-	
+    
   Summary:
     TCP/IP stack run time commands.
-	
+    
   Description:
     This module provides TCP/IP commands for run time tuning and status reporting
     using the system command processor and console.
@@ -102,4 +102,4 @@ void  TCPIP_COMMAND_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif	//#ifndef __TCPIP_COMMANDS_H
+#endif  //#ifndef __TCPIP_COMMANDS_H

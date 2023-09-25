@@ -1839,7 +1839,7 @@ TCPIP_HTTP_NET_USER_HANDLE    TCPIP_HTTP_NET_UserHandlerRegister
     hHttp   - A handle returned by a previous call to TCPIP_HTTP_NET_UserHandlerRegister
 
   Returns:
-    - true	- if the call succeeded and the user handle was de-registered
+    - true  - if the call succeeded and the user handle was de-registered
     - false - if no such handler is registered 
 
   Remarks:
@@ -1943,7 +1943,7 @@ TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute
     network transport buffer.
     The connection byteCount (see TCPIP_HTTP_NET_ConnectionByteCountGet
     will indicate the number of bytes remaining to be read before the 
-	browser request is complete.
+    browser request is complete.
 
     Since data is still in the network transport buffer, the application must call
     TCPIP_HTTP_NET_ConnectionRead in order to retrieve bytes.  When this is done,
@@ -2083,7 +2083,7 @@ uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandl
     connection data and will be available with 
     TCPIP_HTTP_NET_ConnectionIsAuthorizedGet in any of the 
     template_ConnectionGetExecute, template_ConnectionPostExecute, or 
-	TCPIP_HTTP_NET_Print_varname callbacks.
+    TCPIP_HTTP_NET_Print_varname callbacks.
 
   Precondition:
     None.
@@ -2189,7 +2189,7 @@ uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandl
     especially when managing its output state.  Exercise caution when using
     global or static variables inside this routine.  Use the connection
     callbackPos or the connection data buffer for storage associated with 
-	individual requests.
+    individual requests.
 
     The varDcpt variable descriptor is valid only in the context of this call.
     Any parameters that are needed for further processing should be copied
@@ -2617,7 +2617,7 @@ uint16_t TCPIP_HTTP_NET_ConnectionFlush(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
 
   Returns:
     The number of bytes available to be read from the connection RX buffer.
-	
+    
   Remarks:
     When using an encrypted connection the number of available unencrypted bytes
     may turn out to be different than what this function returns.
@@ -2636,7 +2636,7 @@ uint16_t TCPIP_HTTP_NET_ConnectionReadIsReady(TCPIP_HTTP_NET_CONN_HANDLE connHan
 
   Description:
     This function reads an array of data bytes from the connection RX buffer.  
-	The data is removed from the FIFO in the process.
+    The data is removed from the FIFO in the process.
 
   Precondition:
     connHandle - a valid HTTP connection.

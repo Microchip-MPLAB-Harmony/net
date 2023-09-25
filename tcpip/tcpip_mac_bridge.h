@@ -751,7 +751,7 @@ TCPIP_MAC_BRIDGE_EVENT_HANDLE TCPIP_MAC_Bridge_EventHandlerRegister(TCPIP_MAC_BR
     evHandle    - An event handle returned by a previous call to TCPIP_MAC_Bridge_EventHandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
 
 

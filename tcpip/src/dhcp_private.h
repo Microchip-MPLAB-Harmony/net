@@ -68,45 +68,45 @@ Microchip or any third party.
 
 #define TCPIP_DHCP_DEBUG_MASK                   (0)
 
-#define TCPIP_BOOT_REQUEST                    (1u)	// TCPIP_BOOT_REQUEST DHCP type
-#define TCPIP_BOOT_REPLY                      (2u)	// TCPIP_BOOT_REPLY DHCP type
-#define TCPIP_BOOT_HW_TYPE                    (1u)	// TCPIP_BOOT_HW_TYPE DHCP type
-#define TCPIP_BOOT_LEN_OF_HW_TYPE             (6u)	// TCPIP_BOOT_LEN_OF_HW_TYPE DHCP type
+#define TCPIP_BOOT_REQUEST                    (1u)  // TCPIP_BOOT_REQUEST DHCP type
+#define TCPIP_BOOT_REPLY                      (2u)  // TCPIP_BOOT_REPLY DHCP type
+#define TCPIP_BOOT_HW_TYPE                    (1u)  // TCPIP_BOOT_HW_TYPE DHCP type
+#define TCPIP_BOOT_LEN_OF_HW_TYPE             (6u)  // TCPIP_BOOT_LEN_OF_HW_TYPE DHCP type
 
-#define TCPIP_DHCP_MESSAGE_TYPE               (53u)	// DHCP Message Type constant
+#define TCPIP_DHCP_MESSAGE_TYPE               (53u) // DHCP Message Type constant
 
-#define TCPIP_DHCP_UNKNOWN_MESSAGE            (0u)	// Code for unknown DHCP message
+#define TCPIP_DHCP_UNKNOWN_MESSAGE            (0u)  // Code for unknown DHCP message
 
-#define TCPIP_DHCP_DISCOVER_MESSAGE           (1u)	// DCHP Discover Message
-#define TCPIP_DHCP_OFFER_MESSAGE              (2u)	// DHCP Offer Message
-#define TCPIP_DHCP_REQUEST_MESSAGE            (3u)	// DHCP Request message
-#define TCPIP_DHCP_DECLINE_MESSAGE            (4u)	// DHCP Decline Message
-#define TCPIP_DHCP_ACK_MESSAGE                (5u)	// DHCP ACK Message
-#define TCPIP_DHCP_NAK_MESSAGE                (6u)	// DHCP NAK Message
-#define TCPIP_DHCP_RELEASE_MESSAGE            (7u)	// DCHP Release message
-#define TCPIP_DHCP_INFORM_MESSAGE             (8u)	// DCHP INFORM Message
+#define TCPIP_DHCP_DISCOVER_MESSAGE           (1u)  // DCHP Discover Message
+#define TCPIP_DHCP_OFFER_MESSAGE              (2u)  // DHCP Offer Message
+#define TCPIP_DHCP_REQUEST_MESSAGE            (3u)  // DHCP Request message
+#define TCPIP_DHCP_DECLINE_MESSAGE            (4u)  // DHCP Decline Message
+#define TCPIP_DHCP_ACK_MESSAGE                (5u)  // DHCP ACK Message
+#define TCPIP_DHCP_NAK_MESSAGE                (6u)  // DHCP NAK Message
+#define TCPIP_DHCP_RELEASE_MESSAGE            (7u)  // DCHP Release message
+#define TCPIP_DHCP_INFORM_MESSAGE             (8u)  // DCHP INFORM Message
 
-#define TCPIP_DHCP_REQUEST_RENEW_MESSAGE      (9u)	// internal message for Request Renew message
-#define TCPIP_DHCP_TIMEOUT_MESSAGE            (10u)	// internal message to show no message available
+#define TCPIP_DHCP_REQUEST_RENEW_MESSAGE      (9u)  // internal message for Request Renew message
+#define TCPIP_DHCP_TIMEOUT_MESSAGE            (10u) // internal message to show no message available
 
-#define TCPIP_DHCP_SERVER_IDENTIFIER          (54u)	// DHCP Server Identifier
+#define TCPIP_DHCP_SERVER_IDENTIFIER          (54u) // DHCP Server Identifier
 
-#define TCPIP_DHCP_OPTION_ACK_MESSAGE		  (53u)	// DHCP ACK Message
-#define TCPIP_DHCP_PARAM_REQUEST_LIST         (55u)	// DHCP_PARAM_REQUEST_LIST Type
-#define TCPIP_DHCP_PARAM_REQUEST_IP_ADDRESS   (50u)	// DHCP_PARAM_REQUEST_IP_ADDRESS Type
-#define TCPIP_DHCP_PARAM_REQUEST_CLIENT_ID    (61u)	// DHCP_PARAM_REQUEST Client Type
+#define TCPIP_DHCP_OPTION_ACK_MESSAGE         (53u) // DHCP ACK Message
+#define TCPIP_DHCP_PARAM_REQUEST_LIST         (55u) // DHCP_PARAM_REQUEST_LIST Type
+#define TCPIP_DHCP_PARAM_REQUEST_IP_ADDRESS   (50u) // DHCP_PARAM_REQUEST_IP_ADDRESS Type
+#define TCPIP_DHCP_PARAM_REQUEST_CLIENT_ID    (61u) // DHCP_PARAM_REQUEST Client Type
 
-#define TCPIP_DHCP_SUBNET_MASK                (1u)	// DHCP_SUBNET_MASK Type
-#define TCPIP_DHCP_ROUTER                     (3u)	// DHCP_ROUTER Type
-#define TCPIP_DHCP_TIME_SERVER                (4u)	// DHCP_TIME_SERVER Type
-#define TCPIP_DHCP_DNS						  (6u)	// DHCP_DNS Type
-#define TCPIP_DHCP_HOST_NAME			      (12u)	// DHCP_HOST_NAME Type
-#define TCPIP_DHCP_IP_LEASE_TIME              (51u)	// DHCP_IP_LEASE_TIME Type
-#define TCPIP_DHCP_RENEW_TIME                 (58u)	// DHCP RENEW time (T1)
-#define TCPIP_DHCP_REBIND_TIME                (59u)	// DHCP REBIND time (T2)
-#define TCPIP_DHCP_NTP_SERVER                 (42u)	// DHCP_NTP_SERVER Type
+#define TCPIP_DHCP_SUBNET_MASK                (1u)  // DHCP_SUBNET_MASK Type
+#define TCPIP_DHCP_ROUTER                     (3u)  // DHCP_ROUTER Type
+#define TCPIP_DHCP_TIME_SERVER                (4u)  // DHCP_TIME_SERVER Type
+#define TCPIP_DHCP_DNS                        (6u)  // DHCP_DNS Type
+#define TCPIP_DHCP_HOST_NAME                  (12u) // DHCP_HOST_NAME Type
+#define TCPIP_DHCP_IP_LEASE_TIME              (51u) // DHCP_IP_LEASE_TIME Type
+#define TCPIP_DHCP_RENEW_TIME                 (58u) // DHCP RENEW time (T1)
+#define TCPIP_DHCP_REBIND_TIME                (59u) // DHCP REBIND time (T2)
+#define TCPIP_DHCP_NTP_SERVER                 (42u) // DHCP_NTP_SERVER Type
 
-#define TCPIP_DHCP_END_OPTION                 (255u)	// DHCP_END_OPTION Type
+#define TCPIP_DHCP_END_OPTION                 (255u)    // DHCP_END_OPTION Type
 
 
 
@@ -170,24 +170,24 @@ Microchip or any third party.
 // DHCP or BOOTP Header structure
 typedef struct
 {
-    uint8_t	    op;             // Message type for this message
-    uint8_t	    htype;	        // Hardware type for this message
-    uint8_t	    hlen;	        // Length of hardware type
-    uint8_t	    hops;			// Number of hops
-    uint32_t    xid;	        // DHCP Transaction ID
-    uint16_t	secs;	        // Number of elapsed seconds
-    uint16_t	flags;		    // BOOTP Flags
-    uint32_t	ciaddr;		    // Client IP
-    uint32_t	yiaddr;			// Your IP
-    uint32_t	siaddr;	        // Next Server IP
-    uint32_t	giaddr;	        // Relay Agent IP
-    uint8_t     chaddr[16];		// Client MAC Address
+    uint8_t     op;             // Message type for this message
+    uint8_t     htype;          // Hardware type for this message
+    uint8_t     hlen;           // Length of hardware type
+    uint8_t     hops;           // Number of hops
+    uint32_t    xid;            // DHCP Transaction ID
+    uint16_t    secs;           // Number of elapsed seconds
+    uint16_t    flags;          // BOOTP Flags
+    uint32_t    ciaddr;         // Client IP
+    uint32_t    yiaddr;         // Your IP
+    uint32_t    siaddr;         // Next Server IP
+    uint32_t    giaddr;         // Relay Agent IP
+    uint8_t     chaddr[16];     // Client MAC Address
 } TCPIP_DHCP_FRAME_HEADER;
 
 typedef struct
 {
-    uint8_t	    sname[64];      // optional server host name
-    uint8_t	    file[128];	    // boot file name
+    uint8_t     sname[64];      // optional server host name
+    uint8_t     file[128];      // boot file name
 } TCPIP_DHCP_FRAME_OPT_HEADER;
 
 typedef struct
@@ -210,7 +210,7 @@ typedef struct
     uint8_t*            pOpt;       // current option pointer
     int32_t             optSize;    // current option size
     unsigned int        msgType;    // current message type
-	TCPIP_UINT32_VAL    serverID;   // server ID for the transaction
+    TCPIP_UINT32_VAL    serverID;   // server ID for the transaction
     TCPIP_UINT32_VAL    leaseTime;  // lease time or 0 if not valid
     TCPIP_UINT32_VAL    renewTime;  // renew time or 0 if not valid
     TCPIP_UINT32_VAL    rebindTime; // rebind time or 0 if not valid
@@ -385,7 +385,7 @@ typedef enum
 
 typedef struct  _TAG_DHCP_LIST_NODE
 {
-	struct _TAG_DHCP_LIST_NODE*		next;		// next node in list
+    struct _TAG_DHCP_LIST_NODE*     next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_DHCP_EVENT_HANDLER        handler;    // handler to be called for event
     const void*                     hParam;     // handler parameter

@@ -1,14 +1,14 @@
 /**************************************************************************
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     telnet.h
-	
+    
   Summary:
     Telnet provides bidirectional, interactive communication between two
     nodes on the Internet or on a Local Area Network.
-	
+    
   Description:
     Telnet Server Module for Microchip TCP/IP Stack. The telnet protocol is
     explained in RFC 854.                                                  
@@ -75,7 +75,7 @@ Microchip or any third party.
     Enumeration describing the possible states of a telnet connection.
 */
 
-typedef	enum
+typedef enum
 {
     TCPIP_TELNET_IDLE = 0,
     TCPIP_TELNET_GET_LOGIN,
@@ -390,4 +390,4 @@ void  TCPIP_TELNET_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif	//#ifndef __TELNET_H
+#endif  //#ifndef __TELNET_H

@@ -74,7 +74,7 @@ Microchip or any third party.
   Description:
     Definition of the heap handle which clients
     use to get access to heap statistics functions.
-	
+    
   Remarks:
     None.
 
@@ -468,7 +468,7 @@ typedef struct
 /*
   Function:
     TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType, 
-	                                                  int heapIndex)
+                                                      int heapIndex)
 
   Summary:
     Returns the current TCP/IP stack heap handle.
@@ -489,7 +489,7 @@ typedef struct
 
   Returns:
     A handle to the current TCP/IP stack heap of the requested type; otherwise, 0 if an error
-	occurred.
+    occurred.
 
   Remarks:
     None.
@@ -499,13 +499,13 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType
 //*****************************************************************************
 /* Function:
      size_t TCPIP_STACK_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
-	 
+     
    Summary:
     Returns the size of the heap.
    
    Description:
     This function returns the size of the heap. This is the size that was 
-	specified when the heap was created.
+    specified when the heap was created.
    
    Preconditions:
     heapH       - valid heap handle
@@ -524,13 +524,13 @@ size_t                 TCPIP_STACK_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
 //*****************************************************************************
 /* Function:
     size_t TCPIP_STACK_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
-	 
+     
    Summary:
     Returns the maximum size of a block that can be currently allocated from this heap.
    
    Description:
     The function returns the maximum size of a block that can be currently allocated 
-	from this heap.
+    from this heap.
    
    Preconditions:
     heapH       - valid heap handle
@@ -543,7 +543,7 @@ size_t                 TCPIP_STACK_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
    
    Remarks:
     This is info only. It can change is the heap has multiple clients. 
-	The call could be expensive.
+    The call could be expensive.
     The entire heap has to be traversed to find the maximum.
     If the heap is really fragmented this might take some time.
 */
@@ -552,7 +552,7 @@ size_t                 TCPIP_STACK_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
 //*****************************************************************************
 /* Function:
     size_t TCPIP_STACK_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
-	 
+     
    Summary:
     Returns the size of the space currently available in the heap.
    
@@ -576,7 +576,7 @@ size_t                 TCPIP_STACK_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
 //*****************************************************************************
 /* Function:
     size_t TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
-	 
+     
    Summary:
     Returns the current heap watermark.
    
@@ -601,15 +601,15 @@ size_t                 TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE he
 //*****************************************************************************
 /* Function:      
     TCPIP_STACK_HEAP_RES TCPIP_STACK_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
-	
+    
    Summary:
     Returns the last error encountered in a heap operation and clears the value
-	of the last error variable.
+    of the last error variable.
    
    Description:
     The function returns the last error encountered in a heap operation.
     It clears the value of the last error variable.
-	
+    
    Precondition:    
     heapH       - valid heap handle
  
@@ -618,7 +618,7 @@ size_t                 TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE he
 
    Returns:
     The last error encountered in an operation or TCPIP_STACK_HEAP_RES_OK if no 
-	error occurred.
+    error occurred.
 
    Remarks:
      The heap holds an error variable storing the last error encountered in an operation.

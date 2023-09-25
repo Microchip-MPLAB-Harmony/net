@@ -60,7 +60,7 @@ Microchip or any third party.
 // option, all TX segments are fixed at 536 bytes maximum.
 // This symbol sets an upper bound on the TCP MSS on the transmit side
 // which can ignore/override the remote node advertising.
-#define TCPIP_TCP_MAX_SEG_SIZE_TX			(1460u)
+#define TCPIP_TCP_MAX_SEG_SIZE_TX           (1460u)
 
 // Default socket TX buffer size
 // Note that this setting affects all TCP sockets that are created
@@ -73,7 +73,7 @@ Microchip or any third party.
 // high throughput. 
 // Note that some modules (like HTTP) use their own settings to specify the buffer size
 // for their TCP sockets.
-#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE		512			
+#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE        512         
 
 // Default socket RX buffer size
 // Note that this setting affects all TCP sockets that are created
@@ -86,8 +86,8 @@ Microchip or any third party.
 // high throughput. 
 // Note that some modules (like HTTP) use their own settings to specify the buffer size
 // for their TCP sockets.
-#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE		512			
-		
+#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE        512         
+        
 // Enable the TCP sockets dynamic options set/get functionality
 // If enabled, the functions: TCPIP_TCP_OptionsSet, TCPIP_TCP_OptionsGet and TCPIP_TCP_FifoSizeAdjust
 // exist and are compiled in
@@ -96,13 +96,13 @@ Microchip or any third party.
 #define TCPIP_TCP_DYNAMIC_OPTIONS               1
 
 // Timeout to syn retransmit, data retry - ms
-#define TCPIP_TCP_START_TIMEOUT_VAL   	(1000ul)
+#define TCPIP_TCP_START_TIMEOUT_VAL     (1000ul)
 
 // Timeout for delayed-acknowledgment algorithm, ms
-#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		(100ul)
+#define TCPIP_TCP_DELAYED_ACK_TIMEOUT       (100ul)
 
 // Timeout for FIN WAIT 2 state, ms
-#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		(5000ul)
+#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT        (5000ul)
 
 // Maximum Segment Length (MSL) timeout, seconds
 // This value sets the time a socket will be in the TIME_WAIT/2MSL state
@@ -126,7 +126,7 @@ Microchip or any third party.
 #define     TCPIP_TCP_QUIET_TIME           (30)
 
 // Timeout for keep-alive messages when no traffic is sent, ms
-#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		(10000ul)
+#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT        (10000ul)
 
 // Timeout for the CLOSE_WAIT state, ms
 // If the remote socket closes the connection
@@ -135,31 +135,31 @@ Microchip or any third party.
 // If the value is set to 0 then the socket will wait forever
 // for the application to close the socket (default behavior). 
 // Default should be 0
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		(0)
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT        (0)
 
 // Maximum number of retransmission attempts
-#define TCPIP_TCP_MAX_RETRIES			(5u)
+#define TCPIP_TCP_MAX_RETRIES           (5u)
 
 // Maximum number of keep-alive messages that can be sent 
 // without receiving a response before automatically closing 
 // the connection
-#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES	(6u)
+#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES   (6u)
 
 // Smaller than all other retries to reduce SYN flood DoS duration
-#define TCPIP_TCP_MAX_SYN_RETRIES		(2u)
+#define TCPIP_TCP_MAX_SYN_RETRIES       (2u)
 
 // Timeout before automatically transmitting unflushed data, ms.
 // Default value is 40 ms.
-#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL	(40ul)
+#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL (40ul)
 
 // Timeout before automatically transmitting a window update
 // due to a TCPIP_TCP_Get() or TCPIP_TCP_ArrayGet() function call, ms.
-#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL	(200ul)
+#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL (200ul)
 
-//	The maximum number of sockets to create in the stack.
-//	When defining TCPIP_TCP_MAX_SOCKETS take into account
-//	the number of interfaces the stack is supporting.
-#define TCPIP_TCP_MAX_SOCKETS 			(10)
+//  The maximum number of sockets to create in the stack.
+//  When defining TCPIP_TCP_MAX_SOCKETS take into account
+//  the number of interfaces the stack is supporting.
+#define TCPIP_TCP_MAX_SOCKETS           (10)
 
 
 

@@ -4043,7 +4043,7 @@ static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_CONN* pHttpCon, uint8_t cFin
     srchBuff[0] = cFind;
     srchBuff[1] = 0;
 
-	return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
+    return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
 }
 
 TCPIP_HTTP_USER_HANDLE TCPIP_HTTP_UserHandlerRegister(size_t instIx, const TCPIP_HTTP_USER_CALLBACK* userCallback)

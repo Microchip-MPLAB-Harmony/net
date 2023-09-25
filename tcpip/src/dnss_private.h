@@ -4,7 +4,7 @@ DNS Server module private header
 
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     dnss_private.h
 
@@ -62,7 +62,7 @@ Microchip or any third party.
 // *****************************************************************************
 /* 
   Structure:
-	TCPIP_DNSS_CACHE_ENTRY
+    TCPIP_DNSS_CACHE_ENTRY
 
   Summary:
     This structure is used to set and get the cache entries for DNS client use.
@@ -75,7 +75,7 @@ Microchip or any third party.
 */
 typedef struct
 {
-	uint8_t*				    sHostNameData;  //Host name size
+    uint8_t*                    sHostNameData;  //Host name size
     IPV4_ADDR                   ip4Address;    // Provide a symbol for IPv4 entries number; 
     TCPIP_UINT32_VAL            tConfig;       //  Configured time for all the IPv4 and Ipv6 address per hostname
     IP_ADDRESS_TYPE             recordType;     //  DNS protocol record type is mapped to IP address type
@@ -102,13 +102,13 @@ typedef enum
 
 typedef union
 {
-	uint8_t Val;
-	struct
-	{
-		unsigned char DNSServInUse 		: 1;	// Indicates the DNS Server module is in use
-		unsigned char AddressType 	: 2;    // IP_ADDRESS_TYPE_IPV6 or IP_ADDRESS_TYPE_IPV4
+    uint8_t Val;
+    struct
+    {
+        unsigned char DNSServInUse      : 1;    // Indicates the DNS Server module is in use
+        unsigned char AddressType   : 2;    // IP_ADDRESS_TYPE_IPV6 or IP_ADDRESS_TYPE_IPV4
         unsigned char filler        : 5;
-	} bits;
+    } bits;
 } DNS_SERVER_FLAGS;
 
 typedef enum
@@ -123,11 +123,11 @@ typedef struct
 {
     OA_HASH_DCPT*       dnssHashDcpt;       // contiguous space for a hash descriptor  and hash table entries  
     UDP_SOCKET          dnsSrvSocket;               // Server Socket used by DNS Server
-    DNSS_STATE		    smState;           // server state machine status
+    DNSS_STATE          smState;           // server state machine status
     uint8_t             dnsSrvInitCount;
     DNS_SERVER_FLAGS    flags;
     int                 intfIdx;    
-	const void 		    *memH;
+    const void          *memH;
     int                 IPv4EntriesPerDNSName;
 #ifdef TCPIP_STACK_USE_IPV6
     int                 IPv6EntriesPerDNSName;
@@ -145,11 +145,11 @@ typedef struct
 */
 
 // DNS Server cache entry
-typedef struct	_TAG_DNSS_HASH_ENTRY 
+typedef struct  _TAG_DNSS_HASH_ENTRY 
 {
-	OA_HASH_ENTRY				hEntry; 		// hash header;
-	uint8_t*                    memblk;         // memory block for IPv4 and IPv6 and TTL block of memory. Hostname is not part of this block
-	uint32_t                    tInsert;        // start time per hash entry
+    OA_HASH_ENTRY               hEntry;         // hash header;
+    uint8_t*                    memblk;         // memory block for IPv4 and IPv6 and TTL block of memory. Hostname is not part of this block
+    uint32_t                    tInsert;        // start time per hash entry
 
     int                         nIPv4Entries;     // how many entries in the ip4Address[] array; if IPv4 is defined
     IPV4_ADDR*                  pip4Address;  // pointer to an array of IPv4 entries 
@@ -158,8 +158,8 @@ typedef struct	_TAG_DNSS_HASH_ENTRY
     IPV6_ADDR*                  pip6Address;  // pointer to an array of IPv6 entries
 #endif    
     uint8_t                     *pHostName;
-	uint8_t						recordType;  // record can be  IPv6 ( 28 )or IPv4 ( 1)	
-	uint8_t                     netIfIdx;
+    uint8_t                     recordType;  // record can be  IPv6 ( 28 )or IPv4 ( 1)  
+    uint8_t                     netIfIdx;
     TCPIP_UINT32_VAL            validityTime;      // user configured time per hash entry in second
 }DNSS_HASH_ENTRY;
 

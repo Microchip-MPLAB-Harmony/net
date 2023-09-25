@@ -1,13 +1,13 @@
 /**********************************************************
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     ip_config.h
-	
+    
   Summary:
     Internet Protocol (IP) Configuration file.
-	
+    
   Description:
     This file contains the IP module configuration options.
 

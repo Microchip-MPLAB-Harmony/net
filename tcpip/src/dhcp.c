@@ -58,8 +58,8 @@ typedef struct
                                             // operation dependent                
                                             // wait operations are implemented as difference between the 
                                             // current tick/second and startWait to avoid counter overflows
-	uint32_t			    tRequest;		// the time when the DHCP request was sent - seconds
-	uint32_t			    tRenewRequest;  // the time when the DHCP renew request was sent - seconds
+    uint32_t                tRequest;       // the time when the DHCP request was sent - seconds
+    uint32_t                tRenewRequest;  // the time when the DHCP renew request was sent - seconds
     uint32_t                t1Seconds;      // # of seconds to wait until we get to RENEW state (T1 timer)
     uint32_t                t2Seconds;      // # of seconds to wait until we get to REBIND state (T2 timer)
     uint32_t                tExpSeconds;    // # of seconds to wait until the lease completely expired
@@ -67,20 +67,20 @@ typedef struct
                                             // T1 < T2 < Texp
     uint32_t                t3Seconds;      // # of seconds to wait until reissuing a REQUEST in RENEW/REBIND state
     uint32_t                tOpStart;       // time at which a lease operation is started
-	uint32_t				dwServerID;		// DHCP Server ID cache
-	IPV4_ADDR				serverAddress;	// DHCP Server that grant the lease
-	IPV4_ADDR				dhcpIPAddress;	// DHCP obtained IP address
-	IPV4_ADDR				dhcpGateway;	// DHCP obtained gateway
-	IPV4_ADDR				dhcpMask;		// DHCP obtained mask
-	#if defined(TCPIP_STACK_USE_DNS)
-	IPV4_ADDR				dhcpDNS;		// DHCP obtained primary DNS server
-	IPV4_ADDR				dhcpDNS2;		// DHCP obtained secondary DNS server
-	#endif	
+    uint32_t                dwServerID;     // DHCP Server ID cache
+    IPV4_ADDR               serverAddress;  // DHCP Server that grant the lease
+    IPV4_ADDR               dhcpIPAddress;  // DHCP obtained IP address
+    IPV4_ADDR               dhcpGateway;    // DHCP obtained gateway
+    IPV4_ADDR               dhcpMask;       // DHCP obtained mask
+    #if defined(TCPIP_STACK_USE_DNS)
+    IPV4_ADDR               dhcpDNS;        // DHCP obtained primary DNS server
+    IPV4_ADDR               dhcpDNS2;       // DHCP obtained secondary DNS server
+    #endif  
 #if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
-	IPV4_ADDR				timeServers[TCPIP_DHCP_TIME_SERVER_ADDRESSES];	// DHCP obtained time servers
+    IPV4_ADDR               timeServers[TCPIP_DHCP_TIME_SERVER_ADDRESSES];  // DHCP obtained time servers
 #endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
 #if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
-	IPV4_ADDR				ntpServers[TCPIP_DHCP_NTP_SERVER_ADDRESSES];	// DHCP obtained time servers
+    IPV4_ADDR               ntpServers[TCPIP_DHCP_NTP_SERVER_ADDRESSES];    // DHCP obtained time servers
 #endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     TCPIP_UINT32_VAL        transactionID;  // current transaction ID
     TCPIP_DHCP_HOST_NAME_CALLBACK   nameCallback;   // get host name callback
@@ -92,42 +92,42 @@ typedef struct
     uint16_t                tLeaseCheck;    // time to wait for a lease check
     uint16_t                dhcpOp;         // DHCP current operation: TCPIP_DHCP_OPERATION_TYPE
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_STATUS) != 0
-	uint8_t		            smState;		// DHCP client state machine variable: TCPIP_DHCP_STATUS
-	uint8_t		            prevState;		// DHCP client previous state machine variable: TCPIP_DHCP_STATUS
+    uint8_t                 smState;        // DHCP client state machine variable: TCPIP_DHCP_STATUS
+    uint8_t                 prevState;      // DHCP client previous state machine variable: TCPIP_DHCP_STATUS
 #else
-	uint16_t		        smState;		// DHCP client state machine variable: TCPIP_DHCP_STATUS
+    uint16_t                smState;        // DHCP client state machine variable: TCPIP_DHCP_STATUS
 #endif  // TCPIP_DHCP_DEBUG_MASK
-	union
-	{
-	    struct
-	    {
-	        uint8_t bDHCPEnabled        : 1;	// Whether or not DHCP is currently enabled
-	        uint8_t bIsBound            : 1;	// Whether or not DHCP is currently bound
-	        uint8_t bOfferReceived      : 1;	// Whether or not an offer has been received
-			uint8_t bDHCPServerDetected : 1;	// Indicates if a DCHP server has been detected
+    union
+    {
+        struct
+        {
+            uint8_t bDHCPEnabled        : 1;    // Whether or not DHCP is currently enabled
+            uint8_t bIsBound            : 1;    // Whether or not DHCP is currently bound
+            uint8_t bOfferReceived      : 1;    // Whether or not an offer has been received
+            uint8_t bDHCPServerDetected : 1;    // Indicates if a DCHP server has been detected
             uint8_t bWasBound           : 1;    // successfully held a lease
             uint8_t bReportFail         : 1;    // report run time failure flag
             uint8_t bWriteBack          : 1;    // write back the resulting host name
             uint8_t bRetry              : 1;    // a new cycle/retry because of a failure
-	    };
-	    uint8_t val;
-	} flags;
-	// Indicates which DHCP values are currently valid
-	union
-	{
-		struct
-		{
-			uint8_t IPAddress      : 1;     // Leased IP address is valid
-			uint8_t Gateway        : 1;	    // Gateway address is valid
-			uint8_t Mask           : 1;	    // Subnet mask is valid
-			uint8_t DNS            : 1;	    // Primary DNS is valid
-			uint8_t DNS2           : 1;	    // Secondary DNS is valid
-			uint8_t tServer        : 1;	    // Time Server addresses are valid
-			uint8_t ntpServer      : 1;	    // Time Server addresses are valid
-			uint8_t reserved       : 1;	    // unused
-		};
-		uint8_t val;
-	} validValues;
+        };
+        uint8_t val;
+    } flags;
+    // Indicates which DHCP values are currently valid
+    union
+    {
+        struct
+        {
+            uint8_t IPAddress      : 1;     // Leased IP address is valid
+            uint8_t Gateway        : 1;     // Gateway address is valid
+            uint8_t Mask           : 1;     // Subnet mask is valid
+            uint8_t DNS            : 1;     // Primary DNS is valid
+            uint8_t DNS2           : 1;     // Secondary DNS is valid
+            uint8_t tServer        : 1;     // Time Server addresses are valid
+            uint8_t ntpServer      : 1;     // Time Server addresses are valid
+            uint8_t reserved       : 1;     // unused
+        };
+        uint8_t val;
+    } validValues;
 #if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
     uint8_t     tServerNo;          // number of stored valid time servers in timeServers 
 #endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
@@ -199,12 +199,12 @@ static void     _DHCPDbgProcessTmo(DHCP_CLIENT_VARS* pClient);
 static bool     _DHCPDbgProcessAckDecline(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf);
 #endif  // TCPIP_DHCP_DEBUG_MASK
 
-static DHCP_CLIENT_VARS*	DHCPClients = 0;    // DHCP client per interface 
+static DHCP_CLIENT_VARS*    DHCPClients = 0;    // DHCP client per interface 
 
 static int                  dhcpInterfaces = 0; // number of interfaces present
 static int                  dhcpInitCount = 0;  // DHCP module initialization count
 
-static UDP_SOCKET    	    dhcpClientSocket;   // Handle to DHCP client socket
+static UDP_SOCKET           dhcpClientSocket;   // Handle to DHCP client socket
 static UDP_PORT             dhcpClientPort;
 static UDP_PORT             dhcpServerPort;
 
@@ -358,16 +358,16 @@ static const char* _DHCPStatTbl[] =
 {
     "idle ",         // TCPIP_DHCP_IDLE 
     "wlink",         // TCPIP_DHCP_WAIT_LINK,         
-    "discs",         // TCPIP_DHCP_SEND_DISCOVERY,	   
-    "offrw",         // TCPIP_DHCP_GET_OFFER,		   
-    "requs",         // TCPIP_DHCP_SEND_REQUEST,	 
-    "requw",         // TCPIP_DHCP_GET_REQUEST_ACK,	
+    "discs",         // TCPIP_DHCP_SEND_DISCOVERY,     
+    "offrw",         // TCPIP_DHCP_GET_OFFER,          
+    "requs",         // TCPIP_DHCP_SEND_REQUEST,     
+    "requw",         // TCPIP_DHCP_GET_REQUEST_ACK, 
     "lchek",         // TCPIP_DHCP_WAIT_LEASE_CHECK,
     "lrtry",         // TCPIP_DHCP_WAIT_LEASE_RETRY,
     "skip",          // TCPIP_DHCP_SKIP_LEASE_CHECK,
-    "bound",         // TCPIP_DHCP_BOUND,			   
-    "renes",         // TCPIP_DHCP_SEND_RENEW,	
-    "renew",         // TCPIP_DHCP_GET_RENEW_ACK,	   
+    "bound",         // TCPIP_DHCP_BOUND,              
+    "renes",         // TCPIP_DHCP_SEND_RENEW,  
+    "renew",         // TCPIP_DHCP_GET_RENEW_ACK,      
     "rbnds",         // TCPIP_DHCP_SEND_REBIND,
     "rbndw",         // TCPIP_DHCP_GET_REBIND_ACK,     
 };
@@ -499,16 +499,16 @@ static void _DHCPClientClose(TCPIP_NET_IF* pNetIf, bool disable, bool release)
             _DHCPSend(pClient, pNetIf, TCPIP_DHCP_RELEASE_MESSAGE, 0);
         }
 
-		pClient->flags.bIsBound = false;
+        pClient->flags.bIsBound = false;
         pClient->flags.bDHCPServerDetected = false;
-        pClient->flags.bReportFail = 1;	
+        pClient->flags.bReportFail = 1; 
         pClient->tOpStart = 0; 
         pClient->dhcpTmo = pClient->dhcpTmoBase;
         _DHCPSetIPv4Filter(pClient, false);
         
         if(disable)
         {
-            pClient->flags.bWasBound = false;	
+            pClient->flags.bWasBound = false;   
             pClient->flags.bDHCPEnabled = false;
             pNetIf->Flags.bIsDHCPEnabled = false;
         }
@@ -650,30 +650,30 @@ static void _DHCPSetTimeout(DHCP_CLIENT_VARS* pClient)
     bool TCPIP_DHCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCP_MODULE_CONFIG* pDhcpConfig);
 
   Summary:
-	Resets the DHCP client module for the specified interface.
+    Resets the DHCP client module for the specified interface.
 
   Description:
-	Resets the DHCP client module, giving up any current lease, knowledge of 
-	DHCP servers, etc. for the specified interface.
+    Resets the DHCP client module, giving up any current lease, knowledge of 
+    DHCP servers, etc. for the specified interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackCtrl - pointer to stack structure specifying the interface to initialize
+    stackCtrl - pointer to stack structure specifying the interface to initialize
 
   Returns:
-	None
+    None
 
   Remarks:
-	This function should be called internally just once per interface 
+    This function should be called internally just once per interface 
     by the stack manager.
 ***************************************************************************/
 bool TCPIP_DHCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCP_MODULE_CONFIG* pDhcpConfig)
 {
     DHCP_CLIENT_VARS*   pClient;
     bool    iniRes;
-	
+    
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         if(stackCtrl->pNetIf->Flags.bIsDHCPEnabled != 0)
@@ -769,22 +769,22 @@ bool TCPIP_DHCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     void TCPIP_DHCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
-	Turns off the DHCP client module for the specified interface.
+    Turns off the DHCP client module for the specified interface.
 
   Description:
-	DHCP client process when the specified interface or whole stack goes down
+    DHCP client process when the specified interface or whole stack goes down
 
   Precondition:
-	None
+    None
 
   Parameters:
-	stackData - pointer to stack structure specifying the interface to deinitialize
+    stackData - pointer to stack structure specifying the interface to deinitialize
 
   Returns:
-	None
+    None
 
   Remarks:
-	This function is called internally just once per interface 
+    This function is called internally just once per interface 
     by the stack manager.
 ***************************************************************************/
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -820,26 +820,26 @@ void TCPIP_DHCP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
 /*****************************************************************************
   Function:
-	void TCPIP_DHCP_Disable(TCPIP_NET_HANDLE hNet)
+    void TCPIP_DHCP_Disable(TCPIP_NET_HANDLE hNet)
 
   Summary:
-	Disables the DHCP Client for the specified interface.
+    Disables the DHCP Client for the specified interface.
 
   Description:
-	Disables the DHCP client for the specified interface.
+    Disables the DHCP client for the specified interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	pNetIf - Interface to disable the DHCP client on.
+    pNetIf - Interface to disable the DHCP client on.
 
   Returns:
-	true if success
+    true if success
     false otherwise
 
   Remarks:
-	The current lease will be released.
+    The current lease will be released.
 ***************************************************************************/
 bool TCPIP_DHCP_Disable(TCPIP_NET_HANDLE hNet)
 {
@@ -951,22 +951,22 @@ static bool _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ o
 
 /*****************************************************************************
   Function:
-	bool TCPIP_DHCP_IsEnabled(CPIP_NET_HANDLE hNet)
+    bool TCPIP_DHCP_IsEnabled(CPIP_NET_HANDLE hNet)
 
   Summary:
-	Determins if the DHCP client is enabled on the specified interface.
+    Determins if the DHCP client is enabled on the specified interface.
 
   Description:
-	Determins if the DHCP client is enabled on the specified interface.
+    Determins if the DHCP client is enabled on the specified interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	 hNet- Interface to query.
+     hNet- Interface to query.
 
   Returns:
-	None
+    None
 ***************************************************************************/
 bool TCPIP_DHCP_IsEnabled(TCPIP_NET_HANDLE hNet)
 {
@@ -991,26 +991,26 @@ bool TCPIP_DHCP_IsActive(TCPIP_NET_HANDLE hNet)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_DHCP_IsBound(TCPIP_NET_HANDLE hNet)
+    bool TCPIP_DHCP_IsBound(TCPIP_NET_HANDLE hNet)
 
   Summary:
-	Determins if the DHCP client has an IP address lease on the specified 
-	interface.
+    Determins if the DHCP client has an IP address lease on the specified 
+    interface.
 
   Description:
-	Determins if the DHCP client has an IP address lease on the specified 
-	interface.
+    Determins if the DHCP client has an IP address lease on the specified 
+    interface.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	hNet - Interface to query
+    hNet - Interface to query
 
   Returns:
-	true - DHCP client has obtained an IP address lease (and likely other 
-		parameters) and these values are currently being used.
-	false - No IP address is currently leased
+    true - DHCP client has obtained an IP address lease (and likely other 
+        parameters) and these values are currently being used.
+    false - No IP address is currently leased
 ***************************************************************************/
 bool TCPIP_DHCP_IsBound(TCPIP_NET_HANDLE hNet)
 {
@@ -1026,27 +1026,27 @@ bool TCPIP_DHCP_IsBound(TCPIP_NET_HANDLE hNet)
 
 /*****************************************************************************
   Function:
-	bool TCPIP_DHCP_IsServerDetected(TCPIP_NET_HANDLE hNet)
+    bool TCPIP_DHCP_IsServerDetected(TCPIP_NET_HANDLE hNet)
 
   Summary:
-	Determins if the DHCP client on the specified interface has seen a DHCP 
-	server.
+    Determins if the DHCP client on the specified interface has seen a DHCP 
+    server.
 
   Description:
-	Determins if the DHCP client on the specified interface has seen a DHCP 
-	server.
-	
+    Determins if the DHCP client on the specified interface has seen a DHCP 
+    server.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	hNet- Interface to query.
+    hNet- Interface to query.
 
   Returns:
-	true - At least one DHCP server is attached to the specified network 
-		interface.
-	false - No DHCP servers are currently detected on the specified network 
-		interface.
+    true - At least one DHCP server is attached to the specified network 
+        interface.
+    false - No DHCP servers are currently detected on the specified network 
+        interface.
 ***************************************************************************/
 bool TCPIP_DHCP_IsServerDetected(TCPIP_NET_HANDLE hNet)
 {
@@ -1166,7 +1166,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 // set a default lease just in case the server won't specify one
                 _DHCPSetLeaseTimeParams(pClient, 0);
                 pClient->validValues.val = 0x00;
-                pClient->flags.bIsBound = false;	
+                pClient->flags.bIsBound = false;    
                 pClient->flags.bOfferReceived = false;
                 pClient->serverAddress.Val = 0;
 
@@ -1457,7 +1457,7 @@ options offs:  240  |                                                           
 minimum packet: 240 bytes (no option except the magic cookie)
 minimum packet that needs to be accepted: 236 + 312 = 548 bytes (RFC)
 
-	********************************************************************/
+    ********************************************************************/
 
     int  netIx, nNets;
     TCPIP_DHCP_FRAME_HEADER    dhcpHdr;
@@ -2053,8 +2053,8 @@ static void _DHCPSetBoundState(DHCP_CLIENT_VARS* pClient)
     pClient->serverAddress.Val = sktInfo.sourceIPaddress.v4Add.Val;
 
     _DHCPClientStateSet(pClient, TCPIP_DHCP_BOUND);
-    pClient->flags.bIsBound = true;	
-    pClient->flags.bWasBound = true;	
+    pClient->flags.bIsBound = true; 
+    pClient->flags.bWasBound = true;    
     pClient->flags.bReportFail = true; 
     pClient->flags.bRetry = false; 
     _DHCPSetIPv4Filter(pClient, false);
@@ -3052,7 +3052,7 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
 {
     return false;
 }
-#endif	//#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
+#endif  //#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
 
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 

@@ -67,10 +67,10 @@ typedef enum
 // Stores the header of a UDP packet
 typedef struct
 {
-    UDP_PORT    SourcePort;				// Source UDP port
-    UDP_PORT    DestinationPort;		// Destination UDP port
-    uint16_t    Length;					// Length of data
-    uint16_t    Checksum;				// UDP checksum of the data
+    UDP_PORT    SourcePort;             // Source UDP port
+    UDP_PORT    DestinationPort;        // Destination UDP port
+    uint16_t    Length;                 // Length of data
+    uint16_t    Checksum;               // UDP checksum of the data
 } UDP_HEADER;
 
 

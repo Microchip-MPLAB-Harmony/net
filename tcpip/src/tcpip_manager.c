@@ -3611,7 +3611,7 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
     bool    loadFault;
     const void*  pMacConfig = 0;             // MAC configuration save
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-	TCPIP_MAC_ADDR	oldMACAddr;
+    TCPIP_MAC_ADDR  oldMACAddr;
     oldMACAddr.v[0] = 0;
     oldMACAddr.v[1] = 0;
     oldMACAddr.v[2] = 0;
@@ -4216,10 +4216,10 @@ bool _TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, tcpipSignalHand
     TCPIP_MODULE_SIGNAL_ENTRY* pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle;
     if((pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle) != 0 && pSignalEntry->signalHandler != 0)
     {   // minimum sanity check
-		if ((asyncTmoMs != 0) && (asyncTmoMs < stackTaskRate))
-		{
+        if ((asyncTmoMs != 0) && (asyncTmoMs < stackTaskRate))
+        {
             asyncTmoMs = stackTaskRate;
-		}
+        }
         pSignalEntry->asyncTmo = pSignalEntry->currTmo = asyncTmoMs;
         return true;
     }

@@ -1119,7 +1119,7 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
 // *****************************************************************************
 /* Function:
     TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_HANDLER handler, 
-	                           const void* hParam)
+                               const void* hParam)
 
   Summary:
     Registers a DHCP server Handler.
@@ -1174,7 +1174,7 @@ TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPI
     hDhcp   - A handle returned by a previous call to TCPIP_DHCPS_HandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
  */
 

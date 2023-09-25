@@ -51,12 +51,12 @@ Microchip or any third party.
 // ICMP Packet Structure
 typedef struct
 {
-	uint8_t vType;
-	uint8_t vCode;
-	uint16_t wChecksum;
-	uint16_t wIdentifier;
-	uint16_t wSequenceNumber;
-	uint32_t wData[];      // payload
+    uint8_t vType;
+    uint8_t vCode;
+    uint16_t wChecksum;
+    uint16_t wIdentifier;
+    uint16_t wSequenceNumber;
+    uint32_t wData[];      // payload
 } ICMP_PACKET;
 
 #define ICMP_TYPE_ECHO_REQUEST      8   // ICMP server is requested echo - type
@@ -580,7 +580,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     pTxHdr->vType = ICMP_TYPE_ECHO_REPLY;
     pTxHdr->vCode = ICMP_CODE_ECHO_REPLY;
     checksum.Val = pTxHdr->wChecksum;
-    checksum.v[0] += 8;	// Subtract 0x0800 from the checksum
+    checksum.v[0] += 8; // Subtract 0x0800 from the checksum
     if(checksum.v[0] < 8u)
     {
         checksum.v[1]++;

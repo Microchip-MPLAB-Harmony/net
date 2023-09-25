@@ -113,28 +113,28 @@ static TCPIP_HELPER_PORT_ENTRY*    _TCPIP_Helper_SecurePortEntry(uint16_t port, 
     bool TCPIP_Helper_StringToIPAddress(uint8_t* str, IPV4_ADDR* addr)
 
   Summary:
-	Converts a string to an IP address
+    Converts a string to an IP address
 
   Description:
-	This function parses a dotted-quad decimal IP address string into an 
-	IPV4_ADDR struct.  The output result is big-endian.
-	
+    This function parses a dotted-quad decimal IP address string into an 
+    IPV4_ADDR struct.  The output result is big-endian.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	str - Pointer to a dotted-quad IP address string
-	addr - Pointer to IPV4_ADDR in which to store the result
+    str - Pointer to a dotted-quad IP address string
+    addr - Pointer to IPV4_ADDR in which to store the result
 
   Return Values:
-  	true - an IP address was successfully decoded
-  	false - no IP address could be found, or the format was incorrect
+    true - an IP address was successfully decoded
+    false - no IP address could be found, or the format was incorrect
   ***************************************************************************/
 bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 {
-	TCPIP_UINT32_VAL dwVal;
+    TCPIP_UINT32_VAL dwVal;
     IPV4_ADDR   convAddr;
-	uint8_t i, charLen, currentOctet;
+    uint8_t i, charLen, currentOctet;
 
     if(addr)
     {
@@ -146,76 +146,76 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
         return true;
     }
 
-	charLen = 0;
-	currentOctet = 0;
-	dwVal.Val = 0;
+    charLen = 0;
+    currentOctet = 0;
+    dwVal.Val = 0;
 
-	while((i = *str++))
-	{
-		if(currentOctet > 3u)
-			break;
+    while((i = *str++))
+    {
+        if(currentOctet > 3u)
+            break;
 
-		i -= '0';
-		
+        i -= '0';
+        
 
-		// Validate the character is a numerical digit or dot, depending on location
-		if(charLen == 0u)
-		{
-			if(i > 9u)
-				return false;
-		}
-		else if(charLen == 3u)
-		{
-			if(i != (uint8_t)('.' - '0'))
-				return false;
+        // Validate the character is a numerical digit or dot, depending on location
+        if(charLen == 0u)
+        {
+            if(i > 9u)
+                return false;
+        }
+        else if(charLen == 3u)
+        {
+            if(i != (uint8_t)('.' - '0'))
+                return false;
 
-			if(dwVal.Val > 0x00020505ul)
-				return false;
+            if(dwVal.Val > 0x00020505ul)
+                return false;
 
-			convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
-			charLen = 0;
-			dwVal.Val = 0;
-			continue;
-		}
-		else
-		{
-			if(i == (uint8_t)('.' - '0'))
-			{
-				if(dwVal.Val > 0x00020505ul)
-					return false;
+            convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+            charLen = 0;
+            dwVal.Val = 0;
+            continue;
+        }
+        else
+        {
+            if(i == (uint8_t)('.' - '0'))
+            {
+                if(dwVal.Val > 0x00020505ul)
+                    return false;
 
-				convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
-				charLen = 0;
-				dwVal.Val = 0;
-				continue;
-			}
-			if(i > 9u)
-				return false;
-		}
+                convAddr.v[currentOctet++] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+                charLen = 0;
+                dwVal.Val = 0;
+                continue;
+            }
+            if(i > 9u)
+                return false;
+        }
 
-		charLen++;
-		dwVal.Val <<= 8;
-		dwVal.v[0] = i;
-	}
+        charLen++;
+        dwVal.Val <<= 8;
+        dwVal.v[0] = i;
+    }
 
-	// Make sure the very last character is a valid termination character 
-	// (i.e., not more hostname, which could be legal and not an IP 
-	// address as in "10.5.13.233.picsaregood.com"
-	if(currentOctet != 3 || (i != 0u && i != '/' && i != '\r' && i != '\n' && i != ' ' && i != '\t' && i != ':'))
-		return false;
+    // Make sure the very last character is a valid termination character 
+    // (i.e., not more hostname, which could be legal and not an IP 
+    // address as in "10.5.13.233.picsaregood.com"
+    if(currentOctet != 3 || (i != 0u && i != '/' && i != '\r' && i != '\n' && i != ' ' && i != '\t' && i != ':'))
+        return false;
 
-	// Verify and convert the last octet and return the result
-	if(dwVal.Val > 0x00020505ul)
-		return false;
+    // Verify and convert the last octet and return the result
+    if(dwVal.Val > 0x00020505ul)
+        return false;
 
-	convAddr.v[3] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
+    convAddr.v[3] = dwVal.v[2]*((uint8_t)100) + dwVal.v[1]*((uint8_t)10) + dwVal.v[0];
     
     if(addr)
     {
         addr->Val = convAddr.Val;
     }
 
-	return true;
+    return true;
 }
 
 bool TCPIP_Helper_IPAddressToString(const IPV4_ADDR* ipAdd, char* buff, size_t buffSize)
@@ -243,18 +243,18 @@ bool TCPIP_Helper_IPAddressToString(const IPV4_ADDR* ipAdd, char* buff, size_t b
     bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
 
   Summary:
-	Converts a string to an IPv6 address
+    Converts a string to an IPv6 address
 
   Description:
-	This function parses the text representation of an IPv6 address
-	IPV6_ADDR struct.  The output result is big-endian.
-	
+    This function parses the text representation of an IPv6 address
+    IPV6_ADDR struct.  The output result is big-endian.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	addr - Pointer to IPV6_ADDR in which to store the result
-	addStr - Pointer to an RFC3513, Section 2.2 text representation of
+    addr - Pointer to IPV6_ADDR in which to store the result
+    addStr - Pointer to an RFC3513, Section 2.2 text representation of
         an IPv6 address
         Example:    1111:2222:3333:4444:5555:6666:AAAA:FFFF
                     1111:2222::FFFF
@@ -263,8 +263,8 @@ bool TCPIP_Helper_IPAddressToString(const IPV4_ADDR* ipAdd, char* buff, size_t b
                     etc.
 
   Return Values:
-  	true - an IP address was successfully decoded
-  	false - no IP address could be found, or the format was incorrect
+    true - an IP address was successfully decoded
+    false - no IP address could be found, or the format was incorrect
   ***************************************************************************/
 bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
 {
@@ -483,21 +483,21 @@ bool TCPIP_Helper_IPv6AddressToString (const IPV6_ADDR * v6Addr, char* buff, siz
     bool TCPIP_Helper_IsPrivateAddress(uint32_t ipv4Address)
 
   Summary:
-	Detects a private (non-routable) address
+    Detects a private (non-routable) address
 
   Description:
-	This function checks if the passed in IPv4 address
+    This function checks if the passed in IPv4 address
     is a private or a routable address
 
   Precondition:
-	None
+    None
 
   Parameters:
-	ipv4Address - IPv4 address to check, network order
+    ipv4Address - IPv4 address to check, network order
 
   Return Values:
-  	true - the IPv4 address is a private address
-  	false - the IPv4 address is a routable address
+    true - the IPv4 address is a private address
+    false - the IPv4 address is a routable address
   ***************************************************************************/
 bool TCPIP_Helper_IsPrivateAddress(uint32_t ipv4Address)
 {
@@ -523,22 +523,22 @@ bool TCPIP_Helper_IsPrivateAddress(uint32_t ipv4Address)
     bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
 
   Summary:
-	Converts a string to an MAC address
+    Converts a string to an MAC address
 
   Description:
-	This function parses a MAC address string "aa:bb:cc:dd:ee:ff"
+    This function parses a MAC address string "aa:bb:cc:dd:ee:ff"
     or "aa-bb-cc-dd-ee-ff" into an hex MAC address.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	str - Pointer to a colon separated MAC address string
-	macAddr - Pointer to buffer to store the result
+    str - Pointer to a colon separated MAC address string
+    macAddr - Pointer to buffer to store the result
 
   Return Values:
-  	true - a MAC address was successfully decoded
-  	false - no MAC address could be found, or the format was incorrect
+    true - a MAC address was successfully decoded
+    false - no MAC address could be found, or the format was incorrect
   ***************************************************************************/
 bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
 {
@@ -627,21 +627,21 @@ static const TCPIP_MAC_POWER_ENTRY TCPIP_MAC_POWER_TBL[] =
     TCPIP_MAC_POWER_MODE TCPIP_Helper_StringToPowerMode(const char* str)
 
   Summary:
-	Converts a string to a TCPIP stack power mode
+    Converts a string to a TCPIP stack power mode
 
   Description:
-	This function parses a power mode string ("full", "low", "down", etc)
+    This function parses a power mode string ("full", "low", "down", etc)
     to an internal TCPIP_MAC_POWER_MODE. 
 
   Precondition:
-	None
+    None
 
   Parameters:
-	str - Pointer to a power mode string
+    str - Pointer to a power mode string
 
   Return Values:
-  	a valid TCPIP_MAC_POWER_MODE - a power mode was successfully decoded
-  	TCPIP_MAC_POWER_NONE - no power mode could be found
+    a valid TCPIP_MAC_POWER_MODE - a power mode was successfully decoded
+    TCPIP_MAC_POWER_NONE - no power mode could be found
   ***************************************************************************/
 TCPIP_MAC_POWER_MODE TCPIP_Helper_StringToPowerMode(const char* str)
 {
@@ -678,134 +678,134 @@ const char* TCPIP_Helper_PowerModeToString(TCPIP_MAC_POWER_MODE mode)
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_Helper_Base64Decode(const uint8_t* sourceData, uint16_t sourceLen, 
-						uint8_t* destData, uint16_t destLen)
+    uint16_t TCPIP_Helper_Base64Decode(const uint8_t* sourceData, uint16_t sourceLen, 
+                        uint8_t* destData, uint16_t destLen)
 
   Summary:
     Helper function to decode a Base-64 encoded array.
 
   Description:
-	Decodes a Base-64 array to its literal representation.
-	
+    Decodes a Base-64 array to its literal representation.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	sourceData  - Pointer to a string of Base-64 encoded data
-	sourceLen	- Length of the Base-64 source data
-	destData	- Pointer to write the decoded data
-	sourceLen	- Maximum length that can be written to destData
+    sourceData  - Pointer to a string of Base-64 encoded data
+    sourceLen   - Length of the Base-64 source data
+    destData    - Pointer to write the decoded data
+    sourceLen   - Maximum length that can be written to destData
 
   Returns:
-  	Number of decoded bytes written to destData.
+    Number of decoded bytes written to destData.
   
   Remarks:
-	This function will ignore invalid Base-64 characters (CR, LF, etc).
+    This function will ignore invalid Base-64 characters (CR, LF, etc).
     If sourceData is equal to destData, the data will be converted
-	in-place.
+    in-place.
     If sourceData is not equal to destData, but the regions 
-	overlap, the behavior is undefined.
-	
-	Decoded data size is 3 / 4 the size of the encoded source data.
+    overlap, the behavior is undefined.
+    
+    Decoded data size is 3 / 4 the size of the encoded source data.
   ***************************************************************************/
 uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceLen, uint8_t* cDestData, uint16_t wDestLen)
 {
-	uint8_t i;
-	uint8_t vByteNumber;
-	uint16_t wBytesOutput;
+    uint8_t i;
+    uint8_t vByteNumber;
+    uint16_t wBytesOutput;
 
     if(cSourceData == 0 || cDestData == 0)
     {
         return 0;
     }
 
-	vByteNumber = 0;
-	wBytesOutput = 0;
+    vByteNumber = 0;
+    wBytesOutput = 0;
 
-	// Loop over all provided bytes
-	while(wSourceLen--)
-	{
-		// Fetch a Base64 byte and decode it to the original 6 bits
-		i = *cSourceData++;
-		if(i >= 'A' && i <= 'Z')	// Regular data
-			i -= 'A' - 0;
-		else if(i >= 'a' && i <= 'z')
-			i -= 'a' - 26;
-		else if(i >= '0' && i <= '9')
-			i -= '0' - 52;
-		else if(i == '+' || i == '-')
-			i = 62;
-		else if(i == '/' || i == '_')
-			i = 63;
-		else 						// Skip all padding (=) and non-Base64 characters
-			continue;
+    // Loop over all provided bytes
+    while(wSourceLen--)
+    {
+        // Fetch a Base64 byte and decode it to the original 6 bits
+        i = *cSourceData++;
+        if(i >= 'A' && i <= 'Z')    // Regular data
+            i -= 'A' - 0;
+        else if(i >= 'a' && i <= 'z')
+            i -= 'a' - 26;
+        else if(i >= '0' && i <= '9')
+            i -= '0' - 52;
+        else if(i == '+' || i == '-')
+            i = 62;
+        else if(i == '/' || i == '_')
+            i = 63;
+        else                        // Skip all padding (=) and non-Base64 characters
+            continue;
 
 
-		// Write the 6 bits to the correct destination location(s)
-		if(vByteNumber == 0u)
-		{
-			vByteNumber++;
-			if(wBytesOutput >= wDestLen)
-				break;
-			wBytesOutput++;
-			*cDestData = i << 2;
-		}
-		else if(vByteNumber == 1u)
-		{
-			vByteNumber++;
-			*cDestData++ |= i >> 4;
-			if(wBytesOutput >= wDestLen)
-				break;
-			wBytesOutput++;
-			*cDestData = i << 4;
-		}
-		else if(vByteNumber == 2u)
-		{
-			vByteNumber++;
-			*cDestData++ |= i >> 2;
-			if(wBytesOutput >= wDestLen)
-				break;
-			wBytesOutput++;
-			*cDestData = i << 6;
-		}
-		else if(vByteNumber == 3u)
-		{
-			vByteNumber = 0;
-			*cDestData++ |= i;
-		}
-	}
+        // Write the 6 bits to the correct destination location(s)
+        if(vByteNumber == 0u)
+        {
+            vByteNumber++;
+            if(wBytesOutput >= wDestLen)
+                break;
+            wBytesOutput++;
+            *cDestData = i << 2;
+        }
+        else if(vByteNumber == 1u)
+        {
+            vByteNumber++;
+            *cDestData++ |= i >> 4;
+            if(wBytesOutput >= wDestLen)
+                break;
+            wBytesOutput++;
+            *cDestData = i << 4;
+        }
+        else if(vByteNumber == 2u)
+        {
+            vByteNumber++;
+            *cDestData++ |= i >> 2;
+            if(wBytesOutput >= wDestLen)
+                break;
+            wBytesOutput++;
+            *cDestData = i << 6;
+        }
+        else if(vByteNumber == 3u)
+        {
+            vByteNumber = 0;
+            *cDestData++ |= i;
+        }
+    }
 
-	return wBytesOutput;
+    return wBytesOutput;
 }
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_Helper_Base64Encode(const uint8_t* sourceData, uint16_t sourceLen,
-						uint8_t* destData, uint16_t destLen)
+    uint16_t TCPIP_Helper_Base64Encode(const uint8_t* sourceData, uint16_t sourceLen,
+                        uint8_t* destData, uint16_t destLen)
   Summary:
     Helper function to encode to Base-64.
 
   Description:
-	This function encodes a binary array to Base-64.
-	
+    This function encodes a binary array to Base-64.
+    
   Precondition:
-	None
+    None
 
   Parameters:
-	sourceData - Pointer to a string of binary data
-	sourceLen	- Length of the binary source data
-	destData	- Pointer to write the Base-64 encoded data
-	destLen	    - Maximum length that can be written to destData
+    sourceData - Pointer to a string of binary data
+    sourceLen   - Length of the binary source data
+    destData    - Pointer to write the Base-64 encoded data
+    destLen     - Maximum length that can be written to destData
 
   Returns:
-  	Number of encoded bytes written to destData.  This will always be
-  	a multiple of 4.
+    Number of encoded bytes written to destData.  This will always be
+    a multiple of 4.
   
   Remarks:
-	Encoding cannot be performed in-place.
+    Encoding cannot be performed in-place.
     If surceData overlaps with  destData, the behavior is undefined.
-	
-	The source data is padded with 1 or 2 bytes, if needed, to make the source size a multiple
+    
+    The source data is padded with 1 or 2 bytes, if needed, to make the source size a multiple
     of 3 bytes.
     Then for each 3 bytes tuple in the source 4 output bytes are generated.
     The output size needed is pad(sourceLen) * 4 / 3 bytes.
@@ -813,124 +813,124 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* cSourceData, uint16_t wSourceL
   ***************************************************************************/
 uint16_t TCPIP_Helper_Base64Encode(const uint8_t* cSourceData, uint16_t wSourceLen, uint8_t* cDestData, uint16_t wDestLen)
 {
-	uint8_t i, j;
-	uint8_t vOutput[4];
-	uint16_t wOutputLen;
+    uint8_t i, j;
+    uint8_t vOutput[4];
+    uint16_t wOutputLen;
 
     if(cSourceData == 0 || cDestData == 0)
     {
         return 0;
     }
 
-	wOutputLen = 0;
-	while(wDestLen >= 4u)
-	{
-		// Start out treating the output as all padding
-		vOutput[0] = 0xFF;
-		vOutput[1] = 0xFF;
-		vOutput[2] = 0xFF;
-		vOutput[3] = 0xFF;
+    wOutputLen = 0;
+    while(wDestLen >= 4u)
+    {
+        // Start out treating the output as all padding
+        vOutput[0] = 0xFF;
+        vOutput[1] = 0xFF;
+        vOutput[2] = 0xFF;
+        vOutput[3] = 0xFF;
 
-		// Get 3 input octets and split them into 4 output hextets (6-bits each) 
-		if(wSourceLen == 0u)
-			break;
-		i = *cSourceData++;
-		wSourceLen--;
-		vOutput[0] = (i & 0xFC)>>2;
-		vOutput[1] = (i & 0x03)<<4;
-		if(wSourceLen)
-		{
-			i = *cSourceData++;
-			wSourceLen--;
-			vOutput[1] |= (i & 0xF0)>>4;
-			vOutput[2] = (i & 0x0F)<<2;
-			if(wSourceLen)
-			{
-				i = *cSourceData++;
-				wSourceLen--;
-				vOutput[2] |= (i & 0xC0)>>6;
-				vOutput[3] = i & 0x3F;
-			}
-		}
-	
-		// Convert hextets into Base 64 alphabet and store result
-		for(i = 0; i < 4u; i++)
-		{
-			j = vOutput[i];
+        // Get 3 input octets and split them into 4 output hextets (6-bits each) 
+        if(wSourceLen == 0u)
+            break;
+        i = *cSourceData++;
+        wSourceLen--;
+        vOutput[0] = (i & 0xFC)>>2;
+        vOutput[1] = (i & 0x03)<<4;
+        if(wSourceLen)
+        {
+            i = *cSourceData++;
+            wSourceLen--;
+            vOutput[1] |= (i & 0xF0)>>4;
+            vOutput[2] = (i & 0x0F)<<2;
+            if(wSourceLen)
+            {
+                i = *cSourceData++;
+                wSourceLen--;
+                vOutput[2] |= (i & 0xC0)>>6;
+                vOutput[3] = i & 0x3F;
+            }
+        }
+    
+        // Convert hextets into Base 64 alphabet and store result
+        for(i = 0; i < 4u; i++)
+        {
+            j = vOutput[i];
 
-			if(j <= 25u)
-				j += 'A' - 0;
-			else if(j <= 51u)
-				j += 'a' - 26;
-			else if(j <= 61u)
-				j += '0' - 52;
-			else if(j == 62u)
-				j = '+';
-			else if(j == 63u)
-				j = '/';
-			else				// Padding
-				j = '=';
+            if(j <= 25u)
+                j += 'A' - 0;
+            else if(j <= 51u)
+                j += 'a' - 26;
+            else if(j <= 61u)
+                j += '0' - 52;
+            else if(j == 62u)
+                j = '+';
+            else if(j == 63u)
+                j = '/';
+            else                // Padding
+                j = '=';
 
-			*cDestData++ = j;
-		}
+            *cDestData++ = j;
+        }
 
-		// Update counters
-		wDestLen -= 4;
-		wOutputLen += 4;
-	}
+        // Update counters
+        wDestLen -= 4;
+        wOutputLen += 4;
+    }
 
-	return wOutputLen;
+    return wOutputLen;
 }
 
 
 /*****************************************************************************
   Function:
-	uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint16_t seed)
+    uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint16_t seed)
 
   Summary:
-	Calculates an IP checksum value.
+    Calculates an IP checksum value.
 
   Description:
-	This function calculates an IP checksum over an array of input data.  The
-	checksum is the 16-bit one's complement of one's complement sum of all 
-	words in the data (with zero-padding if an odd number of bytes are 
-	summed).  This checksum is defined in RFC 793.
+    This function calculates an IP checksum over an array of input data.  The
+    checksum is the 16-bit one's complement of one's complement sum of all 
+    words in the data (with zero-padding if an odd number of bytes are 
+    summed).  This checksum is defined in RFC 793.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	buffer - pointer to the data to be checksummed
-	count  - number of bytes to be checksummed
+    buffer - pointer to the data to be checksummed
+    count  - number of bytes to be checksummed
     seed   - start seed
 
   Returns:
-	The calculated checksum.
-	
+    The calculated checksum.
+    
   Note:
-	The checksum is implemented as a fast assembly function on PIC32M platforms.
+    The checksum is implemented as a fast assembly function on PIC32M platforms.
   ***************************************************************************/
 #if !defined(__mips__)
 uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint16_t seed)
 {
-	uint16_t i;
-	uint16_t *val;
-	union
-	{
-		uint8_t  b[4];
-		uint16_t w[2];
-		uint32_t dw;
-	} sum;
+    uint16_t i;
+    uint16_t *val;
+    union
+    {
+        uint8_t  b[4];
+        uint16_t w[2];
+        uint32_t dw;
+    } sum;
 
     if(buffer == 0)
     {
         return 0;
     }
 
-	val = (uint16_t*)buffer;
+    val = (uint16_t*)buffer;
 
-	// Calculate the sum of all words
-	sum.dw = (uint32_t)seed;
+    // Calculate the sum of all words
+    sum.dw = (uint32_t)seed;
     if ((unsigned int)buffer % 2)
     {
         sum.w[0] += (*(uint8_t *)buffer) << 8;
@@ -938,29 +938,29 @@ uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint
         count--;
     }
 
-	i = count >> 1;
+    i = count >> 1;
 
-	while(i--)
-		sum.dw += (uint32_t)*val++;
+    while(i--)
+        sum.dw += (uint32_t)*val++;
 
-	// Add in the sum of the remaining byte, if present
-	if(count & 0x1)
-		sum.dw += (uint32_t)*(uint8_t*)val;
+    // Add in the sum of the remaining byte, if present
+    if(count & 0x1)
+        sum.dw += (uint32_t)*(uint8_t*)val;
 
-	// Do an end-around carry (one's complement arrithmatic)
-	sum.dw = (uint32_t)sum.w[0] + (uint32_t)sum.w[1];
+    // Do an end-around carry (one's complement arrithmatic)
+    sum.dw = (uint32_t)sum.w[0] + (uint32_t)sum.w[1];
 
-	// Do another end-around carry in case if the prior add 
-	// caused a carry out
-	sum.w[0] += sum.w[1];
+    // Do another end-around carry in case if the prior add 
+    // caused a carry out
+    sum.w[0] += sum.w[1];
 
     if ((unsigned int)buffer % 2)
     {
         sum.w[0] = ((uint16_t)sum.b[0] << 8 ) | (uint16_t)sum.b[1];
     }
 
-	// Return the resulting checksum
-	return ~sum.w[0];
+    // Return the resulting checksum
+    return ~sum.w[0];
 }
 #if defined(__CORTEX_A) ||  defined(__CORTEX_M)
 void TCPIP_Helper_Memcpy (void *dst, const void *src, size_t len)
@@ -1158,46 +1158,46 @@ uint16_t TCPIP_Helper_PacketCopy(TCPIP_MAC_PACKET* pSrcPkt, uint8_t* pDest, uint
 
 /*****************************************************************************
   Function:
-	void TCPIP_Helper_FormatNetBIOSName(uint8_t Name[])
+    void TCPIP_Helper_FormatNetBIOSName(uint8_t Name[])
 
   Summary:
-	Formats a string to a valid NetBIOS name.
+    Formats a string to a valid NetBIOS name.
 
   Description:
-	This function formats a string to a valid NetBIOS name.  Names will be
-	exactly 16 characters, as defined by the NetBIOS spec.  The 16th 
-	character will be a 0x00 byte, while the other 15 will be the 
-	provided string, padded with spaces as necessary.
+    This function formats a string to a valid NetBIOS name.  Names will be
+    exactly 16 characters, as defined by the NetBIOS spec.  The 16th 
+    character will be a 0x00 byte, while the other 15 will be the 
+    provided string, padded with spaces as necessary.
 
   Precondition:
-	None
+    None
 
   Parameters:
-	Name - the string to format as a NetBIOS name.  This parameter must have
-	  at least 16 bytes allocated.
+    Name - the string to format as a NetBIOS name.  This parameter must have
+      at least 16 bytes allocated.
 
   Returns:
-	None
+    None
   ***************************************************************************/
 void TCPIP_Helper_FormatNetBIOSName(uint8_t Name[])
 {
-	uint8_t i;
+    uint8_t i;
 
-	Name[15] = '\0';
-	i = 0;
-	while(i < 15u)
-	{
+    Name[15] = '\0';
+    i = 0;
+    while(i < 15u)
+    {
         Name[i] = toupper(Name[i]);
-		if(Name[i] == '\0')
-		{
-			while(i < 15u)
-			{
-				Name[i++] = ' ';
-			}
-			break;
-		}
-		i++;
-	}
+        if(Name[i] == '\0')
+        {
+            while(i < 15u)
+            {
+                Name[i++] = ' ';
+            }
+            break;
+        }
+        i++;
+    }
 }
 
 unsigned char TCPIP_Helper_FindCommonPrefix (const unsigned char * addr1, const unsigned char * addr2, unsigned char bytes)
@@ -1243,27 +1243,27 @@ void  TCPIP_Helper_SingleListInitialize(SINGLE_LIST* pL)
 
 void  TCPIP_Helper_SingleListHeadAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN)
 {
-	pN->next = pL->head;
-	pL->head = pN;
-	if(pL->tail == 0)
-	{  // empty list
-		pL->tail = pN;
-	}
+    pN->next = pL->head;
+    pL->head = pN;
+    if(pL->tail == 0)
+    {  // empty list
+        pL->tail = pN;
+    }
     pL->nNodes++;
 }
 
 void  TCPIP_Helper_SingleListTailAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN)
 {
-	pN->next = 0;
-	if(pL->tail == 0)
-	{
-		pL->head = pL->tail = pN;
-	}
-	else
-	{
-		pL->tail->next = pN;
-		pL->tail = pN;
-	}
+    pN->next = 0;
+    if(pL->tail == 0)
+    {
+        pL->head = pL->tail = pN;
+    }
+    else
+    {
+        pL->tail->next = pN;
+        pL->tail = pN;
+    }
     pL->nNodes++;
 }
 
@@ -1279,7 +1279,7 @@ void  TCPIP_Helper_SingleListMidAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST
 
 SGL_LIST_NODE*  TCPIP_Helper_SingleListHeadRemove(SINGLE_LIST* pL)
 {
-	SGL_LIST_NODE* pN = pL->head;
+    SGL_LIST_NODE* pN = pL->head;
     if(pN)
     {
         if(pL->head == pL->tail)
@@ -1293,7 +1293,7 @@ SGL_LIST_NODE*  TCPIP_Helper_SingleListHeadRemove(SINGLE_LIST* pL)
         pL->nNodes--;
     }
 
-	return pN;
+    return pN;
 }
 
 // removes the next node (following prev) in the list
@@ -1372,11 +1372,11 @@ bool TCPIP_Helper_SingleListFind(SINGLE_LIST* pL, SGL_LIST_NODE* pN)
 
 void  TCPIP_Helper_SingleListAppend(SINGLE_LIST* pDstL, SINGLE_LIST* pAList)
 {
-	SGL_LIST_NODE* pN;
-	while((pN = TCPIP_Helper_SingleListHeadRemove(pAList)))
-	{
-		TCPIP_Helper_SingleListTailAdd(pDstL, pN);
-	}
+    SGL_LIST_NODE* pN;
+    while((pN = TCPIP_Helper_SingleListHeadRemove(pAList)))
+    {
+        TCPIP_Helper_SingleListTailAdd(pDstL, pN);
+    }
 }
 
 
@@ -1592,35 +1592,35 @@ void  TCPIP_Helper_DoubleListInitialize(DOUBLE_LIST* pL)
 
 void  TCPIP_Helper_DoubleListHeadAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN)
 {
-	if(pL->head == 0)
-	{ // empty list, first node
-		pL->head = pL->tail = pN;
-		pN->next = pN->prev = 0;
-	}
-	else
-	{
-		pN->next = pL->head;
-		pN->prev = 0;
-		pL->head->prev = pN;
-		pL->head = pN;
-	}		
+    if(pL->head == 0)
+    { // empty list, first node
+        pL->head = pL->tail = pN;
+        pN->next = pN->prev = 0;
+    }
+    else
+    {
+        pN->next = pL->head;
+        pN->prev = 0;
+        pL->head->prev = pN;
+        pL->head = pN;
+    }       
     pL->nNodes++;
 }
 
 void  TCPIP_Helper_DoubleListTailAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN)
 {
-	if(pL->head == 0)
-	{ // empty list, first node
-		pL->head = pL->tail = pN;
-		pN->next = pN->prev = 0;
-	}
-	else
-	{
-		pN->next = 0;
-		pN->prev = pL->tail;
-		pL->tail->next = pN;
-		pL->tail = pN;
-	}		
+    if(pL->head == 0)
+    { // empty list, first node
+        pL->head = pL->tail = pN;
+        pN->next = pN->prev = 0;
+    }
+    else
+    {
+        pN->next = 0;
+        pN->prev = pL->tail;
+        pL->tail->next = pN;
+        pL->tail = pN;
+    }       
     pL->nNodes++;
 }
 
@@ -1682,18 +1682,18 @@ void  TCPIP_Helper_DoubleListMidRemove(DOUBLE_LIST* pL, DBL_LIST_NODE* pN)
 
 void  TCPIP_Helper_DoubleListNodeRemove(DOUBLE_LIST* pL, DBL_LIST_NODE* pN)
 {
-	if(pN == pL->head)
-	{
-		TCPIP_Helper_DoubleListHeadRemove(pL);
-	}
-	else if(pN == pL->tail)
-	{
-		TCPIP_Helper_DoubleListTailRemove(pL);
-	}
-	else
-	{
-		TCPIP_Helper_DoubleListMidRemove(pL, pN);
-	}
+    if(pN == pL->head)
+    {
+        TCPIP_Helper_DoubleListHeadRemove(pL);
+    }
+    else if(pN == pL->tail)
+    {
+        TCPIP_Helper_DoubleListTailRemove(pL);
+    }
+    else
+    {
+        TCPIP_Helper_DoubleListMidRemove(pL, pN);
+    }
 }
 
 bool TCPIP_Helper_DoubleListFind(DOUBLE_LIST* pL, DBL_LIST_NODE* pN)

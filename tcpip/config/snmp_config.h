@@ -71,21 +71,21 @@ Microchip or any third party.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
-#define TCPIP_SNMP_TASK_PROCESS_RATE	(200)
+#define TCPIP_SNMP_TASK_PROCESS_RATE    (200)
 
 // The Microchip mib2bib.jar compiler is used to convert the Microchip MIB script to binary format 
 // and it is compatible with the Microchip SNMP agent. which is written in ASCII format.
 // Name of the bib file for SNMP is snmp.bib.
-#define TCPIP_SNMP_BIB_FILE_NAME		"snmp.bib"
+#define TCPIP_SNMP_BIB_FILE_NAME        "snmp.bib"
 
 // Maximum length for the OID String. Change this to match your OID string length.
-#define TCPIP_SNMP_OID_MAX_LEN			(18)
+#define TCPIP_SNMP_OID_MAX_LEN          (18)
 
 // The maximum length in octets of an SNMP message which this SNMP agent able to process.
 // As per RFC 3411 snmpEngineMaxMessageSize and RFC 1157 ( section 4- protocol specification )
 // and implementation  supports more than 480 whenever feasible.
 //It should be divisible by 16
-#define TCPIP_SNMP_MAX_MSG_SIZE		480
+#define TCPIP_SNMP_MAX_MSG_SIZE     480
 
 // Update the Non record id OID value which is part of CustomSnmpDemoApp.c file.
 // This is the maximum size for gSnmpNonMibRecInfo[] which is the list of static variable Parent 
@@ -102,15 +102,15 @@ Microchip or any third party.
 // Application must ensure that this length is observed.
 // SNMP module adds one byte extra after TCPIP_SNMP_COMMUNITY_MAX_LEN
 // for adding '\0' NULL character.
-#define TCPIP_SNMP_COMMUNITY_MAX_LEN  	(8u)
+#define TCPIP_SNMP_COMMUNITY_MAX_LEN    (8u)
 
 // Specifying more strings than TCPIP_SNMP_MAX_COMMUNITY_SUPPORT will result in the
 // later strings being ignored (but still wasting program memory).  Specifying
 // fewer strings is legal, as long as at least one is present.
-#define TCPIP_SNMP_MAX_COMMUNITY_SUPPORT	(3u)
+#define TCPIP_SNMP_MAX_COMMUNITY_SUPPORT    (3u)
 
 // Maximum length for SNMP Trap community name 
-#define TCPIP_SNMP_NOTIFY_COMMUNITY_LEN	(TCPIP_SNMP_COMMUNITY_MAX_LEN)
+#define TCPIP_SNMP_NOTIFY_COMMUNITY_LEN (TCPIP_SNMP_COMMUNITY_MAX_LEN)
 
 
 #endif  // _SNMP_CONFIG_H_

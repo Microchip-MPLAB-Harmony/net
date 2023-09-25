@@ -2601,7 +2601,7 @@ static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
             TCPIP_UDP_Close(dhcpSkt);
             dhcpSkt = INVALID_UDP_SOCKET;
         }
-		TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_STRICT_PORT | UDP_OPTION_STRICT_SET_STICKY, (void*)false);
+        TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_STRICT_PORT | UDP_OPTION_STRICT_SET_STICKY, (void*)false);
         // make sure we can receive all the server advertise messages 
         // enforce a minimum value
         size_t rxQLimit = TCPIP_DHCPV6_MIN_RX_QUEUE_LIMIT;
@@ -2609,7 +2609,7 @@ static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
         {
             rxQLimit = pClient->nIanaDcpts + pClient->nIataDcpts; 
         }
-		TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_RX_QUEUE_LIMIT, (void*)rxQLimit);
+        TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_RX_QUEUE_LIMIT, (void*)rxQLimit);
     }
 
 

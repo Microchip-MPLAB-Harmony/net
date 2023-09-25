@@ -347,7 +347,7 @@ static void _ARPProcessRxPkt(TCPIP_NET_IF* pIf, ARP_PACKET* packet)
             if(reg_apps[i].used)
             {
                 reg_apps[i].TCPIP_ARP_PacketNotify(pIf,
-				packet->SenderIPAddr.Val,
+                packet->SenderIPAddr.Val,
                                 packet->TargetIPAddr.Val,
                                 &packet->SenderMACAddr,
                                 &packet->TargetMACAddr,

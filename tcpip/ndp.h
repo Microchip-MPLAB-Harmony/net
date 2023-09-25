@@ -6,7 +6,7 @@
 
   File Name:
     ndp.h
-	
+    
   Summary:
     IPv6 Internet Communication Message Neighbor Discovery Protocol (NDP).
 
@@ -15,7 +15,7 @@
     as ARP (which is used in IPv4 for address resolve). NDP is used discover link local
     addresses of the IPv6 nodes present in the local link using a mix of ICMPv6
     messages and multicast addresses, stateless auto-configuration and router redirection.
-	
+    
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
@@ -114,7 +114,7 @@ typedef struct
 
   Remarks:
     None.
-	
+    
 */
 void TCPIP_NDP_NborReachConfirm (TCPIP_NET_HANDLE netH, const IPV6_ADDR * address);
 

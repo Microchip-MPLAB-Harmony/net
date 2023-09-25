@@ -568,7 +568,7 @@ TCPIP_SNTP_HANDLE      TCPIP_SNTP_HandlerRegister(TCPIP_SNTP_EVENT_HANDLER handl
     hSntp   - A handle returned by a previous call to TCPIP_SNTP_HandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
  */
 

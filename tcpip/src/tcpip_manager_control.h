@@ -52,10 +52,10 @@ Microchip or any third party.
 // supported ETH frame types that are processed by the stack
 //
 
-#define TCPIP_ETHER_TYPE_IPV4      	(0x0800u)
+#define TCPIP_ETHER_TYPE_IPV4       (0x0800u)
 #define TCPIP_ETHER_TYPE_IPV6       (0x86DDu)
-#define TCPIP_ETHER_TYPE_ARP     	(0x0806u)
-#define TCPIP_ETHER_TYPE_LLDP     	(0x88CCu)
+#define TCPIP_ETHER_TYPE_ARP        (0x0806u)
+#define TCPIP_ETHER_TYPE_LLDP       (0x88CCu)
 #define TCPIP_ETHER_TYPE_UNKNOWN    (0xFFFFu)
 
 // minimum timeout (maximum rate) for link check, ms
@@ -131,7 +131,7 @@ typedef union
         uint16_t bIsDHCPSrvEnabled      : 1;    // init: controls the DHCP Server enable/disable on the interface
                                                 // runtime: mirror bit set by the DHCP Server to reflect the current/last status
                                                 // TCPIP_STACK_ADDRESS_SERVICE_MASK has to match!!!
-		uint16_t bIsDnsClientEnabled    : 1;    // DNS client  enable/disable  .
+        uint16_t bIsDnsClientEnabled    : 1;    // DNS client  enable/disable  .
         uint16_t bIsDnsServerEnabled    : 1;    // DNS server Enable and Disable
         uint16_t bIsDNSServerAuto       : 1;    // DNS Server auto enable/disable on this interface
         uint16_t bInterfaceEnabled      : 1;    // 0 when TCPIP_MAC_POWER_DOWN/TCPIP_MAC_POWER_LOW 
@@ -153,16 +153,16 @@ typedef struct
 {
     uint16_t        size;                   // structure size; used in the configuration save/restore
     uint16_t        macId;                  // corresponding MAC id
-	IPV4_ADDR		netIPAddr;              // IP address; currently only one IP add per interface
-	IPV4_ADDR		netMask;                // Subnet mask
-	IPV4_ADDR		netGateway;             // Gateway
-	IPV4_ADDR		dnsServer[2];           // Primary + Secondary DNS Servers
-	IPV4_ADDR		DefaultIPAddr;          // Default IP address
-	IPV4_ADDR		DefaultMask;            // Default subnet mask
-	IPV4_ADDR		DefaultGateway;         // Default Gateway
-	IPV4_ADDR		DefaultDNSServer[2];    // Default DNS Servers; primary and secondary
-	uint8_t		    NetBIOSName[16];        // NetBIOS name
-	TCPIP_MAC_ADDR	netMACAddr;             // MAC address
+    IPV4_ADDR       netIPAddr;              // IP address; currently only one IP add per interface
+    IPV4_ADDR       netMask;                // Subnet mask
+    IPV4_ADDR       netGateway;             // Gateway
+    IPV4_ADDR       dnsServer[2];           // Primary + Secondary DNS Servers
+    IPV4_ADDR       DefaultIPAddr;          // Default IP address
+    IPV4_ADDR       DefaultMask;            // Default subnet mask
+    IPV4_ADDR       DefaultGateway;         // Default Gateway
+    IPV4_ADDR       DefaultDNSServer[2];    // Default DNS Servers; primary and secondary
+    uint8_t         NetBIOSName[16];        // NetBIOS name
+    TCPIP_MAC_ADDR  netMACAddr;             // MAC address
     TCPIP_STACK_NET_IF_FLAGS Flags;
     const TCPIP_MAC_OBJECT*  pMacObj;   // MAC object associated with this interface
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -194,16 +194,16 @@ typedef struct _tag_TCPIP_NET_IF
     {
         uint16_t        size;                   // structure size; used in the configuration save/restore
         uint16_t        macId;                  // corresponding MAC id
-        IPV4_ADDR		netIPAddr;              // IP address; currently only one IP add per interface
-        IPV4_ADDR		netMask;                // Subnet mask
-        IPV4_ADDR		netGateway;             // Gateway
-        IPV4_ADDR		dnsServer[2];           // Primary + Secondary DNS Servers
-        IPV4_ADDR		DefaultIPAddr;          // Default IP address
-        IPV4_ADDR		DefaultMask;            // Default subnet mask
-        IPV4_ADDR		DefaultGateway;         // Default Gateway
-        IPV4_ADDR		DefaultDNSServer[2];    // Default DNS Servers; primary and secondary
-        uint8_t		    NetBIOSName[16];        // NetBIOS name
-        TCPIP_MAC_ADDR	netMACAddr;             // MAC address
+        IPV4_ADDR       netIPAddr;              // IP address; currently only one IP add per interface
+        IPV4_ADDR       netMask;                // Subnet mask
+        IPV4_ADDR       netGateway;             // Gateway
+        IPV4_ADDR       dnsServer[2];           // Primary + Secondary DNS Servers
+        IPV4_ADDR       DefaultIPAddr;          // Default IP address
+        IPV4_ADDR       DefaultMask;            // Default subnet mask
+        IPV4_ADDR       DefaultGateway;         // Default Gateway
+        IPV4_ADDR       DefaultDNSServer[2];    // Default DNS Servers; primary and secondary
+        uint8_t         NetBIOSName[16];        // NetBIOS name
+        TCPIP_MAC_ADDR  netMACAddr;             // MAC address
         TCPIP_STACK_NET_IF_FLAGS Flags;
         const TCPIP_MAC_OBJECT*  pMacObj;   // MAC object associated with this interface
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -278,7 +278,7 @@ typedef struct _tag_TCPIP_NET_IF
 
 typedef struct  _TAG_TCPIP_LIST_NODE
 {
-	struct _TAG_TCPIP_LIST_NODE *next;	// next node in list
+    struct _TAG_TCPIP_LIST_NODE *next;  // next node in list
                                                 // safe cast to SGL_LIST_NODE node!!!
     TCPIP_STACK_EVENT_HANDLER   handler;    // handler to be called for event
     const void*                 hParam;     // handler parameter
@@ -307,8 +307,8 @@ typedef struct _TCPIP_STACK_MODULE_CTRL
     //
     uint16_t    nIfs;       // number of the interfaces supported in this session
     uint16_t    nAliases;   // number of alias interfaces in this session         
-	// number of the modules enabled in this session
-	int 	nModules;
+    // number of the modules enabled in this session
+    int     nModules;
     // allocation parameters
     const void* memH;                   // handle to be used in the TCPIP_HEAP_ calls
     TCPIP_STACK_HEAP_TYPE   heapType;   // type of the heap                

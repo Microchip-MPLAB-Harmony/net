@@ -74,14 +74,14 @@ Microchip or any third party.
 // *****************************************************************************
 /*  
   Enumeration:
-	TCPIP_IGMP_RESULT
+    TCPIP_IGMP_RESULT
 
   Summary:
     This enumeration is used  to report the result of an IGMP API call.
 
   Description:
     These results are returned by the IGMP API functions.
-	
+    
   Remarks:
     Negative codes represent errors.
 
@@ -114,14 +114,14 @@ typedef enum
 // *****************************************************************************
 /*  
   Enumeration:
-	TCPIP_IGMP_FILTER_TYPE
+    TCPIP_IGMP_FILTER_TYPE
 
   Summary:
     This enumeration lists the supported IGMP filters.
 
   Description:
     These filters are currently supported by IGMPv3.
-	
+    
   Remarks:
     None
 
@@ -136,14 +136,14 @@ typedef enum
 // *****************************************************************************
 /*  
   Enumeration:
-	TCPIP_IGMP_EVENT_TYPE
+    TCPIP_IGMP_EVENT_TYPE
 
   Summary:
     This enumeration lists the IGMP events used to notify IGMP client applications.
 
   Description:
     These events are used while notifying to the registered applications.
-	
+    
   Remarks:
     Multiple events can be set.
 */
@@ -170,15 +170,15 @@ typedef enum
 
 // *****************************************************************************
 /* Type:
-		TCPIP_IGMP_EVENT_HANDLER
+        TCPIP_IGMP_EVENT_HANDLER
 
   Summary:
     Notification handler that can be called when an IGMP event ocurrs and the user needs to be notified
    
   Description:
     The format of a notification handler registered with the IGMP module.
-	Once an IGMP event occurs the IGMP service will call for the registered handler.
-	
+    Once an IGMP event occurs the IGMP service will call for the registered handler.
+    
   Parameters:
     mcastAddress    - the multicast group for which the IGMP event occurred
     evType          - the IGMP reported event
@@ -294,7 +294,7 @@ typedef struct
 /* 
   Function:
     TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
+                      TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
 
   Summary:
     Subscribes to an IGMP multicast group.
@@ -342,7 +342,7 @@ typedef struct
 
  */
 TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
+                      TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
 
 
 // *****************************************************************************
@@ -394,7 +394,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNe
 /* 
   Function:
     TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize);
+                      TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize);
 
   Summary:
     Returns the subscription to sources in an IGMP multicast group.
@@ -430,7 +430,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNe
 
  */
 TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
-  		              TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize);
+                      TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize);
 
 // *****************************************************************************
 /* 
@@ -586,7 +586,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Leave(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV
 // *****************************************************************************
 /* 
   Function:
-	TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_HANDLER handler, const void* hParam);
+    TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_HANDLER handler, const void* hParam);
 
   Summary:
     Registers a IGMP client Handler.
@@ -609,7 +609,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Leave(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV
 
   Returns:
     - Returns a valid handle if the call succeeds 
-	- Returns null handle if the call failed (out of memory, for example)
+    - Returns null handle if the call failed (out of memory, for example)
 
   Remarks:
     The handler has to be short and fast. It is meant for
@@ -619,7 +619,7 @@ TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_
 
 // *****************************************************************************
 /* Function:
-	bool TCPIP_IGMP_HandlerDeRegister(TCPIP_IGMP_HANDLE hIgmp);
+    bool TCPIP_IGMP_HandlerDeRegister(TCPIP_IGMP_HANDLE hIgmp);
 
   Summary:
     Deregisters a previously registered IGMP client handler.

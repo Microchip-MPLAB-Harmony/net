@@ -67,7 +67,7 @@ typedef union __attribute__((aligned(CACHE_LINE_SIZE))) _tag_headNode
     _heap_Align x;
     struct
     {
-        union _tag_headNode*	allocPtr;   // pointer as returned by the external allocation function
+        union _tag_headNode*    allocPtr;   // pointer as returned by the external allocation function
     };
 }_headNode;
 
@@ -275,20 +275,20 @@ static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 
 static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
-	size_t      mapBytes;
-	_headNode*  ptr;
+    size_t      mapBytes;
+    _headNode*  ptr;
     TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
     void* alignPtr = 0;
 
     
-	if(hDcpt == 0 || nBytes == 0)
+    if(hDcpt == 0 || nBytes == 0)
     {
         return 0;
     }
 
     if(hDcpt->heapDoAlign)
     {
-        nBytes = ((nBytes + sizeof(_headNode) - 1) / sizeof(_headNode) + 1) * sizeof(_headNode);	// allocate multiple of units + 1 entry to store the pointer  
+        nBytes = ((nBytes + sizeof(_headNode) - 1) / sizeof(_headNode) + 1) * sizeof(_headNode);    // allocate multiple of units + 1 entry to store the pointer  
     }
 
     if (hDcpt->heapDoProtect)
@@ -296,7 +296,7 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
         (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
     }
 
-	while(true)
+    while(true)
     {
         ptr = (_headNode*)(*hDcpt->heapConfig.malloc_fnc)(nBytes);
 
@@ -370,7 +370,7 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr)
 {
     TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
   
-	if(hDcpt != 0 && ptr != 0)
+    if(hDcpt != 0 && ptr != 0)
     {
         if (hDcpt->heapDoProtect)
         {

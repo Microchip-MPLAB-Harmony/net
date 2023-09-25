@@ -1,13 +1,13 @@
 /**********************************************************
   Company:
     Microchip Technology Inc.
-	
+    
   File Name:
     tcpip_mac_bridge_config.h
-	
+    
   Summary:
     Layer 2 MAC bridge Configuration file.
-	
+    
   Description:
     This file contains the MAC Layer 2 bridge module configuration options.
 

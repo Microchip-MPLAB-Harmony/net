@@ -151,7 +151,7 @@ static void             _TCPIP_AnnounceCleanup(void);
 static void             ANNOUNCE_Notify(TCPIP_NET_HANDLE hNet, uint8_t dhcpEvType, const void * param);
 
 #if defined (TCPIP_STACK_USE_IPV6)
-static void  			IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, uint8_t evType, const void * param);
+static void             IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, uint8_t evType, const void * param);
 #endif // defined (TCPIP_STACK_USE_IPV6)
 
 static void             TCPIP_ANNOUNCE_Send(void);
@@ -575,23 +575,23 @@ static void TCPIP_ANNOUNCE_Timeout(void)
     
     s = announceDcpt.skt;
 
-	while(true)
-	{   // consume all queued packets
+    while(true)
+    {   // consume all queued packets
         if(!TCPIP_UDP_GetIsReady(s))
         {
             break;
         }
-			
+            
         // See if this is a discovery query or reply
         TCPIP_UDP_Get(s, &discQuery);
         if(discQuery == 'D')
         {   // We received a discovery request, reply
             TCPIP_UDP_SocketInfoGet(s, &sktInfo);
-            // fake a legitimate DHCP event on that interface	
+            // fake a legitimate DHCP event on that interface   
             ANNOUNCE_Notify (sktInfo.hNet, DHCP_EVENT_BOUND, (const void*)TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST);
         }
         TCPIP_UDP_Discard(s);
-	}	
+    }   
 
     TCPIP_NET_IF *pNetIf;
     int netIx;

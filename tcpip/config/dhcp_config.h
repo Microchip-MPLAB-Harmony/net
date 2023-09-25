@@ -54,7 +54,7 @@ Microchip or any third party.
 
 // Defines how long to wait before a DHCP lease is acquired
 // when the DHCP module is enabled, seconds
-#define TCPIP_DHCP_TIMEOUT				(10)
+#define TCPIP_DHCP_TIMEOUT              (10)
 
 
 // The DHCP task processing rate: number of milliseconds to generate an DHCP tick.

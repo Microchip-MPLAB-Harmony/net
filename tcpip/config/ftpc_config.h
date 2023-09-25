@@ -50,12 +50,12 @@ Microchip or any third party.
 
 // Specify the Default Transmit Buffer Size for the FTP Client Data Socket
 // if 0, the TCP Socket Transmit buffer size will be used by FTPC data socket
-#define TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT      		(0)
+#define TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT           (0)
 
 
 // Specify the Default Receive Buffer Size for the FTP Client Data Socket
 // if 0, the TCP Socket Receive buffer size will be used by FTPC data socket
-#define TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT         	(0)
+#define TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT           (0)
 
 // Specify the time-out for FTP Client commands, in seconds
 // This is the time to wait for a response from FTP server

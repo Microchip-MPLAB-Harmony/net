@@ -104,7 +104,7 @@ typedef struct
 
   Returns:
     None.
-	
+    
   Remarks:
     None.
 */

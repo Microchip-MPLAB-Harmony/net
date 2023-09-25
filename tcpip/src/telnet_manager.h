@@ -60,4 +60,4 @@ void        TCPIP_TELNET_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stack
 
 
     
-#endif	//#ifndef __TELNET__MANAGER_H_
+#endif  //#ifndef __TELNET__MANAGER_H_

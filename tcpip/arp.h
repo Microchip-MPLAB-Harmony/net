@@ -272,7 +272,7 @@ typedef enum
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_HANDLE TCPIP_ARP_HandlerRegister(TCPIP_NET_HANDLE hNet, 
-	                        TCPIP_ARP_EVENT_HANDLER handler, const void* hParam)
+                            TCPIP_ARP_EVENT_HANDLER handler, const void* hParam)
 
   Summary:
     Register an ARP resolve handler.
@@ -364,7 +364,7 @@ bool            TCPIP_ARP_HandlerDeRegister(TCPIP_ARP_HANDLE hArp);
 
   Remarks:
     To retrieve the ARP query result, call the TCPIP_ARP_IsResolved function.
-	
+    
 */
 TCPIP_ARP_RESULT      TCPIP_ARP_Resolve(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPAddr);
 
@@ -409,7 +409,7 @@ bool            TCPIP_ARP_IsResolved(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPA
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* IPAddr, 
-	                      const IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType)
+                          const IPV4_ADDR* srcAddr, TCPIP_ARP_OPERATION_TYPE opType)
 
    Summary:
     Transmits an ARP probe to resolve an IP address.
@@ -464,7 +464,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, 
-	                                    const TCPIP_MAC_ADDR* hwAdd, bool perm)
+                                        const TCPIP_MAC_ADDR* hwAdd, bool perm)
 
    Summary:
     Adds an ARP cache entry for the specified interface.
@@ -487,7 +487,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_Probe(TCPIP_NET_HANDLE hNet
    Returns:
     - On Success - ARP_RES_OK/ARP_RES_ENTRY_EXIST
     - On Failure - An Error for example, cache is full with permanent entries that 
-	               cannot be purged or the permanent quota exceeded)  
+                   cannot be purged or the permanent quota exceeded)  
 
    Remarks:
     None.
@@ -499,7 +499,7 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR*
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_RESULT TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, 
-	                                    TCPIP_MAC_ADDR* pHwAdd, bool probe)
+                                        TCPIP_MAC_ADDR* pHwAdd, bool probe)
 
    Summary:
     Gets the current mapping for an IP address.
@@ -542,7 +542,7 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR*
 
   Remarks:
     Similar to TCPIP_ARP_Resolve + TCPIP_ARP_IsResolved, it avoids a double hash 
-	search when the mapping exists.
+    search when the mapping exists.
 */
 TCPIP_ARP_RESULT      TCPIP_ARP_EntryGet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, 
                                          TCPIP_MAC_ADDR* pHwAdd, bool probe);
@@ -606,7 +606,7 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntryRemoveAll(TCPIP_NET_HANDLE hNet);
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_RESULT TCPIP_ARP_EntryRemoveNet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, 
-	                                       const IPV4_ADDR* mask, TCPIP_ARP_ENTRY_TYPE type)
+                                           const IPV4_ADDR* mask, TCPIP_ARP_ENTRY_TYPE type)
 
    Summary:
     Removes all the entries belonging to a network interface.
@@ -645,7 +645,7 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntryRemoveNet(TCPIP_NET_HANDLE hNet, const IPV4
 // *****************************************************************************
 /* Function:
     TCPIP_ARP_RESULT TCPIP_ARP_EntryQuery(TCPIP_NET_HANDLE hNet, size_t index, 
-	                                      TCPIP_ARP_ENTRY_QUERY* pArpQuery)
+                                          TCPIP_ARP_ENTRY_QUERY* pArpQuery)
 
    Summary:
     Queries an ARP cache entry using the index of the cache line.
@@ -683,7 +683,7 @@ TCPIP_ARP_RESULT      TCPIP_ARP_EntryQuery(TCPIP_NET_HANDLE hNet, size_t index,
 
    Description:
     The function will return the number of entries of the specified type that are 
-	currently in the cache.
+    currently in the cache.
 
    Precondition:
     The ARP module should have been initialized.
@@ -704,7 +704,7 @@ size_t          TCPIP_ARP_CacheEntriesNoGet(TCPIP_NET_HANDLE hNet, TCPIP_ARP_ENT
 // *****************************************************************************
 /* Function
     TCPIP_ARP_RESULT TCPIP_ARP_CacheThresholdSet(TCPIP_NET_HANDLE hNet, 
-	                                            int purgeThres, int purgeEntries);
+                                                int purgeThres, int purgeEntries);
 
    Summary:
     Sets the cache threshold for the specified interface in percent.
