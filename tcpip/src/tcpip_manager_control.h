@@ -78,8 +78,8 @@ typedef void    (*tcpipModuleSignalHandler)(void);
 typedef struct
 {
     uint16_t        frameType;      // one of valid TCPIP_ETHER_TYPE_ values 
-    uint16_t        pktTypeFlags;   // user packet flags to set for this type
     uint16_t        moduleId;       // TCPIP_STACK_MODULE: corresponding module handling this
+    uint32_t        pktTypeFlags;   // user packet flags to set for this type
 
 }TCPIP_FRAME_PROCESS_ENTRY;
 
@@ -166,7 +166,7 @@ typedef struct
     TCPIP_STACK_NET_IF_FLAGS Flags;
     const TCPIP_MAC_OBJECT*  pMacObj;   // MAC object associated with this interface
 #if defined(TCPIP_STACK_USE_IPV6)
-    uint16_t        startFlags;  // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
+    uint16_t        startFlags;     // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
     uint16_t        ipv6PrefixLen;  // IPv6 subnet ID
     IPV6_ADDR       netIPv6Addr;    // static IPv6 address
     IPV6_ADDR       netIPv6Gateway; // default IPv6 gateway
@@ -176,7 +176,8 @@ typedef struct
     uint16_t        advInitCount;   // number of initial advertisements [0, MAX_INITIAL_RTR_ADVERTISEMENTS]
 #endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 #else
-    uint32_t        startFlags;  // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
+    uint16_t        startFlags;     // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
+    uint16_t        pad;            // not used, padding
 #endif
 }TCPIP_STACK_NET_IF_DCPT;
 
@@ -216,7 +217,8 @@ typedef struct _tag_TCPIP_NET_IF
         uint16_t        advInitCount;   // number of initial advertisements [0, MAX_INITIAL_RTR_ADVERTISEMENTS]
 #endif  // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 #else
-        uint32_t        startFlags;  // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
+        uint16_t        startFlags;     // TCPIP_NETWORK_CONFIG_FLAGS: flags for interface start up
+        uint16_t        pad;            // not used, padding
 #endif
     };
 
@@ -249,23 +251,26 @@ typedef struct _tag_TCPIP_NET_IF
                                                 // necessarily triggered by hardware
     uint16_t            currEvents;             // current TCPIP_MAC_EVENT processed event
     uint16_t            linkMtu;                // current interface link MTU
+
+    uint8_t             txOffload;              // MAC TX TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS        
+    uint8_t             rxOffload;              // MAC RX TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS        
+                                                // Not used. The MAC sets the pktFlags when calculating RX checksums!
     union
     {
         struct
         {
-            uint16_t linkPrev       : 1;        // previous status of the link
-            uint16_t connEvent      : 1;        // when set indicates a connection event
-            uint16_t connEventType  : 1;        // 0: TCPIP_MAC_EV_CONN_LOST; 1: TCPIP_MAC_EV_CONN_ESTABLISHED
-            uint16_t bridged        : 1;        // 1: interface is part of a bridge
-            uint16_t reserved       : 12;       // available
+            uint8_t linkPrev       : 1;        // previous status of the link
+            uint8_t connEvent      : 1;        // when set indicates a connection event
+            uint8_t connEventType  : 1;        // 0: TCPIP_MAC_EV_CONN_LOST; 1: TCPIP_MAC_EV_CONN_ESTABLISHED
+            uint8_t bridged        : 1;        // 1: interface is part of a bridge
+            uint8_t reserved       : 4;        // available
         };
-        uint16_t        v;
+        uint8_t        v;
     }exFlags;                               // additional extended flags      
     uint8_t             macType;            // a TCPIP_MAC_TYPE value: ETH, Wi-Fi, etc; 
-    uint8_t             bridgePort;         // bridge port this interface belongs to; < 256
 
     char                ifName[7];          // native interface name + \0
-    uint8_t             pad;                // padding, not used
+    uint8_t             bridgePort;         // bridge port this interface belongs to; < 256
 } TCPIP_NET_IF;
 
 

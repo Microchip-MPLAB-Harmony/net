@@ -235,30 +235,30 @@ static const uint16_t TCPIP_STACK_MODULE_SIGNAL_CONFIG_TBL[] =
 // table containing the layer 1 frames processed by this stack
 static const TCPIP_FRAME_PROCESS_ENTRY TCPIP_FRAME_PROCESS_TBL [] = 
 {
-    // frameType                            // pktTypeFlags             // moduleId 
-    // 1st layer handling
-#if defined(TCPIP_STACK_USE_IPV4)
-    {TCPIP_ETHER_TYPE_ARP,                  TCPIP_MAC_PKT_FLAG_ARP,     TCPIP_MODULE_ARP},  // ARP entry
-#else
-    {TCPIP_ETHER_TYPE_UNKNOWN,              0,                          TCPIP_MODULE_ARP},  // ARP not processed
-#endif  // defined(TCPIP_STACK_USE_IPV4)
-
-#if defined(TCPIP_STACK_USE_IPV4)
-    {TCPIP_ETHER_TYPE_IPV4,                 TCPIP_MAC_PKT_FLAG_IPV4,    TCPIP_MODULE_IPV4},  // IPv4 entry
-#else
-    {TCPIP_ETHER_TYPE_UNKNOWN,              0,                          TCPIP_MODULE_IPV4},  // IPv4 not processed
-#endif  // defined(TCPIP_STACK_USE_IPV4)
-
-#if defined(TCPIP_STACK_USE_IPV6)
-    {TCPIP_ETHER_TYPE_IPV6,                 TCPIP_MAC_PKT_FLAG_IPV6,    TCPIP_MODULE_IPV6},  // IPv6 entry
-#else
-    {TCPIP_ETHER_TYPE_UNKNOWN,              0,                          TCPIP_MODULE_IPV6},  // IPv6 not processed
-#endif // defined(TCPIP_STACK_USE_IPV6)
-
-#if defined(TCPIP_STACK_USE_LLDP)
-    {TCPIP_ETHER_TYPE_LLDP,                 TCPIP_MAC_PKT_FLAG_LLDP,    TCPIP_MODULE_LLDP},  // LLDP entry
-#else
-    {TCPIP_ETHER_TYPE_UNKNOWN,              0,                          TCPIP_MODULE_LLDP},  // LLDP not processed
+    // frameType                                 // moduleId                        // pktTypeFlags         
+    // 1st layer handling                                                                 
+#if defined(TCPIP_STACK_USE_IPV4)                                                         
+    {.frameType = TCPIP_ETHER_TYPE_ARP,         .moduleId = TCPIP_MODULE_ARP,       .pktTypeFlags = TCPIP_MAC_PKT_FLAG_ARP},  // ARP entry
+#else                                                                               
+    {.frameType = TCPIP_ETHER_TYPE_UNKNOWN,     .moduleId = TCPIP_MODULE_ARP,      .pktTypeFlags = 0},                       // ARP not processed
+#endif  // defined(TCPIP_STACK_USE_IPV4)                                            
+                                                                                    
+#if defined(TCPIP_STACK_USE_IPV4)                                                   
+    {.frameType = TCPIP_ETHER_TYPE_IPV4,        .moduleId = TCPIP_MODULE_IPV4,     .pktTypeFlags = TCPIP_MAC_PKT_FLAG_IPV4}, // IPv4 entry
+#else                                                                               
+    {.frameType = TCPIP_ETHER_TYPE_UNKNOWN,     .moduleId = TCPIP_MODULE_IPV4,     .pktTypeFlags = 0},                       // IPv4 not processed
+#endif  // defined(TCPIP_STACK_USE_IPV4)                                            
+                                                                                    
+#if defined(TCPIP_STACK_USE_IPV6)                                                   
+    {.frameType = TCPIP_ETHER_TYPE_IPV6,        .moduleId = TCPIP_MODULE_IPV6,     .pktTypeFlags = TCPIP_MAC_PKT_FLAG_IPV6}, // IPv6 entry
+#else                                                                               
+    {.frameType = TCPIP_ETHER_TYPE_UNKNOWN,     .moduleId = TCPIP_MODULE_IPV6,     .pktTypeFlags = 0},                       // IPv6 not processed
+#endif // defined(TCPIP_STACK_USE_IPV6)                                             
+                                                                                    
+#if defined(TCPIP_STACK_USE_LLDP)                                                   
+    {.frameType = TCPIP_ETHER_TYPE_LLDP,        .moduleId = TCPIP_MODULE_LLDP,     .pktTypeFlags = TCPIP_MAC_PKT_FLAG_LLDP}, // LLDP entry
+#else                                                                               
+    {.frameType = TCPIP_ETHER_TYPE_UNKNOWN,     .moduleId = TCPIP_MODULE_LLDP,     .pktTypeFlags = 0},                       // LLDP not processed
 #endif  // defined(TCPIP_STACK_USE_LLDP)
 
     // add other types of supported frames here
@@ -1770,6 +1770,9 @@ static bool _TCPIPStackIsRunState(void)
                     memcpy(pNetIf->netMACAddr.v, macParams.ifPhyAddress.v, sizeof(pNetIf->netMACAddr));
                     pNetIf->Flags.bMacProcessOnEvent = macParams.processFlags != TCPIP_MAC_PROCESS_FLAG_NONE;
                     pNetIf->linkMtu = macParams.linkMtu;
+                    pNetIf->txOffload = (uint8_t)macParams.checksumOffloadTx;
+                    pNetIf->rxOffload = (uint8_t)macParams.checksumOffloadRx;
+
                     // enable this interface
                     pNetIf->Flags.bInterfaceEnabled = true;
                     pNetIf->Flags.bMacInitialize = false;

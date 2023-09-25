@@ -542,23 +542,23 @@ typedef union
     packet allocation flags and general purpose flags.
   
   Remarks:
-    16 bits only packet flags are supported.
+    32 bits packet flags are supported.
 */
 
 typedef enum
 {
     /* Packet can not be dynamically deallocated.
        Set when the packet is allocated. */
-    TCPIP_MAC_PKT_FLAG_STATIC       = 0x0001,
+    TCPIP_MAC_PKT_FLAG_STATIC               = 0x00000001,
 
     /* If set, it is a TX packet/segment. Otherwise, it is a RX packet.*/
-    TCPIP_MAC_PKT_FLAG_TX           = 0x0002,
+    TCPIP_MAC_PKT_FLAG_TX                   = 0x00000002,
 
     /* Packet data spans multiple segments - ZC functionality.
        If not set then the packet has only one data segment.
        It is set by the MAC driver when a RX packet spans multiple
        data segments. */
-    TCPIP_MAC_PKT_FLAG_SPLIT        = 0x0004,       
+    TCPIP_MAC_PKT_FLAG_SPLIT                = 0x00000004,       
 
 
     /* Packet data is queued somewhere, cannot be freed.
@@ -566,27 +566,42 @@ typedef enum
        the packet is in use and queued for further processing
        (normally the MAC driver does that).
        Cleared by the packet destination when the packet processing was completed.*/
-    TCPIP_MAC_PKT_FLAG_QUEUED       = 0x0008,       
+    TCPIP_MAC_PKT_FLAG_QUEUED               = 0x00000008,       
 
 
     /* RX flag, MAC updated. Specifies an unicast packet. */
-    TCPIP_MAC_PKT_FLAG_UNICAST      = 0x0010,      
+    TCPIP_MAC_PKT_FLAG_UNICAST              = 0x00000010,      
 
     /* RX flag, MAC updated. Specifies a broadcast packet. */
-    TCPIP_MAC_PKT_FLAG_BCAST        = 0x0020,      
+    TCPIP_MAC_PKT_FLAG_BCAST                = 0x00000020,      
 
     /* RX flag, MAC updated. Specifies an multicast packet. */
-    TCPIP_MAC_PKT_FLAG_MCAST        = 0x0040,      
+    TCPIP_MAC_PKT_FLAG_MCAST                = 0x00000040,      
 
     /* Packet cast mask bits. */
-    TCPIP_MAC_PKT_FLAG_CAST_MASK    = 0x0070,      
+    TCPIP_MAC_PKT_FLAG_CAST_MASK            = 0x00000070,      
 
     /* Packet cast mask. Specifies a packet where the MCAST/BCAST fields
        are not updated by the MAC RX process. */
-    TCPIP_MAC_PKT_FLAG_CAST_DISABLED= 0x0000,      
+    TCPIP_MAC_PKT_FLAG_CAST_DISABLED        = 0x00000000,      
+
+    /* Reserved for future use */
+    TCPIP_MAC_PKT_FLAG_RESERVED             = 0x00000080,      
+
+    /* RX packet checksum calculation flags.
+       MAC driver updates these flags: */
+
+    /* IP header checksum was calculated for this RX packet and is OK; 0x01 << 8 */
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_IP         = 0x00000100,   
+
+    /* TCP checksum was calculated for this RX packet and is OK; 0x02 << 8 */
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP        = 0x00000200,      
+
+    /* UDP checksum was calculated for this RX packet and is OK; 0x04 << 8 */
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP        = 0x00000400,      
 
     /* Available user flags. */
-    TCPIP_MAC_PKT_FLAG_USER         = 0x0100,      
+    TCPIP_MAC_PKT_FLAG_USER                 = 0x00010000,      
 
 }TCPIP_MAC_PACKET_FLAGS;
 
@@ -875,10 +890,6 @@ struct _tag_TCPIP_MAC_PACKET
        The MAC driver does not use this field. */
     uint8_t*                        pTransportLayer;
 
-    /* Total length of the transport layer.
-       The MAC driver shouldn't need this field. */
-    uint16_t                        totTransportLen;
-
     /* TCPIP_MAC_PACKET_FLAGS associated packet flags.
        On TX: the MAC driver has to set:
          TCPIP_MAC_PKT_FLAG_QUEUED - if the driver needs to queue the packet 
@@ -888,8 +899,9 @@ struct _tag_TCPIP_MAC_PACKET
             TCPIP_MAC_PKT_FLAG_RX
                and TCPIP_MAC_PKT_FLAG_UNICAST, TCPIP_MAC_PKT_FLAG_BCAST and TCPIP_MAC_PKT_FLAG_MCAST
             TCPIP_MAC_PKT_FLAG_QUEUED
-            TCPIP_MAC_PKT_FLAG_SPLIT */
-    uint16_t                        pktFlags;
+            TCPIP_MAC_PKT_FLAG_SPLIT
+            TCPIP_MAC_PKT_FLAG_RX_CHKSUM_IP, TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP, TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP */
+    uint32_t                        pktFlags;
 
     /* Time stamp value. Statistics, info.
        On TX: the sending higher layer protocol updates this field.
@@ -903,6 +915,10 @@ struct _tag_TCPIP_MAC_PACKET
        On RX: the receiving higher level protocol updates this value.
             The MAC driver doesn't use this field. */
     const void*                     pktIf;
+
+    /* Total length of the transport layer.
+       The MAC driver shouldn't need this field. */
+    uint16_t                        totTransportLen;
 
     /* A TCPIP_MAC_PKT_ACK_RES code associated with the packet.
        On TX: The MAC driver sets this field when calling the packet ackFunc.
@@ -918,17 +934,19 @@ struct _tag_TCPIP_MAC_PACKET
     /* Packet client data; ignored by the MAC driver.
        It can be used by the packet client modules
        (MCHP TCP/IP stack note: the use of this field is assigned as follows:
-            - pktClientData[0] reserved for IPv4 module use 
-            - pktClientData[1] reserved for IPv6 module use 
-            - pktClientData[2] can be used by higher layer modules (IGMP, UDP, etc.) */
+            - pktClientData16[0] reserved for IPv4 module use 
+            - pktClientData16[1] reserved for IPv6 module use 
+            - pktClientData16[2, 3] can be used by higher layer modules (IGMP, UDP, etc.) */
     union
     {
-        uint16_t            pktClientData[3];
+        uint16_t            pktClientData16[4];
+        uint32_t            pktClientData32[2];
         struct
         {
             uint16_t        ipv4PktData;
             uint16_t        ipv6PktData;
             uint16_t        modPktData;
+            uint16_t        extPktData;
         };
     };
 
@@ -1246,6 +1264,7 @@ typedef enum
   Remarks:
     Multiple values can be OR-ed together
 
+    8 bit values only are supported!
 */
 typedef enum
 {

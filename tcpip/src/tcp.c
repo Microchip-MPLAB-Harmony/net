@@ -1604,28 +1604,34 @@ static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, u
     // start preparing the TCP packet
     pv4Pkt->macPkt.pDSeg->segLen += hdrLen;
 
-    // add the pseudo header
-    pseudoHdr.SourceAddress.Val = pv4Pkt->srcAddress.Val;
-    pseudoHdr.DestAddress.Val = pv4Pkt->destAddress.Val;
-    pseudoHdr.Zero = 0;
-    pseudoHdr.Protocol = IP_PROT_TCP;
-    pseudoHdr.Length = TCPIP_Helper_htons(hdrLen + loadLen);
-    checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
-
     // add the TCP header
     pTCPHdr = (TCP_HEADER*)pv4Pkt->macPkt.pTransportLayer;
-    checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, hdrLen, checksum);
-    if(loadLen)
-    {   // add the data segments
-        pv4Pkt->macPkt.pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
-        checksum = ~TCPIP_Helper_PacketChecksum(&pv4Pkt->macPkt, ((TCP_V4_PACKET*)pv4Pkt)->tcpSeg[0].segLoad, loadLen, checksum);
-    }
-    else
-    {   // packet not carying user payload
-        pv4Pkt->macPkt.pDSeg->segFlags &= ~TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
+    pTCPHdr->Checksum = 0;
+
+    if((pSkt->pSktNet->txOffload & TCPIP_MAC_CHECKSUM_TCP) == 0)
+    {   // not handled by hardware
+        // add the pseudo header
+        pseudoHdr.SourceAddress.Val = pv4Pkt->srcAddress.Val;
+        pseudoHdr.DestAddress.Val = pv4Pkt->destAddress.Val;
+        pseudoHdr.Zero = 0;
+        pseudoHdr.Protocol = IP_PROT_TCP;
+        pseudoHdr.Length = TCPIP_Helper_htons(hdrLen + loadLen);
+        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
+
+        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, hdrLen, checksum);
+        if(loadLen)
+        {   // add the data segments
+            pv4Pkt->macPkt.pDSeg->segFlags |= TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
+            checksum = ~TCPIP_Helper_PacketChecksum(&pv4Pkt->macPkt, ((TCP_V4_PACKET*)pv4Pkt)->tcpSeg[0].segLoad, loadLen, checksum);
+        }
+        else
+        {   // packet not carying user payload
+            pv4Pkt->macPkt.pDSeg->segFlags &= ~TCPIP_MAC_SEG_FLAG_USER_PAYLOAD;
+        }
+
+        pTCPHdr->Checksum = ~checksum;
     }
 
-    pTCPHdr->Checksum = ~checksum;
 
     pktParams.ttl = pSkt->ttl;
     pktParams.tosFlags = pSkt->tos;
@@ -1667,27 +1673,30 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     pPktSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt);
     pPktDstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
 
-    // Calculate IP pseudoheader checksum.
-    pseudoHdr.SourceAddress.Val = pPktSrcAdd->Val;
-    pseudoHdr.DestAddress.Val = pPktDstAdd->Val;
-    pseudoHdr.Zero	= 0;
-    pseudoHdr.Protocol = IP_PROT_TCP;
-    pseudoHdr.Length = TCPIP_Helper_ntohs(tcpTotLength);
-
-    calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
-    // Note: pseudoHdr length is multiple of 4!
-    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0)
+    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0)
     {
-        calcChkSum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
-    }
-    else
-    {
-        calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
-    }
+        // Calculate IP pseudoheader checksum.
+        pseudoHdr.SourceAddress.Val = pPktSrcAdd->Val;
+        pseudoHdr.DestAddress.Val = pPktDstAdd->Val;
+        pseudoHdr.Zero	= 0;
+        pseudoHdr.Protocol = IP_PROT_TCP;
+        pseudoHdr.Length = TCPIP_Helper_ntohs(tcpTotLength);
 
-    if(calcChkSum != 0)
-    {   // discard packet
-        return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
+        // Note: pseudoHdr length is multiple of 4!
+        if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0)
+        {
+            calcChkSum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
+        }
+        else
+        {
+            calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, tcpTotLength, calcChkSum);
+        }
+
+        if(calcChkSum != 0)
+        {   // discard packet
+            return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+        }
     }
 
 
@@ -2661,13 +2670,13 @@ uint16_t TCPIP_TCP_ArrayPut(TCP_SOCKET hTCP, const uint8_t* data, uint16_t len)
 	if(pSkt->txHead + wActualLen >= pSkt->txEnd)
 	{
 		wRightLen = pSkt->txEnd-pSkt->txHead;
-        memcpy((uint8_t*)pSkt->txHead, data, wRightLen);
+        TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wRightLen);
 		data += wRightLen;
 		wActualLen -= wRightLen;
 		pSkt->txHead = pSkt->txStart;
 	}
 
-    memcpy((uint8_t*)pSkt->txHead, data, wActualLen);
+    TCPIP_Helper_Memcpy((uint8_t*)pSkt->txHead, data, (uint32_t)wActualLen);
 	pSkt->txHead += wActualLen;
 
     bool    toFlush = false;
@@ -3000,7 +3009,7 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
 		RightLen = pSkt->rxEnd - pSkt->rxTail + 1;
 		if(buffer)
 		{
-			memcpy(buffer, (uint8_t*)pSkt->rxTail, RightLen);
+            TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, RightLen);
 			buffer += RightLen;
 		}
 		len -= RightLen;
@@ -3009,7 +3018,7 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
 
 	if(buffer)
     {
-		memcpy(buffer, (uint8_t*)pSkt->rxTail, len);
+        TCPIP_Helper_Memcpy(buffer, (uint8_t*)pSkt->rxTail, len);
     }
 	pSkt->rxTail += len;
 	len += RightLen;
@@ -3143,14 +3152,14 @@ uint16_t TCPIP_TCP_ArrayPeek(TCP_SOCKET hTCP, uint8_t *vBuffer, uint16_t wLen, u
     if(wLen <= wBytesUntilWrap)
     {
         // Read all at once
-        memcpy(vBuffer, ptrRead, wLen);
+        TCPIP_Helper_Memcpy(vBuffer, ptrRead, wLen);
     }
     else
     {
         // Read all bytes up to the wrap position and then read remaining bytes 
         // at the start of the buffer
-        memcpy(vBuffer, ptrRead, wBytesUntilWrap);
-        memcpy(vBuffer + wBytesUntilWrap, (uint8_t*)pSkt->rxStart, wLen - wBytesUntilWrap);
+        TCPIP_Helper_Memcpy(vBuffer, ptrRead, wBytesUntilWrap);
+        TCPIP_Helper_Memcpy(vBuffer + wBytesUntilWrap, (uint8_t*)pSkt->rxStart, wLen - wBytesUntilWrap);
     }
 
     return wLen;
@@ -3310,7 +3319,7 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
         }
 
         // Read a chunk of data into the buffer
-        memcpy(buffer, ptrRead, k);
+        TCPIP_Helper_Memcpy(buffer, ptrRead, k);
         ptrRead += k;
         wBytesUntilWrap -= k;
 
@@ -3758,14 +3767,12 @@ static void TCPIP_TCP_Tick(void)
 static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 {
 	TCP_HEADER      *pTCPHdr;
-	IPV6_PSEUDO_HEADER   pseudoHeader;
-    uint16_t        calcChkSum;
     uint16_t        dataLen;
 	uint8_t         optionsSize;
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
     TCB_STUB*       pSkt; 
-    TCPIP_NET_HANDLE     pPktIf;
+    TCPIP_NET_IF*       pPktIf;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
     const void*         sigParam;
     uint16_t            sigMask;
@@ -3779,22 +3786,32 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
     dataLen = pRxPkt->totTransportLen;
 
-	// Calculate IP pseudoheader checksum.
-    memcpy (&pseudoHeader.SourceAddress, remoteIP, sizeof (IPV6_ADDR));
-    memcpy (&pseudoHeader.DestAddress, localIP, sizeof (IPV6_ADDR));
-    // Total payload length is the length of data + extension headers
-    pseudoHeader.PacketLength = TCPIP_Helper_htons(dataLen);
-    pseudoHeader.zero1 = 0;
-    pseudoHeader.zero2 = 0;
-    pseudoHeader.NextHeader = IP_PROT_TCP;
-
     pTCPHdr = (TCP_HEADER*)pRxPkt->pTransportLayer;
-    // Note: if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0) not supported for now!
-    calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader, sizeof(pseudoHeader), 0);
-    calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, dataLen, calcChkSum);
-    if(calcChkSum != 0)
-    {   // discard packet
-        return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+
+    pPktIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
+    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP) == 0)
+    {
+        // Calculate IP pseudoheader checksum.
+        uint16_t        calcChkSum;
+        IPV6_PSEUDO_HEADER   pseudoHeader;
+
+        memcpy (&pseudoHeader.SourceAddress, remoteIP, sizeof (IPV6_ADDR));
+        memcpy (&pseudoHeader.DestAddress, localIP, sizeof (IPV6_ADDR));
+        // Total payload length is the length of data + extension headers
+        pseudoHeader.PacketLength = TCPIP_Helper_htons(dataLen);
+        pseudoHeader.zero1 = 0;
+        pseudoHeader.zero2 = 0;
+        pseudoHeader.NextHeader = IP_PROT_TCP;
+
+        // Note: if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_SPLIT) != 0) not supported for now!
+
+
+        calcChkSum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader, sizeof(pseudoHeader), 0);
+        calcChkSum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pTCPHdr, dataLen, calcChkSum);
+        if(calcChkSum != 0)
+        {   // discard packet
+            return TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+        }
     }
 
 	_TcpSwapHeader(pTCPHdr);
@@ -3818,7 +3835,6 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         // extract header
         pRxPkt->pDSeg->segLen -=  optionsSize + sizeof(*pTCPHdr);    
         _TcpHandleSeg(pSkt, pTCPHdr, dataLen - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
-        pPktIf = pRxPkt->pktIf;
 
         sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
         if((sktEvent &= sigMask) != 0)
@@ -5847,11 +5863,11 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 
                 if(pendTxEnd)
                 {
-                    memcpy(newTxBuff, pSkt->txTail, pendTxEnd);
+                    TCPIP_Helper_Memcpy(newTxBuff, pSkt->txTail, pendTxEnd);
                 }
                 if(pendTxBeg)
                 {
-                    memcpy(newTxBuff + pendTxEnd,  srcOffs, pendTxBeg);
+                    TCPIP_Helper_Memcpy(newTxBuff + pendTxEnd,  srcOffs, pendTxBeg);
                 }
 
 
@@ -5911,11 +5927,11 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
 
                 if(avlblRxEnd)
                 {
-                    memcpy(newRxBuff, pSkt->rxTail, avlblRxEnd);
+                    TCPIP_Helper_Memcpy(newRxBuff, pSkt->rxTail, avlblRxEnd);
                 }
                 if(avlblRxBeg)
                 {
-                    memcpy(newRxBuff + avlblRxEnd, srcOffs, avlblRxBeg);
+                    TCPIP_Helper_Memcpy(newRxBuff + avlblRxEnd, srcOffs, avlblRxBeg);
                 }
             }
         }

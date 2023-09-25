@@ -1240,9 +1240,16 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
         checksumPointer = TCPIP_IPV6_DataSegmentContentsGetByType (ptrPacket, TYPE_IPV6_UPPER_LAYER_HEADER);
         if (checksumPointer != NULL)
         {
-            checksumPointer = (uint16_t *)(((uint8_t *)checksumPointer) + ptrPacket->upperLayerChecksumOffset);
-            *checksumPointer = ~TCPIP_IPV6_PseudoHeaderChecksumGet (ptrPacket);
-            *checksumPointer = TCPIP_IPV6_PayloadChecksumCalculate (ptrPacket);
+            if((((TCPIP_NET_IF*)ptrPacket->netIfH)->txOffload & TCPIP_MAC_CHECKSUM_IPV6) == 0)
+            {
+                checksumPointer = (uint16_t *)(((uint8_t *)checksumPointer) + ptrPacket->upperLayerChecksumOffset);
+                *checksumPointer = ~TCPIP_IPV6_PseudoHeaderChecksumGet (ptrPacket);
+                *checksumPointer = TCPIP_IPV6_PayloadChecksumCalculate (ptrPacket);
+            }
+            else
+            {
+                *checksumPointer = 0;
+            }
         }
     }
 

@@ -1503,8 +1503,7 @@ static void TcpTxFillSegment(tIperfState* pIState)
 {
     uint16_t chunk_size, sent_bytes;
 
-    /* Fill the buffer with ASCII char T */
-    memset( txfer_buffer, 0x54, sizeof(txfer_buffer));
+
 
     while( pIState->remainingTxData > 0u )
     {
@@ -1565,6 +1564,9 @@ static void StateMachineTCPTxOpen(tIperfState* pIState)
 
     TCPIP_TCP_Connect(pIState->tcpClientSock);
     pIState->timer = SYS_TMR_TickCountGet();
+	
+    /* Fill the buffer with ASCII char T */
+    memset( txfer_buffer, 0x54, sizeof(txfer_buffer));
 }
 
 static void StateMachineTcpRxDone(tIperfState* pIState)
@@ -1769,8 +1771,7 @@ static uint16_t UdpTxFillDatagram(tIperfState* pIState)
     uint16_t remainingTxData;
     uint16_t txData = 0;
 
-    /* Fill the buffer with ASCII char U */
-    memset( txfer_buffer, 0x55, sizeof(txfer_buffer));
+
 
     remainingTxData = pIState->remainingTxData;
     while( remainingTxData > 0u )
@@ -1850,6 +1851,8 @@ static void StateMachineUDPTxOpen(tIperfState* pIState)
      // Wait for a few seconds before first TCP tx, so we can resolve ARP.
     pIState->nextTxTime = pIState->startTime + pIState->mPktPeriod;
 
+    /* Fill the buffer with ASCII char U */
+    memset( txfer_buffer, 0x55, sizeof(txfer_buffer));
 
 }
 

@@ -56,7 +56,11 @@ TCPIP_MAC_POWER_MODE TCPIP_Helper_StringToPowerMode(const char* str);
 const char*     TCPIP_Helper_PowerModeToString(TCPIP_MAC_POWER_MODE mode);
 
 uint16_t        TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t len, uint16_t seed);
-
+#if defined(__mips__)
+#define TCPIP_Helper_Memcpy(dst, src, len)     memcpy(dst, src, len)
+#else
+void            TCPIP_Helper_Memcpy(void *dst, const void *src, size_t len);
+#endif
 uint16_t        TCPIP_Helper_PacketChecksum(TCPIP_MAC_PACKET* pPkt, uint8_t* startAdd, uint16_t len, uint16_t seed);
 
 uint16_t        TCPIP_Helper_ChecksumFold(uint32_t checksum);

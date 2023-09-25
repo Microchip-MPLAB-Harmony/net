@@ -1083,7 +1083,10 @@ static bool TCPIP_IPV4_ForwardPkt(TCPIP_MAC_PACKET* pFwdPkt, const IPV4_ROUTE_TA
     pHeader->TimeToLive -= 1;
     pHeader->HeaderChecksum = 0;
     headerLen = pHeader->IHL << 2;
-    pHeader->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHeader, headerLen, 0);
+    if((pFwdIf->txOffload & TCPIP_MAC_CHECKSUM_IPV4) == 0)
+    {   // not handled by hardware
+        pHeader->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHeader, headerLen, 0);
+    }
 
     if(pMacDst == 0)
     {   // ARP target not known yet; queue it
@@ -2252,8 +2255,10 @@ void TCPIP_IPV4_PacketFormatTx(IPV4_PACKET* pPkt, uint8_t protocol, uint16_t ipL
     pHdr->HeaderChecksum = 0;
     pHdr->SourceAddress.Val = pPkt->srcAddress.Val;
     pHdr->DestAddress.Val = pPkt->destAddress.Val;
-    // update the checksum
-    pHdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHdr, hdrLen, 0);
+    if((((TCPIP_NET_IF*)pPkt->netIfH)->txOffload & TCPIP_MAC_CHECKSUM_IPV4) == 0)
+    {   // not handled by hardware; update the checksum
+        pHdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHdr, hdrLen, 0);
+    }
 
     pPkt->macPkt.pDSeg->segLen += hdrLen;
     pPkt->macPkt.pTransportLayer = pPkt->macPkt.pNetLayer + hdrLen;
@@ -2432,7 +2437,7 @@ static void TCPIP_IPV4_Process(void)
 {
     TCPIP_NET_IF* pNetIf;
     TCPIP_MAC_PACKET* pRxPkt;
-    uint8_t      headerLen;
+    uint8_t      headerLen, isFragment;
     uint16_t     headerChecksum, totalLength, payloadLen;
     IPV4_HEADER  *pHeader;
     IPV4_HEADER  cIpv4Hdr, *pCHeader;
@@ -2522,35 +2527,40 @@ static void TCPIP_IPV4_Process(void)
                 break;
             }
 
-            // Validate the IP header.  If it is correct, the checksum 
-            // will come out to 0x0000 (because the header contains a 
-            // precomputed checksum).  A corrupt header will have a 
-            // nonzero checksum.
-            headerChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHeader, headerLen, 0);
-
-            if(headerChecksum)
-            {
-                // Bad packet. The function caller will be notified by means of the false 
-                // return value and it should discard the packet.
-                ackRes = TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
-                break;
-            }
-
             // Make a copy of the header for the network to host conversion
             cIpv4Hdr = *pHeader;
             pCHeader = &cIpv4Hdr;
             pCHeader->TotalLength = totalLength;
             pCHeader->FragmentInfo.val = TCPIP_Helper_ntohs(pCHeader->FragmentInfo.val);
 
+            isFragment =  (pCHeader->FragmentInfo.MF != 0 || pCHeader->FragmentInfo.fragOffset != 0);
 #if (_TCPIP_IPV4_FRAGMENTATION == 0)
             // Throw this packet away if it is a fragment.  
             // We don't support IPv4 fragment reconstruction.
-            if(pCHeader->FragmentInfo.MF != 0 || pCHeader->FragmentInfo.fragOffset != 0)
+            if(isFragment)
             {   // discard the fragment
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
             }
 #endif  // (_TCPIP_IPV4_FRAGMENTATION == 0)
+
+            // Validate the IP header.  If it is correct, the checksum 
+            // will come out to 0x0000 (because the header contains a 
+            // precomputed checksum).  A corrupt header will have a 
+            // nonzero checksum.
+            if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_IP) == 0)
+            {   // cannot skip checksum calculation if not handled by MAC!
+                headerChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHeader, headerLen, 0);
+
+                if(headerChecksum)
+                {
+                    // Bad packet. The function caller will be notified by means of the false 
+                    // return value and it should discard the packet.
+                    ackRes = TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+                    break;
+                }
+            }
+
 
             TCPIP_IPV4_CheckRxPkt(pRxPkt);
 
@@ -3180,10 +3190,11 @@ TCPIP_IPV4_FILTER_TYPE TCPIP_IPV4_PacketFilterClear(TCPIP_IPV4_FILTER_TYPE filtT
 void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum, bool setMac)
 {
     IPV4_HEADER* pIpv4Hdr;
+    TCPIP_NET_IF* netIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
 
     pIpv4Hdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
     pIpv4Hdr->DestAddress.Val = pIpv4Hdr->SourceAddress.Val;
-    pIpv4Hdr->SourceAddress.Val = _TCPIPStackNetAddress((TCPIP_NET_IF*)pRxPkt->pktIf);
+    pIpv4Hdr->SourceAddress.Val = _TCPIPStackNetAddress(netIf);
 
     pIpv4Hdr->TotalLength = TCPIP_Helper_htons(pIpv4Hdr->TotalLength);
     pIpv4Hdr->FragmentInfo.val = TCPIP_Helper_htons(pIpv4Hdr->FragmentInfo.val);
@@ -3197,7 +3208,10 @@ void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum
     if(setChecksum)
     {
         pIpv4Hdr->HeaderChecksum = 0;
-        pIpv4Hdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pIpv4Hdr, headerLen, 0);
+        if((netIf->txOffload & TCPIP_MAC_CHECKSUM_IPV4) == 0)
+        {   // not handled by hardware
+            pIpv4Hdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pIpv4Hdr, headerLen, 0);
+        }
     }
 
     if(setMac)
@@ -3841,6 +3855,7 @@ static bool TCPIP_IPV4_FragmentTxPkt(TCPIP_MAC_PACKET* pMacPkt, uint16_t linkMtu
         pHdr->FragmentInfo.val = TCPIP_Helper_htons(fragInfo.val);
         // update the checksum
         pHdr->HeaderChecksum = 0;
+        // no checksum offload for fragmented packets
         pHdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pHdr, ipv4HeaderSize, 0);
 
         pIpv4Load += currFragSize;

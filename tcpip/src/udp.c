@@ -1500,19 +1500,23 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
     udpTotLength = TCPIP_Helper_ntohs(pUDPHdr->Length);
 
+    bool isFragmented = false;
+
 #if (_TCPIP_IPV4_FRAGMENTATION == 0)
     if(udpTotLength != pRxPkt->totTransportLen)
     {   // discard suspect packet
         return TCPIP_MAC_PKT_ACK_STRUCT_ERR;
     }
+#else
+    isFragmented = pRxPkt->pkt_next != 0;
 #endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
 
     pPktSrcAdd = TCPIP_IPV4_PacketGetSourceAddress(pRxPkt);
     pPktDstAdd = TCPIP_IPV4_PacketGetDestAddress(pRxPkt);
 	// See if we need to validate the checksum field (0x0000 is disabled)
 #ifdef TCPIP_UDP_USE_RX_CHECKSUM
-	if((pUDPHdr->Checksum != 0))
-	{
+    if(pUDPHdr->Checksum != 0 && (isFragmented || (pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP) == 0))
+	{   // no hardware checksum offload 
         IPV4_PSEUDO_HEADER  pseudoHdr;
         uint16_t            calcChkSum;
 	    // Calculate IP pseudoheader checksum.
@@ -1680,25 +1684,28 @@ static uint16_t _UDPv4Flush(UDP_SOCKET_DCPT* pSkt)
     pUDPHdr->Length = TCPIP_Helper_htons(udpTotLen);
     pUDPHdr->Checksum = 0;
 
-    // add the pseudo header
-    pseudoHdr.SourceAddress.Val = pv4Pkt->srcAddress.Val;
-    pseudoHdr.DestAddress.Val = pv4Pkt->destAddress.Val;
-    pseudoHdr.Zero = 0;
-    pseudoHdr.Protocol = IP_PROT_UDP;
-    pseudoHdr.Length = pUDPHdr->Length;
-    checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
+    if((pSkt->pSktNet->txOffload & TCPIP_MAC_CHECKSUM_UDP) == 0)
+    {   // not handled by hardware; add the pseudo header
+        pseudoHdr.SourceAddress.Val = pv4Pkt->srcAddress.Val;
+        pseudoHdr.DestAddress.Val = pv4Pkt->destAddress.Val;
+        pseudoHdr.Zero = 0;
+        pseudoHdr.Protocol = IP_PROT_UDP;
+        pseudoHdr.Length = pUDPHdr->Length;
 
-    if(pSkt->flags.txSplitAlloc != 0)
-    {
-        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pUDPHdr, sizeof(UDP_HEADER), checksum);
-        checksum = ~TCPIP_Helper_CalcIPChecksum(pZSeg->segLoad, udpLoadLen, checksum);
-    }
-    else
-    {   // one contiguous buffer
-        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pUDPHdr, udpTotLen, checksum);
-    }
+        checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHdr, sizeof(pseudoHdr), 0);
 
-    pUDPHdr->Checksum = ~checksum;
+        if(pSkt->flags.txSplitAlloc != 0)
+        {
+            checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pUDPHdr, sizeof(UDP_HEADER), checksum);
+            checksum = ~TCPIP_Helper_CalcIPChecksum(pZSeg->segLoad, udpLoadLen, checksum);
+        }
+        else
+        {   // one contiguous buffer
+            checksum = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)pUDPHdr, udpTotLen, checksum);
+        }
+
+        pUDPHdr->Checksum = ~checksum;
+    }
 
     isMcastDest = TCPIP_Helper_IsMcastAddress(&pv4Pkt->destAddress);
     if(isMcastDest)
@@ -2037,7 +2044,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
 
 
 #ifdef TCPIP_UDP_USE_RX_CHECKSUM
-    if(h->Checksum != 0)
+    if(h->Checksum != 0 && (pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP) == 0)
     {
         IPV6_PSEUDO_HEADER  pseudoHeader;
         uint16_t            calcChkSum;
@@ -2546,7 +2553,7 @@ uint16_t TCPIP_UDP_ArrayPut(UDP_SOCKET s, const uint8_t *cData, uint16_t wDataLe
 
             if(wDataLen)
             {
-                memcpy(pSkt->txWrite, cData, wDataLen);
+                TCPIP_Helper_Memcpy(pSkt->txWrite, cData, wDataLen);
                 pSkt->txWrite += wDataLen;
             }
 
@@ -2685,7 +2692,7 @@ uint16_t TCPIP_UDP_ArrayGet(UDP_SOCKET s, uint8_t *cData, uint16_t reqBytes)
         {
             if(cData != 0)
             {
-                memcpy(cData, pSkt->rxCurr, xtractBytes);
+                TCPIP_Helper_Memcpy(cData, pSkt->rxCurr, xtractBytes);     
                 cData += xtractBytes;
             }
             // adjust
