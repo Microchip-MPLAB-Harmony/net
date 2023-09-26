@@ -42,6 +42,7 @@ static SYS_MODULE_OBJ _DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv);
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
 static void     _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv);
+static void     _MacTxFreeQueue( DRV_GMAC_DRIVER * pMACDrv);
 static void     _MACCleanup(DRV_GMAC_DRIVER * pMACDrv );
 #endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
@@ -190,82 +191,82 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
 static DRV_GMAC_DRIVER _gmac_drv_dcpt[] = 
 {
     #if defined(DRV_GMAC)  || defined(DRV_ETH)
-	{
-		&DRV_GMAC_Object,
-		{0},
-	},
+    {
+        &DRV_GMAC_Object,
+        {0},
+    },
     #elif defined(DRV_GMAC0)  
-	{
-		&DRV_GMAC0_Object,
-		{0},
-	},
+    {
+        &DRV_GMAC0_Object,
+        {0},
+    },
     #endif 
     #if defined(DRV_GMAC1)   
     {
-		&DRV_GMAC1_Object,
-		{0},
-	}	
+        &DRV_GMAC1_Object,
+        {0},
+    }   
     #endif 
 };
 
 //GMAC statistics register access 
 static const DRV_PIC32CGMAC_HW_REG_DCPT macPIC32CHwRegDcpt[] =
 {
-	{"Tx Byte Count-lower 32bits(TxOTLO)",    DRV_PIC32CGMAC_LibGetTxOctetLow},
-	{"Tx Byte Count-upper 16bits(TxOTHI)",    DRV_PIC32CGMAC_LibGetTxOctetHigh},
-	{"Tx Frames w/o error(TxFTCNT)",   DRV_PIC32CGMAC_LibGetTxFrameCount},
-	{"Tx Broadcast Frames(TxBCFT)",    DRV_PIC32CGMAC_LibGetTxBCastFrameCount},
-	{"Tx Multicast Frames(TxMFT)",     DRV_PIC32CGMAC_LibGetTxMCastFrameCount},
-	{"Tx Pause Frames(TxPFT)",     DRV_PIC32CGMAC_LibGetTxPauseFrameCount},
-	{"Tx 64-byte Frames(TxBFT64)",   DRV_PIC32CGMAC_LibGetTx64ByteFrameCount},
-	{"Tx 65-127 byte Frames(TBFT127)",   DRV_PIC32CGMAC_LibGetTx127ByteFrameCount},
-	{"Tx 128-255 byte Frames(TBFT255)",   DRV_PIC32CGMAC_LibGetTx255ByteFrameCount},
-	{"Tx 256-511 byte Frames(TBFT511)",   DRV_PIC32CGMAC_LibGetTx511ByteFrameCount},
-	{"Tx 512-1023 byte Frames(TBFT1023)",  DRV_PIC32CGMAC_LibGetTx1023ByteFrameCount},
-	{"Tx 1024-1518 byte Frames(TBFT1518)",  DRV_PIC32CGMAC_LibGetTx1518ByteFrameCount},
-	{"Tx Frames >= 1518 byte(GTBF1518)",  DRV_PIC32CGMAC_LibGetTxGT1518ByteFrameCount},
-	{"Tx Underrun Frames not TXed(TxTUR)",     DRV_PIC32CGMAC_LibGetTxUnderRunFrameCount},
-	{"Tx Single Collision Frames(TxSCF)",     DRV_PIC32CGMAC_LibGetTxSingleCollFrameCount},
-	{"Tx 2-15 Collision Frames(TxMCF)",     DRV_PIC32CGMAC_LibGetTxMultiCollFrameCount},	
-	{"Tx 16 Collision Frames(TxECCNT)",   DRV_PIC32CGMAC_LibGetTxExcessCollFrameCount},
-	{"Tx late Collision Frames(TxLCCNT)",   DRV_PIC32CGMAC_LibGetTxLateCollFrameCount},
-	{"Tx Deferred Frames(TxDTF)",     DRV_PIC32CGMAC_LibGetTxDeferFrameCount},	
-	{"Tx Carrier Sense error Frames(TxCSE)",     DRV_PIC32CGMAC_LibGetTxCSErrorFrameCount},		
-	{"Rx Byte Count-lower 32bits(RxORLO)",    DRV_PIC32CGMAC_LibGetRxOctetLow},
-	{"Rx Byte Count-upper 16bits(RxORHI)",    DRV_PIC32CGMAC_LibGetRxOctetHigh},
-	{"Rx Frames w/o error(RxFRCNT)",    DRV_PIC32CGMAC_LibGetRxFrameCount},
-	{"Rx Broadcast Frames(RxBCFR)",    DRV_PIC32CGMAC_LibGetRxBCastFrameCount},
-	{"Rx Multicast Frames (RxMFR)",     DRV_PIC32CGMAC_LibGetRxMCastFrameCount},
-	{"Rx Pause Frames(RxPFR)",     DRV_PIC32CGMAC_LibGetRxPauseFrameCount},
-	{"Rx 64-byte Frames(RxBFR64)",   DRV_PIC32CGMAC_LibGetRx64ByteFrameCount},
-	{"Rx 65-127 byte Frames(TBFR127)",   DRV_PIC32CGMAC_LibGetRx127ByteFrameCount},
-	{"Rx 128-255 byte Frames(TBFR255)",   DRV_PIC32CGMAC_LibGetRx255ByteFrameCount},
-	{"Rx 256-511 byte Frames(TBFR511)",   DRV_PIC32CGMAC_LibGetRx511ByteFrameCount},
-	{"Rx 512-1023 byte Frames(TBFR1023)",  DRV_PIC32CGMAC_LibGetRx1023ByteFrameCount},
-	{"Rx 1024-1518 byte Frames(TBFR1518)",  DRV_PIC32CGMAC_LibGetRx1518ByteFrameCount},
-	{"Rx Frames >= 1519 bytes(TMXBFR)",    DRV_PIC32CGMAC_LibGetRxGT1518ByteFrameCount},
-	{"Rx Frames < 64 bytes(RxUFR)",     DRV_PIC32CGMAC_LibGetRxUnderSizeFrameCount},
-	{"Rx Frames > 1518 bytes(RxOFR)",     DRV_PIC32CGMAC_LibGetRxOverSizeFrameCount},
-	{"Rx error Frames > 1518 bytes(RxJR)",      DRV_PIC32CGMAC_LibGetRxJabberFrameCount},
-	{"Rx CRC error Frames(RxFCSE)",    DRV_PIC32CGMAC_LibGetRxFCSErrorFrameCount},
-	{"Rx Length field error Frames(RxLFFE)",    DRV_PIC32CGMAC_LibGetRxLFErrorFrameCount},
-	{"Rx symbol error Frames(RxRSE)",     DRV_PIC32CGMAC_LibGetRxSymErrorFrameCount},
-	{"Rx alignment error Frames(RxAE)",      DRV_PIC32CGMAC_LibGetRxAlignErrorFrameCount},
-	{"Rx Resource Error (RxRRE)",     DRV_PIC32CGMAC_LibGetRxResErrorFrameCount},		
-	{"Rx overrun error Frames(RxROE)",     DRV_PIC32CGMAC_LibGetRxOverRunFrameCount},
-	{"Rx IPHdr Chksum error Frames(RxIHCE)",    DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount},	
-	{"Rx TCP Chksum error Frames(RxTCE)",     DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount},	
-	{"Rx UDP Chksum error Frames(RxUCE)",     DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount},
+    {"Tx Byte Count-lower 32bits(TxOTLO)",    DRV_PIC32CGMAC_LibGetTxOctetLow},
+    {"Tx Byte Count-upper 16bits(TxOTHI)",    DRV_PIC32CGMAC_LibGetTxOctetHigh},
+    {"Tx Frames w/o error(TxFTCNT)",   DRV_PIC32CGMAC_LibGetTxFrameCount},
+    {"Tx Broadcast Frames(TxBCFT)",    DRV_PIC32CGMAC_LibGetTxBCastFrameCount},
+    {"Tx Multicast Frames(TxMFT)",     DRV_PIC32CGMAC_LibGetTxMCastFrameCount},
+    {"Tx Pause Frames(TxPFT)",     DRV_PIC32CGMAC_LibGetTxPauseFrameCount},
+    {"Tx 64-byte Frames(TxBFT64)",   DRV_PIC32CGMAC_LibGetTx64ByteFrameCount},
+    {"Tx 65-127 byte Frames(TBFT127)",   DRV_PIC32CGMAC_LibGetTx127ByteFrameCount},
+    {"Tx 128-255 byte Frames(TBFT255)",   DRV_PIC32CGMAC_LibGetTx255ByteFrameCount},
+    {"Tx 256-511 byte Frames(TBFT511)",   DRV_PIC32CGMAC_LibGetTx511ByteFrameCount},
+    {"Tx 512-1023 byte Frames(TBFT1023)",  DRV_PIC32CGMAC_LibGetTx1023ByteFrameCount},
+    {"Tx 1024-1518 byte Frames(TBFT1518)",  DRV_PIC32CGMAC_LibGetTx1518ByteFrameCount},
+    {"Tx Frames >= 1518 byte(GTBF1518)",  DRV_PIC32CGMAC_LibGetTxGT1518ByteFrameCount},
+    {"Tx Underrun Frames not TXed(TxTUR)",     DRV_PIC32CGMAC_LibGetTxUnderRunFrameCount},
+    {"Tx Single Collision Frames(TxSCF)",     DRV_PIC32CGMAC_LibGetTxSingleCollFrameCount},
+    {"Tx 2-15 Collision Frames(TxMCF)",     DRV_PIC32CGMAC_LibGetTxMultiCollFrameCount},    
+    {"Tx 16 Collision Frames(TxECCNT)",   DRV_PIC32CGMAC_LibGetTxExcessCollFrameCount},
+    {"Tx late Collision Frames(TxLCCNT)",   DRV_PIC32CGMAC_LibGetTxLateCollFrameCount},
+    {"Tx Deferred Frames(TxDTF)",     DRV_PIC32CGMAC_LibGetTxDeferFrameCount},  
+    {"Tx Carrier Sense error Frames(TxCSE)",     DRV_PIC32CGMAC_LibGetTxCSErrorFrameCount},     
+    {"Rx Byte Count-lower 32bits(RxORLO)",    DRV_PIC32CGMAC_LibGetRxOctetLow},
+    {"Rx Byte Count-upper 16bits(RxORHI)",    DRV_PIC32CGMAC_LibGetRxOctetHigh},
+    {"Rx Frames w/o error(RxFRCNT)",    DRV_PIC32CGMAC_LibGetRxFrameCount},
+    {"Rx Broadcast Frames(RxBCFR)",    DRV_PIC32CGMAC_LibGetRxBCastFrameCount},
+    {"Rx Multicast Frames (RxMFR)",     DRV_PIC32CGMAC_LibGetRxMCastFrameCount},
+    {"Rx Pause Frames(RxPFR)",     DRV_PIC32CGMAC_LibGetRxPauseFrameCount},
+    {"Rx 64-byte Frames(RxBFR64)",   DRV_PIC32CGMAC_LibGetRx64ByteFrameCount},
+    {"Rx 65-127 byte Frames(TBFR127)",   DRV_PIC32CGMAC_LibGetRx127ByteFrameCount},
+    {"Rx 128-255 byte Frames(TBFR255)",   DRV_PIC32CGMAC_LibGetRx255ByteFrameCount},
+    {"Rx 256-511 byte Frames(TBFR511)",   DRV_PIC32CGMAC_LibGetRx511ByteFrameCount},
+    {"Rx 512-1023 byte Frames(TBFR1023)",  DRV_PIC32CGMAC_LibGetRx1023ByteFrameCount},
+    {"Rx 1024-1518 byte Frames(TBFR1518)",  DRV_PIC32CGMAC_LibGetRx1518ByteFrameCount},
+    {"Rx Frames >= 1519 bytes(TMXBFR)",    DRV_PIC32CGMAC_LibGetRxGT1518ByteFrameCount},
+    {"Rx Frames < 64 bytes(RxUFR)",     DRV_PIC32CGMAC_LibGetRxUnderSizeFrameCount},
+    {"Rx Frames > 1518 bytes(RxOFR)",     DRV_PIC32CGMAC_LibGetRxOverSizeFrameCount},
+    {"Rx error Frames > 1518 bytes(RxJR)",      DRV_PIC32CGMAC_LibGetRxJabberFrameCount},
+    {"Rx CRC error Frames(RxFCSE)",    DRV_PIC32CGMAC_LibGetRxFCSErrorFrameCount},
+    {"Rx Length field error Frames(RxLFFE)",    DRV_PIC32CGMAC_LibGetRxLFErrorFrameCount},
+    {"Rx symbol error Frames(RxRSE)",     DRV_PIC32CGMAC_LibGetRxSymErrorFrameCount},
+    {"Rx alignment error Frames(RxAE)",      DRV_PIC32CGMAC_LibGetRxAlignErrorFrameCount},
+    {"Rx Resource Error (RxRRE)",     DRV_PIC32CGMAC_LibGetRxResErrorFrameCount},       
+    {"Rx overrun error Frames(RxROE)",     DRV_PIC32CGMAC_LibGetRxOverRunFrameCount},
+    {"Rx IPHdr Chksum error Frames(RxIHCE)",    DRV_PIC32CGMAC_LibGetRxIPHdrCSErrorFrameCount}, 
+    {"Rx TCP Chksum error Frames(RxTCE)",     DRV_PIC32CGMAC_LibGetRxTCPCSErrorFrameCount}, 
+    {"Rx UDP Chksum error Frames(RxUCE)",     DRV_PIC32CGMAC_LibGetRxUDPCSErrorFrameCount},
 };
 
 //table of different Link startup
 static const _DRV_GMAC_LinkStateF _DRV_GMAC_LinkStateTbl[] =
 {
-	_DRV_GMAC_LinkStateStartLink,     	// DRV_PIC32CGMAC_LINK_CHECK_START_LINK
-	_DRV_GMAC_LinkStateGetLink,       	// DRV_PIC32CGMAC_LINK_CHECK_GET_LINK
-	_DRV_GMAC_LinkStateWaitLinkUp,   	// DRV_PIC32CGMAC_LINK_CHECK_WAIT_LINK_UP
-	_DRV_GMAC_LinkStateNegComplete,   	// DRV_PIC32CGMAC_LINK_CHECK_NEG_COMPLETE
-	_DRV_GMAC_LinkStateNegResult,     	// DRV_PIC32CGMAC_LINK_CHECK_NEG_RESULT
+    _DRV_GMAC_LinkStateStartLink,       // DRV_PIC32CGMAC_LINK_CHECK_START_LINK
+    _DRV_GMAC_LinkStateGetLink,         // DRV_PIC32CGMAC_LINK_CHECK_GET_LINK
+    _DRV_GMAC_LinkStateWaitLinkUp,      // DRV_PIC32CGMAC_LINK_CHECK_WAIT_LINK_UP
+    _DRV_GMAC_LinkStateNegComplete,     // DRV_PIC32CGMAC_LINK_CHECK_NEG_COMPLETE
+    _DRV_GMAC_LinkStateNegResult,       // DRV_PIC32CGMAC_LINK_CHECK_NEG_RESULT
 };
 
 //convert mac id to index
@@ -341,57 +342,57 @@ static DRV_GMAC_DRIVER* _GmacHandleToMacInst(uintptr_t handle)
  *****************************************************************************/
 SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
 {
-	DRV_GMAC_DRIVER * pMACDrv;	
-	int				macIx;
-	const TCPIP_MAC_MODULE_CTRL* const macControl = ((TCPIP_MAC_INIT*)init)->macControl;	
+    DRV_GMAC_DRIVER * pMACDrv;  
+    int             macIx;
+    const TCPIP_MAC_MODULE_CTRL* const macControl = ((TCPIP_MAC_INIT*)init)->macControl;    
     const TCPIP_MODULE_MAC_PIC32C_CONFIG* initData = (const TCPIP_MODULE_MAC_PIC32C_CONFIG*)((TCPIP_MAC_INIT*)init)->moduleData;
-	TCPIP_MAC_RES		initRes;	
-	GMAC_QUE_LIST		queueIdx;	
-	GMAC_RX_FILTERS		gmacRxFilt;
-	
-	macIx = _GmacIdToIndex(index);
-	
-	if(macIx < 0 )
-	{   
-		return SYS_MODULE_OBJ_INVALID;      // no such type supported
-	}
+    TCPIP_MAC_RES       initRes;    
+    GMAC_QUE_LIST       queueIdx;   
+    GMAC_RX_FILTERS     gmacRxFilt;
+    
+    macIx = _GmacIdToIndex(index);
+    
+    if(macIx < 0 )
+    {   
+        return SYS_MODULE_OBJ_INVALID;      // no such type supported
+    }
    
     pMACDrv = _gmac_drv_dcpt + macIx;
 
-	if(pMACDrv->sGmacData._macFlags._init != 0)
-	{   // already initialized	
-		return (SYS_MODULE_OBJ)pMACDrv;
-	}
-	    	
-	if(pMACDrv->sGmacData._macFlags._open != 0)
-	{
-		return SYS_MODULE_OBJ_INVALID;     // have a client connected
-	}
+    if(pMACDrv->sGmacData._macFlags._init != 0)
+    {   // already initialized  
+        return (SYS_MODULE_OBJ)pMACDrv;
+    }
+            
+    if(pMACDrv->sGmacData._macFlags._open != 0)
+    {
+        return SYS_MODULE_OBJ_INVALID;     // have a client connected
+    }
 
-	if(macControl->memH == 0)
-	{
-		return SYS_MODULE_OBJ_INVALID;     // not possible without dynamic memory!
-	}
+    if(macControl->memH == 0)
+    {
+        return SYS_MODULE_OBJ_INVALID;     // not possible without dynamic memory!
+    }
 
-	if(initData == 0)
-	{
-		return SYS_MODULE_OBJ_INVALID;     // not possible without init data!
-	}
+    if(initData == 0)
+    {
+        return SYS_MODULE_OBJ_INVALID;     // not possible without init data!
+    }
 
-	if(initData->pPhyBase == 0 || initData->pPhyInit == 0)
-	{
-		return SYS_MODULE_OBJ_INVALID;     // not possible without a PHY!
-	}
-	
-	// init the MAC object
+    if(initData->pPhyBase == 0 || initData->pPhyInit == 0)
+    {
+        return SYS_MODULE_OBJ_INVALID;     // not possible without a PHY!
+    }
+    
+    // init the MAC object
     memset(&pMACDrv->sGmacData, 0x0, sizeof(pMACDrv->sGmacData)); 
     pMACDrv->sGmacData.hPhyClient = DRV_HANDLE_INVALID;
     pMACDrv->sGmacData.hPhySysObject = SYS_MODULE_OBJ_INVALID;
     pMACDrv->sGmacData.sysStat = SYS_STATUS_UNINITIALIZED;
-	
+    
     pMACDrv->sGmacData._macIx = macIx;
     pMACDrv->sGmacData._phyIx = macIx;    // use the same index for the associated PHY
-    pMACDrv->sGmacData._macFlags._linkPrev = 0;	
+    pMACDrv->sGmacData._macFlags._linkPrev = 0; 
 
     // use initialization data
     pMACDrv->sGmacData._AllocH = macControl->memH;
@@ -405,30 +406,30 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     pMACDrv->sGmacData.pktAckF = macControl->pktAckF;
 
     pMACDrv->sGmacData._synchF = macControl->synchF;
-	
+    
     pMACDrv->sGmacData._controlFlags = macControl->controlFlags;
     pMACDrv->sGmacData._dataOffset = (macControl->controlFlags & TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) == 0 ? 0 : 2;
     pMACDrv->sGmacData._dataOffsetMask = (macControl->controlFlags & TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2) != 0 ? 0xfffffffc : 0xffffffff;
     pMACDrv->sGmacData._txDiscard = false;
-	// copy the configuration data
-	pMACDrv->sGmacData.gmacConfig = *initData;	
-	
+    // copy the configuration data
+    pMACDrv->sGmacData.gmacConfig = *initData;  
+    
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_RX);
     DRV_GMAC_LibDescriptorsPoolAdd (pMACDrv, DRV_GMAC_DCPT_TYPE_TX);
     
-	for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
-	{
-		if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt < DRV_GMAC_MIN_TX_DESCRIPTORS)
-		{
-			return SYS_MODULE_OBJ_INVALID; //return invalid than setting min dscp count
-		}
+    for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
+    {
+        if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt < DRV_GMAC_MIN_TX_DESCRIPTORS)
+        {
+            return SYS_MODULE_OBJ_INVALID; //return invalid than setting min dscp count
+        }
         
         uint16_t rxBufferSize = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
 
-		if(rxBufferSize < DRV_GMAC_MIN_RX_SIZE)
-		{
-			return SYS_MODULE_OBJ_INVALID; //return invalid than setting min Rx buffer size
-		}
+        if(rxBufferSize < DRV_GMAC_MIN_RX_SIZE)
+        {
+            return SYS_MODULE_OBJ_INVALID; //return invalid than setting min Rx buffer size
+        }
 
         if(rxBufferSize > DRV_GMAC_RX_MAX_FRAME)
         {   // no need to exceed the max allowed RX frame
@@ -437,17 +438,17 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
         // GMAC RX buffer size needs to be multiple of 64
         rxBufferSize = ((rxBufferSize + 63) / 64) * 64;
         pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize = rxBufferSize;
-	}
-	
+    }
+    
     if(!DRV_PIC32CGMAC_LibSetPriorityToQueueNum(pMACDrv))
     {
         return SYS_MODULE_OBJ_INVALID; //return invalid
     }
         
-	//set the MAC address received from system config
-	memcpy((pMACDrv->sGmacData.gmacConfig.macAddress.v), (macControl->ifPhyAddress.v),sizeof(macControl->ifPhyAddress));	
+    //set the MAC address received from system config
+    memcpy((pMACDrv->sGmacData.gmacConfig.macAddress.v), (macControl->ifPhyAddress.v),sizeof(macControl->ifPhyAddress));    
 
-	
+    
     if(!_DRV_GMAC_RxCreate(pMACDrv))
     {
         return SYS_MODULE_OBJ_INVALID;     // failed to create synch lock
@@ -460,22 +461,22 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     
     initRes = TCPIP_MAC_RES_OK;
    
-	while(1)
-	{
-		// start the initialization sequence
-		DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-			
- 		initRes = _DRV_GMAC_PHYInitialise(pMACDrv);
- 		if(initRes != TCPIP_MAC_RES_OK)
- 		{
-			// some error occurred
-			initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
-	 		break;
- 		}
-		
-		//global configurations for gmac
-		DRV_PIC32CGMAC_LibInit(pMACDrv);
-				        
+    while(1)
+    {
+        // start the initialization sequence
+        DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+            
+        initRes = _DRV_GMAC_PHYInitialise(pMACDrv);
+        if(initRes != TCPIP_MAC_RES_OK)
+        {
+            // some error occurred
+            initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
+            break;
+        }
+        
+        //global configurations for gmac
+        DRV_PIC32CGMAC_LibInit(pMACDrv);
+                        
         //Receive All Multi-cast packets? then set 64-bit hash value to all ones.
         if((pMACDrv->sGmacData.gmacConfig.macRxFilt) & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT)
         {
@@ -492,59 +493,59 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 
         // Initialize Rx Queue Filters
         if(DRV_PIC32CGMAC_LibRxQueFilterInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
-		{			
-			initRes = TCPIP_MAC_RES_INIT_FAIL;
-			break;		
-		}
+        {           
+            initRes = TCPIP_MAC_RES_INIT_FAIL;
+            break;      
+        }
         
-		if(DRV_PIC32CGMAC_LibRxInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
-		{			
-			initRes = TCPIP_MAC_RES_INIT_FAIL;
-			break;		
-		}
-		
-		if(DRV_PIC32CGMAC_LibTxInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
-		{
-			initRes = TCPIP_MAC_RES_INIT_FAIL;
-			break;
-		}
-		
+        if(DRV_PIC32CGMAC_LibRxInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
+        {           
+            initRes = TCPIP_MAC_RES_INIT_FAIL;
+            break;      
+        }
+        
+        if(DRV_PIC32CGMAC_LibTxInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
+        {
+            initRes = TCPIP_MAC_RES_INIT_FAIL;
+            break;
+        }
+        
         for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
         {
-            //Initialize QUEUES				
+            //Initialize QUEUES             
             if(DRV_PIC32CGMAC_LibInitTransfer(pMACDrv,queueIdx) != DRV_PIC32CGMAC_RES_OK)
             {
                 initRes = TCPIP_MAC_RES_INIT_FAIL;
                 break;
             }
         }
-		
+        
         DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
         DRV_PIC32CGMAC_LibSysInt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
-		
-		
-		DRV_PIC32CGMAC_LibTransferEnable(pMACDrv); //enable Transmit and Receive of GMAC
-		
+        
+        
+        DRV_PIC32CGMAC_LibTransferEnable(pMACDrv); //enable Transmit and Receive of GMAC
+        
         if(DRV_GMAC_EventInit((DRV_HANDLE)pMACDrv, macControl->eventF, macControl->eventParam) != TCPIP_MAC_RES_OK)
-		{
-			initRes = TCPIP_MAC_RES_EVENT_INIT_FAIL;
-			break;
-		}
-		// end of initialization
-		break;
-		
-	}
-	
-	if(initRes != TCPIP_MAC_RES_OK)
-	{   // failed; release what we've allocated
-		_MACDeinit(pMACDrv);
-		return SYS_MODULE_OBJ_INVALID;
-	}
-	
-	// success
-	// remaining initialization is done by DRV_ETHMAC_PIC32MACTasks	 	
-	pMACDrv->sGmacData._macFlags._init = 1;	
-	pMACDrv->sGmacData.sysStat = SYS_STATUS_BUSY;
+        {
+            initRes = TCPIP_MAC_RES_EVENT_INIT_FAIL;
+            break;
+        }
+        // end of initialization
+        break;
+        
+    }
+    
+    if(initRes != TCPIP_MAC_RES_OK)
+    {   // failed; release what we've allocated
+        _MACDeinit(pMACDrv);
+        return SYS_MODULE_OBJ_INVALID;
+    }
+    
+    // success
+    // remaining initialization is done by DRV_ETHMAC_PIC32MACTasks     
+    pMACDrv->sGmacData._macFlags._init = 1; 
+    pMACDrv->sGmacData.sysStat = SYS_STATUS_BUSY;
     
     //initialize unimplemented Receive status to -1
     pMACDrv->sGmacData._rxStat.nRxErrorPackets = 0;
@@ -552,8 +553,8 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
     pMACDrv->sGmacData._rxStat.nRxPendBuffers = 0;
     pMACDrv->sGmacData._rxStat.nRxSchedBuffers = 0;
     
-	return (SYS_MODULE_OBJ)pMACDrv;
-	
+    return (SYS_MODULE_OBJ)pMACDrv;
+    
 }
 
 /****************************************************************************
@@ -574,7 +575,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 void DRV_GMAC_Deinitialize(SYS_MODULE_OBJ object)
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
     if(pMACDrv != 0)
     {
         if(pMACDrv->sGmacData._macFlags._init != 0)
@@ -592,7 +593,7 @@ void DRV_GMAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const 
 
 SYS_STATUS DRV_GMAC_Status (SYS_MODULE_OBJ object)
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
     if(pMACDrv != 0)
     {
         if(pMACDrv->sGmacData._macFlags._init != 0)
@@ -600,29 +601,29 @@ SYS_STATUS DRV_GMAC_Status (SYS_MODULE_OBJ object)
             return pMACDrv->sGmacData.sysStat;
         }
     }
-	return SYS_STATUS_ERROR;
+    return SYS_STATUS_ERROR;
 }
 
 void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
 {
-	TCPIP_ETH_PAUSE_TYPE        pauseType;
-	DRV_ETHPHY_CLIENT_STATUS    phyStat;
-	DRV_HANDLE                  hPhyClient;
-	DRV_ETHPHY_RESULT           phyInitRes;
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
+    TCPIP_ETH_PAUSE_TYPE        pauseType;
+    DRV_ETHPHY_CLIENT_STATUS    phyStat;
+    DRV_HANDLE                  hPhyClient;
+    DRV_ETHPHY_RESULT           phyInitRes;
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
 
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(object);
     if(pMACDrv == 0 || (pMACDrv->sGmacData._macFlags._init == 0))
-	{   // nothing to do
-		return;
-	}
-	
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	
-	pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
-	
-	switch(pMACDrv->sGmacData.sysStat)
-	{
+    {   // nothing to do
+        return;
+    }
+    
+    pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+    
+    pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
+    
+    switch(pMACDrv->sGmacData.sysStat)
+    {
         case SYS_STATUS_BUSY:
             // perform the PHY initialization
 
@@ -646,11 +647,11 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
             // PHY was detected properly
             pMACDrv->sGmacData._macFlags._linkPresent = 1;
             if((pMACDrv->sGmacData.gmacConfig.ethFlags & TCPIP_ETH_OPEN_AUTO) != 0)
-            {	// we'll just wait for the negotiation to be done
-                pMACDrv->sGmacData._macFlags._linkNegotiation = 1;	// performing the negotiation
+            {   // we'll just wait for the negotiation to be done
+                pMACDrv->sGmacData._macFlags._linkNegotiation = 1;  // performing the negotiation
             }
             else
-            {	// no need of negotiation results; just update the MAC
+            {   // no need of negotiation results; just update the MAC
                 pauseType = (pMACDrv->sGmacData.gmacConfig.ethFlags & TCPIP_ETH_OPEN_FDUPLEX) ? DRV_GMAC_PAUSE_CPBL_MASK : TCPIP_ETH_PAUSE_TYPE_NONE;
                 DRV_PIC32CGMAC_LibMACOpen(pMACDrv, pMACDrv->sGmacData._linkResFlags, pauseType);
             }
@@ -665,23 +666,21 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
         default:    // SYS_STATUS_READY
             if(((pMACDrv->sGmacData._controlFlags & TCPIP_MAC_CONTROL_NO_LINK_CHECK) == 0 && pMACDrv->sGmacData._macFlags._linkPrev == false) ||
                     (pMACDrv->sGmacData._txDiscard == true))
-            {   
-                _DRV_GMAC_TxLock(pMACDrv); 
+            {                   
                 // discard the TX queues
-                _MacTxDiscardQueues(pMACDrv, TCPIP_MAC_PKT_ACK_LINK_DOWN); 
-                _DRV_GMAC_TxUnlock(pMACDrv);
+                _MacTxDiscardQueues(pMACDrv, TCPIP_MAC_PKT_ACK_LINK_DOWN);                 
                 pMACDrv->sGmacData._txDiscard = false;
             }
 
             break;
-	}
+    }
 
 }
 
 
 size_t DRV_GMAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize, size_t* pConfigSize) 
-{	
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+{   
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv != 0)
     {
         if(pConfigSize)
@@ -705,22 +704,22 @@ DRV_HANDLE DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT in
     int                 macIx;
     DRV_GMAC_DRIVER * pMACDrv;
     DRV_HANDLE    hMac = DRV_HANDLE_INVALID;
-	
-	macIx = _GmacIdToIndex(drvIndex);
-	
-	if(macIx >= 0 )
-	{
-		pMACDrv = _gmac_drv_dcpt + macIx;
-		if(pMACDrv->sGmacData._macFlags._init == 1)
-		{
-			if(pMACDrv->sGmacData._macFlags._open == 0)
-			{   // only one client for now
-				pMACDrv->sGmacData._macFlags._open = 1;
-				hMac = (DRV_HANDLE)pMACDrv;
-			}
+    
+    macIx = _GmacIdToIndex(drvIndex);
+    
+    if(macIx >= 0 )
+    {
+        pMACDrv = _gmac_drv_dcpt + macIx;
+        if(pMACDrv->sGmacData._macFlags._init == 1)
+        {
+            if(pMACDrv->sGmacData._macFlags._open == 0)
+            {   // only one client for now
+                pMACDrv->sGmacData._macFlags._open = 1;
+                hMac = (DRV_HANDLE)pMACDrv;
+            }
 
-		}
-	}
+        }
+    }
 
     return hMac;
 }
@@ -728,10 +727,10 @@ DRV_HANDLE DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT in
 
 void DRV_GMAC_Close( DRV_HANDLE hMac ) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv != 0)
     {
-        if(pMACDrv->sGmacData._macFlags._init == 1)	
+        if(pMACDrv->sGmacData._macFlags._init == 1) 
         {
             pMACDrv->sGmacData._macFlags._open = 0;
         }
@@ -744,37 +743,37 @@ void DRV_GMAC_Close( DRV_HANDLE hMac )
 
 TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)  
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
 
     TCPIP_MAC_DATA_SEGMENT* pSeg;
-	GMAC_QUE_LIST queueIdx = GMAC_QUE_0;
+    GMAC_QUE_LIST queueIdx = GMAC_QUE_0;
     
     // Check if priority is between 0 and (Number of Queues -1 )
     if ((ptrPacket->pktPriority) >= pMACDrv->sGmacData.gmacConfig.macQueNum)
     {    
-        return TCPIP_MAC_RES_PACKET_ERR; 	        
+        return TCPIP_MAC_RES_PACKET_ERR;            
     }
-	
-	queueIdx = (GMAC_QUE_LIST)(pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[ptrPacket->pktPriority]);
-	
+    
+    queueIdx = (GMAC_QUE_LIST)(pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[ptrPacket->pktPriority]);
+    
     if (queueIdx == DRV_GMAC_DUMMY_PRIORITY)
     {
         // fallback to default queue priority
         queueIdx = GMAC_QUE_0 ;
     }
     else if(queueIdx >= pMACDrv->sGmacData.gmacConfig.macQueNum)
-    {            	
+    {               
         return TCPIP_MAC_RES_PACKET_ERR; 
     }
     
-	//new packet for transmission
+    //new packet for transmission
     _DRV_GMAC_TxLock(pMACDrv); 
-	while(ptrPacket)
-	{
+    while(ptrPacket)
+    {
         pSeg = ptrPacket->pDSeg;
         // check that packets are properly formatted and
         // have room to store the packet info
@@ -791,11 +790,11 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
         }
         
     }       
-	_MacTxPendingPackets(pMACDrv,queueIdx);
-	_MACTxAcknowledgeEth(pMACDrv,queueIdx);	
+    _MacTxPendingPackets(pMACDrv,queueIdx);
+    _MACTxAcknowledgeEth(pMACDrv,queueIdx); 
     _DRV_GMAC_TxUnlock(pMACDrv);
     
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
 }
 
 
@@ -807,17 +806,17 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 // returns a pending RX packet if exists
 TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat)  
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return 0;
     }
 
-	TCPIP_MAC_RES			mRes;	
-	TCPIP_MAC_PACKET		*pRxPkt = NULL;
-	TCPIP_MAC_PACKET_RX_STAT_PIC32C	pRxPktStat = {0};
-	DRV_PIC32CGMAC_RESULT	ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;	
-	int                     buffsPerRxPkt = 0;
+    TCPIP_MAC_RES           mRes;   
+    TCPIP_MAC_PACKET        *pRxPkt = NULL;
+    TCPIP_MAC_PACKET_RX_STAT_PIC32C pRxPktStat = {0};
+    DRV_PIC32CGMAC_RESULT   ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;  
+    int                     buffsPerRxPkt = 0;
     static GMAC_QUE_LIST    queueIndex = DRV_GMAC_NO_ACTIVE_QUEUE;    
 
     //get highest priority active queue index
@@ -826,8 +825,8 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
     //if any any active queue?
     while(queueIndex != DRV_GMAC_NO_ACTIVE_QUEUE)
     {        
-        _DRV_GMAC_RxLock(pMACDrv);	
-		//get Rx packet from Queue
+        _DRV_GMAC_RxLock(pMACDrv);  
+        //get Rx packet from Queue
         ethRes = DRV_PIC32CGMAC_LibRxGetPacket (pMACDrv, &pRxPkt, &buffsPerRxPkt, &pRxPktStat, queueIndex);
         _DRV_GMAC_RxUnlock(pMACDrv);
         
@@ -845,35 +844,35 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
             queueIndex = DRV_PIC32CGMAC_LibGetHighPrioReadyQue(pMACDrv);
         }
     }
-	
-	if(buffsPerRxPkt > 1)
+    
+    if(buffsPerRxPkt > 1)
     {
         pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_SPLIT;
     } 
-	if(ethRes == DRV_PIC32CGMAC_RES_PACKET_QUEUED || ethRes == DRV_PIC32CGMAC_RES_NO_PACKET)
-	{   // done, no more packets
-		mRes = TCPIP_MAC_RES_PENDING;
-	}
-	else if(ethRes == DRV_PIC32CGMAC_RES_OK)
-	{   
-		mRes = TCPIP_MAC_RES_OK;
-		pMACDrv->sGmacData._rxStat.nRxOkPackets++;		
-	}
-	else
-	{   
-		mRes = TCPIP_MAC_RES_PACKET_ERR;
-		pMACDrv->sGmacData._rxStat.nRxErrorPackets++;
-	}
+    if(ethRes == DRV_PIC32CGMAC_RES_PACKET_QUEUED || ethRes == DRV_PIC32CGMAC_RES_NO_PACKET)
+    {   // done, no more packets
+        mRes = TCPIP_MAC_RES_PENDING;
+    }
+    else if(ethRes == DRV_PIC32CGMAC_RES_OK)
+    {   
+        mRes = TCPIP_MAC_RES_OK;
+        pMACDrv->sGmacData._rxStat.nRxOkPackets++;      
+    }
+    else
+    {   
+        mRes = TCPIP_MAC_RES_PACKET_ERR;
+        pMACDrv->sGmacData._rxStat.nRxErrorPackets++;
+    }
 
-	if(pRes)
-	{
-		*pRes = mRes;
-	}
-	
-	if(mRes == TCPIP_MAC_RES_OK)
-	{   // valid Ethernet packet;
-		// format properly and return the packet pointer
-		// restore packet the buffer belongs to
+    if(pRes)
+    {
+        *pRes = mRes;
+    }
+    
+    if(mRes == TCPIP_MAC_RES_OK)
+    {   // valid Ethernet packet;
+        // format properly and return the packet pointer
+        // restore packet the buffer belongs to
         TCPIP_MAC_DATA_SEGMENT  *pDSeg;
         
         pDSeg = pRxPkt->pDSeg;
@@ -907,40 +906,40 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
             pDSeg->segLen = pDSeg->segLen + pMACDrv->sGmacData._dataOffset;
             
         }
-		
-		// Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
-		pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
-		pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
+        
+        // Note: re-set pMacLayer and pNetLayer; IPv6 changes these pointers inside the packet!
+        pRxPkt->pMacLayer = pRxPkt->pDSeg->segLoad;
+        pRxPkt->pNetLayer = pRxPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
 
-		pRxPkt->tStamp = SYS_TMR_TickCountGet();
-		pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
+        pRxPkt->tStamp = SYS_TMR_TickCountGet();
+        pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_QUEUED;
 
 
-		pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_CAST_MASK;
-		if(pRxPktStat.bm.bBroadcastDetected)
-		{
-			pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_BCAST;
-		}
-		else if(pRxPktStat.bm.bMultiHashMatch)
-		{
-			pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
-		}
-		else if(pRxPktStat.bm.bUniHashMatch)
-		{
-			pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
-		}
+        pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_CAST_MASK;
+        if(pRxPktStat.bm.bBroadcastDetected)
+        {
+            pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_BCAST;
+        }
+        else if(pRxPktStat.bm.bMultiHashMatch)
+        {
+            pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
+        }
+        else if(pRxPktStat.bm.bUniHashMatch)
+        {
+            pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_UNICAST;
+        }
 
-		if(pPktStat)
-		{
+        if(pPktStat)
+        {
             pPktStat->rxStatPIC32C.val = pRxPktStat.val;
-		}
+        }
 
 
         pRxPkt->pktPriority = DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(pMACDrv, queueIndex);
-		// success
-		return pRxPkt;
-	}
-	
+        // success
+        return pRxPkt;
+    }
+    
     return 0;
 
 }
@@ -950,40 +949,40 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
 
 bool DRV_GMAC_LinkCheck(DRV_HANDLE hMac) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0 || (pMACDrv->sGmacData._macFlags._linkPresent == 0))
     {
-	    return false;
+        return false;
     }
 
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+    pPhyBase->DRV_ETHPHY_Tasks(pMACDrv->sGmacData.hPhySysObject);
 
 
     (*_DRV_GMAC_LinkStateTbl[pMACDrv->sGmacData._linkCheckState])(pMACDrv);
 
-    return pMACDrv->sGmacData._macFlags._linkPrev == 1;	
+    return pMACDrv->sGmacData._macFlags._linkPrev == 1; 
 
 }
 
 static void _DRV_GMAC_LinkStateDown(DRV_GMAC_DRIVER * pMACDrv) 
 {
-	// link is down; reset state flags, initialization time
-	pMACDrv->sGmacData._macFlags._linkPrev = 0;
-	pMACDrv->sGmacData._macFlags._linkUpDone = 0;
-	pMACDrv->sGmacData._linkUpTick = SYS_TMR_TickCountGet();
-	pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
+    // link is down; reset state flags, initialization time
+    pMACDrv->sGmacData._macFlags._linkPrev = 0;
+    pMACDrv->sGmacData._macFlags._linkUpDone = 0;
+    pMACDrv->sGmacData._linkUpTick = SYS_TMR_TickCountGet();
+    pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
 }
 
 static void _DRV_GMAC_LinkStateStartLink(DRV_GMAC_DRIVER * pMACDrv) 
 {
     DRV_ETHPHY_RESULT phyRes;    
    
-	phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->DRV_ETHPHY_LinkStatusGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData._negResult.linkStatus, false);
+    phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->DRV_ETHPHY_LinkStatusGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData._negResult.linkStatus, false);
     if(phyRes < 0)
     {   // some error occurred
-	    _DRV_GMAC_LinkStateDown(pMACDrv);
-	    return;
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+        return;
     }
 
     pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_GET_LINK;
@@ -991,149 +990,149 @@ static void _DRV_GMAC_LinkStateStartLink(DRV_GMAC_DRIVER * pMACDrv)
 
 static void _DRV_GMAC_LinkStateGetLink(DRV_GMAC_DRIVER * pMACDrv) 
 {
-	DRV_ETHPHY_CLIENT_STATUS phyStat;
-	DRV_ETHPHY_RESULT phyRes;
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
-	bool linkCurrUp;
+    DRV_ETHPHY_CLIENT_STATUS phyStat;
+    DRV_ETHPHY_RESULT phyRes;
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
+    bool linkCurrUp;
 
-	
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
-	if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
-	{   // not done yet
-		return;
-	}
+    
+    pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+    phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
+    if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
+    {   // not done yet
+        return;
+    }
 
-	phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
-	if(phyRes != DRV_ETHPHY_RES_OK)
-	{   // some error occurred
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-		return;
-	}
+    phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
+    if(phyRes != DRV_ETHPHY_RES_OK)
+    {   // some error occurred
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+        return;
+    }
 
-	linkCurrUp = (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) != 0;
+    linkCurrUp = (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) != 0;
 
-	if(linkCurrUp == false)
-	{
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-		return;
-	}
+    if(linkCurrUp == false)
+    {
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+        return;
+    }
 
-	// link up
-	if( (bool) pMACDrv->sGmacData._macFlags._linkPrev == linkCurrUp )
-	{   // PHY state not changed
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
-	}
-	else
-	{
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_WAIT_LINK_UP;
-	}
-	
+    // link up
+    if( (bool) pMACDrv->sGmacData._macFlags._linkPrev == linkCurrUp )
+    {   // PHY state not changed
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
+    }
+    else
+    {
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_WAIT_LINK_UP;
+    }
+    
 }
 
 // ok, the link is coming up
 static void _DRV_GMAC_LinkStateWaitLinkUp(DRV_GMAC_DRIVER * pMACDrv) 
 {
-	DRV_ETHPHY_RESULT   phyRes;
+    DRV_ETHPHY_RESULT   phyRes;
 
-	if(pMACDrv->sGmacData._macFlags._linkUpDone == 0)
-	{   // wait the init tmo before checking the link up
-		uint32_t currTick = SYS_TMR_TickCountGet();
-		if(currTick - pMACDrv->sGmacData._linkUpTick < pMACDrv->sGmacData._linkWaitTick)
-		{
-			return;
-		}
-		pMACDrv->sGmacData._macFlags._linkUpDone = 1;
-	}
+    if(pMACDrv->sGmacData._macFlags._linkUpDone == 0)
+    {   // wait the init tmo before checking the link up
+        uint32_t currTick = SYS_TMR_TickCountGet();
+        if(currTick - pMACDrv->sGmacData._linkUpTick < pMACDrv->sGmacData._linkWaitTick)
+        {
+            return;
+        }
+        pMACDrv->sGmacData._macFlags._linkUpDone = 1;
+    }
 
-	// initialization delay passed
-	if(pMACDrv->sGmacData._macFlags._linkNegotiation == 0)
-	{   // no auto negotiation taking place; this is the link status
-		pMACDrv->sGmacData._macFlags._linkPrev = true;
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
-		return;
-	}
+    // initialization delay passed
+    if(pMACDrv->sGmacData._macFlags._linkNegotiation == 0)
+    {   // no auto negotiation taking place; this is the link status
+        pMACDrv->sGmacData._macFlags._linkPrev = true;
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
+        return;
+    }
 
-	// auto negotiation is turned on
-	// we have to re-negotiate but the link is actually up only
-	// after the re-negotiation is done
-	// wait for negotiation complete
-	phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->DRV_ETHPHY_NegotiationIsComplete(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, false);
-	if(phyRes < 0)
-	{   // some error occurred
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-	}
-	else
-	{   // advance
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_NEG_COMPLETE;
-	}
+    // auto negotiation is turned on
+    // we have to re-negotiate but the link is actually up only
+    // after the re-negotiation is done
+    // wait for negotiation complete
+    phyRes = pMACDrv->sGmacData.gmacConfig.pPhyBase->DRV_ETHPHY_NegotiationIsComplete(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, false);
+    if(phyRes < 0)
+    {   // some error occurred
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+    }
+    else
+    {   // advance
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_NEG_COMPLETE;
+    }
    
 }
 
 static void _DRV_GMAC_LinkStateNegComplete(DRV_GMAC_DRIVER * pMACDrv) 
 {
-	DRV_ETHPHY_CLIENT_STATUS phyStat;
-	DRV_ETHPHY_RESULT phyRes;
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
+    DRV_ETHPHY_CLIENT_STATUS phyStat;
+    DRV_ETHPHY_RESULT phyRes;
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
 
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
-	if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
-	{   // not done yet
-		return;
-	}
+    pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+    phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
+    if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
+    {   // not done yet
+        return;
+    }
 
-	phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
-	if(phyRes != DRV_ETHPHY_RES_OK)
-	{   // some error occurred
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-		return;
-	}
+    phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
+    if(phyRes != DRV_ETHPHY_RES_OK)
+    {   // some error occurred
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+        return;
+    }
 
-	phyRes = pPhyBase->DRV_ETHPHY_NegotiationResultGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData._negResult);
+    phyRes = pPhyBase->DRV_ETHPHY_NegotiationResultGet(pMACDrv->sGmacData.hPhyClient, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &pMACDrv->sGmacData._negResult);
 
-	if(phyRes < 0)
-	{   // some error occurred
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-	}
-	else
-	{   // advance; get negotiation result
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_NEG_RESULT;
-	}
+    if(phyRes < 0)
+    {   // some error occurred
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+    }
+    else
+    {   // advance; get negotiation result
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_NEG_RESULT;
+    }
    
 }
 
 static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)  
 {
-	DRV_ETHPHY_CLIENT_STATUS phyStat;
-	DRV_ETHPHY_RESULT phyRes;
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
-	TCPIP_ETH_PAUSE_TYPE        pauseType;
-	DRV_ETHPHY_CONFIG_FLAGS phyCfgFlags = 0;
+    DRV_ETHPHY_CLIENT_STATUS phyStat;
+    DRV_ETHPHY_RESULT phyRes;
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
+    TCPIP_ETH_PAUSE_TYPE        pauseType;
+    DRV_ETHPHY_CONFIG_FLAGS phyCfgFlags = 0;
 
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
-	phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
-	if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
-	{   // not done yet
-		return;
-	}
+    pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+    phyStat = pPhyBase->DRV_ETHPHY_ClientStatus( pMACDrv->sGmacData.hPhyClient );
+    if(phyStat == DRV_ETHPHY_CLIENT_STATUS_BUSY)
+    {   // not done yet
+        return;
+    }
 
-	phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
-	if(phyRes != DRV_ETHPHY_RES_OK)
-	{   // some error occurred
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-		return;
-	}
+    phyRes = pPhyBase->DRV_ETHPHY_ClientOperationResult(pMACDrv->sGmacData.hPhyClient);
+    if(phyRes != DRV_ETHPHY_RES_OK)
+    {   // some error occurred
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+        return;
+    }
 
-	
-	if( (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) != 0 )
-	{   // negotiation succeeded; properly update the MAC
-		pPhyBase->DRV_ETHPHY_HWConfigFlagsGet(pMACDrv->sGmacData.hPhyClient, &phyCfgFlags);
+    
+    if( (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) != 0 )
+    {   // negotiation succeeded; properly update the MAC
+        pPhyBase->DRV_ETHPHY_HWConfigFlagsGet(pMACDrv->sGmacData.hPhyClient, &phyCfgFlags);
         if((phyCfgFlags & DRV_ETHPHY_CFG_GMII))
         {
             pMACDrv->sGmacData._negResult.linkFlags |= TCPIP_ETH_OPEN_GMII;
         }
-		else if((phyCfgFlags & DRV_ETHPHY_CFG_RGMII))
+        else if((phyCfgFlags & DRV_ETHPHY_CFG_RGMII))
         {
             pMACDrv->sGmacData._negResult.linkFlags |= TCPIP_ETH_OPEN_RGMII;
         }
@@ -1145,16 +1144,16 @@ static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
         {
             pMACDrv->sGmacData._negResult.linkFlags |= TCPIP_ETH_OPEN_RMII;
         }
-		pauseType = pMACDrv->sGmacData._negResult.pauseType;
-		DRV_PIC32CGMAC_LibMACOpen(pMACDrv, pMACDrv->sGmacData._negResult.linkFlags, pauseType);
+        pauseType = pMACDrv->sGmacData._negResult.pauseType;
+        DRV_PIC32CGMAC_LibMACOpen(pMACDrv, pMACDrv->sGmacData._negResult.linkFlags, pauseType);
         
-		pMACDrv->sGmacData._macFlags._linkPrev = 1;
-		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
-	}
-	else
-	{
-		_DRV_GMAC_LinkStateDown(pMACDrv);
-	}
+        pMACDrv->sGmacData._macFlags._linkPrev = 1;
+        pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
+    }
+    else
+    {
+        _DRV_GMAC_LinkStateDown(pMACDrv);
+    }
     
 }
 
@@ -1194,7 +1193,7 @@ static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
  *****************************************************************************/
 TCPIP_MAC_RES DRV_GMAC_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP_MAC_ADDR* DestMACAddr) 
 { 
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
@@ -1229,7 +1228,7 @@ bool DRV_GMAC_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode)
 
 TCPIP_MAC_RES DRV_GMAC_Process(DRV_HANDLE hMac)  
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
@@ -1237,115 +1236,115 @@ TCPIP_MAC_RES DRV_GMAC_Process(DRV_HANDLE hMac)
 
     int8_t queueIdx = 0;
  
-	_DRV_GMAC_TxLock(pMACDrv);
+    _DRV_GMAC_TxLock(pMACDrv);
     //start processing high priority Queue first
     for(queueIdx = pMACDrv->sGmacData.gmacConfig.macQueNum -1; queueIdx >= (int32_t)GMAC_QUE_0; queueIdx--)
     { 
         if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueTxEnable)
         {
-            _MACTxAcknowledgeEth(pMACDrv,queueIdx);	
+            _MACTxAcknowledgeEth(pMACDrv,queueIdx); 
             _MacTxPendingPackets(pMACDrv,queueIdx);            
         }
-	}
-	_DRV_GMAC_TxUnlock(pMACDrv);
+    }
+    _DRV_GMAC_TxUnlock(pMACDrv);
 
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
 
 }
 
 TCPIP_MAC_RES DRV_GMAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
     
-	if(pRxStatistics)
-	{
+    if(pRxStatistics)
+    {
         _DRV_GMAC_RxLock(pMACDrv);
-		DRV_PIC32CGMAC_LibRxBuffersCountGet(pMACDrv, &pMACDrv->sGmacData._rxStat.nRxPendBuffers, &pMACDrv->sGmacData._rxStat.nRxSchedBuffers);
-		_DRV_GMAC_RxUnlock(pMACDrv);
-		*pRxStatistics = pMACDrv->sGmacData._rxStat;
-	}
-	if(pTxStatistics)
-	{
-		_DRV_GMAC_TxLock(pMACDrv);
-		pMACDrv->sGmacData._txStat.nTxPendBuffers = 0; //clear the previous pending status
-		for(uint16_t index = 0; index < pMACDrv->sGmacData.gmacConfig.macQueNum; index++)
-		{
-			pMACDrv->sGmacData._txStat.nTxPendBuffers += DRV_PIC32CGMAC_SingleListCount(&(pMACDrv->sGmacData.gmac_queue[index]._TxQueue));
-			
-		}		
-		_DRV_GMAC_TxUnlock(pMACDrv);
-		*pTxStatistics = pMACDrv->sGmacData._txStat;
-	}
+        DRV_PIC32CGMAC_LibRxBuffersCountGet(pMACDrv, &pMACDrv->sGmacData._rxStat.nRxPendBuffers, &pMACDrv->sGmacData._rxStat.nRxSchedBuffers);
+        _DRV_GMAC_RxUnlock(pMACDrv);
+        *pRxStatistics = pMACDrv->sGmacData._rxStat;
+    }
+    if(pTxStatistics)
+    {
+        _DRV_GMAC_TxLock(pMACDrv);
+        pMACDrv->sGmacData._txStat.nTxPendBuffers = 0; //clear the previous pending status
+        for(uint16_t index = 0; index < pMACDrv->sGmacData.gmacConfig.macQueNum; index++)
+        {
+            pMACDrv->sGmacData._txStat.nTxPendBuffers += DRV_PIC32CGMAC_SingleListCount(&(pMACDrv->sGmacData.gmac_queue[index]._TxQueue));
+            
+        }       
+        _DRV_GMAC_TxUnlock(pMACDrv);
+        *pTxStatistics = pMACDrv->sGmacData._txStat;
+    }
 
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
 
 }
 
 TCPIP_MAC_RES DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries)  
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-	const DRV_PIC32CGMAC_HW_REG_DCPT*   pHwRegDcpt;
-	
-	int nHwEntries = sizeof(macPIC32CHwRegDcpt)/sizeof(*macPIC32CHwRegDcpt);
+    const DRV_PIC32CGMAC_HW_REG_DCPT*   pHwRegDcpt;
+    
+    int nHwEntries = sizeof(macPIC32CHwRegDcpt)/sizeof(*macPIC32CHwRegDcpt);
 
-	if(pHwEntries)
-	{
-		*pHwEntries = nHwEntries;
-	}
+    if(pHwEntries)
+    {
+        *pHwEntries = nHwEntries;
+    }
 
-	if(pRegEntries)
-	{   // fill data
-		unsigned int ix, regLim;
+    if(pRegEntries)
+    {   // fill data
+        unsigned int ix, regLim;
 
-		regLim = nEntries > nHwEntries ? nHwEntries : nEntries;
-		pHwRegDcpt = macPIC32CHwRegDcpt;
-		for(ix = 0; ix < regLim; ix++, pRegEntries++, pHwRegDcpt++)
-		{
-			strncpy(pRegEntries->registerName, pHwRegDcpt->regName, sizeof(pRegEntries->registerName));
-			pRegEntries->registerValue = (*pHwRegDcpt->regFunc)(pMACDrv);
-		}
-	}
+        regLim = nEntries > nHwEntries ? nHwEntries : nEntries;
+        pHwRegDcpt = macPIC32CHwRegDcpt;
+        for(ix = 0; ix < regLim; ix++, pRegEntries++, pHwRegDcpt++)
+        {
+            strncpy(pRegEntries->registerName, pHwRegDcpt->regName, sizeof(pRegEntries->registerName));
+            pRegEntries->registerValue = (*pHwRegDcpt->regFunc)(pMACDrv);
+        }
+    }
 
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
 
 }
 
 TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams)
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv == 0)
     {
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-	if(pMACDrv->sGmacData.sysStat == SYS_STATUS_READY)
-	{
-		if(pMacParams)
-		{		
+    if(pMACDrv->sGmacData.sysStat == SYS_STATUS_READY)
+    {
+        if(pMacParams)
+        {       
             DRV_PIC32CGMAC_LibGetMacAddr(pMACDrv, pMacParams->ifPhyAddress.v);
-			
-			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
-			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
-			pMacParams->linkMtu = TCPIP_MAC_LINK_MTU_ETH;
+            
+            pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
+            pMacParams->macType = TCPIP_MAC_TYPE_ETH;
+            pMacParams->linkMtu = TCPIP_MAC_LINK_MTU_ETH;
             pMacParams->checksumOffloadRx = pMACDrv->sGmacData.gmacConfig.checksumOffloadRx;
             pMacParams->checksumOffloadTx = pMACDrv->sGmacData.gmacConfig.checksumOffloadTx;
             pMacParams->macTxPrioNum = pMACDrv->sGmacData.gmacConfig.macTxPrioNum;
             pMacParams->macRxPrioNum = pMACDrv->sGmacData.gmacConfig.macRxPrioNum;;
-		}
+        }
 
-		return TCPIP_MAC_RES_OK;
-	}
+        return TCPIP_MAC_RES_OK;
+    }
 
-	return TCPIP_MAC_RES_IS_BUSY;
+    return TCPIP_MAC_RES_IS_BUSY;
     
 }
 
@@ -1374,14 +1373,14 @@ static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueI
 
 static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx ) 
 {
-	TCPIP_MAC_PACKET* pPkt;
-	
-	DRV_PIC32CGMAC_RESULT ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;    
+    TCPIP_MAC_PACKET* pPkt;
+    
+    DRV_PIC32CGMAC_RESULT ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;    
     
     //packet in queue for transmission
     while((pPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxQueue)) != 0)
-	{
-		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv,  pPkt->pDSeg, queueIdx);
+    {
+        ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv,  pPkt->pDSeg, queueIdx);
         if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
         {
             pMACDrv->sGmacData._txStat.nTxQueueFull++;
@@ -1390,22 +1389,22 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
             break;
         }
 
-	}	
-	
-	if((ethRes == DRV_PIC32CGMAC_RES_OK)||(ethRes == DRV_PIC32CGMAC_RES_NO_PACKET))
-	{
-		return TCPIP_MAC_RES_OK;
-	}
-	else if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
-	{   
+    }   
+    
+    if((ethRes == DRV_PIC32CGMAC_RES_OK)||(ethRes == DRV_PIC32CGMAC_RES_NO_PACKET))
+    {
+        return TCPIP_MAC_RES_OK;
+    }
+    else if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
+    {   
         // not enough resource in the Tx hardware
-		return TCPIP_MAC_RES_PENDING;
-	}
-	else
-    {		
-        // not transmitted	
-		pMACDrv->sGmacData._txStat.nTxErrorPackets++;
-		(*pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_BUFFER_ERR,TCPIP_THIS_MODULE_ID);	
+        return TCPIP_MAC_RES_PENDING;
+    }
+    else
+    {       
+        // not transmitted  
+        pMACDrv->sGmacData._txStat.nTxErrorPackets++;
+        (*pMACDrv->sGmacData.pktAckF)(pPkt, TCPIP_MAC_PKT_ACK_BUFFER_ERR,TCPIP_THIS_MODULE_ID); 
         return TCPIP_MAC_RES_PACKET_ERR; 
     }
 
@@ -1416,42 +1415,43 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 {
      DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-	 DRV_PIC32CGMAC_LibClose(pMACDrv, DRV_PIC32CGMAC_CLOSE_DEFAULT);
+     DRV_PIC32CGMAC_LibClose(pMACDrv, DRV_PIC32CGMAC_CLOSE_DEFAULT);
      DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
-	 DRV_GMAC_EventDeInit((DRV_HANDLE)pMACDrv);
-	 
-	 const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
+     DRV_GMAC_EventDeInit((DRV_HANDLE)pMACDrv);
+     
+     const DRV_ETHPHY_OBJECT_BASE* pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase;
 
-	 if(pMACDrv->sGmacData.hPhyClient != DRV_HANDLE_INVALID)
-	 {
-		 pPhyBase->DRV_ETHPHY_Close(pMACDrv->sGmacData.hPhyClient);
-		 pMACDrv->sGmacData.hPhyClient = DRV_HANDLE_INVALID;
-	 }
-	 if(pMACDrv->sGmacData.hPhySysObject != SYS_MODULE_OBJ_INVALID)
-	 {
-		 pPhyBase->DRV_ETHPHY_Deinitialize(pMACDrv->sGmacData.hPhySysObject);
-		 pMACDrv->sGmacData.hPhySysObject = SYS_MODULE_OBJ_INVALID;
-		 
-	 }
-	 
-	_MACCleanup(pMACDrv);
-	pMACDrv->sGmacData.sysStat = SYS_STATUS_UNINITIALIZED;
-	pMACDrv->sGmacData._macFlags.val = 0;
+     if(pMACDrv->sGmacData.hPhyClient != DRV_HANDLE_INVALID)
+     {
+         pPhyBase->DRV_ETHPHY_Close(pMACDrv->sGmacData.hPhyClient);
+         pMACDrv->sGmacData.hPhyClient = DRV_HANDLE_INVALID;
+     }
+     if(pMACDrv->sGmacData.hPhySysObject != SYS_MODULE_OBJ_INVALID)
+     {
+         pPhyBase->DRV_ETHPHY_Deinitialize(pMACDrv->sGmacData.hPhySysObject);
+         pMACDrv->sGmacData.hPhySysObject = SYS_MODULE_OBJ_INVALID;
+         
+     }
+     
+    _MACCleanup(pMACDrv);
+    pMACDrv->sGmacData.sysStat = SYS_STATUS_UNINITIALIZED;
+    pMACDrv->sGmacData._macFlags.val = 0;
 
 }
 
 static void _MACCleanup(DRV_GMAC_DRIVER * pMACDrv )
 {
     _DRV_GMAC_TxLock(pMACDrv); 
-	// TX clean up
+    // TX clean up
     _MacTxDiscardQueues(pMACDrv,TCPIP_MAC_PKT_ACK_NET_DOWN);
+    _MacTxFreeQueue(pMACDrv);
     _DRV_GMAC_TxUnlock(pMACDrv);
-	// RX clean up
-	_MacRxFreePacket(pMACDrv);
+    // RX clean up
+    _MacRxFreePacket(pMACDrv);
    
-	_DRV_GMAC_RxDelete(pMACDrv);
-	_DRV_GMAC_TxDelete(pMACDrv);
+    _DRV_GMAC_RxDelete(pMACDrv);
+    _DRV_GMAC_TxDelete(pMACDrv);
 }
 
 static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
@@ -1459,11 +1459,11 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
     TCPIP_MAC_PACKET* pRxPkt;
     DRV_GMAC_QUEUE gmac_queue;
     GMAC_QUE_LIST queueIdx;
-	uint16_t index = 0;
+    uint16_t index = 0;
     
-	//free all the Rx packets linked to New and Ack Queues.
-	for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
-	{	
+    //free all the Rx packets linked to New and Ack Queues.
+    for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
+    {   
         gmac_queue = pMACDrv->sGmacData.gmac_queue[queueIdx];
         
         //Free all Rx packets in Rx Queue
@@ -1474,23 +1474,23 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
         }        
         //Free the Rx packets assigned to Rx descriptors and set rx descriptors to default
         for(index = 0; index < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; index++ )
-		{
+        {
             if(gmac_queue.pRxPckt != NULL)
             {
-				// get Rx packet for each rx descriptor
-				pRxPkt = gmac_queue.pRxPckt[index];
-				if(pRxPkt)
-				{
-					
-					(*pMACDrv->sGmacData.pktFreeF)(pRxPkt);
-				}
-				
-				gmac_queue.nRxDescIndex = 0;
-				gmac_queue.pRxPckt[index] = 0;
-				gmac_queue.pRxDesc[index].rx_desc_buffaddr.val = 0;
-				gmac_queue.pRxDesc[index].rx_desc_status.val = 0;
-			}
-		}
+                // get Rx packet for each rx descriptor
+                pRxPkt = gmac_queue.pRxPckt[index];
+                if(pRxPkt)
+                {
+                    
+                    (*pMACDrv->sGmacData.pktFreeF)(pRxPkt);
+                }
+                
+                gmac_queue.nRxDescIndex = 0;
+                gmac_queue.pRxPckt[index] = 0;
+                gmac_queue.pRxDesc[index].rx_desc_buffaddr.val = 0;
+                gmac_queue.pRxDesc[index].rx_desc_status.val = 0;
+            }
+        }
         
         if(gmac_queue.pRxPckt != NULL)
         {
@@ -1500,10 +1500,34 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
         }
         
         __DMB();
-	}
-	
+    }
+    
 }
 
+static void     _MacTxFreeQueue( DRV_GMAC_DRIVER * pMACDrv)
+{
+    DRV_GMAC_QUEUE gmac_queue;
+    GMAC_QUE_LIST queueIdx;
+    DRV_GMAC_TX_DESC_INDEX * pTxQueueNode;
+    
+    //free all the Tx Ack Queue Nodes     
+    for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
+    {   
+        gmac_queue = pMACDrv->sGmacData.gmac_queue[queueIdx];
+        
+        while((pTxQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&gmac_queue._TxDescAckPoolQueue))!= NULL)    
+        { 
+            //free Tx Queue Node 
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pTxQueueNode);             
+        }   
+        
+        while((pTxQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&gmac_queue._TxDescUnAckQueue))!= NULL)    
+        { 
+            //free Tx Queue Node 
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pTxQueueNode);             
+        } 
+    }
+}
 #else
 static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 {
@@ -1514,21 +1538,37 @@ static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES ackRes)  
 {
     GMAC_QUE_LIST queueIdx;  
-    // Disable GMAC Transmit
-    DRV_PIC32CGMAC_LibTxEnable(pMACDrv, false);
     
     for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
-	{
-        //Acknowledge the successfully transmitted packets
-        _MACTxAcknowledgeEth(pMACDrv, queueIdx);
-        //Acknowledge the TX packets with transmission errors
-        DRV_PIC32CGMAC_LibTxAckErrPacket(pMACDrv, queueIdx, ackRes); 
-        //Acknowledge the TX packets Queued
-        DRV_PIC32CGMAC_LibTxAckPendPacket(pMACDrv, queueIdx, ackRes);  
-        DRV_PIC32CGMAC_LibTxInit(pMACDrv);
+    {
+        // Discard any queued transmit packets
+        if ((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxQueue.head) != NULL)
+        {
+            _DRV_GMAC_TxLock(pMACDrv); 
+            // Disable GMAC Transmit
+            DRV_PIC32CGMAC_LibTxEnable(pMACDrv, false);
+            //Acknowledge the TX packets Queued
+            DRV_PIC32CGMAC_LibTxAckPendPacket(pMACDrv, queueIdx, ackRes); 
+            // Enable GMAC Transmit
+            DRV_PIC32CGMAC_LibTxEnable(pMACDrv, true);
+            _DRV_GMAC_TxUnlock(pMACDrv);
+        }
+        
+        // Discard any unacknowledged transmit packets
+        if ((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue.head) != NULL)
+        {
+            _DRV_GMAC_TxLock(pMACDrv); 
+            // Disable GMAC Transmit
+            DRV_PIC32CGMAC_LibTxEnable(pMACDrv, false);
+            //Acknowledge the unacknowledged TX packets
+            DRV_PIC32CGMAC_LibTxClearUnAckPacket(pMACDrv, queueIdx, ackRes); 
+            // Enable GMAC Transmit
+            DRV_PIC32CGMAC_LibTxEnable(pMACDrv, true);
+            _DRV_GMAC_TxUnlock(pMACDrv);
+            
+        }
     }
-    // Enable GMAC Transmit
-    DRV_PIC32CGMAC_LibTxEnable(pMACDrv, true);
+    
 }
 
 /*************************
@@ -1563,18 +1603,18 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES 
 /*static __inline__*/static  GMAC_EVENTS /*__attribute__((always_inline))*/ _XtlEventsTcp2Eth(TCPIP_MAC_EVENT tcpEv)
 {
 
-	GMAC_EVENTS  eEvents;
-	eEvents = (tcpEv&(TCPIP_MAC_EV_TX_DONE))? GMAC_EV_TXCOMPLETE:0;	
-	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_DONE))? GMAC_EV_RXCOMPLETE:0;	
-	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_OVFLOW))? GMAC_EV_RXOVERRUN:0;
-	eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_BUSERR))? GMAC_EV_TXFRAMECORRUPT:0;
+    GMAC_EVENTS  eEvents;
+    eEvents = (tcpEv&(TCPIP_MAC_EV_TX_DONE))? GMAC_EV_TXCOMPLETE:0; 
+    eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_DONE))? GMAC_EV_RXCOMPLETE:0;    
+    eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_OVFLOW))? GMAC_EV_RXOVERRUN:0;
+    eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_BUSERR))? GMAC_EV_TXFRAMECORRUPT:0;
     eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_ABORT))? GMAC_EV_TXUNDERRUN:0;
-	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_BUFNA))? GMAC_EV_RXUSEDBITREAD:0; // mapping RX Used bit interrupt to BUFNA;
+    eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_BUFNA))? GMAC_EV_RXUSEDBITREAD:0; // mapping RX Used bit interrupt to BUFNA;
                                                                          // reason is no GMAC interrupt bit for BUFNA
                                                                          // and RXUBR interrupt will trigger with BUFNA
     
-	return eEvents;
-	
+    return eEvents;
+    
 }
 
 /****************************************************************************
@@ -1600,13 +1640,13 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES 
  ******************************************************************************/
 /*static __inline__*/static  TCPIP_MAC_EVENT /*__attribute__((always_inline))*/ _XtlEventsEth2Tcp(GMAC_EVENTS eEvents)
 {
-	TCPIP_MAC_EVENT tcpEv;
+    TCPIP_MAC_EVENT tcpEv;
 
     tcpEv = (eEvents&(GMAC_EV_TXCOMPLETE))? TCPIP_MAC_EV_TX_DONE:0;
-	tcpEv |= (eEvents&(GMAC_EV_RXCOMPLETE))? TCPIP_MAC_EV_RX_DONE:0;
-	tcpEv |= (eEvents&(GMAC_EV_RXOVERRUN))? TCPIP_MAC_EV_RX_OVFLOW:0;
-	tcpEv |= (eEvents&(GMAC_EV_TXFRAMECORRUPT))? TCPIP_MAC_EV_TX_BUSERR:0;
-	tcpEv |= (eEvents&(GMAC_EV_RXUSEDBITREAD))? TCPIP_MAC_EV_RX_BUFNA:0; // mapping RX Used bit interrupt to BUFNA;
+    tcpEv |= (eEvents&(GMAC_EV_RXCOMPLETE))? TCPIP_MAC_EV_RX_DONE:0;
+    tcpEv |= (eEvents&(GMAC_EV_RXOVERRUN))? TCPIP_MAC_EV_RX_OVFLOW:0;
+    tcpEv |= (eEvents&(GMAC_EV_TXFRAMECORRUPT))? TCPIP_MAC_EV_TX_BUSERR:0;
+    tcpEv |= (eEvents&(GMAC_EV_RXUSEDBITREAD))? TCPIP_MAC_EV_RX_BUFNA:0; // mapping RX Used bit interrupt to BUFNA;
                                                                          // reason is no GMAC interrupt bit for BUFNA
                                                                          // and RXUBR interrupt will trigger with BUFNA
     
@@ -1651,21 +1691,21 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES 
 *****************************************************************************/
 static TCPIP_MAC_RES DRV_GMAC_EventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF, const void* eventParam)
 {
-	DRV_GMAC_EVENT_DCPT*    pDcpt;
-	DRV_GMAC_DRIVER * pMACDrv;
+    DRV_GMAC_EVENT_DCPT*    pDcpt;
+    DRV_GMAC_DRIVER * pMACDrv;
 
-	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
+    pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
     DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
     DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
-	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
-	pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
-	pDcpt->_EthEnabledEvents = pDcpt->_EthPendingEvents = 0;
-	pDcpt->_TcpNotifyFnc = eventF;
-	pDcpt->_TcpNotifyParam = eventParam;
+    pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
+    pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
+    pDcpt->_EthEnabledEvents = pDcpt->_EthPendingEvents = 0;
+    pDcpt->_TcpNotifyFnc = eventF;
+    pDcpt->_TcpNotifyParam = eventParam;
 
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
 
 }
 
@@ -1701,20 +1741,20 @@ static TCPIP_MAC_RES DRV_GMAC_EventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 static TCPIP_MAC_RES DRV_GMAC_EventDeInit(DRV_HANDLE hMac) 
 {
-	DRV_GMAC_EVENT_DCPT*    pDcpt;
-	DRV_GMAC_DRIVER * pMACDrv;
+    DRV_GMAC_EVENT_DCPT*    pDcpt;
+    DRV_GMAC_DRIVER * pMACDrv;
 
-	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
+    pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
     DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
     DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
 
-	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
-	pDcpt->_TcpNotifyFnc = 0;
-	pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
-	pDcpt->_EthEnabledEvents = pDcpt->_EthPendingEvents = 0;
+    pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
+    pDcpt->_TcpNotifyFnc = 0;
+    pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
+    pDcpt->_EthEnabledEvents = pDcpt->_EthPendingEvents = 0;
 
-	return TCPIP_MAC_RES_OK;
+    return TCPIP_MAC_RES_OK;
     
 }
 #endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
@@ -1766,33 +1806,33 @@ static TCPIP_MAC_RES DRV_GMAC_EventDeInit(DRV_HANDLE hMac)
 *****************************************************************************/
 bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enable) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     bool *intStat = 0;
-	DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;	
-	GMAC_QUE_LIST queIdx;
+    DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;   
+    GMAC_QUE_LIST queIdx;
     GMAC_EVENTS ethEvents;
     
-	if(pMACDrv == 0)
+    if(pMACDrv == 0)
     {
         return false;
     }
-	if(enable)
-	{
-		GMAC_EVENTS  ethSetEvents;
+    if(enable)
+    {
+        GMAC_EVENTS  ethSetEvents;
         
-		ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
+        ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
 
-		if(pDcpt->_TcpEnabledEvents != 0)
-		{   // already have some active
+        if(pDcpt->_TcpEnabledEvents != 0)
+        {   // already have some active
             DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-		}
+        }
 
-		pDcpt->_TcpEnabledEvents |= macEvMask;        // add more
-		pDcpt->_EthEnabledEvents |= ethSetEvents;
+        pDcpt->_TcpEnabledEvents |= macEvMask;        // add more
+        pDcpt->_EthEnabledEvents |= ethSetEvents;
 
-		if(pDcpt->_TcpEnabledEvents != 0)
-		{
-			ethSetEvents &= ~pDcpt->_EthPendingEvents;		// keep just the new un-ack events			
+        if(pDcpt->_TcpEnabledEvents != 0)
+        {
+            ethSetEvents &= ~pDcpt->_EthPendingEvents;      // keep just the new un-ack events          
             for(queIdx = GMAC_QUE_0; queIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queIdx++)
             {
                 ethEvents = ethSetEvents;    
@@ -1804,7 +1844,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
                 {
                     ethEvents = ethEvents & (~GMAC_EV_RX_ALL);
                 }
-                //Read ISR register to clear the interrupt status	
+                //Read ISR register to clear the interrupt status   
                 DRV_PIC32CGMAC_LibReadInterruptStatus(pMACDrv,queIdx);
                 //Enable GMAC interrupts
                 DRV_PIC32CGMAC_LibEnableInterrupt(pMACDrv, queIdx, ethEvents);
@@ -1812,11 +1852,11 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
             }
             
             DRV_PIC32CGMAC_LibSysInt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
-		}
-	}
-	else
-	{   // disable some events
-		GMAC_EVENTS  ethClrEvents;
+        }
+    }
+    else
+    {   // disable some events
+        GMAC_EVENTS  ethClrEvents;
 #if defined(DRV_GMAC0) || defined(DRV_GMAC) || defined(DRV_ETH)      
         if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
         {
@@ -1830,36 +1870,36 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
         }
 #endif
         
-		macEvMask &= pDcpt->_TcpEnabledEvents;                  // keep just the enabled ones
-		ethClrEvents = _XtlEventsTcp2Eth(macEvMask);
+        macEvMask &= pDcpt->_TcpEnabledEvents;                  // keep just the enabled ones
+        ethClrEvents = _XtlEventsTcp2Eth(macEvMask);
 
-		if(pDcpt->_TcpEnabledEvents != 0)
-		{   // already have some active
+        if(pDcpt->_TcpEnabledEvents != 0)
+        {   // already have some active
             DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
-		}
+        }
 
-		pDcpt->_TcpEnabledEvents &= ~macEvMask;     // clear some of them
-		pDcpt->_EthEnabledEvents &= ~ethClrEvents;
+        pDcpt->_TcpEnabledEvents &= ~macEvMask;     // clear some of them
+        pDcpt->_EthEnabledEvents &= ~ethClrEvents;
 
-		pDcpt->_TcpPendingEvents &= ~macEvMask;     // remove them from un-ack list
-		pDcpt->_EthPendingEvents &= ~ethClrEvents;
-		
+        pDcpt->_TcpPendingEvents &= ~macEvMask;     // remove them from un-ack list
+        pDcpt->_EthPendingEvents &= ~ethClrEvents;
+        
         for(queIdx = GMAC_QUE_0; queIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queIdx++)
         {            
             //Disable GMAC interrupts
             DRV_PIC32CGMAC_LibDisableInterrupt(pMACDrv, queIdx, ethClrEvents);
-            //Read ISR register to clear the interrupt status	
+            //Read ISR register to clear the interrupt status   
             DRV_PIC32CGMAC_LibReadInterruptStatus(pMACDrv,queIdx);
 
         }
 
-		if(pDcpt->_TcpEnabledEvents != 0)
-		{
+        if(pDcpt->_TcpEnabledEvents != 0)
+        {
             DRV_PIC32CGMAC_LibSysInt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
-		}
-	}
+        }
+    }
 
-	return true;
+    return true;
 
 }
 
@@ -1913,15 +1953,15 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 *****************************************************************************/
 bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     bool *intStat = 0;
-	DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
+    DRV_GMAC_EVENT_DCPT*  pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
     GMAC_QUE_LIST queIdx;
     if(pMACDrv == 0)
     {
         return false;
     }
-	    
+        
 #if defined(DRV_GMAC0) || defined(DRV_GMAC) || defined(DRV_ETH)       
     if (pMACDrv->pObj->macId == TCPIP_MODULE_MAC_PIC32C_0)
     {
@@ -1935,22 +1975,22 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
     }
 #endif
     
-	if(pDcpt->_TcpEnabledEvents != 0)
-	{   
+    if(pDcpt->_TcpEnabledEvents != 0)
+    {   
         // already have some active
-		GMAC_EVENTS  ethAckEv;
+        GMAC_EVENTS  ethAckEv;
 
-		ethAckEv=_XtlEventsTcp2Eth(tcpAckEv);
+        ethAckEv=_XtlEventsTcp2Eth(tcpAckEv);
 
         // stop interrupts for a while
         DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 
-		pDcpt->_TcpPendingEvents &= ~tcpAckEv;         // no longer pending
-		pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
-		
+        pDcpt->_TcpPendingEvents &= ~tcpAckEv;         // no longer pending
+        pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
+        
         for(queIdx = GMAC_QUE_0; queIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queIdx++)
         {   
-            //Read ISR register to clear the interrupt status	
+            //Read ISR register to clear the interrupt status   
             DRV_PIC32CGMAC_LibReadInterruptStatus(pMACDrv, queIdx);
             //Enable GMAC interrupts
             DRV_PIC32CGMAC_LibEnableInterrupt(pMACDrv, queIdx, ethAckEv);
@@ -1959,11 +1999,11 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 
         DRV_PIC32CGMAC_LibSysInt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
         
-		return true;
-	}
+        return true;
+    }
 
-	return false;
-	
+    return false;
+    
 }
 
 
@@ -2010,7 +2050,7 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 *****************************************************************************/
 TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac) 
 {
-	DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
+    DRV_GMAC_DRIVER * pMACDrv = _GmacHandleToMacInst(hMac);
     if(pMACDrv != 0)
     {
         return pMACDrv->sGmacData._gmac_event_group_dcpt._TcpPendingEvents;
@@ -2026,27 +2066,27 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac)
 // Rx Filter for PIC32C
 static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter) 
 {
-	GMAC_RX_FILTERS rxFilter = 0;
+    GMAC_RX_FILTERS rxFilter = 0;
     
-	rxFilter = (macFilter & TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT) ? GMAC_FILT_PREAMBLE_ERR_ACCEPT: 0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT) ? GMAC_FILT_CRC_ERR_ACCEPT:0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT) ? GMAC_FILT_MAXFRAME_ACCEPT:0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT) ? GMAC_FILT_UCASTHASH_ACCEPT:0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) ? GMAC_FILT_MCASTHASH_ACCEPT:0;
+    rxFilter = (macFilter & TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT) ? GMAC_FILT_PREAMBLE_ERR_ACCEPT: 0;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT) ? GMAC_FILT_CRC_ERR_ACCEPT:0;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT) ? GMAC_FILT_MAXFRAME_ACCEPT:0;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT) ? GMAC_FILT_UCASTHASH_ACCEPT:0;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT) ? GMAC_FILT_MCASTHASH_ACCEPT:0;
     
     rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT) ? GMAC_FILT_MCASTHASH_ACCEPT:0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT) ? 0:GMAC_FILT_BCAST_REJECT;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT) ? 0:GMAC_FILT_BCAST_REJECT;
 
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT) ? GMAC_FILT_ALLFRAME_ACCEPT:0;
-	
-	rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT) ? GMAC_FILT_JUMBOFRAME_ACCEPT:0;
-	
-	return rxFilter;
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT) ? GMAC_FILT_ALLFRAME_ACCEPT:0;
+    
+    rxFilter |= (macFilter & TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT) ? GMAC_FILT_JUMBOFRAME_ACCEPT:0;
+    
+    return rxFilter;
 
 }
 
@@ -2068,26 +2108,26 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
 void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents)
 {
     GMAC_EVENTS currGroupEvents = (GMAC_EVENTS)GMAC_EV_NONE;
-	DRV_GMAC_EVENT_DCPT* pDcpt;	
-	DRV_GMAC_DRIVER * pMACDrv = &_gmac_drv_dcpt[macIndex];		
+    DRV_GMAC_EVENT_DCPT* pDcpt; 
+    DRV_GMAC_DRIVER * pMACDrv = &_gmac_drv_dcpt[macIndex];      
 
-	// process interrupts
-	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
+    // process interrupts
+    pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
     //  keep just the relevant ones
-	currGroupEvents = ((GMAC_EVENTS)currEthEvents) & pDcpt->_EthEnabledEvents;
+    currGroupEvents = ((GMAC_EVENTS)currEthEvents) & pDcpt->_EthEnabledEvents;
     
-	if(currGroupEvents)
-	{
+    if(currGroupEvents)
+    {
         // add the new events
-		pDcpt->_EthPendingEvents |= currGroupEvents;                    
-		pDcpt->_TcpPendingEvents |= _XtlEventsEth2Tcp(currGroupEvents);
+        pDcpt->_EthPendingEvents |= currGroupEvents;                    
+        pDcpt->_TcpPendingEvents |= _XtlEventsEth2Tcp(currGroupEvents);
 
-		if(pDcpt->_TcpNotifyFnc)
-		{
+        if(pDcpt->_TcpNotifyFnc)
+        {
             // let the user know
-			(*pDcpt->_TcpNotifyFnc)(pDcpt->_TcpPendingEvents, pDcpt->_TcpNotifyParam);     
-		}
-	}
+            (*pDcpt->_TcpNotifyFnc)(pDcpt->_TcpPendingEvents, pDcpt->_TcpNotifyParam);     
+        }
+    }
 
 }
 
@@ -2097,45 +2137,45 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex, uint32_t  currEthEvents)
  *****************************************************************************/
 static SYS_MODULE_OBJ _DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv) 
 {
-	SYS_MODULE_OBJ hPhySysObject;
-	DRV_HANDLE     hPhyClient;	
-	DRV_ETHPHY_SETUP phySetup;
-	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;	
-	int phyIx = pMACDrv->sGmacData._phyIx;
-	TCPIP_MAC_RES   initRes;
-	DRV_ETHPHY_RESULT   phyInitRes;	
+    SYS_MODULE_OBJ hPhySysObject;
+    DRV_HANDLE     hPhyClient;  
+    DRV_ETHPHY_SETUP phySetup;
+    const DRV_ETHPHY_OBJECT_BASE* pPhyBase; 
+    int phyIx = pMACDrv->sGmacData._phyIx;
+    TCPIP_MAC_RES   initRes;
+    DRV_ETHPHY_RESULT   phyInitRes; 
 
-	pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase; 
+    pPhyBase =  pMACDrv->sGmacData.gmacConfig.pPhyBase; 
 
-	hPhySysObject = pPhyBase->DRV_ETHPHY_Initialize(phyIx,  (SYS_MODULE_INIT *)pMACDrv->sGmacData.gmacConfig.pPhyInit);
-	if ( hPhySysObject == SYS_MODULE_OBJ_INVALID )
-	{
-		initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
-		return initRes;
-	}
+    hPhySysObject = pPhyBase->DRV_ETHPHY_Initialize(phyIx,  (SYS_MODULE_INIT *)pMACDrv->sGmacData.gmacConfig.pPhyInit);
+    if ( hPhySysObject == SYS_MODULE_OBJ_INVALID )
+    {
+        initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
+        return initRes;
+    }
 
-	pMACDrv->sGmacData.hPhySysObject = hPhySysObject;
-	hPhyClient = pPhyBase->DRV_ETHPHY_Open(phyIx, DRV_IO_INTENT_READWRITE);
-	if ( DRV_HANDLE_INVALID == hPhyClient )
-	{
-		initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
-		return initRes;
-	}
-	
-	pMACDrv->sGmacData.hPhyClient = hPhyClient;
-	phySetup.phyAddress = pMACDrv->sGmacData.gmacConfig.pPhyInit->phyAddress;
-	phySetup.openFlags = pMACDrv->sGmacData.gmacConfig.ethFlags;
-	phySetup.configFlags = pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags;
-	phySetup.macPauseType = DRV_GMAC_PAUSE_CPBL_MASK;
-	phySetup.resetFunction = pMACDrv->sGmacData.gmacConfig.pPhyInit->resetFunction;
-		
-	phyInitRes = pPhyBase->DRV_ETHPHY_Setup(hPhyClient, &phySetup, &pMACDrv->sGmacData._linkResFlags);
-	
-	if(phyInitRes < 0)
-	{   // some error occurred
-		initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
-		return initRes;
-	}
-	initRes = TCPIP_MAC_RES_OK;
-	return initRes;
+    pMACDrv->sGmacData.hPhySysObject = hPhySysObject;
+    hPhyClient = pPhyBase->DRV_ETHPHY_Open(phyIx, DRV_IO_INTENT_READWRITE);
+    if ( DRV_HANDLE_INVALID == hPhyClient )
+    {
+        initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
+        return initRes;
+    }
+    
+    pMACDrv->sGmacData.hPhyClient = hPhyClient;
+    phySetup.phyAddress = pMACDrv->sGmacData.gmacConfig.pPhyInit->phyAddress;
+    phySetup.openFlags = pMACDrv->sGmacData.gmacConfig.ethFlags;
+    phySetup.configFlags = pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags;
+    phySetup.macPauseType = DRV_GMAC_PAUSE_CPBL_MASK;
+    phySetup.resetFunction = pMACDrv->sGmacData.gmacConfig.pPhyInit->resetFunction;
+        
+    phyInitRes = pPhyBase->DRV_ETHPHY_Setup(hPhyClient, &phySetup, &pMACDrv->sGmacData._linkResFlags);
+    
+    if(phyInitRes < 0)
+    {   // some error occurred
+        initRes = TCPIP_MAC_RES_PHY_INIT_FAIL;
+        return initRes;
+    }
+    initRes = TCPIP_MAC_RES_OK;
+    return initRes;
 }

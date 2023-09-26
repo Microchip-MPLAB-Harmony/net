@@ -358,8 +358,7 @@ static DRV_ETHPHY_SMI_TXFER_RES _DRV_PHY_SMITransferWaitComplete(DRV_ETHPHY_CLIE
     uint32_t  opData;
 
     if(hClientObj->smiTxferStatus != DRV_ETHPHY_SMI_TXFER_OP_WAIT_COMPLETE)
-    {   // nothing to wait for; but some functions may call this if a write operation was failed by MIIM and needs retry
-        _PhyDebugCond(false, __func__, __LINE__);
+    {   // nothing to wait for; but some functions may call this for write operations
         return DRV_ETHPHY_SMI_TXFER_RES_DONE;
     } 
 

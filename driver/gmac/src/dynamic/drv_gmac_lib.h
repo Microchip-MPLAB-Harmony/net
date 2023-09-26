@@ -989,6 +989,43 @@ void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST
     <p>Replaces:<p><c><b>void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes)</b></c>
  *****************************************************************************/
 void DRV_PIC32CGMAC_LibTxAckErrPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
+
+/*******************************************************************************
+  Function:
+    void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
+ 
+  Summary:
+    Acknowledge the Unacknowledged Transmit packets during transmit errors
+
+  Description:
+    This function acknowledges packets added to MAC transmit descriptors. This function will
+    acknowledge all the unacknowledged transmitted or not transmitted packets in transmit descriptor. 
+    This will be called during error condition to discard queued TX packets. 
+    The TX acknowledgment function will be called from this routine.
+
+  Precondition:
+    None
+
+  Parameters:
+    pMACDrv         - driver instance.
+    queueIdx        - queue Index
+    ackRes          - packet acknowledgment result
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    DRV_PIC32CGMAC_LibTxClearUnAckPacket(pMACDrv, queueIdx, ackRes); 
+    </code>
+
+  Remarks:
+    Any TX packets in transmit descriptors has to be acknowledged during error condition, 
+    otherwise the memory allocated for the packet will not be freed.
+
+    <p>Replaces:<p><c><b>void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes)</b></c>
+ *****************************************************************************/
+void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx, TCPIP_MAC_PKT_ACK_RES ackRes);
 // *****************************************************************************
 // *****************************************************************************
 // Section: Packet receive functions

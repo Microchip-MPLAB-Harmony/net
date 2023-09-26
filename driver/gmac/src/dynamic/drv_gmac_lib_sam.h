@@ -63,71 +63,71 @@ Microchip or any third party.
 */
 typedef enum{
     // All events
-	GMAC_EV_NONE
+    GMAC_EV_NONE
     /*DOM-IGNORE-BEGIN*/ = 0 /*DOM-IGNORE-END*/,
-	// Management Frame Sent
-	GMAC_EV_MGMTFRAMESENT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_MFS_Msk /*DOM-IGNORE-END*/,
-	
-	// Receive Complete
-	GMAC_EV_RXCOMPLETE
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RCOMP_Msk /*DOM-IGNORE-END*/,
-	
-	// RX Used Bit Read
-	GMAC_EV_RXUSEDBITREAD
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RXUBR_Msk /*DOM-IGNORE-END*/,
-	
-	// TX Used Bit Read
-	GMAC_EV_TXUSEDBITREAD
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TXUBR_Msk /*DOM-IGNORE-END*/,
-	
-	// Transmit Underrun
-	GMAC_EV_TXUNDERRUN
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TUR_Msk /*DOM-IGNORE-END*/,
-	
-	// Retry Limit Exceeded
-	GMAC_EV_RETRYLIMITEXCEED
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RLEX_Msk /*DOM-IGNORE-END*/,
-	
-	// Transmit Frame Corruption
-	GMAC_EV_TXFRAMECORRUPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TFC_Msk /*DOM-IGNORE-END*/,
-	
-	// Transmit Complete
-	GMAC_EV_TXCOMPLETE
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TCOMP_Msk /*DOM-IGNORE-END*/,
+    // Management Frame Sent
+    GMAC_EV_MGMTFRAMESENT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_MFS_Msk /*DOM-IGNORE-END*/,
+    
+    // Receive Complete
+    GMAC_EV_RXCOMPLETE
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RCOMP_Msk /*DOM-IGNORE-END*/,
+    
+    // RX Used Bit Read
+    GMAC_EV_RXUSEDBITREAD
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RXUBR_Msk /*DOM-IGNORE-END*/,
+    
+    // TX Used Bit Read
+    GMAC_EV_TXUSEDBITREAD
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TXUBR_Msk /*DOM-IGNORE-END*/,
+    
+    // Transmit Underrun
+    GMAC_EV_TXUNDERRUN
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TUR_Msk /*DOM-IGNORE-END*/,
+    
+    // Retry Limit Exceeded
+    GMAC_EV_RETRYLIMITEXCEED
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_RLEX_Msk /*DOM-IGNORE-END*/,
+    
+    // Transmit Frame Corruption
+    GMAC_EV_TXFRAMECORRUPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TFC_Msk /*DOM-IGNORE-END*/,
+    
+    // Transmit Complete
+    GMAC_EV_TXCOMPLETE
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_TCOMP_Msk /*DOM-IGNORE-END*/,
 
-	// Receive Overrun
-	GMAC_EV_RXOVERRUN
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_ROVR_Msk /*DOM-IGNORE-END*/,
+    // Receive Overrun
+    GMAC_EV_RXOVERRUN
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_ROVR_Msk /*DOM-IGNORE-END*/,
 
-	// HRESP Not OK
-	GMAC_EV_HRESPNOTOK
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_HRESP_Msk /*DOM-IGNORE-END*/,
+    // HRESP Not OK
+    GMAC_EV_HRESPNOTOK
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_HRESP_Msk /*DOM-IGNORE-END*/,
 
-	// Pause Frame with Non-zero Pause Quantum Received
-	GMAC_EV_PAUSEFRAMENZRECV
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFNZ_Msk /*DOM-IGNORE-END*/,
+    // Pause Frame with Non-zero Pause Quantum Received
+    GMAC_EV_PAUSEFRAMENZRECV
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFNZ_Msk /*DOM-IGNORE-END*/,
 
-	// Pause Time Zero
-	GMAC_EV_PAUSETIMEZERO
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PTZ_Msk /*DOM-IGNORE-END*/,
+    // Pause Time Zero
+    GMAC_EV_PAUSETIMEZERO
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PTZ_Msk /*DOM-IGNORE-END*/,
 
-	// Pause Frame Transmitted
-	GMAC_EV_PAUSEFRAMETX
-	/*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFTR_Msk /*DOM-IGNORE-END*/,
-	// All events
-	GMAC_EV_ALL
-	/*DOM-IGNORE-BEGIN*/= (	GMAC_EV_MGMTFRAMESENT | GMAC_EV_RXCOMPLETE |  GMAC_EV_RXUSEDBITREAD |
-	GMAC_EV_TXUNDERRUN | GMAC_EV_RETRYLIMITEXCEED |	GMAC_EV_TXFRAMECORRUPT |
-	GMAC_EV_TXCOMPLETE | GMAC_EV_RXOVERRUN | GMAC_EV_HRESPNOTOK |
-	GMAC_EV_PAUSEFRAMENZRECV | GMAC_EV_PAUSETIMEZERO | GMAC_EV_PAUSEFRAMETX ) /*DOM-IGNORE-END*/,
+    // Pause Frame Transmitted
+    GMAC_EV_PAUSEFRAMETX
+    /*DOM-IGNORE-BEGIN*/ = GMAC_ISR_PFTR_Msk /*DOM-IGNORE-END*/,
+    // All events
+    GMAC_EV_ALL
+    /*DOM-IGNORE-BEGIN*/= ( GMAC_EV_MGMTFRAMESENT | GMAC_EV_RXCOMPLETE |  GMAC_EV_RXUSEDBITREAD |
+    GMAC_EV_TXUNDERRUN | GMAC_EV_RETRYLIMITEXCEED | GMAC_EV_TXFRAMECORRUPT |
+    GMAC_EV_TXCOMPLETE | GMAC_EV_RXOVERRUN | GMAC_EV_HRESPNOTOK |
+    GMAC_EV_PAUSEFRAMENZRECV | GMAC_EV_PAUSETIMEZERO | GMAC_EV_PAUSEFRAMETX ) /*DOM-IGNORE-END*/,
     // RX events
-	GMAC_EV_RX_ALL
-	/*DOM-IGNORE-BEGIN*/= (GMAC_EV_RXCOMPLETE | GMAC_EV_RXUSEDBITREAD | GMAC_EV_RXOVERRUN) /*DOM-IGNORE-END*/, 
+    GMAC_EV_RX_ALL
+    /*DOM-IGNORE-BEGIN*/= (GMAC_EV_RXCOMPLETE | GMAC_EV_RXUSEDBITREAD | GMAC_EV_RXOVERRUN) /*DOM-IGNORE-END*/, 
     // TX events
-	GMAC_EV_TX_ALL
-	/*DOM-IGNORE-BEGIN*/= (GMAC_EV_TXCOMPLETE | GMAC_EV_TXFRAMECORRUPT | GMAC_EV_TXUNDERRUN) /*DOM-IGNORE-END*/ 
+    GMAC_EV_TX_ALL
+    /*DOM-IGNORE-BEGIN*/= (GMAC_EV_TXCOMPLETE | GMAC_EV_TXFRAMECORRUPT | GMAC_EV_TXUNDERRUN) /*DOM-IGNORE-END*/ 
 } GMAC_EVENTS;
 
 // *****************************************************************************
@@ -154,8 +154,12 @@ typedef struct
 /// The buffer addresses written into the descriptors must be aligned so the
 /// last few bits are zero.  These bits have special meaning for the GMAC
 /// peripheral and cannot be used as part of the address.
-#define GMAC_RX_ADDRESS_MASK   ((unsigned int)0xFFFFFFFC)
-#define GMAC_LENGTH_FRAME   ((unsigned int)0x3FFF)    /// Length of frame mask
+#define GMAC_RX_ADDRESS_MASK    ((unsigned int)0xFFFFFFFC)
+#define GMAC_LENGTH_FRAME       ((unsigned int)0x3FFF)    /// Length of frame mask
+#define GMAC_RX_CHECKSUM_OFFLOAD_STATUS     ((unsigned int)0x00C00000)
+#define GMAC_RX_CHECKSUM_IP_OFFLOAD         ((unsigned int)0x00400000)
+#define GMAC_RX_CHECKSUM_IP_TCP_OFFLOAD     ((unsigned int)0x00800000)
+#define GMAC_RX_CHECKSUM_IP_UDP_OFFLOAD     ((unsigned int)0x00C00000)
 
 // receive buffer descriptor bits
 #define GMAC_RX_OWNERSHIP_BIT   (1u <<  0)
@@ -190,44 +194,44 @@ typedef struct
     default!
 */
 typedef enum{
-	// Frames with wrong Preamble are accepted
-	GMAC_FILT_PREAMBLE_ERR_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_RXBP_Msk /*DOM-IGNORE-END*/,
+    // Frames with wrong Preamble are accepted
+    GMAC_FILT_PREAMBLE_ERR_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_RXBP_Msk /*DOM-IGNORE-END*/,
 
-	// Frames with wrong CRC are accepted
-	GMAC_FILT_CRC_ERR_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_IRXFCS_Msk /*DOM-IGNORE-END*/,
+    // Frames with wrong CRC are accepted
+    GMAC_FILT_CRC_ERR_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_IRXFCS_Msk /*DOM-IGNORE-END*/,
 
-	// Frames with Maximum frame size accepted
-	GMAC_FILT_MAXFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MAXFS_Msk /*DOM-IGNORE-END*/,
+    // Frames with Maximum frame size accepted
+    GMAC_FILT_MAXFRAME_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MAXFS_Msk /*DOM-IGNORE-END*/,
 
-	// Frames with Unicast Hash match accepted
-	GMAC_FILT_UCASTHASH_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_UNIHEN_Msk /*DOM-IGNORE-END*/,
-	
-	// Frames with Multicast Hash match accepted
-	GMAC_FILT_MCASTHASH_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MTIHEN_Msk /*DOM-IGNORE-END*/,
-	
-	// All Broadcast rejected
-	GMAC_FILT_BCAST_REJECT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_NBC_Msk /*DOM-IGNORE-END*/,
-	
-	// All valid frames accepted
-	GMAC_FILT_ALLFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_CAF_Msk /*DOM-IGNORE-END*/,
-	
-	// Jumbo frames accepted
-	GMAC_FILT_JUMBOFRAME_ACCEPT
-	/*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_JFRAME_Msk /*DOM-IGNORE-END*/,	
-	
-	GMAC_FILT_ALL_FILTERS
-	/*DOM-IGNORE-BEGIN*/    =	GMAC_FILT_PREAMBLE_ERR_ACCEPT	|	GMAC_FILT_CRC_ERR_ACCEPT	|
-								GMAC_FILT_MAXFRAME_ACCEPT		|	GMAC_FILT_UCASTHASH_ACCEPT	|
-								GMAC_FILT_MCASTHASH_ACCEPT		|	GMAC_FILT_BCAST_REJECT		|
-								GMAC_FILT_ALLFRAME_ACCEPT		|	GMAC_FILT_ALLFRAME_ACCEPT	|
-								GMAC_FILT_JUMBOFRAME_ACCEPT	/*DOM-IGNORE-END*/
+    // Frames with Unicast Hash match accepted
+    GMAC_FILT_UCASTHASH_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_UNIHEN_Msk /*DOM-IGNORE-END*/,
+    
+    // Frames with Multicast Hash match accepted
+    GMAC_FILT_MCASTHASH_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_MTIHEN_Msk /*DOM-IGNORE-END*/,
+    
+    // All Broadcast rejected
+    GMAC_FILT_BCAST_REJECT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_NBC_Msk /*DOM-IGNORE-END*/,
+    
+    // All valid frames accepted
+    GMAC_FILT_ALLFRAME_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_CAF_Msk /*DOM-IGNORE-END*/,
+    
+    // Jumbo frames accepted
+    GMAC_FILT_JUMBOFRAME_ACCEPT
+    /*DOM-IGNORE-BEGIN*/ = GMAC_NCFGR_JFRAME_Msk /*DOM-IGNORE-END*/,    
+    
+    GMAC_FILT_ALL_FILTERS
+    /*DOM-IGNORE-BEGIN*/    =   GMAC_FILT_PREAMBLE_ERR_ACCEPT   |   GMAC_FILT_CRC_ERR_ACCEPT    |
+                                GMAC_FILT_MAXFRAME_ACCEPT       |   GMAC_FILT_UCASTHASH_ACCEPT  |
+                                GMAC_FILT_MCASTHASH_ACCEPT      |   GMAC_FILT_BCAST_REJECT      |
+                                GMAC_FILT_ALLFRAME_ACCEPT       |   GMAC_FILT_ALLFRAME_ACCEPT   |
+                                GMAC_FILT_JUMBOFRAME_ACCEPT /*DOM-IGNORE-END*/
 } GMAC_RX_FILTERS;
 
 
