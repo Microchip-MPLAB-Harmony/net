@@ -1950,6 +1950,56 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
 
 // *****************************************************************************
 /* Function:
+    DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteWaitComplete( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress )
+
+  Summary:
+    Starts a vendor SMI write transfer. After this function call, check the completion of 
+	write operation with DRV_ETHPHY_VendorSMIOperationIsComplete.
+	<p><b>Implementation:</b> Dynamic</p>
+
+  Description:
+    This function will start a SMI write transfer.
+
+  Precondition:
+    - The DRV_ETHPHY_Initialize routine must have been called.
+    - DRV_ETHPHY_Open must have been called to obtain a valid device
+      handle.
+    - DRV_ETHPHY_Setup is in progress and configures the PHY
+    - The vendor implementation of the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure
+      is running and a SMI transfer is needed
+
+  Parameters:
+    - handle  - driver handle as passed by the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure call
+    - rIx    - vendor transaction SMI register to read
+    - phyAddress - PHY address to use for transaction
+
+  Returns:
+    DRV_ETHPHY_RES_OK  - if the vendor SMI write transfer is started
+
+    DRV_ETHPHY_RES_PENDING - the SMI bus was busy and the call needs to be retried
+
+    
+    < 0 - some error and the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure
+          has to return error to be aborted by the DRV_ETHPHY_Setup
+
+
+  Example:
+    <code>
+    </code>
+
+  Remarks:
+    The function is intended for implementing vendor SMI transfers
+    within DRV_EXTPHY_MIIConfigure and DRV_EXTPHY_MDIXConfigure.
+
+    It has to be called from within the DRV_EXTPHY_MIIConfigure or DRV_EXTPHY_MDIXConfigure
+    functions (which are called, in turn, by the DRV_ETHPHY_Setup procedure)
+    otherwise the call will fail.
+
+    The DRV_ETHPHY_RES_OK and DRV_ETHPHY_RES_PENDING significance is changed from the general driver API.
+*/
+DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteWaitComplete( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
+// *****************************************************************************
+/* Function:
     DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIOperationIsComplete(DRV_HANDLE handle)
 
   Summary:
@@ -2056,6 +2106,8 @@ typedef struct DRV_ETHPHY_OBJECT_BASE_TYPE
     DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIReadResultGet)( DRV_HANDLE handle, uint16_t* pSmiRes);
 
     DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteStart)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
+    
+    DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIWriteWaitComplete)( DRV_HANDLE handle, uint16_t rIx,  uint16_t wData, int phyAddress );
     
     DRV_ETHPHY_RESULT        (*DRV_ETHPHY_VendorSMIOperationIsComplete)( DRV_HANDLE handle);
     

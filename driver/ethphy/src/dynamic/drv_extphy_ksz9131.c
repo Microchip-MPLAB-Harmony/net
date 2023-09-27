@@ -160,7 +160,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
     {
         case DRV_KSZ9131_SKEW_CLK_1:
             //Write to MMD Control register to set MMD Device Address : 02
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x02), phyAddress);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x02), phyAddress);
             if(res < 0)
             {   // some error
                 return res;
@@ -180,7 +180,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access : Clock Pad Skew Register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_CLK_SKEW_REG), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_CLK_SKEW_REG), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -201,7 +201,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x02), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x02), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -222,7 +222,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9131_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register : Set Rx/Tx Clock pad skew to maximum
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x3FF, phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x3FF, phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;

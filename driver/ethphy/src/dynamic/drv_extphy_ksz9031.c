@@ -162,7 +162,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
     {
         case DRV_KSZ9031_LINKUP_ERRATA_1:
             //Write to MMD Control register to set MMD Device Address : 00
-            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
+            res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
             if(res < 0)
             {   // some error
                 return res;
@@ -182,7 +182,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_HI_REG), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_HI_REG), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -203,7 +203,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -224,7 +224,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register 
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x0006, phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x0006, phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -244,7 +244,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {
                 //Write to MMD Control register to set MMD Device Address : 00
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | 0x00), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -264,7 +264,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 // Write to MMD Address register to set Register Address for access : Clock Pad Skew Register
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_LO_REG), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, (PHY_MMD_DEV0_AN_FLP_BURST_TX_LO_REG), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -285,7 +285,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Control register to access the data
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (_PHY_MMD_CNTL_ACCESS_DATA_MASK | 0x00), phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
@@ -306,7 +306,7 @@ static DRV_ETHPHY_RESULT _DRV_KSZ9031_LinkupErrata(const DRV_ETHPHY_OBJECT_BASE*
             else if(res == DRV_ETHPHY_RES_OK)
             {   
                 //Write to MMD Data register to write data to register 
-                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x1A80, phyAddress);
+                res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, 0x1A80, phyAddress);
                 if(res < 0)
                 {   // some error
                     return res;
