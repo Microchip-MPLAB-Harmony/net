@@ -51,17 +51,17 @@ Microchip or any third party.
 typedef enum {
     /*
     // basic registers, across all registers: 0-1
-    PHY_REG_BMCON		= 0,
-    PHY_REG_BMSTAT		= 1,
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
     // extended registers: 2-15
-    PHY_REG_PHYID1		= 2,
-    PHY_REG_PHYID2		= 3,
-    PHY_REG_ANAD		= 4,
-    PHY_REG_ANLPAD		= 5,
-    PHY_REG_ANLPADNP	= 5,
-    PHY_REG_ANEXP		= 6,
-    PHY_REG_ANNPTR		= 7,
-    PHY_REG_ANLPRNP		= 8,
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANLPADNP    = 5,
+    PHY_REG_ANEXP       = 6,
+    PHY_REG_ANNPTR      = 7,
+    PHY_REG_ANLPRNP     = 8,
      */
 
     // Vendor Specific Registers
@@ -1975,6 +1975,6 @@ typedef union {
     };
 } __LAN9303_BM_IPR;
 
-#endif	// _LAN_9303_H_
+#endif  // _LAN_9303_H_
 
 

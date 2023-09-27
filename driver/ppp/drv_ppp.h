@@ -357,7 +357,7 @@ typedef void    (*PPP_EVENT_HANDLER)(DRV_HANDLE hMac, PPP_EVENT event, const uin
 // *****************************************************************************
 /* Function:
     PPP_EVENT_HANDLE PPP_EventHandlerRegister(DRV_HANDLE hMac, PPP_EVENT_HANDLER handler, 
-	                           const void* hParam)
+                               const void* hParam)
 
   Summary:
     Registers a PPP Handler.
@@ -414,7 +414,7 @@ PPP_EVENT_HANDLE PPP_EventHandlerRegister(DRV_HANDLE hMac, PPP_EVENT_HANDLER han
     hPPP   - A handle returned by a previous call to PPP_EventHandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
 
 
@@ -500,7 +500,7 @@ typedef struct
     clear   - if true, the statistics data will be cleared
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such hMac exists
 
 
@@ -607,7 +607,7 @@ PPP_STAT_HANDLE PPP_StatHandlerRegister(DRV_HANDLE hMac, PPP_STAT_HANDLER handle
     hPPP   - A handle returned by a previous call to PPP_StatHandlerRegister.
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if no such handler is registered
 
 
@@ -636,7 +636,7 @@ bool             PPP_StatHandlerDeregister(DRV_HANDLE hMac, PPP_STAT_HANDLE hPPP
     ctlProt - the control protocol type: LCP or IPCP
 
   Returns:
-    - true	- if the call succeeds
+    - true  - if the call succeeds
     - false - if the call failed (invalid handle)
 
   Remarks:

@@ -51,7 +51,7 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
     DRV_ENC28J60_BUS_RESULT res;
     DRV_ENC28J60_TX_PACKET_INFO* pTxLock;
     DRV_ENC28J60_CHECK_TX_STATUS_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkTxStaInfo);
-	
+    
     switch(curSt->state)
     {
         case DRV_ENC28J60_CTS_WAIT:

@@ -81,8 +81,8 @@ typedef struct {
 
   Description:
     Defines the enumeration for the type of address.  This enumeration is not used 
-	directly by the presentation layer and is used to enforce a consistent interface 
-	between layers.
+    directly by the presentation layer and is used to enforce a consistent interface 
+    between layers.
 
   Remarks:
     None.
@@ -130,17 +130,17 @@ typedef enum
 
   Parameters:
     addType     - The type of address being used. This is passed unaltered to the 
-	              transport layer.
+                  transport layer.
     port        - The port to listen or to send to.  This is passed unaltered to 
-	              the transport layer.
+                  the transport layer.
     address     - The address to use. This is passed unaltered to the transport layer.
 
   Returns:
     - NET_PRES_INVALID_SOCKET       - No sockets of the specified type were available to be
                                       opened.
     - NET_PRES_SKT_HANDLE_T handle  - Returned when NET_PRES_INVALID_SOCKET is returned. 
-	                                  Save this handle and use it when calling all 
-									  other presentation socket APIs.
+                                      Save this handle and use it when calling all 
+                                      other presentation socket APIs.
  */
  
 typedef NET_PRES_SKT_HANDLE_T (*NET_PRES_TransOpen)(NET_PRES_TRANS_ADDRESS_TYPE addType, 
@@ -293,7 +293,7 @@ typedef bool (*NET_PRES_TransSocketInfoGet)(NET_PRES_SKT_HANDLE_T handle, void *
     vBuffer  - The buffer location to put the information.
     wLen     - The size of the buffer.
     wStart   - Where to start peeking into the buffer. This parameter is not used 
-	           and will always be set to '0'.
+               and will always be set to '0'.
 
   Returns:
     - true  - Indicates success
@@ -387,25 +387,25 @@ typedef bool (*NET_PRES_TransSignalHandlerDeregister)(NET_PRES_SKT_HANDLE_T hand
 
   Summary:
     Defines the read function provided by the transport layer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function prototype is used to define the function that the Networking 
     Presentation Layer will pass to the provider when it is initialized.  The 
-	provider will use this function when it needs to read from the transport layer.
+    provider will use this function when it needs to read from the transport layer.
 
   Preconditions:
     None.
 
   Parameters:
-    transHandle	- This is the transport layer handle provided by the transport layer when
+    transHandle - This is the transport layer handle provided by the transport layer when
                   a communications channel is open.
-    buffer	    - This is a pointer to the buffer that the transport layer will copy data to.
+    buffer      - This is a pointer to the buffer that the transport layer will copy data to.
     count       - This is the size of the buffer.
 
   Returns:
     The number of data bytes copied by the transport channel into the buffer.
-	
+    
 */
 
 typedef uint16_t (*NET_PRES_TransRead)(uintptr_t transHandle, uint8_t* buffer, uint16_t count);
@@ -415,26 +415,26 @@ typedef uint16_t (*NET_PRES_TransRead)(uintptr_t transHandle, uint8_t* buffer, u
 
   Summary:
     Defines the write function provided by the transport layer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function prototype is used to define the function that the Networking 
     Presentation Layer will pass to the provider when it is initialized. The 
-	provider will use this function when it needs to write to the transport layer.
+    provider will use this function when it needs to write to the transport layer.
 
   Preconditions:
     None.
 
   Parameters:
-    transHandle	- This is the transport layer handle provided by the transport layer when
+    transHandle - This is the transport layer handle provided by the transport layer when
                   a communications channel is open.
-    buffer	    - This is a pointer to the buffer contains the data to be passed to 
-	              the transport layer.
+    buffer      - This is a pointer to the buffer contains the data to be passed to 
+                  the transport layer.
     count       - This is the size of the buffer.
 
   Returns:
     The number of data bytes accepted by the transport layer.
-	
+    
 */
 
 typedef uint16_t (*NET_PRES_TransWrite)(uintptr_t transHandle, const uint8_t* buffer, uint16_t count);
@@ -444,25 +444,25 @@ typedef uint16_t (*NET_PRES_TransWrite)(uintptr_t transHandle, const uint8_t* bu
 
   Summary:
     Defines the ready function provided by the transport layer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function prototype is used to define the function that the Networking 
-	Presentation Layer will pass to the provider when it is initialized.  The 
-	provider will use this function when it needs to check if it can read or write 
-	to the layer.
+    Presentation Layer will pass to the provider when it is initialized.  The 
+    provider will use this function when it needs to check if it can read or write 
+    to the layer.
 
   Preconditions:
     None.
 
   Parameters:
-    transHandle	- This is the transport layer handle provided by the transport layer when
+    transHandle - This is the transport layer handle provided by the transport layer when
                   a communications channel is open.
 
   Returns:
     - true  - The presentation layer can read or write to the transport layer
     - false - The transport layer is busy and cannot accept reads or write
-	
+    
 */
 
 typedef uint16_t (*NET_PRES_TransReady)(uintptr_t transHandle);
@@ -473,7 +473,7 @@ typedef uint16_t (*NET_PRES_TransReady)(uintptr_t transHandle);
 
   Summary:
     Checks to see if a port is encrypted by default.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function prototype is used by the presentation layer to determine if 
@@ -489,7 +489,7 @@ typedef uint16_t (*NET_PRES_TransReady)(uintptr_t transHandle);
     - true  - The port is encrypted by default and the presentation layer will
               start negotiating encryption when it is connected.
     - false - The post is not encrypted by default.
-	
+    
 */
 
 
@@ -505,8 +505,8 @@ typedef bool (*NET_PRES_TransIsPortDefaultSecured)(uint16_t port);
   Description:
     This data type defines the data required by the transport layer to effectively
     work with the Networking Presentation Layer.  The data is there to allow the 
-	Networking Presentation Layer to configure the provider to effectively use 
-	the transport layer.
+    Networking Presentation Layer to configure the provider to effectively use 
+    the transport layer.
 
   Remarks:
     None.

@@ -43,7 +43,7 @@ int32_t DRV_ENC28J60_ResetStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
     DRV_ENC28J60_BUS_RESULT busRes;
     uintptr_t ret;
 
-	reg.value= 0;
+    reg.value= 0;
     switch(pDrvInst->mainStateInfo.initInfo.resetStateInfo.state)
     {
         case DRV_ENC28J60_RS_READ_ESTAT:

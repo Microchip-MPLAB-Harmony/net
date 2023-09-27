@@ -85,8 +85,8 @@ static uint16_t ksz8863OperationResults[3] = {0};
  *
  * PreCondition:    - Communication to the PHY should have been established.
  *
- * Input:   		handle - A valid open-instance handle, returned from the driver's open routine   
- *					cFlags - the requested configuration flags: DRV_ETHPHY_CFG_RMII/DRV_ETHPHY_CFG_MII
+ * Input:           handle - A valid open-instance handle, returned from the driver's open routine   
+ *                  cFlags - the requested configuration flags: DRV_ETHPHY_CFG_RMII/DRV_ETHPHY_CFG_MII
  *
  * Output:          DRV_ETHPHY_RES_OK - success,
  *                  an error code otherwise
@@ -102,7 +102,7 @@ static uint16_t ksz8863OperationResults[3] = {0};
 
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj,DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-    return DRV_ETHPHY_RES_OK;	
+    return DRV_ETHPHY_RES_OK;   
 }
 
 
@@ -112,7 +112,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
  * PreCondition:    - Communication to the PHY should have been established.
  *
  * Input:           handle - A valid open-instance handle, returned from the driver's open routine
- *					oFlags - the requested open flags: TCPIP_ETH_OPEN_MDIX_AUTO, TCPIP_ETH_OPEN_MDIX_NORM/TCPIP_ETH_OPEN_MDIX_SWAP
+ *                  oFlags - the requested open flags: TCPIP_ETH_OPEN_MDIX_AUTO, TCPIP_ETH_OPEN_MDIX_NORM/TCPIP_ETH_OPEN_MDIX_SWAP
  *
  * Output:          DRV_ETHPHY_RES_OK - success,
  *                  an error code otherwise
@@ -126,7 +126,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
  *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, TCPIP_ETH_OPEN_FLAGS oFlags)
 {
-	return DRV_ETHPHY_RES_OK;	
+    return DRV_ETHPHY_RES_OK;   
 
 }
 
@@ -148,7 +148,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
  *****************************************************************************/
 static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle)
 {
-	return 2500000;		//  2.5 MHz max clock supported
+    return 2500000;     //  2.5 MHz max clock supported
 }
 
 // the DRV_ETHPHY_OBJECT

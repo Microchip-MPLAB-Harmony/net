@@ -288,7 +288,7 @@ typedef const void* DRV_MIIM_CALLBACK_HANDLE;
 
 // *****************************************************************************
 /* Type:
-	MIIM Driver Operation Complete Callback
+    MIIM Driver Operation Complete Callback
 
   Summary:
     Notification function that will be called when a MIIM operation is completed
@@ -296,7 +296,7 @@ typedef const void* DRV_MIIM_CALLBACK_HANDLE;
    
   Description:
     The format of an operation callback notification function registered with the MIIM driver.
-	
+    
   Parameters:
     cliHandle   - the client handle.
                   This is the handle that identifies the client (obtained with DRV_MIIM_Open)

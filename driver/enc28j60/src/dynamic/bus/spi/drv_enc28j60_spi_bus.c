@@ -716,7 +716,7 @@ uintptr_t DRV_ENC28J60_SPI_SfrReadStart(DRV_ENC28J60_DriverInfo *  pDrvInstance,
     if((pOpDcpt = _DRV_GetOpDcpt(pBusInfo, autoAck, 0)) != 0)
     {
         pWrBuff = pOpDcpt->opWrBuffer;
-        *pWrBuff = DRV_ENC28J60_SPI_INST_RCR | (sfr & 0x1f);	
+        *pWrBuff = DRV_ENC28J60_SPI_INST_RCR | (sfr & 0x1f);    
 
         if ((DRV_ENC28J60_SFR_MACON1 <= sfr && sfr <= DRV_ENC28J60_SFR_MAADR2)  || sfr == DRV_ENC28J60_SFR_MISTAT)
         {   // read buffer is selected so that the 1 byte result will be in pOpDcpt->opRdBuffer + 2;
@@ -767,8 +767,8 @@ uintptr_t DRV_ENC28J60_SPI_SfrRead16Start(DRV_ENC28J60_DriverInfo *  pDrvInstanc
         pWrBuff1 = pOpDcpt1->opWrBuffer;
         pWrBuff2 = pOpDcpt2->opWrBuffer;
 
-        *pWrBuff1 = DRV_ENC28J60_SPI_INST_RCR | (sfrLow & 0x1f);	
-        *pWrBuff2 = DRV_ENC28J60_SPI_INST_RCR | ((sfrLow + 1) & 0x1f);	
+        *pWrBuff1 = DRV_ENC28J60_SPI_INST_RCR | (sfrLow & 0x1f);    
+        *pWrBuff2 = DRV_ENC28J60_SPI_INST_RCR | ((sfrLow + 1) & 0x1f);  
 
         pRdBuff1 = pOpDcpt1->opRdBuffer;
         pRdBuff2 = pOpDcpt2->opRdBuffer;
@@ -1700,7 +1700,7 @@ uintptr_t DRV_ENC28J60_SPI_ReadDataStart(DRV_ENC28J60_DriverInfo *  pDrvInstance
     {
         pWrBuff = pOpDcpt->opWrBuffer;
 
-        *pWrBuff = DRV_ENC28J60_SPI_INST_RBM;	
+        *pWrBuff = DRV_ENC28J60_SPI_INST_RBM;   
 
         DRV_SPI_WriteReadTransferAdd(pBusInfo->clientHandle, pWrBuff, 1, &buffer[-1], dataSize + 1, &spiHandle);
         if(spiHandle != DRV_SPI_TRANSFER_HANDLE_INVALID)

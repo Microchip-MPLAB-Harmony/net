@@ -62,7 +62,7 @@ Microchip or any third party.
         #include "driver/gmac/src/dynamic/drv_gmac_lib_pic32ck.h"
     #endif
 #else
-	#include "driver/gmac/src/dynamic/drv_gmac_lib_sam.h"
+    #include "driver/gmac/src/dynamic/drv_gmac_lib_sam.h"
 #endif
 #include "driver/gmac/src/drv_gmac_local.h"
 #include "device.h"

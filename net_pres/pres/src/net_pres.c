@@ -717,7 +717,7 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle)
             return (*fprov)(pSkt->providerData);
         }
         // not secure yet
-		return 0;
+        return 0;
     }
         
     NET_PRES_TransReady ftrans = pSkt->transObject->fpReadyToRead;

@@ -46,34 +46,34 @@ Microchip or any third party.
 
 typedef enum
 {
-	/*
-	// basic registers, accross all registers: 0-1
-	PHY_REG_BMCON		= 0,
-	PHY_REG_BMSTAT		= 1,
-	// extended registers: 2-15
-	PHY_REG_PHYID1		= 2,
-	PHY_REG_PHYID2		= 3,
-	PHY_REG_ANAD		= 4,
-	PHY_REG_ANLPAD		= 5,
-	PHY_REG_ANLPADNP	= 5,
-	PHY_REG_ANEXP		= 6,
-	PHY_REG_ANNPTR		= 7,    
-	PHY_REG_ANLPRNP		= 8,    
-	*/
-	// specific vendor registers: 16-31
-	PHY_REG_PAGE_SEL = 20,
-	PHY_REG_UTP_CONTROL_MODE = 16,
-	PHY_REG_INTR_STATUS = 17,
-	PHY_REG_UTP_INT_CONTROL_STATUS = 18,
-	PHY_REG_DIGITAL_IO_SPCF_CNTL = 29,
-	PHY_REG_MDIX_CNTL_SPFC_STATUS = 30,
+    /*
+    // basic registers, accross all registers: 0-1
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
+    // extended registers: 2-15
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANLPADNP    = 5,
+    PHY_REG_ANEXP       = 6,
+    PHY_REG_ANNPTR      = 7,    
+    PHY_REG_ANLPRNP     = 8,    
+    */
+    // specific vendor registers: 16-31
+    PHY_REG_PAGE_SEL = 20,
+    PHY_REG_UTP_CONTROL_MODE = 16,
+    PHY_REG_INTR_STATUS = 17,
+    PHY_REG_UTP_INT_CONTROL_STATUS = 18,
+    PHY_REG_DIGITAL_IO_SPCF_CNTL = 29,
+    PHY_REG_MDIX_CNTL_SPFC_STATUS = 30,
     PHY_REG_FORCE_LINK_CONTROL = 17, // page 1
     PHY_REG_LED_CNTRL = 16,  // page 3
     PHY_REG_WOL_CNTRL = 16,  // page 4
     PHY_REG_WOL_MAC_ADDR = 16, // page 5
     PHY_REG_WOL_STATUS = 17, // page 17
     
-	
+    
 }IP101GR_VENDOR_REG;
 
 
@@ -100,17 +100,17 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __MODECTRL_UTP_bits_t;	// page 16, reg 16: PHY_REG_UTP_CONTROL_MODE
-#define	_UTP_MODECTRL_ANALOG_OFF	            0x0001
-#define	_UTP_MODECTRL_LDPS_MASK		            0x0002
-#define	_UTP_MODECTRL_REPEATER_MODE_MASK		0x0004
-#define	_UTP_MODECTRL_BYPASS_DSP_RESET_MASK	    0x0020
-#define	_UTP_MODECTRL_NWAY_PWSAVE_MASK	        0x0080
-#define	_UTP_MODECTRL_FEF_DIS_MASK	            0x0100
-#define	_UTP_MODECTRL_JABBER_EN_MASK	        0x0200
-#define	_UTP_MODECTRL_AUTO_MDIX_MASK	        0x0800
-#define	_UTP_MODECTRL_RMII_V12_MASK	            0x1000
-#define	_UTP_MODECTRL_RMII_V10_MASK	            0x2000
+} __MODECTRL_UTP_bits_t;    // page 16, reg 16: PHY_REG_UTP_CONTROL_MODE
+#define _UTP_MODECTRL_ANALOG_OFF                0x0001
+#define _UTP_MODECTRL_LDPS_MASK                 0x0002
+#define _UTP_MODECTRL_REPEATER_MODE_MASK        0x0004
+#define _UTP_MODECTRL_BYPASS_DSP_RESET_MASK     0x0020
+#define _UTP_MODECTRL_NWAY_PWSAVE_MASK          0x0080
+#define _UTP_MODECTRL_FEF_DIS_MASK              0x0100
+#define _UTP_MODECTRL_JABBER_EN_MASK            0x0200
+#define _UTP_MODECTRL_AUTO_MDIX_MASK            0x0800
+#define _UTP_MODECTRL_RMII_V12_MASK             0x1000
+#define _UTP_MODECTRL_RMII_V10_MASK             0x2000
 
 typedef union {
   struct {   
@@ -129,9 +129,9 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __INTERRUPTSTATUSbits_t;	// page 16 reg 17: PHY_REG_INTR_STATUS
-#define	_INTERRUPTSTATUS_INTR_MASK		        0x8000
-#define	_INTERRUPTSTATUS_INTR_STATUS_MASK		0x0008
+} __INTERRUPTSTATUSbits_t;  // page 16 reg 17: PHY_REG_INTR_STATUS
+#define _INTERRUPTSTATUS_INTR_MASK              0x8000
+#define _INTERRUPTSTATUS_INTR_STATUS_MASK       0x0008
 
 
 typedef union {
@@ -151,9 +151,9 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __UTP_INTERRUPT_CONTR_STATUSbits_t;	// page 16 reg 18: PHY_REG_UTP_INT_CONTROL_STATUS
-#define	_UTP_INTERRUPT_CONTR_STATUS_MDIX_MASK		        0x0020
-#define	_UTP_INTERRUPT_CONTR_STATUS_LINKUP_MASK		        0x0040
+} __UTP_INTERRUPT_CONTR_STATUSbits_t;   // page 16 reg 18: PHY_REG_UTP_INT_CONTROL_STATUS
+#define _UTP_INTERRUPT_CONTR_STATUS_MDIX_MASK               0x0020
+#define _UTP_INTERRUPT_CONTR_STATUS_LINKUP_MASK             0x0040
 
 
 typedef union {
@@ -167,8 +167,8 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __MDIX_CONTR_STATUSbits_t;	// page 16 reg 30: PHY_REG_MDIX_CNTL_SPFC_STATUS
-#define	_MDIX_CONTR_STATUS_FORCEMDIX_MASK		        0x0008
+} __MDIX_CONTR_STATUSbits_t;    // page 16 reg 30: PHY_REG_MDIX_CNTL_SPFC_STATUS
+#define _MDIX_CONTR_STATUS_FORCEMDIX_MASK               0x0008
 
 typedef union {
   struct {    
@@ -180,9 +180,9 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __FORCE_LINK_STATUSbits_t;	// page 1 reg 17: PHY_REG_FORCE_LINK_CONTROL
-#define	_FORCE_LINK_STATUS_LINK100_MASK		        0x0008
-#define	_FORCE_LINK_STATUS_LINK10_MASK		        0x0010
+} __FORCE_LINK_STATUSbits_t;    // page 1 reg 17: PHY_REG_FORCE_LINK_CONTROL
+#define _FORCE_LINK_STATUS_LINK100_MASK             0x0008
+#define _FORCE_LINK_STATUS_LINK10_MASK              0x0010
 
 
 
@@ -203,9 +203,9 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __WOL_CNTRLbits_t;	// page 4 reg 16: PHY_REG_WOL_CNTRL
-#define	_WOL_EN_MASK		                    0x8000
-#define	_WOL_PLUS_MASTER_SLAVE_MASK		        0x4000
+} __WOL_CNTRLbits_t;    // page 4 reg 16: PHY_REG_WOL_CNTRL
+#define _WOL_EN_MASK                            0x8000
+#define _WOL_PLUS_MASTER_SLAVE_MASK             0x4000
 #define _WOL_INTR_ACTIVE_HIGH_MASK              0x2000
 #define _WOL_SENSE_MAGIC_PKT_MASK               0x0800
 #define _WOL_SENSE_ANY_PKT_MASK                 0x0400
@@ -230,9 +230,9 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __WOL_STATUSbits_t;	// page 17 reg 17: PHY_REG_WOL_STATUS
-#define	_WOL_PLUS_WAKE_STATUS_MASK              0x0001
-#define	_WOL_PLUS_SLEEP_MASK		            0x0002
+} __WOL_STATUSbits_t;   // page 17 reg 17: PHY_REG_WOL_STATUS
+#define _WOL_PLUS_WAKE_STATUS_MASK              0x0001
+#define _WOL_PLUS_SLEEP_MASK                    0x0002
 #define _WOL_PLUS_SLEEPING_STATUS_MASK             0x0004
 #define _WOL_PLUS_INTR_STATUS_MASK              0x0008
 #define _WOL_PLUS_INTR_DIS_MASK                 0x8000
@@ -241,13 +241,13 @@ typedef union {
 typedef enum
 {
     PAGENUM_0=0,
-	PAGENUM_1=1,
+    PAGENUM_1=1,
     PAGENUM_2=2,
     PAGENUM_3=3,
-	PAGENUM_4=4,
-	PAGENUM_5=5,
+    PAGENUM_4=4,
+    PAGENUM_5=5,
     PAGENUM_16=16,
-	PAGENUM_17=17,    
+    PAGENUM_17=17,    
 }ePAGENUMBERSEL;
 
 typedef enum 
@@ -261,7 +261,7 @@ typedef enum
 
 typedef enum
 {
-    WOL_MODE_MASTER	=1,
+    WOL_MODE_MASTER =1,
     WOL_MODE_SLAVE = 0,
 }WOL_OPERATION_MODE;
 
@@ -282,5 +282,5 @@ typedef enum
 #define IP101GR_INTR_PIN_32_DISABLE     0
 
 
-#endif	// _IP_101GR_H_
+#endif  // _IP_101GR_H_
 

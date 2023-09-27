@@ -45,33 +45,33 @@ Microchip or any third party.
 
 typedef enum
 {
-	/*
-	// basic registers, accross all registers: 0-1
-	PHY_REG_BMCON		= 0,
-	PHY_REG_BMSTAT		= 1,
-	// extended registers: 2-15
-	PHY_REG_PHYID1		= 2,
-	PHY_REG_PHYID2		= 3,
-	PHY_REG_ANAD		= 4,
-	PHY_REG_ANLPAD		= 5,
-	PHY_REG_ANLPADNP	= 5,
-	PHY_REG_ANEXP		= 6,
-	PHY_REG_ANNPTR		= 7,
-	PHY_REG_ANLPRNP		= 8,
-	*/
-	// specific vendor registers: 16-31
-	PHY_REG_SILICON_REV	= 16,
-	PHY_REG_MODE_CTRL	= 17,
-	PHY_REG_SPECIAL_MODE	= 18,
-	PHY_REG_SYMBOL_ERR_CNT	= 26,
-	PHY_REG_SPECIAL_CTRL	= 27,
-	PHY_REG_INT_SOURCE	= 29,
-	PHY_REG_INT_MASK	= 30,
-	PHY_REG_PHY_CTRL	= 31,
-	PHY_MMD_ACCESS_CONTROL = 13,
-	PHY_MMD_ACCESS_DATA_ADDR = 14,
-	//
-	//PHY_REGISTERS		= 32	// total number of registers
+    /*
+    // basic registers, accross all registers: 0-1
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
+    // extended registers: 2-15
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANLPADNP    = 5,
+    PHY_REG_ANEXP       = 6,
+    PHY_REG_ANNPTR      = 7,
+    PHY_REG_ANLPRNP     = 8,
+    */
+    // specific vendor registers: 16-31
+    PHY_REG_SILICON_REV = 16,
+    PHY_REG_MODE_CTRL   = 17,
+    PHY_REG_SPECIAL_MODE    = 18,
+    PHY_REG_SYMBOL_ERR_CNT  = 26,
+    PHY_REG_SPECIAL_CTRL    = 27,
+    PHY_REG_INT_SOURCE  = 29,
+    PHY_REG_INT_MASK    = 30,
+    PHY_REG_PHY_CTRL    = 31,
+    PHY_MMD_ACCESS_CONTROL = 13,
+    PHY_MMD_ACCESS_DATA_ADDR = 14,
+    //
+    //PHY_REGISTERS     = 32    // total number of registers
 }LAN8740_VENDOR_REG;
 
 
@@ -86,8 +86,8 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __SILICONREVbits_t;	// reg 16: PHY_REG_SILICON_REV 
-#define	_SILICONREV_SILICON_REV_MASK		0x03c0
+} __SILICONREVbits_t;   // reg 16: PHY_REG_SILICON_REV 
+#define _SILICONREV_SILICON_REV_MASK        0x03c0
 
 
 typedef union {
@@ -109,15 +109,15 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __MODECTRLbits_t;	// reg 17: PHY_REG_MODE_CTRL
-#define	_MODECTRL_ENERGYON_MASK		0x0002
-#define	_MODECTRL_FORCE_GOOD_LINK_MASK	0x0004
-#define	_MODECTRL_PHYADPB_MASK		0x0008
-#define	_MODECTRL_ALTINT_MASK		0x0040
-#define	_MODECTRL_FAR_LOOPBACK_MASK	0x0200
-#define	_MODECTRL_MDPREPB_MASK		0x0400
-#define	_MODECTRL_LOWSQEN_MASK		0x0800
-#define	_MODECTRL_EDPWRDOWN_MASK	0x2000
+} __MODECTRLbits_t; // reg 17: PHY_REG_MODE_CTRL
+#define _MODECTRL_ENERGYON_MASK     0x0002
+#define _MODECTRL_FORCE_GOOD_LINK_MASK  0x0004
+#define _MODECTRL_PHYADPB_MASK      0x0008
+#define _MODECTRL_ALTINT_MASK       0x0040
+#define _MODECTRL_FAR_LOOPBACK_MASK 0x0200
+#define _MODECTRL_MDPREPB_MASK      0x0400
+#define _MODECTRL_LOWSQEN_MASK      0x0800
+#define _MODECTRL_EDPWRDOWN_MASK    0x2000
 
 
 typedef union {
@@ -131,10 +131,10 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __SPECIALMODEbits_t;	// reg 18: PHY_REG_SPECIAL_MODE
-#define	_SPECIALMODE_PHYAD_MASK		0x001f
-#define	_SPECIALMODE_MODE_MASK		0x00e0
-#define	_SPECIALMODE_MIIMODE_MASK	0x4000
+} __SPECIALMODEbits_t;  // reg 18: PHY_REG_SPECIAL_MODE
+#define _SPECIALMODE_PHYAD_MASK     0x001f
+#define _SPECIALMODE_MODE_MASK      0x00e0
+#define _SPECIALMODE_MIIMODE_MASK   0x4000
 
 
 
@@ -146,7 +146,7 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __SYMBOLERRCNTbits_t;	// reg 26: PHY_REG_SYMBOL_ERR_CNT
+} __SYMBOLERRCNTbits_t; // reg 26: PHY_REG_SYMBOL_ERR_CNT
 
 
 typedef union {
@@ -163,11 +163,11 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __SPECIALCTRLbits_t;	// reg 27: PHY_REG_SPECIAL_CTRL
-#define	_SPECIALCTRL_XPOL_MASK		0x0010
-#define	_SPECIALCTRL_SQEOFF_MASK	0x0800
-#define	_SPECIALCTRL_CH_SELECT_MASK	0x2000    // Manual MDIX
-#define	_SPECIALCTRL_AMDIXCTRL_MASK	0x8000
+} __SPECIALCTRLbits_t;  // reg 27: PHY_REG_SPECIAL_CTRL
+#define _SPECIALCTRL_XPOL_MASK      0x0010
+#define _SPECIALCTRL_SQEOFF_MASK    0x0800
+#define _SPECIALCTRL_CH_SELECT_MASK 0x2000    // Manual MDIX
+#define _SPECIALCTRL_AMDIXCTRL_MASK 0x8000
 
 
 
@@ -188,7 +188,7 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __INTSOURCEbits_t;	// reg 29: PHY_REG_INT_SOURCE
+} __INTSOURCEbits_t;    // reg 29: PHY_REG_INT_SOURCE
 
 typedef union {
   struct {
@@ -206,15 +206,15 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __INTMASKbits_t;	// reg 30: PHY_REG_INT_MASK
+} __INTMASKbits_t;  // reg 30: PHY_REG_INT_MASK
 
 #define WOL_INT8_EN 0x0100
 
 typedef union {
-  struct {	      
+  struct {        
     unsigned SCRMBL_DISBL:1;
     unsigned :1;
-    unsigned SPEED:3;	// 1: 10MbpsHD; 5:10MbpsFD; 2: 100MbpsHD; 6: 100MbpsFD; 
+    unsigned SPEED:3;   // 1: 10MbpsHD; 5:10MbpsFD; 2: 100MbpsHD; 6: 100MbpsFD; 
     unsigned :1;
     unsigned ENABLE_4B5B:1;
     unsigned GPO:3;
@@ -225,19 +225,19 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __PHYCTRLbits_t;	// reg 31: PHY_REG_PHY_CTRL
-#define	_PHYCTRL_SCRMBL_DISBL_MASK	0x0001
-#define	_PHYCTRL_SPEED_MASK		0x001c
-#define	_PHYCTRL_SPEED_FDUPLX_MASK	0x0010
-#define	_PHYCTRL_SPEED_100_10_MASK	0x000c
-#define	_PHYCTRL_SPEED_100_MASK		0x0008
-#define	_PHYCTRL_ENABLE_4B5B_MASK	0x0040
-#define	_PHYCTRL_GPO_MASK		0x0380
-#define	_PHYCTRL_AUTODONE_MASK		0x1000
+} __PHYCTRLbits_t;  // reg 31: PHY_REG_PHY_CTRL
+#define _PHYCTRL_SCRMBL_DISBL_MASK  0x0001
+#define _PHYCTRL_SPEED_MASK     0x001c
+#define _PHYCTRL_SPEED_FDUPLX_MASK  0x0010
+#define _PHYCTRL_SPEED_100_10_MASK  0x000c
+#define _PHYCTRL_SPEED_100_MASK     0x0008
+#define _PHYCTRL_ENABLE_4B5B_MASK   0x0040
+#define _PHYCTRL_GPO_MASK       0x0380
+#define _PHYCTRL_AUTODONE_MASK      0x1000
 
 // MMD ( MDIO Managable Devices )
 typedef union {
-  struct {	      
+  struct {        
     unsigned MMD_DEV_ADDR:5;
     unsigned :9;
     unsigned MMD_FUNCTION:2;
@@ -245,7 +245,7 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __MMDACCESSCONTROLbits_t;	// Index 13: 
+} __MMDACCESSCONTROLbits_t; // Index 13: 
 
 
 #define _PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000 // 15 and 14th is 00
@@ -280,7 +280,7 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __WOL_CNTL_STATUS_bits_t;	// Index 3.32784: 
+} __WOL_CNTL_STATUS_bits_t; // Index 3.32784: 
 
 #define _MII_RMII_INTF_MASK                     0x8000
 #define _LED1_FUNCTION_LINKACTIVITY_MASK        0x0000
@@ -319,7 +319,7 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __WOL_FILTER_CONFIG_bits_t;	// Index 3.32785: 
+} __WOL_FILTER_CONFIG_bits_t;   // Index 3.32785: 
 
 #define _WOL_WAKEUP_FILTER_ENABLE           0x8000
 #define _WOL_WAKEUP_FILTER_TRIGGERED        0x4000
@@ -403,5 +403,5 @@ typedef enum
 #define WOL_WAKEUP_BYTEMASK_REG6 0x0000
 #define WOL_WAKEUP_BYTEMASK_REG7 0x0000
 
-#endif	// _LAN_8700_H_
+#endif  // _LAN_8700_H_
 

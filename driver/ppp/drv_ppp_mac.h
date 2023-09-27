@@ -339,7 +339,7 @@ typedef struct
 
   Summary:
     Initializes the PPP MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports the initialization of the PPP MAC.  Used by tcpip_module_manager.
@@ -373,7 +373,7 @@ SYS_MODULE_OBJ DRV_PPP_MAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
 
   Summary:
     Deinitializes the PPP MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports teardown of the PPP MAC (opposite of set up).  Used by tcpip_module_manager.
@@ -405,7 +405,7 @@ void DRV_PPP_MAC_Deinitialize(SYS_MODULE_OBJ object);
 
   Summary:
     Reinitializes the PPP MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports re-initialization of the PPP MAC (opposite of set up).
@@ -438,7 +438,7 @@ void DRV_PPP_MAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * con
     
   Summary:
     Provides the current status of the MAC driver module.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function provides the current status of the MAC driver
@@ -474,7 +474,7 @@ SYS_STATUS DRV_PPP_MAC_Status ( SYS_MODULE_OBJ object );
     
   Summary:
     Maintains the PPP MAC driver's state machine.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function is used to maintain the driver's internal state machine
@@ -506,7 +506,7 @@ void DRV_PPP_MAC_Tasks( SYS_MODULE_OBJ object );
     
   Summary:
     Opens a client instance of the PPP MAC Driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function opens a client instance of the PPP MAC Driver.
@@ -542,7 +542,7 @@ DRV_HANDLE DRV_PPP_MAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT
     
   Summary:
     Closes a client instance of the PPP MAC Driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function closes a client instance of the PPP MAC Driver.
@@ -572,7 +572,7 @@ void DRV_PPP_MAC_Close( DRV_HANDLE hMac );
 
   Summary:
     Checks current link status.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function checks the link status of the associated network interface.
@@ -606,7 +606,7 @@ bool DRV_PPP_MAC_LinkCheck( DRV_HANDLE hMac );
 
   Summary:
     Selects the current power mode for the PPP MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function sets the power mode for the PPP MAC.
@@ -640,7 +640,7 @@ bool DRV_PPP_MAC_PowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode );
     
   Summary:
     Sets the current MAC hash table receive filter.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     The function does not apply to the PPP link.
@@ -673,7 +673,7 @@ TCPIP_MAC_RES DRV_PPP_MAC_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP
     
   Summary:
     MAC driver transmit function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is the MAC transmit function.
@@ -720,7 +720,7 @@ TCPIP_MAC_RES DRV_PPP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket
 
   Summary:
     This is the MAC receive function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will return a packet if such a pending packet exists.
@@ -785,7 +785,7 @@ TCPIP_MAC_PACKET* DRV_PPP_MAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TC
     
   Summary:
     MAC periodic processing function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that allows for internal processing by the MAC
@@ -831,7 +831,7 @@ TCPIP_MAC_RES DRV_PPP_MAC_Process(DRV_HANDLE hMac);
 
   Summary:
     Gets the current MAC statistics.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current value of the statistic counters
@@ -873,7 +873,7 @@ TCPIP_MAC_RES       DRV_PPP_MAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STAT
 
   Summary:
     MAC parameter get function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that returns the run time parameters of the MAC driver.
@@ -902,7 +902,7 @@ TCPIP_MAC_RES     DRV_PPP_MAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETER
 
   Summary:
     Gets the current MAC hardware statistics registers.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current value of the statistic registers
@@ -948,7 +948,7 @@ TCPIP_MAC_RES       DRV_PPP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC
 
   Summary:
     Gets the current MAC driver configuration.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current MAC driver configuration and store it into
@@ -988,7 +988,7 @@ size_t      DRV_PPP_MAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buff
     
   Summary:
     Enables/disables the MAC events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that enables or disables the events to be reported
@@ -1045,7 +1045,7 @@ bool DRV_PPP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool e
     
   Summary:
     Acknowledges and re-enables processed events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function acknowledges and re-enables processed events. Multiple
@@ -1102,7 +1102,7 @@ bool    DRV_PPP_MAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv);
     
   Summary:
     Returns the currently pending events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the currently pending PPP MAC events.

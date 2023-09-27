@@ -66,7 +66,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_TXST:
+        case DRV_ENC28J60_TP_WAIT_TXST:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -81,7 +81,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_SET_ETXND;
             // no break
 
-		case DRV_ENC28J60_TP_SET_ETXND:
+        case DRV_ENC28J60_TP_SET_ETXND:
             count = 0;
 
             pkt->pDSeg = pkt->macPkt->pDSeg;
@@ -109,7 +109,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_ETXND:
+        case DRV_ENC28J60_TP_WAIT_ETXND:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -164,7 +164,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_SEND_PKT_WAIT;
             break;
 
-		case DRV_ENC28J60_TP_SEND_PKT_WAIT:
+        case DRV_ENC28J60_TP_SEND_PKT_WAIT:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -193,7 +193,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_EIR:
+        case DRV_ENC28J60_TP_WAIT_EIR:
             busRes = (*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pkt->operation, &reg, true);
             if(busRes < 0)
             {   // some error; retry
@@ -215,7 +215,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_SET_TXRST;
             // no break
 
-		case DRV_ENC28J60_TP_SET_TXRST:
+        case DRV_ENC28J60_TP_SET_TXRST:
             reg.value = 0;
             reg.econ1.TXRST = 1;
             ret = (*pDrvInst->busVTable->fpSfrBitSet)(pDrvInst, DRV_ENC28J60_SFR_ECON1, reg, false);
@@ -227,7 +227,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
  
-		case DRV_ENC28J60_TP_WAIT_SET_TXRST:
+        case DRV_ENC28J60_TP_WAIT_SET_TXRST:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -242,7 +242,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_CLR_TXRST;
             // no break;
 
-		case DRV_ENC28J60_TP_CLR_TXRST:
+        case DRV_ENC28J60_TP_CLR_TXRST:
             reg.value = 0;
             reg.econ1.TXRST = 1;
             ret = (*pDrvInst->busVTable->fpSfrBitClr)(pDrvInst, DRV_ENC28J60_SFR_ECON1, reg, false);
@@ -254,7 +254,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_CLR_TXRST:
+        case DRV_ENC28J60_TP_WAIT_CLR_TXRST:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -269,7 +269,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_CLR_TXERIF;
             // no break
 
-		case DRV_ENC28J60_TP_CLR_TXERIF:
+        case DRV_ENC28J60_TP_CLR_TXERIF:
             reg.value = 0;
             reg.eir.TXERIF = 1;
             reg.eir.TXIF = 1;
@@ -282,7 +282,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_CLR_TXERIF:
+        case DRV_ENC28J60_TP_WAIT_CLR_TXERIF:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -316,7 +316,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case DRV_ENC28J60_TP_WAIT_PKT_TX:
+        case DRV_ENC28J60_TP_WAIT_PKT_TX:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
@@ -332,10 +332,10 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_WAIT_FOR_COMPLETE;
             break;
 
-		case DRV_ENC28J60_TP_WAIT_FOR_COMPLETE:
+        case DRV_ENC28J60_TP_WAIT_FOR_COMPLETE:
             break;
 
-		case DRV_ENC28J60_TP_RST_EIR:
+        case DRV_ENC28J60_TP_RST_EIR:
             if(pkt->macPkt != NULL)
             {   // update the packet status
                 if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
@@ -361,7 +361,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pkt->state = DRV_ENC28J60_TP_CLR_EIR;
             // no break
 
-		case DRV_ENC28J60_TP_CLR_EIR:
+        case DRV_ENC28J60_TP_CLR_EIR:
             reg.value = 0;
             reg.eir.TXIF = 1;
             reg.eir.TXERIF = 1;

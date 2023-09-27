@@ -397,7 +397,7 @@ typedef struct _DRV_ETHPHY_INSTANCE
     uint16_t                    configFlags;    // DRV_ETHPHY_CONFIG_FLAGS: ETHPHY MII/RMII configuration flags
     uintptr_t                   ethphyId;       // The peripheral Id associated with the object
     uint32_t                    openFlags;      // TCPIP_ETH_OPEN_FLAGS: flags required at open time
-    const DRV_ETHPHY_OBJECT*    pPhyObj;        // PHY object, vendor specific functions	
+    const DRV_ETHPHY_OBJECT*    pPhyObj;        // PHY object, vendor specific functions    
     const DRV_ETHPHY_OBJECT_BASE* pBaseObj;     // PHY base: this object
     const DRV_MIIM_OBJECT_BASE* pMiimBase;      // MIIM driver base object to use   
     DRV_ETHPHY_TMO *            ethphyTmo;      // PHY Initialization Time-outs 

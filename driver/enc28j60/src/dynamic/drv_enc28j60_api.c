@@ -872,7 +872,7 @@ TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
         return TCPIP_MAC_RES_OP_ERR;
     }
 
-	//pMacParams->processFlags = 0; 
+    //pMacParams->processFlags = 0; 
     //pMacParams->macType = TCPIP_MAC_TYPE_ETH;
     
     memcpy(pMacParams, &pDrvInst->stackParameters, sizeof(TCPIP_MAC_PARAMETERS));

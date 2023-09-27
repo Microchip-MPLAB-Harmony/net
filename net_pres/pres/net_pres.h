@@ -82,21 +82,21 @@ struct _NET_PRES_EncProviderObject;
 */
 
 typedef struct {
-	// Pointer to the transport object that handles the stream server
+    // Pointer to the transport object that handles the stream server
     const struct _NET_PRES_TransportObject * pTransObject_ss;  
-	// Pointer to the transport object that handles the stream client
+    // Pointer to the transport object that handles the stream client
     const struct _NET_PRES_TransportObject * pTransObject_sc;  
-	// Pointer to the transport object that handles the datagram server
+    // Pointer to the transport object that handles the datagram server
     const struct _NET_PRES_TransportObject * pTransObject_ds;  
-	// Pointer to the transport object that handles the datagram client
+    // Pointer to the transport object that handles the datagram client
     const struct _NET_PRES_TransportObject * pTransObject_dc;  
-	// Pointer to the encryption provider object that handles the stream server
+    // Pointer to the encryption provider object that handles the stream server
     const struct _NET_PRES_EncProviderObject * pProvObject_ss;  
-	// Pointer to the encryption provider object that handles the stream client
+    // Pointer to the encryption provider object that handles the stream client
     const struct _NET_PRES_EncProviderObject * pProvObject_sc;  
-	// Pointer to the encryption provider object that handles the datagram server
+    // Pointer to the encryption provider object that handles the datagram server
     const struct _NET_PRES_EncProviderObject * pProvObject_ds;  
-	// Pointer to the encryption provider object that handles the datagram client
+    // Pointer to the encryption provider object that handles the datagram client
     const struct _NET_PRES_EncProviderObject * pProvObject_dc;  
 }NET_PRES_INST_DATA;
 
@@ -116,7 +116,7 @@ typedef struct {
 typedef struct {
     uint8_t numLayers;                     // Number of presentation layers
     const NET_PRES_INST_DATA  * pInitData; // Pointer to an array of pointers to 
-	                                       // presentation layer instance data.
+                                           // presentation layer instance data.
 }NET_PRES_INIT_DATA;
 
 // *****************************************************************************
@@ -214,12 +214,12 @@ typedef int16_t NET_PRES_SKT_HANDLE_T;
     hNet        - The network interface on which the event has occurred
     sigType     - The type of signal that has occurred
     param       - An additional parameter that can has been specified at the handler 
-	              registration call. Currently not used and it will be null.
+                  registration call. Currently not used and it will be null.
 
 
   Remarks:
     The handler has to be short and fast. It is meant for setting an event flag, 
-	not for lengthy processing!
+    not for lengthy processing!
 
  */
 
@@ -237,7 +237,7 @@ typedef void    (*NET_PRES_SIGNAL_FUNCTION)(NET_PRES_SKT_HANDLE_T handle, NET_PR
 
   Summary:
     Initializes the Network Presentation Layer sub-system with the configuration data.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     Initializes the Network Presentation Layer sub-system with the configuration data.
@@ -246,13 +246,13 @@ typedef void    (*NET_PRES_SIGNAL_FUNCTION)(NET_PRES_SKT_HANDLE_T handle, NET_PR
     None.
 
   Parameters:
-    index	- This is the index of the network presentation layer instance to be initialized.  
+    index   - This is the index of the network presentation layer instance to be initialized.  
               Since there is only one network presentation layer, this parameter is ignored.
-    init	- This is a pointer to a NET_PRES_INIT_DATA structure
+    init    - This is a pointer to a NET_PRES_INIT_DATA structure
     
     Returns:
       - Valid handle to the presentation instance - If successful
-      - SYS_MODULE_OBJ_INVALID					  - If unsuccessful 
+      - SYS_MODULE_OBJ_INVALID                    - If unsuccessful 
 */
 
 SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
@@ -263,7 +263,7 @@ SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
 
   Summary:
     Deinitializes the Network Presentation Layer Instance.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function deallocates any resources allocated by the initialization function.  
@@ -272,7 +272,7 @@ SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
     The layer must be successfully initialized with NET_PRES_Initialize.
     
   Parameters:
-    Object	- the valid object returned from NET_PRES_Initialize
+    Object  - the valid object returned from NET_PRES_Initialize
 
   Returns:
     None.
@@ -285,7 +285,7 @@ void NET_PRES_Deinitialize(SYS_MODULE_OBJ obj);
 
   Summary:
     Reinitializes the instance of the presentation layer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function will deinitialize and initialize the layer instance. 
@@ -294,12 +294,12 @@ void NET_PRES_Deinitialize(SYS_MODULE_OBJ obj);
     The layer must be successfully initialized with NET_PRES_Initialize.
 
   Parameters:
-    object	- The object valid passed back to NET_PRES_Initialize
-    init	    - The new initialization structure
+    object  - The object valid passed back to NET_PRES_Initialize
+    init        - The new initialization structure
 
     Returns:
     None.
-	  
+      
     */
 
 void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const SYS_MODULE_INIT * const init);
@@ -309,7 +309,7 @@ void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const SYS_MODULE_INIT * const ini
 
   Summary:
     MPLAB Harmony tasks function used for general presentation layer tasks.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function is called by the main loop.  It is used to pump encryption 
@@ -319,11 +319,11 @@ void NET_PRES_Reinitialize(SYS_MODULE_OBJ obj, const SYS_MODULE_INIT * const ini
     The layer must be successfully initialized with NET_PRES_Initialize.
 
   Parameters:
-    object	- The valid object passed back to NET_PRES_Initialize
+    object  - The valid object passed back to NET_PRES_Initialize
 
   Returns:
     None.
-	  
+      
     */
 
 void NET_PRES_Tasks(SYS_MODULE_OBJ obj);
@@ -334,7 +334,7 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj);
   Summary:
     Provides the current status of the MPLAB Harmony Networking Presentation 
     Layer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function provides the current status of the MPLAB Harmony Net 

@@ -55,13 +55,13 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
     DRV_ENC28J60_BUS_RESULT busRes;
 
 
-	if (pDrvInst->mainStateInfo.runningInfo.resetRxInfo.state != DRV_ENC28J60_RRX_WAIT)
+    if (pDrvInst->mainStateInfo.runningInfo.resetRxInfo.state != DRV_ENC28J60_RRX_WAIT)
     {
         return 0;
     }
 
 
-	switch (pkt->state)
+    switch (pkt->state)
     {
         case DRV_ENC28J60_RX_EMPTY_PACKET:
             break;
@@ -184,7 +184,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             // else retry
             break;
 
-		case  DRV_ENC28J60_RX_WAIT_FOR_PKTDEC:
+        case  DRV_ENC28J60_RX_WAIT_FOR_PKTDEC:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error, retry
@@ -201,8 +201,8 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             pDrvInst->rxPacketPending = false;
             pkt->state = DRV_ENC28J60_RX_RESET_ERXRDPTR;
             // no break;
-		
-    	case DRV_ENC28J60_RX_RESET_ERXRDPTR:
+        
+        case DRV_ENC28J60_RX_RESET_ERXRDPTR:
             // Decrement the next packet pointer before writing it into
             // the ERXRDPT registers.  This is a silicon errata workaround.
 
@@ -224,7 +224,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             if (newRXRDLocation > pDrvInst->encMemRxEnd)
             {
                 newRXRDLocation = pDrvInst->encMemRxEnd;
-            }			 
+            }            
             if (newRXRDLocation == pDrvInst->encMemRxStart)
             {
                 newRXRDLocation = pDrvInst->encMemRxEnd;
@@ -237,12 +237,12 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             if(ret != 0)
             {   // success
                 pkt->operation = ret;
-                pkt->state = DRV_ENC28J60_RX_RESET_WAIT;		
+                pkt->state = DRV_ENC28J60_RX_RESET_WAIT;        
             }
             // else retry
             break;
 
-		case DRV_ENC28J60_RX_RESET_WAIT:
+        case DRV_ENC28J60_RX_RESET_WAIT:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error, retry

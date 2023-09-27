@@ -52,21 +52,21 @@ Microchip or any third party.
 typedef enum
 {
     // basic registers, accross all registers: 0-1
-    PHY_REG_BMCON       	= 0,  // Basic:    Control Register
-    PHY_REG_BMSTAT      	= 1,  // Basic:    Status Register
-    PHY_REG_PHYID1      	= 2,  // Extended: PHY Identifier 1
-    PHY_REG_PHYID2      	= 3,  // Extended: PHY Identifier 2
-    PHY_REG_ANAD        	= 4,  // Extended: Auto-Negotiation Advertisement Register
-    PHY_REG_ANLPAD      	= 5,  // Extended: Auto-Negotiation Link Partner Advertisement
-    PHY_REG_ANLPADNP    	= 5,  // Extended: Auto-Negotiation Link Partner Advertisement, Next Page (?)
-    PHY_REG_ANEXP       	= 6,  // Extended: Auto-Negotiation Expansion
-    PHY_REG_ANNPTR      	= 7,  // Extended: Auto-Negotiation Next Page Transmit
-    PHY_REG_ANLPRNP     	= 8,  // Extended: Auto-Negotiation Link Partner Received Next Page
-    PHY_REG_1000BASECON 	= 9,
-    PHY_REG_1000BASESTAT 	= 10,
-    PHY_REG_MMD_CONTROL 	= 13,
-    PHY_REG_MMD_DATA 		= 14,
-    PHY_REG_EXTSTAT 		= 15,
+    PHY_REG_BMCON           = 0,  // Basic:    Control Register
+    PHY_REG_BMSTAT          = 1,  // Basic:    Status Register
+    PHY_REG_PHYID1          = 2,  // Extended: PHY Identifier 1
+    PHY_REG_PHYID2          = 3,  // Extended: PHY Identifier 2
+    PHY_REG_ANAD            = 4,  // Extended: Auto-Negotiation Advertisement Register
+    PHY_REG_ANLPAD          = 5,  // Extended: Auto-Negotiation Link Partner Advertisement
+    PHY_REG_ANLPADNP        = 5,  // Extended: Auto-Negotiation Link Partner Advertisement, Next Page (?)
+    PHY_REG_ANEXP           = 6,  // Extended: Auto-Negotiation Expansion
+    PHY_REG_ANNPTR          = 7,  // Extended: Auto-Negotiation Next Page Transmit
+    PHY_REG_ANLPRNP         = 8,  // Extended: Auto-Negotiation Link Partner Received Next Page
+    PHY_REG_1000BASECON     = 9,
+    PHY_REG_1000BASESTAT    = 10,
+    PHY_REG_MMD_CONTROL     = 13,
+    PHY_REG_MMD_DATA        = 14,
+    PHY_REG_EXTSTAT         = 15,
     // specific vendor registers: 16-31
     PHY_REG_VENDOR  = 16,   // this is updated by each specific PHY
     //
@@ -108,7 +108,7 @@ typedef union
 #define _BMCON_ISOLATE_MASK     0x0400
 #define _BMCON_PDWN_MASK        0x0800
 #define _BMCON_AN_ENABLE_MASK   0x1000
-#define _BMCON_SPEED100_MASK   	0x2000
+#define _BMCON_SPEED100_MASK    0x2000
 #define _BMCON_LOOPBACK_MASK    0x4000
 #define _BMCON_RESET_MASK       0x8000
 
@@ -119,21 +119,21 @@ typedef union
     uint16_t    w;
     struct
     {
-		uint16_t EXTEND_ABLE        :1;
-		uint16_t JABBER_DET         :1;
-		uint16_t LINK_STAT          :1;
-		uint16_t AN_ABLE            :1;
-		uint16_t REM_FAULT          :1;
-		uint16_t AN_COMPLETE        :1;
-		uint16_t PREAMBLE_SUPPRESS  :1;
-		uint16_t                    :1;
-		uint16_t EXTENDED_STAT      :1;
-		uint16_t                    :2;
-		uint16_t BASE10T_HDX        :1;
-		uint16_t BASE10T_FDX        :1;
-		uint16_t BASE100TX_HDX      :1;
-		uint16_t BASE100TX_FDX      :1;
-		uint16_t BASE100T4          :1;
+        uint16_t EXTEND_ABLE        :1;
+        uint16_t JABBER_DET         :1;
+        uint16_t LINK_STAT          :1;
+        uint16_t AN_ABLE            :1;
+        uint16_t REM_FAULT          :1;
+        uint16_t AN_COMPLETE        :1;
+        uint16_t PREAMBLE_SUPPRESS  :1;
+        uint16_t                    :1;
+        uint16_t EXTENDED_STAT      :1;
+        uint16_t                    :2;
+        uint16_t BASE10T_HDX        :1;
+        uint16_t BASE10T_FDX        :1;
+        uint16_t BASE100TX_HDX      :1;
+        uint16_t BASE100TX_FDX      :1;
+        uint16_t BASE100T4          :1;
     };
 } __BMSTATbits_t;   // reg 1: PHY_REG_BMSTAT
 

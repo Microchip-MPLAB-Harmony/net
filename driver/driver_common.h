@@ -310,7 +310,7 @@ typedef uintptr_t DRV_HANDLE;
     defined for the selected device.
 
  Remarks:
-	None.
+    None.
 */
     
 #ifndef _PLIB_UNSUPPORTED

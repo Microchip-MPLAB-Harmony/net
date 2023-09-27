@@ -1131,19 +1131,19 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibTxPendingBuffersGet(DRV_ETHMAC_INSTANCE_DCPT* pM
 
 static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl)
 {
-	DRV_ETHMAC_DCPT_NODE	*pEDcpt;
-	int	 	nDcpts=0;
-	
-	
-	for(pEDcpt=pList->head; pEDcpt!=0 && pEDcpt->next!=0; pEDcpt=pEDcpt->next)
-	{	// don't count the ending dummy descriptor 
-		if(pEDcpt->hwDcpt.hdr.EOWN == isHwCtrl)
-		{
-			nDcpts++;
-		}
-	}
-	
-	return nDcpts;	
+    DRV_ETHMAC_DCPT_NODE    *pEDcpt;
+    int     nDcpts=0;
+    
+    
+    for(pEDcpt=pList->head; pEDcpt!=0 && pEDcpt->next!=0; pEDcpt=pEDcpt->next)
+    {   // don't count the ending dummy descriptor 
+        if(pEDcpt->hwDcpt.hdr.EOWN == isHwCtrl)
+        {
+            nDcpts++;
+        }
+    }
+    
+    return nDcpts;  
 }
 
 /////  generic single linked lists manipulation ///////////
@@ -1152,7 +1152,7 @@ static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl)
 // removes the head node
 DRV_ETHMAC_SGL_LIST_NODE*  DRV_ETHMAC_SingleListHeadRemove(DRV_ETHMAC_SGL_LIST* pL)
 {
-	DRV_ETHMAC_SGL_LIST_NODE* pN = pL->head;
+    DRV_ETHMAC_SGL_LIST_NODE* pN = pL->head;
     if(pN)
     {
         if(pL->head == pL->tail)
@@ -1166,32 +1166,32 @@ DRV_ETHMAC_SGL_LIST_NODE*  DRV_ETHMAC_SingleListHeadRemove(DRV_ETHMAC_SGL_LIST* 
         pL->nNodes--;
     }
 
-	return pN;
+    return pN;
 }
 
 // adds node to tail
 void  DRV_ETHMAC_SingleListTailAdd(DRV_ETHMAC_SGL_LIST* pL, DRV_ETHMAC_SGL_LIST_NODE* pN)
 {
-	pN->next = 0;
-	if(pL->tail == 0)
-	{
-		pL->head = pL->tail = pN;
-	}
-	else
-	{
-		pL->tail->next = pN;
-		pL->tail = pN;
-	}
+    pN->next = 0;
+    if(pL->tail == 0)
+    {
+        pL->head = pL->tail = pN;
+    }
+    else
+    {
+        pL->tail->next = pN;
+        pL->tail = pN;
+    }
     pL->nNodes++;
 }
 
 void  DRV_ETHMAC_SingleListAppend(DRV_ETHMAC_SGL_LIST* pDstL, DRV_ETHMAC_SGL_LIST* pAList)
 {
-	DRV_ETHMAC_SGL_LIST_NODE* pN;
-	while((pN = DRV_ETHMAC_SingleListHeadRemove(pAList)))
-	{
-		DRV_ETHMAC_SingleListTailAdd(pDstL, pN);
-	}
+    DRV_ETHMAC_SGL_LIST_NODE* pN;
+    while((pN = DRV_ETHMAC_SingleListHeadRemove(pAList)))
+    {
+        DRV_ETHMAC_SingleListTailAdd(pDstL, pN);
+    }
 }
 
 

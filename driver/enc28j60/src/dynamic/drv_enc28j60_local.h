@@ -83,28 +83,28 @@ typedef struct _DRV_ENC28J60_DriverInfo
     uint16_t encMemRxStart;
     uint16_t encMemRxEnd;
     uint16_t encMemRdPtr;
-	uint16_t encMemRxRdPtr;
-	uint16_t encMemRxWrPtr;
+    uint16_t encMemRxRdPtr;
+    uint16_t encMemRxWrPtr;
 
-	uint16_t encRamForAppSize;
-	uint16_t encRamForAppStartAdr;
-	uint16_t encMemTxStart;
-	uint16_t encMemTxEnd;
-	uint16_t encMemWrPtr;
-	uint16_t encMemGpEnd;
+    uint16_t encRamForAppSize;
+    uint16_t encRamForAppStartAdr;
+    uint16_t encMemTxStart;
+    uint16_t encMemTxEnd;
+    uint16_t encMemWrPtr;
+    uint16_t encMemGpEnd;
 
-	uint8_t encMacAdr5;
-	uint8_t encMacAdr6;
-	uint8_t encMacAdr3;
-	uint8_t encMacAdr4;
-	uint8_t encMacAdr1;	
-	uint8_t encMacAdr2;
-						
-	uint8_t encMacon1;
-	uint8_t encMacon3;
-	uint8_t encMacon4;
-	
-	
+    uint8_t encMacAdr5;
+    uint8_t encMacAdr6;
+    uint8_t encMacAdr3;
+    uint8_t encMacAdr4;
+    uint8_t encMacAdr1; 
+    uint8_t encMacAdr2;
+                        
+    uint8_t encMacon1;
+    uint8_t encMacon3;
+    uint8_t encMacon4;
+    
+    
     TCPIP_MAC_PARAMETERS stackParameters;
     TCPIP_MAC_EVENT eventMask;
     TCPIP_MAC_EVENT currentEvents;
@@ -115,8 +115,8 @@ typedef struct _DRV_ENC28J60_DriverInfo
 
     bool rxPacketPending;
 
-	uintptr_t txStateMachineOp;
-	uintptr_t rxStateMachineOp;
+    uintptr_t txStateMachineOp;
+    uintptr_t rxStateMachineOp;
 
     DRV_ENC28J60_TX_PACKET_INFO txDescriptors[MAX_TX_DESCRIPTORS];
     DRV_ENC28J60_RX_PACKET_INFO rxDescriptors;

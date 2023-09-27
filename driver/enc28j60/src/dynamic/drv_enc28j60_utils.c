@@ -53,9 +53,9 @@ void DRV_ENC28J60_SetEvent(struct _DRV_ENC28J60_DriverInfo *  pDrvInst, TCPIP_MA
     pDrvInst->currentEvents |= events;
     (*pDrvInst->stackCfg.eventF)(events, pDrvInst->stackCfg.eventParam);
 
-	res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);
+    res = OSAL_MUTEX_Unlock(&pDrvInst->drvMutex);
     res = res;
-    SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not unlock the driver mutex");	
+    SYS_ASSERT(res == OSAL_RESULT_TRUE, "Could not unlock the driver mutex");   
 
 }
 

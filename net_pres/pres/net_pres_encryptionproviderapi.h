@@ -12,7 +12,7 @@ MPLAB Harmony Networking Presentation Layer Encryption Provider Header File
     
   Description:
     This file describes the API that encryption providers follow for the Networking
-	Presentation Layer.
+    Presentation Layer.
 
 *******************************************************************************/
 
@@ -64,11 +64,11 @@ struct _NET_PRES_TransportObject;
 
   Summary:
     Defines the enumeration for the state and status of the encrypted portion 
-	of a connection.
+    of a connection.
 
   Description:
     This enumeration defines the enumeration for the state and status of the 
-	encrypted portion of a connection.
+    encrypted portion of a connection.
 
   Remarks:
     None.
@@ -77,21 +77,21 @@ struct _NET_PRES_TransportObject;
 typedef enum
 {
     NET_PRES_ENC_SS_UNKNOWN,                      // Presentation encryption is in 
-	                                              // an unknown/default state
+                                                  // an unknown/default state
     NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION, // Presentation encryption has not 
-	                                              // started negotiation
+                                                  // started negotiation
     NET_PRES_ENC_SS_CLIENT_NEGOTIATING,           // Presentation encryption client 
-	                                              // negotiation is in progress
+                                                  // negotiation is in progress
     NET_PRES_ENC_SS_SERVER_NEGOTIATING,           // Presentation encryption server 
-	                                              // negotiation is in progress
+                                                  // negotiation is in progress
     NET_PRES_ENC_SS_OPEN,                         // Presentation encryption negotiation 
-	                                              // is complete and data can be sent/received
+                                                  // is complete and data can be sent/received
     NET_PRES_ENC_SS_FAILED,                       // Presentation encryption negotiation failed 
-	                                              // or some other failure
+                                                  // or some other failure
     NET_PRES_ENC_SS_CLOSING,                      // Presentation encryption is closing, but
-	                                              // connection needs to be pumped for final packets
+                                                  // connection needs to be pumped for final packets
     NET_PRES_ENC_SS_CLOSED                        // Presentation encryption is closed, provider 
-	                                              // data has been freed
+                                                  // data has been freed
 }NET_PRES_EncSessionStatus;
 
 // *****************************************************************************
@@ -99,7 +99,7 @@ typedef enum
 
   Summary:
     Defines the initialization function to the encryption provider.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer prototype defines the initialization function to the 
@@ -109,7 +109,7 @@ typedef enum
     None.
 
   Parameters:
-    transObject	- This is a copy of the structure the transport layer provides
+    transObject - This is a copy of the structure the transport layer provides
                   to the presentation layer to read and write data.
 
   Returns:
@@ -149,11 +149,11 @@ typedef bool (*NET_PRES_EncProviderDeinit)( void );
 
   Summary:
     Defines the open connection function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer prototype defines the open connection function to the 
-	provider.
+    provider.
 
   Preconditions:
     None.
@@ -175,25 +175,25 @@ typedef bool (*NET_PRES_EncProviderOpen)(uintptr_t transHandle, void * providerD
 
   Summary:
     Connects the function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function is used by the presentation layer to pump the encryption negotiation.
     While negotiation is ongoing, the presentation layer's task function will continue to 
-	call the function until negotiation ends.
+    call the function until negotiation ends.
  
   Preconditions:
     A connection must have already been created.
 
   Parameters:
     providerData - A pointer to the buffer that keeps the providerData returned from 
-	               the Open call.
+                   the Open call.
 
     Returns:
     - NET_PRES_ENC_SS_CLIENT_NEGOTIATING - Client is still negotiating the connection
     - NET_PRES_ENC_SS_SERVER_NEGOTIATING - Server is still negotiating the connection
     - NET_PRES_ENC_SS_OPEN               - Negotiation is complete and data can be 
-	                                       securely transmitted
+                                           securely transmitted
     - NET_PRES_ENC_SS_FAILED             - Negotiation failed
 
  */
@@ -205,12 +205,12 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnect)(void * provider
 
   Summary:
     Defines the close function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer defines the close function.  It is called by the 
-	Networking Presentation Layer after a connection has been closed by the 
-	client.
+    Networking Presentation Layer after a connection has been closed by the 
+    client.
 
   Preconditions:
     A connection must have already been created.
@@ -221,7 +221,7 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnect)(void * provider
 
   Returns:
     - NET_PRES_ENC_SS_CLOSING - Connection is closing, function must be called again to 
-	                            pump the close
+                                pump the close
     - NET_PRES_ENC_SS_CLOSED  - The connection is closed and can be cleaned up
 
  */
@@ -232,11 +232,11 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnectionClose)(void * 
 
   Summary:
     Defines the write function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer defines the write function.  It is called by the 
-	presentation layer when the application wants to write to a secured connection.
+    presentation layer when the application wants to write to a secured connection.
 
   Preconditions:
     A connection must have already been created, and be in the open state.
@@ -244,7 +244,7 @@ typedef NET_PRES_EncSessionStatus (*NET_PRES_EncProviderConnectionClose)(void * 
   Parameters:
     providerData - A pointer to the buffer for the provider to keep connection
                    specific data.
-    buffer	     - This is a pointer to the buffer that will be sent to the provider.
+    buffer       - This is a pointer to the buffer that will be sent to the provider.
     size         - This is the size of the buffer.
 
 
@@ -260,11 +260,11 @@ typedef int32_t (*NET_PRES_EncProviderWrite)(void * providerData, const uint8_t 
 
   Summary:
     Defines the write ready function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer defines the write ready function. It is called by the 
-	presentation layer when the application wants to check the write space
+    presentation layer when the application wants to check the write space
     to a secured connection.
     The function checks for the requested size.
     If this is not available, it checks for at least minimum size (if != 0)
@@ -298,8 +298,8 @@ typedef uint16_t (*NET_PRES_EncProviderWriteReady)(void * providerData,
 
   Description:
     This function pointer defines the read function.  It is called by the 
-	presentation layer when the presentation client wants to read from a secured 
-	connection.
+    presentation layer when the presentation client wants to read from a secured 
+    connection.
 
   Preconditions:
     A connection must have already been created, and be in the open state.
@@ -307,7 +307,7 @@ typedef uint16_t (*NET_PRES_EncProviderWriteReady)(void * providerData,
   Parameters:
     providerData - A pointer to the buffer for the provider to keep connection
                    specific data.
-    buffer	     - A pointer to the buffer that will be read from the provider.
+    buffer       - A pointer to the buffer that will be read from the provider.
     count        - Size of the buffer.
 
 
@@ -330,7 +330,7 @@ typedef int32_t (*NET_PRES_EncProviderRead)(void * providerData, uint8_t * buffe
 
   Description:
     This function pointer defines the read ready function.  It is called by the 
-	presentation layer when the presentation client wants to check whether 
+    presentation layer when the presentation client wants to check whether 
     read data is available from a secured connection.
 
   Preconditions:
@@ -352,11 +352,11 @@ typedef int32_t (*NET_PRES_EncProviderReadReady)(void * providerData);
 
   Summary:
     Determines whether the encryption provider has been initialized.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer determines whether the encryption provider has been 
-	initialized and informs the presentation layer.
+    initialized and informs the presentation layer.
 
   Preconditions:
     A connection must have already been created, and be in the open state.
@@ -376,11 +376,11 @@ typedef bool (*NET_PRES_EncProviderIsInitialized)( void );
 
   Summary:
     Defines the output size function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer defines the output size function. It is called by the 
-	presentation layer when the application wants to check how many bytes will
+    presentation layer when the application wants to check how many bytes will
     be sent across the Transport layer, given a specified plaintext input size. 
     
 
@@ -408,7 +408,7 @@ typedef int32_t (*NET_PRES_EncProviderOutputSize)(void * providerData, int32_t i
 
   Summary:
     Defines the maximum output size function to the provider.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function pointer defines the maximum output size function.
@@ -442,8 +442,8 @@ typedef int32_t (*NET_PRES_EncProviderMaxOutputSize)(void * providerData);
 
   Description:
     This data type is given to the presentation layer during initialization to 
-	provide information on the provider, so it can be used during secure 
-	communications.
+    provide information on the provider, so it can be used during secure 
+    communications.
 
   Remarks:
     None.
@@ -451,22 +451,22 @@ typedef int32_t (*NET_PRES_EncProviderMaxOutputSize)(void * providerData);
 typedef struct _NET_PRES_EncProviderObject
 {
     NET_PRES_EncProviderInit fpInit;               // Function pointer to open/initialize 
-	                                               // the provider
+                                                   // the provider
     NET_PRES_EncProviderDeinit fpDeinit;           // Function pointer to close/deinitialize 
-	                                               // the provider
+                                                   // the provider
     NET_PRES_EncProviderOpen fpOpen;               // Function pointer to create a stream client 
-	                                               // connection
+                                                   // connection
     NET_PRES_EncProviderConnect fpConnect;         // Function pointer to connect and pump the 
-	                                               // negotiation of a stream client connection
+                                                   // negotiation of a stream client connection
     NET_PRES_EncProviderConnectionClose fpClose;   // Function Pointer to close and clean 
-	                                               // up a connection
+                                                   // up a connection
     NET_PRES_EncProviderWrite fpWrite;             // Function Pointer to write data to a connection
     NET_PRES_EncProviderWriteReady fpWriteReady;   // Function Pointer to check the connection write space
     NET_PRES_EncProviderRead fpRead;               // Function pointer to read data from a connection
     NET_PRES_EncProviderReadReady fpReadReady;     // Function pointer to return the available read data from a connection
     NET_PRES_EncProviderRead fpPeek;               // Function pointer to peek at data from a connection
     NET_PRES_EncProviderIsInitialized fpIsInited;  // Function pointer to check to determine if
-	                                               // the provider has been initialized
+                                                   // the provider has been initialized
     NET_PRES_EncProviderOutputSize fpOutputSize;   // Function pointer to get the output size
     NET_PRES_EncProviderMaxOutputSize fpMaxOutputSize; // Function pointer to get the maximum output size
 }NET_PRES_EncProviderObject;

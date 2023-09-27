@@ -44,6 +44,6 @@ Microchip or any third party.
 #define _KSZ_8863_H_
 
 
-#endif	// _KSZ_8863_H_
+#endif  // _KSZ_8863_H_
 
 

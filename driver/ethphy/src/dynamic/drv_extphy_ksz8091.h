@@ -49,32 +49,32 @@ Microchip or any third party.
 
 typedef enum
 {
-	/*
-	// basic registers, across all registers: 0-8
-	PHY_REG_BMCON		= 0,
-	PHY_REG_BMSTAT		= 1,
-	// extended registers: 2-15
-	PHY_REG_PHYID1		= 2,
-	PHY_REG_PHYID2		= 3,
-	PHY_REG_ANAD		= 4,
-	PHY_REG_ANLPAD		= 5,
-	PHY_REG_ANEXP		= 6,
-	PHY_REG_ANNPTR		= 7,
-	PHY_REG_ANLPRNP		= 8,
-	*/
-	// specific vendor registers: 16-31
-	PHY_REG_DIGITAL_CONTROL     = 0x10,
-	PHY_REG_AFE_CONTROL         = 0x11,
-	PHY_REG_RXER_COUNTER        = 0x15,
-	PHY_REG_STRAP_OVERRIDE      = 0x16,
-	PHY_REG_STRAP_STATUS        = 0x17,
-	PHY_REG_EXPANDED_CONTROL    = 0x18,
-	PHY_REG_INTERUPT            = 0x1b,
-	PHY_REG_LINKMD_CONTROL      = 0x1d,
-	PHY_REG_PHY_CONTROL_1       = 0x1e,
-	PHY_REG_PHY_CONTROL_2       = 0x1f,
-	//
-	//PHY_REGISTERS		= 32	// total number of registers
+    /*
+    // basic registers, across all registers: 0-8
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
+    // extended registers: 2-15
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANEXP       = 6,
+    PHY_REG_ANNPTR      = 7,
+    PHY_REG_ANLPRNP     = 8,
+    */
+    // specific vendor registers: 16-31
+    PHY_REG_DIGITAL_CONTROL     = 0x10,
+    PHY_REG_AFE_CONTROL         = 0x11,
+    PHY_REG_RXER_COUNTER        = 0x15,
+    PHY_REG_STRAP_OVERRIDE      = 0x16,
+    PHY_REG_STRAP_STATUS        = 0x17,
+    PHY_REG_EXPANDED_CONTROL    = 0x18,
+    PHY_REG_INTERUPT            = 0x1b,
+    PHY_REG_LINKMD_CONTROL      = 0x1d,
+    PHY_REG_PHY_CONTROL_1       = 0x1e,
+    PHY_REG_PHY_CONTROL_2       = 0x1f,
+    //
+    //PHY_REGISTERS     = 32    // total number of registers
 }KSZ8091_VENDOR_REG;
 
 
@@ -87,7 +87,7 @@ typedef union {
     unsigned            :11;
     };
   unsigned short w:16;
-} __KSZ8091_DigitalControlBits_t;	
+} __KSZ8091_DigitalControlBits_t;   
 
 typedef union {
   struct {    
@@ -96,7 +96,7 @@ typedef union {
     unsigned            :10;
   };
   unsigned short w:16;
-} __KSZ8091_AFEControlBits_t;	
+} __KSZ8091_AFEControlBits_t;   
 
 
 typedef union {
@@ -104,7 +104,7 @@ typedef union {
     unsigned short rxerCount:16;
   };
   unsigned short w:16;
-} __KSZ8091_RXERCounterBits_t;	
+} __KSZ8091_RXERCounterBits_t;  
 
 
 typedef union {
@@ -122,7 +122,7 @@ typedef union {
     unsigned                :1;
   };
   unsigned short w:16;
-} __KSZ8091_StrapOverrideBits_t;	
+} __KSZ8091_StrapOverrideBits_t;    
 
 
 typedef union {
@@ -139,7 +139,7 @@ typedef union {
     unsigned PHY_ADD        :3;
   };
   unsigned short w:16;
-} __KSZ8091_StrapStatusBits_t;	
+} __KSZ8091_StrapStatusBits_t;  
 
 typedef union {
   struct {
@@ -148,7 +148,7 @@ typedef union {
     unsigned                :4;
   };
   unsigned short w:16;
-} __KSZ8091_ExpandedControlBits_t;	
+} __KSZ8091_ExpandedControlBits_t;  
 
 
 typedef union {
@@ -171,52 +171,52 @@ typedef union {
     unsigned JABBER_ENABLE                      :1;
   };
   unsigned short w:16;
-} __KSZ8091_InterruptBits_t;	
+} __KSZ8091_InterruptBits_t;    
 
 typedef union {
-	struct {
+    struct {
         unsigned CABLE_FAULT_COUNT  :9;
         unsigned                    :3;
-		unsigned SHORT_CABLE        :1;
-		unsigned CABLE_DIAG_RESULT  :2;
-		unsigned CABLE_DIAG_ENABLE  :1;
-	};
+        unsigned SHORT_CABLE        :1;
+        unsigned CABLE_DIAG_RESULT  :2;
+        unsigned CABLE_DIAG_ENABLE  :1;
+    };
     unsigned short w:16;
 } __KSZ8091_LinkMDControlBits_t;
 
 typedef union {
-	struct {
-		unsigned OPERATION_MODE: 3;
-		unsigned PHY_ISOLATE    :1;
-		unsigned ENERGY_DETECT  :1;
-		unsigned MDI_STATE      :1;
-		unsigned                :1;
-		unsigned POLARITY_STAT  :1;
-		unsigned LINK_STAT      :1;
-		unsigned ENABLE_PAUSE   :1;
+    struct {
+        unsigned OPERATION_MODE: 3;
+        unsigned PHY_ISOLATE    :1;
+        unsigned ENERGY_DETECT  :1;
+        unsigned MDI_STATE      :1;
+        unsigned                :1;
+        unsigned POLARITY_STAT  :1;
+        unsigned LINK_STAT      :1;
+        unsigned ENABLE_PAUSE   :1;
         unsigned                :6;
-	};
+    };
     unsigned short w:16;
 } __KSZ8091_PhyControl1Bits_t;
 
 typedef union {
-	struct {
-		unsigned DATA_SCRAMBLER     :1;
-		unsigned SQE_TEST           :1;
-		unsigned REMOTE_LOOPBACK    :1;
-		unsigned DISABLE_TRANSMIT   :1;
-		unsigned LED_MODE           :2;
-		unsigned                    :1;
+    struct {
+        unsigned DATA_SCRAMBLER     :1;
+        unsigned SQE_TEST           :1;
+        unsigned REMOTE_LOOPBACK    :1;
+        unsigned DISABLE_TRANSMIT   :1;
+        unsigned LED_MODE           :2;
+        unsigned                    :1;
         unsigned RMII_CLOCK_SELECT  :1;
-		unsigned JABBER_ENABLE      :1;
-		unsigned INTERUPT_LEVEL     :1;
-		unsigned POWER_SAVING       :1;
-		unsigned FORCE_LINK         :1;
-		unsigned                    :1;
-		unsigned PAIR_SWAP_DISABLE  :1;
-		unsigned MDI_X_SELECT       :1;
-		unsigned HP_MDIX            :1;
-	};
+        unsigned JABBER_ENABLE      :1;
+        unsigned INTERUPT_LEVEL     :1;
+        unsigned POWER_SAVING       :1;
+        unsigned FORCE_LINK         :1;
+        unsigned                    :1;
+        unsigned PAIR_SWAP_DISABLE  :1;
+        unsigned MDI_X_SELECT       :1;
+        unsigned HP_MDIX            :1;
+    };
     unsigned short w: 16;
 } __KSZ8091_PhyControl2Bits_t;
 

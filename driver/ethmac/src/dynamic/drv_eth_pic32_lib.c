@@ -62,12 +62,12 @@ void DRV_ETH_MaxFrameLengthSet(DRV_ETHERNET_REGISTERS* eth, uint16_t MaxFrameLen
 
 void DRV_ETH_Disable(DRV_ETHERNET_REGISTERS* eth)
 {
-    eth->ETHCON1CLR = _ETHCON1_ON_MASK;	    
+    eth->ETHCON1CLR = _ETHCON1_ON_MASK;     
 }
 
 void DRV_ETH_Enable(DRV_ETHERNET_REGISTERS* eth)
 {
-    eth->ETHCON1SET = _ETHCON1_ON_MASK;	    
+    eth->ETHCON1SET = _ETHCON1_ON_MASK;     
 }
 
 void DRV_ETH_TxRTSDisable(DRV_ETHERNET_REGISTERS* eth)
@@ -92,7 +92,7 @@ void DRV_ETH_RxEnable(DRV_ETHERNET_REGISTERS* eth)
 
 bool DRV_ETH_EthernetIsBusy(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (bool)(eth->ETHSTAT.BUSY); 						       
+    return (bool)(eth->ETHSTAT.BUSY);                              
 }
 
 uint8_t DRV_ETH_RxPacketCountGet(DRV_ETHERNET_REGISTERS* eth)
@@ -133,19 +133,19 @@ uint8_t* DRV_ETH_RxPacketDescAddrGet(DRV_ETHERNET_REGISTERS* eth)
 void DRV_ETH_BackToBackIPGSet(DRV_ETHERNET_REGISTERS* eth, uint8_t backToBackIPGValue)
 {
     eth->EMACxIPGTCLR = _EMAC1IPGT_B2BIPKTGP_MASK;
-    eth->EMACxIPGTSET = _EMAC1IPGT_B2BIPKTGP_MASK & ((uint32_t)backToBackIPGValue << _EMAC1IPGT_B2BIPKTGP_POSITION);	 
+    eth->EMACxIPGTSET = _EMAC1IPGT_B2BIPKTGP_MASK & ((uint32_t)backToBackIPGValue << _EMAC1IPGT_B2BIPKTGP_POSITION);     
 }
 
 void DRV_ETH_NonBackToBackIPG1Set(DRV_ETHERNET_REGISTERS* eth, uint8_t nonBackToBackIPGValue)
 {
     eth->EMACxIPGRCLR = _EMACxIPGR_NB2BIPKTGP1_MASK;
-    eth->EMACxIPGRSET = _EMACxIPGR_NB2BIPKTGP1_MASK & ((uint32_t)nonBackToBackIPGValue << _EMACxIPGR_NB2BIPKTGP1_POSITION);	
+    eth->EMACxIPGRSET = _EMACxIPGR_NB2BIPKTGP1_MASK & ((uint32_t)nonBackToBackIPGValue << _EMACxIPGR_NB2BIPKTGP1_POSITION); 
 }
 
 void DRV_ETH_NonBackToBackIPG2Set(DRV_ETHERNET_REGISTERS* eth, uint8_t nonBackToBackIPGValue)
 {
     eth->EMACxIPGRCLR = _EMACxIPGR_NB2BIPKTGP2_MASK;
-    eth->EMACxIPGRSET = _EMACxIPGR_NB2BIPKTGP2_MASK & ((uint32_t)nonBackToBackIPGValue <<_EMACxIPGR_NB2BIPKTGP2_POSITION);	
+    eth->EMACxIPGRSET = _EMACxIPGR_NB2BIPKTGP2_MASK & ((uint32_t)nonBackToBackIPGValue <<_EMACxIPGR_NB2BIPKTGP2_POSITION);  
 }
 
 void DRV_ETH_CollisionWindowSet(DRV_ETHERNET_REGISTERS* eth, uint8_t collisionWindowValue)
@@ -155,7 +155,7 @@ void DRV_ETH_CollisionWindowSet(DRV_ETHERNET_REGISTERS* eth, uint8_t collisionWi
 
 void DRV_ETH_ReTxMaxSet(DRV_ETHERNET_REGISTERS* eth, uint16_t retransmitMax)
 {
-    eth->EMACxCLRT.RETX = retransmitMax;												     
+    eth->EMACxCLRT.RETX = retransmitMax;                                                     
 }
 
 void DRV_ETH_RMIIResetEnable(DRV_ETHERNET_REGISTERS* eth)
@@ -170,32 +170,32 @@ void DRV_ETH_RMIIResetDisable(DRV_ETHERNET_REGISTERS* eth)
 
 void DRV_ETH_RMIISpeedSet(DRV_ETHERNET_REGISTERS* eth, DRV_ETH_RMII_SPEED RMIISpeed)
 {
-    eth->EMACxSUPP.SPEEDRMII = RMIISpeed ;	
+    eth->EMACxSUPP.SPEEDRMII = RMIISpeed ;  
 }
 
 void DRV_ETH_RxFiltersClr(DRV_ETHERNET_REGISTERS* eth, DRV_ETH_RX_FILTERS rxFilters)
 {
-    eth->ETHRXFCCLR = (uint32_t)rxFilters & DRV_ETH_FILT_ALL_FILTERS;	
+    eth->ETHRXFCCLR = (uint32_t)rxFilters & DRV_ETH_FILT_ALL_FILTERS;   
 }
 
 void DRV_ETH_RxFiltersSet(DRV_ETHERNET_REGISTERS* eth, DRV_ETH_RX_FILTERS rxFilters)
 {
-    eth->ETHRXFCSET = ((uint32_t)rxFilters  & DRV_ETH_FILT_ALL_FILTERS);	
+    eth->ETHRXFCSET = ((uint32_t)rxFilters  & DRV_ETH_FILT_ALL_FILTERS);    
 }
 
 void DRV_ETH_PauseTimerSet(DRV_ETHERNET_REGISTERS* eth, uint16_t PauseTimerValue)
 {
-    eth->ETHCON1SET = _ETHCON1_PTV_MASK & ((uint32_t)PauseTimerValue << _ETHCON1_PTV_POSITION);				 
+    eth->ETHCON1SET = _ETHCON1_PTV_MASK & ((uint32_t)PauseTimerValue << _ETHCON1_PTV_POSITION);              
 }
 
 void DRV_ETH_RxFullWmarkSet(DRV_ETHERNET_REGISTERS* eth, uint8_t watermarkValue)
 {
-    eth->ETHRXWM.RXFWM = watermarkValue;			 
+    eth->ETHRXWM.RXFWM = watermarkValue;             
 }
 
 void DRV_ETH_RxEmptyWmarkSet(DRV_ETHERNET_REGISTERS* eth, uint8_t watermarkValue)
 {
-    eth->ETHRXWM.RXEWM = watermarkValue;		
+    eth->ETHRXWM.RXEWM = watermarkValue;        
 }
 
 void DRV_ETH_TxPauseEnable(DRV_ETHERNET_REGISTERS* eth)
@@ -318,43 +318,43 @@ void DRV_ETH_EventsClear(DRV_ETHERNET_REGISTERS* eth, DRV_ETH_EVENTS evmask)
 
 bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* eth)
 {
-    return (bool)(eth->ETHCON1.ON) ;	
+    return (bool)(eth->ETHCON1.ON) ;    
 }
 
 void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* eth)
-{    	
-	eth->EMACxMCFGSET = _EMACxMCFG_NOPRE_MASK;	
+{       
+    eth->EMACxMCFGSET = _EMACxMCFG_NOPRE_MASK;  
 }
 
 void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* eth)
-{	
-	eth->EMACxMCFGCLR = _EMACxMCFG_NOPRE_MASK;	
+{   
+    eth->EMACxMCFGCLR = _EMACxMCFG_NOPRE_MASK;  
 }
 
 void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* eth)
-{    	
-	eth->EMACxMCFGSET = _EMACxMCFG_SCANINC_MASK;		
+{       
+    eth->EMACxMCFGSET = _EMACxMCFG_SCANINC_MASK;        
 }
 
 
 void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* eth)
-{		
-	eth->EMACxMCFGCLR = _EMACxMCFG_SCANINC_MASK;		
+{       
+    eth->EMACxMCFGCLR = _EMACxMCFG_SCANINC_MASK;        
 }
 
 bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* eth)
-{		
-	return (bool) (eth->EMACxMIND.MIIMBUSY);
+{       
+    return (bool) (eth->EMACxMIND.MIIMBUSY);
 }
 
 void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* eth, uint8_t phyAddr )
-{	
-	eth->EMACxMADR.PHYADDR = phyAddr;
+{   
+    eth->EMACxMADR.PHYADDR = phyAddr;
 }
 
 void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* eth, uint8_t regAddr)
-{	
-	eth->EMACxMADR.REGADDR = regAddr;
+{   
+    eth->EMACxMADR.REGADDR = regAddr;
 }
 
 void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* eth)
@@ -363,18 +363,18 @@ void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* eth)
 }
 
 void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* eth)
-{		
-	eth->EMACxMCMDSET = _EMACxMCMD_SCAN_MASK;
+{       
+    eth->EMACxMCMDSET = _EMACxMCMD_SCAN_MASK;
 }
 
 void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* eth)
-{	
-	eth->EMACxMCMDCLR = _EMACxMCMD_SCAN_MASK;
+{   
+    eth->EMACxMCMDCLR = _EMACxMCMD_SCAN_MASK;
 }
 
 void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* eth, uint16_t writeData )
 {
-	eth->EMACxMWTD.MWTD =writeData ;  				 
+    eth->EMACxMWTD.MWTD =writeData ;                 
                      
     // there's 2 clock cycles till busy is set for a write op
 #if defined(__PIC32MZ__)
@@ -385,13 +385,13 @@ void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* eth, uint16_t writeData )
 }
 
 void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* eth)
-{	
-	eth->EMACxMCMDCLR=_EMACxMCMD_READ_MASK;
+{   
+    eth->EMACxMCMDCLR=_EMACxMCMD_READ_MASK;
 }
 
 void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* eth)
-{		
-	eth->EMACxMCMDSET=_EMACxMCMD_READ_MASK;
+{       
+    eth->EMACxMCMDSET=_EMACxMCMD_READ_MASK;
 
     // there's 4 clock cycles till busy is set for a read op
 #if defined(__PIC32MZ__)
@@ -403,27 +403,27 @@ void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* eth)
 }
 
 uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* eth)
-{    	
-	return (uint16_t)(eth->EMACxMRDD.MRDD);								 
+{       
+    return (uint16_t)(eth->EMACxMRDD.MRDD);                              
 }
 
 bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* eth)
-{		
-	return (bool) (eth->EMACxMIND.NOTVALID);
+{       
+    return (bool) (eth->EMACxMIND.NOTVALID);
 }
 
 void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* eth)
-{		
-	eth->EMACxMCFGSET = _EMACxMCFG_RESETMGMT_MASK; 
+{       
+    eth->EMACxMCFGSET = _EMACxMCFG_RESETMGMT_MASK; 
 }
 
 void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* eth)
-{	
-	eth->EMACxMCFGCLR = _EMACxMCFG_RESETMGMT_MASK; 
+{   
+    eth->EMACxMCFGCLR = _EMACxMCFG_RESETMGMT_MASK; 
 }
 
 void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* eth , ETH_MIIM_CLK MIIMClock )
 {
-	eth->EMACxMCFG.CLKSEL = MIIMClock ;
+    eth->EMACxMCFG.CLKSEL = MIIMClock ;
 }
 

@@ -734,7 +734,7 @@ static DRV_ETHPHY_RESULT DRV_LAN9354_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE*
 
 static unsigned int DRV_LAN9354_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle)
 {
-	return 2500000;		//  2.5 MHz max clock supported
+    return 2500000;     //  2.5 MHz max clock supported
 }
 
 

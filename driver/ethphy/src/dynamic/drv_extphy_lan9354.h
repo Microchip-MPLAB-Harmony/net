@@ -52,14 +52,14 @@ typedef enum
 {
     /*
     // basic registers, accross all registers: 0-1
-    PHY_REG_BMCON		= 0,
-    PHY_REG_BMSTAT		= 1,
-	// extended registers: 2-15
-    PHY_REG_PHYID1		= 2,
-    PHY_REG_PHYID2		= 3,
-    PHY_REG_ANAD		= 4,
-    PHY_REG_ANLPAD		= 5,
-    PHY_REG_ANEXP		= 6,
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
+    // extended registers: 2-15
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANEXP       = 6,
      */
     // specific vendor registers: 16-31
     // Note: reg 27 exists for the Port A, B only!
@@ -522,6 +522,6 @@ typedef enum
 }LAN9354_INDIRECT_SW_CTL_STAT_REG;
 
 
-#endif	// _LAN_9354_H_
+#endif  // _LAN_9354_H_
 
 

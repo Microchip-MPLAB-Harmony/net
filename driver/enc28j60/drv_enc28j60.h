@@ -6,13 +6,13 @@
     
   File Name:
     drv_enc28j60.h
-	
+    
   Summary:
     ENC28J60 Driver interface definition.
-	
+    
   Description:
     This file defines the interface definition for the ENC28J60 Driver.
-	  
+      
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
@@ -107,22 +107,22 @@ typedef enum
 typedef struct _DRV_ENC28J60_Configuration
 {
     /* Number of TX Descriptors to Allocate*/
-	uint16_t txDescriptors;
+    uint16_t txDescriptors;
 
-	/* Number of RX Descriptors to Allocate*/
-	uint16_t rxDescriptors;
+    /* Number of RX Descriptors to Allocate*/
+    uint16_t rxDescriptors;
 
-	/* Size of the buffer each RX Descriptor will use.  Make sure its not smaller than maxFrameSize*/
-	uint16_t rxDescBufferSize;
-	
+    /* Size of the buffer each RX Descriptor will use.  Make sure its not smaller than maxFrameSize*/
+    uint16_t rxDescBufferSize;
+    
     /* Index of the SPI driver to use */
-	SYS_MODULE_INDEX spiDrvIndex;
+    SYS_MODULE_INDEX spiDrvIndex;
 
-	/* The ENC28J60 hardware has a 8 k dram.  rxBufferSize defines how much of that memory is used by the rxBuffer*/
-	uint16_t rxBufferSize;
+    /* The ENC28J60 hardware has a 8 k dram.  rxBufferSize defines how much of that memory is used by the rxBuffer*/
+    uint16_t rxBufferSize;
 
-	/* The maximum frame size to be supported by the hardware.  1536 is the default*/
-	uint16_t maxFrameSize;
+    /* The maximum frame size to be supported by the hardware.  1536 is the default*/
+    uint16_t maxFrameSize;
 
     //SYS_PORT_PIN spiSSPortPin;
     DRV_SPI_TRANSFER_SETUP spiSetup;    
@@ -153,7 +153,7 @@ extern const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject;
 
     Summary:
       Initializes the ENC28J60 Driver Instance, with the configuration data.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function initializes the ENC28J60 Driver with configuration data 
@@ -164,14 +164,14 @@ extern const TCPIP_MAC_OBJECT DRV_ENC28J60_MACObject;
       None.
 
     Parameters
-      index	- This is the index of the driver instance to be initialized.  
-	          The definition DRV_ENC28J60_NUM_DRV_INSTANCES controls how many instances 
-	          are available.
-      init	- This is a pointer to a DRV_ENC28J60_CONFIG structure.
+      index - This is the index of the driver instance to be initialized.  
+              The definition DRV_ENC28J60_NUM_DRV_INSTANCES controls how many instances 
+              are available.
+      init  - This is a pointer to a DRV_ENC28J60_CONFIG structure.
     
     Returns
-      - Valid handle to the driver instance		- If successful
-      - SYS_MODULE_OBJ_INVALID					- If unsuccessful 
+      - Valid handle to the driver instance     - If successful
+      - SYS_MODULE_OBJ_INVALID                  - If unsuccessful 
 */
 SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT * init);
 
@@ -179,7 +179,7 @@ SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT *
 /* ENC28J60 Deinitialization
     Summary:
       Deinitializes the ENC28J60 Driver Instance.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function deallocates any resources allocated by the initialization function.  
@@ -188,7 +188,7 @@ SYS_MODULE_OBJ DRV_ENC28J60_Initialize(SYS_MODULE_INDEX index, SYS_MODULE_INIT *
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize.
     
     Parameters:
-      Object	- the valid object returned from DRV_ENC28J60_Initialize
+      Object    - the valid object returned from DRV_ENC28J60_Initialize
 
     Returns:
       None.
@@ -200,7 +200,7 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object);
 
     Summary:
       Reinitializes the instance of the ENC28J60 driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function will deinitialize and initialize the driver instance.
@@ -210,12 +210,12 @@ void DRV_ENC28J60_Deinitialize(SYS_MODULE_OBJ object);
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize.
 
     Parameters:
-      - object	- The object valid passed back to DRV_ENC28J60_Initialize
-      - init	- The new initialization structure.
+      - object  - The object valid passed back to DRV_ENC28J60_Initialize
+      - init    - The new initialization structure.
 
     Returns:
       None
-	  
+      
     */
 void DRV_ENC28J60_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
 
@@ -224,7 +224,7 @@ void DRV_ENC28J60_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * co
 
     Summary:
       Gets the current status of the driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function will get the status of the driver instance.
@@ -233,13 +233,13 @@ void DRV_ENC28J60_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * co
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize().
 
     Parameters:
-      object	- The object valid passed back to DRV_ENC28J60_Initialize()
+      object    - The object valid passed back to DRV_ENC28J60_Initialize()
 
     Returns:
-      - SYS_STATUS_ERROR			- if an invalid handle has been passed in
-      - SYS_STATUS_UNINITIALIZED	- if the driver has not completed initialization
-      - SYS_STATUS_BUSY				- if the driver is closing and moving to the closed state
-      - SYS_STATUS_READY			- if the driver is ready for client commands
+      - SYS_STATUS_ERROR            - if an invalid handle has been passed in
+      - SYS_STATUS_UNINITIALIZED    - if the driver has not completed initialization
+      - SYS_STATUS_BUSY             - if the driver is closing and moving to the closed state
+      - SYS_STATUS_READY            - if the driver is ready for client commands
 */
 SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ obect);
 
@@ -248,7 +248,7 @@ SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ obect);
 
     Summary:
       Main task function for the driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function will execute the main state machine for the ENC28J60 driver.
@@ -257,7 +257,7 @@ SYS_STATUS DRV_ENC28J60_Status(SYS_MODULE_OBJ obect);
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize.
 
     Parameters:
-      object	- The object valid passed back to DRV_ENC28J60_Initialize
+      object    - The object valid passed back to DRV_ENC28J60_Initialize
 
     Returns:
       None.
@@ -269,7 +269,7 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object);
 
     Summary:
       This function sets the MAC control information for the driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function is used to pass in the TCPIP_MAC_CONTROL_INIT information that 
@@ -281,8 +281,8 @@ void DRV_ENC28J60_Tasks(SYS_MODULE_OBJ object);
       The driver had to be successfully initialized with ENC28J60_Initialize.
 
     Parameters:
-      - object	- The object valid passed back to DRV_ENC28J60_Initialize
-      - init	- The structure containing the MAC control information
+      - object  - The object valid passed back to DRV_ENC28J60_Initialize
+      - init    - The structure containing the MAC control information
  
     Returns:
       true if success
@@ -295,7 +295,7 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
 
     Summary:
       This function initializes the driver with a TCPIP_MAC_INIT object.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function is used by the TCP/IP stack to fully initialize the driver with 
@@ -305,13 +305,13 @@ bool DRV_ENC28J60_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL * 
       None.
     
     Parameters:
-      index	- This is the index of the driver instance to be initialized. The definition 
-			  DRV_ENC28J60_NUM_DRV_INSTANCES controls how many instances are available.
-      init	- This is a pointer to a TCPIP_MAC_INIT structure.
+      index - This is the index of the driver instance to be initialized. The definition 
+              DRV_ENC28J60_NUM_DRV_INSTANCES controls how many instances are available.
+      init  - This is a pointer to a TCPIP_MAC_INIT structure.
 
     Returns:
-      Returns a valid handle to the driver instance	- If successful
-      SYS_MODULE_OBJ_INVALID						- If unsuccessful
+      Returns a valid handle to the driver instance - If successful
+      SYS_MODULE_OBJ_INVALID                        - If unsuccessful
 */
 SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
 
@@ -326,7 +326,7 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
 /* ENC28J60 Open
     Summary:
       This function is called by the client to open a handle to a driver instance.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       The client will call this function to open a handle to the driver.  When the 
@@ -337,14 +337,14 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
       The driver had to be successfully initialized with DRV_ENC28J60_Initialize.
 
     Parameters:
-      index	 - This is the index of the driver instance to be initialized.  The
+      index  - This is the index of the driver instance to be initialized.  The
                definition DRV_ENC28J60_NUM_DRV_INSTANCES controls how many 
                instances are available.
       intent - The intent to use when opening the driver.  Only exclusive is supported
 
     Returns:
       Returns a valid handle - If successful
-      INVALID_HANDLE		 - If unsuccessful
+      INVALID_HANDLE         - If unsuccessful
 */
 DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent);
 
@@ -354,12 +354,12 @@ DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent);
 
     Summary:
       Closes a client handle to the driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function closes a handle to the driver.  If it is the last client open, 
       the driver will send an RX Disable command to the ENC hardware and move to 
-	  the closed state.
+      the closed state.
 
     Preconditions:
       The client had to be successfully opened with DRV_ENC28J60_Open.
@@ -377,7 +377,7 @@ void DRV_ENC28J60_Close(DRV_HANDLE handle);
 
     Summary:
       This function returns the status of the link.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function checks the status of the link and returns it to the caller.
@@ -389,8 +389,8 @@ void DRV_ENC28J60_Close(DRV_HANDLE handle);
       hMac: the successfully opened handle
 
     Returns:
-      - true	- if the link is active
-      - false	- all other times
+      - true    - if the link is active
+      - false   - all other times
 */
 bool DRV_ENC28J60_LinkCheck(DRV_HANDLE hMac);
 
@@ -399,7 +399,7 @@ bool DRV_ENC28J60_LinkCheck(DRV_HANDLE hMac);
 
     Summary:
       This function adds an entry to the hash table.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function adds to the MAC's hash table for hash table matching.  
@@ -409,12 +409,12 @@ bool DRV_ENC28J60_LinkCheck(DRV_HANDLE hMac);
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac			- the successfully opened handle
-      DestMACAddr	- MAC address to add to the hash table
+      hMac          - the successfully opened handle
+      DestMACAddr   - MAC address to add to the hash table
 
     Returns:
-      - TCPIP_MAC_RES_TYPE_ERR	- if the hMac is invalid
-      - TCPIP_MAC_RES_OP_ERR	- if the hMac is valid
+      - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
+      - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
  */
 TCPIP_MAC_RES DRV_ENC28J60_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP_MAC_ADDR* DestMACAddr);
 
@@ -423,21 +423,21 @@ TCPIP_MAC_RES DRV_ENC28J60_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPI
 
     Summary:
       This function sets the power mode of the device.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function sets the power mode of the ENC28J60.
-	  Note: This functionality  is not implemented in the first release.
+      Note: This functionality  is not implemented in the first release.
 
     Preconditions:
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac		- the successfully opened handle
-      pwrMode	- the power mode to set
+      hMac      - the successfully opened handle
+      pwrMode   - the power mode to set
 
     Returns:
-      - false	- This functionality is not supported in this version of the driver
+      - false   - This functionality is not supported in this version of the driver
 */
 bool  DRV_ENC28J60_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode);
 
@@ -446,7 +446,7 @@ bool  DRV_ENC28J60_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode);
 
     Summary:
       This function queues a packet for transmission.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function will take a packet and add it to the queue for transmission.  
@@ -458,14 +458,14 @@ bool  DRV_ENC28J60_PowerMode(DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode);
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters
-      hMac		- the successfully opened handle
-      ptrPacket	- pointer to the packet
+      hMac      - the successfully opened handle
+      ptrPacket - pointer to the packet
 
     Returns:
-      - TCPIP_MAC_RES_OP_ERR		- if the client handle is invalid
-      - TCPIP_MAC_RES_IS_BUSY		- if the driver is not in the run state
-      - TCPIP_MAC_RES_QUEUE_TX_FULL	- if there are no free descriptors
-      - TCPIP_MAC_RES_OK			- on successful queuing of the packet
+      - TCPIP_MAC_RES_OP_ERR        - if the client handle is invalid
+      - TCPIP_MAC_RES_IS_BUSY       - if the driver is not in the run state
+      - TCPIP_MAC_RES_QUEUE_TX_FULL - if there are no free descriptors
+      - TCPIP_MAC_RES_OK            - on successful queuing of the packet
 */
 TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
 
@@ -474,7 +474,7 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
 
     Summary:
       Receive a packet from the driver.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function retrieves a packet from the driver.  The packet needs to be 
@@ -485,13 +485,13 @@ TCPIP_MAC_RES DRV_ENC28J60_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacke
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac			- the successfully opened handle
-      pRes			- the result of the operation
-      pPktStat		- address to the receive statistics
+      hMac          - the successfully opened handle
+      pRes          - the result of the operation
+      pPktStat      - address to the receive statistics
 
     Returns:
-      - Pointer to a valid packet	- if successful
-      - NULL						- if unsuccessful
+      - Pointer to a valid packet   - if successful
+      - NULL                        - if unsuccessful
 */
 TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
@@ -500,22 +500,22 @@ TCPIP_MAC_PACKET* DRV_ENC28J60_PacketRx(DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TC
 
     Summary:
       Additional processing that happens outside the tasks function.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       This function does additional processing that is not done inside the 
-	  tasks function.  
-	  Note: This function does nothing in the first release.
+      tasks function.  
+      Note: This function does nothing in the first release.
     
     Preconditions:
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac	- the successfully opened handle
+      hMac  - the successfully opened handle
 
     Returns:
-      - TCPIP_MAC_RES_TYPE_ERR	- if the hMac is invalid
-      - TCPIP_MAC_RES_OP_ERR	- if the hMac is valid
+      - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
+      - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
 */
 TCPIP_MAC_RES DRV_ENC28J60_Process(DRV_HANDLE hMac);
 
@@ -524,21 +524,21 @@ TCPIP_MAC_RES DRV_ENC28J60_Process(DRV_HANDLE hMac);
 
     Summary:
     Retrieve the devices statistics.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
     Description:
     Get the current statistics stored in the driver.  
-	Note: Statistics are not planned for the first release.
+    Note: Statistics are not planned for the first release.
 
     Preconditions:
     The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac	- the successfully opened handle
+      hMac  - the successfully opened handle
 
     Returns:
-      - TCPIP_MAC_RES_TYPE_ERR	- if the hMac is invalid
-      - TCPIP_MAC_RES_OP_ERR	- if the hMac is valid
+      - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
+      - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
 */
 TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
 
@@ -547,7 +547,7 @@ TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTIC
 
     Summary:
       Get the parameters of the device.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       Get the parameters of the device, which includes that it is an Ethernet device 
@@ -557,12 +557,12 @@ TCPIP_MAC_RES DRV_ENC28J60_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTIC
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac			- the successfully opened handle
-      pMacParams	- pointer to put the parameters
+      hMac          - the successfully opened handle
+      pMacParams    - pointer to put the parameters
 
     Returns:
-      - TCPIP_MAC_RES_TYPE_ERR	- if the hMac is invalid
-      - TCPIP_MAC_RES_OK		- if the hMac is valid
+      - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
+      - TCPIP_MAC_RES_OK        - if the hMac is valid
 */
 TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams);
 
@@ -571,24 +571,24 @@ TCPIP_MAC_RES DRV_ENC28J60_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* 
 
     Summary:
       Get the register statistics.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       Get the device specific statistics.
-	  Note: Statistics are not planned for the first release
+      Note: Statistics are not planned for the first release
 
     Preconditions:
     The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac			- the successfully opened handle
-      pRegEntries	- 
-      nEntries		- 
-      pHwEntries	- 
+      hMac          - the successfully opened handle
+      pRegEntries   - 
+      nEntries      - 
+      pHwEntries    - 
 
     Returns:
-      - TCPIP_MAC_RES_TYPE_ERR 	- if the hMac is invalid
-      - TCPIP_MAC_RES_OP_ERR	- if the hMac is valid
+      - TCPIP_MAC_RES_TYPE_ERR  - if the hMac is invalid
+      - TCPIP_MAC_RES_OP_ERR    - if the hMac is valid
 */
 TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
 
@@ -597,20 +597,20 @@ TCPIP_MAC_RES DRV_ENC28J60_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STAT
 
     Summary:
       Gets the current configuration.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
     
     Description:
       Gets the current configuration.  
-	  Note: This function does nothing in the first release.
+      Note: This function does nothing in the first release.
 
     Preconditions:
       The client had to be successfully opened with DRV_ENC28J60_Open.
     
     Parameters:
-      hMac			- the successfully opened handle
-      configBuff	- location to copy the configuration too
-      buffSize		- buffer size
-      pConfigSize	- configuration size needed
+      hMac          - the successfully opened handle
+      configBuff    - location to copy the configuration too
+      buffSize      - buffer size
+      pConfigSize   - configuration size needed
 
     Returns:
         Number of bytes copied to the buffer
@@ -622,7 +622,7 @@ size_t DRV_ENC28J60_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize
 
     Summary:
       Sets the event mask.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       Sets the event mask to what is passed in.
@@ -631,13 +631,13 @@ size_t DRV_ENC28J60_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac		- the successfully opened handle
-      macEvents	- the mask to enable or disable
-      enable	- to enable or disable events
+      hMac      - the successfully opened handle
+      macEvents - the mask to enable or disable
+      enable    - to enable or disable events
 
     Returns
-      - true 	- if the mask could be set
-      - false	- if the mast could not be set
+      - true    - if the mask could be set
+      - false   - if the mast could not be set
 */
 bool DRV_ENC28J60_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
 
@@ -646,7 +646,7 @@ bool DRV_ENC28J60_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool 
 
     Summary:
       Acknowledges an event.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function acknowledges an event.
@@ -655,12 +655,12 @@ bool DRV_ENC28J60_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool 
       The client had to be successfully opened with DRV_ENC28J60_Open.
 
     Parameters:
-      hMac 		- the successfully opened handle
+      hMac      - the successfully opened handle
       macEvents - the events to acknowledge
 
     Returns:
-      - true	- if successful
-      - false	- if not successful
+      - true    - if successful
+      - false   - if not successful
 */
 bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
 
@@ -669,7 +669,7 @@ bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
 
     Summary:
       Gets the current events.
-	  <p><b>Implementation:</b> Dynamic</p>
+      <p><b>Implementation:</b> Dynamic</p>
 
     Description:
       This function gets the current events.
@@ -681,8 +681,8 @@ bool DRV_ENC28J60_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
       hMac - the successfully opened handle
 
     Returns:
-	  - TCPIP_MAC_EV_NONE	- Returned on an error
-	  - List of events		- Returned on event other than an error
+      - TCPIP_MAC_EV_NONE   - Returned on an error
+      - List of events      - Returned on event other than an error
 
 */
 TCPIP_MAC_EVENT DRV_ENC28J60_EventPendingGet(DRV_HANDLE hMac);

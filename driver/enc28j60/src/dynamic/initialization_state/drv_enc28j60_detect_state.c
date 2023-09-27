@@ -42,7 +42,7 @@ Microchip or any third party.
 int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     uint16_t    phyID1Value;
-	DRV_ENC28J60_PHY_RES phyRes;
+    DRV_ENC28J60_PHY_RES phyRes;
     DRV_ENC28J60_RegUnion phyReg;
     DRV_ENC28J60_DETECT_STATE_INFO* pInfo = &pDrvInst->mainStateInfo.initInfo.detectStateInfo;
 

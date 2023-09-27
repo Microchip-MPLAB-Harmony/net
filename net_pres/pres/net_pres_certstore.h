@@ -70,12 +70,12 @@ extern "C" {
 
   Summary:
     This function gets the CA certificates from the store,
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function is used by client connections to retrieve the Certificate 
-	Authority certificates that are used to validate signatures on server 
-	certificates.
+    Authority certificates that are used to validate signatures on server 
+    certificates.
     
   Preconditions:
     None.
@@ -84,17 +84,17 @@ extern "C" {
     certPtr   - A pointer to the CA certificates
     certSize  - The size of the certificates
     certIndex - Most likely '0', but this parameter is provided to select 
-	            a different set of CA certificates
+                a different set of CA certificates
     
     Returns:
     - true  - Indicates success
     - false - Indicates failure
-	
+    
 */    
 
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, 
                                   uint8_t certIndex);
-								  
+                                  
 // *****************************************************************************
 /* Get Device X509 TLS Parameters function
 
@@ -133,12 +133,12 @@ bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr,
 
   Summary:
     This function gets a server certificate and key from the certificate store.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function is used by server connections to retrieve their certificate 
-	and private key. Multiple server certificates can be stored in the certificate 
-	store, for example one for a Web server and one for a mail server.
+    and private key. Multiple server certificates can be stored in the certificate 
+    store, for example one for a Web server and one for a mail server.
     
   Preconditions:
     None.
@@ -149,7 +149,7 @@ bool NET_PRES_CertStoreGetDeviceTlsParams(const uint8_t ** certPtr,
     serverKeyPtr   - A pointer to the server private key
     serverKeySize  - The size of the server private key
     certIndex      - Most likely '0', but this parameter is provided to select a 
-	                 different server certificate
+                     different server certificate
     
   Returns:
     - true  - Indicates success

@@ -462,18 +462,18 @@ static __inline__ DRV_ETHMAC_DCPT_LIST* __attribute__((always_inline)) DRV_ETHMA
 //
 typedef struct _TAG_DRV_ETHMAC_SGL_LIST_NODE
 {
-	struct _TAG_DRV_ETHMAC_SGL_LIST_NODE*	next;		// next node in list
+    struct _TAG_DRV_ETHMAC_SGL_LIST_NODE*   next;       // next node in list
     void*                                   data[];     // generic payload    
-}DRV_ETHMAC_SGL_LIST_NODE;	// generic linked list node definition
+}DRV_ETHMAC_SGL_LIST_NODE;  // generic linked list node definition
 
 
 typedef struct
 {
-	DRV_ETHMAC_SGL_LIST_NODE*	head;	// list head
-	DRV_ETHMAC_SGL_LIST_NODE*	tail;
+    DRV_ETHMAC_SGL_LIST_NODE*   head;   // list head
+    DRV_ETHMAC_SGL_LIST_NODE*   tail;
     int             nNodes; // number of nodes in the list
 
-}DRV_ETHMAC_SGL_LIST;	// single linked list
+}DRV_ETHMAC_SGL_LIST;   // single linked list
 
 static __inline__ void  __attribute__((always_inline)) DRV_ETHMAC_SingleListInitialize(DRV_ETHMAC_SGL_LIST* pL)
 {

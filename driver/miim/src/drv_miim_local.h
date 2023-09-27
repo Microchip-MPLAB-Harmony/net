@@ -91,18 +91,18 @@ Microchip or any third party.
 
 typedef struct _TAG_SGL_LIST_NODE
 {
-	struct _TAG_SGL_LIST_NODE*		next;		// next node in list
+    struct _TAG_SGL_LIST_NODE*      next;       // next node in list
     void*                           data[];     // generic payload    
-}SGL_LIST_NODE;	// generic linked list node definition
+}SGL_LIST_NODE; // generic linked list node definition
 
 
 typedef struct
 {
-	SGL_LIST_NODE*	head;	// list head
-	SGL_LIST_NODE*	tail;
+    SGL_LIST_NODE*  head;   // list head
+    SGL_LIST_NODE*  tail;
     int             nNodes; // number of nodes in the list
 
-}SINGLE_LIST;	// single linked list
+}SINGLE_LIST;   // single linked list
 
 
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)

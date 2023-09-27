@@ -65,22 +65,22 @@ Microchip or any third party.
 // layout of the Ethernet registers        
 typedef struct __attribute__ ((packed , aligned(4)))
 {
- __ETHCON1bits_t	ETHCON1;
+ __ETHCON1bits_t    ETHCON1;
 volatile uint32_t        ETHCON1CLR ;
 volatile uint32_t        ETHCON1SET ;
 volatile uint32_t        ETHCON1INV ;
 
- __ETHCON2bits_t	ETHCON2;
+ __ETHCON2bits_t    ETHCON2;
  volatile uint32_t        ETHCON2CLR ;
  volatile uint32_t        ETHCON2SET ;
  volatile uint32_t        ETHCON2INV ;
 
- __ETHTXSTbits_t		ETHTXST ;
+ __ETHTXSTbits_t        ETHTXST ;
  volatile uint32_t        ETHTXSTCLR ;
  volatile uint32_t        ETHTXSTSET ;
  volatile uint32_t        ETHTXSTINV ;
  
- __ETHRXSTbits_t		ETHRXST ;
+ __ETHRXSTbits_t        ETHRXST ;
  volatile uint32_t        ETHRXSTCLR ;
  volatile uint32_t        ETHRXSTSET ;
  volatile uint32_t        ETHRXSTINV ;
@@ -95,12 +95,12 @@ volatile uint32_t        ETHCON1INV ;
  volatile uint32_t        ETHHT1SET ;
  volatile uint32_t        ETHHT1INV ;
 
- __ETHPMM0bits_t 	  ETHPMM0 ;
+ __ETHPMM0bits_t      ETHPMM0 ;
  volatile uint32_t        ETHPMM0CLR ;
  volatile uint32_t        ETHPMM0SET ;
  volatile uint32_t        ETHPMM0INV ;
 
- __ETHPMM1bits_t 	  ETHPMM1 ;
+ __ETHPMM1bits_t      ETHPMM1 ;
  volatile uint32_t        ETHPMM1CLR ;
  volatile uint32_t        ETHPMM1SET ;
  volatile uint32_t        ETHPMM1INV ;
@@ -115,7 +115,7 @@ volatile uint32_t        ETHCON1INV ;
  volatile uint32_t        ETHPMOSET ;
  volatile uint32_t        ETHPMOINV ;
  
- __ETHRXFCbits_t	   ETHRXFC ;
+ __ETHRXFCbits_t       ETHRXFC ;
  volatile uint32_t        ETHRXFCCLR ;
  volatile uint32_t        ETHRXFCSET ;
  volatile uint32_t        ETHRXFCINV ;
@@ -137,24 +137,24 @@ volatile uint32_t        ETHCON1INV ;
 
  __ETHSTATbits_t         ETHSTAT ;
 
- volatile uint32_t   	  addroffset[7];
+ volatile uint32_t        addroffset[7];
  
- __ETHRXOVFLOWbits_t		ETHRXOVFLOW ;
+ __ETHRXOVFLOWbits_t        ETHRXOVFLOW ;
  volatile uint32_t        ETHRXOVFLOWCLR ;
  volatile uint32_t        ETHRXOVFLOWSET ;
  volatile uint32_t        ETHRXOVFLOWINV ;
 
- __ETHFRMTXOKbits_t		ETHFRMTXOK ;
+ __ETHFRMTXOKbits_t     ETHFRMTXOK ;
  volatile uint32_t        ETHFRMTXOKCLR ;
  volatile uint32_t        ETHFRMTXOKSET ;
  volatile uint32_t        ETHFRMTXOKINV ;
 
- __ETHSCOLFRMbits_t		ETHSCOLFRM ;
+ __ETHSCOLFRMbits_t     ETHSCOLFRM ;
  volatile uint32_t        ETHSCOLFRMCLR ;
  volatile uint32_t        ETHSCOLFRMSET ;
  volatile uint32_t        ETHSCOLFRMINV ;
 
- __ETHMCOLFRMbits_t		ETHMCOLFRM ;
+ __ETHMCOLFRMbits_t     ETHMCOLFRM ;
  volatile uint32_t        ETHMCOLFRMCLR ;
  volatile uint32_t        ETHMCOLFRMSET ;
  volatile uint32_t        ETHMCOLFRMINV ;
@@ -174,7 +174,7 @@ volatile uint32_t        ETHCON1INV ;
  volatile uint32_t        ETHALGNERRSET ;
  volatile uint32_t        ETHALGNERRINV ;
 
- volatile uint32_t   	  addroffset1[36];
+ volatile uint32_t        addroffset1[36];
  
  __EMACxCFG1bits_t       EMACxCFG1 ;
  volatile uint32_t        EMACxCFG1CLR ;
@@ -232,7 +232,7 @@ volatile uint32_t        ETHCON1INV ;
  volatile uint32_t        EMACxMADRINV ;
 
 
- __EMACxMWTDbits_t  	EMACxMWTD ;
+ __EMACxMWTDbits_t      EMACxMWTD ;
  volatile uint32_t        EMACxMWTDCLR ;
  volatile uint32_t        EMACxMWTDSET ;
  volatile uint32_t        EMACxMWTDINV ;
@@ -247,7 +247,7 @@ volatile uint32_t        ETHCON1INV ;
  volatile uint32_t        EMACxMINDSET ;
  volatile uint32_t        EMACxMINDINV ;
  
- volatile uint32_t  addroffset2[8];	
+ volatile uint32_t  addroffset2[8]; 
 
  __EMACxSA0bits_t        EMACxSA0 ;
  volatile uint32_t        EMACxSA0CLR ;
@@ -500,7 +500,7 @@ typedef enum {
 
   Precondition:
     Write to the Pause Timer register before enabling the receiver. Call this 
-	function before calling DRV_ETH_ReceiveEnable.
+    function before calling DRV_ETH_ReceiveEnable.
 
   Parameters:
     pEthReg - pointer to the Ethernet registers
@@ -527,7 +527,7 @@ void DRV_ETH_PauseTimerSet(DRV_ETHERNET_REGISTERS* pEthReg, uint16_t PauseTimerV
 
   Description:
     This function enables the Ethernet module.
-	This function performs atomic register access. 
+    This function performs atomic register access. 
 
   Precondition:
     None.
@@ -556,7 +556,7 @@ void DRV_ETH_Enable(DRV_ETHERNET_REGISTERS* pEthReg);
 
   Description:
     This function disables the Ethernet module.
-	This function performs atomic register access. 
+    This function performs atomic register access. 
 
   Precondition:
     None.
@@ -710,7 +710,7 @@ void DRV_ETH_RxDisable(DRV_ETHERNET_REGISTERS* pEthReg);
 
   Description:
     This function enables Ethernet Automatic Flow Control logic.
-	This function performs atomic register access.
+    This function performs atomic register access.
 
   Precondition:
     None.
@@ -780,8 +780,8 @@ void DRV_ETH_RxBufferCountDecrement(DRV_ETHERNET_REGISTERS* pEthReg);
   Description:
    This function sets the required buffer size for the receive operation.
     In this implementation, all receive descriptors use the same buffer 
-	size (unlike the transmission flow where each descriptor can have 
-	a different buffer size)
+    size (unlike the transmission flow where each descriptor can have 
+    a different buffer size)
 
   Precondition:
     0 < rxBuffSize <= 2032
@@ -798,9 +798,9 @@ void DRV_ETH_RxBufferCountDecrement(DRV_ETHERNET_REGISTERS* pEthReg);
 
   Remarks:
     None
-	This function should be part of the initialization process and should
-	NOT be called when the rx process is active! The receive buffer size 
-	is always TRUNCATED to a multiple of 16 bytes.
+    This function should be part of the initialization process and should
+    NOT be called when the rx process is active! The receive buffer size 
+    is always TRUNCATED to a multiple of 16 bytes.
 */
 int DRV_ETH_RxSetBufferSize(DRV_ETHERNET_REGISTERS* pEthReg, int rxBuffSize);
 
@@ -1323,7 +1323,7 @@ uint8_t DRV_ETH_RxPacketCountGet(DRV_ETHERNET_REGISTERS* pEthReg);
     This function clears the Ethernet module interrupt source status using a mask.
     Logically 'OR' the masks together. Any masks not ORed with the others will 
     be disabled.
-	This function performs atomic register access. 
+    This function performs atomic register access. 
 
   Precondition:
     None.
@@ -1511,7 +1511,7 @@ void DRV_ETH_NonBackToBackIPG2Set(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t nonBa
 
   Description:
     This function sets the EMAC collision window.
-	This function performs atomic register access. 
+    This function performs atomic register access. 
 
   Precondition:
     None.

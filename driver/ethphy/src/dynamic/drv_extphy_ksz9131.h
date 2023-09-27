@@ -46,46 +46,46 @@ Microchip or any third party.
 
 typedef enum
 {
-	/*
-	// basic registers, accross all registers: 0-1
-	PHY_REG_BMCON		= 0,
-	PHY_REG_BMSTAT		= 1,
-	// extended registers: 2-15
-	PHY_REG_PHYID1		= 2,
-	PHY_REG_PHYID2		= 3,
-	PHY_REG_ANAD		= 4,
-	PHY_REG_ANLPAD		= 5,
-	PHY_REG_ANLPADNP	= 5,
-	PHY_REG_ANEXP		= 6,
-	PHY_REG_ANNPTR		= 7,
-	PHY_REG_ANLPRNP		= 8,
-	*/    
-	PHY_MMD_ACCESS_CONTROL = 13,
-	PHY_MMD_ACCESS_DATA_ADDR = 14,
-	// specific vendor registers: 16-31
-	PHY_REG_RESERVED	= 16,
-	PHY_REG_REMOTE_LPBK	= 17,
-	PHY_REG_LINKMD_DIAG	= 18,
-    PHY_REG_DIG_PMA	= 19,
-	PHY_REG_RX_ERR_CNT	= 21,
-    PHY_REG_LED_MODE	= 22,
-    PHY_REG_LED_BEHV	= 23,
-	PHY_REG_MDIO_DRV	= 25,
-    PHY_REG_KSZ9031_LED_MODE	= 26,
-    PHY_REG_INT_CTRL	= 27,
-    PHY_REG_AUTO_MDIX	= 28,
-	PHY_REG_SOFT_POWER_DOWN	= 29,
-	PHY_REG_EXT_LPBK	= 30,
-	PHY_REG_PHY_CTRL	= 31,
-	//
-	//PHY_REGISTERS		= 32	// total number of registers
+    /*
+    // basic registers, accross all registers: 0-1
+    PHY_REG_BMCON       = 0,
+    PHY_REG_BMSTAT      = 1,
+    // extended registers: 2-15
+    PHY_REG_PHYID1      = 2,
+    PHY_REG_PHYID2      = 3,
+    PHY_REG_ANAD        = 4,
+    PHY_REG_ANLPAD      = 5,
+    PHY_REG_ANLPADNP    = 5,
+    PHY_REG_ANEXP       = 6,
+    PHY_REG_ANNPTR      = 7,
+    PHY_REG_ANLPRNP     = 8,
+    */    
+    PHY_MMD_ACCESS_CONTROL = 13,
+    PHY_MMD_ACCESS_DATA_ADDR = 14,
+    // specific vendor registers: 16-31
+    PHY_REG_RESERVED    = 16,
+    PHY_REG_REMOTE_LPBK = 17,
+    PHY_REG_LINKMD_DIAG = 18,
+    PHY_REG_DIG_PMA = 19,
+    PHY_REG_RX_ERR_CNT  = 21,
+    PHY_REG_LED_MODE    = 22,
+    PHY_REG_LED_BEHV    = 23,
+    PHY_REG_MDIO_DRV    = 25,
+    PHY_REG_KSZ9031_LED_MODE    = 26,
+    PHY_REG_INT_CTRL    = 27,
+    PHY_REG_AUTO_MDIX   = 28,
+    PHY_REG_SOFT_POWER_DOWN = 29,
+    PHY_REG_EXT_LPBK    = 30,
+    PHY_REG_PHY_CTRL    = 31,
+    //
+    //PHY_REGISTERS     = 32    // total number of registers
 }KSZ9131_VENDOR_REG;
 
 
 
 // MMD ( MDIO Managable Devices )
 typedef union {
-  struct {	      
+  struct {        
     unsigned MMD_DEV_ADDR:5;
     unsigned :9;
     unsigned MMD_FUNCTION:2;
@@ -93,12 +93,12 @@ typedef union {
   struct {
     unsigned short w:16;
   };
-} __MMDACCESSCONTROLbits_t;	// Index 13: 
+} __MMDACCESSCONTROLbits_t; // Index 13: 
 
 typedef enum
-{	// MMD Register under Device Address 2
+{   // MMD Register under Device Address 2
     PHY_MMD_CLK_SKEW_REG = 8,
-	PHY_MMD_TX_DLL_REG	 = 77,
+    PHY_MMD_TX_DLL_REG   = 77,
 }PHY_MMD_DEV2_REG;
 
 #define _PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000 // 15 and 14th is 00

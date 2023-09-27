@@ -128,7 +128,7 @@ int32_t DRV_ENC28J60_ChkIntStateEnter(struct _DRV_ENC28J60_DriverInfo * pDrvInst
 {
     DRV_ENC28J60_CHECK_INT_INFO * curSt = &(pDrvInst->mainStateInfo.runningInfo.chkIntInfo);
     curSt->state = DRV_ENC28J60_CI_WAIT;
-	pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkUpdateNeeded = true;
+    pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkUpdateNeeded = true;
 
     return 0;
 }

@@ -194,7 +194,7 @@ typedef struct
 
   Summary:
     Initializes the PIC32 Ethernet MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports the initialization of the PIC32 Ethernet MAC.  Used by tcpip_module_manager.
@@ -228,7 +228,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
   Summary:
     Deinitializes the PIC32 Ethernet MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports teardown of the PIC32 Ethernet MAC (opposite of set up).  Used by tcpip_module_manager.
@@ -260,7 +260,7 @@ void DRV_ETHMAC_PIC32MACDeinitialize(SYS_MODULE_OBJ object);
 
   Summary:
     Reinitializes the PIC32 Ethernet MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function supports re-initialization of the PIC32 Ethernet MAC (opposite of set up).
@@ -293,7 +293,7 @@ void DRV_ETHMAC_PIC32MACReinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INI
     
   Summary:
     Provides the current status of the MAC driver module.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function provides the current status of the MAC driver
@@ -329,7 +329,7 @@ SYS_STATUS DRV_ETHMAC_PIC32MACStatus ( SYS_MODULE_OBJ object );
     
   Summary:
     Maintains the EThernet MAC driver's state machine.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function is used to maintain the driver's internal state machine
@@ -361,7 +361,7 @@ void DRV_ETHMAC_PIC32MACTasks( SYS_MODULE_OBJ object );
     
   Summary:
     Opens a client instance of the PIC32 MAC Driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function opens a client instance of the PIC32 MAC Driver.
@@ -397,7 +397,7 @@ DRV_HANDLE DRV_ETHMAC_PIC32MACOpen(const SYS_MODULE_INDEX drvIndex, const DRV_IO
     
   Summary:
     Closes a client instance of the PIC32 MAC Driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function closes a client instance of the PIC32 MAC Driver.
@@ -427,7 +427,7 @@ void DRV_ETHMAC_PIC32MACClose( DRV_HANDLE hMac );
 
   Summary:
     Checks current link status.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function checks the link status of the associated network interface.
@@ -463,7 +463,7 @@ bool DRV_ETHMAC_PIC32MACLinkCheck( DRV_HANDLE hMac );
 
   Summary:
     Selects the current power mode for the Ethernet MAC.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function sets the power mode for the Ethernet MAC.
@@ -497,7 +497,7 @@ bool DRV_ETHMAC_PIC32MACPowerMode( DRV_HANDLE hMac, TCPIP_MAC_POWER_MODE pwrMode
     
   Summary:
     Sets the current MAC hash table receive filter.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function sets the MAC hash table filtering to allow 
@@ -552,7 +552,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, cons
     
   Summary:
     MAC driver transmit function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is the MAC transmit function.
@@ -599,7 +599,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
 
   Summary:
     This is the MAC receive function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will return a packet if such a pending packet exists.
@@ -665,7 +665,7 @@ TCPIP_MAC_PACKET* DRV_ETHMAC_PIC32MACPacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* p
     
   Summary:
     MAC periodic processing function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that allows for internal processing by the MAC
@@ -711,7 +711,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACProcess(DRV_HANDLE hMac);
 
   Summary:
     Gets the current MAC statistics.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current value of the statistic counters
@@ -753,7 +753,7 @@ TCPIP_MAC_RES       DRV_ETHMAC_PIC32MACStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_
 
   Summary:
     MAC parameter get function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that returns the run time parameters of the MAC driver.
@@ -782,7 +782,7 @@ TCPIP_MAC_RES     DRV_ETHMAC_PIC32MACParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PA
 
   Summary:
     Gets the current MAC hardware statistics registers.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current value of the statistic registers
@@ -825,7 +825,7 @@ TCPIP_MAC_RES       DRV_ETHMAC_PIC32MACRegisterStatisticsGet(DRV_HANDLE hMac, TC
 
   Summary:
     Gets the current MAC driver configuration.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will get the current MAC driver configuration and store it into
@@ -865,7 +865,7 @@ size_t      DRV_ETHMAC_PIC32MACConfigGet(DRV_HANDLE hMac, void* configBuff, size
     
   Summary:
     Enables/disables the MAC events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is a function that enables or disables the events to be reported
@@ -922,7 +922,7 @@ bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents,
     
   Summary:
     Acknowledges and re-enables processed events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
     
   Description:
     This function acknowledges and re-enables processed events. Multiple
@@ -979,7 +979,7 @@ bool    DRV_ETHMAC_PIC32MACEventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcp
     
   Summary:
     Returns the currently pending events.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the currently pending Ethernet MAC events.
@@ -1031,7 +1031,7 @@ TCPIP_MAC_EVENT DRV_ETHMAC_PIC32MACEventPendingGet(DRV_HANDLE hMac);
     
   Summary:
     Ethernet MAC driver interrupt function.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This is the Ethernet MAC driver interrupt service routine.

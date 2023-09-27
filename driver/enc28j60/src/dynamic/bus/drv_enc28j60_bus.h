@@ -68,13 +68,13 @@ typedef enum
     DRV_ENC28J60_PTR_ETXNDH,
     DRV_ENC28J60_PTR_ERXSTL,
     DRV_ENC28J60_PTR_ERXSTH,    
-	DRV_ENC28J60_PTR_ERXNDL,
+    DRV_ENC28J60_PTR_ERXNDL,
     DRV_ENC28J60_PTR_ERXNDH,
     DRV_ENC28J60_PTR_ERXRDPTL,
     DRV_ENC28J60_PTR_ERXRDPTH,
     DRV_ENC28J60_PTR_ERXWRPTL,
     DRV_ENC28J60_PTR_ERXWRPTH,
-	DRV_ENC28J60_PTR_EDMASTL,
+    DRV_ENC28J60_PTR_EDMASTL,
     DRV_ENC28J60_PTR_EDMASTH,
     DRV_ENC28J60_PTR_EDMANDL,
     DRV_ENC28J60_PTR_EDMANDH,
@@ -688,9 +688,9 @@ typedef TCPIP_MAC_RES (*DRV_ENC28J60_WritePacket)(struct _DRV_ENC28J60_DriverInf
     some space before the actual pointer in the packet.  For the PIC32 Internal 
     MAC this is two bytes.  This data is used by the MAC for its own purposes.  
     n the case of the ENC28J60 only 1 byte is needed for SPI. The buffer that 
-	is passed in is the start of the data segment, and this function assumes 
-	there is some allocated space before the pointer.  The datasize is the size
-	of the data portion, not the total size of the buffer.
+    is passed in is the start of the data segment, and this function assumes 
+    there is some allocated space before the pointer.  The datasize is the size
+    of the data portion, not the total size of the buffer.
 
     Preconditions:
     The bus had to have been initialized first.

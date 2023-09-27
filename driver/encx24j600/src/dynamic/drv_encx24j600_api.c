@@ -204,7 +204,7 @@ void DRV_ENCX24J600_Deinitialize(SYS_MODULE_OBJ object)
 {
     DRV_ENCX24J600_DriverInfo * pDrvInst = ( DRV_ENCX24J600_DriverInfo *)object;    
     TCPIP_MAC_PACKET* pkt;
-	
+    
     if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
     {
         return;

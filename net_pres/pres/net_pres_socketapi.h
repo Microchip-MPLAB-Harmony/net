@@ -79,37 +79,37 @@ typedef enum {
     NET_PRES_SKT_ENCRYPTED = 0x0020,
     
     NET_PRES_SKT_UNENCRYPTED_STREAM_CLIENT = (NET_PRES_SKT_UNENCRYPTED | 
-	                                          NET_PRES_SKT_STREAM | 
-											  NET_PRES_SKT_CLIENT),
+                                              NET_PRES_SKT_STREAM | 
+                                              NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_UNENCRYPTED_STREAM_SERVER = (NET_PRES_SKT_UNENCRYPTED | 
-	                                          NET_PRES_SKT_STREAM | 
-											  NET_PRES_SKT_SERVER),
+                                              NET_PRES_SKT_STREAM | 
+                                              NET_PRES_SKT_SERVER),
     NET_PRES_SKT_UNENCRYPTED_DATAGRAM_CLIENT = (NET_PRES_SKT_UNENCRYPTED | 
-	                                            NET_PRES_SKT_DATAGRAM | 
-	                                            NET_PRES_SKT_CLIENT),
+                                                NET_PRES_SKT_DATAGRAM | 
+                                                NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_UNENCRYPTED_DATAGRAM_SERVER = (NET_PRES_SKT_UNENCRYPTED | 
-	                                            NET_PRES_SKT_DATAGRAM | 
-	                                            NET_PRES_SKT_SERVER),
+                                                NET_PRES_SKT_DATAGRAM | 
+                                                NET_PRES_SKT_SERVER),
     NET_PRES_SKT_ENCRYPTED_STREAM_CLIENT = (NET_PRES_SKT_ENCRYPTED | 
-	                                        NET_PRES_SKT_STREAM | 
-	                                        NET_PRES_SKT_CLIENT),
+                                            NET_PRES_SKT_STREAM | 
+                                            NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_ENCRYPTED_STREAM_SERVER = (NET_PRES_SKT_ENCRYPTED | 
-	                                        NET_PRES_SKT_STREAM | 
-	                                        NET_PRES_SKT_SERVER),
+                                            NET_PRES_SKT_STREAM | 
+                                            NET_PRES_SKT_SERVER),
     NET_PRES_SKT_ENCRYPTED_DATAGRAM_CLIENT = (NET_PRES_SKT_ENCRYPTED | 
-	                                          NET_PRES_SKT_DATAGRAM | 
-	                                          NET_PRES_SKT_CLIENT),
+                                              NET_PRES_SKT_DATAGRAM | 
+                                              NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_ENCRYPTED_DATAGRAM_SERVER = (NET_PRES_SKT_ENCRYPTED | 
-	                                          NET_PRES_SKT_DATAGRAM | 
-	                                          NET_PRES_SKT_SERVER),
+                                              NET_PRES_SKT_DATAGRAM | 
+                                              NET_PRES_SKT_SERVER),
     NET_PRES_SKT_DEFAULT_STREAM_CLIENT = (NET_PRES_SKT_STREAM | 
-	                                        NET_PRES_SKT_CLIENT),
+                                            NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_DEFAULT_STREAM_SERVER = (NET_PRES_SKT_STREAM | 
-	                                        NET_PRES_SKT_SERVER),
+                                            NET_PRES_SKT_SERVER),
     NET_PRES_SKT_DEFAULT_DATAGRAM_CLIENT = (NET_PRES_SKT_DATAGRAM | 
-	                                          NET_PRES_SKT_CLIENT),
+                                              NET_PRES_SKT_CLIENT),
     NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER = (NET_PRES_SKT_DATAGRAM | 
-	                                          NET_PRES_SKT_SERVER)
+                                              NET_PRES_SKT_SERVER)
 } NET_PRES_SKT_T;
 
 // *****************************************************************************
@@ -188,7 +188,7 @@ typedef struct {
 typedef enum {
     NET_PRES_SKT_OK = 0,
     NET_PRES_SKT_OP_NOT_SUPPORTED = -1,  // Most likely the function is not 
-	                                     // supported by the socket type
+                                         // supported by the socket type
     NET_PRES_SKT_OP_OUT_OF_HANDLES = -2,
     NET_PRES_SKT_OP_INVALID_INDEX = -3,
     NET_PRES_SKT_UNKNOWN_ERROR = -4,
@@ -206,11 +206,11 @@ typedef enum {
 
   Description:
     Provides a unified method for opening all presentation sockets types. Sockets 
-	are created at the presentation layer module initialization, and can be claimed 
-	with this function and freed using NET_PRES_SocketClose.
+    are created at the presentation layer module initialization, and can be claimed 
+    with this function and freed using NET_PRES_SocketClose.
     The presentation layer will call the corresponding open function in the transport 
-	layer, and if encryption is specified the presentation layer will also handle 
-	encryption negotiation.
+    layer, and if encryption is specified the presentation layer will also handle 
+    encryption negotiation.
 
   Precondition:
     The MPLAB Harmony Networking Presentation Layer is initialized.
@@ -219,9 +219,9 @@ typedef enum {
     index          - Index of the presentation layer.
     socketType     - The type of socket to open.
     addType        - The type of address being used. This is passed unaltered to the 
-	                 transport layer.
+                     transport layer.
     port           - The port to listen or to send to.  This is passed unaltered to 
-	                 the transport layer.
+                     the transport layer.
     addr           - Address to use. This is passed unaltered to the transport layer.
     error          - The extended error code of the function.
 
@@ -229,8 +229,8 @@ typedef enum {
     - NET_PRES_INVALID_SOCKET      - No sockets of the specified type were available to be
                                      opened
     - NET_PRES_SKT_HANDLE_T handle - Returned when NET_PRES_INVALID_SOCKET is returned. Save 
-	                                 this handle and use it when calling all other presentation 
-								     socket APIs.
+                                     this handle and use it when calling all other presentation 
+                                     socket APIs.
  */
 
 NET_PRES_SKT_HANDLE_T NET_PRES_SocketOpen(NET_PRES_INDEX index, NET_PRES_SKT_T socketType, NET_PRES_SKT_ADDR_T addrType, NET_PRES_SKT_PORT_T port, NET_PRES_ADDRESS * addr, NET_PRES_SKT_ERROR_T* error);
@@ -272,10 +272,10 @@ bool NET_PRES_SocketIsOpenModeSupported(NET_PRES_INDEX index, NET_PRES_SKT_T soc
   Parameters:
     handle    - The socket to bind.
     addType   - The type of address being used. This is passed unaltered to the 
-	            transport layer.
+                transport layer.
     port      - The port to use. This is passed unaltered to the transport layer.
     addr      - The address to bind to.  This is passed unaltered to the transport 
-	            layer.
+                layer.
 
   Returns:
     - true  - Indicates success
@@ -299,7 +299,7 @@ bool NET_PRES_SocketBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T addrT
   Parameters:
     handle   - The socket to bind.
     addType  - The type of address being used. This is passed unaltered to the 
-	           transport layer.
+               transport layer.
     port     - The port to use.  This is passed unaltered to the transport layer.
     addr     - The address to bind to. This is passed unaltered to the transport layer.
 
@@ -319,7 +319,7 @@ bool NET_PRES_SocketRemoteBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T
 
   Description:
     Various options can be set at the socket level. This function calls directly 
-	to the transport layer's OptionSet function, if it exists.
+    to the transport layer's OptionSet function, if it exists.
 
   Precondition:
     A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -327,7 +327,7 @@ bool NET_PRES_SocketRemoteBind(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SKT_ADDR_T
   Parameters:
     handle    - The socket to set options for.
     option    - The specific option to be set, this is passed unaltered to the 
-	            transport layer.
+                transport layer.
     optParam  - The option value, this is passed unaltered to the transport layer.
 
   Returns:
@@ -347,7 +347,7 @@ void* optParam);
   Description:
     Various options can be obtained at the socket level.
     This function calls directly to the transport layer's OptionGet function, if 
-	it exists.
+    it exists.
 
   Precondition:
     A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -441,7 +441,7 @@ bool NET_PRES_SocketWasDisconnected(NET_PRES_SKT_HANDLE_T handle);
 
   Description:
     This function calls the transport layer's disconnect function directly, 
-	if it exists.
+    if it exists.
 
   Precondition:
     A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -459,11 +459,11 @@ bool NET_PRES_SocketDisconnect(NET_PRES_SKT_HANDLE_T handle);
 //******************************************************************************
 /*
   Summary:
-	Connects a client socket.
+    Connects a client socket.
 
   Description:
-	This function calls the transport layer's connect function directly, 
-	if it exists.
+    This function calls the transport layer's connect function directly, 
+    if it exists.
 
 
   Precondition:
@@ -482,13 +482,13 @@ bool NET_PRES_SocketConnect(NET_PRES_SKT_HANDLE_T handle);
 //******************************************************************************
 /*
   Summary:
-	Disconnects an open socket and destroys the socket handle, releasing the 
-	associated resources.
+    Disconnects an open socket and destroys the socket handle, releasing the 
+    associated resources.
 
   Description:
     This function calls the encryption provider's close function and then calls 
-	the close function of the transport layer for the socket and frees the socket 
-	for reuse.
+    the close function of the transport layer for the socket and frees the socket 
+    for reuse.
 
   Precondition:
     A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -498,7 +498,7 @@ bool NET_PRES_SocketConnect(NET_PRES_SKT_HANDLE_T handle);
 
   Returns:
     None.
-	
+    
   */
 void NET_PRES_SocketClose(NET_PRES_SKT_HANDLE_T handle);
 
@@ -540,14 +540,14 @@ bool NET_PRES_SocketInfoGet(NET_PRES_SKT_HANDLE_T handle, void * info);
   Parameters:
     handle  - Presentation layer socket handle.
     reqSize - Write size to check for.
-	minSize - Minimum size that could be guaranteed. Could be '0' if not needed.
+    minSize - Minimum size that could be guaranteed. Could be '0' if not needed.
 
   Returns:
     The number of bytes available in the TX buffer:
     - >= reqSize - If the requested space is available in the output buffer
     - >= minSize - I there's at least this minimum space (minSize != 0)
     - 0          - Requested (minimum) space cannot be granted
-	
+    
  */
 uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqSize, 
                                      uint16_t minSize);
@@ -621,7 +621,7 @@ uint16_t NET_PRES_SocketFlush(NET_PRES_SKT_HANDLE_T handle);
 
   Returns:
     The number of bytes available to be read from the TCP RX buffer.
-	
+    
   */
 uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle);
 
@@ -632,7 +632,7 @@ uint16_t NET_PRES_SocketReadIsReady(NET_PRES_SKT_HANDLE_T handle);
 
   Description:
     This function reads an array of data bytes from a socket's RX buffer/FIFO.  
-	The data is removed from the FIFO in the process.  If the connection is encrypted
+    The data is removed from the FIFO in the process.  If the connection is encrypted
     this function calls the encryption provider's read function, otherwise it
     calls the transport layer's read function.
 
@@ -713,7 +713,7 @@ uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle);
 
   Description:
     This function calls the transport layer's register signal handle function 
-	directly, if it exists
+    directly, if it exists
 
   Precondition:
      A socket needs to have been opened by NET_PRES_SocketOpen
@@ -721,16 +721,16 @@ uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle);
   Parameters:
     handle     - The presentation layer socket handle.
     sigMask    - The mask of signals to be reported, this parameter is passed to 
-	             the transport layer directly.
+                 the transport layer directly.
     handler    - signal handler to be called when an event occurs.  This parameter 
-	             is passed to the transport layer directly.
+                 is passed to the transport layer directly.
     hParam     - Parameter to be used in the handler call.  This parameter is passed 
-	             to the transport layer directly.
+                 to the transport layer directly.
 
   Returns:
     - valid handle      - Indicates the call succeeded
-	- null handle       - Indicates the call failed (null handler, no such socket, 
-	                      existent handler)
+    - null handle       - Indicates the call failed (null handler, no such socket, 
+                          existent handler)
 
  */
 
@@ -744,7 +744,7 @@ NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_
     
   Description:
     This function calls the transport layer's deregister signal handler function,
-	if it exists
+    if it exists
 
   Precondition:
      A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -754,7 +754,7 @@ NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_
     hSig    - A handle returned by a previous call to TCPIP_TCP_SignalHandlerRegister.
 
   Returns:
-    - true	- If the call succeeds
+    - true  - If the call succeeds
     - false - If no such handler is registered
  */
 
@@ -768,7 +768,7 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle,
 
   Description:
     This function returns checks to see if an encrypted socket is still undergoing 
-	negotiation. 
+    negotiation. 
  
    Precondition:
      A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -777,7 +777,7 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle,
    handle    - The presentation layer socket handle.
 
   Returns:
-    - true	- If the encryption negotiation is still ongoing
+    - true  - If the encryption negotiation is still ongoing
     - false - If there is no ongoing negotiation
 
  */
@@ -800,7 +800,7 @@ bool NET_PRES_SocketIsNegotiatingEncryption(NET_PRES_SKT_HANDLE_T handle);
    handle   - The presentation layer socket handle.
 
   Returns:
-    - true	- If the communications is secure
+    - true  - If the communications is secure
     - false - If the communications is not secure
 
  */
@@ -822,7 +822,7 @@ bool NET_PRES_SocketIsSecure(NET_PRES_SKT_HANDLE_T handle);
      handle - The presentation layer socket handle.
 
   Returns:
-    - true	- If the call was successful
+    - true  - If the call was successful
     - false - If the call was unsuccessful
 
  */

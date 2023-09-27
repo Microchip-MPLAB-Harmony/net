@@ -167,7 +167,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeviceSetup(uintptr_t miimId, const DRV_MIIM_SETUP* pSe
 void DRV_MIIM_PortEnable(uintptr_t miimId)
 {
     eth_registers_t *  pEthRegs = (eth_registers_t *) miimId;
-    pEthRegs->ETH_NCR |=	ETH_NCR_MPE_Msk;
+    pEthRegs->ETH_NCR |=    ETH_NCR_MPE_Msk;
 }
 
 void DRV_MIIM_PortDisable(uintptr_t miimId)

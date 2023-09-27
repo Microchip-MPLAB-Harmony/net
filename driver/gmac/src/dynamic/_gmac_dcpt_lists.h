@@ -33,12 +33,12 @@ Microchip or any third party.
 */
 typedef enum  
 {
-	GMAC_QUE_0 = 0,
-	GMAC_QUE_1 = 1,
-	GMAC_QUE_2 = 2,
+    GMAC_QUE_0 = 0,
+    GMAC_QUE_1 = 1,
+    GMAC_QUE_2 = 2,
     GMAC_QUE_3 = 3,
-	GMAC_QUE_4 = 4,
-	GMAC_QUE_5 = 5
+    GMAC_QUE_4 = 4,
+    GMAC_QUE_5 = 5
 } GMAC_QUE_LIST;
 
 #define GMAC_QUE0_MASK      (1<<GMAC_QUE_0)
@@ -64,21 +64,21 @@ typedef enum
 
 typedef union
 {
-	uint32_t val;                   /**< 32-Bit access */
-	struct _GmacTxStatusBM 
-	{
-		uint32_t len: 11,           /**< Length of buffer */
-					reserved: 4,
-					bLastBuffer: 1, /**< Last buffer (in the current frame) */
-					bNoCRC: 1,      /**< No CRC */
-					reserved1: 10,
-					bExhausted: 1,  /**< Buffer exhausted in mid frame */
-					bUnderrun: 1,   /**< Transmit under run */
-					bError: 1,      /**< Retry limit exceeded, error detected */
-					bWrap: 1,       /**< Marks last descriptor in TD list */
-					bUsed: 1;       /**< User clear, GMAC sets this once a frame
+    uint32_t val;                   /**< 32-Bit access */
+    struct _GmacTxStatusBM 
+    {
+        uint32_t len: 11,           /**< Length of buffer */
+                    reserved: 4,
+                    bLastBuffer: 1, /**< Last buffer (in the current frame) */
+                    bNoCRC: 1,      /**< No CRC */
+                    reserved1: 10,
+                    bExhausted: 1,  /**< Buffer exhausted in mid frame */
+                    bUnderrun: 1,   /**< Transmit under run */
+                    bError: 1,      /**< Retry limit exceeded, error detected */
+                    bWrap: 1,       /**< Marks last descriptor in TD list */
+                    bUsed: 1;       /**< User clear, GMAC sets this once a frame
                                         has been successfully transmitted */
-	} bm;
+    } bm;
 } DRV_GMAC_TXDCPT_STATUS;
 
 // *****************************************************************************
@@ -94,15 +94,15 @@ typedef union
 */
 typedef union
 {
-	uint32_t val;
-	struct _GmacRxAddrBM 
-	{
-		uint32_t    bOwnership: 1, /**< User clear, GMAC set this to one once
+    uint32_t val;
+    struct _GmacRxAddrBM 
+    {
+        uint32_t    bOwnership: 1, /**< User clear, GMAC set this to one once
                                     it has successfully written a frame to
                                         memory */
                     bWrap: 1,       /**< Marks last descriptor in receive buffer */
-					addrDW: 30;     /**< Address in number of DW */
-	} bm;
+                    addrDW: 30;     /**< Address in number of DW */
+    } bm;
 } DRV_GMAC_RXDCPT_ADDR;             /**< Address, Wrap & Ownership */
 
 // *****************************************************************************
@@ -117,9 +117,9 @@ typedef union
 */
 typedef struct
 {
-	volatile DRV_GMAC_RXDCPT_ADDR rx_desc_buffaddr;
-	volatile TCPIP_MAC_PACKET_RX_STAT_PIC32C rx_desc_status;
-	
+    volatile DRV_GMAC_RXDCPT_ADDR rx_desc_buffaddr;
+    volatile TCPIP_MAC_PACKET_RX_STAT_PIC32C rx_desc_status;
+    
 } DRV_PIC32CGMAC_HW_RXDCPT; 
 
 // *****************************************************************************
@@ -134,8 +134,8 @@ typedef struct
 */
 typedef struct
 {
-	volatile uint32_t tx_desc_buffaddr;
-	volatile DRV_GMAC_TXDCPT_STATUS tx_desc_status;	
+    volatile uint32_t tx_desc_buffaddr;
+    volatile DRV_GMAC_TXDCPT_STATUS tx_desc_status; 
 } DRV_PIC32CGMAC_HW_TXDCPT;   
 
 
@@ -144,18 +144,18 @@ typedef struct
 ////////////////////////////////////////////////////////////////////////////////
 typedef struct _TAG_DRV_PIC32CGMAC_SGL_LIST_NODE
 {
-	struct _TAG_DRV_PIC32CGMAC_SGL_LIST_NODE*	next;       /**< next linked list  */      
-	void*                                       data[];     /**< generic payload */
+    struct _TAG_DRV_PIC32CGMAC_SGL_LIST_NODE*   next;       /**< next linked list  */      
+    void*                                       data[];     /**< generic payload */
 }DRV_PIC32CGMAC_SGL_LIST_NODE;                  /**< Single list for GMAC packet */ 
 
 
 typedef struct
 {
-	DRV_PIC32CGMAC_SGL_LIST_NODE*	head;	/**< Linked list head  */ 
-	DRV_PIC32CGMAC_SGL_LIST_NODE*	tail;   /**< Linked list tail  */ 
+    DRV_PIC32CGMAC_SGL_LIST_NODE*   head;   /**< Linked list head  */ 
+    DRV_PIC32CGMAC_SGL_LIST_NODE*   tail;   /**< Linked list tail  */ 
     int             nNodes;                 /**< number of nodes in the list */ 
 
-}DRV_PIC32CGMAC_SGL_LIST;	// single linked list
+}DRV_PIC32CGMAC_SGL_LIST;   // single linked list
 
 //Initialize Single List
 static  __inline__ void  __attribute__((always_inline)) DRV_PIC32CGMAC_SingleListInitialize(DRV_PIC32CGMAC_SGL_LIST* pL)

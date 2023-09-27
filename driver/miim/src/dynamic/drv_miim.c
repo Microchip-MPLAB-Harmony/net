@@ -1451,23 +1451,23 @@ void  Helper_SingleListInitialize(SINGLE_LIST* pL)
 
 void  Helper_SingleListTailAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN)
 {
-	pN->next = 0;
-	if(pL->tail == 0)
-	{
-		pL->head = pL->tail = pN;
-	}
-	else
-	{
-		pL->tail->next = pN;
-		pL->tail = pN;
-	}
+    pN->next = 0;
+    if(pL->tail == 0)
+    {
+        pL->head = pL->tail = pN;
+    }
+    else
+    {
+        pL->tail->next = pN;
+        pL->tail = pN;
+    }
     pL->nNodes++;
 }
 
 
 SGL_LIST_NODE*  Helper_SingleListHeadRemove(SINGLE_LIST* pL)
 {
-	SGL_LIST_NODE* pN = pL->head;
+    SGL_LIST_NODE* pN = pL->head;
     if(pN)
     {
         if(pL->head == pL->tail)
@@ -1481,7 +1481,7 @@ SGL_LIST_NODE*  Helper_SingleListHeadRemove(SINGLE_LIST* pL)
         pL->nNodes--;
     }
 
-	return pN;
+    return pN;
 }
 
 // removes a node somewhere in the middle
