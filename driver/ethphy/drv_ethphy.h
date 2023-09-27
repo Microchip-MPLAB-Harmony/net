@@ -530,7 +530,7 @@ typedef DRV_ETHPHY_RESULT (* DRV_ETHPHY_VENDOR_DETECT) ( const struct DRV_ETHPHY
   Parameters:
     - pBaseObj- pointer to the PHY Base object that calls this function as a result of 
       performing its initialization procedure.
-	- handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
+    - handle  - Client's driver handle (returned from DRV_ETHPHY_Open)
 
   Returns:
     None
@@ -708,7 +708,7 @@ typedef struct DRV_ETHPHY_INIT
     SYS_MODULE_INDEX            miimIndex; 
             
     /* PHY Initialization Time-outs */
-	DRV_ETHPHY_TMO *            ethphyTmo; 
+    DRV_ETHPHY_TMO *            ethphyTmo; 
 
 } DRV_ETHPHY_INIT;
 
@@ -819,7 +819,7 @@ typedef struct
     
   Summary:
     Initializes the Ethernet PHY driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function initializes the Ethernet PHY driver, making it ready for
@@ -881,7 +881,7 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize ( const SYS_MODULE_INDEX        index,
 
   Summary:
     Reinitializes the driver and refreshes any associated hardware settings.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function reinitializes the driver and refreshes any associated hardware
@@ -939,7 +939,7 @@ void DRV_ETHPHY_Reinitialize ( SYS_MODULE_OBJ               object,
 
   Summary:
     Deinitializes the specified instance of the Ethernet PHY driver module.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function deinitializes the specified instance of the Ethernet PHY driver
@@ -985,7 +985,7 @@ void DRV_ETHPHY_Deinitialize ( SYS_MODULE_OBJ object );
     
   Summary:
     Provides the current status of the Ethernet PHY driver module.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function provides the current status of the Ethernet PHY driver
@@ -1049,7 +1049,7 @@ SYS_STATUS DRV_ETHPHY_Status ( SYS_MODULE_OBJ object );
     
   Summary:
     Maintains the driver's state machine and implements its ISR.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function is used to maintain the driver's internal state machine
@@ -1099,7 +1099,7 @@ void DRV_ETHPHY_Tasks( SYS_MODULE_OBJ object );
 
   Summary:
     Opens the specified Ethernet PHY driver instance and returns a handle to it.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function opens the specified Ethernet PHY driver instance and provides a
@@ -1151,7 +1151,7 @@ DRV_HANDLE DRV_ETHPHY_Open( const SYS_MODULE_INDEX drvIndex,
 
   Summary:
     Closes an opened instance of the Ethernet PHY driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function closes an opened instance of the Ethernet PHY driver, invalidating
@@ -1194,7 +1194,7 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle );
     
   Summary:
     Gets the current client-specific status the Ethernet PHY driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function gets the client-specific status of the Ethernet PHY
@@ -1244,7 +1244,7 @@ DRV_ETHPHY_CLIENT_STATUS DRV_ETHPHY_ClientStatus( DRV_HANDLE handle );
     
   Summary:
     Gets the result of a client operation  initiated by the Ethernet PHY driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     Returns the result of a client operation  initiated by the Ethernet PHY driver.
@@ -1286,7 +1286,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_ClientOperationResult( DRV_HANDLE handle);
     
   Summary:
     Aborts a current client operation  initiated by the Ethernet PHY driver.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     Aborts a current client operation  initiated by the Ethernet PHY driver.
@@ -1322,7 +1322,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_ClientOperationAbort( DRV_HANDLE handle);
     
   Summary:
     Returns the PHY address.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the current PHY address
@@ -1366,7 +1366,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERF
     
   Summary:
     Initializes Ethernet PHY configuration and set up procedure.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function initializes the Ethernet PHY communication. It tries to
@@ -1420,7 +1420,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE  handle, DRV_ETHPHY_SETUP* pSetUp
 
   Summary:
     Restarts auto-negotiation of the Ethernet PHY link.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function restarts auto-negotiation of the Ethernet PHY link.
@@ -1457,7 +1457,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_RestartNegotiation( DRV_HANDLE handle, DRV_ETHPHY_I
   Summary:
     Returns the current Ethernet PHY hardware MII/RMII and ALTERNATE/DEFAULT
     configuration flags.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the current Ethernet PHY hardware MII/RMII and
@@ -1494,7 +1494,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 
   Summary:
     Returns the results of a previously initiated Ethernet PHY negotiation.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
    This function returns the results of a previously initiated Ethernet PHY
@@ -1545,7 +1545,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationIsComplete( DRV_HANDLE handle, DRV_ETHPH
   
   Summary:
     Returns the result of a completed negotiation.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the PHY negotiation data gathered after a completed negotiation.
@@ -1599,7 +1599,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_NegotiationResultGet( DRV_HANDLE handle, DRV_ETHPHY
     
   Summary:
     Returns the current link status.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the current link status.
@@ -1643,7 +1643,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_LinkStatusGet( DRV_HANDLE handle, DRV_ETHPHY_INTERF
     
   Summary:
     Immediately resets the Ethernet PHY.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function immediately resets the Ethernet PHY, optionally waiting
@@ -1694,7 +1694,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Reset( DRV_HANDLE handle, bool waitComplete );
 
   Summary:
     Returns the current value of the vendor data.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function returns the current value of the vendor data.
@@ -1745,7 +1745,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorDataGet( DRV_HANDLE handle, uint32_t* pVendor
 
   Summary:
     Returns the current value of the vendor data.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function sets the current value of the vendor data.
@@ -1796,7 +1796,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorDataSet( DRV_HANDLE handle, uint32_t vendorDa
   Summary:
     Starts a vendor SMI read transfer.
     Data will be available with DRV_ETHPHY_VendorSMIReadResultGet.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will start a SMI read transfer.
@@ -1851,7 +1851,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadStart( DRV_HANDLE handle, uint16_t rIx
   Summary:
     Reads the result of a previous vendor initiated SMI read transfer
     with DRV_ETHPHY_VendorSMIReadStart.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will return the data of a SMI read transfer.
@@ -1903,7 +1903,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadResultGet( DRV_HANDLE handle, uint16_t
 
   Summary:
     Starts a vendor SMI write transfer.
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will start a SMI write transfer.
@@ -1918,7 +1918,8 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIReadResultGet( DRV_HANDLE handle, uint16_t
 
   Parameters:
     - handle  - driver handle as passed by the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure call
-    - rIx    - vendor transaction SMI register to read
+    - rIx    - vendor transaction SMI register to write
+    - wData  - data to be written
     - phyAddress - PHY address to use for transaction
 
   Returns:
@@ -1954,8 +1955,8 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
 
   Summary:
     Starts a vendor SMI write transfer. After this function call, check the completion of 
-	write operation with DRV_ETHPHY_VendorSMIOperationIsComplete.
-	<p><b>Implementation:</b> Dynamic</p>
+    write operation with DRV_ETHPHY_VendorSMIOperationIsComplete.
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will start a SMI write transfer.
@@ -1970,7 +1971,8 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteStart( DRV_HANDLE handle, uint16_t rI
 
   Parameters:
     - handle  - driver handle as passed by the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure call
-    - rIx    - vendor transaction SMI register to read
+    - rIx    - vendor transaction SMI register to write
+    - wData  - data to be written
     - phyAddress - PHY address to use for transaction
 
   Returns:
@@ -2004,7 +2006,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_VendorSMIWriteWaitComplete( DRV_HANDLE handle, uint
 
   Summary:
     Check the SMI Operation is complete
-	<p><b>Implementation:</b> Dynamic</p>
+    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This function will return the status of SMI transfer.
