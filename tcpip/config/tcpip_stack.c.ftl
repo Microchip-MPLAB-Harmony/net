@@ -870,7 +870,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_SNMP_SERVER,      &tcpipSNMPInitData},            // TCPIP_MODULE_SNMP_SERVER
 </#if>
 <#if (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT)?has_content && (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT) == true>
-    {TCPIP_MODULE_SMTPC, &tcpipSMTPCInitData},                                  // TCPIP_MODULE_SMTPC,
+    {TCPIP_MODULE_SMTPC,            &tcpipSMTPCInitData},           // TCPIP_MODULE_SMTPC,
 </#if>
 <#if (tcpipDdns.TCPIP_USE_DDNS)?has_content && (tcpipDdns.TCPIP_USE_DDNS) == true>
     {TCPIP_MODULE_DYNDNS_CLIENT,    &tcpipDDNSInitData},            // TCPIP_MODULE_DYNDNS_CLIENT,
@@ -891,7 +891,16 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_TFTP_SERVER,      &tcpipTFTPSInitData},           // TCPIP_MODULE_TFTP_SERVER
 </#if>
 <#if (tcpipIgmp.TCPIP_USE_IGMP)?has_content && (tcpipIgmp.TCPIP_USE_IGMP) == true>
-    {TCPIP_MODULE_IGMP, &tcpipIGMPInitData},            // TCPIP_MODULE_IGMP
+    {TCPIP_MODULE_IGMP,             &tcpipIGMPInitData},            // TCPIP_MODULE_IGMP
+</#if>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content && (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
+    {TCPIP_MODULE_SNMPV3_SERVER,    0},                             // TCPIP_MODULE_SNMPV3_SERVER,
+</#if>
+<#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true>
+    {TCPIP_MODULE_COMMAND,          0},                             // TCPIP_MODULE_COMMAND,
+</#if>
+<#if (tcpipIperf.TCPIP_USE_IPERF)?has_content && (tcpipIperf.TCPIP_USE_IPERF) == true>
+    {TCPIP_MODULE_IPERF,            0},                             // TCPIP_MODULE_IPERF,
 </#if>
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 
