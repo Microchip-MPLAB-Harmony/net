@@ -348,11 +348,30 @@ socket (int af, int type, int protocol)
   struct BSDSocket *socket = BSDSocketArray;
     SOCKET s;
 
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IPV6)
     if (af != AF_INET && af != AF_INET6)
     {
         errno = EAFNOSUPPORT;
         return SOCKET_ERROR;
     }
+#elif defined(TCPIP_STACK_USE_IPV4)
+    if (af != AF_INET)
+    {
+        errno = EAFNOSUPPORT;
+        return SOCKET_ERROR;
+    }
+#elif defined(TCPIP_STACK_USE_IPV6)
+    if (af != AF_INET6)
+    {
+        errno = EAFNOSUPPORT;
+        return SOCKET_ERROR;
+    }
+#else
+    _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+    errno = EAFNOSUPPORT;
+    return SOCKET_ERROR;
+#endif
+
 
     if (protocol == IPPROTO_IP)
     {
@@ -382,10 +401,11 @@ socket (int af, int type, int protocol)
             continue;
 
         socket->SocketType = type;
-        socket->localIP = IP_ADDR_ANY; // updated by bind()
+        socket->localIPv4 = IP_ADDR_ANY; // updated by bind()
 #if defined(TCPIP_STACK_USE_IPV6)
-        socket->addressFamily = af;
+        socket->localIPv6[0] = IP_ADDR_ANY; // updated by bind()
 #endif
+        socket->addressFamily = af;
 
         if (type == SOCK_DGRAM && protocol == IPPROTO_UDP)
         {
@@ -550,7 +570,7 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
         }
         else
         {
-            if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, lPort, (NET_PRES_ADDRESS*) & lAddr6))
+            if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, lPort, (NET_PRES_ADDRESS *)((((struct sockaddr_in6 *) name)->sin6_addr.in6_u.u6_addr32[0] == IP_ADDR_ANY) ? 0 : (IP_MULTI_ADDRESS*) & lAddr6)))
             {
                 errno = EINVAL;
                 return SOCKET_ERROR;
@@ -564,15 +584,15 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
             if (socket->addressFamily == AF_INET)
             {
 #endif
-                socket->localIP = lAddr.Val;
+                socket->localIPv4 = lAddr.Val;
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
             {
-                socket->localIP = lAddr6.d[0];
-                socket->localIPv6[0] = lAddr6.d[1];
-                socket->localIPv6[1] = lAddr6.d[2];
-                socket->localIPv6[2] = lAddr6.d[3];
+                socket->localIPv6[0] = lAddr6.d[0];
+                socket->localIPv6[1] = lAddr6.d[1];
+                socket->localIPv6[2] = lAddr6.d[2];
+                socket->localIPv6[3] = lAddr6.d[3];
             }
 #endif
     socket->bsdState = SKT_BOUND;
@@ -660,21 +680,21 @@ int listen( SOCKET s, int backlog )
             if (ps->addressFamily == AF_INET)
             {
 #endif
-                if (ps->localIP)
+                if (ps->localIPv4)
                 {
-                    lclAddr.Val = ps->localIP;
+                    lclAddr.Val = ps->localIPv4;
                 }
                 clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, ps->localPort, (NET_PRES_ADDRESS *)(lclAddr.Val == 0 ? 0 : (IP_MULTI_ADDRESS*) & lclAddr), 0);
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
             {
-                if (ps->localIP)
+                if (ps->localIPv6[0])
                 {
-                    lclAddr6.d[0] = ps->localIP;
-                    lclAddr6.d[1] = ps->localIPv6[0];
-                    lclAddr6.d[2] = ps->localIPv6[1];
-                    lclAddr6.d[3] = ps->localIPv6[2];
+                    lclAddr6.d[0] = ps->localIPv6[0];
+                    lclAddr6.d[1] = ps->localIPv6[1];
+                    lclAddr6.d[2] = ps->localIPv6[2];
+                    lclAddr6.d[3] = ps->localIPv6[3];
                 }
                 clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV6, ps->localPort, (NET_PRES_ADDRESS*)(lclAddr6.d[0] == 0 ? 0 : (IP_MULTI_ADDRESS*) & lclAddr6), 0);
             }
@@ -693,7 +713,21 @@ int listen( SOCKET s, int backlog )
             cs->needsSignal = true;
             cs->localPort = ps->localPort;
             cs->SocketType = SOCK_STREAM;
-            cs->localIP = ps->localIP;
+#if defined(TCPIP_STACK_USE_IPV4)
+            if (ps->addressFamily == AF_INET)
+            {
+                cs->localIPv4 = ps->localIPv4;
+            }
+#endif
+#if defined(TCPIP_STACK_USE_IPV6)
+            if (ps->addressFamily == AF_INET6)
+            {
+                cs->localIPv6[0] = ps->localIPv6[0];
+                cs->localIPv6[1] = ps->localIPv6[1];
+                cs->localIPv6[2] = ps->localIPv6[2];
+                cs->localIPv6[3] = ps->localIPv6[3];
+            }
+#endif
             cs->parentId = s; 
 
             _cfgBsdSocket(cs);
@@ -825,10 +859,10 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
                             return SOCKET_ERROR;
                         }
                         addrRemote = (struct sockaddr_in6*) addr;
-                        addrRemote->sin6_addr.in6_u.u6_addr8[0] = tcpSockInfo.remoteIPaddress.v6Add.d[0];
-                        addrRemote->sin6_addr.in6_u.u6_addr8[1] = tcpSockInfo.remoteIPaddress.v6Add.d[1];
-                        addrRemote->sin6_addr.in6_u.u6_addr8[2] = tcpSockInfo.remoteIPaddress.v6Add.d[2];
-                        addrRemote->sin6_addr.in6_u.u6_addr8[3] = tcpSockInfo.remoteIPaddress.v6Add.d[3];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[0] = tcpSockInfo.remoteIPaddress.v6Add.d[0];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[1] = tcpSockInfo.remoteIPaddress.v6Add.d[1];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[2] = tcpSockInfo.remoteIPaddress.v6Add.d[2];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[3] = tcpSockInfo.remoteIPaddress.v6Add.d[3];
                         addrRemote->sin6_port = tcpSockInfo.remotePort;
                         *addrlen = sizeof (struct sockaddr_in6);
                     }
@@ -836,7 +870,21 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
                 }
             }
             BSDSocketArray[sockCount].remotePort = tcpSockInfo.remotePort;
-            BSDSocketArray[sockCount].remoteIP = tcpSockInfo.remoteIPaddress.v4Add.Val;
+#if defined(TCPIP_STACK_USE_IPV6)
+            if (tcpSockInfo.addressType == IP_ADDRESS_TYPE_IPV4)
+            {
+#endif
+                BSDSocketArray[sockCount].remoteIPv4 = tcpSockInfo.remoteIPaddress.v4Add.Val;
+#if defined(TCPIP_STACK_USE_IPV6)
+            }
+            else
+            {
+                BSDSocketArray[sockCount].remoteIPv6[0] = tcpSockInfo.remoteIPaddress.v6Add.d[0];
+                BSDSocketArray[sockCount].remoteIPv6[1] = tcpSockInfo.remoteIPaddress.v6Add.d[1];
+                BSDSocketArray[sockCount].remoteIPv6[2] = tcpSockInfo.remoteIPaddress.v6Add.d[2];
+                BSDSocketArray[sockCount].remoteIPv6[3] = tcpSockInfo.remoteIPaddress.v6Add.d[3];
+            }
+#endif
             BSDSocketArray[sockCount].bsdState = SKT_EST;
             return sockCount;
         }
@@ -932,10 +980,10 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
         uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
         struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
         memcpy(remoteIP6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
-        localAddr6.d[0] = socket->localIP;
-        localAddr6.d[1] = socket->localIPv6[0];
-        localAddr6.d[2] = socket->localIPv6[1];
-        localAddr6.d[3] = socket->localIPv6[2];
+        localAddr6.d[0] = socket->localIPv6[0];
+        localAddr6.d[1] = socket->localIPv6[1];
+        localAddr6.d[2] = socket->localIPv6[2];
+        localAddr6.d[3] = socket->localIPv6[3];
     }
 #endif
 
@@ -993,7 +1041,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                 if (socket->addressFamily == AF_INET)
                 {
 #endif
-                    if (socket->localIP == IP_ADDR_ANY)
+                    if (socket->localIPv4 == IP_ADDR_ANY)
                     {
                         socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV4, remotePort, (NET_PRES_ADDRESS *)&remoteIP, 0);
                         if(socket->SocketID == INVALID_SOCKET)
@@ -1010,7 +1058,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                             errno = ENOBUFS;
                             return SOCKET_ERROR;
                         }
-                        if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV4, 0, (NET_PRES_ADDRESS *)&socket->localIP))
+                        if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV4, 0, (NET_PRES_ADDRESS *)&socket->localIPv4))
                         {
                             errno = EADDRINUSE;
                             NET_PRES_SocketClose(socket->SocketID);
@@ -1036,7 +1084,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                 }
                 else
                 {
-                    if (socket->localIP == IP_ADDR_ANY)
+                    if (socket->localIPv6[0] == IP_ADDR_ANY)
                     {
                         socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*)&remoteIP6, 0);
                         if(socket->SocketID == INVALID_SOCKET)
@@ -1060,7 +1108,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                             socket->SocketID = INVALID_SOCKET;
                             return SOCKET_ERROR;
                         }
-                        if (!NET_PRES_SocketRemoteBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*)&remoteIP))
+                        if (!NET_PRES_SocketRemoteBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*)&remoteIP6))
                         {
                             errno = EADDRINUSE;
                             NET_PRES_SocketClose(socket->SocketID);
@@ -1092,7 +1140,7 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                 if (socket->addressFamily == AF_INET)
                 {
 #endif
-                    localAddr.Val  = socket->localIP == IP_ADDR_ANY ? 0 : socket->localIP;
+                    localAddr.Val  = socket->localIPv4 == IP_ADDR_ANY ? 0 : socket->localIPv4;
                     remoteAddr.Val = remoteIP;
                     TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(0, &remoteAddr, &localAddr, true), false);
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -1147,15 +1195,15 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
         if (socket->addressFamily == AF_INET)
         {
 #endif
-            socket->remoteIP = remoteIP;
+            socket->remoteIPv4 = remoteIP;
 #if defined(TCPIP_STACK_USE_IPV6)
         }
         else
         {
-            socket->remoteIP = remoteIP6.d[0];
-            socket->remoteIPv6[0] = remoteIP6.d[1];
-            socket->remoteIPv6[1] = remoteIP6.d[2];
-            socket->remoteIPv6[2] = remoteIP6.d[3];
+            socket->remoteIPv6[0] = remoteIP6.d[0];
+            socket->remoteIPv6[1] = remoteIP6.d[1];
+            socket->remoteIPv6[2] = remoteIP6.d[2];
+            socket->remoteIPv6[3] = remoteIP6.d[3];
         }
 #endif
         return 0; //success
@@ -1270,15 +1318,15 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
         if (socket->addressFamily == AF_INET)
         {
 #endif
-            remoteIp.Val = socket->remoteIP;
+            remoteIp.Val = socket->remoteIPv4;
 #if defined(TCPIP_STACK_USE_IPV6)
         }
         else
         {
-            remoteIp6.d[0] = socket->remoteIP;
-            remoteIp6.d[1] = socket->remoteIPv6[0];
-            remoteIp6.d[2] = socket->remoteIPv6[1];
-            remoteIp6.d[3] = socket->remoteIPv6[2];
+            remoteIp6.d[0] = socket->remoteIPv6[0];
+            remoteIp6.d[1] = socket->remoteIPv6[1];
+            remoteIp6.d[2] = socket->remoteIPv6[2];
+            remoteIp6.d[3] = socket->remoteIPv6[3];
         }
 #endif
         wRemotePort = socket->remotePort;
@@ -1328,6 +1376,7 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
                 else
                 {
                     memset(&local6, 0x00, sizeof(local6));
+                    local6.sin6_addr.in6_u.u6_addr32[0] = IP_ADDR_ANY;
                     if (bind(s, (struct sockaddr*) &local6, sizeof (local6)) == SOCKET_ERROR)
                         return SOCKET_ERROR;
                 }
@@ -1370,6 +1419,8 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
             }
             // Set the proper remote port
             TCPIP_UDP_DestinationPortSet(uSkt, wRemotePort);
+            // IPv6 client socket requires explicit binding
+            TCPIP_UDP_SocketNetSet(uSkt, TCPIP_STACK_NetDefaultGet());
         }
 #endif
         // Select the UDP socket and see if we can write to it
@@ -2557,7 +2608,7 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
         rem_addr = (struct sockaddr_in*)addr;
         rem_addr->sin_family = AF_INET;
         rem_addr->sin_port = socket->localPort;
-        rem_addr->sin_addr.S_un.S_addr = socket->localIP;
+        rem_addr->sin_addr.S_un.S_addr = socket->localIPv4;
 
         *addrlen = sizeof(struct sockaddr_in);
         return 0;

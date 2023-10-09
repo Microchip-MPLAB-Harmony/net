@@ -70,7 +70,6 @@ struct BSDSocket
 {
     uint16_t                localPort;      // local port
     uint16_t                remotePort;     // remote port
-    uint32_t                remoteIP;       // remote IP
 
     uint16_t                SocketType;     // Socket type
     uint8_t                 bsdState;       // Socket state: BSD_SCK_STATE
@@ -78,12 +77,14 @@ struct BSDSocket
     int16_t                 nativeSkt;      // corresponding native socket                
     uint16_t                backlog;        // maximum number or client connection
 
-#if defined(TCPIP_STACK_USE_IPV6)
-    uint32_t                remoteIPv6[3];  // remote IP for IPv6
+#if defined(TCPIP_STACK_USE_IPV4)
+    uint32_t                remoteIPv4;     // remote IP
+    uint32_t                localIPv4;      // bound address
 #endif
-    uint32_t                localIP;        // bound address
+
 #if defined(TCPIP_STACK_USE_IPV6)
-    uint32_t                localIPv6[3];
+    uint32_t                remoteIPv6[4];  // remote IP for IPv6
+    uint32_t                localIPv6[4];   // bound address
 #endif
     uint32_t                rcvBufSize;
     uint32_t                sndBufSize;
