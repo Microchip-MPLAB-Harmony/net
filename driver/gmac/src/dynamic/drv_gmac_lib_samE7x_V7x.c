@@ -346,17 +346,21 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
 
         if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[desc_idx] == 0)
         {
-            if((pPacket = (TCPIP_MAC_PACKET *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxQueue))!= NULL)
+            _DRV_GMAC_RxLock(pMACDrv);
+            pPacket = (TCPIP_MAC_PACKET *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxQueue);
+            _DRV_GMAC_RxUnlock(pMACDrv);
+            
+            if(pPacket != NULL)
             {
-                _DRV_GMAC_RxLock(pMACDrv);
-                /* Reset status value. */
-                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_status.val = 0;
-
-                uint32_t segBuffer = (uint32_t)(pPacket->pDSeg->segBuffer) & GMAC_RX_ADDRESS_MASK;   // should be 4-byte aligned
-                
+                uint32_t segBuffer = (uint32_t)(pPacket->pDSeg->segBuffer) & GMAC_RX_ADDRESS_MASK;   // should be 4-byte aligned                
                 // Invalidate Cache : at address 'segBuffer' and for Cache line size
                 // 'segBuffer' is a Cache Aligned address
                 DCACHE_INVALIDATE_BY_ADDR((uint32_t *)segBuffer, (CACHE_LINE_SIZE));
+                
+                _DRV_GMAC_RxLock(pMACDrv);
+                /* Reset status value. */
+                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_status.val = 0;
+                
                 if (desc_idx == pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt - 1)
                 {
                     pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_buffaddr.val =  segBuffer | GMAC_RX_WRAP_BIT;
@@ -365,7 +369,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(DRV_GMAC_DRIVER* pMACDrv
                 {
                     pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[desc_idx].rx_desc_buffaddr.val =  segBuffer;
                 }
-
                 _DRV_GMAC_RxUnlock(pMACDrv);
 
                 // set the packet acknowledgment
@@ -1510,9 +1513,10 @@ static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             }
             else
             {
+                _DRV_GMAC_RxLock(pMacDrv); 
                 // add the packet to new queue for re-use
                 DRV_PIC32CGMAC_SingleListTailAdd(&pMacDrv->sGmacData.gmac_queue[queueIdx]._RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pPkt);
-
+                _DRV_GMAC_RxUnlock(pMacDrv);
             }
 
             if( !pDSegNext )
@@ -1820,8 +1824,9 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
         {
             pRxPkt->pDSeg->segFlags |=  TCPIP_MAC_SEG_FLAG_RX_STICKY;
         }
-
+        _DRV_GMAC_RxLock(pMACDrv); 
         DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx]._RxQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pRxPkt);
+        _DRV_GMAC_RxUnlock(pMACDrv);
     }
     return gmacAllocRes;
 }

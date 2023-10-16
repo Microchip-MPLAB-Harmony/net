@@ -819,17 +819,17 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
     int                     buffsPerRxPkt = 0;
     static GMAC_QUE_LIST    queueIndex = DRV_GMAC_NO_ACTIVE_QUEUE;    
 
+    _DRV_GMAC_RxLock(pMACDrv); 
     //get highest priority active queue index
     queueIndex = DRV_PIC32CGMAC_LibGetHighPrioReadyQue(pMACDrv);      
+    _DRV_GMAC_RxUnlock(pMACDrv);
     
     //if any any active queue?
     while(queueIndex != DRV_GMAC_NO_ACTIVE_QUEUE)
-    {        
-        _DRV_GMAC_RxLock(pMACDrv);  
+    { 
         //get Rx packet from Queue
         ethRes = DRV_PIC32CGMAC_LibRxGetPacket (pMACDrv, &pRxPkt, &buffsPerRxPkt, &pRxPktStat, queueIndex);
-        _DRV_GMAC_RxUnlock(pMACDrv);
-        
+                
         //if valid rx packet?
         if(ethRes == DRV_PIC32CGMAC_RES_OK)
         {
@@ -838,10 +838,12 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TCPIP
         }
         else 
         {
+            _DRV_GMAC_RxLock(pMACDrv); 
             //clear que event status     
             DRV_PIC32CGMAC_LibClearPriorityQue(pMACDrv,queueIndex);
             //get highest priority active queue index
             queueIndex = DRV_PIC32CGMAC_LibGetHighPrioReadyQue(pMACDrv);
+            _DRV_GMAC_RxUnlock(pMACDrv);
         }
     }
     
@@ -1464,8 +1466,16 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
         gmac_queue = pMACDrv->sGmacData.gmac_queue[queueIdx];
         
         //Free all Rx packets in Rx Queue
-        while((pRxPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&gmac_queue._RxQueue))!= NULL)
+        while(true)
         {
+            _DRV_GMAC_RxLock(pMACDrv); 
+            pRxPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&gmac_queue._RxQueue);
+            _DRV_GMAC_RxUnlock(pMACDrv);
+            
+            if(pRxPkt == NULL)
+            {
+                break;
+            }
             // Free the Rx packet
             (*pMACDrv->sGmacData.pktFreeF)(pRxPkt);                   
         }        
