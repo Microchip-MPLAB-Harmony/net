@@ -704,8 +704,16 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
     DRV_PIC32CGMAC_RESULT res = DRV_PIC32CGMAC_RES_NO_PACKET;
     DRV_GMAC_TX_DESC_INDEX * pTxAckQueueNode;
         
-    while((pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue))!= NULL)    
+    while(true)    
     {
+        _DRV_GMAC_TxLock(pMACDrv); 
+        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue);
+        _DRV_GMAC_TxUnlock(pMACDrv);
+        
+        if(pTxAckQueueNode == NULL )
+        {
+            break;
+        }
         //remove head of _TxDescUnAckQueue queue if USED bit is set.        
         //Check head of _TxDescUnAckQueue queue start index descriptor 'USED' bit is set?
         if(((pTxDesc[pTxAckQueueNode->startIndex].tx_desc_status.val) & GMAC_TX_USED_BIT) && (pTxDesc[pTxAckQueueNode->startIndex].tx_desc_buffaddr != 0))
@@ -751,14 +759,17 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
             // add the node to unused queue after clearing the values
             pTxAckQueueNode->buffer_count = 0;
             pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
-            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
             
+            _DRV_GMAC_TxLock(pMACDrv); 
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
+            _DRV_GMAC_TxUnlock(pMACDrv);
         }
         else
         {
+            _DRV_GMAC_TxLock(pMACDrv); 
             // add the node back to queue as transmit not yet completed
             DRV_PIC32CGMAC_SingleListHeadAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
-            
+            _DRV_GMAC_TxUnlock(pMACDrv);
             break;
         }    
         
@@ -775,8 +786,15 @@ void DRV_PIC32CGMAC_LibTxAckPendPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST
     TCPIP_MAC_PACKET* pPkt;
 
     //packet in queue for transmission
-    while((pPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxQueue)) != 0)
+    while(true)
     {
+        _DRV_GMAC_TxLock(pMACDrv); 
+        pPkt = (TCPIP_MAC_PACKET*)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxQueue);
+        _DRV_GMAC_TxUnlock(pMACDrv);
+        if(pPkt == 0)
+        {
+            break;
+        }
         // release pending list packets
         if(*pMACDrv->sGmacData.pktAckF)
         {   // Tx Callback
@@ -833,8 +851,16 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
     uint16_t buffer_end_index = 0;
     DRV_GMAC_TX_DESC_INDEX * pTxAckQueueNode;
     
-    while((pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue))!= NULL)    
-    {           
+    while(true)    
+    {        
+        _DRV_GMAC_TxLock(pMACDrv);
+        pTxAckQueueNode = (DRV_GMAC_TX_DESC_INDEX *)DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescUnAckQueue);
+        _DRV_GMAC_TxUnlock(pMACDrv);
+        
+        if(pTxAckQueueNode == NULL )
+        {
+            break;
+        }
         //get buffer count
         buffer_count = pTxAckQueueNode->buffer_count;
         //get start index
@@ -875,7 +901,9 @@ void DRV_PIC32CGMAC_LibTxClearUnAckPacket( DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_L
         // add the node to unused queue after clearing the values
         pTxAckQueueNode->buffer_count = 0;
         pTxAckQueueNode->startIndex = pTxAckQueueNode->endIndex = 0;  
-        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode);      
+        _DRV_GMAC_TxLock(pMACDrv); 
+        DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxDescAckPoolQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pTxAckQueueNode); 
+        _DRV_GMAC_TxUnlock(pMACDrv);
             
     }
         
