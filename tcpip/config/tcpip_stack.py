@@ -681,6 +681,11 @@ def instantiateComponent(tcpipStackComponent):
         intStringStart = "core.EVIC_"
         intStringEnd = "_ENABLE"
 
+    # Number of Interrupts
+    tcpipStackMacIntNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_INTERRUPT_NUM", tcpipStackConfigSummary)
+    tcpipStackMacIntNum.setLabel("Number of Interrupts")
+    tcpipStackMacIntNum.setVisible(configSummaryVisible)
+    tcpipStackMacIntNum.setReadOnly(True)
         
     if macName != "None":
         interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
@@ -693,12 +698,9 @@ def instantiateComponent(tcpipStackComponent):
                 interruptDict["caption"] = str(interruptsChildrenList[interrupt].getAttribute("caption"))
                 macInterruptStruct.append(interruptDict)
 
-        # Number of Interrupts
-        tcpipStackMacIntNum = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_MAC_INTERRUPT_NUM", tcpipStackConfigSummary)
-        tcpipStackMacIntNum.setLabel("Number of Interrupts")
-        tcpipStackMacIntNum.setVisible(configSummaryVisible)
+
         tcpipStackMacIntNum.setDefaultValue(len(macInterruptStruct))
-        tcpipStackMacIntNum.setReadOnly(True)
+
         
         for intIndex in range(0, len(macInterruptStruct)):
         
@@ -722,6 +724,9 @@ def instantiateComponent(tcpipStackComponent):
             tcpipStackMacIntVector[intIndex].setDefaultValue(macInterruptStruct[intIndex]["index"])
             tcpipStackMacIntVector[intIndex].setVisible(configSummaryVisible) 
             tcpipStackMacIntVector[intIndex].setReadOnly(True) 
+            
+    else:
+        tcpipStackMacIntNum.setDefaultValue(0)
 
     ###################################################################################################    
     #Add to system_config.h
