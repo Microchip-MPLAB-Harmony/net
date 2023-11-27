@@ -845,7 +845,7 @@ public class MPFS2Lib //: MPFS2Writer
                 "    #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL \r\n"+
                 "    const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"+
                 "#else\r\n"+
-                "    const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))\r\n"+
+                "    const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((used,keep))\r\n"+
                 "    NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"+
                 "#endif"        
             );
