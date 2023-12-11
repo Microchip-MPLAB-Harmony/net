@@ -66,7 +66,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
     
     if Peripheral.moduleExists("GMAC"):
         drvExtPhyLan8740ConfigRmii.setDefaultValue(True)
-    elif "PIC32M" in Variables.get("__PROCESSOR"):
+    elif "PIC32M" or "WFI32" in Variables.get("__PROCESSOR"):
         drvExtPhyLan8740ConfigRmii.setDefaultValue(False)
     
         # Configuration Fuses Is ALT
