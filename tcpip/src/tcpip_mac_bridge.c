@@ -392,10 +392,10 @@ static __inline__ uint16_t __attribute__((always_inline)) _MAC_Bridge_GetPktFlag
 
 // stores the forward descriptor in the packet
 // since this is either the bridge copy or the host does not process it
-// we use the pktClientData16[1:2] for storing the descriptor
+// we use the pktClientData32[1] for storing the descriptor
 static __inline__ void __attribute__((always_inline)) _MAC_Bridge_StorePktFwdDcpt(TCPIP_MAC_PACKET* pPkt, MAC_BRIDGE_FWD_DCPT* pFwdDcpt)
 {
-    MAC_BRIDGE_FWD_DCPT** pStoreDcpt = (MAC_BRIDGE_FWD_DCPT**)(pPkt->pktClientData16 + 1);
+    MAC_BRIDGE_FWD_DCPT** pStoreDcpt = (MAC_BRIDGE_FWD_DCPT**)(pPkt->pktClientData32 + 1);
     // should be properly aligned
     _Mac_Bridge_AssertCond( ((uintptr_t)pStoreDcpt & (sizeof(uintptr_t) - 1)) == 0, __func__, __LINE__);
     
@@ -405,7 +405,7 @@ static __inline__ void __attribute__((always_inline)) _MAC_Bridge_StorePktFwdDcp
 // returns the forward descriptor of the packet
 static __inline__ MAC_BRIDGE_FWD_DCPT* __attribute__((always_inline)) _MAC_Bridge_GetPktFwdDcpt(TCPIP_MAC_PACKET* pPkt)
 {
-    MAC_BRIDGE_FWD_DCPT** pStoreDcpt = (MAC_BRIDGE_FWD_DCPT**)(pPkt->pktClientData16 + 1);
+    MAC_BRIDGE_FWD_DCPT** pStoreDcpt = (MAC_BRIDGE_FWD_DCPT**)(pPkt->pktClientData32 + 1);
     // should be properly aligned
     _Mac_Bridge_AssertCond( ((uintptr_t)pStoreDcpt & (sizeof(uintptr_t) - 1)) == 0, __func__, __LINE__);
     

@@ -55,7 +55,7 @@ Microchip or any third party.
 #define MAC_BRIDGE_DEBUG_MASK_TRACE_PKT     0x0010
 
 
-#define MAC_BRIDGE_DEBUG_MASK       (0)
+#define MAC_BRIDGE_DEBUG_MASK       (1)
 
 // because of the forwardMap,
 // no more than 32 ports supported currently

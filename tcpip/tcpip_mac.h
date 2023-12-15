@@ -934,6 +934,7 @@ struct _tag_TCPIP_MAC_PACKET
     /* Packet client data; ignored by the MAC driver.
        It can be used by the packet client modules
        (MCHP TCP/IP stack note: the use of this field is assigned as follows:
+            - pktClientData16[0 - 3] used by the bridge module
             - pktClientData16[0] reserved for IPv4 module use 
             - pktClientData16[1] reserved for IPv6 module use 
             - pktClientData16[2, 3] can be used by higher layer modules (IGMP, UDP, etc.) */
