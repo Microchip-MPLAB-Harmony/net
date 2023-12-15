@@ -262,11 +262,11 @@ static const DRV_PIC32CGMAC_HW_REG_DCPT macPIC32CHwRegDcpt[] =
 //table of different Link startup
 static const _DRV_GMAC_LinkStateF _DRV_GMAC_LinkStateTbl[] =
 {
-    _DRV_GMAC_LinkStateStartLink,       // DRV_PIC32CGMAC_LINK_CHECK_START_LINK
-    _DRV_GMAC_LinkStateGetLink,         // DRV_PIC32CGMAC_LINK_CHECK_GET_LINK
-    _DRV_GMAC_LinkStateWaitLinkUp,      // DRV_PIC32CGMAC_LINK_CHECK_WAIT_LINK_UP
-    _DRV_GMAC_LinkStateNegComplete,     // DRV_PIC32CGMAC_LINK_CHECK_NEG_COMPLETE
-    _DRV_GMAC_LinkStateNegResult,       // DRV_PIC32CGMAC_LINK_CHECK_NEG_RESULT
+    _DRV_GMAC_LinkStateStartLink,       // DRV_GMAC_LINK_CHECK_START_LINK
+    _DRV_GMAC_LinkStateGetLink,         // DRV_GMAC_LINK_CHECK_GET_LINK
+    _DRV_GMAC_LinkStateWaitLinkUp,      // DRV_GMAC_LINK_CHECK_WAIT_LINK_UP
+    _DRV_GMAC_LinkStateNegComplete,     // DRV_GMAC_LINK_CHECK_NEG_COMPLETE
+    _DRV_GMAC_LinkStateNegResult,       // DRV_GMAC_LINK_CHECK_NEG_RESULT
 };
 
 //convert mac id to index

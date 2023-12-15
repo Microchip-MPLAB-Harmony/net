@@ -43,7 +43,7 @@ Microchip or any third party.
 // RX Buffer allocation types
 #define GMAC_RX_STICKY_BUFFERS  1
 #define GMAC_RX_DYNAMIC_BUFFERS 0
-
+#define GMAC_NCR_MIIONRGMII_Msk (0x10000000)
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -147,19 +147,20 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     // Select MII interface mode 
     if(pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RGMII)//RGMII Mode
     {
+        pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | GMAC_UR_MIM_RGMII | 
                                                 ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
-        
-        pGmacRegs->GMAC_NCFGR |= GMAC_NCFGR_GBE_Msk;
     }
     else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_MII)//MII Mode
     {
+        pGmacRegs->GMAC_NCR |= GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | 
                                                ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }
     else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RMII)//RMII Mode
     {
+        pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~(GMAC_UR_MIM_Msk | GMAC_UR_REFCLK_Msk)) | GMAC_UR_MIM_RMII | 
                                                 ((pMACDrv->sGmacData.gmacConfig.macRefClkSrc)? GMAC_UR_REFCLK_Msk: 0);
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
@@ -270,6 +271,7 @@ void DRV_PIC32CGMAC_LibClose(DRV_GMAC_DRIVER * pMACDrv, DRV_PIC32CGMAC_CLOSE_FLA
  * Function: DRV_PIC32CGMAC_LibMACOpen
  * Summary : Open GMAC driver
  *****************************************************************************/
+
 void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS oFlags, TCPIP_ETH_PAUSE_TYPE pauseType)
 {   
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
@@ -279,7 +281,7 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
     pGmacRegs->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;
     
     ncfgr = pGmacRegs->GMAC_NCFGR;
-    
+
     if(oFlags & TCPIP_ETH_OPEN_FDUPLEX)
     {
         ncfgr |= GMAC_NCFGR_FD_Msk ;
@@ -288,13 +290,18 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
     {
         ncfgr &= ~GMAC_NCFGR_FD_Msk ;   
     }
-    if(oFlags & (TCPIP_ETH_OPEN_1000 | TCPIP_ETH_OPEN_100))
+    if(oFlags & TCPIP_ETH_OPEN_1000)
     {
-        ncfgr |= GMAC_NCFGR_SPD_Msk ;
+        ncfgr |= (GMAC_NCFGR_SPD_Msk|GMAC_NCFGR_GBE_Msk) ;
+    }
+    else if (oFlags & TCPIP_ETH_OPEN_100)
+    {
+        ncfgr &= ~GMAC_NCFGR_GBE_Msk ;
+        ncfgr |= GMAC_NCFGR_SPD_Msk;
     }
     else
     {
-        ncfgr &= ~GMAC_NCFGR_SPD_Msk ;
+        ncfgr &= ~(GMAC_NCFGR_SPD_Msk|GMAC_NCFGR_GBE_Msk) ;
     }
         
     if(pauseType & TCPIP_ETH_PAUSE_TYPE_EN_RX)
@@ -310,16 +317,18 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
     // Select MII interface mode 
     if(oFlags & TCPIP_ETH_OPEN_RGMII)//GMII Mode
     {        
+        pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~GMAC_UR_MIM_Msk) | GMAC_UR_MIM_RGMII;
-        pGmacRegs->GMAC_NCFGR |= GMAC_NCFGR_GBE_Msk;
     }
     else if(oFlags & TCPIP_ETH_OPEN_MII)//MII Mode
     {
+        pGmacRegs->GMAC_NCR |= GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~GMAC_UR_MIM_Msk);
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }
     else if(oFlags & TCPIP_ETH_OPEN_RMII)//RMII Mode
     {
+        pGmacRegs->GMAC_NCR &= ~GMAC_NCR_MIIONRGMII_Msk;
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~GMAC_UR_MIM_Msk) | GMAC_UR_MIM_RMII;
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }   

@@ -125,6 +125,7 @@ typedef enum
 {
     DRV_ETHPHY_SETUP_PHASE_IDLE = 0,
     DRV_ETHPHY_SETUP_PHASE_DETECT,
+    DRV_ETHPHY_SETUP_PHASE_READ_ID,        
     DRV_ETHPHY_SETUP_PHASE_RESET,
     DRV_ETHPHY_SETUP_PHASE_NEGOTIATE,
     DRV_ETHPHY_SETUP_PHASE_DONE,
@@ -367,7 +368,10 @@ typedef struct
     uint16_t                    detectMask;     // the pPhyObj->bmconDetectMask value 
     uint16_t                    capabMask;      // the pPhyObj->bmstatCpblMask value 
     uintptr_t                   vendorData;
-    DRV_ETHPHY_VENDOR_DETECT    vendorDetect;
+    DRV_ETHPHY_VENDOR_DETECT    vendorDetect;    
+        
+    uint16_t                    phyId_1;        // PHYY Identifier 1 register value
+    uint16_t                    phyId_2;        // PHYY Identifier 2 register value
 
 } DRV_ETHPHY_CLIENT_OBJ;
 
@@ -395,6 +399,8 @@ typedef struct _DRV_ETHPHY_INSTANCE
     uint16_t                    miimIndex;      // SYS_MODULE_INDEX: MIIM object index 
     uint16_t                    iModule;        // SYS_MODULE_INDEX: Module instance number
     uint16_t                    configFlags;    // DRV_ETHPHY_CONFIG_FLAGS: ETHPHY MII/RMII configuration flags
+
+    
     uintptr_t                   ethphyId;       // The peripheral Id associated with the object
     uint32_t                    openFlags;      // TCPIP_ETH_OPEN_FLAGS: flags required at open time
     const DRV_ETHPHY_OBJECT*    pPhyObj;        // PHY object, vendor specific functions    
