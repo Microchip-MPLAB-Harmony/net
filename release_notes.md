@@ -1,4 +1,65 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.11.0 (December, 2023)
+### ADDITIONS AND UPDATES FOR  3.11.0:
+
+- **New features**
+
+    - The release provides various bug fixes.
+    - Improvements of the iperf throughput on GMAC SAM devices - GMAC checksum offload support.
+    - The release adds the serial PPP MAC driver.
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+
+- **New Features and Bug Fixes**
+
+The following table provides the list of fixes in the 3.11.0 release:
+
+| Module                | Description     |
+| ------ | -------- |
+| GMAC driver   | Added support for MAC RX/TX Checksum offload feature |
+|               | iperf throughput improvement |
+|               | RGMII/GMII 10/100 Support - for 9x7, A7G5, PIC32CZ_CA platforms |
+|               | Fixed issue with critical section access |
+|               | Fixed invalid use of FreeRTOS APIs in GMAC code |
+| MAC driver    | Added the serial link PPP support as a virtual MAC |
+| MIIM driver   | Corrections for the usage of the MIIM driver |
+| PHY driver    | ETHPHY Driver function to write to ETHPHY registers and wait for the completion |
+|               | Corrected symbol DRV_ETHPHY_OBJECT_BASE_lan9303 case |
+|               | Updates for 1000 Mbps support |
+| BSD module    | Fixes for the bind operation |
+| MCC           | MCC Net plugin various fixes |
+|               | Added support for Wi-Fi modules part numbers |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.15](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.35](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, 3.11.0
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), 5.3.7 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.13.1
+- Harmony csp repository, v3.18.0
+- Harmony bsp repository, v3.17.0
+- Harmony dev\_packs repository, v3.18.1
+- Harmony crypto repository, v3.8.1
+- Harmony usb repository, 3.11.0 for demos requiring USB
+- wolfSSL  v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
+
+
+### KNOWN ISSUES
+* See the applications release notes in [product family specific repository](apps/release_notes.md)
+
 ## Net Release v3.10.1 (August, 2023)
 ### ADDITIONS AND UPDATES FOR  3.10.1:
 
