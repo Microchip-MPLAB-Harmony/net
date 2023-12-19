@@ -40,7 +40,6 @@ body {
  */
 .wh_publication_title > a {
   padding: 0.1em 0;
-  text-transform: uppercase;
   font-weight: bold;
   line-height: 1em;
   font-size: 1.8em;
@@ -50,6 +49,22 @@ body {
     padding: 0;
   }
 }
+
+/* 
+ * Edit/Comment button in webhelp
+ */
+
+.editbutton {
+  border: 2px solid green;
+  border-radius: 5px;
+  width: 200px;
+  text-align: center;
+  padding: 7px;
+  background-color: #04aa6d;
+  color: #ffffff;
+  font-weight: bold;
+  }
+
 
 /*
  * ------------------------------------------------------------------
@@ -735,4 +750,33 @@ dl.noboldlist dt {
 dl.noboldlist dd {
   margin: 0 0 0 100px;
   padding: 0 0 0.5em 0;
+}
+
+/* Disclaimer */
+.mchp_disclaimer {
+  padding: 0 10px;
+  text-align: center;
+}
+.mchp_disclaimer > .mchp_disclaimer_text {
+  font-size: .8em;
+  margin: 0;
+  color: #000;
+}
+.wh_footer {
+  margin-top: 0 !important;
+}
+
+.table-container{
+  max-height: 500px;
+  overflow: auto !important;
+}
+
+.table-container tr:nth-child(1) th{
+  position: sticky;
+  top: 0;
+}
+
+.table-container tr:nth-child(2) th{
+  position: sticky;
+  top: 29px;
 }

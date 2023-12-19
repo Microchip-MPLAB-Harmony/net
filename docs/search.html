@@ -23,12 +23,13 @@
     <script data-main="./oxygen-webhelp/app/search-page.js" src="./oxygen-webhelp/lib/requirejs/require.js"></script>
     
 
-        <link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/>
+        <link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/microchip.css?buildId=2022062014"/><link rel="stylesheet" type="text/css" href="oxygen-webhelp/template/notes.css?buildId=2022062014"/><script src="./oxygen-webhelp/app/custom-search-scripts.js" async="true"></script>
         
         
 <script src="mchp-context-help.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async="" type="text/javascript"></script>
+    <script src="https://assets.adobedtm.com/6a72a357eb48/a636c708c7fe/launch-0b0023397020.min.js"></script><!-- Adobe Analytics -->
 
         
     </head>
@@ -71,7 +72,7 @@
             
             
             
-            <form id="searchForm" method="get" role="search" action="search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div></form>
+            <form id="searchForm" method="get" role="search" action="search.html"><div class="d-flex justify-contents-around"><div class="flex-grow-1"></div><div class="position-relative flex-grow-1"><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" aria-label="Search query" required="required"/><button type="submit" class="wh_search_button" aria-label="Search"><span class="search_input_text">Search</span></button></div><div class="align-self-center flex-grow-1 ml-2"></div></div></form>
             
             <div class="mchp-color-stripe-grid-container">
   <div class="mchp-main-bar mchp-orange-bar"></div>
@@ -125,7 +126,7 @@
         
         
         
-        <footer class="navbar navbar-default wh_footer">
+        <div class="mchp_disclaimer"><p class="mchp_disclaimer_text">The online versions of the documents are provided as a courtesy. Verify all content and data in the device’s PDF documentation found on the device product page.</p></div><footer class="navbar navbar-default wh_footer">
   <div class=" footer-container mx-auto ">
     <div class="footer">
   <div class="mchp-wh-footer">
@@ -234,6 +235,9 @@
     gtag('js', new Date());   
     gtag('config', 'UA-2724382-19');
   </script>
+  
+  <script type="text/javascript">_satellite.pageBottom();</script><!-- Adobe Analytics -->
+  
 </div>
   </div>
 </footer>
