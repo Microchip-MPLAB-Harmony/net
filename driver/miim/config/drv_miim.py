@@ -244,7 +244,7 @@ def instantiateComponent(drvMiimComponent):
         drv_miim_xxx_file = "drv_miim_pic32cz.c"
     elif ("SAM9X6" in processor): 
         drv_miim_xxx_file = "drv_miim_emac.c"
-    elif (("PIC32MZ" or "WFI32" in processor) or ("PIC32MX" in processor)): 
+    elif (("PIC32MZ" in processor) or ("WFI32" in processor) or ("PIC32MX" in processor)): 
         drv_miim_xxx_file = "drv_miim_pic32m.c"
     elif ("PIC32CK" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32ck.c"

@@ -672,7 +672,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "EMAC"
         intStringStart = "core."
         intStringEnd = "_INTERRUPT_ENABLE"
-    elif "PIC32MZ" or "WFI32" in processor:
+    elif ("PIC32MZ" in processor) or ("WFI32" in processor): 
         macName = "ETHERNET"
         intStringStart = "core.EVIC_"
         intStringEnd = "_ENABLE"
