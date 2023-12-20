@@ -3261,7 +3261,7 @@ uint16_t TCPIP_TCP_ArrayFind(TCP_SOCKET hTCP, const uint8_t* cFindArray, uint16_
     const uint8_t *cFindArrayStart;
     uint8_t i, j, k;
     bool isFinding;
-    uint8_t buffer[32];
+    uint8_t buffer[32] = {0};
 
     TCB_STUB* pSkt = _TcpSocketChk(hTCP); 
     
