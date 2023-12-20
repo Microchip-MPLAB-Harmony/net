@@ -1365,7 +1365,7 @@ static TCPIP_IPV4_RES IPV4_BuildForwardTables(const TCPIP_IPV4_MODULE_CONFIG* pI
 static TCPIP_IPV4_RES IPv4_BuildAsciiTable(IPV4_FORWARD_DESCRIPTOR* pFwdDcpt, const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pAEntry, size_t nEntries)
 {
     int ix;
-    TCPIP_IPV4_FORWARD_ENTRY_BIN bEntry;
+    TCPIP_IPV4_FORWARD_ENTRY_BIN bEntry = {0};
 
     TCPIP_IPV4_RES buildRes = TCPIP_IPV4_RES_OK;
     for(ix = 0; ix < nEntries; ix++, pAEntry++)
@@ -1463,6 +1463,8 @@ static TCPIP_IPV4_RES IPv4_ProcessAsciiEntries(const TCPIP_IPV4_FORWARD_ENTRY_AS
 {
 #define BIN_PROCESS_CHUNK_ENTRIES 16
     TCPIP_IPV4_FORWARD_ENTRY_BIN bArrEntry[BIN_PROCESS_CHUNK_ENTRIES];
+
+    (void)memset(bArrEntry, 0, sizeof(bArrEntry));
 
     size_t nChunks = nEntries / BIN_PROCESS_CHUNK_ENTRIES;
     size_t nRem = nEntries - nChunks * BIN_PROCESS_CHUNK_ENTRIES;

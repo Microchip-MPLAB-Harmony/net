@@ -6772,7 +6772,7 @@ static void _CommandIpv4Table(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     // ip table index
     size_t ix;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-    TCPIP_IPV4_FORWARD_ENTRY_BIN fwdEntry;
+    TCPIP_IPV4_FORWARD_ENTRY_BIN fwdEntry = {0};
     unsigned int index = 0;
 
     if(argc > 2)
