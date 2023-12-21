@@ -2258,7 +2258,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 {   
     uint8_t getbulkOverFlowFlag = false;
     uint8_t temp =0;
-    uint8_t OIDValue[TCPIP_SNMP_OID_MAX_LEN];
+    uint8_t OIDValue[TCPIP_SNMP_OID_MAX_LEN] = {0};
     uint8_t OIDLen=0;
     uint8_t varIndex =0;
     uint8_t communityLen=0,commRetVal=0;
@@ -3378,7 +3378,7 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
 {
     TCPIP_UINT16_VAL temp;
     uint8_t putBytes=0;
-    OID_INFO indexRec;
+    OID_INFO indexRec = {0};
     uint8_t *pOIDValue;
     uint8_t OIDValue[TCPIP_SNMP_OID_MAX_LEN];
     uint8_t OIDLen;
@@ -3693,7 +3693,7 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
     uint8_t sequenceCnt=0;
     uint8_t sequenceRepeatCnt=0;
     SNMP_ID varID;
-    OID_INFO indexRec;
+    OID_INFO indexRec  = {0};
     SNMP_INDEX_INFO indexInfo;
     MIB_INFO varNodeInfo;
     uint16_t OIDValOffset;
@@ -4882,7 +4882,7 @@ bool TCPIP_SNMP_OIDStringGetByAddr(int32_t fileDescr,OID_INFO* rec, uint8_t* oid
     uint32_t hTarget;
     uint32_t hCurrent;
     uint32_t hNext;
-    OID_INFO currentMIB;
+    OID_INFO currentMIB = {0};
     uint8_t index;
     enum { SM_PROBE_SIBLING, SM_PROBE_CHILD } state;
 

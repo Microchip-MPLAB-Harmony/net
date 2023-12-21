@@ -376,7 +376,7 @@ void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpInt
 {
     unsigned int i;
 
-    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo;
+    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL};
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;
     //Modify this private enterprise assigned number to your organization number asssigned by IANA
     TCPIP_UINT32_VAL mchpPvtEntpriseAssignedNumber;
@@ -467,7 +467,7 @@ void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpInt
 ***************************************************************************/
 void TCPIP_SNMPv3_EngineBootsRcrdUpdate(void)
 {
-    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo;
+    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL};
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
@@ -1467,7 +1467,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
     }smSnmp=SM_PKT_STRUCT_LEN_OFFSET;
 
     
-    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo; 
+    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
@@ -3209,7 +3209,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     uint8_t             USM_Index=0,temp_index=0;
     SNMPV3_PRIV_PROT_TYPE       usmPrivType = SNMPV3_NO_PRIV;
 
-    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo; 
+    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
@@ -3734,7 +3734,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     TCPIP_UINT16_VAL    totaltrapLen={0};
     uint16_t        i=0;
     uint8_t     USM_Index=0;
-    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo; 
+    SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
     SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
     uint8_t tempBuf[4] = {0U, 0U, 0U, 0U};
     uint8_t tempCntr=0;
