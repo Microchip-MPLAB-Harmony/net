@@ -1,5 +1,5 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us" data-whc_version="24.1">
-    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="Test Setup PIC32 MZ Embedded Connectivity Starter Kit PIC32 MX Ethernet Starter Kit II Starter Kit I/O Expansion Board Fast 100 Mbps Ethernet PICtail Plus Windows 7 PC TX buffer: 7350 bytes RX buffer: ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.1.3 Network Metrics</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B-d9767e43"/><meta name="wh-source-relpath" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B.xml"/><meta name="wh-out-relpath" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B.html"/>
+    <head><link rel="shortcut icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><link rel="icon" href="oxygen-webhelp\template\resources/images/favicon.ico"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="description" content="Iperf Bandwidth Measurements in TCP Server Mode Table 1-1.  Commands Hardware Board Computer iperf -s -i 5 -x &lt;speed&gt; iperf -c &lt;board ip addr&gt; -t 50 -i 5 For 100 Mbps test , &lt;speed&gt; = 100M For 1000 ..."/><meta name="copyright" content="(C) Copyright 2023"/><meta name="generator" content="DITA-OT"/><title>1.1.3 Network Metrics</title><!--  Generated with Oxygen version 24.1, build number 2022062014.  --><meta name="wh-path2root" content=""/><meta name="wh-toc-id" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B-d9767e43"/><meta name="wh-source-relpath" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B.xml"/><meta name="wh-out-relpath" content="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B.html"/>
     <!-- Latest compiled and minified Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="./oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css"/>
     
@@ -136,282 +136,319 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-437CB719-C403-461E-AA66-0EAD854AC012">
 <h1 class="- topic/title title topictitle1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-437CB719-C403-461E-AA66-0EAD854AC012" style="">1.1.3 Network Metrics</h1>
 <div class="- topic/body body">
-        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB"><h2 class="- topic/title title sectiontitle">Test Setup</h2>
+        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB"><h2 class="- topic/title title sectiontitle">Iperf Bandwidth Measurements in
+                TCP Server Mode</h2>
+            
+            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-1. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-45B8FFF6-CAD0-4FA9-9E1E-70E2C0815A7D">Commands</span></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__1">Hardware Board </th>
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__2">Computer </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__1">iperf -s -i 5 -x &lt;speed&gt; </td>
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__2">iperf -c &lt;board ip addr&gt; -t 50 -i 5 </td>
+                        </tr>
+                    </tbody></table></div>
+            <p class="- topic/p p">For 100 Mbps test , &lt;speed&gt; = 100M</p>
+            <p class="- topic/p p">For 1000 Mbps test, &lt;speed&gt; = 1000M</p>
+            <p class="- topic/p p">All bandwidth numbers are in <em class="+ topic/ph hi-d/i ph i">megabits per second</em>. </p>
+            <div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-2. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-E76C6D72-652C-46EE-BEAB-D0C756C382B6">Throughput in TCP Server
+                    Mode</span></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Hardware Platform </strong></th>
+                            <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">Optimization - O3 </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">PIC32MZ EF Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">70</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">PIC32MZ DA Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">81</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAM E70 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">92</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAM V71 XULT </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">92</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAM E54 XPRO </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">85</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">PIC32CX SG41 CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">81</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">PIC32CK GC CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">89</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">PIC32CZ CA CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">245</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAMA7G54 EK</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">521</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAM9X75 DDR3 EB</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">521</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">SAMA5D2 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">91</td>
+                        </tr>
+                    </tbody></table></div>
+        </section>
+        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-ADA0A1F2-B4DD-4E0D-A8F4-BC6AB2D58649" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-ADA0A1F2-B4DD-4E0D-A8F4-BC6AB2D58649"><h2 class="- topic/title title sectiontitle">Iperf Bandwidth Measurements in
+                TCP Client Mode</h2>
+            
+            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-3. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-A3B3F979-9124-4EAF-A998-8614CC74DEB5">Commands</span></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__1">Hardware Board </th>
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__2">Computer </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__1">iperf -c &lt;comp ip addr&gt; -t 50 -i 5 -x &lt;speed&gt;</td>
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__2">iperf -s -i 5</td>
+                        </tr>
+                    </tbody></table></div>
+            <p class="- topic/p p">For 100 Mbps test , &lt;speed&gt; = 100M</p>
+            <p class="- topic/p p">For 1000 Mbps test, &lt;speed&gt; = 1000M</p>
+            <p class="- topic/p p">All bandwidth numbers are in <em class="+ topic/ph hi-d/i ph i">megabits per second</em>. </p>
+            <div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-4. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C0FD6348-D6D5-4B51-AA49-ACF198F9C692">Throughput in TCP Client
+                    Mode</span></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Hardware Platform </strong></th>
+                            <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">Optimization - O3 </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">PIC32MZ EF Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">PIC32MZ DA Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAM E70 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">92</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAM V71 XULT </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">92</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAM E54 XPRO </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">92</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">PIC32CX SG41 CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">88</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">PIC32CK GC CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">93</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">PIC32CZ CA CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">227</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAMA7G54 EK</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">506</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAM9X75 DDR3 EB</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">506</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">SAMA5D2 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">92</td>
+                        </tr>
+                    </tbody></table></div>
+        </section>
+        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FD84CC9-9FB5-4E82-9F11-BF3C6AF971A0" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FD84CC9-9FB5-4E82-9F11-BF3C6AF971A0"><h2 class="- topic/title title sectiontitle">Iperf Bandwidth Measurements in
+                UDP Server Mode</h2>
+            
+            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-5. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-D509CF97-F3A8-4BF1-BD97-5AF8E1808C94">Commands</span></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__1">Hardware Board </th>
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__2">Computer </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__1">iperf -s -u -i 5</td>
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__2">iperf -c &lt;board ip addr&gt; -t 50 -i 5 -u -b
+                                &lt;speed&gt;</td>
+                        </tr>
+                    </tbody></table></div>
+            <p class="- topic/p p">For 100 Mbps test , &lt;speed&gt; = 100M</p>
+            <p class="- topic/p p">For 1000 Mbps test, &lt;speed&gt; = 1000M</p>
+            <p class="- topic/p p">All bandwidth numbers are in <em class="+ topic/ph hi-d/i ph i">megabits per second</em>. </p>
+            <div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-6. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-1658A869-1AA0-45D9-A06D-8160803E7467">Throughput in UDP Server
+                    Mode</span></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Hardware Platform </strong></th>
+                            <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">Optimization - O3 </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">PIC32MZ EF Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">PIC32MZ DA Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAM E70 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAM V71 XULT </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAM E54 XPRO </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">PIC32CX SG41 CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">PIC32CK GC CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">PIC32CZ CA CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">330</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAMA7G54 EK</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">952</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAM9X75 DDR3 EB</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">952</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">SAMA5D2 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">95</td>
+                        </tr>
+                    </tbody></table></div>
+        </section>
+        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C8C4DC29-D561-4CA5-9CEA-868BB2AEC306" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C8C4DC29-D561-4CA5-9CEA-868BB2AEC306"><h2 class="- topic/title title sectiontitle">Iperf Bandwidth Measurements in
+                UDP Client Mode</h2>
+            
+            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-7. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-E6876D94-E04C-4A4A-BFBF-4B65F5DA96AE">Commands</span></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__1">Hardware Board </th>
+                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__2">Computer </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__1">iperf -c &lt;comp ip addr&gt; -t 50 -i 5 -u -b &lt;speed&gt;</td>
+                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__2">iperf -s -u -i 5</td>
+                        </tr>
+                    </tbody></table></div>
+            <p class="- topic/p p">For 100 Mbps test , &lt;speed&gt; = 100M</p>
+            <p class="- topic/p p">For 1000 Mbps test, &lt;speed&gt; = 1000M</p>
+            <p class="- topic/p p">All bandwidth numbers are in <em class="+ topic/ph hi-d/i ph i">megabits per second</em>. </p>
+            <div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB" data-cols="2"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-8. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-74A04CA8-FA2D-40E3-9CC6-FBFE5668821B">Throughput in UDP Client
+                    Mode</span></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead">
+                        <tr class="- topic/row">
+                            <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Hardware Platform </strong></th>
+                            <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">Optimization - O3 </th>
+                        </tr>
+                    </thead><tbody class="- topic/tbody tbody">
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">PIC32MZ EF Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">PIC32MZ DA Starter Kit</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAM E70 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAM V71 XULT </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">94</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAM E54 XPRO </td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">PIC32CX SG41 CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">PIC32CK GC CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">PIC32CZ CA CULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">327</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAMA7G54 EK</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">615</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAM9X75 DDR3 EB</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">615</td>
+                        </tr>
+                        <tr class="- topic/row">
+                            <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">SAMA5D2 XULT</td>
+                            <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">95</td>
+                        </tr>
+                    </tbody></table></div>
+        </section>
+        <p class="- topic/p p"></p>
+        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB"><h2 class="- topic/title title sectiontitle">Notes:</h2>
             
             <div class="- topic/p p">
                 <ul class="- topic/ul ul" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__UL_GPX_LXX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__UL_GPX_LXX_KXB">
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7EE67AC2-4E01-4139-93E4-23573A89531E" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7EE67AC2-4E01-4139-93E4-23573A89531E">PIC32 MZ Embedded Connectivity Starter Kit</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-CE4F0C32-F021-4FFD-9910-4ED06F9941C0" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-CE4F0C32-F021-4FFD-9910-4ED06F9941C0">PIC32 MX Ethernet Starter Kit II</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-810937B2-3691-4F49-9BDD-BAA1FDADE9C8" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-810937B2-3691-4F49-9BDD-BAA1FDADE9C8">Starter Kit I/O Expansion Board</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-D7F89928-5E04-4AD6-811F-415E5D9A7375" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-D7F89928-5E04-4AD6-811F-415E5D9A7375">Fast 100 Mbps Ethernet PICtail Plus</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-B4DD9017-C6B8-4F74-9323-DB9A023A49D3" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-B4DD9017-C6B8-4F74-9323-DB9A023A49D3">Windows 7 PC</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-3C386D9B-2721-4ECF-A5C1-AF8A366418B2" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-3C386D9B-2721-4ECF-A5C1-AF8A366418B2">TX buffer: 7350 bytes</li>
-                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5C5C9AA2-B3F6-4961-9F02-E72931D7CEBE" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5C5C9AA2-B3F6-4961-9F02-E72931D7CEBE">RX buffer: 4400 byte</li>
+                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-07186BEF-298C-4D68-95C8-5D6402EC5F10" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-07186BEF-298C-4D68-95C8-5D6402EC5F10">For Test Setup, please refer
+                        to the hardware platform specific documentation, which is available in their
+                        repository in the <em class="+ topic/ph hi-d/i ph i">docs\index.html</em> file.</li>
+                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-4D74D447-6ED7-43BE-8001-66BB171845F6" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-4D74D447-6ED7-43BE-8001-66BB171845F6">The following parameters are
+                        configured for the above test. Please refer to the <em class="+ topic/ph hi-d/i ph i">iperf_demo
+                        </em>application for each platform . <ul class="- topic/ul ul" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__UL_ESL_FYT_VZB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__UL_ESL_FYT_VZB">
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-78167FD8-8469-48F6-9F18-5B338E1C3F52" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-78167FD8-8469-48F6-9F18-5B338E1C3F52">Iperf UDP TX Pkt Queue </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-FA4DAFB5-1296-4968-962C-D62131150777" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-FA4DAFB5-1296-4968-962C-D62131150777">Iperf Rx Buffer Size</li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-A51DB865-9908-444C-A5F3-6F28FE3658A7" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-A51DB865-9908-444C-A5F3-6F28FE3658A7">Iperf Tx Buffer Size </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5962C14B-CA2A-42A5-8AE5-19367AA12950" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5962C14B-CA2A-42A5-8AE5-19367AA12950">TCP Task Rate</li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-AFF5C1BF-E657-4B19-AE32-C5B25341BD01" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-AFF5C1BF-E657-4B19-AE32-C5B25341BD01">UDP TX Queue Limit </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7288D3D6-7D7C-422C-8983-70FBA00D3A34" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7288D3D6-7D7C-422C-8983-70FBA00D3A34">UDP RX Queue Limit </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-B0E30A19-B079-46FC-9FFD-303498208A55" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-B0E30A19-B079-46FC-9FFD-303498208A55">TCPIP Stack Tick Rate </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FB2CDB7-F7CC-49EA-BE65-8797340015AE" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FB2CDB7-F7CC-49EA-BE65-8797340015AE">System Heap Size </li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F2A80597-4FC4-4F31-8539-C8697B6778D5" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F2A80597-4FC4-4F31-8539-C8697B6778D5">TCP/IP Heap Size</li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F5C34B20-83FD-4DC3-AE81-A076364D95C3" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F5C34B20-83FD-4DC3-AE81-A076364D95C3"># Ethernet MAC RX Descriptors</li>
+                            <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-E7774A50-577D-459E-924D-03159FAB39AB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-E7774A50-577D-459E-924D-03159FAB39AB"># Ethernet MAC TX Descriptors</li>
+                        </ul><strong class="+ topic/ph hi-d/b ph b">Note</strong> that these parameters vary across different platforms.</li>
+                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-2D0DBEC6-D896-473D-80C6-D204FAC57C50" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-2D0DBEC6-D896-473D-80C6-D204FAC57C50">If the platform supports
+                        ‘Ethernet MAC Checksum offload’ feature, then <strong class="+ topic/ph hi-d/b ph b">enable the RX &amp; TX
+                            Checksum offload</strong> for performing the iperf test.</li>
+                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F06D1CEC-CED1-40E0-B1FB-A4D3C34687B7" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-F06D1CEC-CED1-40E0-B1FB-A4D3C34687B7">The above results are captured with a direct ethernet cable connection
+                        between the Computer and the Hardware board .</li>
+                    <li class="- topic/li li" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7E5E8FAE-F701-4603-AE88-72092D69FF2B" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-7E5E8FAE-F701-4603-AE88-72092D69FF2B">The compiler optimization
+                        level used here is O3.</li>
                 </ul>
             </div>
-        </section>
-        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB"><h2 class="- topic/title title sectiontitle">Iperf Bandwidth Measurements </h2>
-            
-            <div class="- topic/p p">All bandwidth numbers are in kilobits per second. <div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB" data-cols="6"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-1. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-E76C6D72-652C-46EE-BEAB-D0C756C382B6">Table 1: Internal MAC Measurements for PIC32MX Devices</span></caption><colgroup><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/></colgroup><thead class="- topic/thead thead">
-                            <tr class="- topic/row">
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Type </strong></th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">-O0 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__3">-O1 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__4">-O2 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__5">-O3 </th>
-                                <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__6">-Os </th>
-                            </tr>
-                        </thead><tbody class="- topic/tbody tbody">
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">TCP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">25,963 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__3">47,652 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__4">53,650 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__5">56,682 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__6">50,191</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">TCP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">29,046 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__3">45,193 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__4">50,484 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__5">52,603 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__6">45,659</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">UDP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">33,795 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__3">60,997 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__4">71,105 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__5">72,049 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__6">63,298</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__1">UDP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__2">36,451 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__3">78,546 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__4">86,994 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__5">88,757 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_EFQ_XZX_KXB__entry__6">80,948</td>
-                            </tr>
-                        </tbody></table></div><div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB" data-cols="6"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-2. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C0FD6348-D6D5-4B51-AA49-ACF198F9C692">Table 2: Internal MAC Measurements for PIC32MZ Devices</span></caption><colgroup><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/></colgroup><thead class="- topic/thead thead">
-                            <tr class="- topic/row">
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Type </strong></th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">-O0 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__3">-O1 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__4">-O2 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__5">-O3 </th>
-                                <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__6">-Os </th>
-                            </tr>
-                        </thead><tbody class="- topic/tbody tbody">
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">TCP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">31,722 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__3">56,929 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__4">61,361 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__5">64,479 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__6">59,742 </td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">TCP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">28,924 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__3">41,570 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__4">44,168 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__5">44,721 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__6">42,437 </td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">UDP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">45,534 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__3">80,116 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__4">87,043 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__5">89,377 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__6">84,044</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__1">UDP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__2">53,155 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__3">90,766 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__4">95,943 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__5">95,899 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_DYZ_GBY_KXB__entry__6">94,411</td>
-                            </tr>
-                        </tbody></table></div><div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB" data-cols="6"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-3. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-1658A869-1AA0-45D9-A06D-8160803E7467">Table 3: ENCx24J600 MAC Measurements for PIC32MX Devices</span></caption><colgroup><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/></colgroup><thead class="- topic/thead thead">
-                            <tr class="- topic/row">
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Type </strong></th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">-O0 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__3">-O1 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__4">-O2 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__5">-O3 </th>
-                                <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__6">-Os </th>
-                            </tr>
-                        </thead><tbody class="- topic/tbody tbody">
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">TCP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">6,023 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__3">7,225 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__4">8,211 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__5">7,633 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__6">7,373 </td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">TCP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">5,760 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__3">7,476 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__4">8,118 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__5">8,166 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__6">7,588</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">UDP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">7,035 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__3">8,826 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__4">9,159 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__5">9,148 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__6">8,949 </td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__1">UDP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__2">7,849 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__3">9,651 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__4">10,358 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__5">10,371 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_PTS_VBY_KXB__entry__6">9,722 </td>
-                            </tr>
-                        </tbody></table></div><div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB" data-cols="6"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-4. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-74A04CA8-FA2D-40E3-9CC6-FBFE5668821B">Table 4: Internal MAC Measurements for PIC32MX + MIPS16 Devices</span></caption><colgroup><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/><col style="width:16.666666666666664%"/></colgroup><thead class="- topic/thead thead">
-                            <tr class="- topic/row">
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Type </strong></th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">-O0 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__3">-O1 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__4">-O2 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__5">-O3 </th>
-                                <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__6">-Os </th>
-                            </tr>
-                        </thead><tbody class="- topic/tbody tbody">
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">TCP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">19,748 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__3">29,707 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__4">32,488 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__5">33,920 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__6">30,206</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">TCP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">17,369 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__3">23,294 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__4">25,945 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__5">28,018 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__6">23,421</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">UDP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">23,901 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__3">34,285 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__4">38,598 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__5">51,959 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__6">36,252</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__1">UDP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__2">27,720 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__3">37,914 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__4">39,186 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__5">60,143 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_FV4_GCY_KXB__entry__6">37,401</td>
-                            </tr>
-                        </tbody></table></div><div class="table-container"><table class="- topic/table table frame-all" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB" data-cols="5"><caption class="- topic/title title tablecap" data-caption-side="top" data-is-repeated="true"><span class="table--title-label"><span class="table--title-label">Table 1-5. </span></span><span class="table--title" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-2D20798A-1958-4B43-A1E1-898F56AE16BC">Table 5: ENCx24J600 MAC Measurements for PIC32MX + MIPS16 Devices </span></caption><colgroup><col style="width:20%"/><col style="width:20%"/><col style="width:20%"/><col style="width:20%"/><col style="width:20%"/></colgroup><thead class="- topic/thead thead">
-                            <tr class="- topic/row">
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__1"><strong class="+ topic/ph hi-d/b ph b">Type </strong></th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__2">-O0 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__3">-O1 </th>
-                                <th class="- topic/entry entry align-center colsep-1 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__4">-O2 </th>
-                                <th class="- topic/entry entry align-center colsep-0 rowsep-1" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__5">-O3 </th>
-                            </tr>
-                        </thead><tbody class="- topic/tbody tbody">
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__1">TCP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__2">5,480 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__3">6,232 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__4">6,985 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__5">6,345</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__1">TCP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__2">4,984 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__3">6,262 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__4">6,454 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__5">6,644</td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__1">UDP Client </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__2">6,370 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__3">7,727 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__4">8,069 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-1" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__5">8,586 </td>
-                            </tr>
-                            <tr class="- topic/row">
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__1">UDP Server </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__2">7,109 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__3">8,471 </td>
-                                <td class="- topic/entry entry align-center colsep-1 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__4">8,702 </td>
-                                <td class="- topic/entry entry align-center colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UNS_MCY_KXB__entry__5">9,289</td>
-                            </tr>
-                        </tbody></table></div></div>
-        </section>
-        <section class="- topic/section section" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_S5C_HDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_S5C_HDY_KXB"><h2 class="- topic/title title sectiontitle">Commands</h2>
-            
-            <p class="- topic/p p">The following commands were used to generate the network performance numbers as
-                measured with Iperf: </p>
-            <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">UDP/IP Client:</strong>
-            </p>
-            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
-                        <tr class="- topic/row">
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__1">PIC32 Board </th>
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__2">Personal Computer </th>
-                        </tr>
-                    </thead><tbody class="- topic/tbody tbody">
-                        <tr class="- topic/row">
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__1">iperf -c &lt;PC IP Address&gt; -u -b 100M -i 5 -t 20 </td>
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_RXG_JDY_KXB__entry__2">iperf -s -u -i 5 </td>
-                        </tr>
-                    </tbody></table></div>
-            <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">UDP/IP Server:</strong></p>
-            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
-                        <tr class="- topic/row">
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__1">PIC32 Board </th>
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__2">Personal Computer </th>
-                        </tr>
-                    </thead><tbody class="- topic/tbody tbody">
-                        <tr class="- topic/row">
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__1">iperf -s -u -i 5 </td>
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_SXG_JDY_KXB__entry__2">iperf -c mchpboard_e -u -b 100M -i 5 -t 20 </td>
-                        </tr>
-                    </tbody></table></div>
-            <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">TCP/IP Client:</strong></p>
-            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
-                        <tr class="- topic/row">
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__1">PIC32 Board </th>
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__2">Personal Computer </th>
-                        </tr>
-                    </thead><tbody class="- topic/tbody tbody">
-                        <tr class="- topic/row">
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__1">iperf -c &lt;PC IP Address&gt; -t 10 -i 5 -l 1024 -x 100M -M 1460 </td>
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_TXG_JDY_KXB__entry__2">iperf -s -i 5 -m -w 10K –N </td>
-                        </tr>
-                    </tbody></table></div>
-            <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">TCP/IP Server:</strong></p>
-            <div class="table-container"><table class="- topic/table table" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB" data-ofbid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB" data-cols="2"><caption></caption><colgroup><col/><col/></colgroup><thead class="- topic/thead thead">
-                        <tr class="- topic/row">
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__1">PIC32 Board </th>
-                            <th class="- topic/entry entry colsep-0 rowsep-0" id="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__2">Personal Computer </th>
-                        </tr>
-                    </thead><tbody class="- topic/tbody tbody">
-                        <tr class="- topic/row">
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__1">iperf -s -i 5 -x 100M </td>
-                            <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__TABLE_UXG_JDY_KXB__entry__2">iperf -c mchpboard_e -t 10 -i 5 -l 1024 </td>
-                        </tr>
-                    </tbody></table></div>
         </section>
 </div>
 </article></main></div>
@@ -426,7 +463,11 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         <nav role="navigation" id="wh_topic_toc" aria-label="On this page" class="col-lg-2 d-none d-lg-block navbar d-print-none"> 
                             <div id="wh_topic_toc_content">
 		                        
-	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB">Test Setup</a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB">Iperf Bandwidth Measurements </a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_S5C_HDY_KXB" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_S5C_HDY_KXB">Commands</a></div></li></ul></div>
+	                            <div class=" wh_topic_toc "><div class="wh_topic_label">On this page</div><ul><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_AN1_VXX_KXB">Iperf Bandwidth Measurements in
+                TCP Server Mode</a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-ADA0A1F2-B4DD-4E0D-A8F4-BC6AB2D58649" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-ADA0A1F2-B4DD-4E0D-A8F4-BC6AB2D58649">Iperf Bandwidth Measurements in
+                TCP Client Mode</a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FD84CC9-9FB5-4E82-9F11-BF3C6AF971A0" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-5FD84CC9-9FB5-4E82-9F11-BF3C6AF971A0">Iperf Bandwidth Measurements in
+                UDP Server Mode</a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C8C4DC29-D561-4CA5-9CEA-868BB2AEC306" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__GUID-C8C4DC29-D561-4CA5-9CEA-868BB2AEC306">Iperf Bandwidth Measurements in
+                UDP Client Mode</a></div></li><li class="section-item"><div class="section-title"><a href="#GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB" data-tocid="GUID-CD9D6449-B64A-4A42-82E5-82527E43184B__SECTION_CWT_5VX_KXB">Notes:</a></div></li></ul></div>
 	                        	
                         	</div>
                         </nav>
