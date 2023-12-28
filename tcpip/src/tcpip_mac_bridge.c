@@ -710,9 +710,10 @@ static void _MAC_Bridge_Cleanup(void)
 TCPIP_MAC_BRIDGE_PKT_RES TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRxPkt)
 {
     MAC_BRIDGE_HASH_ENTRY* heSrc, *heDest;
-    MAC_BRIDGE_FWD_DCPT fwdDcpt, *pFwdDcpt;
     TCPIP_MAC_PACKET* pFwdPkt;
     TCPIP_MAC_BRIDGE_EVENT brEvent;
+    MAC_BRIDGE_FWD_DCPT *pFwdDcpt;
+    MAC_BRIDGE_FWD_DCPT fwdDcpt = {0};
 
     TCPIP_NET_IF* pInIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
 

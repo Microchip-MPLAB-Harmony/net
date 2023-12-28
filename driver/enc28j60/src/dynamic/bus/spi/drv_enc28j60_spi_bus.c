@@ -1443,6 +1443,7 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
             break;
 
         case DRV_ENC28J60_PHY_OP_STATE_WAIT_BUSY:
+            phyReg.value = 0;
             busRes = DRV_ENC28J60_SPI_SfrReadResult(pDrvInstance, _phyOpDcpt.currOpDcpt, &phyReg, true);
             if(busRes < 0)
             {
