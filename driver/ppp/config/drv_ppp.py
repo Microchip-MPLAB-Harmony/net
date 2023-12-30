@@ -491,7 +491,7 @@ def instantiateComponent(drvPPPComponent):
     tcpipPPPMacHeaderFile.setType("HEADER")
     tcpipPPPMacHeaderFile.setOverwrite(True)
     
-    # file "$HARMONY_VERSION_PATH/framework/driver/ppp/ppp_lib.X.a" to         "$PROJECT_SOURCE_FILES/framework/driver/ppp/drv_ppp_mac.c"
+    # file "$HARMONY_VERSION_PATH/framework/driver/ppp/ppp_lib.X.a" to         "$PROJECT_SOURCE_FILES/framework/driver/ppp/lib/ppp_lib_xxxx.X.a"
     # Add ppp_lib.X.a library
     pppLibraryFile = drvPPPComponent.createLibrarySymbol("PPP_LIB", None)
     if "PIC32MZ" in processor:
@@ -506,6 +506,22 @@ def instantiateComponent(drvPPPComponent):
 
     pppLibraryFile.setDestPath("/driver/ppp/lib/")
     pppLibraryFile.setEnabled(True)
+
+    # file "$HARMONY_VERSION_PATH/framework/driver/ppp/tm_l12_lib_xxxx.a" to         "$PROJECT_SOURCE_FILES/framework/driver/ppp/lib/tm_l12_lib_xxxx.a"
+    # Add tm_l12_lib_xxx.a library
+    tmLibraryFile = drvPPPComponent.createLibrarySymbol("TM_LIB", None)
+    if "PIC32MZ" in processor:
+        tmLibraryFile.setSourcePath("driver/ppp/tm_l12_lib_pic32mz.a")
+        tmLibraryFile.setOutputName("tm_l12_lib_pic32mz.a")
+    elif "SAME5" in processor:
+        tmLibraryFile.setSourcePath("driver/ppp/tm_l12_lib_same54.a")
+        tmLibraryFile.setOutputName("tm_l12_lib_same54.a")
+    else:
+        # should not happen
+        return
+
+    tmLibraryFile.setDestPath("/driver/ppp/lib/")
+    tmLibraryFile.setEnabled(True)
 
 def tcpipPPPRxOwnBufferCallBack(symbol, event):
     print event["value"]
