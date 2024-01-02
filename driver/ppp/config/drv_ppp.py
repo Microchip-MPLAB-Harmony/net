@@ -604,7 +604,11 @@ def handleMessage(messageID, args):
     
 def onAttachmentConnected(source, target):
     if (source["id"] == "PPP_Uart_Dependency"): 
-        Database.setSymbolValue("PPP_MAC", "DRV_PPP_UART_TYPE", target["component"].getDisplayName(),2)
+        target_name = target["component"].getDisplayName()
+        # SERCOM used in USART mode
+        if "SERCOM" in target_name:
+            target_name = target_name + "_USART"
+        Database.setSymbolValue("PPP_MAC", "DRV_PPP_UART_TYPE", target_name,2)
         uartComponent = "drvPPPUart" + target['component'].getDisplayName().capitalize()
         setVal(uartComponent, "DRV_PPP_UART_NAME", "PPP")
     elif (target["id"] == "NETCONFIG_MAC_Dependency"):
