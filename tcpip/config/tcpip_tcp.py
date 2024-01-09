@@ -211,7 +211,7 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipCryptoEnable()
     
     # Disable Crypto Dependency
-    tcpipTcpCryptoSupportWarning = tcpipTcpComponent.createCommentSymbol("TCPIP_TCP_DISABLE_CRYPTO_USAGE ", tcpipTcpCryptoSupport)
+    tcpipTcpCryptoSupportWarning = tcpipTcpComponent.createCommentSymbol("TCPIP_TCP_DISABLE_CRYPTO_USAGE_COMMENT ", tcpipTcpCryptoSupport)
     tcpipTcpCryptoSupportWarning.setLabel("!!Potential security vulnerability. See RFC 6528 and 6056")
     tcpipTcpCryptoSupportWarning.setVisible(False)
     tcpipTcpCryptoSupportWarning.setDependencies(tcpipTcpCryptoDisable, ["TCPIP_TCP_DISABLE_CRYPTO_USAGE"])  
@@ -381,10 +381,12 @@ def tcpipTcpCryptoDisable(symbol, event):
     if (event["value"] == True):    
         symbol.setVisible(True)
         symbol.getComponent().setDependencyEnabled("Tcp_Crypto_Dependency", False);
+        setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", False)
         # tcpipCryptoDisable()
     else:
         symbol.setVisible(False)  
         symbol.getComponent().setDependencyEnabled("Tcp_Crypto_Dependency", True);
+        setVal("tcpipStack", "TCPIP_STACK_SYS_RANDOM_H2_ADAPTER", True)
         tcpipCryptoEnable()
         
 # make TCP options visible
