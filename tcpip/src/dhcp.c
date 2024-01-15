@@ -34,18 +34,9 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
-
-
-
-
-
-
-
 #include <ctype.h>
 #include "tcpip/src/tcpip_private.h"
 
-#if defined(TCPIP_STACK_USE_IPV4)
-#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
 #include "tcpip/src/dhcp_private.h"
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_DHCP_CLIENT
@@ -68,7 +59,9 @@ typedef struct
     uint32_t                t3Seconds;      // # of seconds to wait until reissuing a REQUEST in RENEW/REBIND state
     uint32_t                tOpStart;       // time at which a lease operation is started
     uint32_t                dwServerID;     // DHCP Server ID cache
-    IPV4_ADDR               serverAddress;  // DHCP Server that grant the lease
+    IPV4_ADDR               lastSrvAddress; // DHCP Server that sent the last message
+    IPV4_ADDR               leaseSrvAddress;// DHCP Server that we try to bound to; to avoid using another server that interfered while we're doing ARP...
+    IPV4_ADDR               boundSrvAddress;// DHCP Server that we're bound to (grant the lease)
     IPV4_ADDR               dhcpIPAddress;  // DHCP obtained IP address
     IPV4_ADDR               dhcpGateway;    // DHCP obtained gateway
     IPV4_ADDR               dhcpMask;       // DHCP obtained mask
@@ -82,7 +75,7 @@ typedef struct
 #if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     IPV4_ADDR               ntpServers[TCPIP_DHCP_NTP_SERVER_ADDRESSES];    // DHCP obtained time servers
 #endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
-    TCPIP_UINT32_VAL        transactionID;  // current transaction ID
+    uint32_t                transactionID;  // current transaction ID
     TCPIP_DHCP_HOST_NAME_CALLBACK   nameCallback;   // get host name callback
     IPV4_FILTER_HANDLE      dhcpFilterHandle;   // IPv4 packet filter    
     // unaligned data
@@ -146,7 +139,7 @@ static void     TCPIP_DHCP_Process(bool isTmo);
 static void     _DHCPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
 static unsigned int  _DHCPReceive(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf);
 static bool     _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messageType, TCPIP_DHCP_OPERATION_FLAGS dhcpFlags);
-static void     _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType);
+static void     _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd);
 static bool     _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ opReq, uint32_t reqAddress);
 
 static bool     _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen);
@@ -177,6 +170,7 @@ static int                      _DHCPOptionProcessNtpServer(DHCP_CLIENT_VARS* pC
 #endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
 
 static int                      _DHCPOptionProcessEnd(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
+static unsigned int             _DHCPOptionGetMsgType(TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
 
 
 static TCPIP_DHCP_OPTION_RESULT _DHCPOptionsWrite(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPTION_WRITE_DATA* pOptData);
@@ -189,6 +183,18 @@ static int                      _DHCPOptionClientId(TCPIP_NET_IF* pNetIf, TCPIP_
 static int                      _DHCPOptionWriteEnd(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPTION_WRITE_DATA* pSendData);
 
 static int                      _DHCPFormatHostName(char* destBuffer, const char* srcBuffer, int destSize);
+
+static unsigned int             _DHCPCheckMsgType(TCPIP_NET_IF* pNetIf);
+static TCPIP_DHCP_EVENT_TYPE    _DHCPRxMsgType2Event(unsigned int msgType);
+static TCPIP_DHCP_EV_SOURCE     _DHCPEventSource(TCPIP_DHCP_EVENT_TYPE evType);
+static void                     _DHCPRxGetInfo(void);
+
+// returns true if the client event requires broadcast address
+static __inline__ bool __attribute__((always_inline)) _DHCPEventUseBcast(TCPIP_DHCP_EVENT_TYPE evType)
+{
+    return (evType == DHCP_EVENT_DISCOVER || evType == DHCP_EVENT_REQUEST || evType == DHCP_EVENT_DECLINE || evType == DHCP_EVENT_REQUEST_REBIND);
+}
+
 
 
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAKE_TMO) != 0
@@ -348,7 +354,7 @@ static __inline__ void __attribute__((always_inline)) _DHCPSetFailTimeout(DHCP_C
     {
         pClient->tOpStart = _TCPIP_SecCountGet();
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAIL_TMO_EVENT) != 0
-        SYS_CONSOLE_PRINT("DHCP cli: %d, set fail tmo: %d, xid: 0x%8x, at: %s, reset: %s\r\n", pClient - DHCPClients, pClient->tOpStart, TCPIP_Helper_htonl(pClient->transactionID.Val), isRunTime ? "run" : "init", resetTmo ? "y" : "n");
+        SYS_CONSOLE_PRINT("DHCP cli: %d, set fail tmo: %d, xid: 0x%8x, at: %s, reset: %s\r\n", pClient - DHCPClients, pClient->tOpStart, TCPIP_Helper_htonl(pClient->transactionID), isRunTime ? "run" : "init", resetTmo ? "y" : "n");
 #endif  // TCPIP_DHCP_DEBUG_MASK
     }
 }
@@ -376,7 +382,7 @@ static void _DHCPDbgStatus(DHCP_CLIENT_VARS* pClient)
 {
     if(pClient->smState != pClient->prevState)
     {
-        SYS_CONSOLE_PRINT("DHCP cli: %d, state: %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, _DHCPStatTbl[pClient->smState], TCPIP_Helper_htonl(pClient->transactionID.Val), _TCPIP_MsecCountGet());
+        SYS_CONSOLE_PRINT("DHCP cli: %d, state: %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, _DHCPStatTbl[pClient->smState], TCPIP_Helper_htonl(pClient->transactionID), _TCPIP_MsecCountGet());
         pClient->prevState = pClient->smState;
     }
 }
@@ -430,7 +436,7 @@ static void _DHCPDbgAddServiceEvent(DHCP_CLIENT_VARS* pClient, TCPIP_STACK_ADDRE
 
 #endif  // TCPIP_DHCP_DEBUG_MASK
 
-#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0 || (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE) != 0
+#if (TCPIP_DHCP_DEBUG_MASK & (TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE | TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE)) != 0
 static const char* _DHCPMsgTypeTbl[] = 
 {
     "unkn",         // TCPIP_DHCP_UNKNOWN_MESSAGE
@@ -443,25 +449,26 @@ static const char* _DHCPMsgTypeTbl[] =
     "relea",        // TCPIP_DHCP_RELEASE_MESSAGE
     "info",         // TCPIP_DHCP_INFORM_MESSAGE
 };
-#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0 || (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE) != 0
+#endif //  (TCPIP_DHCP_DEBUG_MASK & (TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE | TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE)) != 0
 
 
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
-static void _DHCPDbgRxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType, int rxErrCode)
+static void _DHCPDbgRxDisplay(TCPIP_NET_IF* pNetIf, unsigned int msgType, int rxErrCode)
 {
-    if(msgType >= sizeof(_DHCPMsgTypeTbl) / sizeof(*_DHCPMsgTypeTbl))
+    if(rxErrCode != 0)
     {
-        msgType = 0;    // this is unknown
+        if(msgType >= sizeof(_DHCPMsgTypeTbl) / sizeof(*_DHCPMsgTypeTbl))
+        {
+            msgType = 0;    // this is unknown
+        }
+
+        const char* dhcpMsg = _DHCPMsgTypeTbl[msgType];
+        DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
+
+        SYS_CONSOLE_PRINT("DHCP cli Rx error - if: %d, Rx: %s, xid: 0x%8x, error: %d, msec: %d\r\n", TCPIP_STACK_NetIxGet(pNetIf), dhcpMsg, TCPIP_Helper_htonl(pClient->transactionID), rxErrCode, _TCPIP_MsecCountGet());
     }
-
-    const char* dhcpMsg = _DHCPMsgTypeTbl[msgType];
-
-    SYS_CONSOLE_PRINT("DHCP cli: %d, Rx: %s, xid: 0x%8x, error: %d, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, TCPIP_Helper_htonl(pClient->transactionID.Val), rxErrCode, _TCPIP_MsecCountGet());
 }
-
-#else
-#define _DHCPDbgRxDisplay(pClient, msgType, rxErrCode) do{rxErrCode = rxErrCode;}while(0)
-#endif  // TCPIP_DHCP_DEBUG_MASK
+#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
 
 #if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE) != 0
 static void _DHCPDebugTxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType, bool success)
@@ -473,12 +480,11 @@ static void _DHCPDebugTxDisplay(DHCP_CLIENT_VARS* pClient, unsigned int msgType,
 
     const char* dhcpMsg = _DHCPMsgTypeTbl[msgType];
 
-    SYS_CONSOLE_PRINT("DHCP cli: %d, Tx: %s %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, success ? "Sent" : "Failed", TCPIP_Helper_htonl(pClient->transactionID.Val), _TCPIP_MsecCountGet());
+    SYS_CONSOLE_PRINT("DHCP cli: %d, Tx: %s %s, xid: 0x%8x, msec: %d\r\n", pClient - DHCPClients, dhcpMsg, success ? "Sent" : "Failed", TCPIP_Helper_htonl(pClient->transactionID), _TCPIP_MsecCountGet());
 }
 #else
 #define _DHCPDebugTxDisplay(pClient, msgType, success)
 #endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE) != 0
-
 
 static __inline__ void __attribute__((always_inline)) _DHCPSetIPv4Filter(DHCP_CLIENT_VARS* pClient, bool active)
 {
@@ -852,7 +858,7 @@ bool TCPIP_DHCP_Disable(TCPIP_NET_HANDLE hNet)
             _DHCPClientClose(pNetIf, true, true);
             TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPC, TCPIP_STACK_ADDRESS_SERVICE_EVENT_USER_STOP);
             _DHCPDbgAddServiceEvent(pClient, TCPIP_STACK_ADDRESS_SERVICE_EVENT_USER_STOP, 0);
-            _DHCPNotifyClients(pNetIf, DHCP_EVENT_SERVICE_DISABLED);
+            _DHCPNotifyClients(pNetIf, DHCP_EVENT_SERVICE_DISABLED, 0, 0);
         }
         return true;
     }
@@ -930,7 +936,6 @@ static bool _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ o
                     return false;
                 }
                 
-                pClient->dhcpIPAddress.Val = reqAddress;
                 opType = TCPIP_DHCP_OPER_INIT_REBOOT;
             }
 
@@ -942,6 +947,7 @@ static bool _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ o
 
     if(opType != TCPIP_DHCP_OPER_NONE)
     {
+        pClient->dhcpIPAddress.Val = reqAddress;
         _DHCPEnable(pNetIf, opType);
         return true;
     }
@@ -1107,6 +1113,9 @@ static void _DHCPSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, T
 
 static void TCPIP_DHCP_Process(bool isTmo)
 {
+    // get incoming packet info and generate RX event
+    _DHCPRxGetInfo();
+
     unsigned int        recvMsg;
     DHCP_CLIENT_VARS*   pClient;
     int                 netIx, nNets;
@@ -1168,7 +1177,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 pClient->validValues.val = 0x00;
                 pClient->flags.bIsBound = false;    
                 pClient->flags.bOfferReceived = false;
-                pClient->serverAddress.Val = 0;
+                pClient->boundSrvAddress.Val = 0;
 
                 // Send the DHCP Discover broadcast
                 if(!_DHCPSend(pClient, pNetIf, TCPIP_DHCP_DISCOVER_MESSAGE, TCPIP_DHCP_FLAG_SEND_ZERO_ADD | TCPIP_DHCP_FLAG_SEND_BCAST))
@@ -1176,7 +1185,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     break;
                 }
 
-                _DHCPNotifyClients(pNetIf, DHCP_EVENT_DISCOVER);
+                _DHCPNotifyClients(pNetIf, DHCP_EVENT_DISCOVER, 0, 0);
                 // Start a timer and begin looking for a response
                 _DHCPSetTimeout(pClient);
                 _DHCPClientStateSet(pClient, TCPIP_DHCP_GET_OFFER);
@@ -1191,7 +1200,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     if((SYS_TMR_TickCountGet() - pClient->startWait) >= pClient->waitTicks)
                     {
                         _DHCPSetRunFail(pClient, TCPIP_DHCP_SEND_DISCOVERY, true);  
-                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT);
+                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT, 0, 0);
                     }
                     break;
                 }
@@ -1219,7 +1228,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 }
                 // store the request time
                 pClient->tRequest = _TCPIP_SecCountGet();
-                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST);
+                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST, 0, 0);
                 // Start a timer and begin looking for a response
                 _DHCPSetTimeout(pClient);
                 _DHCPClientStateSet(pClient, TCPIP_DHCP_GET_REQUEST_ACK);
@@ -1233,7 +1242,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     if((SYS_TMR_TickCountGet() - pClient->startWait) >= pClient->waitTicks)
                     {
                         _DHCPSetRunFail(pClient, TCPIP_DHCP_SEND_DISCOVERY, true);
-                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT);
+                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT, 0, 0);
                     }
                 }
                 break;
@@ -1285,7 +1294,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                         _DHCPSend(pClient, pNetIf, TCPIP_DHCP_DECLINE_MESSAGE, TCPIP_DHCP_FLAG_SEND_ZERO_ADD | TCPIP_DHCP_FLAG_SEND_BCAST);
                         _DHCPClientStateSet(pClient, TCPIP_DHCP_WAIT_LEASE_RETRY);
                         pClient->startWait = _TCPIP_SecCountGet();
-                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_DECLINE);
+                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_DECLINE, 0, 0);
                     }
                 }
                 break;
@@ -1321,7 +1330,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 }
                 // store the request time
                 pClient->tRenewRequest = _TCPIP_SecCountGet();
-                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_RENEW);
+                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_RENEW, 0, 0);
                 pClient->flags.bOfferReceived = false;
 
                 // Set as timeout half the time remaining to T2 (rebind)
@@ -1360,7 +1369,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                 }
                 // store the request time
                 pClient->tRenewRequest = _TCPIP_SecCountGet();
-                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_REBIND);
+                _DHCPNotifyClients(pNetIf, DHCP_EVENT_REQUEST_REBIND, 0, 0);
                 pClient->flags.bOfferReceived = false;
 
                 // Set as timeout half the time remaining to Texp (lease expiration)
@@ -1381,7 +1390,7 @@ static void TCPIP_DHCP_Process(bool isTmo)
                     if((_TCPIP_SecCountGet() - pClient->tRequest) >= pClient->tExpSeconds)
                     {   // REBIND state expired; restart
                         _DHCPSetRunFail(pClient, TCPIP_DHCP_SEND_DISCOVERY, false);
-                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT);
+                        _DHCPNotifyClients(pNetIf, DHCP_EVENT_TIMEOUT, 0, 0);
                     }
                     else if((_TCPIP_SecCountGet() - pClient->startWait) >= pClient->t3Seconds)
                     {   // check if there's time for retransmission of another DHCP request
@@ -1414,12 +1423,12 @@ Parameters:
   pNetIf - interface to use
 
 Returns:
-  One of the DCHP_TYPE* contants.
-***************************************************************************/
-static unsigned int _DHCPReceive(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf)
-{
-                    /*********************************************************************
-                    DHCP PACKET FORMAT AS PER RFC 1541
+  One of the DCHP message types
+
+
+Remarks:
+
+    DHCP PACKET FORMAT AS PER RFC 1541
 
                     0                   1                   2                   3
                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1457,24 +1466,170 @@ options offs:  240  |                                                           
 minimum packet: 240 bytes (no option except the magic cookie)
 minimum packet that needs to be accepted: 236 + 312 = 548 bytes (RFC)
 
-    ********************************************************************/
+***************************************************************************/
+static unsigned int _DHCPReceive(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf)
+{
 
-    int  netIx, nNets;
     TCPIP_DHCP_FRAME_HEADER    dhcpHdr;
     TCPIP_DHCP_FRAME_OPTIONS   dhcpOpt;
     TCPIP_DHCP_OPTION_PROCESS_DATA  dhcpOptData;
     int32_t optSize;    // size of the option in this DHCP packet
     TCPIP_DHCP_OPTION_RESULT   dspRes;
-    DHCP_CLIENT_VARS *pOwner, *pSrchClient;
-    TCPIP_NET_IF* pIf;
+
+    unsigned int               msgType;
+    UDP_SOCKET                 s;
+    bool                       keepMessage;     // if the retrieved message should be discarded 
+                                                // i.e. belongs to the client running on this interface and was processed
+
+
+    uint32_t rxErrCode = 0;
+    s = dhcpClientSocket;
+    msgType = TCPIP_DHCP_UNKNOWN_MESSAGE;
+    keepMessage = false;
+
+    while(true)
+    {
+        // get the HDCP header
+        dhcpHdr.op = 0;
+        TCPIP_UDP_ArrayGet(s, &dhcpHdr.op, sizeof(dhcpHdr));
+
+        // Make sure this is TCPIP_BOOT_REPLY.
+        if ( dhcpHdr.op != TCPIP_BOOT_REPLY )
+        {
+            rxErrCode = 1;  
+            break;
+        }
+
+        // ignore the unused part of the header: server host name and boot file
+        if(TCPIP_UDP_ArrayGet(s, 0, sizeof(TCPIP_DHCP_FRAME_OPT_HEADER)) != sizeof(TCPIP_DHCP_FRAME_OPT_HEADER))
+        {
+            rxErrCode = 2;  
+            break;
+        }
+
+        // get the variable options
+        optSize = (int32_t)TCPIP_UDP_ArrayGet(s, dhcpOpt.cookie, sizeof(dhcpOpt));
+        if(optSize < sizeof(dhcpOpt.cookie) || (memcmp(dhcpOpt.cookie, dhcpMagicCookie, sizeof(dhcpOpt.cookie)) != 0))
+        {
+            rxErrCode = 3;  
+            break;
+        }
+
+        // valid message
+        // check that this message belongs to our client
+        bool doProcess = false;     // if the message should be processed
+        if(pClient->smState == TCPIP_DHCP_GET_OFFER || pClient->smState == TCPIP_DHCP_GET_REQUEST_ACK ||
+                pClient->smState == TCPIP_DHCP_GET_RENEW_ACK || pClient->smState == TCPIP_DHCP_GET_REBIND_ACK)
+        {   // client waiting for some DHCP message
+            if(dhcpHdr.xid == pClient->transactionID && memcmp(dhcpHdr.chaddr, _TCPIPStack_NetMACAddressGet(pNetIf), sizeof(TCPIP_MAC_ADDR)) == 0)
+            {   // seems to be ours
+                doProcess = true;   // i.e. ours, process message
+            }
+        }
+
+        if(doProcess == false)
+        {   // valid message but not ours
+            rxErrCode =  4;
+            keepMessage = true;     // needs to be processed further by client on other interface
+            break;
+        }
+
+        // ok it's ours, we can process this one and then discard (keepMessage == false)
+        // if this is the first offer record yiaddr value/client IP address
+        // so that we can REQUEST it.
+        if(!pClient->flags.bOfferReceived)
+        {
+            pClient->dhcpIPAddress.Val = dhcpHdr.yiaddr;
+            pClient->validValues.IPAddress = 1;
+        }
+
+        memset(&dhcpOptData, 0, sizeof(dhcpOptData));
+        dhcpOptData.pOpt = dhcpOpt.options;
+        dhcpOptData.optSize = optSize - sizeof(dhcpMagicCookie);   // eat up the cookie
+        dhcpOptData.msgType = TCPIP_DHCP_UNKNOWN_MESSAGE;
+        // so far so good
+        // Dispatch by the Option number
+        dspRes = _DHCPOptionProcess(pClient, &dhcpOptData);
+
+        if(dspRes == TCPIP_DHCP_OPTION_RES_FAIL)
+        {   // failed
+            rxErrCode = 5;
+            break;
+        }
+        else if(dspRes != TCPIP_DHCP_OPTION_RES_END)
+        {   // failed
+            rxErrCode = 6;
+            break;
+        }
+
+        // check what we got
+        if ( dhcpOptData.msgType == TCPIP_DHCP_OFFER_MESSAGE || (dhcpOptData.msgType == TCPIP_DHCP_ACK_MESSAGE && pClient->dhcpOp == TCPIP_DHCP_OPER_INIT_REBOOT))
+        {   // store the current server ID
+            pClient->dwServerID = dhcpOptData.serverID.Val;
+            pClient->flags.bOfferReceived = true;
+        }
+        else if(pClient->dwServerID != dhcpOptData.serverID.Val)
+        {   // Fail if the server id doesn't match
+            rxErrCode = 7;
+            break;
+        }
+
+        // success
+        msgType = dhcpOptData.msgType;
+
+        if(msgType == TCPIP_DHCP_ACK_MESSAGE)
+        {   // received a lease; get values
+#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAKE_LEASE_TIME) != 0
+            if(_dhcpDbgLeaseTime)
+            {
+                dhcpOptData.leaseTime.Val = _dhcpDbgLeaseTime; 
+                dhcpOptData.renewTime.Val = 0; 
+                dhcpOptData.rebindTime.Val = 0; 
+            }
+#endif  // TCPIP_DHCP_DEBUG_MASK
+            _DHCPSetLeaseTimeParams(pClient, &dhcpOptData);
+#if defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
+            TCPIP_UDP_RxOffsetSet(s, sizeof(dhcpHdr) + sizeof(((TCPIP_DHCP_FRAME_OPT_HEADER*)0)->sname));
+            TCPIP_UDP_ArrayGet(s, pClient->bootFileName, sizeof(pClient->bootFileName));
+            pClient->bootFileName[sizeof(pClient->bootFileName) - 1] = 0;   // make sure is null terminated
+#endif // defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
+        }
+
+        break;
+    }
+
+    if(keepMessage == false)
+    {   // either invalid or processed; simply discard
+        TCPIP_UDP_Discard(s);                     
+    }
+    else 
+    {   // save it for another client
+        TCPIP_UDP_RxOffsetSet(s, 0);
+    }
+
+#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
+    _DHCPDbgRxDisplay(pNetIf, msgType, rxErrCode);
+#else
+    (void)rxErrCode;
+#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
+    return msgType;
+}
+
+// this routine just checks the message and returns the message type.
+// Used for unhandled messages (of no interest to the client, for example the client is already bound)
+// but user notification is needed.
+static unsigned int _DHCPCheckMsgType(TCPIP_NET_IF* pNetIf)
+{
+    TCPIP_DHCP_FRAME_HEADER    dhcpHdr;
+    TCPIP_DHCP_FRAME_OPTIONS   dhcpOpt;
+    TCPIP_DHCP_OPTION_PROCESS_DATA  dhcpOptData;
+    int32_t optSize;    // size of the option in this DHCP packet
 
     unsigned int               msgType;
     UDP_SOCKET                 s;
 
-
-    int rxErrCode = 0;
+    uint32_t rxErrCode = 0;
     s = dhcpClientSocket;
-    pOwner = 0;
     msgType = TCPIP_DHCP_UNKNOWN_MESSAGE;
 
     while(true)
@@ -1505,110 +1660,25 @@ minimum packet that needs to be accepted: 236 + 312 = 548 bytes (RFC)
             break;
         }
 
-        // check that this message belongs to one of our clients
-        nNets = TCPIP_STACK_NumberOfNetworksGet();
-        pSrchClient = DHCPClients; 
-        for(netIx = 0; netIx < nNets; netIx++, pSrchClient++) 
-        {
-            pIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet (netIx);
-            if(!TCPIP_STACK_NetworkIsUp(pIf) || pSrchClient->flags.bDHCPEnabled == false)
-            {   // not enabled on this interface
-                continue;
-            }
-
-            if(pSrchClient->smState == TCPIP_DHCP_GET_OFFER || pSrchClient->smState == TCPIP_DHCP_GET_REQUEST_ACK ||
-                    pSrchClient->smState == TCPIP_DHCP_GET_RENEW_ACK || pSrchClient->smState == TCPIP_DHCP_GET_REBIND_ACK)
-            {
-                if(dhcpHdr.xid == pSrchClient->transactionID.Val && memcmp(dhcpHdr.chaddr, _TCPIPStack_NetMACAddressGet(pIf), sizeof(TCPIP_MAC_ADDR)) == 0)
-                {   // seems to be the right one
-                    pOwner = pSrchClient; 
-                    break;
-                }
-            }
-        }
-
-        if(pClient != pOwner)
-        {   // not ours
-            rxErrCode =  pOwner == 0 ? 4 : 5;
-            break;
-        }
-
-        pOwner = 0; // signal that message needs to be discarded
-
-        // ok it's ours, we can process this one
-        // if this is the first offer record yiaddr value/client IP address
-        // so that we can REQUEST it.
-        if(!pClient->flags.bOfferReceived)
-        {
-            pClient->dhcpIPAddress.Val = dhcpHdr.yiaddr;
-            pClient->validValues.IPAddress = 1;
-        }
+        // we do not check that this message belongs to one of our clients
+        // it can be any DHCP message on the network
+        // just get the message type
 
         memset(&dhcpOptData, 0, sizeof(dhcpOptData));
         dhcpOptData.pOpt = dhcpOpt.options;
         dhcpOptData.optSize = optSize - sizeof(dhcpMagicCookie);   // eat up the cookie
-        dhcpOptData.msgType = TCPIP_DHCP_UNKNOWN_MESSAGE;
-        // so far so good
-        // Dispatch by the Option number
-        dspRes = _DHCPOptionProcess(pClient, &dhcpOptData);
-
-        if(dspRes == TCPIP_DHCP_OPTION_RES_FAIL)
-        {   // failed
-            rxErrCode = 6;
-            break;
-        }
-        else if(dspRes != TCPIP_DHCP_OPTION_RES_END)
-        {   // failed
-            rxErrCode = 7;
-            break;
-        }
-
-        // check what we got
-        if ( dhcpOptData.msgType == TCPIP_DHCP_OFFER_MESSAGE || (dhcpOptData.msgType == TCPIP_DHCP_ACK_MESSAGE && pClient->dhcpOp == TCPIP_DHCP_OPER_INIT_REBOOT))
-        {   // store the current server ID
-            pClient->dwServerID = dhcpOptData.serverID.Val;
-            pClient->flags.bOfferReceived = true;
-        }
-        else if(pClient->dwServerID != dhcpOptData.serverID.Val)
-        {   // Fail if the server id doesn't match
-            rxErrCode = 8;
-            break;
-        }
-
-        // success
-        msgType = dhcpOptData.msgType;
-
-        if(msgType == TCPIP_DHCP_ACK_MESSAGE)
-        {   // received a lease; get values
-#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_FAKE_LEASE_TIME) != 0
-            if(_dhcpDbgLeaseTime)
-            {
-                dhcpOptData.leaseTime.Val = _dhcpDbgLeaseTime; 
-                dhcpOptData.renewTime.Val = 0; 
-                dhcpOptData.rebindTime.Val = 0; 
-            }
-#endif  // TCPIP_DHCP_DEBUG_MASK
-            _DHCPSetLeaseTimeParams(pClient, &dhcpOptData);
-#if defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
-            TCPIP_UDP_RxOffsetSet(s, sizeof(dhcpHdr) + sizeof(((TCPIP_DHCP_FRAME_OPT_HEADER*)0)->sname));
-            TCPIP_UDP_ArrayGet(s, pClient->bootFileName, sizeof(pClient->bootFileName));
-            pClient->bootFileName[sizeof(pClient->bootFileName) - 1] = 0;   // make sure is null terminated
-#endif // defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
-        }
+        msgType = _DHCPOptionGetMsgType(&dhcpOptData);
 
         break;
     }
 
-    if(pOwner == 0)
-    {   // not ours, invalid or processed; simply discard
-        TCPIP_UDP_Discard(s);                     
-    }
-    else 
-    {   // save it for another client
-        TCPIP_UDP_RxOffsetSet(s, 0);
-    }
 
-    _DHCPDbgRxDisplay(pClient, msgType, rxErrCode);
+#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
+    _DHCPDbgRxDisplay(pNetIf, msgType, rxErrCode);
+#else
+    (void)rxErrCode;
+#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE) != 0
+
     return msgType;
 }
 
@@ -1888,6 +1958,22 @@ static int _DHCPOptionProcessEnd(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PR
     return 0;   // end detected
 }
 
+// return the message type from the option data
+static unsigned int _DHCPOptionGetMsgType(TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData)
+{
+    if(pOptData->optSize >= sizeof(TCPIP_DHCP_OPTION_DATA_MSG_TYPE))
+    {
+        TCPIP_DHCP_OPTION_DATA_MSG_TYPE* pMsgType = (TCPIP_DHCP_OPTION_DATA_MSG_TYPE*)pOptData->pOpt;
+
+        if(pMsgType->len == sizeof(pMsgType->type))
+        {
+            return pMsgType->type;
+        }
+    }
+
+    return TCPIP_DHCP_UNKNOWN_MESSAGE;
+}
+
 
 // Process the received offer/data
 static unsigned int _DHCPProcessReceiveData(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf)
@@ -1927,11 +2013,11 @@ static unsigned int _DHCPProcessReceiveData(DHCP_CLIENT_VARS* pClient, TCPIP_NET
                 if(pClient->validValues.IPAddress == 0 || pClient->validValues.Mask == 0)
                 {   // having a new address without a valid mask seems weird
                     dhcpRecvFail = true;
-                    dhcpEv = DHCP_EVENT_ACK_INVALID;
                     break;
                 }
 
                 // seems we received a new valid lease
+                pClient->leaseSrvAddress.Val = pClient->lastSrvAddress.Val;     // this is the server that granted the lease
                 TCPIP_DHCP_STATUS newState;
                 if(pClient->tLeaseCheck == 0)
                 {   // skip the ARP check phase...
@@ -1956,21 +2042,19 @@ static unsigned int _DHCPProcessReceiveData(DHCP_CLIENT_VARS* pClient, TCPIP_NET
                     newState = TCPIP_DHCP_WAIT_LEASE_CHECK;
                 }
                 _DHCPClientStateSet(pClient, newState);
-                dhcpEv = DHCP_EVENT_ACK;
             }
             else if( pClient->smState == TCPIP_DHCP_GET_RENEW_ACK || pClient->smState == TCPIP_DHCP_GET_REBIND_ACK)
             {
                 pClient->tRequest = pClient->tRenewRequest;
                 // update the bound state
                 _DHCPSetBoundState(pClient);
-                dhcpEv = DHCP_EVENT_BOUND;
+                dhcpEv = DHCP_EVENT_BOUND; 
             }
 
             break;
 
         case TCPIP_DHCP_NAK_MESSAGE:
             dhcpRecvFail = true;
-            dhcpEv = DHCP_EVENT_NACK;
             break;
 
         default:
@@ -1985,10 +2069,108 @@ static unsigned int _DHCPProcessReceiveData(DHCP_CLIENT_VARS* pClient, TCPIP_NET
 
     if(dhcpEv != DHCP_EVENT_NONE)
     {
-        _DHCPNotifyClients(pNetIf, dhcpEv);
+        _DHCPNotifyClients(pNetIf, dhcpEv, 0, 0);
     }
 
     return recvRes;
+}
+
+// returns the corresponding RX event for a received message type
+static TCPIP_DHCP_EVENT_TYPE _DHCPRxMsgType2Event(unsigned int msgType)
+{
+    TCPIP_DHCP_EVENT_TYPE dhcpEv;
+
+    if(msgType == TCPIP_DHCP_OFFER_MESSAGE)
+    {
+        dhcpEv = DHCP_EVENT_OFFER;
+    } 
+    else if(msgType == TCPIP_DHCP_ACK_MESSAGE)
+    {
+        dhcpEv = DHCP_EVENT_ACK;
+    } 
+    else if(msgType == TCPIP_DHCP_NAK_MESSAGE)
+    {
+        dhcpEv = DHCP_EVENT_NACK;
+    } 
+    else
+    {   // unknown RX message
+        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        dhcpEv = DHCP_EVENT_UNKNOWN;
+    } 
+
+    return dhcpEv;
+}
+
+// returns the source of the event
+static TCPIP_DHCP_EV_SOURCE _DHCPEventSource(TCPIP_DHCP_EVENT_TYPE evType)
+{
+    TCPIP_DHCP_EV_SOURCE evSrc;
+
+    static const uint8_t event_src_tbl[] = 
+    {
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_DISCOVER
+        TCPIP_DHCP_EV_SRC_SERVER,       // DHCP_EVENT_OFFER
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_REQUEST
+        TCPIP_DHCP_EV_SRC_SERVER,       // DHCP_EVENT_ACK
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_DECLINE
+        TCPIP_DHCP_EV_SRC_SERVER,       // DHCP_EVENT_NACK
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_TIMEOUT
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_BOUND
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_REQUEST_RENEW
+        TCPIP_DHCP_EV_SRC_CLIENT,       // DHCP_EVENT_REQUEST_REBIND
+        TCPIP_DHCP_EV_SRC_SERVER,       // DHCP_EVENT_UNKNOWN
+        TCPIP_DHCP_EV_SRC_CONN,         // DHCP_EVENT_CONN_LOST
+        TCPIP_DHCP_EV_SRC_CONN,         // DHCP_EVENT_CONN_ESTABLISHED
+        TCPIP_DHCP_EV_SRC_CONN,         // DHCP_EVENT_SERVICE_DISABLED
+    };
+
+    uint8_t evIx = (uint8_t)evType - 1U;
+
+    if(evIx >= sizeof(event_src_tbl) / sizeof(*event_src_tbl))
+    {
+        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        evSrc = TCPIP_DHCP_EV_SRC_NONE;
+    }
+    else
+    {
+        evSrc = event_src_tbl[evIx];
+    }
+
+    return evSrc;
+}
+
+// Retrieves info from incoming DHCP packets
+// It also generates RX notification if needed
+static void _DHCPRxGetInfo(void)
+{
+    TCPIP_DHCP_EVENT_TYPE dhcpEv;
+    UDP_SOCKET_INFO sktInfo;
+    TCPIP_NET_IF* pNetIf;
+
+    UDP_SOCKET s = dhcpClientSocket;
+
+    if(TCPIP_UDP_GetIsReady(s) == 0)
+    {   // no pending data
+        return;
+    }
+
+    sktInfo.sourceIPaddress.v4Add.Val = 0;
+    sktInfo.hNet = 0;
+    TCPIP_UDP_SocketInfoGet(s , &sktInfo);
+    pNetIf = _TCPIPStackHandleToNet(sktInfo.hNet);
+
+    DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf); 
+    // store the address of the server that sent the message
+    pClient->lastSrvAddress.Val = sktInfo.sourceIPaddress.v4Add.Val;
+
+    // generate the RX event
+    unsigned int msgType = _DHCPCheckMsgType(pNetIf); 
+    dhcpEv = _DHCPRxMsgType2Event(msgType); 
+
+    _DHCPNotifyClients(pNetIf, dhcpEv, sktInfo.destIPaddress.v4Add.Val, pClient->lastSrvAddress.Val);
+
+    // restore the UDP packet for further processing
+    TCPIP_UDP_RxOffsetSet(s, 0);
 }
 
 // a new valid lease has been obtained
@@ -2039,25 +2221,22 @@ static void _DHCPSetNewLease(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf)
 
     _DHCPSetBoundState(pClient);
 
-    _DHCPNotifyClients(pNetIf, DHCP_EVENT_BOUND);
+    _DHCPNotifyClients(pNetIf, DHCP_EVENT_BOUND, 0, 0);
 
 }
 
 static void _DHCPSetBoundState(DHCP_CLIENT_VARS* pClient)
 {
-    UDP_SOCKET_INFO sktInfo;
-
     // store the address of the server that gave us the lease
-    sktInfo.sourceIPaddress.v4Add.Val = 0;
-    TCPIP_UDP_SocketInfoGet(dhcpClientSocket , &sktInfo);
-    pClient->serverAddress.Val = sktInfo.sourceIPaddress.v4Add.Val;
+    pClient->boundSrvAddress.Val = pClient->leaseSrvAddress.Val;
 
     _DHCPClientStateSet(pClient, TCPIP_DHCP_BOUND);
     pClient->flags.bIsBound = true; 
     pClient->flags.bWasBound = true;    
     pClient->flags.bReportFail = true; 
     pClient->flags.bRetry = false; 
-    _DHCPSetIPv4Filter(pClient, false);
+    // Note: normally we suppress RX 'spurious' messages except when need to notify the user...
+    // _DHCPSetIPv4Filter(pClient, false);
 }
 
 
@@ -2172,19 +2351,19 @@ static bool _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messa
     // allow receiving on any interface
     TCPIP_UDP_OptionsSet(s, UDP_OPTION_STRICT_NET, (void*)0);
 
-    if((dhcpFlags & TCPIP_DHCP_FLAG_SEND_BCAST) != 0 || pClient->serverAddress.Val == 0)
+    if((dhcpFlags & TCPIP_DHCP_FLAG_SEND_BCAST) != 0 || pClient->boundSrvAddress.Val == 0)
     {   // Ensure that we transmit to the broadcast IP and MAC addresses
         // The UDP Socket remembers who it was last talking to
         TCPIP_UDP_BcastIPV4AddressSet(s, UDP_BCAST_NETWORK_LIMITED, pNetIf);
     }
     else
     {
-        TCPIP_UDP_DestinationIPAddressSet(s, IP_ADDRESS_TYPE_IPV4, (IP_MULTI_ADDRESS*)&pClient->serverAddress);
+        TCPIP_UDP_DestinationIPAddressSet(s, IP_ADDRESS_TYPE_IPV4, (IP_MULTI_ADDRESS*)&pClient->boundSrvAddress);
     }
 
     if((dhcpFlags & TCPIP_DHCP_FLAG_SEND_ZERO_ADD) != 0)
     {   // Make sure we advertise a 0.0.0.0 IP address so all DHCP servers will respond.
-        // A static IP address outside the DHCP server's scope it may be simply ignored.
+        // A static IP address outside the DHCP server's scope it may simply be ignored.
         sourceIp.Val = 0;
     }    
     else
@@ -2199,7 +2378,7 @@ static bool _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messa
     {
         if(pClient->flags.bRetry == false)
         {   // generate a new transaction ID
-            pClient->transactionID.Val = SYS_RANDOM_PseudoGet(); 
+            pClient->transactionID = SYS_RANDOM_PseudoGet(); 
         }
         // Reset offered flag so we know to act upon the next valid offer
         pClient->flags.bOfferReceived = false;
@@ -2211,7 +2390,7 @@ static bool _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messa
     pDhcpHdr->op = TCPIP_BOOT_REQUEST;
     pDhcpHdr->htype = TCPIP_BOOT_HW_TYPE;
     pDhcpHdr->hlen = TCPIP_BOOT_LEN_OF_HW_TYPE;
-    pDhcpHdr->xid = pClient->transactionID.Val;
+    pDhcpHdr->xid = pClient->transactionID;
     // set ciaddr
     // If this is DHCP REQUEST message, use previously allocated IP address.
     if( messageType == TCPIP_DHCP_RELEASE_MESSAGE || messageType == TCPIP_DHCP_REQUEST_RENEW_MESSAGE) 
@@ -2565,7 +2744,7 @@ void TCPIP_DHCP_ConnectionHandler(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT connEven
             _TCPIPStackSetConfigAddress(pNetIf, 0, 0, 0, true);
             TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPC, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST);
             _DHCPDbgAddServiceEvent(pClient, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST, 0);
-            _DHCPNotifyClients(pNetIf, DHCP_EVENT_CONN_LOST);
+            _DHCPNotifyClients(pNetIf, DHCP_EVENT_CONN_LOST, 0, 0);
         }
         else if (connEvent & TCPIP_MAC_EV_CONN_ESTABLISHED)
         {
@@ -2573,7 +2752,7 @@ void TCPIP_DHCP_ConnectionHandler(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT connEven
             // should be in this state anyway
             // but just in case we've missed the link down event
             _DHCPEnable(pNetIf, pClient->flags.bWasBound ? TCPIP_DHCP_OPER_INIT_REBOOT : TCPIP_DHCP_OPER_INIT);
-            _DHCPNotifyClients(pNetIf, DHCP_EVENT_CONN_ESTABLISHED);
+            _DHCPNotifyClients(pNetIf, DHCP_EVENT_CONN_ESTABLISHED, 0, 0);
         }
     }
 
@@ -2619,95 +2798,91 @@ bool TCPIP_DHCP_HandlerDeRegister(TCPIP_DHCP_HANDLE hDhcp)
     return false;
 }
 
-static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType)
+static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd)
 {
     TCPIP_DHCP_LIST_NODE* dNode;
-#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS) != 0 || (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_CONN_EVENTS) != 0
-    const char* message;
-#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS) != 0 || (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_CONN_EVENTS) != 0
 
+    DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
+    TCPIP_DHCP_EVENT_INFO   evInfo;
+
+    memset(&evInfo, 0x0, sizeof(evInfo));
+    evInfo.dhcpTimeMs = _TCPIP_MsecCountGet();
+
+        
+        TCPIP_DHCP_EV_SOURCE evSrc = _DHCPEventSource(evType);
+
+        if(evSrc == TCPIP_DHCP_EV_SRC_SERVER || evSrc == TCPIP_DHCP_EV_SRC_CLIENT)
+        {
+            evInfo.transactionId = pClient->transactionID;
+        }
+
+        if(evSrc == TCPIP_DHCP_EV_SRC_SERVER)
+        {
+            evInfo.clientAddress.Val = clientAdd;
+            evInfo.serverAddress.Val = serverAdd;
+        }
+        else
+        {   // client initiated or connection event
+            evInfo.clientAddress.Val = pClient->dhcpIPAddress.Val;
+            if(_DHCPEventUseBcast(evType) || pClient->boundSrvAddress.Val == 0)
+            {
+                evInfo.serverAddress.Val = 0xffffffff;  // BCAST_NETWORK_LIMITED; 
+            } 
+            else
+            {
+                evInfo.serverAddress.Val = pClient->boundSrvAddress.Val;
+            }
+        }
 
     TCPIP_Notification_Lock(&dhcpRegisteredUsers);
     for(dNode = (TCPIP_DHCP_LIST_NODE*)dhcpRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
     {
         if(dNode->hNet == 0 || dNode->hNet == pNetIf)
         {   // trigger event
-            (*dNode->handler)(pNetIf, evType, dNode->hParam);
+            (*dNode->handler)(pNetIf, evType, &evInfo, dNode->hParam);
         }
     }
     TCPIP_Notification_Unlock(&dhcpRegisteredUsers);
 
-#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS) != 0
-    if(evType != DHCP_EVENT_CONN_LOST && evType != DHCP_EVENT_CONN_ESTABLISHED)
+#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_NOTIFY_EVENTS) != 0
+    static const char* event_name_tbl[] = 
     {
-        switch (evType)
-        {
-            case DHCP_EVENT_DISCOVER:
-                message = "dcv";
-                break;
-            case DHCP_EVENT_REQUEST:
-                message = "req";
-                break;
-            case DHCP_EVENT_ACK:
-                message = "ack";
-                break;
-            case DHCP_EVENT_ACK_INVALID:
-                message = "inv";
-                break;
-            case DHCP_EVENT_DECLINE:
-                message = "dcl";
-                break;
-            case DHCP_EVENT_NACK:
-                message = "nak";
-                break;
-            case DHCP_EVENT_TIMEOUT:
-                message = "tmo";
-                break;
-            case DHCP_EVENT_BOUND:
-                message = "bnd";
-                break;
-            case DHCP_EVENT_REQUEST_RENEW:
-                message = "ren";
-                break;
-            case DHCP_EVENT_REQUEST_REBIND:
-                message = "rbn";
-                break;
-            case DHCP_EVENT_SERVICE_DISABLED:
-                message = "off";
-                break;
-            default:
-                message = "unk";
-                break;
-        }
-        SYS_CONSOLE_PRINT("DHCP cli: %d event: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _TCPIP_MsecCountGet());
-    }
-#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS) != 0
+        "none",     // DHCP_EVENT_NONE
+        "dcv",      // DHCP_EVENT_DISCOVER
+        "offer",    // DHCP_EVENT_OFFER
+        "req",      // DHCP_EVENT_REQUEST
+        "ack",      // DHCP_EVENT_ACK
+        "dcl",      // DHCP_EVENT_DECLINE
+        "nak",      // DHCP_EVENT_NACK
+        "tmo",      // DHCP_EVENT_TIMEOUT
+        "bnd",      // DHCP_EVENT_BOUND
+        "ren",      // DHCP_EVENT_REQUEST_RENEW
+        "rbn",      // DHCP_EVENT_REQUEST_REBIND
+        "unk",      // DHCP_EVENT_UNKNOWN
+        "lost",     // DHCP_EVENT_CONN_LOST
+        "est",      // DHCP_EVENT_CONN_ESTABLISHED
+        "off",      // DHCP_EVENT_SERVICE_DISABLED
+    };
+    char cliBuff[20], srvBuff[20];
 
-
-#if (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_CONN_EVENTS) != 0
-    if(evType == DHCP_EVENT_CONN_LOST)
+    const char* message;
+    if(evType < 0 || evType >= sizeof(event_name_tbl) / sizeof(*event_name_tbl))
     {
-        message = "lost";
-    }
-    else if(evType == DHCP_EVENT_CONN_ESTABLISHED)
-    {
-        message = "est";
+        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        message = "illegal";
     }
     else
     {
-        message = 0;
+        message = event_name_tbl[evType];
     }
 
-    if(message)
-    {
-        SYS_CONSOLE_PRINT("DHCP cli: %d connection: %s, msec: %d\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, _TCPIP_MsecCountGet());
-    }
-
-#endif
-
+    TCPIP_Helper_IPAddressToString(&evInfo.clientAddress, cliBuff, sizeof(cliBuff));
+    TCPIP_Helper_IPAddressToString(&evInfo.serverAddress, srvBuff, sizeof(srvBuff));
+    SYS_CONSOLE_PRINT("DHCP cli: %d event: %s, msec: %d, id: 0x%08x\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, evInfo.dhcpTimeMs, evInfo.transactionId);
+    SYS_CONSOLE_PRINT("\tDHCP ev client address: %s, server address: %s\r\n", cliBuff, srvBuff);
+#endif  // (TCPIP_DHCP_DEBUG_MASK & TCPIP_DHCP_DEBUG_MASK_NOTIFY_EVENTS) != 0
 
 }
-
 
 // enable unicast DHCP packets
 // this should be an IPv4 packet
@@ -2816,7 +2991,7 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
                 pDhcpInfo->rebindTime = pClient->tRequest + pClient->t2Seconds;
                 pDhcpInfo->dhcpAddress.Val = pClient->dhcpIPAddress.Val;
                 pDhcpInfo->subnetMask.Val = pClient->dhcpMask.Val;
-                pDhcpInfo->serverAddress.Val = pClient->serverAddress.Val;
+                pDhcpInfo->serverAddress.Val = pClient->boundSrvAddress.Val;
 #if defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
                 pDhcpInfo->bootFileName = (const char*)pClient->bootFileName;
 #else
@@ -3014,46 +3189,6 @@ static bool _DHCPDbgProcessAckDecline(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* p
 
 
 
-#else   // defined(TCPIP_STACK_USE_DHCP_CLIENT)
 
-// provide basic/common functions for DHCP access when disabled
-bool TCPIP_DHCP_IsEnabled(TCPIP_NET_HANDLE hNet)
-{
-    return false;
-}
-
-bool TCPIP_DHCP_IsActive(TCPIP_NET_HANDLE hNet)
-{
-    return false;
-}
-
-bool TCPIP_DHCP_Disable(TCPIP_NET_HANDLE hNet)
-{
-    return false;
-}
-
-bool TCPIP_DHCP_Enable(TCPIP_NET_HANDLE hNet)
-{
-    return false;
-}
-
-bool TCPIP_DHCP_Renew(TCPIP_NET_HANDLE hNet)
-{
-    return false;
-}
-
-
-bool TCPIP_DHCP_Request(TCPIP_NET_HANDLE hNet, IPV4_ADDR reqAddress)
-{
-    return false;
-}
-
-bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
-{
-    return false;
-}
-#endif  //#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-
-#endif  // defined(TCPIP_STACK_USE_IPV4)
 
 

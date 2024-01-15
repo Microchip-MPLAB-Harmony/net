@@ -74,25 +74,57 @@ Microchip or any third party.
 
   Description:
     None.
+
+  Remarks:
+    The lease related events are first.
+    They are followed by the connection related events.
  */
 typedef enum
 {
     DHCP_EVENT_NONE     = 0,     // DHCP no event
+    // lease related events
     DHCP_EVENT_DISCOVER,         // DHCP discovery sent: cycle started
+    DHCP_EVENT_OFFER,            // DHCP offer received
     DHCP_EVENT_REQUEST,          // DHCP request sent
     DHCP_EVENT_ACK,              // DHCP request acknowledge was received
-    DHCP_EVENT_ACK_INVALID,      // DHCP acknowledge received but discarded as invalid
-    DHCP_EVENT_DECLINE,          // DHCP lease declined
+    DHCP_EVENT_DECLINE,          // DHCP decline sent because the ARP probe failed
     DHCP_EVENT_NACK,             // DHCP negative acknowledge was received
     DHCP_EVENT_TIMEOUT,          // DHCP server timeout
     DHCP_EVENT_BOUND,            // DHCP lease obtained
     DHCP_EVENT_REQUEST_RENEW,    // lease request renew sent
     DHCP_EVENT_REQUEST_REBIND,   // lease request rebind sent
+    DHCP_EVENT_UNKNOWN,          // an unknown/unsupported DHCP message has been received
+    // connection related events
     DHCP_EVENT_CONN_LOST,        // connection to the DHCP server lost
     DHCP_EVENT_CONN_ESTABLISHED, // connection re-established
-    DHCP_EVENT_SERVICE_DISABLED  // DHCP service disabled, reverted to the default IP address
+    DHCP_EVENT_SERVICE_DISABLED, // DHCP service disabled, reverted to the default IP address
 
 } TCPIP_DHCP_EVENT_TYPE;
+
+// *****************************************************************************
+/* Structure: TCPIP_DHCP_EVENT_INFO
+
+  Summary:
+    Reports DHCP event information.
+
+  Description:
+    This data structure is used for reporting extended info about an DHCP event.
+
+  Remarks:
+    Connection events do not have associated client and server addresses and transaction IDs.
+ */
+typedef struct
+{
+    uint32_t        dhcpTimeMs;             // current DHCP time, milliseconds
+    IPV4_ADDR       clientAddress;          // for RX events (DHCP_EVENT_OFFER, DHCP_EVENT_ACK, DHCP_EVENT_NACK, DHCP_EVENT_UNKNOWN) this is the destination IPv4 address of the DHCP packet
+                                            // for TX and other events this is the client IPv4 address when the DHCP message that triggered the event was sent
+
+    IPV4_ADDR       serverAddress;          // for RX events (DHCP_EVENT_OFFER, DHCP_EVENT_ACK, DHCP_EVENT_NACK, DHCP_EVENT_UNKNOWN) this is the source IPv4 address of the DHCP packet (server that sent the message)
+                                            // for TX and other events this is the current bound address.
+                                            // If the client is not bound or the network broadcast is used, then this is a broadcast address
+    uint32_t        transactionId;          // transaction ID associated with the DHCP message  
+                                            // For a connection related event, this is the last ID that has been used
+}TCPIP_DHCP_EVENT_INFO;
 
 // *****************************************************************************
 /* Enumeration: TCPIP_DHCP_STATUS
@@ -171,11 +203,22 @@ typedef struct
     Prototype of a DHCP event handler. Clients can register a handler with the
     DHCP service. Once an DHCP event occurs the DHCP service will called the
     registered handler.
+
+  Parameters:
+    hNet    - Interface the DHCP event occurred on.
+    evType  - type of event that occurred
+    evInfo  - associated event information 
+    param   - user supplied parameter.
+              Not used by the DHCP module.
+
+  Remarks:
+    evInfo points to a constant structure that should not be modified and which is valid only in the context of the event handler call.
+
     The handler has to be short and fast. It is meant for
     setting an event flag, <i>not</i> for lengthy processing!
  */
 
-typedef void    (*TCPIP_DHCP_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE evType, const void* param);
+typedef void    (*TCPIP_DHCP_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE evType, const TCPIP_DHCP_EVENT_INFO* evInfo, const void* param);
 
 
 // *****************************************************************************

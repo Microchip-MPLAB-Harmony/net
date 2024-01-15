@@ -1127,7 +1127,8 @@ void TCPIP_PKT_FlightLogAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE m
                 discardPkt = true;
                 break;
             }
-            else if((pLogEntry->logFlags & TCPIP_PKT_LOG_FLAG_SKT_PARAM) != 0)
+
+            if((pLogEntry->logFlags & TCPIP_PKT_LOG_FLAG_SKT_PARAM) != 0)
             {   // a socket entry; check against skt discard mask
                 if(((1 << pLogEntry->sktNo) & _pktLogInfo.sktLogMask) == 0)
                 {   // discard it

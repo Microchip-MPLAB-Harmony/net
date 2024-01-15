@@ -50,13 +50,12 @@ Microchip or any third party.
 #define __DHCP_PRIVATE_H_
 
 // enable DHCP debugging features
-#define TCPIP_DHCP_DEBUG_MASK_LEASE_EVENTS      0x01    // enable lease related events display
-#define TCPIP_DHCP_DEBUG_MASK_CONN_EVENTS       0x02    // enable connection related events display
-#define TCPIP_DHCP_DEBUG_MASK_ADDRESS_EVENTS    0x04    // enable adress service events display
-#define TCPIP_DHCP_DEBUG_MASK_FAIL_TMO_EVENT    0x08    // enable fail timeout events display
-#define TCPIP_DHCP_DEBUG_MASK_STATUS            0x10    // enable status display
-#define TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE     0x20    // enable receive results display
-#define TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE     0x40    // enable TX messages display
+#define TCPIP_DHCP_DEBUG_MASK_NOTIFY_EVENTS     0x01    // enable notification events display
+#define TCPIP_DHCP_DEBUG_MASK_ADDRESS_EVENTS    0x02    // enable adress service events display
+#define TCPIP_DHCP_DEBUG_MASK_FAIL_TMO_EVENT    0x04    // enable fail timeout events display
+#define TCPIP_DHCP_DEBUG_MASK_STATUS            0x08    // enable status display
+#define TCPIP_DHCP_DEBUG_MASK_RX_RES_ENABLE     0x10    // enable receive results display
+#define TCPIP_DHCP_DEBUG_MASK_TX_MSG_ENABLE     0x20    // enable TX messages display
 
 
 #define TCPIP_DHCP_DEBUG_MASK_FAKE_TMO          0x0100    // enable fake timeout support...
@@ -75,19 +74,33 @@ Microchip or any third party.
 
 #define TCPIP_DHCP_MESSAGE_TYPE               (53u) // DHCP Message Type constant
 
+
+// DHCP messages from Client to the server
+#define TCPIP_DHCP_DISCOVER_MESSAGE           (1u)  // DCHP Discover Message: Client broadcast to locate available servers
+#define TCPIP_DHCP_REQUEST_MESSAGE            (3u)  // DHCP Request message: Client message to servers either
+                                                    // (a) requesting offered parameters from one server and implicitly declining offers from all others,
+                                                    // (b) confirming correctness of previously allocated address after, e.g., system reboot,
+                                                    // (c) extending the lease on a particular network address.
+#define TCPIP_DHCP_DECLINE_MESSAGE            (4u)  // DHCP Decline Message: Client to server indicating network address is already in use.
+#define TCPIP_DHCP_RELEASE_MESSAGE            (7u)  // DCHP Release message: Client to server relinquishing network address and cancelling remaining lease.
+#define TCPIP_DHCP_INFORM_MESSAGE             (8u)  // DCHP INFORM Message: Client to server, asking only for local configuration parameters;
+                                                    // client already has externally configured network address.
+
+
+
+// DHCP messages from Server to the Client
+#define TCPIP_DHCP_OFFER_MESSAGE              (2u)  // DHCP Offer Message: Server to client in response to DHCPDISCOVER with
+                                                    // offer of configuration parameters.
+#define TCPIP_DHCP_ACK_MESSAGE                (5u)  // DHCP ACK Message: Server to client with configuration parameters, including committed
+                                                    // network address.
+#define TCPIP_DHCP_NAK_MESSAGE                (6u)  // DHCP NAK Message: Server to client indicating client’s notion of network
+                                                    // address is incorrect (e.g., client has moved to new subnet) or client’s lease as expired
+// Internal DHCP messages
 #define TCPIP_DHCP_UNKNOWN_MESSAGE            (0u)  // Code for unknown DHCP message
-
-#define TCPIP_DHCP_DISCOVER_MESSAGE           (1u)  // DCHP Discover Message
-#define TCPIP_DHCP_OFFER_MESSAGE              (2u)  // DHCP Offer Message
-#define TCPIP_DHCP_REQUEST_MESSAGE            (3u)  // DHCP Request message
-#define TCPIP_DHCP_DECLINE_MESSAGE            (4u)  // DHCP Decline Message
-#define TCPIP_DHCP_ACK_MESSAGE                (5u)  // DHCP ACK Message
-#define TCPIP_DHCP_NAK_MESSAGE                (6u)  // DHCP NAK Message
-#define TCPIP_DHCP_RELEASE_MESSAGE            (7u)  // DCHP Release message
-#define TCPIP_DHCP_INFORM_MESSAGE             (8u)  // DCHP INFORM Message
-
 #define TCPIP_DHCP_REQUEST_RENEW_MESSAGE      (9u)  // internal message for Request Renew message
 #define TCPIP_DHCP_TIMEOUT_MESSAGE            (10u) // internal message to show no message available
+
+// DHCP options, etc.
 
 #define TCPIP_DHCP_SERVER_IDENTIFIER          (54u) // DHCP Server Identifier
 
@@ -113,7 +126,7 @@ Microchip or any third party.
 // Default time out value for all DHCP requests; seconds
 // This forms the base of the DHCP transactions timeout 
 // and it's used in the expornential backoff
-// Using a default value for 100Mbps networks
+// Using a default value for 100 Mbps networks
 #define TCPIP_DHCP_EXP_BACKOFF_BASE   2
 
 // exponential backoff limit, as set by the standard; seconds
@@ -393,6 +406,16 @@ typedef struct  _TAG_DHCP_LIST_NODE
                                                 // 0 if all    
 }TCPIP_DHCP_LIST_NODE;
 
+
+// event source type: client/server initiated, illegal
+// Note: 8 bit value!
+typedef enum
+{
+    TCPIP_DHCP_EV_SRC_NONE = 0,     // none/illegal
+    TCPIP_DHCP_EV_SRC_SERVER,       // server initiated event
+    TCPIP_DHCP_EV_SRC_CLIENT,       // client initiated event
+    TCPIP_DHCP_EV_SRC_CONN,         // connection initiated event
+}TCPIP_DHCP_EV_SOURCE;
 
 
 
