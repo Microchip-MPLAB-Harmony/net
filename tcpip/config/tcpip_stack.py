@@ -46,7 +46,7 @@ tcpipStackNetInterfaceName = []
 tcpipStackIntMacInterface = []
 tcpipStackMiiMode = []
 tcpipStackOthInterface = []
-configSummaryVisible = True
+configSummaryVisible = False
 
 symbol_value = 0
 #########################################################################################

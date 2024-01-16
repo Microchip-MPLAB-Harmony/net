@@ -1426,6 +1426,7 @@ def instantiateComponent(drvGmacComponent):
         drvGmacNoCacheConfig.setVisible(True)
         drvGmacNoCacheConfig.setDefaultValue(True)
         drvGmacNoCacheConfig.setDescription("Create Non-Cacheable Memory Region in Data Memory (Internal SRAM)") 
+        drvGmacNoCacheConfig.setDependencies(drvMacMPUConfig, ["DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG"])
             
         drvGmacNoCacheMemRegSize = drvGmacComponent.createKeyValueSetSymbol("DRV_"+ gmacComponentName + "_NOCACHE_REGION_SIZE", drvGmacNoCacheConfig)
         drvGmacNoCacheMemRegSize.setHelp("mcc_h3_gmac_configurations")
@@ -1447,40 +1448,58 @@ def instantiateComponent(drvGmacComponent):
         drvGmacNoCacheMemRegSize.setVisible(True) 
         drvGmacNoCacheMemRegSize.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG"])
 
+        drvGmacNoCacheMemSizeDummy = drvGmacComponent.createBooleanSymbol("DRV_"+ gmacComponentName + "_NOCACHE_SIZE_DUMMY", drvGmacNoCacheConfig)
+        drvGmacNoCacheMemSizeDummy.setVisible(False)
+        drvGmacNoCacheMemSizeDummy.setDependencies(drvMacMemSizeConfig, ["DRV_"+ gmacComponentName + "_NOCACHE_REGION_SIZE"]) 
+
         drvGmacNoCacheMemAddressComment = drvGmacComponent.createCommentSymbol("DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS_COMMENT", drvGmacNoCacheConfig)
         drvGmacNoCacheMemAddressComment.setLabel("***Start Address must be aligned to Memory Size***")
         drvGmacNoCacheMemAddressComment.setVisible(True)
         drvGmacNoCacheMemAddressComment.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG"]) 
         
+        if ("PIC32CZ" in processor): # PIC32CZ
+            drvGmacNodeIntRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLEXRAM\"]")
+        else: # SAMV7/SAME7/SAMRH
+            drvGmacNodeIntRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
+            
+        if drvGmacNodeIntRAM is not None:
+            startAddressIRAM = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "IRAM1_START", drvGmacNoCacheConfig)
+            startAddressIRAM.setLabel("RAM Start Address")
+            startAddressIRAM.setVisible(False)
+            startAddressIRAM.setDefaultValue(drvGmacNodeIntRAM.getAttribute("start"))
+
+            sizeAddressIRAM = drvGmacComponent.createStringSymbol("DRV_"+ gmacComponentName + "IRAM1_SIZE", drvGmacNoCacheConfig)
+            sizeAddressIRAM.setLabel("RAM Size")
+            sizeAddressIRAM.setVisible(False)
+            sizeAddressIRAM.setDefaultValue(drvGmacNodeIntRAM.getAttribute("size"))
+
+            endAddressIRAM = drvGmacComponent.createHexSymbol("DRV_"+ gmacComponentName + "IRAM_END", drvGmacNoCacheConfig)
+            endAddressIRAM.setLabel("RAM End Address")
+            endAddressIRAM.setVisible(False)
+            startAddressInt = int(drvGmacNodeIntRAM.getAttribute("start"), 16)
+            sizeInt = int(drvGmacNodeIntRAM.getAttribute("size"), 16)
+            endAddressInt = startAddressInt + sizeInt - 1
+            endAddressIRAM.setDefaultValue(endAddressInt)
+            
+            sizeVal = int(drvGmacNoCacheMemRegSize.getSelectedValue())
+            memVal = pow(2, (sizeVal + 1))
+            nonCacheAddress = startAddressInt + sizeInt - memVal
+        else:
+            Log.writeErrorMessage("No Internal RAM detected")
+            
         drvGmacNoCacheMemAddress = drvGmacComponent.createHexSymbol("DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS",drvGmacNoCacheConfig)
         drvGmacNoCacheMemAddress.setHelp("mcc_h3_gmac_configurations")
         drvGmacNoCacheMemAddress.setLabel("Start Address of Non-Cacheable Memory")
         drvGmacNoCacheMemAddress.setVisible(True)  
-        drvGmacNoCacheMemAddress.setMin(0)
-        if("SAMV7" in processor) or ("SAME7" in processor):
-            drvGmacNoCacheMemAddress.setDefaultValue(0x2045F000)  
-        elif ("SAMRH" in processor):
-            drvGmacNoCacheMemAddress.setDefaultValue(0x2105F000)            
-        elif ("PIC32CZ" in processor): # PIC32CZ
-            drvGmacNoCacheMemAddress.setDefaultValue(0x2009F000)  
-            
+        drvGmacNoCacheMemAddress.setMin(0)     
+        if drvGmacNodeIntRAM is not None:
+            drvGmacNoCacheMemAddress.setDefaultValue(nonCacheAddress)           
         drvGmacNoCacheMemAddress.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG"]) 
 
-        initNoCacheMPU()
-        
-        drvGmacNoCachebool = drvGmacComponent.createBooleanSymbol("DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG_BOOL", drvGmacNoCacheConfig)
-        drvGmacNoCachebool.setHelp("mcc_h3_gmac_configurations")
-        drvGmacNoCachebool.setLabel("Non-Cacheable Memory Region Configuration")
-        drvGmacNoCachebool.setVisible(False)
-        drvGmacNoCachebool.setDefaultValue(False)
-        drvGmacNoCachebool.setDependencies(drvMacMPUConfig, ["DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG", "DRV_"+ gmacComponentName + "_NOCACHE_REGION_SIZE", "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"]) 
-        
-        # Set global MPU symbols
-        setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", drvGmacNoCacheConfig.getValue())
-        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", drvGmacNoCacheMemAddress.getValue())
-        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE",drvGmacNoCacheMemRegSize.getKeyForValue(drvGmacNoCacheMemRegSize.getSelectedValue()) )
-               
-    
+        drvGmacNoCacheMemAddrDummy = drvGmacComponent.createBooleanSymbol("DRV_"+ gmacComponentName + "_NOCACHE_ADDR_DUMMY", drvGmacNoCacheConfig)
+        drvGmacNoCacheMemAddrDummy.setVisible(False)
+        drvGmacNoCacheMemAddrDummy.setDependencies(drvMacMemAddrConfig, ["DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"]) 
+         
     # Driver GMAC Heap Size
     drvGmacHeapSize = drvGmacComponent.createIntegerSymbol("DRV_"+ gmacComponentName + "_HEAP_SIZE", None)
     drvGmacHeapSize.setHelp("mcc_h3_gmac_configurations")
@@ -1759,6 +1778,11 @@ def onAttachmentConnected(source, target):
             setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RGMII")
         else:
             setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interface_number), "RMII" if tcpipGmacEthRmii.getValue() == True else "MII")
+        
+        # Set MPU and TCP/IP Configurator symbols for Non-Cacheable memory, for GMAC Descriptors
+        # The initialization from this event is to update the symbols after instantiation and applying the user entry from .mc3
+        if("SAMV7" in processor) or ("SAME7" in processor) or ("SAMRH" in processor) or ("PIC32CZ" in processor): # SAME70, SAMV71, SAMRH71, PIC32CZ            
+            initNoCacheMPU()
         
 def onAttachmentDisconnected(source, target):
     global gmacComponentId
@@ -2147,34 +2171,45 @@ def tcpipGmacRxBuffAllocCountQue0CallBack(symbol, event):
     else:
         symbol.setValue(3)
 
-def drvMacMPUConfig(symbol, event):
+def drvMacMemSizeConfig(symbol, event):
     global drvGmacNoCacheMemRegSize
     global noCache_MPU_index
     global gmacComponentId
-    global gmacComponentName
-    coreComponent = Database.getComponentByID("core")
+    global gmacComponentName 
     
-    if (noCache_MPU_index != 0xff): 
-        if(Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG") == True):
-            Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), True)
-            Database.setSymbolValue("core", ("MPU_Region_Name" + str(noCache_MPU_index)), "GMAC Descriptor")
-            Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"))
-            index = drvGmacNoCacheMemRegSize.getValue()
-            keyval = drvGmacNoCacheMemRegSize.getKeyValue(index)
-            key = drvGmacNoCacheMemRegSize.getKeyForValue(keyval)
-            setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"))
-            setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE", key)
-            setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", True)
-            mpuRegSize = coreComponent.getSymbolByID("MPU_Region_" + str(noCache_MPU_index) + "_Size")
-            mpuRegSize.setSelectedKey(key)
-        else:
-            Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), False)
-            setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", False)
-    
-    
+    keyval =  drvGmacNoCacheMemRegSize.getSelectedValue()
+    key = drvGmacNoCacheMemRegSize.getKeyForValue(keyval)
+    memSize = pow(2, (int(keyval) + 1))
+    devEndAddress = Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "IRAM_END")
+    nonCacheAddress = devEndAddress - memSize + 1
+    Database.setSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS", nonCacheAddress)
+    setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE", key)
+    readNonCacheAddress = Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS")
+    setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", readNonCacheAddress)
+    if(Database.getSymbolValue("core", ("MPU_Region_Name" + str(noCache_MPU_index))) == "GMAC Descriptor"):
+        Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), readNonCacheAddress)
+        index = drvGmacNoCacheMemRegSize.getValue()
+        Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Size"), index)
+
+def drvMacMemAddrConfig(symbol, event):
+    global noCache_MPU_index
+    readNonCacheAddress = event["value"]
+    setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", readNonCacheAddress)
+    if(Database.getSymbolValue("core", ("MPU_Region_Name" + str(noCache_MPU_index))) == "GMAC Descriptor"):
+        Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), readNonCacheAddress)
+                
+def drvMacMPUConfig(symbol, event):
+    global noCache_MPU_index
+    if (event["value"] == False):
+        Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), False)
+        setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", False)
+    else:
+        Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), True)
+        setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", True)  
 
 def initNoCacheMPU():
     global noCache_MPU_index
+    global drvGmacNoCacheMemRegSize
     global gmacComponentId
     global gmacComponentName
     if (noCache_MPU_index == 0xff): 
@@ -2184,20 +2219,32 @@ def initNoCacheMPU():
         if(Database.getSymbolValue("core", "CoreMPU_DEFAULT") != True):  
             Database.setSymbolValue("core", "CoreMPU_DEFAULT", True)            
         mpuNumRegions = Database.getSymbolValue("core", "MPU_NUMBER_REGIONS")
+        readNonCacheAddress = Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS")
         
-        for i in range(0,mpuNumRegions):
-            if(Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable")) != True):
+        # Enable/Update MPU Symbols
+        for i in range(0,mpuNumRegions):            
+            if(Database.getSymbolValue("core", ("MPU_Region_Name" + str(i))) == "GMAC Descriptor"):
+                noCache_MPU_index = i
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), True)
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Type"), 5)
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Size"), 7)
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Access"), 3)                
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), readNonCacheAddress)
+                break
+            elif(Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable")) != True):
                 noCache_MPU_index = i
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Enable"), True)
                 Database.setSymbolValue("core", ("MPU_Region_Name" + str(noCache_MPU_index)), "GMAC Descriptor")
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Type"), 5)
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Size"), 7)
                 Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Access"), 3)
-                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"))
+                Database.setSymbolValue("core", ("MPU_Region_" + str(noCache_MPU_index) + "_Address"), readNonCacheAddress)                
                 break
-                
-
-
+        # Update TCP/IP Configurator Summary symbols
+        setVal("tcpipStack", "TCPIP_STACK_NO_CACHE_CONFIG", Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NO_CACHE_CONFIG"))
+        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_MEM_ADDRESS", Database.getSymbolValue(gmacComponentId, "DRV_"+ gmacComponentName + "_NOCACHE_MEM_ADDRESS"))
+        setVal("tcpipStack", "TCPIP_STACK_NOCACHE_SIZE",drvGmacNoCacheMemRegSize.getKeyForValue(drvGmacNoCacheMemRegSize.getSelectedValue()) )   
+              
 def gmacHeapCalc():
     global gmacComponentId
     global gmacComponentName
