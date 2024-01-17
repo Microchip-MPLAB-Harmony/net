@@ -737,7 +737,7 @@ def instantiateComponent( macComponent ):
 
     # EXTERNAL PHY INFO
     # Use RMII Connection to PHY
-    tcpipMacEthRmii = macComponent.createBooleanSymbol( "USE_RMII", None )
+    tcpipMacEthRmii = macComponent.createBooleanSymbol( "USE_RMII", linkConnection )
     tcpipMacEthRmii.setHelp("mcc_h3_emac_configurations")
     tcpipMacEthRmii.setLabel( "Use RMII" )
     tcpipMacEthRmii.setDefaultValue( True )
@@ -751,12 +751,32 @@ def instantiateComponent( macComponent ):
     rmiiMskCmpValue.setDefaultValue( getRmiiMskCmpValueFor( tcpipMacEthRmii.getValue() ) )
 
     # PHY Connected to MAC
-    phyType = macComponent.createStringSymbol( "DRV_MAC_PHY_TYPE", None )
+    phyType = macComponent.createStringSymbol( "DRV_MAC_PHY_TYPE", linkConnection )
     phyType.setHelp("mcc_h3_emac_configurations")
     phyType.setLabel( "External PHY Device" )
     phyType.setDefaultValue( "" )
     phyType.setReadOnly( True )
     
+    # Pin Settings
+    tcpipEmacPinConfig = macComponent.createMenuSymbol("TCPIP_EMAC_PIN_CONFIG", None)
+    tcpipEmacPinConfig.setLabel("Pin Configurations")
+    tcpipEmacPinConfig.setDescription("Pin Configurations for Internal Ethernet MAC")
+    tcpipEmacPinConfig.setVisible(True)
+    
+    # Comment for MII Pin Configuration
+    tcpipEmacMIIPinConfig = macComponent.createCommentSymbol("TCPIP_EMAC_MII_PIN_CONFIG", tcpipEmacPinConfig)
+    tcpipEmacMIIPinConfig.setLabel("*** Configure "+ atdfMacInstanceName + " MII/RMII pins from Plugins -> Pin Configuration")
+    tcpipEmacMIIPinConfig.setVisible(True)
+    
+    # Comment for MDIO Pin Configuration
+    tcpipEmacMDIOPinConfig = macComponent.createCommentSymbol("TCPIP_EMAC_MDIO_PIN_CONFIG", tcpipEmacPinConfig)
+    tcpipEmacMDIOPinConfig.setLabel("*** Configure "+ atdfMacInstanceName + " management(MDIO) pins from Plugins -> Pin Configuration")
+    tcpipEmacMDIOPinConfig.setVisible(True)
+    
+    # Note for PHY RESET, Interrupt Pins
+    tcpipEmacRSTIntPinNote = macComponent.createCommentSymbol("TCPIP_EMAC_RSTINT_PIN_NOTE", tcpipEmacPinConfig)
+    tcpipEmacRSTIntPinNote.setLabel("*** Reset and Interrupt pins of Ethernet PHY are not used by "+ atdfMacInstanceName + " driver")
+    tcpipEmacRSTIntPinNote.setVisible(True)
     
     emacConfigSummary = macComponent.createMenuSymbol("DRV_EMAC_CONFIG_SUMMARY", None)
     emacConfigSummary.setLabel("Configuration Summary")

@@ -579,7 +579,28 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacEthRgmii.setDescription("RGMII Connection")
         tcpipGmacEthRgmii.setDefaultValue(True)
         tcpipGmacEthRgmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII"] )
-        
+    
+    # Pin Settings
+    tcpipGmacPinConfig = drvGmacComponent.createMenuSymbol("TCPIP_"+ gmacComponentName + "_PIN_CONFIG", None)
+    tcpipGmacPinConfig.setLabel("Pin Configurations")
+    tcpipGmacPinConfig.setDescription("Pin Configurations for Internal Ethernet MAC")
+    tcpipGmacPinConfig.setVisible(True)
+    
+    # Comment for MII Pin Configuration
+    tcpipGmacMIIPinConfig = drvGmacComponent.createCommentSymbol("TCPIP_"+ gmacComponentName + "_MII_PIN_CONFIG", tcpipGmacPinConfig)
+    tcpipGmacMIIPinConfig.setLabel("*** Configure " + gmacComponentName + " MII/RMII/GMII/RGMII pins from Plugins -> Pin Configuration")
+    tcpipGmacMIIPinConfig.setVisible(True)
+    
+    # Comment for MDIO Pin Configuration
+    tcpipGmacMDIOPinConfig = drvGmacComponent.createCommentSymbol("TCPIP_"+ gmacComponentName + "_MDIO_PIN_CONFIG", tcpipGmacPinConfig)
+    tcpipGmacMDIOPinConfig.setLabel("*** Configure " + gmacComponentName + " management(MDIO) pins from Plugins -> Pin Configuration")
+    tcpipGmacMDIOPinConfig.setVisible(True)
+    
+    # Note for PHY RESET, Interrupt Pins
+    tcpipGmacRSTIntPinNote = drvGmacComponent.createCommentSymbol("TCPIP_"+ gmacComponentName + "_RSTINT_PIN_NOTE", tcpipGmacPinConfig)
+    tcpipGmacRSTIntPinNote.setLabel("*** Reset and Interrupt pins of Ethernet PHY are not used by " + gmacComponentName + " driver")
+    tcpipGmacRSTIntPinNote.setVisible(True)
+    
     # Advanced Settings
     tcpipGmacAdvSettings = drvGmacComponent.createMenuSymbol("TCPIP_"+ gmacComponentName + "_ADV_SETTING", None)
     tcpipGmacAdvSettings.setLabel("Advanced Settings")
@@ -1725,19 +1746,15 @@ def tcpipEthMacMIIMode(symbol, event):
     interface = 0
     if len(interfaceNum):
         if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") != None):
-            global tcpipGmacEthRmii
             if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RMII") == True):
                 setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RMII")      
         if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") != None):
-            global tcpipGmacEthMii
             if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MII") == True):
                 setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "MII")
         if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") != None):
-            global tcpipGmacEthGmii
             if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_GMII") == True):
                 setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "GMII")
         if (Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") != None):
-            global tcpipGmacEthRgmii
             if(Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_RGMII") == True):
                 setVal("tcpipStack", "TCPIP_STACK_MII_MODE_IDX" + str(interfaceNum[interface]), "RGMII")
             

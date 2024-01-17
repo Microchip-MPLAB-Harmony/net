@@ -315,7 +315,28 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthRmii.setDescription("RMII Connection")
     tcpipEthmacEthRmii.setDefaultValue(True)
     tcpipEthmacEthRmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_EMAC_ETH_OF_RMII"] )
+    
     # todo default y if FMIIEN = "OFF" 
+    # Pin Settings
+    tcpipEthmacPinConfig = drvPic32mEthmacComponent.createMenuSymbol("TCPIP_ETHMAC_PIN_CONFIG", None)
+    tcpipEthmacPinConfig.setLabel("Pin Configurations")
+    tcpipEthmacPinConfig.setDescription("Pin Configurations for Internal Ethernet MAC")
+    tcpipEthmacPinConfig.setVisible(True)
+    
+    # Comment for MII Pin Configuration
+    tcpipEthmacMIIPinConfig = drvPic32mEthmacComponent.createCommentSymbol("TCPIP_ETHMAC_MII_PIN_CONFIG", tcpipEthmacPinConfig)
+    tcpipEthmacMIIPinConfig.setLabel("*** Configure ETHMAC MII/RMII pins from Plugins -> Pin Configuration")
+    tcpipEthmacMIIPinConfig.setVisible(True)
+    
+    # Comment for MDIO Pin Configuration
+    tcpipEthmacMDIOPinConfig = drvPic32mEthmacComponent.createCommentSymbol("TCPIP_ETHMAC_MDIO_PIN_CONFIG", tcpipEthmacPinConfig)
+    tcpipEthmacMDIOPinConfig.setLabel("*** Configure ETHMAC management(MDIO) pins from Plugins -> Pin Configuration")
+    tcpipEthmacMDIOPinConfig.setVisible(True)
+    
+    # Note for PHY RESET, Interrupt Pins
+    tcpipEthmacRSTIntPinNote = drvPic32mEthmacComponent.createCommentSymbol("TCPIP_ETHMAC_RSTINT_PIN_NOTE", tcpipEthmacPinConfig)
+    tcpipEthmacRSTIntPinNote.setLabel("*** Reset and Interrupt pins of Ethernet PHY are not used by ETHMAC driver")
+    tcpipEthmacRSTIntPinNote.setVisible(True)
     
     # Advanced Settings
     tcpipEthmacAdvSettings = drvPic32mEthmacComponent.createMenuSymbol("TCPIP_ETHMAC_ADV_SETTING", None)
@@ -459,7 +480,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacAutoFlowCtrlEmptyWtrMark.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE"])
     
     # PHY Connected to Ethernet MAC
-    tcpipEthmacPhyType = drvPic32mEthmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", None)
+    tcpipEthmacPhyType = drvPic32mEthmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", tcpipEthmacAdvSettings)
     tcpipEthmacPhyType.setHelp("mcc_h3_ethmac_configurations")
     tcpipEthmacPhyType.setLabel("External PHY Device")
     tcpipEthmacPhyType.setVisible(True)
