@@ -4047,7 +4047,7 @@ void TCPIP_COMMAND_Task(void)
 #if (TCPIP_ARP_COMMANDS != 0)
 static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // arp <interface> <req/query/del/list> <ipAddr>
+    // arp <interface> <req/query/del/list/insert> <ipAddr> <macAddr>\r\n");
     //
     TCPIP_NET_HANDLE netH;
     IPV4_ADDR ipAddr;
@@ -4165,11 +4165,32 @@ static void _CommandArp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             return;
         }
 
+        if (strcmp(argv[2], "insert") == 0)
+        {   // insert an address
+            if (argc < 5 || !TCPIP_Helper_StringToMACAddress(argv[4], macAddr.v))
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid MAC address string \r\n");
+                return;
+            }
+
+
+            arpRes = TCPIP_ARP_EntrySet(netH, &ipAddr, &macAddr, true);
+            if(arpRes >= 0)
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "arp: Added MAC address %s for %s (%d)\r\n", argv[4], argv[3], arpRes);
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "arp: Failed to insert MAC address!\r\n");
+            }
+            return;
+        }
+
         break;
     }
 
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: arp interface list\r\n");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: arp interface req/query/del ipAddr\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: arp interface req/query/del/insert <ipAddr> <macAddr>\r\n");
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: arp eth0 req 192.168.1.105 \r\n");
 }
 #endif  // (TCPIP_ARP_COMMANDS != 0)

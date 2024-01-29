@@ -1361,8 +1361,9 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAd
     OA_HASH_ENTRY   *hE;
     PROTECTED_SINGLE_LIST     *oldList, *newList;
     ARP_ENTRY_FLAGS newFlags;
-    TCPIP_ARP_RESULT      res;
+    TCPIP_ARP_RESULT res;
     TCPIP_NET_IF    *pIf;
+    bool setEntry;
 
     if(ipAdd == 0 || ipAdd->Val == 0)
     {   // do not store 0's in cache
@@ -1396,6 +1397,7 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAd
     }
     
     arpHE = (ARP_HASH_ENTRY*)hE;
+    setEntry = false;
    
     if(hE->flags.newEntry == 0)
     {   // existent entry
@@ -1415,20 +1417,28 @@ TCPIP_ARP_RESULT TCPIP_ARP_EntrySet(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAd
         if(newList != oldList)
         {   // remove from the old list
             TCPIP_Helper_ProtectedSingleListNodeRemove(oldList, (SGL_LIST_NODE*)&arpHE->next);
+            setEntry = true;
         }
         res = ARP_RES_ENTRY_EXIST;
     }
     else
     {
+        setEntry = true;
         res = ARP_RES_OK;
     }
     
     // add it to where it belongs
-    _ARPSetEntry(arpHE, newFlags, hwAdd, newList);
+    if(setEntry == true)
+    {
+        _ARPSetEntry(arpHE, newFlags, hwAdd, newList);
 
-    if(TCPIP_Helper_ProtectedSingleListCount(&pArpDcpt->permList) >= (arpMod.permQuota * pArpDcpt->hashDcpt->fullSlots)/100)
-    {   // quota exceeded
-        res = ARP_RES_PERM_QUOTA_EXCEED;
+        if(perm)
+        {
+            if(TCPIP_Helper_ProtectedSingleListCount(&pArpDcpt->permList) >= (arpMod.permQuota * pArpDcpt->hashDcpt->hEntries) / 100)
+            {   // quota exceeded
+                res = ARP_RES_PERM_QUOTA_EXCEED;
+            }
+        }
     }
 
     return res;
