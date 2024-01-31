@@ -141,6 +141,7 @@ static unsigned int  _DHCPReceive(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetI
 static bool     _DHCPSend(DHCP_CLIENT_VARS* pClient, TCPIP_NET_IF* pNetIf, int messageType, TCPIP_DHCP_OPERATION_FLAGS dhcpFlags);
 static void     _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd);
 static bool     _DHCPStartOperation(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_OPERATION_REQ opReq, uint32_t reqAddress);
+static void     _DHCPSetEventInfo(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd, TCPIP_DHCP_EVENT_INFO* pEvInfo);
 
 static bool     _DHCPPacketFilter(TCPIP_MAC_PACKET* pRxPkt, uint8_t hdrlen);
 static UDP_SOCKET _DHCPOpenSocket(void);
@@ -2772,13 +2773,31 @@ TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_E
 {
     if(handler && dhcpMemH)
     {
-        TCPIP_DHCP_LIST_NODE dhcpNode;
+        TCPIP_DHCP_LIST_EV_NODE dhcpNode;
         dhcpNode.next = 0;
         dhcpNode.handler = handler;
+        dhcpNode.xhandler = 0;
         dhcpNode.hParam = hParam;
         dhcpNode.hNet = hNet;
 
-        return (TCPIP_DHCP_LIST_NODE*)TCPIP_Notification_Add(&dhcpRegisteredUsers, dhcpMemH, &dhcpNode, sizeof(dhcpNode));
+        return (TCPIP_DHCP_LIST_EV_NODE*)TCPIP_Notification_Add(&dhcpRegisteredUsers, dhcpMemH, &dhcpNode, sizeof(dhcpNode));
+    }
+
+    return 0;
+}
+
+TCPIP_DHCP_HANDLE TCPIP_DHCP_HandlerRegisterEx(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER_EX exHandler, const void* hParam)
+{
+    if(exHandler && dhcpMemH)
+    {
+        TCPIP_DHCP_LIST_EV_NODE dhcpNode;
+        dhcpNode.next = 0;
+        dhcpNode.handler = 0;
+        dhcpNode.xhandler = exHandler;
+        dhcpNode.hParam = hParam;
+        dhcpNode.hNet = hNet;
+
+        return (TCPIP_DHCP_LIST_EV_NODE*)TCPIP_Notification_Add(&dhcpRegisteredUsers, dhcpMemH, &dhcpNode, sizeof(dhcpNode));
     }
 
     return 0;
@@ -2798,48 +2817,71 @@ bool TCPIP_DHCP_HandlerDeRegister(TCPIP_DHCP_HANDLE hDhcp)
     return false;
 }
 
+static void _DHCPSetEventInfo(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd, TCPIP_DHCP_EVENT_INFO* pEvInfo)
+{
+    DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
+
+    pEvInfo->dhcpTimeMs = _TCPIP_MsecCountGet();
+
+    TCPIP_DHCP_EV_SOURCE evSrc = _DHCPEventSource(evType);
+
+    if(evSrc == TCPIP_DHCP_EV_SRC_SERVER || evSrc == TCPIP_DHCP_EV_SRC_CLIENT)
+    {
+        pEvInfo->transactionId = pClient->transactionID;
+    }
+
+    if(evSrc == TCPIP_DHCP_EV_SRC_SERVER)
+    {
+        pEvInfo->clientAddress.Val = clientAdd;
+        pEvInfo->serverAddress.Val = serverAdd;
+    }
+    else
+    {   // client initiated or connection event
+        pEvInfo->clientAddress.Val = pClient->dhcpIPAddress.Val;
+        if(_DHCPEventUseBcast(evType) || pClient->boundSrvAddress.Val == 0)
+        {
+            pEvInfo->serverAddress.Val = 0xffffffff;  // BCAST_NETWORK_LIMITED; 
+        } 
+        else
+        {
+            pEvInfo->serverAddress.Val = pClient->boundSrvAddress.Val;
+        }
+    }
+}
+
+
+
 static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evType, uint32_t clientAdd, uint32_t serverAdd)
 {
-    TCPIP_DHCP_LIST_NODE* dNode;
+    TCPIP_DHCP_LIST_EV_NODE* dNode;
 
-    DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
     TCPIP_DHCP_EVENT_INFO   evInfo;
 
     memset(&evInfo, 0x0, sizeof(evInfo));
-    evInfo.dhcpTimeMs = _TCPIP_MsecCountGet();
-
-        
-        TCPIP_DHCP_EV_SOURCE evSrc = _DHCPEventSource(evType);
-
-        if(evSrc == TCPIP_DHCP_EV_SRC_SERVER || evSrc == TCPIP_DHCP_EV_SRC_CLIENT)
-        {
-            evInfo.transactionId = pClient->transactionID;
-        }
-
-        if(evSrc == TCPIP_DHCP_EV_SRC_SERVER)
-        {
-            evInfo.clientAddress.Val = clientAdd;
-            evInfo.serverAddress.Val = serverAdd;
-        }
-        else
-        {   // client initiated or connection event
-            evInfo.clientAddress.Val = pClient->dhcpIPAddress.Val;
-            if(_DHCPEventUseBcast(evType) || pClient->boundSrvAddress.Val == 0)
-            {
-                evInfo.serverAddress.Val = 0xffffffff;  // BCAST_NETWORK_LIMITED; 
-            } 
-            else
-            {
-                evInfo.serverAddress.Val = pClient->boundSrvAddress.Val;
-            }
-        }
 
     TCPIP_Notification_Lock(&dhcpRegisteredUsers);
-    for(dNode = (TCPIP_DHCP_LIST_NODE*)dhcpRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
+    for(dNode = (TCPIP_DHCP_LIST_EV_NODE*)dhcpRegisteredUsers.list.head; dNode != 0; dNode = dNode->next)
     {
         if(dNode->hNet == 0 || dNode->hNet == pNetIf)
         {   // trigger event
-            (*dNode->handler)(pNetIf, evType, &evInfo, dNode->hParam);
+            if(dNode->handler != 0)
+            {   // simple event
+                (*dNode->handler)(pNetIf, evType, dNode->hParam);
+            }
+            else if(dNode->xhandler != 0)
+            {   // extended event
+                if(evInfo.dhcpTimeMs == 0)
+                {
+                    _DHCPSetEventInfo(pNetIf, evType, clientAdd, serverAdd, &evInfo);
+                }
+
+                (*dNode->xhandler)(pNetIf, evType, &evInfo, dNode->hParam);
+            }
+            else
+            {
+                _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+                // do nothing
+            }
         }
     }
     TCPIP_Notification_Unlock(&dhcpRegisteredUsers);
@@ -2876,6 +2918,10 @@ static void _DHCPNotifyClients(TCPIP_NET_IF* pNetIf, TCPIP_DHCP_EVENT_TYPE evTyp
         message = event_name_tbl[evType];
     }
 
+    if(evInfo.dhcpTimeMs == 0)
+    {
+        _DHCPSetEventInfo(pNetIf, evType, clientAdd, serverAdd, &evInfo);
+    }
     TCPIP_Helper_IPAddressToString(&evInfo.clientAddress, cliBuff, sizeof(cliBuff));
     TCPIP_Helper_IPAddressToString(&evInfo.serverAddress, srvBuff, sizeof(srvBuff));
     SYS_CONSOLE_PRINT("DHCP cli: %d event: %s, msec: %d, id: 0x%08x\r\n", TCPIP_STACK_NetIndexGet(pNetIf), message, evInfo.dhcpTimeMs, evInfo.transactionId);

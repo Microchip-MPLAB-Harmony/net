@@ -108,7 +108,8 @@ typedef enum
     Reports DHCP event information.
 
   Description:
-    This data structure is used for reporting extended info about an DHCP event.
+    This data structure is used in the extended DHCP events
+    for reporting extended info about an DHCP event.
 
   Remarks:
     Connection events do not have associated client and server addresses and transaction IDs.
@@ -195,30 +196,34 @@ typedef struct
 /*
   Type:
     TCPIP_DHCP_EVENT_HANDLER
+    TCPIP_DHCP_EVENT_HANDLER_EX
 
   Summary:
-    DHCP event handler prototype.
+    DHCP event handler prototypes.
 
   Description:
-    Prototype of a DHCP event handler. Clients can register a handler with the
-    DHCP service. Once an DHCP event occurs the DHCP service will called the
-    registered handler.
+    Prototype of a DHCP simple and extended event handler.
+    Clients can register a handler with the DHCP service.
+    Once an DHCP event occurs the DHCP service will called the registered handler.
 
   Parameters:
     hNet    - Interface the DHCP event occurred on.
     evType  - type of event that occurred
     evInfo  - associated event information 
+              For the extended handler only
     param   - user supplied parameter.
               Not used by the DHCP module.
 
   Remarks:
-    evInfo points to a constant structure that should not be modified and which is valid only in the context of the event handler call.
+    For the extended handler, evInfo points to a constant structure that should not be modified
+    and which is valid only in the context of the event handler call.
 
     The handler has to be short and fast. It is meant for
     setting an event flag, <i>not</i> for lengthy processing!
  */
 
-typedef void    (*TCPIP_DHCP_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE evType, const TCPIP_DHCP_EVENT_INFO* evInfo, const void* param);
+typedef void    (*TCPIP_DHCP_EVENT_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE evType, const void* param);
+typedef void    (*TCPIP_DHCP_EVENT_HANDLER_EX)(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE evType, const TCPIP_DHCP_EVENT_INFO* evInfo, const void* param);
 
 
 // *****************************************************************************
@@ -558,14 +563,13 @@ bool TCPIP_DHCP_RequestTimeoutSet(TCPIP_NET_HANDLE hNet, uint16_t initTmo,
 
 // *****************************************************************************
 /* Function:
-    TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER handler, 
-                               const void* hParam)
+    TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER handler, const void* hParam)
 
   Summary:
-    Registers a DHCP Handler.
+    Registers a simple DHCP Handler.
 
   Description:
-    This function registers a DHCP event handler.
+    This function registers a simple DHCP event handler (not carrying extended event info).
     The DHCP module will call the registered handler when a
     DHCP event (TCPIP_DHCP_EVENT_TYPE) occurs.
 
@@ -594,8 +598,46 @@ bool TCPIP_DHCP_RequestTimeoutSet(TCPIP_NET_HANDLE hNet, uint16_t initTmo,
     callback.
  */
 
-TCPIP_DHCP_HANDLE      TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, 
-                          TCPIP_DHCP_EVENT_HANDLER handler, const void* hParam);
+TCPIP_DHCP_HANDLE      TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER handler, const void* hParam);
+
+// *****************************************************************************
+/* Function:
+    TCPIP_DHCP_HandlerRegisterEx(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER_EX exHandler, const void* hParam)
+
+  Summary:
+    Registers an extended DHCP Handler.
+
+  Description:
+    This function registers an extended DHCP event handler which will carry extended event info.
+    The DHCP module will call the registered handler when a
+    DHCP event (TCPIP_DHCP_EVENT_TYPE) occurs.
+
+  Precondition:
+    The DHCP module must be initialized.
+
+  Parameters:
+    hNet    - Interface handle.
+              Use hNet == 0 to register on all interfaces available.
+    exHandler - Handler to be called when a DHCP event occurs.
+    hParam  - Parameter to be used in the handler call.
+              This is user supplied and is not used by the DHCP module.
+
+
+  Returns:
+    Returns a valid handle if the call succeeds, or a null handle if
+    the call failed (out of memory, for example).
+
+  Remarks:
+    The handler has to be short and fast. It is meant for
+    setting an event flag, not for lengthy processing!
+
+    The hParam is passed by the client and will be used by the DHCP when the
+    notification is made. It is used for per-thread content or if more modules,
+    for example, share the same handler and need a way to differentiate the
+    callback.
+ */
+
+TCPIP_DHCP_HANDLE      TCPIP_DHCP_HandlerRegisterEx(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_HANDLER_EX exHandler, const void* hParam);
 
 // *****************************************************************************
 /* Function:
@@ -605,13 +647,13 @@ TCPIP_DHCP_HANDLE      TCPIP_DHCP_HandlerRegister(TCPIP_NET_HANDLE hNet,
     Deregisters a previously registered DHCP handler.
     
   Description:
-    This function deregisters the DHCP event handler.
+    This function deregisters a simple or extended DHCP event handler.
 
   Precondition:
     The DHCP module must be initialized.
 
   Parameters:
-    hDhcp   - A handle returned by a previous call to TCPIP_DHCP_HandlerRegister.
+    hDhcp   - A handle returned by a previous call to TCPIP_DHCP_HandlerRegister/TCPIP_DHCP_HandlerRegisterEx.
 
   Returns:
     - true  - if the call succeeds

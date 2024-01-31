@@ -396,15 +396,16 @@ typedef enum
 
 // DHCP event registration
 
-typedef struct  _TAG_DHCP_LIST_NODE
+typedef struct  _TAG_DHCP_LIST_EV_NODE
 {
-    struct _TAG_DHCP_LIST_NODE*     next;       // next node in list
+    struct _TAG_DHCP_LIST_EV_NODE*  next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
-    TCPIP_DHCP_EVENT_HANDLER        handler;    // handler to be called for event
+    TCPIP_DHCP_EVENT_HANDLER        handler;    // if !NULL, handler to be called for event
+    TCPIP_DHCP_EVENT_HANDLER_EX     xhandler;   // if !NULL, extended handler to be called for event
     const void*                     hParam;     // handler parameter
     TCPIP_NET_HANDLE                hNet;       // interface that's registered for
                                                 // 0 if all    
-}TCPIP_DHCP_LIST_NODE;
+}TCPIP_DHCP_LIST_EV_NODE;
 
 
 // event source type: client/server initiated, illegal
