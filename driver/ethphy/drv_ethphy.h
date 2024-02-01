@@ -173,11 +173,11 @@ typedef enum
     DRV_ETHPHY_CFG_RGMII       /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/ ,
     /*  GMII data interface in configuration fuses. */
     DRV_ETHPHY_CFG_GMII        /*DOM-IGNORE-BEGIN*/ = 0x08 /*DOM-IGNORE-END*/ ,
-    /*  Configuration fuses is ALT */
+    /*  I/O Configuration fuses is ALT */
     DRV_ETHPHY_CFG_ALTERNATE   /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/ ,
 
-    /*  Configuration fuses is DEFAULT */
-    DRV_ETHPHY_CFG_DEFAULT     /*DOM-IGNORE-BEGIN*/ = 0x20 /*DOM-IGNORE-END*/ ,
+    /*  I/O Configuration fuses is DEFAULT */
+    DRV_ETHPHY_CFG_DEFAULT     /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/ ,
 
     /*  Use the fuses configuration to detect if you are RMII/MII and ALT/DEFAULT configuration */
     /*  NOTE: - this option does not check the consistency btw the software call and the way the */
