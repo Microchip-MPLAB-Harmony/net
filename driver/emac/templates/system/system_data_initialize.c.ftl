@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2021-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2021-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,6 +43,8 @@ const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpip${MAC_PERIPHERAL_INSTANCE}InitData =
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#elseif (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE) == "LAN9354">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_lan9354,
+<#elseif (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE) == "Dummy">
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Dummy,
 <#else>
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
 </#if>

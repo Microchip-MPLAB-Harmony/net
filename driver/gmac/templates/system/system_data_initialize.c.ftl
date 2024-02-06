@@ -167,13 +167,15 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
     <#lt><#elseif (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9354.TCPIP_EMAC_PHY_TYPE) == "LAN9354">
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_lan9354,
+    <#lt><#elseif (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyDummy.TCPIP_EMAC_PHY_TYPE) == "Dummy">
+        <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Dummy,
     <#lt><#else>
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     <#lt></#if>
     <#lt>       .pPhyInit               = &tcpipPhyInitData_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]},
-	<#lt><#if ((TCPIP_INTMAC_DEVICE) == "SAMA7G")> 
-		<#lt>       .macRefClkSrc           = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]},
-	<#lt></#if>
+    <#lt><#if ((TCPIP_INTMAC_DEVICE) == "SAMA7G")> 
+        <#lt>       .macRefClkSrc           = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]},
+    <#lt></#if>
     <#lt>       .checksumOffloadRx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_RX_CHKSM_OFFLOAD,
     <#lt>       .checksumOffloadTx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_TX_CHKSM_OFFLOAD,
     <#lt>       .macTxPrioNum           = TCPIP_${GMAC_PERIPHERAL_INSTANCE}_TX_PRIO_COUNT,

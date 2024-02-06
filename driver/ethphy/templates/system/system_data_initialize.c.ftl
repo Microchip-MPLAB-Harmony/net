@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2021-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2021-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,6 +42,7 @@ Microchip or any third party.
 <#else>
     <#lt><#assign miimIdx = count>
 </#if>    
+<#if (emac_phy_type  != "Dummy")>
 <#lt>/*** ${emac_phy_type} PHY Driver Time-Out Initialization Data ***/
 <#lt>DRV_ETHPHY_TMO drv${emac_phy_type?lower_case}Tmo = 
 <#lt>{
@@ -49,6 +50,7 @@ Microchip or any third party.
 <#lt>    .aNegDoneTmo = DRV_ETHPHY_${emac_phy_type}_NEG_DONE_TMO,
 <#lt>    .aNegInitTmo = DRV_ETHPHY_${emac_phy_type}_NEG_INIT_TMO,    
 <#lt>};
+</#if>    
 
 <#lt>/*** ETH PHY Initialization Data ***/
 <#if use_phy_reset_callback == true>
@@ -58,24 +60,36 @@ Microchip or any third party.
 </#if>
 <#lt>const DRV_ETHPHY_INIT tcpipPhyInitData_${emac_phy_type} =
 <#lt>{    
-<#lt>    .ethphyId               = DRV_${emac_phy_type}_PHY_PERIPHERAL_ID,
-<#lt>    .phyAddress             = DRV_${emac_phy_type}_PHY_ADDRESS,
-<#lt>    .phyFlags               = DRV_${emac_phy_type}_PHY_CONFIG_FLAGS,
-<#lt>    .pPhyObject             = &DRV_ETHPHY_OBJECT_${emac_phy_type},
+<#if (emac_phy_type  != "Dummy")>
+    <#lt>    .ethphyId               = DRV_${emac_phy_type}_PHY_PERIPHERAL_ID,
+    <#lt>    .phyAddress             = DRV_${emac_phy_type}_PHY_ADDRESS,
+    <#lt>    .phyFlags               = DRV_${emac_phy_type}_PHY_CONFIG_FLAGS,
+    <#lt>    .pPhyObject             = &DRV_ETHPHY_OBJECT_${emac_phy_type},
+    <#lt>    .ethphyTmo              = &drv${emac_phy_type?lower_case}Tmo,
+    <#if drvMiim.DRV_MIIM_USE_DRIVER?has_content && drvMiim.DRV_MIIM_USE_DRIVER == true >
+        <#lt>    .pMiimObject            = &${drvMiim.DRV_MIIM_DRIVER_OBJECT},
+        <#lt>    .pMiimInit              = &drvMiimInitData_${miimIdx},
+        <#lt>    .miimIndex              = ${miimIdx},
+    <#else>
+        <#lt>    .pMiimObject            = 0,
+        <#lt>    .pMiimInit              = 0,
+        <#lt>    .miimIndex              = 0,
+    </#if>
+<#else>
+    <#lt>    .ethphyId               = 0,
+    <#lt>    .phyAddress             = 0,
+    <#lt>    .pPhyObject             = 0,
+    <#lt>    .phyFlags               = 0,
+    <#lt>    .pMiimObject            = 0,
+    <#lt>    .pMiimInit              = 0,
+    <#lt>    .miimIndex              = 0,
+</#if>
+
+
 <#if use_phy_reset_callback == true && phy_reset_callback?has_content>
     <#lt>    .resetFunction          = ${phy_reset_callback},
 <#else>
     <#lt>    .resetFunction          = 0,
-</#if>
-<#lt>    .ethphyTmo              = &drv${emac_phy_type?lower_case}Tmo,
-<#if drvMiim.DRV_MIIM_USE_DRIVER?has_content && drvMiim.DRV_MIIM_USE_DRIVER == true >
-    <#lt>    .pMiimObject            = &${drvMiim.DRV_MIIM_DRIVER_OBJECT},
-    <#lt>    .pMiimInit              = &drvMiimInitData_${miimIdx},
-    <#lt>    .miimIndex              = ${miimIdx},
-<#else>
-    <#lt>    .pMiimObject            = 0,
-    <#lt>    .pMiimInit              = 0,
-    <#lt>    .miimIndex              = 0,
 </#if>
 <#lt>};
 

@@ -1,5 +1,5 @@
 """
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -431,6 +431,13 @@ def loadModule():
     drvExtMacEnc28j60Component.addMultiCapability("libdrvExtMacEnc28j60","MAC",None)  
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
     drvExtMacEnc28j60Component.setDisplayType("MAC Layer")
+
+    #Driver for Dummy PHY
+    drvExtPhyDummyComponent = Module.CreateComponent("drvExtPhyDummy", "Dummy", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dummy.py")
+    drvExtPhyDummyComponent.addCapability("libdrvExtPhyDummy","PHY",False)   
+    # drvExtPhyDummyComponent.addDependency("LAN8770_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyDummyComponent.setDisplayType("PHY Layer")
+    
     ########################## Harmony Network Presentation Module #################################    
     # OBSOLETE Module - Do not use this module for new demos#
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer(Obsolete)", "/TCPIP/Layer6-PRESENTATION","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")

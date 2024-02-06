@@ -19,7 +19,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -2127,6 +2127,7 @@ extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default;
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9303;
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_ksz8863;
 extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_lan9354;
+extern const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Dummy;
 
 
 // *****************************************************************************
