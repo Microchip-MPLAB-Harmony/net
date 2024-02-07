@@ -99,6 +99,15 @@ def instantiateComponent(drvExtPhyDummyComponent):
     drvExtPhyDummyIndexNum.setDefaultValue(1)
     drvExtPhyDummyIndexNum.setReadOnly(True)
     
+    # Driver PHY Peripheral ID
+    drvExtPhyDummyPeripheralId= drvExtPhyDummyComponent.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyDummyAdvSettings)
+    drvExtPhyDummyPeripheralId.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyDummyPeripheralId.setLabel("PHY Peripheral ID") 
+    drvExtPhyDummyPeripheralId.setVisible(True)
+    drvExtPhyDummyPeripheralId.setDescription("Driver PHY Peripheral ID")
+    drvExtPhyDummyPeripheralId.setDefaultValue("")
+    drvExtPhyDummyPeripheralId.setReadOnly(True)
+    
     # External MAC Name
     drvExtPhyMacName= drvExtPhyDummyComponent.createStringSymbol("DRV_ETHPHY_MAC_NAME", None)
     drvExtPhyMacName.setLabel("Mac Name") 
@@ -150,27 +159,28 @@ def instantiateComponent(drvExtPhyDummyComponent):
     drvExtPhyDummyHeaderFile.setEnabled(True)
 
 
-    # ifblock TCPIP_EMAC_PHY_TYPE = "Dummy"
     # file drv_extphy_dummy.c "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dummy.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dummy.c"
-    # endif
     # Add drv_extphy_dummy.c file
     drvExtPhyDummySourceFile = drvExtPhyDummyComponent.createFileSymbol(None, None)
-    useThinDriver = Database.getSymbolValue("Dummy","DRV_ETHPHY_USE_THIN_DRIVER")
-    if useThinDriver == True:
-        print('@@@@_aa thin: yeah')
-        drvExtPhyDummySourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy_thin.c")
-        drvExtPhyDummySourceFile.setOutputName("drv_extphy_dummy_thin.c")
-    else:
-        print('@@@@_aa thin: nexa')
-        drvExtPhyDummySourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy.c")
-        drvExtPhyDummySourceFile.setOutputName("drv_extphy_dummy.c")
+    drvExtPhyDummySourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy.c")
+    drvExtPhyDummySourceFile.setOutputName("drv_extphy_dummy.c")
 
     drvExtPhyDummySourceFile.setOverwrite(True)
     drvExtPhyDummySourceFile.setDestPath("driver/ethphy/src/dynamic/")
     drvExtPhyDummySourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyDummySourceFile.setType("SOURCE")
     drvExtPhyDummySourceFile.setEnabled(True)
+    drvExtPhyDummySourceFile.setDependencies(drvExtPhyDummySourceFileAdd, ["DRV_ETHPHY_USE_THIN_DRIVER"])
     
+    drvExtPhyThinSourceFile = drvExtPhyDummyComponent.createFileSymbol(None, None)
+    drvExtPhyThinSourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_dummy_thin.c")
+    drvExtPhyThinSourceFile.setOutputName("drv_extphy_dummy_thin.c")
+    drvExtPhyThinSourceFile.setOverwrite(True)
+    drvExtPhyThinSourceFile.setDestPath("driver/ethphy/src/dynamic/")
+    drvExtPhyThinSourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
+    drvExtPhyThinSourceFile.setType("SOURCE")
+    drvExtPhyThinSourceFile.setEnabled(False)
+    drvExtPhyThinSourceFile.setDependencies(drvExtPhyThinSourceFileAdd, ["DRV_ETHPHY_USE_THIN_DRIVER"])
     
 def drvExtPhyDummyMenuVisibleSingle(symbol, event):
     if (event["value"] == True):
@@ -180,7 +190,12 @@ def drvExtPhyDummyMenuVisibleSingle(symbol, event):
         print("EthMac Menu Invisible.")
         symbol.setVisible(False)
         
+def drvExtPhyDummySourceFileAdd(sourceFile, event):
+    sourceFile.setEnabled(not event["value"])
 
+def drvExtPhyThinSourceFileAdd(sourceFile, event):
+    sourceFile.setEnabled(event["value"])    
+    
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}
@@ -201,39 +216,78 @@ def handleMessage(messageID, args):
         retDict= {"Return": "UnImplemented Command"}
     return retDict
 
-def onAttachmentConnected(source, target):
-    macComponentName = target["component"].getDisplayName()
+class macNegFields():
+    def __init__(self):
+        self.autoNegSymbol = ''
+        self.autoMdixSymbol = ''
+        self.swapMdixSymbol = ''
+        self.phyLoopSymbol = ''
+
+def getMacNegFields(macTarget):
+    macComponentName = macTarget["component"].getDisplayName()
     print('@@@@_aa mac:', macComponentName)
+
+    macFields = macNegFields()
+    
     if 'ETHMAC' in macComponentName:
-        autoNegSymbol = target["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_AUTO_NEGOTIATION")
-        autoMdixSymbol = target["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_MDIX_AUTO")
-        swapMdixSymbol = target["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_MDIX_SWAP")
-        phyLoopSymbol = target["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_PHY_LOOPBACK")
+        macFields.autoNegSymbol = macTarget["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_AUTO_NEGOTIATION")
+        macFields.autoMdixSymbol = macTarget["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_MDIX_AUTO")
+        macFields.swapMdixSymbol = macTarget["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_MDIX_SWAP")
+        macFields.phyLoopSymbol = macTarget["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_PHY_LOOPBACK")
 
     elif 'GMAC' in macComponentName:
-        autoNegSymbol = target["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_AUTO_NEGOTIATION")
-        autoMdixSymbol = target["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_MDIX_AUTO")
-        swapMdixSymbol = target["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_MDIX_SWAP")
-        phyLoopSymbol = target["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_PHY_LOOPBACK")
+        macFields.autoNegSymbol = macTarget["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_AUTO_NEGOTIATION")
+        macFields.autoMdixSymbol = macTarget["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_MDIX_AUTO")
+        macFields.swapMdixSymbol = macTarget["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_MDIX_SWAP")
+        macFields.phyLoopSymbol = macTarget["component"].getSymbolByID("TCPIP_"+ macComponentName + "_ETH_OF_PHY_LOOPBACK")
 
     elif 'EMAC' in macComponentName:
-        autoNegSymbol = target["component"].getSymbolByID("LINK_AUTO_NEGOTIATION")
-        autoMdixSymbol = target["component"].getSymbolByID("MDIX_AUTO_ENABLE")
-        swapMdixSymbol = target["component"].getSymbolByID("MDIX_SWAP")
-        phyLoopSymbol = target["component"].getSymbolByID("PHY_LOOPBACK")
+        macFields.autoNegSymbol = macTarget["component"].getSymbolByID("LINK_AUTO_NEGOTIATION")
+        macFields.autoMdixSymbol = macTarget["component"].getSymbolByID("MDIX_AUTO_ENABLE")
+        macFields.swapMdixSymbol = macTarget["component"].getSymbolByID("MDIX_SWAP")
+        macFields.phyLoopSymbol = macTarget["component"].getSymbolByID("PHY_LOOPBACK")
 
     else:
         # Unsupported MAC
+        return None
+
+    return macFields
+
+
+def onAttachmentConnected(source, target):
+    macFields = getMacNegFields(target)
+
+    if macFields == None:
+        # Unsupported MAC
         return
 
-    autoNegSymbol.setValue(False)
-    autoNegSymbol.setVisible(False)
+    macFields.autoNegSymbol.setValue(False)
+    macFields.autoNegSymbol.setVisible(False)
 
-    autoMdixSymbol.setValue(False)
-    autoMdixSymbol.setVisible(False)
-    swapMdixSymbol.setValue(False)
-    swapMdixSymbol.setVisible(False)
+    macFields.autoMdixSymbol.setValue(False)
+    macFields.autoMdixSymbol.setVisible(False)
+    macFields.swapMdixSymbol.setValue(False)
+    macFields.swapMdixSymbol.setVisible(False)
 
-    phyLoopSymbol.setValue(False)
-    phyLoopSymbol.setVisible(False)
+    macFields.phyLoopSymbol.setValue(False)
+    macFields.phyLoopSymbol.setVisible(False)
+
+def onAttachmentDisconnected(source, target):
+    # this is required to restore the autoneg and other symbols when dummy phy is removed from the project.
+    macFields = getMacNegFields(target)
+
+    if macFields == None:
+        # Unsupported MAC
+        return
+
+    macFields.autoNegSymbol.setValue(True)
+    macFields.autoNegSymbol.setVisible(True)
+
+    macFields.autoMdixSymbol.setValue(True)
+    macFields.autoMdixSymbol.setVisible(True)
+    macFields.swapMdixSymbol.setValue(False)
+    macFields.swapMdixSymbol.setVisible(False)
+
+    macFields.phyLoopSymbol.setValue(False)
+    macFields.phyLoopSymbol.setVisible(True)
 
