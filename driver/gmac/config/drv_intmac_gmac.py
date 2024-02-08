@@ -522,6 +522,13 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthUse10.setVisible(True)
     tcpipGmacEthUse10.setDescription("Use 10MBps")
     tcpipGmacEthUse10.setDefaultValue(True)
+
+    # remote ctrl connection Flag
+    tcpipGmacRmtCtrlConnFlag = drvGmacComponent.createBooleanSymbol("RMT_CTRL_ENABLE_FLAG", tcpipEthConnFlag)
+    tcpipGmacRmtCtrlConnFlag.setLabel("Remote Control Enable")
+    tcpipGmacRmtCtrlConnFlag.setVisible(False) 
+    tcpipGmacRmtCtrlConnFlag.setDefaultValue(False)
+    tcpipGmacRmtCtrlConnFlag.setReadOnly(True)
     
     # Use Auto MDIX
     tcpipGmacEthMdixAuto = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_ETH_OF_MDIX_AUTO", tcpipEthConnFlag)
@@ -538,7 +545,7 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthMdixSwap.setVisible(False)
     tcpipGmacEthMdixSwap.setDescription("Use Swapped MDIX")
     tcpipGmacEthMdixSwap.setDefaultValue(False)
-    tcpipGmacEthMdixSwap.setDependencies(tcpipEthMacMdixSwapVisible, ["TCPIP_"+ gmacComponentName + "_ETH_OF_MDIX_AUTO"])
+    tcpipGmacEthMdixSwap.setDependencies(tcpipEthMacMdixSwapVisible, ["TCPIP_"+ gmacComponentName + "_ETH_OF_MDIX_AUTO", "RMT_CTRL_ENABLE_FLAG"])
 
     # RMII Connection
     tcpipGmacEthRmii = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_ETH_OF_RMII", tcpipEthConnFlag)
@@ -1720,11 +1727,15 @@ def tcpipEthMacMdixSwapVisible(symbol, event):
     global gmacComponentId
     global gmacComponentName
     tcpipEthMacAutoMdix = Database.getSymbolValue(gmacComponentId,"TCPIP_"+ gmacComponentName + "_ETH_OF_MDIX_AUTO")
+    remoteCtrl = Database.getSymbolValue(gmacComponentId,"RMT_CTRL_ENABLE_FLAG")
 
-    if (event["value"] == True):
-        symbol.setVisible(False)
+    if (remoteCtrl == False):
+        if (tcpipEthMacAutoMdix == True):
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
     else:
-        symbol.setVisible(True)
+        symbol.setVisible(False)
         
 def tcpipEthMacRMIIMode(symbol, event): 
     global tcpipGmacEthMii

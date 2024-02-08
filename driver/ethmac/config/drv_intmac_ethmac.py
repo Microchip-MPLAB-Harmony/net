@@ -289,6 +289,13 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthPhyLoopBack.setVisible(True)
     tcpipEthmacEthPhyLoopBack.setDescription("Loopbacked At The PHY Level")
     tcpipEthmacEthPhyLoopBack.setDefaultValue(False)
+
+    # remote ctrl connection Flag
+    tcpipEthmacRmtCtrlConnFlag = drvGmacComponent.createBooleanSymbol("RMT_CTRL_ENABLE_FLAG", tcpipEthConnFlag)
+    tcpipEthmacRmtCtrlConnFlag.setLabel("Remote Control Enable")
+    tcpipEthmacRmtCtrlConnFlag.setVisible(False) 
+    tcpipEthmacRmtCtrlConnFlag.setDefaultValue(False)
+    tcpipEthmacRmtCtrlConnFlag.setReadOnly(True)
     
     # Use Auto MDIX
     tcpipEthmacEthMdixAuto = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_MDIX_AUTO", tcpipEthConnFlag)
@@ -305,7 +312,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthMdixSwap.setVisible(False)
     tcpipEthmacEthMdixSwap.setDescription("Use Swapped MDIX")
     tcpipEthmacEthMdixSwap.setDefaultValue(False)
-    tcpipEthmacEthMdixSwap.setDependencies(tcpipEthMacMdixSwapVisible, ["TCPIP_EMAC_ETH_OF_MDIX_AUTO"])
+    tcpipEthmacEthMdixSwap.setDependencies(tcpipEthMacMdixSwapVisible, ["TCPIP_EMAC_ETH_OF_MDIX_AUTO", "RMT_CTRL_ENABLE_FLAG"])
 
     # RMII Connection
     tcpipEthmacEthRmii = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_EMAC_ETH_OF_RMII", tcpipEthConnFlag)
@@ -691,10 +698,15 @@ def tcpipEthMacMenuVisibleSingle(symbol, event):
             
 def tcpipEthMacMdixSwapVisible(symbol, event):
     tcpipEthMacAutoMdix = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_ETH_OF_MDIX_AUTO")
-    if (event["value"] == True):
-        symbol.setVisible(False)
+    remoteCtrl = Database.getSymbolValue(gmacComponentId,"RMT_CTRL_ENABLE_FLAG")
+
+    if (remoteCtrl == False):
+        if (tcpipEthMacAutoMdix == True):
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
     else:
-        symbol.setVisible(True)
+        symbol.setVisible(False)
         
 def setEthmacInterruptData(status):
 

@@ -103,7 +103,7 @@ def instantiateComponent(drvExtPhyDummyComponent):
     drvExtPhyDummyPeripheralId= drvExtPhyDummyComponent.createStringSymbol("DRV_ETHPHY_PERIPHERAL_ID", drvExtPhyDummyAdvSettings)
     drvExtPhyDummyPeripheralId.setHelp("mcc_h3_phy_configurations")
     drvExtPhyDummyPeripheralId.setLabel("PHY Peripheral ID") 
-    drvExtPhyDummyPeripheralId.setVisible(True)
+    drvExtPhyDummyPeripheralId.setVisible(False)
     drvExtPhyDummyPeripheralId.setDescription("Driver PHY Peripheral ID")
     drvExtPhyDummyPeripheralId.setDefaultValue("")
     drvExtPhyDummyPeripheralId.setReadOnly(True)
@@ -222,12 +222,13 @@ class macNegFields():
         self.autoMdixSymbol = ''
         self.swapMdixSymbol = ''
         self.phyLoopSymbol = ''
+        self.rmtCtrlSymbol = ''
 
 def getMacNegFields(macTarget):
     macComponentName = macTarget["component"].getDisplayName()
-    print('@@@@_aa mac:', macComponentName)
 
     macFields = macNegFields()
+    macFields.rmtCtrlSymbol = macTarget["component"].getSymbolByID("RMT_CTRL_ENABLE_FLAG")
     
     if 'ETHMAC' in macComponentName:
         macFields.autoNegSymbol = macTarget["component"].getSymbolByID("TCPIP_EMAC_ETH_OF_AUTO_NEGOTIATION")
@@ -260,7 +261,7 @@ def onAttachmentConnected(source, target):
     if macFields == None:
         # Unsupported MAC
         return
-
+    
     macFields.autoNegSymbol.setValue(False)
     macFields.autoNegSymbol.setVisible(False)
 
@@ -271,6 +272,8 @@ def onAttachmentConnected(source, target):
 
     macFields.phyLoopSymbol.setValue(False)
     macFields.phyLoopSymbol.setVisible(False)
+
+    macFields.rmtCtrlSymbol.setValue(True)
 
 def onAttachmentDisconnected(source, target):
     # this is required to restore the autoneg and other symbols when dummy phy is removed from the project.
@@ -290,4 +293,6 @@ def onAttachmentDisconnected(source, target):
 
     macFields.phyLoopSymbol.setValue(False)
     macFields.phyLoopSymbol.setVisible(True)
+    
+    macFields.rmtCtrlSymbol.setValue(False)
 
