@@ -435,7 +435,6 @@ def loadModule():
     #Driver for Dummy PHY
     drvExtPhyDummyComponent = Module.CreateComponent("drvExtPhyDummy", "Dummy", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dummy.py")
     drvExtPhyDummyComponent.addCapability("libdrvExtPhyDummy","PHY",False)   
-    # drvExtPhyDummyComponent.addDependency("LAN8770_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyDummyComponent.setDisplayType("PHY Layer")
     
     ########################## Harmony Network Presentation Module #################################    
