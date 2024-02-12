@@ -291,7 +291,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthPhyLoopBack.setDefaultValue(False)
 
     # remote ctrl connection Flag
-    tcpipEthmacRmtCtrlConnFlag = drvGmacComponent.createBooleanSymbol("RMT_CTRL_ENABLE_FLAG", tcpipEthConnFlag)
+    tcpipEthmacRmtCtrlConnFlag = drvPic32mEthmacComponent.createBooleanSymbol("RMT_CTRL_ENABLE_FLAG", tcpipEthConnFlag)
     tcpipEthmacRmtCtrlConnFlag.setLabel("Remote Control Enable")
     tcpipEthmacRmtCtrlConnFlag.setVisible(False) 
     tcpipEthmacRmtCtrlConnFlag.setDefaultValue(False)
@@ -698,7 +698,7 @@ def tcpipEthMacMenuVisibleSingle(symbol, event):
             
 def tcpipEthMacMdixSwapVisible(symbol, event):
     tcpipEthMacAutoMdix = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_ETH_OF_MDIX_AUTO")
-    remoteCtrl = Database.getSymbolValue(gmacComponentId,"RMT_CTRL_ENABLE_FLAG")
+    remoteCtrl = Database.getSymbolValue(tcpipEmacModuleId,"RMT_CTRL_ENABLE_FLAG")
 
     if (remoteCtrl == False):
         if (tcpipEthMacAutoMdix == True):
