@@ -5,7 +5,6 @@
 - **New features**
 
     - The release provides various bug fixes.
-    - The release adds the PHY dummy driver.
 
 - **Applications**
   - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
@@ -18,16 +17,13 @@ The following table provides the list of fixes in the 3.11.1 release:
 | Module                | Description     |
 | ------ | -------- |
 | GMAC driver   | Fixed the GMAC Descriptor start Address for devices with smaller internal RAM |
-| MAC driver    | Added a remote control enable symbol for the MAC |
 | ETHMAC driver | Bug fix for the ETHMAC |
-| PHY driver    | Added the PHY dummy driver |
-|               | Added the 'thin' option + onAttachmentDisconnected handling |
+| PHY driver    | Support the PHY dummy driver |
 |               | Fixed the DRV_ETHPHY_CFG_DEFAULT flag |
 |               | Implemented Customer Feedback - PHY pins 'RESET' and 'IRQ' pin usage indication |
 | TCP           | Fixed the issue when 'Disabling crypto TCP dependency' |
-| DHCP          | Added DHCP API for extended event info |
-|               | Added DHCP event for offer with improved event info |
-| ARP           | Added command for insertion of permanent entries in the ARP cache |
+| DHCP          | Extended DHCP event for offer with improved event info |
+| ARP           | Fixed the command for insertion of permanent entries in the ARP cache |
 
 ### TESTED WITH:
 
