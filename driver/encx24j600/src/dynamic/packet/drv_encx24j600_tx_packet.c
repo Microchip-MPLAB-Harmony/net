@@ -34,11 +34,16 @@ Microchip or any third party.
 */
 
 // DOM-IGNORE-END
+#include "system_config.h"
+#include "system_definitions.h"
+#include "system/debug/sys_debug.h"
+
 #include "drv_encx24j600_tx_packet.h"
 #include "../drv_encx24j600_local.h"
 #include "../drv_encx24j600_utils.h"
 #include "../drv_encx24j600_ds_defs.h"
 #include "../running_state/drv_encx24j600_running_state.h"
+#include "../bus/spi/drv_encx24j600_spi_bus.h"
 
 uint16_t lastPacketAddr = 0xffff;
 
@@ -72,22 +77,43 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
                 pkt->gpPtr = pDrvInst->gpPtrVal;
                 pkt->pDSeg = pkt->pkt->pDSeg;
             }
-            uint16_t count = 0;
-            while (pkt->pDSeg != NULL)
-            {
 
-                if (pDrvInst->txBufferRemaining < pkt->pDSeg->segLen)
-                {
-                    return 0;
-                }
-                ret = (pDrvInst->busVTable->fpDataWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, pkt->pDSeg->segLoad, pkt->pDSeg->segLen);
-                count+= pkt->pDSeg->segLen;
+            uint16_t dataCount = 0;
+            TCPIP_MAC_DATA_SEGMENT* pSeg = pkt->pkt->pDSeg;
+            uint16_t nSegs = 0;
+            while (pSeg != NULL)
+            {
+                dataCount += pSeg->segLen;
+                pSeg = pSeg->next;
+                nSegs++;
+            }
+            if (pDrvInst->txBufferRemaining < dataCount)
+            {
+                return 0;
+            }
+
+            if(nSegs > 1)
+            {   // multiple segments; copy the whole packet and send it at once
+                ret = (pDrvInst->busVTable->fpDataPktWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, pkt, dataCount);
                 if (ret == 0)
                 {
                     return 0;
                 }
-                DRV_ENCX24J600_AddGpData(pDrvInst, pkt->pDSeg->segLen);
-                pkt->pDSeg = pkt->pDSeg->next;
+                DRV_ENCX24J600_AddGpData(pDrvInst, dataCount);
+            }
+            else
+            {
+                // send packet segment by segment
+                while (pkt->pDSeg != NULL)
+                {
+                    ret = (pDrvInst->busVTable->fpDataSegWr)(pDrvInst, DRV_ENCX24J600_PTR_GPWR, pkt);
+                    if (ret == 0)
+                    {
+                        return 0;
+                    }
+                    DRV_ENCX24J600_AddGpData(pDrvInst, pkt->pDSeg->segLen);
+                    pkt->pDSeg = pkt->pDSeg->next;
+                }
             }
             // If we're here there are no data segments left.
             //SYS_CONSOLE_PRINT("TXe:pkt %x @ %x len %x next @ %x\r\n", pkt, pkt->gpPtr, count, pDrvInst->gpPtrVal);
@@ -166,11 +192,13 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             if(pkt->pkt != NULL)
             {
                 uint16_t count = 0;
+                uint16_t nSegs = 0;
                 pkt->pDSeg = pkt->pkt->pDSeg;
                 while (pkt->pDSeg != NULL)
                 {
                     count += pkt->pDSeg->segLen;
                     pkt->pDSeg = pkt->pDSeg->next;
+                    nSegs++;
                 }
                 if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
                 {
@@ -181,6 +209,10 @@ int32_t DRV_ENCX24J600_TxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
                      pkt->pkt->ackRes = TCPIP_MAC_PKT_ACK_TX_OK;
                 }
 
+                if(nSegs > 1)
+                {   // this packet was copied into an allocated buffer - Free it!
+                    DRV_ENCX24J600_WritePktAck(pDrvInst, pkt);
+                }
                 pkt->pkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
                 (*pkt->pkt->ackFunc)(pkt->pkt, pkt->pkt->ackParam);
                 DRV_ENCX24J600_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);

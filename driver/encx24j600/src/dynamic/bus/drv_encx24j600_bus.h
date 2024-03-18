@@ -609,7 +609,7 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DR
     Writes data to the ENC hardware
     
     Details:
-    This function writes data to the ENC. 
+    This function writes a data segment to the ENC. 
 
     Preconditions:
     The bus had to have been initialized first.  The parameters to this function 
@@ -623,16 +623,23 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DR
     the total size of the buffer.
     
     Parameters:
-        pDrvInstance – The driver instance
-        reg – the register to write to
-        buffer – the location of the buffer to write
-        dataSize – the size of the data to write.
+        pDrvInstance - The driver instance
+        reg - the register to write to
+        pkt - the packet with the buffer to write
+        dataSize - the size of the data to write.
 
     Returns:
         0 – on error
         Valid handle – on success
 */
-typedef uintptr_t (*DRV_ENCX24J600_WriteData)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t *  buffer, uint16_t  dataSize);
+typedef uintptr_t (*DRV_ENCX24J600_WriteSeg)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, struct _DRV_ENCX24J600_TX_PACKET_INFO *  pkt);
+
+// *****************************************************************************
+// Write packet data to the ENC
+// This function performs a copy of the packet in an allocated buffer and sends it to the ENC
+// Return 0 if an error.
+// Valid handle on success
+typedef uintptr_t (*DRV_ENCX24J600_WritePkt)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, struct _DRV_ENCX24J600_TX_PACKET_INFO *  pkt, uint16_t dataSize);
 
 // *****************************************************************************
 /* Read Data Start
@@ -691,7 +698,8 @@ typedef struct _DRV_ENCX24J600_BusVTable
     DRV_ENCX24J600_WritePointer fpPtrWr;
     DRV_ENCX24J600_ReadPointerStart fpPtrRdStart;
     DRV_ENCX24J600_ReadPointerResult fpPtrRdResult;
-    DRV_ENCX24J600_WriteData fpDataWr;
+    DRV_ENCX24J600_WritePkt  fpDataPktWr;
+    DRV_ENCX24J600_WriteSeg fpDataSegWr;
     DRV_ENCX24J600_ReadData fpDataRd;
 }DRV_ENCX24J600_BusVTable;
 

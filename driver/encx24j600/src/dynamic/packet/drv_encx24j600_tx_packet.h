@@ -72,6 +72,7 @@ typedef struct _DRV_ENCX24J600_TX_PACKET_INFO
     uint16_t gpPtr;
     TCPIP_MAC_DATA_SEGMENT*         pDSeg;
     uintptr_t operation;
+    void*    pCopyBuff;
 }DRV_ENCX24J600_TX_PACKET_INFO;
 
 int32_t DRV_ENCX24J600_TxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_TX_PACKET_INFO *pkt);
