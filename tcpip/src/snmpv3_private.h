@@ -517,8 +517,8 @@ typedef struct
 typedef struct
 {
     uint8_t userName[TCPIP_SNMPV3_USER_SECURITY_NAME_LEN];
-    uint8_t userAuthPswd[TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN]; //RFC specifies not to save password with the managed nodes instead store pswd ipad and opad values.
-    uint8_t userPrivPswd[TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN];
+    uint8_t userAuthPswd[TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN]; //RFC specifies not to save password with the managed nodes instead store pswd ipad and opad values.
+    uint8_t userPrivPswd[TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN];
     uint8_t userAuthPswdLoclizdKey[TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN];
     uint8_t userPrivPswdLoclizdKey[TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN];
     uint8_t userAuthLocalKeyHmacIpad[64];

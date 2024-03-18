@@ -724,6 +724,10 @@ static bool _SNMPV3_Stack_parameterInit(const TCPIP_SNMP_MODULE_CONFIG *snmpData
         if(userAuthPasswd)
         {
             strLen = strlen((char*)userAuthPasswd);
+            if(strLen > TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+            {
+                strLen = TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN;
+            }
             memcpy(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,userAuthPasswd,strLen);
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswdLen=strLen;
         }
@@ -731,6 +735,10 @@ static bool _SNMPV3_Stack_parameterInit(const TCPIP_SNMP_MODULE_CONFIG *snmpData
         if(userPrivPasswd)
         {
             strLen = strlen((char*)userPrivPasswd);
+            if(strLen > TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+            {
+                strLen = TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN;
+            }
             memcpy(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd,userPrivPasswd,strLen);
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswdLen=strLen;
         }

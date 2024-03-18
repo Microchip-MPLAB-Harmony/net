@@ -1,3 +1,14 @@
+/*******************************************************************************
+  Simple Network Management Protocol (SNMP) Version 3 Agent
+
+  Summary:
+    Module for Microchip TCP/IP Stack
+    
+  Description:
+    -Provides SNMPv3 API for SNMP agent communication
+    -Reference: RFC 3414 (for SNMPv3)
+*******************************************************************************/
+
 /*
 Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
@@ -595,7 +606,7 @@ uint8_t TCPIP_SNMPv3_EngnMaxMsgSizeNegotiate(uint32_t maxMsgSizeInRequest)
     allocated buffer and updates the offset length couter.
                                 
   Precondition:
-    The SNMPv3 stack has sucessfully allocated dynamic memory buffer from the Heap
+    The SNMPv3 stack has successfully allocated dynamic memory buffer from the Heap
     
   Parameters:
     val: uint8_t value to be written to the buffer
@@ -780,7 +791,306 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
     return SNMP_NO_ERR;
 }
 
-bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,uint8_t len,uint8_t userIndex,void *val)
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(uint8_t userIndex)
+{
+    // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
+    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    {
+        return SNMPV3_USM_INVALID_USER;
+    }
+    SNMPv3USMAuthPrivPswdLocalization(userIndex);
+    SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(userIndex);    
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(char *userName, uint8_t userLen, uint8_t userIndex)
+{
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
+    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    {
+        return SNMPV3_USM_INVALID_USER;
+    }
+    if(userName == NULL)
+    {
+        return SNMPV3_USM_INVALID_INPUTCONFIG;
+    }
+    
+    // User name "initial" should not be allowed 
+    if(strncmp((char*)userName,"initial",7)== 0)
+    {
+        return SNMPV3_USM_INVALID_USERNAME;
+    }
+    // User name length validation
+    if(userLen > TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
+    {
+        return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
+    }
+    // overwrite the user name at that valid position
+    snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength = userLen;
+    memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,'\0',TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
+    strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)userName,userLen);
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMUserName(char *userName, uint8_t *userLen, uint8_t userIndex)
+{
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    {
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength == 0u)
+    {
+        return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
+    }
+    *userLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength;
+    strncpy(userName,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,*userLen);
+
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMAuth(char *userName, 
+        uint8_t userLen, char *authPasswd, uint8_t authPasswdLen, SNMPV3_HMAC_HASH_TYPE hashType)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    if(authPasswdLen>TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+    {
+        return SNMPV3_USM_INVALID_PRIVAUTH_PASSWORD_LEN;
+    }
+    // find the user name from the list and then update the authpassword
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].secLevel == NO_AUTH_NO_PRIV)
+            {
+                return SNMPV3_USM_INVALID_AUTH_CONFIG_NOT_ALLOWED;
+            }
+            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,(char*)authPasswd,authPasswdLen);
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswdLen = authPasswdLen;
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userHashType = hashType;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMAuth(char *userName, 
+        uint8_t userLen, char *authPasswd, uint8_t *authPasswdLen, SNMPV3_HMAC_HASH_TYPE *hashType)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    uint8_t passwdLen=0;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    // find the user name from the list and then get the authpassword
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            passwdLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswdLen;
+            strncpy((char*)authPasswd,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,passwdLen); 
+            *hashType = (SNMPV3_HMAC_HASH_TYPE)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userHashType;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMPrivacy(char *userName,
+        uint8_t userLen,char *privPasswd, uint8_t privPasswdLen, 
+        SNMPV3_PRIV_PROT_TYPE privType)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    if(privPasswdLen>TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+    {
+        return SNMPV3_USM_INVALID_PRIVAUTH_PASSWORD_LEN;
+    }
+    // find the user name from the list and then update the privpassword
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            if((snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].secLevel == NO_AUTH_NO_PRIV) ||
+                    (snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].secLevel == AUTH_NO_PRIV))
+            {
+                return SNMPV3_USM_INVALID_PRIV_CONFIG_NOT_ALLOWED;
+            }
+            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd,(char*)privPasswd, privPasswdLen);
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswdLen = privPasswdLen;
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivType = privType;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMPrivacy(char *userName, 
+        uint8_t userLen, char *privPasswd, uint8_t *privPasswdLen, SNMPV3_PRIV_PROT_TYPE *privType)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    uint8_t passwdLen=0;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    // find the user name from the list and then get the authpassword
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            passwdLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswdLen;
+            strncpy((char*)privPasswd, (char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd, passwdLen);
+            *privType = (SNMPV3_PRIV_PROT_TYPE)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivType;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMSecLevel(char *userName, uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL secLevel)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    if(secLevel>AUTH_PRIV)
+    {
+        return SNMPV3_USM_INVALID_SECURITY_LEVEL;
+    }
+    // find the user name from the list and then update the security level
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].secLevel = secLevel;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName, uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL *secLevel)
+{
+    uint8_t userDBIndex=0;
+    bool    userNameFound=false;
+    
+    SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+
+    TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
+
+    snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
+    
+    // find the user name from the list and then get the security level
+    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    {
+        if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
+        {
+            *secLevel = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].secLevel;
+            userNameFound = true;
+            break;
+        }       
+    }
+    
+    if(userNameFound == false)
+    {// Invalid input user name
+        return SNMPV3_USM_INVALID_USER;
+    }
+    
+    return SNMPV3_USM_SUCCESS;
+}
+
+bool TCPIP_SNMPV3_EngineUserDataBaseSet(
+    TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType, uint8_t len, 
+    uint8_t userIndex,void *val)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
@@ -789,16 +1099,32 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
+    // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
     if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    {
         return false;
-    
+    }
+    if(val == 0)
+    {
+        return false;
+    }
+        
     switch(userDataBaseType)
     {
-        case SNMPV3_USERNAME_CONFIG_TYPE:
+        case SNMPV3_USERNAME_CONFIG_TYPE:            
+            // User name "initial" should not be allowed 
             if(val == 0)
+            {
                 return false;
-            if(strncmp((char*)val,"initial",len)== 0)
+            }
+            if(strncmp((char*)val,"initial",7)== 0)
+            {
                 return false;
+            }
+            if(len > TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
+            {
+                return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
+            }
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength = len;
             memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,'\0',TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
             strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)val,len);
@@ -810,13 +1136,17 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             break;
         case SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE:
             if(len>TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            {
                 return false;
+            }
             strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userAuthPswdLoclizdKey,(char*)val,len);
             SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(userIndex);
             break;
         case SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE:
             if(len>TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN)
+            {   
                 return false;
+            }
             strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey,(char*)val,len);
             break;
         case SNMPV3_HASHTYPE_CONFIG_TYPE:
@@ -862,7 +1192,9 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
         case SNMPV3_TARGET_SECURITY_LEVEL_TYPE:
             if(TCPIP_SNMPv3_CmprTrapSecNameAndSecLvlWithUSMDb(userIndex,strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName),
                 snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName,(*(STD_BASED_SNMPV3_SECURITY_LEVEL*)val))!= true)
+            {
                 return false;
+            }
             snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType = (*(STD_BASED_SNMPV3_SECURITY_LEVEL*)val);
             break;
         case SNMPV3_TARGET_SECURITY_NAME_TYPE:
@@ -871,17 +1203,23 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             
             // restrict the user security name "initial"
             if(strncmp((char*)val,"initial",len)== 0)
+            {
                 return false;
+            }
             // check if the target security name is the part of the user security name table,
             // if target security name is not present in that table then return false.
 
             for(index=0;index<TCPIP_SNMPV3_USM_MAX_USER;index++)
             {
                 if(strncmp((char*)val,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[index].userName,len)== 0)
+                {
                     break;
+                }
             }
             if(index == TCPIP_SNMPV3_USM_MAX_USER)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -892,7 +1230,7 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType = *(STD_BASED_SNMP_MESSAGE_PROCESSING_MODEL*)val;
             break;
         default:
-            return false;            
+            return true;            
     }
     return true;
 }
@@ -907,16 +1245,18 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
     if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    {
         return false;
+    }
 
     switch(userDataBaseType)
     {
         case SNMPV3_USERNAME_CONFIG_TYPE:
-            if ( snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength == 0u )
+            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength == 0u)
             {
                 return false;
             }
-            if (len == snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength)
+            if(len == snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength)
             {
                 return false;
             }
@@ -927,35 +1267,55 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
         case SNMPV3_PRIVPASSWD_CONFIG_TYPE:
             break;
         case SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len>=TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len >= TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            {
                 return false;
+            }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userAuthPswdLoclizdKey[len];            
             break;
         case SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len>=TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len >= TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            {
                 return false;
+            }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey[len];
             
             break;
+            
         case SNMPV3_HASHTYPE_CONFIG_TYPE:
             if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == SNMPV3_HMAC_MD5)
+            {
                 *(uint8_t*)val = hmacMD5Auth;
+            }
             else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == SNMPV3_HMAC_SHA1)
+            {
                 *(uint8_t*)val = hmacSHAAuth;
+            }
             else
+            {
                 *(uint8_t*)val = noAuthProtocol;
+            }
             break;
+            
         case SNMPV3_PRIVTYPE_CONFIG_TYPE:
-           if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_AES_PRIV)
-                *(uint8_t*)val = aesPrivProtocol;
-           else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_DES_PRIV)
-                *(uint8_t*)val = desPrivProtocol;
+            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_AES_PRIV)
+            {
+                 *(uint8_t*)val = aesPrivProtocol;
+            }
+            else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_DES_PRIV)
+            {
+                 *(uint8_t*)val = desPrivProtocol;
+            }
             else
+            {
                 *(uint8_t*)val = noPrivProtocol;
+            }
             break;
+            
         case SNMPV3_TARGET_SECURITY_LEVEL_TYPE:
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityLevelType;
             break;
+            
         case SNMPV3_TARGET_SECURITY_NAME_TYPE:
             if (strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName) == 0u)
                 return false;
@@ -964,12 +1324,15 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName[len];
             return true;
             break;
+            
         case SNMPV3_TARGET_SECURITY_MODEL_TYPE:
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType;            
             break;
+            
         case SNMPV3_TARGET_MP_MODEL_TYPE:
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType;
             break;
+            
         case SNMPV3_ENGINE_ID_TYPE:
             if(snmpv3EngnDcptMemoryStubPtr->SnmpEngnIDLength == 0u)
             {
@@ -981,15 +1344,17 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->SnmpEngineID[len];
             break;
+            
         case SNMPV3_ENGINE_BOOT_TYPE:
-            *(uint8_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineBoots;
+            *(uint32_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineBoots;
             break;
         case SNMPV3_ENGINE_TIME_TYPE:
-            *(uint8_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime;
+            *(uint32_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime;
             break;
         case SNMPV3_ENGINE_MAX_MSG_TYPE:
-            *(uint8_t*)val = (uint16_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngnMaxMsgSize;
+            *(uint16_t*)val = (uint16_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngnMaxMsgSize;
             break;
+            
         default:
             return false;
     }

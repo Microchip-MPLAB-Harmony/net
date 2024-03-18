@@ -77,6 +77,19 @@ Microchip or any third party.
 // Section: SNMPV3 Agent Data Types and Constants
 // *****************************************************************************
 // *****************************************************************************
+// *****************************************************************************
+/* 
+  Summary:
+    SNMPV3 Authentication and Privacy password length 
+
+  Description:
+    SNMPV3 authentication and privacy password string length should be less than
+    this value.
+    
+  Remarks:
+    None.
+*/
+#define TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN      12
 
 // *****************************************************************************
 /*
@@ -265,6 +278,57 @@ typedef enum
 
 // *****************************************************************************
 /*
+  Enumeration:
+    SNMPV3_USM_CONFIG_ERROR_TYPE
+
+  Summary:
+    USM Configuration error code type enumeration.  
+
+  Description:
+    The following error codes describes the return types errors for SNMPv3 USM
+    configuration.   
+    
+  Remarks:
+    None.
+*/
+typedef enum
+{
+    SNMPV3_USM_SUCCESS=0,
+    /* Error return value if pointer argument is NULL */
+    SNMPV3_USM_INVALID_INPUTCONFIG,
+    /* Error return value if user index is more than TCPIP_SNMPV3_USM_MAX_USER */
+    SNMPV3_USM_INVALID_USER,
+    /* Error return value for UserName "initial", username "initial" is not 
+    allowed */
+    SNMPV3_USM_INVALID_USERNAME,
+    /* Error return value if userName length is more than the value of 
+    TCPIP_SNMPV3_USER_SECURITY_NAME_LEN */
+    SNMPV3_USM_INVALID_USER_NAME_LENGTH,
+    /* Error return value if Auth or Priv password length is more than the value
+     of TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN */
+    SNMPV3_USM_INVALID_PRIVAUTH_PASSWORD_LEN,
+     /* Error return value if Auth or Priv password length is more than the value
+     of TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN */
+    SNMPV3_USM_INVALID_PRIVAUTH_LOCALIZED_PASSWORD_LEN,
+    /* Error return value if Auth or Priv security level type is not matching to
+    the enum USM_SECURITY_LEVEL*/
+    SNMPV3_USM_INVALID_PRIVAUTH_TYPE,
+    /*Authentication security level configuration not allowed if security level 
+    type is noAuthNoPriv */
+    SNMPV3_USM_INVALID_AUTH_CONFIG_NOT_ALLOWED,
+    /*Privacy security level configuration allowed if security level 
+    type is authPriv */
+    SNMPV3_USM_INVALID_PRIV_CONFIG_NOT_ALLOWED,
+    /* Error return value for invalid security level */
+    SNMPV3_USM_INVALID_SECURITY_LEVEL,
+    /*SNMPV3 USM SET configuration not supported */
+    SNMPV3_USM_NOT_SUPPORTED,
+    SNMPV3_USM_NO_ERROR,
+    
+}TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE;
+
+// *****************************************************************************
+/*
   Structure:
     TCPIP_SNMP_COMMUNITY_CONFIG
 
@@ -378,11 +442,14 @@ typedef struct
 //****************************************************************************
 /*
   Function:
-    void TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
-                                    uint8_t len,uint8_t userIndex,void *val);
+    bool TCPIP_SNMPV3_EngineUserDataBaseGet(
+        TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
+        uint8_t len,
+        uint8_t userIndex,
+        void *val);
 
   Summary:
-    Get SNMPv3 engine data base details.
+    Get SNMPv3 USM engine data base details.
 
   Description:
     This function is used to get SNMPv3 Engine data base details using 
@@ -399,7 +466,8 @@ typedef struct
             data type. 
 
   Returns:
-    None.
+    true  - success
+    false - failure
     
   Example:
   <code>
@@ -429,14 +497,54 @@ typedef struct
   Remarks:
     None
 */
-bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
-                                  uint8_t len,uint8_t userIndex,void *val);
+bool TCPIP_SNMPV3_EngineUserDataBaseGet(
+    TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
+    uint8_t len,
+    uint8_t userIndex,
+    void *val);
 
 //****************************************************************************
 /*
   Function:
-    void TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
-                                    uint8_t len,uint8_t userIndex,void *val);
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(
+                                       SNMP_INDEX index)
+
+  Summary:
+    Calculate Auth and Priv  password to the localized key with present USM
+    details.
+
+  Description:
+    This routine converts MD5 or SHA1 authentication and AES privacy password 
+    string to localized key. 
+
+  Precondition:
+    SNMPV3 initialization is required
+
+  Parameters:
+    userIndex - SNMPv3 user index
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE 
+    
+  Example:
+  <code>
+    uint8_t index=0;
+    // The below API should be called after all the USM SET opeartion.
+    TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
+  </code>
+  
+  Remarks:
+    TCPIP_SNMPV3_USMAuthPrivLocaziation(SNMP_INDEX index) should be called after 
+ setting USM Authentication and Privacy password configuration.
+ */
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
+
+//****************************************************************************
+/*
+  Function:
+    bool TCPIP_SNMPV3_EngineUserDataBaseSet(
+            TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
+            uint8_t len, uint8_t userIndex, void *val)
 
   Summary:
     Set SNMPv3 engine data base details.
@@ -456,7 +564,8 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             data type. 
 
   Returns:
-    None.
+    true  - success
+    false - failure 
     
   Example:
   <code>
@@ -465,14 +574,14 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
     switch(var)
     {
         case USER_SECURITY_NAME:
-            if ( ref ==  SNMP_END_OF_VAR )
+            if(ref ==  SNMP_END_OF_VAR)
             {
                 if(TCPIP_SNMPV3_EngineUserDataBaseSet(SNMPV3_USERNAME_CONFIG_TYPE,strlen((char*)gSnmpv3UserSecurityName),
                                                 index,gSnmpv3UserSecurityName) != true)
                     return false;
             }
             // Make sure that index is within our range.
-            if ( index < TCPIP_SNMPV3_USM_MAX_USER )
+            if(index < TCPIP_SNMPV3_USM_MAX_USER)
             {
                 // Copy given value into local buffer.
                 gSnmpv3UserSecurityName[ref]=val.byte;
@@ -481,13 +590,19 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
             break;
     }
   }
+   // The below API should be called after all the USM SET opeartion.
+    TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
   </code>
   
   Remarks:
-    None.
-*/
-bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
-                                       uint8_t len,uint8_t userIndex,void *val);
+    TCPIP_SNMPV3_USMAuthPrivLocaziation(SNMP_INDEX index) shoudl be called after 
+ setting USM attributes.
+ */
+bool TCPIP_SNMPV3_EngineUserDataBaseSet(
+    TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,
+    uint8_t len,
+    uint8_t userIndex,
+    void *val);
 
 //****************************************************************************
 //****************************************************************************
@@ -535,13 +650,16 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
   Remarks:
     None.
   */
-bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t targetIndex,SNMP_TRAP_IP_ADDRESS_TYPE eTrapMultiAddressType);
+bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,
+    uint8_t targetIndex, SNMP_TRAP_IP_ADDRESS_TYPE eTrapMultiAddressType);
 
 //****************************************************************************
 /*
   Function:
-    void TCPIP_SNMPv3_TrapConfigDataGet(uint8_t userIndex,uint8_t *msgModelType,
-                                                    uint8_t *securityModelType)
+    void TCPIP_SNMPv3_TrapConfigDataGet(
+        uint8_t userIndex,
+        uint8_t *msgModelType,
+        uint8_t *securityModelType)
 
   Summary:
     Gets the SNMPv3 Trap configuration details using the user name index.
@@ -564,7 +682,261 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
   Remarks:
     None.
 */
-void TCPIP_SNMPv3_TrapConfigDataGet(uint8_t userIndex,uint8_t *msgModelType,uint8_t *securityModelType);
+void TCPIP_SNMPv3_TrapConfigDataGet(uint8_t userIndex, 
+        uint8_t *msgModelType, uint8_t *securityModelType);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(
+            char *userName, uint8_t userLen, uint8_t userIndex)
+
+  Summary:
+    Configure the SNMPv3 user name for a specific index.
+
+  Description:
+    This function is used to set the SNMPv3 user name for a specific index.
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - user length should be less than TCPIP_SNMPV3_USER_SECURITY_NAME_LEN
+    userIndex - user name index
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None.
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(char *userName, 
+            uint8_t userLen, uint8_t userIndex);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMUserName(
+            char *userName, uint8_t *userLen, uint8_t userIndex)
+
+  Summary:
+    Get the configured SNMPv3 user name for a specific index.
+
+  Description:
+    This function is used to get the SNMPv3 user name for a specific index.
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - returns username length 
+    userIndex - user name index
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None.
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMUserName(char *userName, 
+            uint8_t *userLen, uint8_t userIndex);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMAuth(char *userName, 
+    uint8_t userLen, char *authPasswd, uint8_t authPasswdLen, 
+    SNMPV3_HMAC_HASH_TYPE hashType)
+
+  Summary:
+    Configure the SNMPv3 authentication password for a configured USM user name.
+
+  Description:
+    This function is used to configure the SNMPv3 authentication password for a
+    configured USM user name. Authentication password configuration should not be 
+    allowed for noAuthNoPRiv security level.
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - username length 
+    authPasswd - authentication password
+    authPasswdLen - authentication password length
+    hashType - set authentication hash type (MD5 or SHA)
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    TCPIP_SNMPV3_USMAuthPrivLocalization() should be called after configuring 
+    authentication password.
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMAuth(char *userName, 
+    uint8_t userLen, char *authPasswd, uint8_t authPasswdLen, SNMPV3_HMAC_HASH_TYPE hashType);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMAuth(char *userName, 
+    uint8_t userLen, char *authPasswd, uint8_t *authPasswdLen, 
+    SNMPV3_HMAC_HASH_TYPE *hashType)
+
+  Summary:
+    Get the SNMPv3 authentication password for a configured USM user name.
+
+  Description:
+    This function is used to get the SNMPv3 authentication password for a
+    configured USM user name. 
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - username length 
+    authPasswd - get authentication password
+    authPasswdLen - get authentication password length
+    hashType - get authentication hash type (MD5 or SHA)
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMAuth(char *userName, 
+    uint8_t userLen, char *authPasswd, uint8_t *authPasswdLen, SNMPV3_HMAC_HASH_TYPE *hashType);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMPrivacy(char *userName, 
+    uint8_t userLen, char *privPasswd, uint8_t privPasswdLen, SNMPV3_PRIV_PROT_TYPE privType)
+
+  Summary:
+    Configure the SNMPv3 privacy password for a configured USM user name.
+
+  Description:
+    This function is used to configure the SNMPv3 authentication password for a
+    configured USM user name. Privacy password configuration should not be 
+    allowed for noAuthNoPRiv and AuthNoPriv security levels.
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen -  username length 
+    privPasswd - privacy password
+    privPasswdLen - privacy password length
+    privType - set privacy protocol type (AES-CFG or DES)
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    TCPIP_SNMPV3_USMAuthPrivLocalization() should be called after configuring 
+    privacy password.
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMPrivacy(char *userName, 
+    uint8_t userLen, char *privPasswd, uint8_t privPasswdLen, SNMPV3_PRIV_PROT_TYPE privType);
+
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMPrivacy(char *userName, 
+    uint8_t userLen, char *privPasswd, uint8_t *privPasswdLen, SNMPV3_PRIV_PROT_TYPE *privType)
+
+  Summary:
+    Get the SNMPv3 privacy password for a configured USM user name.
+
+  Description:
+    This function is used to get the SNMPv3 privacy password for a
+    configured USM user name. 
+ 
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - username length 
+    privPasswd - get privacy password
+    privPasswdLen - get privacy password length
+    privType - get privacy protocol type (AES-CFG or DES)
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMPrivacy(char *userName, 
+    uint8_t userLen, char *privPasswd, uint8_t *privPasswdLen, SNMPV3_PRIV_PROT_TYPE *privType);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMSecLevel(
+    char *userName, uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL secLevel)
+
+  Summary:
+    Configure the SNMPv3 USM security level for a configured USM user name.
+
+  Description:
+    This function is used to configure the SNMPv3 USM security level for a
+    configured USM user name. 
+  
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen - username length 
+    secLevel - security level
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMSecLevel(char *userName,
+        uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL secLevel);
+
+//****************************************************************************
+/*
+  Function:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(
+    char *userName, uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL *secLevel)
+
+  Summary:
+    Get SNMPv3 USM security level for a configured USM user name.
+
+  Description:
+    This function is used to get the SNMPv3 USM security level for a
+    configured USM user name. 
+  
+  Precondition:
+    TCPIP_SNMP_Initialize and SNMPv3 module initialization should be completed.
+
+  Parameters:
+    userName - USM user name
+    userLen -  username length 
+    secLevel - returns security level
+
+  Returns:
+    TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE
+    
+  Remarks:
+    None
+*/
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName, 
+        uint8_t userLen, STD_BASED_SNMPV3_SECURITY_LEVEL *secLevel);
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
