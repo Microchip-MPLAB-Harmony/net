@@ -87,7 +87,7 @@ typedef enum
     The bus has to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
         Negative if error
@@ -108,7 +108,7 @@ typedef int32_t (*DRV_ENCX24J600_OpenInterface)(struct _DRV_ENCX24J600_DriverInf
     The bus has to have been initialized first.
     
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns:
         None
@@ -128,13 +128,13 @@ typedef void (*DRV_ENCX24J600_CloseInterface)( struct _DRV_ENCX24J600_DriverInfo
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
         handle - Handle created by the operation.
 
     Returns
-        DRV_ENCX24J600_BR_SUCCESS – if the operation was successful
-        DRV_ENCX24J600_BR_PENDING – if the operation is still pending
-        DRV_ENCX24J600_BR_ERROR – if there was an error in the operation
+        DRV_ENCX24J600_BR_SUCCESS - if the operation was successful
+        DRV_ENCX24J600_BR_PENDING - if the operation is still pending
+        DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
 typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_OperationResult)( struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle );
 
@@ -154,14 +154,14 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_OperationResult)( struct _DRV
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
-        reg – The Special Function Register to write to.
-        Value – the value to write into the register
-        opIndex – the index to use for this operation
+        pDrvInstance - The driver instance
+        reg - The Special Function Register to write to.
+        Value - the value to write into the register
+        opIndex - the index to use for this operation
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_SfrWrite)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value,  uint8_t  opIndex );
 
@@ -180,13 +180,13 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrWrite)(struct _DRV_ENCX24J600_DriverInfo *
     The bus had to have been initialized first.
     
     Parameters:
-        pDrvInstance – The driver instance
-        reg – The Special Function Register to write to.
-        opIndex – the index to use for this operation
+        pDrvInstance - The driver instance
+        reg - The Special Function Register to write to.
+        opIndex - the index to use for this operation
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_SfrReadStart)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, uint8_t  opIndex );
 
@@ -204,15 +204,15 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrReadStart)(struct _DRV_ENCX24J600_DriverIn
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance – The driver instance
-        handle – the handle from the read start operation
-        value – where to put the results of the operation
-        opIndex – the index to use for this operation
+        pDrvInstance - The driver instance
+        handle - the handle from the read start operation
+        value - where to put the results of the operation
+        opIndex - the index to use for this operation
 
     Returns
-        DRV_ENCX24J600_BR_SUCCESS – if the operation was successful
-        DRV_ENCX24J600_BR_PENDING – if the operation is still pending
-        DRV_ENCX24J600_BR_ERROR – if there was an error in the operation
+        DRV_ENCX24J600_BR_SUCCESS - if the operation was successful
+        DRV_ENCX24J600_BR_PENDING - if the operation is still pending
+        DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
 typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_SfrReadResult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t  handle, DRV_ENCX24J600_RegUnion *  value,  uint8_t  opIndex );
 
@@ -231,14 +231,14 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_SfrReadResult)(struct _DRV_EN
     The bus had to have been initialized first.
     
     Parameters
-        pDrvInstance – The driver instance
-        reg – The Special Function Register to write to.
-        Value – The bits to set in the register.
-        opIndex – the index to use for this operation
+        pDrvInstance - The driver instance
+        reg - The Special Function Register to write to.
+        Value - The bits to set in the register.
+        opIndex - the index to use for this operation
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_SfrBitSet)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
@@ -257,14 +257,14 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrBitSet)(struct _DRV_ENCX24J600_DriverInfo 
     The bus had to have been initialized first.
     
     Parameters
-        pDrvInstance – The driver instance
-        reg – The Special Function Register to write to.
-        Value – The bits to clear in the register.
-        opIndex – the index to use for this operation
+        pDrvInstance - The driver instance
+        reg - The Special Function Register to write to.
+        Value - The bits to clear in the register.
+        opIndex - the index to use for this operation
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_SfrBitClear)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
@@ -281,11 +281,11 @@ typedef uintptr_t (*DRV_ENCX24J600_SfrBitClear)(struct _DRV_ENCX24J600_DriverInf
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_SystemReset)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -302,11 +302,11 @@ typedef uintptr_t (*DRV_ENCX24J600_SystemReset)(struct _DRV_ENCX24J600_DriverInf
     The bus had to have been initialized first.
     
     Parameters
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_EnableRX)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -323,11 +323,11 @@ typedef uintptr_t (*DRV_ENCX24J600_EnableRX)(struct _DRV_ENCX24J600_DriverInfo *
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_DisableRX)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -346,11 +346,11 @@ typedef uintptr_t (*DRV_ENCX24J600_DisableRX)(struct _DRV_ENCX24J600_DriverInfo 
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_ReqPktTx)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -368,11 +368,11 @@ typedef uintptr_t (*DRV_ENCX24J600_ReqPktTx)(struct _DRV_ENCX24J600_DriverInfo *
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_DecrPktCtr)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -389,11 +389,11 @@ typedef uintptr_t (*DRV_ENCX24J600_DecrPktCtr)(struct _DRV_ENCX24J600_DriverInfo
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_EnableInterrupts)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -410,11 +410,11 @@ typedef uintptr_t (*DRV_ENCX24J600_EnableInterrupts)(struct _DRV_ENCX24J600_Driv
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_DisableInterrupts)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -431,11 +431,11 @@ typedef uintptr_t (*DRV_ENCX24J600_DisableInterrupts)(struct _DRV_ENCX24J600_Dri
     The bus had to have been initialized first.
 
     Parameters
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlDisable)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -452,11 +452,11 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlDisable)(struct _DRV_ENCX24J600_Drive
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlSingle)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -473,11 +473,11 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlSingle)(struct _DRV_ENCX24J600_Driver
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlMult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -494,11 +494,11 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrlMult)(struct _DRV_ENCX24J600_DriverIn
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
+        pDrvInstance - The driver instance
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_FlowCtrClear)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance );
 
@@ -517,14 +517,14 @@ typedef uintptr_t (*DRV_ENCX24J600_FlowCtrClear)(struct _DRV_ENCX24J600_DriverIn
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
-        reg – The PHY register to write
-        value – the Value to write
-        opIndex – the operation index.
+        pDrvInstance - The driver instance
+        reg - The PHY register to write
+        value - the Value to write
+        opIndex - the operation index.
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_PhyWrite)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_PHY_SFR_MAP  reg, DRV_ENCX24J600_RegUnion  value, uint8_t  opIndex );
 
@@ -542,14 +542,14 @@ typedef uintptr_t (*DRV_ENCX24J600_PhyWrite)(struct _DRV_ENCX24J600_DriverInfo *
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
-        reg – The register to write
-        value – the value to write
-        opIndex – the operation index.
+        pDrvInstance - The driver instance
+        reg - The register to write
+        value - the value to write
+        opIndex - the operation index.
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_WritePointer)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint16_t  value, uint8_t  opIndex );
 
@@ -567,13 +567,13 @@ typedef uintptr_t (*DRV_ENCX24J600_WritePointer)(struct _DRV_ENCX24J600_DriverIn
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
-        reg – The register to write
-        opIndex – the operation index.
+        pDrvInstance - The driver instance
+        reg - The register to write
+        opIndex - the operation index.
 
     Returns:
-        NULL – On Error
-        Valid Handle – on success
+        NULL - On Error
+        Valid Handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_ReadPointerStart)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t  opIndex );
 
@@ -590,15 +590,15 @@ typedef uintptr_t (*DRV_ENCX24J600_ReadPointerStart)(struct _DRV_ENCX24J600_Driv
     The bus had to have been initialized first.
 
     Parameters:
-        pDrvInstance – The driver instance
-        handle – From the read operation
-        value – the location for the results
-        opIndex – the operation index.
+        pDrvInstance - The driver instance
+        handle - From the read operation
+        value - the location for the results
+        opIndex - the operation index.
 
     Returns:
-        DRV_ENCX24J600_BR_SUCCESS – if the operation was successful
-        DRV_ENCX24J600_BR_PENDING – if the operation is still pending
-        DRV_ENCX24J600_BR_ERROR – if there was an error in the operation
+        DRV_ENCX24J600_BR_SUCCESS - if the operation was successful
+        DRV_ENCX24J600_BR_PENDING - if the operation is still pending
+        DRV_ENCX24J600_BR_ERROR - if there was an error in the operation
 */
 typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, uintptr_t handle, uint16_t* value, uint8_t  opIndex );
 
@@ -629,8 +629,8 @@ typedef DRV_ENCX24J600_BUS_RESULT (*DRV_ENCX24J600_ReadPointerResult)(struct _DR
         dataSize - the size of the data to write.
 
     Returns:
-        0 – on error
-        Valid handle – on success
+        0 - on error
+        Valid handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_WriteSeg)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, struct _DRV_ENCX24J600_TX_PACKET_INFO *  pkt);
 
@@ -662,14 +662,14 @@ typedef uintptr_t (*DRV_ENCX24J600_WritePkt)(struct _DRV_ENCX24J600_DriverInfo *
     The bus had to have been initialized first.
     
     Parameters
-        pDrvInstance – The driver instance
-        reg – the register to write to
-        buffer – the location of the buffer to write
-        dataSize – the size of the data to read.
+        pDrvInstance - The driver instance
+        reg - the register to write to
+        buffer - the location of the buffer to write
+        dataSize - the size of the data to read.
 
     Returns:
-        0 – on error
-        Valid handle – on success
+        0 - on error
+        Valid handle - on success
 */
 typedef uintptr_t (*DRV_ENCX24J600_ReadData)(struct _DRV_ENCX24J600_DriverInfo *  pDrvInstance, DRV_ENCX24J600_POINTER  reg, uint8_t *  buffer, uint16_t  dataSize);
 
