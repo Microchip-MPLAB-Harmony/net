@@ -1,5 +1,5 @@
 # Microchip MPLAB Harmony 3 Release Notes
-## Net Release v3.11.1 (February, 2024)
+## Net Release v3.11.1 (March, 2024)
 ### ADDITIONS AND UPDATES FOR  3.11.1:
 
 - **New features**
@@ -16,14 +16,15 @@ The following table provides the list of fixes in the 3.11.1 release:
 
 | Module                | Description     |
 | ------ | -------- |
-| GMAC driver   | Fixed the GMAC Descriptor start Address for devices with smaller internal RAM |
-| ETHMAC driver | Bug fix for the ETHMAC |
-| PHY driver    | Support the PHY dummy driver |
-|               | Fixed the DRV_ETHPHY_CFG_DEFAULT flag |
-|               | Implemented Customer Feedback - PHY pins 'RESET' and 'IRQ' pin usage indication |
-| TCP           | Fixed the issue when 'Disabling crypto TCP dependency' |
-| DHCP          | Extended DHCP event for offer with improved event info |
-| ARP           | Fixed the command for insertion of permanent entries in the ARP cache |
+| ENCX24J600 driver| Fix for ENC transmit of TCP buffers |
+| GMAC driver      | Fixed the GMAC Descriptor start Address for devices with smaller internal RAM |
+| ETHMAC driver    | Bug fix for the ETHMAC |
+| PHY driver       | Support the PHY dummy driver |
+|                  | Fixed the DRV_ETHPHY_CFG_DEFAULT flag |
+|                  | Implemented Customer Feedback - PHY pins 'RESET' and 'IRQ' pin usage indication |
+| TCP              | Fixed the issue when 'Disabling crypto TCP dependency' |
+| DHCP             | Extended DHCP event for offer with improved event info |
+| ARP              | Fixed the command for insertion of permanent entries in the ARP cache |
 
 ### TESTED WITH:
 
