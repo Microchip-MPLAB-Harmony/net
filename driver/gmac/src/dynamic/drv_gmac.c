@@ -1569,6 +1569,8 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES 
             DRV_PIC32CGMAC_LibTxEnable(pMACDrv, false);
             //Acknowledge the TX packets Queued
             DRV_PIC32CGMAC_LibTxAckPendPacket(pMACDrv, queueIdx, ackRes); 
+            // Reset Transmit Indexes
+            DRV_PIC32CGMAC_LibClearTxIndex(pMACDrv, queueIdx);
             // Enable GMAC Transmit
             DRV_PIC32CGMAC_LibTxEnable(pMACDrv, true);            
         }
@@ -1580,6 +1582,8 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,TCPIP_MAC_PKT_ACK_RES 
             DRV_PIC32CGMAC_LibTxEnable(pMACDrv, false);
             //Acknowledge the unacknowledged TX packets
             DRV_PIC32CGMAC_LibTxClearUnAckPacket(pMACDrv, queueIdx, ackRes); 
+            // Reset Transmit Indexes
+            DRV_PIC32CGMAC_LibClearTxIndex(pMACDrv, queueIdx);
             // Enable GMAC Transmit
             DRV_PIC32CGMAC_LibTxEnable(pMACDrv, true);     
         }

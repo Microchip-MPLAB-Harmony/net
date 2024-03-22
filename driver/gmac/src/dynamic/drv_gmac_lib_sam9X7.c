@@ -276,6 +276,7 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
 {   
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     uint32_t ncfgr;
+    GMAC_QUE_LIST queueIdx; 
     
     pGmacRegs->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk;
     pGmacRegs->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;
@@ -332,6 +333,14 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
         pGmacRegs->GMAC_UR = (pGmacRegs->GMAC_UR & ~GMAC_UR_MIM_Msk) | GMAC_UR_MIM_RMII;
         pGmacRegs->GMAC_NCFGR &= ~GMAC_NCFGR_GBE_Msk;
     }   
+    
+    // Reset Tx Indexes. After TXEN reset, the Transmit Queue Pointer will point to the start of the
+    // transmit descriptor list.
+    for(queueIdx = GMAC_QUE_0; queueIdx < pMACDrv->sGmacData.gmacConfig.macQueNum; queueIdx++)
+    {
+        // Reset Transmit Indexes
+        DRV_PIC32CGMAC_LibClearTxIndex(pMACDrv, queueIdx);
+    }
     
     pGmacRegs->GMAC_NCR |= GMAC_NCR_RXEN_Msk;
     pGmacRegs->GMAC_NCR |= GMAC_NCR_TXEN_Msk;
@@ -1890,7 +1899,17 @@ void DRV_PIC32CGMAC_LibTxEnable(DRV_GMAC_DRIVER* pMACDrv, bool enable)
     }
 }
 
-
+/****************************************************************************
+ * Function:    DRV_PIC32CGMAC_LibClearTxIndex
+ * Summary:     Reset Transmit Processing Indexes
+ *****************************************************************************/
+void  DRV_PIC32CGMAC_LibClearTxIndex(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx)
+{
+    // Reset Transmit processing indexes. Because, after TXEN reset, the Transmit  
+    // Queue Pointer will point to the start of the transmit descriptor list.
+    pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead = 0;
+    pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail = 0;
+}
 /****************************************************************************
  * Function:        _GetPktSegCount
  * Summary: Counts no. of packet segments in MAC packet
