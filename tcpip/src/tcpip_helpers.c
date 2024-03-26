@@ -962,7 +962,14 @@ uint16_t TCPIP_Helper_CalcIPChecksum(const uint8_t* buffer, uint16_t count, uint
     // Return the resulting checksum
     return ~sum.w[0];
 }
-#if defined(__CORTEX_A) ||  defined(__CORTEX_M)
+// This version of  TCPIP_Helper_Memcpy (without standard library memcpy) 
+// is tested on Cortex-A7, Cortex-A5, Cortex-M4, Cortex-M7, Cortex-M33.
+// This is a lightweight routine with higher performance.But devices that do not
+// support/disabled unaligned memory access must not use this version.
+#if (!defined(UNALIGNED_SUPPORT_DISABLE))  &&  \
+    ((defined(__CORTEX_A) && ((__CORTEX_A == 5U) || (__CORTEX_A == 7U))) ||  \
+     (defined(__CORTEX_M) && ((__CORTEX_M == 4U) || (__CORTEX_M == 7U) || \
+     (__CORTEX_M == 33U))))
 void TCPIP_Helper_Memcpy (void *dst, const void *src, size_t len)
 {
 #define WORD_ALIGN_MASK 0x00000003
