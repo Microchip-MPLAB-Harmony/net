@@ -3788,6 +3788,7 @@ TCPIP_EVENT_HANDLE    TCPIP_STACK_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_E
         eventNode.hParam = hParam;
         eventNode.evMask = evMask;
         eventNode.pNetIf = pNetIf;
+        eventNode.next   = NULL;        
 
         return (TCPIP_EVENT_LIST_NODE*)TCPIP_Notification_Add(&pNetIf->registeredClients, tcpip_stack_ctrl_data.memH, &eventNode, sizeof(eventNode));
     }

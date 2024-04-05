@@ -290,7 +290,7 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
 
      // collect hostname from Client Query Named server packet
     _DNSCopyRXNameToTX(s);   // Copy hostname of first question over to TX packet
-    if(strlen((char*)hostNameWithDot) == 0)
+    if(strlen(hostNameWithDot) == 0)
     {       
         return false;
     }

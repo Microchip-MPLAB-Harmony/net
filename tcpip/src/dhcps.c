@@ -669,8 +669,8 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
     TCPIP_NET_IF        *pNetIfFromDcpt=NULL;
     uint32_t            ix=0;
     uint8_t             getBuffer[TCPIP_DHCPS_MAX_RECEIVED_BUFFER_SIZE];
-    TCPIP_DHCPS_DATA    udpGetBufferData;
-    IPV4_ADDR           ClientIP;
+    TCPIP_DHCPS_DATA    udpGetBufferData = {0};
+    IPV4_ADDR           ClientIP = {0};
     TCPIP_DHCPS_STATE_STATUS dhcpsSmSate;
     BOOTP_HEADER       BOOTPHeader;
     
@@ -713,6 +713,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
                 
             case TCPIP_DHCPS_DETECT_VALID_INTF:
 
+                memset(&udpSockInfo, 0, sizeof(udpSockInfo));
                 TCPIP_UDP_SocketInfoGet(s, &udpSockInfo);
                 pNetIfFromDcpt = (TCPIP_NET_IF*)udpSockInfo.hNet;
                 // check if DHCP server is enabled or Not for this incoming packet interface
@@ -1019,7 +1020,7 @@ static bool _DCHPS_FindRequestIPAddress(TCPIP_DHCPS_DATA *inputBuf,uint8_t *reqA
     
     while(inputBuf->endPtr-inputBuf->wrPtr)
     {
-        uint8_t Option, Len;
+        uint8_t Option, Len = 0;
 
         if(_DHCPS_GetOptionLen(inputBuf,&Option,&Len) != true)
         {
