@@ -2,8 +2,8 @@
 <Package name="net">
     <Dependencies>
         <Dependency name="core" version="v3.13.3"/>
-        <Dependency name="csp" version="v3.18.2"/>
-        <Dependency name="bsp" version="v3.17.0"/>
+        <Dependency name="csp" version="v3.18.4"/>
+        <Dependency name="bsp" version="v3.18.0"/>
         <Dependency name="crypto" version="v3.8.1"/>
         <Dependency name="usb" version="v3.12.0"/>
         <Dependency name="wolfssl" version="v5.4.0"/>
