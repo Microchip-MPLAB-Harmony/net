@@ -1,5 +1,5 @@
 # Microchip MPLAB Harmony 3 Release Notes
-## Net Release v3.11.1 (March, 2024)
+## Net Release v3.11.1 (April, 2024)
 ### ADDITIONS AND UPDATES FOR  3.11.1:
 
 - **New features**
@@ -17,8 +17,10 @@ The following table provides the list of fixes in the 3.11.1 release:
 | Module                | Description     |
 | ------ | -------- |
 | ENCX24J600 driver| Fix for ENC transmit of TCP buffers |
-| GMAC driver      | Fixed the GMAC Descriptor start Address for devices with smaller internal RAM |
+| GMAC driver      | Fixed the unstable behaviour after a link loss |
+|                  | Fixed the GMAC Descriptor start Address for devices with smaller internal RAM |
 | ETHMAC driver    | Bug fix for the ETHMAC |
+| TCPIP_Helper     | Fixed 'M0 Devices need particular handling on TCPIP_Helper_Memcpy'  |
 | PHY driver       | Support the PHY dummy driver |
 |                  | Fixed the DRV_ETHPHY_CFG_DEFAULT flag |
 |                  | Implemented Customer Feedback - PHY pins 'RESET' and 'IRQ' pin usage indication |
@@ -41,8 +43,8 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
 
 - Harmony core repository, v3.13.3
-- Harmony csp repository, v3.18.2
-- Harmony bsp repository, v3.17.0
+- Harmony csp repository, v3.18.4
+- Harmony bsp repository, v3.18.0
 - Harmony crypto repository, v3.8.1
 - Harmony usb repository, v3.12.0 for demos requiring USB
 - wolfSSL  v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
