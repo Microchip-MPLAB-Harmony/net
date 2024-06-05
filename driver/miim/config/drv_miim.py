@@ -232,13 +232,8 @@ def instantiateComponent(drvMiimComponent):
     
     #file DRV_MIIM_XXX_C "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim_xxx.c" to "$PROJECT_SOURCE_FILES/framework/driver/miim/src/dynamic/drv_miim_xxx.c"
     processor =  get_processor()  
-    if (("SAME7" in processor) or ("SAMV7" in processor)):
-        drv_miim_xxx_file = "drv_miim_gmac.c"
-    elif (("SAME5" in processor) or ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor)):
-        drv_miim_xxx_file = "drv_miim_gmac.c"
-    elif (("SAMA7G" in processor) or ("SAM9X7" in processor)):
-        drv_miim_xxx_file = "drv_miim_gmac.c"
-    elif ("SAMRH" in processor): 
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or 
+        ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor) or ("SAMA7G" in processor) or ("SAM9X7" in processor) or ("SAMA7D6" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif ("PIC32CZ" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32cz.c"

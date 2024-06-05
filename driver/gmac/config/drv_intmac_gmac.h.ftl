@@ -16,7 +16,7 @@
 *******************************************************************************/
 -->
 <#--
-Copyright (C) 2014-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2014-2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -267,11 +267,15 @@ Microchip or any third party.
     <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_MDIX_SWAP"] == true>
                                                         TCPIP_ETH_OPEN_MDIX_SWAP |\
     </#if>
-    <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_RMII"] == true>
-                                                        TCPIP_ETH_OPEN_RMII |\
+    <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_RMII"]?has_content>
+        <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_RMII"] == true>
+                                                            TCPIP_ETH_OPEN_RMII |\
+        </#if>
     </#if>
-    <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_MII"] == true>
-                                                        TCPIP_ETH_OPEN_MII |\
+    <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_MII"]?has_content>
+        <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_MII"] == true>
+                                                            TCPIP_ETH_OPEN_MII |\
+        </#if>
     </#if>
     <#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_GMII"]?has_content>
         <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_ETH_OF_GMII"] == true>
@@ -299,6 +303,8 @@ Microchip or any third party.
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAMA5D2">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK_CLK_FREQUENCY}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAMA7G">
+            <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK1_FREQUENCY}
+        <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAMA7D6">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK1_FREQUENCY}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAM9X7">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK_FREQUENCY}
