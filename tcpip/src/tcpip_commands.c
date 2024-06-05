@@ -8004,12 +8004,15 @@ static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         return;
     }
     // more than position field 
+    memset(userNameBuf, 0, sizeof(userNameBuf));
+    memset(authPwBuf, 0, sizeof(authPwBuf));
+    memset(privPwBuf, 0, sizeof(privPwBuf));
+
     configArgs = 3;
     while(argc >= 3)
     {
         if(strncmp("u",argv[configArgs],1) == 0)
         {
-            memset(userNameBuf,0,sizeof(userNameBuf));
             strncpy(userNameBuf,argv[configArgs+1],TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
             usmUserNameOpcode = true;
             configArgs = configArgs+2;
@@ -8023,7 +8026,6 @@ static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         else if(strncmp("a",argv[configArgs],1) == 0)
         {
             hashType = atoi(argv[configArgs+1]);
-            memset(authPwBuf,0,sizeof(authPwBuf));
             strncpy(authPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
             usmAuthPasswdOpcode = true;
             configArgs = configArgs+3;
@@ -8031,7 +8033,6 @@ static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         else if(strncmp("p",argv[configArgs],1) == 0)
         {
             privType = atoi(argv[configArgs+1]);
-            memset(privPwBuf,0,sizeof(privPwBuf));
             strncpy(privPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
             usmPrivPasswdOpcode = true;
             configArgs = configArgs+3;
