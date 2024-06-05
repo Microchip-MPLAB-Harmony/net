@@ -16,6 +16,8 @@
     This facilitates an easy method to view status information
     and control applications using any standard web browser.
 
+  Note:
+    The http module is obsolete. The new http_net module should be used!
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
@@ -62,6 +64,10 @@ Microchip or any third party.
 
 #endif
 // DOM-IGNORE-END  
+
+// NOTE: The http module is deprecated and should not be used for new projects. The new http_net module should be used.
+//
+// #warning "The http module is obsolete. The new http_net module should be used!"
 
 // *****************************************************************************
 // *****************************************************************************

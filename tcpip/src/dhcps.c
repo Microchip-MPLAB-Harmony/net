@@ -42,6 +42,8 @@ Microchip or any third party.
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
 
+//#warning "The dhcps module is obsolete. The new dhcp_server module should be used!"
+
 //ICMP Request and Reply global variables
 
 TCPIP_DHCPS_ICMP_PROCESS_TYPE dhcpsEchoRequestState=TCPIP_DHCPS_ECHO_REQUEST_IDLE;

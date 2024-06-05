@@ -16,6 +16,9 @@
     or important alerts. Using the e-mail to SMS gateways provided by most cell 
     phone carriers, these messages can also be delivered directly to cell phone 
     handsets.
+
+  Note:
+    The SMTP module is obsolete. The new SMTPC module should be used!
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*

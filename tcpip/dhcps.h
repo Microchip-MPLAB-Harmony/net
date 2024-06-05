@@ -15,6 +15,9 @@
      client from the range defined in the dhcps_config.h  file.
      Lease time per IP address is decided as per the TMO configuration 
      which is defined in dhcps_config.h.
+
+  Note:
+    The dhcps module is obsolete. The new dhcp_server module should be used!
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -60,6 +63,10 @@ Microchip or any third party.
 
 #endif
 // DOM-IGNORE-END  
+
+// NOTE: The dhcps module is deprecated and should not be used for new projects. The new dhcp_server module should be used.
+//
+// #warning "The dhcps module is obsolete. The new dhcp_server module should be used!"
 
 // *****************************************************************************
 // *****************************************************************************

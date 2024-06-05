@@ -47,6 +47,7 @@ Microchip or any third party.
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
 
+#warning "The http module is obsolete. The new http_net module should be used!"
 
 #define HTTP_SEND_DATABUF_SIZE      256
 #define HTTP_INC_DATABUF_SIZE       256
