@@ -265,7 +265,7 @@ def loadModule():
     tcpipZeroConfComponent.setDisplayType("Application Layer")
 
     ###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
-    if ("SAMA7G" in Variables.get("__PROCESSOR")) and (Peripheral.moduleExists("GMAC")):
+    if (("SAMA7G" in Variables.get("__PROCESSOR")) or ("SAMA7D6" in Variables.get("__PROCESSOR"))) and (Peripheral.moduleExists("GMAC")):
         drvGmacComponent_0 = Module.CreateComponent("drvGmac0", "GMAC0", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent_0.addMultiCapability("libdrvGmac0","MAC", None)
         drvGmacComponent_0.addDependency("GMAC0_PHY_Dependency", "PHY", None, False, True)  
@@ -419,6 +419,12 @@ def loadModule():
     drvExtPhyLan8770Component.addCapability("libdrvExtPhyLan8770","PHY",False)   
     drvExtPhyLan8770Component.addDependency("LAN8770_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8770Component.setDisplayType("PHY Layer")
+    
+    #Driver for LAN88840 PHY
+    drvExtPhyLan8840Component = Module.CreateComponent("drvExtPhyLan8840", "LAN8840", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8840.py")
+    drvExtPhyLan8840Component.addCapability("libdrvExtPhyLan8840","PHY",False)   
+    drvExtPhyLan8840Component.addDependency("LAN8840_MIIM_Dependency", "MIIM", None, True, True)        
+    drvExtPhyLan8840Component.setDisplayType("PHY Layer")
     
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
