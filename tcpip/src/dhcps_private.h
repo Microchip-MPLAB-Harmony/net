@@ -69,7 +69,7 @@ Microchip or any third party.
 #define TCPIP_DHCPS_QUEUE_LIMIT_SIZE            (7)
 
 // Minimum DHCP Discovery packet size 
-#define TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE     300
+#define TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE     241
 
 // Boot file name, null terminated string; "generic" name or null in DHCPDISCOVER, fully qualified
 // directory-path name in DHCPOFFER.
