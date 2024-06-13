@@ -7977,80 +7977,121 @@ static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
     
     if(argc < 3)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: snmpv3 usm <pos> <u name> <l security-level> <a type authpass> <p type privpass>\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: snmpv3 usm <pos> <u name> <l security-level> <a type authpass> <p type privpass> <info>\r\n");
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "SNMPv3 USM position range - 0 to %d \r\n", TCPIP_SNMPV3_USM_MAX_USER-1);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "SNMPv3 USM security level NoAuthNoPriv- %d, AuthNoPriv- %d, AuthPriv- %d \r\n", NO_AUTH_NO_PRIV, AUTH_NO_PRIV, AUTH_PRIV);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "SNMPv3 USM authentication supported type md5- %d sha- %d \r\n", SNMPV3_HMAC_MD5, SNMPV3_HMAC_SHA1);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "SNMPv3 USM privacy supported type DES- %d AES- %d \r\n", SNMPV3_DES_PRIV, SNMPV3_AES_PRIV);
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: snmpv3 usm 2 u mchp l 3 a 0 auth12345 p 1 priv12345 \r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: snmpv3 usm info \r\n");
         return;
     }
 
-    if(argc>=3)
+    configArgs = 1;
+    if(argc >= 3)
     {
-        if(strcmp(argv[1], "usm") == 0)
+        if(strcmp(argv[configArgs], "usm") == 0)
         {
-            usmPos = atoi(argv[2]);
-            if(usmPos>= TCPIP_SNMPV3_USM_MAX_USER)
+            configArgs = configArgs +1;
+            if(strcmp("info",argv[configArgs]) == 0)
             {
-                (*pCmdIO->pCmdApi->msg)(cmdIoParam,"Invalid USM configuration position\r\n");
-                return;
+                usmUserInfo = true;
+            }
+            else
+            {
+                usmPos = atoi(argv[configArgs]);
+                if(usmPos>= TCPIP_SNMPV3_USM_MAX_USER)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"Invalid USM configuration position\r\n");
+                    return;
+                }
             }
         }
     }
-    else
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam,"insufficient number of arguments\r\n");
-        return;
-    }
+  
     // more than position field 
     memset(userNameBuf, 0, sizeof(userNameBuf));
     memset(authPwBuf, 0, sizeof(authPwBuf));
     memset(privPwBuf, 0, sizeof(privPwBuf));
 
-    configArgs = 3;
-    while(argc >= 3)
+    configArgs = configArgs + 1;
+    // verify there are enough commands for this SNMPv3 configuration
+    if(argc == configArgs)
     {
-        if(strncmp("u",argv[configArgs],1) == 0)
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 insufficient user inputs\r\n");
+        return;
+    }
+    
+    if(usmUserInfo != true)
+    {
+        while(argc > 3)
         {
-            strncpy(userNameBuf,argv[configArgs+1],TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
-            usmUserNameOpcode = true;
-            configArgs = configArgs+2;
-        }
-        else if(strncmp("l",argv[configArgs],1) == 0)
-        {
-            secLev = atoi(argv[configArgs+1]);
-            usmSecLevelOpcode = true;
-            configArgs = configArgs+2;
-        }
-        else if(strncmp("a",argv[configArgs],1) == 0)
-        {
-            hashType = atoi(argv[configArgs+1]);
-            strncpy(authPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
-            usmAuthPasswdOpcode = true;
-            configArgs = configArgs+3;
-        }
-        else if(strncmp("p",argv[configArgs],1) == 0)
-        {
-            privType = atoi(argv[configArgs+1]);
-            strncpy(privPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
-            usmPrivPasswdOpcode = true;
-            configArgs = configArgs+3;
-        }
-        else if(strcmp("info",argv[configArgs-1]) == 0)
-        {
-            usmUserInfo = true;
-            break;
-        }
-        else
-        {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam,"invalid number of arguments\r\n");
-            return;
-        }
-        if(configArgs>=argc)
-        {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam,"End of arguments\r\n");
-            break;
+            if(strncmp("u",argv[configArgs],1) == 0)
+            {
+                if(argc == configArgs+1)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 User name is missing\r\n");
+                    return;
+                }
+                strncpy(userNameBuf,argv[configArgs+1],TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
+                usmUserNameOpcode = true;
+                configArgs = configArgs+2;
+            }
+            else if(strncmp("l",argv[configArgs],1) == 0)
+            {
+                if(argc == configArgs+1)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 security level is missing\r\n");
+                    return;
+                }
+                secLev = atoi(argv[configArgs+1]);
+                usmSecLevelOpcode = true;
+                configArgs = configArgs+2;
+            }
+            else if(strncmp("a",argv[configArgs],1) == 0)
+            {
+                if(argc == configArgs+1)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 Authentication Hash type is missing\r\n");
+                    return;
+                }
+                hashType = atoi(argv[configArgs+1]);
+                if(argc == configArgs+2)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 Authentication password is missing\r\n");
+                    return;
+                }
+                strncpy(authPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
+                usmAuthPasswdOpcode = true;
+                configArgs = configArgs+3;
+            }
+            else if(strncmp("p",argv[configArgs],1) == 0)
+            {
+                if(argc == configArgs+1)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 Privacy Hash type is missing\r\n");
+                    return;
+                }
+                privType = atoi(argv[configArgs+1]);
+                if(argc == configArgs+2)
+                {
+                    (*pCmdIO->pCmdApi->msg)(cmdIoParam,"SNMPv3 Privacy password is missing\r\n");
+                    return;
+                }
+                strncpy(privPwBuf,argv[configArgs+2],TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN);
+                usmPrivPasswdOpcode = true;
+                configArgs = configArgs+3;
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam,"invalid number of arguments\r\n");
+                return;
+            }
+            if(configArgs>=argc)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam,"End of arguments\r\n");
+                break;
+            }
         }
     }
     
