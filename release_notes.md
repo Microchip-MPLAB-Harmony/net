@@ -1,4 +1,55 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.12.0 (June, 2024)
+### ADDITIONS AND UPDATES FOR  3.12.0:
+
+- **New features**
+
+    - The release provides the following new features:
+		- Addition of GMAC driver support for SAMA7D6 MPU.
+		- Addition of PHY driver support for LAN8840.
+
+- **Applications**
+  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+
+
+- **Bug Fixes**
+
+The following table provides the list of fixes in the 3.12.0 release:
+
+| Module                | Description     |
+| ------ | -------- |
+| DHCPS            | Lowered the Minimum DHCP Discovery valid packet size |
+| TCPIP Commands   | Fixed MISRA C violations | 
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.40](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.12.0
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.1 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.13.4
+- Harmony csp repository, v3.19.0
+- Harmony bsp repository, v3.20.0
+- Harmony crypto repository, v3.8.1
+- Harmony usb repository, v3.13.0 for demos requiring USB
+- wolfSSL  v5.4.0 (https://github.com/Microchip-MPLAB-Harmony/wolfssl/tree/v5.4.0) for demos requiring wolfSSL encryption
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+- CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
+
+
+### KNOWN ISSUES
+* See the applications release notes in [product family specific repository](apps/readme.md)
+
+
 ## Net Release v3.11.1 (April, 2024)
 ### ADDITIONS AND UPDATES FOR  3.11.1:
 
