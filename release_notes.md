@@ -1,25 +1,25 @@
-# Microchip MPLAB Harmony 3 Release Notes
+# Microchip MPLAB® Harmony 3 Release Notes
 ## Net Release v3.12.0 (June, 2024)
 ### ADDITIONS AND UPDATES FOR  3.12.0:
 
 - **New features**
 
     - The release provides the following new features:
-		- Addition of GMAC driver support for SAMA7D6 MPU.
-		- Addition of PHY driver support for LAN8840.
+		- GMAC driver support for SAMA7D6.
+		- PHY driver support for LAN8840.
 
 - **Applications**
-  - MPLAB Harmony provides large number of application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are moved to the [product family specific repository](apps/readme.md).
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
 
 
 - **Bug Fixes**
 
-The following table provides the list of fixes in the 3.12.0 release:
+	-	The following table provides the list of fixes in the 3.12.0 release:
 
-| Module                | Description     |
-| ------ | -------- |
-| DHCPS            | Lowered the Minimum DHCP Discovery valid packet size |
-| TCPIP Commands   | Fixed MISRA C violations | 
+		| Module                | Description     |
+		| ------ | -------- |
+		| DHCPS            | Lowered the Minimum DHCP Discovery valid packet size |
+		| TCPIP Commands   | Fixed MISRA C violations | 
 
 
 ### TESTED WITH:
@@ -47,7 +47,7 @@ In order to regenerate source code for any of the applications, you will also ne
 
 
 ### KNOWN ISSUES
-* See the applications release notes in [product family specific repository](apps/readme.md)
+* None.
 
 
 ## Net Release v3.11.1 (April, 2024)
