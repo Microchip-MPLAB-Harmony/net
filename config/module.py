@@ -34,6 +34,7 @@ def loadModule():
     tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME", None, True, True)
     tcpipStackComponent.addDependency("Core_SysConsole_Dependency", "SYS_CONSOLE", None, False, False)
     tcpipStackComponent.setDisplayType("TCP/IP Library")
+    tcpipStackComponent.setHelpKeyword("tcpip_core")
         
     tcpipNetConfigComponent = Module.CreateGeneratorComponent("tcpipNetConfig", "NETCONFIG", "/TCPIP/CORE/","tcpip/config/tcpip_network_config_common.py","tcpip/config/tcpip_network_config.py")
     tcpipNetConfigComponent.addDependency("NETCONFIG_MAC_Dependency", "MAC")
@@ -44,21 +45,25 @@ def loadModule():
     tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True) 
     tcpipCmdComponent.addDependency("TcpipCmd_SysCmd_Dependency", "SYS_COMMAND", None, True, True)
     tcpipCmdComponent.setDisplayType("TCP/IP Library")
+    tcpipCmdComponent.setHelpKeyword("tcpip_cmd")
 
     ###########  TCP/IP LIBRARY Network Layer Configurations  ###########
     tcpipArpComponent = Module.CreateComponent("tcpipArp", "ARP", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_arp.py")
     tcpipArpComponent.addCapability("libtcpipArp","ARP", True)
     tcpipArpComponent.setDisplayType("Network Layer")
+    tcpipArpComponent.setHelpKeyword("tcpip_arp")
     
     tcpipIcmpComponent = Module.CreateComponent("tcpipIcmp", "ICMPv4", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_icmp.py")
     tcpipIcmpComponent.addCapability("libtcpipIcmp","ICMPv4",True)  
     tcpipIcmpComponent.addDependency("Icmp_IPv4_Dependency", "IPv4", None, True, True)
     tcpipIcmpComponent.setDisplayType("Network Layer")
+    tcpipIcmpComponent.setHelpKeyword("tcpip_icmp")
 
     tcpipIgmpComponent = Module.CreateComponent("tcpipIgmp", "IGMP", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_igmp.py")
     tcpipIgmpComponent.addCapability("libtcpipIgmp","IGMP",True)
     tcpipIgmpComponent.addDependency("Igmp_IPv4_Dependency", "IPv4", None, True, True)
     tcpipIgmpComponent.setDisplayType("Network Layer")
+    tcpipIgmpComponent.setHelpKeyword("tcpip_igmp")
     
     tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv4.py")
     tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4",True)
@@ -66,6 +71,7 @@ def loadModule():
     #tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE", None, True, True)  
     tcpipIPv4Component.addDependency("Ipv4_Arp_Dependency", "ARP", None, True, True)    
     tcpipIPv4Component.setDisplayType("Network Layer")
+    tcpipIPv4Component.setHelpKeyword("tcpip_ipv4")
     
     tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv6.py")
     tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6",True)
@@ -73,14 +79,17 @@ def loadModule():
     tcpipIPv6Component.addDependency("Ipv6_Ndp_Dependency", "NDP", None, True, True)
     tcpipIPv6Component.addDependency("Ipv6_Icmpv6_Dependency", "ICMPv6", None, True, True)
     tcpipIPv6Component.setDisplayType("Network Layer")
+    tcpipIPv6Component.setHelpKeyword("tcpip_ipv6")
     
     tcpipIcmpv6Component = Module.CreateComponent("tcpipIcmpv6", "ICMPv6", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_icmpv6.py")
     tcpipIcmpv6Component.addCapability("libtcpipIcmpv6","ICMPv6",True)  
     tcpipIcmpv6Component.setDisplayType("Network Layer")
+    tcpipIcmpv6Component.setHelpKeyword("tcpip_icmpv6")
     
     tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ndp.py")
     tcpipNdpComponent.addCapability("libtcpipNdp","NDP",True)
     tcpipNdpComponent.setDisplayType("Network Layer")
+    tcpipNdpComponent.setHelpKeyword("tcpip_ndp")
 
     ###########  TCP/IP LIBRARY Transport Layer Configurations  ###########
     tcpipTcpComponent = Module.CreateSharedComponent("tcpipTcp", "TCP", "/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_tcp.py")
@@ -88,11 +97,13 @@ def loadModule():
     tcpipTcpComponent.addDependency("Tcp_IP_Dependency", "IP", None, True, True)
     tcpipTcpComponent.addDependency("Tcp_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
     tcpipTcpComponent.setDisplayType("Transport Layer")
+    tcpipTcpComponent.setHelpKeyword("tcpip_tcp")
     
     tcpipUdpComponent = Module.CreateSharedComponent("tcpipUdp", "UDP", "/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_udp.py")
     tcpipUdpComponent.addCapability("libtcpipUdp","UDP",True)
     tcpipUdpComponent.addDependency("Udp_IP_Dependency", "IP", None, True, True)
     tcpipUdpComponent.setDisplayType("Transport Layer")
+    tcpipUdpComponent.setHelpKeyword("tcpip_udp")
 
     ########################## TCP/IP LIBRARY Presentation Layer Configurations #################################    
     net_PresComponent = Module.CreateComponent("net_Pres", "Presentation Layer", "/TCPIP/Layer6-PRESENTATION", "net_pres/pres/config/net_pres.py")
@@ -100,6 +111,7 @@ def loadModule():
     net_PresComponent.addDependency("Net_Pres_Crypto_Dependency", "TLS Provider", None, False, False)
     net_PresComponent.addDependency("Net_Pres_SNTP_Dependency", "SNTP", None, True, True)
     net_PresComponent.setDisplayType("Presentation Layer")
+    net_PresComponent.setHelpKeyword("net_pres")
     
     ###########  TCP/IP LIBRARY Application Layer Configurations  ###########   
     tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")
@@ -107,6 +119,7 @@ def loadModule():
     tcpipAnnounceComponent.addDependency("Announce_IPv4_Dependency", "IPv4", None, True, True)
     tcpipAnnounceComponent.addDependency("Announce_UDP_Dependency", "UDP", None, True, True)    
     tcpipAnnounceComponent.setDisplayType("Application Layer")
+    tcpipAnnounceComponent.setHelpKeyword("tcpip_announce")
     
     tcpipBerkeleyApiComponent = Module.CreateComponent("tcpipBerkeleyApi", "Berkeley API", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_berkeley_api.py")
     tcpipBerkeleyApiComponent.addCapability("libtcpipBerkeleyApi","BSD",True)   
@@ -115,18 +128,21 @@ def loadModule():
     tcpipBerkeleyApiComponent.addDependency("BSD_NETPRES_Dependency", "net_pres", True, True)
     tcpipBerkeleyApiComponent.addDependency("BSD_DNSC_Dependency", "DNSC", None, True, True)
     tcpipBerkeleyApiComponent.setDisplayType("Application Layer")
+    tcpipBerkeleyApiComponent.setHelpKeyword("tcpip_bsd")
     
     tcpipDdnsComponent = Module.CreateComponent("tcpipDdns", "DDNS", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ddns.py")
     tcpipDdnsComponent.addCapability("libtcpipDdns","DDNS",True)    
     tcpipDdnsComponent.addDependency("Ddns_UDP_Dependency", "UDP", None, True, True)
     tcpipDdnsComponent.addDependency("Ddns_IPv4_Dependency", "IPv4", None, True, True)  
     tcpipDdnsComponent.setDisplayType("Application Layer")
+    tcpipDdnsComponent.setHelpKeyword("tcpip_ddns")
     
     tcpipDhcpComponent = Module.CreateComponent("tcpipDhcp", "DHCP CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcp.py")
     tcpipDhcpComponent.addCapability("libtcpipDhcp","DHCPC",True)
     tcpipDhcpComponent.addDependency("Dhcpc_IPv4_Dependency", "IPv4", None, True, True)
     tcpipDhcpComponent.addDependency("Dhcpc_UDP_Dependency", "UDP", None, True, True)
     tcpipDhcpComponent.setDisplayType("Application Layer")
+    tcpipDhcpComponent.setHelpKeyword("tcpip_dhcp")
     
     tcpipDhcpsComponent = Module.CreateComponent("tcpipDhcps", "DHCP SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcps.py")
     tcpipDhcpsComponent.addCapability("libtcpipDhcps","DHCPS",True)
@@ -134,6 +150,7 @@ def loadModule():
     tcpipDhcpsComponent.addDependency("Dhcps_UDP_Dependency", "UDP", None, True, True) 
     tcpipDhcpsComponent.addDependency("Dhcps_Icmp_Dependency", "ICMPv4", None, True, True)
     tcpipDhcpsComponent.setDisplayType("Application Layer")
+    tcpipDhcpsComponent.setHelpKeyword("tcpip_dhcps")
     
     # DHCP Server new module
     tcpipDhcpServerComponent = Module.CreateComponent("tcpipDhcpServer", "DHCP SERVER v2", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcp_server.py")
@@ -142,28 +159,33 @@ def loadModule():
     tcpipDhcpServerComponent.addDependency("DhcpServer_UDP_Dependency", "UDP", None, True, True) 
     tcpipDhcpServerComponent.addDependency("DhcpServer_Icmp_Dependency", "ICMPv4", None, True, True)
     tcpipDhcpServerComponent.setDisplayType("Application Layer")
+    tcpipDhcpServerComponent.setHelpKeyword("tcpip_dhcpsv2")
     
     tcpipDhcpcv6Component = Module.CreateComponent("tcpipDhcpcv6", "DHCPV6 CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dhcpv6.py")
     tcpipDhcpcv6Component.addCapability("libtcpipDhcpcv6","DHCPCV6",True)
     tcpipDhcpcv6Component.addDependency("Dhcpcv6_IPv6_Dependency", "IPv6", None, True, True)
     tcpipDhcpcv6Component.addDependency("Dhcpcv6_UDP_Dependency", "UDP", None, True, True)
     tcpipDhcpcv6Component.setDisplayType("Application Layer")
+    tcpipDhcpcv6Component.setHelpKeyword("tcpip_dhcpv6")
     
     tcpipDnsComponent = Module.CreateComponent("tcpipDns", "DNS CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dns.py")
     tcpipDnsComponent.addCapability("libtcpipDns","DNSC",True)  
     tcpipDnsComponent.addDependency("Dns_UDP_Dependency", "UDP", None, True, True)
     tcpipDnsComponent.setDisplayType("Application Layer")
+    tcpipDnsComponent.setHelpKeyword("tcpip_dns")
     
     tcpipDnssComponent = Module.CreateComponent("tcpipDnss", "DNS SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_dnss.py")
     tcpipDnssComponent.addCapability("libtcpipDnss","DNSS",True)    
     tcpipDnssComponent.addDependency("Dnss_UDP_Dependency", "UDP", None, True, True)    
     tcpipDnssComponent.setDisplayType("Application Layer")
+    tcpipDnssComponent.setHelpKeyword("tcpip_dnss")
     
     tcpipFtpsComponent = Module.CreateComponent("tcpipFtps", "FTP SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftps.py")
     tcpipFtpsComponent.addCapability("libtcpipFtps","FTPS",True)    
     tcpipFtpsComponent.addDependency("Ftps_TCP_Dependency", "TCP", None, True, True)    
     tcpipFtpsComponent.addDependency("Ftps_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipFtpsComponent.setDisplayType("Application Layer")
+    tcpipFtpsComponent.setHelpKeyword("tcpip_ftps")
     
     tcpipHttpNetComponent = Module.CreateComponent("tcpipHttpNet", "HTTPNET SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_httpnet.py")
     tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET",True)   
@@ -171,6 +193,7 @@ def loadModule():
     tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
     tcpipHttpNetComponent.setDisplayType("Application Layer")
+    tcpipHttpNetComponent.setHelpKeyword("tcpip_httpnet")
 
     tcpipHttpSrvV2Component = Module.CreateComponent("tcpipHttpSrvV2", "HTTP SERVER v2", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http_server.py")
     tcpipHttpSrvV2Component.addCapability("libtcpipHttpV2","HTTP Server v2",True)   
@@ -186,30 +209,35 @@ def loadModule():
         tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "SYS_FS", None, True, True)
         tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
         tcpipHttpComponent.setDisplayType("Application Layer")
+        tcpipHttpComponent.setHelpKeyword("tcpip_http")
 
     tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_iperf.py")
     tcpipIperfComponent.addCapability("libtcpipIperf","IPERF",True)
     tcpipIperfComponent.addDependency("Iperf_TCP_Dependency", "TCP", None, True, True)
     tcpipIperfComponent.addDependency("Iperf_UDP_Dependency", "UDP", None, True, True)
     tcpipIperfComponent.setDisplayType("Application Layer")
+    tcpipIperfComponent.setHelpKeyword("tcpip_iperf")
 
     tcpipFtpcComponent = Module.CreateComponent("tcpipFtpc", "FTP CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftpc.py")
     tcpipFtpcComponent.addCapability("libtcpipFtpc","FTPC",True)
     tcpipFtpcComponent.addDependency("FTPC_TCP_Dependency", "TCP", None, True, True)    
     tcpipFtpcComponent.addDependency("FTPC_TcipFs_Dependency", "SYS_FS", None, True, True)
     tcpipFtpcComponent.setDisplayType("Application Layer")
+    tcpipFtpcComponent.setHelpKeyword("tcpip_ftpc")
     
     tcpipNbnsComponent = Module.CreateComponent("tcpipNbns", "NBNS", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_nbns.py")
     tcpipNbnsComponent.addCapability("libtcpipNbns","NBNS",True)
     tcpipNbnsComponent.addDependency("Nbns_IPv4_Dependency", "IPv4", None, True, True)
     tcpipNbnsComponent.addDependency("Nbns_UDP_Dependency", "UDP", None, True, True)    
     tcpipNbnsComponent.setDisplayType("Application Layer")
+    tcpipNbnsComponent.setHelpKeyword("tcpip_nbns")
     
     # tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_reboot.py")
     # tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT",True)
     # tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4", None, True, True)
     # tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP", None, True, True)
     # tcpipRebootComponent.setDisplayType("Library")
+    # tcpipRebootComponent.setHelpKeyword("tcpip_reboot")
 
     tcpipSmtpcComponent = Module.CreateComponent("tcpipSmtpc", "SMTP CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_smtpc.py")
     tcpipSmtpcComponent.addCapability("libtcpipSmtpc","SMTPC",True)
@@ -218,29 +246,34 @@ def loadModule():
     tcpipSmtpcComponent.addDependency("Smtpc_DNSC_Dependency", "DNSC", None, True, True)
     tcpipSmtpcComponent.addDependency("Smtpc_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipSmtpcComponent.setDisplayType("Application Layer")
+    tcpipSmtpcComponent.setHelpKeyword("tcpip_smtpc")
     
     tcpipSnmpComponent = Module.CreateComponent("tcpipSnmp", "SNMP", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmp.py")
     tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP",True)    
     tcpipSnmpComponent.addDependency("Snmp_UDP_Dependency", "UDP", None, True, True)    
     tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipSnmpComponent.setDisplayType("Application Layer")
+    tcpipSnmpComponent.setHelpKeyword("tcpip_snmp")
 
     if "SAMA5" not in processor:    
         tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")
         tcpipSnmpv3Component.addCapability("libtcpipSnmpv3","SNMPV3",True)  
         tcpipSnmpv3Component.addDependency("Snmpv3_SNMP_Dependency", "SNMP", None, True, True)
         tcpipSnmpv3Component.setDisplayType("Application Layer")
+        tcpipSnmpv3Component.setHelpKeyword("tcpip_snmp")
 
     tcpipSntpComponent = Module.CreateComponent("tcpipSntp", "SNTP", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_sntp.py")
     tcpipSntpComponent.addCapability("libtcpipSntp","SNTP",True)    
     tcpipSntpComponent.addDependency("Sntp_DNSC_Dependency", "DNSC", None, True, True)
     tcpipSntpComponent.setDisplayType("Application Layer")
+    tcpipSntpComponent.setHelpKeyword("tcpip_sntp")
     
     tcpipTelnetComponent = Module.CreateComponent("tcpipTelnet", "TELNET", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_telnet.py")
     tcpipTelnetComponent.addCapability("libtcpipTelnet","TELNET",True)
     tcpipTelnetComponent.addDependency("Telnet_TcpipCmd_Dependency", "TCPIP_CMD", None, True, True)
     tcpipTelnetComponent.addDependency("Telnet_NetPres_Dependency", "net_pres", True, True)
     tcpipTelnetComponent.setDisplayType("Application Layer")
+    tcpipTelnetComponent.setHelpKeyword("tcpip_telnet")
     
     tcpipTftpcComponent = Module.CreateComponent("tcpipTftpc", "TFTP CLIENT", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_tftpc.py")
     tcpipTftpcComponent.addCapability("libtcpipTftpc","TFTPC",True)
@@ -249,6 +282,7 @@ def loadModule():
     #tcpipTftpcComponent.addDependency("Tftpc_MAC_Dependency", "MAC")
     tcpipTftpcComponent.addDependency("Tftpc_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipTftpcComponent.setDisplayType("Application Layer")
+    tcpipTftpcComponent.setHelpKeyword("tcpip_tftpc")
     
     tcpipTftpsComponent = Module.CreateComponent("tcpipTftps", "TFTP SERVER", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_tftps.py")
     tcpipTftpsComponent.addCapability("libtcpipTftps","TFTPS",True)
@@ -257,12 +291,14 @@ def loadModule():
     #tcpipTftpsComponent.addDependency("Tftps_MAC_Dependency", "MAC")
     tcpipTftpsComponent.addDependency("Tftps_TcpipFs_Dependency", "SYS_FS", None, True, True)
     tcpipTftpsComponent.setDisplayType("Application Layer")
+    tcpipTftpsComponent.setHelpKeyword("tcpip_tftps")
     
     tcpipZeroConfComponent = Module.CreateComponent("tcpipZeroConf", "ZEROCONF", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_zeroconf.py")
     tcpipZeroConfComponent.addCapability("libtcpipZeroConf","ZEROCONF",True)
     tcpipZeroConfComponent.addDependency("ZeroConf_IPv4_Dependency", "IPv4", None, True, True)
     tcpipZeroConfComponent.addDependency("ZeroConf_UDP_Dependency", "UDP", None, True, True)
     tcpipZeroConfComponent.setDisplayType("Application Layer")
+    tcpipZeroConfComponent.setHelpKeyword("tcpip_zeroconf")
 
     ###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
     if (("SAMA7G" in Variables.get("__PROCESSOR")) or ("SAMA7D6" in Variables.get("__PROCESSOR"))) and (Peripheral.moduleExists("GMAC")):
@@ -270,34 +306,41 @@ def loadModule():
         drvGmacComponent_0.addMultiCapability("libdrvGmac0","MAC", None)
         drvGmacComponent_0.addDependency("GMAC0_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent_0.setDisplayType("MAC Layer")
+        drvGmacComponent_0.setHelpKeyword("drv_gmac")
         drvGmacComponent_1 = Module.CreateComponent("drvGmac1", "GMAC1", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent_1.addMultiCapability("libdrvGmac1","MAC", None)
         drvGmacComponent_1.addDependency("GMAC1_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent_1.setDisplayType("MAC Layer")
+        drvGmacComponent_1.setHelpKeyword("drv_gmac")
     elif Peripheral.moduleExists("GMAC"):
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addMultiCapability("libdrvGmac","MAC", None)
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, False, True)  
         drvGmacComponent.setDisplayType("MAC Layer")
+        drvGmacComponent.setHelpKeyword("drv_gmac")
     elif (("PIC32CZ" in Variables.get("__PROCESSOR")) or ("PIC32CK" in Variables.get("__PROCESSOR"))) and (Peripheral.moduleExists("ETH")):
         drvGmacComponent = Module.CreateComponent("drvGmac", "ETH", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
         drvGmacComponent.addDependency("ETH_PHY_Dependency", "PHY", None, False, True)  
-        drvGmacComponent.setDisplayType("MAC Layer")    
+        drvGmacComponent.setDisplayType("MAC Layer")
+        drvGmacComponent.setHelpKeyword("drv_gmac")
     elif Peripheral.moduleExists("EMAC"):
         aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_0.addMultiCapability( "libdrvMac0", "MAC", None)
         aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, False, True)
         aDrvMacComponent_0.setDisplayType("MAC Layer")
+        aDrvMacComponent_0.setHelpKeyword("MAC_Driver_Module")
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_1.addMultiCapability( "libdrvMac1", "MAC", None)
         aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, False, True)
         aDrvMacComponent_1.setDisplayType("MAC Layer")
+        aDrvMacComponent_1.setHelpKeyword("MAC_Driver_Module")
     elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addMultiCapability("libdrvPic32mEthmac","MAC", None)
         drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, False, True)
         drvPic32mEthmacComponent.setDisplayType("MAC Layer")
+        drvPic32mEthmacComponent.setHelpKeyword("drv_ethmac")
             
     # PPP driver            
     if "PIC32MZ" in processor or "SAME5" in processor:
@@ -305,11 +348,13 @@ def loadModule():
         drvPPPComponent.addMultiCapability("libdrvPPPMac","MAC", None)
         drvPPPComponent.addDependency("PPP_Uart_Dependency", "UART", None, False, True)  
         drvPPPComponent.setDisplayType("MAC Layer")
+        drvPPPComponent.setHelpKeyword("drv_ppp")
 
     ## MIIM Driver
     drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Drivers/", "driver/miim/config/drv_miim.py")
     drvMiimComponent.addCapability("libdrvMiim","MIIM",True)   
     drvMiimComponent.setDisplayType("PHY Layer")
+    drvMiimComponent.setHelpKeyword("drv_miim")
     
     ################# ETHERNET PHY Driver ##############################################
     #Driver for Microchip VSC8540 PHY
@@ -317,131 +362,153 @@ def loadModule():
     drvExtPhyVsc8540Component.addCapability("libdrvExtPhyVsc8540","PHY",False)   
     drvExtPhyVsc8540Component.addDependency("VSC8540_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyVsc8540Component.setDisplayType("PHY Layer")
+    drvExtPhyVsc8540Component.setHelpKeyword("drv_ethphy")
 
     #Driver for Micrel KSZ8041 PHY
     drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
     drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",False)   
     drvExtPhyKsz8041Component.addDependency("KSZ8041_MIIM_Dependency", "MIIM", None, True, True)  
     drvExtPhyKsz8041Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz8041Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ8061 PHY
     drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
     drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",False)   
     drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8061Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz8061Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ8081 PHY
     drvExtPhyKsz8081Component = Module.CreateComponent("drvExtPhyKsz8081", "KSZ8081", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8081.py")
     drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",False)   
     drvExtPhyKsz8081Component.addDependency("KSZ8081_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8081Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz8081Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ8091 PHY
     drvExtPhyKsz8091Component = Module.CreateComponent("drvExtPhyKsz8091", "KSZ8091", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8091.py")
     drvExtPhyKsz8091Component.addCapability("libdrvExtPhyKsz8091","PHY",False)   
     drvExtPhyKsz8091Component.addDependency("KSZ8091_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz8091Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz8091Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ8863 PHY
     drvExtPhyKsz8863Component = Module.CreateComponent("drvExtPhyKsz8863", "KSZ8863", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8863.py")
     drvExtPhyKsz8863Component.addCapability("libdrvExtPhyKsz8863","PHY",False)   
     drvExtPhyKsz8863Component.addDependency("KSZ8863_MIIM_Dependency", "MIIM", None, True, True)  
     drvExtPhyKsz8863Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz8863Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ9031 PHY
     drvExtPhyKsz9031Component = Module.CreateComponent("drvExtPhyKsz9031", "KSZ9031", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz9031.py")
     drvExtPhyKsz9031Component.addCapability("libdrvExtPhyKsz9031","PHY",False)   
     drvExtPhyKsz9031Component.addDependency("KSZ9031_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz9031Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz9031Component.setHelpKeyword("drv_ethphy")
     
     #Driver for Micrel KSZ9131 PHY
     drvExtPhyKsz9131Component = Module.CreateComponent("drvExtPhyKsz9131", "KSZ9131", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz9131.py")
     drvExtPhyKsz9131Component.addCapability("libdrvExtPhyKsz9131","PHY",False)   
     drvExtPhyKsz9131Component.addDependency("KSZ9131_MIIM_Dependency", "MIIM", None, True, True)    
     drvExtPhyKsz9131Component.setDisplayType("PHY Layer")
+    drvExtPhyKsz9131Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN8700 PHY
     drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
     drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",False)   
     drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)       
     drvExtPhyLan8700Component.setDisplayType("PHY Layer")
+    drvExtPhyLan8700Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN8720PHY
     drvExtPhyLan8720Component = Module.CreateComponent("drvExtPhyLan8720", "LAN8720", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8720.py")
     drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",False)   
     drvExtPhyLan8720Component.addDependency("LAN8720_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan8720Component.setDisplayType("PHY Layer")
+    drvExtPhyLan8720Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN8740 PHY
     drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
     drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",False)   
     drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8740Component.setDisplayType("PHY Layer")
+    drvExtPhyLan8740Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN8742A PHY
     drvExtPhyLan8742aComponent = Module.CreateComponent("drvExtPhyLan8742a", "LAN8742A", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8742a.py")
     drvExtPhyLan8742aComponent.addCapability("libdrvExtPhyLan8742a","PHY",False)   
     drvExtPhyLan8742aComponent.addDependency("LAN8742a_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8742aComponent.setDisplayType("PHY Layer")
+    drvExtPhyLan8742aComponent.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN9303PHY
     drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
     drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",False)   
     drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyLan9303Component.setDisplayType("PHY Layer")
+    drvExtPhyLan9303Component.setHelpKeyword("drv_ethphy")
     
     #Driver for DP83640PHY
     drvExtPhyDp83640Component = Module.CreateComponent("drvExtPhyDp83640", "DP83640", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83640.py")
     drvExtPhyDp83640Component.addCapability("libdrvExtPhyDp83640","PHY",False)   
     drvExtPhyDp83640Component.addDependency("DP83640_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83640Component.setDisplayType("PHY Layer")
+    drvExtPhyDp83640Component.setHelpKeyword("drv_ethphy")
     
     #Driver for DP83848PHY
     drvExtPhyDp83848Component = Module.CreateComponent("drvExtPhyDp83848", "DP83848", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dp83848.py")
     drvExtPhyDp83848Component.addCapability("libdrvExtPhyDp83848","PHY",False)   
     drvExtPhyDp83848Component.addDependency("DP83848_MIIM_Dependency", "MIIM", None, True, True) 
     drvExtPhyDp83848Component.setDisplayType("PHY Layer")
+    drvExtPhyDp83848Component.setHelpKeyword("drv_ethphy")
     
     #Driver for IP101GRPHY
     drvExtPhyIp101grComponent = Module.CreateComponent("drvExtPhyIp101gr", "IP101GR", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ip101gr.py")
     drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",False)   
     drvExtPhyIp101grComponent.addDependency("IP101GR_MIIM_Dependency", "MIIM", None, True, True)     
     drvExtPhyIp101grComponent.setDisplayType("PHY Layer")
+    drvExtPhyIp101grComponent.setHelpKeyword("drv_ethphy")
 
     #Driver for LAN9354 PHY
     drvExtPhyLan9354Component = Module.CreateComponent("drvExtPhyLan9354", "LAN9354", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9354.py")
     drvExtPhyLan9354Component.addCapability("libdrvExtPhyLan9354","PHY",False)   
     drvExtPhyLan9354Component.addDependency("LAN9354_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan9354Component.setDisplayType("PHY Layer")
+    drvExtPhyLan9354Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN8770 PHY
     drvExtPhyLan8770Component = Module.CreateComponent("drvExtPhyLan8770", "LAN8770", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8770.py")
     drvExtPhyLan8770Component.addCapability("libdrvExtPhyLan8770","PHY",False)   
     drvExtPhyLan8770Component.addDependency("LAN8770_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8770Component.setDisplayType("PHY Layer")
+    drvExtPhyLan8770Component.setHelpKeyword("drv_ethphy")
     
     #Driver for LAN88840 PHY
     drvExtPhyLan8840Component = Module.CreateComponent("drvExtPhyLan8840", "LAN8840", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8840.py")
     drvExtPhyLan8840Component.addCapability("libdrvExtPhyLan8840","PHY",False)   
     drvExtPhyLan8840Component.addDependency("LAN8840_MIIM_Dependency", "MIIM", None, True, True)        
     drvExtPhyLan8840Component.setDisplayType("PHY Layer")
+    drvExtPhyLan8840Component.setHelpKeyword("drv_ethphy")
     
     #Driver for ENCX24J600
     drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
     drvExtMacEncx24j600Component.addMultiCapability("libdrvExtMacEncx24j600","MAC",None)   
     drvExtMacEncx24j600Component.addDependency("ENCX24J600_SPI", "DRV_SPI", None, False, True)   
     drvExtMacEncx24j600Component.setDisplayType("MAC Layer")
+    drvExtMacEncx24j600Component.setHelpKeyword("drv_encj600")
     
     #Driver for ENC28J60
     drvExtMacEnc28j60Component = Module.CreateGeneratorComponent("drvExtMacEnc28j60", "ENC28J60", "/Drivers/External Ethernet Controller", "driver/enc28j60/config/drv_enc28j60_common.py", "driver/enc28j60/config/drv_enc28j60.py")
     drvExtMacEnc28j60Component.addMultiCapability("libdrvExtMacEnc28j60","MAC",None)  
     drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
     drvExtMacEnc28j60Component.setDisplayType("MAC Layer")
+    drvExtMacEnc28j60Component.setHelpKeyword("drv_enc28j60")
 
     #Driver for Dummy PHY
     drvExtPhyDummyComponent = Module.CreateComponent("drvExtPhyDummy", "Dummy", "/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_dummy.py")
     drvExtPhyDummyComponent.addCapability("libdrvExtPhyDummy","PHY",False)   
     drvExtPhyDummyComponent.setDisplayType("PHY Layer")
+    drvExtPhyDummyComponent.setHelpKeyword("drv_ethphy")
     
     ########################## Harmony Network Presentation Module #################################    
     # OBSOLETE Module - Do not use this module for new demos#
