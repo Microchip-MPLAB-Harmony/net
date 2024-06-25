@@ -173,8 +173,10 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpip${GMAC_PERIPHERAL_INSTANCE}InitData =
         <#lt>       .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     <#lt></#if>
     <#lt>       .pPhyInit               = &tcpipPhyInitData_${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_PHY_TYPE"]},
-    <#lt><#if ((TCPIP_INTMAC_DEVICE) == "SAMA7G")> 
-        <#lt>       .macRefClkSrc           = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]},
+    <#lt><#if ((TCPIP_INTMAC_DEVICE) == "SAMA7G")|| (TCPIP_INTMAC_DEVICE == "SAM9X7")> 
+        <#lt><#if .vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]?has_content>  
+            <#lt>       .macRefClkSrc           = ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_REF_CLK_SRC"]},
+        <#lt></#if>
     <#lt></#if>
     <#lt>       .checksumOffloadRx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_RX_CHKSM_OFFLOAD,
     <#lt>       .checksumOffloadTx      = DRV_${GMAC_PERIPHERAL_INSTANCE}_TX_CHKSM_OFFLOAD,
