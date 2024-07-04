@@ -97,6 +97,9 @@ typedef union {
 
 typedef enum
 {   // MMD Register under Device Address 2
+    PHY_MMD_CTL_SKEW_REG = 4,
+    PHY_MMD_RGMII_RX_DATA_SKEW_REG = 5,
+    PHY_MMD_RGMII_TX_DATA_SKEW_REG = 6,            
     PHY_MMD_CLK_SKEW_REG = 8,
     PHY_MMD_TX_DLL_REG   = 77,
 }PHY_MMD_DEV2_REG;
@@ -104,7 +107,82 @@ typedef enum
 #define _PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000 // 15 and 14th is 00
 #define _PHY_MMD_CNTL_ACCESS_DATA_MASK  0x4000 // 15 and 14 th is 01
 #define _PHY_MMD_RESERVED_MASK 0x3FE0
+#define _PHY_MMD_DEVICE_ADDRESS 0x02
 
+#define PHY_MMD_TX_CLK_SKEW_POS 5 
+#define PHY_MMD_RX_CTL_SKEW_POS 4
+#define PHY_MMD_RXD3_PAD_SKEW_POS 12
+#define PHY_MMD_RXD2_PAD_SKEW_POS 8
+#define PHY_MMD_RXD1_PAD_SKEW_POS 4
+#define PHY_MMD_TXD3_PAD_SKEW_POS 12
+#define PHY_MMD_TXD2_PAD_SKEW_POS 8
+#define PHY_MMD_TXD1_PAD_SKEW_POS 4
+
+#define PHY_MMD_TX_CLK_SKEW_MASK 0xFC1F 
+#define PHY_MMD_RX_CLK_SKEW_MASK 0xFFE0 
+#define PHY_MMD_RX_CTL_SKEW_MASK 0xFF0F
+#define PHY_MMD_TX_CTL_SKEW_MASK 0xFFF0
+#define PHY_MMD_RXD3_PAD_SKEW_MASK 0x0FFF
+#define PHY_MMD_RXD2_PAD_SKEW_MASK 0xF0FF
+#define PHY_MMD_RXD1_PAD_SKEW_MASK 0xFF0F
+#define PHY_MMD_RXD0_PAD_SKEW_MASK 0xFFF0
+#define PHY_MMD_TXD3_PAD_SKEW_MASK 0x0FFF
+#define PHY_MMD_TXD2_PAD_SKEW_MASK 0xF0FF
+#define PHY_MMD_TXD1_PAD_SKEW_MASK 0xFF0F
+#define PHY_MMD_TXD0_PAD_SKEW_MASK 0xFFF0
+
+
+typedef enum
+{
+    TX_CLK_SKEW_READ = 0,
+            
+    TX_CLK_SKEW_WRITE,
+
+    RX_CLK_SKEW_READ,
+            
+    RX_CLK_SKEW_WRITE,
+            
+    RX_CTL_SKEW_READ,
+            
+    RX_CTL_SKEW_WRITE,
+       
+    TX_CTL_SKEW_READ,
+            
+    TX_CTL_SKEW_WRITE,            
+            
+    RXD3_SKEW_READ,
+            
+    RXD3_SKEW_WRITE,
+            
+    RXD2_SKEW_READ,
+            
+    RXD2_SKEW_WRITE,
+            
+    RXD1_SKEW_READ,
+            
+    RXD1_SKEW_WRITE,
+            
+    RXD0_SKEW_READ,
+            
+    RXD0_SKEW_WRITE,
+            
+    TXD3_SKEW_READ,
+            
+    TXD3_SKEW_WRITE,
+            
+    TXD2_SKEW_READ,
+            
+    TXD2_SKEW_WRITE,
+            
+    TXD1_SKEW_READ,
+            
+    TXD1_SKEW_WRITE,
+            
+    TXD0_SKEW_READ,
+            
+    TXD0_SKEW_WRITE,          
+                   
+} SKEW_SET_STATES;
 
 #endif  // _LAN8840_H_
 

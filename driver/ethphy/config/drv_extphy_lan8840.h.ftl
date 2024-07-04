@@ -68,6 +68,102 @@ Microchip or any third party.
 #define DRV_ETHPHY_${emac_phy_type}_NEG_DONE_TMO        ${DRV_ETHPHY_NEG_DONE_TMO}
 #define DRV_ETHPHY_${emac_phy_type}_RESET_CLR_TMO       ${DRV_ETHPHY_RESET_CLR_TMO}
 
+<#if DRV_ETHPHY_TX_CLK_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TX_CLK_SKEW       0x${DRV_ETHPHY_TX_CLK_SKEW}
+</#if>
+<#if DRV_ETHPHY_RX_CLK_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RX_CLK_SKEW       0x${DRV_ETHPHY_RX_CLK_SKEW}
+</#if>
+<#if DRV_ETHPHY_RX_CTL_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RX_CTL_SKEW       0x${DRV_ETHPHY_RX_CTL_SKEW}
+</#if>
+<#if DRV_ETHPHY_TX_CTL_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TX_CTL_SKEW       0x${DRV_ETHPHY_TX_CTL_SKEW}
+</#if>
+<#if DRV_ETHPHY_RXD3_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RXD3_SKEW       0x${DRV_ETHPHY_RXD3_SKEW}
+</#if>
+<#if DRV_ETHPHY_RXD2_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RXD2_SKEW       0x${DRV_ETHPHY_RXD2_SKEW}
+</#if>
+<#if DRV_ETHPHY_RXD1_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RXD1_SKEW       0x${DRV_ETHPHY_RXD1_SKEW}
+</#if>
+<#if DRV_ETHPHY_RXD0_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_RXD0_SKEW       0x${DRV_ETHPHY_RXD0_SKEW}
+</#if>
+<#if DRV_ETHPHY_TXD3_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TXD3_SKEW       0x${DRV_ETHPHY_TXD3_SKEW}
+</#if>
+<#if DRV_ETHPHY_TXD2_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TXD2_SKEW       0x${DRV_ETHPHY_TXD2_SKEW}
+</#if>
+<#if DRV_ETHPHY_TXD1_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TXD1_SKEW       0x${DRV_ETHPHY_TXD1_SKEW}
+</#if>
+<#if DRV_ETHPHY_TXD0_SKEW_SET == true>
+<#if skew_setting?exists>
+<#else>
+<#assign skew_setting = "#define DRV_ETHPHY_"+emac_phy_type+"_SKEW_SETTING" >
+${skew_setting}
+</#if>
+#define DRV_ETHPHY_${emac_phy_type}_TXD0_SKEW       0x${DRV_ETHPHY_TXD0_SKEW}
+</#if>
 <#--
 /*******************************************************************************
  End of File

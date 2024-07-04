@@ -123,6 +123,266 @@ def instantiateComponent(drvExtPhyLan8840Component):
     drvExtPhyMacName.setVisible(False)   
     drvExtPhyMacName.setDefaultValue("")
     drvExtPhyMacName.setReadOnly(True) 
+    
+    # LAN8840 PHY Skew Settings
+    drvExtPhyLan8840SkewSet = drvExtPhyLan8840Component.createMenuSymbol(None, drvExtPhyLan8840AdvSettings) 
+    drvExtPhyLan8840SkewSet.setLabel("Skew Settings")
+    drvExtPhyLan8840SkewSet.setVisible(True)
+    drvExtPhyLan8840SkewSet.setDescription("Driver PHY Skew Settings")
+    
+    # TX_CLK_SKEW 
+    drvExtPhyLan8840TxClkSkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TX_CLK_SKEW_SET", drvExtPhyLan8840SkewSet)
+    drvExtPhyLan8840TxClkSkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxClkSkewEnable.setLabel("TX Clock Skew") 
+    drvExtPhyLan8840TxClkSkewEnable.setVisible(True)
+    drvExtPhyLan8840TxClkSkewEnable.setDescription("Driver PHY TX Clock Skew Set")
+    drvExtPhyLan8840TxClkSkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxClkSkew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TX_CLK_SKEW", drvExtPhyLan8840TxClkSkewEnable)
+    drvExtPhyLan8840TxClkSkew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxClkSkew.setLabel("Skew Value")
+    drvExtPhyLan8840TxClkSkew.setVisible(False)
+    drvExtPhyLan8840TxClkSkew.setDescription("Driver PHY TX Clock Skew")
+    drvExtPhyLan8840TxClkSkew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TX_CLK_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxClkSkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxClkSkewEnable)
+    drvExtPhyLan8840TxClkSkewCmt.setLabel("*** Range 0x00 - 0x1F")
+    drvExtPhyLan8840TxClkSkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxClkSkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TX_CLK_SKEW_SET"]) 
+
+    # RX_CLK_SKEW 
+    drvExtPhyLan8840RxClkSkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RX_CLK_SKEW_SET", drvExtPhyLan8840SkewSet)
+    drvExtPhyLan8840RxClkSkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxClkSkewEnable.setLabel("RX Clock Skew") 
+    drvExtPhyLan8840RxClkSkewEnable.setVisible(True)
+    drvExtPhyLan8840RxClkSkewEnable.setDescription("Driver PHY RX Clock Skew Set")
+    drvExtPhyLan8840RxClkSkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxClkSkew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RX_CLK_SKEW", drvExtPhyLan8840RxClkSkewEnable)
+    drvExtPhyLan8840RxClkSkew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxClkSkew.setLabel("Skew Value")
+    drvExtPhyLan8840RxClkSkew.setVisible(False)
+    drvExtPhyLan8840RxClkSkew.setDescription("Driver PHY RX Clock Skew")
+    drvExtPhyLan8840RxClkSkew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RX_CLK_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxClkSkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxClkSkewEnable)
+    drvExtPhyLan8840RxClkSkewCmt.setLabel("*** Range 0x00 - 0x1F")
+    drvExtPhyLan8840RxClkSkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxClkSkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RX_CLK_SKEW_SET"]) 
+
+    # RX_CTL_SKEW 
+    drvExtPhyLan8840RxCtlSkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RX_CTL_SKEW_SET", drvExtPhyLan8840SkewSet)
+    drvExtPhyLan8840RxCtlSkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxCtlSkewEnable.setLabel("RX Control Signal Skew") 
+    drvExtPhyLan8840RxCtlSkewEnable.setVisible(True)
+    drvExtPhyLan8840RxCtlSkewEnable.setDescription("Driver PHY RX Control Signal Skew Set")
+    drvExtPhyLan8840RxCtlSkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxCtlSkew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RX_CTL_SKEW", drvExtPhyLan8840RxCtlSkewEnable)
+    drvExtPhyLan8840RxCtlSkew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxCtlSkew.setLabel("Skew Value")
+    drvExtPhyLan8840RxCtlSkew.setVisible(False)
+    drvExtPhyLan8840RxCtlSkew.setDescription("Driver PHY RX Control Signal Skew")
+    drvExtPhyLan8840RxCtlSkew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RX_CTL_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxCtlSkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxCtlSkewEnable)
+    drvExtPhyLan8840RxCtlSkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840RxCtlSkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxCtlSkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RX_CTL_SKEW_SET"]) 
+
+    # TX_CTL_SKEW 
+    drvExtPhyLan8840TxCtlSkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TX_CTL_SKEW_SET", drvExtPhyLan8840SkewSet)
+    drvExtPhyLan8840TxCtlSkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxCtlSkewEnable.setLabel("TX Control Signal Skew") 
+    drvExtPhyLan8840TxCtlSkewEnable.setVisible(True)
+    drvExtPhyLan8840TxCtlSkewEnable.setDescription("Driver PHY TX Control Signal Skew Set")
+    drvExtPhyLan8840TxCtlSkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxCtlSkew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TX_CTL_SKEW", drvExtPhyLan8840TxCtlSkewEnable)
+    drvExtPhyLan8840TxCtlSkew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxCtlSkew.setLabel("Skew Value")
+    drvExtPhyLan8840TxCtlSkew.setVisible(False)
+    drvExtPhyLan8840TxCtlSkew.setDescription("Driver PHY TX Control Signal Skew")
+    drvExtPhyLan8840TxCtlSkew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TX_CTL_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxCtlSkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxCtlSkewEnable)
+    drvExtPhyLan8840TxCtlSkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840TxCtlSkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxCtlSkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TX_CTL_SKEW_SET"]) 
+
+
+    # RX Data Skew
+    drvExtPhyLan8840RxDataSkew = drvExtPhyLan8840Component.createMenuSymbol(None, drvExtPhyLan8840SkewSet) 
+    drvExtPhyLan8840RxDataSkew.setLabel("RX Data Skew")
+    drvExtPhyLan8840RxDataSkew.setVisible(True)
+    drvExtPhyLan8840RxDataSkew.setDescription("RGMII RX DATA SKEW")
+
+    # RXD3_SKEW 
+    drvExtPhyLan8840RxD3SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RXD3_SKEW_SET", drvExtPhyLan8840RxDataSkew)
+    drvExtPhyLan8840RxD3SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD3SkewEnable.setLabel("RXD3 Skew") 
+    drvExtPhyLan8840RxD3SkewEnable.setVisible(True)
+    drvExtPhyLan8840RxD3SkewEnable.setDescription("Driver PHY RXD3 Skew Set")
+    drvExtPhyLan8840RxD3SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxD3Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RXD3_SKEW", drvExtPhyLan8840RxD3SkewEnable)
+    drvExtPhyLan8840RxD3Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD3Skew.setLabel("Skew Value")
+    drvExtPhyLan8840RxD3Skew.setVisible(False)
+    drvExtPhyLan8840RxD3Skew.setDescription("Driver PHY RXD3 Skew")
+    drvExtPhyLan8840RxD3Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD3_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxD3SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxD3SkewEnable)
+    drvExtPhyLan8840RxD3SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840RxD3SkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxD3SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD3_SKEW_SET"]) 
+
+    # RXD2_SKEW 
+    drvExtPhyLan8840RxD2SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RXD2_SKEW_SET", drvExtPhyLan8840RxDataSkew)
+    drvExtPhyLan8840RxD2SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD2SkewEnable.setLabel("RXD2 Skew") 
+    drvExtPhyLan8840RxD2SkewEnable.setVisible(True)
+    drvExtPhyLan8840RxD2SkewEnable.setDescription("Driver PHY RXD2 Skew Set")
+    drvExtPhyLan8840RxD2SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxD2Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RXD2_SKEW", drvExtPhyLan8840RxD2SkewEnable)
+    drvExtPhyLan8840RxD2Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD2Skew.setLabel("Skew Value")
+    drvExtPhyLan8840RxD2Skew.setVisible(False)
+    drvExtPhyLan8840RxD2Skew.setDescription("Driver PHY RXD2 Skew")
+    drvExtPhyLan8840RxD2Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD2_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxD2SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxD2SkewEnable)
+    drvExtPhyLan8840RxD2SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840RxD2SkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxD2SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD2_SKEW_SET"]) 
+
+    # RXD1_SKEW 
+    drvExtPhyLan8840RxD1SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RXD1_SKEW_SET", drvExtPhyLan8840RxDataSkew)
+    drvExtPhyLan8840RxD1SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD1SkewEnable.setLabel("RXD1 Skew") 
+    drvExtPhyLan8840RxD1SkewEnable.setVisible(True)
+    drvExtPhyLan8840RxD1SkewEnable.setDescription("Driver PHY RXD1 Skew Set")
+    drvExtPhyLan8840RxD1SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxD1Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RXD1_SKEW", drvExtPhyLan8840RxD1SkewEnable)
+    drvExtPhyLan8840RxD1Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD1Skew.setLabel("Skew Value")
+    drvExtPhyLan8840RxD1Skew.setVisible(False)
+    drvExtPhyLan8840RxD1Skew.setDescription("Driver PHY RXD1 Skew")
+    drvExtPhyLan8840RxD1Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD1_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxD1SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxD1SkewEnable)
+    drvExtPhyLan8840RxD1SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840RxD1SkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxD1SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD1_SKEW_SET"]) 
+
+    # RXD0_SKEW 
+    drvExtPhyLan8840RxD0SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_RXD0_SKEW_SET", drvExtPhyLan8840RxDataSkew)
+    drvExtPhyLan8840RxD0SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD0SkewEnable.setLabel("RXD0 Skew") 
+    drvExtPhyLan8840RxD0SkewEnable.setVisible(True)
+    drvExtPhyLan8840RxD0SkewEnable.setDescription("Driver PHY RXD0 Skew Set")
+    drvExtPhyLan8840RxD0SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840RxD0Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_RXD0_SKEW", drvExtPhyLan8840RxD0SkewEnable)
+    drvExtPhyLan8840RxD0Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840RxD0Skew.setLabel("Skew Value")
+    drvExtPhyLan8840RxD0Skew.setVisible(False)
+    drvExtPhyLan8840RxD0Skew.setDescription("Driver PHY RXD0 Skew")
+    drvExtPhyLan8840RxD0Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD0_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840RxD0SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840RxD0SkewEnable)
+    drvExtPhyLan8840RxD0SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840RxD0SkewCmt.setVisible(False)  
+    drvExtPhyLan8840RxD0SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_RXD0_SKEW_SET"]) 
+
+
+    # TX Data Skew
+    drvExtPhyLan8840TxDataSkew = drvExtPhyLan8840Component.createMenuSymbol(None, drvExtPhyLan8840SkewSet) 
+    drvExtPhyLan8840TxDataSkew.setLabel("TX Data Skew")
+    drvExtPhyLan8840TxDataSkew.setVisible(True)
+    drvExtPhyLan8840TxDataSkew.setDescription("RGMII TX DATA SKEW")
+
+    # TXD3_SKEW 
+    drvExtPhyLan8840TxD3SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TXD3_SKEW_SET", drvExtPhyLan8840TxDataSkew)
+    drvExtPhyLan8840TxD3SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD3SkewEnable.setLabel("TXD3 Skew") 
+    drvExtPhyLan8840TxD3SkewEnable.setVisible(True)
+    drvExtPhyLan8840TxD3SkewEnable.setDescription("Driver PHY TXD3 Skew Set")
+    drvExtPhyLan8840TxD3SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxD3Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TXD3_SKEW", drvExtPhyLan8840TxD3SkewEnable)
+    drvExtPhyLan8840TxD3Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD3Skew.setLabel("Skew Value")
+    drvExtPhyLan8840TxD3Skew.setVisible(False)
+    drvExtPhyLan8840TxD3Skew.setDescription("Driver PHY TXD3 Skew")
+    drvExtPhyLan8840TxD3Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD3_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxD3SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxD3SkewEnable)
+    drvExtPhyLan8840TxD3SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840TxD3SkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxD3SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD3_SKEW_SET"]) 
+
+    # TXD2_SKEW 
+    drvExtPhyLan8840TxD2SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TXD2_SKEW_SET", drvExtPhyLan8840TxDataSkew)
+    drvExtPhyLan8840TxD2SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD2SkewEnable.setLabel("TXD2 Skew") 
+    drvExtPhyLan8840TxD2SkewEnable.setVisible(True)
+    drvExtPhyLan8840TxD2SkewEnable.setDescription("Driver PHY TXD2 Skew Set")
+    drvExtPhyLan8840TxD2SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxD2Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TXD2_SKEW", drvExtPhyLan8840TxD2SkewEnable)
+    drvExtPhyLan8840TxD2Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD2Skew.setLabel("Skew Value")
+    drvExtPhyLan8840TxD2Skew.setVisible(False)
+    drvExtPhyLan8840TxD2Skew.setDescription("Driver PHY TXD2 Skew")
+    drvExtPhyLan8840TxD2Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD2_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxD2SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxD2SkewEnable)
+    drvExtPhyLan8840TxD2SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840TxD2SkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxD2SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD2_SKEW_SET"]) 
+
+    # TXD1_SKEW 
+    drvExtPhyLan8840TxD1SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TXD1_SKEW_SET", drvExtPhyLan8840TxDataSkew)
+    drvExtPhyLan8840TxD1SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD1SkewEnable.setLabel("TXD1 Skew") 
+    drvExtPhyLan8840TxD1SkewEnable.setVisible(True)
+    drvExtPhyLan8840TxD1SkewEnable.setDescription("Driver PHY TXD1 Skew Set")
+    drvExtPhyLan8840TxD1SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxD1Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TXD1_SKEW", drvExtPhyLan8840TxD1SkewEnable)
+    drvExtPhyLan8840TxD1Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD1Skew.setLabel("Skew Value")
+    drvExtPhyLan8840TxD1Skew.setVisible(False)
+    drvExtPhyLan8840TxD1Skew.setDescription("Driver PHY TXD1 Skew")
+    drvExtPhyLan8840TxD1Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD1_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxD1SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxD1SkewEnable)
+    drvExtPhyLan8840TxD1SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840TxD1SkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxD1SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD1_SKEW_SET"]) 
+
+    # TXD0_SKEW 
+    drvExtPhyLan8840TxD0SkewEnable= drvExtPhyLan8840Component.createBooleanSymbol("DRV_ETHPHY_TXD0_SKEW_SET", drvExtPhyLan8840TxDataSkew)
+    drvExtPhyLan8840TxD0SkewEnable.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD0SkewEnable.setLabel("TXD0 Skew") 
+    drvExtPhyLan8840TxD0SkewEnable.setVisible(True)
+    drvExtPhyLan8840TxD0SkewEnable.setDescription("Driver PHY TXD0 Skew Set")
+    drvExtPhyLan8840TxD0SkewEnable.setDefaultValue(False)
+    #Value 
+    drvExtPhyLan8840TxD0Skew = drvExtPhyLan8840Component.createHexSymbol("DRV_ETHPHY_TXD0_SKEW", drvExtPhyLan8840TxD0SkewEnable)
+    drvExtPhyLan8840TxD0Skew.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8840TxD0Skew.setLabel("Skew Value")
+    drvExtPhyLan8840TxD0Skew.setVisible(False)
+    drvExtPhyLan8840TxD0Skew.setDescription("Driver PHY TXD0 Skew")
+    drvExtPhyLan8840TxD0Skew.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD0_SKEW_SET"])  
+    # Comment 
+    drvExtPhyLan8840TxD0SkewCmt = drvExtPhyLan8840Component.createCommentSymbol(None, drvExtPhyLan8840TxD0SkewEnable)
+    drvExtPhyLan8840TxD0SkewCmt.setLabel("*** Range 0x00 - 0x0F")
+    drvExtPhyLan8840TxD0SkewCmt.setVisible(False)  
+    drvExtPhyLan8840TxD0SkewCmt.setDependencies(drvExtPhyLan8840MenuVisibleSingle, ["DRV_ETHPHY_TXD0_SKEW_SET"])     
                             
     #Add forward declaration to initialization.c
     drvExtPhyLan8840InitDataSourceFtl = drvExtPhyLan8840Component.createFileSymbol(None, None)
@@ -215,10 +475,10 @@ def instantiateComponent(drvExtPhyLan8840Component):
     
 def drvExtPhyLan8840MenuVisibleSingle(symbol, event):
     if (event["value"] == True):
-        print("EthMac Menu Visible.")       
+        print("EthPhy Menu Visible.")       
         symbol.setVisible(True)
     else:
-        print("EthMac Menu Invisible.")
+        print("EthPhy Menu Invisible.")
         symbol.setVisible(False)
 
             
