@@ -37,6 +37,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* 
 static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, uint16_t regIndex, uint16_t* pReadOut);
 static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, uint16_t regIndex,  uint16_t writeIn);
 #endif
+
 /******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -50,9 +51,7 @@ typedef enum
     DRV_LAN8840_MMD_REG_OPR_5,
     DRV_LAN8840_MMD_REG_OPR_6
 } DRV_LAN8840_MMD_REG_OPR_STATE;
-/****************************************************************************
- *                 interface functions
- ****************************************************************************/
+
 typedef struct 
 {
     SKEW_SET_STATES skewSetState;
@@ -60,6 +59,10 @@ typedef struct
 } LAN8840_PHY_INST_DATA_TYPE;
 
 LAN8840_PHY_INST_DATA_TYPE LAN8840_PHY_INST_DATA[DRV_MIIM_INSTANCES_NUMBER];
+
+/****************************************************************************
+ *                 interface functions
+ ****************************************************************************/
 /****************************************************************************
  * Function:        DRV_EXTPHY_MIIConfigure
  *
@@ -82,17 +85,19 @@ LAN8840_PHY_INST_DATA_TYPE LAN8840_PHY_INST_DATA[DRV_MIIM_INSTANCES_NUMBER];
  *
  * Note:            
  *****************************************************************************/
-#ifdef DRV_ETHPHY_LAN8840_SKEW_SETTING
 static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
 {
-    return DRV_LAN8840_Skew_Setting(pBaseObj, hClientObj);
+    #ifdef DRV_ETHPHY_LAN8840_SKEW_SETTING
+    {
+        return DRV_LAN8840_Skew_Setting(pBaseObj, hClientObj);
+    }
+    #else
+    {
+        return DRV_ETHPHY_RES_OK;
+    }
+    #endif
 }
-#else
-static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, DRV_ETHPHY_CONFIG_FLAGS cFlags)
-{
-    return DRV_ETHPHY_RES_OK;
-}
-#endif
+
 /****************************************************************************
  * Function:        DRV_EXTPHY_MDIXConfigure
  *
@@ -119,7 +124,6 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 {
     return DRV_ETHPHY_RES_OK;
 }
-
 
 /****************************************************************************
  * Function:        DRV_EXTPHY_SMIClockGet
@@ -154,6 +158,28 @@ const DRV_ETHPHY_OBJECT  DRV_ETHPHY_OBJECT_LAN8840 =
     .bmstatCpblMask = 0,                    // standard capabilities mask
 };
 
+/****************************************************************************
+ * Function:        DRV_LAN8840_Skew_Setting
+ *
+ * PreCondition:    DRV_ETHPHY_LAN8840_SKEW_SETTING macro should have been defined.
+ *
+ * Input:           hClientObj - A valid open-instance handle, returned from the driver's open routine
+ *
+ * Output:          DRV_ETHPHY_RES_OK - operation completed successfully
+ *
+ *                  DRV_ETHPHY_RES_PENDING - operation pending; the call needs to be re-issued until
+ *                                    DRV_ETHPHY_RES_OK or an error reported
+ *
+ *
+ *                  < 0         - an error occurred and the operation was aborted
+ *
+ *
+ * Side Effects:    None
+ *
+ * Overview:        This function does the skew settings by performing read and write operations on the MMD registers corresponding to the relevent skew setting configured.
+ *
+ * Note:            None
+ *****************************************************************************/
 #ifdef DRV_ETHPHY_LAN8840_SKEW_SETTING
 static DRV_ETHPHY_RESULT DRV_LAN8840_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj)
 {
@@ -559,6 +585,30 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* 
     return res;
 }
 
+/****************************************************************************
+ * Function:        DRV_LAN8840_Read_MMD_Reg
+ *
+ * PreCondition:    DRV_ETHPHY_LAN8840_SKEW_SETTING macro should have been defined.
+ *
+ * Input:           hClientObj - A valid open-instance handle, returned from the driver's open routine.
+ *                  regIndex - The MMD register location to read from.
+ *                  pReadOut - A pointer, to which the read result will be updated in this function.
+ *
+ * Output:          DRV_ETHPHY_RES_OK - operation completed successfully
+ *
+ *                  DRV_ETHPHY_RES_PENDING - operation pending; the call needs to be re-issued until
+ *                                    DRV_ETHPHY_RES_OK or an error reported
+ *
+ *
+ *                  < 0         - an error occurred and the operation was aborted
+ *
+ *
+ * Side Effects:    None
+ *
+ * Overview:        This function performs read from the MMD register and updates the pReadOut with the read result.
+ *
+ * Note:            None
+ *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, uint16_t regIndex,  uint16_t* pReadOut)
 {
     uint32_t readState = 0;
@@ -684,6 +734,30 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
     return res;
 }
 
+/****************************************************************************
+ * Function:        DRV_LAN8840_Write_MMD_Reg
+ *
+ * PreCondition:    DRV_ETHPHY_LAN8840_SKEW_SETTING macro should have been defined.
+ *
+ * Input:           hClientObj - A valid open-instance handle, returned from the driver's open routine.
+ *                  regIndex - The MMD register location to write to.
+ *                  writeIn - The value which is to be written to the MMD register.
+ *
+ * Output:          DRV_ETHPHY_RES_OK - operation completed successfully
+ *
+ *                  DRV_ETHPHY_RES_PENDING - operation pending; the call needs to be re-issued until
+ *                                    DRV_ETHPHY_RES_OK or an error reported
+ *
+ *
+ *                  < 0         - an error occurred and the operation was aborted
+ *
+ *
+ * Side Effects:    None
+ *
+ * Overview:        This function writes to the MMD register with the value given in writeIn argument.
+ *
+ * Note:            None
+ *****************************************************************************/
 static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE hClientObj, uint16_t regIndex,  uint16_t writeIn)
 {    
     uint32_t writeState = 0;
