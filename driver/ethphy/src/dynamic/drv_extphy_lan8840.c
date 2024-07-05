@@ -643,9 +643,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             {   // some error
                 return res;
             }
-            readState++;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-            res = DRV_ETHPHY_RES_PENDING;
+            else if(res == DRV_ETHPHY_RES_OK)
+            {
+                readState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
             break;
 
         case DRV_LAN8840_MMD_REG_OPR_2:
@@ -663,9 +666,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 {   // some error
                     return res;
                 }
-                readState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    readState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }
             }
             break;
 
@@ -684,9 +690,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 {   // some error
                     return res;
                 }
-                readState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    readState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }
             }
             break;
             
@@ -705,9 +714,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 {   // some error
                     return res;
                 }
-                readState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    readState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }
             }
             break;
             
@@ -717,10 +729,13 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             if(res < 0)
             {   // some error
                 return res;
-            }                
-            readState++;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-            res = DRV_ETHPHY_RES_PENDING;
+            }
+            else if(res == DRV_ETHPHY_RES_OK)
+            {                
+                readState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }    
             break;
             
         case DRV_LAN8840_MMD_REG_OPR_6:
@@ -732,8 +747,8 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {           
-            readState = 0;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
+                readState = 0;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
             }
             break;
     }
@@ -786,9 +801,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             {   // some error
                 return res;
             }
-            writeState++;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
-            res = DRV_ETHPHY_RES_PENDING;
+            else if(res == DRV_ETHPHY_RES_OK)
+            {
+                writeState++;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                res = DRV_ETHPHY_RES_PENDING;
+            }
             break;
 
         case DRV_LAN8840_MMD_REG_OPR_2:
@@ -806,9 +824,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 {   // some error
                     return res;
                 }
-                writeState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    writeState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }
             }
             break;
 
@@ -827,9 +848,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 {   // some error
                     return res;
                 }
-                writeState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    writeState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }    
             }
             break;
             
@@ -848,9 +872,12 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 {   // some error
                     return res;
                 }
-                writeState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
-                res = DRV_ETHPHY_RES_PENDING;
+                else if(res == DRV_ETHPHY_RES_OK)
+                {
+                    writeState++;
+                    pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState);
+                    res = DRV_ETHPHY_RES_PENDING;
+                }    
             }
             break;
             
@@ -863,8 +890,8 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             }
             else if(res == DRV_ETHPHY_RES_OK)
             { 
-            writeState = 0;
-            pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState); 
+                writeState = 0;
+                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, writeState); 
             }
             break;
     }
