@@ -48,8 +48,7 @@ typedef enum
     DRV_LAN8840_MMD_REG_OPR_2,
     DRV_LAN8840_MMD_REG_OPR_3,  
     DRV_LAN8840_MMD_REG_OPR_4,
-    DRV_LAN8840_MMD_REG_OPR_5,
-    DRV_LAN8840_MMD_REG_OPR_6
+    DRV_LAN8840_MMD_REG_OPR_5
 } DRV_LAN8840_MMD_REG_OPR_STATE;
 
 typedef struct 
@@ -726,21 +725,6 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
         case DRV_LAN8840_MMD_REG_OPR_5:
             //Read result from MMD Data register
             res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, pReadOut);
-            if(res < 0)
-            {   // some error
-                return res;
-            }
-            else if(res == DRV_ETHPHY_RES_OK)
-            {                
-                readState++;
-                pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, readState);
-                res = DRV_ETHPHY_RES_PENDING;
-            }    
-            break;
-            
-        case DRV_LAN8840_MMD_REG_OPR_6:
-            // wait for read result get complete
-            res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
                 return res;
