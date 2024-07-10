@@ -511,7 +511,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
 
-#if (TCPIP_GMAC_SCREEN1_COUNT_QUE)
+#if (defined(TCPIP_GMAC0_SCREEN1_COUNT_QUE) && (TCPIP_GMAC0_SCREEN1_COUNT_QUE != 0)) || (defined(TCPIP_GMAC1_SCREEN1_COUNT_QUE) && (TCPIP_GMAC1_SCREEN1_COUNT_QUE != 0))
     uint32_t st1rpq_val = 0;
     for(uint8_t type1_idx=0; type1_idx < pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type1FiltCount; type1_idx++)
     {
@@ -531,7 +531,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
         
     }
 #endif   
-#if (TCPIP_GMAC_SCREEN2_COUNT_QUE)
+#if (defined(TCPIP_GMAC0_SCREEN2_COUNT_QUE) && (TCPIP_GMAC0_SCREEN2_COUNT_QUE != 0)) || (defined(TCPIP_GMAC1_SCREEN2_COUNT_QUE) && (TCPIP_GMAC1_SCREEN2_COUNT_QUE != 0))
     uint32_t st2rpq_val = 0;
     uint16_t comp_val = 0, comp_mask = 0;
     uint8_t ethType_index = 0, comp_index = 0;
@@ -557,10 +557,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
             st2rpq_val |= GMAC_ST2RPQ_COMPAE(1) | GMAC_ST2RPQ_COMPA(comp_index);
             comp_val = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAValue);
             comp_mask = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAMask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0 = GMAC_ST2CW0_COMPVAL(comp_val) | GMAC_ST2CW0_MASKVAL(comp_mask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1 =
-                    GMAC_ST2CW1_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAOffset) |
-                    GMAC_ST2CW1_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAOffsetStart);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0R = GMAC_ST2CW0R_COMPVAL(comp_val) | GMAC_ST2CW0R_MASKVAL(comp_mask);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1R =
+                    GMAC_ST2CW1R_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAOffset) |
+                    GMAC_ST2CW1R_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compAOffsetStart);
             comp_index++;
         }
         
@@ -569,10 +569,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
             st2rpq_val |= GMAC_ST2RPQ_COMPBE(1) | GMAC_ST2RPQ_COMPB(comp_index);
             comp_val = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBValue);
             comp_mask = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBMask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0 = GMAC_ST2CW0_COMPVAL(comp_val) | GMAC_ST2CW0_MASKVAL(comp_mask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1 =
-                    GMAC_ST2CW1_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBOffset) |
-                    GMAC_ST2CW1_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBOffsetStart);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0R = GMAC_ST2CW0R_COMPVAL(comp_val) | GMAC_ST2CW0R_MASKVAL(comp_mask);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1R =
+                    GMAC_ST2CW1R_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBOffset) |
+                    GMAC_ST2CW1R_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compBOffsetStart);
             comp_index++;
         }
         
@@ -581,10 +581,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
             st2rpq_val |= GMAC_ST2RPQ_COMPCE(1) | GMAC_ST2RPQ_COMPC(comp_index);
             comp_val = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCValue);
             comp_mask = __REVSH(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCMask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0 = GMAC_ST2CW0_COMPVAL(comp_val) | GMAC_ST2CW0_MASKVAL(comp_mask);
-            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1 =
-                    GMAC_ST2CW1_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCOffset) |
-                    GMAC_ST2CW1_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCOffsetStart);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW0R = GMAC_ST2CW0R_COMPVAL(comp_val) | GMAC_ST2CW0R_MASKVAL(comp_mask);
+            pGmacRegs->GMAC_ST2CW[comp_index].GMAC_ST2CW1R =
+                    GMAC_ST2CW1R_OFFSVAL(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCOffset) |
+                    GMAC_ST2CW1R_OFFSSTRT(pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type2FiltInit[type2_idx].compCOffsetStart);
             comp_index++;
         }
         pGmacRegs->GMAC_ST2RPQ[type2_idx] = st2rpq_val;
