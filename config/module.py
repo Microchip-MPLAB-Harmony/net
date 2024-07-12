@@ -40,6 +40,7 @@ def loadModule():
     tcpipNetConfigComponent.addDependency("NETCONFIG_MAC_Dependency", "MAC")
     tcpipNetConfigComponent.addCapability("libtcpipNetConfig","NETCONFIG",True)
     tcpipNetConfigComponent.setDisplayType("TCP/IP Library")
+    tcpipNetConfigComponent.setHelpKeyword("tcpip_netconfig")
     
     tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/TCPIP/CORE/", "tcpip/config/tcpip_cmd.py")
     tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True) 
@@ -329,12 +330,12 @@ def loadModule():
         aDrvMacComponent_0.addMultiCapability( "libdrvMac0", "MAC", None)
         aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, False, True)
         aDrvMacComponent_0.setDisplayType("MAC Layer")
-        aDrvMacComponent_0.setHelpKeyword("MAC_Driver_Module")
+        aDrvMacComponent_0.setHelpKeyword("drv_emac")
         aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
         aDrvMacComponent_1.addMultiCapability( "libdrvMac1", "MAC", None)
         aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, False, True)
         aDrvMacComponent_1.setDisplayType("MAC Layer")
-        aDrvMacComponent_1.setHelpKeyword("MAC_Driver_Module")
+        aDrvMacComponent_1.setHelpKeyword("drv_emac")
     elif ("PIC32M" in Variables.get("__PROCESSOR")) and (deviceSeries != "PIC32MZW"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addMultiCapability("libdrvPic32mEthmac","MAC", None)
