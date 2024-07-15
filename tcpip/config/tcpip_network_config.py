@@ -42,6 +42,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Network interface Number
     tcpipNetConfigNum = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_CONFIG_NUMBER", None)
+    tcpipNetConfigNum.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetConfigNum.setLabel("Network Configurations Index")
     tcpipNetConfigNum.setVisible(True)
     tcpipNetConfigNum.setValue(int(str(index)),1)
@@ -55,6 +56,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # Network interface name
     tcpipNetIfName = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX" + str(index),None)   
+    tcpipNetIfName.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIfName.setLabel("Interface")
     tcpipNetIfName.setVisible(True)
     tcpipNetIfName.setDefaultValue("")
@@ -62,6 +64,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # Network Host name
     tcpipNetHostName = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX" + str(index), None)
+    tcpipNetHostName.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetHostName.setLabel("Host Name")
     tcpipNetHostName.setVisible(True)
     tcpipNetHostName.setDefaultValue("")
@@ -69,6 +72,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # Network Interface MAC address
     tcpipNetMacAddress = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX" + str(index),None)
+    tcpipNetMacAddress.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetMacAddress.setLabel("Mac Address")
     tcpipNetMacAddress.setVisible(True)
     tcpipNetMacAddress.setDefaultValue("")
@@ -76,6 +80,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Network Interface IP address
     tcpipNetIpAddress = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX" + str(index), None)
+    tcpipNetIpAddress.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpAddress.setLabel("IPv4 Static Address")
     tcpipNetIpAddress.setVisible(True)
     tcpipNetIpAddress.setDefaultValue("")
@@ -83,12 +88,14 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # Network Interface IP address Mask
     tcpipNetIpAddrMask = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IP_MASK_IDX" + str(index),None)
+    tcpipNetIpAddrMask.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpAddrMask.setLabel("IPv4 SubNet Mask")
     tcpipNetIpAddrMask.setVisible(True)
     tcpipNetIpAddrMask.setDefaultValue("255.255.255.0")
 
     # Network Interface Gateway IP address
     tcpipNetGatewayIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_GATEWAY_IDX" + str(index),None)
+    tcpipNetGatewayIpAddr.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetGatewayIpAddr.setLabel("IPv4 Default Gateway Address")
     tcpipNetGatewayIpAddr.setVisible(True)
     tcpipNetGatewayIpAddr.setDefaultValue("")
@@ -96,6 +103,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Network Interface Primary DNS IP address
     tcpipNetPrimDnsIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_DNS_IDX" + str(index),None)
+    tcpipNetPrimDnsIpAddr.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetPrimDnsIpAddr.setLabel("IPv4 Primary DNS")
     tcpipNetPrimDnsIpAddr.setVisible(True)
     tcpipNetPrimDnsIpAddr.setDefaultValue("")
@@ -103,10 +111,12 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Network Configuration Start-up Flags Menu
     tcpipNetStartupFlag = tcpipNetConfigComponent.createMenuSymbol("TCPIP_NETWORK_STARTUP_FLAG_IDX" + str(index),None)
+    tcpipNetStartupFlag.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetStartupFlag.setLabel("Network Configuration Start-up Flags")
     tcpipNetStartupFlag.setVisible(True)    
 
     tcpipNetDhcpFlag = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_IDX"+str(index),tcpipNetStartupFlag)
+    tcpipNetDhcpFlag.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetDhcpFlag.setVisible(True)
     tcpipNetDhcpFlag.setLabel("DHCP Flag")
     tcpipNetDhcpFlag.addKey("DHCP_CLIENT_ENABLE", "0", "Enable DHCP Client")
@@ -118,6 +128,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetDhcpFlag.setDefaultValue(0)
 
     tcpipNetDnsFlag = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DNS_IDX"+str(index),tcpipNetStartupFlag)
+    tcpipNetDnsFlag.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetDnsFlag.setVisible(True)
     tcpipNetDnsFlag.setLabel("DNS Flag")
     tcpipNetDnsFlag.addKey("DNS_CLIENT_ENABLE", "0", "Enable DNS Client")
@@ -129,12 +140,14 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Enable Multicast on this Network Configuration
     tcpipNetMcastEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_CONFIG_MULTICAST_IDX"+str(index),tcpipNetStartupFlag)
+    tcpipNetMcastEnable.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetMcastEnable.setLabel("Multicast Enabled on this Interface")
     tcpipNetMcastEnable.setVisible(True)
     tcpipNetMcastEnable.setDefaultValue(False)
 
     # Input IPv6 Static Address and Subnet Prefix Length
     tcpipNetIpv6AddrSubnetInput = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX"+str(index),tcpipNetStartupFlag)
+    tcpipNetIpv6AddrSubnetInput.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6AddrSubnetInput.setLabel("IPv6 Static Address and Subnet Prefix Length")
     tcpipNetIpv6AddrSubnetInput.setVisible(False)
     tcpipNetIpv6AddrSubnetInput.setDefaultValue(False)  
@@ -142,6 +155,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # IPv6 Static address for this interface
     tcpipNetIpv6StatAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+    tcpipNetIpv6StatAddr.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6StatAddr.setLabel("IPv6 Static Address")
     tcpipNetIpv6StatAddr.setVisible(False)
     tcpipNetIpv6StatAddr.setDefaultValue("fde4:8dba:82e1::")
@@ -149,6 +163,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # IPv6 Static address Prefix Length for this interface
     tcpipNetIpv6StatAddrPrfxLen = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+    tcpipNetIpv6StatAddrPrfxLen.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6StatAddrPrfxLen.setLabel("IPv6 Static Address Prefix Length")
     tcpipNetIpv6StatAddrPrfxLen.setVisible(False)
     tcpipNetIpv6StatAddrPrfxLen.setDefaultValue(64)
@@ -156,6 +171,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
         
     # IPv6 Default Gateway Address for this interface
     tcpipNetIpv6GatewayAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+    tcpipNetIpv6GatewayAddr.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6GatewayAddr.setLabel("IPv6 Default Gateway Address")
     tcpipNetIpv6GatewayAddr.setVisible(False)
     tcpipNetIpv6GatewayAddr.setDefaultValue("")
@@ -163,6 +179,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # G3-PLC support for this interface
     tcpipNetIpv6G3PlcNet = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_IDX"+str(index), tcpipNetStartupFlag)
+    tcpipNetIpv6G3PlcNet.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6G3PlcNet.setLabel("IPv6 G3-PLC network")
     tcpipNetIpv6G3PlcNet.setVisible(False)
     tcpipNetIpv6G3PlcNet.setDefaultValue(False)  
@@ -170,6 +187,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # G3-PLC router/device on this net
     tcpipNetIpv6G3PlcRouter = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_IDX" + str(index), tcpipNetIpv6G3PlcNet)
+    tcpipNetIpv6G3PlcRouter.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6G3PlcRouter.setLabel("G3-PLC router")
     tcpipNetIpv6G3PlcRouter.setVisible(False)
     tcpipNetIpv6G3PlcRouter.setDefaultValue(False)
@@ -177,6 +195,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # G3-PLC router advertisements
     tcpipNetIpv6G3Advertise = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_G3_NET_ROUTER_ADV_IDX" + str(index), tcpipNetIpv6G3PlcRouter)
+    tcpipNetIpv6G3Advertise.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetIpv6G3Advertise.setLabel("G3-PLC router send advertisements")
     tcpipNetIpv6G3Advertise.setVisible(False)
     tcpipNetIpv6G3Advertise.setDefaultValue(False)
@@ -185,18 +204,21 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 
     # Advanced Settings
     tcpipNetAdvSettings = tcpipNetConfigComponent.createMenuSymbol("TCPIP_NETWORK_ADV_SETTING_IDX" + str(index), None)
+    tcpipNetAdvSettings.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetAdvSettings.setLabel("Advanced Settings")
     tcpipNetAdvSettings.setDescription("Advanced Settings")
     tcpipNetAdvSettings.setVisible(True)
 
     # Network Interface Secondary DNS IP address
     tcpipNetSecDnsIpAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetSecDnsIpAddr.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetSecDnsIpAddr.setLabel("IPv4 Secondary DNS")
     tcpipNetSecDnsIpAddr.setVisible(True)
     tcpipNetSecDnsIpAddr.setDefaultValue("0.0.0.0")  
     
     # Network Interface MAC Driver Object
     tcpipNetMacDrvObj = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetMacDrvObj.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetMacDrvObj.setLabel("Network MAC Driver")
     tcpipNetMacDrvObj.setVisible(True)
     tcpipNetMacDrvObj.setDefaultValue("")
@@ -204,6 +226,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Add this interface to MAC Bridge
     tcpipAddMacBridge = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_MACBRIDGE_ADD_IDX"+str(index),tcpipNetAdvSettings)
+    tcpipAddMacBridge.setHelp("mcc_h3_netconfig_configurations")
     tcpipAddMacBridge.setLabel("Add Interface to MAC Bridge")
     if( Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT") > 1):
         tcpipAddMacBridge.setVisible(True)
@@ -221,6 +244,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     
     # Network Interface Power Mode
     tcpipNetPwrMode = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX" + str(index),tcpipNetAdvSettings)
+    tcpipNetPwrMode.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetPwrMode.setLabel("Power Mode")
     tcpipNetPwrMode.setVisible(True)
     tcpipNetPwrMode.addKey("full", "0" , "Power full" )

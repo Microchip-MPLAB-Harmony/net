@@ -35,6 +35,7 @@ def instantiateComponent(tcpipNetConfigComponent):
     tcpipNetConfigNumMax.setVisible(False)
     
     tcpipNetConfigInterfaceCount = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_INTERAFCE_COUNT", None)
+    tcpipNetConfigInterfaceCount.setHelp("mcc_h3_netconfig_configurations")
     tcpipNetConfigInterfaceCount.setLabel("Number of Instances")
     if Variables.get("__H3_RUNTIME") == "MCC":
         tcpipNetConfigInterfaceCount.setDefaultValue(0)
