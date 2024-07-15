@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<publication>
+   <title>MPLAB® Harmony 3 TCP/IP Library</title>
+   <urls>
+      <url>
+         <loc>GUID-D4AB047B-AA57-433C-9975-88FC7E7798B0.html</loc>
+         <lastmod>2024-04-16T09:55:44</lastmod>
+         <title>1 TCP/IP Stack Libraries Help</title>
+         <description>This section provides information on MPLAB Harmony TCP/IP Stack Library </description>
+         <urls>
+            <url>
+               <loc>GUID-5324F446-60A4-4815-82AA-571C61BA6DE9.html</loc>
+               <lastmod>2024-04-16T09:55:14</lastmod>
+               <title>1.1 TCP/IP Stack Library Overview</title>
+               <description>The MPLAB® Harmony TCP/IP Stack distribution package contain:Source files for all the network modules that are part TCP/IP Stack. It is available in the net/tcpip folder.Drivers for internal and ...</description>
+               <urls>
+                  <url>
+                     <loc>GUID-41997673-B586-4C0B-8D5D-F6B1F10B591C.html</loc>
+                     <lastmod>2023-05-08T13:02:06</lastmod>
+                     <title>1.1.1 Introduction</title>
+                     <description>The MPLAB Harmony TCP/IP Stack provides a foundation for embedded network applications by handling most of the interaction required between the physical network port and the application. It includes ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-8D4BF36F-78F2-4E95-AB16-2349993A06E2.html</loc>
+                     <lastmod>2023-05-11T18:21:25</lastmod>
+                     <title>1.1.2 Key Features</title>
+                     <description>The key features of the MPLAB® Harmony TCP/IP Stack are:Multiple interfaces - Ethernet and/or Wi-Fi interfaces are supported.Dual stack with IPv4 and/or IPv6 support:UDP and TCP sockets can support ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-CD9D6449-B64A-4A42-82E5-82527E43184B.html</loc>
+                     <lastmod>2023-12-22T13:53:58</lastmod>
+                     <title>1.1.3 Network Metrics</title>
+                     <description>Iperf Bandwidth Measurements in TCP Server Mode CommandsHardware Board Computer iperf -s -i 5 -x &lt;speed&gt; iperf -c &lt;board ip addr&gt; -t 50 -i 5 For 100 Mbps test , &lt;speed&gt; = 100M For 1000 Mbps test, ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-C944AF34-E0C1-41DA-8C23-370F0FC00578.html</loc>
+                     <lastmod>2023-05-08T15:48:04</lastmod>
+                     <title>1.1.4 Flash and RAM Usage</title>
+                     <description>The following figures provide Flash and RAM usage information for the supported devices.PIC32MZEF Memory Usage in bytes (based on net 3.5.0, XC32 v2.30) PIC32MZDAS Memory Usage in bytes (based on net ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-25ED6322-BD3C-4EA5-A164-ECCB425E5FFB.html</loc>
+                     <lastmod>2023-05-08T12:59:36</lastmod>
+                     <title>1.1.5 Getting Help</title>
+                     <description>The TCP/IP Stack is supported through Microchip's standard support channels. If you encounter difficulties, you may submit ticket requests at Microchip Technical Support Portal.The Microchip forums ...</description>
+                     <urls/>
+                  </url>
+               </urls>
+            </url>
+         </urls>
+      </url>
+      <url>
+         <loc>GUID-75BD1A70-4576-4266-8274-1F18619A98A0.html</loc>
+         <lastmod>2023-05-10T12:48:28</lastmod>
+         <title>2 Getting started with MPLAB® Harmony TCP/IP Stack</title>
+         <description/>
+         <urls>
+            <url>
+               <loc>GUID-60A0C5B2-638B-4B28-9F43-745322863B88.html</loc>
+               <lastmod>2023-05-10T07:34:23</lastmod>
+               <title>2.1 Create your first TCP/IP Application</title>
+               <description>This tutorial demonstrates how to create a TCP/IP application project with MPLAB® Harmony TCP/IP Stack and MPLAB® Harmony v3 modules, using MPLABX IDE and MPLAB® Code Configurator.The tutorial ...</description>
+               <urls>
+                  <url>
+                     <loc>GUID-1D82343A-EDA2-4CC2-846D-B3C993D55731.html</loc>
+                     <lastmod>2023-05-09T11:05:39</lastmod>
+                     <title>2.1.1 Software Prerequisites</title>
+                     <description>The instructions in this tutorial assume that you have already installed the following software.MPLAB® X Integrated Development EnvironmentMPLAB® XC32/32++ C CompilerMPLAB® Code ConfiguratorMPLAB® ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-E7E0ABF5-033A-43C4-A9FB-9E2D62AFFCB4.html</loc>
+                     <lastmod>2023-05-09T11:45:47</lastmod>
+                     <title>2.1.2 Hardware Requirements</title>
+                     <description>The hardware development boards supported by Harmony 3 TCP/IP applications are as follows:SAME70 Xplained UltraSAMV71 Xplained UltraSAME54 Xplained PROSAMA5D2 Xplained UltraSAM9X60-EK Evaluation ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-561C3C52-2669-4417-9E50-2845923F7599.html</loc>
+                     <lastmod>2023-05-10T15:33:50</lastmod>
+                     <title>2.1.3 Creating New Harmony MCC Project</title>
+                     <description>Open the MPLAB® X IDECreate a New Project by clicking the New Project icon Microchip Technology or by selecting File -&gt; New ProjectIn the New Project window select 32-Bit MCC Harmony Project and ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-C2EA1D23-D9AF-49CB-85C6-1A4206586850.html</loc>
+                     <lastmod>2023-05-10T16:19:04</lastmod>
+                     <title>2.1.4 TCP/IP Configuration</title>
+                     <description>Start TCP/IP Configuration from Plugins drop-down menu TCP/IP Configuration starts with empty Overview window Click Application in TCP/IP Layers on the left side pane Add DHCP CLIENT by drag and drop ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-26797AD3-8425-4762-91F2-858B7177DC4B.html</loc>
+                     <lastmod>2023-05-10T16:32:06</lastmod>
+                     <title>2.1.5 Add other Harmony modules</title>
+                     <description>Switch to Project Graph window in MPLABX IDE. By default, the Root Layer is visible. Add SYS_CONSOLE and USART dependency.Right Click on SYS_CONSOLE dependency button on TCP/IP STACK box.Select ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-28F62CB1-C360-40F6-8125-8EA43C4A063D.html</loc>
+                     <lastmod>2024-02-20T10:17:31</lastmod>
+                     <title>2.1.6 Clock Configuration</title>
+                     <description>Start Clock Configuration from Plugins drop-down menu Verify the clock configuration. The application demo can work with default clock configuration. Verify the Processor Clock (HCLK) is 300,000,000 ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-27BACF3E-053A-4EAA-9CAE-61FA0FCA18FA.html</loc>
+                     <lastmod>2023-05-10T17:34:20</lastmod>
+                     <title>2.1.7 MPU Configuration</title>
+                     <description>The MPU (Memory Protection Unit) is for the configuration of the memory regions. Here, we are configuring a non-cacheable memory region for storing GMAC descriptors. This configuration is applicable ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-AF4E3FEB-EABB-4A99-AC18-6CD0BAAB7836.html</loc>
+                     <lastmod>2023-05-10T17:34:49</lastmod>
+                     <title>2.1.8 Interrupt Configuration</title>
+                     <description>The NVIC (Nested Vectored Interrupt Controller) is the interrupt controller in SAM devices. For other devices, refer the interrupt section in device datasheet. Start NVIC Configuration from Plugins ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-25D5E0C9-3A18-432E-9C34-D93E8812A38D.html</loc>
+                     <lastmod>2023-05-10T17:35:15</lastmod>
+                     <title>2.1.9 Pin Configuration</title>
+                     <description>Start Pin Configuration from Plugins drop-down menu Configure the pins for USART1 as shown below. Configure the pins for GMAC.Refer to the SAME70 Xplained Ultra board schematic for the GMAC pins. ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-12304D77-B2B9-43F2-A9F4-DE2D817C7943.html</loc>
+                     <lastmod>2023-05-10T17:35:43</lastmod>
+                     <title>2.1.10 MCC Code Generation</title>
+                     <description>When all the required Harmony components are added to the project and configured, it is time to generate the source files. Click Generate button in Project Resources window on left pane. Verify the ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-91873651-A426-4648-B1A4-CD7314750FE6.html</loc>
+                     <lastmod>2024-02-20T10:16:18</lastmod>
+                     <title>2.1.11 Application Coding</title>
+                     <description>Now, you have the MPLAB® Harmony components configured for a TCP/IP application. The Getting-Started demo implements a simple TCP/IP Client application. This application is written using the API's ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-BB159738-CAC4-4016-BA1F-EA0BC67E6DD7.html</loc>
+                     <lastmod>2023-05-10T17:36:40</lastmod>
+                     <title>2.1.12 Build and Program</title>
+                     <description>The demo project will be compiled and programmed to the SAME70 development board.Build the Application.Open the project Properties by Right Clicking on the project name ...</description>
+                     <urls/>
+                  </url>
+                  <url>
+                     <loc>GUID-181D54DB-9EBE-4C42-9E49-B77B4A15D186.html</loc>
+                     <lastmod>2023-05-10T17:37:01</lastmod>
+                     <title>2.1.13 Testing the Application</title>
+                     <description>The functions of TCP/IP Client are tested using console commands. The console is the virtual COM port enumerated when a micro-USB cable connected to the DEBUG USB port on SAM E70 Xplained Ultra ...</description>
+                     <urls/>
+                  </url>
+               </urls>
+            </url>
+            <url>
+               <loc>GUID-3A0DFD6E-F6BC-4FE9-BAE4-BE22C34C21C0.html</loc>
+               <lastmod>2023-05-11T18:19:43</lastmod>
+               <title>2.2 Migrate MHC based TCP/IP Demos to TCP/IP Configurator</title>
+               <description>Follow the steps to migrate existing TCP/IP application demo to work with TCP/IP Configurator.Open TCP/IP application demo to migrate, in MPLAB X IDEEnsure that the project uses the latest toolchain ...</description>
+               <urls/>
+            </url>
+         </urls>
+      </url>
+      <url>
+         <loc>GUID-0FB3F908-88EE-45CE-94F5-E97AF9049C9B.html</loc>
+         <lastmod>2022-04-04T12:20:47</lastmod>
+         <title> Microchip Information</title>
+         <description/>
+         <urls>
+            <url>
+               <loc>GUID-7551DC67-D79D-4F0C-B56F-7B17E12400E0.html</loc>
+               <lastmod>2022-07-05T07:23:16</lastmod>
+               <title> The Microchip Website</title>
+               <description>Microchip provides online support via our website at . This website is used to make files and information easily available to customers. Some of the content available includes:Product Support – Data ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-CDA512D8-0DE4-4672-8716-04CAC681CB38.html</loc>
+               <lastmod>2022-07-05T07:27:49</lastmod>
+               <title> Product Change Notification Service</title>
+               <description>Microchip’s product change notification service helps keep customers current on Microchip products. Subscribers will receive email notification whenever there are changes, updates, revisions or ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-F05182E4-B102-4775-A746-1FF37F465312.html</loc>
+               <lastmod>2022-07-05T07:29:30</lastmod>
+               <title> Customer Support</title>
+               <description>Users of Microchip products can receive assistance through several channels:Distributor or RepresentativeLocal Sales OfficeEmbedded Solutions Engineer (ESE)Technical Support Customers should contact ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-E8251634-7B15-4073-A103-5A5F128B8699.html</loc>
+               <lastmod>2021-09-15T14:48:25</lastmod>
+               <title> Microchip Devices Code Protection Feature</title>
+               <description>Note the following details of the code protection feature on Microchip products:Microchip products meet the specifications contained in their particular Microchip Data Sheet.Microchip believes that ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-125F1A93-76CC-4BD7-BACA-01844FBD5F4F.html</loc>
+               <lastmod>2024-06-13T17:02:57</lastmod>
+               <title> Legal Notice</title>
+               <description>This publication and the information herein may be used only with Microchip products, including to design, test, and integrate Microchip products with your application. Use of this information in any ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-21750586-F9F2-4E33-87FB-8F2994BF4744.html</loc>
+               <lastmod>2023-08-23T20:11:43</lastmod>
+               <title> Trademarks</title>
+               <description>The Microchip name and logo, the Microchip logo, Adaptec, AVR, AVR logo, AVR Freaks, BesTime, BitCloud, CryptoMemory, CryptoRF, dsPIC, flexPWR, HELDO, IGLOO, JukeBlox, KeeLoq, Kleer, LANCheck, ...</description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-07985EED-D525-413B-AEFE-78B563328687.html</loc>
+               <lastmod>2022-07-05T07:33:24</lastmod>
+               <title> Quality Management System</title>
+               <description>For information regarding Microchip’s Quality Management Systems, please visit </description>
+               <urls/>
+            </url>
+            <url>
+               <loc>GUID-02A694CF-88A5-4ADA-8785-7EEEC62D66EA.html</loc>
+               <lastmod>2024-04-23T08:39:10</lastmod>
+               <title> Worldwide Sales and Service</title>
+               <description>AMERICASASIA/PACIFICASIA/PACIFICEUROPE Corporate Office 2355 West Chandler Blvd. Chandler, AZ 85224-6199 Tel: 480-792-7200 Fax: 480-792-7277 Technical Support: Web Address: Atlanta Duluth, GA Tel: ...</description>
+               <urls/>
+            </url>
+         </urls>
+      </url>
+   </urls>
+</publication>

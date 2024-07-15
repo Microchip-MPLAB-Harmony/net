@@ -1,0 +1,1 @@
+define({"topics":[{"title":"<ph>1.2.2.1<\/ph>\nNetwork Presentation Layer","href":"GUID-337C22DB-C00E-42C9-8BB2-876D36A7B5AD.html","attributes":{"data-id":"GUID-337C22DB-C00E-42C9-8BB2-876D36A7B5AD"},"menu":{"hasChildren":false},"tocID":"GUID-337C22DB-C00E-42C9-8BB2-876D36A7B5AD-d10887e5570","next":"GUID-337C22DB-C00E-42C9-8BB2-876D36A7B5AD-d10887e5570"}]});
