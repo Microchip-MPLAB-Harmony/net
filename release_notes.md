@@ -16,6 +16,7 @@
 		| ------------- | ----------- |
 		| GMAC      	| Fixed the GMAC reference clock selection not working on SAM9X75 |
 		|  	   	    	| Fixed the Missing GMAC interrupts in TCP/IP Configurator->Configuration Summary for SAMA7D6 | 
+        |               | Fixed the SAM9X7 and SAMA7D6 MAC priority Queue support |
 		| SNMPv3		| SNMPv3 USM command updated |
 		| MCC			| Referencing to components' online help from MCC is implemented |
 		| Documentation | Updated the documentation and added the missing sections | 
