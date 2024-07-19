@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="v3.13.4"/>
-        <Dependency name="csp" version="v3.19.0"/>
-        <Dependency name="bsp" version="v3.20.0"/>
+        <Dependency name="core" version="v3.13.5"/>
+        <Dependency name="csp" version="v3.19.3"/>
+        <Dependency name="bsp" version="v3.20.1"/>
         <Dependency name="crypto" version="v3.8.1"/>
-        <Dependency name="usb" version="v3.13.0"/>
+        <Dependency name="usb" version="v3.14.0"/>
         <Dependency name="wolfssl" version="v5.4.0"/>
         <Dependency name="wolfMQTT" version="v1.11.1"/>
         <Dependency name="CMSIS-FreeRTOS" version="v10.5.1"/>
