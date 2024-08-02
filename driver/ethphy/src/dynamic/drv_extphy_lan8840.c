@@ -187,384 +187,395 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Skew_Setting(const DRV_ETHPHY_OBJECT_BASE* 
     DRV_ETHPHY_RESULT res = 0;
     uint16_t writeValue;
     DRV_ETHPHY_CLIENT_OBJ *hClient = (DRV_ETHPHY_CLIENT_OBJ *)hClientObj;
-    uint16_t readRes =  lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue;
+    uint16_t readValue =  lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue;
     SKEW_SET_STATES skewSetState = lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState;
     
     switch(skewSetState)
     {
         case(TX_CLK_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_TX_CLK_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TX_CLK_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;
                     
         case(TX_CLK_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_TX_CLK_SKEW << PHY_MMD_TX_CLK_SKEW_POS) | (readRes & ~(PHY_MMD_TX_CLK_SKEW_MASK)) ;
+            writeValue = (DRV_ETHPHY_LAN8840_TX_CLK_SKEW << PHY_MMD_TX_CLK_SKEW_POS) | (readValue & ~(PHY_MMD_TX_CLK_SKEW_MASK)) ;
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CLK_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CLK_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;
                     
         case(RX_CLK_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RX_CLK_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CLK_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;
                     
         case(RX_CLK_SKEW_WRITE):
-            writeValue = DRV_ETHPHY_LAN8840_RX_CLK_SKEW | (readRes & ~(PHY_MMD_RX_CLK_SKEW_MASK)) ;
+            writeValue = DRV_ETHPHY_LAN8840_RX_CLK_SKEW | (readValue & ~(PHY_MMD_RX_CLK_SKEW_MASK)) ;
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CLK_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CTL_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CTL_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;
         
         case(RX_CTL_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RX_CTL_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RX_CTL_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;
             
         case(RX_CTL_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_RX_CTL_SKEW << PHY_MMD_RX_CTL_SKEW_POS) | (readRes & ~(PHY_MMD_RX_CTL_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_RX_CTL_SKEW << PHY_MMD_RX_CTL_SKEW_POS) | (readValue & ~(PHY_MMD_RX_CTL_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TX_CTL_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TX_CTL_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;
         
         case(TX_CTL_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_TX_CTL_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TX_CTL_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(TX_CTL_SKEW_WRITE):
-            writeValue = DRV_ETHPHY_LAN8840_TX_CTL_SKEW | (readRes & ~(PHY_MMD_TX_CTL_SKEW_MASK));
+            writeValue = DRV_ETHPHY_LAN8840_TX_CTL_SKEW | (readValue & ~(PHY_MMD_TX_CTL_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_CTL_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD3_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD3_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;          
           
         case(RXD3_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RXD3_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD3_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(RXD3_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_RXD3_SKEW << PHY_MMD_RXD3_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_RXD3_PAD_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_RXD3_SKEW << PHY_MMD_RXD3_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_RXD3_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD2_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD2_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;       
             
         case(RXD2_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RXD2_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD2_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(RXD2_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_RXD2_SKEW << PHY_MMD_RXD2_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_RXD2_PAD_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_RXD2_SKEW << PHY_MMD_RXD2_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_RXD2_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD1_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD1_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;            
 
         case(RXD1_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RXD1_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD1_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(RXD1_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_RXD1_SKEW << PHY_MMD_RXD1_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_RXD1_PAD_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_RXD1_SKEW << PHY_MMD_RXD1_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_RXD1_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD0_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD0_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;       
             
         case(RXD0_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_RXD0_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = RXD0_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(RXD0_SKEW_WRITE):
-            writeValue = DRV_ETHPHY_LAN8840_RXD0_SKEW | (readRes & ~(PHY_MMD_RXD0_PAD_SKEW_MASK));
+            writeValue = DRV_ETHPHY_LAN8840_RXD0_SKEW | (readValue & ~(PHY_MMD_RXD0_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_RX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD3_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD3_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;        
             
         case(TXD3_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_TXD3_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD3_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(TXD3_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_TXD3_SKEW << PHY_MMD_TXD3_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_TXD3_PAD_SKEW_MASK)) ;
+            writeValue = (DRV_ETHPHY_LAN8840_TXD3_SKEW << PHY_MMD_TXD3_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_TXD3_PAD_SKEW_MASK)) ;
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD2_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD2_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;       
             
         case(TXD2_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_TXD2_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD2_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(TXD2_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_TXD2_SKEW << PHY_MMD_TXD2_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_TXD2_PAD_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_TXD2_SKEW << PHY_MMD_TXD2_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_TXD2_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD1_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD1_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;            
 
         case(TXD1_SKEW_READ):
         #ifdef DRV_ETHPHY_LAN8840_TXD1_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD1_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;            
                     
         case(TXD1_SKEW_WRITE):
-            writeValue = (DRV_ETHPHY_LAN8840_TXD1_SKEW << PHY_MMD_TXD1_PAD_SKEW_POS ) | (readRes & ~(PHY_MMD_TXD1_PAD_SKEW_MASK));
+            writeValue = (DRV_ETHPHY_LAN8840_TXD1_SKEW << PHY_MMD_TXD1_PAD_SKEW_POS ) | (readValue & ~(PHY_MMD_TXD1_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD0_SKEW_READ;   
                 res = DRV_ETHPHY_RES_PENDING;
             }
         #else
             lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD0_SKEW_READ;
+            res = DRV_ETHPHY_RES_PENDING;
         #endif
             break;                   
             
         case(TXD0_SKEW_READ):               
         #ifdef DRV_ETHPHY_LAN8840_TXD0_SKEW
-            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readRes);
+            res = DRV_LAN8840_Read_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, &readValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }            
-            if(res == DRV_ETHPHY_RES_OK)
+            else if(res == DRV_ETHPHY_RES_OK)
             {
-                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readRes;
+                lan8840_phy_inst_data[hClient->hDriver->miimIndex].readResValue = readValue;
                 lan8840_phy_inst_data[hClient->hDriver->miimIndex].skewSetState = TXD0_SKEW_WRITE;
                 res = DRV_ETHPHY_RES_PENDING;
             }
             break;
                     
         case(TXD0_SKEW_WRITE): 
-            writeValue = DRV_ETHPHY_LAN8840_TXD0_SKEW  | (readRes & ~(PHY_MMD_TXD0_PAD_SKEW_MASK));
+            writeValue = DRV_ETHPHY_LAN8840_TXD0_SKEW  | (readValue & ~(PHY_MMD_TXD0_PAD_SKEW_MASK));
             res = DRV_LAN8840_Write_MMD_Reg(pBaseObj, hClientObj, PHY_MMD_RGMII_TX_DATA_SKEW_REG, writeValue);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }     
         #else
             res = DRV_ETHPHY_RES_OK;
@@ -628,7 +639,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {
@@ -643,7 +654,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -651,7 +662,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -667,7 +678,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -675,7 +686,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -691,7 +702,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -699,7 +710,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
                 res = pBaseObj->DRV_ETHPHY_VendorSMIReadStart(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -715,7 +726,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Read_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE* 
             res = pBaseObj->DRV_ETHPHY_VendorSMIReadResultGet(hClientObj, pReadOut);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {           
@@ -771,7 +782,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {
@@ -786,7 +797,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -794,7 +805,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, regIndex, phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -810,7 +821,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -818,7 +829,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_CONTROL, (M_PHY_MMD_CNTL_ACCESS_DATA_MASK | PHY_MMD_DEVICE_ADDRESS), phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -834,7 +845,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             {   
@@ -842,7 +853,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
                 res = pBaseObj->DRV_ETHPHY_VendorSMIWriteWaitComplete(hClientObj, PHY_MMD_ACCESS_DATA_ADDR, writeIn, phyAddress);
                 if(res < 0)
                 {   // some error
-                    break;
+                    // do nothing
                 }
                 else if(res == DRV_ETHPHY_RES_OK)
                 {
@@ -858,7 +869,7 @@ static DRV_ETHPHY_RESULT DRV_LAN8840_Write_MMD_Reg(const DRV_ETHPHY_OBJECT_BASE*
             res = pBaseObj->DRV_ETHPHY_VendorSMIOperationIsComplete(hClientObj);
             if(res < 0)
             {   // some error
-                break;
+                // do nothing
             }
             else if(res == DRV_ETHPHY_RES_OK)
             { 
