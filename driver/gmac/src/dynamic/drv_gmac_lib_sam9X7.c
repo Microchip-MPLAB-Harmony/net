@@ -221,7 +221,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
         //dma configuration
         pGmacRegs->GMAC_DCFGR = (GMAC_DCFGR_DRBS_Msk & ((wRxBufferSize_temp >> 6) << GMAC_DCFGR_DRBS_Pos))
                                 | (GMAC_DCFGR_RXBMS_Msk & ((3) << GMAC_DCFGR_RXBMS_Pos)) | GMAC_DCFGR_TXPBMS_Msk  
-                                | GMAC_DCFGR_FBLDO(4) | GMAC_DCFGR_DDRP_Msk;
+                                | GMAC_DCFGR_FBLDO(16) | GMAC_DCFGR_DDRP_Msk;
 
         if((pMACDrv->sGmacData.gmacConfig.checksumOffloadTx) != TCPIP_MAC_CHECKSUM_NONE)
         {
