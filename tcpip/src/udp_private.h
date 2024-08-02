@@ -235,18 +235,18 @@ typedef struct
     uint16_t        rxTotLen;       // total remaining data length, across segments 
     uint8_t*        rxCurr;         // current RX pointer 
     // socket info + flags
-    uint8_t         addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
-    uint8_t         txAllocLimit;   // max number of packets that can be queued/allocated at a certain time
-    uint8_t         txAllocCnt;     // current number of packets that are allocated for TX
-    TCPIP_UDP_SKT_EXT_FLAGS extFlags; // additional socket flags; 8 bit value
     TCPIP_UDP_SKT_FLAGS flags;      // current socket flags; 32 bit value
     SINGLE_LIST     rxQueue;        // queued RX packets belonging to this socket
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;  // socket event handler
-    const void*     sigParam;               // event handler parameter
+    const void*     sigParam;              // event handler parameter
+    uint16_t        txAllocLimit;   // max number of packets that can be queued/allocated at a certain time
+    uint16_t        txAllocCnt;     // current number of packets that are allocated for TX
+    uint16_t        rxQueueLimit;   // max number of RX packets that can be queued at a certain time
     uint16_t        sigMask;        // TCPIP_UDP_SIGNAL_TYPE: active events
-    uint16_t         rxQueueLimit;   // max number of RX packets that can be queued at a certain time
+    uint8_t         addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
+    TCPIP_UDP_SKT_EXT_FLAGS extFlags; // additional socket flags; 8 bit value
     uint8_t         ttl;            // socket TTL value 
-    uint8_t         padding[];      // padding; not used
+    uint8_t         padding[1];     // padding; not used
 
 } UDP_SOCKET_DCPT;
 

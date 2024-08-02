@@ -843,8 +843,8 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
                       - UDP_OPTION_TX_BUFF          - 16-bit value in bytes of the TX buffer
                                                       Note: the UDP_OPTION_TX_BUFF will discard
                                                          the data in the current socket buffer 
-                      - UDP_OPTION_TX_QUEUE_LIMIT   - 8-bit value of the TX queue limit
-                      - UDP_OPTION_RX_QUEUE_LIMIT   - 8-bit value of the RX queue limit
+                      - UDP_OPTION_TX_QUEUE_LIMIT   - 16-bit value of the TX queue limit
+                      - UDP_OPTION_RX_QUEUE_LIMIT   - 16-bit value of the RX queue limit
                       - UDP_OPTION_RX_AUTO_ADVANCE  - boolean enable/disable
                       - UDP_OPTION_TX_TTL           - 8-bit value of TTL
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_OPTION_MULTICAST_DATA structure
@@ -896,8 +896,8 @@ bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION opti
                       - UDP_OPTION_BROADCAST        - pointer to UDP_SOCKET_BCAST_TYPE
                       - UDP_OPTION_BUFFER_POOL      - pointer to boolean
                       - UDP_OPTION_TX_BUFF          - pointer to a 16 bit value to receive bytes of the TX buffer
-                      - UDP_OPTION_TX_QUEUE_LIMIT   - pointer to an 8 bit value to receive the TX queue limit
-                      - UDP_OPTION_RX_QUEUE_LIMIT   - pointer to an 8 bit value to receive the RX queue limit
+                      - UDP_OPTION_TX_QUEUE_LIMIT   - pointer to an 16 bit value to receive the TX queue limit
+                      - UDP_OPTION_RX_QUEUE_LIMIT   - pointer to an 16 bit value to receive the RX queue limit
                       - UDP_OPTION_RX_AUTO_ADVANCE  - pointer to boolean
                       - UDP_OPTION_TX_TTL           - pointer to an 8 bit value to receive the TTL value
                       - UDP_OPTION_MULTICAST        - pointer to a UDP_MULTICAST_FLAGS value to receive the current socket settings

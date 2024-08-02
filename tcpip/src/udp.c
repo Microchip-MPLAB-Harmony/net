@@ -3318,11 +3318,11 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case UDP_OPTION_TX_QUEUE_LIMIT:
-                pSkt->txAllocLimit = (uint8_t)(unsigned int)optParam;
+                pSkt->txAllocLimit = (uint16_t)(unsigned int)optParam;
                 return true;
 
             case UDP_OPTION_RX_QUEUE_LIMIT:
-                pSkt->rxQueueLimit = (uint8_t)(unsigned int)optParam;
+                pSkt->rxQueueLimit = (uint16_t)(unsigned int)optParam;
                 return true;
 
             case UDP_OPTION_RX_AUTO_ADVANCE:
@@ -3433,11 +3433,11 @@ bool TCPIP_UDP_OptionsGet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
                 
             case UDP_OPTION_TX_QUEUE_LIMIT:
-                *(uint8_t*)optParam = pSkt->txAllocLimit;
+                *(uint16_t*)optParam = pSkt->txAllocLimit;
                 return true;
 
             case UDP_OPTION_RX_QUEUE_LIMIT:
-                *(uint8_t*)optParam = pSkt->rxQueueLimit;
+                *(uint16_t*)optParam = pSkt->rxQueueLimit;
                 return true;
 
             case UDP_OPTION_RX_AUTO_ADVANCE:
