@@ -1721,12 +1721,20 @@ bool TCPIP_IPV6_HeaderGet(TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR * localIPAddr, IPV
     if ((header.V_T_F & 0x000000F0) != IPv6_VERSION)
         return false;
 
-    uint16_t pktLen = TCPIP_PKT_PayloadLen(pRxPkt);
     uint16_t payloadLen = TCPIP_Helper_ntohs(header.PayloadLength);
 
-    if(payloadLen > pktLen)
+    if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_RX_INTERNAL) != 0)
+    {   // skip the pkt length check for an internally generated packet! Already checked.
+        // clear flag; only one internal generation
+        pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_RX_INTERNAL;
+    }
+    else
     {
-        return false;
+        uint16_t pktLen = TCPIP_PKT_PayloadLen(pRxPkt);
+        if(payloadLen > pktLen)
+        {   // suspicious packet
+            return false;
+        }
     }
 
     *hopLimit = header.HopLimit;
@@ -2507,8 +2515,6 @@ TCPIP_IPV6_FragmentationHeaderProcess(
     //
     if (ptrFragment->packetSize == ptrFragment->bytesInPacket)
     {
-        TCPIP_MAC_PTR_TYPE  tempReadPtr;
-        TCPIP_MAC_PTR_TYPE  tempBaseReadPtr;
         TCPIP_UINT16_VAL    aTcpIpUInt16Val;
 
         // Subtract the length of the IPV6 header from the payload
@@ -2518,19 +2524,24 @@ TCPIP_IPV6_FragmentationHeaderProcess(
         ptrFragment->ptrPacket[ IPV6_HEADER_OFFSET_PAYLOAD_LENGTH ] =       aTcpIpUInt16Val.v[ 1 ];
         ptrFragment->ptrPacket[ IPV6_HEADER_OFFSET_PAYLOAD_LENGTH + 1 ] =   aTcpIpUInt16Val.v[ 0 ];
 
-        tempReadPtr = MACSetReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket);
-        tempBaseReadPtr = MACSetBaseReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket - sizeof (TCPIP_MAC_ETHERNET_HEADER));
+        MACSetReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket);
+        MACSetBaseReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket - sizeof (TCPIP_MAC_ETHERNET_HEADER));
 
-        TCPIP_IPV6_Process (pNetIf, pRxPkt);
+        // fragmentation complete; reinsert the packet for further processing
+        pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_RX_INTERNAL;    // signal special internal packet
+        if(_TCPIPStackModuleRxInsert(TCPIP_MODULE_IPV6, pRxPkt, true))
+        {
+            ptrFragment->firstFragmentLength = 0;
+            TCPIP_Helper_SingleListNodeRemove(&pIpv6Config->rxFragments, (SGL_LIST_NODE *)ptrFragment);
+            TCPIP_IPV6_FragmentBufferFree (ptrFragment);
 
-        MACSetReadPtr (pRxPkt, tempReadPtr);
-        MACSetBaseReadPtr (pRxPkt, tempBaseReadPtr);
-
-        
-        ptrFragment->firstFragmentLength = 0;
-
-        TCPIP_Helper_SingleListNodeRemove(&pIpv6Config->rxFragments, (SGL_LIST_NODE *)ptrFragment);
-        TCPIP_IPV6_FragmentBufferFree (ptrFragment);
+            return IPV6_ACTION_TX_INTERNAL; 
+        }
+        else
+        {   // failed; wait for other fragment or timeout
+            pRxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_RX_INTERNAL;
+            // return IPV6_ACTION_DISCARD_SILENT and be discarded
+        }
     }
 
     return IPV6_ACTION_DISCARD_SILENT;
@@ -3390,6 +3401,10 @@ static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt)
                 // Discard the packet
                 cIPFrameType = IPV6_PROT_NONE;
                 break;
+            case IPV6_ACTION_TX_INTERNAL:
+                // Packet in internal traffic; Do not acknowledge
+                return;
+
             // No action was required
             case IPV6_ACTION_NONE:
             default:

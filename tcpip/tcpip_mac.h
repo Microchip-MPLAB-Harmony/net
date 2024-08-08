@@ -600,6 +600,9 @@ typedef enum
     /* UDP checksum was calculated for this RX packet and is OK; 0x04 << 8 */
     TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP        = 0x00000400,      
 
+    /* internally generated packet */
+    TCPIP_MAC_PKT_FLAG_RX_INTERNAL          = 0x00000800,
+
     /* Available user flags. */
     TCPIP_MAC_PKT_FLAG_USER                 = 0x00010000,      
 
