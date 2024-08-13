@@ -148,99 +148,16 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         </button>
                         
                         
-                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__GUID-60DF7E68-18F8-47D9-BB39-07E5164F6482">
-<h1 class="- topic/title title topictitle1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__GUID-60DF7E68-18F8-47D9-BB39-07E5164F6482" style="">1.2.5.8.1 Abstraction Model</h1>
-<div class="- topic/body body">
-        <p class="- topic/p p">To understand how this library works you must first understand how an external Ethernet
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__GUID-60DF7E68-18F8-47D9-BB39-07E5164F6482"><h1 class="- topic/title title topictitle1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__GUID-60DF7E68-18F8-47D9-BB39-07E5164F6482" style="">1.2.5.8.1 Abstraction Model</h1><div class="- topic/body body"><p class="- topic/p p">To understand how this library works you must first understand how an external Ethernet
             PHY interfaces with the Ethernet Controller. As shown in Figure 1, the PHY has two
-            interfaces: </p>
-        <p class="- topic/p p">The management interface for configuration/control of the PHY, known as the Media
-            Independent Interface Management (MIIM) or Serial Management Interface (SMI) </p>
-        <p class="- topic/p p">The transmit and receive data interface, which could be the Media Independent Interface
-            (MIIM) or the Reduced Media Independent Interface (RMII)</p>
-        <div class=""><img class="- topic/image image" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__IMAGE_QWL_2DM_L1C" src="GUID-C9F74FE2-DFA7-40A7-811C-F64256ED779F-high.png"/></div>
-        <p class="- topic/p p">The block diagram also shows an interrupt signal (nINT) going to an external interrupt
+            interfaces: </p><p class="- topic/p p">The management interface for configuration/control of the PHY, known as the Media
+            Independent Interface Management (MIIM) or Serial Management Interface (SMI) </p><p class="- topic/p p">The transmit and receive data interface, which could be the Media Independent Interface
+            (MIIM) or the Reduced Media Independent Interface (RMII)</p><div class=""><img class="- topic/image image" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__IMAGE_QWL_2DM_L1C" src="GUID-C9F74FE2-DFA7-40A7-811C-F64256ED779F-high.png"/></div><p class="- topic/p p">The block diagram also shows an interrupt signal (nINT) going to an external interrupt
             pin on the host device and signals going to on-board LEDs to show link state and link
-            activity. </p>
-        <p class="- topic/p p">The SMI or MIIM interface controls the PHY. This control interface is standardized for
+            activity. </p><p class="- topic/p p">The SMI or MIIM interface controls the PHY. This control interface is standardized for
             all PHYs by Clause 22 of the 802.3 standard. It provides up to 32 16-bit registers on
             the PHY. The following table provides a summary of all 32 registers. Consult the data
-            sheet for the PHY device for the specific bit fields in each register. </p>
-        <div class="table-container"><table class="- topic/table table frame-all" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C" data-ofbid="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C" data-cols="3"><caption></caption><colgroup><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/></colgroup><thead class="- topic/thead thead">
-                    <tr class="- topic/row">
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">Register Address </th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Register Name</th>
-                        <th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Register Type </th>
-                    </tr>
-                </thead><tbody class="- topic/tbody tbody">
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">0</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Control</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Basic</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">1</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Status</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Basic</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">2,3</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">PHY Identifier </td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">4</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Advertisement</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">5</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Link Partner Base Page Ability</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">6</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Expansion</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">7</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Next Page Transmit</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">8</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Link Partner Received Next Page</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">9</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">HOST-CLIENT Control Register</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">10</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">HOST-CLIENT Status Register</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">11-14</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Reserved</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">15</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Extended Status</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">16-31</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Vendor Specific</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td>
-                    </tr>
-                </tbody></table></div>
-    </div>
-</article></main></div>
+            sheet for the PHY device for the specific bit fields in each register. </p><div class="table-container"><table class="- topic/table table frame-all" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C" data-ofbid="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C" data-cols="3"><caption></caption><colgroup><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">Register Address </th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Register Name</th><th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Register Type </th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">0</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Control</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Basic</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">1</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Status</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Basic</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">2,3</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">PHY Identifier </td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">4</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Advertisement</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">5</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Link Partner Base Page Ability</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">6</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Expansion</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">7</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Next Page Transmit</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">8</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Auto-Negotiation Link Partner Received Next Page</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">9</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">HOST-CLIENT Control Register</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">10</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">HOST-CLIENT Status Register</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">11-14</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Reserved</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">15</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Extended Status</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__1">16-31</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__2">Vendor Specific</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-866D9DFC-BDA7-45F9-9EC6-C9A0F7FC5002__TABLE_M3P_LDM_L1C__entry__3">Extended</td></tr></tbody></table></div></div></article></main></div>
                         
                         
                         

@@ -143,70 +143,24 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         </button>
                         
                         
-                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__GUID-63B6AAF2-7249-4A57-8BE2-3F330CFE7374">
-<h1 class="- topic/title title topictitle1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__GUID-63B6AAF2-7249-4A57-8BE2-3F330CFE7374" style="">1.2.4.3 ICMPv6 Module</h1>
-<div class="- topic/body body">
-        <p class="- topic/p p">This document specifies a set of APIs of Internet Control Message Protocol (ICMP)
-            messages for use with version 6 of the Internet Protocol (IPv6). </p>
-        <p class="- topic/p p">The Internet Protocol, version 6 (IPv6) is a new version of IP, uses the Internet Control
-            Message Protocol (ICMP) as defined for IPv4 </p>
-        <p class="- topic/p p">[RFC-792], with a number of changes. It is called ICMPv6, and has an IPv6 Next Header
-            value of 58. </p>
-        <p class="- topic/p p">ICMPv6 messages are used by IPv6 nodes to report error messages and information messages.
-            ICMPv6 is also used for Ipv6 node diagnostic (i.e., IPv6 ping). </p>
-        <p class="- topic/p p">The ICMPv6 protocol also provides a framework for the following: </p>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Neighbor Discovery</strong></p>
-        <p class="- topic/p p">Neighbor Discovery is a series of five ICMPv6 messages that manage node-to-node
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__GUID-63B6AAF2-7249-4A57-8BE2-3F330CFE7374"><h1 class="- topic/title title topictitle1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__GUID-63B6AAF2-7249-4A57-8BE2-3F330CFE7374" style="">1.2.4.3 ICMPv6 Module</h1><div class="- topic/body body"><p class="- topic/p p">This document specifies a set of APIs of Internet Control Message Protocol (ICMP)
+            messages for use with version 6 of the Internet Protocol (IPv6). </p><p class="- topic/p p">The Internet Protocol, version 6 (IPv6) is a new version of IP, uses the Internet Control
+            Message Protocol (ICMP) as defined for IPv4 </p><p class="- topic/p p">[RFC-792], with a number of changes. It is called ICMPv6, and has an IPv6 Next Header
+            value of 58. </p><p class="- topic/p p">ICMPv6 messages are used by IPv6 nodes to report error messages and information messages.
+            ICMPv6 is also used for Ipv6 node diagnostic (i.e., IPv6 ping). </p><p class="- topic/p p">The ICMPv6 protocol also provides a framework for the following: </p><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Neighbor Discovery</strong></p><p class="- topic/p p">Neighbor Discovery is a series of five ICMPv6 messages that manage node-to-node
             communication on a link. Neighbor Discovery replaces Address Resolution Protocol (ARP),
-            ICMP (IPv4) Router Discovery, and the ICMP (IPv4) Redirect message.</p>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Multicast Listener Discovery (MLD)</strong></p>
-        <p class="- topic/p p">Multicast Listener Discovery is a series of three ICMP messages that manage subnet
+            ICMP (IPv4) Router Discovery, and the ICMP (IPv4) Redirect message.</p><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Multicast Listener Discovery (MLD)</strong></p><p class="- topic/p p">Multicast Listener Discovery is a series of three ICMP messages that manage subnet
             multicast membership. Multicast Listener Discovery replaces version 2 of the Internet
-            Group Management Protocol (IGMP) for IPv4.</p>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Path MTU Discovery</strong></p>
-        <p class="- topic/p p">The maximum transmission unit (MTU) for a path is the minimum link MTU of all links on a
+            Group Management Protocol (IGMP) for IPv4.</p><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">Path MTU Discovery</strong></p><p class="- topic/p p">The maximum transmission unit (MTU) for a path is the minimum link MTU of all links on a
             path between a source and a destination. IPv6 packets that are smaller than the path MTU
             do not require fragmentation by the host and are successfully forwarded by all routers
             on the path. To discover the path MTU, the sending host uses the receipt of ICMPv6
-            Packet Too Big messages.</p>
-        <div class="table-container"><table class="- topic/table table frame-all" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C" data-ofbid="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C" data-cols="2"><caption></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead">
-                    <tr class="- topic/row">
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">ICMPv6 Common Messages</th>
-                        <th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Functions</th>
-                    </tr>
-                </thead><tbody class="- topic/tbody tbody">
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Echo Request </td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent to check IPv6 connectivity to a particular host.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Echo Reply</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent in response to an ICMPv6 Echo Request.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Destination Unreachable</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router or the destination host to inform the sending host
-                            that the packet or payload cannot be delivered.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Packet to big</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that a packet is too large
-                            to forward.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Time exceeded</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that the Hop Limit of an
-                            IPv6 packet has expired.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Parameter Problem</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that an error was
+            Packet Too Big messages.</p><div class="table-container"><table class="- topic/table table frame-all" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C" data-ofbid="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C" data-cols="2"><caption></caption><colgroup><col style="width:50%"/><col style="width:50%"/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">ICMPv6 Common Messages</th><th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Functions</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Echo Request </td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent to check IPv6 connectivity to a particular host.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Echo Reply</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent in response to an ICMPv6 Echo Request.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Destination Unreachable</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router or the destination host to inform the sending host
+                            that the packet or payload cannot be delivered.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Packet to big</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that a packet is too large
+                            to forward.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Time exceeded</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that the Hop Limit of an
+                            IPv6 packet has expired.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__1">Parameter Problem</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-642B5607-DAB5-4AAF-8487-2AF208A2625C__TABLE_TKC_KMP_M1C__entry__2">Sent by a router to inform a sending host that an error was
                             encountered in processing the IPv6 header or an IPv6 extension header.
-                        </td>
-                    </tr>
-                </tbody></table></div>
-</div>
-</article></main></div>
+                        </td></tr></tbody></table></div></div></article></main></div>
                         
                         
                         

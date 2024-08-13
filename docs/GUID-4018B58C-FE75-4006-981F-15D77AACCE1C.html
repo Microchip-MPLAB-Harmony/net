@@ -161,35 +161,22 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         </button>
                         
                         
-                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-33EDDE66-44A9-4859-83B1-E4650A2F2091">
-<h1 class="- topic/title title topictitle1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-33EDDE66-44A9-4859-83B1-E4650A2F2091" style="">1.2.1.19.1 Abstraction Model</h1>
-<div class="- topic/body body">
-        <div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_N4B_CM3_N1C" src="GUID-3844C6A3-2018-462D-A737-DF9E06CDDC51-high.png"/></div>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">SNMP Server (Agent)</strong></p>
-        <p class="- topic/p p">SNMP is an Internet protocol that was originally designed to manage different network
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-33EDDE66-44A9-4859-83B1-E4650A2F2091"><h1 class="- topic/title title topictitle1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-33EDDE66-44A9-4859-83B1-E4650A2F2091" style="">1.2.1.19.1 Abstraction Model</h1><div class="- topic/body body"><div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_N4B_CM3_N1C" src="GUID-3844C6A3-2018-462D-A737-DF9E06CDDC51-high.png"/></div><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">SNMP Server (Agent)</strong></p><p class="- topic/p p">SNMP is an Internet protocol that was originally designed to manage different network
             devices, such as file servers, hubs, routers, and so on. It can also be used to manage
             and control an ever increasing number of small embedded systems connected to one another
             over any IP network. Systems can communicate with each other using SNMP to transfer
-            control and status information, creating a truly distributed system</p>
-        <p class="- topic/p p">Location of the SNMP Stack in the TCP/IP Protocol Stack:</p>
-        <div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_UJR_HM3_N1C" src="GUID-9A47A2AE-4B6C-42B6-B856-E879099747C5-high.png"/></div>
-        <p class="- topic/p p">The Microchip SNMP Server is a multi-lingual implementation, which supports SNMPv1, V2c,
+            control and status information, creating a truly distributed system</p><p class="- topic/p p">Location of the SNMP Stack in the TCP/IP Protocol Stack:</p><div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_UJR_HM3_N1C" src="GUID-9A47A2AE-4B6C-42B6-B856-E879099747C5-high.png"/></div><p class="- topic/p p">The Microchip SNMP Server is a multi-lingual implementation, which supports SNMPv1, V2c,
             and V3 server features simultaneously. The SNMP Server is implemented to address the
             requirements of embedded applications and works with both IPv4 and IPv6 addresses.
             SNMPv1 and V2c are enabled by TCPIP_STACK_USE_SNMP_SERVER. SNMPv3 support is enabled by
             TCPIP_STACK_USE_SNMPV3_SERVER. Since the SNMPv3 stack requires the support of SNMPv1 and
             SNMPv2c, TCPIP_STACK_USE_SNMPV3_SERVER should be enabled with
-            TCPIP_STACK_USE_SNMP_SERVER. </p>
-        <div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_WHK_3M3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_WHK_3M3_N1C"><span class="note__title">Note:</span> Currently, the SNMP agent will be able to communicate with one
+            TCPIP_STACK_USE_SNMP_SERVER. </p><div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_WHK_3M3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_WHK_3M3_N1C"><span class="note__title">Note:</span> Currently, the SNMP agent will be able to communicate with one
             manager at a time, and it will be connected to either an IPv4 address or an IPv6
-            address. </div>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">V2c</em></p>
-        <p class="- topic/p p">V2c is implemented with support for the configuration of multiple community names and the
+            address. </div><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">V2c</em></p><p class="- topic/p p">V2c is implemented with support for the configuration of multiple community names and the
             community names can be configured through the HTTP web interface. An access-restricted
             web page is provided with the demonstration application to allow dynamic configuration
-            of SNMP communities.</p>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">SNMPv3</em></p>
-        <p class="- topic/p p">SNMPv3 RFC specifies different types of access mechanisms, user security model (USM),
+            of SNMP communities.</p><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">SNMPv3</em></p><p class="- topic/p p">SNMPv3 RFC specifies different types of access mechanisms, user security model (USM),
             authentication and privacy protocols. The Microchip SNMPv3 Server is implemented with
             support for the AES 128 CFB 128 and DES-CBC privacy protocols, and the MD5 and SHA1
             message authentication protocols. The demonstration implementation of the server is
@@ -202,21 +189,15 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
             respective localized keys of the password. The Microchip SNMPv3 agent is provided with
             the password information in the database for "Getting Started" and for understanding
             purposes only. It is recommended that the SNMPv3 stack be modified to restrict access to
-            the password OIDs declared in the user database.</p>
-        <div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_RWT_LM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_RWT_LM3_N1C"><span class="note__title">Note:</span> Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in
+            the password OIDs declared in the user database.</p><div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_RWT_LM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_RWT_LM3_N1C"><span class="note__title">Note:</span> Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in
             the SNMP Stack will prevent access to the variables that should be secured by SNMPv3.
             SNMP variables are structures in a tree in the MIB. Access to parts of this tree is
             determined by version. For example, SYSTEM-type variables can be accessed regardless of
             the SNMP version, while SNMPv2c requests can access part of the tree, and authenticated
-            SNMPv3 requests can access the complete tree.</div>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">MIB Files</strong></p>
-        <p class="- topic/p p">SNMP describes the hierarchal storage of management objects (referred to with object IDs
-            or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files: </p>
-        <p class="- topic/p p">mchip.mib - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing
-            information about the variables used in the demonstration </p>
-        <p class="- topic/p p">snmp.mib - This is a custom-formatted file that can be parsed to create Web page and
-            header resources that can be accessed with a MCHP device </p>
-        <p class="- topic/p p">The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip
+            SNMPv3 requests can access the complete tree.</div><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">MIB Files</strong></p><p class="- topic/p p">SNMP describes the hierarchal storage of management objects (referred to with object IDs
+            or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files: </p><p class="- topic/p p">mchip.mib - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing
+            information about the variables used in the demonstration </p><p class="- topic/p p">snmp.mib - This is a custom-formatted file that can be parsed to create Web page and
+            header resources that can be accessed with a MCHP device </p><p class="- topic/p p">The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip
             MIB script (snmp.mib) to generate two files named snmp.bib and mib.h. The snmp.bib file
             is a compressed record of management objects that will be stored with web pages and the
             mib.h file contains C defines for each OID. These files are included in the appropriate
@@ -225,24 +206,18 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
             directory and included in the project. Rebuild your project, and then rebuild and
             re-upload the web page. This will bundle the BIB file into the web page image, which
             will allow the SNMP agent to search for the required variable information with the MPFS
-            file system.</p>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">MIB Browsers</strong></p>
-        <p class="- topic/p p">Several SNMP MIB browsers are available. Users can also install a customized MIB browser
-            specific to their application. </p>
-        <p class="- topic/p p">This documentation describes how to use the iREASONING Networks MIB Browser to run the
+            file system.</p><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">MIB Browsers</strong></p><p class="- topic/p p">Several SNMP MIB browsers are available. Users can also install a customized MIB browser
+            specific to their application. </p><p class="- topic/p p">This documentation describes how to use the iREASONING Networks MIB Browser to run the
             TCP/IP SNMP demonstration applications. The MIB Browser can be obtained from:
             http://www.ireasoning.com/downloadmibbrowserlicense.shtml. The MIB script upload, the
             MIB tree structure display, and the SNMP query mechanism procedures vary from browser to
-            browser. </p>
-        <div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_VSZ_NM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_VSZ_NM3_N1C"><span class="note__title">Note:</span> The use of a MIB browser or other third-party products may
+            browser. </p><div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_VSZ_NM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_VSZ_NM3_N1C"><span class="note__title">Note:</span> The use of a MIB browser or other third-party products may
             require that users review and agree to the terms of a license. Microchip's reference to
             the iREASONING Networks MIB Browser is for the users' convenience. It is the user's
             responsibility to obtain information about, and comply with the terms of, any applicable
-            licenses. </div>
-        <p class="- topic/p p">Refer to the Microchip application note, AN870 "SNMP V2c Agent for Microchip TCP/IP
+            licenses. </div><p class="- topic/p p">Refer to the Microchip application note, AN870 "SNMP V2c Agent for Microchip TCP/IP
             Stack" (DS00000870) for more details on the MIB scripts, community names, and
-            demonstration SNMP MIB variable tree structure. </p>
-        <p class="- topic/p p">The ASN.1 format mchip.mib file is defined with a private variable tree structure for the
+            demonstration SNMP MIB variable tree structure. </p><p class="- topic/p p">The ASN.1 format mchip.mib file is defined with a private variable tree structure for the
             MIB variables. Also the mchip.mib is added with the number of OIDs that could be
             accessed only with SNMPv3 request. The browser can access every variable in the MIB
             database provided the community name matches. The access to the MIB variables is
@@ -250,190 +225,71 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
             SNMPv2c/v3 request. But the SNMP-FRAMEWORK-MIB.mib variables could only be accessed with
             a SNMPv3 request if the credentials are matched and the message is authenticated. To
             modify these MIB variables, corresponding changes must be made to both MIB scripts
-            (snmp.mib and mchip.mib). </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HXC_QM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HXC_QM3_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-B202474E-8FDB-46A9-975C-50277E1FA888" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-B202474E-8FDB-46A9-975C-50277E1FA888">For SNMP V2c services , The V2c agent is configured by default with three Read
+            (snmp.mib and mchip.mib). </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HXC_QM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HXC_QM3_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-B202474E-8FDB-46A9-975C-50277E1FA888" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-B202474E-8FDB-46A9-975C-50277E1FA888">For SNMP V2c services , The V2c agent is configured by default with three Read
                 communities ("public", "read", "") and three Write communities
-                ("private","write","public") </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DEFE2114-6ACC-4214-B248-2C8A4FAC684D" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DEFE2114-6ACC-4214-B248-2C8A4FAC684D">At run-time, the community names can be dynamically configured using the HTTP
-                interface for SNMP community name configuration </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-F549340A-17D3-4DC0-9387-C1D9B3367E3F" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-F549340A-17D3-4DC0-9387-C1D9B3367E3F">If the V2c agent receives an SNMP request with an unknown community name, the agent
-                will generate an Authentication trap </li>
-        </ul>
-        <p class="- topic/p p">The V2c agent's multiple community support feature enables the user application to
+                ("private","write","public") </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DEFE2114-6ACC-4214-B248-2C8A4FAC684D" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DEFE2114-6ACC-4214-B248-2C8A4FAC684D">At run-time, the community names can be dynamically configured using the HTTP
+                interface for SNMP community name configuration </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-F549340A-17D3-4DC0-9387-C1D9B3367E3F" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-F549340A-17D3-4DC0-9387-C1D9B3367E3F">If the V2c agent receives an SNMP request with an unknown community name, the agent
+                will generate an Authentication trap </li></ul><p class="- topic/p p">The V2c agent's multiple community support feature enables the user application to
             provide limited access to the requesting browser based on the community name used by the
-            browser to access the MIB database variables of the agent. </p>
-        <p class="- topic/p p">For SNMPv3 services: </p>
-        <div class="table-container"><table class="- topic/table table frame-all" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C" data-cols="4"><caption></caption><colgroup><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/></colgroup><thead class="- topic/thead thead">
-                    <tr class="- topic/row">
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Type</th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">USER 1</th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">USER 2</th>
-                        <th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">USER 3</th>
-                    </tr>
-                </thead><tbody class="- topic/tbody tbody">
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">USM User</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">microchip</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">SnmpAdmin</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">root</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Security Level</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">auth, priv</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">auth, no priv</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">no auth, no priv</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Auth Algorithm</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">MD5</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">SHA1</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Auth Password</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">auth12345</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">ChandlerUS</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Privacy Algorithm</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">AES</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">N/A</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Privacy Password</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">priv12345</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">N/A</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td>
-                    </tr>
-                </tbody></table></div>
-        <p class="- topic/p p">If SNMPv3 services are required, SNMPv3 browser is required to be configured with the
+            browser to access the MIB database variables of the agent. </p><p class="- topic/p p">For SNMPv3 services: </p><div class="table-container"><table class="- topic/table table frame-all" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C" data-cols="4"><caption></caption><colgroup><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Type</th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">USER 1</th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">USER 2</th><th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">USER 3</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">USM User</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">microchip</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">SnmpAdmin</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">root</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Security Level</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">auth, priv</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">auth, no priv</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">no auth, no priv</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Auth Algorithm</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">MD5</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">SHA1</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Auth Password</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">auth12345</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">ChandlerUS</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Privacy Algorithm</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">AES</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">N/A</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__1">Privacy Password</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__2">priv12345</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__3">N/A</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_UB5_SM3_N1C__entry__4">N/A</td></tr></tbody></table></div><p class="- topic/p p">If SNMPv3 services are required, SNMPv3 browser is required to be configured with the
             user name, authentication and privacy password, message authentication hash type,
             privacy protocol type. The SNMP server would respond only if one of the user credentials
             and user security parameters in the following table is configured at the manager. The
             previous table is stored in the global structure with the SNMPv3 server stack. The
             SNMPv3 server would only respond if the request credentials of the MIB browser matches
-            to that of the stored user data base of the SNMP server. </p>
-        <p class="- topic/p p">The Microchip SNMPv3 stack does support only one Context Engine ID with the server. Leave
-            the "Context Name" option in the "Advanced" tab empty. It is ignored on the server. </p>
-        <p class="- topic/p p">According to the user and the auth and privacy protocols configured with the SNMP
+            to that of the stored user data base of the SNMP server. </p><p class="- topic/p p">The Microchip SNMPv3 stack does support only one Context Engine ID with the server. Leave
+            the "Context Name" option in the "Advanced" tab empty. It is ignored on the server. </p><p class="- topic/p p">According to the user and the auth and privacy protocols configured with the SNMP
             browser, the UDP authenticated and encrypted message would be exchanged between server
-            and the client. </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HVF_FN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HVF_FN3_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-6A1F1568-262A-4DA7-8197-2F43C156F728" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-6A1F1568-262A-4DA7-8197-2F43C156F728">If the USER 1 values, as shown in the table, are configured in the MIB browser, the
+            and the client. </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HVF_FN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_HVF_FN3_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-6A1F1568-262A-4DA7-8197-2F43C156F728" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-6A1F1568-262A-4DA7-8197-2F43C156F728">If the USER 1 values, as shown in the table, are configured in the MIB browser, the
                 data exchange between the client and server is encrypted and authenticated. The PDU
                 could be captured in the Ethernet packet sniffer, such as WireShark, and examined.
                 As the data is encrypted and authenticated, the data integrity and the privacy is
-                achieved. </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DA1A147F-0A3B-494A-8B57-3F26E164F3A9" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DA1A147F-0A3B-494A-8B57-3F26E164F3A9">If USER 2 values, as shown in the table, are configured in the MIB browser, the data
+                achieved. </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DA1A147F-0A3B-494A-8B57-3F26E164F3A9" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-DA1A147F-0A3B-494A-8B57-3F26E164F3A9">If USER 2 values, as shown in the table, are configured in the MIB browser, the data
                 exchange between client and server is authenticated. The data integrity would be
                 checked once the data is received at either end. The message authentication
                 mechanism protects from the possible data sniffing and modification threat, and also
-                guarantees that the data is received from the authenticated and guaranteed source. </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-8901D22A-BA2B-44E3-83B5-D34EC7AB4989" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-8901D22A-BA2B-44E3-83B5-D34EC7AB4989">If USER 3 values, as shown in the table, are configured in the MIB browser, the data
-                exchange between client and server is neither authenticated nor encrypted </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1328A964-CC83-4123-8A5A-0932F83C0B47" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1328A964-CC83-4123-8A5A-0932F83C0B47">Considering the three USER configurations, if the SNMP server is to be accessed over
+                guarantees that the data is received from the authenticated and guaranteed source. </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-8901D22A-BA2B-44E3-83B5-D34EC7AB4989" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-8901D22A-BA2B-44E3-83B5-D34EC7AB4989">If USER 3 values, as shown in the table, are configured in the MIB browser, the data
+                exchange between client and server is neither authenticated nor encrypted </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1328A964-CC83-4123-8A5A-0932F83C0B47" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1328A964-CC83-4123-8A5A-0932F83C0B47">Considering the three USER configurations, if the SNMP server is to be accessed over
                 WAN, in the Internet cloud, the data should be encrypted and authenticated to have
-                the highest level of data privacy and integrity </li>
-        </ul>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">SNMP Traps</strong></p>
-        <p class="- topic/p p">The MPLAB Harmony TCP/IP Stack supports Trap version1 and Trap version2 formatted traps.
+                the highest level of data privacy and integrity </li></ul><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">SNMP Traps</strong></p><p class="- topic/p p">The MPLAB Harmony TCP/IP Stack supports Trap version1 and Trap version2 formatted traps.
             Traps are notifications from the agent to the manager that are used when a predefined
-            event occurs at the agent. </p>
-        <p class="- topic/p p">From mchip.mib, the ipv4TrapTable and ipv6TrapTable are the two tabular sections, which
+            event occurs at the agent. </p><p class="- topic/p p">From mchip.mib, the ipv4TrapTable and ipv6TrapTable are the two tabular sections, which
             are used to configure HOST IPv4 and IPv6 address and this will help the HOST trap
-            receiver to receive the traps. </p>
-        <p class="- topic/p p">Several preprocessor macros in the snmp_config.h variant header file can be used to
+            receiver to receive the traps. </p><p class="- topic/p p">Several preprocessor macros in the snmp_config.h variant header file can be used to
             enable or disable traps in the agent. Commenting and uncommenting these macros in the
             file will have different results. The SNMP_TRAP_DISABLED macro will disable traps
-            entirely if it is not commented: </p>
-        <pre class="+ topic/pre pr-d/codeblock pre codeblock" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_FRY_HN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_FRY_HN3_N1C"><code>#define SNMP_TRAP_DISABLED</code></pre>
-        <div class="- topic/p p">The user must configure the expected trap format at the SNMP Manager. SNMPv2 entities
+            entirely if it is not commented: </p><pre class="+ topic/pre pr-d/codeblock pre codeblock" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_FRY_HN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_FRY_HN3_N1C"><code>#define SNMP_TRAP_DISABLED</code></pre><div class="- topic/p p">The user must configure the expected trap format at the SNMP Manager. SNMPv2 entities
             acting as an agent should be able to generate and transmit SNMP V2 trap PDUs when the
             manager is configured to receive and process SNMP V2 trap PDUs. To configure the trap
             format, comment or uncomment the SNMP_STACK_USE_V2_TRAP macro in the snmp_config.h
             header file:
-            <pre class="+ topic/pre pr-d/codeblock pre codeblock" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_VX2_JN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_VX2_JN3_N1C"><code>#define SNMP_STACK_USE_V2_TRAP</code></pre></div>
-        <p class="- topic/p p">If the macro has been commented out, the SNMP agent will send V1 formatted trap PDUs;
+            <pre class="+ topic/pre pr-d/codeblock pre codeblock" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_VX2_JN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__CODEBLOCK_VX2_JN3_N1C"><code>#define SNMP_STACK_USE_V2_TRAP</code></pre></div><p class="- topic/p p">If the macro has been commented out, the SNMP agent will send V1 formatted trap PDUs;
             otherwise, it will send V2 formatted trap PDUs. By default, the SNMP agent is configured
             to send V2 formatted traps. Note that the SNMP V2c agent should only send V2 formatted
-            traps. </p>
-        <p class="- topic/p p">To enable traps in SNMPv3, the #define SNMP_V1_V2_TRAP_WITH_SNMPv3 macro must be
-            uncommented. </p>
-        <p class="- topic/p p">The following table illustrates how to enable/disable traps for different versions of
-            SNMP. </p>
-        <div class="table-container"><table class="- topic/table table frame-all" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C" data-cols="4"><caption></caption><colgroup><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/></colgroup><thead class="- topic/thead thead">
-                    <tr class="- topic/row">
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">Type</th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">SNMPv1</th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">SNMPv2c</th>
-                        <th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">SNMPv3</th>
-                    </tr>
-                </thead><tbody class="- topic/tbody tbody">
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">TRAPv2 (enabled by default)</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">Comment out the #define SNMP_TRAP_DISABLED macro</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">Comment out the #define SNMP_TRAP_DISABLED macro</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the
-                            #define SNMP_V1_V2_TRAP_WITH_SNMPV3 macro</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">TRAPv2 (disabled by default)</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">Not supported</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the
-                            #define SNMP_STACK_USE_V2_TRAP macro</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">Comment out the #define SNMP_TRAP_DISABLED macro Uncomment the
+            traps. </p><p class="- topic/p p">To enable traps in SNMPv3, the #define SNMP_V1_V2_TRAP_WITH_SNMPv3 macro must be
+            uncommented. </p><p class="- topic/p p">The following table illustrates how to enable/disable traps for different versions of
+            SNMP. </p><div class="table-container"><table class="- topic/table table frame-all" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C" data-cols="4"><caption></caption><colgroup><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/><col style="width:25%"/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">Type</th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">SNMPv1</th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">SNMPv2c</th><th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">SNMPv3</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">TRAPv2 (enabled by default)</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">Comment out the #define SNMP_TRAP_DISABLED macro</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">Comment out the #define SNMP_TRAP_DISABLED macro</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the
+                            #define SNMP_V1_V2_TRAP_WITH_SNMPV3 macro</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__1">TRAPv2 (disabled by default)</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__2">Not supported</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__3">Comment out the #define SNMP_TRAP_DISABLED macro. Uncomment the
+                            #define SNMP_STACK_USE_V2_TRAP macro</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__TABLE_TM4_NN3_N1C__entry__4">Comment out the #define SNMP_TRAP_DISABLED macro Uncomment the
                             #define SNMP_V1_V2_TRAP_WITH_SNMPV3 macro. Uncomment the #define
-                            SNMP_STACK_USE_V2_TRAP macro</td>
-                    </tr>
-                </tbody></table></div>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">Demonstrations</em></p>
-        <p class="- topic/p p">Two trap demonstrations APIs are included with the TCP/IP Stack. The task functions for
-            these demonstrations are called in the main application function: </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_LBT_VN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_LBT_VN3_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C3893706-93B2-4D46-881C-6D75F5CFE544" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C3893706-93B2-4D46-881C-6D75F5CFE544">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status
+                            SNMP_STACK_USE_V2_TRAP macro</td></tr></tbody></table></div><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">Demonstrations</em></p><p class="- topic/p p">Two trap demonstrations APIs are included with the TCP/IP Stack. The task functions for
+            these demonstrations are called in the main application function: </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_LBT_VN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_LBT_VN3_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C3893706-93B2-4D46-881C-6D75F5CFE544" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C3893706-93B2-4D46-881C-6D75F5CFE544">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status
                 of the SNMP_STACK_USE_V2_TRAP macro). The trap PDU will only have one demonstration
-                variable binding on the varbind list. </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C5106604-C78A-4F9E-8CA1-B0D6343F37F0" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C5106604-C78A-4F9E-8CA1-B0D6343F37F0">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4)
+                variable binding on the varbind list. </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C5106604-C78A-4F9E-8CA1-B0D6343F37F0" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-C5106604-C78A-4F9E-8CA1-B0D6343F37F0">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4)
                 variable bindings. The user should modify or use this routine as a reference for
                 sending V2 trap format notifications with multiple bindings on the varbind list.
-            </li>
-        </ul>
-        <div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_KZH_WN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_KZH_WN3_N1C"><span class="note__title">Note:</span> The user should only enable one SNMP demonstration API at a
+            </li></ul><div class="- topic/note note notype note_notype" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_KZH_WN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__NOTE_KZH_WN3_N1C"><span class="note__title">Note:</span> The user should only enable one SNMP demonstration API at a
             time. By default, the SNMPV2TrapDemo API is enabled and SNMPTrapDemo is commented out
-            (disabled).</div>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">V1/V2 Formatted Traps with a Single Variable Binding</em></p>
-        <p class="- topic/p p">In the snmp_config.h header file: </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KNG_ZN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KNG_ZN3_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1483CE48-7859-4DC5-92AD-170F4F5A496D" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1483CE48-7859-4DC5-92AD-170F4F5A496D">Uncomment #define SNMP_TRAP_DISABLED </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-4F7DCE3C-3B7A-45E0-9CB2-882D246FC158" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-4F7DCE3C-3B7A-45E0-9CB2-882D246FC158">Comment //#define SNMP_STACK_USE_V2_TRAP </li>
-        </ul>
-        <p class="- topic/p p">For the Trap demonstration, two events are defined within the V2c agent: </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_WLJ_C43_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_WLJ_C43_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-0AC16F55-FC3C-40DD-804E-076772A0BDCF" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-0AC16F55-FC3C-40DD-804E-076772A0BDCF">If the Analog Potentiometer value is greater than 14, the agent will send a Trap
-                every 5 seconds to the configured 'IPv4TrapReceiverIP address'. </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-BB145E59-D242-4246-9554-9CF07F5EE3BB" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-BB145E59-D242-4246-9554-9CF07F5EE3BB">If Button 3 on the demonstration board is pressed, an organization-specific
-                PUSH_BUTTON trap will be sent. </li>
-        </ul>
-        <p class="- topic/p p">The current implementation of the V2c agent also generates a standard "Authentication
-            Failure Trap": </p>
-        <ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KP1_D43_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KP1_D43_N1C">
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-D3F13F53-4220-4B1C-82A0-2F8E1968C140" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-D3F13F53-4220-4B1C-82A0-2F8E1968C140">If a request is received to modify (Set) a private MIB variable, or </li>
-            <li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-A0BFF6F2-1ED4-4FDB-8D00-D03F54D2BC1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-A0BFF6F2-1ED4-4FDB-8D00-D03F54D2BC1C">If the value of the variable is requested (Get) by a browser with the wrong
-                community name </li>
-        </ul>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">HTTP Configuration</strong></p>
-        <p class="- topic/p p">If a HTTP server is used with the Harmony TCP/IP stack, it is possible to dynamically
+            (disabled).</div><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">V1/V2 Formatted Traps with a Single Variable Binding</em></p><p class="- topic/p p">In the snmp_config.h header file: </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KNG_ZN3_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KNG_ZN3_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1483CE48-7859-4DC5-92AD-170F4F5A496D" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-1483CE48-7859-4DC5-92AD-170F4F5A496D">Uncomment #define SNMP_TRAP_DISABLED </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-4F7DCE3C-3B7A-45E0-9CB2-882D246FC158" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-4F7DCE3C-3B7A-45E0-9CB2-882D246FC158">Comment //#define SNMP_STACK_USE_V2_TRAP </li></ul><p class="- topic/p p">For the Trap demonstration, two events are defined within the V2c agent: </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_WLJ_C43_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_WLJ_C43_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-0AC16F55-FC3C-40DD-804E-076772A0BDCF" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-0AC16F55-FC3C-40DD-804E-076772A0BDCF">If the Analog Potentiometer value is greater than 14, the agent will send a Trap
+                every 5 seconds to the configured 'IPv4TrapReceiverIP address'. </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-BB145E59-D242-4246-9554-9CF07F5EE3BB" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-BB145E59-D242-4246-9554-9CF07F5EE3BB">If Button 3 on the demonstration board is pressed, an organization-specific
+                PUSH_BUTTON trap will be sent. </li></ul><p class="- topic/p p">The current implementation of the V2c agent also generates a standard "Authentication
+            Failure Trap": </p><ul class="- topic/ul ul" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KP1_D43_N1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__UL_KP1_D43_N1C"><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-D3F13F53-4220-4B1C-82A0-2F8E1968C140" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-D3F13F53-4220-4B1C-82A0-2F8E1968C140">If a request is received to modify (Set) a private MIB variable, or </li><li class="- topic/li li" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-A0BFF6F2-1ED4-4FDB-8D00-D03F54D2BC1C" data-ofbid="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__GUID-A0BFF6F2-1ED4-4FDB-8D00-D03F54D2BC1C">If the value of the variable is requested (Get) by a browser with the wrong
+                community name </li></ul><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">HTTP Configuration</strong></p><p class="- topic/p p">If a HTTP server is used with the Harmony TCP/IP stack, it is possible to dynamically
             configure the Read and Write community names through the SNMP Configuration web page.
             Access the web page using http://mchpboard_c/mpfsupload or http://&lt;Board IP
             address&gt;(for IPv6 it should be http://[Ipv6 address]:80/index.html), and then access the
             SNMP Configuration web page through the navigation bar. Use "admin" for the username and
-            "microchip" for the password. </p>
-        <div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_A2B_F43_N1C" src="GUID-9A9F08B0-04E4-4444-8C8C-5CD057B9C6D1-high.png"/></div>
-    </div>
-</article></main></div>
+            "microchip" for the password. </p><div class=""><img class="- topic/image image" id="GUID-4018B58C-FE75-4006-981F-15D77AACCE1C__IMAGE_A2B_F43_N1C" src="GUID-9A9F08B0-04E4-4444-8C8C-5CD057B9C6D1-high.png"/></div></div></article></main></div>
                         
                         
                         

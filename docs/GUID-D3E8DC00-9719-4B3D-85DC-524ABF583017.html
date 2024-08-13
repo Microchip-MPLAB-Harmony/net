@@ -161,88 +161,28 @@ Getting started with MPLAB® Harmony TCP/IP Stack </a></div></div></li><li role=
                         </button>
                         
                         
-                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-9E39D077-ABB7-49AF-8823-53D2B99443C2">
-<h1 class="- topic/title title topictitle1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-9E39D077-ABB7-49AF-8823-53D2B99443C2" style="">1.2.1.23.1 Abstraction Model</h1>
-<div class="- topic/body body">
-        <p class="- topic/p p">The TFTP communication is based on a client/server model. The process of transferring a
-            file consists of three main phases. In highly generalized terms, these phases are: </p>
-        <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_NT3_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_NT3_SX3_N1C">
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-68AF9457-EAFA-4A45-BF9E-CD3D78D1A975" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-68AF9457-EAFA-4A45-BF9E-CD3D78D1A975">Initial Connection: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_S1Q_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_S1Q_SX3_N1C">
-                    <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-B4F6A94C-AFE4-45E7-A361-C2D5D62B4202" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-B4F6A94C-AFE4-45E7-A361-C2D5D62B4202">The TFTP client establishes the connection by sending an initial request to
-                        the server. </li>
-                    <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-D8395C20-426C-41BA-A822-A4A568829879" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-D8395C20-426C-41BA-A822-A4A568829879">The server responds back to the client and the connection is effectively
-                        opened. </li>
-                </ul></li>
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-5017F523-8514-42C1-A775-E86FEC6093D6" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-5017F523-8514-42C1-A775-E86FEC6093D6">Data Transfer: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_E3Y_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_E3Y_SX3_N1C">
-                    <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-20F193F5-B04F-4587-85B5-1E543DE508E4" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-20F193F5-B04F-4587-85B5-1E543DE508E4">Once the connection has been established, the client and server exchange
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-9E39D077-ABB7-49AF-8823-53D2B99443C2"><h1 class="- topic/title title topictitle1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-9E39D077-ABB7-49AF-8823-53D2B99443C2" style="">1.2.1.23.1 Abstraction Model</h1><div class="- topic/body body"><p class="- topic/p p">The TFTP communication is based on a client/server model. The process of transferring a
+            file consists of three main phases. In highly generalized terms, these phases are: </p><ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_NT3_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_NT3_SX3_N1C"><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-68AF9457-EAFA-4A45-BF9E-CD3D78D1A975" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-68AF9457-EAFA-4A45-BF9E-CD3D78D1A975">Initial Connection: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_S1Q_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_S1Q_SX3_N1C"><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-B4F6A94C-AFE4-45E7-A361-C2D5D62B4202" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-B4F6A94C-AFE4-45E7-A361-C2D5D62B4202">The TFTP client establishes the connection by sending an initial request to
+                        the server. </li><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-D8395C20-426C-41BA-A822-A4A568829879" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-D8395C20-426C-41BA-A822-A4A568829879">The server responds back to the client and the connection is effectively
+                        opened. </li></ul></li><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-5017F523-8514-42C1-A775-E86FEC6093D6" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-5017F523-8514-42C1-A775-E86FEC6093D6">Data Transfer: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_E3Y_SX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_E3Y_SX3_N1C"><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-20F193F5-B04F-4587-85B5-1E543DE508E4" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-20F193F5-B04F-4587-85B5-1E543DE508E4">Once the connection has been established, the client and server exchange
                         TFTP messages. One device sends data and the other sends acknowledgments.
-                    </li>
-                </ul></li>
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-2CE91060-243E-43E9-8DB2-AB1CE8EAACDB" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-2CE91060-243E-43E9-8DB2-AB1CE8EAACDB">Connection Termination: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_RCG_TX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_RCG_TX3_N1C">
-                    <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-CCF0DD02-D834-42EF-9080-3CC3638DEE1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-CCF0DD02-D834-42EF-9080-3CC3638DEE1C">When the last TFTP message containing data has been sent and acknowledged,
-                        the connection is terminated. </li>
-                </ul></li>
-        </ul>
-        <div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_ALT_VX3_N1C" src="GUID-80B572B8-A68C-400D-8CDE-1C23753F195D-high.png"/></div>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">How the Library Works</strong></p>
-        <p class="- topic/p p">Any transfer begins with a request from a client to read or write a file. If the server
+                    </li></ul></li><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-2CE91060-243E-43E9-8DB2-AB1CE8EAACDB" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-2CE91060-243E-43E9-8DB2-AB1CE8EAACDB">Connection Termination: <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_RCG_TX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_RCG_TX3_N1C"><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-CCF0DD02-D834-42EF-9080-3CC3638DEE1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-CCF0DD02-D834-42EF-9080-3CC3638DEE1C">When the last TFTP message containing data has been sent and acknowledged,
+                        the connection is terminated. </li></ul></li></ul><div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_ALT_VX3_N1C" src="GUID-80B572B8-A68C-400D-8CDE-1C23753F195D-high.png"/></div><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">How the Library Works</strong></p><p class="- topic/p p">Any transfer begins with a request from a client to read or write a file. If the server
             grants the request, the connection is opened and the file is sent usually in fixed
             length blocks of 512 bytes. Each data packet contains one block of data, and must be
             acknowledged by an acknowledgment packet before the next packet can be sent. A data
             packet of less than 512 bytes, signals termination of a transfer. If a packet gets lost
             in the network, the intended recipient will time out and may retransmit the last packet
             (which may be data or an acknowledgment), thus causing the sender of the lost packet to
-            retransmit that lost packet. </p>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Transfer Set up</em></p>
-        <ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_M2P_YX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_M2P_YX3_N1C">
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-A723BE82-C643-414F-BBAF-EFC61BAF4A31" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-A723BE82-C643-414F-BBAF-EFC61BAF4A31">To set up a TFTP transfer, a TFTP client device can request (get) files from the
-                server and also transfer (put) files to the server. </li>
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-3121E823-B53D-4F68-B65A-44A9539AEEA7" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-3121E823-B53D-4F68-B65A-44A9539AEEA7">The File System on the server is transparent. Currently the Microchip Harmony
-                devices support MPFS or FAT file systems. </li>
-            <li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-E5079885-358D-457A-8B94-A41865C58BD2" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-E5079885-358D-457A-8B94-A41865C58BD2">The Microchip TFTP server implementation allows the user to start and stop the
+            retransmit that lost packet. </p><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Transfer Set up</em></p><ul class="- topic/ul ul" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_M2P_YX3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__UL_M2P_YX3_N1C"><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-A723BE82-C643-414F-BBAF-EFC61BAF4A31" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-A723BE82-C643-414F-BBAF-EFC61BAF4A31">To set up a TFTP transfer, a TFTP client device can request (get) files from the
+                server and also transfer (put) files to the server. </li><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-3121E823-B53D-4F68-B65A-44A9539AEEA7" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-3121E823-B53D-4F68-B65A-44A9539AEEA7">The File System on the server is transparent. Currently the Microchip Harmony
+                devices support MPFS or FAT file systems. </li><li class="- topic/li li" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-E5079885-358D-457A-8B94-A41865C58BD2" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__GUID-E5079885-358D-457A-8B94-A41865C58BD2">The Microchip TFTP server implementation allows the user to start and stop the
                 service dynamically by using the TFTP Application Programming Interface ( API)
-                function. </li>
-        </ul>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Transfer Options</em></p>
-        <p class="- topic/p p">The following options are supported in the current TFTP server implementation (see RFC
-            2348, 2349): </p>
-        <div class="table-container"><table class="- topic/table table frame-all" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C" data-cols="3"><caption></caption><colgroup><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/></colgroup><thead class="- topic/thead thead">
-                    <tr class="- topic/row">
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">TFTP Option Name</th>
-                        <th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">TFTP Option Code (Used in Request Messages)</th>
-                        <th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">Description</th>
-                    </tr>
-                </thead><tbody class="- topic/tbody tbody">
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Block Size</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">blksize</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option allows the Client and the Server to send data blocks of a
-                            size different than 512 bytes</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Timeout Interval</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">interval</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option permits the client /server to agree on a specified number
-                            of seconds to use for their retransmission.</td>
-                    </tr>
-                    <tr class="- topic/row">
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Transfer Size</td>
-                        <td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">tsize</td>
-                        <td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option allows the side receiving the file to determine the
-                            ultimate size of the transfer before it begins.</td>
-                    </tr>
-                </tbody></table></div>
-        <p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">TFTP Client Server Communication</strong></p>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Write Request (WRQ)</em></p>
-        <p class="- topic/p p">The following diagram illustrates a write request</p>
-        <div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_Y51_KY3_N1C" src="GUID-23C771ED-99E8-4691-8E03-2A33FBB0DA03-high.png"/></div>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Read Request (RRQ)</em></p>
-        <p class="- topic/p p">The following diagram illustrates a read request</p>
-        <div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_PNB_MY3_N1C" src="GUID-73724EB7-D583-412A-96EF-9A45816FC909-high.png"/></div>
-        <p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">Flow chart for the TFTP server processing incoming requests</em></p>
-        <div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_MDJ_4Y3_N1C" src="GUID-18F372DF-2890-4D13-940D-35C5BF3BDB42-high.png"/></div>
-    </div>
-</article></main></div>
+                function. </li></ul><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Transfer Options</em></p><p class="- topic/p p">The following options are supported in the current TFTP server implementation (see RFC
+            2348, 2349): </p><div class="table-container"><table class="- topic/table table frame-all" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C" data-ofbid="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C" data-cols="3"><caption></caption><colgroup><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/><col style="width:33.33333333333333%"/></colgroup><thead class="- topic/thead thead"><tr class="- topic/row"><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">TFTP Option Name</th><th class="- topic/entry entry colsep-1 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">TFTP Option Code (Used in Request Messages)</th><th class="- topic/entry entry colsep-0 rowsep-1" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">Description</th></tr></thead><tbody class="- topic/tbody tbody"><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Block Size</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">blksize</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option allows the Client and the Server to send data blocks of a
+                            size different than 512 bytes</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Timeout Interval</td><td class="- topic/entry entry colsep-1 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">interval</td><td class="- topic/entry entry colsep-0 rowsep-1" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option permits the client /server to agree on a specified number
+                            of seconds to use for their retransmission.</td></tr><tr class="- topic/row"><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__1">Transfer Size</td><td class="- topic/entry entry colsep-1 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__2">tsize</td><td class="- topic/entry entry colsep-0 rowsep-0" headers="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__TABLE_ABP_BY3_N1C__entry__3">The option allows the side receiving the file to determine the
+                            ultimate size of the transfer before it begins.</td></tr></tbody></table></div><p class="- topic/p p"><strong class="+ topic/ph hi-d/b ph b">TFTP Client Server Communication</strong></p><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Write Request (WRQ)</em></p><p class="- topic/p p">The following diagram illustrates a write request</p><div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_Y51_KY3_N1C" src="GUID-23C771ED-99E8-4691-8E03-2A33FBB0DA03-high.png"/></div><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">TFTP Read Request (RRQ)</em></p><p class="- topic/p p">The following diagram illustrates a read request</p><div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_PNB_MY3_N1C" src="GUID-73724EB7-D583-412A-96EF-9A45816FC909-high.png"/></div><p class="- topic/p p"><em class="+ topic/ph hi-d/i ph i">Flow chart for the TFTP server processing incoming requests</em></p><div class=""><img class="- topic/image image" id="GUID-D3E8DC00-9719-4B3D-85DC-524ABF583017__IMAGE_MDJ_4Y3_N1C" src="GUID-18F372DF-2890-4D13-940D-35C5BF3BDB42-high.png"/></div></div></article></main></div>
                         
                         
                         

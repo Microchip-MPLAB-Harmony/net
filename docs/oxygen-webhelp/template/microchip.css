@@ -622,6 +622,12 @@ table.headercolumn > tbody tr > td:first-child {
     font-weight: bold;
 }
 
+.no-cell-bg{
+  background: inherit !important;
+  color: inherit !important;
+  font-weight: normal !important;
+}
+
 ol.horizontal {
   padding-left: 0;
   margin-left: 0;
