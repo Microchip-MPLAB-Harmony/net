@@ -17,7 +17,7 @@
         | LAN8840 PHY   | Board-specific skew settings implementation for LAN8840 PHY driver |
         | UDP           | Updated the UDP socket Rx and Tx limits |
 		| GMAC      	| Increased GMAC DMA burst size for SAM9X7 GMAC driver to Max |
-		| Documentation | Updated the Network Metrics page | 
+		| Documentation | Updated the 'Network Metrics' page | 
 
 ### TESTED WITH:
 
@@ -43,7 +43,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - CMSIS-FreeRTOS v10.5.1 (https://github.com/ARM-software/CMSIS-FreeRTOS/tree/v10.5.1) for demos requiring FreeRTOS support
 
 ### KNOWN ISSUES
-- None
+- IPv6 fragment assembly fails, issue is under investigation.
 
 
 ## Net Release v3.12.1 (July, 2024)
