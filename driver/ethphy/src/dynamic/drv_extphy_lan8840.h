@@ -40,9 +40,9 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _LAN8840_H_
+#ifndef H_LAN8840_H_
 
-#define _LAN8840_H_
+#define H_LAN8840_H_
 
 typedef enum
 {
@@ -84,16 +84,16 @@ typedef enum
 
 
 // MMD ( MDIO Managable Devices )
-typedef union {
-  struct {        
-    unsigned MMD_DEV_ADDR:5;
-    unsigned :9;
-    unsigned MMD_FUNCTION:2;
-  };
-  struct {
-    unsigned short w:16;
-  };
-} __MMDACCESSCONTROLbits_t; // Index 13: 
+typedef union
+{
+    struct __attribute__((packed))
+    {        
+        unsigned MMD_DEV_ADDR:  5;
+        unsigned :  9;
+        unsigned MMD_FUNCTION:  2;
+    };
+    uint16_t w;
+} U_MMDACCESSCONTROLbits_t; // Index 13: 
 
 typedef enum
 {   // MMD Register under Device Address 2
@@ -104,33 +104,33 @@ typedef enum
     PHY_MMD_TX_DLL_REG   = 77,
 }PHY_MMD_DEV2_REG;
 
-#define M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000 // 15 and 14th is 00
-#define M_PHY_MMD_CNTL_ACCESS_DATA_MASK  0x4000 // 15 and 14 th is 01
-#define M_PHY_MMD_RESERVED_MASK 0x3FE0
+#define M_PHY_MMD_CNTL_ACCESS_ADDRESS_MASK  0x0000U // 15 and 14th is 00
+#define M_PHY_MMD_CNTL_ACCESS_DATA_MASK     0x4000U // 15 and 14 th is 01
+#define M_PHY_MMD_RESERVED_MASK             0x3FE0U
 
-#define PHY_MMD_DEVICE_ADDRESS 0x02
+#define PHY_MMD_DEVICE_ADDRESS              0x02U
 
-#define PHY_MMD_TX_CLK_SKEW_POS 5U
-#define PHY_MMD_RX_CTL_SKEW_POS 4U
-#define PHY_MMD_RXD3_PAD_SKEW_POS 12U
-#define PHY_MMD_RXD2_PAD_SKEW_POS 8U
-#define PHY_MMD_RXD1_PAD_SKEW_POS 4U
-#define PHY_MMD_TXD3_PAD_SKEW_POS 12U
-#define PHY_MMD_TXD2_PAD_SKEW_POS 8U
-#define PHY_MMD_TXD1_PAD_SKEW_POS 4U
+#define PHY_MMD_TX_CLK_SKEW_POS             5U
+#define PHY_MMD_RX_CTL_SKEW_POS             4U
+#define PHY_MMD_RXD3_PAD_SKEW_POS           12U
+#define PHY_MMD_RXD2_PAD_SKEW_POS           8U
+#define PHY_MMD_RXD1_PAD_SKEW_POS           4U
+#define PHY_MMD_TXD3_PAD_SKEW_POS           12U
+#define PHY_MMD_TXD2_PAD_SKEW_POS           8U
+#define PHY_MMD_TXD1_PAD_SKEW_POS           4U
 
-#define PHY_MMD_TX_CLK_SKEW_MASK 0x03E0
-#define PHY_MMD_RX_CLK_SKEW_MASK 0x001F
-#define PHY_MMD_RX_CTL_SKEW_MASK 0x00F0
-#define PHY_MMD_TX_CTL_SKEW_MASK 0x000F
-#define PHY_MMD_RXD3_PAD_SKEW_MASK 0xF000
-#define PHY_MMD_RXD2_PAD_SKEW_MASK 0x0F00
-#define PHY_MMD_RXD1_PAD_SKEW_MASK 0x00F0
-#define PHY_MMD_RXD0_PAD_SKEW_MASK 0x000F
-#define PHY_MMD_TXD3_PAD_SKEW_MASK 0xF000
-#define PHY_MMD_TXD2_PAD_SKEW_MASK 0x0F00
-#define PHY_MMD_TXD1_PAD_SKEW_MASK 0x00F0
-#define PHY_MMD_TXD0_PAD_SKEW_MASK 0x000F
+#define PHY_MMD_TX_CLK_SKEW_MASK            0x03E0U
+#define PHY_MMD_RX_CLK_SKEW_MASK            0x001FU
+#define PHY_MMD_RX_CTL_SKEW_MASK            0x00F0U
+#define PHY_MMD_TX_CTL_SKEW_MASK            0x000FU
+#define PHY_MMD_RXD3_PAD_SKEW_MASK          0xF000U
+#define PHY_MMD_RXD2_PAD_SKEW_MASK          0x0F00U
+#define PHY_MMD_RXD1_PAD_SKEW_MASK          0x00F0U
+#define PHY_MMD_RXD0_PAD_SKEW_MASK          0x000FU
+#define PHY_MMD_TXD3_PAD_SKEW_MASK          0xF000U
+#define PHY_MMD_TXD2_PAD_SKEW_MASK          0x0F00U
+#define PHY_MMD_TXD1_PAD_SKEW_MASK          0x00F0U
+#define PHY_MMD_TXD0_PAD_SKEW_MASK          0x000FU
 
 
 typedef enum
@@ -183,7 +183,7 @@ typedef enum
             
     TXD0_SKEW_WRITE,          
                    
-} SKEW_SET_STATES;
+} LAN8840_SKEW_SET_STATES;
 
-#endif  // _LAN8840_H_
+#endif  // H_LAN8840_H_
 
