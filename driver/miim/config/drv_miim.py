@@ -237,6 +237,8 @@ def instantiateComponent(drvMiimComponent):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif ("PIC32CZ" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32cz.c"
+    elif (("WBZ653" in processor) or ("PIC32CXBZ6" in processor)):
+        drv_miim_xxx_file = "drv_miim_pic32cxbz6.c"
     elif ("SAM9X6" in processor): 
         drv_miim_xxx_file = "drv_miim_emac.c"
     elif (("PIC32MZ" in processor) or ("WFI32" in processor) or ("PIC32MX" in processor)): 
@@ -357,7 +359,10 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
         
 def drvMiimSetIntMacId(symbol, event):
     if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):
-        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ") or (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CK")):  
+        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ") or 
+            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CK") or 
+            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "WBZ653") or 
+            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CXBZ6")):  
             symbol.setValue("ETH_BASE_ADDRESS") 
         else:
             symbol.setValue("GMAC_BASE_ADDRESS")
