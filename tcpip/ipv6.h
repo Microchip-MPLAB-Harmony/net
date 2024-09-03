@@ -121,11 +121,7 @@ typedef enum {
     IPV6_ACTION_DISCARD_PP_0, // Discard the packet and send an ICMP parameter problem message with code value 0
     IPV6_ACTION_DISCARD_PP_2, // Discard the packet and send an ICMP parameter problem message with code value 2
     IPV6_ACTION_DISCARD_PP_2_NOT_MC, // Discard the packet and send an ICMP parameter problem message with code value 3
-    IPV6_ACTION_BEGIN_EX_HEADER_PROCESSING, // Begin extension processing
-
-    IPV6_ACTION_TX_INTERNAL,    // The packet was transmitted internally.
-                                // No action, do not acknowledge, still in traffic
-
+    IPV6_ACTION_BEGIN_EX_HEADER_PROCESSING // Begin extension processing
 } IPV6_ACTION;
 
 /* IPv6 Type-length-value type code for the Pad 1 option */
