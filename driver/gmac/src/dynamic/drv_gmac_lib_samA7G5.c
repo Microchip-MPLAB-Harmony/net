@@ -509,8 +509,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
 {
     gmac_registers_t *  pGmacRegs = (gmac_registers_t *) pMACDrv->sGmacData.gmacConfig.ethModuleId;
     DRV_PIC32CGMAC_RESULT gmacRes = DRV_PIC32CGMAC_RES_OK;
-
-#if (TCPIP_GMAC_SCREEN1_COUNT_QUE)
+#if (defined(TCPIP_GMAC0_SCREEN1_COUNT_QUE) && (TCPIP_GMAC0_SCREEN1_COUNT_QUE != 0)) || (defined(TCPIP_GMAC1_SCREEN1_COUNT_QUE) && (TCPIP_GMAC1_SCREEN1_COUNT_QUE != 0))
     uint32_t st1rpq_val = 0;
     for(uint8_t type1_idx=0; type1_idx < pMACDrv->sGmacData.gmacConfig.pRxQueFiltInit->type1FiltCount; type1_idx++)
     {
@@ -529,8 +528,8 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv
         pGmacRegs->GMAC_ST1RPQ[type1_idx] = st1rpq_val;
         
     }
-#endif   
-#if (TCPIP_GMAC_SCREEN2_COUNT_QUE)
+#endif
+#if (defined(TCPIP_GMAC0_SCREEN2_COUNT_QUE) && (TCPIP_GMAC0_SCREEN2_COUNT_QUE != 0)) || (defined(TCPIP_GMAC1_SCREEN2_COUNT_QUE) && (TCPIP_GMAC1_SCREEN2_COUNT_QUE != 0))
     uint32_t st2rpq_val = 0;
     uint16_t comp_val = 0, comp_mask = 0;
     uint8_t ethType_index = 0, comp_index = 0;
