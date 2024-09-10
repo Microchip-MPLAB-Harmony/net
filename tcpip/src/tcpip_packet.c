@@ -181,7 +181,6 @@ void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES 
         pPkt->ackRes = ackRes;
     }
 
-    pPkt->pktPriority = 0; //clear the packet priority to default
     if(pPkt->ackFunc)
     {
        TCPIP_PKT_FlightLogAcknowledge(pPkt, moduleId, ackRes);

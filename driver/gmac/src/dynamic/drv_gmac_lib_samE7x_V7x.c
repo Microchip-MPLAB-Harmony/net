@@ -1507,7 +1507,7 @@ static void _MacRxPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
         {
             pDSegNext = pPkt->pDSeg->next;
             pPkt->pDSeg->next = 0;
-
+            pPkt->pktPriority = 0;
             // for dynamic packets(non-sticky):
             // always free if NO_SMART_ALLOC flag is set
             // free if RX packets greater than the defined threshold
