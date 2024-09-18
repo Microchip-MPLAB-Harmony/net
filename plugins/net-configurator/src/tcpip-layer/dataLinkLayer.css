@@ -1,0 +1,46 @@
+.card-wraper {
+  width: 33%;
+  font-size: 12px;
+  font-weight: 100;
+  min-width: 300px;
+}
+.card-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+.card-container-top {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.mac-card-container {
+  width: 30%;
+  height: 100%;
+  min-height: 300px;
+  margin: 10px;
+}
+.phy-card-container {
+  width: 70%;
+  height: 100%;
+  min-height: 300px;
+  margin: 10px;
+}
+.mac-phy-title {
+  margin-left: -68px;
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.card-container-top-title{
+  font-size: 20px;
+  font-weight: bold;
+}
+.mac-title {
+  margin-right: 5px;
+  font-size: 20px;
+  font-weight: bold;
+}

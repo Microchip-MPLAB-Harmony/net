@@ -1,0 +1,6 @@
+.unsatisfied {
+  display: flex;
+  font-size: 22px;
+  gap: 2rem;
+  justify-content: flex-start;
+}

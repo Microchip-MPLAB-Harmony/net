@@ -1,0 +1,69 @@
+.square1 {
+    display: block;
+    width: 16px;
+    left: 0;
+    height: 16px;
+    margin-top:14px;
+    z-index: 999;
+    border: 1px solid black;
+    position: relative;
+}
+.circle {
+    display: block;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    margin-top:14px;
+    z-index: 999;
+    border:1px solid black;
+    position: relative;
+}
+.triangle {
+    display: block;
+    width: 15px;
+    left:0;
+    margin-top:14px;
+    height: 15px;
+    transform: rotate(45deg);
+    z-index: 999;
+    border: 1px solid black;
+    position: relative;
+}
+
+.line-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+.dot {
+    position: relative;
+    cursor: pointer;
+}
+.requiredcircle {
+    position: absolute;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    z-index: 999;
+    border:1px solid black;
+    margin-left:-5px;
+    margin-top: 12px;
+    background-color: rgb(244, 91, 91);
+
+}
+.optionalCircle{
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    margin-top: 12px;
+    z-index: 999;
+    float: inline-end;
+    margin-left: -10px;
+    border:1px solid black;
+    background-color: rgb(244, 244, 48);
+}

@@ -1,0 +1,62 @@
+.side-menu-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 0.5rem;
+}
+.side-menu-sub-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.side-menu-tcpip {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sibe-menu-button {
+  height: 50px;
+}
+.sibe-menu-button .p-button-label {
+  font-size: 18px;
+  font-weight: 700;
+}
+.sibe-menu-button .p-button {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.overview .p-button {
+  background-color: #ffc470;
+}
+
+.application .p-button {
+  background-color: #dd5746;
+}
+.presentation .p-button {
+  background-color: #ffc470;
+}
+.transport .p-button {
+  background-color: #4ccd99;
+}
+.network .p-button {
+  background-color: #374259;
+}
+
+.data-link .p-button {
+  background-color: #5bbcff;
+}
+
+.basic-config .p-button {
+  background-color: #7f9f80;
+}
+.config-summary .p-button {
+  background-color: #ffc470;
+}
+.p-button-icon{
+  font-size: 18px ;
+}
