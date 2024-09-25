@@ -42,6 +42,8 @@ Microchip or any third party.
 #define DRV_${emac_phy_type}_PHY_CONFIG_FLAGS       ( 0 \
 <#if TCPIP_INTMAC_PHY_CONFIG_RMII>              
                                                     | DRV_ETHPHY_CFG_RMII \
+<#elseif TCPIP_INTMAC_PHY_CONFIG_MII>              
+                                                    | DRV_ETHPHY_CFG_MII \
 </#if>
 <#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE?has_content && TCPIP_INTMAC_PHY_CONFIG_ALTERNATE == true>
                                                     | DRV_ETHPHY_CFG_ALTERNATE \

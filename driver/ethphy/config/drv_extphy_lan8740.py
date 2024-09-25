@@ -57,6 +57,14 @@ def instantiateComponent(drvExtPhyLan8740Component):
     drvExtPhyLan8740ConnFlag.setVisible(True)
     drvExtPhyLan8740ConnFlag.setDescription("External PHY Connection Flags")
     
+    # MII Data Interface
+    drvExtPhyLan8740ConfigMii = drvExtPhyLan8740Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_MII", drvExtPhyLan8740ConnFlag)
+    drvExtPhyLan8740ConfigMii.setHelp("mcc_h3_phy_configurations")
+    drvExtPhyLan8740ConfigMii.setLabel("MII Data Interface")
+    drvExtPhyLan8740ConfigMii.setVisible(True)
+    drvExtPhyLan8740ConfigMii.setDescription("MII Data Interface")
+    drvExtPhyLan8740ConfigMii.setDefaultValue(False)
+    
     # RMII Data Interface
     drvExtPhyLan8740ConfigRmii = drvExtPhyLan8740Component.createBooleanSymbol("TCPIP_INTMAC_PHY_CONFIG_RMII", drvExtPhyLan8740ConnFlag)
     drvExtPhyLan8740ConfigRmii.setHelp("mcc_h3_phy_configurations")
