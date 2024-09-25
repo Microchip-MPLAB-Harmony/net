@@ -61,6 +61,10 @@ Microchip or any third party.
         <#else>
             <#lt>#define TCPIP_IF_GMAC  
         </#if>
+    <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "ETH">
+        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("WBZ65"))>
+            <#lt>#define TCPIP_IF_WBZ65_ETH 
+        </#if>        
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC0">
         <#lt>#define TCPIP_IF_GMAC0
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC1">

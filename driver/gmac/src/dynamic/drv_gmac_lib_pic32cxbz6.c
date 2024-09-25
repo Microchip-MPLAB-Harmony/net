@@ -134,24 +134,13 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     DRV_PIC32CGMAC_LibSetMacAddr(pMACDrv, (const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
     
     // Select MII interface mode 
-    if(pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_GMII)//GMII Mode
+    if(pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RMII)//RMII Mode
     {
-        pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1) | ETH_CTRLB_GBITCLKREQ(1);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR |= ETH_NCFGR_GIGE(1);
+        pGmacRegs->ETH_UR = ETH_UR_MII(0); //initial mode set as RMII
     }
-    else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_MII)//MII Mode
+    else
     {
-        pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GBITCLKREQ_Msk;
-        pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
-    }
-    else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_RMII)//RMII Mode
-    {
-        pGmacRegs->ETH_CTRLB &= ~(ETH_CTRLB_GMIIEN_Msk | ETH_CTRLB_GBITCLKREQ_Msk);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
+        pGmacRegs->ETH_UR = ETH_UR_MII(1); //initial mode set as MII
     }    
 }
 
@@ -266,26 +255,16 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
     
     
     pGmacRegs->ETH_NCFGR = ncfgr;
-    
-    // Select MII interface mode 
-    if(oFlags & TCPIP_ETH_OPEN_GMII)//GMII Mode
-    {        
-        pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1) | ETH_CTRLB_GBITCLKREQ(1);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR |= ETH_NCFGR_GIGE(1);
-    }
-    else if(oFlags & TCPIP_ETH_OPEN_MII)//MII Mode
+
+    if(oFlags & TCPIP_ETH_OPEN_RMII)
     {
-        pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GBITCLKREQ_Msk;
-        pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
+        //Configure in RMII mode
+        pGmacRegs->ETH_UR = ETH_UR_MII(0);
     }
-    else if(oFlags & TCPIP_ETH_OPEN_RMII)//RMII Mode
+    else
     {
-        pGmacRegs->ETH_CTRLB &= ~(ETH_CTRLB_GMIIEN_Msk | ETH_CTRLB_GBITCLKREQ_Msk);
-        while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
+        //Configure in MII mode
+        pGmacRegs->ETH_UR = ETH_UR_MII(1);
     }   
     
     // Reset Tx Indexes. After TXEN reset, the Transmit Queue Pointer will point to the start of the

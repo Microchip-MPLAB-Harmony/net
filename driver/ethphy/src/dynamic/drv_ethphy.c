@@ -2067,6 +2067,9 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 #elif defined (TCPIP_IF_GMAC)
             hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;
             ethRes = DRV_ETHPHY_RES_OK;
+#elif defined (TCPIP_IF_WBZ65_ETH)
+            hwFlags = ((ETH_REGS->ETH_UR & ETH_UR_Msk)== DRV_ETH_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;
+            ethRes = DRV_ETHPHY_RES_OK;            
 #elif defined (TCPIP_IF_PIC32CZ_GMAC)
             if (ETH_REGS->ETH_CTRLB & ETH_CTRLB_GMIIEN_Msk)
             {
