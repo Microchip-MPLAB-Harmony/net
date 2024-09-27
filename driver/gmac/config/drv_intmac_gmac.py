@@ -569,13 +569,15 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthRmii.setLabel("RMII Connection")
     tcpipGmacEthRmii.setVisible(True)
     tcpipGmacEthRmii.setDescription("RMII Connection")
+    if ("WBZ653" in processor) or ("PIC32CXBZ6" in dev_series): # WBZ653 / PIC32CXBZ6
+        tcpipGmacEthRmii.setReadOnly(True)
     if (("SAMA7G" in processor) and (gmacComponentName == "GMAC0")) or ("SAMA7D6" in processor) or ("SAM9X7" in processor): # GMAC0 of SAMA7G54  / SAMA7D6 / SAM9X7
         tcpipGmacEthRmii.setDefaultValue(False)
     else:
         tcpipGmacEthRmii.setDefaultValue(True)
     tcpipGmacEthRmii.setDependencies( tcpipEthMacMIIMode, ["TCPIP_"+ gmacComponentName + "_ETH_OF_RMII"] )
     
-    if not ("SAMA7D6" in processor):
+    if not (("SAMA7D6" in processor) or ("WBZ653" in processor) or ("PIC32CXBZ6" in dev_series)):
         # MII Connection
         tcpipGmacEthMii = drvGmacComponent.createBooleanSymbol("TCPIP_"+ gmacComponentName + "_ETH_OF_MII", tcpipEthConnFlag)
         tcpipGmacEthMii.setHelp("mcc_h3_gmac_configurations")
