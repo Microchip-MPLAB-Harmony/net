@@ -63,7 +63,7 @@ def instantiateComponent(drvExtPhyLan8720Component):
     drvExtPhyLan8720ConfigRmii.setLabel("RMII Data Interface")
     drvExtPhyLan8720ConfigRmii.setVisible(True)
     drvExtPhyLan8720ConfigRmii.setDescription("RMII Data Interface")
-    if (Peripheral.moduleExists("GMAC")) or ((Peripheral.moduleExists("ETH")) and (("WBZ653" in Variables.get("__PROCESSOR")) or ("PIC32CX" in Variables.get("__PROCESSOR")))):
+    if (Peripheral.moduleExists("GMAC")) or (Peripheral.moduleExists("ETH")):
         drvExtPhyLan8720ConfigRmii.setDefaultValue(True)
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         drvExtPhyLan8720ConfigRmii.setDefaultValue(False)
