@@ -231,13 +231,15 @@ def instantiateComponent(drvMiimComponent):
     #drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])   
     
     #file DRV_MIIM_XXX_C "$HARMONY_VERSION_PATH/framework/driver/miim/src/dynamic/drv_miim_xxx.c" to "$PROJECT_SOURCE_FILES/framework/driver/miim/src/dynamic/drv_miim_xxx.c"
-    processor =  get_processor()  
+    device_node = ATDF.getNode('/avr-tools-device-file/devices/device')
+    dev_series = str(device_node.getAttribute("series"))
+    processor =  get_processor()
     if (("SAME7" in processor) or ("SAMV7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or 
         ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor) or ("SAMA7G" in processor) or ("SAM9X7" in processor) or ("SAMA7D6" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif ("PIC32CZ" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32cz.c"
-    elif (("WBZ653" in processor) or ("PIC32CXBZ6" in processor)):
+    elif (("WBZ653" in processor) or ("PIC32CXBZ6" in dev_series)):
         drv_miim_xxx_file = "drv_miim_pic32cxbz6.c"
     elif ("SAM9X6" in processor): 
         drv_miim_xxx_file = "drv_miim_emac.c"
