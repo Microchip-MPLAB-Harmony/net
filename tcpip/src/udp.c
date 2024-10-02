@@ -3217,6 +3217,14 @@ bool TCPIP_UDP_RemoteBind(UDP_SOCKET s, IP_ADDRESS_TYPE addType, UDP_PORT remote
             _RxSktUnlock(pSkt);
             return false;
         }
+
+#if defined (TCPIP_STACK_USE_IPV4)
+        if(addType == (uint8_t)IP_ADDRESS_TYPE_IPV4)
+        {
+            pSkt->pktSrcAddress.Val = remoteAddress->v4Add.Val;
+        } 
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+
         if(pSkt->extFlags.stickyLooseRemAddress == 0)
         {
             pSkt->flags.looseRemAddress = 0;
