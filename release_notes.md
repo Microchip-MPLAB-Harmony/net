@@ -1,5 +1,5 @@
 # Microchip MPLAB® Harmony 3 Release Notes
-## Net Release v3.12.3 (September, 2024)
+## Net Release v3.12.3 (October, 2024)
 ### ADDITIONS AND UPDATES FOR v3.12.3:
 
 - **New Features**
@@ -17,6 +17,9 @@
         | LAN8840 PHY   | Improved the board-specific skew settings implementation for LAN8840 PHY driver | 
         | IPv6          | Fixed the IPv6 fragmentation assembly issue |
         | GMAC      	| Fixed the transmit failure issue when GMAC Priority Queue is enabled |
+        |           	| Fixed the exception when Priority Queues are enabled |
+        | UDP       	| Fix for socket remote bind last used address |
+        | Plugin       	| React version of Net Manager(TCP/IP Configurator) has been implemented |
 
 ### TESTED WITH:
 
@@ -33,7 +36,7 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
 
 - Harmony core repository, v3.13.5
-- Harmony csp repository, v3.19.5
+- Harmony csp repository, v3.19.6
 - Harmony bsp repository, v3.20.1
 - Harmony crypto repository, v3.8.2
 - Harmony usb repository, v3.14.0 for demos requiring USB
