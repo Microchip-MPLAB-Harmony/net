@@ -2,7 +2,7 @@
 <Package name="net">
     <Dependencies>
         <Dependency name="core" version="v3.13.5"/>
-        <Dependency name="csp" version="v3.19.5"/>
+        <Dependency name="csp" version="v3.19.6"/>
         <Dependency name="bsp" version="v3.20.1"/>
         <Dependency name="crypto" version="v3.8.2"/>
         <Dependency name="usb" version="v3.14.0"/>
