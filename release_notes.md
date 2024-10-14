@@ -19,7 +19,7 @@
         | GMAC      	| Fixed the transmit failure issue when GMAC Priority Queue is enabled |
         |           	| Fixed the exception when Priority Queues are enabled |
         | UDP       	| Fix for socket remote bind last used address |
-        | Plugin       	| React version of Net Manager(TCP/IP Configurator) has been implemented |
+        | Plugin       	| Migrated to react version of Net Manager(TCP/IP Configurator) |
 
 ### TESTED WITH:
 
