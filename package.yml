@@ -30,3 +30,6 @@ package:
     - name: "CMSIS-FreeRTOS"
       type: "package"
       version: "v10.5.1"
+    - name: "harmony-services"
+      type: "package"
+      version: "v1.5.0"
