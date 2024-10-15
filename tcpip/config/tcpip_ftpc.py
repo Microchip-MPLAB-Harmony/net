@@ -96,7 +96,7 @@ def instantiateComponent(tcpipFtpcComponent):
     tcpipFtpcHeapSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_HEAP_SIZE", None)
     tcpipFtpcHeapSize.setLabel("FTPC Heap Size (bytes)") 
     tcpipFtpcHeapSize.setVisible(False)
-    tcpipFtpcHeapSize.setDefaultValue(tcpipFtpcHeapCalc())
+    # tcpipFtpcHeapSize.setDefaultValue(tcpipFtpcHeapCalc())
     tcpipFtpcHeapSize.setReadOnly(True)
     tcpipFtpcHeapSize.setDependencies(tcpipFtpcHeapUpdate, tcpipFtpcheapdependency)  
     
