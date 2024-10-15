@@ -1,3 +1,6 @@
+![Microchip logo](https://raw.githubusercontent.com/wiki/Microchip-MPLAB-Harmony/Microchip-MPLAB-Harmony.github.io/images/microchip_logo.png)
+![Harmony logo small](https://raw.githubusercontent.com/wiki/Microchip-MPLAB-Harmony/Microchip-MPLAB-Harmony.github.io/images/microchip_mplab_harmony_logo_small.png)
+
 # MPLAB® Harmony 3 Net Support Package
 
 MPLAB Harmony 3 is an extension of the MPLAB® ecosystem for creating
@@ -27,10 +30,19 @@ reference information.
 | Folder     | Description                                               |
 |------------|-----------------------------------------------------------|
 | apps       | Example applications for Net library components           |
-| doc        | Net library help documentation                            |
+| docs       | Net library help documentation                            |
 | driver     | Drivers used by the TCP/IP stack                          |
 | tcpip      | The TCP/IP stack                                          |
 | net pres   | The network presentation layer used by the TCP/IP stack   |
+
+## Documentation
+
+Click [here](https://onlinedocs.microchip.com/v2/keyword-lookup?keyword=MH3_net&redirect=true) to view the Net library help documentation.
+
+To view the documentation offline, follow these steps:
+ - Download the publication as a zip file from [here](https://onlinedocs.microchip.com/download/GUID-B1AF6B2B-BC62-4D92-B329-A50140DF3437?type=webhelp).
+ - Extract the zip file into a folder.
+ - Navigate to the folder and open **index.html** in a web browser of your choice.
 
 ____
 
