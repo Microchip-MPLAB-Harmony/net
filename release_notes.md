@@ -10,7 +10,7 @@
 
 
 - **Improvements and Bug Fixes**
-	-	The following table provides the list of improvements and bug fixes in the v3.12.2 release:
+	-	The following table provides the list of improvements and bug fixes in the v3.12.3 release:
 
 		| Module        | Description |
 		| ------------- | ----------- |
