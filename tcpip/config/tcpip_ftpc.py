@@ -124,18 +124,30 @@ def tcpipFtpcHeapCalc():
     ctrlSktRxBuffSize = 0
     nMaxClients = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_MAX_NUM_CLIENT")
     if((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True)): 
-        ctrlSktTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
-        ctrlSktRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
+        if(Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE") == None):
+            ctrlSktTxBuffSize = 0
+        else: 
+            ctrlSktTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
+        if(Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE") == None):
+            ctrlSktRxBuffSize = 0
+        else: 
+            ctrlSktRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
     
     dataTxBuffSize = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT")
     if(dataTxBuffSize == 0):   
         if((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True)):
-            dataTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
+            if(Database.getSymbolValue("tcpipTcp", "TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE") == None):
+                dataTxBuffSize = 0
+            else:
+                dataTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
     
     dataRxBuffSize = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT")
     if(dataRxBuffSize == 0):   
         if((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True)):
-            dataRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
+            if(Database.getSymbolValue("tcpipTcp", "TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE") == None):
+                dataRxBuffSize = 0
+            else:
+                dataRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
     
     heap_size = nMaxClients * (180 + ctrlSktTxBuffSize +  ctrlSktRxBuffSize + (2 * dataTxBuffSize) + (2 * dataRxBuffSize))
     return heap_size    
