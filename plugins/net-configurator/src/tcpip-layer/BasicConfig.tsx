@@ -86,9 +86,9 @@ const BasicConfigLayer = ({componentIds}:Props) => {
   ) => {
     if (e.ctrlKey || e.metaKey) {
       if (selectedComponent.includes(componentId)) {
-        setSelectedComponent(
-          selectedComponent.filter((c) => c !== componentId)
-        );
+        // setSelectedComponent(
+        //   selectedComponent.filter((c) => c !== componentId)
+        // );
       } else {
         setSelectedComponent(
           retrieveUnique([...selectedComponent, componentId])
@@ -102,7 +102,9 @@ const BasicConfigLayer = ({componentIds}:Props) => {
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     componentId: string,
-    container: "available" | "active"
+    container: "available" | "active",
+    isSelected: boolean,
+    componentType: "UniqueComponent" | "InstanceComponent"
   ) => {
     event.dataTransfer.effectAllowed = "move";
     const drag_icon = document.createElement("div");
@@ -120,6 +122,35 @@ const BasicConfigLayer = ({componentIds}:Props) => {
         selectedComponent.length > 0 ? selectedComponent : [componentId]
       )
     );
+    if (
+      container === "active" &&
+      (componentType === "UniqueComponent" ||
+        componentType === "InstanceComponent")
+    ) {
+      if (event.ctrlKey) {
+        if (isSelected) {
+          // componentUtilApi.removeFromSelectedComponents(componentId);
+        } else {
+          componentUtilApi.addToSelectedComponents(componentId);
+        }
+      } else {
+        componentUtilApi.setSelectedComponent(componentId);
+      }
+    } else {
+      if (event.ctrlKey || event.metaKey) {
+        if (selectedComponent.includes(componentId)) {
+          setSelectedComponent(
+            selectedComponent.filter((c) => c !== componentId)
+          );
+        } else {
+          setSelectedComponent(
+            retrieveUnique([...selectedComponent, componentId])
+          );
+        }
+      } else {
+        setSelectedComponent([componentId]);
+      }
+    }
   };
 
   const handleDragOver = (

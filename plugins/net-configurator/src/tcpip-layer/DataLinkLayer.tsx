@@ -31,7 +31,7 @@ import AttachmentCardWrapper from "../common-component/ConnectableCard";
 import WarningComponent from "../common-component/WarningComponent";
 import Loader from "../common-component/LoaderComponent";
 import useLoading from "./useLoading";
-import {compare} from '../util/sorting'
+import { compare } from "../util/sorting";
 const log = new Logger("DataLinkLayer");
 type Props = {
   macComponentIds: string[];
@@ -188,6 +188,20 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
         selectedComponent.length > 0 ? selectedComponent : [componentId]
       )
     );
+      if (event.ctrlKey || event.metaKey) {
+        if (selectedComponent.includes(componentId)) {
+          // setSelectedComponent(
+          //   selectedComponent.filter((c) => c !== componentId)
+          // );
+        } else {
+          setSelectedComponent(
+            retrieveUnique([...selectedComponent, componentId])
+          );
+        }
+      } else {
+        setSelectedComponent([componentId]);
+      }
+    
   };
 
   const handleDragOver = (
@@ -242,13 +256,13 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
       </div>
     );
   };
-  const handleOnDragEnd = ()=>{
-    setSourceContainer(undefined)
-    setTargetContainer(undefined)
-  }
+  const handleOnDragEnd = () => {
+    setSourceContainer(undefined);
+    setTargetContainer(undefined);
+  };
   return (
     <>
-    <div className="main-container" onDragEnd={handleOnDragEnd}>
+      <div className="main-container" onDragEnd={handleOnDragEnd}>
         <div className="app-content-top">
           <Panel
             style={{}}

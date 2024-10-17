@@ -6,7 +6,10 @@ import React, {
   useState,
 } from "react";
 import { Panel } from "primereact/panel";
-import { Logger, componentUtilApi } from "@mplab_harmony/harmony-plugin-client-lib";
+import {
+  Logger,
+  componentUtilApi,
+} from "@mplab_harmony/harmony-plugin-client-lib";
 import { useComponents } from "@mplab_harmony/harmony-plugin-client-lib";
 import TCPIPComponentDefault from "../common-component/TCPIPComponentDefault";
 import AvailableHeader from "../common-component/AvailableHeader";
@@ -37,18 +40,18 @@ const ApplicationLayer = ({ componentIds }: Props) => {
   const panelTwoRef = React.useRef<LegacyRef<Panel>>();
   const [visible, setVisible] = useState<boolean>(false);
   const [deactivateVisible, setDeactivateVisible] = useState<boolean>(false);
-  const { loading, showLoader ,lodingText} = useLoading();
+  const { loading, showLoader, lodingText } = useLoading();
   useEffect(() => {
     initApplicationLayer();
     initBasicConfigLayer();
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     const deselectedComponent = components
-    .filter((e) => e.isActive)
-    .filter((e) => e.isSelected)
-    .map((e) => e.componentId);
-    setSelectedComponentDeactivate(deselectedComponent)
-  },[components])
+      .filter((e) => e.isActive)
+      .filter((e) => e.isSelected)
+      .map((e) => e.componentId);
+    setSelectedComponentDeactivate(deselectedComponent);
+  }, [components]);
   const activateComponents = async (event: MouseEvent<HTMLButtonElement>) => {
     if (selectedComponent.length > 1) {
       setVisible(true);
@@ -67,7 +70,7 @@ const ApplicationLayer = ({ componentIds }: Props) => {
   }
 
   const activate = async () => {
-    showLoader(selectedComponent,true);
+    showLoader(selectedComponent, true);
     await activateComponent("APPLICATION LAYER", selectedComponent).then(
       () => {}
     );
@@ -80,7 +83,7 @@ const ApplicationLayer = ({ componentIds }: Props) => {
       .filter((e) => e.isActive)
       .filter((e) => e.isSelected)
       .map((e) => e.componentId);
-      showLoader(toBeDeactivated,false);
+    showLoader(toBeDeactivated, false);
     componentUtilApi.deactivateComponents(toBeDeactivated).then(() => {});
     setDeactivateVisible(false);
   };
@@ -107,15 +110,17 @@ const ApplicationLayer = ({ componentIds }: Props) => {
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     componentId: string,
-    container: "available" | "active"
+    container: "available" | "active",
+    isSelected: boolean,
+    componentType: "UniqueComponent" | "InstanceComponent"
   ) => {
     event.dataTransfer.effectAllowed = "move";
     const drag_icon = document.createElement("div");
     drag_icon.className = "pi pi-clone";
     drag_icon.style.fontSize = "60px";
-    drag_icon.style.top='-100px';
-    drag_icon.style.right='0px';
-    drag_icon.style.position='absolute';
+    drag_icon.style.top = "-100px";
+    drag_icon.style.right = "0px";
+    drag_icon.style.position = "absolute";
     document.body.appendChild(drag_icon);
     event.dataTransfer.setDragImage(drag_icon, 40, 30);
     setSourceContainer(container);
@@ -125,6 +130,35 @@ const ApplicationLayer = ({ componentIds }: Props) => {
         selectedComponent.length > 0 ? selectedComponent : [componentId]
       )
     );
+    if (
+      container === "active" &&
+      (componentType === "UniqueComponent" ||
+        componentType === "InstanceComponent")
+    ) {
+      if (event.ctrlKey) {
+        if (isSelected) {
+          // componentUtilApi.removeFromSelectedComponents(componentId);
+        } else {
+          componentUtilApi.addToSelectedComponents(componentId);
+        }
+      } else {
+        componentUtilApi.setSelectedComponent(componentId);
+      }
+    } else {
+      if (event.ctrlKey || event.metaKey) {
+        if (selectedComponent.includes(componentId)) {
+          // setSelectedComponent(
+          //   selectedComponent.filter((c) => c !== componentId)
+          // );
+        } else {
+          setSelectedComponent(
+            retrieveUnique([...selectedComponent, componentId])
+          );
+        }
+      } else {
+        setSelectedComponent([componentId]);
+      }
+    }
   };
 
   const handleDragOver = (
@@ -132,7 +166,7 @@ const ApplicationLayer = ({ componentIds }: Props) => {
     container: "available" | "active"
   ) => {
     event.preventDefault();
-    if (sourceContainer === 'available') {
+    if (sourceContainer === "available") {
       setUnsetDraggingColor("panel-container-2_content", "set");
     } else {
       setUnsetDraggingColor("panel-container-1_content", "set");
@@ -144,7 +178,7 @@ const ApplicationLayer = ({ componentIds }: Props) => {
     targetContainer: "available" | "active"
   ) => {
     event.preventDefault();
-    
+
     if (targetContainer === "available" && sourceContainer === "active") {
       deactivateComponents(event as any);
     }
@@ -155,10 +189,10 @@ const ApplicationLayer = ({ componentIds }: Props) => {
     setUnsetDraggingColor("panel-container-2_content", "unset");
   };
 
-  const handleOnDragEnd = ()=>{
+  const handleOnDragEnd = () => {
     setUnsetDraggingColor("panel-container-1_content", "unset");
     setUnsetDraggingColor("panel-container-2_content", "unset");
-  }
+  };
 
   return (
     <div className="main-container" onDragEnd={handleOnDragEnd}>
@@ -202,7 +236,9 @@ const ApplicationLayer = ({ componentIds }: Props) => {
           ref={panelTwoRef as RefObject<Panel>}
           id="panel-container-2"
           headerTemplate={
-            <ActiveHeader {...{ selectedComponentDeactivate, deactivateComponents }} />
+            <ActiveHeader
+              {...{ selectedComponentDeactivate, deactivateComponents }}
+            />
           }
           className={`panel-container ${
             selectedComponent.length > 0 ? "highlighted" : ""

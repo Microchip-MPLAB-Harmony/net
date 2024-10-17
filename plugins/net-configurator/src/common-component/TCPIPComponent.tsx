@@ -94,9 +94,7 @@ const TCPIPComponent = (
           componentUtilApi.addToSelectedComponents(componentId);
         }
       } else {
-        if (!isSelected) {
-          componentUtilApi.setSelectedComponent(componentId);
-        }
+        componentUtilApi.setSelectedComponent(componentId);
       }
     } else {
       handleCardClick(event, componentId);
@@ -126,7 +124,7 @@ const TCPIPComponent = (
       className="card-wrapper"
       draggable={draggable}
       onDragStart={(e) =>
-        handleDragStart(e, componentId, isActive ? "active" : "available")
+        handleDragStart(e, componentId, isActive ? "active" : "available",isSelected,componentType)
       }
     >
       {((requiredDependency &&
@@ -171,7 +169,7 @@ const TCPIPComponent = (
             ? "selected-drag-card"
             : "drag-card"
         }`}
-        onClick={(e) => handleClick(e, componentId)}
+        onClickCapture={(e) => handleClick(e, componentId)}
         label={componentName}
         style={{
           backgroundColor: "#5bbcff",
