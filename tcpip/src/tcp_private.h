@@ -227,8 +227,10 @@ typedef struct
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;           // socket signal handler
     const void*         sigParam;                   // socket signal parameter
     uint8_t             keepAliveLim;               // current limit
-    uint8_t ttl;                                    // socket TTL value
-    uint8_t tos;                                    // socket TOS value
+    uint8_t             ttl;                        // socket TTL value
+    uint8_t             tos;                        // socket TOS value
+    uint8_t             dupAckCnt;                  // duplicate ack count for fast retransmission    
+#if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
     union
     {
         uint8_t         val;
@@ -239,6 +241,7 @@ typedef struct
             uint8_t reserved        : 3;            // padding; not used
         };
     }dbgFlags;
+#endif  // ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
 
     uint8_t pad[];                  // padding; not used
 } TCB_STUB;

@@ -4558,6 +4558,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
     pSkt->flags.seqInc = 0;
     pSkt->flags.bSYNSent = 0;
     pSkt->retxTmo = pSkt->retxTime = 0;
+    pSkt->dupAckCnt = 0;    
     pSkt->MySEQ = 0;
     pSkt->sHoleSize = -1;
     pSkt->remoteWindow = 1;
@@ -4580,8 +4581,8 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
         pSkt->srcAddress.Val = 0;
     }
 
-    pSkt->dbgFlags.val = 0;
 #if ((TCPIP_TCP_DEBUG_LEVEL & TCPIP_TCP_DEBUG_MASK_TRACE_STATE) != 0)
+    pSkt->dbgFlags.val = 0;
     pSkt->dbgFlags.tracePrevState = 0xf;
     if((_tcpTraceMask & (1 << pSkt->sktIx)) != 0)
     {
@@ -5195,6 +5196,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             if(((int32_t)(dwTemp) > 0) && (dwTemp <= pSkt->txEnd - pSkt->txStart))
             {   // ACK-ed some data
                 _TCP_LoadRetxTmo(pSkt, true);
+                pSkt->dupAckCnt = 0;    
                 pSkt->Flags.bHalfFullFlush = false;
 
                 // Bytes ACKed, free up the TX FIFO space
@@ -5236,9 +5238,19 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 // See if we have outstanding TX data that is waiting for an ACK
                 if(pSkt->txTail != pSkt->txUnackedTail)
                 {
-                    if(pSkt->retxTime != 0 && (int32_t)(SYS_TMR_TickCountGet() - pSkt->retxTime) >= 0)
+                    bool fastRetransmit = false;
+                    if(++pSkt->dupAckCnt >= 3)
+                    {
+                        fastRetransmit = true; 
+                    }
+                    else if (pSkt->retxTime != 0 && (int32_t)(SYS_TMR_TickCountGet() - pSkt->retxTime) >= 0)
                     {   // ack timeout
                         _TCP_LoadRetxTmo(pSkt, false);
+                        fastRetransmit = true;
+                    }
+
+                    if(fastRetransmit)
+                    {
                         // Set up to perform a fast retransmission
                         // Roll back unacknowledged TX tail pointer to cause retransmit to occur
                         pSkt->MySEQ -= (pSkt->txUnackedTail - pSkt->txTail);
