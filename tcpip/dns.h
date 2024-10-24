@@ -88,6 +88,7 @@ typedef enum
     TCPIP_DNS_EVENT_NAME_ERROR,         // no such name reported by the DNS server
     TCPIP_DNS_EVENT_SOCKET_ERROR,       // a DNS probe could not be sent, socket was busy, TX failed, etc.
     TCPIP_DNS_EVENT_NO_INTERFACE,       // a DNS probe could not be sent, no DNS interface could be selected
+    TCPIP_DNS_EVENT_INTERNAL_ERROR,     // a DNS internal error occurred. Should not happen.
 
 }TCPIP_DNS_EVENT_TYPE;
 
@@ -211,6 +212,7 @@ typedef enum
     TCPIP_DNS_RES_CACHE_FULL          = -8,   // the cache is full and no entry could be added
     TCPIP_DNS_RES_INVALID_HOSTNAME    = -9,   // Invalid hostname
     TCPIP_DNS_RES_SOCKET_ERROR       = -10,   // DNS UDP socket error: not ready, TX error, etc.
+    TCPIP_DNS_RES_INTERNAL_ERROR     = -11,   // DNS internal error occurred. Should not happen.
 }TCPIP_DNS_RESULT;
 
 
@@ -236,14 +238,10 @@ typedef struct
     int             cacheEntries;       // Max number of cache entries 
     uint32_t        entrySolvedTmo;     // Solved entry removed after this tmo if not referenced - seconds
     int             nIPv4Entries;       // Number of IPv4 entries per DNS name and Default value is 1.
-    IP_ADDRESS_TYPE ipAddressType;      // IP protocol type to use for connecting to the DNS server:
-                                        // IPv4 or IPv6
-                                        // Currently only IPv4 is supported and this parameter is not used
-                                        // Reserved for future improvements
     int             nIPv6Entries;       // Number of IPv6 address per DNS Name
                                         // Default value is 1 and is used only when IPv6 is enabled
-
-                                
+    IP_ADDRESS_TYPE ipAddressType;      // IP protocol type to use for connecting to the DNS server:
+                                        // IPv4 or IPv6
 }TCPIP_DNS_CLIENT_MODULE_CONFIG;
 
 // *****************************************************************************

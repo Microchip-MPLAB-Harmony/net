@@ -285,10 +285,16 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
         memset(addr, 0, sizeof(*addr));
     }
 
-    if(addStr == 0 || (len = strlen(addStr)) == 0)
+    if(addStr == 0)
     {
         return false;
     }
+    len = strlen(addStr);
+    if(len == 0)
+    {
+        return false;
+    }
+
 
     memset(convAddr.v, 0, sizeof(convAddr));
 

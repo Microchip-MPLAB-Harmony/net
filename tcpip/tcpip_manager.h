@@ -2045,6 +2045,85 @@ bool    TCPIP_STACK_NetAddressDnsPrimarySet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ip
     
  */
 bool            TCPIP_STACK_NetAddressDnsSecondSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddress);
+//*********************************************************************
+/*
+   Function:        
+    bool TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address);
+  
+   Summary:
+    Sets network interface IPv6 DNS address.
+
+   Description:
+    This function sets the network interface IPv6 default DNS address.
+    
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+    The network interface should be up and running and IPv6 should be enabled.
+  
+   Parameters:
+   netH - Interface handle to set the DNS address of.
+   ipv6Address - IPv6 address to set
+  
+   Returns:         
+   - true  - if success
+   - false - if no such interface
+             or IPv6 is not enabled
+             or the IPv6 address is invalid
+             or no net unicast address with the same scope found
+                 
+  Example:
+  <code>
+   TCPIP_NET_HANDLE netH = TCPIP_STACK_NetHandleGet("eth0");
+   TCPIP_STACK_NetDnsIPv6Set(netH, &myIPv6Address);
+  </code>
+  
+   Remarks:  
+    Exercise extreme caution when using these functions to change the settings
+    of a running network interface.
+    Changing these parameters at runtime can lead to unexpected behavior
+    or loss of network connectivity.
+    The preferred way to change the parameters for a running interface is to do so 
+    as part of the network configuration passed at the stack initialization.
+
+    
+    The scope of the ipv6Address should match the scope of an unicast IPv6 net addresses.
+    When a DNS query is performed a network source address with the same scope as the DNS IPv6 address will be chosen.
+    Otherwise the DNS query will fail.
+    
+ */
+bool            TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address);
+
+//*********************************************************************
+/*
+   Function:        
+    bool TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress);
+  
+   Summary:
+    Gets network interface IPv6 DNS address.
+
+   Description:
+    This function gets the network interface IPv6 default DNS address.
+    
+   Precondition:    
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+    The network interface should be up and running and IPv6 should be enabled.
+  
+   Parameters:
+   netH - Interface handle to get the DNS address of.
+   dnsAddress - pointer to an IPv6 address to get the result
+  
+   Returns:         
+   - true  - if success and the dnsAddress has been updated
+   - false - if no such interface
+             or IPv6 is not enabled
+             or the dnsAddress is invalid
+                 
+   Remarks:  
+    None
+ */
+bool            TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress);
 
 //*********************************************************************
 /*

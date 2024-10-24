@@ -137,7 +137,7 @@ typedef union
         uint16_t bInterfaceEnabled      : 1;    // 0 when TCPIP_MAC_POWER_DOWN/TCPIP_MAC_POWER_LOW 
         uint16_t bIPv6Enabled           : 1;
         uint16_t bIPv6InConfig          : 1;
-volatile uint16_t bNewTcpipEventAvlbl   : 1;    // event available flag
+        unsigned bIpv6DnsValid          : 1;    // IPv6 DNS address is valid flag
         uint16_t powerMode              : 2;    // current power mode
         uint16_t bInConfig              : 1;    // stack is configuring itself
         uint16_t bMacProcessOnEvent     : 1;    // TCPIP_MAC_Process function needed on event
@@ -170,6 +170,7 @@ typedef struct
     uint16_t        ipv6PrefixLen;  // IPv6 subnet ID
     IPV6_ADDR       netIPv6Addr;    // static IPv6 address
     IPV6_ADDR       netIPv6Gateway; // default IPv6 gateway
+    IPV6_ADDR       netIPv6Dns[1];  // default IPv6 DNS server; only one value maintained as default/current, as an IPv6 address is fairly big
 #if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
     uint32_t        advLastSec;     // last second count when advertisement was evaluated
     uint16_t        advTmo;         // advertising timeout, seconds; when expires (reaches 0) new advertisement needs to be sent
@@ -211,6 +212,7 @@ typedef struct _tag_TCPIP_NET_IF
         uint16_t        ipv6PrefixLen;  // IPv6 subnet ID
         IPV6_ADDR       netIPv6Addr;    // static IPv6 address
         IPV6_ADDR       netIPv6Gateway; // default IPv6 gateway
+        IPV6_ADDR       netIPv6Dns[1];  // default IPv6 DNS server; only one value maintained as default/current, as an IPv6 address is fairly big
 #if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
         uint32_t        advLastSec;     // last second count when advertisement was evaluated
         uint16_t        advTmo;         // advertising timeout, seconds; when expires (reaches 0) new advertisement needs to be sent

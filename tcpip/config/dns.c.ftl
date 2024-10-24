@@ -73,10 +73,18 @@ static bool                 _DNS_ProcessPacket(TCPIP_DNS_DCPT* pDnsDcpt);
 static  TCPIP_DNS_RESULT    _DNSCompleteHashEntry(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* dnsHE);
 static  void                _DNS_CleanCache(TCPIP_DNS_DCPT* pDnsDcpt);
 static TCPIP_DNS_RESULT     _DNS_IsNameResolved(const char* hostName, IPV4_ADDR* hostIPv4, IPV6_ADDR* hostIPv6, bool singleAddress);
-static bool                 _DNS_ValidateIf(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround);
-static bool                 _DNS_AddSelectionIf(TCPIP_NET_IF* pIf, TCPIP_NET_IF** dnsIfTbl, int tblEntries);
-static bool                 _DNS_NetIsValid(TCPIP_NET_IF* pIf);
+static bool                 _DNS_ValidateIf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround);
+static bool                 _DNS_AddSelectionIf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf, TCPIP_NET_IF** dnsIfTbl, int tblEntries);
+static bool                 _DNS_NetIsValid(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf);
 
+#if defined(TCPIP_STACK_USE_IPV4)
+static bool                 _DNS_ValidateIfIpv4(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround);
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+static bool                 _DNS_ValidateIfIpv6(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround);
+static bool                 _GetNetIPv6Address(TCPIP_DNS_HASH_ENTRY* pDnsHE, IPV6_ADDR_STRUCT* ip6AddStr);
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 static void                 TCPIP_DNS_ClientProcess(bool isTmo);
 static void                 TCPIP_DNS_CacheTimeout(TCPIP_DNS_DCPT* pDnsDcpt);
 static void                 _DNSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
@@ -210,12 +218,13 @@ static void _DNS_DbgRRName(char* nameBuffer, TCPIP_DNS_RR_TYPE rrType)
 #endif  // ((TCPIP_DNS_DEBUG_LEVEL & (TCPIP_DNS_DEBUG_MASK_ANSWER_NAMES | TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES)) != 0)
 
 #if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_VALIDATE) != 0)
-static void _DNS_DbgValidateIf(TCPIP_NET_IF* pIf, int startIx, int selIx, bool success)
+static void _DNS_DbgValidateIf(TCPIP_NET_IF* pIf, int startIx, int selIx, bool isIpv6, bool success)
 {
-    SYS_CONSOLE_PRINT("DNS Validate - if: %d, startIx: %d, selIx: %d, success: %d\r\n", pIf->netIfIx, startIx, selIx, success);
+    const char* ipMsg = isIpv6 ? "IPv6" : "IPv4";
+    SYS_CONSOLE_PRINT("DNS Validate - if: %d, startIx: %d, selIx: %d, %s, success: %d\r\n", pIf->netIfIx, startIx, selIx, ipMsg, success);
 }
 #else
-#define _DNS_DbgValidateIf(pIf, startIx, selIx, success)
+#define _DNS_DbgValidateIf(pIf, startIx, selIx, isIpv6, success)
 #endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_VALIDATE) != 0)
 
 #if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_ARP_FLUSH) != 0)
@@ -381,15 +390,22 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
         // only IPv4 operation supported for now
 #if !defined (TCPIP_STACK_USE_IPV4)
-        (void)_DNSPutString;
-        (void)_DNS_SelectIntf;
-        return false;
-#else
-        if(dnsData->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+        if(dnsData->ipAddressType == IP_ADDRESS_TYPE_IPV4)
         {
+            (void)_DNSPutString;
+            (void)_DNS_SelectIntf;
             return false;
         }
 #endif  // !defined (TCPIP_STACK_USE_IPV4)
+
+#if !defined (TCPIP_STACK_USE_IPV6)
+        if(dnsData->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+        {
+            (void)_DNSPutString;
+            (void)_DNS_SelectIntf;
+            return false;
+        }
+#endif  // !defined (TCPIP_STACK_USE_IPV6)
 
         pDnsDcpt->memH = stackData->memH;
         hashMemSize = sizeof(OA_HASH_DCPT) + dnsData->cacheEntries * sizeof(TCPIP_DNS_HASH_ENTRY);
@@ -1047,23 +1063,23 @@ static bool _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDns
 
     if(pDnsDcpt->strictNet != 0)
     {   // only the strict interface is checked
-        return _DNS_ValidateIf(pDnsDcpt->strictNet, pDnsHE, true);
+        return _DNS_ValidateIf(pDnsDcpt, pDnsDcpt->strictNet, pDnsHE, true);
     }
 
     memset(dnsSelectIfs, 0, sizeof(dnsSelectIfs));
 
     // add the interfaces to be considered
     // the preferred interface
-    _DNS_AddSelectionIf(pDnsDcpt->prefNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
+    _DNS_AddSelectionIf(pDnsDcpt, pDnsDcpt->prefNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
     // the current interface
-    _DNS_AddSelectionIf(pDnsHE->currNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
+    _DNS_AddSelectionIf(pDnsDcpt, pDnsHE->currNet, dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
     // the default interface
-    _DNS_AddSelectionIf((TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
+    _DNS_AddSelectionIf(pDnsDcpt, (TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet(), dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs));
     // and any other interface
     nIfs = TCPIP_STACK_NumberOfNetworksGet();
     for(ix = 0; ix < nIfs; ix++)
     {
-       if(!_DNS_AddSelectionIf((TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(ix), dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs)))
+       if(!_DNS_AddSelectionIf(pDnsDcpt, (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(ix), dnsSelectIfs, sizeof(dnsSelectIfs) / sizeof(*dnsSelectIfs)))
        {
            break;
        }
@@ -1084,7 +1100,7 @@ static bool _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDns
     {
         if((pDnsIf = dnsSelectIfs[ix]) != 0)
         {   // for the last valid interface allow DNS servers wrap around
-            if(_DNS_ValidateIf(pDnsIf, pDnsHE, (ix == nIfs - 1)))
+            if(_DNS_ValidateIf(pDnsDcpt, pDnsIf, pDnsHE, (ix == nIfs - 1)))
             {
                 return true;
             }
@@ -1101,34 +1117,36 @@ static bool _DNS_SelectIntf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDns
 // true if OK
 // Interface must support DNS traffic:
 // up and running, configured and have valid DNS servers 
-static bool _DNS_AddSelectionIf(TCPIP_NET_IF* pIf, TCPIP_NET_IF** dnsIfTbl, int tblEntries)
+static bool _DNS_AddSelectionIf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf, TCPIP_NET_IF** dnsIfTbl, int tblEntries)
 {
     int ix, addIx;
 
-    if(pIf && _DNS_NetIsValid(pIf))
+    if(pIf == 0 || !_DNS_NetIsValid(pDnsDcpt, pIf))
     {
-        addIx = -1;
-        for(ix = 0; ix < tblEntries; ix++)
-        {
-            if(dnsIfTbl[ix] == pIf)
-            {   // already there
-                return true;
-            }
-            if(dnsIfTbl[ix] == 0 && addIx < 0)
-            {   // insert slot
-                addIx = ix;
-            }
-        }
+        return false;
+    }
 
-        // pIf is not in the table
-        if(addIx >= 0)
-        {
-            dnsIfTbl[addIx] = pIf;
+    addIx = -1;
+    for(ix = 0; ix < tblEntries; ix++)
+    {
+        if(dnsIfTbl[ix] == pIf)
+        {   // already there
+            return true;
         }
-        else
-        {   // table full
-            return false;
+        if(dnsIfTbl[ix] == 0 && addIx < 0)
+        {   // insert slot
+            addIx = ix;
         }
+    }
+
+    // pIf is not in the table
+    if(addIx >= 0)
+    {
+        dnsIfTbl[addIx] = pIf;
+    }
+    else
+    {   // table full
+        return false;
     }
 
     return true;
@@ -1139,26 +1157,64 @@ static bool _DNS_AddSelectionIf(TCPIP_NET_IF* pIf, TCPIP_NET_IF** dnsIfTbl, int 
 // it sets the current interface and server index too
 // if a retry (i.e. the entry already has that interface) the server index is advanced too
 // if wrapAround, the server index is cleared to 0
-static bool _DNS_ValidateIf(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround)
+static bool _DNS_ValidateIf(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround)
+{
+    if(_DNS_NetIsValid(pDnsDcpt, pIf))
+    {
+#if defined(TCPIP_STACK_USE_IPV4)
+        if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV4)
+        {
+            return _DNS_ValidateIfIpv4(pIf, pDnsHE, wrapAround);
+        } 
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+        if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+        {
+            return _DNS_ValidateIfIpv6(pIf, pDnsHE, wrapAround);
+        } 
+#endif  // defined(TCPIP_STACK_USE_IPV6)
+
+        _DNSAssertCond(false, __func__, __LINE__);
+    }
+    return false;
+}
+
+// returns true if the pIf can be selected for DNS traffic
+// false otherwise
+// it sets the current interface and server index too
+// if a retry (i.e. the entry already has that interface) the server index is advanced too
+// if wrapAround, the server index is cleared to 0
+#if defined(TCPIP_STACK_USE_IPV4)
+static bool _DNS_ValidateIfIpv4(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround)
 {
     int ix, startIx;
-    bool    srvFound;
+    bool    srvFound = false;
 
-    if(_DNS_NetIsValid(pIf))
+    if(pDnsHE->currNet == pIf)
+    {   // trying the current interface
+        // at 1st attempt just stick to what we had before
+        // when retrying; use a different server index
+        startIx = (pDnsHE->currRetry == 0) ? pDnsHE->currServerIx : pDnsHE->currServerIx + 1;
+    }
+    else
+    {   // for a new interface start with the 1st server
+        startIx = 0;
+    }
+
+    for(ix = startIx; ix < sizeof(pIf->dnsServer) / sizeof(*pIf->dnsServer); ix++)
     {
-        srvFound = false;
-        if(pDnsHE->currNet == pIf)
-        {   // trying the current interface
-            // at 1st attempt just stick to what we had before
-            // when retrying; use a different server index
-            startIx = (pDnsHE->currRetry == 0) ? pDnsHE->currServerIx : pDnsHE->currServerIx + 1;
+        if(pIf->dnsServer[ix].Val != 0)
+        {   // all good; select new interface
+            srvFound = true;
+            break;
         }
-        else
-        {   // for a new interface start with the 1st server
-            startIx = 0;
-        }
+    }
 
-        for(ix = startIx; ix < sizeof(pIf->dnsServer) / sizeof(*pIf->dnsServer); ix++)
+    // search from the beginning
+    if(!srvFound && wrapAround) 
+    {
+        for(ix = 0; ix < startIx; ix++)
         {
             if(pIf->dnsServer[ix].Val != 0)
             {   // all good; select new interface
@@ -1166,54 +1222,93 @@ static bool _DNS_ValidateIf(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, boo
                 break;
             }
         }
+    }
 
-        // search from the beginning
-        if(!srvFound && wrapAround) 
-        {
-            for(ix = 0; ix < startIx; ix++)
-            {
-                if(pIf->dnsServer[ix].Val != 0)
-                {   // all good; select new interface
-                    srvFound = true;
-                    break;
-                }
-            }
-        }
+    if(srvFound)
+    {
+        pDnsHE->currNet = pIf;
+        pDnsHE->currServerIx = ix;
+    }
 
-        if(srvFound)
+    _DNS_DbgValidateIf(pIf, startIx, ix, false, srvFound);
+    return srvFound;
+}
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+// returns true if the pIf can be selected for DNS traffic
+// false otherwise
+// it sets the current interface and server index too
+// if a retry (i.e. the entry already has that interface) the server index is advanced too
+// if wrapAround, the server index is cleared to 0
+#if defined(TCPIP_STACK_USE_IPV6)
+static bool _DNS_ValidateIfIpv6(TCPIP_NET_IF* pIf, TCPIP_DNS_HASH_ENTRY* pDnsHE, bool wrapAround)
+{
+    bool    srvFound = false;
+
+    // for IPv6 we currently support just one IPv6 DNS address
+    // just make sure the interface is valid
+
+    if(TCPIP_IPV6_InterfaceIsReady(pIf))
+    {   // interface ready
+        if(pIf->Flags.bIpv6DnsValid == 1U)
         {
-            pDnsHE->currNet = pIf;
-            pDnsHE->currServerIx = ix;
-            _DNS_DbgValidateIf(pIf, startIx, ix, true);
-            return true;
-        }
-        else
-        {
-            _DNS_DbgValidateIf(pIf, startIx, ix, false);
+            srvFound = true;
         }
     }
 
-    return false;
+    if(srvFound)
+    {
+        pDnsHE->currNet = pIf;
+        pDnsHE->currServerIx = 0;
+    }
+
+    _DNS_DbgValidateIf(pIf, 0, 0, true, srvFound);
+    return srvFound;
 }
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 
 // returns true if a network interface can be selected for DNS traffic
 // false otherwise
-static bool _DNS_NetIsValid(TCPIP_NET_IF* pIf)
+static bool _DNS_NetIsValid(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_NET_IF* pIf)
 {
+    if(TCPIP_STACK_NetIsReady(pIf) == false)
+    {   // interface not up, not linked or not configured
+        return false;
+    }
 
-    if(TCPIP_STACK_NetIsReady(pIf) != 0)
-    {   // interface is up, linked and configured
-        if(_TCPIPStackNetAddress(pIf) != 0)
-        {   // has a valid address
-            if(pIf->Flags.bIsDnsClientEnabled != 0)
-            {   // DNS enabled on this interface
-                return pIf->dnsServer[0].Val != 0 || pIf->dnsServer[1].Val != 0;
+    if(pIf->Flags.bIsDnsClientEnabled == 0U)
+    {   // DNS not enabled on this interface
+        return false;
+    }
+
+    while(true)
+    {
+#if defined(TCPIP_STACK_USE_IPV4)
+        if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV4)
+        {
+            if(_TCPIPStackNetAddress(pIf) != 0U)
+            {   // has a valid address
+                return pIf->dnsServer[0].Val != 0U || pIf->dnsServer[1].Val != 0U;
+            }
+            break;
+        }
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+        if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+        {
+            if(TCPIP_IPV6_InterfaceIsReady(pIf))
+            {   // interface ready
+                return pIf->Flags.bIpv6DnsValid == 1U;
             }
         }
+        break;
+#endif // defined(TCPIP_STACK_USE_IPV6)
     }
 
     return false;
 }
+
 // send a signal to the DNS module that data is available
 // no manager alert needed since this normally results as a higher layer (UDP) signal
 static void _DNSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
@@ -1224,48 +1319,64 @@ static void _DNSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TC
     }
 }
 
-#if defined (TCPIP_STACK_USE_IPV4)
 static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE)
 {
     TCPIP_DNS_HEADER    DNSPutHeader;
     uint8_t             *wrPtr, *startPtr;
-    uint16_t            sktPayload;
+    int16_t             sktPayload;
     TCPIP_DNS_EVENT_TYPE evType;
     TCPIP_DNS_RESULT    res;
-    IPV4_ADDR           dnsServerAdd;
+#if defined(TCPIP_STACK_USE_IPV4)
+    const IPV4_ADDR*    dnsServerAdd4;
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_IPV6)
+    const IPV6_ADDR*    dnsServerAdd6;
+    IPV6_ADDR_STRUCT    ip6AddStruct;
+#endif  // defined(TCPIP_STACK_USE_IPV6)
+    bool                sktUpdate;
     UDP_SOCKET          dnsSocket = pDnsDcpt->dnsSocket;
     
-    pDnsHE->hEntry.flags.value &= ~TCPIP_DNS_FLAG_ENTRY_COMPLETE;
+    pDnsHE->hEntry.flags.value &= ~(uint16_t)TCPIP_DNS_FLAG_ENTRY_COMPLETE;
 
     while(true)
     {
-        int oldServerIx = pDnsHE->currServerIx; // store the previously used DNS server index
-        TCPIP_NET_IF* oldIf = pDnsHE->currNet;
-        if(!_DNS_SelectIntf(pDnsDcpt, pDnsHE))
+        size_t oldServerIx = pDnsHE->currServerIx; // store the previously used DNS server index
+        const TCPIP_NET_IF* oldIf = pDnsHE->currNet;
+        if(!_DNS_SelectIntf(pDnsDcpt, pDnsHE)) 
         {   // couldn't get an output interface
             res = TCPIP_DNS_RES_NO_INTERFACE;
             evType = TCPIP_DNS_EVENT_NO_INTERFACE;
             break; 
         }
 
-        if(oldIf == 0)
+        sktUpdate = (pDnsHE->currServerIx != oldServerIx || pDnsHE->currNet != oldIf);  // if socket needs to change settings: switched to another server/interface
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_SKT_UPDATE) != 0)
+        if(sktUpdate != false)
+        {
+            SYS_CONSOLE_PRINT("DNS debug sktUpdate - curr ix: %d, old ix: %d, curr net: 0x%08x, old net: 0x%08x\r\n", pDnsHE->currServerIx, oldServerIx, pDnsHE->currNet, oldIf); 
+        }
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_SKT_UPDATE) != 0)
+        if(oldIf == NULL)
         {
             oldIf = pDnsHE->currNet; 
         }
-        if(pDnsHE->currServerIx != oldServerIx || pDnsHE->currNet != oldIf )
-        {   // switched to another server/interface
+   
+#if defined(TCPIP_STACK_USE_IPV4)
+        if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV4 && sktUpdate != false) 
+        {
             // abort (if any) pending ARP on the old DNS server.
             // a pending ARP counts as a socket TX pending packet
             // and newer packets could be discarded if the socket limit is exceeded
             IPV4_ADDR oldDns = oldIf->dnsServer[oldServerIx];
-            if(oldDns.Val != 0)
+            if(oldDns.Val != 0U)
             {
-                TCPIP_ARP_EntryRemove(oldIf, &oldDns);
+                (void)TCPIP_ARP_EntryRemove(oldIf, &oldDns);
                 _DNS_DbgArpFlush(oldIf, oldServerIx, pDnsHE->currNet, pDnsHE->currServerIx, &oldDns);
             }
         }
+#endif  // defined(TCPIP_STACK_USE_IPV4)
 
-        if(!TCPIP_UDP_PutIsReady(dnsSocket))
+        if(TCPIP_UDP_PutIsReady(dnsSocket) == 0U)
         {   // failed to allocate another TX buffer
             res = TCPIP_DNS_RES_SOCKET_ERROR;
             evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
@@ -1273,22 +1384,70 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
         }
 
         // this will put the start pointer at the beginning of the TX buffer
-        TCPIP_UDP_TxOffsetSet(dnsSocket, 0, false);    
+        (void)TCPIP_UDP_TxOffsetSet(dnsSocket, 0, false);    
 
         //Get the write pointer:
         wrPtr = TCPIP_UDP_TxPointerGet(dnsSocket);
-        if(wrPtr == 0)
+        if(wrPtr == NULL)
         {
             res = TCPIP_DNS_RES_SOCKET_ERROR;
             evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
             break; 
         }
 
-        // set up the socket
-        TCPIP_UDP_Bind(dnsSocket, IP_ADDRESS_TYPE_IPV4, 0, (IP_MULTI_ADDRESS*)&pDnsHE->currNet->netIPAddr);
-        dnsServerAdd.Val = pDnsHE->currNet->dnsServer[pDnsHE->currServerIx].Val;
-        TCPIP_UDP_DestinationIPAddressSet(dnsSocket, pDnsDcpt->ipAddressType, (IP_MULTI_ADDRESS*)&dnsServerAdd);
-        TCPIP_UDP_DestinationPortSet(dnsSocket, TCPIP_DNS_SERVER_PORT);
+        // set up the socket, if needed
+        res = TCPIP_DNS_RES_OK;
+        while(sktUpdate)
+        { 
+#if defined(TCPIP_STACK_USE_IPV4)
+            if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV4)
+            { 
+                if(!TCPIP_UDP_Bind(dnsSocket, IP_ADDRESS_TYPE_IPV4, 0, (IP_MULTI_ADDRESS*)(&pDnsHE->currNet->netIPAddr)))
+                {
+                    res = TCPIP_DNS_RES_SOCKET_ERROR;
+                    evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
+                    break; 
+                }
+                dnsServerAdd4 = pDnsHE->currNet->dnsServer + pDnsHE->currServerIx;
+                (void)TCPIP_UDP_DestinationIPAddressSet(dnsSocket, IP_ADDRESS_TYPE_IPV4, (IP_MULTI_ADDRESS*)(dnsServerAdd4)); 
+                break;
+            }
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+            if(pDnsDcpt->ipAddressType == IP_ADDRESS_TYPE_IPV6)
+            {
+                if(!_GetNetIPv6Address(pDnsHE, &ip6AddStruct))
+                {   // failed to get valid IPv6 address
+                    res = TCPIP_DNS_RES_NO_INTERFACE;
+                    evType = TCPIP_DNS_EVENT_NO_INTERFACE;
+                    break; 
+                }
+
+                if(!TCPIP_UDP_Bind(dnsSocket, IP_ADDRESS_TYPE_IPV6, 0, (IP_MULTI_ADDRESS*)(&ip6AddStruct.address)))
+                {
+                    res = TCPIP_DNS_RES_SOCKET_ERROR;
+                    evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
+                    break; 
+                }
+                dnsServerAdd6 = pDnsHE->currNet->netIPv6Dns + pDnsHE->currServerIx;
+                (void)TCPIP_UDP_DestinationIPAddressSet(dnsSocket, pDnsDcpt->ipAddressType, (IP_MULTI_ADDRESS*)(dnsServerAdd6));
+                break;
+            }
+#endif  // defined(TCPIP_STACK_USE_IPV6)
+
+            _DNSAssertCond(false, __func__, __LINE__);
+            res = TCPIP_DNS_RES_INTERNAL_ERROR;
+            evType = TCPIP_DNS_EVENT_INTERNAL_ERROR;
+            break; 
+        }
+
+        if(res != TCPIP_DNS_RES_OK)
+        {
+            break;
+        }
+
+        (void)TCPIP_UDP_DestinationPortSet(dnsSocket, TCPIP_DNS_SERVER_PORT);
 
         startPtr = wrPtr;
         // Put DNS query here
@@ -1302,10 +1461,10 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
         // Answers set to zero
         // Name server resource address also set to zero
         // Additional records also set to zero
-        DNSPutHeader.Answers.Val = DNSPutHeader.AuthoritativeRecords.Val = DNSPutHeader.AdditionalRecords.Val = 0;
+        DNSPutHeader.Answers.Val = DNSPutHeader.AuthoritativeRecords.Val = DNSPutHeader.AdditionalRecords.Val = 0U;
 
         // copy the DNS header to the UDP buffer
-        memcpy(wrPtr, &DNSPutHeader, sizeof(TCPIP_DNS_HEADER));
+        (void)memcpy(wrPtr, &DNSPutHeader, sizeof(TCPIP_DNS_HEADER));
         wrPtr += sizeof(TCPIP_DNS_HEADER);
 
         // Put hostname string to resolve
@@ -1322,10 +1481,11 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
         // Put complete DNS query packet buffer to the UDP buffer
         // Once it is completed writing into the buffer, you need to update the Tx offset again,
         // because the socket flush function calculates how many bytes are in the buffer using the current write pointer:
-        sktPayload = (uint16_t)(wrPtr - startPtr);
-        TCPIP_UDP_TxOffsetSet(dnsSocket, sktPayload, false);
+        _DNSAssertCond(wrPtr - startPtr >= 0, __func__, __LINE__);
+        sktPayload = (int16_t)(wrPtr - startPtr);
+        (void)TCPIP_UDP_TxOffsetSet(dnsSocket, (uint16_t)sktPayload, false);
 
-        if(TCPIP_UDP_Flush(dnsSocket) != sktPayload)
+        if(TCPIP_UDP_Flush(dnsSocket) != (uint16_t)sktPayload)
         {
             res = TCPIP_DNS_RES_SOCKET_ERROR;
             evType = TCPIP_DNS_EVENT_SOCKET_ERROR;
@@ -1343,12 +1503,49 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
     _DNSNotifyClients(pDnsDcpt, pDnsHE, evType);
     return res;
 }
-#else
-static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH_ENTRY* pDnsHE)
+
+// gets a net IPv6 UNICAST address that matches the scope of the DNS IPv6 address
+// returns false if not found
+// otherwise updates the ip6AddStr that's passed in and returns true.
+// ip6AddStr cannot be NULL!
+#if defined(TCPIP_STACK_USE_IPV6)
+static bool _GetNetIPv6Address(TCPIP_DNS_HASH_ENTRY* pDnsHE, IPV6_ADDR_STRUCT* ip6AddStr)
 {
-    return TCPIP_DNS_RES_NO_SERVICE; 
+    IPV6_ADDR_HANDLE    ip6AddHndl = NULL;
+    bool res = false;
+
+    TCPIP_NET_IF* netIf = pDnsHE->currNet;
+
+    (void)memset(ip6AddStr, 0, sizeof(*ip6AddStr));
+    // select a local IPv6 address that matches the DNS address
+    IPV6_ADDRESS_TYPE dnsType;
+    dnsType.byte = TCPIP_IPV6_AddressTypeGet(netIf, netIf->netIPv6Dns + pDnsHE->currServerIx);
+
+    while(true)
+    {
+        ip6AddHndl = TCPIP_STACK_NetIPv6AddressGet(netIf, IPV6_ADDR_TYPE_UNICAST, ip6AddStr, ip6AddHndl);
+        if(ip6AddHndl == NULL)
+        {   // no more valid IPv6 addresses;
+            break; 
+        }
+        else if(ip6AddStr->flags.scope == dnsType.bits.scope)
+        {   // found it
+            res = true;
+            break;
+        }
+        else
+        {
+            // continue
+        }
+    }
+
+#if ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_IPV6_SCOPE) != 0)
+    SYS_CONSOLE_PRINT("DNS debug - select IPv6 addr scope: %d, res: %d\r\n", dnsType.bits.scope, res);
+#endif  // ((TCPIP_DNS_DEBUG_LEVEL & TCPIP_DNS_DEBUG_MASK_IPV6_SCOPE) != 0)
+
+    return res;
 }
-#endif
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 
 TCPIP_DNS_RESULT TCPIP_DNS_RemoveEntry(const char *hostName)
 {

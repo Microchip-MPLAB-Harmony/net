@@ -50,6 +50,8 @@ Microchip or any third party.
 #define TCPIP_DNS_DEBUG_MASK_QUESTION_NAMES  (0x0008)
 #define TCPIP_DNS_DEBUG_MASK_VALIDATE        (0x0010)
 #define TCPIP_DNS_DEBUG_MASK_ARP_FLUSH       (0x0020)
+#define TCPIP_DNS_DEBUG_MASK_SKT_UPDATE      (0x0040)
+#define TCPIP_DNS_DEBUG_MASK_IPV6_SCOPE      (0x0080)
 
 // enable DNS debugging levels
 #define TCPIP_DNS_DEBUG_LEVEL               (0)
@@ -148,7 +150,7 @@ typedef struct
     uint8_t                     nIPv4Entries;   // number of valid entries in the ip4Address[] array;
     uint8_t                     nIPv6Entries;   // number of valid entries in the ip6Address[] array;
     uint8_t                     resolve_type;   // TCPIP_DNS_RESOLVE_TYPE value
-    uint8_t                     currServerIx;   // current server used
+    uint8_t                     currServerIx;   // IPv4: current server used
     uint8_t                     recordMask;     // a TCPIP_DNS_ADDRESS_REC_MASK mask: IPv6/IPv4 
     uint8_t                     currRetry;      // current retry number for an address resolution
     uint8_t                     nRetries;       // # of retries for address resolution

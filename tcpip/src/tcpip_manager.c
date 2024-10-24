@@ -2943,6 +2943,84 @@ bool TCPIP_STACK_NetAddressDnsSecondSet(TCPIP_NET_HANDLE netH, IPV4_ADDR* ipAddr
     return false;
 }
 
+#if defined(TCPIP_STACK_USE_IPV6)
+// Note: the scope of the ipv6Address should match the scope of an unicast IPv6 net addresses
+bool  TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
+{
+    if(ipv6Address != NULL)
+    {
+        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
+        if(pNetIf != NULL)
+        {
+            IPV6_ADDR_HANDLE    ip6AddHndl = NULL;
+            IPV6_ADDR_STRUCT    ip6AddStr, *pAddStr;
+            IPV6_ADDRESS_TYPE   dnsType;
+
+            (void)memset(&ip6AddStr, 0, sizeof(ip6AddStr));
+            pAddStr = &ip6AddStr;
+
+            dnsType.byte = TCPIP_IPV6_AddressTypeGet(pNetIf, ipv6Address);
+
+            bool res = false;
+            while(true)
+            {
+                ip6AddHndl = TCPIP_STACK_NetIPv6AddressGet(pNetIf, IPV6_ADDR_TYPE_UNICAST, pAddStr, ip6AddHndl);
+                if(ip6AddHndl == NULL)
+                {   // no more valid IPv6 addresses;
+                    break; 
+                }
+                else if(pAddStr->flags.scope == dnsType.bits.scope)
+                {   // found it
+                    res = true;
+                    break;
+                }
+                else
+                {
+                    // continue
+                }
+            }
+
+            if(res != false)
+            {
+                pNetIf->netIPv6Dns[0] = *ipv6Address;
+                pNetIf->Flags.bIpv6DnsValid = 1;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool  TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
+{
+    if(dnsAddress != NULL)
+    {
+        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
+        if(pNetIf != NULL)
+        {
+            (void)memset(dnsAddress->v, 0, sizeof(*dnsAddress));
+            if(pNetIf->Flags.bIpv6DnsValid == 1U)
+            {
+                *dnsAddress = pNetIf->netIPv6Dns[0];
+            }
+            return true;
+        }
+    }
+
+    return false;
+}
+#else
+bool TCPIP_STACK_NetDnsIPv6Set(TCPIP_NET_HANDLE netH, const IPV6_ADDR* ipv6Address)
+{
+    return false;
+}
+bool TCPIP_STACK_NetDnsIPv6Get(TCPIP_NET_HANDLE netH, IPV6_ADDR* dnsAddress)
+{
+    return false;
+}
+#endif  // defined(TCPIP_STACK_USE_IPV6)
+
 uint32_t TCPIP_STACK_NetMask(TCPIP_NET_HANDLE netH)
 {
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
@@ -3236,6 +3314,9 @@ TCPIP_NETWORK_CONFIG*   TCPIP_STACK_NetConfigSet(void* configStoreBuff, void* ne
 
         TCPIP_Helper_IPv6AddressToString(&pNetStg->netIPv6Gateway, tempBuff, sizeof(tempBuff) - 1);
         pNetConf->ipv6Gateway = _NetConfigStringToBuffer(&pDstBuff, tempBuff, &dstSize, &needLen, &actualLen);
+        
+        (void) TCPIP_Helper_IPv6AddressToString(pNetStg->netIPv6Dns, tempBuff, sizeof(tempBuff) - 1U);
+        pNetConf->ipv6Dns = _NetConfigStringToBuffer(&pDstBuff, tempBuff, &dstSize, &needLen, &actualLen);
     }
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
@@ -3685,16 +3766,44 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
 #if defined(TCPIP_STACK_USE_IPV6)
         if((pNetIf->startFlags & TCPIP_NETWORK_CONFIG_IPV6_ADDRESS) != 0)
         {
+            bool configIPv6 = true;
+
             pNetIf->ipv6PrefixLen = (uint16_t)pUsrConfig->ipv6PrefixLen;
-            if(pUsrConfig->ipv6Addr == 0 || !TCPIP_Helper_StringToIPv6Address (pUsrConfig->ipv6Addr, &pNetIf->netIPv6Addr))
-            {   // ignore the static IPv6 address if incorrect
-                pNetIf->startFlags &= ~TCPIP_NETWORK_CONFIG_IPV6_ADDRESS;
-            }
-            else if(pUsrConfig->ipv6Gateway != 0 && !TCPIP_Helper_StringToIPv6Address (pUsrConfig->ipv6Gateway, &pNetIf->netIPv6Gateway))
-            {   // ignore the IPv6 gateway if incorrect; gateway == 0 is allowed.
-                pNetIf->startFlags &= ~TCPIP_NETWORK_CONFIG_IPV6_ADDRESS;
+
+            // ignore the static IPv6 address if incorrect
+            if(pUsrConfig->ipv6Addr == 0)
+            {
+                if(!TCPIP_Helper_StringToIPv6Address (pUsrConfig->ipv6Addr, &pNetIf->netIPv6Addr))
+                {
+                    configIPv6 = false;
+                }
             }
 
+            // ignore the IPv6 gateway if incorrect; gateway == 0 is allowed.
+            if(pUsrConfig->ipv6Gateway != 0)
+            {
+                if(!TCPIP_Helper_StringToIPv6Address (pUsrConfig->ipv6Gateway, &pNetIf->netIPv6Gateway))
+                {   
+                    configIPv6 = false;
+                }
+            }
+            // load the IPv6 DNS if provided
+            if(pUsrConfig->ipv6Dns != NULL)
+            {
+                if(!TCPIP_Helper_StringToIPv6Address (pUsrConfig->ipv6Dns, &pNetIf->netIPv6Dns[0]))
+                {   // incorrect DNS address
+                    configIPv6 = false;
+                }
+                else
+                {
+                    pNetIf->Flags.bIpv6DnsValid = 1;
+                }
+            }
+
+            if(configIPv6 == false)
+            {
+                pNetIf->startFlags &= ~TCPIP_NETWORK_CONFIG_IPV6_ADDRESS;
+            }
         }
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 

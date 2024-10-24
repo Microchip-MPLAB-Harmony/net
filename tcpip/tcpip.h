@@ -609,8 +609,12 @@ typedef struct
     int             ipv6PrefixLen;
 
     /* default IPv6 gateway address; only if TCPIP_NETWORK_CONFIG_IPV6_ADDRESS specified
-       can be NULL if not needed*/
+       can be NULL if not needed */
     const char*     ipv6Gateway; 
+
+    /* IPv6 DNS to use; only if TCPIP_NETWORK_CONFIG_IPV6_ADDRESS specified
+       can be NULL if not needed */
+    const char*     ipv6Dns; 
 }TCPIP_NETWORK_CONFIG;
 
 // *****************************************************************************
