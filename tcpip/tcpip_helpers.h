@@ -87,8 +87,8 @@ Microchip or any third party.
     - false - no IP address could be found, or the format was incorrect
 
  Remarks:
-    If str == NULL, or strlen(str) == 0
-    the result will be address 0
+    If IPAddress != NULL, it will be first cleared to 0.
+    Thus if false is returned, the IPAddress will contain 0. 
  */
 
 bool    TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* IPAddress);
@@ -151,8 +151,8 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
     - false - no IP address could be found, or the format was incorrect
 
  Remarks:
-    If str == NULL, or strlen(str) == 0
-    the result will be address 0
+    If addr != NULL, it will be first cleared to 0.
+    Thus if false is returned, the addr will contain 0. 
  */
 
 bool    TCPIP_Helper_StringToIPv6Address (const char * str, IPV6_ADDR * addr);

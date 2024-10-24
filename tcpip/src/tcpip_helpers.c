@@ -143,7 +143,7 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 
     if(str == 0 || strlen(str) == 0)
     {
-        return true;
+        return false;
     }
 
     charLen = 0;
@@ -287,7 +287,7 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
 
     if(addStr == 0 || (len = strlen(addStr)) == 0)
     {
-        return true;
+        return false;
     }
 
     memset(convAddr.v, 0, sizeof(convAddr));
