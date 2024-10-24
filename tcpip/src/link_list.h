@@ -93,8 +93,13 @@ void  TCPIP_Helper_SingleListTailAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN);
 
 
 // insertion in the middle, not head or tail
+// Note: no verification is made for 'after'. It should be a valid list node!
 void  TCPIP_Helper_SingleListMidAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
+// insertion at head, at tail or in the middle
+// If after == NULL, it will insert at head
+// Note: no verification is made for 'after'. It should be a valid list node!
+void    TCPIP_Helper_SingleListAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
 // removes the head node
 SGL_LIST_NODE*  TCPIP_Helper_SingleListHeadRemove(SINGLE_LIST* pL);
@@ -158,8 +163,14 @@ void  TCPIP_Helper_ProtectedSingleListTailAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIS
 
 
 // insertion in the middle, not head or tail
+// Note: no verification is made for 'after'. It should be a valid list node!
 void  TCPIP_Helper_ProtectedSingleListMidAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
+// insertion at head, at tail or in the middle
+// If after == NULL, it will insert at head
+//
+// Note: no verification is made for 'after'. It should be a valid list node!
+void    TCPIP_Helper_ProtectedSingleListAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
 // removes the head node
 SGL_LIST_NODE*  TCPIP_Helper_ProtectedSingleListHeadRemove(PROTECTED_SINGLE_LIST* pL);
@@ -231,7 +242,13 @@ void  TCPIP_Helper_DoubleListHeadAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 void  TCPIP_Helper_DoubleListTailAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
 // add node pN in the middle, after existing node "after"
+// Note: no verification is made for 'after'. It should be a valid list node!
 void  TCPIP_Helper_DoubleListMidAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
+
+// insertion at head, at tail or in the middle
+// If after == NULL, it will insert at head
+// Note: no verification is made for 'after'. It should be a valid list node!
+void  TCPIP_Helper_DoubleListAdd(DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
 
 DBL_LIST_NODE*  TCPIP_Helper_DoubleListHeadRemove(DOUBLE_LIST* pL);
 
@@ -285,7 +302,13 @@ void  TCPIP_Helper_ProtectedDoubleListHeadAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIS
 void  TCPIP_Helper_ProtectedDoubleListTailAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
 // add node pN in the middle, after existing node "after"
+// Note: no verification is made for 'after'. It should be a valid list node!
 void  TCPIP_Helper_ProtectedDoubleListMidAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
+
+// insertion at head, at tail or in the middle
+// If after == NULL, it will insert at head
+// Note: no verification is made for 'after'. It should be a valid list node!
+void  TCPIP_Helper_ProtectedDoubleListAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
 
 DBL_LIST_NODE*  TCPIP_Helper_ProtectedDoubleListHeadRemove(PROTECTED_DOUBLE_LIST* pL);
 
