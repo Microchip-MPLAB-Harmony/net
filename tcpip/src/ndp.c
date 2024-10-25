@@ -507,10 +507,7 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NborEntryDelete (TCPIP_NET_IF * pNetIf, IPV6_
     while (entry->queuedPackets.nNodes != 0)
     {
         pkt = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove(&entry->queuedPackets);
-        if (pkt->ackFnc)
-        {
-            (*pkt->ackFnc)(pkt, false, pkt->ackParam);
-        }
+        TCPIP_IPV6_PacketAck(pkt, false);
     }
 
     // If this entry is a router, see if we need to remove it from the default router list
@@ -1791,10 +1788,7 @@ void TCPIP_NDP_NborCacheLinkLayerAddressUpdate (TCPIP_NET_IF * pNetIf, IPV6_HEAP
                 {
                     IPV6_PACKET * pkt;
                     pkt = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove(&neighborPointer->queuedPackets);
-                    if (pkt->ackFnc)
-                    {
-                        (*pkt->ackFnc)(pkt, false, pkt->ackParam);
-                    }
+                    TCPIP_IPV6_PacketAck(pkt, false);
                 }
             }
             break;
@@ -1856,10 +1850,7 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                     while (neighborPointer->queuedPackets.nNodes != 0)
                     {
                         pkt = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove(&neighborPointer->queuedPackets);
-                        if (pkt->ackFnc)
-                        {
-                            (*pkt->ackFnc)(pkt, false, pkt->ackParam);
-                        }
+                        TCPIP_IPV6_PacketAck(pkt, false);
                     }
                     neighborPointer = TCPIP_NDP_NborEntryDelete (pNetIf, neighborPointer);
                     break;
@@ -1877,10 +1868,7 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                         if (TCPIP_IPV6_PacketTransmit ((IPV6_PACKET *)neighborPointer->queuedPackets.head))
                         {
                             pkt = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove(&neighborPointer->queuedPackets);
-                            if (pkt->ackFnc)
-                            {
-                                (*pkt->ackFnc)(pkt, true, pkt->ackParam);
-                            }
+                            TCPIP_IPV6_PacketAck(pkt, true);
                         }
                         else
                         {
@@ -1895,10 +1883,7 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                         if (TCPIP_IPV6_PacketTransmit ((IPV6_PACKET *)neighborPointer->queuedPackets.head))
                         {
                             pkt = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove(&neighborPointer->queuedPackets);
-                            if (pkt->ackFnc)
-                            {
-                                (*pkt->ackFnc)(pkt, true, pkt->ackParam);
-                            }
+                            TCPIP_IPV6_PacketAck(pkt, true);
                             TCPIP_NDP_ReachabilitySet (pNetIf, neighborPointer, NDP_STATE_DELAY);
                         }
                         else

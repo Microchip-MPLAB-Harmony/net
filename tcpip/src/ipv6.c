@@ -556,7 +556,7 @@ bool TCPIP_IPV6_InterfaceIsReady (TCPIP_NET_HANDLE netH)
 
 
 // ipv6.h
-IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate (TCPIP_NET_HANDLE netH, IPV6_PACKET_ACK_FNC ackFnc, void* ackParam)
+IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate (TCPIP_NET_HANDLE netH, IPV6_PACKET_ACK_FNC ack6Fnc, void* ack6Param)
 {
     TCPIP_NET_IF * pNetIf =  _TCPIPStackHandleToNet(netH);
     IPV6_PACKET * ptrPacket = (IPV6_PACKET *)TCPIP_HEAP_Malloc (ipv6MemH, sizeof (IPV6_PACKET));
@@ -591,8 +591,8 @@ IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate (TCPIP_NET_HANDLE netH, IPV6_PACKET_AC
     ptrPacket->upperLayerHeaderLen = 0;
     memset (&ptrPacket->remoteMACAddr, 0x00, sizeof (TCPIP_MAC_ADDR));
 
-    ptrPacket->ackFnc = ackFnc;
-    ptrPacket->ackParam = ackParam;
+    ptrPacket->ack6Fnc = ack6Fnc;
+    ptrPacket->ack6Param = ack6Param;
     ptrPacket->macAckFnc = 0;
 
     return ptrPacket;
@@ -1278,10 +1278,7 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
 
             if(TCPIP_IPV6_PacketTransmit (ptrPacket))
             {   // success
-                if (ptrPacket->ackFnc)
-                {
-                    (*ptrPacket->ackFnc)(ptrPacket, true, ptrPacket->ackParam);
-                }
+                TCPIP_IPV6_PacketAck(ptrPacket, true);
                 return 1;
             }
 
@@ -1332,10 +1329,7 @@ int TCPIP_IPV6_Flush (IPV6_PACKET * ptrPacket)
 
         if(TCPIP_IPV6_PacketTransmit (ptrPacket))
         {   // success
-            if (ptrPacket->ackFnc)
-            {
-                (*ptrPacket->ackFnc)(ptrPacket, true, ptrPacket->ackParam);
-            }
+            TCPIP_IPV6_PacketAck(ptrPacket, true);
             return 1;
         }
         else
@@ -1976,10 +1970,7 @@ static void _TCPIP_IPV6_PacketEnqueue(IPV6_PACKET * pkt, SINGLE_LIST* pList, int
         {
             ptrPacket = (IPV6_PACKET *)TCPIP_Helper_SingleListHeadRemove (sglList);
             ptrPacket->flags.queued = false;
-            if (ptrPacket->ackFnc)
-            {
-                (*ptrPacket->ackFnc)(ptrPacket, false, ptrPacket->ackParam);
-            }
+            TCPIP_IPV6_PacketAck(ptrPacket, false);
         }
         TCPIP_Helper_SingleListTailAdd (sglList, (SGL_LIST_NODE *)pkt);
         pkt->flags.queued = true;
@@ -2688,20 +2679,14 @@ static void _TCPIP_IPV6_QueuedPacketTransmitTask (PROTECTED_SINGLE_LIST* pList)
         if ((long)(tick - queuedPacket->queuedPacketTimeout) > 0)
         {   // timeout; remove packet
             queuedPacket->flags.queued = false;
-            if (queuedPacket->ackFnc)
-            {
-                (*queuedPacket->ackFnc)(queuedPacket, false, queuedPacket->ackParam);
-            }
+            TCPIP_IPV6_PacketAck(queuedPacket, false);
         }
         else
         {   // try to transmit it
             if (TCPIP_IPV6_PacketTransmit(queuedPacket))
             {   // success
                 queuedPacket->flags.queued = false;
-                if (queuedPacket->ackFnc)
-                {
-                    (*queuedPacket->ackFnc)(queuedPacket, true, queuedPacket->ackParam);
-                }
+                TCPIP_IPV6_PacketAck(queuedPacket, true);
             }
             else
             {   // failed to transmit; reinsert
@@ -3916,7 +3901,7 @@ static TCPIP_MAC_PACKET* TCPIP_IPV6_MacPacketTxAllocate(IPV6_PACKET* pkt, uint16
     if(pMacPkt != 0)
     {
         TCPIP_MAC_PACKET_ACK_FUNC macAckFnc = (pkt->macAckFnc != 0) ? pkt->macAckFnc : TCPIP_IPV6_MacPacketTxAck;
-        TCPIP_PKT_PacketAcknowledgeSet(pMacPkt, macAckFnc, pkt->ackParam);
+        TCPIP_PKT_PacketAcknowledgeSet(pMacPkt, macAckFnc, pkt->ack6Param);
     }
 
     return pMacPkt;
@@ -4051,6 +4036,18 @@ void TCPIP_IPV6_SetRemoteMacAddress(IPV6_PACKET * ptrPacket, const TCPIP_MAC_ADD
 void TCPIP_IPV6_SetPacketMacAcknowledge(IPV6_PACKET * ptrPacket, TCPIP_MAC_PACKET_ACK_FUNC macAckFnc)
 {
     ptrPacket->macAckFnc = macAckFnc;
+}
+
+void TCPIP_IPV6_PacketAck(IPV6_PACKET * ptrPacket, bool success)
+{
+    if (ptrPacket->ack6Fnc != NULL)
+    {
+        if(success != true)
+        {   // for failure, force the neighbor to be re-evaluated
+            ptrPacket->neighbor = NULL;
+        }
+        ptrPacket->ack6Fnc(ptrPacket, success, ptrPacket->ack6Param);
+    }
 }
 
 int TCPIP_IPV6_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH)

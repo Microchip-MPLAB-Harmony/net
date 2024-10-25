@@ -1009,4 +1009,34 @@ void TCPIP_IPV6_SetRemoteMacAddress(IPV6_PACKET * ptrPacket, const TCPIP_MAC_ADD
  */
 void TCPIP_IPV6_SetPacketMacAcknowledge(IPV6_PACKET * ptrPacket, TCPIP_MAC_PACKET_ACK_FUNC macAckFnc);
 
+// *****************************************************************************
+
+/*
+  Function:
+        void TCPIP_IPV6_PacketAck(IPV6_PACKET * ptrPacket, bool success);
+
+  Summary:
+        Acknowledges a TX packet that IPv6 module has processed.
+
+  Description:
+        The function will call the IPv6 packet acknowledge function of an IPV6_PACKET once the IPv6 module TX processing of the packet is done.
+
+  Precondition:
+        ptrPacket - valid IPV6_PACKET pointer
+        
+
+  Parameters:
+        ptrPacket - packet to set the TCPIP_MAC_ADDR for
+        success   - true if the packet was sent successfuly
+                    false otherwise
+
+
+  Returns:
+     None
+      
+  Remarks:
+     This function should be called by the IPv6 module once it's done processing/transmitting a IPv6 packet.
+ */
+void TCPIP_IPV6_PacketAck(IPV6_PACKET * ptrPacket, bool success);
+
 #endif // _IPV6_MANAGER_H_

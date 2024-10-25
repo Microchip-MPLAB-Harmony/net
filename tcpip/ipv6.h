@@ -591,9 +591,9 @@ typedef struct _IPV6_PACKET
         unsigned char val;
     } flags;
     TCPIP_MAC_ADDR remoteMACAddr;               // The packet's remote MAC address
-    IPV6_PACKET_ACK_FNC ackFnc;                 // function to be called when IPv6 done with the packet
+    IPV6_PACKET_ACK_FNC ack6Fnc;                // function to be called when IPv6 done with the packet
     TCPIP_MAC_PACKET_ACK_FUNC macAckFnc;        // function to be called when MAC done with a TX packet
-    void* ackParam;                             // parameter to be used
+    void* ack6Param;                            // parameter to be used
     void* clientData;                           // optional packet client data
     void * neighbor;                            // The neighbor that the message was received from    
     unsigned short offsetInSegment;             // Offset used for storing fragment transmission information
@@ -860,7 +860,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect(TCPIP_NET_HANDLE hNetIf,
 /*
   Function:
     IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate (TCPIP_NET_HANDLE netH, 
-                                 IPV6_PACKET_ACK_FNC ackFnc, void* ackParam);
+                                 IPV6_PACKET_ACK_FNC ack6Fnc, void* ack6Param);
 
 
   Summary:
@@ -876,9 +876,9 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect(TCPIP_NET_HANDLE hNetIf,
 
   Parameters:
     netH        - Interface of the outgoing packet.
-    ackFnc      - function to be called when IP is done with the TX packet
+    ack6Fnc     - function to be called when IP is done with the TX packet
                   (finished transmitting)
-    ackParam    - parameter to be used for this callback
+    ack6Param   - parameter to be used for this callback
                   This has meaning only for the caller of the
                   TCPIP_IPV6_TxPacketAllocate
 
@@ -889,7 +889,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_DASSourceAddressSelect(TCPIP_NET_HANDLE hNetIf,
   Remarks:
     None.
  */
-IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate(TCPIP_NET_HANDLE netH, IPV6_PACKET_ACK_FNC ackFnc, void* ackParam);
+IPV6_PACKET * TCPIP_IPV6_TxPacketAllocate(TCPIP_NET_HANDLE netH, IPV6_PACKET_ACK_FNC ack6Fnc, void* ack6Param);
 
 
 //*****************************************************************************
