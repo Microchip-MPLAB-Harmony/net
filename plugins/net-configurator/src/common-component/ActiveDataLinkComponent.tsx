@@ -11,6 +11,8 @@ import MyContext from "./Mycontext";
 import AttachmentIcon from "./AttachmentIcon";
 import { OverlayPanel } from "primereact/overlaypanel";
 import CustomeTooltip from "./CustomeTooltip";
+import OverlayPanelComponent from "./OverlayPanelComponent";
+import { ContextMenu } from "primereact/contextmenu";
 const ActiveDataLinkComponent = (
   props: HTMLAttributes<HTMLButtonElement> & {
     componentHook: ComponentHook;
@@ -44,6 +46,7 @@ const ActiveDataLinkComponent = (
     useContext(MyContext);
   const op: any = useRef(null);
   const ox: any = useRef(null);
+  const cm = useRef<ContextMenu>(null);
   const phyAttachment = attachments.filter((e) => e.displayType === "PHY");
   const macAttachment = attachments.filter((e) => e.displayType === "MAC");
   const macMIMAttachment = attachments.filter((e) => e.displayType === "MIIM");
@@ -55,8 +58,16 @@ const ActiveDataLinkComponent = (
   const [optionalDepList, setOptDepList] = useState<
     { name: string; displayType: string }[]
   >([]);
+  const [requiredSatList, setReqSatList] = useState<
+    { componentId: string; displayType: string; displayName: string }[]
+  >([]);
+  const [optionalSatList, setOptSatList] = useState<
+    { componentId: string; displayType: string; displayName: string }[]
+  >([]);
   const required: any = [];
   const optional: any = [];
+  const requiredSatisfierList: any = [];
+  const optionalSatisfierList: any = [];
   const fetchFunction = async (attachment: any) => {
     const dispType =
       attachment?.satisfiableComponents[0]?.displayType === "PHY Layer" ||
@@ -74,6 +85,9 @@ const ActiveDataLinkComponent = (
           name: attachment.displayType,
           displayType: dispType,
         });
+        attachment.satisfiableComponents.map((satisfier: any) => {
+          requiredSatisfierList.push(satisfier);
+        });
       }
     }
     
@@ -88,6 +102,9 @@ const ActiveDataLinkComponent = (
           name: attachment.displayType,
           displayType: dispType,
         });
+        attachment.satisfiableComponents.map((satisfier: any) => {
+          optionalSatisfierList.push(satisfier);
+        });
       }
     }
     
@@ -101,6 +118,8 @@ const ActiveDataLinkComponent = (
           fetchFunction(attachment);
           setReqDepList(required);
           setOptDepList(optional);
+          setReqSatList(requiredSatisfierList);
+          setOptSatList(optionalSatisfierList);
         }
       });
     }
@@ -451,6 +470,14 @@ const ActiveDataLinkComponent = (
             fontWeight: "600",
             fontSize: "16px",
           }}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            if (isActive) {
+              if (cm.current) {
+                cm.current.show(e);
+              }
+            }
+          }}
         />
         <div style={{ width: "15px", position: "relative" }}>
           {displayType === "MAC Layer" &&
@@ -460,6 +487,22 @@ const ActiveDataLinkComponent = (
           {displayType === "PHY Layer" &&
             attachmentIcon("PHY Layer", "MIIM", "-7px", "DEPENDENCY")}
         </div>
+      </div>
+      <div>
+        {((requiredDependency &&
+          isActive &&
+          (componentType === "InstanceComponent" ||
+            componentType === "UniqueComponent")) ||
+          (optionalDependency &&
+            isActive &&
+            (componentType === "InstanceComponent" ||
+              componentType === "UniqueComponent"))) && (
+          <OverlayPanelComponent
+            cm={cm}
+            optionalSatList={optionalSatList}
+            requiredSatList={requiredSatList}
+          />
+        )}
       </div>
     </div>
   );

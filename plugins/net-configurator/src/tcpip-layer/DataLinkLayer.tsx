@@ -125,7 +125,15 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
 
   const deactivate = async () => {
     const newMacComponents: Component[] = [];
+    const generatorComponent: string[] = [];
     const macCompo = macComponents.map((mac) => {
+      if (
+        mac.componentType === "GeneratorComponent" &&
+        mac?.instances?.length === 1 &&
+        mac?.instances[0]?.isSelected
+      ) {
+        generatorComponent.push(mac.componentId);
+      }
       if (mac?.instances?.length > 0) {
         mac.instances.map((m) => {
           newMacComponents.push(m);
@@ -134,6 +142,7 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
         newMacComponents.push(mac);
       }
     });
+
     const toBeDeactivated = [
       ...newMacComponents,
       ...phyComponents,
@@ -142,8 +151,16 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
       .filter((e) => e.isActive)
       .filter((e) => e.isSelected)
       .map((e) => e.componentId);
+    if (
+      instantiateComponent?.instances?.length === 1 &&
+      instantiateComponent?.instances[0]?.isSelected
+    ) {
+      generatorComponent.push(instantiateComponent.componentId);
+    }
     showLoader(toBeDeactivated, false);
-    componentUtilApi.deactivateComponents(toBeDeactivated).then(() => {});
+    componentUtilApi
+      .deactivateComponents([...toBeDeactivated, ...generatorComponent])
+      .then(() => {});
     setDeactivateVisible(false);
     executeCallback(updateArrow);
   };
@@ -188,20 +205,19 @@ const DataLinkLayer = ({ macComponentIds, phyComponentIds }: Props) => {
         selectedComponent.length > 0 ? selectedComponent : [componentId]
       )
     );
-      if (event.ctrlKey || event.metaKey) {
-        if (selectedComponent.includes(componentId)) {
-          // setSelectedComponent(
-          //   selectedComponent.filter((c) => c !== componentId)
-          // );
-        } else {
-          setSelectedComponent(
-            retrieveUnique([...selectedComponent, componentId])
-          );
-        }
+    if (event.ctrlKey || event.metaKey) {
+      if (selectedComponent.includes(componentId)) {
+        // setSelectedComponent(
+        //   selectedComponent.filter((c) => c !== componentId)
+        // );
       } else {
-        setSelectedComponent([componentId]);
+        setSelectedComponent(
+          retrieveUnique([...selectedComponent, componentId])
+        );
       }
-    
+    } else {
+      setSelectedComponent([componentId]);
+    }
   };
 
   const handleDragOver = (

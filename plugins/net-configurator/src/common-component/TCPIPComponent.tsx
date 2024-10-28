@@ -1,5 +1,5 @@
 import { Button } from "primereact/button";
-import { HTMLAttributes, useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useRef, useState } from "react";
 import {
   ComponentHook,
   componentUtilApi,
@@ -7,6 +7,8 @@ import {
 import "./shape.css";
 import { Tooltip } from "primereact/tooltip";
 import CustomeTooltip from "./CustomeTooltip";
+import OverlayPanelComponent from "./OverlayPanelComponent";
+import { ContextMenu } from "primereact/contextmenu";
 
 const TCPIPComponent = (
   props: HTMLAttributes<HTMLButtonElement> & {
@@ -36,6 +38,7 @@ const TCPIPComponent = (
     draggable,
     ...onlyHTMLAttributes
   } = props;
+  const cm = useRef<ContextMenu>(null);
   const [requiredDependency, setRequiredDependency] = useState<boolean>(false);
   const [optionalDependency, setOptionalDependency] = useState<boolean>(false);
   const [requiredDepList, setReqDepList] = useState<
@@ -44,8 +47,16 @@ const TCPIPComponent = (
   const [optionalDepList, setOptDepList] = useState<
     { name: string; displayType: string }[]
   >([]);
+  const [requiredSatList, setReqSatList] = useState<
+    { componentId: string; displayType: string; displayName: string }[]
+  >([]);
+  const [optionalSatList, setOptSatList] = useState<
+    { componentId: string; displayType: string; displayName: string }[]
+  >([]);
   const required: any = [];
   const optional: any = [];
+  const requiredSatisfierList: any = [];
+  const optionalSatisfierList: any = [];
   const fetchFunction = async (attachment: any) => {
     const dispType =
       attachment?.satisfiableComponents[0]?.displayType === "PHY Layer" ||
@@ -55,7 +66,7 @@ const TCPIPComponent = (
     if (
       attachment.required === true &&
       attachment.connected === false &&
-      attachment.enabled===true
+      attachment.enabled === true
     ) {
       setRequiredDependency(true);
       if (attachment.satisfiableComponents.length > 0) {
@@ -63,9 +74,12 @@ const TCPIPComponent = (
           name: attachment.displayType,
           displayType: dispType,
         });
+        attachment.satisfiableComponents.map((satisfier: any) => {
+          requiredSatisfierList.push(satisfier);
+        });
       }
-    } 
-    
+    }
+
     if (
       attachment.required === false &&
       attachment.connected === false &&
@@ -77,9 +91,11 @@ const TCPIPComponent = (
           name: attachment.displayType,
           displayType: dispType,
         });
+        attachment.satisfiableComponents.map((satisfier: any) => {
+          optionalSatisfierList.push(satisfier);
+        });
       }
-    } 
-   
+    }
   };
   const handleClick = (event: any, componentId: any) => {
     if (
@@ -104,6 +120,8 @@ const TCPIPComponent = (
   if (!isNaN(parseInt(componentId.split("_")[1]))) {
     componentName = `${displayName}-${componentId.split("_")[1]}`;
   }
+  
+  
   useEffect(() => {
     if (componentHook.isActive === true) {
       setOptionalDependency(false);
@@ -113,10 +131,13 @@ const TCPIPComponent = (
           fetchFunction(attachment);
           setReqDepList(required);
           setOptDepList(optional);
+          setReqSatList(requiredSatisfierList);
+          setOptSatList(optionalSatisfierList);
         }
       });
     }
   }, [componentHook]);
+  
 
   return (
     <div
@@ -124,7 +145,13 @@ const TCPIPComponent = (
       className="card-wrapper"
       draggable={draggable}
       onDragStart={(e) =>
-        handleDragStart(e, componentId, isActive ? "active" : "available",isSelected,componentType)
+        handleDragStart(
+          e,
+          componentId,
+          isActive ? "active" : "available",
+          isSelected,
+          componentType
+        )
       }
     >
       {((requiredDependency &&
@@ -179,7 +206,31 @@ const TCPIPComponent = (
           height: "40px",
           gap: "1rem",
         }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          if (isActive) {
+            if (cm.current) {
+              cm.current.show(e);
+            }
+          }
+        }}
       />
+      <div>
+        {((requiredDependency &&
+          isActive &&
+          (componentType === "InstanceComponent" ||
+            componentType === "UniqueComponent")) ||
+          (optionalDependency &&
+            isActive &&
+            (componentType === "InstanceComponent" ||
+              componentType === "UniqueComponent"))) && (
+          <OverlayPanelComponent
+            cm={cm}
+            optionalSatList={optionalSatList}
+            requiredSatList={requiredSatList}
+          />
+        )}
+      </div>
     </div>
   );
 };
