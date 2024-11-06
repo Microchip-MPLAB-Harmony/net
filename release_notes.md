@@ -1,4 +1,53 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.13.0-E1 (November, 2024)
+### ADDITIONS AND UPDATES FOR v3.13.0-E1:
+
+- **New Features**
+    - This **engineering release** contains:
+        - Added GMAC driver support PIC32CX-BZ6 and WBZ653 family of devices 
+        - Added DNS IPv6 support
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+
+- **Improvements and Bug Fixes**
+	-	The following table provides the list of improvements and bug fixes in the v3.13.0-E1 release:
+
+		| Module        | Description |
+		| ------------- | ----------- |
+        | TCP       	        | Fix for Restoring the fast transmission on duplicate acknowledgments |
+        | TCPIP_Helpers         | Updates for generic list manipulation |
+        |                       | Updated the IPv4 and IPv6 string conversion routines |         
+        | IPv6 & NDP            | Fix for open socket to an invalid destination uses a discarded NDP entry |
+        | LAN8720 & LAN8740 PHY | Updated 'RMII Data Interface' as default PHY connection flag for 'ETH' | 
+        | Plugin       	        | Improvements on drag and drop of component & loading of dependency from component |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.45](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.13.0-E1
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.1 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.14.0-E1
+- Harmony csp repository, v3.20.0-E1
+- Harmony bsp repository, v3.21.0-E1
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+
+### KNOWN ISSUES
+- None
+
+
 ## Net Release v3.12.3 (October, 2024)
 ### ADDITIONS AND UPDATES FOR v3.12.3:
 
