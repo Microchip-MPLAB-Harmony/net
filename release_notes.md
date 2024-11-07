@@ -4,8 +4,7 @@
 
 - **New Features**
     - This **engineering release** contains:
-        - Added GMAC driver support PIC32CX-BZ6 and WBZ653 family of devices 
-        - Added DNS IPv6 support
+        - Added GMAC driver support PIC32CX-BZ6 and WBZ653 family of devices
 
 - **Applications**
   - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
@@ -21,6 +20,7 @@
         |                       | Updated the IPv4 and IPv6 string conversion routines |         
         | IPv6 & NDP            | Fix for open socket to an invalid destination uses a discarded NDP entry |
         | LAN8720 & LAN8740 PHY | Updated 'RMII Data Interface' as default PHY connection flag for 'ETH' | 
+        | DNS                   | Updates for DNS IPv6 support |                  
         | Plugin       	        | Improvements on drag and drop of component & loading of dependency from component |
 
 ### TESTED WITH:
