@@ -46,19 +46,24 @@ static IPV6_ADDR tempAddress;
 typedef struct
 {
     IPV6_ADDR_STRUCT * addressPointer;
-    uint32_t timer;
+    uint32_t transmitTimer;
     TCPIP_NET_IF * netConfig;
     uint8_t state;
     uint8_t transmitAttempt;
     uint8_t receivedSolicitations;
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+    uint8_t retryCount;
+    uint32_t retryTimer;
+#endif // (TCPIP_IPV6_RIID_ENABLED != 0)    
 } DAD_STATIC_VARS;
 
 enum
 {
     DAD_STATE_INACTIVE = 0,
     DAD_STATE_TRANSMIT,
-    DAD_STATE_WAIT,
+    DAD_STATE_TRANSMIT_WAIT,
     DAD_STATE_FAIL,
+    DAD_STATE_RETRY_WAIT,
     DAD_STATE_DONE
 } DUPLICATE_ADDR_DISCOVERY_STATE;
 
@@ -98,6 +103,13 @@ static void _TCPIP_NDP_Cleanup(void);
 #define _TCPIP_NDP_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
+static uint32_t _TCPIP_NDP_RandomSolicitationDelayGet(void);
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+static bool _TCPIP_NDP_InterfaceIdReserved(IPV6_ADDR_STRUCT* tentativeAddressPointer);
+static bool _TCPIP_NDP_InterfaceIdInUse(TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT* tentativeAddressPointer);
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
+    
 static void TCPIP_NDP_DupAddrDiscoveryTask (void);
 
 static void TCPIP_NDP_RouterSolicitTask (void);
@@ -778,6 +790,9 @@ char TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT *
             gDuplicateAddrDetectState[i].transmitAttempt = 0;
             gDuplicateAddrDetectState[i].receivedSolicitations = 0;
             gDuplicateAddrDetectState[i].netConfig = pNetIf;
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+            gDuplicateAddrDetectState[i].retryCount = 0;
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
             ndpDADCount++;
             return (char) i;
         }
@@ -822,7 +837,7 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
 
     if(gSetInitialDelay)
     {
-        gInitialDelay = SYS_TMR_TickCountGet() + (((SYS_RANDOM_PseudoGet() % 40) * SYS_TMR_TickCounterFrequencyGet() * TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY) / 40);
+        gInitialDelay = _TCPIP_NDP_RandomSolicitationDelayGet();
         gSetInitialDelay = false;
         return DAD_PENDING;
     }
@@ -846,6 +861,11 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
         // Determine if any of our active threads matches the address we just received
         if (gDuplicateAddrDetectState[i].addressPointer == localAddressPointer)
         {
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+            TCPIP_NET_IF * pNetIf = gDuplicateAddrDetectState[i].netConfig;
+            const TCPIP_IPV6_CONFIG_DCPT* pIpv6Dcpt = TCPIP_IPV6_ConfigDcptGet();
+#endif // (TCPIP_IPV6_RIID_ENABLED != 0)    
+            
             switch (gDuplicateAddrDetectState[i].state)
             {
                 case DAD_STATE_INACTIVE:
@@ -862,20 +882,31 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
 
                         IPV6_ADDR_STRUCT* pDadStruct = (gDuplicateAddrDetectState + i)->addressPointer;
                         IPV6_ADDR* pDadAdd = (IPV6_ADDR*)((uint8_t*)pDadStruct + offsetof(struct _IPV6_ADDR_STRUCT, address));
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+                        if ((pIpv6Dcpt->configFlags & TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID) != 0)
+                        {
+                            if (_TCPIP_NDP_InterfaceIdReserved(pDadStruct) ||
+                                _TCPIP_NDP_InterfaceIdInUse(gDuplicateAddrDetectState[i].netConfig, pDadStruct))
+                            {
+                                gDuplicateAddrDetectState[i].state = DAD_STATE_FAIL;
+                                return DAD_PENDING;
+                            }
+                        }
+#endif // (TCPIP_IPV6_RIID_ENABLED != 0)    
                         pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (gDuplicateAddrDetectState[i].netConfig, (IPV6_ADDR *)&IPV6_FIXED_ADDR_UNSPECIFIED, &solicitedNodeMulticastAddr, pDadAdd);
                         if (pkt != NULL)
                         {
                             if (!TCPIP_ICMPV6_Flush(pkt))
                                 return DAD_PENDING;
                             gDuplicateAddrDetectState[i].transmitAttempt++;
-                            gDuplicateAddrDetectState[i].timer = SYS_TMR_TickCountGet() + ((SYS_TMR_TickCounterFrequencyGet() * TCPIP_IPV6_InterfaceConfigGet(gDuplicateAddrDetectState[i].netConfig)->retransmitTime) / 1000);
-                            gDuplicateAddrDetectState[i].state = DAD_STATE_WAIT;
+                            gDuplicateAddrDetectState[i].transmitTimer = SYS_TMR_TickCountGet() + ((SYS_TMR_TickCounterFrequencyGet() * TCPIP_IPV6_InterfaceConfigGet(gDuplicateAddrDetectState[i].netConfig)->retransmitTime) / 1000);
+                            gDuplicateAddrDetectState[i].state = DAD_STATE_TRANSMIT_WAIT;
                         }
                     }
                     return DAD_PENDING;
                     break;
-                case DAD_STATE_WAIT:
-                    if ((long)(SYS_TMR_TickCountGet() - gDuplicateAddrDetectState[i].timer) > 0)
+                case DAD_STATE_TRANSMIT_WAIT:
+                    if ((long)(SYS_TMR_TickCountGet() - gDuplicateAddrDetectState[i].transmitTimer) > 0)
 
                     {
                         if (gDuplicateAddrDetectState[i].transmitAttempt == DUPLICATE_ADDR_DETECT_TRANSMITS)
@@ -890,9 +921,40 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
                     return DAD_OK;
                     break;
                 case DAD_STATE_FAIL:
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+                    if ((pIpv6Dcpt->configFlags & TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID) != 0)
+                    {
+                        gDuplicateAddrDetectState[i].retryCount++;
+                        if (gDuplicateAddrDetectState[i].retryCount < DUPLICATE_ADDR_DETECT_RETRIES)
+                        {
+                            gDuplicateAddrDetectState[i].retryTimer = _TCPIP_NDP_RandomSolicitationDelayGet();
+                            gDuplicateAddrDetectState[i].state = DAD_STATE_RETRY_WAIT;
+                            return DAD_PENDING;
+                        }
+                    }
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
                     gDuplicateAddrDetectState[i].state = DAD_STATE_INACTIVE;
                     return DAD_ADDRESS_DUPLICATED;
                     break;
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+                case DAD_STATE_RETRY_WAIT:
+                    if ((long)(SYS_TMR_TickCountGet() - gDuplicateAddrDetectState[i].retryTimer) > 0)
+                    {
+                        IPV6_ADDR *pAddress = &gDuplicateAddrDetectState[i].addressPointer->address;
+                        uint8_t prefixLength = gDuplicateAddrDetectState[i].addressPointer->prefixLen;
+                        uint8_t retryCount = gDuplicateAddrDetectState[i].retryCount;
+                        if(TCPIP_IPV6_AddressInterfaceIDSet(pNetIf, pAddress, prefixLength, retryCount) == false)
+                        {
+                            gDuplicateAddrDetectState[i].state = DAD_STATE_INACTIVE;
+                            return DAD_BAD_ARGUMENT;
+                        }
+                        gDuplicateAddrDetectState[i].transmitAttempt = 0;
+                        gDuplicateAddrDetectState[i].receivedSolicitations = 0;
+                        gDuplicateAddrDetectState[i].state = DAD_STATE_TRANSMIT;
+                    }
+                    return DAD_PENDING;
+                    break;
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
                 default:
                     gDuplicateAddrDetectState[i].state = DAD_STATE_INACTIVE;
                     return DAD_BAD_ARGUMENT;
@@ -904,6 +966,63 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
     // Could not find matching entry
     return DAD_BAD_ARGUMENT;
 }
+
+static uint32_t _TCPIP_NDP_RandomSolicitationDelayGet(void)
+{
+    return SYS_TMR_TickCountGet() + (((SYS_RANDOM_PseudoGet() % 40) * SYS_TMR_TickCounterFrequencyGet() * TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY) / 40);
+}
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+static bool _TCPIP_NDP_InterfaceIdReserved(IPV6_ADDR_STRUCT* tentativeAddressPointer)
+{
+    // The subnet-router anycast ID (RFC 4291)
+    static const uint8_t SUBNET_ROUTER_ANYCAST_IID[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    // The reserved IANA ethernet block ranges 0200:5EFF:FE00:0000-0200:5EFF:FE00:5212 and 0200:5EFF:FE00:5214-0200:5EFF:FEFF:FFFF (RFC 4291)
+    // and the Proxy Mobile 0200:5EFF:FE00:5213 (RFC 6543)
+    static const uint8_t IANA_ETHERNET_BLOCK_AND_PROXY_MOBILE_PREFIX_RANGE[5] = {0x02, 0x00, 0x5E, 0xFF, 0xFE};
+    // The reserved subnet anycast range (RFC 2526)
+    static const uint8_t SUBNET_ANYCAST_PREFIX_RANGE[7] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
+    uint8_t *pInterfaceID = tentativeAddressPointer->address.v + IPV6_INTERFACE_ID_OFFSET;
+    
+    return  (0 == memcmp(pInterfaceID, SUBNET_ROUTER_ANYCAST_IID, sizeof(SUBNET_ROUTER_ANYCAST_IID))) ||
+            (0 == memcmp(pInterfaceID, IANA_ETHERNET_BLOCK_AND_PROXY_MOBILE_PREFIX_RANGE, sizeof(IANA_ETHERNET_BLOCK_AND_PROXY_MOBILE_PREFIX_RANGE)) ||
+            ((0 == memcmp(pInterfaceID, SUBNET_ANYCAST_PREFIX_RANGE, sizeof(SUBNET_ANYCAST_PREFIX_RANGE))) && (pInterfaceID[7] >= 0x80)));
+}
+
+static bool _TCPIP_NDP_InterfaceIdInUse(TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT* tentativeAddressPointer)
+{
+    IPV6_ADDR_STRUCT * unicastAddressPointer;
+    IPV6_INTERFACE_CONFIG*  pIpv6Config;
+    uint8_t *prefix = tentativeAddressPointer->address.v;
+    uint8_t prefixLength = tentativeAddressPointer->prefixLen;
+    uint8_t *interfaceID = tentativeAddressPointer->address.v + IPV6_INTERFACE_ID_OFFSET;
+
+    pIpv6Config = TCPIP_IPV6_InterfaceConfigGet(pNetIf);
+    unicastAddressPointer = (IPV6_ADDR_STRUCT *)pIpv6Config->listIpv6UnicastAddresses.head;
+
+    while (unicastAddressPointer != NULL)
+    {
+        if (unicastAddressPointer->prefixLen != 0)
+        {
+            if (prefixLength == unicastAddressPointer->prefixLen)
+            {
+                const IPV6_ADDR* pUnicastAdd = (const IPV6_ADDR*)((uint8_t*)unicastAddressPointer + offsetof(struct _IPV6_ADDR_STRUCT, address));
+                if (TCPIP_Helper_FindCommonPrefix (prefix, pUnicastAdd->v, sizeof (IPV6_ADDR)) >= prefixLength)
+                {
+                    if (0 == memcmp(interfaceID, pUnicastAdd->v + IPV6_INTERFACE_ID_OFFSET, IPV6_INTERFACE_ID_SIZE / 8U))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        unicastAddressPointer = unicastAddressPointer->next;
+    }
+    
+    return false;
+}
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
 
 /*****************************************************************************
   Function:
@@ -1552,15 +1671,17 @@ void TCPIP_NDP_SAAPrefixInfoProcess (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_IN
                     if (prefixInfo->vPrefixLen + IPV6_INTERFACE_ID_SIZE != 128)
                         return;
                     pPrefixAdd = (IPV6_ADDR*)((uint8_t*)prefixInfo + offsetof(struct NDP_OPTION_PREFIX_INFO, aPrefix));
-                    TCPIP_NDP_AddressConstructFromPrefix (pNetIf, &tempAddress, pPrefixAdd, prefixInfo->vPrefixLen);
-                    localAddressPointer = TCPIP_IPV6_UnicastAddressAdd (pNetIf, &tempAddress, 0, false);
-                    if (localAddressPointer != NULL)
+                    if (TCPIP_NDP_AddressConstructFromPrefix (pNetIf, &tempAddress, pPrefixAdd, prefixInfo->vPrefixLen) == true)
                     {
-                        localAddressPointer->prefixLen = prefixInfo->vPrefixLen;
-                        localAddressPointer->preferredLifetime = prefixInfo->dPreferredLifetime;
-                        localAddressPointer->validLifetime = prefixInfo->dValidLifetime;
-                        localAddressPointer->lastTickTime = SYS_TMR_TickCountGet();
+                        localAddressPointer = TCPIP_IPV6_UnicastAddressAdd (pNetIf, &tempAddress, 0, false);
+                        if (localAddressPointer != NULL)
+                        {
+                            localAddressPointer->prefixLen = prefixInfo->vPrefixLen;
+                            localAddressPointer->preferredLifetime = prefixInfo->dPreferredLifetime;
+                            localAddressPointer->validLifetime = prefixInfo->dValidLifetime;
+                            localAddressPointer->lastTickTime = SYS_TMR_TickCountGet();
 
+                        }
                     }
                 }
             }
@@ -1691,7 +1812,7 @@ uint8_t TCPIP_NDP_PrefixOnLinkStatusGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR 
 
 /*****************************************************************************
   Function:
-    void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf,
+    bool TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf,
         IPV6_ADDR * destination, IPV6_ADDR * prefix,
         uint8_t prefixLength)
 
@@ -1711,28 +1832,24 @@ uint8_t TCPIP_NDP_PrefixOnLinkStatusGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR 
     prefixLength - Length of the prefix (should be 8 bytes)
 
   Returns:
-    None
+    true  - On success
+    false - Failure to indicate an invalid address  
 
   Remarks:
     None
   ***************************************************************************/
-void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength)
+bool TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength)
 {
-    uint8_t offset = prefixLength >> 3;
-
     memcpy (destination, prefix, sizeof (IPV6_ADDR));
 
     // We'll never construct an address from a prefix
     // that isn't 64 bits (since our interface ID is also 64 bits).
     if ((prefixLength & 0x07) == 0)
     {
-        destination->v[offset++] = pNetIf->netMACAddr.v[0] | 0x02;
-        destination->v[offset++] = pNetIf->netMACAddr.v[1];
-        destination->v[offset++] = pNetIf->netMACAddr.v[2];
-        destination->v[offset++] = 0xFF;
-        destination->v[offset++] = 0xFE;
-        memcpy (&destination->v[offset], &(pNetIf->netMACAddr).v[3], 3);
+        return TCPIP_IPV6_AddressInterfaceIDSet(pNetIf, destination, prefixLength, 0);
     }
+
+    return false;
 }
 
 /*****************************************************************************

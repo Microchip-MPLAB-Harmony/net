@@ -82,4 +82,43 @@ Microchip or any third party.
 #define TCPIP_IPV6_G3_PLC_SUPPORT                       false
 </#if>
 
+<#if TCPIP_IPV6_RIID_ENABLE == true>
+#define TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE           true
+
+    <#if (TCPIP_IPV6_RIID_SELECTION)?has_content>
+        <#if (TCPIP_IPV6_RIID_SELECTION) == "RIID Default Generation">
+        <#if (TCPIP_IPV6_RIID_SEC_KEY_F)?has_content>
+        <#lt>#define TCPIP_IPV6_RIID_SEC_KEY_F              &${TCPIP_IPV6_RIID_SEC_KEY_F}
+        <#else>
+        <#lt>#define TCPIP_IPV6_RIID_SEC_KEY_F              NULL
+        </#if>
+        <#if (TCPIP_IPV6_RIID_NET_IFACE_F)?has_content>
+        <#lt>#define TCPIP_IPV6_RIID_NET_IFACE_F            &${TCPIP_IPV6_RIID_NET_IFACE_F}
+        <#else>
+        <#lt>#define TCPIP_IPV6_RIID_NET_IFACE_F            NULL
+        </#if>
+        <#if (TCPIP_IPV6_RIID_NET_ID_F)?has_content>
+        <#lt>#define TCPIP_IPV6_RIID_NET_ID_F               &${TCPIP_IPV6_RIID_NET_ID_F}
+        <#else>
+        <#lt>#define TCPIP_IPV6_RIID_NET_ID_F               NULL
+        </#if>
+        <#else>
+            <#if (TCPIP_IPV6_RIID_PRF)?has_content>
+            <#lt>#define TCPIP_IPV6_RIID_PRF             &${TCPIP_IPV6_RIID_PRF}
+            <#else>
+            <#lt>#define TCPIP_IPV6_RIID_PRF             NULL
+            </#if>
+        </#if>
+    </#if>
+
+#define TCPIP_IPV6_START_FLAGS                       \
+<#if TCPIP_IPV6_CONFIG_FLAG_RIID == true>
+                                                        TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID |\
+</#if>
+                                                        TCPIP_IPV6_FLAG_NONE
+<#else>
+#define TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE           false
+</#if>
+
+
 </#if>

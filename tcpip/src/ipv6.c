@@ -47,9 +47,9 @@ Microchip or any third party.
 #if defined(TCPIP_STACK_USE_IPV6)
 #include "tcpip/src/ipv6_private.h"
 
-#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
+#if (TCPIP_IPV6_RIID_ENABLED != 0) || (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 #include "crypto/crypto.h"
-#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0) || (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 // This is left shifted by 4.  Actual value is 0x04.
 #define IPv4_VERSION        (0x40u)
@@ -163,6 +163,7 @@ static TCPIP_IPV6_PACKET_HANDLER ipv6PktHandler = 0;
 static const void* ipv6PktHandlerParam;
 #endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
 
+static TCPIP_IPV6_CONFIG_DCPT  ipv6_config_dcpt;
 /************************************************************************/
 /****************               Prototypes               ****************/
 /************************************************************************/
@@ -211,6 +212,11 @@ static void TCPIP_IPV6_ProcessPackets(void);
 
 static void TCPIP_IPV6_Process (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt);
 
+static void _TCPIP_IPV6_EUI64InterfaceIDSet (IPV6_ADDR *pAddress, TCPIP_MAC_ADDR * pNetMACAddr);
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+static bool _TCPIP_IPV6_RandomInterfaceIDSet(TCPIP_NET_IF* pNetIf, IPV6_ADDR* ip6Addr, uint8_t prefixLen, uint8_t dadCounter);
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)    
 
 // ipv6_manager.h
 bool TCPIP_IPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const pStackInit, const TCPIP_IPV6_MODULE_CONFIG* pIpv6Init)
@@ -264,7 +270,22 @@ bool TCPIP_IPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const pStackInit, cons
                     break;
                 }
 
-                iniRes = TCPIP_Helper_ProtectedSingleListInitialize (&ipv6QueuedPackets);
+                if ((iniRes = TCPIP_Helper_ProtectedSingleListInitialize (&ipv6QueuedPackets)) == false)
+                {
+                    break;
+                }
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+                if ((pIpv6Init->configFlags & TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID) != 0)
+                {
+                    if(pIpv6Init->pRiidFnc == NULL && pIpv6Init->pSecretKeyFnc == NULL)
+                    {
+                        iniRes = false;
+                        break;
+                    }
+                }
+#endif  // (TCPIP_IPV6_RIID_ENABLED != 0)
+
 
 #if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
                 ipv6PktHandler = 0;
@@ -281,10 +302,16 @@ bool TCPIP_IPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const pStackInit, cons
 
             ipv6StartTick = 0;
 
-            // initialize IPv6 configuration parameter
-            pIpv6Config = ipv6Config + pStackInit->netIx;
-            pIpv6Config->rxfragmentBufSize = pIpv6Init->rxfragmentBufSize;
-            pIpv6Config->fragmentPktRxTimeout = pIpv6Init->fragmentPktRxTimeout;
+            // initialize IPv6 configuration parameters
+            ipv6_config_dcpt.rxfragmentBufSize = pIpv6Init->rxfragmentBufSize;
+            ipv6_config_dcpt.fragmentPktRxTimeout = pIpv6Init->fragmentPktRxTimeout;
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+            ipv6_config_dcpt.riidPrF = pIpv6Init->pRiidFnc;
+            ipv6_config_dcpt.riidNetIfaceF = pIpv6Init->pNetIfaceFnc;
+            ipv6_config_dcpt.riidNetIdF = pIpv6Init->pNetworkIdFnc;
+            ipv6_config_dcpt.riidKeyF = pIpv6Init->pSecretKeyFnc;
+#endif // (TCPIP_IPV6_RIID_ENABLED != 0)
+            ipv6_config_dcpt.configFlags = pIpv6Init->configFlags;
         }
 
         ipv6ModuleInitCount++;
@@ -440,7 +467,10 @@ void TCPIP_IPV6_InitializeStop (TCPIP_NET_IF * pNetIf)
 static void TCPIP_IPV6_InitializeTask (void)
 {
     IPV6_ADDR_STRUCT * localAddressPointer;
-    IPV6_ADDR linkLocalAddress = {{0xFE, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0 | 0x02, 0, 0, 0xFF, 0xFE, 0, 0, 0}};
+    IPV6_ADDR linkLocalAddress = {{0xFE, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
+    const uint8_t linkLocalPrefixLen = 10;  // LL address: fe80::/10
+    uint8_t dadCount;
+    uint8_t dadCountLast;
     int netIx;
     TCPIP_NET_IF * pNetIf;
     IPV6_INTERFACE_CONFIG*  pIpv6Config;
@@ -454,13 +484,6 @@ static void TCPIP_IPV6_InitializeTask (void)
 
         if ((pNetIf->Flags.bIPv6InConfig == true) && (TCPIP_STACK_NetworkIsLinked(pNetIf)))
         {
-            linkLocalAddress.v[8] = pNetIf->netMACAddr.v[0] | 0x02;
-            linkLocalAddress.v[9] = pNetIf->netMACAddr.v[1];
-            linkLocalAddress.v[10] = pNetIf->netMACAddr.v[2];
-            linkLocalAddress.v[13] = pNetIf->netMACAddr.v[3];
-            linkLocalAddress.v[14] = pNetIf->netMACAddr.v[4];
-            linkLocalAddress.v[15] = pNetIf->netMACAddr.v[5];
-
             switch (pIpv6Config->initState)
             {
                 case IPV6_INIT_STATE_INITIALIZE:
@@ -472,6 +495,12 @@ static void TCPIP_IPV6_InitializeTask (void)
                         break;
                     }
                     // Configure link-local address
+                    if (TCPIP_IPV6_AddressInterfaceIDSet(pNetIf, &linkLocalAddress, linkLocalPrefixLen, 0) == false)
+                    {
+                        pIpv6Config->initState = IPV6_INIT_STATE_FAIL;
+                        break;
+                    }
+
                     localAddressPointer = TCPIP_IPV6_UnicastAddressAdd (pNetIf, &linkLocalAddress, 0, false);
                     if (localAddressPointer == NULL)
                     {
@@ -496,23 +525,54 @@ static void TCPIP_IPV6_InitializeTask (void)
                     pIpv6Config->initState = IPV6_INIT_STATE_DAD;
                     break;
                 case IPV6_INIT_STATE_DAD:
-                    if (TCPIP_IPV6_AddressFind (pNetIf, &linkLocalAddress, IPV6_ADDR_TYPE_UNICAST))
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+                    if ((ipv6_config_dcpt.configFlags & TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID) != 0)
                     {
-                        pGatewayAddr = (IPV6_ADDR*)TCPIP_STACK_NetDefaultIPv6GatewayGet(pNetIf);
-                        if(pGatewayAddr)
-                        {   // add a new router entry, valid forever
-                            if(TCPIP_IPV6_NewRouterEntry(pNetIf, pGatewayAddr, 0, 0, 0xffffffff) != TCPIP_IPV6_RES_OK)
+                        dadCountLast = IPV6_RIID_IDGEN_RETRIES - 1U;
+                    }
+                    else
+#endif // (TCPIP_IPV6_RIID_ENABLED != 0)
+                    {
+                        dadCountLast = 0;
+                    }
+                    dadCount = 0;
+                    while(true)
+                    {
+                        if (TCPIP_IPV6_AddressInterfaceIDSet(pNetIf, &linkLocalAddress, linkLocalPrefixLen, dadCount) == false)
+                        {
+                            pIpv6Config->initState = IPV6_INIT_STATE_FAIL;
+                            break;
+                        }
+
+                        if (TCPIP_IPV6_AddressFind (pNetIf, &linkLocalAddress, IPV6_ADDR_TYPE_UNICAST))
+                        {
+                            pGatewayAddr = (IPV6_ADDR*)TCPIP_STACK_NetDefaultIPv6GatewayGet(pNetIf);
+                            if(pGatewayAddr)
+                            {   // add a new router entry, valid forever
+                                if(TCPIP_IPV6_NewRouterEntry(pNetIf, pGatewayAddr, 0, 0, 0xffffffff) != TCPIP_IPV6_RES_OK)
+                                {
+                                    pIpv6Config->initState = IPV6_INIT_STATE_FAIL;
+                                    break;
+                                }
+                            }
+
+                            pIpv6Config->initState = IPV6_INIT_STATE_SOLICIT_ROUTER;
+                            break;
+                        }
+                        else if (TCPIP_IPV6_AddressFind (pNetIf, &linkLocalAddress, IPV6_ADDR_TYPE_UNICAST_TENTATIVE) == NULL)
+                        {
+                            if (dadCount == dadCountLast)
                             {
                                 pIpv6Config->initState = IPV6_INIT_STATE_FAIL;
                                 break;
                             }
                         }
-
-                        pIpv6Config->initState = IPV6_INIT_STATE_SOLICIT_ROUTER;
-                    }
-                    else if (TCPIP_IPV6_AddressFind (pNetIf, &linkLocalAddress, IPV6_ADDR_TYPE_UNICAST_TENTATIVE) == NULL)
-                    {
-                        pIpv6Config->initState = IPV6_INIT_STATE_FAIL;
+                        else
+                        {
+                            // stay in IPV6_INIT_STATE_DAD 
+                            break;
+                        }
+                        dadCount++;
                     }
                     break;
                 case IPV6_INIT_STATE_SOLICIT_ROUTER:
@@ -2039,6 +2099,174 @@ uint8_t TCPIP_IPV6_AddressTypeGet (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * addr
     return returnVal.byte;
 }
 
+/*****************************************************************************
+  Function:
+    void _TCPIP_IPV6_EUI64InterfaceIDSet (IPV6_ADDR *pAddress, TCPIP_MAC_ADDR * pNetMACAddr)
+
+  Summary:
+    Sets the 64-bit interface ID in an IPv6 address using the EUI-64 method.
+
+  Description:
+    Sets the 64-bit interface ID in an IPv6 address using the EUI-64 method.
+
+  Precondition:
+    None
+
+  Parameters:
+    pAddress - The IPv6 address where the interface ID is set.
+    pNetMACAddr - The interface MAC address
+
+  Returns:
+    None
+
+  Remarks:
+    Implements EUI-64 method defined in RFC 4291 Appendix A
+
+  ***************************************************************************/
+static void _TCPIP_IPV6_EUI64InterfaceIDSet (IPV6_ADDR *pAddress, TCPIP_MAC_ADDR * pNetMACAddr)
+{
+    uint8_t *pInterfaceID = pAddress->v + IPV6_INTERFACE_ID_OFFSET;
+
+    *pInterfaceID++ = pNetMACAddr->v[0] | 0x02;
+    *pInterfaceID++ = pNetMACAddr->v[1];
+    *pInterfaceID++ = pNetMACAddr->v[2];
+    *pInterfaceID++ = 0xFF;
+    *pInterfaceID++ = 0xFE;
+    *pInterfaceID++ = pNetMACAddr->v[3];
+    *pInterfaceID++ = pNetMACAddr->v[4];
+    *pInterfaceID++ = pNetMACAddr->v[5];
+}
+
+// ipv6_private.h
+// prefixLen should normally be 64.
+// However, we allow for any length.
+// BUT the size of the generated RID is always 64 bits.
+bool TCPIP_IPV6_AddressInterfaceIDSet (TCPIP_NET_IF* pNetIf, IPV6_ADDR* pAddress, uint8_t prefixLen, uint8_t dadCounter)
+{
+    if ((pNetIf == NULL) || (pAddress == NULL))
+    {
+        return false;
+    }
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+    if ((ipv6_config_dcpt.configFlags & TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID) != 0)
+    {
+        bool prfRes;
+        if(ipv6_config_dcpt.riidPrF != NULL)
+        {   // call the user supplied PRF
+            prfRes = ipv6_config_dcpt.riidPrF(pNetIf, pAddress, prefixLen, dadCounter);
+        }
+        else
+        { // call the default SHA-1 PRF function
+            prfRes = _TCPIP_IPV6_RandomInterfaceIDSet(pNetIf, pAddress, prefixLen, dadCounter);
+        }
+
+        return prfRes;
+    }
+    else
+#endif
+    {
+        _TCPIP_IPV6_EUI64InterfaceIDSet(pAddress, &pNetIf->netMACAddr);
+    }
+
+    return true;
+}
+
+#if (TCPIP_IPV6_RIID_ENABLED != 0)
+/*****************************************************************************
+  Function:
+    static bool _TCPIP_IPV6_RandomInterfaceIDSet(TCPIP_NET_IF * pNetIf, IPV6_ADDR* ip6Addr, uint8_t prefixLen, uint8_t dadCounter)
+
+  Summary:
+    Sets a Random Interface ID in an IPv6 address.
+
+  Description:
+    Sets a 64 bit Random Interface ID in an IPv6 address as described in RFC7217 Section 5.
+    It's using a default PRF SHA-1 function.
+
+  Precondition:
+    The network prefix is set in the input IPv6 address
+
+  Parameters:
+    pNetIf - the network interface for which this PRF is calculated
+    ip6Addr - the address to update - it should contain the right network prefix
+    prefixLen - the length of the prefix, as described in RFC7217 Section 5.
+    dadCounter - the DAD counter, as described in RFC7217 Section 5. (0: IDGEN_RETRIES - 1)
+
+
+  Returns:
+    true  - On success
+    false - Failure to indicate an error occurred 
+
+  Remarks:
+     None
+
+  ***************************************************************************/
+// Calculate SHA-1 of: (prefix, Net_Iface, Network_ID, DAD_Counter, secret_key);
+static bool _TCPIP_IPV6_RandomInterfaceIDSet(TCPIP_NET_IF* pNetIf, IPV6_ADDR* ip6Addr, uint8_t prefixLen, uint8_t dadCounter)
+{
+
+    CRYPT_SHA_CTX  shaSum;
+    uint8_t shaDigest[20];  // SHA1 size is 160 bits
+
+    // calculate the SHA1
+    CRYPT_SHA_Initialize(&shaSum);
+
+    // add prefix
+    CRYPT_SHA_DataAdd(&shaSum, ip6Addr->v, (prefixLen + 7U) / 8U);  // round up the prefixLen to bytes
+
+    TCPIP_IPV6_CONFIG_DCPT*  pIpv6Dcpt = &ipv6_config_dcpt; 
+
+    // add Net_Iface
+    if(pIpv6Dcpt->riidNetIfaceF != NULL)
+    {
+        const uint8_t* pNetIface = NULL;
+        size_t netIfaceSize = pIpv6Dcpt->riidNetIfaceF(pNetIf, &pNetIface);
+        if(pNetIface != NULL && netIfaceSize != 0U)
+        {   // add the Net_Iface parameter
+            CRYPT_SHA_DataAdd(&shaSum, pNetIface, netIfaceSize);
+        }
+    }
+    else
+    {   // use the default MAC address
+        CRYPT_SHA_DataAdd(&shaSum, pNetIf->netMACAddr.v, sizeof(pNetIf->netMACAddr));
+    }
+
+    // add the Network_ID
+    if(pIpv6Dcpt->riidNetIdF != NULL)
+    {
+        const uint8_t* pNetworkID = NULL;
+        size_t netIdSize = pIpv6Dcpt->riidNetIdF(pNetIf, &pNetworkID);
+        if(pNetworkID != NULL && netIdSize != 0U)
+        {   // add the Net_Iface parameter
+            CRYPT_SHA_DataAdd(&shaSum, pNetworkID, netIdSize);
+        }
+    }
+    // else skip the optional Network_ID 
+
+    // add the DAD_Counter 
+    CRYPT_SHA_DataAdd(&shaSum, &dadCounter, sizeof(dadCounter));
+
+    // add the secret_key; riidKeyF cannot be NULL
+    const uint8_t* pSecretKey = NULL;
+    size_t keySize = pIpv6Dcpt->riidKeyF(pNetIf, &pSecretKey);
+    if(pSecretKey == NULL || keySize < IPV6_RIID_SECRET_KEY_MIN_SIZE)
+    {   // failed
+        return false;
+    }
+
+    // add the secret key
+    CRYPT_SHA_DataAdd(&shaSum, pSecretKey, keySize);
+
+    // done
+    CRYPT_SHA_Finalize(&shaSum, shaDigest);
+
+    // success; InterfaceID = 64 LSbs of RID
+    uint8_t* pRid = shaDigest + sizeof(shaDigest) - IPV6_INTERFACE_ID_SIZE / 8U;
+    memcpy(ip6Addr->v + IPV6_INTERFACE_ID_OFFSET, pRid, IPV6_INTERFACE_ID_SIZE / 8U);
+    return true;
+}
+#endif
 
 // ipv6.h
 void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * address)
@@ -2418,7 +2646,7 @@ TCPIP_IPV6_FragmentationHeaderProcess(
         if (ptrFragment == NULL)
             return IPV6_ACTION_DISCARD_SILENT;
         //Allocate  memory for the fragmented packet w.r.t to TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE
-        ptrFragment->ptrPacket =(uint8_t*)TCPIP_HEAP_Malloc(ipv6MemH,pIpv6Config->rxfragmentBufSize);
+        ptrFragment->ptrPacket =(uint8_t*)TCPIP_HEAP_Malloc(ipv6MemH, ipv6_config_dcpt.rxfragmentBufSize);
         if(ptrFragment->ptrPacket == NULL)
         {
             TCPIP_IPV6_FragmentBufferFree (ptrFragment);
@@ -2427,7 +2655,7 @@ TCPIP_IPV6_FragmentationHeaderProcess(
 
         ptrFragment->next = NULL;
         // The RFC specifies that the fragments must be reassembled in one minute or less
-        ptrFragment->secondsRemaining = pIpv6Config->fragmentPktRxTimeout;
+        ptrFragment->secondsRemaining = ipv6_config_dcpt.fragmentPktRxTimeout;
         ptrFragment->identification = fragmentHeader.identification;
         ptrFragment->packetSize = headerLen;
         ptrFragment->bytesInPacket = headerLen;
@@ -2458,7 +2686,7 @@ TCPIP_IPV6_FragmentationHeaderProcess(
             ptrFragment->firstFragmentLength = dataCount + headerLen;
         }
 
-        if ((headerLen + (fragmentHeader.offsetM.bits.fragmentOffset << 3) + dataCount) > pIpv6Config->rxfragmentBufSize)
+        if ((headerLen + (fragmentHeader.offsetM.bits.fragmentOffset << 3) + dataCount) > ipv6_config_dcpt.rxfragmentBufSize)
         {
             TCPIP_IPV6_ErrorSend (pNetIf, pRxPkt, localIP, remoteIP, ICMPV6_ERR_PP_ERRONEOUS_HEADER, ICMPV6_ERROR_PARAMETER_PROBLEM, TCPIP_Helper_htonl(headerLen + 2), dataCount + headerLen + sizeof (IPV6_FRAGMENT_HEADER));
             if(ptrFragment != NULL)
@@ -3532,6 +3760,10 @@ IPV6_INTERFACE_CONFIG* TCPIP_IPV6_InterfaceConfigGet(const TCPIP_NET_IF* pNetIf)
     return ipv6Config + TCPIP_STACK_NetIxGet (pNetIf);
 }
 
+const TCPIP_IPV6_CONFIG_DCPT* TCPIP_IPV6_ConfigDcptGet(void)
+{
+    return &ipv6_config_dcpt;
+}
 
 const IPV6_ADDR* TCPIP_IPV6_DefaultRouterGet(TCPIP_NET_HANDLE netH)
 {

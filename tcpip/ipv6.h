@@ -121,7 +121,8 @@ typedef enum {
     IPV6_ACTION_DISCARD_PP_0, // Discard the packet and send an ICMP parameter problem message with code value 0
     IPV6_ACTION_DISCARD_PP_2, // Discard the packet and send an ICMP parameter problem message with code value 2
     IPV6_ACTION_DISCARD_PP_2_NOT_MC, // Discard the packet and send an ICMP parameter problem message with code value 3
-    IPV6_ACTION_BEGIN_EX_HEADER_PROCESSING // Begin extension processing
+    IPV6_ACTION_BEGIN_EX_HEADER_PROCESSING, // Begin extension processing
+
 } IPV6_ACTION;
 
 /* IPv6 Type-length-value type code for the Pad 1 option */
@@ -478,6 +479,175 @@ typedef const void * IPV6_HANDLE; // Pointer to IPv6 object
 
 // *****************************************************************************
 /* 
+  Type:
+    IPV6_RIID_PR_FNC
+
+  Summary:
+    Optional Pseudo Random function to be used for the IPv6 address random interface Identifier (RID) generation.
+
+  Description:
+    RFC 7217 defines a way to generate a RID using a Pseudo Random Function (PRF).
+    This type describes the PRF that can be optionally supplied to generate the RID.
+
+  Parameters:
+    hNet - Handle identifying the network interface for which this PRF is calculated
+    ip6Addr - address to be updated with the calculated RID.
+              On input the address should contain the prefix (1st prefixLen bits)
+              On output it needs to be updated with the generated RID in the least significant 64 bits.
+    prefixLen - the length of the prefix, as described in RFC7217 Section 5.
+    dadCounter - the DAD counter, as described in RFC7217 Section 5.
+
+  Returns:
+    true    - if the calculation was successful and the ip6Addr has been updated
+    false   - otherwise. Some failure has occurred.
+
+  Remarks:
+    If this function is provided, it has to compute a stable Random Interface ID.
+    as described in RFC7217 Section 5.
+    Its output has to be at least 64 bits long!
+    It should update the Interface Identifier part of ip6Addr according to the RFC7217!
+
+    Could be NULL and a default internal SHA1 function will be used. 
+
+    The prefixLen parameter should normally be 64.
+    But it can be a different value - for example 10 when using an LL address.
+    However, the length of the Interface Identifier field will be 64 bits in this implementation!
+    So, the relation: prefix length + Interface Identifier length = 128 bits is NOT enforced!
+
+    Additional notes from RFC 7217:
+        - The pseudorandom function (PRF) MUST NOT be computable from the outside (without knowledge of the secret key).
+        -  PRF() MUST also be difficult to reverse, such that it resists attempts to obtain the secret_key,
+           even when given samples of the output of PRF() and knowledge or control of the other input parameters.
+        - PRF() SHOULD produce an output of at least 64 bits.
+        - PRF() could be implemented as a cryptographic hash of the concatenation of each of the function parameters.
+            SHA-1 [FIPS-SHS] and SHA-256 are two possible options for PRF().
+            MD5 [RFC1321] is considered UNACCEPTABLE for PRF() [RFC6151]
+ */
+typedef bool (*IPV6_RIID_PR_FNC)(TCPIP_NET_HANDLE hNet, IPV6_ADDR* ip6Addr, uint8_t prefixLen, uint8_t dadCounter); 
+
+// *****************************************************************************
+/* 
+  Type:
+    IPV6_RIID_NET_IFACE_FNC
+
+  Summary:
+    Net_Iface function to be used for random interface ID generation.
+
+  Description:
+    RFC 7217 defines an Net_Iface parameter to be used for random interface ID generation.
+    This is an implementation-dependent stable identifier associated with the network interface
+    for which the RID is being generated.
+
+  Parameters:
+    hNet - Handle identifying the network interface for which the Net_Iface is calculated
+    pNetIface - address to store a pointer to the calculated identifier.
+    
+  Returns:
+    The size of the Net_Iface to use, in bytes.
+
+  Remarks:
+    As recommended by the standard, usual options are:
+    - The Interface Index
+    - The Interface Name
+    - The Interface Link-layer address
+    - Logical Network Service Identity
+
+    If the function returns 0, then the Net_Iface parameter in the RID generation will be skipped.
+
+    Could be NULL and a default internal implementation using the interface Link-layer address will be used.
+
+ */
+typedef size_t (*IPV6_RIID_NET_IFACE_FNC)(TCPIP_NET_HANDLE hNet, const uint8_t** pNetIface);
+
+// *****************************************************************************
+/* 
+  Type:
+    IPV6_RIID_NET_ID_FNC
+
+  Summary:
+    Optional Network_ID get function to be used for random interface ID generation.
+
+  Description:
+    RFC 7217 defines an optional Network_ID parameter to be used for random interface ID generation.
+    The Network_ID should be any network-specific data that identifies the subnet to which the interface is attached,
+    for example, the IEEE 802.11 Service Set Identifier (SSID).
+
+  Parameters:
+    hNet - Handle identifying the network interface for which the Network_ID is calculated
+    pNetworkID - address to store a pointer to the calculated Network_ID.
+    
+  Returns:
+    The size of the Network_ID to use, in bytes.
+
+
+  Remarks:
+    If the function is NULL or returns 0, then the Network_ID in the RID generation will be skipped.
+
+ */
+typedef size_t (*IPV6_RIID_NET_ID_FNC)(TCPIP_NET_HANDLE hNet, const uint8_t** pNetworkID);
+
+// *****************************************************************************
+/* 
+  Type:
+    IPV6_RIID_SECRET_KEY_FNC
+
+  Summary:
+    Secret_key to be used for random interface ID generation.
+
+  Description:
+    RFC 7217 defines the mandatory Secret_key parameter to be used for random interface ID generation.
+
+  Parameters:
+    hNet - Handle identifying the network interface for which the Secret_key is calculated
+    pSecretKey - address to store a pointer to the calculated Secret_key.
+    
+  Returns:
+    The size of the Secret_key to use, in bytes.
+    It should be at least 16 bytes (128 bits) as required by the standard!
+
+
+  Remarks:
+    If a custom IPV6_RIID_PR_FNC is not provided, then this function CANNOT be NULL!
+   
+    If the function returns a value < 16 bytes, then the RID generation will fail!
+
+    Additional notes from the RFC 7217:
+        - The function should generate a secret key that is not known by the attacker.
+        - The secret key SHOULD be of at least 128 bits.
+        - It MUST be initialized to a pseudo-random number (see [RFC4086] for randomness requirements for security)
+          when the operating system is installed or when the IPv6 protocol stack is "bootstrapped" for the first time.
+        - An implementation MAY provide the means for the system administrator to display and change the secret key.
+
+ */
+typedef size_t (*IPV6_RIID_SECRET_KEY_FNC)(TCPIP_NET_HANDLE hNet, const uint8_t** pSecretKey);
+
+
+// *****************************************************************************
+/* 
+  Enumeration:
+    TCPIP_IPV6_CONFIG_FLAGS 
+
+  Summary:
+    This enumeration is used to initialize the IPv6 module
+
+  Description:
+    Flags for the IPv6 module configuration and initialization
+
+  Remarks:
+    16 bits supported only
+ */
+typedef enum
+{
+     TCPIP_IPV6_FLAG_NONE                      = 0,
+     TCPIP_IPV6_FLAG_RANDOM_INTERFACE_ID       = 0x0001,    // generate a random interface ID in IP addresses
+                                                            // TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE shoud be defined and != 0
+     
+     // More flags will be eventually added
+
+} TCPIP_IPV6_CONFIG_FLAGS;
+
+// *****************************************************************************
+/* 
   Structure:
     TCPIP_IPV6_MODULE_CONFIG
 
@@ -492,8 +662,28 @@ typedef const void * IPV6_HANDLE; // Pointer to IPv6 object
  */
 typedef struct
 {
-    uint32_t        rxfragmentBufSize;      // RX fragmented buffer size
-    uint32_t        fragmentPktRxTimeout;   // fragmented packet time out value
+    uint32_t                    rxfragmentBufSize;      // RX fragmented buffer size
+    uint32_t                    fragmentPktRxTimeout;   // fragmented packet time out value
+
+    // members used only if TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE != 0 ! 
+    IPV6_RIID_PR_FNC            pRiidFnc;   // Random Interface ID generation function pointer
+                                            // See the notes from the IPV6_RIID_PR_FNC definition.
+                                            // Could be NULL and a default SHA1 function will be used. 
+    IPV6_RIID_NET_IFACE_FNC     pNetIfaceFnc;   // Net_Iface generation function pointer
+                                            // See the notes from the IPV6_RIID_NET_IFACE_FNC definition.
+                                            // Could be NULL and a default interface Link-layer address will be used. 
+        
+    IPV6_RIID_NET_ID_FNC        pNetworkIdFnc;  // Optional network ID get function pointer
+                                            // Could be NULL and the Network_ID parameter will be skipped
+                                            // See the notes from the IPV6_RIID_NET_ID_FNC definition.
+                                            //
+    IPV6_RIID_SECRET_KEY_FNC    pSecretKeyFnc;  // Secret key function to be used in the feneration of the RID
+                                            // This cannot be NULL if pRiidFnc == NULL!
+                                            // See the notes from the IPV6_RIID_SECRET_KEY_FNC definition.
+                                            //
+    // end of TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE != 0 ! members
+
+    TCPIP_IPV6_CONFIG_FLAGS     configFlags;    // configuration flags
 }TCPIP_IPV6_MODULE_CONFIG;
 
 // *****************************************************************************
@@ -616,7 +806,7 @@ typedef struct _IPV6_PACKET
     (ULA) generation.
 
   Remarks:
-    None.
+    8 bit values only.
  */
 typedef enum
 {
@@ -699,7 +889,7 @@ typedef enum
     This enumeration provides a list of possible flags for the IPv6 neighbor API
 
   Remarks:
-    None.
+    8 bit values only.
  */
 typedef enum
 {

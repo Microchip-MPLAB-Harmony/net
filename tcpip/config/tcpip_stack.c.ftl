@@ -421,10 +421,38 @@ const TCPIP_DNSS_MODULE_CONFIG tcpipDNSServerInitData =
 
 <#if (tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true>
 /*** IPv6 Initialization Data ***/
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_ENABLE)?has_content && (tcpipIPv6.TCPIP_IPV6_RIID_ENABLE) == true>
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_SELECTION)?has_content && (tcpipIPv6.TCPIP_IPV6_RIID_SELECTION) == "RIID Default Generation">
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_SEC_KEY_F)?has_content>
+extern size_t ${tcpipIPv6.TCPIP_IPV6_RIID_SEC_KEY_F}(TCPIP_NET_HANDLE hNet, const uint8_t** pSecretKey);
+</#if>
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_NET_IFACE_F)?has_content>
+extern size_t ${tcpipIPv6.TCPIP_IPV6_RIID_NET_IFACE_F}(TCPIP_NET_HANDLE hNet, const uint8_t** pNetworkID);
+</#if>
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_NET_ID_F)?has_content>
+extern size_t ${tcpipIPv6.TCPIP_IPV6_RIID_NET_ID_F}(TCPIP_NET_HANDLE hNet, const uint8_t** pNetIface);
+</#if>
+<#else>    
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_PRF)?has_content>
+extern bool ${tcpipIPv6.TCPIP_IPV6_RIID_PRF}(TCPIP_NET_HANDLE hNet, IPV6_ADDR* ip6Addr, uint8_t prefixLen, uint8_t dadCounter);
+</#if>
+</#if>
+</#if>
 const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData = 
 {
     .rxfragmentBufSize      = TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE,
     .fragmentPktRxTimeout   = TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT,
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_ENABLE)?has_content && (tcpipIPv6.TCPIP_IPV6_RIID_ENABLE) == true>
+<#if (tcpipIPv6.TCPIP_IPV6_RIID_SELECTION)?has_content && (tcpipIPv6.TCPIP_IPV6_RIID_SELECTION) == "RIID Default Generation">
+    .pSecretKeyFnc          = TCPIP_IPV6_RIID_SEC_KEY_F,
+    .pNetIfaceFnc           = TCPIP_IPV6_RIID_NET_IFACE_F,
+    .pNetworkIdFnc          = TCPIP_IPV6_RIID_NET_ID_F,
+<#else>    
+    .pRiidFnc               = TCPIP_IPV6_RIID_PRF,
+</#if>
+    .configFlags            = TCPIP_IPV6_START_FLAGS,
+</#if>
+</#if>
 };
 
 <#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>
@@ -450,7 +478,7 @@ const TCPIP_DHCPV6_MODULE_CONFIG  tcpipDhcpcv6InitData =
     .msgBufferSize              = TCPIP_DHCPV6_MESSAGE_BUFFER_SIZE,        
 };
 </#if>
-</#if>
+
 
 <#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
 /*** IPv4 Initialization Data ***/

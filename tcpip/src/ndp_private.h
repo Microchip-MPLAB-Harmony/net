@@ -52,9 +52,8 @@ Microchip or any third party.
 // Private types
 //***************
 #define DUPLICATE_ADDR_DETECT_TRANSMITS         3
+#define DUPLICATE_ADDR_DETECT_RETRIES           3
 #define DUPLICATE_ADDR_DISCOVERY_THREADS        4
-
-#define IPV6_INTERFACE_ID_SIZE                  64u
 
 #define DAD_UNAVAILABLE                         -1
 #define DAD_OK                                  0
@@ -77,7 +76,7 @@ void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, uint8_t 
 
 char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer);
 
-void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength);
+bool TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * destination, IPV6_ADDR * prefix, uint8_t prefixLength);
 
 IPV6_ADDR_STRUCT * TCPIP_NDP_TentativeAddressPromote (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * entryLocation);
 

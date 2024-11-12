@@ -20,6 +20,27 @@ source software license terms, no license or other rights, whether express or
 implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 """
+TCPIP_IPV6_RIID_TYPES = ["RIID Default Generation", "RIID Custom Generation"]
+
+def tcpipIPv6RiidDefaultVisible(symbol, event):
+    if (event["value"] == TCPIP_IPV6_RIID_TYPES[0]):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipIPv6RiidCustomVisible(symbol, event):
+    if (event["value"] == TCPIP_IPV6_RIID_TYPES[1]):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipIPv6RiidFlagVisible(symbol, event):
+    if (event["value"] == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+    
 
     
 def instantiateComponent(tcpipIPv6Component):
@@ -203,7 +224,77 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIPv6G3PlcRouterEnable.setDefaultValue(False)
     tcpipIPv6G3PlcRouterEnable.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_G3_PLC_SUPPORT"])
 
+    # Enable IPv6 RIID Generation
+    tcpipIPv6RiidEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_RIID_ENABLE", tcpipIPv6AdvSettings)
+    tcpipIPv6RiidEnable.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidEnable.setLabel("Enable RIID Generation")
+    tcpipIPv6RiidEnable.setVisible(True)
+    tcpipIPv6RiidEnable.setDescription("Enable Random Interface ID Generation")
+    tcpipIPv6RiidEnable.setDefaultValue(False)
     
+    # RIID Generation Selection
+    tcpipIPv6RiidSelection = tcpipIPv6Component.createComboSymbol("TCPIP_IPV6_RIID_SELECTION", tcpipIPv6RiidEnable, TCPIP_IPV6_RIID_TYPES)
+    tcpipIPv6RiidSelection.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidSelection.setLabel("Select IPv6 RIID Generation")
+    tcpipIPv6RiidSelection.setVisible(False)
+    tcpipIPv6RiidSelection.setDescription("RIID Generation Selection")
+    tcpipIPv6RiidSelection.setDefaultValue("RIID Default Generation")
+    tcpipIPv6RiidSelection.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_RIID_ENABLE"])
+
+    # RIID Default Settings
+    # RIID Secret Key function
+    tcpipIPv6RiidSecKeyF = tcpipIPv6Component.createStringSymbol("TCPIP_IPV6_RIID_SEC_KEY_F", tcpipIPv6RiidSelection)
+    tcpipIPv6RiidSecKeyF.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidSecKeyF.setLabel("IPv6 RIID Secret Key function")
+    tcpipIPv6RiidSecKeyF.setVisible(True)
+    tcpipIPv6RiidSecKeyF.setDescription("Mandatory Custom IPv6 Secret Key function for generating the RIID")
+    tcpipIPv6RiidSecKeyF.setDefaultValue("")
+    tcpipIPv6RiidSecKeyF.setDependencies(tcpipIPv6RiidDefaultVisible, ["TCPIP_IPV6_RIID_SELECTION"])
+    
+    # RIID Default Settings
+    # RIID NET_IFACE function
+    tcpipIPv6RiidNetIfaceF = tcpipIPv6Component.createStringSymbol("TCPIP_IPV6_RIID_NET_IFACE_F", tcpipIPv6RiidSelection)
+    tcpipIPv6RiidNetIfaceF.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidNetIfaceF.setLabel("IPv6 RIID NET_IFACE function")
+    tcpipIPv6RiidNetIfaceF.setVisible(True)
+    tcpipIPv6RiidNetIfaceF.setDescription("Optional IPv6 NET_IFACE function for generating the RIID")
+    tcpipIPv6RiidNetIfaceF.setDefaultValue("")
+    tcpipIPv6RiidNetIfaceF.setDependencies(tcpipIPv6RiidDefaultVisible, ["TCPIP_IPV6_RIID_SELECTION"])
+
+    # RIID Default Settings
+    # RIID NET_ID function
+    tcpipIPv6RiidNetIdF = tcpipIPv6Component.createStringSymbol("TCPIP_IPV6_RIID_NET_ID_F", tcpipIPv6RiidSelection)
+    tcpipIPv6RiidNetIdF.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidNetIdF.setLabel("IPv6 RIID NET_ID function")
+    tcpipIPv6RiidNetIdF.setVisible(True)
+    tcpipIPv6RiidNetIdF.setDescription("Optional IPv6 NET_ID function for generating the RIID")
+    tcpipIPv6RiidNetIdF.setDefaultValue("")
+    tcpipIPv6RiidNetIdF.setDependencies(tcpipIPv6RiidDefaultVisible, ["TCPIP_IPV6_RIID_SELECTION"])
+
+    # RIID Custom PRF function
+    tcpipIPv6RiidPrF = tcpipIPv6Component.createStringSymbol("TCPIP_IPV6_RIID_PRF", tcpipIPv6RiidSelection)
+    tcpipIPv6RiidPrF.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIPv6RiidPrF.setLabel("IPv6 RIID PRF function")
+    tcpipIPv6RiidPrF.setVisible(False)
+    tcpipIPv6RiidPrF.setDescription("Custom IPv6 PRF function for generating the RIID")
+    tcpipIPv6RiidPrF.setDefaultValue("")
+    tcpipIPv6RiidPrF.setDependencies(tcpipIPv6RiidCustomVisible, ["TCPIP_IPV6_RIID_SELECTION"])
+    
+    # IPv6 Configuration Flags Settings
+    tcpipIpv6ConfigFlag = tcpipIPv6Component.createMenuSymbol(None, tcpipIPv6AdvSettings)
+    tcpipIpv6ConfigFlag.setLabel("Configuration Flags")
+    tcpipIpv6ConfigFlag.setVisible(True)
+    tcpipIpv6ConfigFlag.setDescription("IPv6 Configuration Flags Settings")
+
+    # IPv6 start with RIID option
+    tcpipIpv6ConfigFlagStartRiid = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_CONFIG_FLAG_RIID", tcpipIpv6ConfigFlag)
+    tcpipIpv6ConfigFlagStartRiid.setHelp("mcc_h3_ipv6_configurations")
+    tcpipIpv6ConfigFlagStartRiid.setLabel("IPv6 RIID Generation option")
+    tcpipIpv6ConfigFlagStartRiid.setVisible(False)
+    tcpipIpv6ConfigFlagStartRiid.setDescription("Start IPv6 with RIID Generation")
+    tcpipIpv6ConfigFlagStartRiid.setDefaultValue(False)
+    tcpipIpv6ConfigFlagStartRiid.setDependencies(tcpipIPv6RiidFlagVisible, ["TCPIP_IPV6_RIID_ENABLE"])
+
     tcpipIpv6heapdependency = ["tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
         
     # IPv6 Heap Size

@@ -60,6 +60,29 @@ typedef struct
     unsigned char NextHeader;
 } IPV6_PSEUDO_HEADER;
 
+#if defined(TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE) && (TCPIP_IPV6_RANDOM_INTERFACE_ID_ENABLE != 0)
+#define TCPIP_IPV6_RIID_ENABLED   1
+#else
+#define TCPIP_IPV6_RIID_ENABLED   0
+#endif
+
+// IPv6 module configuration descriptor:
+// global settings per module
+typedef struct
+{
+    uint16_t        configFlags;            // a TCPIP_IPV6_CONFIG_FLAGS value
+    uint16_t        pad;                    // padding, not used
+    uint32_t        rxfragmentBufSize;      // RX fragmented buffer size
+    uint32_t        fragmentPktRxTimeout;   // fragmented packet timeout value
+#if (TCPIP_IPV6_RIID_ENABLED != 0)    
+    IPV6_RIID_PR_FNC        riidPrF;        // Random Interface ID generation function - optional
+    IPV6_RIID_NET_IFACE_FNC riidNetIfaceF;  // Net_Iface generation function - optional
+    IPV6_RIID_NET_ID_FNC    riidNetIdF;     // network_ID generation function - optional
+    IPV6_RIID_SECRET_KEY_FNC riidKeyF;      // secret key generation function - mandatory if riidPrF == NULL
+#endif  // TCPIP_IPV6_RIID_ENABLED != 0
+
+}TCPIP_IPV6_CONFIG_DCPT;
+
 typedef struct
 {
     IPV6_HEAP_NDP_DR_ENTRY * currentDefaultRouter;
@@ -81,10 +104,7 @@ typedef struct
     uint8_t initState;
     uint8_t policyPreferTempOrPublic;
     uint8_t g3PanIdSet;                         // The G3-PLC network PAN_Id has been set for this interface   
-    // IPv6 runtime configuration parameters.
-    uint32_t        rxfragmentBufSize;  // RX fragmented buffer size
-    uint32_t        fragmentPktRxTimeout;  // fragmented packet timeout value
-    uint16_t        g3PanId;                  // PAN_Id for a G3 network
+    uint16_t        g3PanId;                    // PAN_Id for a G3 network
     uint16_t        pad16;
 } IPV6_INTERFACE_CONFIG;
 
@@ -825,6 +845,7 @@ void TCPIP_IPV6_ClientsNotify(TCPIP_NET_IF* pNetIf, IPV6_EVENT_TYPE evType, cons
 
 IPV6_INTERFACE_CONFIG* TCPIP_IPV6_InterfaceConfigGet(const TCPIP_NET_IF* pNetIf);
 
+const TCPIP_IPV6_CONFIG_DCPT* TCPIP_IPV6_ConfigDcptGet(void);
 
 /*****************************************************************************
   Function:
@@ -1038,5 +1059,47 @@ void TCPIP_IPV6_SetPacketMacAcknowledge(IPV6_PACKET * ptrPacket, TCPIP_MAC_PACKE
      This function should be called by the IPv6 module once it's done processing/transmitting a IPv6 packet.
  */
 void TCPIP_IPV6_PacketAck(IPV6_PACKET * ptrPacket, bool success);
+
+// IPv6 Interface Identifier length, in bits. Fixed for this implementation
+#define IPV6_INTERFACE_ID_SIZE          64U
+
+// corresponding offset in the IPv6 address, bytes
+#define IPV6_INTERFACE_ID_OFFSET        8U
+
+// minimum accepted secret key size, bytes
+#define IPV6_RIID_SECRET_KEY_MIN_SIZE   16U
+
+// default DAD retries for RIID generation
+#define IPV6_RIID_IDGEN_RETRIES         3U
+
+/*****************************************************************************
+  Function:
+    bool TCPIP_IPV6_AddressInterfaceIDSet (TCPIP_NET_IF * pNetIf, IPV6_ADDR *pAddress, uint8_t prefixLength, uint8_t DAD_Counter)
+
+  Summary:
+    Sets the 64-bit interface ID in an IPv6 address.
+
+  Description:
+    Sets the 64-bit interface ID in an IPv6 address
+
+  Precondition:
+    The network prefix is set in the address structure
+
+  Parameters:
+    pNetIf - The interface
+    pAddress - The IPv6 address where the interface ID is set.
+    prefixLength - The length of the address prefix
+    dadCounter - The Duplicate Address Detection Counter
+
+  Returns:
+    true  - On success
+    false - Failure to indicate an error occurred  
+
+  Remarks:
+    None
+
+  ***************************************************************************/
+bool TCPIP_IPV6_AddressInterfaceIDSet (TCPIP_NET_IF * pNetIf, IPV6_ADDR *pAddress, uint8_t prefixLen, uint8_t dadCounter);
+
 
 #endif // _IPV6_MANAGER_H_
