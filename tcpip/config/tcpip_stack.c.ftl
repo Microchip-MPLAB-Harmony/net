@@ -453,7 +453,6 @@ const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData =
     .configFlags            = TCPIP_IPV6_START_FLAGS,
 </#if>
 };
-</#if>
 
 <#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>
 /*** DHCPv6 client Initialization Data ***/
@@ -478,7 +477,7 @@ const TCPIP_DHCPV6_MODULE_CONFIG  tcpipDhcpcv6InitData =
     .msgBufferSize              = TCPIP_DHCPV6_MESSAGE_BUFFER_SIZE,        
 };
 </#if>
-
+</#if>
 
 <#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
 /*** IPv4 Initialization Data ***/
