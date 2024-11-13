@@ -452,8 +452,8 @@ const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData =
 </#if>
     .configFlags            = TCPIP_IPV6_START_FLAGS,
 </#if>
-</#if>
 };
+</#if>
 
 <#if (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT)?has_content && (tcpipDhcpcv6.TCPIP_STACK_USE_DHCPV6_CLIENT) == true>
 /*** DHCPv6 client Initialization Data ***/
