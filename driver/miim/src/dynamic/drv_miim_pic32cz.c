@@ -1,5 +1,5 @@
 /*******************************************************************************
-  MIIM Driver Device API for SAM PIC32CZ devices
+  MIIM Driver Device API for PIC32CZ CA8 & CA9 devices
 
   Company:
     Microchip Technology Inc.
@@ -8,7 +8,7 @@
     drv_miim_pic32cz.c
 
   Summary:
-    MIIM driver device API for SAM platform - PIC32CZ.
+    MIIM driver device API for platform - PIC32CZ CA8 & CA9.
 
   Description:
     This file contains routines for MIIM driver register access.

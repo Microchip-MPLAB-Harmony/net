@@ -21,7 +21,7 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 -->
 <#lt><#if (TCPIP_INTMAC_DEVICE)?has_content>  
-    <#lt><#if (((TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((TCPIP_INTMAC_DEVICE) == "SAMRH71") || ((TCPIP_INTMAC_DEVICE) == "PIC32CZ") || ((TCPIP_INTMAC_DEVICE) == "SAMA7G") || ((TCPIP_INTMAC_DEVICE) == "SAMA7D6") || ((TCPIP_INTMAC_DEVICE) == "SAM9X7"))> 
+    <#lt><#if (((TCPIP_INTMAC_DEVICE) == "SAME7x_V7x") || ((TCPIP_INTMAC_DEVICE) == "SAMA5D2") || ((TCPIP_INTMAC_DEVICE) == "SAMRH71") || ((TCPIP_INTMAC_DEVICE) == "PIC32CZCA8") || ((TCPIP_INTMAC_DEVICE) == "PIC32CZCA9") || ((TCPIP_INTMAC_DEVICE) == "SAMA7G") || ((TCPIP_INTMAC_DEVICE) == "SAMA7D6") || ((TCPIP_INTMAC_DEVICE) == "SAM9X7"))> 
         <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"]?has_content>   
             <#lt><#if .vars["TCPIP_${GMAC_PERIPHERAL_INSTANCE?string}_RX_QUE_FILTER_EN"] == true>  
                 

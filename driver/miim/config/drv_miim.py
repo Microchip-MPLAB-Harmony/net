@@ -36,6 +36,10 @@ def get_processor():
         processor = "PIC32CXSG41"
     elif (re.match("PIC32CX\d*SG61", processor) != None):
         processor = "PIC32CXSG41"
+    elif (re.match("PIC32CZ\d*CA8", processor) != None):
+        processor = "PIC32CZCA8"
+    elif (re.match("PIC32CZ\d*CA9", processor) != None):
+        processor = "PIC32CZCA9"
 
     return processor
 
@@ -237,7 +241,7 @@ def instantiateComponent(drvMiimComponent):
     if (("SAME7" in processor) or ("SAMV7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or 
         ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor) or ("SAMA7G" in processor) or ("SAM9X7" in processor) or ("SAMA7D6" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
-    elif ("PIC32CZ" in processor): 
+    elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor): 
         drv_miim_xxx_file = "drv_miim_pic32cz.c"
     elif (("WBZ653" in processor) or ("PIC32CXBZ6" in dev_series)):
         drv_miim_xxx_file = "drv_miim_pic32cxbz6.c"
@@ -361,7 +365,8 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
         
 def drvMiimSetIntMacId(symbol, event):
     if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):
-        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZ") or 
+        if((Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZCA8") or 
+            (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CZCA9") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CK") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "WBZ653") or 
             (Database.getSymbolValue("drvGmac", "TCPIP_INTMAC_DEVICE") == "PIC32CXBZ6")):  

@@ -6,7 +6,7 @@
 
   Description:
     This library provides a low-level abstraction of the Ethernet module
-    on Microchip PIC32MX family microcontrollers with a convenient C language
+    on Microchip PIC32CZ CA8 & CA9 family microcontrollers with a convenient C language
     interface.  It can be used to simplify low-level access to the module
     without the necessity of interacting directly with the module's registers,
     thus hiding differences from one microcontroller variant to another.

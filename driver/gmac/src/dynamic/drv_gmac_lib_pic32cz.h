@@ -13,7 +13,7 @@
 
   Description:
     This library provides a low-level abstraction of the Ethernet module
-    on Microchip PIC32CZ family 
+    on Microchip PIC32CZ CA8 & CA9 family 
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*

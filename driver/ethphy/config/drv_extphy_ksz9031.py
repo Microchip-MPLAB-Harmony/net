@@ -75,7 +75,7 @@ def instantiateComponent(drvExtPhyKsz9031Component):
     
     if Peripheral.moduleExists("GMAC"):
         drvExtPhyKsz9031ConfigRmii.setDefaultValue(True)
-    elif "PIC32CZ" in Variables.get("__PROCESSOR"):
+    elif (("PIC32CZ" in Variables.get("__PROCESSOR")) and (("CA8" in Variables.get("__PROCESSOR")) or ("CA9" in Variables.get("__PROCESSOR")))) :
         drvExtPhyKsz9031ConfigRmii.setDefaultValue(True)
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         drvExtPhyKsz9031ConfigRmii.setDefaultValue(False)

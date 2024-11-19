@@ -71,7 +71,7 @@ Microchip or any third party.
     <#elseif ((drvEmac1??) && (drvEmac1.TCPIP_USE_ETH_MAC  == true))>
         <#lt>#define DRV_MIIM_ETH_MODULE_ID_0              EMAC1_BASE_ADDRESS
     <#elseif ((drvGmac??) && (drvGmac.TCPIP_USE_ETH_MAC  == true))>
-        <#if ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CZ")) || 
+        <#if ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && ((drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CZCA8") || (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CZCA9"))) || 
                 ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CK")) || 
                 ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "WBZ653")) || 
                 ((drvGmac.TCPIP_INTMAC_DEVICE?has_content) && (drvGmac.TCPIP_INTMAC_DEVICE  == "PIC32CXBZ6"))>

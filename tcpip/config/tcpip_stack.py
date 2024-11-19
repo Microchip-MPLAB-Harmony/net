@@ -61,6 +61,10 @@ def get_processor():
         processor = "PIC32CXSG41"
     elif (re.match("PIC32CX\d*SG61", processor) != None):
         processor = "PIC32CXSG41"
+    elif (re.match("PIC32CZ\d*CA8", processor) != None):
+        processor = "PIC32CZCA8"
+    elif (re.match("PIC32CZ\d*CA9", processor) != None):
+        processor = "PIC32CZCA9"
 
     return processor
 
@@ -660,7 +664,7 @@ def instantiateComponent(tcpipStackComponent):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"
-    elif ("PIC32CZ" in processor) or ("PIC32CK" in processor):   
+    elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor) or ("PIC32CK" in processor):   
         macName = "ETH"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"

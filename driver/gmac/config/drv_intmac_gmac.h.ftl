@@ -298,7 +298,7 @@ Microchip or any third party.
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.CLK_MCK_FREQ}
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAME5x">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MAIN_CLOCK_FREQUENCY}
-        <#lt><#elseif TCPIP_INTMAC_DEVICE == "PIC32CZ">
+        <#lt><#elseif ((TCPIP_INTMAC_DEVICE == "PIC32CZCA8") || (TCPIP_INTMAC_DEVICE == "PIC32CZCA9"))>
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 (${core.MAIN_CLOCK_FREQUENCY}/${core.CONF_MCLK_CLKDIV1})           
         <#lt><#elseif TCPIP_INTMAC_DEVICE == "SAMA5D2">
             <#lt>#define TCPIP_INTMAC_PERIPHERAL_CLK                 ${core.MCK_CLK_FREQUENCY}
@@ -343,7 +343,7 @@ Microchip or any third party.
     <#lt>#define DRV_${GMAC_PERIPHERAL_INSTANCE}_RMII_MODE                      ${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_RMII_VALUE"]}
 
     <#lt><#if (TCPIP_INTMAC_DEVICE)?has_content>
-        <#lt><#if ((TCPIP_INTMAC_DEVICE == "SAME7x_V7x") || (TCPIP_INTMAC_DEVICE == "PIC32CZ") || (TCPIP_INTMAC_DEVICE == "SAMRH71"))>
+        <#lt><#if ((TCPIP_INTMAC_DEVICE == "SAME7x_V7x") || (TCPIP_INTMAC_DEVICE == "PIC32CZCA8") || (TCPIP_INTMAC_DEVICE == "PIC32CZCA9") || (TCPIP_INTMAC_DEVICE == "SAMRH71"))>
             <#lt><#if .vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_NO_CACHE_CONFIG"]?has_content>
                 <#lt><#if .vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_NO_CACHE_CONFIG"] == true>
                     <#lt>#define DRV_${GMAC_PERIPHERAL_INSTANCE}_DESCRIPTOR_ADDRESS                0x${.vars["DRV_${GMAC_PERIPHERAL_INSTANCE?string}_NOCACHE_MEM_ADDRESS"]}
