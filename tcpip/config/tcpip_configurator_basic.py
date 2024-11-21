@@ -173,7 +173,7 @@ def tcpipAutoConfigTcpipCmdEnable(symbol, event):
         res = Database.activateComponents(["sys_command"])
         res = Database.connectDependencies(autoConnectTableCmd)
         series = ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("series")
-        if(series == "SAME54") or (series == "SAME70") or (series == "SAMV71")or (series == "SAMA5D2"):
+        if(series == "SAME54") or (series == "SAME70") or (series == "SAMV71") or ("PIC32CZCA7" in series) or (series == "SAMA5D2"):
             #Todo: change to Database.sendMessage(); but need handleMessage() in sys_command
             Database.setSymbolValue("sys_command", "SYS_COMMAND_PRINT_BUFFER_SIZE", 2560)
         

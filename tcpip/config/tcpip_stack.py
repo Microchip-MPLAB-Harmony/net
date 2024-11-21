@@ -65,6 +65,8 @@ def get_processor():
         processor = "PIC32CZCA8"
     elif (re.match("PIC32CZ\d*CA9", processor) != None):
         processor = "PIC32CZCA9"
+    elif (re.match("PIC32CZ\d*CA7", processor) != None):
+        processor = "PIC32CZCA7"
 
     return processor
 
@@ -172,6 +174,8 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackDeviceFamily.setDefaultValue("SAME70")
     elif "SAMV71" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAMV71")
+    elif "PIC32CZCA7" in processor:
+        tcpipStackDeviceFamily.setDefaultValue("PIC32CZCA7")
     elif "SAME54" in processor:
         tcpipStackDeviceFamily.setDefaultValue("SAME54")
     elif "PIC32M" in processor:
@@ -660,7 +664,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # Interrupt Configuration Summary
     macName = "None"
-    if ("SAME7" in processor) or ("SAMV7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor) or ("PIC32CXSG41" in processor):
+    if ("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZCA7" in processor) or ("SAME5" in processor) or ("SAMRH7" in processor) or ("PIC32CXSG41" in processor):
         macName = "GMAC"
         intStringStart = "core.NVIC_"
         intStringEnd = "_0_ENABLE"

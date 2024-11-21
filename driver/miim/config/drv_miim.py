@@ -40,6 +40,8 @@ def get_processor():
         processor = "PIC32CZCA8"
     elif (re.match("PIC32CZ\d*CA9", processor) != None):
         processor = "PIC32CZCA9"
+    elif (re.match("PIC32CZ\d*CA7", processor) != None):
+        processor = "PIC32CZCA7"
 
     return processor
 
@@ -238,7 +240,7 @@ def instantiateComponent(drvMiimComponent):
     device_node = ATDF.getNode('/avr-tools-device-file/devices/device')
     dev_series = str(device_node.getAttribute("series"))
     processor =  get_processor()
-    if (("SAME7" in processor) or ("SAMV7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or 
+    if (("SAME7" in processor) or ("SAMV7" in processor) or ("PIC32CZCA7" in processor) or ("SAMRH" in processor) or ("SAME5" in processor) or 
         ("SAMA5D2" in processor) or ("PIC32CXSG41" in processor) or ("SAMA7G" in processor) or ("SAM9X7" in processor) or ("SAMA7D6" in processor)):
         drv_miim_xxx_file = "drv_miim_gmac.c"
     elif ("PIC32CZCA8" in processor) or ("PIC32CZCA9" in processor): 
