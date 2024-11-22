@@ -54,15 +54,15 @@ Microchip or any third party.
             <#lt>#define TCPIP_IF_PIC32MZW_ETHMAC   
         </#if>
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC">
-        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CZCA8")) || ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CZCA9"))) >
-            <#lt>#define TCPIP_IF_PIC32CZCA8_CA9_GMAC
-        <#elseif ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("SAM9X7"))>
+        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("SAM9X7"))>
             <#lt>#define TCPIP_IF_GMAC_SAM9X7  
         <#else>
             <#lt>#define TCPIP_IF_GMAC  
         </#if>
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "ETH">
-        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("WBZ65")) || ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CXBZ6")))>
+        <#if ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CZCA8")) || ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CZCA9"))) >
+            <#lt>#define TCPIP_IF_PIC32CZCA8_CA9_ETH
+        <#elseif ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?has_content) && (((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("WBZ65")) || ((tcpipNetConfig.TCPIP_STACK_NETWORK_DEV_SERIES)?contains("PIC32CXBZ6")))>
             <#lt>#define TCPIP_IF_PIC32CXBZ6_ETH 
         </#if>        
     <#elseif .vars["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${INDEX?string}"] = "GMAC0">

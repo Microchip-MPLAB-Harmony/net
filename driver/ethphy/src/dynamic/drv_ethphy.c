@@ -2070,10 +2070,10 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 #elif defined (TCPIP_IF_PIC32CXBZ6_ETH)
             hwFlags = ((ETH_REGS->ETH_UR & ETH_UR_Msk)== DRV_ETH_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;
             ethRes = DRV_ETHPHY_RES_OK;            
-#elif defined (TCPIP_IF_PIC32CZCA8_CA9_GMAC)
+#elif defined (TCPIP_IF_PIC32CZCA8_CA9_ETH)
             if (ETH_REGS->ETH_CTRLB & ETH_CTRLB_GMIIEN_Msk)
             {
-                if(ETH_REGS->ETH_NCFGR & ETH_NCFGR_GIGE_Msk)
+                if(ETH_REGS->ETH_CTRLB & ETH_CTRLB_GBITCLKREQ_Msk)
                 {
                     hwFlags = DRV_ETHPHY_CFG_GMII;
                 }
