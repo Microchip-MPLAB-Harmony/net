@@ -309,21 +309,7 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
     {
         ncfgr &= ~ETH_NCFGR_FD_Msk ;    
     }
-    
-    if(oFlags & TCPIP_ETH_OPEN_1000)
-    {
-        ncfgr |= (ETH_NCFGR_SPD_Msk | ETH_NCFGR_GIGE_Msk);
-    }
-    else if (oFlags & TCPIP_ETH_OPEN_100)
-    {
-        ncfgr &= ~ETH_NCFGR_GIGE_Msk;
-        ncfgr |= ETH_NCFGR_SPD_Msk;        
-    }
-    else
-    {
-        ncfgr &= ~(ETH_NCFGR_SPD_Msk | ETH_NCFGR_GIGE_Msk);
-    }
-
+        
     if(pauseType & TCPIP_ETH_PAUSE_TYPE_EN_RX)
     {
         ncfgr |= ETH_NCFGR_PEN_Msk ;
@@ -333,27 +319,36 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
         ncfgr &= ~ETH_NCFGR_PEN_Msk ;       
     }
     
-    pGmacRegs->ETH_NCFGR = ncfgr;
-    
-    // Select MII interface mode 
-    if(oFlags & TCPIP_ETH_OPEN_GMII)//GMII Mode
-    {        
+    //Speed & MII settings
+    if (oFlags & TCPIP_ETH_OPEN_1000)
+    {   //GMII
+        ncfgr |= (ETH_NCFGR_SPD_Msk | ETH_NCFGR_GIGE_Msk);
         pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1) | ETH_CTRLB_GBITCLKREQ(1);
         while(pGmacRegs->ETH_SYNCB);
     }
-    else if(oFlags & TCPIP_ETH_OPEN_MII)//MII Mode
+    else if (oFlags & TCPIP_ETH_OPEN_100)
     {
+        ncfgr &= ~ETH_NCFGR_GIGE_Msk;
+        ncfgr |= ETH_NCFGR_SPD_Msk;
         pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GBITCLKREQ_Msk;
-        pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1);
+        if (oFlags & TCPIP_ETH_OPEN_MII)
+        {   //MII
+            pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1);
+        }
+        else if (oFlags & TCPIP_ETH_OPEN_RMII)
+        {   //RMII
+            pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GMIIEN_Msk;
+        }
         while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
     }
-    else if(oFlags & TCPIP_ETH_OPEN_RMII)//RMII Mode
+    else
     {
+        ncfgr &= ~(ETH_NCFGR_SPD_Msk | ETH_NCFGR_GIGE_Msk);
         pGmacRegs->ETH_CTRLB &= ~(ETH_CTRLB_GMIIEN_Msk | ETH_CTRLB_GBITCLKREQ_Msk);
         while(pGmacRegs->ETH_SYNCB);
-        pGmacRegs->ETH_NCFGR &= ~ETH_NCFGR_GIGE_Msk;
-    }   
+    }
+ 
+    pGmacRegs->ETH_NCFGR = ncfgr;   
     
     // Reset Tx Indexes. After TXEN reset, the Transmit Queue Pointer will point to the start of the
     // transmit descriptor list.
