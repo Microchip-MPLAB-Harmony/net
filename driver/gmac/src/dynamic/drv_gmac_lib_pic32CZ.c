@@ -169,6 +169,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     {
         pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1) | ETH_CTRLB_GBITCLKREQ(1);
         while(pGmacRegs->ETH_SYNCB);
+        pGmacRegs->ETH_NCFGR |= ETH_NCFGR_GIGE(1);
     }
     else if (pMACDrv->sGmacData.gmacConfig.pPhyInit->phyFlags & DRV_ETHPHY_CFG_MII)//MII Mode
     {

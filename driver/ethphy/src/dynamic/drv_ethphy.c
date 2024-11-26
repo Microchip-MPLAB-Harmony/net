@@ -2073,7 +2073,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 #elif defined (TCPIP_IF_PIC32CZCA8_CA9_ETH)
             if (ETH_REGS->ETH_CTRLB & ETH_CTRLB_GMIIEN_Msk)
             {
-                if(ETH_REGS->ETH_CTRLB & ETH_CTRLB_GBITCLKREQ_Msk)
+                if(ETH_REGS->ETH_NCFGR & ETH_NCFGR_GIGE_Msk)
                 {
                     hwFlags = DRV_ETHPHY_CFG_GMII;
                 }
