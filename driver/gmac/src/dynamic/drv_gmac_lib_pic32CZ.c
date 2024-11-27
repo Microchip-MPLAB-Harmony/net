@@ -326,10 +326,17 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
         pGmacRegs->ETH_CTRLB |= ETH_CTRLB_GMIIEN(1) | ETH_CTRLB_GBITCLKREQ(1);
         while(pGmacRegs->ETH_SYNCB);
     }
-    else if (oFlags & TCPIP_ETH_OPEN_100)
+    else
     {
         ncfgr &= ~ETH_NCFGR_GIGE_Msk;
-        ncfgr |= ETH_NCFGR_SPD_Msk;
+        if (oFlags & TCPIP_ETH_OPEN_100)
+        {
+            ncfgr |= ETH_NCFGR_SPD_Msk;
+        }
+        else
+        {
+            ncfgr &= ~ETH_NCFGR_SPD_Msk;
+        }
         pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GBITCLKREQ_Msk;
         if (oFlags & TCPIP_ETH_OPEN_MII)
         {   //MII
@@ -339,12 +346,6 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
         {   //RMII
             pGmacRegs->ETH_CTRLB &= ~ETH_CTRLB_GMIIEN_Msk;
         }
-        while(pGmacRegs->ETH_SYNCB);
-    }
-    else
-    {
-        ncfgr &= ~(ETH_NCFGR_SPD_Msk | ETH_NCFGR_GIGE_Msk);
-        pGmacRegs->ETH_CTRLB &= ~(ETH_CTRLB_GMIIEN_Msk | ETH_CTRLB_GBITCLKREQ_Msk);
         while(pGmacRegs->ETH_SYNCB);
     }
  
