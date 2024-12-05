@@ -1107,7 +1107,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHan
             mySMTPMessage.username = postEmail.username;
             mySMTPMessage.password = postEmail.password;
             mySMTPMessage.to = postEmail.mailTo;
-            mySMTPMessage.from = "\"SMTP Service\" <mchpboard@picsaregood.com>";
+            mySMTPMessage.from = "mchpboard@picsaregood.com";
             mySMTPMessage.subject = "Microchip TCP/IP Stack Status Update";
 
             // set the buffer attachment
