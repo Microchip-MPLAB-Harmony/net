@@ -1,4 +1,50 @@
 # Microchip MPLAB® Harmony 3 Release Notes
+## Net Release v3.13.0 (December, 2024)
+### ADDITIONS AND UPDATES FOR v3.13.0:
+
+- **New Features**
+    - Addition of net support for PIC32CZ CA7 family of devices
+    - PIC32CX-BZ6 and WBZ653 family of devices net support
+    - Added Random Interface Identifier generation for IPv6
+
+- **Applications**
+  - MPLAB® Harmony 3 provides Net library application examples to accelerate learning and reduce the development cycles for your embedded systems with reusable software components. The applications examples are available in the [product family specific repository](apps/readme.md).
+
+- **Improvements and Bug Fixes**
+    - Updated net support for PIC32CZ CA8 & CA9 family of devices
+
+	-	The following table provides the list of improvements and bug fixes in the v3.13.0 release:
+
+		| Module        | Description |
+		| ------------- | ----------- |
+        | Ethernet PHY       	| Fixed the PHY interface mode selection on PIC32CZ CA8 & CA9 devices |
+        | SMTP Client       	| Fixed the syntax error in the SMTP message sender address |
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB® X IDE v6.20](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB® XC32 C/C++ Compiler v4.45](https://www.microchip.com/mplab/compilers) or later
+- Harmony net repository, v3.13.0
+- Harmony net demo apps repositories
+- MPLAB Code Configurator (MCC), v5.5.1 or later
+
+In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules (see net/package.xml):
+
+- Harmony core repository, v3.14.0
+- Harmony csp repository, v3.20.0
+- Harmony bsp repository, v3.21.1
+- Harmony crypto repository, v3.8.2
+- harmony-services repository, v1.5.0
+- wolfMQTT v1.11.1 (https://github.com/Microchip-MPLAB-Harmony/wolfMQTT/tree/v1.11.1) for demos requiring wolfMQTT support
+
+### KNOWN ISSUES
+- None
+
+
 ## Net Release v3.13.0-E1 (November, 2024)
 ### ADDITIONS AND UPDATES FOR v3.13.0-E1:
 
