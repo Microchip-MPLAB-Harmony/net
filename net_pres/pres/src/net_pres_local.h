@@ -47,6 +47,7 @@ extern "C" {
     {
         bool initialized;
         OSAL_MUTEX_HANDLE_TYPE presMutex;
+        NET_PRES_CBACK_HANDLE  sniCback;
         uint8_t numLayers;
         NET_PRES_TransportObject transObjectSS[NET_PRES_NUM_INSTANCE];
         NET_PRES_TransportObject transObjectSC[NET_PRES_NUM_INSTANCE];

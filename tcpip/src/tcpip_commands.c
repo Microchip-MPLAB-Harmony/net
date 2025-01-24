@@ -93,9 +93,13 @@ Microchip or any third party.
 #define _TCPIP_STACK_HDLC_COMMANDS
 #endif  // defined(TCPIP_STACK_USE_PPP_INTERFACE) && (TCPIP_STACK_HDLC_COMMANDS != 0)
 
-#if defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+#if defined(TCPIP_STACK_USE_WS_CLIENT) && (TCPIP_WSC_COMMANDS != 0)
+#define _TCPIP_COMMANDS_WSC
+#endif
+
+#if defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND) || defined(_TCPIP_COMMANDS_WSC)
 #define _TCPIP_STACK_COMMAND_TASK
-#endif // defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+#endif // defined(_TCPIP_COMMAND_PING4) || defined(_TCPIP_COMMAND_PING6) || defined(TCPIP_STACK_USE_DNS) || defined(_TCPIP_COMMANDS_MIIM) || defined(_TCPIP_STACK_PPP_ECHO_COMMAND) || defined(_TCPIP_COMMANDS_WSC)
 
 
 #if defined(TCPIP_STACK_COMMANDS_STORAGE_ENABLE) && (TCPIP_STACK_CONFIGURATION_SAVE_RESTORE != 0)
@@ -341,6 +345,10 @@ typedef enum
     TCPIP_CMD_STAT_PPP_START,       // ppp echo start
     TCPIP_PPP_CMD_DO_ECHO,          // do the job
     TCPIP_CMD_STAT_PPP_STOP = TCPIP_PPP_CMD_DO_ECHO,    // pppp echo stop
+
+    // WSC task status
+    TCPIP_CMD_STAT_WSC_OPEN,        // WSC has an open connection
+
 }TCPIP_COMMANDS_STAT;
 
 static SYS_CMD_DEVICE_NODE* pTcpipCmdDevice = 0;
@@ -466,7 +474,7 @@ uint32_t                    pppStartTick;
 static uint8_t  pppEchoBuff[TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE];
 static int      pppEchoSize = TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE;
 
-#endif
+#endif // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
 
 
 
@@ -507,6 +515,39 @@ static void _CommandModRunning(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)  
 static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
+
+#if defined(_TCPIP_COMMANDS_WSC)  
+static void F_Command_WsHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WscRate(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsRegister(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsPong(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsRxInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsForceRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void F_Command_WsAutoRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+
+static void Wsc_CmdInitialize(void);
+static void Wsc_CmdTask(void);
+static const char* Wsc_SNIHostName(NET_PRES_SKT_HANDLE_T handle);
+static void Wsc_PrintSettings(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv);
+static void Wsc_EventHandler(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_EVENT_TYPE evType, TCPIP_WSC_EV_INFO evInfo, const void* param);
+static void Wsc_SendCtrlFrame(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv, const char* message, TCPIP_WS_OP_CODE opCode);
+static TCPIP_WSC_RES Wsc_SendMsg(TCPIP_WSC_SEND_MSG_DCPT* txDcpt);
+static TCPIP_WSC_RES Wsc_ReadMsg(const void* rxHandle);
+static void Wsc_CloseConn(void);
+
+
+static void _CommandWsc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif
+
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -628,6 +669,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)    
     {"snmpv3",  _Command_SNMPv3USMSet,     ": snmpv3"},
 #endif    
+#if defined(_TCPIP_COMMANDS_WSC)
+    {"wsc",        _CommandWsc,                  ": WebSocket commands"},
+#endif  // defined(_TCPIP_COMMANDS_WSC)
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -690,6 +734,10 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
         miimHandle = 0;
         miimOpHandle = 0;
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
+
+#if defined(_TCPIP_COMMANDS_WSC)
+        Wsc_CmdInitialize();
+#endif  // defined(_TCPIP_COMMANDS_WSC)
     }
 
     commandInitCount++;
@@ -4099,7 +4147,14 @@ void TCPIP_COMMAND_Task(void)
             TCPIPCmd_PppEchoTask();
         }
 #endif  // defined(_TCPIP_STACK_PPP_ECHO_COMMAND)
+#if defined(_TCPIP_COMMANDS_WSC)  
+        if(tcpipCmdStat == TCPIP_CMD_STAT_WSC_OPEN)
+        {
+            Wsc_CmdTask();
+        }
+#endif  //  defined(_TCPIP_COMMANDS_WSC)  
     }
+
 }
 
 
@@ -8263,6 +8318,1031 @@ static void _Command_SNMPv3USMSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
     }
     
 }
+#endif
+
+#if defined(_TCPIP_COMMANDS_WSC)  
+typedef struct
+{
+    const char* cmdName;     // name of the WSC command
+    SYS_CMD_FNC cmdFnc;      // command function
+    const char* cmdHelp;        // brief command explanation
+}WSC_COMMAND_DCPT;
+
+// list of supported WSC commands
+static const WSC_COMMAND_DCPT wscCmdTbl[] = 
+{
+    {"help",    F_Command_WsHelp,       "WSC sub-command help"},
+    {"set",     F_Command_WsSet,        "sets the server parameters"},
+    {"preset",  F_Command_WsPreset,     "uses a preset parameter set"},
+    {"rate",    F_Command_WscRate,      "changes the WSC task rate, ms"},
+    {"open",    F_Command_WsOpen,       "opens a connection"},
+    {"close",   F_Command_WsClose,      "closes a connection"},
+    {"evreg",   F_Command_WsRegister,   "registers an event handler"},
+    {"stat",    F_Command_WsStat,       "current connection status"},
+    {"ping",    F_Command_WsPing,       "pings the server"},
+    {"pong",    F_Command_WsPong,       "pongs the server"},
+    {"msg",     F_Command_WsMsg,        "message to the server"},
+    {"rxinfo",  F_Command_WsRxInfo,     "current RX info"},
+    {"rxsize",  F_Command_WsRxSize,     "current RX buffer size"},
+    {"read",    F_Command_WsRead,       "read from the connection"},
+    {"fread",  F_Command_WsForceRead,  "forced read from the connection"},
+    {"auto-read",   F_Command_WsAutoRead,   "sets the auto-read option"},
+};
+
+// current WS server we want to connect to.
+// Used for preset servers:
+typedef struct
+{
+    const char* server;
+    const char* resource;
+    const char* proto;
+    uint16_t    port;
+}WSC_TEST_PRESET;
+
+// list of preset servers
+static const WSC_TEST_PRESET wsc_presets[] = 
+{
+// { server, resource, proto, port}
+    {"ws.ifelse.io", 0, 0, 80},
+    {"ws.ifelse.io", 0, 0, 443},
+    {"echo.websocket.org", 0, 0, 443},
+    {"497877863b54bfd9.octt.openchargealliance.org", "Mchp", "ocpp1.6", 16968},
+};
+
+// message to be sent for a connection close
+static TCPIP_WSC_CLOSE_CODE ws_close_code = TCPIP_WSC_CLOSE_GOING_AWAY;
+static const char* ws_close_msg = "The user has closed the connection!";    
+
+// messages used for pinging the server
+static const char* ws_ping_tbl[] =
+{
+    "Hello There, everybody!",
+    "This is a slightly longer message, just for testing the functionality",
+    "This is the longest message for a ping to the server. Test that it goes through without problems. Makes sure everything is OK",
+};
+
+// messages for sending to the server
+static const char* ws_msg_tbl[] =
+{
+    "Hello There, everybody!",
+    "Slightly longer message, just for the fun/test of it",
+    "This is a really long message to test it it goes through without problems. Needs to be tested\
+        Just to make sure everything is OK",
+    "Long message, i.e. beyond 125 characters. Something like >= 250 chars would do. Testing this too\
+        but from multiple write operations, possibly. Give it a try, see if it is long enough for this test!\
+        Well, let's add some more lines, just to be sure...\
+        And this is the last line!",
+    " Now a really long message combination of multiple lines. For a really long message it'd have to send it in multiple chunks!\r\n\
+        Line number 1 of the long message\r\n\
+        Line number 2 of the long message\r\n\
+        Line number 3 of the long message\r\n\
+        Line number 4 of the long message\r\n\
+        Line number 5 of the long message\r\n\
+        Line number 6 of the long message\r\n\
+        Line number 7 of the long message\r\n\
+        Line number 8 of the long message\r\n\
+        Line number 9 of the long message\r\n\
+        Line number 10 of the long message\r\n\
+        Line number 11 of the long message\r\n\
+        Line number 12 of the long message\r\n\
+        Line number 13 of the long message\r\n\
+        Line number 14 of the long message\r\n\
+        Line number 15 of the long message\r\n\
+        Line number 16 of the long message\r\n\
+        Line number 17 of the long message\r\n\
+        Line number 18 of the long message\r\n\
+        Line number 19 of the long message\r\n\
+        Last line (number 20) of the long message\r\n",
+};
+
+
+// dynamic data for the WSC commands
+
+static int wscTaskInited = 0;   // 0 - needs to be initialized
+                                // 1 - initialized OK
+                                // < 0 - initialization failed
+
+#define WSC_CMD_TASK_RATE_MIN       5   // minimum value 5 ms
+#define WSC_CMD_TASK_RATE_DEFAULT   100 // default value 100 ms
+
+static uint32_t wscCmdTaskRate;     // WSC task rate
+
+static bool     wscDisAutoRead = false; // enable/disable WSC task automatically read of the pending messages
+
+static TCPIP_WSC_CONN_HANDLE wscConnHandle = NULL;      // current WSC connection handle
+
+
+// current server to connect to
+static char wsc_server[64 + 1] = "";
+// current resource on the server
+static char wsc_resource[64 + 1] = "";
+// current prototype to request
+static char wsc_proto[16 + 1] = "";
+// current port to connect to
+static uint16_t wsc_port = 80U;
+// if proto usage is enforced
+static int wsc_proto_enforced = 1;
+// current base settings for the connection flags
+static uint16_t wsc_flags = (uint16_t)TCPIP_WSC_CONN_FLAG_NONE;
+
+// current event handle
+static TCPIP_WSC_EV_HANDLE wsc_EvHandle = NULL;
+static TCPIP_WSC_CONN_HANDLE wsc_EvConnHandle = NULL;   // the connection handle used for the event registration
+                                                        // copy of the wscConnHandle
+
+// current pending message to TX
+static TCPIP_WSC_SEND_MSG_DCPT wsc_TxMsgDcpt;
+static TCPIP_WSC_SEND_MSG_DCPT* pWsc_TxMsgDcpt = NULL;
+
+// buffer for reading messages from the server
+static union
+{
+    uint8_t uBuffer[512];
+    char    cBuffer[513];
+}U_WSC_RD_BUFF;
+
+// current read message handle
+static const void* wsc_RxMsgHandle = NULL;
+static size_t wsc_bReadSize = 100;      // size of the buffer to use for a read operation
+
+static void Wsc_CmdInitialize(void)
+{
+    wscCmdTaskRate = WSC_CMD_TASK_RATE_DEFAULT;
+
+    wsc_server[sizeof(wsc_server) - 1U] = '\0';
+    wsc_resource[sizeof(wsc_resource) - 1U] = '\0';
+    wsc_proto[sizeof(wsc_proto) - 1U] = '\0';
+
+    SYS_MODULE_OBJ presObj = NET_PRES_ModuleObjGet(0);
+    NET_PRES_CBACK_HANDLE sniCback = NET_PRES_SniCallbackRegister(presObj, Wsc_SNIHostName); 
+    if(sniCback == NULL)
+    {
+        SYS_CONSOLE_MESSAGE("WSC: Failed to register SNI callback!\r\n");
+        wscTaskInited = -1;
+        return;
+    }
+
+    wscTaskInited = 1;
+    SYS_CONSOLE_MESSAGE("WSC: Initialized WSC Task!\r\n");
+}
+
+
+// WSC Task function
+static void Wsc_CmdTask(void)
+{
+    if(wscTaskInited > 0)
+    {
+        // check for pending TX tasks
+        if(pWsc_TxMsgDcpt != NULL)
+        {
+            TCPIP_WSC_RES res = Wsc_SendMsg(pWsc_TxMsgDcpt);
+            if(res <= 0)
+            {   // done one way or another
+                pWsc_TxMsgDcpt = NULL;
+            }
+            // else keep sending
+        }
+
+        // check for pending RX tasks
+        if(!wscDisAutoRead && wsc_RxMsgHandle != NULL)
+        {
+            TCPIP_WSC_RES res = Wsc_ReadMsg(wsc_RxMsgHandle);
+            if(res <= 0)
+            {   // done one way or another
+                wsc_RxMsgHandle = NULL;
+            }
+            // else keep reading
+        }
+    }
+}
+
+// function for registering the client SNI host name with wolfSSL
+static const char* Wsc_SNIHostName(NET_PRES_SKT_HANDLE_T handle)
+{
+    return wsc_server;
+}
+
+// WSC command functions
+static void _CommandWsc(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(wscTaskInited <= 0)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc commands not initialized. Restart!\r\n");
+    }
+
+    size_t ix;
+    const WSC_COMMAND_DCPT* pCDcpt;
+
+    if(argc < 2)
+    {
+        F_Command_WsHelp(pCmdIO, argc, argv);
+        return;
+    }
+
+    // execute the command
+    pCDcpt = wscCmdTbl; 
+    for(ix = 0; ix < sizeof(wscCmdTbl) / sizeof(*wscCmdTbl); ix++)
+    {
+        if(strcmp(argv[1], pCDcpt->cmdName) == 0)
+        {   // found it
+            pCDcpt->cmdFnc(pCmdIO, argc, argv);
+            return;
+        }
+        pCDcpt++;
+    }
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc - unknown command: %s\r\n", argv[1]);
+
+}
+
+static void F_Command_WsHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    size_t ix;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    const WSC_COMMAND_DCPT* pCDcpt = wscCmdTbl; 
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc supported sub-commands: \r\n");
+    for(ix = 0; ix < sizeof(wscCmdTbl) / sizeof(*wscCmdTbl); ix++)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t'wsc %s - %s'\r\n", pCDcpt->cmdName, pCDcpt->cmdHelp);
+        pCDcpt++;
+    }
+}
+
+// updates the settings for a connection
+static void F_Command_WsSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc set
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool printUsage = false;
+    bool printSettings = true;
+
+    while(true)
+    {
+        if(argc == 2)
+        {
+            printUsage = true;
+            break;
+        }
+
+
+        int argIx = 2;
+        argc -= 2;
+
+        if((argc & 0x1) != 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc set : an even number of arguments is required. Retry!\r\n");
+            printUsage = true;
+            printSettings = false;
+            break;
+        }
+
+        // set params in turn
+        while(argc != 0)
+        {
+            char* kword = argv[argIx];
+            char* param = argv[argIx + 1];
+
+            if(strcmp(kword, "server") == 0)
+            {
+                if(strcmp(param, "none") == 0)
+                {
+                    wsc_server[0] = '\0';
+                }
+                else
+                {
+                    strncpy(wsc_server, param, sizeof(wsc_server) - 1U);
+                }
+            }
+            else if(strcmp(kword, "resource") == 0)
+            {
+                if(strcmp(param, "none") == 0)
+                {
+                    wsc_resource[0] = '\0';
+                }
+                else
+                {
+                    strncpy(wsc_resource, param, sizeof(wsc_resource) - 1U);
+                }
+            }
+            else if(strcmp(kword, "proto") == 0)
+            {
+                if(strcmp(param, "none") == 0)
+                {
+                    wsc_proto[0] = '\0';
+                }
+                else
+                {
+                    strncpy(wsc_proto, param, sizeof(wsc_proto) - 1U);
+                }
+            }
+            else if(strcmp(kword, "port") == 0)
+            {
+                wsc_port = strtoul(param, NULL, 10);
+            }
+            else if(strcmp(kword, "proto_enforced") == 0)
+            {
+                wsc_proto_enforced = strtoul(param, NULL, 10);
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc set - unknown setting: %sRetry!\r\n", kword);
+                break;
+            }
+            argIx += 2;
+            argc -= 2;
+        }
+
+        break;
+    }
+
+    if(printUsage)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: 'wsc set  <server name/none> <resource path/none> <proto name/none> <port n> <proto_enforced 0/1>'\r\n");
+    }
+
+    if(printSettings)
+    {
+        Wsc_PrintSettings(pCmdIO, argv);
+    }
+
+
+}
+
+// updates the settings for a connection
+static void F_Command_WsPreset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc preset index
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc < 3)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc preset - provide a preset index!\r\n");
+        return;
+    }
+
+    int presIx = strtoul(argv[2], NULL, 10);
+    if(presIx >= sizeof(wsc_presets) / sizeof(*wsc_presets))
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc preset - wrong preset index! Maxim '%d'\r\n", sizeof(wsc_presets) / sizeof(*wsc_presets) - 1);
+        return;
+    }
+
+    // update the settings
+    const WSC_TEST_PRESET* preset = wsc_presets + presIx;
+
+    if(preset->server != NULL)
+    {
+        strncpy(wsc_server, preset->server, sizeof(wsc_server) - 1U);
+    }
+    else
+    {
+        wsc_server[0] = '\0';
+    }
+
+    if(preset->resource != NULL)
+    {
+        strncpy(wsc_resource, preset->resource, sizeof(wsc_resource) - 1U);
+    }
+    else
+    {
+        wsc_resource[0] = '\0';
+    }
+
+    if(preset->proto != NULL)
+    {
+        strncpy(wsc_proto, preset->proto, sizeof(wsc_proto) - 1U);
+    }
+    else
+    {
+        wsc_proto[0] = '\0';
+    }
+
+    wsc_port = preset->port;
+
+    Wsc_PrintSettings(pCmdIO, argv);
+}
+
+static void Wsc_PrintSettings(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc %s - settings: \r\n", argv[1]);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tserver: '%s'\r\n", wsc_server[0] == '\0' ? "none" : wsc_server);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tresource: '%s'\r\n", wsc_resource[0] == '\0' ? "none" : wsc_resource);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto: '%s'\r\n", wsc_proto[0] == '\0' ? "none" : wsc_proto);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tport: %d\r\n", wsc_port);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tproto_enforced: '%d'\r\n", wsc_proto_enforced);
+} 
+
+// change the rate of the WSC task
+static void F_Command_WscRate(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc rate ms
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(argc > 2)
+    {
+        uint32_t rateMs = strtoul(argv[2], NULL, 10);
+        if(rateMs < WSC_CMD_TASK_RATE_MIN) 
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc rate - bad value: %d. Minimum: %d\r\n", rateMs, WSC_CMD_TASK_RATE_MIN);
+            return;
+        }
+        wscCmdTaskRate = rateMs;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc Task rate: %d ms\r\n", wscCmdTaskRate);
+}
+
+
+static void F_Command_WsOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc open 
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(tcpipCmdStat != TCPIP_CMD_STAT_IDLE || wscConnHandle != NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc open - Another operation ongoing. Retry!\r\n");
+        return;
+    }
+
+    if(wsc_server[0] == '\0')
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc open - no server set. Retry!\r\n");
+        return;
+    }
+
+    Wsc_PrintSettings(pCmdIO, argv);
+
+    const char** openProtos;
+    uint16_t nProto;
+    if(wsc_proto[1] == '\0')
+    {
+        openProtos = NULL;
+        nProto = 0;
+    }
+    else
+    {
+        const char* protoTbl[] = {wsc_proto};
+        openProtos = protoTbl;
+        nProto = 1;
+    }
+
+    TCPIP_WSC_RES res;
+    TCPIP_WSC_CONN_DCPT connDcpt; 
+    connDcpt.server = wsc_server;
+    connDcpt.resource = wsc_resource;
+    connDcpt.port = wsc_port;
+    connDcpt.connFlags = wsc_flags | (wsc_proto_enforced ? TCPIP_WSC_CONN_FLAG_PROTO_ENFORCED : TCPIP_WSC_CONN_FLAG_PROTO_OPTIONAL);
+    connDcpt.protocols = openProtos;
+    connDcpt.nProtocols = nProto;
+    connDcpt.extensions = NULL;
+
+    wscConnHandle = TCPIP_WSC_ConnOpen(&connDcpt, &res);
+    
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc open - wscConnHandle: 0x%08x, res: %d\r\n", wscConnHandle, res);
+    if(wscConnHandle != NULL)
+    {   // success
+        tcpipCmdStat = TCPIP_CMD_STAT_WSC_OPEN;
+        pTcpipCmdDevice = pCmdIO;
+        _TCPIPStackSignalHandlerSetParams(TCPIP_THIS_MODULE_ID, tcpipCmdSignalHandle, wscCmdTaskRate);
+    }
+}
+
+static void F_Command_WsClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc close
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc close - wscConnHandle is NULL\r\n");
+    }
+
+    TCPIP_WSC_RES res = TCPIP_WSC_ConnClose(wscConnHandle, ws_close_code, ws_close_msg);
+    Wsc_CloseConn();
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc close - res: %d\r\n", res);
+}
+
+static void F_Command_WsRegister(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc evreg 0/1 - deregister, register
+    
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    const char* regMsg;
+
+    while(argc > 2)
+    {
+        uint32_t regVal = 0;
+        regVal = strtoul(argv[2], NULL, 10);
+        bool doReg = regVal != 0;
+
+        if(doReg && wsc_EvHandle != NULL)
+        {   // nothing to do
+            break;
+        }
+        else if(doReg == false && wsc_EvHandle == NULL)
+        {   // nothing to do
+            break;
+        }
+
+        // OK
+        bool res;
+        if(doReg)
+        {
+            wsc_EvConnHandle = wscConnHandle;
+            wsc_EvHandle = TCPIP_WSC_HandlerRegister(wsc_EvConnHandle, &Wsc_EventHandler, NULL);
+            res = wsc_EvHandle != NULL;
+            regMsg = " ";
+        }
+        else
+        {
+            res = TCPIP_WSC_HandlerDeRegister(wsc_EvConnHandle, wsc_EvHandle);
+            wsc_EvHandle = NULL;
+            regMsg = " de-";
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc evreg -%sregister result: %d\r\n", regMsg, res);
+        break;
+    }
+
+
+    // show status
+    if(wsc_EvHandle != NULL)
+    {
+        regMsg = " ";
+    }
+    else
+    {
+        regMsg = " de-";
+    }
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc evreg -%sregistered (wsc_EvConnHandle = 0x%08x) - evHandle: 0x%0x\r\n", regMsg, wsc_EvConnHandle, wsc_EvHandle);
+}
+
+// connection status
+static void F_Command_WsStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc stat
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc stat - wscConnHandle NULL\r\n");
+        return;
+    }
+    TCPIP_WSC_CONN_STATUS connStat = TCPIP_WSC_ConnStatus(wscConnHandle);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc stat - conn stat is: %d\r\n", connStat);
+}
+
+
+// ping the server
+static void F_Command_WsPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc ping <ix>
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    uint32_t pingIx = 0;
+    bool msgSel = false;
+    if(argc > 2)
+    {
+        pingIx = strtoul(argv[2], NULL, 10);
+        if(pingIx >= sizeof(ws_ping_tbl) / sizeof(*ws_ping_tbl))
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc ping - bad ping ix: %d\r\n", pingIx);
+            return;
+        }
+        msgSel = true;
+    }
+
+    const char* ws_ping_data = msgSel ? ws_ping_tbl[pingIx] : NULL;
+    Wsc_SendCtrlFrame(pCmdIO, argv, ws_ping_data, TCPIP_WS_CTRL_CODE_PING);
+}
+
+static void F_Command_WsPong(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc pong <ix>
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    uint32_t pongIx = 0;
+    bool msgSel = false;
+    if(argc > 2)
+    {
+        pongIx = strtoul(argv[2], NULL, 10);
+        if(pongIx >= sizeof(ws_ping_tbl) / sizeof(*ws_ping_tbl))
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc pong - bad pong ix: %d\r\n", pongIx);
+            return;
+        }
+        msgSel = true;
+    }
+
+    const char* ws_pong_data = msgSel ? ws_ping_tbl[pongIx] : NULL;
+    Wsc_SendCtrlFrame(pCmdIO, argv, ws_pong_data, TCPIP_WS_CTRL_CODE_PONG);
+}
+
+// sends a message to the server
+static void F_Command_WsMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc msg <ix>
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(pWsc_TxMsgDcpt != NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc msg - another message ongoing. Retry later!\r\n");
+        return;
+    }
+
+    // brand new message to send
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc msg - wscConnHandle NULL\r\n");
+        return;
+    }
+    TCPIP_WSC_CONN_STATUS connStat = TCPIP_WSC_ConnStatus(wscConnHandle);
+    if(connStat != TCPIP_WSC_CONN_STAT_OPEN)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc msg - stat not open: %d. Retry!\r\n", connStat);
+        return;
+    }
+
+    uint32_t msgIx = 0;
+    if(argc > 2)
+    {
+        msgIx = strtoul(argv[2], NULL, 10);
+        if(msgIx >= sizeof(ws_msg_tbl) / sizeof(*ws_msg_tbl))
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc msg - bad msg ix: %d\r\n", msgIx);
+            return;
+        }
+    }
+
+    wsc_TxMsgDcpt.msgData = (const uint8_t*)ws_msg_tbl[msgIx]; 
+    wsc_TxMsgDcpt.msgSize = strlen(ws_msg_tbl[msgIx]);
+    wsc_TxMsgDcpt.msgFlags = TCPIP_WSC_MSG_FLAG_TEXT; 
+    wsc_TxMsgDcpt.msgId = 0; 
+
+    pWsc_TxMsgDcpt = &wsc_TxMsgDcpt;
+}
+
+static void F_Command_WsRxInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc rxinfo
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc rxinfo - wscConnHandle NULL\r\n");
+        return;
+    }
+    TCPIP_WSC_PEND_MSG_DCPT msgDcpt, *pDcpt;
+    pDcpt = &msgDcpt;
+    TCPIP_WSC_RES res = TCPIP_WSC_MessageInfo(wscConnHandle, wsc_RxMsgHandle, pDcpt);
+
+    pCmdIO->pCmdApi->print(cmdIoParam, "wsc rxinfo (wsc_RxMsgHandle == 0x%08x) - handle: 0x%08x, res = %d\r\n", wsc_RxMsgHandle, pDcpt->msgHandle, res);
+    if(res == TCPIP_WSC_RES_OK)
+    {
+        pCmdIO->pCmdApi->print(cmdIoParam, "\tmsg flags: 0x%02x, opcode: 0x%02x, ftype: %d, flen: %d\r\n", pDcpt->info.flags, pDcpt->info.opCode, pDcpt->info.frameType, pDcpt->info.frameLen);
+        pCmdIO->pCmdApi->print(cmdIoParam, "\tmsg payLen: %d, rendLen: %d, skt pendLen: %d, srv avlbl: %d\r\n", pDcpt->payloadLen, pDcpt->renderedLen, pDcpt->sktPendLen, pDcpt->srvAvlblLen);
+        if(wsc_RxMsgHandle == NULL)
+        {
+            wsc_RxMsgHandle = pDcpt->msgHandle;
+            pCmdIO->pCmdApi->print(cmdIoParam, "wsc rxinfo set wsc_RxMsgHandle to: 0x%08x\r\n", wsc_RxMsgHandle);
+        }
+    }
+}
+
+static void F_Command_WsRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc rxsize <bSize>  // default size is 100 bytes
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(wsc_RxMsgHandle != NULL)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc rxsize - Another read message ongoing: 0x%08x. Retry later!\r\n", wsc_RxMsgHandle);
+        return;
+    }
+
+    if(argc > 2)
+    {
+        size_t bSize;
+        bSize = strtoul(argv[2], NULL, 10);
+        if(bSize == 0U || bSize > sizeof(U_WSC_RD_BUFF.uBuffer))
+        {
+            pCmdIO->pCmdApi->print(cmdIoParam, "wsc rxsize - invalid bSize: %d\r\n", bSize);
+            return;
+        }
+        wsc_bReadSize = bSize;
+    }
+
+    pCmdIO->pCmdApi->print(cmdIoParam, "wsc rxsize - read buffer size: %d\r\n", wsc_bReadSize);
+}
+
+static void F_Command_WsRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc read
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc read - wscConnHandle NULL\r\n");
+        return;
+    }
+
+    if(wsc_RxMsgHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc read - No pending read message. Use 'fread'!\r\n");
+        return;
+    }
+
+    TCPIP_WSC_RES res = Wsc_ReadMsg(wsc_RxMsgHandle);
+    if(res <= 0)
+    {   // done one way or another
+        wsc_RxMsgHandle = NULL;
+    }
+    else if(res == TCPIP_WSC_RES_MORE_DATA)
+    {
+        pCmdIO->pCmdApi->msg(cmdIoParam, "wsc read: more data pending. Call again!\r\n");
+    }
+    else
+    {
+        // nothing to do
+    }
+}
+
+static void F_Command_WsForceRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc fread
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "wsc fread - wscConnHandle NULL\r\n");
+        return;
+    }
+
+    // read using a NULL handle
+    TCPIP_WSC_RES res = Wsc_ReadMsg(NULL);
+
+    if(res == TCPIP_WSC_RES_MORE_DATA)
+    {
+        pCmdIO->pCmdApi->msg(cmdIoParam, "wsc fread: more data pending. Call again!\r\n");
+    }
+}
+
+static void F_Command_WsAutoRead(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // wsc auto-read 0/1
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc > 2)
+    {
+        uint32_t autoVal = 0;
+        autoVal = strtoul(argv[2], NULL, 10);
+        wscDisAutoRead = autoVal == 0U;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc auto-read is: %d\r\n", !wscDisAutoRead);
+}
+
+
+// sends a control message to the server
+static void Wsc_SendCtrlFrame(SYS_CMD_DEVICE_NODE* pCmdIO, char** argv, const char* message, TCPIP_WS_OP_CODE opCode)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(wscConnHandle == NULL)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc %s - wscConnHandle NULL\r\n", argv[1]);
+        return;
+    }
+    TCPIP_WSC_CONN_STATUS connStat = TCPIP_WSC_ConnStatus(wscConnHandle);
+    if(connStat != TCPIP_WSC_CONN_STAT_OPEN)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc %s - stat not open: %d. Retry!\r\n", argv[1], connStat);
+        return;
+    }
+
+    size_t dataSize = (message == NULL) ? 0U : strlen(message);
+
+    TCPIP_WSC_RES res;
+
+    size_t (*WSC_CtrlFnc)(TCPIP_WSC_CONN_HANDLE hConn, const uint8_t* dataBuff, size_t dataSize, TCPIP_WSC_RES* pRes);
+
+    if(opCode == TCPIP_WS_CTRL_CODE_PING)
+    {
+        WSC_CtrlFnc = TCPIP_WSC_ConnPing;
+    } 
+    else if(opCode == TCPIP_WS_CTRL_CODE_PONG)
+    {
+        WSC_CtrlFnc = TCPIP_WSC_ConnPong;
+    } 
+    else
+    {   // if using the function for other control codes
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc ctrl message - unknown code: %d\r\n", opCode);
+        return;
+    }
+
+    size_t sentSize = WSC_CtrlFnc(wscConnHandle, (const uint8_t*)message, dataSize, &res);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "wsc %s - sent: %d, expected: %d, res: %d\r\n", argv[1], sentSize, dataSize, res);
+
+}
+
+// returns the result of the operation
+static TCPIP_WSC_RES Wsc_SendMsg(TCPIP_WSC_SEND_MSG_DCPT* txDcpt)
+{
+    const void* cmdIoParam = pTcpipCmdDevice->cmdIoParam;
+    // send the message
+    TCPIP_WSC_RES res;
+
+    size_t sentSize = TCPIP_WSC_MessageSend(wscConnHandle, txDcpt, &res);
+    if(sentSize != 0)
+    {
+        (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc msg - sent: %d, expected: %d, res: %d\r\n", sentSize, txDcpt->msgSize, res);
+    }
+
+    if(res < 0)
+    {
+        (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc msg - failed with res: %d. Aborted!\r\n", res);
+    }
+    else if(res == TCPIP_WSC_RES_OK)
+    {
+        (*pTcpipCmdDevice->pCmdApi->msg)(cmdIoParam, "wsc msg - Completed OK\r\n");
+    }
+    // else continue sending data
+    //
+    return res;
+
+}
+
+static TCPIP_WSC_RES Wsc_ReadMsg(const void* rxHandle)
+{
+    TCPIP_WSC_RES res;
+    const void* cmdIoParam = pTcpipCmdDevice->cmdIoParam;
+
+    size_t readSize = TCPIP_WSC_MessageRead(wscConnHandle, rxHandle, U_WSC_RD_BUFF.uBuffer, wsc_bReadSize, &res);
+    if(readSize != 0)
+    {
+        pTcpipCmdDevice->pCmdApi->print(cmdIoParam, "wsc read - readSize: %d, res: %d\r\n", readSize, res);
+    }
+
+    if(res < 0)
+    {
+        (*pTcpipCmdDevice->pCmdApi->print)(cmdIoParam, "wsc read - failed with res: %d. Aborted!\r\n", res);
+    }
+    else
+    {
+        // check if smth was read
+        if(readSize != 0)
+        {   // display 100 chars...
+            U_WSC_RD_BUFF.cBuffer[readSize] = '\0';
+            U_WSC_RD_BUFF.cBuffer[100] = '\0';   // limit to 100 chars
+            pTcpipCmdDevice->pCmdApi->print(cmdIoParam, "wsc read message dump: %s\r\n", U_WSC_RD_BUFF.cBuffer);
+        }
+
+        if(res == TCPIP_WSC_RES_OK)
+        {   // done
+            (*pTcpipCmdDevice->pCmdApi->msg)(cmdIoParam, "wsc read - Completed OK\r\n");
+        }
+        // else continue reading data
+    }
+
+    return res;
+}
+// WSC event handler
+static void Wsc_EventHandler(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_EVENT_TYPE evType, TCPIP_WSC_EV_INFO evInfo, const void* param)
+{
+    const TCPIP_WSC_OPEN_INFO* openInfo;
+    const TCPIP_WSC_PEND_MSG_DCPT* msgDcpt;
+    const TCPIP_WSC_ERR_MSG_DCPT* errDcpt;
+    const char* evMsg;
+    char addBuff[44];
+
+    bool  closeConn = false;
+    switch(evType)
+    {
+        case WSC_EVENT_RAW_ESTABLISHED:
+        case WSC_EVENT_RAW_RX_DATA:
+        case WSC_EVENT_RAW_RX_FIN:
+        case WSC_EVENT_RAW_RX_RST:
+        case WSC_EVENT_RAW_UNKNOWN:
+            if(evType == WSC_EVENT_RAW_ESTABLISHED)
+            {
+                evMsg = "Established";
+            }
+            else if(evType == WSC_EVENT_RAW_RX_DATA)
+            {
+                evMsg = "RX data";
+            }
+            else if(evType == WSC_EVENT_RAW_RX_FIN)
+            {
+                evMsg = "FIN";
+                closeConn = true;
+            }
+            else if(evType == WSC_EVENT_RAW_RX_RST)
+            {
+                evMsg = "RST";
+                closeConn = true;
+            }
+            else
+            {
+                evMsg = "unknown";
+            }
+            SYS_CONSOLE_PRINT(" WSC Event RAW - %s\r\n", evMsg);
+            break;
+        
+        case WSC_EVENT_OPEN:
+            openInfo = evInfo.openInfo;
+
+            if(openInfo->ipType == IP_ADDRESS_TYPE_IPV4)
+            {
+                (void)TCPIP_Helper_IPAddressToString(&openInfo->srvAddress.v4Add, addBuff, sizeof(addBuff));
+            }
+            else
+            {
+                (void)TCPIP_Helper_IPv6AddressToString(&openInfo->srvAddress.v6Add, addBuff, sizeof(addBuff));
+            }
+            int netIx = TCPIP_STACK_NetIndexGet(openInfo->hNet);
+            SYS_CONSOLE_PRINT(" WSC Event - open: address: %s, port: %d, network: %d\r\n", addBuff, openInfo->srvPort, netIx);
+            break;
+            
+        case WSC_EVENT_MSG_READY:
+            msgDcpt = evInfo.pendMsgDcpt;
+            SYS_CONSOLE_PRINT(" WSC Event - msg rdy: ftype: %d, flen: %d, payLen: %d, skt pendLen: %d, srv avlbl: %d, handle: 0x%08x\r\n", msgDcpt->info.frameType, msgDcpt->info.frameLen, msgDcpt->payloadLen, msgDcpt->sktPendLen, msgDcpt->srvAvlblLen, msgDcpt->msgHandle);
+            wsc_RxMsgHandle = msgDcpt->msgHandle;
+            break;
+
+        case WSC_EVENT_CTRL_CLOSE:
+        case WSC_EVENT_CTRL_PING:
+        case WSC_EVENT_CTRL_PONG:
+        case WSC_EVENT_CTRL_UNKNOWN:
+            if(evType == WSC_EVENT_CTRL_CLOSE)
+            {
+                evMsg = "close";
+                closeConn = true;
+            }
+            else if(evType == WSC_EVENT_CTRL_PING)
+            {
+                evMsg = "ping";
+            }
+            else if(evType == WSC_EVENT_CTRL_PONG)
+            {
+                evMsg = "pong";
+            }
+            else
+            {
+                evMsg = "unknown";
+            }
+
+            SYS_CONSOLE_PRINT(" WSC Event - ctrl: %s, message: %s\r\n", evMsg, evInfo.evCtrlMsg);
+            break;
+
+        case WSC_EVENT_CONN_CLOSE:
+            SYS_CONSOLE_MESSAGE(" WSC Event - conn closed!\r\n");
+            closeConn = true;
+            break;
+
+        case WSC_EVENT_MSG_ERROR:
+        case WSC_EVENT_MSG_DISCARD_USR_TMO:
+        case WSC_EVENT_MSG_DISCARD_CLOSE:
+            errDcpt = evInfo.errMsgDcpt;
+            if(evType == WSC_EVENT_MSG_ERROR)
+            {
+                evMsg = "err";
+            }
+            else if(evType == WSC_EVENT_MSG_DISCARD_USR_TMO)
+            {
+                evMsg = "discard tmo";
+            }
+            else
+            {
+                evMsg = "discard close";
+            }
+            SYS_CONSOLE_PRINT(" WSC Event - msg %s: ftype: %d, flen: %d, payLen: %llu\r\n", evMsg, errDcpt->info.frameType, errDcpt->info.frameLen, errDcpt->payloadLen);
+            break;
+
+        case WSC_EVENT_FAIL_CONN:
+            SYS_CONSOLE_PRINT(" WSC Event - fail conn: failRes: %d\r\n", evInfo.failInfo->failRes);
+            closeConn = true;
+            break;
+
+        default:
+            SYS_CONSOLE_PRINT(" WSC Event unk - %d\r\n", evType);
+            break;
+
+    }
+
+    if(closeConn && wscConnHandle != NULL)
+    {
+        Wsc_CloseConn();
+    }
+
+}
+
+static void Wsc_CloseConn(void)
+{
+    wscConnHandle = NULL;
+    pWsc_TxMsgDcpt = NULL;
+    wsc_RxMsgHandle = NULL;
+    tcpipCmdStat = TCPIP_CMD_STAT_IDLE;
+    _TCPIPStackSignalHandlerSetParams(TCPIP_THIS_MODULE_ID, tcpipCmdSignalHandle, 0);
+}
+
 #endif
 
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)

@@ -301,6 +301,14 @@ def loadModule():
     tcpipZeroConfComponent.setDisplayType("Application Layer")
     tcpipZeroConfComponent.setHelpKeyword("tcpip_zeroconf")
 
+
+    tcpipWscComponent = Module.CreateComponent("tcpipWSC", "WSC", "/TCPIP/Layer7-APPLICATION/", "tcpip/config/wsc.py")
+    tcpipWscComponent.addCapability("libtcpipWsc","WebSocket Client",True)   
+    tcpipWscComponent.addDependency("WSC_TCP_Dependency", "TCP", None, True, True)  
+    tcpipWscComponent.addDependency("WSC", "net_pres", True, True)
+    tcpipWscComponent.setDisplayType("Application Layer")
+
+
     ###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
     if (("SAMA7G" in Variables.get("__PROCESSOR")) or ("SAMA7D6" in Variables.get("__PROCESSOR"))) and (Peripheral.moduleExists("GMAC")):
         drvGmacComponent_0 = Module.CreateComponent("drvGmac0", "GMAC0", "/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")

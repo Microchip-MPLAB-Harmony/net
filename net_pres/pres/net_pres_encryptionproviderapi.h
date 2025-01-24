@@ -159,6 +159,8 @@ typedef bool (*NET_PRES_EncProviderDeinit)( void );
     None.
 
   Parameters:
+   obj          - The NET_PRES object handle, returned from NET_PRES_Initialize
+   presHandle   - The NET_PRES handle used for this client.
    transHandle  - The handle from the transport layer to use for this client.
    providerData - A pointer to the buffer for the provider to keep connection
                   specific data.
@@ -168,7 +170,7 @@ typedef bool (*NET_PRES_EncProviderDeinit)( void );
     - false - Create did not succeed
 
  */
-typedef bool (*NET_PRES_EncProviderOpen)(uintptr_t transHandle, void * providerData);
+typedef bool (*NET_PRES_EncProviderOpen)(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
 
 // *****************************************************************************
 /* Presentation Encryption Provider Connect Prototype

@@ -74,14 +74,14 @@ extern NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBE
 			<#if netPresSuppServer?has_content && netPresSuppServer == true>            
 bool NET_PRES_EncProviderStreamServerInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderStreamServerDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderStreamServerOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
+bool NET_PRES_EncProviderStreamServerOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER}(void);
             </#if>
             <#assign netPresSuppClient= "NET_PRES_SUPPORT_CLIENT_ENC"?eval>
 			<#if netPresSuppClient?has_content && netPresSuppClient == true>             
 bool NET_PRES_EncProviderStreamClientInit${INST_NUMBER}(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderStreamClientDeinit${INST_NUMBER}(void);
-bool NET_PRES_EncProviderStreamClientOpen${INST_NUMBER}(uintptr_t transHandle, void * providerData);
+bool NET_PRES_EncProviderStreamClientOpen${INST_NUMBER}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER}(void);
 				<#if NET_PRES_BLOB_RUNTIME_CERT_SUPPORT == true>
 bool NET_PRES_SetCertificate(unsigned char* in, long sz, int format);
@@ -121,8 +121,14 @@ int32_t NET_PRES_EncProviderReadReady${INST_NUMBER}(void * providerData);
 int32_t NET_PRES_EncProviderPeek${INST_NUMBER}(void * providerData, uint8_t * buffer, uint16_t size);
 int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_t inSize);
 int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
+    
 	<#if ((lib_wolfssl.wolfsslTlsSni?has_content) && (lib_wolfssl.wolfsslTlsSni) == true)>
-		<#lt>#define NET_PRES_SNI_HOST_NAME		"${NET_PRES_SUPPORT_SNI_HOST_NAME}"
+        <#assign netPresSNICbackEn= "NET_PRES_SNI_CALLBACK_ENABLE"?eval>
+        <#if (netPresSNICbackEn?has_content) && (netPresSNICbackEn == true)>
+            <#lt>
+        <#else>
+            <#lt>#define NET_PRES_SNI_HOST_NAME		"${NET_PRES_SUPPORT_SNI_HOST_NAME}"
+        </#if>
 	</#if>
 	<#if ((lib_wolfssl.wolfsslTlsAlpn?has_content) && (lib_wolfssl.wolfsslTlsAlpn) == true)>
 		<#lt>#define NET_PRES_ALPN_PROTOCOL_NAME_LIST		"${NET_PRES_SUPPORT_ALPN_PROTOCOL_NAME}"

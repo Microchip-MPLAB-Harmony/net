@@ -378,7 +378,8 @@ def instantiateComponent(tcpipStackComponent):
                                 "tcpipSnmp.TCPIP_USE_SNMP", "tcpipSnmp.TCPIP_SNMP_HEAP_SIZE",
                                 "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftpc.TCPIP_TFTPC_HEAP_SIZE",
                                 "tcpipUdp.TCPIP_USE_UDP", "tcpipUdp.TCPIP_UDP_HEAP_SIZE",
-                                "tcpipTcp.TCPIP_USE_TCP", "tcpipTcp.TCPIP_TCP_HEAP_SIZE"] 
+                                "tcpipTcp.TCPIP_USE_TCP", "tcpipTcp.TCPIP_TCP_HEAP_SIZE",
+                                "tcpipWSC.TCPIP_STACK_USE_WS_CLIENT", "tcpipWSC.TCPIP_WSC_HEAP_SIZE"] 
                                 
     # TCP/IP Stack Recommended Heap Size
     tcpipStackHeapRecommendSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_HEAP_SIZE_RECOMMEND", tcpipStackHeap)
@@ -1874,6 +1875,33 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackLldpTlvHeaderFile.setType("HEADER")
     tcpipStackLldpTlvHeaderFile.setOverwrite(True)
 
+    # Add wsc.h file to project
+    tcpipStackWscHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackWscHeaderFile.setSourcePath("tcpip/wsc.h")
+    tcpipStackWscHeaderFile.setOutputName("wsc.h")
+    tcpipStackWscHeaderFile.setDestPath("library/tcpip/")
+    tcpipStackWscHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+    tcpipStackWscHeaderFile.setType("HEADER")
+    tcpipStackWscHeaderFile.setOverwrite(True)
+
+    # Add wsc_manager.h file to project
+    tcpipStackWscManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackWscManagerHeaderFile.setSourcePath("tcpip/src/wsc_manager.h")
+    tcpipStackWscManagerHeaderFile.setOutputName("wsc_manager.h")
+    tcpipStackWscManagerHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackWscManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackWscManagerHeaderFile.setType("HEADER")
+    tcpipStackWscManagerHeaderFile.setOverwrite(True)
+
+    # Add wsc_private.h file to project
+    tcpipStackWscPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackWscPrivateHeaderFile.setSourcePath("tcpip/src/wsc_private.h")
+    tcpipStackWscPrivateHeaderFile.setOutputName("wsc_private.h")
+    tcpipStackWscPrivateHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackWscPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackWscPrivateHeaderFile.setType("HEADER")
+    tcpipStackWscPrivateHeaderFile.setOverwrite(True)
+    
     # Add tcpip_mac_bridge.h file to project
     tcpipStackBridgeHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackBridgeHeaderFile.setSourcePath("tcpip/tcpip_mac_bridge.h")
@@ -1919,6 +1947,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
     tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
     tcpipStackTftpsEn = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
+    tcpipStackWscEn = Database.getSymbolValue("tcpipWSC","TCPIP_STACK_USE_WS_CLIENT")
     
     # Add sys_fs_shell.c file to project
     tcpipStackSysFsShellSourceFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -2458,6 +2487,12 @@ def tcpipHeapCalc():
     if((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True)): 
         if(Database.getSymbolValue("tcpipTcp","TCPIP_TCP_HEAP_SIZE") != None):
             heapsize = heapsize + Database.getSymbolValue("tcpipTcp","TCPIP_TCP_HEAP_SIZE") 
+
+    # WSC 
+    if((Database.getSymbolValue("tcpipWSC", "TCPIP_STACK_USE_WS_CLIENT") == True)): 
+        if(Database.getSymbolValue("tcpipWSC","TCPIP_WSC_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipWSC","TCPIP_WSC_HEAP_SIZE")   
+
             
     return heapsize
 

@@ -229,6 +229,8 @@ def instantiateComponent(tcpipTcpComponent):
                                 "tcpipFtps.TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE", "tcpipFtps.TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE",
                                 "tcpipIperf.TCPIP_USE_IPERF", "tcpipIperf.TCPIP_IPERF_MAX_INSTANCES", 
                                 "tcpipIperf.TCPIP_IPERF_TX_BUFFER_SIZE", "tcpipIperf.TCPIP_IPERF_RX_BUFFER_SIZE", 
+                                "tcpipWSC.TCPIP_STACK_USE_WS_CLIENT", "tcpipWSC.TCPIP_WSC_CONNECTIONS", 
+                                "tcpipWSC.TCPIP_WSC_SKT_TX_BUFF_SIZE", "tcpipWSC.TCPIP_WSC_SKT_RX_BUFF_SIZE",
                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]   
         
     # TCP Heap Size
@@ -266,6 +268,7 @@ def tcpipTcpHeapCalc():
     nMailConnections = 0
     nFTPSConnections = 0
     nIperfInstances = 0
+    nWscConnections = 0
     sktTxBuffSize_HTTPNET = 0
     sktRxBuffSize_HTTPNET = 0    
     sktTxBuffSize_HTTP = 0
@@ -278,6 +281,8 @@ def tcpipTcpHeapCalc():
     sktRxBuffSize_Ftps = 0    
     sktTxBuffSize_iperf = 0
     sktRxBuffSize_iperf = 0
+    sktTxBuffSize_wsc = 0
+    sktRxBuffSize_wsc = 0    
     
     if(Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER") == True):
         if(Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_MAX_CONNECTIONS") != None):
@@ -351,7 +356,19 @@ def tcpipTcpHeapCalc():
             if(sktRxBuffSize_iperf == 0):
                 sktRxBuffSize_iperf = sktRxBuffSize
     
-    ownSockets = (nSockets - nHTTP_NET_Connections - nHTTP_Connections - nTelnetConnections - nMailConnections - nFTPSConnections  - nIperfInstances)
+    if(Database.getSymbolValue("tcpipWSC","TCPIP_STACK_USE_WS_CLIENT") == True):
+        if(Database.getSymbolValue("tcpipWSC","TCPIP_WSC_CONNECTIONS") != None):
+            nWscConnections = Database.getSymbolValue("tcpipWSC","TCPIP_WSC_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipWSC","TCPIP_WSC_SKT_TX_BUFF_SIZECPIP_SMTPC_SKT_TX_BUFF_SIZE") != None):
+            sktTxBuffSize_wsc = Database.getSymbolValue("tcpipWSC","TCPIP_WSC_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_wsc == 0):
+                sktTxBuffSize_wsc = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipWSC","TCPIP_WSC_SKT_TX_BUFF_SIZE") != None):
+            sktRxBuffSize_wsc = Database.getSymbolValue("tcpipWSC","TCPIP_WSC_SKT_TX_BUFF_SIZE")
+            if(sktRxBuffSize_wsc == 0):
+                sktRxBuffSize_wsc = sktRxBuffSize
+    
+    ownSockets = (nSockets - nHTTP_NET_Connections - nHTTP_Connections - nTelnetConnections - nMailConnections - nFTPSConnections  - nIperfInstances - nWscConnections)
     
     heap_size = ownSockets * (sktTxBuffSize + sktRxBuffSize) + (nSockets * 132) \
                 + nHTTP_NET_Connections * (176 + sktTxBuffSize_HTTPNET + sktRxBuffSize_HTTPNET) \
@@ -359,7 +376,8 @@ def tcpipTcpHeapCalc():
                 + nTelnetConnections * (sktTxBuffSize_Telnet + sktRxBuffSize_Telnet) \
                 + nMailConnections * (176 + sktTxBuffSize_Smtpc + sktRxBuffSize_Smtpc) \
                 + nFTPSConnections * (sktTxBuffSize_Ftps + sktRxBuffSize_Ftps) \
-                + nIperfInstances * (sktTxBuffSize_iperf + sktRxBuffSize_iperf)
+                + nIperfInstances * (sktTxBuffSize_iperf + sktRxBuffSize_iperf) \
+                + nWscConnections * (176 + sktTxBuffSize_wsc + sktRxBuffSize_wsc)
                     
     return heap_size    
     

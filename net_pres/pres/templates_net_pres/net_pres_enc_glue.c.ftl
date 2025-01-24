@@ -429,37 +429,50 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}(void)
         INST
         CONNECTION
         TYPE>
-bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(uintptr_t transHandle, void * providerData)
+bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(SYS_MODULE_OBJ obj, uintptr_t presHandle, uintptr_t transHandle, void * providerData)
 {
     <#assign netPresUseWolfSSL= "NET_PRES_USE_WOLF_SSL"?eval>
 	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
-        WOLFSSL* ssl = wolfSSL_new(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
-        if (ssl == NULL)
-        {
-            return false;
-        }
-        if (wolfSSL_set_fd(ssl, transHandle) != SSL_SUCCESS)
-        {
-            wolfSSL_free(ssl);
-            return false;
-        }
+    <#lt>    WOLFSSL* ssl = wolfSSL_new(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
+    <#lt>    if (ssl == NULL)
+    <#lt>    {
+    <#lt>        return false;
+    <#lt>    }
+    <#lt>    if (wolfSSL_set_fd(ssl, transHandle) != SSL_SUCCESS)
+    <#lt>    {
+    <#lt>        wolfSSL_free(ssl);
+    <#lt>        return false;
+    <#lt>    }
 		<#if ((lib_wolfssl.wolfsslTlsSni?has_content) && (lib_wolfssl.wolfsslTlsSni) == true)>
-        if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, NET_PRES_SNI_HOST_NAME, strlen(NET_PRES_SNI_HOST_NAME)) != WOLFSSL_SUCCESS)
-        {
-            return false;
-        }
+            <#assign netPresSNICbackEn= "NET_PRES_SNI_CALLBACK_ENABLE"?eval>
+            <#if (netPresSNICbackEn?has_content) && (netPresSNICbackEn == true)>
+            <#lt>   NET_PRES_SNI_CALLBACK sniCback = NET_PRES_SniCallbackGet(obj);
+            <#lt>   if(sniCback != NULL)
+            <#lt>   {
+            <#lt>       const char* sni_name = sniCback(presHandle);
+            <#lt>       if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, sni_name, strlen(sni_name)) != WOLFSSL_SUCCESS)
+            <#lt>       {
+            <#lt>           return false;
+            <#lt>       }
+            <#lt>    }
+            <#else>
+            <#lt>    if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, NET_PRES_SNI_HOST_NAME, strlen(NET_PRES_SNI_HOST_NAME)) != WOLFSSL_SUCCESS)
+            <#lt>    {
+            <#lt>        return false;
+            <#lt>    }
+            </#if>
 		</#if>
 		<#if ((lib_wolfssl.wolfsslTlsAlpn?has_content) && (lib_wolfssl.wolfsslTlsAlpn) == true)>
-        if (wolfSSL_UseALPN(ssl, NET_PRES_ALPN_PROTOCOL_NAME_LIST, sizeof(NET_PRES_ALPN_PROTOCOL_NAME_LIST),WOLFSSL_ALPN_FAILED_ON_MISMATCH) != WOLFSSL_SUCCESS)
-        {
-            return false;
-        }
+    <#lt>    if (wolfSSL_UseALPN(ssl, NET_PRES_ALPN_PROTOCOL_NAME_LIST, sizeof(NET_PRES_ALPN_PROTOCOL_NAME_LIST),WOLFSSL_ALPN_FAILED_ON_MISMATCH) != WOLFSSL_SUCCESS)
+    <#lt>    {
+    <#lt>        return false;
+    <#lt>    }
 		</#if>
-        memcpy(providerData, &ssl, sizeof(WOLFSSL*));
-        return true;
+    <#lt>    memcpy(providerData, &ssl, sizeof(WOLFSSL*));
+    <#lt>    return true;
     <#else>
-    //TODO: Enter in code to open a connection with the provider
-    return false;
+    <#lt>//TODO: Enter in code to open a connection with the provider
+    <#lt>return false;
     </#if>
 }
 </#macro> 

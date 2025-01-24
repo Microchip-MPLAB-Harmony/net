@@ -210,6 +210,9 @@ void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName
 <#if (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT)?has_content && (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT) == true>
 #include "tcpip/src/ftpc_manager.h"
 </#if>
+<#if (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT)?has_content &&  (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT) == true>
+#include "tcpip/src/wsc_manager.h"
+</#if>
 <#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
 #include "tcpip/src/tcpip_mac_bridge_manager.h"
 </#if>

@@ -681,6 +681,19 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 };
 </#if>
 
+<#if (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT)?has_content && (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT) == true>
+/*** WS client Initialization Data ***/
+const TCPIP_WSC_MODULE_CONFIG tcpipWscInitData =
+{
+    .nConnections       = TCPIP_WSC_CONNECTIONS,
+    .sktTxBuffSize      = TCPIP_WSC_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize      = TCPIP_WSC_SKT_RX_BUFF_SIZE,
+    .srvTmo             = TCPIP_WSC_SERVER_REPLY_TIMEOUT,
+    .usrTmo             = TCPIP_WSC_USER_READ_TIMEOUT,
+    .configFlags        = TCPIP_WSC_CONFIG_FLAGS,
+};
+</#if>
+
 <#if (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE)?has_content && (tcpipNetConfig.TCPIP_STACK_USE_MAC_BRIDGE) == true>
 TCPIP_MAC_BRIDGE_ENTRY_BIN tcpipMacbridgeTable[${tcpipNetConfig.TCPIP_STACK_NETWORK_MAC_BRIDGE_COUNT}] = 
 {
@@ -928,6 +941,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 </#if>
 <#if (tcpipIperf.TCPIP_USE_IPERF)?has_content && (tcpipIperf.TCPIP_USE_IPERF) == true>
     {TCPIP_MODULE_IPERF,            0},                             // TCPIP_MODULE_IPERF,
+</#if>
+<#if (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT)?has_content && (tcpipWSC.TCPIP_STACK_USE_WS_CLIENT) == true>
+    {TCPIP_MODULE_WS_CLIENT,        &tcpipWscInitData},           // TCPIP_MODULE_WS_CLIENT,
 </#if>
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 

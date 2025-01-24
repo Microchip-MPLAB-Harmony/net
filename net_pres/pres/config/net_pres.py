@@ -232,18 +232,28 @@ def instantiateComponent(net_PresComponent):
     # Support SNI?
     netPresSNI = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SNI",netPresEncryptEnable)
     netPresSNI.setLabel("Support SNI?")
-    netPresSNI.setVisible(False)
+    netPresSNI.setVisible(True)
     netPresSNI.setHelp("mcc_h3_netPres_configurations")
     netPresSNI.setDefaultValue(False)
     netPresSNI.setDependencies(netPresWolfSSLSNI, ["NET_PRES_SUPPORT_SNI"])
 
-    # Host Name for SNI?
+    # Use a callback Function for SNI
+    SniCallbackEnable = net_PresComponent.createBooleanSymbol("NET_PRES_SNI_CALLBACK_ENABLE", netPresSNI)
+    SniCallbackEnable.setHelp("mcc_h3_netPres_configurations")
+    SniCallbackEnable.setLabel("Enable SNI Callback")
+    SniCallbackEnable.setVisible(False)
+    SniCallbackEnable.setDescription("Use a Callback Function to be called for SNI")
+    SniCallbackEnable.setDefaultValue(False)
+    SniCallbackEnable.setDependencies(wolfSSLSNICbackEnable, ["NET_PRES_SUPPORT_SNI"])
+    
+    # Hard coded Host Name for SNI - if no callback
     netPresSNIHostName = net_PresComponent.createStringSymbol("NET_PRES_SUPPORT_SNI_HOST_NAME", netPresSNI) 
     netPresSNIHostName.setLabel("SNI Host name")
     netPresSNIHostName.setVisible(False)
     netPresSNIHostName.setHelp("mcc_h3_netPres_configurations")
     netPresSNIHostName.setDescription("SNI host name")
     netPresSNIHostName.setDefaultValue("microchip.com")
+    netPresSNIHostName.setDependencies(sniCbackVisibility, ["NET_PRES_SUPPORT_SNI","NET_PRES_SNI_CALLBACK_ENABLE"])
     
     # Support ALPN?
     netPresALPN = net_PresComponent.createBooleanSymbol("NET_PRES_SUPPORT_ALPN",netPresEncryptEnable)
@@ -884,6 +894,25 @@ def netPresWolfsslTngtls(symbol, event):
 def netPresWolfSSLSNI(symbol, event):
     Database.setSymbolValue("lib_wolfssl","wolfsslTlsSni",event["value"])
 
+def wolfSSLSNICbackEnable(symbol, event):
+    if (event["value"] == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+    Database.setSymbolValue("lib_wolfssl","wolfsslSniCbackEnable",event["value"])
+
+def sniMenuCbackVisible(symbol, event):
+    symbol.setVisible(event["value"])
+    Database.setSymbolValue("lib_wolfssl","wolfsslSniCback",event["value"])
+    
+def sniCbackVisibility(symbol, event):     
+    netPresSNI = Database.getSymbolValue("net_Pres","NET_PRES_SUPPORT_SNI")
+    netPresSNICBackEnable = Database.getSymbolValue("net_Pres","NET_PRES_SNI_CALLBACK_ENABLE")
+    if( (netPresSNI != False) and (netPresSNICBackEnable == False) ):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+    
 def netPresWolfSSLALPN(symbol, event):
     Database.setSymbolValue("lib_wolfssl","wolfsslTlsAlpn",event["value"])
 
@@ -947,3 +976,4 @@ def handleMessage(messageID, args):
     else:
         retDict= {"Return": "UnImplemented Command"}
     return retDict
+

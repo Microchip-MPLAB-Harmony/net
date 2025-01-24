@@ -55,8 +55,7 @@ static void _NET_PRES_AssertCond(bool cond, const char* message, int lineNo)
 static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
 
-SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
-                                           const SYS_MODULE_INIT * const init )
+SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init )
 {
     if (sNetPresData.initialized || !init)
     {
@@ -113,6 +112,15 @@ SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
         {
             memcpy(&sNetPresData.encProvObjectDC[x], pInitData->pInitData[x].pProvObject_dc, sizeof(NET_PRES_EncProviderObject));
         }        
+    }
+    return (SYS_MODULE_OBJ)&sNetPresData;
+}
+
+SYS_MODULE_OBJ NET_PRES_ModuleObjGet(const SYS_MODULE_INDEX index)
+{
+    if(sNetPresData.initialized == false)
+    {
+        return SYS_MODULE_OBJ_INVALID;
     }
     return (SYS_MODULE_OBJ)&sNetPresData;
 }
@@ -219,7 +227,7 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
                     {
                         continue;
                     }
-                    if (!(*sNetPresSockets[x].provObject->fpOpen)(sNetPresSockets[x].transHandle, &sNetPresSockets[x].providerData))
+                    if (!(*sNetPresSockets[x].provObject->fpOpen)(obj, (uintptr_t)(x + 1), sNetPresSockets[x].transHandle, &sNetPresSockets[x].providerData))
                     {
                         sNetPresSockets[x].status = NET_PRES_ENC_SS_FAILED;
                         continue;                       
@@ -1094,3 +1102,62 @@ NET_PRES_SKT_HANDLE_T NET_PRES_SocketGetTransportHandle(NET_PRES_SKT_HANDLE_T ha
     return pSkt->transHandle;
     
 }
+
+NET_PRES_CBACK_HANDLE NET_PRES_SniCallbackRegister(SYS_MODULE_OBJ obj, NET_PRES_SNI_CALLBACK cBack)
+{
+    if(cBack == NULL)
+    {
+        return NULL;
+    }
+
+    NET_PRES_InternalData * pData = (NET_PRES_InternalData*)obj;
+    if (pData != &sNetPresData || pData->initialized == false)
+    {
+        return NULL;
+    }
+
+    NET_PRES_CBACK_HANDLE cbHandle = NULL;
+    (void)OSAL_MUTEX_Lock(&pData->presMutex, OSAL_WAIT_FOREVER);
+    if(pData->sniCback == NULL)
+    {
+        pData->sniCback = cBack;
+        cbHandle = (NET_PRES_CBACK_HANDLE)pData->sniCback;
+    }
+
+    (void)OSAL_MUTEX_Unlock(&pData->presMutex);
+
+    return cbHandle;
+}
+
+bool NET_PRES_SniCallbackDeregister(SYS_MODULE_OBJ obj, NET_PRES_CBACK_HANDLE cBackHandle)
+{
+    NET_PRES_InternalData * pData = (NET_PRES_InternalData*)obj;
+    if (pData != &sNetPresData || pData->initialized == false)
+    {
+        return false;
+    }
+
+    bool res = false;
+    (void)OSAL_MUTEX_Lock(&pData->presMutex, OSAL_WAIT_FOREVER);
+    if(pData->sniCback == cBackHandle)
+    {
+        pData->sniCback = NULL;
+        res = true;
+    }
+
+    (void)OSAL_MUTEX_Unlock(&pData->presMutex);
+
+    return res;
+}
+
+NET_PRES_SNI_CALLBACK NET_PRES_SniCallbackGet(SYS_MODULE_OBJ obj)
+{
+    NET_PRES_InternalData * pData = (NET_PRES_InternalData*)obj;
+    if (pData != &sNetPresData || pData->initialized == false)
+    {
+        return NULL;
+    }
+
+    return pData->sniCback;
+}
+

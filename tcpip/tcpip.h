@@ -347,7 +347,7 @@ typedef enum
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 38 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 39 /*DOM-IGNORE-END*/
     TCPIP_MODULE_BERKELEY,
     TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
@@ -357,6 +357,7 @@ typedef enum
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
     TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
     TCPIP_MODULE_FTP_CLIENT,        /* FTP client */
+    TCPIP_MODULE_WS_CLIENT,         /* WS client */
 
     /* add other modules here */
     TCPIP_MODULE_MAC_BRIDGE,        /* MAC layer 2 bridge */
@@ -775,5 +776,6 @@ typedef struct TCPIP_STACK_INIT
 #include "tcpip/iperf.h"
 #include "tcpip/tcpip_commands.h"
 #include "tcpip/tftps.h"
+#include "tcpip/wsc.h"
 
 #endif  // __TCPIP_H__

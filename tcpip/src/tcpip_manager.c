@@ -534,6 +534,9 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_HTTP_SERVER_V2)
     {.moduleId = TCPIP_MODULE_HTTP_SERVER_V2, .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_Server_Initialize,  .deInitFunc = TCPIP_HTTP_Server_Deinitialize},      // TCPIP_STACK_USE_HTTP_SERVER_V2
 #endif  // defined(TCPIP_STACK_USE_HTTP_SERVER_V2)
+#if defined(TCPIP_STACK_USE_WS_CLIENT)
+    {.moduleId = (uint16_t)TCPIP_MODULE_WS_CLIENT,      .initFunc = (tcpipModuleInitFunc)&TCPIP_WSC_Initialize,  .deInitFunc = &TCPIP_WSC_Deinitialize},               // TCPIP_MODULE_WS_CLIENT
+#endif  // defined(TCPIP_STACK_USE_WS_CLIENT)
     // Add other stack modules here
      
 };
@@ -644,6 +647,9 @@ static const TCPIP_STACK_MODULE_ENTRY TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_HTTP_SERVER_V2)
     {.moduleId = TCPIP_MODULE_HTTP_SERVER_V2, .initFunc = (tcpipModuleInitFunc)TCPIP_HTTP_Server_Initialize},   // TCPIP_STACK_USE_HTTP_SERVER_V2
 #endif  // defined(TCPIP_STACK_USE_HTTP_SERVER_V2)
+#if defined(TCPIP_STACK_USE_WS_CLIENT)
+    {.moduleId = (uint16_t)TCPIP_MODULE_WS_CLIENT, .initFunc = (tcpipModuleInitFunc)&TCPIP_WSC_Initialize},    // TCPIP_MODULE_WS_CLIENT
+#endif  // defined(TCPIP_STACK_USE_WS_CLIENT)
     // Add other stack modules here
      
 };
