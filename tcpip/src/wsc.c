@@ -613,7 +613,7 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         semConn = true;
 #endif  // (M_WSC_SEM_PER_CONNECTION != 0)
 #endif  // (M_WSC_SEM_LOCK != 0)
-        SYS_CONSOLE_PRINT("WSC - rtosUsed: %d, name, semLock: %d, semConn: %d\r\n", wscModDcpt.rtosUsed, rtosName, semLock, semConn);
+        SYS_CONSOLE_PRINT("WSC - rtosUsed: %d, name %s, semLock: %d, semConn: %d\r\n", wscModDcpt.rtosUsed, rtosName, semLock, semConn);
 #endif // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_RTOS) != 0)
         gWscDcpt = &wscModDcpt;
 
