@@ -496,10 +496,10 @@ typedef union
                     WSC_EVENT_CTRL_PONG  -  pointer to a constant string, the pong message
                     WSC_EVENT_CTRL_UNKNOWN  -  pointer to a constant string, the control message
 
-                    // other connection events
+                    - other connection events
                     WSC_EVENT_CONN_CLOSE    - NULL
 
-                    // errors
+                    - errors
                     WSC_EVENT_MSG_ERROR - a pointer to a constant TCPIP_WSC_ERR_MSG_DCPT data structure
                     WSC_EVENT_MSG_DISCARD_USR_TMO - a pointer to a constant TCPIP_WSC_ERR_MSG_DCPT data structure
                     WSC_EVENT_MSG_DISCARD_CLOSE - a pointer to a constant TCPIP_WSC_ERR_MSG_DCPT data structure

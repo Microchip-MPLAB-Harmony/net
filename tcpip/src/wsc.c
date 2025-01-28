@@ -302,6 +302,18 @@ static __inline__ TCPIP_WSC_CONN_CTRL* __attribute__((always_inline)) FC_ConnHnd
     return U_CONN_HNDL_PTR.pWsc;
 }
 
+static TCPIP_WSC_EV_HANDLE FC_EvHndler2Handle(TCPIP_WSC_EVENT_HANDLER handler)
+{
+    union
+    {
+        TCPIP_WSC_EVENT_HANDLER handler;
+        TCPIP_WSC_EV_HANDLE     evHandle;
+    }U_EV_HANDLER_EV_HANDLE;
+    
+    U_EV_HANDLER_EV_HANDLE.handler = handler;
+    return U_EV_HANDLER_EV_HANDLE.evHandle;
+}
+
 static __inline__ void __attribute__((always_inline)) WSC_StartSrvWaitTimer(TCPIP_WSC_CONN_CTRL* pWsc)
 {
     if(pWsc->parent->srvTmoMs != 0U)
@@ -494,7 +506,7 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     initFail = false;
     while(wscInitCount == 0)
     {   // first time we're run
-        memset(&wscModDcpt, 0, sizeof(wscModDcpt));
+        (void)memset(&wscModDcpt, 0, sizeof(wscModDcpt));
         _TCPIPStack_Assert(gWscDcpt == NULL, __FILE__, __func__, __LINE__);
 
         const TCPIP_WSC_MODULE_CONFIG* wscInitData = (const TCPIP_WSC_MODULE_CONFIG*)initData;
@@ -559,24 +571,24 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
             break;
         }
         // make sure the sockets have a minimum buffer size
-        uint16_t sktBuffSize = wscInitData->sktTxBuffSize == 0U ? TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE : wscInitData->sktTxBuffSize;
+        uint16_t sktBuffSize = wscInitData->sktTxBuffSize == 0U ? (uint16_t)TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE : wscInitData->sktTxBuffSize;
         if(sktBuffSize < WSC_MIN_SOCKET_BUFF_SIZE)
         {
             sktBuffSize = WSC_MIN_SOCKET_BUFF_SIZE;
         } 
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_SIZE) != 0)
-        wscModDcpt.sktTxBuffSize = dbgSktTxSize;
+        wscModDcpt.sktTxBuffSize = (uint16_t)dbgSktTxSize;
 #else
         wscModDcpt.sktTxBuffSize = sktBuffSize;
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_SIZE) != 0)
 
-        sktBuffSize = wscInitData->sktRxBuffSize == 0U ? TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE : wscInitData->sktRxBuffSize;
+        sktBuffSize = wscInitData->sktRxBuffSize == 0U ? (uint16_t)TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE : wscInitData->sktRxBuffSize;
         if(sktBuffSize < WSC_MIN_SOCKET_BUFF_SIZE)
         {
             sktBuffSize = WSC_MIN_SOCKET_BUFF_SIZE;
         } 
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_SIZE) != 0)
-        wscModDcpt.sktRxBuffSize = dbgSktRxSize;
+        wscModDcpt.sktRxBuffSize = (uint16_t)dbgSktRxSize;
 #else
         wscModDcpt.sktRxBuffSize = sktBuffSize;
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SKT_SIZE) != 0)
@@ -584,13 +596,13 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
         wscModDcpt.wscConfigFlags = wscInitData->configFlags;
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SRV_TMO) != 0)
-        wscModDcpt.srvTmoMs = dbgSrvTmo;
+        wscModDcpt.srvTmoMs = (uint16_t)dbgSrvTmo;
 #else
         wscModDcpt.srvTmoMs = wscInitData->srvTmo;
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SRV_TMO) != 0)
 
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_USR_TMO) != 0)
-        wscModDcpt.usrTmoMs = dbgUsrTmo;
+        wscModDcpt.usrTmoMs = (uint16_t)dbgUsrTmo;
 #else
         wscModDcpt.usrTmoMs = wscInitData->usrTmo;
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_USR_TMO) != 0)
@@ -726,10 +738,9 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
         // lock access to the gWscDcpt->wscConnCtrl resource!!!
         UserGblLock(gWscDcpt);
         pWsc = gWscDcpt->wscConnCtrl;
-        res = TCPIP_WSC_RES_OK;
         for(connIx = 0; connIx < gWscDcpt->wscConnNo; connIx++)
         {
-            if(pWsConn == NULL && pWsc->intState == (uint16_t)WSC_INT_STAT_IDLE)
+            if(pWsc->intState == (uint16_t)WSC_INT_STAT_IDLE)
             {
                 SetIntState(pWsc, WSC_INT_STAT_BUSY);
                 pWsConn = pWsc;
@@ -739,11 +750,6 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
         }
 
         UserGblUnlock(gWscDcpt);
-
-        if(res != TCPIP_WSC_RES_OK)
-        {
-            break;
-        }
 
         if(pWsConn == NULL)
         {
@@ -766,7 +772,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
 
         if(res == TCPIP_WSC_RES_OK)
         {
-            strncpy(pWsConn->srvName, connDcpt->server, sizeof(pWsConn->srvName) - 1U);
+            (void)strncpy(pWsConn->srvName, connDcpt->server, sizeof(pWsConn->srvName) - 1U);
             pWsConn->srvName[sizeof(pWsConn->srvName) - 1U] = '\0';
 
             pWsConn->resource[0] = '\0';
@@ -779,7 +785,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
                 }
                 if(resource[0] != '\0')
                 {
-                    strncpy(pWsConn->resource, resource, sizeof(pWsConn->resource) - 1U);
+                    (void)strncpy(pWsConn->resource, resource, sizeof(pWsConn->resource) - 1U);
                     pWsConn->resource[sizeof(pWsConn->resource) - 1U] = '\0';
                 }
             }
@@ -795,7 +801,7 @@ TCPIP_WSC_CONN_HANDLE TCPIP_WSC_ConnOpen(const TCPIP_WSC_CONN_DCPT* connDcpt, TC
                     if(protoSrc != NULL && strlen(protoSrc) != 0U)
                     {
                         char* protoDst = pWsConn->protocols[protoDstIx];
-                        strncpy(protoDst, protoSrc, TCPIP_WSC_PROTO_MAX_LEN);
+                        (void)strncpy(protoDst, protoSrc, TCPIP_WSC_PROTO_MAX_LEN);
                         protoDst[TCPIP_WSC_PROTO_MAX_LEN] = '\0';
                         protoDstIx++;
                         pWsConn->nProtocols++;
@@ -936,12 +942,12 @@ static TCPIP_WSC_RES WSC_SendCloseFrame(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_CLO
             return TCPIP_WSC_RES_EXCESS_DATA; 
         }
         TCPIP_UINT16_VAL code;  // convert the closeCode
-        code.Val = closeCode;
+        code.Val = (uint16_t)closeCode;
         U_CLOSE_BUFF.uBuff[0] = code.v[1];  // convert to net order
         U_CLOSE_BUFF.uBuff[1] = code.v[0];  // convert to net order
         if(reason != NULL)
         {
-            strncpy(U_CLOSE_BUFF.cBuff + 2, reason, sizeof(U_CLOSE_BUFF.cBuff) - 2U);
+            (void)strncpy(U_CLOSE_BUFF.cBuff + 2, reason, sizeof(U_CLOSE_BUFF.cBuff) - 2U);
         }
         msgBuff = U_CLOSE_BUFF.uBuff;
     }
@@ -952,7 +958,7 @@ static TCPIP_WSC_RES WSC_SendCloseFrame(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_CLO
     }
 
     // send a close frame
-    return WSC_SendCtrlFrame(pWsc, TCPIP_WS_CTRL_CODE_CLOSE, msgBuff, msgSize);
+    return WSC_SendCtrlFrame(pWsc, (uint8_t)TCPIP_WS_CTRL_CODE_CLOSE, msgBuff, (uint16_t)msgSize);
 }
 
 // RFC notes:
@@ -1070,7 +1076,7 @@ size_t TCPIP_WSC_MessageSend(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_SEND_MSG_DCP
                 break;
             }
 
-            if((isFragment && msgDcpt->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U)
+            if((/*isFragment &&*/ msgDcpt->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U)
             {   // control message cannot be fragmented!
                 res = TCPIP_WSC_RES_BAD_ARG;
                 break;
@@ -1091,7 +1097,7 @@ size_t TCPIP_WSC_MessageSend(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_SEND_MSG_DCP
             }
             else
             {   // data frame
-                frameLen = payloadLen > (size_t)WS_FRAME_SMALL_MAX_PAYLEN ? sizeof(WS_CLIENT_FRAME_MEDIUM) : sizeof(WS_FRAME_SMALL_MAX_PAYLEN);
+                frameLen = payloadLen > (size_t)WS_FRAME_SMALL_MAX_PAYLEN ? (uint16_t)sizeof(WS_CLIENT_FRAME_MEDIUM) : (uint16_t)sizeof(WS_FRAME_SMALL_MAX_PAYLEN);
             }
 
             uint16_t avlblWrLen = NET_PRES_SocketWriteIsReady(pWsc->netSocket, frameLen, 0U);
@@ -1141,7 +1147,7 @@ size_t TCPIP_WSC_MessageSend(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_SEND_MSG_DCP
         size_t txLeftBytes = pTxMsg->msgSize - pTxMsg->sentBytes; 
         if(txLeftBytes > (size_t)pWsc->parent->sktTxBuffSize)
         {   // no sense to exceed the buffer size; also keep it to 16 bits
-            pTxMsg->toSendBytes = (size_t)pWsc->parent->sktTxBuffSize;
+            pTxMsg->toSendBytes = pWsc->parent->sktTxBuffSize;
         }
         else
         {
@@ -1220,7 +1226,7 @@ TCPIP_WSC_EV_HANDLE TCPIP_WSC_HandlerRegister(TCPIP_WSC_CONN_HANDLE hConn, TCPIP
                 {   // OK, none already registered.
                     pWsc->evHandler = handler;
                     pWsc->hParam = hParam;
-                    evHandle = handler; 
+                    evHandle = FC_EvHndler2Handle(handler); 
                 }
                 WSC_ConnectionUnlock(pWsc, false);
             }
@@ -1233,7 +1239,7 @@ TCPIP_WSC_EV_HANDLE TCPIP_WSC_HandlerRegister(TCPIP_WSC_CONN_HANDLE hConn, TCPIP
         {
             gWscDcpt->evHandler = handler;
             gWscDcpt->hParam = hParam;
-            evHandle = handler;
+            evHandle = FC_EvHndler2Handle(handler);
         }
         UserGblUnlock(gWscDcpt);
     }
@@ -1349,7 +1355,7 @@ size_t TCPIP_WSC_MessageRead(TCPIP_WSC_CONN_HANDLE hConn, const void* msgHandle,
 
         if(pBuffer != NULL)
         {
-            usrLeftBytes = (usrLeftBytes > bufferSize) ? bufferSize : usrLeftBytes;
+            usrLeftBytes = ((size_t)usrLeftBytes > bufferSize) ? (uint16_t)bufferSize : usrLeftBytes;
         }
         // else discard whatever available
 
@@ -1401,7 +1407,11 @@ size_t TCPIP_WSC_MessageRead(TCPIP_WSC_CONN_HANDLE hConn, const void* msgHandle,
 TCPIP_WSC_RES TCPIP_WSC_MessageInfo(TCPIP_WSC_CONN_HANDLE hConn, const void* msgHandle, TCPIP_WSC_PEND_MSG_DCPT* msgDcpt)
 {
     TCPIP_WSC_CONN_CTRL* pWsc = WSC_ValidateConn(hConn);
-    TCPIP_WSC_PEND_MSG_DCPT pendDcpt1, pendDcpt2;  // read the current pending message descriptor
+    union
+    {
+        TCPIP_WSC_PEND_MSG_DCPT dcpt;
+        uint8_t dcptBuff[sizeof(TCPIP_WSC_PEND_MSG_DCPT)];
+    }pendDcpt1, pendDcpt2;  // read the current pending message descriptor
 
     if(pWsc == NULL)
     {
@@ -1416,28 +1426,28 @@ TCPIP_WSC_RES TCPIP_WSC_MessageInfo(TCPIP_WSC_CONN_HANDLE hConn, const void* msg
     // read only: try to get a consistent state without locking
     do
     {
-        pendDcpt1 = pWsc->pendRxMsg;
-        pendDcpt2 = pWsc->pendRxMsg;
-    } while(memcmp(&pendDcpt1, &pendDcpt2, sizeof(pendDcpt1)) != 0);
+        pendDcpt1.dcpt = pWsc->pendRxMsg;
+        pendDcpt2.dcpt = pWsc->pendRxMsg;
+    } while(memcmp(pendDcpt1.dcptBuff, pendDcpt2.dcptBuff, sizeof(pendDcpt1)) != 0);
 
     // got a consistent reading
-    if(pendDcpt1.msgHandle == NULL)
+    if(pendDcpt1.dcpt.msgHandle == NULL)
     {   // no message pending
         return TCPIP_WSC_RES_NO_MSG;
     }
 
-    _TCPIPStack_Assert(pendDcpt1.info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
+    _TCPIPStack_Assert(pendDcpt1.dcpt.info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
     // should not be done, as it should have been cleared by user read!
-    _TCPIPStack_Assert(pendDcpt1.renderedLen < pendDcpt1.payloadLen, __FILE__, __func__, __LINE__);
+    _TCPIPStack_Assert(pendDcpt1.dcpt.renderedLen < pendDcpt1.dcpt.payloadLen, __FILE__, __func__, __LINE__);
     
-    if(msgHandle != NULL && msgHandle != pendDcpt1.msgHandle)
+    if(msgHandle != NULL && msgHandle != pendDcpt1.dcpt.msgHandle)
     {
         return TCPIP_WSC_RES_BAD_MSG_HANDLE;
     }
 
     if(msgDcpt != NULL)
     {   // update the info
-        *msgDcpt = pendDcpt1;
+        *msgDcpt = pendDcpt1.dcpt;
     }
     // make sure state hasn't changed
     if(pWsc->connState != (uint16_t)TCPIP_WSC_CONN_STAT_OPEN)
@@ -1617,7 +1627,7 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
     }
     else
     {
-        NET_PRES_SocketWasReset(netSkt);
+        (void)NET_PRES_SocketWasReset(netSkt);
     }
     pConn->netSocket = netSkt;
 
@@ -1973,7 +1983,7 @@ static const char* ws_end_header = "\r\n\r\n";  // http headers end
 static const char* ws_alt_end_header = "\n\n";  // some servers end like this...
 static const char* ws_list_delim = ", ";        // list words delimiter
 static const char* ws_guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";    // WS GUID
-static int ws_word_delim = ' ';                 // word delimiter
+static int ws_word_delim = (int)' ';                 // word delimiter
 
 // Origin: http://example.com - optional for non web clients
 // static const char wsc_origin_header = "Origin: %s"; // Origin: http://example.com
@@ -2033,7 +2043,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     // "Upgrade: websocket";
     uint16_t sLen = (uint16_t)strlen(wsc_upgrade_header); 
     totReqLen += sLen;
-    strcpy(U_HDR_BUFF.srvBuff, wsc_upgrade_header);
+    (void)strcpy(U_HDR_BUFF.srvBuff, wsc_upgrade_header);
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, sLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
      U_HDR_BUFF.srvBuff[sLen] = '\0';
@@ -2043,7 +2053,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     // "Connection: Upgrade";
     sLen = (uint16_t)strlen(wsc_connection_header);
     totReqLen += sLen;
-    strcpy(U_HDR_BUFF.srvBuff, wsc_connection_header);
+    (void)strcpy(U_HDR_BUFF.srvBuff, wsc_connection_header);
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, sLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
      U_HDR_BUFF.srvBuff[sLen] = '\0';
@@ -2054,7 +2064,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
      if(pWsc->nProtocols != 0U)
      {
          sLen = (uint16_t)strlen(wsc_protocol_header);
-         strcpy(U_HDR_BUFF.srvBuff, wsc_protocol_header);
+         (void)strcpy(U_HDR_BUFF.srvBuff, wsc_protocol_header);
          U_HDR_BUFF.srvBuff[sLen] = ' ';    // add start proto list delimiter
          sLen++;
          totReqLen += sLen;
@@ -2070,7 +2080,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
          {
              protoSrc = pWsc->protocols[protoIx];
              sLen = (uint16_t)strlen(protoSrc);
-             strcpy(U_HDR_BUFF.srvBuff, protoSrc);
+             (void)strcpy(U_HDR_BUFF.srvBuff, protoSrc);
              if(protoIx == pWsc->nProtocols - 1U)
              {  // add ws_end_line: "\r\n"
                  U_HDR_BUFF.srvBuff[sLen] = ws_end_line[0];
@@ -2106,7 +2116,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     {
         sLen = (uint16_t)strlen(wsc_version_header);
         totReqLen += sLen;
-        strcpy(U_HDR_BUFF.srvBuff, wsc_version_header);
+        (void)strcpy(U_HDR_BUFF.srvBuff, wsc_version_header);
         outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, sLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
         U_HDR_BUFF.srvBuff[sLen] = '\0';
@@ -2117,7 +2127,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     // end of headers
     sLen = (uint16_t)strlen(ws_end_line);
     totReqLen += sLen;
-    strcpy(U_HDR_BUFF.srvBuff, ws_end_line);
+    (void)strcpy(U_HDR_BUFF.srvBuff, ws_end_line);
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, sLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
         U_HDR_BUFF.srvBuff[sLen] = '\0';
@@ -2130,7 +2140,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     }
     else
     {   // all good
-        NET_PRES_SocketFlush(skt); 
+        (void)NET_PRES_SocketFlush(skt); 
         WSC_StartSrvWaitTimer(pWsc);
         pWsc->valMask = 0;
         SetIntState(pWsc, WSC_INT_STAT_WAIT_HSHAKE);
@@ -2153,7 +2163,7 @@ static int WSC_GenerateKey(uint8_t* base64Buffer, size_t buffLen)
     }
 
     // base64 encode
-    uint16_t base64Len = TCPIP_Helper_Base64Encode(wsKeyBuffer, sizeof(wsKeyBuffer), base64Buffer, buffLen);
+    uint16_t base64Len = TCPIP_Helper_Base64Encode(wsKeyBuffer, (uint16_t)sizeof(wsKeyBuffer), base64Buffer, (uint16_t)buffLen);
     base64Buffer[base64Len] = 0;    // end string properly
 
     // success
@@ -2178,12 +2188,12 @@ typedef struct
 
 static const WSC_VALIDATE_ENTRY wsc_validate_tbl[] =
 {
-    {wss_status_line, Validate_StatusLine},
-    {wss_upgrade_line, Validate_UpgradeLine},
-    {wss_connection_line, Validate_ConnectionLine},
-    {wss_accept_line, Validate_AcceptLine},
-    {wss_proto_line, Validate_ProtoLine},
-    {wss_extension_line, Validate_ExtensionLine},
+    {wss_status_line, &Validate_StatusLine},
+    {wss_upgrade_line, &Validate_UpgradeLine},
+    {wss_connection_line, &Validate_ConnectionLine},
+    {wss_accept_line, &Validate_AcceptLine},
+    {wss_proto_line, &Validate_ProtoLine},
+    {wss_extension_line, &Validate_ExtensionLine},
 };
 
 // WSC_INT_STAT_WAIT_HSHAKE
@@ -2199,7 +2209,7 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
     while(avlblBytes != 0U)
     {   // data waiting; peek into available data
         char* hdrBuff = pWsc->c_peekBuff; 
-        peekBytes = NET_PRES_SocketPeek(skt, pWsc->u_peekBuff, sizeof(pWsc->u_peekBuff));
+        peekBytes = NET_PRES_SocketPeek(skt, pWsc->u_peekBuff, (uint16_t)sizeof(pWsc->u_peekBuff));
         hdrBuff[peekBytes] = '\0';
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_RX_HSHAKE) != 0)
         SYS_CONSOLE_PRINT("WSC Srv hshake -> %s\r\n", hdrBuff); 
@@ -2224,16 +2234,16 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         {
             hdrEnd[1] = '\0';   // end properly but leave the end of line in place
             hdrEnd += hdrEndLen;
-            peekBytes = hdrEnd - hdrBuff;
+            peekBytes = (uint16_t)(hdrEnd - hdrBuff);
         }
         else
         {   // find at least an end of line
             endPeek = (char*)strdelimr(hdrBuff, ws_end_line);
             if(endPeek == NULL)
             {   // we need at least a line to process
-                if(peekBytes == sizeof(pWsc->u_peekBuff))
+                if(peekBytes == (uint16_t)sizeof(pWsc->u_peekBuff))
                 {   // line longer than our whole peek buffer; just discard it!
-                    NET_PRES_SocketRead(skt, NULL, peekBytes);  // shouldn't be part of the standard headers anyway
+                    (void)NET_PRES_SocketRead(skt, NULL, peekBytes);  // shouldn't be part of the standard headers anyway
                 }
                 // wait for more header characters
                 break;
@@ -2241,12 +2251,12 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
             else
             {   // got an end of line
                 *(++endPeek) = '\0';
-                peekBytes = endPeek - hdrBuff;
+                peekBytes = (uint16_t)(endPeek - hdrBuff);
             }
         }
 
         // discard whatever we read
-        NET_PRES_SocketRead(skt, NULL, peekBytes);
+        (void)NET_PRES_SocketRead(skt, NULL, peekBytes);
         // ok, process buffer
         pWsc->valMask |= WSC_ValidateResponse(pWsc, hdrBuff);
 
@@ -2339,7 +2349,7 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
         }
         // process this line;
 
-        strncpy(lineBuff, lineStart, lineSize);
+        (void)strncpy(lineBuff, lineStart, (size_t)lineSize);
         lineBuff[lineSize] = '\0'; 
         lineStart = lineEnd;
 
@@ -2354,7 +2364,7 @@ static uint32_t WSC_ValidateResponse(TCPIP_WSC_CONN_CTRL* pWsc, char* srvRespons
         // check if known word
         // dummy linear search
         int wordLen = wordEnd - lineBuff;
-        strncpy(wordBuff, lineBuff, wordLen);
+        (void)strncpy(wordBuff, lineBuff, (size_t)wordLen);
         wordBuff[wordLen] = '\0'; 
 
         const WSC_VALIDATE_ENTRY* pEntry = wsc_validate_tbl; 
@@ -2437,7 +2447,7 @@ static uint32_t Validate_AcceptLine(TCPIP_WSC_CONN_CTRL* pWsc, char* lineBuff, c
     }
 
     // base64 encode the SHA-1 digest 
-    uint16_t base64Len = TCPIP_Helper_Base64Encode(shaDigest, sizeof(shaDigest), U_64_BUFF.ub64Buffer, sizeof(U_64_BUFF.ub64Buffer ) - 1U);
+    uint16_t base64Len = TCPIP_Helper_Base64Encode(shaDigest, (uint16_t)sizeof(shaDigest), U_64_BUFF.ub64Buffer, (uint16_t)sizeof(U_64_BUFF.ub64Buffer ) - 1U);
     U_64_BUFF.ub64Buffer[base64Len] = 0;    // end string properly
 
     // that should be the value in the accept key.
@@ -2760,17 +2770,20 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
             break;
 
         default:    // TCPIP_WS_FRAME_TYPE_LARGE
-            payloadLen.w[0] = TCPIP_Helper_ntohl(U_FRAME_BUFF.lFrame.extPayLenLow2);
-            payloadLen.w[1] = TCPIP_Helper_ntohl(U_FRAME_BUFF.lFrame.extPayLenLow1);
-            payloadLen.w[2] = TCPIP_Helper_ntohl(U_FRAME_BUFF.lFrame.extPayLenHi2);
-            payloadLen.w[3] = TCPIP_Helper_ntohl(U_FRAME_BUFF.lFrame.extPayLenHi1);
+            payloadLen.w[0] = TCPIP_Helper_ntohs(U_FRAME_BUFF.lFrame.extPayLenLow2);
+            payloadLen.w[1] = TCPIP_Helper_ntohs(U_FRAME_BUFF.lFrame.extPayLenLow1);
+            payloadLen.w[2] = TCPIP_Helper_ntohs(U_FRAME_BUFF.lFrame.extPayLenHi2);
+            payloadLen.w[3] = TCPIP_Helper_ntohs(U_FRAME_BUFF.lFrame.extPayLenHi1);
 
             if(payloadLen.Val < 0x10000ULL)
             {
                 badFrameType = 3;
             }
 #if (M_WSC_LARGE_FRAME_SUPPORT == 0)
-            badFrameType = 4;    // not supported (yet)
+            if(badFrameType == 0)
+            {
+                badFrameType = 4;    // not supported (yet)
+            }
 #endif  // (M_WSC_LARGE_FRAME_SUPPORT == 0)
 
             break;
@@ -2811,7 +2824,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
     peekBytes = frameLen + (uint16_t)payloadLen.Val;
     if(sizeof(U_PEEK_BUFF.uBuff) < peekBytes)
     {
-       peekBytes =  sizeof(U_PEEK_BUFF.uBuff); 
+       peekBytes =  (uint16_t)sizeof(U_PEEK_BUFF.uBuff); 
     }
     peekBytes = NET_PRES_SocketPeek(skt, U_PEEK_BUFF.uBuff, peekBytes);
     U_PEEK_BUFF.cBuff[peekBytes] = '\0';
@@ -2822,7 +2835,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_RX_MSG) != 0) && ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_RX_LOAD) != 0)
 
 
-    NET_PRES_SocketRead(skt, NULL, frameLen);   // discard the frame header, shouldn't be needed!
+    (void)NET_PRES_SocketRead(skt, NULL, frameLen);   // discard the frame header, shouldn't be needed!
 
     pWsc->pendRxMsg.info = msgInfo;
     pWsc->pendRxMsg.payloadLen = (uint16_t)payloadLen.Val;
@@ -2834,6 +2847,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
         const void* handle;
     }U_HANDLE;
 
+    U_HANDLE.handle = NULL;
     (void)WSC_RngGenerate(U_HANDLE.u8, sizeof(U_HANDLE.u8));
     pWsc->pendRxMsg.msgHandle = U_HANDLE.handle;    // generate handle and show message is pending
     pWsc->pendRxMsg.renderedLen = 0U;
@@ -2880,7 +2894,7 @@ static void WSC_Task_Closed(TCPIP_WSC_CONN_CTRL* pWsc)
 
         if(pWsc->srvCloseRxed != 0U) 
         {   // received a close frame; have to send ours
-            res = WSC_SendCloseFrame(pWsc, pWsc->srvCloseCode, NULL);
+            res = WSC_SendCloseFrame(pWsc, (TCPIP_WSC_CLOSE_CODE)pWsc->srvCloseCode, NULL);
             if(res == TCPIP_WSC_RES_OK)
             {   // all good; will be closed the next execution
                 pWsc->cliCloseSent = 1;
@@ -2964,7 +2978,7 @@ static void Wsc_ConnInit(TCPIP_WSC_CONN_CTRL* pWsc)
     // save the pre-set members
     uint16_t connIx = pWsc->connIx;
     TCPIP_WSC_MODULE_DCPT* parent = pWsc->parent;
-    memset(pWsc, 0, sizeof(*pWsc));
+    (void)memset(pWsc, 0, sizeof(*pWsc));
     // restore
     pWsc->connIx = connIx;
     pWsc->parent = parent;
@@ -3001,7 +3015,7 @@ static uint8_t WSC_MsgFlags(WS_FRAME_HEADER frameHdr)
 
         default:
             // unknown/extension?
-            flags = (unsigned int)TCPIP_WSC_MSG_FLAG_RX_UNKNOWN;
+            flags = (uint8_t)TCPIP_WSC_MSG_FLAG_RX_UNKNOWN;
             break;
     }
 
@@ -3056,7 +3070,7 @@ static uint16_t WSC_ProcPendCtrl(TCPIP_WSC_CONN_CTRL* pWsc)
             // got the whole control message
             peekBytes = NET_PRES_SocketPeek(skt, pWsc->u_peekBuff, ctrlLen);
             pWsc->c_peekBuff[peekBytes] = '\0';
-            pWsc->peekCtrlLen = ctrlLen;
+            pWsc->peekCtrlLen = (uint8_t)ctrlLen;
         }
         evInfo.evCtrlMsg = pWsc->c_peekBuff;
     }
@@ -3073,11 +3087,11 @@ static uint16_t WSC_ProcPendCtrl(TCPIP_WSC_CONN_CTRL* pWsc)
     TCPIP_WSC_EVENT_TYPE ctrlEv = WSC_CtrlEvent(opCode);
     if(WSC_Notify_Event(pWsc, ctrlEv, evInfo))
     {   // event delivered; done!
-        pendDcpt->info.frameType = TCPIP_WS_FRAME_TYPE_NONE;
+        pendDcpt->info.frameType = (uint8_t)TCPIP_WS_FRAME_TYPE_NONE;
         pendDcpt->msgHandle = NULL;
         if(peekBytes != 0U)
         {
-            NET_PRES_SocketRead(skt, NULL, peekBytes);   // discard the control message, not needed anymore
+            (void)NET_PRES_SocketRead(skt, NULL, peekBytes);   // discard the control message, not needed anymore
         }
         // all done
         retAct = (uint16_t)WSC_MSG_ACTION_DONE;
@@ -3151,7 +3165,7 @@ static bool WSC_DiscardFrame(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_RES dReason)
 #endif  // ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_RX_DISCARD) != 0) 
        if(dRes)
        {    // done
-           rxDcpt->info.frameType = TCPIP_WS_FRAME_TYPE_NONE; 
+           rxDcpt->info.frameType = (uint8_t)TCPIP_WS_FRAME_TYPE_NONE; 
            pWsc->discardRxMsg = NULL;
        }
        else
@@ -3275,9 +3289,9 @@ static TCPIP_WSC_RES WSC_SendCtrlFrame(TCPIP_WSC_CONN_CTRL* pWsc, uint8_t opCode
     WS_CLIENT_FRAME_CTRL* ctrlFrame = &cFrame;
     (void)memset(ctrlFrame, 0, sizeof(*ctrlFrame));
     ctrlFrame->hdr.fin = 1U;
-    ctrlFrame->hdr.opcode = (unsigned int)opCode;
+    ctrlFrame->hdr.opcode = (uint8_t)opCode;
     ctrlFrame->hdr.mask = 1U;
-    ctrlFrame->hdr.payLen = payloadLen;
+    ctrlFrame->hdr.payLen = (uint8_t)payloadLen;
 
     // generate the mask; this is an independent, complete message!
     union
@@ -3291,7 +3305,7 @@ static TCPIP_WSC_RES WSC_SendCtrlFrame(TCPIP_WSC_CONN_CTRL* pWsc, uint8_t opCode
 
     // frame complete; send it as one message
     uint8_t* pDst = maskBuff;
-    memcpy(pDst, ctrlFrame->hdr.b8, frameLen);
+    (void)memcpy(pDst, ctrlFrame->hdr.b8, frameLen);
     pDst += frameLen;
     // set the masked payload
     if(payloadLen != 0U)
@@ -3367,7 +3381,7 @@ static size_t WSC_SendMsgFrame(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX_MSG* pTxMs
                     pTxMsg->maskIx = 0;
                 }
             }
-            wrLen = NET_PRES_SocketWrite(skt, maskBuff, sizeof(maskBuff));
+            wrLen = NET_PRES_SocketWrite(skt, maskBuff, (uint16_t)sizeof(maskBuff));
             totWrLen += wrLen;
             if(wrLen != (uint16_t)sizeof(maskBuff))
             {   // could not write all data; abort
@@ -3387,7 +3401,7 @@ static size_t WSC_SendMsgFrame(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX_MSG* pTxMs
                     pTxMsg->maskIx = 0;
                 }
             }
-            totWrLen += NET_PRES_SocketWrite(skt, maskBuff, nRem);
+            totWrLen += NET_PRES_SocketWrite(skt, maskBuff, (uint16_t)nRem);
         }
         break;
     }
@@ -3415,7 +3429,7 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
 
     TCPIP_WS_FRAME_TYPE frameType;
     uint16_t frameLen;
-    uint16_t payloadLen = pTxMsg->msgSize;
+    size_t payloadLen = pTxMsg->msgSize;
 
     if((pTxMsg->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U) 
     {
@@ -3466,22 +3480,22 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
     }
 
     // calculate the opCode:
-    unsigned int opCode;
+    uint8_t opCode;
     if((pTxMsg->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U) 
     {
         opCode = pTxMsg->ctrlCode;
     }
     else if((pTxMsg->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_FRAG_MID) != 0U) 
     {
-        opCode = (unsigned int)TCPIP_WS_OPCODE_CONT_FRAME; 
+        opCode = (uint8_t)TCPIP_WS_OPCODE_CONT_FRAME; 
     }
     else if((pTxMsg->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_BINARY) != 0U) 
     {
-        opCode = (unsigned int)TCPIP_WS_OPCODE_BINARY_FRAME; 
+        opCode = (uint8_t)TCPIP_WS_OPCODE_BINARY_FRAME; 
     }
     else
     {
-        opCode = (unsigned int)TCPIP_WS_OPCODE_TEXT_FRAME; 
+        opCode = (uint8_t)TCPIP_WS_OPCODE_TEXT_FRAME; 
     }
 
 
@@ -3490,26 +3504,22 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
     if(frameType == TCPIP_WS_FRAME_TYPE_CTRL || frameType == TCPIP_WS_FRAME_TYPE_SMALL)
     {   // ctrl/small frame
         WS_CLIENT_FRAME_CTRL* cFrame = &U_FRAME_BUFF.cFrame;
-        cFrame->hdr.fin = finCode;
+        cFrame->hdr.fin = (uint8_t)finCode;
         cFrame->hdr.opcode = opCode;
         cFrame->hdr.mask = 1U;
-        cFrame->hdr.payLen = payloadLen;
+        cFrame->hdr.payLen = (uint8_t)payloadLen;
         (void)memcpy(cFrame->maskKey, pTxMsg->maskKey, 4U);
     }
-    else if(frameType == TCPIP_WS_FRAME_TYPE_MEDIUM)
+    else
     {
+        // _TCPIPStack_Assert(frameType == TCPIP_WS_FRAME_TYPE_MEDIUM, __FILE__, __func__, __LINE__);
         WS_CLIENT_FRAME_MEDIUM* mFrame = &U_FRAME_BUFF.mFrame;
-        mFrame->hdr.fin = finCode;
-        mFrame->hdr.opcode = (unsigned int)opCode;
+        mFrame->hdr.fin = (uint8_t)finCode;
+        mFrame->hdr.opcode = opCode;
         mFrame->hdr.mask = 1U;
         mFrame->hdr.payLen = WS_FRAME_MEDIUM_PAYLEN;
-        mFrame->extPayLen = TCPIP_Helper_htons(payloadLen); 
+        mFrame->extPayLen = TCPIP_Helper_htons((uint16_t)payloadLen); 
         (void)memcpy(mFrame->maskKey, pTxMsg->maskKey, 4U);
-    }
-    else
-    {   // shouldn't get here!
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
-        return TCPIP_WSC_RES_NOT_IMPLEMENTED;
     }
 
     // send the frame header
@@ -3586,10 +3596,10 @@ int WSC_RngGenerate(uint8_t* rngBuff, size_t buffSize)
 static const char* strdelim(const char* str, const char* delim)
 {
     const char* pD;
-    while(*str)
+    while(*str != '\0')
     {
         pD = delim;
-        while(*pD)
+        while(*pD != '\0')
         {
             if(*pD++ == *str)
             {
@@ -3612,7 +3622,7 @@ static const char* strdelimr(const char* str, const char* delim)
     while(pEndStr != str)
     {
         pD = delim;
-        while(*pD)
+        while(*pD != '\0')
         {
             if(*pD++ == *pEndStr)
             {
@@ -3630,7 +3640,7 @@ static const char* strdelimr(const char* str, const char* delim)
 static bool strcany(const char* delim, int ch)
 {
     const char* pD = delim;
-    while(*pD)
+    while(*pD != '\0')
     {
         if(*pD++ == ch)
         {
@@ -3653,7 +3663,7 @@ static const char* strstrany(const char* str, const char* delim, const char** pE
     if(startDelim != NULL && pEndDelim != NULL)
     {   // skip all other delimiters from then on
         endDelim = startDelim + 1;
-        while(strcany(delim, endDelim[0]))
+        while(strcany(delim, (int)endDelim[0]))
         {
             endDelim++;
         }

@@ -74,12 +74,12 @@ Microchip or any third party.
   Remarks:
     None
  */
-bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData);
+bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 
 /*****************************************************************************
   Function:
-    void  TCPIP_WSC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
+    void  TCPIP_WSC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
     Deinitializes the WSC module.
@@ -100,7 +100,7 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const
   Remarks:
     None.
  */
-void  TCPIP_WSC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
+void  TCPIP_WSC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 #endif  // H_WSC_MANAGER_H_
