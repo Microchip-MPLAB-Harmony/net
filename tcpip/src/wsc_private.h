@@ -57,6 +57,10 @@ Microchip or any third party.
 
 #define M_WSC_LARGE_FRAME_SUPPORT   0
 
+// fragmented messages: currently not supported
+#define M_WSC_FRAGMENT_SUPPORT   0
+
+
 // type of m-thread synchronization we use
 // by default, using a semaphore
 // else, it's a critical section but BUSY may be returned to the API calls!

@@ -1070,17 +1070,20 @@ size_t TCPIP_WSC_MessageSend(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_SEND_MSG_DCP
                 ((msgDcpt->msgFlags & ((uint8_t)TCPIP_WSC_MSG_FLAG_FRAG_START | (uint16_t)TCPIP_WSC_MSG_FLAG_FRAG_END)) != 0U &&
                  (msgDcpt->msgFlags & ((uint8_t)TCPIP_WSC_MSG_FLAG_FRAG_START | (uint16_t)TCPIP_WSC_MSG_FLAG_FRAG_END)) != ((uint16_t)TCPIP_WSC_MSG_FLAG_FRAG_START | (uint16_t)TCPIP_WSC_MSG_FLAG_FRAG_END));
 
+
+#if (M_WSC_FRAGMENT_SUPPORT == 0)
             if(isFragment)
             {   // currently fragmentation not supported
                 res = TCPIP_WSC_RES_NOT_IMPLEMENTED;
                 break;
             }
-
-            if((/*isFragment &&*/ msgDcpt->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U)
+#else
+            if((isFragment && msgDcpt->msgFlags & (uint8_t)TCPIP_WSC_MSG_FLAG_CTRL) != 0U)
             {   // control message cannot be fragmented!
                 res = TCPIP_WSC_RES_BAD_ARG;
                 break;
             }
+#endif  // (M_WSC_FRAGMENT_SUPPORT == 0)
 
             payloadLen = msgDcpt->msgData == NULL ? 0UL : msgDcpt->msgSize;
 
