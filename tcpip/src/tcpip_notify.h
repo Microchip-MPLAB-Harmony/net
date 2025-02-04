@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_NOTIFY_H_
-#define __TCPIP_NOTIFY_H_
+#ifndef H_TCPIP_NOTIFY_H_
+#define H_TCPIP_NOTIFY_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -301,7 +301,7 @@ Function:
 */
 static __inline__ void __attribute__((always_inline)) TCPIP_Notification_Lock(PROTECTED_SINGLE_LIST* notifyList)
 {
-    TCPIP_Helper_ProtectedSingleListLock(notifyList);
+    (void)TCPIP_Helper_ProtSglListLock(notifyList);
 }
 
 // *****************************************************************************
@@ -333,12 +333,12 @@ Function:
 */
 static __inline__ void __attribute__((always_inline)) TCPIP_Notification_Unlock(PROTECTED_SINGLE_LIST* notifyList)
 {
-    TCPIP_Helper_ProtectedSingleListUnlock(notifyList);
+    (void)TCPIP_Helper_ProtSglListUnlock(notifyList);
 }
 
 
 
-#endif  // __TCPIP_NOTIFY_H_
+#endif  // H_TCPIP_NOTIFY_H_
 
 
 

@@ -16,7 +16,7 @@
     that are used in the current stack implementation.
 
     See RFC 6335 and 
-    https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+    www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
     for details.
 
     Also some private port numbers (and ranges) used by the stack modules
@@ -25,7 +25,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -56,8 +56,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_COMMON_PORTS_H__
-#define __TCPIP_COMMON_PORTS_H__
+#ifndef H_TCPIP_COMMON_PORTS_H__
+#define H_TCPIP_COMMON_PORTS_H__
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -227,4 +227,4 @@ Microchip or any third party.
 //DOM-IGNORE-END
 
 
-#endif  // __TCPIP_COMMON_PORTS_H__
+#endif  // H_TCPIP_COMMON_PORTS_H__

@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,9 +44,9 @@ Microchip or any third party.
 #define TCPIP_POOL_DEBUG_MASK_TRACE_GLOBAL      (0x0002)
 
 // enable POOL debugging levels
-#define TCPIP_POOL_DEBUG_LEVEL  0
+#define TCPIP_POOL_DEBUG_LEVEL  (0x01)
 
-#define _TCPIP_POOL_DCPT_MAGIC_NO        0x706f6f6c     // "pool" descriptor signature
+#define M_TCPIP_POOL_DCPT_MAGIC_NO        0x706f6f6cU     // "pool" descriptor signature
 
 // min heap alignment
 // always power of 2
@@ -54,30 +54,30 @@ Microchip or any third party.
 typedef struct __attribute__((aligned(CACHE_LINE_SIZE)))
 {
     uint64_t     pad[CACHE_LINE_SIZE / 8];
-}_TCPIP_POOL_ALIGN;
+}S_TCPIP_POOL_ALIGN;
 #elif (CACHE_LINE_SIZE >= 4u)
-typedef uint32_t _TCPIP_POOL_ALIGN;
+typedef uint32_t S_TCPIP_POOL_ALIGN;
 #else
 #error "TCP/IP Heap: incorrect CACHE_LINE_SIZE!"
 #endif // (CACHE_LINE_SIZE >= 8u)
 
-typedef union _tag_TCPIP_POOL_DATA_BLK
+typedef union U_tag_TCPIP_POOL_DATA_BLK
 {
-    _TCPIP_POOL_ALIGN x;
+    S_TCPIP_POOL_ALIGN x;
     struct  
     {
-        union _tag_TCPIP_POOL_DATA_BLK* next;
-        void*                           data[];                // pool data, user storage
+        union U_tag_TCPIP_POOL_DATA_BLK* next;
+        // void*                         data[];                // pool data, user storage
     };
 }TCPIP_POOL_DATA_BLK;   // a pool data chunk consists of linked blocks
                         // all of the same size
                         //
 
-struct _tag_TCPIP_POOL_DCPT;      // forward definition
+struct S_tag_TCPIP_POOL_DCPT;      // forward definition
 
 typedef struct 
 {
-    struct _tag_TCPIP_POOL_DCPT*    poolH;          // handle of the pool it belongs to
+    struct S_tag_TCPIP_POOL_DCPT*    poolH;          // handle of the pool it belongs to
     TCPIP_POOL_DATA_BLK*            freeList;        // list of data blocks
     // pool entry specifics
     uint16_t                        blockSize;       // size of the individual block (multiple of unit size)
@@ -92,7 +92,7 @@ typedef struct
                             // this is where the data is returned to the user from
 
 
-typedef struct _tag_TCPIP_POOL_DCPT
+typedef struct S_tag_TCPIP_POOL_DCPT
 {
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
     uint32_t                poolMagic;              // valid pool identifier
@@ -112,7 +112,7 @@ typedef struct _tag_TCPIP_POOL_DCPT
     OSAL_SEM_HANDLE_TYPE    poolSemaphore;          // synchronization object
                                                     // A semaphore per entry might be more efficient at run time
                                                     // However it's expensive.
-    uint8_t                 entryExpBlks[];         // nEntries array of # of blocks to expand when an entry runs out of mem
+    uint8_t                 entryExpBlks[1];        // nEntries array of # of blocks to expand when an entry runs out of mem
                                                     // 0 means no expansion
     //TCPIP_POOL_ENTRY      poolEntry[];            // pools themselves, different sizes
 }TCPIP_POOL_DCPT;   // pool descriptor: collection of pool entries
@@ -179,10 +179,10 @@ typedef struct _tag_TCPIP_POOL_DCPT
 // local data
 //
 
-static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH);
-static void*            _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
-static void*            _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize);
-static size_t           _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff);
+static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH);
+static void*            FS_TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
+static void*            FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize);
+static size_t           FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff);
 
 
 // allows a more efficient allocation based on the size that needs to be allocated (for pool type heaps)
@@ -190,43 +190,38 @@ static size_t           _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const vo
 
 #if defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
 typedef const void* TCPIP_STACK_HEAP_SIZE_HANDLE;
-static TCPIP_STACK_HEAP_SIZE_HANDLE _TCPIP_HEAP_HandleBySize(TCPIP_STACK_HEAP_HANDLE heapH, int blkSize);
-static void*            _TCPIP_HEAP_MallocBySize(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_STACK_HEAP_SIZE_HANDLE entryH, size_t nBytes);
-static TCPIP_POOL_ENTRY* _PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HEAP_SIZE_HANDLE entryH);
+static TCPIP_STACK_HEAP_SIZE_HANDLE FS_TCPIP_HEAP_HandleBySize(TCPIP_STACK_HEAP_HANDLE heapH, size_t blkSize);
+static void*            FS_TCPIP_HEAP_MallocBySize(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_STACK_HEAP_SIZE_HANDLE entryH, size_t nBytes);
+static TCPIP_POOL_ENTRY* FS_PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HEAP_SIZE_HANDLE entryH);
 #endif  // defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
 
-static size_t           _TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
-static size_t           _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
-static size_t           _TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
-static size_t           _TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
-static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           FS_TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           FS_TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           FS_TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           FS_TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
+static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH);
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-static size_t           _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr);
+static size_t           FS_TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-
-// maps a buffer to non cached memory
-const void* _TCPIP_HEAP_BufferMapNonCached(const void* buffer, size_t buffSize);
-const void* _TCPIP_HEAP_PointerMapCached(const void* ptr);
-
 
 // the heap object
-static const TCPIP_HEAP_OBJECT      _tcpip_heap_object = 
+static const TCPIP_HEAP_OBJECT      tcpip_heap_object = 
 {
-    .TCPIP_HEAP_Delete = _TCPIP_HEAP_Delete,
-    .TCPIP_HEAP_Malloc = _TCPIP_HEAP_Malloc,
-    .TCPIP_HEAP_Calloc = _TCPIP_HEAP_Calloc,
-    .TCPIP_HEAP_Free = _TCPIP_HEAP_Free,
-    .TCPIP_HEAP_Size = _TCPIP_HEAP_Size,
-    .TCPIP_HEAP_MaxSize = _TCPIP_HEAP_MaxSize,
-    .TCPIP_HEAP_FreeSize = _TCPIP_HEAP_FreeSize,
-    .TCPIP_HEAP_HighWatermark = _TCPIP_HEAP_HighWatermark,
-    .TCPIP_HEAP_LastError = _TCPIP_HEAP_LastError,
+    .F_TCPIP_HEAP_Delete = &FS_TCPIP_HEAP_Delete,
+    .F_TCPIP_HEAP_Malloc = &FS_TCPIP_HEAP_Malloc,
+    .F_TCPIP_HEAP_Calloc = &FS_TCPIP_HEAP_Calloc,
+    .F_TCPIP_HEAP_Free = &FS_TCPIP_HEAP_Free,
+    .F_TCPIP_HEAP_Size = &FS_TCPIP_HEAP_Size,
+    .F_TCPIP_HEAP_MaxSize = &FS_TCPIP_HEAP_MaxSize,
+    .F_TCPIP_HEAP_FreeSize = &FS_TCPIP_HEAP_FreeSize,
+    .F_TCPIP_HEAP_HighWatermark = &FS_TCPIP_HEAP_HighWatermark,
+    .F_TCPIP_HEAP_LastError = &FS_TCPIP_HEAP_LastError,
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    .TCPIP_HEAP_AllocSize = _TCPIP_HEAP_AllocSize,
+    .F_TCPIP_HEAP_AllocSize = &FS_TCPIP_HEAP_AllocSize,
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 #if defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
-    _TCPIP_HEAP_HandleBySize,
-    _TCPIP_HEAP_MallocBySize,
+    &FS_TCPIP_HEAP_HandleBySize,
+    &FS_TCPIP_HEAP_MallocBySize,
 #endif  // defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
 };
 
@@ -234,80 +229,90 @@ typedef struct
 {
     TCPIP_HEAP_OBJECT   heapObj;    // heap object API
     TCPIP_POOL_DCPT     poolDcpt;   // private pool heap object data
-}TCPIP_HEAP_OBJ_INSTANCE;
+}TCPIP_POOL_OBJ_INSTANCE;
 
 
-static int                  _PoolEntryCompare(const void* p1, const void* p2);
-static TCPIP_POOL_ENTRY*    _PoolEntryBySize(TCPIP_POOL_DCPT* pPool, int blkSize);
-static size_t               _PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer, size_t buffSize, int newBlocks);
-static void*                _PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry);
+static int                  FS_PoolEntryCompare(const void* p1, const void* p2);
+static TCPIP_POOL_ENTRY*    FS_PoolEntryBySize(TCPIP_POOL_DCPT* pPool, size_t blkSize);
+static size_t               FS_PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer, size_t buffSize, size_t newBlocks);
+static void*                FS_PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry);
 
 
 
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
-volatile int _PoolExitAssertLoop = 0;
-static bool _PoolAssertCond(bool cond, const char* message, int lineNo)
+static volatile int g_PoolExitAssertLoop = 0;
+static void FS_PoolAssert(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("TCPIP_POOL Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(_PoolExitAssertLoop == 0);
-        return false;
+        while(g_PoolExitAssertLoop == 0)
+        {
+            // do nothing
+        }
     }
-
-    return true;
 }
 // a debug condition, not really assertion
-volatile int _PoolExitCondLoop = 0;
-static bool _PoolDbgCond(bool cond, const char* message, int lineNo)
+static volatile int g_PoolExitCondLoop = 0;
+static bool FS_PoolDbgCond(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("TCPIP_POOL Cond: %s, in line: %d, \r\n", message, lineNo);
-        while(_PoolExitCondLoop == 0);
+        while(g_PoolExitCondLoop == 0)
+        {
+            // do nothing
+        }
         return false;
     }
     return true;
 }
 
 #else
-static __inline__ bool __attribute__((always_inline)) _PoolAssertCond(bool cond, const char* message, int lineNo)
+static __inline__ bool __attribute__((always_inline)) FS_PoolAssert(bool cond, const char* message, int lineNo)
 {
-    return true;
 }
-static __inline__ bool __attribute__((always_inline)) _PoolDbgCond(bool cond, const char* message, int lineNo)
+static __inline__ bool __attribute__((always_inline)) FS_PoolDbgCond(bool cond, const char* message, int lineNo)
 {
     return true;
 }
 #endif  // (TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC)
 
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_TRACE_GLOBAL) != 0)
-TCPIP_HEAP_OBJ_INSTANCE* _poolTraceInst = 0;
-TCPIP_POOL_ENTRY*        _poolTraceEntries[6] = {0};
+static TCPIP_POOL_OBJ_INSTANCE* g_poolTraceInst = NULL;
+static TCPIP_POOL_ENTRY*        g_poolTraceEntries[6] = {0};
 
-static void _PoolDbgTraceClear(void)
+static void FS_PoolDbgTraceDisplay(void);
+
+static void FS_PoolDbgTraceClear(void)
 {
-    _poolTraceInst = 0;
-    memset(_poolTraceEntries, 0, sizeof(_poolTraceEntries));
+    g_poolTraceInst = NULL;
+    (void)memset(g_poolTraceEntries, 0, sizeof(g_poolTraceEntries));
 }
 
-static void _PoolDbgTraceSet(TCPIP_HEAP_OBJ_INSTANCE* hInst)
+static void FS_PoolDbgTraceSet(TCPIP_POOL_OBJ_INSTANCE* hInst)
 {
     TCPIP_POOL_ENTRY*   pEntry;
     TCPIP_POOL_DCPT*    pPool;
-    int                 poolIx;
+    size_t              poolIx;
 
-    if((_poolTraceInst = hInst) != 0)
+    if((g_poolTraceInst = hInst) != NULL)
     {
-        pPool = &_poolTraceInst->poolDcpt;
-        for(pEntry = pPool->poolStart, poolIx = 0; pEntry < pPool->poolEnd && poolIx < sizeof(_poolTraceEntries) / sizeof(*_poolTraceEntries); pEntry++, poolIx++)
+        pPool = &g_poolTraceInst->poolDcpt;
+        pEntry = pPool->poolStart;
+        for(poolIx = 0; poolIx < sizeof(g_poolTraceEntries) / sizeof(*g_poolTraceEntries); poolIx++)
         {
-            _poolTraceEntries[poolIx] = pEntry;
+            g_poolTraceEntries[poolIx] = pEntry;
+            if((uint8_t*)pEntry >= (uint8_t*)pPool->poolEnd)
+            {
+                break;
+            }
+            pEntry++;
         }
     }
 }
 
-void _PoolDbgTraceDisplay(void)
+static void FS_PoolDbgTraceDisplay(void)
 {
     TCPIP_POOL_DCPT*    pPool;
     TCPIP_POOL_ENTRY*   pEntry;
@@ -315,84 +320,183 @@ void _PoolDbgTraceDisplay(void)
     uint32_t            totSize = 0;
     uint32_t            totAvlblSize = 0;
 
-    pPool = &_poolTraceInst->poolDcpt;
+    pPool = &g_poolTraceInst->poolDcpt;
     
-    if(pPool)
+    if(pPool != NULL)
     {
-        for(ix = 0, pEntry = pPool->poolStart; pEntry < pPool->poolEnd; pEntry++, ix++)
+        pEntry = pPool->poolStart;
+        ix = 0;
+        for(pEntry = pPool->poolStart; (uint8_t*)pEntry < (uint8_t*)pPool->poolEnd; pEntry++)
         {
             SYS_CONSOLE_PRINT("Pool Entry: %d, BlkSize: %4d, nBlks: %3d, FreeBlks: %d\r\n", ix, pEntry->blockSize, pEntry->nBlocks, pEntry->freeBlocks); 
-            totSize += pEntry->blockSize * pEntry->nBlocks;
-            totAvlblSize += pEntry->blockSize * pEntry->freeBlocks;
+            totSize += (uint32_t)pEntry->blockSize * (uint32_t)pEntry->nBlocks;
+            totAvlblSize += (uint32_t)pEntry->blockSize * (uint32_t)pEntry->freeBlocks;
+            ix++;
         }
     }
     SYS_CONSOLE_PRINT("Pool Tot Size: %d, Avlbl Size: %d\r\n", totSize, totAvlblSize); 
 
 }
 #else
-static __inline__ void __attribute__((always_inline)) _PoolDbgTraceClear(void)
+static __inline__ void __attribute__((always_inline)) FS_PoolDbgTraceClear(void)
 {
 }
 
-static __inline__ void __attribute__((always_inline)) _PoolDbgTraceSet(TCPIP_HEAP_OBJ_INSTANCE* hInst)
+static __inline__ void __attribute__((always_inline)) FS_PoolDbgTraceSet(TCPIP_POOL_OBJ_INSTANCE* hInst)
 {
 }
 
-void _PoolDbgTraceDisplay(void)
+static __inline__ void __attribute__((always_inline)) FS_PoolDbgTraceDisplay(void)
 {
 }
 
 #endif  // ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_TRACE_GLOBAL) != 0)
 
-
-// gets a TCPIP_HEAP_OBJ_INSTANCE from a heap handle
-// does minimum sanity checking 
-static __inline__ TCPIP_HEAP_OBJ_INSTANCE* __attribute__((always_inline)) _PoolInstance(TCPIP_STACK_HEAP_HANDLE heapH)
+// conversion functions/helpers
+//
+static __inline__ TCPIP_POOL_DATA_BLK* __attribute__((always_inline)) FC_PoolEntry2PoolBlk(TCPIP_POOL_ENTRY* pEntry)
 {
-    TCPIP_HEAP_OBJ_INSTANCE* pInst = (TCPIP_HEAP_OBJ_INSTANCE*)heapH;
-    if(pInst)
+    union
+    {
+        TCPIP_POOL_ENTRY* pEntry;
+        TCPIP_POOL_DATA_BLK* pBlk;
+    }U_POOL_ENTRY_DATA_BLK;
+
+    U_POOL_ENTRY_DATA_BLK.pEntry = pEntry;
+    return U_POOL_ENTRY_DATA_BLK.pBlk;
+}
+
+static __inline__ TCPIP_POOL_ENTRY* __attribute__((always_inline)) FC_PoolBlk2PoolEntry(TCPIP_POOL_DATA_BLK* pBlk)
+{
+    union
+    {
+        TCPIP_POOL_DATA_BLK* pBlk;
+        TCPIP_POOL_ENTRY* pEntry;
+    }U_POOL_BLK_POOL_ENTRY;
+
+    U_POOL_BLK_POOL_ENTRY.pBlk = pBlk;
+    return U_POOL_BLK_POOL_ENTRY.pEntry;
+}
+
+
+static __inline__ TCPIP_POOL_OBJ_INSTANCE* __attribute__((always_inline)) FC_Uptr2PoolInst(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_POOL_OBJ_INSTANCE* hInst;
+    }U_UPTR_POOL_INST;
+
+    U_UPTR_POOL_INST.uptr = uptr;
+    return U_UPTR_POOL_INST.hInst;
+}
+
+static __inline__ TCPIP_POOL_ENTRY* __attribute__((always_inline)) FC_Uptr2PoolEntry(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_POOL_ENTRY* pEntry;
+    }U_UPTR_POOL_ENTRY;
+
+    U_UPTR_POOL_ENTRY.uptr = uptr;
+    return U_UPTR_POOL_ENTRY.pEntry;
+}
+
+static __inline__ TCPIP_POOL_DATA_BLK* __attribute__((always_inline)) FC_Cvptr2PoolBlk(const void* cvptr)
+{
+    union
+    {
+        const void* cvptr;
+        TCPIP_POOL_DATA_BLK* pBlk;
+    }U_CVPTR_POOL_BLK;
+
+    U_CVPTR_POOL_BLK.cvptr = cvptr;
+    return U_CVPTR_POOL_BLK.pBlk;
+}
+
+static __inline__ TCPIP_POOL_DATA_BLK* __attribute__((always_inline)) FC_Uptr2PoolBlk(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_POOL_DATA_BLK* pBlk;
+    }U_UPTR_POOL_BLK;
+
+    U_UPTR_POOL_BLK.uptr = uptr;
+    return U_UPTR_POOL_BLK.pBlk;
+}
+
+static __inline__ ssize_t __attribute__((always_inline)) FC_Size_t2SSize_t(size_t uval)
+{
+    union
+    {
+        size_t uval;
+        ssize_t sval;
+    }U_SIZE_T_SSIZE_T;
+
+    U_SIZE_T_SSIZE_T.uval = uval;
+    return U_SIZE_T_SSIZE_T.sval;
+}
+
+
+// other helpers    
+
+// gets a TCPIP_POOL_OBJ_INSTANCE from a heap handle
+// does minimum sanity checking 
+static __inline__ TCPIP_POOL_OBJ_INSTANCE* __attribute__((always_inline)) FS_PoolInstance(TCPIP_STACK_HEAP_HANDLE heapH)
+{
+    union
+    {
+        TCPIP_STACK_HEAP_HANDLE heapH;
+        TCPIP_POOL_OBJ_INSTANCE* pInst;
+    }U_HANDLE_INST;
+
+    U_HANDLE_INST.heapH = heapH;
+    TCPIP_POOL_OBJ_INSTANCE* pInst = U_HANDLE_INST.pInst;
+    if(pInst != NULL)
     {
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
-        if(pInst->heapObj.TCPIP_HEAP_Delete == _TCPIP_HEAP_Delete)
+        if(pInst->heapObj.F_TCPIP_HEAP_Delete == &FS_TCPIP_HEAP_Delete)
 #endif  // (TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC)
         {
             return pInst;
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 
 // converts a heap handle to a valid pool descriptor pointer
-static  TCPIP_POOL_DCPT* _PoolDcptHandle(TCPIP_STACK_HEAP_HANDLE heapH)
+static  TCPIP_POOL_DCPT* FS_PoolDcptHandle(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_POOL_DCPT* pPool = 0;
-    TCPIP_HEAP_OBJ_INSTANCE* pInst = _PoolInstance(heapH);
-    if(pInst)
+    TCPIP_POOL_DCPT* pPool = NULL;
+    TCPIP_POOL_OBJ_INSTANCE* pInst = FS_PoolInstance(heapH);
+    if(pInst != NULL)
     {
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
-        if(pInst->poolDcpt.poolMagic == _TCPIP_POOL_DCPT_MAGIC_NO)
+        if(pInst->poolDcpt.poolMagic == M_TCPIP_POOL_DCPT_MAGIC_NO)
 #endif  // (TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC)
         {
             pPool = &pInst->poolDcpt;
         }
     }
 
-    _PoolAssertCond(pPool != 0, __func__, __LINE__);
+    FS_PoolAssert(pPool != NULL, __func__, __LINE__);
     return pPool;
 }
 
 // delete a pool entry
 // mark it as invalid
-static __inline__ void _PoolEntryDelete(TCPIP_POOL_ENTRY* pEntry)
+static __inline__ void FS_PoolEntryDelete(TCPIP_POOL_ENTRY* pEntry)
 {
-    memset(pEntry, 0, sizeof(*pEntry));
+    (void)memset(pEntry, 0, sizeof(*pEntry));
 }
 
 // delete a pool descriptor
 // mark it as invalid
-static __inline__ void _PoolDcptDelete(TCPIP_HEAP_OBJ_INSTANCE* pInst)
+static __inline__ void FS_PoolDcptDelete(TCPIP_POOL_OBJ_INSTANCE* pInst)
 {
     TCPIP_POOL_DCPT* pPDcpt = &pInst->poolDcpt;
 
@@ -400,31 +504,34 @@ static __inline__ void _PoolDcptDelete(TCPIP_HEAP_OBJ_INSTANCE* pInst)
     void (*free_fnc)(void* ptr) = pPDcpt->free_fnc;
     OSAL_SEM_HANDLE_TYPE poolSem = pPDcpt->poolSemaphore;
 
-    memset(pInst, 0, sizeof(*pInst));
+    (void)memset(pInst, 0, sizeof(*pInst));
     (*free_fnc)(allocatedBuffer);
-    OSAL_SEM_Delete(&poolSem);
-    _PoolDbgTraceClear();
+    (void)OSAL_SEM_Delete(&poolSem);
+#if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_TRACE_GLOBAL) != 0)
+    FS_PoolDbgTraceClear();
+#endif  // ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_TRACE_GLOBAL) != 0)
 }
 
 // get a buffer from a specified pool entry
-static __inline__ void* __attribute__((always_inline)) _PoolEntryGetBuff(TCPIP_POOL_ENTRY* pEntry)
+static __inline__ void* __attribute__((always_inline)) FS_PoolEntryGetBuff(TCPIP_POOL_ENTRY* pEntry)
 {
     TCPIP_POOL_DATA_BLK* pN;
     
-    if(pEntry->freeList)
+    if(pEntry->freeList != NULL)
     {
         pN = pEntry->freeList;
         pEntry->freeList = pN->next;
         pEntry->freeBlocks--;
-        pN->next = (TCPIP_POOL_DATA_BLK*)pEntry;  // store the entry we belong to!
+
+        pN->next = FC_PoolEntry2PoolBlk(pEntry); // store the entry we belong to!
         return pN + 1;
     }
 
-    return 0;
+    return NULL;
 }
 
 // return a previously allocated pool entry buffer
-static __inline__ void __attribute__((always_inline)) _PoolEntryRetBuff(TCPIP_POOL_ENTRY* pEntry, TCPIP_POOL_DATA_BLK* pN)
+static __inline__ void __attribute__((always_inline)) FS_PoolEntryRetBuff(TCPIP_POOL_ENTRY* pEntry, TCPIP_POOL_DATA_BLK* pN)
 {
     pN->next = pEntry->freeList;
     pEntry->freeList = pN;       // reinsert
@@ -434,18 +541,24 @@ static __inline__ void __attribute__((always_inline)) _PoolEntryRetBuff(TCPIP_PO
 // aligns a buffer on a alignSize boundary
 // alignSize must be multiple of 2!
 // returns the adjusted size
-static size_t   _PoolAlignBuffer(void** pBuffer, size_t buffSize, size_t alignSize)
+static size_t   FS_PoolAlignBuffer(uint8_t** pBuffer, size_t buffSize, size_t alignSize)
 {
-    uint8_t*    blockBuffer = (uint8_t*)*pBuffer;
-    uintptr_t   alignBuffer;
+    uint8_t* blockBuffer = *pBuffer;
+
+    union
+    {
+        uint8_t*  u8Ptr;  
+        uintptr_t alignBuffer;
+    }U_INT_PTR;
 
     // align properly
-    alignBuffer = ((uintptr_t)blockBuffer + alignSize - 1 ) & ~(alignSize - 1);
-    *pBuffer = (uint8_t*)alignBuffer;
+    U_INT_PTR.u8Ptr = blockBuffer;
+    U_INT_PTR.alignBuffer = (U_INT_PTR.alignBuffer + alignSize - 1U) & ~(alignSize - 1U);
+    *pBuffer = U_INT_PTR.u8Ptr;
 
-    buffSize -= (uint8_t*)alignBuffer - blockBuffer ;
+    buffSize -= U_INT_PTR.alignBuffer - (uintptr_t)blockBuffer; 
 
-    return (buffSize & (~(alignSize - 1)));
+    return (buffSize & (~(alignSize - 1U)));
 }
 
 // local data
@@ -457,30 +570,30 @@ static size_t   _PoolAlignBuffer(void** pBuffer, size_t buffSize, size_t alignSi
 // creates a TCPIP memory pool
 TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POOL_CONFIG* pHeapConfig, TCPIP_STACK_HEAP_RES* pRes)
 {
-    TCPIP_HEAP_OBJ_INSTANCE* hInst;
+    TCPIP_POOL_OBJ_INSTANCE* hInst;
     uint8_t            *heapBuffer, *expansionBuffer;
     size_t              entriesBuffSize, entriesSize, allocatedSize, headerSize, expansionSize;
-    int                 nEntries, nExpEntries;
+    size_t              nEntries, nExpEntries;
     const TCPIP_STACK_HEAP_POOL_ENTRY   *pCreateEntries, *pPoolCreate;
     TCPIP_STACK_HEAP_RES      poolRes;
     void*               allocatedBuffer;
     TCPIP_POOL_DCPT*    pPool; // pool is an array of pool entries
     TCPIP_POOL_ENTRY*   pEntry;
     size_t              usedBlksSize;
-    int                 nEntriesBytes;
-    int                 nUnitsPerBlk;
-    int                 newBlocks;
-    int                 poolIx, poolJx;
+    size_t              nEntriesBytes;
+    size_t              nUnitsPerBlk;
+    size_t              newBlocks;
+    size_t              poolIx, poolJx;
     OSAL_SEM_HANDLE_TYPE poolSem;
     OSAL_RESULT         osalRes;
     bool                checkFail;
     
     while(true)
     {
-        hInst = 0;
+        hInst = NULL;
         poolRes = TCPIP_STACK_HEAP_RES_OK;
 
-        if( pHeapConfig == 0 || pHeapConfig->malloc_fnc == 0 || pHeapConfig->free_fnc == 0 || pHeapConfig->pEntries == 0)
+        if( pHeapConfig == NULL || pHeapConfig->malloc_fnc == NULL || pHeapConfig->free_fnc == NULL || pHeapConfig->pEntries == NULL)
         {
             poolRes = TCPIP_STACK_HEAP_RES_INIT_ERR;
             break;
@@ -492,15 +605,15 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         // check for 0 or duplicate entries
         pPoolCreate = pCreateEntries;
         checkFail =  false;
-        for(poolIx = 0; poolIx < nEntries && checkFail == false; poolIx++, pPoolCreate++)
+        for(poolIx = 0; poolIx < nEntries && checkFail == false; poolIx++)
         {
-            if(pPoolCreate->entrySize == 0)
+            if(pPoolCreate->entrySize == 0U)
             {   // invalid entry size; abort
                 checkFail =  true;
                 break;
             }
             // check no other entry with the same size
-            for(poolJx = poolIx + 1; poolJx < nEntries; poolJx++)
+            for(poolJx = poolIx + 1U; poolJx < nEntries; poolJx++)
             {
                 if(pPoolCreate->entrySize == (pHeapConfig->pEntries + poolJx)->entrySize)
                 {   // duplicate
@@ -508,6 +621,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
                     break;
                 }
             }
+            pPoolCreate++;
         }
 
         if(checkFail == true)
@@ -520,24 +634,25 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
 
         entriesSize = 0;
         pPoolCreate = pCreateEntries;
-        for(poolIx = 0; poolIx < nEntries; poolIx++, pPoolCreate++)
+        for(poolIx = 0; poolIx < nEntries; poolIx++)
         {
-            entriesSize += pPoolCreate->entrySize * pPoolCreate->nBlocks + sizeof(TCPIP_POOL_ENTRY) + pPoolCreate->nBlocks * sizeof(TCPIP_POOL_DATA_BLK);
+            entriesSize += (size_t)pPoolCreate->entrySize * (size_t)pPoolCreate->nBlocks + sizeof(TCPIP_POOL_ENTRY) + (size_t)pPoolCreate->nBlocks * sizeof(TCPIP_POOL_DATA_BLK);
+            pPoolCreate++;
         }
 
         // check how much space is needed for the entries increment sizes: entryExpBlks
         expansionSize = pHeapConfig->expansionHeapSize;
-        nExpEntries = expansionSize == 0 ? 0 : nEntries;
+        nExpEntries = expansionSize == 0U ? 0U : nEntries;
 
         // align properly
-        entriesSize = ((entriesSize + sizeof(uintptr_t) - 1) / sizeof(uintptr_t)) * sizeof(uintptr_t);
-        headerSize = ((sizeof(*hInst) + sizeof(*hInst->poolDcpt.entryExpBlks) * nExpEntries + sizeof(uintptr_t) - 1) / sizeof(uintptr_t)) * sizeof(uintptr_t);
-        expansionSize = ((expansionSize + sizeof(uintptr_t) - 1) / sizeof(uintptr_t)) * sizeof(uintptr_t);
+        entriesSize = ((entriesSize + sizeof(uintptr_t) - 1U) / sizeof(uintptr_t)) * sizeof(uintptr_t);
+        headerSize = ((sizeof(*hInst) + sizeof(*hInst->poolDcpt.entryExpBlks) * nExpEntries + sizeof(uintptr_t) - 1U) / sizeof(uintptr_t)) * sizeof(uintptr_t);
+        expansionSize = ((expansionSize + sizeof(uintptr_t) - 1U) / sizeof(uintptr_t)) * sizeof(uintptr_t);
         
         allocatedSize = entriesSize + headerSize + expansionSize;  // extra room for header
 
         // allocate the buffer to create the heap into
-        if((allocatedBuffer = (*pHeapConfig->malloc_fnc)(allocatedSize)) == 0)
+        if((allocatedBuffer = (*pHeapConfig->malloc_fnc)(allocatedSize)) == NULL)
         {
             poolRes = TCPIP_STACK_HEAP_RES_CREATE_ERR;
             break;
@@ -546,14 +661,14 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         heapBuffer = (uint8_t*)allocatedBuffer;
         entriesBuffSize = allocatedSize - expansionSize;    // remove what we don't need now
         // align properly on a 32 bit boundary
-        entriesBuffSize = _PoolAlignBuffer((void**)&heapBuffer, entriesBuffSize, sizeof(uintptr_t));
+        entriesBuffSize = FS_PoolAlignBuffer(&heapBuffer, entriesBuffSize, sizeof(uintptr_t));
 
         // check for enough room
         entriesBuffSize -= headerSize;
         nEntriesBytes = nEntries * sizeof(TCPIP_POOL_ENTRY);
 
         osalRes = OSAL_SEM_Create(&poolSem, OSAL_SEM_TYPE_BINARY, 1, 1);
-        if(osalRes != OSAL_RESULT_TRUE || entriesBuffSize < nEntriesBytes)
+        if(osalRes != OSAL_RESULT_SUCCESS || entriesBuffSize < nEntriesBytes)
         {   // semaphore creation failed or not enough memory; abort
             (*pHeapConfig->free_fnc)(allocatedBuffer);
             poolRes = TCPIP_STACK_HEAP_RES_CREATE_ERR;
@@ -561,36 +676,39 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         }
 
         // create and initialize a proper heap object
-        hInst = (TCPIP_HEAP_OBJ_INSTANCE*)heapBuffer;
-        hInst->heapObj = _tcpip_heap_object;
+        hInst = FC_Uptr2PoolInst(heapBuffer);
+        hInst->heapObj = tcpip_heap_object;
 
         heapBuffer += headerSize;
         // this op should render a properly 32 bit aligned buffer!
-        _PoolAssertCond(((uintptr_t)heapBuffer & (sizeof(uintptr_t) - 1)) == 0, __func__, __LINE__);
+        FS_PoolAssert(((uintptr_t)heapBuffer & (sizeof(uintptr_t) - 1U)) == 0U, __func__, __LINE__);
 
         // init each entry
         pPool = &hInst->poolDcpt;
         pPoolCreate = pCreateEntries;
-        pEntry = (TCPIP_POOL_ENTRY*)heapBuffer;
+
+        pEntry = FC_Uptr2PoolEntry(heapBuffer);
         pPool->poolStart = pEntry;
-        for(poolIx = 0; poolIx < nEntries; poolIx++, pEntry++, pPoolCreate++)
+        for(poolIx = 0; poolIx < nEntries; poolIx++)
         {
-            memset(pEntry, 0, sizeof(*pEntry));  // clear the entry
+            (void)memset(pEntry, 0, sizeof(*pEntry));  // clear the entry
             // round up: room for extra next pointer in the TCPIP_POOL_DATA_BLK
-            nUnitsPerBlk = (pPoolCreate->entrySize + sizeof(TCPIP_POOL_DATA_BLK) - 1) / sizeof(TCPIP_POOL_DATA_BLK) + 1;
-            pEntry->allocSize = nUnitsPerBlk * sizeof(TCPIP_POOL_DATA_BLK);
-            pEntry->blockSize = pEntry->allocSize - sizeof(TCPIP_POOL_DATA_BLK); // room for the next pointer
+            nUnitsPerBlk = (pPoolCreate->entrySize + sizeof(TCPIP_POOL_DATA_BLK) - 1U) / sizeof(TCPIP_POOL_DATA_BLK) + 1U;
+            pEntry->allocSize = (uint16_t)(nUnitsPerBlk * sizeof(TCPIP_POOL_DATA_BLK));
+            pEntry->blockSize = pEntry->allocSize - (uint16_t)sizeof(TCPIP_POOL_DATA_BLK); // room for the next pointer
             pEntry->nBlocks = pPoolCreate->nBlocks;
             pEntry->poolH = pPool;
+            pPoolCreate++;
+            pEntry++;
         }
 
-        pPool->nEntries = nEntries;
+        pPool->nEntries = (uint16_t)nEntries;
         // always alloc uncached!
-        pPool->flags = pHeapConfig->heapFlags | TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED;
-        pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_OK;
+        pPool->flags = (uint16_t)pHeapConfig->heapFlags | (uint16_t)TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED;
+        pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_OK;
         pPool->poolEnd = pEntry;
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
-        pPool->poolMagic = _TCPIP_POOL_DCPT_MAGIC_NO;        
+        pPool->poolMagic = M_TCPIP_POOL_DCPT_MAGIC_NO;        
 #endif  // (TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC)
         pPool->allocatedBuffer = allocatedBuffer;
         pPool->allocatedSize = allocatedSize;
@@ -599,38 +717,39 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         pPool->free_fnc = pHeapConfig->free_fnc;
         pPool->poolSemaphore = poolSem; 
 
-        if(expansionSize != 0)
+        if(expansionSize != 0U)
         {
             expansionBuffer = (uint8_t*)allocatedBuffer + allocatedSize - expansionSize; 
             // align properly on a 32 bit boundary
-            expansionSize = _PoolAlignBuffer((void**)&expansionBuffer, expansionSize, sizeof(uintptr_t));
+            expansionSize = FS_PoolAlignBuffer(&expansionBuffer, expansionSize, sizeof(uintptr_t));
         }
         else
         {
-            expansionBuffer = 0;
+            expansionBuffer = NULL;
         }
         pPool->expansionBuffer = expansionBuffer;
         pPool->expansionSize = (uint16_t)expansionSize;
 
 
         // and sort it ascending
-        qsort(pPool->poolStart, nEntries, sizeof(TCPIP_POOL_ENTRY), _PoolEntryCompare);
+        FC_Sort(pPool->poolStart, nEntries, sizeof(TCPIP_POOL_ENTRY), &FS_PoolEntryCompare);
 
         // store the expansion sizes
-        // Note: because of qsort, the order has changed!
-        if(pPool->expansionSize != 0)
+        // Note: because of FC_Sort, the order has changed!
+        if(pPool->expansionSize != 0U)
         { 
             for(pEntry = pPool->poolStart; pEntry != pPool->poolEnd; pEntry++)
             {
                 pPoolCreate = pCreateEntries;
-                for(poolIx = 0; poolIx < nEntries; poolIx++, pPoolCreate++)
+                for(poolIx = 0; poolIx < nEntries; poolIx++)
                 {
-                    nUnitsPerBlk = (pPoolCreate->entrySize + sizeof(TCPIP_POOL_DATA_BLK) - 1) / sizeof(TCPIP_POOL_DATA_BLK) + 1;
+                    nUnitsPerBlk = (pPoolCreate->entrySize + sizeof(TCPIP_POOL_DATA_BLK) - 1U) / sizeof(TCPIP_POOL_DATA_BLK) + 1U;
                     if(pEntry->allocSize ==  nUnitsPerBlk * sizeof(TCPIP_POOL_DATA_BLK))
                     {   // found entry
                         pPool->entryExpBlks[pEntry - pPool->poolStart] = pPoolCreate->nExpBlks;
                         break;
                     }
+                    pPoolCreate++;
                 }
             }
         }
@@ -642,17 +761,17 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         // allocate the largest blocks first
         for(pEntry = pPool->poolEnd - 1; pEntry >= pPool->poolStart; pEntry--)
         {
-            if(pEntry == pPool->poolStart && pPool->expansionSize == 0 && pEntry->nBlocks != 0)
+            if(pEntry == pPool->poolStart && pPool->expansionSize == 0U && pEntry->nBlocks != 0U)
             {   // for the last allocation - the smallest - we take all the available space 
                 // but only if run-time expansion is not enabled
                 pEntry->nBlocks = 0xffff;
             }
 
-            if(pEntry->nBlocks)
+            if(pEntry->nBlocks != 0U)
             {   // add these blocks 
                 newBlocks = pEntry->nBlocks;
-                pEntry->nBlocks = 0;
-                if((usedBlksSize = _PoolEntryAddBlocks(pEntry, heapBuffer, entriesBuffSize, newBlocks)) == 0)
+                pEntry->nBlocks = 0U;
+                if((usedBlksSize = FS_PoolEntryAddBlocks(pEntry, heapBuffer, entriesBuffSize, newBlocks)) == 0U)
                 {   // no more room
                     break;
                 }
@@ -662,11 +781,11 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
         }
 
         poolRes = TCPIP_STACK_HEAP_RES_OK;
-        _PoolDbgTraceSet(hInst);
+        FS_PoolDbgTraceSet(hInst);
         break;
     }
 
-    if(pRes)
+    if(pRes != NULL)
     {
         *pRes = poolRes;
     }
@@ -674,17 +793,20 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
     return hInst;
 }
 
-static size_t _PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer, size_t buffSize, int newBlocks)
+static size_t FS_PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer, size_t buffSize, size_t newBlocks)
 {
-    int         ix, nBlocks;
+    size_t      ix, nBlocks;
     size_t      takenSize;
-    void*       alignBuffer;
+    uint8_t*    alignBuffer;
     TCPIP_POOL_DCPT* pPool = pEntry->poolH;
-    TCPIP_POOL_DATA_BLK* pDataBlk, *pBlk, *pNextBlk = 0;
+    TCPIP_POOL_DATA_BLK* pDataBlk, *pBlk, *pNextBlk = NULL;
+
+    // make sure it's 16 bits
+    FS_PoolAssert(newBlocks == (size_t)((uint16_t)newBlocks), __func__, __LINE__);
 
     // align the data blocks
     alignBuffer = blockBuffer;
-    buffSize = _PoolAlignBuffer(&alignBuffer, buffSize, sizeof(TCPIP_POOL_DATA_BLK));
+    buffSize = FS_PoolAlignBuffer(&alignBuffer, buffSize, sizeof(TCPIP_POOL_DATA_BLK));
 
     // configure the data blocks
     nBlocks = buffSize / pEntry->allocSize;
@@ -693,23 +815,27 @@ static size_t _PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer
         nBlocks = newBlocks;
     }
 
-    if(nBlocks)
+    if(nBlocks != 0U)
     {
         takenSize = nBlocks * pEntry->allocSize;
-        if((pPool->flags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0) 
+        if((pPool->flags & (uint16_t)TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0U) 
         {
-            pDataBlk = (TCPIP_POOL_DATA_BLK*)_TCPIP_HEAP_BufferMapNonCached(alignBuffer, takenSize);
+
+            const void* cvptr = F_TCPIP_HEAP_BufferMapNonCached(alignBuffer, takenSize);
+            pDataBlk = FC_Cvptr2PoolBlk(cvptr);
         }
         else
         {
-            pDataBlk = (TCPIP_POOL_DATA_BLK*)alignBuffer;
+            pDataBlk = FC_Uptr2PoolBlk(alignBuffer);
         }
 
         // link the data blocks
-        for(ix = 0, pBlk = pDataBlk; ix < nBlocks - 1; ix++, pBlk = pNextBlk)
+        pBlk = pDataBlk;
+        for(ix = 0; ix < nBlocks - 1U; ix++)
         {
-            pNextBlk = (TCPIP_POOL_DATA_BLK*)((uint8_t*)pBlk + pEntry->allocSize);
+            pNextBlk = FC_Uptr2PoolBlk((uint8_t*)pBlk + pEntry->allocSize); 
             pBlk->next = pNextBlk;
+            pBlk = pNextBlk;
         }
 
         // link the data blocks
@@ -717,36 +843,40 @@ static size_t _PoolEntryAddBlocks(TCPIP_POOL_ENTRY* pEntry, uint8_t* blockBuffer
         pEntry->freeList = pDataBlk;
 
         // adjust for buffer alignment
-        takenSize += (uint8_t*)alignBuffer - blockBuffer;
+        takenSize += (uintptr_t)alignBuffer - (uintptr_t)blockBuffer;
     }
     else
     {
-        takenSize = 0;
+        takenSize = 0U;
     }
 
-    pEntry->nBlocks += nBlocks;    
-    pEntry->freeBlocks += nBlocks;    
+    // should not exceed uint16_t representation
+    FS_PoolAssert((size_t)pEntry->nBlocks + nBlocks < 0x10000U, __func__, __LINE__);
+    FS_PoolAssert((size_t)pEntry->freeBlocks + nBlocks < 0x10000U, __func__, __LINE__);
+    pEntry->nBlocks += (uint16_t)nBlocks;    
+    pEntry->freeBlocks += (uint16_t)nBlocks;    
 
     return takenSize;
 }
 
 // simple binary search for the right slot
-static TCPIP_POOL_ENTRY* _PoolEntryBySize(TCPIP_POOL_DCPT* pPool, int blkSize)
+static TCPIP_POOL_ENTRY* FS_PoolEntryBySize(TCPIP_POOL_DCPT* pPool, size_t blkSize)
 {
 // binary search
 
-    int len, half;
+    ssize_t len, half;
     TCPIP_POOL_ENTRY  *pFirstEntry, *pMidEntry;
 
-    len = pPool->nEntries - 1;
+    len = FC_Size_t2SSize_t((size_t)pPool->nEntries - 1U);
+
     pFirstEntry = pPool->poolStart;
     
     while(len > 0)
     {
-        half = len >> 1;
+        half = len / 2;
         pMidEntry = pFirstEntry + half;
 
-        if(pMidEntry->blockSize < blkSize)
+        if((size_t)pMidEntry->blockSize < blkSize)
         {
             pFirstEntry = pMidEntry + 1;
             len -= half + 1;
@@ -757,7 +887,7 @@ static TCPIP_POOL_ENTRY* _PoolEntryBySize(TCPIP_POOL_DCPT* pPool, int blkSize)
         }
     }
     
-    return pFirstEntry->blockSize >= blkSize ? pFirstEntry : 0;
+    return (size_t)pFirstEntry->blockSize >= blkSize ? pFirstEntry : NULL;
 
 }
 
@@ -765,10 +895,10 @@ static TCPIP_POOL_ENTRY* _PoolEntryBySize(TCPIP_POOL_DCPT* pPool, int blkSize)
 //  Low level routines
 //  
 // sorting function
-static int _PoolEntryCompare(const void* p1, const void* p2)
+static int FS_PoolEntryCompare(const void* p1, const void* p2)
 {
-    TCPIP_POOL_ENTRY* pE1 = (TCPIP_POOL_ENTRY*)p1;
-    TCPIP_POOL_ENTRY* pE2 = (TCPIP_POOL_ENTRY*)p2;
+    const TCPIP_POOL_ENTRY* pE1 = (const TCPIP_POOL_ENTRY*)p1;
+    const TCPIP_POOL_ENTRY* pE2 = (const TCPIP_POOL_ENTRY*)p2;
    
 
     if(pE1->blockSize < pE2->blockSize)
@@ -779,8 +909,10 @@ static int _PoolEntryCompare(const void* p1, const void* p2)
     {
         return 1;
     }
-
-    return 0;    
+    else
+    {
+        return 0;    
+    }
 }
 
 
@@ -789,17 +921,17 @@ static int _PoolEntryCompare(const void* p1, const void* p2)
 //
 
 // destroys a pool
-static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
+static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_POOL_DCPT*     pPool;
     TCPIP_POOL_ENTRY*    pEntry;
     TCPIP_STACK_HEAP_RES res = TCPIP_STACK_HEAP_RES_NO_HEAP;
 
-    pPool = _PoolDcptHandle(heapH);
+    pPool = FS_PoolDcptHandle(heapH);
     
-    while(pPool)
+    while(pPool != NULL)
     {
-        if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+        if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
         {
             res = TCPIP_STACK_HEAP_RES_SYNCH_ERR;
             break;
@@ -809,7 +941,8 @@ static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
         {   // check all entries are released
             if(pEntry->freeBlocks != pEntry->nBlocks)
             {
-                res = (pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_IN_USE);
+                pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_IN_USE;
+                res = TCPIP_STACK_HEAP_RES_IN_USE;
                 break;
             }
         }
@@ -822,11 +955,11 @@ static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
         // OK
         for(pEntry = pPool->poolStart; pEntry < pPool->poolEnd; pEntry++)
         {
-            _PoolEntryDelete(pEntry);
+            FS_PoolEntryDelete(pEntry);
         }
         
         
-        _PoolDcptDelete(_PoolInstance(heapH));
+        FS_PoolDcptDelete(FS_PoolInstance(heapH));
 
         break;
     }
@@ -835,21 +968,28 @@ static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 }
 
 // get a pool buffer
-static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
+static void* FS_TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
     TCPIP_POOL_DCPT*    pPool;
     TCPIP_POOL_ENTRY*   pEntry;
-    void*               pBuff = 0;
+    void*               pBuff = NULL;
     
-    while(nBytes != 0 && (pPool = _PoolDcptHandle(heapH)) != 0)
+    while(nBytes != 0U)
     {
-        if((pEntry = _PoolEntryBySize(pPool, nBytes)) == 0)
+        pPool = FS_PoolDcptHandle(heapH);
+        if(pPool == NULL)
         {
-            pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_SIZE_ERR; // cannot satisfy the request
             break;
         }
 
-        pBuff = _PoolEntryAlloc(pEntry);
+        pEntry = FS_PoolEntryBySize(pPool, nBytes);
+        if(pEntry == NULL)
+        {
+            pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_SIZE_ERR; // cannot satisfy the request
+            break;
+        }
+
+        pBuff = FS_PoolEntryAlloc(pEntry);
 
         break;
     }
@@ -857,47 +997,46 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
     return pBuff;
 }
 
-static void* _PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry)
+static void* FS_PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry)
 {
     void*               pBuff;
-    int                 newBlocks;
-    size_t              usedBlksSize;
+    size_t              newBlocks, usedBlksSize;
     TCPIP_POOL_DCPT*    pPool = pEntry->poolH;
 
-    if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
     {
-        return 0;
+        return NULL;
     }
 
-    pBuff = 0;
+    pBuff = NULL;
 
     while(true)
     {
-        if((pBuff = _PoolEntryGetBuff(pEntry)) != 0)
+        if((pBuff = FS_PoolEntryGetBuff(pEntry)) != NULL)
         {   // got it
             break;
         }
 
-        if(pPool->expansionSize != 0)
+        if(pPool->expansionSize != 0U)
         {   // there is an expansion buffer
-            if((newBlocks = pPool->entryExpBlks[pEntry - pPool->poolStart]) != 0)
+            if((newBlocks = (size_t)pPool->entryExpBlks[pEntry - pPool->poolStart]) != 0U)
             {   // we could expand this entry
-                if((usedBlksSize = _PoolEntryAddBlocks(pEntry, pPool->expansionBuffer, pPool->expansionSize, newBlocks)) != 0)
+                if((usedBlksSize = FS_PoolEntryAddBlocks(pEntry, pPool->expansionBuffer, pPool->expansionSize, newBlocks)) != 0U)
                 {   // managed to get room to grow
                     pPool->expansionBuffer += usedBlksSize;
-                    pPool->expansionSize -= usedBlksSize;
-                    pBuff = _PoolEntryGetBuff(pEntry);  // this should not fail now
+                    pPool->expansionSize = (uint16_t)((size_t)pPool->expansionSize - usedBlksSize);
+                    pBuff = FS_PoolEntryGetBuff(pEntry);  // this should not fail now
                     break;
                 }
             }
         }
 
         // no luck so far; try moving up
-        if((pPool->flags & TCPIP_STACK_HEAP_FLAG_POOL_STRICT) == 0)
+        if((pPool->flags & (uint16_t)TCPIP_STACK_HEAP_FLAG_POOL_STRICT) == 0U)
         {   // we can try other entries
             for(pEntry = pEntry + 1; pEntry < pPool->poolEnd; pEntry++)
             {
-                if((pBuff = _PoolEntryGetBuff(pEntry)) != 0)
+                if((pBuff = FS_PoolEntryGetBuff(pEntry)) != NULL)
                 {
                     break;
                 }
@@ -907,9 +1046,9 @@ static void* _PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry)
         break;
     }
 
-    if(pBuff == 0)
+    if(pBuff == NULL)
     {
-        pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_NO_MEM; 
+        pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_NO_MEM; 
     }
     else
     {
@@ -923,12 +1062,12 @@ static void* _PoolEntryAlloc(TCPIP_POOL_ENTRY* pEntry)
     return pBuff;
 }
 
-static void* _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize)
+static void* FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize)
 {
-    void* pBuff = _TCPIP_HEAP_Malloc(heapH, nElems * elemSize);
-    if(pBuff)
+    void* pBuff = FS_TCPIP_HEAP_Malloc(heapH, nElems * elemSize);
+    if(pBuff != NULL)
     {
-        memset(pBuff, 0, nElems * elemSize);
+        (void)memset(pBuff, 0, nElems * elemSize);
     }
 
     return pBuff;
@@ -937,31 +1076,32 @@ static void* _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, si
 
 
 // return a previously allocated pool entry buffer
-static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
+static size_t FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 {
 
     size_t blockSize = 0;
 
-    while(pBuff)
+    while(pBuff != NULL)
     {
-        TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
-        if(pPool)
+        TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
+        if(pPool != NULL)
         {
-            TCPIP_POOL_DATA_BLK*  pN = (TCPIP_POOL_DATA_BLK*)pBuff - 1;
-            TCPIP_POOL_ENTRY* pEntry = (TCPIP_POOL_ENTRY*)pN->next; // get the pool entry pointer
-            if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+            TCPIP_POOL_DATA_BLK*  pN = FC_Cvptr2PoolBlk(pBuff) - 1;
+            TCPIP_POOL_ENTRY* pEntry = FC_PoolBlk2PoolEntry(pN->next); // get the pool entry pointer 
+
+            if(OSAL_SEM_Pend(&pPool->poolSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
             {
                 break;
             }
-            if(_PoolDbgCond(pEntry != 0 && pEntry->poolH == pPool, __func__, __LINE__))
+            if(FS_PoolDbgCond(pEntry != NULL && pEntry->poolH == pPool, __func__, __LINE__))
             {
-                _PoolEntryRetBuff(pEntry, pN);
+                FS_PoolEntryRetBuff(pEntry, pN);
                 blockSize = pEntry->blockSize;
                 pPool->currAllocatedSize -= blockSize;
             }
             else
             {
-                pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_PTR_ERR; 
+                pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_PTR_ERR; 
             }
             (void)OSAL_SEM_Post(&pPool->poolSemaphore);
         }
@@ -972,13 +1112,13 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 }
 
 
-static size_t _TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH)
+static size_t FS_TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_POOL_DCPT*     pPool;
 
-    pPool = _PoolDcptHandle(heapH);
+    pPool = FS_PoolDcptHandle(heapH);
     
-    if(pPool)
+    if(pPool != NULL)
     {
         return pPool->allocatedSize;
     }
@@ -986,18 +1126,18 @@ static size_t _TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH)
     return 0;
 }
 
-static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
+static size_t FS_TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_POOL_DCPT*     pPool;
     TCPIP_POOL_ENTRY*    pEntry;
 
-    pPool = _PoolDcptHandle(heapH);
+    pPool = FS_PoolDcptHandle(heapH);
     
-    if(pPool)
+    if(pPool != NULL)
     {
         for(pEntry = pPool->poolEnd - 1; pEntry >= pPool->poolStart; pEntry--)
         {
-            if(pEntry->freeBlocks)
+            if(pEntry->freeBlocks != 0U)
             {   // return the largest available block
                 return pEntry->blockSize;
             }
@@ -1007,62 +1147,64 @@ static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
     return 0;
 }
 
-static size_t _TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH)
+static size_t FS_TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_POOL_DCPT*     pPool;
     TCPIP_POOL_ENTRY*    pEntry;
     size_t              totPoolSize = 0;
 
-    pPool = _PoolDcptHandle(heapH);
+    pPool = FS_PoolDcptHandle(heapH);
     
-    if(pPool)
+    if(pPool != NULL)
     {
         for(pEntry = pPool->poolStart; pEntry < pPool->poolEnd; pEntry++)
         {
-            if(pEntry->freeBlocks)
+            if(pEntry->freeBlocks != 0U)
             {
-                totPoolSize += pEntry->freeBlocks * pEntry->blockSize;
+                totPoolSize += (size_t)pEntry->freeBlocks * (size_t)pEntry->blockSize;
             }
         }
-        totPoolSize += pPool->expansionSize;
+        totPoolSize += (size_t)pPool->expansionSize;
     }
 
     return totPoolSize;
 }
 
-static size_t _TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
+static size_t FS_TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
+    TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
     
-    return pPool ? pPool->highWatermark : 0;
+    return pPool != NULL ? pPool->highWatermark : 0U;
 }
 
-static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
+static TCPIP_STACK_HEAP_RES FS_TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_STACK_HEAP_RES  res = TCPIP_STACK_HEAP_RES_NO_HEAP;
-    TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
+    TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
 
-    if(pPool)
+    if(pPool != NULL)
     {
-        res = pPool->lastPoolErr;
-        pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_OK;
+        res = (TCPIP_STACK_HEAP_RES)pPool->lastPoolErr;
+        pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_OK;
     }
 
     return res;
 }
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-static size_t _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
+static size_t FS_TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff)
 {
 
-    if(pBuff)
+    if(pBuff != NULL)
     {
-        TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
-        if(pPool)
+        TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
+        if(pPool != NULL)
         {
-            TCPIP_POOL_DATA_BLK*  pN = (TCPIP_POOL_DATA_BLK*)pBuff - 1;
-            TCPIP_POOL_ENTRY* pEntry = (TCPIP_POOL_ENTRY*)pN->next; // get the pool entry pointer
-            if(_PoolDbgCond(pEntry != 0 && pEntry->poolH == pPool, __func__, __LINE__))
+            TCPIP_POOL_DATA_BLK*  pN = FC_Cvptr2PoolBlk(pBuff) - 1;
+
+            TCPIP_POOL_ENTRY* pEntry = FC_PoolBlk2PoolEntry(pN->next); // get the pool entry pointer 
+
+            if(FS_PoolDbgCond(pEntry != NULL && pEntry->poolH == pPool, __func__, __LINE__))
             {
                 return pEntry->blockSize;
             }
@@ -1075,21 +1217,21 @@ static size_t _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* p
 
 #if defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
 // gets a handle for a pool entry using size
-static TCPIP_STACK_HEAP_SIZE_HANDLE _TCPIP_HEAP_HandleBySize(TCPIP_STACK_HEAP_HANDLE heapH, int blkSize)
+static TCPIP_STACK_HEAP_SIZE_HANDLE FS_TCPIP_HEAP_HandleBySize(TCPIP_STACK_HEAP_HANDLE heapH, size_t blkSize)
 {
     TCPIP_POOL_DCPT* pPool;
-    TCPIP_POOL_ENTRY* pEntry = 0;
+    TCPIP_POOL_ENTRY* pEntry = NULL;
 
     if(blkSize != 0)
     {
-        pPool = _PoolDcptHandle(heapH);
-        if(pPool != 0)
+        pPool = FS_PoolDcptHandle(heapH);
+        if(pPool != NULL)
         {
-            pEntry = _PoolEntryBySize(pPool, blkSize);
+            pEntry = FS_PoolEntryBySize(pPool, blkSize);
 
-            if(pEntry == 0)
+            if(pEntry == NULL)
             {
-                pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_SIZE_ERR;
+                pPool->lastPoolErr = (int16_t)TCPIP_STACK_HEAP_RES_SIZE_ERR;
             }
         }
     }
@@ -1099,21 +1241,21 @@ static TCPIP_STACK_HEAP_SIZE_HANDLE _TCPIP_HEAP_HandleBySize(TCPIP_STACK_HEAP_HA
 
 // get a buffer from a specified pool entry
 // nBytes is not really needed...but needed for the other heap types that don't really support entries....!
-static void* _TCPIP_HEAP_MallocBySize(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_STACK_HEAP_SIZE_HANDLE entryH, size_t nBytes)
+static void* FS_TCPIP_HEAP_MallocBySize(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_STACK_HEAP_SIZE_HANDLE entryH, size_t nBytes)
 {
     TCPIP_POOL_DCPT* pPool;
     TCPIP_POOL_ENTRY* pEntry;
-    void*       pBuff = 0;
+    void*       pBuff = NULL;
 
     if(nBytes != 0)
     {
-        if((pPool = _PoolDcptHandle(heapH)) != 0)
+        if((pPool = FS_PoolDcptHandle(heapH)) != NULL)
         {
-            if((pEntry = _PoolEntryHandle(pPool, entryH)) != 0) 
+            if((pEntry = FS_PoolEntryHandle(pPool, entryH)) != NULL) 
             {
                 if(nBytes <= pEntry->blockSize)
                 {
-                    pBuff = _PoolEntryAlloc(pEntry);
+                    pBuff = FS_PoolEntryAlloc(pEntry);
                 }
             }
         }
@@ -1122,10 +1264,10 @@ static void* _TCPIP_HEAP_MallocBySize(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_STACK
     return pBuff;
 }
 // converts a entry handle to a valid pool Entry pointer
-static TCPIP_POOL_ENTRY* _PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HEAP_SIZE_HANDLE entryH)
+static TCPIP_POOL_ENTRY* FS_PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HEAP_SIZE_HANDLE entryH)
 {
     TCPIP_POOL_ENTRY* pEntry = (TCPIP_POOL_ENTRY*)entryH;
-    if(pEntry)
+    if(pEntry != NULL)
     {
 #if ((TCPIP_POOL_DEBUG_LEVEL & TCPIP_POOL_DEBUG_MASK_BASIC) != 0)
         if(pPool->poolStart <= pEntry && pEntry < pPool->poolEnd)
@@ -1135,7 +1277,7 @@ static TCPIP_POOL_ENTRY* _PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HE
         }
     }
 
-    _PoolAssertCond(false, __func__, __LINE__);
+    FS_PoolAssert(false, __func__, __LINE__);
     return 0;
 }
 
@@ -1144,31 +1286,31 @@ static TCPIP_POOL_ENTRY* _PoolEntryHandle(TCPIP_POOL_DCPT* pPool, TCPIP_STACK_HE
 #endif  // defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
 
 
-int TCPIP_HEAP_POOL_Entries(TCPIP_STACK_HEAP_HANDLE heapH)
+uint16_t TCPIP_HEAP_POOL_Entries(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
-    if(pPool)
+    TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
+    if(pPool != NULL)
     {
         return pPool->nEntries;
     }
 
-    return 0;
+    return 0U;
 }
 
 
-bool TCPIP_HEAP_POOL_EntryList(TCPIP_STACK_HEAP_HANDLE heapH, int entryIx, TCPIP_HEAP_POOL_ENTRY_LIST* pList)
+bool TCPIP_HEAP_POOL_EntryList(TCPIP_STACK_HEAP_HANDLE heapH, size_t entryIx, TCPIP_HEAP_POOL_ENTRY_LIST* pList)
 {
-    TCPIP_POOL_DCPT* pPool = _PoolDcptHandle(heapH);
-    if(pPool && entryIx < pPool->nEntries)
+    TCPIP_POOL_DCPT* pPool = FS_PoolDcptHandle(heapH);
+    if(pPool != NULL && entryIx < (size_t)pPool->nEntries)
     {
-        if(pList)
+        if(pList != NULL)
         {
             TCPIP_POOL_ENTRY* pEntry = pPool->poolStart + entryIx;
             pList->blockSize = pEntry->blockSize;
             pList->nBlocks = pEntry->nBlocks;
             pList->freeBlocks = pEntry->freeBlocks;
-            pList->totEntrySize = pEntry->blockSize * pEntry->nBlocks;
-            pList->totFreeSize = pEntry->blockSize * pEntry->freeBlocks;
+            pList->totEntrySize = (size_t)pEntry->blockSize * (size_t)pEntry->nBlocks;
+            pList->totFreeSize = (size_t)pEntry->blockSize * (size_t)pEntry->freeBlocks;
             pList->expansionSize = pPool->expansionSize;
         }
         return true;

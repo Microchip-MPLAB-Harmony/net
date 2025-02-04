@@ -17,7 +17,7 @@ TCP/IP Stack Run-time Commands API Definitions Header File
   **************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -48,8 +48,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_COMMANDS_H
-#define __TCPIP_COMMANDS_H
+#ifndef H_TCPIP_COMMANDS_H_
+#define H_TCPIP_COMMANDS_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -102,4 +102,4 @@ void  TCPIP_COMMAND_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  //#ifndef __TCPIP_COMMANDS_H
+#endif  //#ifndef H_TCPIP_COMMANDS_H_

@@ -9,7 +9,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,21 +39,21 @@ Microchip or any third party.
 
 
 
-#ifndef __HELPERS_H_
-#define __HELPERS_H_
+#ifndef H_HELPERS_H_
+#define H_HELPERS_H_
 
 #include <stdint.h>
 #include <stdbool.h>
 
 
-void        uitoa(uint16_t Value, uint8_t* Buffer);
+void        uitoa(uint16_t Value, char* Buffer);
 
 uint8_t     hexatob(uint16_t AsciiVal);
 uint8_t     btohexa_high(uint8_t b);
 uint8_t     btohexa_low(uint8_t b);
 
 size_t      strncpy_m(char* destStr, size_t destSize, int nStrings, ...);
-int         stricmp ( const char * s1, const char * s2 );
+int         stricmp ( const char * cs1, const char * cs2 );
 
-#endif  // __HELPERS_H_
+#endif  // H_HELPERS_H_
 

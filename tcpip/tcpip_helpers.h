@@ -15,7 +15,7 @@ Header file for tcpip_stack_helpers
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_HELPERS_H_
-#define __TCPIP_HELPERS_H_
+#ifndef H_TCPIP_HELPERS_H_
+#define H_TCPIP_HELPERS_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -126,7 +126,7 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
 // *****************************************************************************
 /*
   Function:
-    bool    TCPIP_Helper_StringToIPv6Address (const char * str, IPV6_ADDR * addr);
+    bool    TCPIP_Helper_StringToIPv6Address (const char * addStr, IPV6_ADDR * addr);
 
   Summary:
     Converts a string to an IPv6 address.
@@ -139,7 +139,7 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
     addr - valid pointer to an IPV6 Address
 
   Parameters:
-    str - Pointer to an RFC3513, Section 2.2 text representation of
+    addStr - Pointer to an RFC3513, Section 2.2 text representation of
         an IPv6 address
         Example:    1111:2222:3333:4444:5555:6666:AAAA:FFFF
                     1111:2222::FFFF
@@ -155,7 +155,7 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
     Thus if false is returned, the addr will contain 0. 
  */
 
-bool    TCPIP_Helper_StringToIPv6Address (const char * str, IPV6_ADDR * addr);
+bool    TCPIP_Helper_StringToIPv6Address (const char * addStr, IPV6_ADDR * addr);
 
 // *****************************************************************************
 /*
@@ -216,7 +216,7 @@ bool    TCPIP_Helper_IPv6AddressToString (const IPV6_ADDR * addr, char* buff, si
 
 static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsBcastAddress(const IPV4_ADDR* IPAddress)
 {
-    return (IPAddress->Val == 0xFFFFFFFF);
+    return (IPAddress->Val == 0xFFFFFFFFU);
 }
 
 // *****************************************************************************
@@ -246,7 +246,7 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsBcastAddres
 
 static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastAddress(const IPV4_ADDR* IPAddress)
 {
-    return ((IPAddress->v[0] & 0xf0) == 0xE0);
+    return ((IPAddress->v[0] & 0xf0U) == 0xE0U);
 }
 
 // *****************************************************************************
@@ -364,7 +364,7 @@ bool     TCPIP_Helper_MACAddressToString(const TCPIP_MAC_ADDR* macAddr, char* bu
  */
 static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAddress(const TCPIP_MAC_ADDR* pMacAddress)
 {
-    return (pMacAddress->v[0] & 0x01) != 0;
+    return (pMacAddress->v[0] & 0x01U) != 0U;
 }
 
 
@@ -375,6 +375,10 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAdd
 // and reverse
 //
 
+/* MISRA C-2012 Rule 8.6 deviated:3 Deviation record ID -  H3_MISRAC_2012_R_8_6_NET_DR_19 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:3 "MISRA C-2012 Rule 8.6" "H3_MISRAC_2012_R_8_6_NET_DR_19" 
 
 // *****************************************************************************
 /*
@@ -407,21 +411,19 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsMcastMACAdd
     None.    
  */
 
-#if defined(__mips__)
 uint32_t __attribute__((nomips16)) TCPIP_Helper_htonl(uint32_t hLong);
 
 uint16_t __attribute__((nomips16)) TCPIP_Helper_htons(uint16_t hShort);
 
 uint64_t __attribute__((nomips16)) TCPIP_Helper_htonll(uint64_t hLLong);
 
-uint64_t __attribute__((nomips16)) TCPIP_Helper_ntohll(uint64_t nLLong);
 #define     TCPIP_Helper_ntohll(ll)  TCPIP_Helper_htonll(ll)
 
-#else
+#if !defined(__mips__)
 
 static inline  uint32_t __attribute__((always_inline)) TCPIP_Helper_htonl(uint32_t hLong)
 {
-    return (((hLong & 0x000000ff) << 24) | ((hLong & 0x0000ff00) << 8) | ((hLong & 0x00ff0000) >> 8) | ((hLong & 0xff000000) >> 24));
+    return (((hLong & 0x000000ffU) << 24) | ((hLong & 0x0000ff00U) << 8) | ((hLong & 0x00ff0000U) >> 8) | ((hLong & 0xff000000U) >> 24));
 }
 
 static inline uint16_t __attribute__((always_inline)) TCPIP_Helper_htons(uint16_t hShort)
@@ -431,11 +433,13 @@ static inline uint16_t __attribute__((always_inline)) TCPIP_Helper_htons(uint16_
 
 #endif  // !defined(__mips__)
 
-uint32_t    TCPIP_Helper_ntohl(uint32_t nLong);
 #define     TCPIP_Helper_ntohl(n)   TCPIP_Helper_htonl(n)
 
-uint16_t TCPIP_Helper_ntohs(uint16_t nShort);
 #define  TCPIP_Helper_ntohs(n)  TCPIP_Helper_htons(n) 
+
+#pragma coverity compliance end_block "MISRA C-2012 Rule 8.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 //*****************************************************************************
 /*
@@ -531,7 +535,7 @@ bool             TCPIP_Helper_UDPSecurePortGet(uint16_t udpPort);
 
 // *****************************************************************************
 /* Function:
-    uint16_t TCPIP_Helper_SecurePortGetByIndex(int index, bool streamSocket, int* pnIndexes);
+    uint16_t TCPIP_Helper_SecurePortGetByIndex(size_t index, bool streamSocket, size_t* pnIndexes);
 
   Summary:
     Returns the secure port belonging to a specified index.
@@ -558,7 +562,7 @@ bool             TCPIP_Helper_UDPSecurePortGet(uint16_t udpPort);
       stream/datagram flag.
  */
 
-uint16_t            TCPIP_Helper_SecurePortGetByIndex(int index, bool streamSocket, int* pnIndexes);
+uint16_t            TCPIP_Helper_SecurePortGetByIndex(size_t index, bool streamSocket, size_t* pnIndexes);
 
 // *****************************************************************************
 /* Function:
@@ -678,4 +682,4 @@ uint16_t TCPIP_Helper_Base64Decode(const uint8_t* sourceData, uint16_t sourceLen
 #endif
 //DOM-IGNORE-END
 
-#endif  // __TCPIP_HELPERS_H_
+#endif  // H_TCPIP_HELPERS_H_

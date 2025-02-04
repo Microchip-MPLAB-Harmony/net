@@ -16,7 +16,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_HEAP_H_
-#define __TCPIP_HEAP_H_
+#ifndef H_TCPIP_HEAP_H_
+#define H_TCPIP_HEAP_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -117,7 +117,7 @@ typedef enum
     /* clients (software modules) to use it. */
     /* Note: this is a private TCPIP heap */
     /* and multi-threaded protection is provided internally. */
-    TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP,      
+    TCPIP_STACK_HEAP_TYPE_INTERNAL,      
                                           
     /* internally implemented pool heap */
     /* Very fast allocation and deallocation without fragmentation */
@@ -125,14 +125,14 @@ typedef enum
     /* so it can result in a not very efficient memory usage */
     /* Note: this is a private TCPIP heap */
     /* and multi-threaded protection is provided internally. */
-    TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL, 
+    TCPIP_STACK_HEAP_TYPE_POOL, 
                           
     /* externally maintained heap */
     /* The heap is maintained externally and allocation
        is done using the supplied functions.
        The TCP/IP stack heap can provide OSAL synchronization
        protection if needed */
-    TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP,              
+    TCPIP_STACK_HEAP_TYPE_EXTERNAL,              
 
     /* number of supported heap types */
     TCPIP_STACK_HEAP_TYPES
@@ -202,6 +202,8 @@ typedef enum
     New results could be added in the future.
 
     Some results are relevant for specific heap types only.
+
+    16 bit only supported!
 */
 
 typedef enum
@@ -274,7 +276,7 @@ typedef enum
     TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED    = 0x01,
     
 
-    // TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP type specific flag:
+    // TCPIP_STACK_HEAP_TYPE_EXTERNAL type specific flag:
     // when an external heap functions are used
     // this flags suppresses the multi-threaded synchronization
     // directives and assumes that the protection is done by the
@@ -282,7 +284,7 @@ typedef enum
     // default is disabled
     TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC   = 0x02,
 
-    // TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP type specific flag:
+    // TCPIP_STACK_HEAP_TYPE_EXTERNAL type specific flag:
     // when an external heap functions are used
     // this flags suppresses the internal implementation of buffer alignment
     // required by the TCP/IP stack.
@@ -293,7 +295,7 @@ typedef enum
     // default is disabled
     TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN     = 0x04,
 
-    // TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL type specific flag:
+    // TCPIP_STACK_HEAP_TYPE_POOL type specific flag:
     // If the strict flag is enabled, the allocation will be tried
     // strictly from the pool entry that matches the requested size.
     // Otherwise, all the pool entries that have blocks larger than the requested size
@@ -331,7 +333,7 @@ typedef enum
 */
 typedef struct
 {
-    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP, TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP, etc.
+    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL, TCPIP_STACK_HEAP_TYPE_EXTERNAL, etc.
     TCPIP_STACK_HEAP_FLAGS  heapFlags;      // heap creation flags
                                             //
     TCPIP_STACK_HEAP_USAGE  heapUsage;      // the usage intended for                                            
@@ -357,7 +359,7 @@ typedef struct
 typedef struct
 {
     // the TCPIP_STACK_HEAP_CONFIG members
-    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP
+    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL
     TCPIP_STACK_HEAP_FLAGS  heapFlags;      // heap creation flags
                                             // TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED will be always internally set 
                                             //
@@ -387,7 +389,7 @@ typedef struct
 typedef struct
 {
     // the TCPIP_STACK_HEAP_CONFIG members
-    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP
+    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_EXTERNAL
     TCPIP_STACK_HEAP_FLAGS  heapFlags;      // heap creation flags
                                             // TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED will be always internally set 
                                             // TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC should be cleared if the external heap functions
@@ -444,7 +446,7 @@ typedef struct
 typedef struct
 {
     // the TCPIP_STACK_HEAP_CONFIG members
-    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL
+    TCPIP_STACK_HEAP_TYPE   heapType;       // type of this heap: TCPIP_STACK_HEAP_TYPE_POOL
     TCPIP_STACK_HEAP_FLAGS  heapFlags;      // heap creation flags
                                             // TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED will be always internally set 
                                             //
@@ -468,7 +470,7 @@ typedef struct
 /*
   Function:
     TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType, 
-                                                      int heapIndex)
+                                                      size_t heapIndex)
 
   Summary:
     Returns the current TCP/IP stack heap handle.
@@ -494,7 +496,7 @@ typedef struct
   Remarks:
     None.
   */
-TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType, int heapIndex);
+TCPIP_STACK_HEAP_HANDLE TCPIP_STACK_HeapHandleGet(TCPIP_STACK_HEAP_TYPE heapType, size_t heapIndex);
 
 //*****************************************************************************
 /* Function:
@@ -635,5 +637,5 @@ TCPIP_STACK_HEAP_RES      TCPIP_STACK_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE hea
 #endif
 //DOM-IGNORE-END
 
-#endif  // __TCPIP_HEAP_H_
+#endif  // H_TCPIP_HEAP_H_
 

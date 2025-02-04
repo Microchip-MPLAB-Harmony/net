@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _HASH_TBL_H_
-#define _HASH_TBL_H_
+#ifndef H_OA_HASH_H_
+#define H_OA_HASH_H_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -78,8 +78,8 @@ Microchip or any third party.
 
 
 // forward references
-typedef struct _TAG_OA_HASH_DCPT    OA_HASH_DCPT;
-typedef struct _TAG_OA_HASH_ENTRY   OA_HASH_ENTRY;
+typedef struct S_TAG_OA_HASH_DCPT    OA_HASH_DCPT;
+typedef struct S_TAG_OA_HASH_ENTRY   OA_HASH_ENTRY;
 
 #if defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 
@@ -126,7 +126,7 @@ typedef void (*OA_HASH_KEY_COPY_F)(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, c
 //
 // Note that the actual size of each hash entry is
 // pOH->hEntrySize which has to include the sizeof(OA_HASH_ENTRY)
-struct _TAG_OA_HASH_DCPT 
+struct S_TAG_OA_HASH_DCPT 
 {
     void*                   memBlk;     // area to create the hash table in
     const void*             hParam;     // caller parameter; could be used for dispatch
@@ -168,25 +168,25 @@ struct _TAG_OA_HASH_DCPT
 // To maintain generality, it is up to 
 // the user to define the key, including length, offset
 // in some user structures, etc
-struct _TAG_OA_HASH_ENTRY
+struct S_TAG_OA_HASH_ENTRY
 {
     union
     {
         uint16_t    value;
-        struct
+        struct __attribute__((packed))
         {
-            uint16_t    busy:       1;          // entry is not empty, in use
-            uint16_t    newEntry:   1;          // entry just newEntry
+            unsigned    busy:       1;          // entry is not empty, in use
+            unsigned    newEntry:   1;          // entry just newEntry
                                                 // updated by TCPIP_OAHASH_EntryLookupOrInsert() 
                                                 // should be used by the caller to 
                                                 // update the entry's user info
-            uint16_t    user:       14;         // user flags
+            unsigned    user:       14;         // user flags
         };
     }flags;      // entry flags
     uint16_t     probeCount;                    // number of steps to get to the
                                                 // key's slot
     //
-    void*       data[];     // generic payload up to the application to use
+    // void*       data[];  // generic payload up to the application to use
                             // this SHOULD include the key
 };
 
@@ -268,6 +268,6 @@ void            TCPIP_OAHASH_KeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry,
 
 #endif  // !defined ( OA_HASH_DYNAMIC_KEY_MANIPULATION )
 
-#endif //  _HASH_TBL_H_
+#endif //  H_OA_HASH_H_
 
 

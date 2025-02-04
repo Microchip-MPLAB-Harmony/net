@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _TCPIP_MANAGER_CONTROL_H_
-#define _TCPIP_MANAGER_CONTROL_H_
+#ifndef H_TCPIP_MANAGER_CONTROL_H_
+#define H_TCPIP_MANAGER_CONTROL_H_
 
 #include "tcpip/tcpip_mac.h"
 
@@ -60,13 +60,13 @@ Microchip or any third party.
 
 // minimum timeout (maximum rate) for link check, ms
 // 5 times per second should be frequent enough
-#define _TCPIP_STACK_LINK_MIN_TMO       200 
+#define M_TCPIP_STACK_LINK_MIN_TMO       200 
 // adjust it vs the stack rate
 
-#if (!defined(TCPIP_STACK_LINK_RATE) || TCPIP_STACK_LINK_RATE < TCPIP_STACK_TICK_RATE || TCPIP_STACK_LINK_RATE < _TCPIP_STACK_LINK_MIN_TMO) 
-#define _TCPIP_STACK_LINK_RATE  _TCPIP_STACK_LINK_MIN_TMO   // use the minimum value
+#if (!defined(TCPIP_STACK_LINK_RATE) || TCPIP_STACK_LINK_RATE < TCPIP_STACK_TICK_RATE || TCPIP_STACK_LINK_RATE < M_TCPIP_STACK_LINK_MIN_TMO) 
+#define M_TCPIP_STACK_LINK_RATE  M_TCPIP_STACK_LINK_MIN_TMO   // use the minimum value
 #else
-#define _TCPIP_STACK_LINK_RATE  TCPIP_STACK_LINK_RATE       // user value
+#define M_TCPIP_STACK_LINK_RATE  TCPIP_STACK_LINK_RATE       // user value
 #endif
 
 // module signal/timeout/asynchronous event handler
@@ -85,20 +85,20 @@ typedef struct
 
 
 // handle for the registration of a signal handler
-typedef const void* tcpipSignalHandle;
+typedef const void* TCPIP_SIGNAL_HANDLE;
 
 
 
 typedef enum
 {
-    TCPIP_STACK_ADDRESS_SERVICE_NONE    = 0,    // no service
-    TCPIP_STACK_ADDRESS_SERVICE_DHCPC,          // DHCP client
-    TCPIP_STACK_ADDRESS_SERVICE_ZCLL,           // ZCLL
-    TCPIP_STACK_ADDRESS_SERVICE_DHCPS,          // DHCP server
+    TCPIP_STACK_ADDR_SRVC_NONE    = 0,    // no service
+    TCPIP_STACK_ADDR_SRVC_DHCPC,          // DHCP client
+    TCPIP_STACK_ADDR_SRVC_ZCLL,           // ZCLL
+    TCPIP_STACK_ADDR_SRVC_DHCPS,          // DHCP server
     //
-    TCPIP_STACK_ADDRESS_SERVICE_MASK    = 0x7,  // mask of address services
+    TCPIP_STACK_ADDR_SRVC_MASK    = 0x7,  // mask of address services
                                                 // has to to match the position in the TCPIP_STACK_NET_IF_FLAGS!!!
-}TCPIP_STACK_ADDRESS_SERVICE_TYPE;
+}TCPIP_STACK_ADDR_SRVC_TYPE;
 
 typedef enum
 {
@@ -111,38 +111,38 @@ typedef enum
 
 typedef enum
 {
-    TCPIP_STACK_ADDRESS_SERVICE_EVENT_NONE    = 0,      // no event
-    TCPIP_STACK_ADDRESS_SERVICE_EVENT_RUN_FAIL,         // run time failure event
-    TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST,        // conn lost event
-    TCPIP_STACK_ADDRESS_SERVICE_EVENT_USER_STOP,        // user stop event
-    TCPIP_STACK_ADDRESS_SERVICE_EVENT_RUN_RESTORE,      // run time restore event event
+    TCPIP_ADDR_SRVC_EV_NONE    = 0,      // no event
+    TCPIP_ADDR_SRVC_EV_RUN_FAIL,         // run time failure event
+    TCPIP_ADDR_SRVC_EV_CONN_LOST,        // conn lost event
+    TCPIP_ADDR_SRVC_EV_USER_STOP,        // user stop event
+    TCPIP_ADDR_SRVC_EV_RUN_RESTORE,      // run time restore event event
                                                         // DHCPc uses this
-}TCPIP_STACK_ADDRESS_SERVICE_EVENT;
+}TCPIP_ADDR_SRVC_EV;
 
 typedef union
 {
-    struct
+    struct __attribute__((packed))
     {
         // stack configuration dynamic flags
-        uint16_t bIsDHCPEnabled         : 1;    // init: controls the DHCP enable/disable on the interface
+        unsigned bIsDHCPEnabled         : 1;    // init: controls the DHCP enable/disable on the interface
                                                 // runtime: mirror bit set by the DHCP to reflect the current/last status
-        uint16_t bIsZcllEnabled         : 1;    // init: controls the ZCLL service enable/disable on the interface
+        unsigned bIsZcllEnabled         : 1;    // init: controls the ZCLL service enable/disable on the interface
                                                 // runtime: mirror bit set by the ZCLL Server to reflect the current/last status
-        uint16_t bIsDHCPSrvEnabled      : 1;    // init: controls the DHCP Server enable/disable on the interface
+        unsigned bIsDHCPSrvEnabled      : 1;    // init: controls the DHCP Server enable/disable on the interface
                                                 // runtime: mirror bit set by the DHCP Server to reflect the current/last status
-                                                // TCPIP_STACK_ADDRESS_SERVICE_MASK has to match!!!
-        uint16_t bIsDnsClientEnabled    : 1;    // DNS client  enable/disable  .
-        uint16_t bIsDnsServerEnabled    : 1;    // DNS server Enable and Disable
-        uint16_t bIsDNSServerAuto       : 1;    // DNS Server auto enable/disable on this interface
-        uint16_t bInterfaceEnabled      : 1;    // 0 when TCPIP_MAC_POWER_DOWN/TCPIP_MAC_POWER_LOW 
-        uint16_t bIPv6Enabled           : 1;
-        uint16_t bIPv6InConfig          : 1;
+                                                // TCPIP_STACK_ADDR_SRVC_MASK has to match!!!
+        unsigned bIsDnsClientEnabled    : 1;    // DNS client  enable/disable  .
+        unsigned bIsDnsServerEnabled    : 1;    // DNS server Enable and Disable
+        unsigned bIsDNSServerAuto       : 1;    // DNS Server auto enable/disable on this interface
+        unsigned bInterfaceEnabled      : 1;    // 0 when TCPIP_MAC_POWER_DOWN/TCPIP_MAC_POWER_LOW 
+        unsigned bIPv6Enabled           : 1;
+        unsigned bIPv6InConfig          : 1;
         unsigned bIpv6DnsValid          : 1;    // IPv6 DNS address is valid flag
-        uint16_t powerMode              : 2;    // current power mode
-        uint16_t bInConfig              : 1;    // stack is configuring itself
-        uint16_t bMacProcessOnEvent     : 1;    // TCPIP_MAC_Process function needed on event
-        uint16_t bMacInitialize         : 1;    // MAC is initializing
-        uint16_t bMacInitDone           : 1;    // MAC initializing done
+        unsigned powerMode              : 2;    // current power mode
+        unsigned bInConfig              : 1;    // stack is configuring itself
+        unsigned bMacProcessOnEvent     : 1;    // TCPIP_MAC_Process function needed on event
+        unsigned bMacInitialize         : 1;    // MAC is initializing
+        unsigned bMacInitDone           : 1;    // MAC initializing done
     };
     uint16_t v;
 }TCPIP_STACK_NET_IF_FLAGS;      // flags per interface
@@ -188,7 +188,7 @@ typedef struct
 
 // TCPIP network structure containing interface information
 //  
-typedef struct _tag_TCPIP_NET_IF
+typedef struct S_tag_TCPIP_NET_IF
 {
     struct  // TCPIP_STACK_NET_IF_DCPT!!!; Anonymous for now;
     // KEEP IN SYNC! ALIGNED! ALWAYS AT BEGINNING!
@@ -228,12 +228,12 @@ typedef struct _tag_TCPIP_NET_IF
     SYS_MODULE_OBJ      macObjHandle;           // MAC system wide handle
     TCPIP_MAC_HANDLE    hIfMac;                 // quick reference to which MAC this interface belongs to
     const void*         pMacConfig;             // MAC configuration data save for a restart
-#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-    struct _tag_TCPIP_NET_IF* pPriIf;           // pointer to the primary interface
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    struct S_tag_TCPIP_NET_IF* pPriIf;           // pointer to the primary interface
                                                 // pPriIf == pIf, means primary
                                                 // else alias  
-    struct _tag_TCPIP_NET_IF* pAlias;           // linked list of alias interfaces belonging to this primary
-#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    struct S_tag_TCPIP_NET_IF* pAlias;           // linked list of alias interfaces belonging to this primary
+#endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
                                                 // ((__aligned__)) !!!
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)
     PROTECTED_SINGLE_LIST         registeredClients;      // stack notification clients
@@ -259,13 +259,13 @@ typedef struct _tag_TCPIP_NET_IF
                                                 // Not used. The MAC sets the pktFlags when calculating RX checksums!
     union
     {
-        struct
+        struct __attribute__((packed))
         {
-            uint8_t linkPrev       : 1;        // previous status of the link
-            uint8_t connEvent      : 1;        // when set indicates a connection event
-            uint8_t connEventType  : 1;        // 0: TCPIP_MAC_EV_CONN_LOST; 1: TCPIP_MAC_EV_CONN_ESTABLISHED
-            uint8_t bridged        : 1;        // 1: interface is part of a bridge
-            uint8_t reserved       : 4;        // available
+            unsigned linkPrev       : 1;        // previous status of the link
+            unsigned connEvent      : 1;        // when set indicates a connection event
+            unsigned connEventType  : 1;        // 0: TCPIP_MAC_EV_CONN_LOST; 1: TCPIP_MAC_EV_CONN_ESTABLISHED
+            unsigned bridged        : 1;        // 1: interface is part of a bridge
+            unsigned reserved       : 4;        // available
         };
         uint8_t        v;
     }exFlags;                               // additional extended flags      
@@ -278,9 +278,9 @@ typedef struct _tag_TCPIP_NET_IF
 
 // TCPIP stack event registration
 
-typedef struct  _TAG_TCPIP_LIST_NODE
+typedef struct  S_TAG_TCPIP_LIST_NODE
 {
-    struct _TAG_TCPIP_LIST_NODE *next;  // next node in list
+    struct S_TAG_TCPIP_LIST_NODE *next;  // next node in list
                                                 // safe cast to SGL_LIST_NODE node!!!
     TCPIP_STACK_EVENT_HANDLER   handler;    // handler to be called for event
     const void*                 hParam;     // handler parameter
@@ -290,6 +290,7 @@ typedef struct  _TAG_TCPIP_LIST_NODE
 
 
 // network interface action for initialization/deinitialization
+// 8 bit values only are supported!
 typedef enum
 {
     TCPIP_STACK_ACTION_INIT,         // stack is initialized 
@@ -301,7 +302,7 @@ typedef enum
 
 
 // data that's passed as reference to each other module init/deinit, etc.
-typedef struct _TCPIP_STACK_MODULE_CTRL
+typedef struct S_TCPIP_STACK_MODULE_CTRL
 {
     // permanent data; this data is maintained by the stack for one full session
     // i.e., across StackInit() -> StackDeInit() calls
@@ -310,7 +311,8 @@ typedef struct _TCPIP_STACK_MODULE_CTRL
     uint16_t    nIfs;       // number of the interfaces supported in this session
     uint16_t    nAliases;   // number of alias interfaces in this session         
     // number of the modules enabled in this session
-    int     nModules;
+    uint16_t    nModules;
+    uint16_t    reserved;   // padding, not used
     // allocation parameters
     const void* memH;                   // handle to be used in the TCPIP_HEAP_ calls
     TCPIP_STACK_HEAP_TYPE   heapType;   // type of the heap                
@@ -321,41 +323,41 @@ typedef struct _TCPIP_STACK_MODULE_CTRL
     // pointer to the current interface
     TCPIP_NET_IF* pNetIf;
     // index of the current interface addressed
-    int     netIx;
+    uint16_t    netIx;
     // current action for the stack
-    TCPIP_STACK_ACTION      stackAction;
+    uint8_t     stackAction;    // TCPIP_STACK_ACTION value
     // the power mode for this interface to go to
     // valid only if stackAction == init/reinit; ignored for deinit
-    TCPIP_MAC_POWER_MODE  powerMode;
+    uint8_t     powerMode;    // TCPIP_MAC_POWER_MODE value
     
 }TCPIP_STACK_MODULE_CTRL;
 
 
 TCPIP_NET_IF*         TCPIP_STACK_IPAddToNet(IPV4_ADDR* pIpAddress, bool useDefault);
 
-TCPIP_NET_IF*         _TCPIPStackIpAddFromAnyNet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* pIpAddress);
+TCPIP_NET_IF*         TCPIPStackIpAddFromAnyNet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* pIpAddress);
 
 
-static __inline__ bool __attribute__((always_inline)) _TCPIPStackIpAddFromLAN(TCPIP_NET_IF* pIf, const IPV4_ADDR* pIpAddress)
+static __inline__ bool __attribute__((always_inline)) TCPIPStackIpAddFromLAN(const TCPIP_NET_IF* pIf, const IPV4_ADDR* pIpAddress)
 {
-    return ((pIf->netIPAddr.Val ^ pIpAddress->Val) & pIf->netMask.Val) == 0;
+    return (((pIf->netIPAddr.Val ^ pIpAddress->Val) & pIf->netMask.Val) == 0U);
 }
 
 int  TCPIP_STACK_NetIxGet(const TCPIP_NET_IF* pNetIf);
 
-static __inline__ int __attribute__((always_inline)) _TCPIPStackNetIxGet(TCPIP_NET_IF* pIf)
+static __inline__ uint16_t __attribute__((always_inline)) TCPIPStackNetIxGet(const TCPIP_NET_IF* pIf)
 {
     return pIf->netIfIx;
 }
 
-uint32_t  TCPIP_STACK_NetAddressGet(TCPIP_NET_IF* pNetIf);
+uint32_t  TCPIP_STACK_NetAddressGet(const TCPIP_NET_IF* pNetIf);
 
-const IPV6_ADDR* TCPIP_STACK_NetStaticIPv6AddressGet(TCPIP_NET_IF* pNetIf, int* pPrefixLen);
+const IPV6_ADDR* TCPIP_STACK_NetStaticIPv6AddressGet(const TCPIP_NET_IF* pNetIf, uint8_t* pPrefixLen);
 
-const IPV6_ADDR* TCPIP_STACK_NetDefaultIPv6GatewayGet(TCPIP_NET_IF* pNetIf);
+const IPV6_ADDR* TCPIP_STACK_NetDefaultIPv6GatewayGet(const TCPIP_NET_IF* pNetIf);
 
 
-uint32_t  TCPIP_STACK_NetMaskGet(TCPIP_NET_IF* pNetIf);
+uint32_t  TCPIP_STACK_NetMaskGet(const TCPIP_NET_IF* pNetIf);
 
 void  TCPIP_STACK_GatewayAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddress);
 void  TCPIP_STACK_PrimaryDNSAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddress);
@@ -364,32 +366,32 @@ void  TCPIP_STACK_SecondaryDNSAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddr
 
 TCPIP_NET_IF*   TCPIP_STACK_NetByAddress(const IPV4_ADDR* pIpAddress);
 
-TCPIP_NET_IF*   TCPIP_STACK_MatchNetAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
+TCPIP_NET_IF*   TCPIP_STACK_MatchNetAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
-bool  TCPIP_STACK_AddressIsOfNetUp( TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
+bool  TCPIP_STACK_AddressIsOfNetUp(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
 // detects net-directed bcast
-bool  TCPIP_STACK_NetIsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
+bool  TCPIP_STACK_NetIsBcastAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
 // detects limited or net-directed bcast
-bool  TCPIP_STACK_IsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
+bool  TCPIP_STACK_IsBcastAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd);
 
 // detects limited or net-directed bcast
 // assumes valid pNetIf
-static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsBcastAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+static __inline__ bool __attribute__((always_inline))  TCPIPStack_IsBcastAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
-    return (pIpAdd->Val == 0xFFFFFFFF) ||  (pIpAdd->Val == (pNetIf->netIPAddr.Val | ~pNetIf->netMask.Val));
+    return (pIpAdd->Val == 0xFFFFFFFFU) ||  (pIpAdd->Val == (pNetIf->netIPAddr.Val | ~pNetIf->netMask.Val));
 }
 
 // detects limited bcast
-static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsLimitedBcast(const IPV4_ADDR* pIpAdd)
+static __inline__ bool __attribute__((always_inline))  TCPIPStack_IsLimitedBcast(const IPV4_ADDR* pIpAdd)
 {
-    return (pIpAdd->Val == 0xFFFFFFFF);
+    return (pIpAdd->Val == 0xFFFFFFFFU);
 }
 
 // detects net_directed bcast
 // assumes valid pNetIf
-static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsDirectedBcast(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+static __inline__ bool __attribute__((always_inline))  TCPIPStack_IsDirectedBcast(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
     return (pIpAdd->Val == (pNetIf->netIPAddr.Val | ~pNetIf->netMask.Val));
 }
@@ -398,125 +400,198 @@ static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsDirectedBca
 // return true if local, i.e. non-forwardable
 // false otherwise
 // assumes the address is a multicast address (starts with 0b1110 prefix)!
-static __inline__ bool __attribute__((always_inline))  _TCPIPStack_IsLocalMcast(const IPV4_ADDR* pIpAdd)
+static __inline__ bool __attribute__((always_inline))  TCPIPStack_IsLocalMcast(const IPV4_ADDR* pIpAdd)
 {
-    return ((pIpAdd->Val & 0x00ffffe0) == 0x000000e0);
+    return ((pIpAdd->Val & 0x00ffffe0U) == 0x000000e0U);
 }
 
 
 
-bool  TCPIP_STACK_NetworkIsLinked(TCPIP_NET_IF* pNetIf);
+bool                TCPIP_STACK_NetworkIsLinked(const TCPIP_NET_IF* pNetIf);
 
-TCPIP_NET_IF*         TCPIP_STACK_MACIdToNet(TCPIP_STACK_MODULE macId);
+TCPIP_NET_IF*       TCPIP_STACK_MACIdToNet(TCPIP_STACK_MODULE macId);
 
-TCPIP_STACK_MODULE  TCPIP_STACK_NetMACId(TCPIP_NET_IF* pNetIf);
+TCPIP_STACK_MODULE  TCPIP_STACK_NetMACId(const TCPIP_NET_IF* pNetIf);
 
-TCPIP_NET_IF*     TCPIP_STACK_MacToNet(TCPIP_MAC_HANDLE hMac);
+TCPIP_NET_IF*       TCPIP_STACK_MacToNet(TCPIP_MAC_HANDLE hMac);
 
-TCPIP_MAC_HANDLE  TCPIP_STACK_NetToMAC(TCPIP_NET_IF* pNetIf);
+TCPIP_MAC_HANDLE    TCPIP_STACK_NetToMAC(const TCPIP_NET_IF* pNetIf);
 
-int         TCPIP_STACK_MacToNetIndex(TCPIP_MAC_HANDLE hMac);
+int                 TCPIP_STACK_MacToNetIndex(TCPIP_MAC_HANDLE hMac);
 
 
 
-const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(TCPIP_NET_IF* pNetIf);
+const uint8_t*  TCPIP_STACK_NetUpMACAddressGet(const TCPIP_NET_IF* pNetIf);
 
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetAddress(TCPIP_NET_IF* pNetIf)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackNetAddress(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->netIPAddr.Val;
 }
 
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetMask(TCPIP_NET_IF* pNetIf)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackNetMask(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->netMask.Val;
 }
 
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetGateway(TCPIP_NET_IF* pNetIf)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackNetGateway(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->netGateway.Val;
 }
 
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetNetwork(TCPIP_NET_IF* pNetIf)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackNetNetwork(const TCPIP_NET_IF* pNetIf)
 {
     return (pNetIf->netIPAddr.Val & pNetIf->netMask.Val);
 }
 
 // returns the host part of an IPv4 address
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackHostPartAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackHostPartAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
     return pIpAdd->Val & (~pNetIf->netMask.Val);
 }
 
 // returns the network part of an IPv4 address
-static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetPartAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+static __inline__ uint32_t  __attribute__((always_inline)) TCPIPStackNetPartAddress(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
     return pIpAdd->Val & pNetIf->netMask.Val;
 }
 
-static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_AddressIsOfNet(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
+static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_AddressIsOfNet(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
-    return (pIpAdd->Val == 0x0100007f || pNetIf->netIPAddr.Val == pIpAdd->Val);
+    return ((pIpAdd->Val == 0x0100007fU) || (pNetIf->netIPAddr.Val == pIpAdd->Val));
 }
 
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackHandleToNet(TCPIP_NET_HANDLE hNet)
+// conversion functions/helpers
+
+static __inline__ void* __attribute__((always_inline)) FC_NetDcpt2Vptr(TCPIP_STACK_NET_IF_DCPT* pNetDcpt)
+{
+    union
+    {
+        TCPIP_STACK_NET_IF_DCPT*    pNetDcpt;
+        void*                       vptr;
+    }U_NET_DCPT_VPTR;
+
+    U_NET_DCPT_VPTR.pNetDcpt = pNetDcpt;
+    return U_NET_DCPT_VPTR.vptr;
+}
+
+// convert net Handle to netIf
+static __inline__ TCPIP_NET_IF* __attribute__((always_inline)) FC_NetH2NetIf(TCPIP_NET_HANDLE netH)
+{
+        union
+        {
+            TCPIP_NET_HANDLE netH;
+            TCPIP_NET_IF* pNetIf;
+        }U_NET_HNDL_NET_IF;        
+
+    U_NET_HNDL_NET_IF.netH = netH;
+    return U_NET_HNDL_NET_IF.pNetIf;
+}
+
+// remove const of net
+static __inline__ TCPIP_NET_IF* __attribute__((always_inline)) FC_CNetIf2NetIf(const TCPIP_NET_IF* cNetIf)
+{
+    union
+    {
+        const TCPIP_NET_IF*  cNetIf;
+        TCPIP_NET_IF* pNetIf;
+    }U_CNET_IF_NET_IF;
+
+    U_CNET_IF_NET_IF.cNetIf = cNetIf;
+    return U_CNET_IF_NET_IF.pNetIf;
+}
+
+static __inline__ TCPIP_NET_IF* __attribute__((always_inline)) FC_Cvptr2NetIf(const void* cvptr)
+{
+        union
+        {
+            const void*  cvptr;
+            TCPIP_NET_IF* pNetIf;
+        }U_CVPTR_NET_IF;        
+
+    U_CVPTR_NET_IF.cvptr = cvptr;
+    return U_CVPTR_NET_IF.pNetIf;
+}
+
+static __inline__  const void* __attribute__((always_inline)) FC_Net2Cvptr(const TCPIP_NET_IF* pNetIf)
+{
+    union
+    {
+        const TCPIP_NET_IF* pNetIf;
+        const void*   cvptr;
+    }U_NET_CV_PTR;
+
+    U_NET_CV_PTR.pNetIf = pNetIf;
+    return U_NET_CV_PTR.cvptr; 
+}
+
+// end of conversion functions/helpers
+
+// stack internal helpers
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackHandleToNet(TCPIP_NET_HANDLE hNet)
 {
     // do some checking
     // if #debug enabled, etc
-    return (TCPIP_NET_IF*)hNet; 
+    TCPIP_NET_IF* pNetIf = FC_NetH2NetIf(hNet); 
+    return pNetIf;
 }
 
 // more checking, for user passed handles
 TCPIP_NET_IF*  TCPIP_Stack_UserHandleToNet(TCPIP_NET_HANDLE hNet);
 
 
-static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_NetworkIsUp(TCPIP_NET_IF* pNetIf)
+static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_NetworkIsUp(const TCPIP_NET_IF* pNetIf)
 {
-    if(pNetIf && pNetIf->Flags.bInterfaceEnabled)
+    if((pNetIf != NULL) && (pNetIf->Flags.bInterfaceEnabled != 0U))
     {
         return true;
     }
     return false;
 }
 
-static __inline__ const uint8_t*  __attribute__((always_inline)) _TCPIPStack_NetMACAddressGet(TCPIP_NET_IF* pNetIf)
+static __inline__ const uint8_t*  __attribute__((always_inline)) TCPIPStack_NetMACAddressGet(const TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? pNetIf->netMACAddr.v : 0;
+    return (pNetIf != NULL) ? pNetIf->netMACAddr.v : NULL;
 }
 
-static __inline__ const char*  __attribute__((always_inline)) _TCPIPStack_NetBIOSName(TCPIP_NET_IF* pNetIf)
+static __inline__ const char*  __attribute__((always_inline)) TCPIPStack_NetBIOSNameGet(const TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? (char*)pNetIf->NetBIOSName : 0;
+    return (pNetIf != NULL) ? (const char*)pNetIf->NetBIOSName : NULL;
 }
 
-static __inline__ TCPIP_MAC_TYPE __attribute__((always_inline)) _TCPIPStack_NetMacType(TCPIP_NET_IF* pNetIf)
+static __inline__ char*  __attribute__((always_inline)) TCPIPStack_NetBIOSName(TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? (TCPIP_MAC_TYPE)pNetIf->macType : 0;
+    return (pNetIf != NULL) ? (char*)pNetIf->NetBIOSName : NULL;
+}
+
+static __inline__ TCPIP_MAC_TYPE __attribute__((always_inline)) TCPIPStack_NetMacType(const TCPIP_NET_IF* pNetIf)
+{
+    return (pNetIf != NULL) ? (TCPIP_MAC_TYPE)pNetIf->macType : (TCPIP_MAC_TYPE)0;
 }
 
 // checks for valid up interface
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackHandleToNetUp(TCPIP_NET_HANDLE hNet)
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackHandleToNetUp(TCPIP_NET_HANDLE hNet)
 {
-    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(hNet);
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(hNet);
     if(TCPIP_STACK_NetworkIsUp(pNetIf))
     {
         return pNetIf;
     }
 
-    return 0;
+    return NULL;
 }
 
 // checks for valid up and linked interface
-TCPIP_NET_IF* _TCPIPStackHandleToNetLinked(TCPIP_NET_HANDLE hNet);
+TCPIP_NET_IF* TCPIPStackHandleToNetLinked(TCPIP_NET_HANDLE hNet);
 
 // returns a valid, linked interface, if any
 // can start search with the default one
-TCPIP_NET_IF* _TCPIPStackAnyNetLinked(bool useDefault);
+TCPIP_NET_IF* TCPIPStackAnyNetLinked(bool useDefault);
 
 // returns the interface for which this address is a net_directed address
 // 0 in not found
 // does NOT check network up, linked, etc.
 // does NOT check primary/virtual interface!
-TCPIP_NET_IF* _TCPIPStackAnyNetDirected(const IPV4_ADDR* pIpAdd);
+TCPIP_NET_IF* TCPIPStackAnyNetDirected(const IPV4_ADDR* pIpAdd);
 
 // converts between an interface name and a MAC (TCPIP_STACK_MODULE) ID 
 // TCPIP_MODULE_MAC_NONE - no MAC id could be found
@@ -527,57 +602,59 @@ TCPIP_STACK_MODULE    TCPIP_STACK_StringToMACId(const char* str);
 const char*     TCPIP_STACK_MACIdToString(TCPIP_STACK_MODULE macId);
 
 // helper to select an address service for interface
-TCPIP_STACK_ADDRESS_SERVICE_TYPE TCPIP_STACK_AddressServiceSelect(TCPIP_NET_IF* pNetIf, TCPIP_NETWORK_CONFIG_FLAGS configFlags);
+TCPIP_STACK_ADDR_SRVC_TYPE TCPIP_STACK_AddressServiceSelect(TCPIP_NET_IF* pNetIf, TCPIP_NETWORK_CONFIG_FLAGS configFlags);
 //Helper to select an DNS service  for  a interface
 TCPIP_STACK_DNS_SERVICE_TYPE TCPIP_STACK_DNSServiceSelect(TCPIP_NET_IF* pNetIf, TCPIP_NETWORK_CONFIG_FLAGS configFlags);
 
 
 // helper to decide if an address service can be started
-bool    TCPIP_STACK_AddressServiceCanStart(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDRESS_SERVICE_TYPE adSvcType);
+bool    TCPIP_STACK_AddressServiceCanStart(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType);
 
 // helper to decide if an DNS  service can be started
 bool TCPIP_STACK_DNSServiceCanStart(TCPIP_NET_IF* pNetIf, TCPIP_STACK_DNS_SERVICE_TYPE dnsSvcType);
 
 
 // notification helper that an address service has some stop event
-void    TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDRESS_SERVICE_TYPE adSvcType, TCPIP_STACK_ADDRESS_SERVICE_EVENT evType);
+void    TCPIP_STACK_AddressServiceEvent(TCPIP_NET_IF* pNetIf, TCPIP_STACK_ADDR_SRVC_TYPE adSvcType, TCPIP_ADDR_SRVC_EV evType);
 
 // address service default status
 void    TCPIP_STACK_AddressServiceDefaultSet(TCPIP_NET_IF* pNetIf);
 
 // helper to check if an address service is running
-TCPIP_STACK_ADDRESS_SERVICE_TYPE _TCPIPStackAddressServiceIsRunning(TCPIP_NET_IF* pNetIf);
+TCPIP_STACK_ADDR_SRVC_TYPE TCPIPStackAddressServiceIsRunning(TCPIP_NET_IF* pNetIf);
 
-static __inline__ bool __attribute__((always_inline)) _TCPIPStackIsConfig(TCPIP_NET_IF* pNetIf)
+static __inline__ bool __attribute__((always_inline)) TCPIPStackIsConfig(const TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf->Flags.bInConfig != 0;
+    return (pNetIf->Flags.bInConfig != 0U);
 }
 
 
-void  _TCPIPStackSetConfigAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* ipAddress, const IPV4_ADDR* mask, const IPV4_ADDR* gw, bool config);
+void  TCPIPStackSetConfigAddress(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* ipAddress, const IPV4_ADDR* mask, const IPV4_ADDR* gw, bool config);
 
 // finds an interface that has the IPv6 address
-TCPIP_NET_IF* _TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE addType, bool useDefault);
+TCPIP_NET_IF* TCPIPStackIPv6AddToNet(IPV6_ADDR* pIPv6Address, IPV6_ADDR_TYPE addType, bool useDefault);
 
 // register a signal/timeout handler with the stack manager
 // returns 0 if failed, a valid handle otherwise
 // the entries are identified by the signalHandler;
 // a second call with the same signalHandler will succeed and not create a new signal entry
-tcpipSignalHandle _TCPIPStackSignalHandlerRegister(TCPIP_STACK_MODULE modId, tcpipModuleSignalHandler signalHandler, int16_t asyncTmoMs);
+TCPIP_SIGNAL_HANDLE TCPIPStackSignalHandlerRegister(TCPIP_STACK_MODULE modId, tcpipModuleSignalHandler signalHandler, int16_t asyncTmoMs);
 
 
 // changes the parameters for a registered signal handler
 // asyncTmo == 0 could be used to stop the timer without deregistration
-bool           _TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, tcpipSignalHandle handle, int16_t asyncTmoMs);
+bool           TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, TCPIP_SIGNAL_HANDLE handle, int16_t asyncTmoMs);
 
 
 // returns the pending module signals
-TCPIP_MODULE_SIGNAL  _TCPIPStackModuleSignalGet(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL clrMask);
+TCPIP_MODULE_SIGNAL  TCPIPStackModuleSignalGet(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL clrMask);
 
 // returns the pending module signals + signal parameter
 // signalParam should NOT be 0!
 // the signal parameter is cleared after this operation, there's is no peek!
-TCPIP_MODULE_SIGNAL  _TCPIPStackModuleSignalParamGet(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL clrMask, uint32_t* signalParam);
+#if (M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
+TCPIP_MODULE_SIGNAL  TCPIPStackModuleSignalParamGet(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL clrMask, uint32_t* signalParam);
+#endif
 
 // a stack module requests setting a signal
 // This function is mainly intended for requiring attention
@@ -596,65 +673,65 @@ TCPIP_MODULE_SIGNAL  _TCPIPStackModuleSignalParamGet(TCPIP_STACK_MODULE modId, T
 //  When done with the critical section the module should clear the TCPIP_MODULE_SIGNAL_ASYNC signal.
 //  However, the stack manager keeps a global count of how many times the modules required TCPIP_MODULE_SIGNAL_ASYNC
 //  That means that a module should always call
-//  _TCPIPStackModuleSignalRequest/_TCPIPStackModuleSignalGet for TCPIP_MODULE_SIGNAL_ASYNC in pairs!
+//  TCPIPStackModuleSignalRequest/TCPIPStackModuleSignalGet for TCPIP_MODULE_SIGNAL_ASYNC in pairs!
 //
 // NOTE:
 //  A signal request sends a signal to the module task itself
 //  A signal request will also send a signal to the stack task itself, when the TCP/IP modules are executed internally.
 //  - unless noMgrAlert is specified
 //
-bool                _TCPIPStackModuleSignalRequest(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL signal, bool noMgrAlert);
+bool                TCPIPStackModuleSignalRequest(TCPIP_STACK_MODULE modId, TCPIP_MODULE_SIGNAL signal_t, bool noMgrAlert);
 
 
 // de-registers a previous registered signal handler
-void           _TCPIPStackSignalHandlerDeregister(tcpipSignalHandle handle); 
+void           TCPIPStackSignalHandlerDeregister(TCPIP_SIGNAL_HANDLE handle); 
 
 
 // inserts a RX packet into the interface RX queue
 // this has to be a fully formatted TCPIP_MAC_PACKET
-void           _TCPIPStackInsertRxPacket(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, bool signal);
+void           TCPIPStackInsertRxPacket(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, bool signal_t);
 
 
-TCPIP_MAC_RES _TCPIPStackPacketTx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET * ptrPacket);
+TCPIP_MAC_RES TCPIPStackPacketTx(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET * ptrPacket);
 
 
 // extracts a packet from a module RX queue
 // returns 0 if queue is empty
-TCPIP_MAC_PACKET*   _TCPIPStackModuleRxExtract(TCPIP_STACK_MODULE modId);
+TCPIP_MAC_PACKET*   TCPIPStackModuleRxExtract(TCPIP_STACK_MODULE modId);
 
 // inserts a packet into a module queue
 // and signals if necessary
 // returns:
 //      true is packet inserted
 //      false if the insertion failed (the module is not running, for example)
-bool _TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal);
+bool TCPIPStackModuleRxInsert(TCPIP_STACK_MODULE modId, TCPIP_MAC_PACKET* pRxPkt, bool signal_t);
 
 
 // purges the packets from a module RX queue
 // belonging to the pNetIf
-void _TCPIPStackModuleRxPurge(TCPIP_STACK_MODULE modId, TCPIP_NET_IF* pNetIf);
+void TCPIPStackModuleRxPurge(TCPIP_STACK_MODULE modId, TCPIP_NET_IF* pNetIf);
 
 // return the stack heap configuration parameters
-const TCPIP_STACK_HEAP_CONFIG* _TCPIPStackHeapConfig(void);
+const TCPIP_STACK_HEAP_CONFIG* TCPIPStackHeapConfig(void);
             
-static __inline__ uint16_t  __attribute__((always_inline)) _TCPIPStackNetLinkMtu(TCPIP_NET_IF* pNetIf)
+static __inline__ uint16_t  __attribute__((always_inline)) TCPIPStackNetLinkMtu(const TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? pNetIf->linkMtu : 0;
+    return (pNetIf != NULL) ? pNetIf->linkMtu : 0U;
 }
 
-#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 
-static __inline__ bool  __attribute__((always_inline)) _TCPIPStackNetIsPrimary(TCPIP_NET_IF* pNetIf)
+static __inline__ bool  __attribute__((always_inline)) TCPIPStackNetIsPrimary(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf == pNetIf->pPriIf;
 }
 
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackNetGetPrimary(TCPIP_NET_IF* pNetIf)
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackNetGetPrimary(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->pPriIf;
 }
 
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackNetGetAlias(TCPIP_NET_IF* pNetIf)
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackNetGetAlias(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->pAlias;
 }
@@ -663,66 +740,62 @@ static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackNetGe
 // based on the interface the packet arrived on
 // (probably a primary interface) and on the packet IP address
 // No check is done if the interface (p or a) is UP!
-TCPIP_NET_IF* _TCPIPStackMapAliasInterface(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pDestAddress);
+TCPIP_NET_IF* TCPIPStackMapAliasInterface(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pDestAddress);
 
 #else
-static __inline__ bool  __attribute__((always_inline)) _TCPIPStackNetIsPrimary(TCPIP_NET_IF* pNetIf)
+static __inline__ bool  __attribute__((always_inline)) TCPIPStackNetIsPrimary(const TCPIP_NET_IF* pNetIf)
 {
     return true;
 }
 
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackNetGetPrimary(TCPIP_NET_IF* pNetIf)
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackNetGetPrimary(const TCPIP_NET_IF* cNetIf)
+{
+    return FC_CNetIf2NetIf(cNetIf);
+}
+
+static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackNetGetAlias(const TCPIP_NET_IF* pNetIf)
+{
+    return NULL;
+}
+
+static __inline__ const TCPIP_NET_IF*  __attribute__((always_inline)) TCPIPStackMapAliasInterface(const TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pDestAddress)
 {
     return pNetIf;
 }
 
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackNetGetAlias(TCPIP_NET_IF* pNetIf)
-{
-    return 0;
-}
-
-static __inline__ TCPIP_NET_IF*  __attribute__((always_inline)) _TCPIPStackMapAliasInterface(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pDestAddress)
-{
-    return pNetIf;
-}
 
 
-
-#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+#endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 
 // marks an interface as bridged
-static __inline__ void __attribute__((always_inline))  _TCPIPStack_BridgeSetIf(TCPIP_NET_IF* pNetIf, uint8_t portNo)
+static __inline__ void __attribute__((always_inline))  TCPIPStack_BridgeSetIf(TCPIP_NET_IF* pNetIf, uint8_t portNo)
 {
     pNetIf->exFlags.bridged = 1;
     pNetIf->bridgePort = portNo;
 }
 
 // marks an interface as unbridged
-static __inline__ void __attribute__((always_inline))  _TCPIPStack_BridgeClearIf(TCPIP_NET_IF* pNetIf)
+static __inline__ void __attribute__((always_inline))  TCPIPStack_BridgeClearIf(TCPIP_NET_IF* pNetIf)
 {
     pNetIf->exFlags.bridged = 0;
 }
 
 // returns true if an interface is bridged
-static __inline__ bool __attribute__((always_inline))  _TCPIPStack_BridgeCheckIf(TCPIP_NET_IF* pNetIf)
+static __inline__ bool __attribute__((always_inline))  TCPIPStack_BridgeCheckIf(const TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf->exFlags.bridged != 0;
+    return (pNetIf->exFlags.bridged != 0U);
 }
 
 // returns the bridge port corresponding to this interface
-static __inline__ uint8_t __attribute__((always_inline))  _TCPIPStack_BridgeGetIfPort(TCPIP_NET_IF* pNetIf)
+static __inline__ uint8_t __attribute__((always_inline))  TCPIPStack_BridgeGetIfPort(const TCPIP_NET_IF* pNetIf)
 {
     return pNetIf->bridgePort;
 }
 
-// run time module initialization
-// Note: function exists only if (_TCPIP_STACK_RUN_TIME_INIT != 0)!
-bool _TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId);
-
 
 // local time keeping
-uint32_t _TCPIP_SecCountGet(void);
-uint32_t _TCPIP_MsecCountGet(void);
+uint32_t TCPIP_SecCountGet(void);
+uint32_t TCPIP_MsecCountGet(void);
 
 
 // debugging, tracing, etc.
@@ -744,6 +817,6 @@ uint64_t    TCPIP_STACK_TimeMeasureGet(bool stop);
 
 
 
-#endif  // _TCPIP_MANAGER_CONTROL_H_
+#endif  // H_TCPIP_MANAGER_CONTROL_H_
 
 

@@ -17,7 +17,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -48,16 +48,16 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _HASH_FNV_H_
-#define _HASH_FNV_H_
+#ifndef H_HASH_FNV_H_
+#define H_HASH_FNV_H_
 
 #include <stdlib.h>
 #include <stdint.h>
 
 //#define NO_FNV_GCC_OPTIMIZATION
 
-#define FNV_32_PRIME    ((uint32_t)16777619ul)
-#define FNV_32_INIT     ((uint32_t)2166136261ul)
+#define FNV_32_PRIME    ((uint32_t)16777619UL)
+#define FNV_32_INIT     ((uint32_t)2166136261UL)
 
 
 // API
@@ -69,5 +69,5 @@ uint32_t fnv_32a_hash(const void *key, size_t keyLen);
 
 
 
-#endif  // _HASH_FNV_H_
+#endif  // H_HASH_FNV_H_
 

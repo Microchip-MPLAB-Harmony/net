@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,16 +47,16 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _LINK_LISTS_H_
-#define _LINK_LISTS_H_
+#ifndef H_LINK_LISTS_H_
+#define H_LINK_LISTS_H_
 
 #include "osal/osal.h"
 #include <stdbool.h>
 
-typedef struct _TAG_SGL_LIST_NODE
+typedef struct S_TAG_SGL_LIST_NODE
 {
-    struct _TAG_SGL_LIST_NODE*      next;       // next node in list
-    void*                           data[];     // generic payload    
+    struct S_TAG_SGL_LIST_NODE*      next;       // next node in list
+    // void*                        data[];     // generic payload    
 }SGL_LIST_NODE; // generic linked list node definition
 
 
@@ -64,7 +64,7 @@ typedef struct
 {
     SGL_LIST_NODE*  head;   // list head
     SGL_LIST_NODE*  tail;
-    int             nNodes; // number of nodes in the list
+    size_t          nNodes; // number of nodes in the list
 
 }SINGLE_LIST;   // single linked list
 
@@ -78,11 +78,11 @@ void  TCPIP_Helper_SingleListInitialize(SINGLE_LIST* pL);
 
 static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_SingleListIsEmpty(SINGLE_LIST* pL)
 {
-    return pL->head == 0;
+    return pL->head == NULL;
 }
 
 
-static __inline__ int __attribute__((always_inline)) TCPIP_Helper_SingleListCount(SINGLE_LIST* pL)
+static __inline__ size_t __attribute__((always_inline)) TCPIP_Helper_SingleListCount(SINGLE_LIST* pL)
 {
     return pL->nNodes;
 }
@@ -122,7 +122,10 @@ void  TCPIP_Helper_SingleListAppend(SINGLE_LIST* pDstL, SINGLE_LIST* pAList);
 // no memory de-allocation is performed, just removes the nodes from the list
 static __inline__ void __attribute__((always_inline)) TCPIP_Helper_SingleListRemoveAll(SINGLE_LIST* pL)
 {
-    while((TCPIP_Helper_SingleListHeadRemove(pL)));
+    while(TCPIP_Helper_SingleListHeadRemove(pL) != NULL)
+    {
+        // do nothing
+    }
 }
 
 // returns true if pN belongs to pL; false otherwise
@@ -139,80 +142,80 @@ typedef struct
 
 // creates an empty single linked list and associated semaphore
 // the list should NOT be used if the initialization failed!
-// However, TCPIP_Helper_ProtectedSingleListDeinitialize() can be safely called
-bool  TCPIP_Helper_ProtectedSingleListInitialize(PROTECTED_SINGLE_LIST* pL);
+// However, TCPIP_Helper_ProtSglListDeinitialize() can be safely called
+bool  TCPIP_Helper_ProtSglListInitialize(PROTECTED_SINGLE_LIST* pL);
 
 // removes all nodes from a single linked list and deletes the associated semaphore
 // no memory de-allocation is performed, just removes the nodes from the list
-void  TCPIP_Helper_ProtectedSingleListDeinitialize(PROTECTED_SINGLE_LIST* pL);
+void  TCPIP_Helper_ProtSglListDeinitialize(PROTECTED_SINGLE_LIST* pL);
 
-static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_ProtectedSingleListIsEmpty(PROTECTED_SINGLE_LIST* pL)
+static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_ProtSglListIsEmpty(PROTECTED_SINGLE_LIST* pL)
 {
     return TCPIP_Helper_SingleListIsEmpty(&pL->list);
 }
 
 
-static __inline__ int __attribute__((always_inline)) TCPIP_Helper_ProtectedSingleListCount(PROTECTED_SINGLE_LIST* pL)
+static __inline__ size_t __attribute__((always_inline)) TCPIP_Helper_ProtSglListCount(PROTECTED_SINGLE_LIST* pL)
 {
     return TCPIP_Helper_SingleListCount(&pL->list);
 }
 
-void  TCPIP_Helper_ProtectedSingleListHeadAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtSglListHeadAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
 
-void  TCPIP_Helper_ProtectedSingleListTailAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtSglListTailAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
 
 
 // insertion in the middle, not head or tail
 // Note: no verification is made for 'after'. It should be a valid list node!
-void  TCPIP_Helper_ProtectedSingleListMidAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
+void  TCPIP_Helper_ProtSglListMidAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
 // insertion at head, at tail or in the middle
 // If after == NULL, it will insert at head
 //
 // Note: no verification is made for 'after'. It should be a valid list node!
-void    TCPIP_Helper_ProtectedSingleListAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
+void    TCPIP_Helper_ProtSglListAdd(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN, SGL_LIST_NODE* after);
 
 // removes the head node
-SGL_LIST_NODE*  TCPIP_Helper_ProtectedSingleListHeadRemove(PROTECTED_SINGLE_LIST* pL);
+SGL_LIST_NODE*  TCPIP_Helper_ProtSglListHeadRemove(PROTECTED_SINGLE_LIST* pL);
 
 // removes the next node (following prev) in the list
 // if prev == 0 removed the head
-SGL_LIST_NODE*  TCPIP_Helper_ProtectedSingleListNextRemove(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* prev);
+SGL_LIST_NODE*  TCPIP_Helper_ProtSglListNextRemove(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* prev);
 
 
 // removes a node anywhere in the list
 // Note: this is lengthy!
 // Use a double linked list if faster operation needed!
-SGL_LIST_NODE*  TCPIP_Helper_ProtectedSingleListNodeRemove(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+SGL_LIST_NODE*  TCPIP_Helper_ProtSglListNodeRemove(PROTECTED_SINGLE_LIST* pL, SGL_LIST_NODE* pN);
 
 
 // concatenates the append list to the destination one
-void  TCPIP_Helper_ProtectedSingleListAppend(PROTECTED_SINGLE_LIST* pDstL, SINGLE_LIST* pAList);
+void  TCPIP_Helper_ProtSglListAppend(PROTECTED_SINGLE_LIST* pDstL, SINGLE_LIST* pAList);
 
 
 // removes all nodes from a single linked list
 // no memory de-allocation is performed, just removes the nodes from the list
 // after this operation the list is valid, i.e. the operation
 // does not delete the associated semaphore
-void TCPIP_Helper_ProtectedSingleListRemoveAll(PROTECTED_SINGLE_LIST* pL);
+void TCPIP_Helper_ProtSglListRemoveAll(PROTECTED_SINGLE_LIST* pL);
 
 
 // locks access to a protected single list
 // the list should have been properly initialized
-bool TCPIP_Helper_ProtectedSingleListLock(PROTECTED_SINGLE_LIST* pL);
+bool TCPIP_Helper_ProtSglListLock(PROTECTED_SINGLE_LIST* pL);
 
 // unlocks access to a protected single list
 // the list should have been properly initialized and lock acquired
-bool TCPIP_Helper_ProtectedSingleListUnlock(PROTECTED_SINGLE_LIST* pL);
+bool TCPIP_Helper_ProtSglListUnlock(PROTECTED_SINGLE_LIST* pL);
 
 /////  double linked lists manipulation ///////////
 //
 
-typedef struct _TAG_DBL_LIST_NODE
+typedef struct S_TAG_DBL_LIST_NODE
 {
-    struct _TAG_DBL_LIST_NODE*      next;       // next node in list
-    struct _TAG_DBL_LIST_NODE*      prev;       // prev node in list
-    void*                           data[];     // generic payload    
+    struct S_TAG_DBL_LIST_NODE*      next;       // next node in list
+    struct S_TAG_DBL_LIST_NODE*      prev;       // prev node in list
+    // void*                        data[];     // generic payload    
 }DBL_LIST_NODE; // generic linked list node definition
 
 
@@ -220,7 +223,7 @@ typedef struct
 {
     DBL_LIST_NODE*  head;   // list head
     DBL_LIST_NODE*  tail;   // list tail;
-    int             nNodes; // number of nodes in the list 
+    size_t          nNodes; // number of nodes in the list 
 }DOUBLE_LIST;   // double linked list
 
 
@@ -229,10 +232,10 @@ void  TCPIP_Helper_DoubleListInitialize(DOUBLE_LIST* pL);
 
 static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_DoubleListIsEmpty(DOUBLE_LIST* pL)
 {
-    return pL->head == 0;
+    return pL->head == NULL;
 }
 
-static __inline__ int __attribute__((always_inline)) TCPIP_Helper_DoubleListCount(DOUBLE_LIST* pL)
+static __inline__ size_t __attribute__((always_inline)) TCPIP_Helper_DoubleListCount(DOUBLE_LIST* pL)
 {
     return pL->nNodes;
 }
@@ -262,7 +265,10 @@ void  TCPIP_Helper_DoubleListNodeRemove(DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 // no memory de-allocation is performed, just removes the nodes from the list
 static __inline__ void __attribute__((always_inline)) TCPIP_Helper_DoubleListRemoveAll(DOUBLE_LIST* pL)
 {
-    while((TCPIP_Helper_DoubleListHeadRemove(pL)));
+    while(TCPIP_Helper_DoubleListHeadRemove(pL) != NULL)
+    {
+        // do nothing
+    }
 }
 
 // returns true if pN belongs to pL; false otherwise
@@ -280,60 +286,60 @@ typedef struct
 
 // creates an empty double linked list and associated semaphore
 // the list should NOT be used if the initialization failed!
-// However, TCPIP_Helper_ProtectedDoubleListDeinitialize() can be safely called
-bool  TCPIP_Helper_ProtectedDoubleListInitialize(PROTECTED_DOUBLE_LIST* pL);
+// However, TCPIP_Helper_ProtDblListDeinitialize() can be safely called
+bool  TCPIP_Helper_ProtDblListInitialize(PROTECTED_DOUBLE_LIST* pL);
 
 // removes all nodes from a double linked list and deletes the associated semaphore
 // no memory de-allocation is performed, just removes the nodes from the list
-void  TCPIP_Helper_ProtectedDoubleListDeinitialize(PROTECTED_DOUBLE_LIST* pL);
+void  TCPIP_Helper_ProtDblListDeinitialize(PROTECTED_DOUBLE_LIST* pL);
 
-static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_ProtectedDoubleListIsEmpty(PROTECTED_DOUBLE_LIST* pL)
+static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_ProtDblListIsEmpty(PROTECTED_DOUBLE_LIST* pL)
 {
     return TCPIP_Helper_DoubleListIsEmpty(&pL->list);
 }
 
-static __inline__ int __attribute__((always_inline)) TCPIP_Helper_ProtectedDoubleListCount(PROTECTED_DOUBLE_LIST* pL)
+static __inline__ size_t __attribute__((always_inline)) TCPIP_Helper_ProtDblListCount(PROTECTED_DOUBLE_LIST* pL)
 {
     return TCPIP_Helper_DoubleListCount(&pL->list);
 }
 
-void  TCPIP_Helper_ProtectedDoubleListHeadAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtDblListHeadAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
-void  TCPIP_Helper_ProtectedDoubleListTailAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtDblListTailAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
 // add node pN in the middle, after existing node "after"
 // Note: no verification is made for 'after'. It should be a valid list node!
-void  TCPIP_Helper_ProtectedDoubleListMidAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
+void  TCPIP_Helper_ProtDblListMidAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
 
 // insertion at head, at tail or in the middle
 // If after == NULL, it will insert at head
 // Note: no verification is made for 'after'. It should be a valid list node!
-void  TCPIP_Helper_ProtectedDoubleListAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
+void  TCPIP_Helper_ProtDblListAdd(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN, DBL_LIST_NODE* after);
 
-DBL_LIST_NODE*  TCPIP_Helper_ProtectedDoubleListHeadRemove(PROTECTED_DOUBLE_LIST* pL);
+DBL_LIST_NODE*  TCPIP_Helper_ProtDblListHeadRemove(PROTECTED_DOUBLE_LIST* pL);
 
-DBL_LIST_NODE*  TCPIP_Helper_ProtectedDoubleListTailRemove(PROTECTED_DOUBLE_LIST* pL);
+DBL_LIST_NODE*  TCPIP_Helper_ProtDblListTailRemove(PROTECTED_DOUBLE_LIST* pL);
 
 // remove existing node, neither head, nor tail
-void  TCPIP_Helper_ProtectedDoubleListMidRemove(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtDblListMidRemove(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
-void  TCPIP_Helper_ProtectedDoubleListNodeRemove(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
+void  TCPIP_Helper_ProtDblListNodeRemove(PROTECTED_DOUBLE_LIST* pL, DBL_LIST_NODE* pN);
 
 // removes all nodes from a double linked list
 // no memory de-allocation is performed, just removes the nodes from the list
 // after this operation the list is valid, i.e. the operation
 // does not delete the associated semaphore
-void TCPIP_Helper_ProtectedDoubleListRemoveAll(PROTECTED_DOUBLE_LIST* pL);
+void TCPIP_Helper_ProtDblListRemoveAll(PROTECTED_DOUBLE_LIST* pL);
 
 
 // locks access to a protected double list
 // the list should have been properly initialized
-void TCPIP_Helper_ProtectedDoubleListLock(PROTECTED_DOUBLE_LIST* pL);
+void TCPIP_Helper_ProtDblListLock(PROTECTED_DOUBLE_LIST* pL);
 
 // unlocks access to a protected double list
 // the list should have been properly initialized and lock acquired
-void TCPIP_Helper_ProtectedDoubleListUnlock(PROTECTED_DOUBLE_LIST* pL);
+void TCPIP_Helper_ProtDblListUnlock(PROTECTED_DOUBLE_LIST* pL);
 
-#endif //  _LINK_LISTS_H_
+#endif //  H_LINK_LISTS_H_
 
 

@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -53,43 +53,53 @@ Microchip or any third party.
 
 #if defined(__PIC32MZ__)
 // flushes a data cache line/address
-static __inline__ void __attribute__((always_inline)) _TCPIP_HEAP_DataLineFlush(void* address)
+static __inline__ void __attribute__((always_inline)) F_TCPIP_HEAP_DataLineFlush(const void* address)
 {   // issue a hit-writeback invalidate order
     __asm__ __volatile__ ("cache 0x15, 0(%0)" ::"r"(address));
 }
 
-
-// invalidates a range of addresses from the cache
-static void _TCPIP_HEAP_DataCacheInvalidate(const void* address, size_t nBytes)
-{
-    int ix;
-
-    uint8_t*    pLine = (uint8_t*)((uint32_t)address & 0xfffffff0); // start on an even cache line
-    nBytes += (uint8_t*)address - pLine;
-    int nLines = (nBytes + 15) / 16;   // round up the number of taken cache lines 
-
-    for(ix = 0; ix < nLines; ix ++)
-    {
-        _TCPIP_HEAP_DataLineFlush(pLine);
-        pLine += 16;
-    }
-
+static __inline__ void __attribute__((always_inline)) F_TCPIP_HEAP_DataSync(void)
+{   // issue a 'sync' instruction
     __asm__ __volatile__ ("sync");
 }
 
 
-const void* _TCPIP_HEAP_BufferMapNonCached(const void* buffer, size_t buffSize)
+// invalidates a range of addresses from the cache
+static void F_TCPIP_HEAP_DataCacheInvalidate(const void* address, size_t nBytes)
 {
-    if(IS_KVA0(buffer))
-    {   // map in K1
-        _TCPIP_HEAP_DataCacheInvalidate(buffer, buffSize);
-        buffer = (const void*)KVA0_TO_KVA1(buffer);
+    size_t ix;
+
+    uint32_t u32Addr = FC_CvPtr2U32(address);
+    u32Addr &= 0xfffffff0U; // start on an even cache line
+    const uint8_t*    pLine = (const uint8_t*)FC_U322CvPtr(u32Addr); // start on an even cache line
+    nBytes += (uint16_t)FC_U8PtrDiff2UI16((const uint8_t*)address, pLine);
+    size_t nLines = (nBytes + 15U) / 16U;   // round up the number of taken cache lines 
+
+    for(ix = 0; ix < nLines; ix ++)
+    {
+        F_TCPIP_HEAP_DataLineFlush(pLine);
+        pLine += 16;
     }
 
-    return buffer;
+    F_TCPIP_HEAP_DataSync();
 }
 
-const void* _TCPIP_HEAP_PointerMapCached(const void* ptr)
+/* MISRA C-2012 Rule 11.6 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_11_6_NET_DR_9 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 11.6" "H3_MISRAC_2012_R_11_6_NET_DR_9" 
+const void* F_TCPIP_HEAP_BufferMapNonCached(const void* dataBuff, size_t buffSize)
+{
+    if(IS_KVA0(dataBuff))
+    {   // map in K1
+        F_TCPIP_HEAP_DataCacheInvalidate(dataBuff, buffSize);
+        dataBuff = (const void*)KVA0_TO_KVA1(dataBuff);
+    }
+
+    return dataBuff;
+}
+
+const void* F_TCPIP_HEAP_PointerMapCached(const void* ptr)
 {
     if(IS_KVA1(ptr))
     {   // map in K1
@@ -98,18 +108,66 @@ const void* _TCPIP_HEAP_PointerMapCached(const void* ptr)
 
     return ptr;
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 11.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 #else
-const void* _TCPIP_HEAP_BufferMapNonCached(const void* buffer, size_t buffSize)
+const void* F_TCPIP_HEAP_BufferMapNonCached(const void* dataBuff, size_t buffSize)
 {
-    return buffer;
+    return dataBuff;
 }
-const void* _TCPIP_HEAP_PointerMapCached(const void* ptr)
+const void* F_TCPIP_HEAP_PointerMapCached(const void* ptr)
 {
     return ptr;
 }
 
 #endif  // defined(__PIC32MZ__)
+
+static __inline__ const TCPIP_STACK_HEAP_INTERNAL_CONFIG* __attribute__((always_inline)) FC_HeapCfg2IntCfg(const TCPIP_STACK_HEAP_CONFIG* cfg)
+{
+    union
+    {
+        const TCPIP_STACK_HEAP_CONFIG* cfg;
+        const TCPIP_STACK_HEAP_INTERNAL_CONFIG* intCfg;
+        const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* extCfg;
+        const TCPIP_STACK_HEAP_POOL_CONFIG* poolCfg;
+
+    }U_HEAP_CFG;
+
+    U_HEAP_CFG.cfg = cfg;
+    return U_HEAP_CFG.intCfg;
+}
+
+static __inline__ const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* __attribute__((always_inline)) FC_HeapCfg2ExtCfg(const TCPIP_STACK_HEAP_CONFIG* cfg)
+{
+    union
+    {
+        const TCPIP_STACK_HEAP_CONFIG* cfg;
+        const TCPIP_STACK_HEAP_INTERNAL_CONFIG* intCfg;
+        const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* extCfg;
+        const TCPIP_STACK_HEAP_POOL_CONFIG* poolCfg;
+
+    }U_HEAP_CFG;
+
+    U_HEAP_CFG.cfg = cfg;
+    return U_HEAP_CFG.extCfg;
+}
+
+static __inline__ const TCPIP_STACK_HEAP_POOL_CONFIG* __attribute__((always_inline)) FC_HeapCfg2PoolCfg(const TCPIP_STACK_HEAP_CONFIG* cfg)
+{
+    union
+    {
+        const TCPIP_STACK_HEAP_CONFIG* cfg;
+        const TCPIP_STACK_HEAP_INTERNAL_CONFIG* intCfg;
+        const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* extCfg;
+        const TCPIP_STACK_HEAP_POOL_CONFIG* poolCfg;
+
+    }U_HEAP_CFG;
+
+    U_HEAP_CFG.cfg = cfg;
+    return U_HEAP_CFG.poolCfg;
+}
 
 
 #if !defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
@@ -118,70 +176,76 @@ const void* _TCPIP_HEAP_PointerMapCached(const void* ptr)
 
 TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_Create(const TCPIP_STACK_HEAP_CONFIG* initData, TCPIP_STACK_HEAP_RES* pRes)
 {
-    if(initData != 0)
+    if(initData != NULL)
     {
-        switch (initData->heapType)
-        {
 #if defined (TCPIP_STACK_USE_INTERNAL_HEAP)
-            case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP:
-                return TCPIP_HEAP_CreateInternal((const TCPIP_STACK_HEAP_INTERNAL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_INTERNAL)
+        {
+            const TCPIP_STACK_HEAP_INTERNAL_CONFIG* intCfg = FC_HeapCfg2IntCfg(initData); 
+            return TCPIP_HEAP_CreateInternal(intCfg, pRes);
+        }
 #endif  // defined (TCPIP_STACK_USE_INTERNAL_HEAP)
 
+
 #if defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
-            case TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP:
-                return TCPIP_HEAP_CreateExternal((const TCPIP_STACK_HEAP_EXTERNAL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_EXTERNAL)
+        {
+            const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* extCfg = FC_HeapCfg2ExtCfg(initData); 
+            return TCPIP_HEAP_CreateExternal(extCfg, pRes);
+        }
 #endif  // defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
 
+
 #if defined (TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
-            case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL:
-                return TCPIP_HEAP_CreateInternalPool((const TCPIP_STACK_HEAP_POOL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_POOL)
+        {
+            const TCPIP_STACK_HEAP_POOL_CONFIG* poolCfg = FC_HeapCfg2PoolCfg(initData); 
+            return TCPIP_HEAP_CreateInternalPool(poolCfg, pRes);
+        }
 #endif  // defined (TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
 
-            default:
-                break;
-        }
     }
 
-    return 0;
+    return NULL;
 }
 
 TCPIP_STACK_HEAP_RES TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    return (*((TCPIP_HEAP_OBJECT*)heapH)->TCPIP_HEAP_Delete)(heapH);
+    return (*((const TCPIP_HEAP_OBJECT*)heapH)->F_TCPIP_HEAP_Delete)(heapH);
 }
 
 // functions needed when not inlined
 void* TCPIP_HEAP_MallocOutline(TCPIP_STACK_HEAP_HANDLE h, size_t nBytes)
 {
-    return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_Malloc)(h, nBytes);
+    return (*((const TCPIP_HEAP_OBJECT*)h)->F_TCPIP_HEAP_Malloc)(h, nBytes);
 }
 
 void* TCPIP_HEAP_CallocOutline(TCPIP_STACK_HEAP_HANDLE h, size_t nElems, size_t elemSize)
 {
-    return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_Calloc)(h, nElems, elemSize);
+    return (*((const TCPIP_HEAP_OBJECT*)h)->F_TCPIP_HEAP_Calloc)(h, nElems, elemSize);
 }
 
 size_t TCPIP_HEAP_FreeOutline(TCPIP_STACK_HEAP_HANDLE h, const void* ptr)
 {
-    return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_Free)(h, ptr);
+    return (*((const TCPIP_HEAP_OBJECT*)h)->F_TCPIP_HEAP_Free)(h, ptr);
 }
 
 #else   // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 // debug functionality
 
 #if defined(TCPIP_STACK_DRAM_TRACE_ENABLE) 
-    #define _TCPIP_STACK_DRAM_TRACE_ENABLE
-    #define _TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE    1       // collapse NDP info into IPv6 since NDP allocated packets are freed by IPv6
+    #define M_TCPIP_STACK_DRAM_TRACE_ENABLE
+    #define M_TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE   1       // collapse NDP info into IPv6 since NDP allocated packets are freed by IPv6
 #else
-    #undef  _TCPIP_STACK_DRAM_TRACE_ENABLE
+    #undef  M_TCPIP_STACK_DRAM_TRACE_ENABLE
 #endif
 
 #if defined(TCPIP_STACK_DRAM_DIST_ENABLE) 
-    #define _TCPIP_STACK_DRAM_DIST_ENABLE
+    #define M_TCPIP_STACK_DRAM_DIST_ENABLE
 
     // distribution block sizes that are monitored
     // Note: there's no way (yet) of allowing the user to specify the requested distribution
-    static const int _tcpip_heap_dist_sizes[] = 
+    static const int t_tcpip_heap_dist_sizes[] = 
     {
         0,      32,     64,     128,    256,    512,    640,    768,
         896,    1024,   1152,   1280,   1408,   1536,   1792,   2000,
@@ -189,7 +253,7 @@ size_t TCPIP_HEAP_FreeOutline(TCPIP_STACK_HEAP_HANDLE h, const void* ptr)
     };
 
 #else
-    #undef  _TCPIP_STACK_DRAM_DIST_ENABLE
+    #undef  M_TCPIP_STACK_DRAM_DIST_ENABLE
 #endif
 
 
@@ -200,103 +264,107 @@ typedef struct
     TCPIP_STACK_HEAP_TYPE       heapType;       // type of heap
     TCPIP_STACK_HEAP_FLAGS      heapFlags;      // creation flags
     TCPIP_HEAP_NO_MEM_HANDLER   noMemHandler;   // out of memory handler for this heap
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-    TCPIP_HEAP_TRACE_ENTRY      _heapTraceTbl[TCPIP_STACK_DRAM_TRACE_SLOTS];
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+    TCPIP_HEAP_TRACE_ENTRY      t_heapTraceTbl[TCPIP_STACK_DRAM_TRACE_SLOTS];
 #endif
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
-    TCPIP_HEAP_DIST_ENTRY _tcpip_heap_dist_array[sizeof(_tcpip_heap_dist_sizes)/sizeof(*_tcpip_heap_dist_sizes) - 1];
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
+    TCPIP_HEAP_DIST_ENTRY t_tcpip_heap_dist_array[sizeof(t_tcpip_heap_dist_sizes)/sizeof(*t_tcpip_heap_dist_sizes) - 1];
 #endif
 }TCPIP_HEAP_DBG_DCPT;
 
 // the heap debug descriptor
-static TCPIP_HEAP_DBG_DCPT      _tcpipHeapDbgDcpt[TCPIP_STACK_SUPPORTED_HEAPS] = { {0} };
+static TCPIP_HEAP_DBG_DCPT      t_tcpipHeapDbgDcpt[TCPIP_STACK_SUPPORTED_HEAPS] = { {0} };
 
 
-#define _heapFailMessage "Heap allocation of %d bytes failed in module %d line %d\r\n"
+#define M_heapFailMessage "Heap allocation of %d bytes failed in module %d line %d\r\n"
 
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
     static TCPIP_HEAP_TRACE_ENTRY* TCPIP_HEAP_FindEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, bool addNewSlot);
     static void TCPIP_HEAP_AddToEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t nBytes, void* ptr);
     static void TCPIP_HEAP_RemoveFromEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t nBytes);
-#endif  // defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
 
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
 static int TCPIP_HEAP_DistCompare(const void *a, const void *b);
 static void TCPIP_HEAP_DistAdd(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t nBytes);
 static void TCPIP_HEAP_DistRem(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t nBytes);
-#endif  // defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
 
 
 // API
 
 TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_Create(const TCPIP_STACK_HEAP_CONFIG* initData, TCPIP_STACK_HEAP_RES* pRes)
 {
-    TCPIP_STACK_HEAP_HANDLE newH;
+    TCPIP_STACK_HEAP_HANDLE newH = NULL;
     TCPIP_STACK_HEAP_FLAGS  flags;
 
-    if(initData == 0)
-    {
-        return 0;
-    }
-
-    switch (initData->heapType)
+    while(initData != NULL)
     {
 #if defined (TCPIP_STACK_USE_INTERNAL_HEAP)
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP:
-            newH = TCPIP_HEAP_CreateInternal((const TCPIP_STACK_HEAP_INTERNAL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_INTERNAL)
+        {
+            const TCPIP_STACK_HEAP_INTERNAL_CONFIG* intCfg = FC_HeapCfg2IntCfg(initData); 
+            newH = TCPIP_HEAP_CreateInternal(intCfg, pRes);
             flags = initData->heapFlags;
             break;
+        }
 #endif  // defined (TCPIP_STACK_USE_INTERNAL_HEAP)
 
 #if defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
-        case TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP:
-            newH = TCPIP_HEAP_CreateExternal((TCPIP_STACK_HEAP_EXTERNAL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_EXTERNAL)
+        {
+            const TCPIP_STACK_HEAP_EXTERNAL_CONFIG* extCfg = FC_HeapCfg2ExtCfg(initData); 
+            newH = TCPIP_HEAP_CreateExternal(extCfg, pRes);
             flags = initData->heapFlags;
             break;
+        }
 #endif  // defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
             
 #if defined (TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL:
-            newH = TCPIP_HEAP_CreateInternalPool((const TCPIP_STACK_HEAP_POOL_CONFIG*)initData, pRes);
+        if(initData->heapType == TCPIP_STACK_HEAP_TYPE_POOL)
+        {
+            const TCPIP_STACK_HEAP_POOL_CONFIG* poolCfg = FC_HeapCfg2PoolCfg(initData); 
+            newH = TCPIP_HEAP_CreateInternalPool(poolCfg, pRes);
             flags = initData->heapFlags;
             break;
+        }
 #endif  // defined (TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
 
-        default:
-            return 0;
+        break;
     }
 
-    if(newH != 0)
+    if(newH != NULL)
     {
-        int hIx;
-        TCPIP_HEAP_DBG_DCPT* pDcpt = _tcpipHeapDbgDcpt;
-        for(hIx = 0; hIx < sizeof(_tcpipHeapDbgDcpt) / sizeof(*_tcpipHeapDbgDcpt); hIx++, pDcpt++)
+        size_t hIx;
+        TCPIP_HEAP_DBG_DCPT* pDcpt = t_tcpipHeapDbgDcpt;
+        for(hIx = 0; hIx < sizeof(t_tcpipHeapDbgDcpt) / sizeof(*t_tcpipHeapDbgDcpt); hIx++)
         {
-            if(pDcpt->heapH == 0)
+            if(pDcpt->heapH == NULL)
             {   // found slot
                 pDcpt->heapH = newH;
                 pDcpt->heapType = initData->heapType;
                 pDcpt->heapFlags = flags;
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-                memset(pDcpt->_heapTraceTbl, 0, sizeof(pDcpt->_heapTraceTbl)); // clear entries
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+                (void)memset(pDcpt->t_heapTraceTbl, 0, sizeof(pDcpt->t_heapTraceTbl)); // clear entries
 #endif
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
                 // initialize the distribution sizes array
                 int ix;
                 TCPIP_HEAP_DIST_ENTRY* pEntry;
                 const int* pSize;
 
-                pSize = _tcpip_heap_dist_sizes;
-                pEntry = pDcpt->_tcpip_heap_dist_array;
-                for(ix = 0; ix < sizeof(_tcpip_heap_dist_sizes)/sizeof(*_tcpip_heap_dist_sizes) - 1; ix++, pSize++, pEntry++)
+                pSize = t_tcpip_heap_dist_sizes;
+                pEntry = pDcpt->t_tcpip_heap_dist_array;
+                for(ix = 0; ix < sizeof(t_tcpip_heap_dist_sizes) / sizeof(*t_tcpip_heap_dist_sizes) - 1; ix++, pSize++, pEntry++)
                 {
-                    memset(pEntry, 0, sizeof(*pEntry)); 
+                    (void)memset(pEntry, 0, sizeof(*pEntry)); 
                     pEntry->lowLimit = *pSize;
                     pEntry->highLimit = *(pSize + 1);
                 }
 #endif
                 break;
             }
+            pDcpt++;
         }
     }
 
@@ -304,32 +372,33 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_Create(const TCPIP_STACK_HEAP_CONFIG* initDat
 }
 
 
-static TCPIP_HEAP_DBG_DCPT* _TCPIP_HEAP_FindDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
+static TCPIP_HEAP_DBG_DCPT* F_TCPIP_HEAP_FindDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    int hIx;
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _tcpipHeapDbgDcpt;
-    for(hIx = 0; hIx < sizeof(_tcpipHeapDbgDcpt) / sizeof(*_tcpipHeapDbgDcpt); hIx++, pDcpt++)
+    size_t hIx;
+    TCPIP_HEAP_DBG_DCPT* pDcpt = t_tcpipHeapDbgDcpt;
+    for(hIx = 0; hIx < sizeof(t_tcpipHeapDbgDcpt) / sizeof(*t_tcpipHeapDbgDcpt); hIx++)
     {
         if(pDcpt->heapH == heapH)
         {   // found slot
             return pDcpt;
         }
+        pDcpt++;
     }
 
-    return 0;
+    return NULL;
 }
 
 TCPIP_STACK_HEAP_RES TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_STACK_HEAP_RES res;
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    if(pDcpt)
+    if(pDcpt != NULL)
     {
-        res =  ((TCPIP_HEAP_OBJECT*)heapH)->TCPIP_HEAP_Delete(heapH);
-        if(res >= 0)
+        res =  ((const TCPIP_HEAP_OBJECT*)heapH)->F_TCPIP_HEAP_Delete(heapH);
+        if((int)res >= 0)
         {   // success, deleted
-            pDcpt->heapH = 0;
+            pDcpt->heapH = NULL;
         }
     }
     else
@@ -343,122 +412,122 @@ TCPIP_STACK_HEAP_RES TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 
 void* TCPIP_HEAP_MallocDebug(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes, int moduleId, int lineNo)
 {
-    TCPIP_HEAP_OBJECT* hObj = (TCPIP_HEAP_OBJECT*)heapH;
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    const TCPIP_HEAP_OBJECT* hObj = (const TCPIP_HEAP_OBJECT*)heapH;
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    void* ptr = (*hObj->TCPIP_HEAP_Malloc)(hObj, nBytes);
+    void* ptr = (*hObj->F_TCPIP_HEAP_Malloc)(heapH, nBytes);
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
-        if(pDcpt != 0)
+        if(pDcpt != NULL)
         {
-            if((pDcpt->heapFlags & TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE) == 0)
+            if(((uint32_t)pDcpt->heapFlags & (uint32_t)TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE) == 0U)
             {
-                SYS_ERROR_PRINT(SYS_ERROR_WARNING, _heapFailMessage, nBytes, moduleId, lineNo);
+                SYS_ERROR_PRINT(SYS_ERROR_WARNING, M_heapFailMessage, nBytes, moduleId, lineNo);
             }
 
-            if(pDcpt->noMemHandler != 0)
+            if(pDcpt->noMemHandler != NULL)
             {
                 (*pDcpt->noMemHandler)(heapH, nBytes, moduleId, lineNo);
             }
         }
     }
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-    if(pDcpt != 0)
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+    if(pDcpt != NULL)
     {
-        if(ptr != 0)
+        if(ptr != NULL)
         {
-            nBytes = (*hObj->TCPIP_HEAP_AllocSize)(hObj, ptr);
+            nBytes = (*hObj->F_TCPIP_HEAP_AllocSize)(heapH, ptr);
         }
         TCPIP_HEAP_AddToEntry(pDcpt, moduleId, nBytes, ptr);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
 
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
-    if(pDcpt != 0)
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
+    if(pDcpt != NULL)
     {
         TCPIP_HEAP_DistAdd(pDcpt, moduleId, nBytes);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
 
     return ptr;
 }
 
 void* TCPIP_HEAP_CallocDebug(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize, int moduleId, int lineNo)
 {
-    TCPIP_HEAP_OBJECT* hObj = (TCPIP_HEAP_OBJECT*)heapH;
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    const TCPIP_HEAP_OBJECT* hObj = (const TCPIP_HEAP_OBJECT*)heapH;
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
     size_t nBytes = nElems * elemSize;
-    void* ptr = (*hObj->TCPIP_HEAP_Calloc)(hObj, nElems, elemSize);
+    void* ptr = (*hObj->F_TCPIP_HEAP_Calloc)(heapH, nElems, elemSize);
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
-        if(pDcpt != 0)
+        if(pDcpt != NULL)
         {
-            if((pDcpt->heapFlags & TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE) == 0)
+            if(((uint32_t)pDcpt->heapFlags & (uint32_t)TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE) == 0U)
             {
-                SYS_ERROR_PRINT(SYS_ERROR_WARNING, _heapFailMessage, nBytes, moduleId, lineNo);
+                SYS_ERROR_PRINT(SYS_ERROR_WARNING, M_heapFailMessage, nBytes, moduleId, lineNo);
             }
 
-            if(pDcpt->noMemHandler != 0)
+            if(pDcpt->noMemHandler != NULL)
             {
                 (*pDcpt->noMemHandler)(heapH, nBytes, moduleId, lineNo);
             }
         }
     }
 
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-    if(pDcpt != 0)
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+    if(pDcpt != NULL)
     {
-        if(ptr != 0)
+        if(ptr != NULL)
         {
-            nBytes = (*hObj->TCPIP_HEAP_AllocSize)(hObj, ptr);
+            nBytes = (*hObj->F_TCPIP_HEAP_AllocSize)(heapH, ptr);
         }
         TCPIP_HEAP_AddToEntry(pDcpt, moduleId, nBytes, ptr);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
 
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
-    if(pDcpt != 0)
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
+    if(pDcpt != NULL)
     {
         TCPIP_HEAP_DistAdd(pDcpt, moduleId, nBytes);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
 
     return ptr;
 }
 
-size_t TCPIP_HEAP_FreeDebug(TCPIP_STACK_HEAP_HANDLE heapH,  const void* pBuff, int moduleId)
+size_t TCPIP_HEAP_FreeDebug(TCPIP_STACK_HEAP_HANDLE heapH,  const void* ptr, int moduleId, int lineNo)
 {
-    TCPIP_HEAP_OBJECT* hObj = (TCPIP_HEAP_OBJECT*)heapH;
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE) || defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    const TCPIP_HEAP_OBJECT* hObj = (const TCPIP_HEAP_OBJECT*)heapH;
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE) || defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 #endif
 
-    int nBytes = (*hObj->TCPIP_HEAP_Free)(hObj, pBuff);
+    size_t nBytes = (*hObj->F_TCPIP_HEAP_Free)(heapH, ptr);
 
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-    if(pDcpt && nBytes)
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+    if(pDcpt != NULL && nBytes != 0U)
     {
         TCPIP_HEAP_RemoveFromEntry(pDcpt, moduleId, nBytes);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
-#if defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
-    if(pDcpt && nBytes)
+#endif  // defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#if defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
+    if(pDcpt != NULL && nBytes != 0)
     {
         TCPIP_HEAP_DistRem(pDcpt, moduleId, nBytes);
     }
-#endif  // defined(_TCPIP_STACK_DRAM_DIST_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_DIST_ENABLE)
 
     return nBytes;
 }
 
 TCPIP_STACK_HEAP_RES TCPIP_HEAP_SetNoMemHandler(TCPIP_STACK_HEAP_HANDLE heapH, TCPIP_HEAP_NO_MEM_HANDLER handler)
 {
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    if(pDcpt != 0)
+    if(pDcpt != NULL)
     {
         pDcpt->noMemHandler = handler;
         return TCPIP_STACK_HEAP_RES_OK;
@@ -467,34 +536,40 @@ TCPIP_STACK_HEAP_RES TCPIP_HEAP_SetNoMemHandler(TCPIP_STACK_HEAP_HANDLE heapH, T
     return TCPIP_STACK_HEAP_RES_NO_HEAP;
 }
 
-#if defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#if defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
 static TCPIP_HEAP_TRACE_ENTRY* TCPIP_HEAP_FindEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, bool addNewSlot)
 {
-    int ix;
+    size_t ix;
     TCPIP_HEAP_TRACE_ENTRY    *freeEntry,*pEntry;
-#if _TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE
-    if(moduleId == TCPIP_MODULE_NDP)
+#if M_TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE
+    if(moduleId == (int)TCPIP_MODULE_NDP)
     {
-        moduleId = TCPIP_MODULE_IPV6;
+        moduleId = (int)TCPIP_MODULE_IPV6;
     }
-#endif  // _TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE
+#endif  // M_TCPIP_STACK_DRAM_TRACE_NDP_COLLAPSE
 
-    freeEntry = 0;
-    for(ix = 0, pEntry = hDcpt->_heapTraceTbl; ix < sizeof(hDcpt->_heapTraceTbl)/sizeof(*hDcpt->_heapTraceTbl); ix++, pEntry++)
+    freeEntry = NULL;
+    pEntry = hDcpt->t_heapTraceTbl;
+    for(ix = 0; ix < sizeof(hDcpt->t_heapTraceTbl)/sizeof(*hDcpt->t_heapTraceTbl); ix++)
     {
         if(pEntry->moduleId == moduleId)
         {
             return pEntry;
         }
-        else if(addNewSlot && freeEntry == 0 && pEntry->moduleId == 0)
+        else if(addNewSlot && freeEntry == NULL && pEntry->moduleId == 0)
         {
             freeEntry = pEntry;
         }
+        else
+        {
+            // do nothing
+        }
+        pEntry++;
     }
 
-    if(freeEntry)
+    if(freeEntry != NULL)
     {
-        memset(freeEntry, 0x0, sizeof(*freeEntry));
+        (void)memset(freeEntry, 0x0, sizeof(*freeEntry));
         freeEntry->moduleId = moduleId;
     }
 
@@ -505,13 +580,13 @@ static void TCPIP_HEAP_AddToEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size
 {
     TCPIP_HEAP_TRACE_ENTRY *pEntry = TCPIP_HEAP_FindEntry(hDcpt, moduleId, true);
 
-    if(pEntry)
+    if(pEntry != NULL)
     {
         pEntry->nAllocs++;
-        if(ptr)
+        if(ptr != NULL)
         {   // successful
             pEntry->totAllocated += nBytes;
-            pEntry->currAllocated += nBytes;
+            pEntry->currAllocated += (ssize_t)nBytes;
         }
         else
         {
@@ -528,24 +603,24 @@ static void TCPIP_HEAP_RemoveFromEntry(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId,
 {
     TCPIP_HEAP_TRACE_ENTRY *pEntry = TCPIP_HEAP_FindEntry(hDcpt, moduleId, false);
 
-    if(pEntry)
+    if(pEntry != NULL)
     {
         pEntry->nFrees++;
-        pEntry->currAllocated -= nBytes;
-        _TCPIPStack_Assert(pEntry->currAllocated >= 0 && pEntry->nFrees <= pEntry->nAllocs, __FILE__, __func__, __LINE__);
+        pEntry->currAllocated -= (ssize_t)nBytes;
+        TCPIPStack_Assert(pEntry->currAllocated >= 0 && pEntry->nFrees <= pEntry->nAllocs, __FILE__, __func__, __LINE__);
     }
 }
 
-bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryIx, TCPIP_HEAP_TRACE_ENTRY* tEntry)
+bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, size_t entryIx, TCPIP_HEAP_TRACE_ENTRY* tEntry)
 {
     TCPIP_HEAP_TRACE_ENTRY *pEntry;
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    if(pDcpt)
+    if(pDcpt != NULL)
     {
-        if(entryIx < sizeof(pDcpt->_heapTraceTbl)/sizeof(*pDcpt->_heapTraceTbl))
+        if(entryIx < sizeof(pDcpt->t_heapTraceTbl)/sizeof(*pDcpt->t_heapTraceTbl))
         {   // valid index
-            pEntry = pDcpt->_heapTraceTbl + entryIx;
+            pEntry = pDcpt->t_heapTraceTbl + entryIx;
             if(pEntry->moduleId > 0)
             {
                 *tEntry = *pEntry;
@@ -557,11 +632,11 @@ bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryI
     return false;
 }
 
-unsigned int TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool getUsed)
+size_t TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool getUsed)
 {
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    if(pDcpt == 0)
+    if(pDcpt == NULL)
     {
         return 0;
     }
@@ -569,50 +644,51 @@ unsigned int TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool ge
     if(getUsed)
     {
         TCPIP_HEAP_TRACE_ENTRY *pEntry;
-        int ix, nUsed;
+        size_t ix, nUsed;
 
         nUsed = 0;
-
-        for(ix = 0, pEntry = pDcpt->_heapTraceTbl; ix < sizeof(pDcpt->_heapTraceTbl)/sizeof(*pDcpt->_heapTraceTbl); ix++, pEntry++)
+        pEntry = pDcpt->t_heapTraceTbl;
+        for(ix = 0; ix < sizeof(pDcpt->t_heapTraceTbl)/sizeof(*pDcpt->t_heapTraceTbl); ix++)
         {
             if(pEntry->moduleId > 0)
             {
                 nUsed++;
             }
+            pEntry++;
         }
 
         return nUsed;
     }
 
-    return sizeof(pDcpt->_heapTraceTbl)/sizeof(*pDcpt->_heapTraceTbl);
+    return sizeof(pDcpt->t_heapTraceTbl)/sizeof(*pDcpt->t_heapTraceTbl);
 }
 
 
 #else
 
-bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryIx, TCPIP_HEAP_TRACE_ENTRY* tEntry)
+bool TCPIP_HEAP_TraceGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, size_t entryIx, TCPIP_HEAP_TRACE_ENTRY* tEntry)
 {
     return false;
 }
 
-unsigned int TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool getUsed)
+size_t TCPIP_HEAP_TraceGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH, bool getUsed)
 {
     return 0;
 }
 
-#endif  // defined(_TCPIP_STACK_DRAM_TRACE_ENABLE)
+#endif  // defined(M_TCPIP_STACK_DRAM_TRACE_ENABLE)
 
 
-#if defined (_TCPIP_STACK_DRAM_DIST_ENABLE)
-bool TCPIP_HEAP_DistGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryIx, TCPIP_HEAP_DIST_ENTRY* pEntry)
+#if defined (M_TCPIP_STACK_DRAM_DIST_ENABLE)
+bool TCPIP_HEAP_DistGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, size_t entryIx, TCPIP_HEAP_DIST_ENTRY* pEntry)
 {
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
     if(pDcpt && pEntry)
     {
-        if(entryIx < sizeof(pDcpt->_tcpip_heap_dist_array)/sizeof(*pDcpt->_tcpip_heap_dist_array))
+        if(entryIx < sizeof(pDcpt->t_tcpip_heap_dist_array)/sizeof(*pDcpt->t_tcpip_heap_dist_array))
         {   // valid index
-           *pEntry =  *(pDcpt->_tcpip_heap_dist_array + entryIx);
+           *pEntry =  *(pDcpt->t_tcpip_heap_dist_array + entryIx);
            return true;
         }
     }
@@ -620,11 +696,11 @@ bool TCPIP_HEAP_DistGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryIx
     return false;
 }
 
-unsigned int TCPIP_HEAP_DistGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH)
+size_t TCPIP_HEAP_DistGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_HEAP_DBG_DCPT* pDcpt = _TCPIP_HEAP_FindDcpt(heapH);
+    TCPIP_HEAP_DBG_DCPT* pDcpt = F_TCPIP_HEAP_FindDcpt(heapH);
 
-    return pDcpt == 0 ? 0 : sizeof(pDcpt->_tcpip_heap_dist_array)/sizeof(*pDcpt->_tcpip_heap_dist_array);
+    return pDcpt == NULL ? 0 : sizeof(pDcpt->t_tcpip_heap_dist_array)/sizeof(*pDcpt->t_tcpip_heap_dist_array);
 }
 
 
@@ -657,7 +733,7 @@ static void TCPIP_HEAP_DistAdd(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t 
         0
     };
     
-    pEntry = bsearch(&nEntry, hDcpt->_tcpip_heap_dist_array, sizeof(hDcpt->_tcpip_heap_dist_array)/sizeof(*hDcpt->_tcpip_heap_dist_array), sizeof(*hDcpt->_tcpip_heap_dist_array), TCPIP_HEAP_DistCompare);
+    pEntry = bsearch(&nEntry, hDcpt->t_tcpip_heap_dist_array, sizeof(hDcpt->t_tcpip_heap_dist_array)/sizeof(*hDcpt->t_tcpip_heap_dist_array), sizeof(*hDcpt->t_tcpip_heap_dist_array), TCPIP_HEAP_DistCompare);
 
     pEntry->currHits++;
     // search for module
@@ -670,7 +746,7 @@ static void TCPIP_HEAP_DistAdd(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t 
             pmDist->modHits++;
             return;
         }
-        else if(pmDist->modId == 0 && pFreeMod == 0)
+        else if(pmDist->modId == 0 && pFreeMod == NULL)
         {
             pFreeMod = pmDist;
         }
@@ -700,24 +776,24 @@ static void TCPIP_HEAP_DistRem(TCPIP_HEAP_DBG_DCPT* hDcpt, int moduleId, size_t 
         0
     };
     
-    pEntry = bsearch(&nEntry, hDcpt->_tcpip_heap_dist_array, sizeof(hDcpt->_tcpip_heap_dist_array)/sizeof(*hDcpt->_tcpip_heap_dist_array), sizeof(*hDcpt->_tcpip_heap_dist_array), TCPIP_HEAP_DistCompare);
+    pEntry = bsearch(&nEntry, hDcpt->t_tcpip_heap_dist_array, sizeof(hDcpt->t_tcpip_heap_dist_array)/sizeof(*hDcpt->t_tcpip_heap_dist_array), sizeof(*hDcpt->t_tcpip_heap_dist_array), TCPIP_HEAP_DistCompare);
 
     pEntry->currHits--;
 }
 
 #else
 
-bool TCPIP_HEAP_DistGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, unsigned int entryIx, TCPIP_HEAP_DIST_ENTRY* pEntry)
+bool TCPIP_HEAP_DistGetEntry(TCPIP_STACK_HEAP_HANDLE heapH, size_t entryIx, TCPIP_HEAP_DIST_ENTRY* pEntry)
 {
     return false;
 }
 
-unsigned int TCPIP_HEAP_DistGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH)
+size_t TCPIP_HEAP_DistGetEntriesNo(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     return 0;
 }
 
-#endif  // defined (_TCPIP_STACK_DRAM_DIST_ENABLE)
+#endif  // defined (M_TCPIP_STACK_DRAM_DIST_ENABLE)
 
 
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 

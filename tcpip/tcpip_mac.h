@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_MAC_H_
-#define __TCPIP_MAC_H_
+#ifndef H_TCPIP_MAC_H_
+#define H_TCPIP_MAC_H_
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -124,70 +124,70 @@ typedef struct  __attribute__((aligned(2), packed))
 
 typedef enum
 {
-    TCPIP_MODULE_MAC_NONE           = 0x1000,   // unspecified/unknown MAC
+    TCPIP_MODULE_MAC_NONE           = 0x1000U,  // unspecified/unknown MAC
 
     // External ENC28J60 device: room for 16 ENCJ60 devices
-    TCPIP_MODULE_MAC_ENCJ60         = 0x1010,
-    TCPIP_MODULE_MAC_ENCJ60_0       = 0x1010,   // alternate numbered name
+    TCPIP_MODULE_MAC_ENCJ60         = 0x1010U,
+    TCPIP_MODULE_MAC_ENCJ60_0       = 0x1010U,  // alternate numbered name
 
     // External ENCX24J600 device: room for 16 ENCJ600 devices 
-    TCPIP_MODULE_MAC_ENCJ600        = 0x1020,
-    TCPIP_MODULE_MAC_ENCJ600_0      = 0x1020,   // alternate numbered name
+    TCPIP_MODULE_MAC_ENCJ600        = 0x1020U,
+    TCPIP_MODULE_MAC_ENCJ600_0      = 0x1020U,  // alternate numbered name
 
     // External ETH97J60 device: room for 16 97J60 devices
-    TCPIP_MODULE_MAC_97J60          = 0x1030,
-    TCPIP_MODULE_MAC_97J60_0        = 0x1030,   // alternate numbered name
+    TCPIP_MODULE_MAC_97J60          = 0x1030U,
+    TCPIP_MODULE_MAC_97J60_0        = 0x1030U,  // alternate numbered name
 
     // Internal/Embedded PIC32 MAC: room for 16 PIC32 devices
-    TCPIP_MODULE_MAC_PIC32INT       = 0x1040,
-    TCPIP_MODULE_MAC_PIC32INT_0     = 0x1040,   // alternate numbered name
+    TCPIP_MODULE_MAC_PIC32INT       = 0x1040U,
+    TCPIP_MODULE_MAC_PIC32INT_0     = 0x1040U,  // alternate numbered name
 
     // Internal/Embedded GMAC of PIC32C: 
-    TCPIP_MODULE_MAC_PIC32C         = 0x1050,   // instance base
-    TCPIP_MODULE_MAC_PIC32C_0       = 0x1050,   // first mac instance
-    TCPIP_MODULE_MAC_PIC32C_1       = 0x1051,   // second mac instance
+    TCPIP_MODULE_MAC_PIC32C         = 0x1050U,  // instance base
+    TCPIP_MODULE_MAC_PIC32C_0       = 0x1050U,  // first mac instance
+    TCPIP_MODULE_MAC_PIC32C_1       = 0x1051U,  // second mac instance
 
     // External MRF24WN Wi-Fi MAC: room for 16 MRF24WN devices
-    TCPIP_MODULE_MAC_MRF24WN        = 0x1060,
-    TCPIP_MODULE_MAC_MRF24WN_0      = 0x1060,   // alternate numbered name
+    TCPIP_MODULE_MAC_MRF24WN        = 0x1060U,
+    TCPIP_MODULE_MAC_MRF24WN_0      = 0x1060U,  // alternate numbered name
 
     // External WINC Wi-Fi MAC: room for 16 WINC devices
-    TCPIP_MODULE_MAC_WINC           = 0x1070,
-    TCPIP_MODULE_MAC_WINC_0         = 0x1070,   // alternate numbered name
+    TCPIP_MODULE_MAC_WINC           = 0x1070U,
+    TCPIP_MODULE_MAC_WINC_0         = 0x1070U,  // alternate numbered name
 
     // External WILC1000 Wi-Fi MAC: room for 16 WILC1000 devices
-    TCPIP_MODULE_MAC_WILC1000       = 0x1080,
-    TCPIP_MODULE_MAC_WILC1000_0     = 0x1080,   // alternate numbered name
+    TCPIP_MODULE_MAC_WILC1000       = 0x1080U,
+    TCPIP_MODULE_MAC_WILC1000_0     = 0x1080U,  // alternate numbered name
 
     // Internal/Embedded PIC32WK Wi-Fi MAC: room for 16 PIC32WK devices
-    TCPIP_MODULE_MAC_PIC32WK        = 0x1090,
-    TCPIP_MODULE_MAC_PIC32WK_0      = 0x1090,   // alternate numbered name
+    TCPIP_MODULE_MAC_PIC32WK        = 0x1090U,
+    TCPIP_MODULE_MAC_PIC32WK_0      = 0x1090U,  // alternate numbered name
 
     // Internal/Embedded PIC32MZW1 Wi-Fi MAC: room for 16 PIC32MZW1 devices
-    TCPIP_MODULE_MAC_PIC32MZW1      = 0x10A0,
-    TCPIP_MODULE_MAC_PIC32MZW1_0    = 0x10A0,   // alternate numbered name
+    TCPIP_MODULE_MAC_PIC32MZW1      = 0x10A0U,
+    TCPIP_MODULE_MAC_PIC32MZW1_0    = 0x10A0U,  // alternate numbered name
 
     // Internal/Embedded EMAC of SAM9x60:
-    TCPIP_MODULE_MAC_SAM9X60        = 0x1100,   // instance base
-    TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100,   // first mac instance
-    TCPIP_MODULE_MAC_SAM9X60_1      = 0x1101,   // second mac instance
+    TCPIP_MODULE_MAC_SAM9X60        = 0x1100U,  // instance base
+    TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100U,  // first mac instance
+    TCPIP_MODULE_MAC_SAM9X60_1      = 0x1101U,  // second mac instance
 
     // Internal/Embedded PPP MAC:
-    TCPIP_MODULE_MAC_PPP            = 0x1200,   // instance base
-    TCPIP_MODULE_MAC_PPP_0          = 0x1200,   // first mac instance
+    TCPIP_MODULE_MAC_PPP            = 0x1200U,  // instance base
+    TCPIP_MODULE_MAC_PPP_0          = 0x1200U,  // first mac instance
 
 
     // External LAN865X device: room for 16 LAN865X devices
-    TCPIP_MODULE_MAC_LAN865X         = 0x1110,
-    TCPIP_MODULE_MAC_LAN865X_0       = 0x1110,   // first mac instance
-    TCPIP_MODULE_MAC_LAN865X_1       = 0x1111,   // second mac instance
+    TCPIP_MODULE_MAC_LAN865X         = 0x1110U,
+    TCPIP_MODULE_MAC_LAN865X_0       = 0x1110U, // first mac instance
+    TCPIP_MODULE_MAC_LAN865X_1       = 0x1111U, // second mac instance
 
     // Internal/Embedded G3 ADP MAC
-    TCPIP_MODULE_MAC_G3ADP           = 0x10B0,
-    TCPIP_MODULE_MAC_G3ADP_0         = 0x10B0,   // alternate numbered name
+    TCPIP_MODULE_MAC_G3ADP           = 0x10B0U,
+    TCPIP_MODULE_MAC_G3ADP_0         = 0x10B0U,   // alternate numbered name
 
     // External, non MCHP, MAC modules
-    TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
+    TCPIP_MODULE_MAC_EXTERNAL       = 0x4000U,
 }TCPIP_MODULE_MAC_ID;
 
 // *****************************************************************************
@@ -224,21 +224,21 @@ typedef enum
 {
     /*  Segment can not be dynamically deallocated. */
     /*  Set when the segment is allocated */
-    TCPIP_MAC_SEG_FLAG_STATIC           = 0x0001, 
+    TCPIP_MAC_SEG_FLAG_STATIC           = 0x0001U, 
 
     /*  If set, it's a TX segment; otherwise, is a RX packet. */
-    TCPIP_MAC_SEG_FLAG_TX               = 0x0002, 
+    TCPIP_MAC_SEG_FLAG_TX               = 0x0002U, 
 
     /*  a MAC RX dedicated/sticky segment; otherwise, a non-dedicated/float segment */
-    TCPIP_MAC_SEG_FLAG_RX_STICKY        = 0x0004, 
+    TCPIP_MAC_SEG_FLAG_RX_STICKY        = 0x0004U, 
 
     /* Segment carrying user payload */
     /* Higher level protocols (TCP, UDP, etc.) may use it */
-    TCPIP_MAC_SEG_FLAG_USER_PAYLOAD     = 0x0008, 
+    TCPIP_MAC_SEG_FLAG_USER_PAYLOAD     = 0x0008U, 
     /*  Ack is required and has not been performed */
-    TCPIP_MAC_SEG_FLAG_ACK_REQUIRED     = 0x0010,
+    TCPIP_MAC_SEG_FLAG_ACK_REQUIRED     = 0x0010U,
     /*  User available segment flags. */
-    TCPIP_MAC_SEG_FLAG_USER             = 0x0100, 
+    TCPIP_MAC_SEG_FLAG_USER             = 0x0100U, 
 
 }TCPIP_MAC_SEGMENT_FLAGS;
 
@@ -288,14 +288,14 @@ typedef struct
     /* Packet pointer. This is the packet the segment belongs to.
      * Could be used by the MAC driver to restore the packet to which
      * a payload belongs to. */
-    struct _tag_TCPIP_MAC_PACKET*   segmentPktPtr;
+    struct S_tag_TCPIP_MAC_PACKET*   segmentPktPtr;
 
     /* Extra space allocated to be used by the MAC driver
      * The size of the gap is variable:
      *      - usually 4 bytes when only Ethernet drivers are used
      *      - 34 bytes when Wi-Fi drivers are present 
     */
-    uint32_t                        segmentDataGap[];
+    // uint32_t                        segmentDataGap[];
 
 }TCPIP_MAC_SEGMENT_GAP_DCPT;
 
@@ -334,10 +334,10 @@ typedef struct
 */
 
 
-typedef struct _tag_MAC_DATA_SEGMENT
+typedef struct S_tag_MAC_DATA_SEGMENT
 {
     /*  Multi-segment support, next segment in the chain. */
-    struct _tag_MAC_DATA_SEGMENT* next;      
+    struct S_tag_MAC_DATA_SEGMENT* next;      
 
     /*  Pointer to the segment data buffer
         It specifies the address where the data starts in the buffer.
@@ -384,7 +384,7 @@ typedef struct _tag_MAC_DATA_SEGMENT
     uint8_t                  segClientData[4];
 
     /*  Additional client segment payload; Ignored by the MAC driver. */
-    /*  uint8_t                  segClientLoad[]; */
+    //  uint8_t                  segClientLoad[];
 }TCPIP_MAC_DATA_SEGMENT;
 
 
@@ -487,26 +487,26 @@ typedef struct __attribute__ ((__packed__))
 typedef union  
 {
     uint32_t val;
-    struct _TCPRxStatusBM 
+    struct S_TCPRxStatusBM
     {
-        uint32_t    len: 13;                /** Length of frame including FCS */
-        uint32_t    offset: 1;              /** Receive buffer offset,
+        unsigned    len: 13;                /** Length of frame including FCS */
+        unsigned    offset: 1;              /** Receive buffer offset,
                                             bits 13:12 of frame length for jumbo frame */
-        uint32_t    bSof: 1;                /** Start of frame */
-        uint32_t    bEof: 1;                /** End of frame */
-        uint32_t    bCFI: 1;                /** Concatenation Format Indicator */
-        uint32_t    vlanPriority: 3;        /** VLAN priority (if VLAN detected) */
-        uint32_t    bPriorityDetected: 1;   /** Priority tag detected */
-        uint32_t    bVlanDetected: 1;       /**< VLAN tag detected */
-        uint32_t    bTypeIDMatch: 2;        /**< Type ID match */
-        uint32_t    bTypeIDMatchfound: 1;   /**< Type ID match found*/
-        uint32_t    bAddrMatch: 2;          /**< Specific Address register 1, 2, 3, 4 match */
-        uint32_t    bAddrMatchfound: 1;     /**< Specific Address match found */
-        uint32_t    reserved: 1;                
-        uint32_t    bUniHashMatch: 1;       /**< Unicast hash match */
-        uint32_t    bMultiHashMatch: 1;     /**< Multicast hash match */
-        uint32_t    bBroadcastDetected: 1;  /**< Global all ones broadcast address detected */
-    } bm;
+        unsigned    bSof: 1;                /** Start of frame */
+        unsigned    bEof: 1;                /** End of frame */
+        unsigned    bCFI: 1;                /** Concatenation Format Indicator */
+        unsigned    vlanPriority: 3;        /** VLAN priority (if VLAN detected) */
+        unsigned    bPriorityDetected: 1;   /** Priority tag detected */
+        unsigned    bVlanDetected: 1;       /**< VLAN tag detected */
+        unsigned    bTypeIDMatch: 2;        /**< Type ID match */
+        unsigned    bTypeIDMatchfound: 1;   /**< Type ID match found*/
+        unsigned    bAddrMatch: 2;          /**< Specific Address register 1, 2, 3, 4 match */
+        unsigned    bAddrMatchfound: 1;     /**< Specific Address match found */
+        unsigned    reserved: 1;                
+        unsigned    bUniHashMatch: 1;       /**< Unicast hash match */
+        unsigned    bMultiHashMatch: 1;     /**< Multicast hash match */
+        unsigned    bBroadcastDetected: 1;  /**< Global all ones broadcast address detected */
+    } bm __attribute__((packed));
 } TCPIP_MAC_PACKET_RX_STAT_PIC32C;
 
 // *****************************************************************************
@@ -547,18 +547,21 @@ typedef union
 
 typedef enum
 {
+    /* no flag set */
+    TCPIP_MAC_PKT_FLAG_NONE                 = 0x0U,
+
     /* Packet can not be dynamically deallocated.
        Set when the packet is allocated. */
-    TCPIP_MAC_PKT_FLAG_STATIC               = 0x00000001,
+    TCPIP_MAC_PKT_FLAG_STATIC               = 0x00000001U,
 
     /* If set, it is a TX packet/segment. Otherwise, it is a RX packet.*/
-    TCPIP_MAC_PKT_FLAG_TX                   = 0x00000002,
+    TCPIP_MAC_PKT_FLAG_TX                   = 0x00000002U,
 
     /* Packet data spans multiple segments - ZC functionality.
        If not set then the packet has only one data segment.
        It is set by the MAC driver when a RX packet spans multiple
        data segments. */
-    TCPIP_MAC_PKT_FLAG_SPLIT                = 0x00000004,       
+    TCPIP_MAC_PKT_FLAG_SPLIT                = 0x00000004U,       
 
 
     /* Packet data is queued somewhere, cannot be freed.
@@ -566,42 +569,45 @@ typedef enum
        the packet is in use and queued for further processing
        (normally the MAC driver does that).
        Cleared by the packet destination when the packet processing was completed.*/
-    TCPIP_MAC_PKT_FLAG_QUEUED               = 0x00000008,       
+    TCPIP_MAC_PKT_FLAG_QUEUED               = 0x00000008U,       
 
 
     /* RX flag, MAC updated. Specifies an unicast packet. */
-    TCPIP_MAC_PKT_FLAG_UNICAST              = 0x00000010,      
+    TCPIP_MAC_PKT_FLAG_UNICAST              = 0x00000010U,      
 
     /* RX flag, MAC updated. Specifies a broadcast packet. */
-    TCPIP_MAC_PKT_FLAG_BCAST                = 0x00000020,      
+    TCPIP_MAC_PKT_FLAG_BCAST                = 0x00000020U,      
 
     /* RX flag, MAC updated. Specifies an multicast packet. */
-    TCPIP_MAC_PKT_FLAG_MCAST                = 0x00000040,      
+    TCPIP_MAC_PKT_FLAG_MCAST                = 0x00000040U,      
 
     /* Packet cast mask bits. */
-    TCPIP_MAC_PKT_FLAG_CAST_MASK            = 0x00000070,      
+    TCPIP_MAC_PKT_FLAG_CAST_MASK            = 0x00000070U,      
 
     /* Packet cast mask. Specifies a packet where the MCAST/BCAST fields
        are not updated by the MAC RX process. */
-    TCPIP_MAC_PKT_FLAG_CAST_DISABLED        = 0x00000000,      
+    TCPIP_MAC_PKT_FLAG_CAST_DISABLED        = 0x00000000U,      
 
     /* Reserved for future use */
-    TCPIP_MAC_PKT_FLAG_RESERVED             = 0x00000080,      
+    TCPIP_MAC_PKT_FLAG_RESERVED             = 0x00000080U,      
 
     /* RX packet checksum calculation flags.
        MAC driver updates these flags: */
 
     /* IP header checksum was calculated for this RX packet and is OK; 0x01 << 8 */
-    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_IP         = 0x00000100,   
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_IP         = 0x00000100U,   
 
     /* TCP checksum was calculated for this RX packet and is OK; 0x02 << 8 */
-    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP        = 0x00000200,      
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_TCP        = 0x00000200U,      
 
     /* UDP checksum was calculated for this RX packet and is OK; 0x04 << 8 */
-    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP        = 0x00000400,      
+    TCPIP_MAC_PKT_FLAG_RX_CHKSUM_UDP        = 0x00000400U,      
+
+    /* internally generated packet */
+    TCPIP_MAC_PKT_FLAG_RX_INTERNAL          = 0x00000800U,
 
     /* Available user flags. */
-    TCPIP_MAC_PKT_FLAG_USER                 = 0x00010000,      
+    TCPIP_MAC_PKT_FLAG_USER                 = 0x00010000U,      
 
 }TCPIP_MAC_PACKET_FLAGS;
 
@@ -721,49 +727,53 @@ typedef enum
     Current implementation does not suport more than 16 filters.
 */
 
+/* MISRA C-2012 Rule 5.2 deviated:4 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:4 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
 typedef enum
 {
     /* Broadcast packets are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0001 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0001U /*DOM-IGNORE-END*/,
 
     /* Multicast packets are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0002 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0002U /*DOM-IGNORE-END*/,
 
     /* Unicast packets to a this host are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0004 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT           /*DOM-IGNORE-BEGIN*/ = 0x0004U /*DOM-IGNORE-END*/,
 
     /* Unicast packets to a different host are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT     /*DOM-IGNORE-BEGIN*/ = 0x0008 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT     /*DOM-IGNORE-BEGIN*/ = 0x0008U /*DOM-IGNORE-END*/,
 
     /* Runt packets (< 64 bytes) are rejected */
-    TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT            /*DOM-IGNORE-BEGIN*/ = 0x0010 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT            /*DOM-IGNORE-BEGIN*/ = 0x0010U /*DOM-IGNORE-END*/,
 
     /* Runt packets (< 64 bytes) are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT            /*DOM-IGNORE-BEGIN*/ = 0x0020 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT            /*DOM-IGNORE-BEGIN*/ = 0x0020U /*DOM-IGNORE-END*/,
 
     /* Packets with CRC errors are rejected */
-    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT       /*DOM-IGNORE-BEGIN*/ = 0x0040 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT       /*DOM-IGNORE-BEGIN*/ = 0x0040U /*DOM-IGNORE-END*/,
 
     /* Packets with CRC errors are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0080 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0080U /*DOM-IGNORE-END*/,
     
     /* Multicast HASH matching packets are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0100 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0100U /*DOM-IGNORE-END*/,
     
     /* Unicast HASH matching packets are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0200 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x0200U /*DOM-IGNORE-END*/,
     
     /* Maximum frame size packets(1536 bytes) are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT        /*DOM-IGNORE-BEGIN*/ = 0x0400 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT        /*DOM-IGNORE-BEGIN*/ = 0x0400U /*DOM-IGNORE-END*/,
 
     /* All packets are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT         /*DOM-IGNORE-BEGIN*/ = 0x0800 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT         /*DOM-IGNORE-BEGIN*/ = 0x0800U /*DOM-IGNORE-END*/,
     
     /* Packets with Frame error are accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x1000 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x1000U /*DOM-IGNORE-END*/,
     
     /* Packets with JUMBO Frame (up to 10240 bytes) is accepted */
-    TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x2000 /*DOM-IGNORE-END*/,
+    TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT       /*DOM-IGNORE-BEGIN*/ = 0x2000U /*DOM-IGNORE-END*/,
     
     /* Default RX filter: will accept most valid packets */
     TCPIP_MAC_RX_FILTER_TYPE_DEFAULT     /*DOM-IGNORE-BEGIN*/ = TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT   | TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT |
@@ -772,6 +782,9 @@ typedef enum
                                          /*DOM-IGNORE-END*/,
 
 }TCPIP_MAC_RX_FILTER_TYPE;
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 
 // *****************************************************************************
@@ -787,7 +800,7 @@ typedef enum
     None.
 */
 
-typedef struct _tag_TCPIP_MAC_PACKET    TCPIP_MAC_PACKET;
+typedef struct S_tag_TCPIP_MAC_PACKET    TCPIP_MAC_PACKET;
 
 
 
@@ -832,15 +845,15 @@ typedef void    (*TCPIP_MAC_PACKET_ACK_FUNC)(TCPIP_MAC_PACKET* pkt,  const void*
     from within an interrupt context.
 
 */
-struct _tag_TCPIP_MAC_PACKET
+struct S_tag_TCPIP_MAC_PACKET
 {
     /* Multi-packet/queuing support.
        This field is used for chaining/queuing packets. */
-    struct _tag_TCPIP_MAC_PACKET*   next;
+    struct S_tag_TCPIP_MAC_PACKET*   next;
 
     /* Multi-packet/queuing support.
        This field is used for chaining packet fragments, etc. */
-    struct _tag_TCPIP_MAC_PACKET*   pkt_next;
+    struct S_tag_TCPIP_MAC_PACKET*   pkt_next;
 
     /* Packet acknowledgment function.
        On TX: A stack module owns the packet.
@@ -953,7 +966,7 @@ struct _tag_TCPIP_MAC_PACKET
 
     /* Additional client packet payload, variable packet data.
        Ignored by the MAC driver. */
-    uint32_t                        pktClientLoad[];
+    // uint32_t                        pktClientLoad[];
 };
 
 
@@ -1104,7 +1117,7 @@ typedef enum
     List of supported MAC power modes.
 
   Remarks:
-    None.
+    8 bit values only are supported!
 
 */
 
@@ -1142,54 +1155,54 @@ typedef enum
     not all events are possible.
 
   Remarks:
-    None.
+    16 bits only events are supported.
 
 */
 
 typedef enum
 {
     /*  no event */
-    TCPIP_MAC_EV_NONE               = 0x0000,
+    TCPIP_MAC_EV_NONE               = 0x0000U,
     
     /*  RX triggered events: A receive packet is pending */
-    TCPIP_MAC_EV_RX_PKTPEND         = 0x0001,
+    TCPIP_MAC_EV_RX_PKTPEND         = 0x0001U,
 
     /*  RX triggered events: RX FIFO overflow (system level latency, no descriptors, etc.) */
-    TCPIP_MAC_EV_RX_OVFLOW          = 0x0002,
+    TCPIP_MAC_EV_RX_OVFLOW          = 0x0002U,
 
     /*  RX triggered events: no RX descriptor available to receive a new packet */
-    TCPIP_MAC_EV_RX_BUFNA           = 0x0004,
+    TCPIP_MAC_EV_RX_BUFNA           = 0x0004U,
 
     /*  RX triggered events: There's RX data available */
-    TCPIP_MAC_EV_RX_ACT             = 0x0008,
+    TCPIP_MAC_EV_RX_ACT             = 0x0008U,
 
     /*  RX triggered events: A packet was successfully received */
-    TCPIP_MAC_EV_RX_DONE            = 0x0010,
+    TCPIP_MAC_EV_RX_DONE            = 0x0010U,
 
     /*  RX triggered events: the number of received packets is greater than or equal to than the RX Full Watermark */
-    TCPIP_MAC_EV_RX_FWMARK          = 0x0020,
+    TCPIP_MAC_EV_RX_FWMARK          = 0x0020U,
 
     /*  RX triggered events: the number of received packets is less than or equal to than the RX Empty Watermark */
-    TCPIP_MAC_EV_RX_EWMARK          = 0x0040,
+    TCPIP_MAC_EV_RX_EWMARK          = 0x0040U,
 
     /*  RX triggered events: a bus error encountered during an RX transfer */
-    TCPIP_MAC_EV_RX_BUSERR          = 0x0080,
+    TCPIP_MAC_EV_RX_BUSERR          = 0x0080U,
 
     /*  TX triggered events: A packet was transmitted and its status is available */
-    TCPIP_MAC_EV_TX_DONE            = 0x0100,          
+    TCPIP_MAC_EV_TX_DONE            = 0x0100U,          
 
     /*  TX triggered events: a TX packet was aborted by the MAC 
         (jumbo/system underrun/excessive defer/late collision/excessive collisions) */
-    TCPIP_MAC_EV_TX_ABORT           = 0x0200,
+    TCPIP_MAC_EV_TX_ABORT           = 0x0200U,
 
     /*  TX triggered events: a bus error encountered during a TX transfer */
-    TCPIP_MAC_EV_TX_BUSERR          = 0x0400,
+    TCPIP_MAC_EV_TX_BUSERR          = 0x0400U,
 
     /*  Connection triggered events: Connection established */
-    TCPIP_MAC_EV_CONN_ESTABLISHED   = 0x0800,
+    TCPIP_MAC_EV_CONN_ESTABLISHED   = 0x0800U,
 
     /*  Connection triggered events: Connection lost */
-    TCPIP_MAC_EV_CONN_LOST          = 0x1000,
+    TCPIP_MAC_EV_CONN_LOST          = 0x1000U,
 
     /*  Useful Masks: all RX related events */
     TCPIP_MAC_EV_RX_ALL             = (TCPIP_MAC_EV_RX_PKTPEND|TCPIP_MAC_EV_RX_OVFLOW|
@@ -1270,19 +1283,19 @@ typedef enum
 typedef enum
 {
     /* No IP/TCP/UDP Checksum calculation by MAC driver */
-    TCPIP_MAC_CHECKSUM_NONE     = 0x00,
+    TCPIP_MAC_CHECKSUM_NONE     = 0x00U,
             
     /* TCP Checksum calculation by MAC driver */        
-    TCPIP_MAC_CHECKSUM_TCP      = 0x01,
+    TCPIP_MAC_CHECKSUM_TCP      = 0x01U,
             
     /* UDP Checksum calculation by MAC driver */        
-    TCPIP_MAC_CHECKSUM_UDP      = 0x02,
+    TCPIP_MAC_CHECKSUM_UDP      = 0x02U,
             
     /* IPv4 Checksum calculation by MAC driver */        
-    TCPIP_MAC_CHECKSUM_IPV4      = 0x04,            
+    TCPIP_MAC_CHECKSUM_IPV4     = 0x04U,            
             
     /* IPv6 Checksum calculation by MAC driver */        
-    TCPIP_MAC_CHECKSUM_IPV6      = 0x08,             
+    TCPIP_MAC_CHECKSUM_IPV6     = 0x08U,             
             
 }TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS;
 
@@ -1611,6 +1624,8 @@ typedef TCPIP_MAC_PACKET* (*TCPIP_MAC_PKT_RetrieveF)(uint8_t* segBuffer, bool is
   
   Remarks:        
     Other types will be eventually added.
+
+    8 bit value only!
 */
 typedef enum
 {
@@ -1654,16 +1669,16 @@ typedef enum
 typedef enum
 {
     /*  default MTU link */
-    TCPIP_MAC_LINK_MTU_DEFAULT  = 1500, 
+    TCPIP_MAC_LINK_MTU_DEFAULT  = 1500U, 
 
     /*  wired Ethernet MAC type */
-    TCPIP_MAC_LINK_MTU_ETH      = 1500,
+    TCPIP_MAC_LINK_MTU_ETH      = 1500U,
 
     /*  wireless, Wi-Fi type MAC*/
-    TCPIP_MAC_LINK_MTU_WLAN     = 1500,
+    TCPIP_MAC_LINK_MTU_WLAN     = 1500U,
 
     /*  G3 ADP MAC type */
-    TCPIP_MAC_LINK_MTU_G3ADP    = 1280,
+    TCPIP_MAC_LINK_MTU_G3ADP    = 1280U,
 
 }TCPIP_MAC_LINK_MTU;
 
@@ -1686,7 +1701,7 @@ typedef enum
 typedef enum
 {
     /*  No special flag set */
-    TCPIP_MAC_CONTROL_FLAG_NONE         = 0x0000, 
+    TCPIP_MAC_CONTROL_FLAG_NONE         = 0x0000U, 
 
     /* Data payload offset of 2 bytes is required
        This is the 2 bytes offset from the segment data buffer: TCPIP_MAC_DATA_SEGMENT.segBuffer
@@ -1707,19 +1722,19 @@ typedef enum
                 dataOffsetMask == 0xfffffffc if dataOffset == 2
                 dataOffsetMask == 0xffffffff if dataOffset == 0
               */
-    TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2  = 0x0001,
+    TCPIP_MAC_CONTROL_PAYLOAD_OFFSET_2  = 0x0001U,
 
     
 
     /*  The driver should not reuse its dynamically allocated buffers
      *  even when the current number of buffers is below the threshold.
      *  Dynamic buffers should be always freed */
-    TCPIP_MAC_CONTROL_NO_SMART_ALLOC    = 0x0002, 
+    TCPIP_MAC_CONTROL_NO_SMART_ALLOC    = 0x0002U, 
 
     /* The driver is not requested to verify the link status and/or
        discard packets when link is down.
        Note: the Harmony stack uses MAC link check */
-    TCPIP_MAC_CONTROL_NO_LINK_CHECK     = 0x0004, 
+    TCPIP_MAC_CONTROL_NO_LINK_CHECK     = 0x0004U, 
 
     /* Other flags eventually added */
 
@@ -1741,17 +1756,17 @@ typedef enum
 typedef enum
 {
     /*  the stack never has to call the TCPIP_MAC_Process function */
-    TCPIP_MAC_PROCESS_FLAG_NONE     = 0x0000, 
+    TCPIP_MAC_PROCESS_FLAG_NONE     = 0x0000U, 
 
     /*  the stack has to call the TCPIP_MAC_Process after an RX signal */
-    TCPIP_MAC_PROCESS_FLAG_RX       = 0x0001, 
+    TCPIP_MAC_PROCESS_FLAG_RX       = 0x0001U, 
 
     /*  the stack has to call the TCPIP_MAC_Process after an TX signal */
-    TCPIP_MAC_PROCESS_FLAG_TX       = 0x0002, 
+    TCPIP_MAC_PROCESS_FLAG_TX       = 0x0002U, 
 
 
     /*  the stack has to call the TCPIP_MAC_Process after any type of signal */
-    TCPIP_MAC_PROCESS_FLAG_ANY      = 0x0100, 
+    TCPIP_MAC_PROCESS_FLAG_ANY      = 0x0100U, 
 
 }TCPIP_MAC_PROCESS_FLAGS;
 
@@ -1965,26 +1980,26 @@ typedef struct
 typedef struct
 {
     /*  number of OK RX packets */
-    int     nRxOkPackets;
+    uint32_t    nRxOkPackets;
 
     /*  number of unacknowledged pending RX buffers in the driver queues. */
     /*  If each incoming packet fits within a RX buffer (the RX buffer is large enough) */
     /*  than this corresponds to the number of unacknowledged pending RX packets. */
     /*  Otherwise the number of packets is less than the pending buffers. */
-    int     nRxPendBuffers;
+    uint32_t    nRxPendBuffers;
 
     /*  number of currently scheduled RX buffers in the driver queues. */
     /* These are available buffers, ready to receive data */
-    int     nRxSchedBuffers;
+    uint32_t    nRxSchedBuffers;
 
     /*  number of RX packets with errors */
-    int     nRxErrorPackets;
+    uint32_t    nRxErrorPackets;
 
     /*  number of RX fragmentation errors */
-    int     nRxFragmentErrors;
+    uint32_t    nRxFragmentErrors;
     
     /*  number of occurences of 'RX Buffer Not Available' */
-    int    nRxBuffNotAvailable;
+    uint32_t    nRxBuffNotAvailable;
 
 }TCPIP_MAC_RX_STATISTICS;
 
@@ -2006,19 +2021,19 @@ typedef struct
 typedef struct
 {
     /*  number of OK transmitted packets */
-    int     nTxOkPackets;
+    uint32_t    nTxOkPackets;
 
     /*  number of unacknowledged pending TX buffers in the driver queues. */
     /*  This is equal with pending TX packets when each packet */
     /*  is contained within a TX buffer. */
-    int     nTxPendBuffers;
+    uint32_t    nTxPendBuffers;
 
     /*  number of packets that could not be transmitted */
-    int     nTxErrorPackets;
+    uint32_t    nTxErrorPackets;
 
     /*  number of times the TX queue was full */
     /*  this may signal that the number of TX descriptors is too small */
-    int     nTxQueueFull;
+    uint32_t    nTxQueueFull;
 
 }TCPIP_MAC_TX_STATISTICS;
 
@@ -2058,7 +2073,7 @@ typedef struct
     SYS_MODULE_OBJ       TCPIP_MAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init);
 
   Summary:
-    MAC driver initialization function.
+    Generic MAC driver initialization function.
 
   Description:
     This is the function that initializes the MAC.
@@ -2098,7 +2113,7 @@ SYS_MODULE_OBJ       TCPIP_MAC_Initialize(const SYS_MODULE_INDEX index, const SY
     void       TCPIP_MAC_Deinitialize(SYS_MODULE_OBJ object);
 
   Summary:
-    MAC driver deinitialization function.
+    Generic MAC driver deinitialization function.
 
   Description:
     This is the function that deinitializes the MAC.
@@ -2126,7 +2141,7 @@ void       TCPIP_MAC_Deinitialize(SYS_MODULE_OBJ object);
     void       TCPIP_MAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);
 
   Summary:
-    MAC driver reinitialization function.
+    Generic MAC driver reinitialization function.
 
   Description:
     This is the function that re-initializes the MAC.
@@ -2159,7 +2174,7 @@ void       TCPIP_MAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT *
     SYS_STATUS TCPIP_MAC_Status ( SYS_MODULE_OBJ object )
     
   Summary:
-    Provides the current status of the MAC driver module.
+    Generic function that provides the current status of the MAC driver module.
 
   Description:
     This function provides the current status of the MAC driver
@@ -2181,13 +2196,13 @@ void       TCPIP_MAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT *
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from TCPIP_MAC_Initialize
+    SYS_MODULE_OBJ      object;     - Returned from TCPIP_MAC_Initialize
     SYS_STATUS          status;
     
     status = TCPIP_MAC_Status(object);
     if (SYS_STATUS_ERROR >= status)
     {
-        // Handle error
+        - Handle error
     }
     </code>
 
@@ -2230,7 +2245,7 @@ SYS_STATUS TCPIP_MAC_Status ( SYS_MODULE_OBJ object );
     void TCPIP_MAC_Tasks( SYS_MODULE_OBJ object )
     
   Summary:
-    Maintains the MAC driver's state machine.
+    Generic function: Maintains the MAC driver's state machine.
 
   Description:
     This function is used to maintain the driver's internal state machine
@@ -2263,7 +2278,7 @@ void TCPIP_MAC_Tasks( SYS_MODULE_OBJ object );
     DRV_HANDLE    TCPIP_MAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT intent );
 
   Summary:
-    MAC driver open function.
+    Generic MAC driver open function.
 
   Description:
     This is the function that opens an instance of the MAC.
@@ -2297,7 +2312,7 @@ DRV_HANDLE    TCPIP_MAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTEN
     void       TCPIP_MAC_Close(DRV_HANDLE hMac);
 
   Summary:
-    MAC driver close function.
+    Generic MAC driver close function.
 
   Description:
     This is the function that closes an instance of the MAC.
@@ -2327,7 +2342,7 @@ void       TCPIP_MAC_Close(DRV_HANDLE hMac);
     TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket);
 
   Summary:
-    MAC driver transmit function.
+    Generic MAC driver transmit function.
 
   Description:
     This is the MAC transmit function.
@@ -2388,7 +2403,7 @@ TCPIP_MAC_RES       TCPIP_MAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPa
                                       TCPIP_MAC_PACKET_RX_STAT* pPktStat);
 
   Summary:
-    A packet is returned if such a pending packet exists.
+    Generic function: A packet is returned if such a pending packet exists.
 
   Description:
     This is the MAC receive function.
@@ -2453,7 +2468,7 @@ TCPIP_MAC_PACKET*   TCPIP_MAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, TC
      TCPIP_MAC_RES       TCPIP_MAC_Process(DRV_HANDLE hMac);
 
   Summary:
-    MAC periodic processing function.
+    Generic MAC periodic processing function.
 
   Description:
     This is a function that allows for internal processing by the MAC driver.
@@ -2496,7 +2511,7 @@ TCPIP_MAC_RES       TCPIP_MAC_Process(DRV_HANDLE hMac);
      TCPIP_MAC_RES     TCPIP_MAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams);
 
   Summary:
-    MAC parameter get function.
+    Generic MAC parameter get function.
 
   Description:
     This is a function that returns the run time parameters of the MAC driver.
@@ -2524,7 +2539,7 @@ TCPIP_MAC_RES     TCPIP_MAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS*
      bool TCPIP_MAC_LinkCheck(DRV_HANDLE hMac);
 
   Summary:
-    MAC link checking function.
+    Generic MAC link checking function.
 
   Description:
     This is a function that returns the current status of the link.
@@ -2556,7 +2571,7 @@ bool                TCPIP_MAC_LinkCheck(DRV_HANDLE hMac);
      bool TCPIP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable);
 
   Summary:
-    MAC events report enable/disable function.
+    Generic MAC events report enable/disable function.
 
   Description:
     This is a function that enables or disables the events to be reported
@@ -2607,7 +2622,7 @@ bool                    TCPIP_MAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT 
      bool TCPIP_MAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
 
   Summary:
-     This function acknowledges a previously reported MAC event.
+     Generic function: This function acknowledges a previously reported MAC event.
 
   Description:
     This function acknowledges and re-enables processed events.
@@ -2661,7 +2676,7 @@ bool                    TCPIP_MAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EV
      TCPIP_MAC_EVENT TCPIP_MAC_EventPendingGet(DRV_HANDLE hMac);
 
   Summary:
-    Returns the currently pending MAC events.
+    Generic function: Returns the currently pending MAC events.
 
   Description:
     This function returns the currently MAC pending events.
@@ -2703,7 +2718,7 @@ TCPIP_MAC_EVENT         TCPIP_MAC_EventPendingGet(DRV_HANDLE hMac);
      TCPIP_MAC_RES TCPIP_MAC_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const TCPIP_MAC_ADDR* DestMACAddr);
 
   Summary:
-    Sets the current MAC hash table receive filter.
+    Generic function: Sets the current MAC hash table receive filter.
 
   Description:
     This function sets the MAC hash table filtering to allow 
@@ -2753,7 +2768,7 @@ TCPIP_MAC_RES        TCPIP_MAC_RxFilterHashTableEntrySet(DRV_HANDLE hMac, const 
                                            TCPIP_MAC_TX_STATISTICS* pTxStatistics);
 
   Summary:
-    Gets the current MAC statistics.
+    Generic function: Gets the current MAC statistics.
 
   Description:
     This function will get the current value of the statistic counters
@@ -2784,10 +2799,10 @@ TCPIP_MAC_RES        TCPIP_MAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATI
 // *****************************************************************************
 /*  Function:
      TCPIP_MAC_RES        TCPIP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* 
-                                     pRegEntries, int nEntries, int* pHwEntries);
+                                     pRegEntries, size_t nEntries, size_t* pHwEntries);
 
   Summary:
-    Gets the current MAC hardware statistics registers.
+    Generic function: Gets the current MAC hardware statistics registers.
 
   Description:
     This function will get the current value of the statistic registers
@@ -2808,7 +2823,7 @@ TCPIP_MAC_RES        TCPIP_MAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATI
                        supported hardware registers.
     pHwEntries    - pointer to an address to store the number of the statistics registers that the hardware supports
                       It is updated by the driver.
-                      Can be 0 if not needed
+                      Can be NULL if not needed
 
   Returns:
     - TCPIP_MAC_RES_OK - if all processing went on OK
@@ -2819,7 +2834,7 @@ TCPIP_MAC_RES        TCPIP_MAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATI
 
 */
 TCPIP_MAC_RES        TCPIP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* 
-                                               pRegEntries, int nEntries, int* pHwEntries);
+                                               pRegEntries, size_t nEntries, size_t* pHwEntries);
 
 //*****************************************************************************
 /*
@@ -2828,7 +2843,7 @@ TCPIP_MAC_RES        TCPIP_MAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_
        size_t* pConfigSize);
     
   Summary:
-    Gets the current MAC driver configuration.
+    Generic function: Gets the current MAC driver configuration.
 
   Description:
     This function will get the current MAC driver configuration and store it into
@@ -2860,4 +2875,4 @@ size_t TCPIP_MAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize, s
 #endif
 //DOM-IGNORE-END
     
-#endif // __TCPIP_MAC_H_
+#endif // H_TCPIP_MAC_H_

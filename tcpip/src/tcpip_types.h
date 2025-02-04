@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _TCPIP_TYPES_H_
-#define _TCPIP_TYPES_H_
+#ifndef H_TCPIP_TYPES_H_
+#define H_TCPIP_TYPES_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -61,14 +61,14 @@ typedef union
     uint8_t Val;
     struct __attribute__((packed))
     {
-         uint8_t b0:1;
-         uint8_t b1:1;
-         uint8_t b2:1;
-         uint8_t b3:1;
-         uint8_t b4:1;
-         uint8_t b5:1;
-         uint8_t b6:1;
-         uint8_t b7:1;
+         unsigned b0:1;
+         unsigned b1:1;
+         unsigned b2:1;
+         unsigned b3:1;
+         unsigned b4:1;
+         unsigned b5:1;
+         unsigned b6:1;
+         unsigned b7:1;
     } bits;
 } TCPIP_UINT8_VAL, TCPIP_UINT8_BITS;
 
@@ -80,25 +80,25 @@ typedef union
     {
         uint8_t LB;
         uint8_t HB;
-    } byte;
+    } vByte;
     struct __attribute__((packed))
     {
-         uint8_t b0:1;
-         uint8_t b1:1;
-         uint8_t b2:1;
-         uint8_t b3:1;
-         uint8_t b4:1;
-         uint8_t b5:1;
-         uint8_t b6:1;
-         uint8_t b7:1;
-         uint8_t b8:1;
-         uint8_t b9:1;
-         uint8_t b10:1;
-         uint8_t b11:1;
-         uint8_t b12:1;
-         uint8_t b13:1;
-         uint8_t b14:1;
-         uint8_t b15:1;
+         unsigned b0:1;
+         unsigned b1:1;
+         unsigned b2:1;
+         unsigned b3:1;
+         unsigned b4:1;
+         unsigned b5:1;
+         unsigned b6:1;
+         unsigned b7:1;
+         unsigned b8:1;
+         unsigned b9:1;
+         unsigned b10:1;
+         unsigned b11:1;
+         unsigned b12:1;
+         unsigned b13:1;
+         unsigned b14:1;
+         unsigned b15:1;
     } bits;
 } TCPIP_UINT16_VAL, TCPIP_UINT16_BITS;
 
@@ -119,7 +119,7 @@ typedef union
         uint8_t HB;
         uint8_t UB;
         uint8_t MB;
-    } byte;
+    } vByte;
     struct __attribute__((packed))
     {
         TCPIP_UINT16_VAL low;
@@ -127,45 +127,45 @@ typedef union
     }wordUnion;
     struct __attribute__((packed))
     {
-         uint8_t b0:1;
-         uint8_t b1:1;
-         uint8_t b2:1;
-         uint8_t b3:1;
-         uint8_t b4:1;
-         uint8_t b5:1;
-         uint8_t b6:1;
-         uint8_t b7:1;
-         uint8_t b8:1;
-         uint8_t b9:1;
-         uint8_t b10:1;
-         uint8_t b11:1;
-         uint8_t b12:1;
-         uint8_t b13:1;
-         uint8_t b14:1;
-         uint8_t b15:1;
-         uint8_t b16:1;
-         uint8_t b17:1;
-         uint8_t b18:1;
-         uint8_t b19:1;
-         uint8_t b20:1;
-         uint8_t b21:1;
-         uint8_t b22:1;
-         uint8_t b23:1;
-         uint8_t b24:1;
-         uint8_t b25:1;
-         uint8_t b26:1;
-         uint8_t b27:1;
-         uint8_t b28:1;
-         uint8_t b29:1;
-         uint8_t b30:1;
-         uint8_t b31:1;
+         unsigned b0:1;
+         unsigned b1:1;
+         unsigned b2:1;
+         unsigned b3:1;
+         unsigned b4:1;
+         unsigned b5:1;
+         unsigned b6:1;
+         unsigned b7:1;
+         unsigned b8:1;
+         unsigned b9:1;
+         unsigned b10:1;
+         unsigned b11:1;
+         unsigned b12:1;
+         unsigned b13:1;
+         unsigned b14:1;
+         unsigned b15:1;
+         unsigned b16:1;
+         unsigned b17:1;
+         unsigned b18:1;
+         unsigned b19:1;
+         unsigned b20:1;
+         unsigned b21:1;
+         unsigned b22:1;
+         unsigned b23:1;
+         unsigned b24:1;
+         unsigned b25:1;
+         unsigned b26:1;
+         unsigned b27:1;
+         unsigned b28:1;
+         unsigned b29:1;
+         unsigned b30:1;
+         unsigned b31:1;
     } bits;
 } TCPIP_UINT32_VAL;
 
 typedef union
 {
     uint64_t Val;
-    uint32_t d[2] __attribute__((packed));
+    uint32_t v32[2] __attribute__((packed));
     uint16_t w[4] __attribute__((packed));
     uint8_t v[8];
     struct __attribute__((packed))
@@ -182,74 +182,74 @@ typedef union
     } word;
     struct __attribute__((packed))
     {
-         uint8_t b0:1;
-         uint8_t b1:1;
-         uint8_t b2:1;
-         uint8_t b3:1;
-         uint8_t b4:1;
-         uint8_t b5:1;
-         uint8_t b6:1;
-         uint8_t b7:1;
-         uint8_t b8:1;
-         uint8_t b9:1;
-         uint8_t b10:1;
-         uint8_t b11:1;
-         uint8_t b12:1;
-         uint8_t b13:1;
-         uint8_t b14:1;
-         uint8_t b15:1;
-         uint8_t b16:1;
-         uint8_t b17:1;
-         uint8_t b18:1;
-         uint8_t b19:1;
-         uint8_t b20:1;
-         uint8_t b21:1;
-         uint8_t b22:1;
-         uint8_t b23:1;
-         uint8_t b24:1;
-         uint8_t b25:1;
-         uint8_t b26:1;
-         uint8_t b27:1;
-         uint8_t b28:1;
-         uint8_t b29:1;
-         uint8_t b30:1;
-         uint8_t b31:1;
-         uint8_t b32:1;
-         uint8_t b33:1;
-         uint8_t b34:1;
-         uint8_t b35:1;
-         uint8_t b36:1;
-         uint8_t b37:1;
-         uint8_t b38:1;
-         uint8_t b39:1;
-         uint8_t b40:1;
-         uint8_t b41:1;
-         uint8_t b42:1;
-         uint8_t b43:1;
-         uint8_t b44:1;
-         uint8_t b45:1;
-         uint8_t b46:1;
-         uint8_t b47:1;
-         uint8_t b48:1;
-         uint8_t b49:1;
-         uint8_t b50:1;
-         uint8_t b51:1;
-         uint8_t b52:1;
-         uint8_t b53:1;
-         uint8_t b54:1;
-         uint8_t b55:1;
-         uint8_t b56:1;
-         uint8_t b57:1;
-         uint8_t b58:1;
-         uint8_t b59:1;
-         uint8_t b60:1;
-         uint8_t b61:1;
-         uint8_t b62:1;
-         uint8_t b63:1;
+         unsigned b0:1;
+         unsigned b1:1;
+         unsigned b2:1;
+         unsigned b3:1;
+         unsigned b4:1;
+         unsigned b5:1;
+         unsigned b6:1;
+         unsigned b7:1;
+         unsigned b8:1;
+         unsigned b9:1;
+         unsigned b10:1;
+         unsigned b11:1;
+         unsigned b12:1;
+         unsigned b13:1;
+         unsigned b14:1;
+         unsigned b15:1;
+         unsigned b16:1;
+         unsigned b17:1;
+         unsigned b18:1;
+         unsigned b19:1;
+         unsigned b20:1;
+         unsigned b21:1;
+         unsigned b22:1;
+         unsigned b23:1;
+         unsigned b24:1;
+         unsigned b25:1;
+         unsigned b26:1;
+         unsigned b27:1;
+         unsigned b28:1;
+         unsigned b29:1;
+         unsigned b30:1;
+         unsigned b31:1;
+         unsigned b32:1;
+         unsigned b33:1;
+         unsigned b34:1;
+         unsigned b35:1;
+         unsigned b36:1;
+         unsigned b37:1;
+         unsigned b38:1;
+         unsigned b39:1;
+         unsigned b40:1;
+         unsigned b41:1;
+         unsigned b42:1;
+         unsigned b43:1;
+         unsigned b44:1;
+         unsigned b45:1;
+         unsigned b46:1;
+         unsigned b47:1;
+         unsigned b48:1;
+         unsigned b49:1;
+         unsigned b50:1;
+         unsigned b51:1;
+         unsigned b52:1;
+         unsigned b53:1;
+         unsigned b54:1;
+         unsigned b55:1;
+         unsigned b56:1;
+         unsigned b57:1;
+         unsigned b58:1;
+         unsigned b59:1;
+         unsigned b60:1;
+         unsigned b61:1;
+         unsigned b62:1;
+         unsigned b63:1;
     } bits;
 } TCPIP_UINT64_VAL;
 
 
-#endif // _TCPIP_TYPES_H_ 
+#endif // H_TCPIP_TYPES_H_ 
 
 

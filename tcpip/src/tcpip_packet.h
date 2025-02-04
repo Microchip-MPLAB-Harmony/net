@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_PACKET_H_
-#define __TCPIP_PACKET_H_
+#ifndef H_TCPIP_PACKET_H_
+#define H_TCPIP_PACKET_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -60,11 +60,11 @@ Microchip or any third party.
 // global trace info
 typedef struct
 {
-    int nEntries;           // all trace entries
-    int nUsed;              // used ones
-    int traceFails;         // failed to allocate/find a packet entry
-    int traceAckErrors;     // packets acknowledged with an error code
-    int traceAckOwnerFails; // packets acknowledged but no module owner found
+    size_t nEntries;           // all trace entries
+    size_t nUsed;              // used ones
+    size_t traceFails;         // failed to allocate/find a packet entry
+    size_t traceAckErrors;     // packets acknowledged with an error code
+    size_t traceAckOwnerFails; // packets acknowledged but no module owner found
 }TCPIP_PKT_TRACE_INFO;
 
 // packet trace
@@ -72,7 +72,7 @@ typedef struct
 // only if TCPIP_PACKET_ALLOCATION_TRACE_ENABLE defined
 typedef struct
 {
-    int         moduleId;           // info belonging to this module; <0 means slot free
+    TCPIP_STACK_MODULE  moduleId;   // info belonging to this module; <0 means slot free
     uint32_t    totAllocated;       // total number of packets allocated successfully by this module
     uint32_t    currAllocated;      // number of packets still allocated by this module
     uint32_t    currSize;           // number of bytes currently allocated
@@ -132,7 +132,7 @@ typedef enum
 typedef struct
 {
     TCPIP_MAC_PACKET*   pPkt;               // packet that's logged
-    uint16_t            moduleLog;          // 32 bit mask of modules that processed the packet
+    uint16_t            moduleLog;          // 16 bit mask of modules that processed the packet
                                             // each module that processes the packet sets its corresponding bit (1 << moduleId) in this mask
                                             // only the basic modules log their packets
                                             // TCPIP_MODULE_LAYER3 will show up as the module ID for a packet handed to a higher layer
@@ -165,10 +165,10 @@ typedef void    (*TCPIP_PKT_LOG_HANDLER)(TCPIP_STACK_MODULE moduleId, const TCPI
 // global logging info
 typedef struct
 {
-    int16_t                 nEntries;           // all log entries
-    int16_t                 nUsed;              // used ones
-    int16_t                 nPersistent;        // non deletable ones
-    int16_t                 nFailed;            // failed to log because all the slots were taken...
+    uint16_t                nEntries;           // all log entries
+    uint16_t                nUsed;              // used ones
+    uint16_t                nPersistent;        // non deletable ones
+    uint16_t                nFailed;            // failed to log because all the slots were taken...
     uint32_t                persistMask;        // current persistent mask
     uint32_t                logModuleMask;      // current module logging mask
     uint32_t                netLogMask;         // current mask of networks the logging is enabled on
@@ -181,32 +181,32 @@ typedef struct
 // Extra TX/RX packet flags
 // NOTE: // 16 bits only packet flags!
 
-#define    TCPIP_MAC_PKT_FLAG_ARP           (TCPIP_MAC_PKT_FLAG_USER << 0)  // ARP packet data
+#define    TCPIP_MAC_PKT_FLAG_ARP           ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 0)    // ARP packet data
                                                                             // set when the packet is ARP
                                                                             //
-#define    TCPIP_MAC_PKT_FLAG_NET_TYPE      (TCPIP_MAC_PKT_FLAG_USER << 1)  // the network type: IPv4/IPv6 packet
-#define    TCPIP_MAC_PKT_FLAG_IPV4          (0)                             // IPv4 packet data; cleared when the packet is IPV4
-#define    TCPIP_MAC_PKT_FLAG_IPV6          (TCPIP_MAC_PKT_FLAG_USER << 1)  // IPv6 packet data; set when the packet is IPV6
+#define    TCPIP_MAC_PKT_FLAG_NET_TYPE      ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 1)    // the network type: IPv4/IPv6 packet
+#define    TCPIP_MAC_PKT_FLAG_IPV4          (0U)                                        // IPv4 packet data; cleared when the packet is IPV4
+#define    TCPIP_MAC_PKT_FLAG_IPV6          ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 1)    // IPv6 packet data; set when the packet is IPV6
 
-#define    TCPIP_MAC_PKT_FLAG_LLDP          (TCPIP_MAC_PKT_FLAG_USER << 2)  // LLDP packet data; set when the packet is LLDP
+#define    TCPIP_MAC_PKT_FLAG_LLDP          ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 2)    // LLDP packet data; set when the packet is LLDP
 
-#define    TCPIP_MAC_PKT_FLAG_ICMP_TYPE     (TCPIP_MAC_PKT_FLAG_USER << 3)  // ICMP packet type
-#define    TCPIP_MAC_PKT_FLAG_ICMPV4        (0)                             // ICMPv4 packet data; cleared when the packet is ICMPv4
-#define    TCPIP_MAC_PKT_FLAG_ICMPV6        (TCPIP_MAC_PKT_FLAG_USER << 3)  // ICMPv6 packet data; set when the packet is ICMPv6
+#define    TCPIP_MAC_PKT_FLAG_ICMP_TYPE     ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 3)    // ICMP packet type
+#define    TCPIP_MAC_PKT_FLAG_ICMPV4        (0U)                                        // ICMPv4 packet data; cleared when the packet is ICMPv4
+#define    TCPIP_MAC_PKT_FLAG_ICMPV6        ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 3)    // ICMPv6 packet data; set when the packet is ICMPv6
 
-#define    TCPIP_MAC_PKT_FLAG_NDP           (TCPIP_MAC_PKT_FLAG_USER << 4)  // NDP packet data; set when the packet is NDP
+#define    TCPIP_MAC_PKT_FLAG_NDP           ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 4)    // NDP packet data; set when the packet is NDP
 
-#define    TCPIP_MAC_PKT_FLAG_TRANSP_TYPE   (TCPIP_MAC_PKT_FLAG_USER << 5)  // UDP/TCP packet type
-#define    TCPIP_MAC_PKT_FLAG_UDP           (0)                             // UDP packet data; set when the packet is UDP
-#define    TCPIP_MAC_PKT_FLAG_TCP           (TCPIP_MAC_PKT_FLAG_USER << 5)  // TCP packet data; set when the packet is TCP
+#define    TCPIP_MAC_PKT_FLAG_TRANSP_TYPE   ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 5)    // UDP/TCP packet type
+#define    TCPIP_MAC_PKT_FLAG_UDP           (0U)                                        // UDP packet data; cleared when the packet is UDP
+#define    TCPIP_MAC_PKT_FLAG_TCP           ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 5)    // TCP packet data; set when the packet is TCP
 
-#define    TCPIP_MAC_PKT_FLAG_IGMP          (TCPIP_MAC_PKT_FLAG_USER << 6)  // IGMP packet
+#define    TCPIP_MAC_PKT_FLAG_IGMP          ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 6)    // IGMP packet
 
 
                                             // packet type extraction mask
 #define    TCPIP_MAC_PKT_FLAG_TYPE_MASK     (TCPIP_MAC_PKT_FLAG_ARP | TCPIP_MAC_PKT_FLAG_NET_TYPE | TCPIP_MAC_PKT_FLAG_LLDP | TCPIP_MAC_PKT_FLAG_ICMP_TYPE | TCPIP_MAC_PKT_FLAG_NDP | TCPIP_MAC_PKT_FLAG_TRANSP_TYPE)
 
-#define    TCPIP_MAC_PKT_FLAG_CONFIG        (TCPIP_MAC_PKT_FLAG_USER << 7)  // packet needs to be transmitted even when the stack
+#define    TCPIP_MAC_PKT_FLAG_CONFIG        ((uint32_t)TCPIP_MAC_PKT_FLAG_USER << 7)  // packet needs to be transmitted even when the stack
                                                                             // is not properly configured
                                                                             // probably a stack configuration packet
 
@@ -214,74 +214,23 @@ typedef struct
 // initialization API
 
 // sets the heap handle to be used for packet allocations
-bool            TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CONFIG* pNetConf, int nNets);
+bool            TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CONFIG* pNetConf, size_t nNets);
 
 void            TCPIP_PKT_Deinitialize(void);
 
 
-// packet allocation API
-
-
-// allocates a socket/transport IPv4/IPv6 packet
-// The MAC, IPv4/IPv6 and transport headers (tHdrLen != 0) are all located in the 1st segment
-// if payloadLen != 0 then the 1st segment will contain the/some payload too
-// if needed, extra segments could be eventually added to the packet
-// pktLen - size of the packet structure (at least TCPIP_MAC_PACKET will be allocated)
-// tHdrLen - optional transport header length to be part of the 1st data segment
-// payloadLen - optional transport payload to be part of the 1st data segment
-// flags     - packet + 1st segment flags
-TCPIP_MAC_PACKET*  TCPIP_PKT_SocketAlloc(uint16_t pktLen, uint16_t tHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags);
-
-
-// allocates a TCPIP_MAC_PACKET packet (TCPIP_MAC_ETHERNET_HEADER always added);
-// pktLen - the size of the packet (it will be 32 bits rounded up)
-// segLoadLen - the payload size for the segment associated to this packet; Payload is always cache line aligned
-//              if 0 no segment is created
-// flags are attached to the 1st segment too 
-TCPIP_MAC_PACKET* TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags);
-
-
-// forces freeing a previously allocated packet
-// note that neither the packet nor segments marked
-// with TCPIP_MAC_PKT_FLAG_STATIC are not freed
-// Also note that this function does not free explicitly the segment payload.
-// A payload that was created contiguously when the segment was created
-// will be automatically freed by this function.
-void            TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt);
-
+// packet helpers
+//
+// set the packet ack function
 static __inline__ void __attribute__((always_inline)) TCPIP_PKT_PacketAcknowledgeSet(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PACKET_ACK_FUNC ackFunc, const void* ackParam)
 {
     pPkt->ackFunc = ackFunc;
     pPkt->ackParam = ackParam;
 }
 
-// acknowledges a packet
-// clears the TCPIP_MAC_PKT_FLAG_QUEUED flag!
-// a packet should always have an acknowledgment function
-// packet's ackRes is updated only if the parameter ackRes != TCPIP_MAC_PKT_ACK_NONE.
-void            TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes);
-
-
-//  simple segment allocation/manipulation
-
-// allocates a segment with payload following immediately the segment header 
-// this segment can be added to a packet using TCPIP_PKT_SegmentAppend
-// loadLen specifies the segment allocated payload (could be 0)
-// The segment payload is always allocated to be cache line aligned.
-// The segment payload pointer will point TCPIP_MAC_MODULE_CTRL::gapDcptOffset bytes after this address 
-// 
-TCPIP_MAC_DATA_SEGMENT* TCPIP_PKT_SegmentAlloc(uint16_t loadLen, TCPIP_MAC_SEGMENT_FLAGS flags);
-
 // adds a segment to the tail of segments of a packet
 // segment should be fully constructed, with flags updated
 void            TCPIP_PKT_SegmentAppend(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_DATA_SEGMENT* pSeg);           
-
-// frees a created segment
-void            TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg);
-
-
-// packet helpers
-//
 
 // sets the proper source, destination and type for a packet
 // it also updated the packet length to include the MAC header size
@@ -324,20 +273,108 @@ int16_t    TCPIP_PKT_GapDcptOffset(void);
 uint16_t    TCPIP_PKT_GapDcptSize(void);
 
 
-// debugging, tracing, logging
-//
+#if !defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
+// allocation functions, no trace version
 
-// returns the number of entries in the trace
-int     TCPIP_PKT_TraceGetEntriesNo(TCPIP_PKT_TRACE_INFO* pTraceInfo);
+// proto
+// allocates a TCPIP_MAC_PACKET packet (TCPIP_MAC_ETHERNET_HEADER always added);
+// pktLen - the size of the packet (it will be 32 bits rounded up)
+// segLoadLen - the payload size for the segment associated to this packet; Payload is always cache line aligned
+//              if 0 no segment is created
+// flags are attached to the 1st segment too 
+TCPIP_MAC_PACKET*   F_TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags);
+
+// forces freeing a previously allocated packet
+// note that neither the packet nor segments marked
+// with TCPIP_MAC_PKT_FLAG_STATIC are not freed
+// Also note that this function does not free explicitly the segment payload.
+// A payload that was created contiguously when the segment was created
+// will be automatically freed by this function.
+void                F_TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt);
+
+// acknowledges a packet
+// clears the TCPIP_MAC_PKT_FLAG_QUEUED flag!
+// a packet should always have an acknowledgment function
+// packet's ackRes is updated only if the parameter ackRes != TCPIP_MAC_PKT_ACK_NONE.
+void                F_TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, int moduleId);
+
+// allocates a socket/transport IPv4/IPv6 packet
+// The MAC, IPv4/IPv6 and transport headers (tHdrLen != 0) are all located in the 1st segment
+// if payloadLen != 0 then the 1st segment will contain the/some payload too
+// if needed, extra segments could be eventually added to the packet
+// pktLen - size of the packet structure (at least TCPIP_MAC_PACKET will be allocated)
+// tHdrLen - optional transport header length to be part of the 1st data segment
+// payloadLen - optional transport payload to be part of the 1st data segment
+// flags     - packet + 1st segment flags
+TCPIP_MAC_PACKET*   F_TCPIP_PKT_SocketAlloc(uint16_t pktLen, uint16_t transpHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags);
+
+// allocates a segment with payload following immediately the segment header 
+// this segment can be added to a packet using TCPIP_PKT_SegmentAppend
+// loadLen specifies the segment allocated payload (could be 0)
+// The segment payload is always allocated to be cache line aligned.
+// The segment payload pointer will point TCPIP_MAC_MODULE_CTRL::gapDcptOffset bytes after this address 
+TCPIP_MAC_DATA_SEGMENT* F_TCPIP_PKT_SegmentAlloc(uint16_t loadLen, TCPIP_MAC_SEGMENT_FLAGS flags);
+
+// frees a created segment
+void                F_TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg);
+
+
+
+// macro calls
+
+#define TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags) F_TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags)
+#define TCPIP_PKT_PacketFree(pPkt) F_TCPIP_PKT_PacketFree(pPkt)
+#define TCPIP_PKT_PacketAcknowledge(pPkt, ackRes) F_TCPIP_PKT_PacketAcknowledge(pPkt, ackRes, (int)TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags) F_TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags)
+#define TCPIP_PKT_SegmentAlloc(loadLen, flags) F_TCPIP_PKT_SegmentAlloc(loadLen, flags)
+#define TCPIP_PKT_SegmentFree(pSeg) F_TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg)
+
+#define TCPIP_PKT_TraceGetEntriesNo(pTraceInfo)
 
 
 // populates a trace entry with data for a index
+#define TCPIP_PKT_TraceGetEntry(entryIx, tEntry) do{return false;}while(0)
+
+
+#else   // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
+// debug version (trace) of packet allocation functions
+
+// proto
+TCPIP_MAC_PACKET*   F_TCPIP_PKT_PacketAllocDebug(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, TCPIP_STACK_MODULE moduleId);
+void                F_TCPIP_PKT_PacketFreeDebug(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE moduleId);
+void                F_TCPIP_PKT_PacketAcknowledgeDebug(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId);
+
+TCPIP_MAC_PACKET*   F_TCPIP_PKT_SocketAllocDebug(uint16_t pktLen, uint16_t tHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags, TCPIP_STACK_MODULE moduleId);
+
+TCPIP_MAC_DATA_SEGMENT* F_TCPIP_PKT_SegmentAllocDebug(uint16_t loadLen, TCPIP_MAC_SEGMENT_FLAGS flags, TCPIP_STACK_MODULE moduleId);
+void                F_TCPIP_PKT_SegmentFreeDebug(TCPIP_MAC_DATA_SEGMENT* pSeg, TCPIP_STACK_MODULE moduleId);
+
+// macro calls
+#define TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags) F_TCPIP_PKT_PacketAllocDebug(pktLen, segLoadLen, flags, TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_PacketFree(pPkt) F_TCPIP_PKT_PacketFreeDebug(pPkt, TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_PacketAcknowledge(pPkt, ackRes) F_TCPIP_PKT_PacketAcknowledgeDebug(pPkt, ackRes, TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags) F_TCPIP_PKT_SocketAllocDebug(pktLen, tHdrLen, payloadLen, flags, TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_SegmentAlloc(loadLen, flags) F_TCPIP_PKT_SegmentAllocDebug(loadLen, flags, TCPIP_THIS_MODULE_ID)
+#define TCPIP_PKT_SegmentFree(pSeg) F_TCPIP_PKT_SegmentFreeDebug(TCPIP_MAC_DATA_SEGMENT* pSeg, TCPIP_THIS_MODULE_ID)
+
+typedef TCPIP_MAC_PACKET* (*TCPIP_PKT_ALLOC_FNC_DBG)(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, TCPIP_STACK_MODULE moduleId);
+typedef void (*TCPIP_PKT_FREE_FNC_DBG)(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE moduleId);
+typedef void (*TCPIP_PKT_ACK_FNC_DBG)(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId);
+
+// returns the number of entries in the trace
+size_t     TCPIP_PKT_TraceGetEntriesNo(TCPIP_PKT_TRACE_INFO* pTraceInfo);
+
+// populates a trace entry with data for a index
 // returns true if the entry is active - has valid data
-bool    TCPIP_PKT_TraceGetEntry(int entryIx, TCPIP_PKT_TRACE_ENTRY* tEntry);
+bool    TCPIP_PKT_TraceGetEntry(size_t entryIx, TCPIP_PKT_TRACE_ENTRY* tEntry);
 
 
+#endif  // !defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
+
+#if (TCPIP_PACKET_LOG_ENABLE != 0)
 // logs a TX packet info
 void    TCPIP_PKT_FlightLogTx(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE moduleId);
+
 // logs a RX packet info;
 void    TCPIP_PKT_FlightLogRx(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE moduleId);
 
@@ -359,7 +396,7 @@ bool     TCPIP_PKT_FlightLogGetInfo(TCPIP_PKT_LOG_INFO* pLogInfo);
 
 // populates a log entry with data for a index
 // returns true if the entry is active - has valid data
-bool    TCPIP_PKT_FlightLogGetEntry(int entryIx, TCPIP_PKT_LOG_ENTRY* pLEntry);
+bool    TCPIP_PKT_FlightLogGetEntry(size_t entryIx, TCPIP_PKT_LOG_ENTRY* pLEntry);
 
 // registers a log handler
 // there is only one handler in the system, no protection
@@ -469,93 +506,20 @@ void    TCPIP_PKT_FlightLogClear(bool clrPersist);
 // at the time the reset is called
 void    TCPIP_PKT_FlightLogReset(bool resetMasks);
 
-#if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-
-// proto
-// packet allocation
-TCPIP_MAC_PACKET*   _TCPIP_PKT_SocketAllocDebug(uint16_t pktLen, uint16_t tHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId);
-TCPIP_MAC_PACKET*   _TCPIP_PKT_PacketAllocDebug(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId);
-void                _TCPIP_PKT_PacketFreeDebug(TCPIP_MAC_PACKET* pPkt, int moduleId);
-TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAllocDebug(uint16_t loadLen, TCPIP_MAC_SEGMENT_FLAGS flags, int moduleId);
-void                _TCPIP_PKT_SegmentFreeDebug(TCPIP_MAC_DATA_SEGMENT* pSeg, int moduleId);
-
-// packet acknowledgement
-void                _TCPIP_PKT_PacketAcknowledgeDebug(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, int moduleId);
-
-// direct calls
-#define TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags)   _TCPIP_PKT_SocketAllocDebug(pktLen, tHdrLen, payloadLen, flags, TCPIP_THIS_MODULE_ID)
-#define TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags)            _TCPIP_PKT_PacketAllocDebug(pktLen, segLoadLen, flags, TCPIP_THIS_MODULE_ID)
-#define TCPIP_PKT_PacketFree(pPkt)                                  _TCPIP_PKT_PacketFreeDebug(pPkt, TCPIP_THIS_MODULE_ID)
-#define TCPIP_PKT_SegmentAlloc(loadLen, flags)                      _TCPIP_PKT_SegmentAllocDebug(loadLen, flags, TCPIP_THIS_MODULE_ID)
-#define TCPIP_PKT_SegmentFree(pSeg)                                 _TCPIP_PKT_SegmentFreeDebug(TCPIP_MAC_DATA_SEGMENT* pSeg, int moduleId);
-
-
-#define TCPIP_PKT_PacketAcknowledge(pPkt, ackRes)                   _TCPIP_PKT_PacketAcknowledgeDebug(pPkt, ackRes, TCPIP_THIS_MODULE_ID)
-
-#define     _TCPIP_PKT_ALLOC_FNC        _TCPIP_PKT_PacketAllocDebug
-#define     _TCPIP_PKT_FREE_FNC         _TCPIP_PKT_PacketFreeDebug
-#define     _TCPIP_PKT_ACK_FNC          _TCPIP_PKT_PacketAcknowledgeDebug
-
-#else
-
-// proto
-TCPIP_MAC_PACKET*   _TCPIP_PKT_SocketAlloc(uint16_t pktLen, uint16_t tHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags);
-TCPIP_MAC_PACKET*   _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags);
-void                _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt);
-TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAlloc(uint16_t loadLen, TCPIP_MAC_SEGMENT_FLAGS flags);
-void                _TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg);
-
-void                _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId);
-
-
-// direct calls
-#define TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags)   _TCPIP_PKT_SocketAlloc(pktLen, tHdrLen, payloadLen, flags)
-#define TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags)            _TCPIP_PKT_PacketAlloc(pktLen, segLoadLen, flags)
-#define TCPIP_PKT_PacketFree(pPkt)                                  _TCPIP_PKT_PacketFree(pPkt)
-#define TCPIP_PKT_SegmentAlloc(loadLen, flags)                      _TCPIP_PKT_SegmentAlloc(loadLen, flags)
-#define TCPIP_PKT_SegmentFree(pSeg)                                 _TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg);
-
-
-#define TCPIP_PKT_PacketAcknowledge(pPkt, ackRes)                   _TCPIP_PKT_PacketAcknowledge(pPkt, ackRes, TCPIP_THIS_MODULE_ID)
-
-
-#define     _TCPIP_PKT_ALLOC_FNC        _TCPIP_PKT_PacketAlloc
-#define     _TCPIP_PKT_FREE_FNC         _TCPIP_PKT_PacketFree
-#define     _TCPIP_PKT_ACK_FNC          _TCPIP_PKT_PacketAcknowledge
-
-
-
-static __inline__ int __attribute__((always_inline)) TCPIP_PKT_TraceGetEntriesNoStatic(TCPIP_PKT_TRACE_INFO* pTraceInfo)
-{
-    return 0;
-}
-#define TCPIP_PKT_TraceGetEntriesNo(pTraceInfo) TCPIP_PKT_TraceGetEntriesNoStatic(pTraceInfo)
-
-
-// populates a trace entry with data for a index
-static __inline__ bool __attribute__((always_inline)) TCPIP_PKT_TraceGetEntryStatic(int entryIx, TCPIP_PKT_TRACE_ENTRY* tEntry)
-{
-    return false;
-}
-#define TCPIP_PKT_TraceGetEntry(entryIx, tEntry) TCPIP_PKT_TraceGetEntryStatic(entryIx, tEntry)
-
-#endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-
-#if !(TCPIP_PACKET_LOG_ENABLE)
+#else   // !(TCPIP_PACKET_LOG_ENABLE)
 
 #define TCPIP_PKT_FlightLogTx(pPkt, moduleId)
 
 #define TCPIP_PKT_FlightLogRx(pPkt, moduleId)
 
 #define TCPIP_PKT_FlightLogTxSkt(pPkt, moduleId, lclRemPort, sktNo )
-
 #define TCPIP_PKT_FlightLogRxSkt(pPkt, moduleId, lclRemPort, sktNo )
 
 #define TCPIP_PKT_FlightLogAcknowledge(pPkt, moduleId, ackRes)
 
-#endif
+#endif  // (TCPIP_PACKET_LOG_ENABLE != 0)
 
 
-#endif // __TCPIP_PACKET_H_
+#endif // H_TCPIP_PACKET_H_
 
 

@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -55,21 +55,21 @@ Microchip or any third party.
 typedef struct __attribute__((aligned(CACHE_LINE_SIZE)))
 {
     uint64_t     pad[CACHE_LINE_SIZE / 8];
-}_heap_Align;
+}S_eHeap_Align;
 #elif (CACHE_LINE_SIZE >= 4u)
-typedef uint32_t _heap_Align;
+typedef uint32_t S_eHeap_Align;
 #else
 #error "TCP/IP Heap: incorrect CACHE_LINE_SIZE!"
 #endif // (CACHE_LINE_SIZE >= 8u) 
 
-typedef union __attribute__((aligned(CACHE_LINE_SIZE))) _tag_headNode
+typedef union __attribute__((aligned(CACHE_LINE_SIZE))) U_tag_eHeadNode
 {
-    _heap_Align x;
+    S_eHeap_Align x;
     struct
     {
-        union _tag_headNode*    allocPtr;   // pointer as returned by the external allocation function
+        union U_tag_eHeadNode*    allocPtr;   // pointer as returned by the external allocation function
     };
-}_headNode;
+}u_eHeadNode;
 
 
 
@@ -78,8 +78,8 @@ typedef struct
     TCPIP_STACK_HEAP_EXTERNAL_CONFIG    heapConfig;         // configuration data save
     size_t                              allocatedBytes;     // how many bytes allocated out there
 
-    OSAL_SEM_HANDLE_TYPE                _heapSemaphore;     // protection semaphore
-    TCPIP_STACK_HEAP_RES                _lastHeapErr;       // last error encountered
+    OSAL_SEM_HANDLE_TYPE                heapSemaphore;     // protection semaphore
+    TCPIP_STACK_HEAP_RES                lastHeapErr;       // last error encountered
 
     // run time flags - faster access
     uint8_t                             heapDoProtect;      // protect external memory access
@@ -92,39 +92,32 @@ typedef struct
 // local data
 //
 
-static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH);
-static void*            _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
-static void*            _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize);
-static size_t           _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* pBuff);
+static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH);
+static void*            FS_TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes);
+static void*            FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize);
+static size_t           FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* cptr);
 
-static size_t           _TCPIP_HEAP_Unavailable(TCPIP_STACK_HEAP_HANDLE heapH);
-static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           FS_TCPIP_HEAP_Unavailable(TCPIP_STACK_HEAP_HANDLE heapH);
+static TCPIP_STACK_HEAP_RES   FS_TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH);
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-static size_t           _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr);
+static size_t           FS_TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-
-// maps a buffer to non cached memory
-const void*   _TCPIP_HEAP_BufferMapNonCached(const void* buffer, size_t buffSize);
-
-// maps a pointer back to cached memory
-const void*   _TCPIP_HEAP_PointerMapCached(const void* ptr);
-
 
 
 // the heap object
-static const TCPIP_HEAP_OBJECT      _tcpip_heap_object = 
+static const TCPIP_HEAP_OBJECT      tcpip_heap_object = 
 {
-    .TCPIP_HEAP_Delete = _TCPIP_HEAP_Delete,
-    .TCPIP_HEAP_Malloc = _TCPIP_HEAP_Malloc,
-    .TCPIP_HEAP_Calloc = _TCPIP_HEAP_Calloc,
-    .TCPIP_HEAP_Free = _TCPIP_HEAP_Free,
-    .TCPIP_HEAP_Size = _TCPIP_HEAP_Unavailable,
-    .TCPIP_HEAP_MaxSize = _TCPIP_HEAP_Unavailable,
-    .TCPIP_HEAP_FreeSize = _TCPIP_HEAP_Unavailable,
-    .TCPIP_HEAP_HighWatermark = _TCPIP_HEAP_Unavailable,
-    .TCPIP_HEAP_LastError = _TCPIP_HEAP_LastError,
+    .F_TCPIP_HEAP_Delete = &FS_TCPIP_HEAP_Delete,
+    .F_TCPIP_HEAP_Malloc = &FS_TCPIP_HEAP_Malloc,
+    .F_TCPIP_HEAP_Calloc = &FS_TCPIP_HEAP_Calloc,
+    .F_TCPIP_HEAP_Free = &FS_TCPIP_HEAP_Free,
+    .F_TCPIP_HEAP_Size = &FS_TCPIP_HEAP_Unavailable,
+    .F_TCPIP_HEAP_MaxSize = &FS_TCPIP_HEAP_Unavailable,
+    .F_TCPIP_HEAP_FreeSize = &FS_TCPIP_HEAP_Unavailable,
+    .F_TCPIP_HEAP_HighWatermark = &FS_TCPIP_HEAP_Unavailable,
+    .F_TCPIP_HEAP_LastError = &FS_TCPIP_HEAP_LastError,
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    .TCPIP_HEAP_AllocSize = _TCPIP_HEAP_AllocSize,
+    .F_TCPIP_HEAP_AllocSize = &FS_TCPIP_HEAP_AllocSize,
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 };
 
@@ -138,40 +131,82 @@ typedef struct
 
 // local prototypes
 //
-static __inline__ bool __attribute__((always_inline)) _TCPIP_HEAP_IsPtrAligned(const void* ptr)
+static __inline__ bool __attribute__((always_inline)) FS_TCPIP_HEAP_IsPtrAligned(const void* ptr)
 {
-    return (uintptr_t)(ptr) == ((uintptr_t)(ptr) & (~(sizeof(_headNode) - 1)));
+    union
+    {
+        const void* ptr;
+        uintptr_t   uptr;
+    }U_UINT_PTR;
+
+    U_UINT_PTR.ptr = ptr;
+    return U_UINT_PTR.uptr == (U_UINT_PTR.uptr & (~(sizeof(u_eHeadNode) - 1U)));
 }
 
 // returns the TCPIP_HEAP_EXT_OBJ_INSTANCE associated with a heap handle
 // null if invalid
-static __inline__ TCPIP_HEAP_EXT_OBJ_INSTANCE* __attribute__((always_inline)) _TCPIP_HEAP_ObjInstance(TCPIP_STACK_HEAP_HANDLE heapH)
+static __inline__ TCPIP_HEAP_EXT_OBJ_INSTANCE* __attribute__((always_inline)) FS_TCPIP_HEAP_ObjInstance(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    if(heapH)
+    union
     {
-        TCPIP_HEAP_EXT_OBJ_INSTANCE* pInst = (TCPIP_HEAP_EXT_OBJ_INSTANCE*)heapH;
-        if(pInst->heapObj.TCPIP_HEAP_Delete == _TCPIP_HEAP_Delete)
+        TCPIP_STACK_HEAP_HANDLE heapH;
+        TCPIP_HEAP_EXT_OBJ_INSTANCE* hInst;
+    }U_HANDLE_INST;
+
+    U_HANDLE_INST.heapH = heapH;
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+    if(heapH != NULL)
+    {
+        if(U_HANDLE_INST.hInst->heapObj.F_TCPIP_HEAP_Delete == &FS_TCPIP_HEAP_Delete)
         {
-            return pInst;
+            return U_HANDLE_INST.hInst;
         }
     }
-    return 0;
+    return NULL;
 #else
-    return (heapH == 0) ? 0 : (TCPIP_HEAP_EXT_OBJ_INSTANCE*)heapH;
+    return U_HANDLE_INST.hInst;
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 
 }
 
 // returns the TCPIP_HEAP_EXT_DCPT associated with a heap handle
 // null if invalid
-static __inline__ TCPIP_HEAP_EXT_DCPT* __attribute__((always_inline)) _TCPIP_HEAP_ObjDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
+static __inline__ TCPIP_HEAP_EXT_DCPT* __attribute__((always_inline)) FS_TCPIP_HEAP_ObjDcpt(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_HEAP_EXT_OBJ_INSTANCE* hInst = _TCPIP_HEAP_ObjInstance(heapH);
+    TCPIP_HEAP_EXT_OBJ_INSTANCE* hInst = FS_TCPIP_HEAP_ObjInstance(heapH);
 
-    return (hInst == 0) ? 0 : &hInst->heapDcpt;
+    return (hInst == NULL) ? NULL : &hInst->heapDcpt;
 }
 
+// conversion functions/helpers
+//
+
+static __inline__ void* __attribute__((always_inline)) FC_Cvptr2Vptr(const void* cvptr)
+{
+    union
+    {
+        const void* cvptr;
+        void* vptr;
+    }U_CVPTR_VPTR;
+
+    U_CVPTR_VPTR.cvptr = cvptr;
+    return U_CVPTR_VPTR.vptr;
+}
+
+static __inline__ void* __attribute__((always_inline)) FC_HeadNode2AlgnVptr(u_eHeadNode* node)
+{
+    union
+    {
+        u_eHeadNode* node;
+        uintptr_t   uptr;
+        void*       vptr;
+    }U_HEAD_NODE_ALGN_VPTR;
+
+    U_HEAD_NODE_ALGN_VPTR.node = node;
+    // align
+    U_HEAD_NODE_ALGN_VPTR.uptr = ((U_HEAD_NODE_ALGN_VPTR.uptr + sizeof(u_eHeadNode) - 1U) & ~(sizeof(u_eHeadNode) - 1U));
+    return U_HEAD_NODE_ALGN_VPTR.vptr;
+}
 
 // API
 
@@ -184,10 +219,10 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
 
     while(true)
     {
-        hDcpt =0;
-        hInst = 0;
+        hDcpt = NULL;
+        hInst = NULL;
 
-        if( pHeapConfig == 0 || pHeapConfig->malloc_fnc == 0 || pHeapConfig->free_fnc == 0 || pHeapConfig->calloc_fnc == 0)
+        if( pHeapConfig == NULL || pHeapConfig->malloc_fnc == NULL || pHeapConfig->free_fnc == NULL || pHeapConfig->calloc_fnc == NULL)
         {
             res = TCPIP_STACK_HEAP_RES_INIT_ERR;
             break;
@@ -195,51 +230,51 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
 
         hInst = (TCPIP_HEAP_EXT_OBJ_INSTANCE*)(*pHeapConfig->calloc_fnc)(1, sizeof(*hInst));
 
-        if(hInst == 0)
+        if(hInst == NULL)
         {
             res = TCPIP_STACK_HEAP_RES_CREATE_ERR;
             break;
         }
 
         hDcpt = &hInst->heapDcpt;
-        if((pHeapConfig->heapFlags & TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC) == 0)
+        if(((uint32_t)pHeapConfig->heapFlags & (uint32_t)TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC) == 0U)
         {
-            if(OSAL_SEM_Create(&hDcpt->_heapSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
+            if(OSAL_SEM_Create(&hDcpt->heapSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_SUCCESS)
             {
                 (*pHeapConfig->free_fnc)(hInst);
-                hInst = 0;
+                hInst = NULL;
                 res = TCPIP_STACK_HEAP_RES_SYNCH_ERR;
                 break;
             }
 
-            hDcpt->heapDoProtect = true;
+            hDcpt->heapDoProtect = 1;
         }
 
         // save the configuration parameters
         hDcpt->heapConfig = *pHeapConfig;
         // create the object
-        hInst->heapObj = _tcpip_heap_object;
+        hInst->heapObj = tcpip_heap_object;
 
         // check if mapping needed; always alloc uncached!
-        // if((hDcpt->heapConfig.heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0)
+        // if(((uint32_t)hDcpt->heapConfig.heapFlags & (uint32_t)TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0)
         {
-            const void* testPtr = _TCPIP_HEAP_BufferMapNonCached(hInst, sizeof(*hInst));
+            const void* testPtr = F_TCPIP_HEAP_BufferMapNonCached(hInst, sizeof(*hInst));
             if(hInst != testPtr)
             {
-                hDcpt->heapDoMap = true;
+                hDcpt->heapDoMap = 1;
             }
         }
         // check if alignment needed
-        if((hDcpt->heapConfig.heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN) == 0)
+        if(((uint32_t)hDcpt->heapConfig.heapFlags & (uint32_t)TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN) == 0U)
         {
-            hDcpt->heapDoAlign = true;
+            hDcpt->heapDoAlign = 1;
         }
 
         res = TCPIP_STACK_HEAP_RES_OK;
         break;
     }
 
-    if(pRes)
+    if(pRes != NULL)
     {
         *pRes = res;
     }
@@ -252,19 +287,19 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
 //
 // deallocates the heap
 // NOTE: no check is done if some blocks are still in use!
-static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
+static TCPIP_STACK_HEAP_RES FS_TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_HEAP_EXT_OBJ_INSTANCE*   hInst = _TCPIP_HEAP_ObjInstance(heapH);
-    TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
+    TCPIP_HEAP_EXT_OBJ_INSTANCE*   hInst = FS_TCPIP_HEAP_ObjInstance(heapH);
+    TCPIP_HEAP_EXT_DCPT*   hDcpt = FS_TCPIP_HEAP_ObjDcpt(heapH);
 
-    if(hDcpt)
+    if(hDcpt != NULL)
     {
-        if (hDcpt->heapDoProtect)
+        if (hDcpt->heapDoProtect != 0U)
         {
-            OSAL_SEM_Delete(&hDcpt->_heapSemaphore);
+            (void)OSAL_SEM_Delete(&hDcpt->heapSemaphore);
         }
         // invalidate it
-        memset(&hInst->heapObj, 0, sizeof(hInst->heapObj));
+        (void)memset(&hInst->heapObj, 0, sizeof(hInst->heapObj));
         (*hInst->heapDcpt.heapConfig.free_fnc)(hInst);
         return TCPIP_STACK_HEAP_RES_OK;
     }
@@ -273,68 +308,68 @@ static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 }
 
 
-static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
+static void* FS_TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
     size_t      mapBytes;
-    _headNode*  ptr;
-    TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
-    void* alignPtr = 0;
-
+    u_eHeadNode*  ptr;
+    TCPIP_HEAP_EXT_DCPT*   hDcpt = FS_TCPIP_HEAP_ObjDcpt(heapH);
+    void* alignPtr = NULL;
     
-    if(hDcpt == 0 || nBytes == 0)
+    if(hDcpt == NULL || nBytes == 0U)
     {
-        return 0;
+        return NULL;
     }
 
-    if(hDcpt->heapDoAlign)
+    if(hDcpt->heapDoAlign != 0U)
     {
-        nBytes = ((nBytes + sizeof(_headNode) - 1) / sizeof(_headNode) + 1) * sizeof(_headNode);    // allocate multiple of units + 1 entry to store the pointer  
+        nBytes = ((nBytes + sizeof(u_eHeadNode) - 1U) / sizeof(u_eHeadNode) + 1U) * sizeof(u_eHeadNode);    // allocate multiple of units + 1 entry to store the pointer  
     }
 
-    if (hDcpt->heapDoProtect)
+    if (hDcpt->heapDoProtect != 0U)
     {
-        (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
+        (void)OSAL_SEM_Pend(&hDcpt->heapSemaphore, OSAL_WAIT_FOREVER);
     }
 
     while(true)
     {
-        ptr = (_headNode*)(*hDcpt->heapConfig.malloc_fnc)(nBytes);
+        ptr = (u_eHeadNode*)(*hDcpt->heapConfig.malloc_fnc)(nBytes);
 
-        if(ptr == 0)
+        if(ptr == NULL)
         {   // failed
-            hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_NO_MEM;
+            hDcpt->lastHeapErr = TCPIP_STACK_HEAP_RES_NO_MEM;
             break;
         }
 
-        if(hDcpt->heapDoAlign)
+        if(hDcpt->heapDoAlign != 0U)
         {   
-            if(_TCPIP_HEAP_IsPtrAligned(ptr))
+            if(FS_TCPIP_HEAP_IsPtrAligned(ptr))
             {   // 1st unit is for storing the allocated pointer
                 alignPtr = ptr + 1;
             }
             else
             {   // always returned an aligned pointer; advance to next aligned address 
-                alignPtr = (void*)(((uintptr_t)ptr + sizeof(_headNode) - 1) & ~(sizeof(_headNode) - 1));
+                alignPtr = FC_HeadNode2AlgnVptr(ptr);
             }
 
            // store the modified pointer
             *((uintptr_t*)alignPtr - 1) = (uintptr_t)ptr;
-            mapBytes = nBytes - sizeof(_headNode);
+            mapBytes = nBytes - sizeof(u_eHeadNode);
         }
         else
         {
-            if(!_TCPIP_HEAP_IsPtrAligned(ptr))
+            if(!FS_TCPIP_HEAP_IsPtrAligned(ptr))
             {
-                hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_BUFF_ALIGN_ERR;
+                hDcpt->lastHeapErr = TCPIP_STACK_HEAP_RES_BUFF_ALIGN_ERR;
                 break;
             }
             alignPtr = ptr;
             mapBytes = nBytes;
         }
 
-        if(hDcpt->heapDoMap)
+        if(hDcpt->heapDoMap != 0U)
         {   // map to non-cached
-            alignPtr = (void*)_TCPIP_HEAP_BufferMapNonCached(alignPtr, mapBytes);
+            const void* cvptr = F_TCPIP_HEAP_BufferMapNonCached(alignPtr, mapBytes);
+            alignPtr = FC_Cvptr2Vptr(cvptr);
         }
 
         // update stats
@@ -343,58 +378,68 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
         break;
     }
 
-    if (hDcpt->heapDoProtect)
+    if (hDcpt->heapDoProtect != 0U)
     {
-        (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+        (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
     }
 
     return alignPtr;
 }
 
-static void* _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize)
+static void* FS_TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize)
 {
     size_t nBytes = nElems * elemSize;
 
     // redirect to malloc
 
-    void* ptr = _TCPIP_HEAP_Malloc(heapH, nBytes);
-    if(ptr)
+    void* ptr = FS_TCPIP_HEAP_Malloc(heapH, nBytes);
+    if(ptr != NULL)
     {
-        memset(ptr, 0, nBytes);
+        (void)memset(ptr, 0, nBytes);
     }
 
     return ptr;
 }
 
-static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr)
+static size_t FS_TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* cptr)
 {
-    TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
+    TCPIP_HEAP_EXT_DCPT*   hDcpt = FS_TCPIP_HEAP_ObjDcpt(heapH);
   
-    if(hDcpt != 0 && ptr != 0)
+    if(hDcpt != NULL && cptr != NULL)
     {
-        if (hDcpt->heapDoProtect)
+        union
         {
-            (void)OSAL_SEM_Pend(&hDcpt->_heapSemaphore, OSAL_WAIT_FOREVER);
+            const void* cptr;
+            void*       vptr;
+            uintptr_t*  uptr;
+            uintptr_t   uval;
+        }U_UINT_PTR;
+
+        U_UINT_PTR.cptr = cptr;
+
+        if (hDcpt->heapDoProtect != 0U)
+        {
+            (void)OSAL_SEM_Pend(&hDcpt->heapSemaphore, OSAL_WAIT_FOREVER);
         }
 
-        if(hDcpt->heapDoMap)
+        if(hDcpt->heapDoMap != 0U)
         {   // map back to cached
-            ptr = _TCPIP_HEAP_PointerMapCached(ptr);
+            U_UINT_PTR.cptr = F_TCPIP_HEAP_PointerMapCached(U_UINT_PTR.cptr);
         }
 
-        if(hDcpt->heapDoAlign)
+        if(hDcpt->heapDoAlign != 0U)
         {   // restore the allocated pointer
-            ptr = (void*)*((uintptr_t*)ptr - 1);
+            U_UINT_PTR.uval = *(U_UINT_PTR.uptr - 1);
         }
 
-        (*hDcpt->heapConfig.free_fnc)((void*)ptr);
+        (*hDcpt->heapConfig.free_fnc)(U_UINT_PTR.vptr);
 
         // update stats
         // no info on how many de-allocated bytes here!
 
-        if (hDcpt->heapDoProtect)
+        if (hDcpt->heapDoProtect != 0U)
         {
-            (void)OSAL_SEM_Post(&hDcpt->_heapSemaphore);
+            (void)OSAL_SEM_Post(&hDcpt->heapSemaphore);
         }
     }
 
@@ -402,31 +447,22 @@ static size_t _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr)
 }
 
 
-static size_t _TCPIP_HEAP_Unavailable(TCPIP_STACK_HEAP_HANDLE heapH)
+static size_t FS_TCPIP_HEAP_Unavailable(TCPIP_STACK_HEAP_HANDLE heapH)
 {
-    TCPIP_HEAP_EXT_DCPT*      hDcpt;
-
-    hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
-
-    if(hDcpt)
-    {
-        return 0;   
-    }
-
-    return -1;
+    return 0;   
 }
 
-static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
+static TCPIP_STACK_HEAP_RES FS_TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_HEAP_EXT_DCPT*      hDcpt;
     TCPIP_STACK_HEAP_RES  res;
 
-    hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
+    hDcpt = FS_TCPIP_HEAP_ObjDcpt(heapH);
 
-    if(hDcpt)
+    if(hDcpt != NULL)
     {
-        res = hDcpt->_lastHeapErr;
-        hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_OK;
+        res = hDcpt->lastHeapErr;
+        hDcpt->lastHeapErr = TCPIP_STACK_HEAP_RES_OK;
     }
     else
     {
@@ -437,16 +473,9 @@ static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
 }
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-static size_t _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr)
+static size_t FS_TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr)
 {
-    TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
-
-    if(hDcpt)
-    {
-        return 0;
-    }
-
-    return -1;
+    return 0;
 }
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 

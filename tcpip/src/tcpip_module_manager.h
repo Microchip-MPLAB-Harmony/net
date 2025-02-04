@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_MODULE_MANAGER_H_
-#define __TCPIP_MODULE_MANAGER_H_
+#ifndef H_TCPIP_MODULE_MANAGER_H_
+#define H_TCPIP_MODULE_MANAGER_H_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -71,20 +71,20 @@ Microchip or any third party.
 // will be called. It should return a result to indicate
 // if the initialization was successful. If not, the
 // interface will not be completed.
-typedef bool    (*tcpipModuleInitFunc)(const TCPIP_STACK_MODULE_CTRL* const, const void* );
+typedef bool    (*tcpipModuleInitFunc)(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* modData);
 
 // de-initialization function
 // if the module needs to clean up when the module is
 // brought down, this function will be called. It should
 // return a result to indicate that everything has been
 // cleaned up.
-typedef void    (*tcpipModuleDeInitFunc)(const TCPIP_STACK_MODULE_CTRL * const);
+typedef void    (*tcpipModuleDeInitFunc)(const TCPIP_STACK_MODULE_CTRL * const stackData);
 
 // perform module initialization at run time based on the initialization data
 #if defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
-#define _TCPIP_STACK_RUN_TIME_INIT       1
+#define M_TCPIP_STACK_RUN_TIME_INIT       1
 #else
-#define _TCPIP_STACK_RUN_TIME_INIT       0
+#define M_TCPIP_STACK_RUN_TIME_INIT       0
 #endif  // defined(TCPIP_STACK_RUN_TIME_INIT) && (TCPIP_STACK_RUN_TIME_INIT != 0)
 
 // module run time flags
@@ -92,10 +92,10 @@ typedef void    (*tcpipModuleDeInitFunc)(const TCPIP_STACK_MODULE_CTRL * const);
 typedef union
 {
     uint8_t    val;
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t isRunning:  1;  // module is part of this run
-        uint8_t reserved:   7;  // not used       
+        unsigned isRunning:  1;  // module is part of this run
+        unsigned reserved:   7;  // not used       
     };
 }TCPIP_MODULE_RUN_DCPT;
 
@@ -138,7 +138,7 @@ typedef struct
                                                     // the stack manager checks that the module reached its timeout
     int16_t                     currTmo;            // current module timeout, msec; maintained by the stack manager
     uint16_t                    signalParam;        // some signals have parameters
-                                                    // for TCPIP_MODULE_SIGNAL_INTERFACE_CHANGE
+                                                    // for TCPIP_MODULE_SIGNAL_IF_CHANGE
                                                     // this is the interface mask: 1 << ifx 
 
 }TCPIP_MODULE_SIGNAL_ENTRY;
@@ -151,24 +151,30 @@ typedef void    (*tcpipModuleConnHandler)(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT 
 
 
 // function for getting the MAC module of an interface
-static __inline__ const TCPIP_MAC_OBJECT* __attribute__((always_inline))  _TCPIP_STACK_GetMacObject(TCPIP_NET_IF* pNetIf)
+static __inline__ const TCPIP_MAC_OBJECT* __attribute__((always_inline))  TCPIP_STACK_GetMacObject(TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? pNetIf->pMacObj : 0;
+    return (pNetIf != NULL) ? pNetIf->pMacObj : NULL;
 }
 
 // function for getting the MAC handle of an interface
-static __inline__ SYS_MODULE_OBJ __attribute__((always_inline))  _TCPIP_STACK_GetMacObjectHandle(TCPIP_NET_IF* pNetIf)
+static __inline__ SYS_MODULE_OBJ __attribute__((always_inline))  TCPIP_STACK_GetMacObjectHandle(TCPIP_NET_IF* pNetIf)
 {
-    return (pNetIf && pNetIf->pMacObj) ? pNetIf->macObjHandle : 0;
+    return ((pNetIf != NULL) && (pNetIf->pMacObj != NULL)) ? pNetIf->macObjHandle : 0U;
 }
 
 // function for getting the MAC client handle of an interface
-static __inline__ TCPIP_MAC_HANDLE __attribute__((always_inline))  _TCPIP_STACK_GetMacClientHandle(TCPIP_NET_IF* pNetIf)
+static __inline__ TCPIP_MAC_HANDLE __attribute__((always_inline))  TCPIP_STACK_GetMacClientHandle(TCPIP_NET_IF* pNetIf)
 {
-    return pNetIf ? pNetIf->hIfMac : 0;
+    return (pNetIf != NULL) ? pNetIf->hIfMac : 0U;
 }
 
-#endif //  __TCPIP_MODULE_MANAGER_H_
+// run time module initialization
+// Note: function exists only if (M_TCPIP_STACK_RUN_TIME_INIT != 0)!
+#if (M_TCPIP_STACK_RUN_TIME_INIT != 0)
+bool TCPIPStack_ModuleIsRunning(TCPIP_STACK_MODULE moduleId);
+#endif
+
+#endif //  H_TCPIP_MODULE_MANAGER_H_
 
 
 
