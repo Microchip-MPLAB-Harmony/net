@@ -19,7 +19,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -50,8 +50,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DYN_DNSCLIENT_H_
-#define __DYN_DNSCLIENT_H_
+#ifndef H_DYN_DNSCLIENT_H_
+#define H_DYN_DNSCLIENT_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -68,8 +68,8 @@ Microchip or any third party.
 //****************************************************************************
 
 // Dynamic DNS Services.
-// Must support the DynDNS API (Auxlang) and correspond
-// to ddnsServiceHosts and ddnsServicePorts in DynDNS.c.
+// These are the supported services
+// Correspond to ddnsServiceHosts in DynDNS.c.
 typedef enum
 {
     DYNDNS_ORG = 0u,      // www.dyndns.org
@@ -77,9 +77,12 @@ typedef enum
     DNSOMATIC_COM         // www.dnsomatic.com
 } DDNS_SERVICES;
 
+extern const char * const ddnsServiceHosts[];
+
 // Status message for DynDNS client.  GOOD and NOCHG are okay, but
 // ABUSE through 911 are fatal.  UNCHANGED through INVALID are locally
 // defined.
+// 8 bit values only!
 typedef enum
 {
     DDNS_STATUS_GOOD = 0u,        // Update successful, hostname is now updated
@@ -143,6 +146,8 @@ typedef struct
     {
         uint8_t *szRAM;
         const uint8_t *szROM;
+        char *czRAM;
+        const char *czROM;
     } CheckIPServer;
 
     uint16_t CheckIPPort;
@@ -151,6 +156,8 @@ typedef struct
     {
         uint8_t *szRAM;
         const uint8_t *szROM;
+        char *czRAM;
+        const char *czROM;
     } UpdateServer;
 
     uint16_t UpdatePort;
@@ -159,27 +166,33 @@ typedef struct
     {
         uint8_t *szRAM;
         const uint8_t *szROM;
+        char *czRAM;
+        const char *czROM;
     } Username;
 
     union
     {
         uint8_t *szRAM;
         const uint8_t *szROM;
+        char *czRAM;
+        const char *czROM;
     } Password;
 
     union
     {
         uint8_t *szRAM;
         const uint8_t *szROM;
+        char *czRAM;
+        const char *czROM;
     } Host;
 
     struct
     {
-        unsigned char CheckIPServer:1;
-        unsigned char UpdateServer:1;
-        unsigned char Username:1;
-        unsigned char Password:1;
-        unsigned char Host:1;
+        unsigned int CheckIPServer:1;
+        unsigned int UpdateServer:1;
+        unsigned int Username:1;
+        unsigned int Password:1;
+        unsigned int Host:1;
 
     } ROMPointers;
 
@@ -233,9 +246,7 @@ void         TCPIP_DDNS_UpdateForce(void);
     Selects a preconfigured Dynamic DNS service.
 
   Description:
-    This function selects a Dynamic DNS service based on parameters
-    configured in ddnsServiceHosts and ddnsServicePorts.  These arrays
-    must match the DDNS_SERVICES enumeration.
+    This function selects a Dynamic DNS service.
 
   Precondition:
     None.
@@ -327,4 +338,4 @@ void  TCPIP_DDNS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __DYN_DNSCLIENT_H_
+#endif  // H_DYN_DNSCLIENT_H_
