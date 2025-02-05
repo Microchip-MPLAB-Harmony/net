@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _ARP_MANAGER_H_
-#define _ARP_MANAGER_H_
+#ifndef H_ARP_MANAGER_H_
+#define H_ARP_MANAGER_H_
 
 
 // stack private API functions
@@ -85,12 +85,13 @@ Microchip or any third party.
     The selection cannot be changed by ifup since this operation does not
     carry ARP configuration parameters (arpDate == 0).
  */
-bool  TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData ,const TCPIP_ARP_MODULE_CONFIG* arpData);
+// bool  TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_ARP_MODULE_CONFIG* arpData);
+bool  TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 
 /*****************************************************************************
   Function:
-    void  TCPIP_ARP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
+    void  TCPIP_ARP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
     Deinitializes the ARP module.
@@ -111,13 +112,13 @@ bool  TCPIP_ARP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData ,const
   Remarks:
     None.
  */
-void  TCPIP_ARP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
+void  TCPIP_ARP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 // TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL API specific Definitions
 struct arp_app_callbacks {
     bool used;
-    void (*TCPIP_ARP_PacketNotify)( TCPIP_NET_IF*  pNetIf
+    void (*TCPIP_ARP_PacketNotify)( const TCPIP_NET_IF*  pNetIf
                            ,uint32_t SenderIPAddr
                            ,uint32_t TargetIPAddr
                            ,TCPIP_MAC_ADDR* SenderMACAddr
@@ -127,7 +128,7 @@ struct arp_app_callbacks {
 
 /*****************************************************************************
   Function:
-    int8_t TCPIP_ARP_CallbacksRegister(struct arp_app_callbacks *app)
+    ssize_t TCPIP_ARP_CallbacksRegister(struct arp_app_callbacks *app)
 
   Summary:
     Registering callback with ARP module to get notified about certain events.
@@ -152,12 +153,12 @@ struct arp_app_callbacks {
              free slot for registration
 
  */
-int8_t TCPIP_ARP_CallbacksRegister(struct arp_app_callbacks *app);
+ssize_t TCPIP_ARP_CallbacksRegister(struct arp_app_callbacks *app);
 
 
 /*****************************************************************************
   Function:
-    bool TCPIP_ARP_CallbacksDeregister(int8_t reg_id)
+    bool TCPIP_ARP_CallbacksDeregister(size_t regId)
 
   Summary:
     De-Registering callbacks with ARP module that are registered previously.
@@ -173,14 +174,14 @@ int8_t TCPIP_ARP_CallbacksRegister(struct arp_app_callbacks *app);
     None
 
   Parameters:
-    reg_id - Registration-id returned in TCPIP_ARP_CallbacksRegister call
+    regId - Registration-id returned in TCPIP_ARP_CallbacksRegister call
 
   Returns:
     true  - On success
-    false - Failure to indicate invalid reg_id
+    false - Failure to indicate invalid regId
  */
-bool TCPIP_ARP_CallbacksDeregister(int8_t id);
+bool TCPIP_ARP_CallbacksDeregister(size_t regId);
 
 
-#endif  // _ARP_MANAGER_H_
+#endif  // H_ARP_MANAGER_H_
 

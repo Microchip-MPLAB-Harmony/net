@@ -16,7 +16,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __ARP_H_
-#define __ARP_H_
+#ifndef H_ARP_H_
+#define H_ARP_H_
 
 #include <stdbool.h>
 
@@ -184,16 +184,16 @@ typedef struct
     size_t  cacheEntries;   // cache entries for this interface
     bool    deleteOld;      // delete old cache if still in place,
                             // else don't reinitialize it
-    int     entrySolvedTmo; // solved entry removed after this tmo
+    size_t  entrySolvedTmo; // solved entry removed after this tmo
                             // if not referenced - seconds
-    int     entryPendingTmo;// timeout for a pending to be solved entry in the cache, in seconds
-    int     entryRetryTmo;  // timeout for resending an ARP request for a pending entry - seconds
+    size_t  entryPendingTmo;// timeout for a pending to be solved entry in the cache, in seconds
+    size_t  entryRetryTmo;  // timeout for resending an ARP request for a pending entry - seconds
                             // 1 sec < tmo < entryPendingTmo
-    int     permQuota;      // max percentage of permanent entries allowed in the cache - %
-    int     purgeThres;     // purge threshold - %
-    int     purgeQuanta;    // no of entries to delete once the threshold is reached
-    int     retries;        // no of retries for resolving an entry
-    int     gratProbeCount; // no of retries done for a gratuitous ARP request
+    size_t  permQuota;      // max percentage of permanent entries allowed in the cache - %
+    size_t  purgeThres;     // purge threshold - %
+    size_t  purgeQuanta;    // no of entries to delete once the threshold is reached
+    size_t  retries;        // no of retries for resolving an entry
+    size_t  gratProbeCount; // no of retries done for a gratuitous ARP request
 }TCPIP_ARP_MODULE_CONFIG;
 
 
@@ -247,19 +247,21 @@ typedef const void* TCPIP_ARP_HANDLE;
 
   Remarks:
     Used for low level functionality, TCPIP_ARP_Probe.
+
+    16 bits only!
 */
 typedef enum
 {
     // supported ARP operations
-    ARP_OPERATION_REQ       = 1,        // ARP request
-    ARP_OPERATION_RESP      = 2,        // ARP response
+    ARP_OPERATION_REQ           = 0x0001U,      // ARP request
+    ARP_OPERATION_RESP          = 0x0002U,      // ARP response
     //
-    ARP_OPERATION_MASK      = 0x000f,   // extract ARP operation
+    ARP_OPERATION_MASK          = 0x000fU,      // extract ARP operation
 
     // ARP flags
-    ARP_OPERATION_CONFIGURE     = 0x1000,   // stack configuration ARP packet
-    ARP_OPERATION_GRATUITOUS    = 0x2000,   // stack gratuitous ARP packet
-    ARP_OPERATION_PROBE_ONLY    = 0x4000,   // an ARP probe is sent only once, the target address is not stored 
+    ARP_OPERATION_CONFIGURE     = 0x1000U,      // stack configuration ARP packet
+    ARP_OPERATION_GRATUITOUS    = 0x2000U,      // stack gratuitous ARP packet
+    ARP_OPERATION_PROBE_ONLY    = 0x4000U,      // an ARP probe is sent only once, the target address is not stored 
     //
 }TCPIP_ARP_OPERATION_TYPE;
 
@@ -704,7 +706,7 @@ size_t          TCPIP_ARP_CacheEntriesNoGet(TCPIP_NET_HANDLE hNet, TCPIP_ARP_ENT
 // *****************************************************************************
 /* Function
     TCPIP_ARP_RESULT TCPIP_ARP_CacheThresholdSet(TCPIP_NET_HANDLE hNet, 
-                                                int purgeThres, int purgeEntries);
+                                                size_t purgeThres, size_t purgeEntries);
 
    Summary:
     Sets the cache threshold for the specified interface in percent.
@@ -731,7 +733,7 @@ size_t          TCPIP_ARP_CacheEntriesNoGet(TCPIP_NET_HANDLE hNet, TCPIP_ARP_ENT
    Remarks:
     None.
 */
-TCPIP_ARP_RESULT TCPIP_ARP_CacheThresholdSet(TCPIP_NET_HANDLE hNet, int purgeThres, int purgeEntries);
+TCPIP_ARP_RESULT TCPIP_ARP_CacheThresholdSet(TCPIP_NET_HANDLE hNet, size_t purgeThres, size_t purgeEntries);
 
 // *****************************************************************************
 /* Function:
@@ -763,4 +765,4 @@ void  TCPIP_ARP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __ARP_H_
+#endif  // H_ARP_H_

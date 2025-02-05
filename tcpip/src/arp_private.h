@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _ARP_PRIVATE_H_ 
-#define _ARP_PRIVATE_H_ 
+#ifndef H_ARP_PRIVATE_H_ 
+#define H_ARP_PRIVATE_H_ 
 
 
 //#define OA_HASH_DYNAMIC_KEY_MANIPULATION
@@ -71,28 +71,36 @@ Microchip or any third party.
 // ARP packet structure
 typedef struct __attribute__((aligned(2), packed))
 {
-    uint16_t    HardwareType;   // Link-layer protocol type (Ethernet is 1)
-    uint16_t    Protocol;       // The upper-layer protocol issuing an ARP request (0x0800 for IPv4)
-    uint8_t     MACAddrLen;     // MAC address length (6)
-    uint8_t     ProtocolLen;    // Length of addresses used in the upper-layer protocol (4)
-    uint16_t    Operation;      // The operation the sender is performing (ARP_OPERATION_REQ or ARP_OPERATION_RESP)
-    TCPIP_MAC_ADDR    SenderMACAddr;  // The sender's hardware (MAC) address
-    IPV4_ADDR     SenderIPAddr;   // The sender's IP address
-    TCPIP_MAC_ADDR    TargetMACAddr;  // The target node's hardware (MAC) address
-    IPV4_ADDR     TargetIPAddr;   // The target node's IP address
+    uint16_t        HardwareType;   // Link-layer protocol type (Ethernet is 1)
+    uint16_t        Protocol;       // The upper-layer protocol issuing an ARP request (0x0800 for IPv4)
+    uint8_t         MACAddrLen;     // MAC address length (6)
+    uint8_t         ProtocolLen;    // Length of addresses used in the upper-layer protocol (4)
+    uint16_t        Operation;      // The operation the sender is performing
+                                    // (ARP_OPERATION_REQ or ARP_OPERATION_RESP)
+    TCPIP_MAC_ADDR  SenderMACAddr;  // The sender's hardware (MAC) address
+    IPV4_ADDR       SenderIPAddr;   // The sender's IP address
+    TCPIP_MAC_ADDR  TargetMACAddr;  // The target node's hardware (MAC) address
+    IPV4_ADDR       TargetIPAddr;   // The target node's IP address
 } ARP_PACKET;
 
 
 
 // ARP cache entry
-typedef struct _TAG_ARP_HASH_ENTRY 
+typedef struct S_TAG_ARP_HASH_ENTRY 
 {
     OA_HASH_ENTRY               hEntry;         // hash header;
-    struct _TAG_ARP_HASH_ENTRY* next;           // ordered link list by tInsert
-    IPV4_ADDR                   ipAddress;      // the hash key: the IP address
-    uint32_t                    tInsert;        // arp time it was inserted 
-    TCPIP_MAC_ADDR                    hwAdd;          // the hardware address
-    uint16_t                    nRetries;       // number of retries for an incomplete entry
+    union
+    {
+        struct
+        {
+            struct S_TAG_ARP_HASH_ENTRY* next;      // ordered link list by tInsert
+            IPV4_ADDR                   ipAddress;      // the hash key: the IP address
+            uint32_t                    tInsert;        // arp time it was inserted 
+            TCPIP_MAC_ADDR              hwAdd;          // the hardware address
+            uint16_t                    nRetries;       // number of retries for an incomplete entry
+        };
+        SGL_LIST_NODE                   lnode;
+    };
 }ARP_HASH_ENTRY;
 
 // ARP flags used in hEntry->flags
@@ -100,14 +108,15 @@ typedef struct _TAG_ARP_HASH_ENTRY
 // should be used! 
 typedef enum
 {
-    ARP_FLAG_ENTRY_BUSY         = 0x0001,          // this is used by the hash itself!
+    ARP_FLAG_NONE               = 0x0000,       // no flag set
+    ARP_FLAG_ENTRY_BUSY         = 0x0001,       // this is used by the hash itself!
     // user flags
-    ARP_FLAG_ENTRY_PERM         = 0x0040,          // entry is permanent
-    ARP_FLAG_ENTRY_COMPLETE     = 0x0080,          // regular entry, complete
-                                                   // else it's incomplete
-                                                   //
-    ARP_FLAG_ENTRY_CONFIGURE    = 0x0100,          // configuration query, transmit always
-    ARP_FLAG_ENTRY_GRATUITOUS   = 0x0200,          // gratuitous ARP query, use different retry number                                                   
+    ARP_FLAG_ENTRY_PERM         = 0x0040,       // entry is permanent
+    ARP_FLAG_ENTRY_COMPLETE     = 0x0080,       // regular entry, complete
+                                                // else it's incomplete
+                                                //
+    ARP_FLAG_ENTRY_CONFIGURE    = 0x0100,       // configuration query, transmit always
+    ARP_FLAG_ENTRY_GRATUITOUS   = 0x0200,       // gratuitous ARP query, use different retry number                                                   
     ARP_FLAG_ENTRY_VALID_MASK   = (ARP_FLAG_ENTRY_PERM | ARP_FLAG_ENTRY_COMPLETE )
                                                      
                                                   
@@ -123,13 +132,13 @@ typedef enum
 // each ARP cache consists of
 typedef struct
 {
-    OA_HASH_DCPT*       hashDcpt;       // contiguous space for a hash descriptor
-                                        // and hash table entries
-    PROTECTED_SINGLE_LIST         permList;       // list of active entries that never expire
-    PROTECTED_SINGLE_LIST         completeList;   // list of completed, valid entries
-    PROTECTED_SINGLE_LIST         incompleteList; // list of not completed yet entries
-    size_t              purgeThres;     // threshold to start cache purging
-    size_t              purgeQuanta;    // how many entries to purge
+    OA_HASH_DCPT*           hashDcpt;       // contiguous space for a hash descriptor
+                                            // and hash table entries
+    PROTECTED_SINGLE_LIST   permList;       // list of active entries that never expire
+    PROTECTED_SINGLE_LIST   completeList;   // list of completed, valid entries
+    PROTECTED_SINGLE_LIST   incompleteList; // list of not completed yet entries
+    size_t                  purgeThres;     // threshold to start cache purging
+    size_t                  purgeQuanta;    // how many entries to purge
 }ARP_CACHE_DCPT;
 
 // ARP unaligned key
@@ -144,16 +153,16 @@ typedef struct __attribute__((packed))
 
 // ARP event registration
 
-typedef struct  _TAG_ARP_LIST_NODE
+typedef struct  S_TAG_ARP_LIST_NODE
 {
-    struct _TAG_ARP_LIST_NODE*      next;       // next node in list
-                                                // makes it valid SGL_LIST_NODE node
-    TCPIP_ARP_EVENT_HANDLER               handler;    // handler to be called for event
-    const void*                     hParam;     // handler parameter
-    TCPIP_NET_HANDLE                hNet;       // interface that's registered for
-                                                // 0 if all    
+    struct S_TAG_ARP_LIST_NODE* next;       // next node in list
+                                            // makes it valid SGL_LIST_NODE node
+    TCPIP_ARP_EVENT_HANDLER     handler;    // handler to be called for event
+    const void*                 hParam;     // handler parameter
+    TCPIP_NET_HANDLE            hNet;       // interface that's registered for
+                                            // 0 if all    
 }ARP_LIST_NODE;
 
 
-#endif  // _ARP_PRIVATE_H_ 
+#endif  // H_ARP_PRIVATE_H_ 
 
