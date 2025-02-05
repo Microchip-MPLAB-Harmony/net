@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __BERKELEY_MANAGER_H_
-#define __BERKELEY_MANAGER_H_
+#ifndef H_BERKELEY_MANAGER_H_
+#define H_BERKELEY_MANAGER_H_
 #include "net_pres/pres/net_pres.h"
 
 typedef enum
@@ -94,23 +94,23 @@ struct BSDSocket
     uint16_t                lingerTmo;
     uint16_t                parentId;       // server sockets created by accept have a parent:
                                             // the original listening socket
-    union {
-        struct {
-            uint16_t tcpLinger          : 1;
-            uint16_t tcpKeepAlive       : 1;
-            uint16_t tcpNoDelay         : 1;
-            uint16_t tcpExclusiveAccess : 1;
-            uint16_t tcpTresFlush       : 2;
-            uint16_t tcpGracefulDisable : 1;
-            uint16_t udpBcastEnabled    : 1;
-            uint16_t isServer           : 1;
-            uint16_t needsSignal        : 1;    // socket needs signal function from the native socket
-            uint16_t needsClose         : 1;    // socket needs to be closed after signaling
-            uint16_t reserved           : 5;
+    union
+    {
+        struct __attribute__((packed))
+        {
+            unsigned tcpLinger          : 1;
+            unsigned tcpKeepAlive       : 1;
+            unsigned tcpNoDelay         : 1;
+            unsigned tcpExclusiveAccess : 1;
+            unsigned tcpTresFlush       : 2;
+            unsigned tcpGracefulDisable : 1;
+            unsigned udpBcastEnabled    : 1;
+            unsigned isServer           : 1;
+            unsigned needsSignal        : 1;    // socket needs signal function from the native socket
+            unsigned needsClose         : 1;    // socket needs to be closed after signaling
+            unsigned reserved           : 5;
         };
-        struct {
-            uint16_t w :16;
-        };
+        uint16_t w;
     };
 }; // Berkeley Socket structure
 
@@ -118,8 +118,7 @@ struct BSDSocket
 
 /*****************************************************************************
   Function:
-    void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
-                        const BERKELEY_MODULE_CONFIG* berkeleyData)
+    void BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const BERKELEY_MODULE_CONFIG* berkeleyData)
 
   Summary:
     Initializes the Berkeley socket structure array.
@@ -140,8 +139,7 @@ struct BSDSocket
   Remarks:
     None.
  */
-bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
-                        const BERKELEY_MODULE_CONFIG* berkeleyData);
+bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData);
 
 
 /*****************************************************************************
@@ -170,16 +168,26 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 void BerkeleySocketDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
 
 
+// Address information states
+typedef enum 
+{
+    TCPIP_BERKELEY_GAI_INACTIVE  = 0,
+    TCPIP_BERKELEY_GAI_START_IPV4,
+    TCPIP_BERKELEY_GAI_WAIT_IPV4,
+    TCPIP_BERKELEY_GAI_START_IPV6,
+    TCPIP_BERKELEY_GAI_WAIT_IPV6,
+    TCPIP_BERKELEY_GAI_FINISHED
+} TCPIP_BERKELEY_GAI_STATE;
 
 
 // enable debug features
-#define __BERKELEY_DEBUG    0
+#define M__BERKELEY_DEBUG    0
 typedef struct
 {
     int16_t bsdState;   // bsd socket status
     int16_t presSktId;  // NET_PRES socket ID
 }BSD_SKT_INFO;
 
-#endif  // __BERKELEY_MANAGER_H_
+#endif  // H_BERKELEY_MANAGER_H_
 
 

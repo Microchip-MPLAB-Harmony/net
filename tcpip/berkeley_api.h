@@ -18,7 +18,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _BERKELEY_API_HEADER_FILE
-#define _BERKELEY_API_HEADER_FILE
+#ifndef H_BERKELEY_API_HEADER_FILE__
+#define H_BERKELEY_API_HEADER_FILE__
 
 #include <limits.h>
 
@@ -157,12 +157,12 @@ struct in_addr
        uint32_t S_addr; //IP address
    }S_un; //union of IP address
     
-#define s_addr  S_un.S_addr //can be used for most TCP & IP code
-#define s_host  S_un.S_un_b.s_b2 //host on imp
-#define s_net   S_un.S_un_b.s_b1 // network
-#define s_imp   S_un.S_un_w.s_w2 // imp
-#define s_impno S_un.S_un_b.s_b4 // imp number
-#define s_lh    S_un.S_un_b.s_b3 // logical host
+#define s_addr  S_un.S_addr         //can be used for most TCP & IP code
+#define s_host  S_un.S_un_b.s_b2    //host on imp
+#define s_net   S_un.S_un_b.s_b1    // network
+#define s_imp   S_un.S_un_w.s_w2    // imp
+#define s_impno S_un.S_un_b.s_b4    // imp number
+#define s_lh    S_un.S_un_b.s_b3    // logical host
 }; // in_addr structure
 
 struct in6_addr
@@ -208,19 +208,19 @@ typedef struct sockaddr_in6 SOCKADDR_IN6;
 /* Structure large enough to hold any socket address (with the historical exception of
 AF_UNIX). 128 bytes reserved.  */
 
-#if ULONG_MAX > 0xffffffff
-# define __ss_aligntype uint64_t
+#if ULONG_MAX > 0xffffffffU
+# define M__ss_aligntype uint64_t
 #else
-# define __ss_aligntype uint32_t
+# define M__ss_aligntype uint32_t
 #endif
-#define _SS_SIZE        128
-#define _SS_PADSIZE     (_SS_SIZE - (2 * sizeof (__ss_aligntype)))
+#define M_SS_SIZE        128
+#define M_SS_PADSIZE     (M_SS_SIZE - (2 * sizeof (M__ss_aligntype)))
 
 struct sockaddr_storage // Here for creating portable applications.  Not used in the stack
 {
     short ss_family;      /* Address family */
-    __ss_aligntype __ss_align;  /* Force desired alignment.  */
-    char __ss_padding[_SS_PADSIZE];
+    M__ss_aligntype a__ss_align;  /* Force desired alignment.  */
+    char c__ss_padding[M_SS_PADSIZE];
 };
 
 
@@ -763,6 +763,36 @@ struct hostent * gethostbyname(char *name);
 
 //******************************************************************************
 /* Function:
+    struct hostent * gethostent(void)
+
+   Summary:
+    The gethostent() call reads the next line of the local host tables.
+
+   Description:
+    The gethostent() call returns a pointer to the next entry in the local host tables.
+    gethostent() uses the local host tables to get aliases.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None
+
+   Returns:
+    The address of the hostent structure.
+
+   Note: This function supports IPv4 only.
+
+   Note: The support/implementation for this function is limited.
+         The gethostbyname() should be used!
+
+  */
+
+struct hostent * gethostent(void);
+
+
+//******************************************************************************
+/* Function:
     int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen);
 
    Summary:
@@ -964,5 +994,5 @@ void  TCPIP_BSD_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // _BERKELEY_API_HEADER_FILE
+#endif  // H_BERKELEY_API_HEADER_FILE__
 

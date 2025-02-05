@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -43,15 +43,10 @@ Microchip or any third party.
 
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
-#ifdef __ICCARM__
-__attribute__((section(".bss.errno"))) int errno = 0;           // initialization required to provide definition
-#include "device.h"                              // extended E codes not provided in IAR errno.h
-#else
 #include <errno.h>
 #if (__XC32_VERSION < 4000) || (__XC32_VERSION == 243739000)
 // xc32 versions >= v4.0 no longer have sys/errno.h 
 #include <sys/errno.h>
-#endif
 #endif
 
 
@@ -60,11 +55,38 @@ static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort);
 
 static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
-static int _BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res);
-static int _BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res);
+static int F_BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res);
+static int F_BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res);
 
-static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype);
-static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype);
+static int F_BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype);
+static int F_BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype);
+
+static int F_setsockopt_ip(const struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length);
+static int F_setsockopt_socket(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length);
+static int F_setsockopt_tcp(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length);
+
+static int F_getsockopt_ip(const struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length);
+static int F_getsockopt_socket(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length);
+static int F_getsockopt_tcp(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length);
+
+static int F_setsockopt_ipv6(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length);
+static int F_setsockopt_icmp6(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length);
+
+static int F_getsockopt_ipv6(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length);
+static int F_getsockopt_icmp6(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length);
+
+#if defined(TCPIP_STACK_USE_IPV4)
+static int connect_stream_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort, SOCKET s);
+static int connect_bound_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort);
+static int connect_dgram_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort);
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+static int connect_stream_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pLocalAddr6, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort, SOCKET s);
+static int connect_bound_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pLocalAddr6, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort);
+static int connect_dgram_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort);
+#endif  // defined(TCPIP_STACK_USE_IPV6)
+
 
 #if !defined(MAX_BSD_SOCKETS)
 #define MAX_BSD_SOCKETS 4
@@ -72,71 +94,218 @@ static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype);
 
 
 // Array of BSDSocket elements; used to track all socket state and connection information.
-static const void*  bsdApiHeapH = 0;                    // memory allocation handle
+static const void*  bsdApiHeapH = NULL;                    // memory allocation handle
 static struct BSDSocket  * BSDSocketArray = NULL;
-static uint8_t BSD_SOCKET_COUNT = MAX_BSD_SOCKETS;
+static int16_t BSD_SOCKET_COUNT = MAX_BSD_SOCKETS;
 
 // The initialization count, so we know how many interfaces are up.
 static int InitCount = 0;
 
 static OSAL_SEM_HANDLE_TYPE bsdSemaphore;
-static tcpipSignalHandle    bsdSignalHandle;
+static TCPIP_SIGNAL_HANDLE    bsdSignalHandle;
+
+static uint32_t sgaihash = 0U;
+static uint32_t sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;   // TCPIP_BERKELEY_GAI_STATE value
+
+// helpers
+static __inline__  struct BSDSocket*  __attribute__((always_inline)) FC_CVPtr2BSD(const void* cvptr)
+{
+    union
+    {
+        const void* cvptr;
+        struct BSDSocket* pSkt;
+    }U_CVPTR_BSD;
+
+    U_CVPTR_BSD.cvptr = cvptr;
+    return U_CVPTR_BSD.pSkt;
+} 
+
+static __inline__  const struct sockaddr_in*  __attribute__((always_inline)) FC_CSockAddr2In(const struct sockaddr* saddr)
+{
+    union
+    {
+        const struct sockaddr*      saddr;
+        const struct sockaddr_in*   s_addr_in;
+    }U_SADDR_IN_CPTR;
+
+    U_SADDR_IN_CPTR.saddr = saddr;
+    return U_SADDR_IN_CPTR.s_addr_in;
+}
+
+static __inline__  struct sockaddr_in*  __attribute__((always_inline)) FC_SockAddr2In(struct sockaddr* saddr)
+{
+    union
+    {
+        struct sockaddr*      saddr;
+        struct sockaddr_in*   s_addr_in;
+    }U_SADDR_IN_PTR;
+
+    U_SADDR_IN_PTR.saddr = saddr;
+    return U_SADDR_IN_PTR.s_addr_in;
+}
+
+static __inline__  struct sockaddr*  __attribute__((always_inline)) FC_SockIn2Addr(struct sockaddr_in* s_addr_in)
+{
+    union
+    {
+        struct sockaddr_in* s_addr_in;
+        struct sockaddr*    saddr;
+    }U_SIN_ADDR_PTR;
+
+    U_SIN_ADDR_PTR.s_addr_in = s_addr_in;
+    return U_SIN_ADDR_PTR.saddr;
+}
+
+static __inline__  const struct sockaddr_in6*  __attribute__((always_inline)) FC_CSockAddr2In6(const struct sockaddr* saddr)
+{
+    union
+    {
+        const struct sockaddr*      saddr;
+        const struct sockaddr_in6*  s_addr_in6;
+    }U_SADDR_IN6_CPTR;
+
+    U_SADDR_IN6_CPTR.saddr = saddr;
+    return U_SADDR_IN6_CPTR.s_addr_in6;
+}
+
+static __inline__  struct sockaddr_in6*  __attribute__((always_inline)) FC_SockAddr2In6(struct sockaddr* saddr)
+{
+    union
+    {
+        struct sockaddr*      saddr;
+        struct sockaddr_in6*  s_addr_in6;
+    }U_SADDR_IN6_PTR;
+
+    U_SADDR_IN6_PTR.saddr = saddr;
+    return U_SADDR_IN6_PTR.s_addr_in6;
+}
+
+static __inline__  struct sockaddr*  __attribute__((always_inline)) FC_SockIn62Addr(struct sockaddr_in6* s_addr_in6)
+{
+    union
+    {
+        struct sockaddr_in6*  s_addr_in6;
+        struct sockaddr*      saddr;
+    }U_SIN6_ADDR_PTR;
+
+    U_SIN6_ADDR_PTR.s_addr_in6 = s_addr_in6;
+    return U_SIN6_ADDR_PTR.saddr;
+}
+
+static __inline__  const struct in6_addr*  __attribute__((always_inline)) FC_CU8Ptr2In6(const uint8_t* u8ptr)
+{
+    union
+    {
+        const uint8_t*          u8ptr;
+        const struct in6_addr*  in6_ptr;
+    }U_U8_IN6_CPTR;
+
+    U_U8_IN6_CPTR.u8ptr = u8ptr;
+    return U_U8_IN6_CPTR.in6_ptr;
+}
+
+static __inline__  struct in6_addr*  __attribute__((always_inline)) FC_U8Ptr2In6(uint8_t* u8ptr)
+{
+    union
+    {
+        uint8_t*          u8ptr;
+        struct in6_addr*  in6_ptr;
+    }U_U8_IN6_PTR;
+
+    U_U8_IN6_PTR.u8ptr = u8ptr;
+    return U_U8_IN6_PTR.in6_ptr;
+}
+
+/* MISRA C-2012 Rule 21.3 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_21_3_NET_DR_7 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 21.3" "H3_MISRAC_2012_R_21_3_NET_DR_7" 
+static __inline__ void* __attribute__((always_inline)) F_BsdCalloc (size_t items, size_t itemSize)
+{
+    return TCPIP_STACK_CALLOC_FUNC(items, itemSize);
+}
+
+static __inline__ void __attribute__((always_inline)) F_BsdFree(void* ptr)
+{
+    TCPIP_STACK_FREE_FUNC(ptr);
+}
+#pragma coverity compliance end_block "MISRA C-2012 Rule 21.3"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 // validates the socket and returns the pointer to the internal BSDSocket
 // returns 0 if error
-struct BSDSocket* _getBsdSocket(SOCKET s)
+static struct BSDSocket* F_getBsdSocket(SOCKET s)
 {
     if(s >= 0 && s < BSD_SOCKET_COUNT)
     {
         return BSDSocketArray + s;
     }
 
-    return 0;
+    return NULL;
 }
 
-void _cfgBsdSocket(struct BSDSocket * socketInfo)
+static void F_cfgBsdSocket(struct BSDSocket * socketInfo)
 {
+    void* ptrOpt;
     if (socketInfo->SocketID == NET_PRES_INVALID_SOCKET)
     {
         return;
     }
 
     socketInfo->nativeSkt = NET_PRES_SocketGetTransportHandle(socketInfo->SocketID);            
-    if (socketInfo->SocketType == SOCK_DGRAM)
+    if (socketInfo->SocketType == (uint16_t)SOCK_DGRAM)
     {
-        if (socketInfo->sndBufSize)
+        if (socketInfo->sndBufSize != 0U)
         {
-            NET_PRES_SocketOptionsSet(socketInfo->SocketID, UDP_OPTION_TX_BUFF, (void*)socketInfo->sndBufSize);
+            ptrOpt = FC_Uint2VPtr(socketInfo->sndBufSize); 
+            (void)NET_PRES_SocketOptionsSet(socketInfo->SocketID, (NET_PRES_SKT_OPTION_TYPE)UDP_OPTION_TX_BUFF, ptrOpt);
         }
-        if(socketInfo->udpBcastEnabled != 0)
+        if(socketInfo->udpBcastEnabled != 0U)
         {
-            TCPIP_UDP_BcastIPV4AddressSet(socketInfo->nativeSkt, UDP_BCAST_NETWORK_LIMITED, 0);
+            (void)TCPIP_UDP_BcastIPV4AddressSet(socketInfo->nativeSkt, UDP_BCAST_NETWORK_LIMITED, NULL);
         }
 
     }
-    else if (socketInfo->SocketType == SOCK_STREAM)
+    else if (socketInfo->SocketType == (uint16_t)SOCK_STREAM)
     {
         TCP_OPTION_LINGER_DATA lingerData;
-        lingerData.lingerEnable = socketInfo->tcpLinger;
+        lingerData.lingerEnable = socketInfo->tcpLinger != 0U;
         lingerData.lingerTmo = socketInfo->lingerTmo;
-        lingerData.gracefulEnable = socketInfo->tcpGracefulDisable == 0;
+        lingerData.gracefulEnable = socketInfo->tcpGracefulDisable == 0U;
 
-        NET_PRES_SocketOptionsSet(socketInfo->SocketID, TCP_OPTION_LINGER, (void*)&lingerData);
+        (void)NET_PRES_SocketOptionsSet(socketInfo->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_LINGER, (void*)&lingerData);
 
-        if (socketInfo->sndBufSize)
+        if (socketInfo->sndBufSize != 0U)
         {
-            NET_PRES_SocketOptionsSet(socketInfo->SocketID, TCP_OPTION_TX_BUFF, (void*)socketInfo->sndBufSize);
+            ptrOpt = FC_Uint2VPtr(socketInfo->sndBufSize); 
+            (void)NET_PRES_SocketOptionsSet(socketInfo->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, ptrOpt);
         }
-        if (socketInfo->rcvBufSize)
+        if (socketInfo->rcvBufSize != 0U)
         {
-            NET_PRES_SocketOptionsSet(socketInfo->SocketID, TCP_OPTION_RX_BUFF, (void*)socketInfo->rcvBufSize);
+            ptrOpt = FC_Uint2VPtr(socketInfo->rcvBufSize); 
+            (void)NET_PRES_SocketOptionsSet(socketInfo->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, ptrOpt);
         }
-        NET_PRES_SocketOptionsSet(socketInfo->SocketID, TCP_OPTION_NODELAY, (void*)(socketInfo->tcpNoDelay ? 0xffffffff : 0));
 
-        if(socketInfo->needsSignal)
+        if(socketInfo->tcpNoDelay != 0U)
         {
-            NET_PRES_SocketSignalHandlerRegister(socketInfo->SocketID, TCPIP_TCP_SIGNAL_RX_FIN | TCPIP_TCP_SIGNAL_RX_RST | TCPIP_TCP_SIGNAL_TX_RST, TCP_SignalFunction, socketInfo);
+            ptrOpt = FC_Uint2VPtr(0xffffffffU); 
         }
+        else
+        {
+            ptrOpt = NULL;
+        }
+        (void)NET_PRES_SocketOptionsSet(socketInfo->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_NODELAY, ptrOpt);
+
+        if(socketInfo->needsSignal != 0U)
+        {
+            uint16_t sigType = (uint16_t)TCPIP_TCP_SIGNAL_RX_FIN | (uint16_t)TCPIP_TCP_SIGNAL_RX_RST | (uint16_t)TCPIP_TCP_SIGNAL_TX_RST; 
+            (void)NET_PRES_SocketSignalHandlerRegister(socketInfo->SocketID, sigType, &TCP_SignalFunction, socketInfo);
+        }
+    }
+    else
+    {
+        // do nothing
     }
 
 }
@@ -165,29 +334,30 @@ void _cfgBsdSocket(struct BSDSocket * socketInfo)
   Remarks:
     None.
   ***************************************************************************/
-bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
-                        const BERKELEY_MODULE_CONFIG* berkeleyData)
+bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData)
 {
-    unsigned int s;
-    struct BSDSocket *socket;
+    int16_t s;
+    struct BSDSocket *bsocket;
     // OSAL_CRITSECT_DATA_TYPE intStatus;
 
     { // This needs hard protection  An Automutext would be best here
-        if (InitCount++)
+        if (InitCount++ != 0)
         {
             return true;
         }
-        if(OSAL_SEM_Create(&bsdSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
+        if(OSAL_SEM_Create(&bsdSemaphore, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_SUCCESS)
         {
             InitCount--;
             return false;
         }
     }
 
-    bsdSignalHandle = 0;
+    bsdSignalHandle = NULL;
+    const BERKELEY_MODULE_CONFIG* berkeleyData = (const BERKELEY_MODULE_CONFIG*)initData;
+
     if (berkeleyData != NULL)
     {
-        BSD_SOCKET_COUNT = berkeleyData->maxSockets;
+        BSD_SOCKET_COUNT = (int16_t)berkeleyData->maxSockets;
     }
     else
     {
@@ -196,10 +366,10 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     bsdApiHeapH = stackData->memH;
 
 
-    BSDSocketArray = TCPIP_HEAP_Calloc(bsdApiHeapH, BSD_SOCKET_COUNT, sizeof (struct BSDSocket));
+    BSDSocketArray = TCPIP_HEAP_Calloc(bsdApiHeapH, (size_t)BSD_SOCKET_COUNT, sizeof (struct BSDSocket));
     if (BSDSocketArray == NULL)
     {
-        if (OSAL_SEM_Delete(&bsdSemaphore) != OSAL_RESULT_TRUE)
+        if (OSAL_SEM_Delete(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
         {
             // SYS_DEBUG message
         }
@@ -207,26 +377,26 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         return false;
     }
     
-    bsdSignalHandle  =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_BSD_Task, 0);
-    if(bsdSignalHandle == 0)
+    bsdSignalHandle  =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_BSD_Task, 0);
+    if(bsdSignalHandle == NULL)
     {   // failed
-        TCPIP_HEAP_Free(bsdApiHeapH, BSDSocketArray);
-        OSAL_SEM_Delete(&bsdSemaphore);
+        (void)TCPIP_HEAP_Free(bsdApiHeapH, BSDSocketArray);
+        (void)OSAL_SEM_Delete(&bsdSemaphore);
         return false;
     }
 
     for (s = 0; s < BSD_SOCKET_COUNT; s++)
     {
-        socket = (struct BSDSocket *) &BSDSocketArray[s];
-        socket->bsdState = SKT_CLOSED;
-        socket->SocketID = NET_PRES_INVALID_SOCKET;
-        socket->rcvBufSize = 0;
-        socket->sndBufSize = 0;
-        socket->rcvTmOut = 0;
-        socket->sndTmOut = 0;
-        socket->lingerTmo = 0;
+        bsocket = (struct BSDSocket *) &BSDSocketArray[s];
+        bsocket->bsdState = (uint8_t)SKT_CLOSED;
+        bsocket->SocketID = NET_PRES_INVALID_SOCKET;
+        bsocket->rcvBufSize = 0;
+        bsocket->sndBufSize = 0;
+        bsocket->rcvTmOut = 0;
+        bsocket->sndTmOut = 0;
+        bsocket->lingerTmo = 0U;
 
-        socket->w = 0;
+        bsocket->w = 0;
     }
 
     return true;
@@ -234,7 +404,7 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
 /*****************************************************************************
   Function:
-    void BerkeleySocketDeinit(void)
+    void BerkeleySocketDeinitialize(void)
 
   Summary:
     De-Initializes the Berkeley socket structure array.
@@ -258,31 +428,38 @@ bool BerkeleySocketInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 void BerkeleySocketDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
 {
-    uint8_t s;
-    struct BSDSocket *socket;
+    int16_t s;
+    struct BSDSocket *bsocket;
 
-    if (InitCount == 0 || --InitCount)
+    if (InitCount == 0)
     {
         return;
     }
 
-    socket = BSDSocketArray;
-    for (s = 0; s < BSD_SOCKET_COUNT; s++, socket++)
-    {
-        if (socket->SocketID == NET_PRES_INVALID_SOCKET)
-        {
-            continue;
-        }
-        closesocket(s);  // Too deep to lock fully
-        socket->bsdState = SKT_CLOSED;
-        socket->SocketID = NET_PRES_INVALID_SOCKET;
+    --InitCount;
+
+    if (InitCount != 0)
+    {   // still active
+        return;
     }
 
-    _TCPIPStackSignalHandlerDeregister(bsdSignalHandle);
-    bsdSignalHandle = 0;
-    TCPIP_HEAP_Free(bsdApiHeapH, BSDSocketArray);
+    bsocket = BSDSocketArray;
+    for (s = 0; s < BSD_SOCKET_COUNT; s++)
+    {
+        if (bsocket->SocketID != NET_PRES_INVALID_SOCKET)
+        {
+            (void)closesocket(s);  // Too deep to lock fully
+            bsocket->bsdState = (uint8_t)SKT_CLOSED;
+            bsocket->SocketID = NET_PRES_INVALID_SOCKET;
+        }
+        bsocket++;
+    }
 
-    if (OSAL_SEM_Delete(&bsdSemaphore) != OSAL_RESULT_TRUE)
+    TCPIPStackSignalHandlerDeregister(bsdSignalHandle);
+    bsdSignalHandle = NULL;
+    (void)TCPIP_HEAP_Free(bsdApiHeapH, BSDSocketArray);
+
+    if (OSAL_SEM_Delete(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
     {
         // SYS_DEBUG message
     }
@@ -293,23 +470,24 @@ void TCPIP_BSD_Task(void)
 {
     // received an asynchronous message
     // check for the sockets that need closing
-    int ix;
+    int16_t ix;
     int asyncSignals = 0;
     struct BSDSocket* pBSkt = BSDSocketArray;
-    for(ix = 0; ix < BSD_SOCKET_COUNT; ix++, pBSkt++)
+    for(ix = 0; ix < BSD_SOCKET_COUNT; ix++)
     {
-        if(pBSkt->bsdState == SKT_DISCONNECTING && pBSkt->needsClose == true)
+        if(pBSkt->bsdState == (uint8_t)SKT_DISCONNECTING && pBSkt->needsClose == 1U)
         {
             NET_PRES_SocketClose(pBSkt->SocketID);
-            pBSkt->bsdState = SKT_CLOSED;
+            pBSkt->bsdState = (uint8_t)SKT_CLOSED;
             pBSkt->SocketID = NET_PRES_INVALID_SOCKET;
             asyncSignals++;
         }
+        pBSkt++;
     }
 
-    while(asyncSignals--)
+    while(asyncSignals-- != 0)
     {   // clear the signals
-        _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC); 
+        (void)TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC); 
     }
 
 
@@ -342,10 +520,8 @@ Returns:
 Remarks:
     None.
  ***************************************************************************/
-SOCKET
-socket (int af, int type, int protocol)
+SOCKET socket (int af, int type, int protocol)
 {
-  struct BSDSocket *socket = BSDSocketArray;
     SOCKET s;
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IPV6)
@@ -367,11 +543,10 @@ socket (int af, int type, int protocol)
         return SOCKET_ERROR;
     }
 #else
-    _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
     errno = EAFNOSUPPORT;
     return SOCKET_ERROR;
 #endif
-
 
     if (protocol == IPPROTO_IP)
     {
@@ -386,58 +561,61 @@ socket (int af, int type, int protocol)
             break;
 
         default:
+            // do nothing
             break;
         }
     }
 
-    if (OSAL_SEM_Pend(&bsdSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_TRUE)
+    if (OSAL_SEM_Pend(&bsdSemaphore, OSAL_WAIT_FOREVER) != OSAL_RESULT_SUCCESS)
     {
         // SYS_DEBUG message
     }
 
-    for (s = 0; s < BSD_SOCKET_COUNT; s++, socket++)
+    struct BSDSocket *bsocket = BSDSocketArray;
+    for (s = 0; s < BSD_SOCKET_COUNT; s++)
     {
-        if (socket->bsdState != SKT_CLOSED) //socket in use
-            continue;
-
-        socket->SocketType = type;
-        socket->localIPv4 = IP_ADDR_ANY; // updated by bind()
+        if (bsocket->bsdState == (uint8_t)SKT_CLOSED) //socket not in use
+        {
+            bsocket->SocketType = (uint16_t)type;
+            bsocket->localIPv4 = IP_ADDR_ANY; // updated by bind()
 #if defined(TCPIP_STACK_USE_IPV6)
-        socket->localIPv6[0] = IP_ADDR_ANY; // updated by bind()
+            bsocket->localIPv6[0] = IP_ADDR_ANY; // updated by bind()
 #endif
-        socket->addressFamily = af;
 
-        if (type == SOCK_DGRAM && protocol == IPPROTO_UDP)
-        {
-            socket->bsdState = SKT_CREATED;
-            if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_TRUE)
+            bsocket->addressFamily = (uint8_t)af;
+            if (type == SOCK_DGRAM && protocol == IPPROTO_UDP)
             {
-                // SYS_DEBUG message
+                bsocket->bsdState = (uint8_t)SKT_CREATED;
+                if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
+                {
+                    // SYS_DEBUG message
+                }
+                return s;
             }
-            return s;
-        }
-        else if (type == SOCK_STREAM && protocol == IPPROTO_TCP)
-        {
-            socket->bsdState = SKT_CREATED;
-            if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_TRUE)
+            else if (type == SOCK_STREAM && protocol == IPPROTO_TCP)
             {
-                // SYS_DEBUG message
+                bsocket->bsdState = (uint8_t)SKT_CREATED;
+                if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
+                {
+                    // SYS_DEBUG message
+                }
+                return s;
             }
-            return s;
-        }
-        else
-        {
-            errno = EINVAL;
-            if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_TRUE)
+            else
             {
-                // SYS_DEBUG message
+                errno = EINVAL;
+                if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
+                {
+                    // SYS_DEBUG message
+                }
+                return SOCKET_ERROR;
             }
-            return SOCKET_ERROR;
         }
+        bsocket++;
     }
 
     errno = EMFILE;
-    if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_TRUE)
+    if (OSAL_SEM_Post(&bsdSemaphore) != OSAL_RESULT_SUCCESS)
     {
         // SYS_DEBUG message
     }
@@ -477,26 +655,20 @@ socket (int af, int type, int protocol)
   ***************************************************************************/
 int bind( SOCKET s, const struct sockaddr* name, int namelen )
 {
+    IP_MULTI_ADDRESS lAddr;
     uint16_t lPort;
-    IPV4_ADDR lAddr;
-    lAddr.Val = 0;
-#if defined(TCPIP_STACK_USE_IPV6)
-    IPV6_ADDR lAddr6;
-    lAddr6.d[0] = 0;
-    lAddr6.d[1] = 0;
-    lAddr6.d[2] = 0;
-    lAddr6.d[3] = 0;
-#endif
 
-    struct BSDSocket *socket = _getBsdSocket(s);
+    (void)memset(lAddr.v6Add.v, 0, sizeof(lAddr));
 
-    if (socket == 0)
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+
+    if (bsocket == NULL)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    if (socket->bsdState != SKT_CREATED) //only work with recently created socket
+    if (bsocket->bsdState != (uint8_t)SKT_CREATED) //only work with recently created socket
     {   
         errno = EINVAL;
         return SOCKET_ERROR;
@@ -508,60 +680,59 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
     }
 
 #if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->addressFamily == AF_INET)
+    if (bsocket->addressFamily == (uint8_t)AF_INET)
 #endif
     {
-        struct sockaddr_in *local_addr;
-        local_addr = (struct sockaddr_in *) name;
-        lAddr.Val = local_addr->sin_addr.S_un.S_addr == IP_ADDR_ANY ? 0 : local_addr->sin_addr.S_un.S_addr;
-
+        const struct sockaddr_in *local_addr = FC_CSockAddr2In(name);
+        lAddr.v4Add.Val = local_addr->sin_addr.S_un.S_addr == IP_ADDR_ANY ? 0U : local_addr->sin_addr.S_un.S_addr;
         lPort = local_addr->sin_port;
     }
 #if defined(TCPIP_STACK_USE_IPV6)
     else
     {
-        struct sockaddr_in6 *local_addr = (struct sockaddr_in6*) name;
-        uint8_t* sin6 = (uint8_t*)local_addr + offsetof(struct sockaddr_in6, sin6_addr);
-        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
-        memcpy(&lAddr6, sin6_addr->in6_u.u6_addr8, sizeof(struct in6_addr));
+        const struct sockaddr_in6 *local_addr6 = FC_CSockAddr2In6(name);
+        const uint8_t* sin6 = (const uint8_t*)local_addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+        const struct  in6_addr* sin6_addr = FC_CU8Ptr2In6(sin6);
+        (void)memcpy(lAddr.v6Add.v, sin6_addr->in6_u.u6_addr8, sizeof(struct in6_addr));
 
-        if (lAddr6.d[0] == IP_ADDR_ANY)
+        if (lAddr.v6Add.d32[0] == IP_ADDR_ANY)
         {
-            lAddr6.d[0] = 0;
+            lAddr.v6Add.d32[0] = 0;
         }
-        lPort = local_addr->sin6_port;
+        lPort = local_addr6->sin6_port;
     }
 #endif
-    if (socket->SocketType == SOCK_DGRAM)
+    if (bsocket->SocketType == (uint16_t)SOCK_DGRAM)
     {
-        if (socket->SocketID == INVALID_SOCKET)
+        if (bsocket->SocketID == INVALID_SOCKET)
         { // create server socket
 
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (socket->addressFamily == AF_INET)
+            if (bsocket->addressFamily == (uint8_t)AF_INET)
             {
 #endif
-                socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER, IP_ADDRESS_TYPE_IPV4, lPort, (NET_PRES_ADDRESS *)(lAddr.Val == 0 ? 0 : (IP_MULTI_ADDRESS*) & lAddr), NULL);
+                bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, lPort, (lAddr.v4Add.Val == 0U ? NULL : FC_MultiAdd2PresAdd(&lAddr)), NULL);
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
             {
-                socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER, IP_ADDRESS_TYPE_IPV6, lPort, (NET_PRES_ADDRESS *)(lAddr6.d[0] == 0 ? 0 : (IP_MULTI_ADDRESS*) & lAddr6), NULL);
+                bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, lPort, (lAddr.v6Add.d32[0] == 0U ? NULL : FC_MultiAdd2PresAdd(&lAddr)), NULL);
             }
 #endif
-            if (socket->SocketID == INVALID_UDP_SOCKET)
+            if (bsocket->SocketID == INVALID_UDP_SOCKET)
             {
                 errno = ENOBUFS;
                 return SOCKET_ERROR;
             }
-            _cfgBsdSocket(socket);
+            F_cfgBsdSocket(bsocket);
 
         } 
 #if defined(TCPIP_STACK_USE_IPV6)
-        if (socket->addressFamily == AF_INET)
+        if (bsocket->addressFamily == (uint8_t)AF_INET)
         {
 #endif
-            if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV4, lPort, (NET_PRES_ADDRESS *)((((struct sockaddr_in *) name)->sin_addr.S_un.S_addr == IP_ADDR_ANY) ? 0 : (IP_MULTI_ADDRESS*) & lAddr)))
+            const struct sockaddr_in* s_addr_in = FC_CSockAddr2In(name); 
+            if (!NET_PRES_SocketBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, lPort, ((s_addr_in->sin_addr.S_un.S_addr == IP_ADDR_ANY) ? NULL : FC_MultiAdd2PresAdd(&lAddr))))
             {
                 errno = EINVAL;
                 return SOCKET_ERROR;
@@ -570,7 +741,8 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
         }
         else
         {
-            if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, lPort, (NET_PRES_ADDRESS *)((((struct sockaddr_in6 *) name)->sin6_addr.in6_u.u6_addr32[0] == IP_ADDR_ANY) ? 0 : (IP_MULTI_ADDRESS*) & lAddr6)))
+            const struct sockaddr_in6* s_addr_in = FC_CSockAddr2In6(name); 
+            if(!NET_PRES_SocketBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, lPort, ((s_addr_in->sin6_addr.in6_u.u6_addr32[0] == IP_ADDR_ANY) ? NULL : FC_MultiAdd2PresAdd(&lAddr))))
             {
                 errno = EINVAL;
                 return SOCKET_ERROR;
@@ -579,23 +751,23 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 #endif
     }
 
-    socket->localPort = lPort;
+    bsocket->localPort = lPort;
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (socket->addressFamily == AF_INET)
+            if (bsocket->addressFamily == (uint8_t)AF_INET)
             {
 #endif
-                socket->localIPv4 = lAddr.Val;
+                bsocket->localIPv4 = lAddr.v4Add.Val;
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
             {
-                socket->localIPv6[0] = lAddr6.d[0];
-                socket->localIPv6[1] = lAddr6.d[1];
-                socket->localIPv6[2] = lAddr6.d[2];
-                socket->localIPv6[3] = lAddr6.d[3];
+                bsocket->localIPv6[0] = lAddr.v6Add.d32[0];
+                bsocket->localIPv6[1] = lAddr.v6Add.d32[1];
+                bsocket->localIPv6[2] = lAddr.v6Add.d32[2];
+                bsocket->localIPv6[3] = lAddr.v6Add.d32[3];
             }
 #endif
-    socket->bsdState = SKT_BOUND;
+    bsocket->bsdState = (uint8_t)SKT_BOUND;
     return 0; //success
 }
 
@@ -634,69 +806,66 @@ int listen( SOCKET s, int backlog )
 {
     struct BSDSocket *ps, *cs;
     SOCKET clientSockID;
-    unsigned int socketcount;
+    int16_t socketcount;
     unsigned char assigned;
-    IPV4_ADDR lclAddr;
-    lclAddr.Val = 0;
-#if defined(TCPIP_STACK_USE_IPV6)
-    IPV6_ADDR lclAddr6;
-    lclAddr6.d[0] = 0;
-    lclAddr6.d[1] = 0;
-    lclAddr6.d[2] = 0;
-    lclAddr6.d[3] = 0;
-#endif
-    
-    ps = _getBsdSocket(s);
-    if(ps == 0)
+    IP_MULTI_ADDRESS lclAddr;
+
+    ps = F_getBsdSocket(s);
+    if(ps == NULL)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    if (ps->SocketType != SOCK_STREAM)
+    if (ps->SocketType != (uint16_t)SOCK_STREAM)
     {
         errno = EOPNOTSUPP;
         return SOCKET_ERROR;
     }
 
-    if (ps->bsdState == SKT_BSD_LISTEN)
-        backlog = ps->backlog;
+    if (ps->bsdState == (uint8_t)SKT_BSD_LISTEN)
+    {
+        backlog = (int)ps->backlog;
+    }
 
-    if ((ps->bsdState != SKT_BOUND) && (ps->bsdState != SKT_BSD_LISTEN))
+    if ((ps->bsdState != (uint8_t)SKT_BOUND) && (ps->bsdState != (uint8_t)SKT_BSD_LISTEN))
     {
         errno = EINVAL;
         return SOCKET_ERROR;
     }
+    (void)memset(lclAddr.v6Add.v, 0, sizeof(lclAddr));
 
-    while (backlog--)
+    while (backlog-- != 0)
     {
-        assigned = 0;
+        assigned = 0U;
         for (socketcount = 0; socketcount < BSD_SOCKET_COUNT; socketcount++)
         {
-            if (BSDSocketArray[socketcount].bsdState != SKT_CLOSED)
+            if (BSDSocketArray[socketcount].bsdState != (uint8_t)SKT_CLOSED)
+            {
                 continue;
+            }
 
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (ps->addressFamily == AF_INET)
+            if (ps->addressFamily == (uint8_t)AF_INET)
             {
 #endif
-                if (ps->localIPv4)
+                if (ps->localIPv4 != 0U)
                 {
-                    lclAddr.Val = ps->localIPv4;
+                    lclAddr.v4Add.Val = ps->localIPv4;
                 }
-                clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, ps->localPort, (NET_PRES_ADDRESS *)(lclAddr.Val == 0 ? 0 : (IP_MULTI_ADDRESS*) & lclAddr), 0);
+                clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, ps->localPort, (lclAddr.v4Add.Val == 0U ? NULL : FC_MultiAdd2PresAdd(&lclAddr)), NULL);
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
             {
-                if (ps->localIPv6[0])
+                if (ps->localIPv6[0] != 0U)
                 {
-                    lclAddr6.d[0] = ps->localIPv6[0];
-                    lclAddr6.d[1] = ps->localIPv6[1];
-                    lclAddr6.d[2] = ps->localIPv6[2];
-                    lclAddr6.d[3] = ps->localIPv6[3];
+                    lclAddr.v6Add.d32[0] = ps->localIPv6[0];
+                    lclAddr.v6Add.d32[1] = ps->localIPv6[1];
+                    lclAddr.v6Add.d32[2] = ps->localIPv6[2];
+                    lclAddr.v6Add.d32[3] = ps->localIPv6[3];
                 }
-                clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV6, ps->localPort, (NET_PRES_ADDRESS*)(lclAddr6.d[0] == 0 ? 0 : (IP_MULTI_ADDRESS*) & lclAddr6), 0);
+                clientSockID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, ps->localPort, (lclAddr.v6Add.d32[0] == 0U ? NULL : FC_MultiAdd2PresAdd(&lclAddr)), NULL);
             }
 #endif
 
@@ -708,41 +877,41 @@ int listen( SOCKET s, int backlog )
 
             cs = BSDSocketArray + socketcount;
             cs->SocketID = clientSockID;
-            cs->bsdState = SKT_LISTEN;
-            cs->isServer = true;
-            cs->needsSignal = true;
+            cs->bsdState = (uint8_t)SKT_LISTEN;
+            cs->isServer = 1U;
+            cs->needsSignal = 1U;
             cs->localPort = ps->localPort;
-            cs->SocketType = SOCK_STREAM;
+            cs->SocketType = (uint16_t)SOCK_STREAM;
 #if defined(TCPIP_STACK_USE_IPV4)
-            if (ps->addressFamily == AF_INET)
+            if (ps->addressFamily == (uint8_t)AF_INET)
             {
                 cs->localIPv4 = ps->localIPv4;
             }
 #endif
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (ps->addressFamily == AF_INET6)
+            if (ps->addressFamily == (uint8_t)AF_INET6)
             {
                 cs->localIPv6[0] = ps->localIPv6[0];
                 cs->localIPv6[1] = ps->localIPv6[1];
                 cs->localIPv6[2] = ps->localIPv6[2];
                 cs->localIPv6[3] = ps->localIPv6[3];
             }
-#endif
-            cs->parentId = s; 
+#endif            
+            cs->parentId = (uint16_t)s; 
 
-            _cfgBsdSocket(cs);
+            F_cfgBsdSocket(cs);
 
 
             // Clear the first reset flag
-            NET_PRES_SocketWasReset(clientSockID);
+            (void)NET_PRES_SocketWasReset(clientSockID);
 
-            assigned = 1;
-            ps->bsdState = SKT_BSD_LISTEN;
-            ps->backlog = backlog;
+            assigned = 1U;
+            ps->bsdState = (uint8_t)SKT_BSD_LISTEN;
+            ps->backlog = (uint16_t)backlog;
 
             break;
         }
-        if (!assigned)
+        if (assigned == 0U)
         {
             errno = EMFILE;
             return SOCKET_ERROR;
@@ -791,23 +960,23 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
 {
     struct BSDSocket *pListenSock;
     TCP_SOCKET_INFO tcpSockInfo;
-    unsigned int sockCount;
+    int16_t sockCount;
     TCP_SOCKET hTCP;
 
-    pListenSock = _getBsdSocket(s); /* Get the pointer to listening server socket */
+    pListenSock = F_getBsdSocket(s); /* Get the pointer to listening server socket */
 
-    if (pListenSock == 0)
+    if (pListenSock == NULL)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    if (pListenSock->bsdState != SKT_BSD_LISTEN)
+    if (pListenSock->bsdState != (uint8_t)SKT_BSD_LISTEN)
     {
         errno = EINVAL;
         return SOCKET_ERROR;
     }
-    if (pListenSock->SocketType != SOCK_STREAM)
+    if (pListenSock->SocketType != (uint16_t)SOCK_STREAM)
     {
         errno = EOPNOTSUPP;
         return SOCKET_ERROR;
@@ -815,27 +984,31 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
 
     for (sockCount = 0; sockCount < BSD_SOCKET_COUNT; sockCount++)
     {
-        if (BSDSocketArray[sockCount].bsdState != SKT_LISTEN)
+        if (BSDSocketArray[sockCount].bsdState != (uint8_t)SKT_LISTEN)
+        {
             continue;
+        }
 
         if (BSDSocketArray[sockCount].localPort != pListenSock->localPort)
+        {
             continue;
+        }
 
         hTCP = BSDSocketArray[sockCount].SocketID;
 
         // We don't care about connections and disconnections before we can
         // process them, so clear the reset flag
-        NET_PRES_SocketWasReset(hTCP);
+        (void)NET_PRES_SocketWasReset(hTCP);
 
         if (NET_PRES_SocketIsConnected(hTCP))
         {
-            NET_PRES_SocketInfoGet(hTCP, &tcpSockInfo);
-            if (addr)
+            (void)NET_PRES_SocketInfoGet(hTCP, &tcpSockInfo);
+            if (addr != NULL)
             {
-                if (addrlen)
+                if (addrlen != NULL)
                 {
 #if defined(TCPIP_STACK_USE_IPV6)
-                    if (pListenSock->addressFamily == AF_INET)
+                    if (pListenSock->addressFamily == (uint8_t)AF_INET)
                     {
 #endif
                         struct sockaddr_in *addrRemote;
@@ -844,10 +1017,10 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
                             errno = EFAULT;
                             return SOCKET_ERROR;
                         }
-                        addrRemote = (struct sockaddr_in *) addr;
-                        addrRemote->sin_addr.S_un.S_addr = tcpSockInfo.remoteIPaddress.v4Add.Val == IP_ADDR_ANY ? 0: tcpSockInfo.remoteIPaddress.v4Add.Val;
+                        addrRemote = FC_SockAddr2In(addr);
+                        addrRemote->sin_addr.S_un.S_addr = tcpSockInfo.remoteIPaddress.v4Add.Val == IP_ADDR_ANY ? 0U: tcpSockInfo.remoteIPaddress.v4Add.Val;
                         addrRemote->sin_port = tcpSockInfo.remotePort;
-                        *addrlen = sizeof (struct sockaddr_in);
+                        *addrlen = (int)sizeof (struct sockaddr_in);
 #if defined(TCPIP_STACK_USE_IPV6)
                     }
                     else
@@ -858,13 +1031,13 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
                             errno = EFAULT;
                             return SOCKET_ERROR;
                         }
-                        addrRemote = (struct sockaddr_in6*) addr;
-                        addrRemote->sin6_addr.in6_u.u6_addr32[0] = tcpSockInfo.remoteIPaddress.v6Add.d[0];
-                        addrRemote->sin6_addr.in6_u.u6_addr32[1] = tcpSockInfo.remoteIPaddress.v6Add.d[1];
-                        addrRemote->sin6_addr.in6_u.u6_addr32[2] = tcpSockInfo.remoteIPaddress.v6Add.d[2];
-                        addrRemote->sin6_addr.in6_u.u6_addr32[3] = tcpSockInfo.remoteIPaddress.v6Add.d[3];
+                        addrRemote = FC_SockAddr2In6(addr);
+                        addrRemote->sin6_addr.in6_u.u6_addr32[0] = tcpSockInfo.remoteIPaddress.v6Add.d32[0];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[1] = tcpSockInfo.remoteIPaddress.v6Add.d32[1];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[2] = tcpSockInfo.remoteIPaddress.v6Add.d32[2];
+                        addrRemote->sin6_addr.in6_u.u6_addr32[3] = tcpSockInfo.remoteIPaddress.v6Add.d32[3];
                         addrRemote->sin6_port = tcpSockInfo.remotePort;
-                        *addrlen = sizeof (struct sockaddr_in6);
+                        *addrlen = (int)sizeof (struct sockaddr_in6);
                     }
 #endif
                 }
@@ -879,13 +1052,13 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
             }
             else
             {
-                BSDSocketArray[sockCount].remoteIPv6[0] = tcpSockInfo.remoteIPaddress.v6Add.d[0];
-                BSDSocketArray[sockCount].remoteIPv6[1] = tcpSockInfo.remoteIPaddress.v6Add.d[1];
-                BSDSocketArray[sockCount].remoteIPv6[2] = tcpSockInfo.remoteIPaddress.v6Add.d[2];
-                BSDSocketArray[sockCount].remoteIPv6[3] = tcpSockInfo.remoteIPaddress.v6Add.d[3];
+                BSDSocketArray[sockCount].remoteIPv6[0] = tcpSockInfo.remoteIPaddress.v6Add.d32[0];
+                BSDSocketArray[sockCount].remoteIPv6[1] = tcpSockInfo.remoteIPaddress.v6Add.d32[1];
+                BSDSocketArray[sockCount].remoteIPv6[2] = tcpSockInfo.remoteIPaddress.v6Add.d32[2];
+                BSDSocketArray[sockCount].remoteIPv6[3] = tcpSockInfo.remoteIPaddress.v6Add.d32[3];
             }
-#endif
-            BSDSocketArray[sockCount].bsdState = SKT_EST;
+#endif            
+            BSDSocketArray[sockCount].bsdState = (uint8_t)SKT_EST;
             return sockCount;
         }
     }
@@ -930,29 +1103,19 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
   ***************************************************************************/
 int connect( SOCKET s, struct sockaddr* name, int namelen ) 
 {
+#if defined(TCPIP_STACK_USE_IPV4)
     struct sockaddr_in *addr;
-    uint32_t remoteIP = 0;
-    uint16_t remotePort = 0;    
-    IPV4_ADDR localAddr;
-    IPV4_ADDR remoteAddr;
-    localAddr.Val = 0;
-    remoteAddr.Val = 0;
+#endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_IPV6)
-    IPV6_ADDR localAddr6;
-    localAddr6.d[0] = 0;
-    localAddr6.d[1] = 0;
-    localAddr6.d[2] = 0;
-    localAddr6.d[3] = 0;
-    IPV6_ADDR remoteIP6;
-    remoteIP6.d[0] = 0;
-    remoteIP6.d[1] = 0;
-    remoteIP6.d[2] = 0;
-    remoteIP6.d[3] = 0;
+    IP_MULTI_ADDRESS localAddr;
     struct sockaddr_in6 * addr6;
 #endif
+    uint16_t remotePort = 0;    
+    IP_MULTI_ADDRESS remoteIP;
+    int res;
 
-    struct BSDSocket *socket = _getBsdSocket(s);
-    if (socket == 0 || socket->bsdState < SKT_CREATED) 
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+    if (bsocket == NULL || bsocket->bsdState < (uint8_t)SKT_CREATED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -964,252 +1127,409 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
         return SOCKET_ERROR;
     }
 
+    (void)memset(remoteIP.v6Add.v, 0, sizeof(remoteIP));
 #if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->addressFamily == AF_INET)
-    {
-#endif
-        addr = (struct sockaddr_in *) name;
-        remotePort = addr->sin_port;
-        remoteIP = addr->sin_addr.S_un.S_addr == IP_ADDR_ANY ? 0: addr->sin_addr.S_un.S_addr;
-#if defined(TCPIP_STACK_USE_IPV6)
-    }
-    else
-    {
-        addr6 = (struct sockaddr_in6 *) name;
-        remotePort = addr6->sin6_port;
-        uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
-        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
-        memcpy(remoteIP6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
-        localAddr6.d[0] = socket->localIPv6[0];
-        localAddr6.d[1] = socket->localIPv6[1];
-        localAddr6.d[2] = socket->localIPv6[2];
-        localAddr6.d[3] = socket->localIPv6[3];
-    }
-#endif
+    (void)memset(localAddr.v6Add.v, 0, sizeof(localAddr));
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 
-#if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->addressFamily == AF_INET)
+    while(true)
     {
-#endif
-        if (remoteIP == 0u || remotePort == 0u)
+#if defined(TCPIP_STACK_USE_IPV4)
+        if (bsocket->addressFamily == (uint8_t)AF_INET)
         {
-            errno = EINVAL;
-            return SOCKET_ERROR;
-        }
-#if defined(TCPIP_STACK_USE_IPV6)
-    }
-    else
-    {
-        if (remoteIP6.d[0] == 0u || remotePort == 0u)
-        {
-            errno = EINVAL;
-            return SOCKET_ERROR;
-        }
-    }
-#endif
-    if (socket->SocketType == SOCK_STREAM) 
-    {
-        switch (socket->bsdState) 
-        {
-            case SKT_EST:
-                return 0; // already established
+            addr = FC_SockAddr2In(name);
+            remotePort = addr->sin_port;
+            remoteIP.v4Add.Val = addr->sin_addr.S_un.S_addr == IP_ADDR_ANY ? 0U: addr->sin_addr.S_un.S_addr;
 
-            case SKT_IN_PROGRESS:
-                if (TCP_SocketWasReset(s)) 
-                {
-                    errno = ECONNREFUSED;
-                    return SOCKET_ERROR;
-                }
-                else if (TCP_SocketWasDisconnected(s, true))
-                {
-                    errno = ECONNREFUSED;
-                    return SOCKET_ERROR;
-                }
-
-                if (!NET_PRES_SocketIsConnected(socket->SocketID)) 
-                {
-                    errno = EINPROGRESS;
-                    return SOCKET_ERROR;
-                }
-
-                socket->bsdState = SKT_EST;
-                return 0; //success
-
-            case SKT_CREATED:
-            case SKT_BOUND:
-#if defined(TCPIP_STACK_USE_IPV6)
-                if (socket->addressFamily == AF_INET)
-                {
-#endif
-                    if (socket->localIPv4 == IP_ADDR_ANY)
-                    {
-                        socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV4, remotePort, (NET_PRES_ADDRESS *)&remoteIP, 0);
-                        if(socket->SocketID == INVALID_SOCKET)
-                        {
-                            errno = ENOBUFS;
-                            return SOCKET_ERROR;
-                        }
-                    }
-                    else
-                    {
-                        socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV4, 0, 0, 0);
-                        if(socket->SocketID == INVALID_SOCKET)
-                        {
-                            errno = ENOBUFS;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV4, 0, (NET_PRES_ADDRESS *)&socket->localIPv4))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketRemoteBind(socket->SocketID, IP_ADDRESS_TYPE_IPV4, remotePort, (NET_PRES_ADDRESS *)&remoteIP))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketConnect(socket->SocketID))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                    }
-#if defined(TCPIP_STACK_USE_IPV6)
-                }
-                else
-                {
-                    if (socket->localIPv6[0] == IP_ADDR_ANY)
-                    {
-                        socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*)&remoteIP6, 0);
-                        if(socket->SocketID == INVALID_SOCKET)
-                        {
-                            errno = ENOBUFS;
-                            return SOCKET_ERROR;
-                        }
-                    }
-                    else
-                    {
-                        socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, IP_ADDRESS_TYPE_IPV6, 0, 0, 0);
-                        if(socket->SocketID == INVALID_SOCKET)
-                        {
-                            errno = ENOBUFS;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, 0, (NET_PRES_ADDRESS*)&localAddr6))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketRemoteBind(socket->SocketID, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*)&remoteIP6))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                        if (!NET_PRES_SocketConnect(socket->SocketID))
-                        {
-                            errno = EADDRINUSE;
-                            NET_PRES_SocketClose(socket->SocketID);
-                            socket->SocketID = INVALID_SOCKET;
-                            return SOCKET_ERROR;
-                        }
-                    }
-
-                }
-#endif
-
-                if (socket->SocketID == INVALID_SOCKET) 
-                {
-                    errno = ENOBUFS;
-                    return SOCKET_ERROR;
-                }
-                _cfgBsdSocket(socket);
-                // Clear the first reset flag
-                NET_PRES_SocketWasReset(socket->SocketID);
-
-#if defined(TCPIP_STACK_USE_IPV6)
-                if (socket->addressFamily == AF_INET)
-                {
-#endif
-                    localAddr.Val  = socket->localIPv4 == IP_ADDR_ANY ? 0 : socket->localIPv4;
-                    remoteAddr.Val = remoteIP;
-                    TCPIP_TCP_SocketNetSet(socket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(0, &remoteAddr, &localAddr, true), false);
-#if defined(TCPIP_STACK_USE_IPV6)
-                }
-#endif
-                socket->isServer = false;
-                socket->bsdState = SKT_IN_PROGRESS;
-                errno = EINPROGRESS;
-                return SOCKET_ERROR;
-
-            default:
-                errno = ECONNRESET;
-                return SOCKET_ERROR;
-        }
-    } 
-    else 
-    {
-        // open the socket
-        if (socket->bsdState == SKT_CREATED) 
-        {
-#if defined(TCPIP_STACK_USE_IPV6)
-            if (socket->addressFamily == AF_INET)
+            if (remoteIP.v4Add.Val == 0u || remotePort == 0u)
             {
-#endif
-                socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_CLIENT, IP_ADDRESS_TYPE_IPV4, remotePort, (NET_PRES_ADDRESS *) & remoteIP, 0);
+                errno = EINVAL;
+                return SOCKET_ERROR;
+            }
+            errno = 0;
+            if (bsocket->SocketType == (uint16_t)SOCK_STREAM) 
+            {
+                res = connect_stream_v4(bsocket, &remoteIP, remotePort, s);
+                if(errno != 0)
+                {
+                    res = SOCKET_ERROR;
+                }
+                return res;
+            } 
+            else 
+            {
+                res = connect_dgram_v4(bsocket, &remoteIP, remotePort);
+                if(errno != 0)
+                {
+                    res = SOCKET_ERROR;
+                }
+                return res;
+            }
+        }
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+
 #if defined(TCPIP_STACK_USE_IPV6)
+        if (bsocket->addressFamily == (uint8_t)AF_INET6)
+        {
+            addr6 = FC_SockAddr2In6(name);
+            remotePort = addr6->sin6_port;
+            uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+            struct  in6_addr* sin6_addr = FC_U8Ptr2In6(sin6);
+            (void)memcpy(remoteIP.v6Add.v, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
+            localAddr.v6Add.d32[0] = bsocket->localIPv6[0];
+            localAddr.v6Add.d32[1] = bsocket->localIPv6[1];
+            localAddr.v6Add.d32[2] = bsocket->localIPv6[2];
+            localAddr.v6Add.d32[3] = bsocket->localIPv6[3];
+
+            if (remoteIP.v6Add.d32[0] == 0u || remotePort == 0u)
+            {
+                errno = EINVAL;
+                return SOCKET_ERROR;
+            }
+            errno = 0;
+            if (bsocket->SocketType == (uint16_t)SOCK_STREAM) 
+            {
+                res = connect_stream_v6(bsocket, &localAddr, &remoteIP, remotePort, s);
+                if(errno != 0)
+                {
+                    res = SOCKET_ERROR;
+                }
+                return res;
+            } 
+            else 
+            {
+                res = connect_dgram_v6(bsocket, &remoteIP, remotePort);
+                if(errno != 0)
+                {
+                    res = SOCKET_ERROR;
+                }
+                return res;
+            }
+        }
+#endif // defined(TCPIP_STACK_USE_IPV6)
+
+        errno = EAFNOSUPPORT;
+        return SOCKET_ERROR;
+    }
+}
+
+#if defined(TCPIP_STACK_USE_IPV4)
+// connects an IPv4 stream socket
+static int connect_stream_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort, SOCKET s)
+{
+    int res;
+
+    errno = 0;
+    switch (bsocket->bsdState) 
+    {
+        case (uint8_t)SKT_EST:
+            res = 0; // already established
+            break;
+
+        case (uint8_t)SKT_IN_PROGRESS:
+            if (TCP_SocketWasReset(s)) 
+            {
+                errno = ECONNREFUSED;
+                res = SOCKET_ERROR;
+            }
+            else if (TCP_SocketWasDisconnected(s, true))
+            {
+                errno = ECONNREFUSED;
+                res = SOCKET_ERROR;
+            }
+            else if (!NET_PRES_SocketIsConnected(bsocket->SocketID)) 
+            {
+                errno = EINPROGRESS;
+                res = SOCKET_ERROR;
             }
             else
             {
-                socket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_CLIENT, IP_ADDRESS_TYPE_IPV6, remotePort, (NET_PRES_ADDRESS*) & remoteIP6, 0);
+                bsocket->bsdState = (uint8_t)SKT_EST;
+                res = 0; //success
             }
-#endif
-            if (socket->SocketID == INVALID_UDP_SOCKET) 
+            break;
+
+        case (uint8_t)SKT_CREATED:
+        case (uint8_t)SKT_BOUND:
+            res = connect_bound_v4(bsocket, remoteIP, remotePort);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
+        default:
+            errno = ECONNRESET;
+            res = SOCKET_ERROR;
+            break;
+    }
+
+    return res;
+}
+
+static int connect_bound_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort)
+{
+    IP_MULTI_ADDRESS localAddr;
+    IPV4_ADDR remoteAddr;
+
+    remoteAddr.Val = 0;
+
+    while(true)
+    {
+        if (bsocket->localIPv4 == IP_ADDR_ANY)
+        {
+            bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, remotePort, FC_MultiAdd2PresAdd(remoteIP), NULL);
+            if(bsocket->SocketID == INVALID_SOCKET)
             {
                 errno = ENOBUFS;
-                return SOCKET_ERROR;
+                break;
             }
-            _cfgBsdSocket(socket);
-            socket->bsdState = SKT_BOUND;
-        }
-        if (socket->bsdState != SKT_BOUND) 
-        {
-            errno = EINVAL;
-            return SOCKET_ERROR;
-        }
-
-        // UDP: remote port is used as a filter. Need to call connect when using
-        // send/recv calls. No need to call 'connect' if using sendto/recvfrom
-        // calls.
-        socket->remotePort = remotePort;
-#if defined(TCPIP_STACK_USE_IPV6)
-        if (socket->addressFamily == AF_INET)
-        {
-#endif
-            socket->remoteIPv4 = remoteIP;
-#if defined(TCPIP_STACK_USE_IPV6)
         }
         else
         {
-            socket->remoteIPv6[0] = remoteIP6.d[0];
-            socket->remoteIPv6[1] = remoteIP6.d[1];
-            socket->remoteIPv6[2] = remoteIP6.d[2];
-            socket->remoteIPv6[3] = remoteIP6.d[3];
+            bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, 0, NULL, NULL);
+            if(bsocket->SocketID == INVALID_SOCKET)
+            {
+                errno = ENOBUFS;
+                break;
+            }
+
+            localAddr.v4Add.Val = bsocket->localIPv4; 
+            if (!NET_PRES_SocketBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, 0, FC_MultiAdd2PresAdd(&localAddr)))
+            {
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                errno = EADDRINUSE;
+                break;
+            }
+
+            if (!NET_PRES_SocketRemoteBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, remotePort, FC_MultiAdd2PresAdd(remoteIP)))
+            {
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                errno = EADDRINUSE;
+                break;
+            }
+
+            if (!NET_PRES_SocketConnect(bsocket->SocketID))
+            {
+                errno = EADDRINUSE;
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                break;
+            }
+
+            // success
+            if (bsocket->SocketID == INVALID_SOCKET) 
+            {
+                errno = ENOBUFS;
+                break;
+            }
+
+            F_cfgBsdSocket(bsocket);
+            // Clear the first reset flag
+            (void)NET_PRES_SocketWasReset(bsocket->SocketID);
+
+            localAddr.v4Add.Val  = bsocket->localIPv4 == IP_ADDR_ANY ? 0U : bsocket->localIPv4;
+            remoteAddr.Val = remoteIP->v4Add.Val;
+            (void)TCPIP_TCP_SocketNetSet(bsocket->nativeSkt, TCPIP_IPV4_SelectSourceInterface(NULL, &remoteAddr, &localAddr.v4Add, true), false);
+
+            bsocket->isServer = 0U;
+            bsocket->bsdState = (uint8_t)SKT_IN_PROGRESS;
+            errno = EINPROGRESS;
+            break;
         }
-#endif
-        return 0; //success
     }
 
+    return SOCKET_ERROR;
 }
+
+static int connect_dgram_v4(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* remoteIP, uint16_t remotePort)
+{
+        // open the socket
+    if(bsocket->bsdState == (uint8_t)SKT_CREATED) 
+    {
+        bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, remotePort, FC_MultiAdd2PresAdd(remoteIP), NULL);
+
+        if (bsocket->SocketID == INVALID_UDP_SOCKET) 
+        {
+            errno = ENOBUFS;
+            return SOCKET_ERROR;
+        }
+
+        F_cfgBsdSocket(bsocket);
+        bsocket->bsdState = (uint8_t)SKT_BOUND;
+    }
+
+    if (bsocket->bsdState != (uint8_t)SKT_BOUND) 
+    {
+        errno = EINVAL;
+        return SOCKET_ERROR;
+    }
+
+    // UDP: remote port is used as a filter. Need to call connect when using
+    // send/recv calls. No need to call 'connect' if using sendto/recvfrom
+    // calls.
+    bsocket->remotePort = remotePort;
+    bsocket->remoteIPv4 = remoteIP->v4Add.Val;
+
+    return 0; //success
+}
+#endif  // defined(TCPIP_STACK_USE_IPV4)
+
+#if defined(TCPIP_STACK_USE_IPV6)
+// connects an IPv6 stream socket
+static int connect_stream_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pLocalAddr6, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort, SOCKET s)
+{
+    int res;
+
+    errno = 0;
+    switch (bsocket->bsdState) 
+    {
+        case (uint8_t)SKT_EST:
+            res = 0; // already established
+            break;
+
+        case (uint8_t)SKT_IN_PROGRESS:
+            if (TCP_SocketWasReset(s)) 
+            {
+                errno = ECONNREFUSED;
+                res = SOCKET_ERROR;
+            }
+            else if (TCP_SocketWasDisconnected(s, true))
+            {
+                errno = ECONNREFUSED;
+                res = SOCKET_ERROR;
+            }
+            else if (!NET_PRES_SocketIsConnected(bsocket->SocketID)) 
+            {
+                errno = EINPROGRESS;
+                res = SOCKET_ERROR;
+            }
+            else
+            {
+                bsocket->bsdState = (uint8_t)SKT_EST;
+                res = 0; //success
+            }
+            break;
+
+        case (uint8_t)SKT_CREATED:
+        case (uint8_t)SKT_BOUND:
+            res = connect_bound_v6(bsocket, pLocalAddr6, pRemoteIP6, remotePort);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
+        default:
+            errno = ECONNRESET;
+            res = SOCKET_ERROR;
+            break;
+    }
+
+    return res;
+}
+
+static int connect_bound_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pLocalAddr6, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort)
+{
+    while(true)
+    {
+        if (bsocket->localIPv6[0] == IP_ADDR_ANY)
+        {
+            bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, remotePort, FC_MultiAdd2PresAdd(pRemoteIP6), NULL);
+            if(bsocket->SocketID == INVALID_SOCKET)
+            {
+                errno = ENOBUFS;
+                break;
+            }
+        }
+        else
+        {
+            bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, 0, NULL, NULL);
+            if(bsocket->SocketID == INVALID_SOCKET)
+            {
+                errno = ENOBUFS;
+                break;
+            }
+            if (!NET_PRES_SocketBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, 0, FC_MultiAdd2PresAdd(pLocalAddr6)))
+            {
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                errno = EADDRINUSE;
+                break;
+            }
+            if (!NET_PRES_SocketRemoteBind(bsocket->SocketID, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, remotePort, FC_MultiAdd2PresAdd(pRemoteIP6)))
+            {
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                errno = EADDRINUSE;
+                break;
+            }
+            if (!NET_PRES_SocketConnect(bsocket->SocketID))
+            {
+                NET_PRES_SocketClose(bsocket->SocketID);
+                bsocket->SocketID = INVALID_SOCKET;
+                errno = EADDRINUSE;
+                break;
+            }
+        }
+
+        if (bsocket->SocketID == INVALID_SOCKET) 
+        {
+            errno = ENOBUFS;
+            break;
+        }
+        F_cfgBsdSocket(bsocket);
+        // Clear the first reset flag
+        (void)NET_PRES_SocketWasReset(bsocket->SocketID);
+
+        bsocket->isServer = 0U;
+        bsocket->bsdState = (uint8_t)SKT_IN_PROGRESS;
+        errno = EINPROGRESS;
+        break;
+    }
+
+    return SOCKET_ERROR;
+}
+
+static int connect_dgram_v6(struct BSDSocket *bsocket, IP_MULTI_ADDRESS* pRemoteIP6, uint16_t remotePort)
+{
+        // open the socket
+    if(bsocket->bsdState == (uint8_t)SKT_CREATED) 
+    {
+        bsocket->SocketID = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_DATAGRAM_CLIENT, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV6, remotePort, FC_MultiAdd2PresAdd(pRemoteIP6), NULL);
+
+        if (bsocket->SocketID == INVALID_UDP_SOCKET) 
+        {
+            errno = ENOBUFS;
+            return SOCKET_ERROR;
+        }
+
+        F_cfgBsdSocket(bsocket);
+        bsocket->bsdState = (uint8_t)SKT_BOUND;
+    }
+
+    if (bsocket->bsdState != (uint8_t)SKT_BOUND) 
+    {
+        errno = EINVAL;
+        return SOCKET_ERROR;
+    }
+
+    // UDP: remote port is used as a filter. Need to call connect when using
+    // send/recv calls. No need to call 'connect' if using sendto/recvfrom
+    // calls.
+    bsocket->remotePort = remotePort;
+
+    bsocket->remoteIPv6[0] = pRemoteIP6->v6Add.d32[0];
+    bsocket->remoteIPv6[1] = pRemoteIP6->v6Add.d32[1];
+    bsocket->remoteIPv6[2] = pRemoteIP6->v6Add.d32[2];
+    bsocket->remoteIPv6[3] = pRemoteIP6->v6Add.d32[3];
+
+    return 0; //success
+}
+#endif  // defined(TCPIP_STACK_USE_IPV6)
 
 /*****************************************************************************
   Function:
@@ -1284,22 +1604,16 @@ int send( SOCKET s, const char* buf, int len, int flags )
 int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen )
 {
     int size = SOCKET_ERROR;
-    IPV4_ADDR remoteIp;
-    remoteIp.Val = 0;
+    IP_MULTI_ADDRESS remoteIp;
     uint16_t wRemotePort;
     struct sockaddr_in local; 
 #if defined(TCPIP_STACK_USE_IPV6)
-    IPV6_ADDR remoteIp6;
-    remoteIp6.d[0] = 0;
-    remoteIp6.d[1] = 0;
-    remoteIp6.d[2] = 0;
-    remoteIp6.d[3] = 0;
     struct sockaddr_in6 local6;
 #endif
 
-    struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
 
-    if (socket == 0 || socket->bsdState == SKT_CLOSED)
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -1311,29 +1625,31 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
         return 0;
     }
 
-    if (socket->SocketType == SOCK_DGRAM) //UDP
+    (void)memset(remoteIp.v6Add.v, 0, sizeof(remoteIp));
+
+    if (bsocket->SocketType == (uint16_t)SOCK_DGRAM) //UDP
     {
         // Decide the destination IP address and port
 #if defined(TCPIP_STACK_USE_IPV6)
-        if (socket->addressFamily == AF_INET)
+        if (bsocket->addressFamily == (uint8_t)AF_INET)
         {
 #endif
-            remoteIp.Val = socket->remoteIPv4;
+            remoteIp.v4Add.Val = bsocket->remoteIPv4;
 #if defined(TCPIP_STACK_USE_IPV6)
         }
         else
         {
-            remoteIp6.d[0] = socket->remoteIPv6[0];
-            remoteIp6.d[1] = socket->remoteIPv6[1];
-            remoteIp6.d[2] = socket->remoteIPv6[2];
-            remoteIp6.d[3] = socket->remoteIPv6[3];
+            remoteIp.v6Add.d32[0] = bsocket->remoteIPv6[0];
+            remoteIp.v6Add.d32[1] = bsocket->remoteIPv6[1];
+            remoteIp.v6Add.d32[2] = bsocket->remoteIPv6[2];
+            remoteIp.v6Add.d32[3] = bsocket->remoteIPv6[3];
         }
 #endif
-        wRemotePort = socket->remotePort;
-        if (to)
+        wRemotePort = bsocket->remotePort;
+        if (to != NULL)
         {
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (socket->addressFamily == AF_INET)
+            if (bsocket->addressFamily == (uint8_t)AF_INET)
             {
 #endif
                 if ((unsigned int) tolen < sizeof (struct sockaddr_in))
@@ -1341,8 +1657,9 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
                     errno = EFAULT;
                     return SOCKET_ERROR;
                 }
-                wRemotePort = ((struct sockaddr_in*) to)->sin_port;
-                remoteIp.Val = ((struct sockaddr_in*) to)->sin_addr.s_addr;
+                const struct sockaddr_in* s_addr_in = FC_CSockAddr2In(to);
+                wRemotePort = s_addr_in->sin_port;
+                remoteIp.v4Add.Val = s_addr_in->sin_addr.s_addr;
 #if defined(TCPIP_STACK_USE_IPV6)
             }
             else
@@ -1352,91 +1669,95 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
                     errno = EFAULT;
                     return SOCKET_ERROR;
                 }
-                struct sockaddr_in6* addr6 = (struct sockaddr_in6*)to;
+                const struct sockaddr_in6* addr6 = FC_CSockAddr2In6(to);
                 wRemotePort = addr6->sin6_port;
-                uint8_t* sin6 = (uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
-                struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
-                memcpy(remoteIp6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
+                const uint8_t* sin6 = (const uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr);
+                const struct  in6_addr* sin6_addr = FC_CU8Ptr2In6(sin6);
+                (void)memcpy(remoteIp.v6Add.v, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
             }
 #endif
 
             // Implicitly bind the socket if it isn't already
-            if (socket->bsdState == SKT_CREATED)
+            if (bsocket->bsdState == (uint8_t)SKT_CREATED)
             {
 #if defined(TCPIP_STACK_USE_IPV6)
-                if (socket->addressFamily == AF_INET)
+                if (bsocket->addressFamily == (uint8_t)AF_INET)
                 {
 #endif
-                    memset(&local, 0, sizeof (local));
+                    (void)memset(&local, 0, sizeof (local));
                     local.sin_addr.s_addr = IP_ADDR_ANY;
-                    if (bind(s, (struct sockaddr*) &local, sizeof (local)) == SOCKET_ERROR)
+                    if (bind(s, FC_SockIn2Addr(&local), (int)sizeof (local)) == SOCKET_ERROR)
+                    {
                         return SOCKET_ERROR;
+                    }
 #if defined(TCPIP_STACK_USE_IPV6)
                 }
                 else
                 {
-                    memset(&local6, 0x00, sizeof(local6));
+                    (void)memset(&local6, 0x00, sizeof(local6));
                     local6.sin6_addr.in6_u.u6_addr32[0] = IP_ADDR_ANY;
-                    if (bind(s, (struct sockaddr*) &local6, sizeof (local6)) == SOCKET_ERROR)
+                    if (bind(s, FC_SockIn62Addr(&local6), (int)sizeof (local6)) == SOCKET_ERROR)
+                    {
                         return SOCKET_ERROR;
+                    }
                 }
 #endif
             }
         }
 
         UDP_SOCKET_INFO udpSockInfo;
-        NET_PRES_SocketInfoGet(socket->SocketID, &udpSockInfo);
-        UDP_SOCKET uSkt = socket->nativeSkt;
+        (void)NET_PRES_SocketInfoGet(bsocket->SocketID, &udpSockInfo);
+        UDP_SOCKET uSkt = bsocket->nativeSkt;
 
 #if defined(TCPIP_STACK_USE_IPV6)
-        if (socket->addressFamily == AF_INET)
+        if (bsocket->addressFamily == (uint8_t)AF_INET)
         {
 #endif
-            if (remoteIp.Val == IP_ADDR_ANY)
+            if (remoteIp.v4Add.Val == IP_ADDR_ANY)
             {
-                TCPIP_UDP_BcastIPV4AddressSet(uSkt, UDP_BCAST_NETWORK_LIMITED, 0);
+                (void)TCPIP_UDP_BcastIPV4AddressSet(uSkt, UDP_BCAST_NETWORK_LIMITED, NULL);
             }
             else
             { // Set the remote IP and MAC address if it is different from what we already have stored in the UDP socket
-                if (udpSockInfo.remoteIPaddress.v4Add.Val != remoteIp.Val)
+                if (udpSockInfo.remoteIPaddress.v4Add.Val != remoteIp.v4Add.Val)
                 {
-                    TCPIP_UDP_DestinationIPAddressSet(uSkt, IP_ADDRESS_TYPE_IPV4, (IP_MULTI_ADDRESS*) & remoteIp.Val);
+                    (void)TCPIP_UDP_DestinationIPAddressSet(uSkt, IP_ADDRESS_TYPE_IPV4, &remoteIp);
                 }
             }
             // Set the proper remote port
-            TCPIP_UDP_DestinationPortSet(uSkt, wRemotePort);
+            (void)TCPIP_UDP_DestinationPortSet(uSkt, wRemotePort);
 #if defined(TCPIP_STACK_USE_IPV6)
         }
         else
         {
-            if ((udpSockInfo.remoteIPaddress.v6Add.d[0] != remoteIp6.d[0]) ||
-                (udpSockInfo.remoteIPaddress.v6Add.d[1] != remoteIp6.d[1]) ||
-                (udpSockInfo.remoteIPaddress.v6Add.d[2] != remoteIp6.d[2]) ||
-                (udpSockInfo.remoteIPaddress.v6Add.d[3] != remoteIp6.d[3]))
+            if ((udpSockInfo.remoteIPaddress.v6Add.d32[0] != remoteIp.v6Add.d32[0]) ||
+                (udpSockInfo.remoteIPaddress.v6Add.d32[1] != remoteIp.v6Add.d32[1]) ||
+                (udpSockInfo.remoteIPaddress.v6Add.d32[2] != remoteIp.v6Add.d32[2]) ||
+                (udpSockInfo.remoteIPaddress.v6Add.d32[3] != remoteIp.v6Add.d32[3]))
             {
-                    TCPIP_UDP_DestinationIPAddressSet(uSkt, IP_ADDRESS_TYPE_IPV6, (IP_MULTI_ADDRESS*) & remoteIp6.d);
+                    (void)TCPIP_UDP_DestinationIPAddressSet(uSkt, IP_ADDRESS_TYPE_IPV6, &remoteIp);
 
             }
             // Set the proper remote port
-            TCPIP_UDP_DestinationPortSet(uSkt, wRemotePort);
+            (void)TCPIP_UDP_DestinationPortSet(uSkt, wRemotePort);
             // IPv6 client socket requires explicit binding
-            TCPIP_UDP_SocketNetSet(uSkt, TCPIP_STACK_NetDefaultGet());
+            (void)TCPIP_UDP_SocketNetSet(uSkt, TCPIP_STACK_NetDefaultGet());            
         }
 #endif
         // Select the UDP socket and see if we can write to it
-        if (NET_PRES_SocketWriteIsReady(socket->SocketID, len, 0))
+        if (NET_PRES_SocketWriteIsReady(bsocket->SocketID, (uint16_t)len, 0U) != 0U)
         {
             // Write data and send UDP datagram
-            size = NET_PRES_SocketWrite(socket->SocketID, (uint8_t*) buf, len);
-            NET_PRES_SocketFlush(socket->SocketID);
+            size = (int)NET_PRES_SocketWrite(bsocket->SocketID, (const uint8_t*) buf, (uint16_t)len);
+            (void)NET_PRES_SocketFlush(bsocket->SocketID);
             return size;
         }
         // just in case there's some old data already in there...
-        NET_PRES_SocketFlush(socket->SocketID);
+        (void)NET_PRES_SocketFlush(bsocket->SocketID);
     }
-    else if (socket->SocketType == SOCK_STREAM) //TCP will only send to the already established socket.
+    else if (bsocket->SocketType == (uint16_t)SOCK_STREAM) //TCP will only send to the already established socket.
     {
-        if (socket->bsdState != SKT_EST)
+        if (bsocket->bsdState != (uint8_t)SKT_EST)
         {
             errno = ENOTCONN;
             return SOCKET_ERROR;
@@ -1450,11 +1771,15 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
 
         // Write data to the socket. If one or more bytes were written, then
         // return this value.  Otherwise, fail and return SOCKET_ERROR.
-        size = NET_PRES_SocketWrite(socket->SocketID, (uint8_t*) buf, len);
-        if (size)
+        size = (int)NET_PRES_SocketWrite(bsocket->SocketID, (const uint8_t*) buf, (uint16_t)len);
+        if (size != 0)
         {
             return size;
         }
+    }
+    else
+    {
+        // do nothing
     }
     errno = EWOULDBLOCK;
     return SOCKET_ERROR;
@@ -1508,64 +1833,76 @@ int recv( SOCKET s, char* buf, int len, int flags )
 {
     int     nBytes;
 
-    struct BSDSocket *socket = _getBsdSocket(s);
-    if( socket == 0 )
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+    if( bsocket == NULL )
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    if(socket->SocketType == SOCK_STREAM) //TCP
+    if(bsocket->SocketType == (uint16_t)SOCK_STREAM) //TCP
     {
-        if(socket->bsdState != SKT_EST)
+        if(bsocket->bsdState != (uint8_t)SKT_EST)
         {
             errno = ENOTCONN;
             return SOCKET_ERROR;
         }
 
-        if(TCP_SocketWasReset(s) || TCP_SocketWasDisconnected(s, false))
+        if(TCP_SocketWasReset(s))
         {
             return 0;
         }
-
-        nBytes = NET_PRES_SocketReadIsReady(socket->SocketID);
-        if(nBytes && buf && len)
-        {   // copy available data to user buffer
-            nBytes = NET_PRES_SocketRead(socket->SocketID, (uint8_t*)buf, len);
+        else if(TCP_SocketWasDisconnected(s, false))
+        {
+            return 0;
+        }
+        else
+        {
+            // continue
         }
 
-        if(nBytes)
+        nBytes = (int)NET_PRES_SocketReadIsReady(bsocket->SocketID);
+        if(nBytes != 0 && buf != NULL && len != 0)
+        {   // copy available data to user buffer
+            nBytes = (int)NET_PRES_SocketRead(bsocket->SocketID, (uint8_t*)buf, (uint16_t)len);
+        }
+
+        if(nBytes != 0)
         {
             return nBytes;
         }
         errno = EWOULDBLOCK;
         return SOCKET_ERROR;
     }
-    else if(socket->SocketType == SOCK_DGRAM) //UDP
+    else if(bsocket->SocketType == (uint16_t)SOCK_DGRAM) //UDP
     {
-        if(socket->bsdState != SKT_BOUND)
+        if(bsocket->bsdState != (uint8_t)SKT_BOUND)
         {
             errno = EINVAL;
             return SOCKET_ERROR;
         }
 
-        nBytes = NET_PRES_SocketReadIsReady(socket->SocketID);
-        if(nBytes && buf && len)
+        nBytes = (int)NET_PRES_SocketReadIsReady(bsocket->SocketID);
+        if(nBytes != 0 && buf != NULL && len != 0)
         {   // copy available data to user buffer
-            nBytes =  NET_PRES_SocketRead(socket->SocketID, (uint8_t*)buf, len);
+            nBytes =  (int)NET_PRES_SocketRead(bsocket->SocketID, (uint8_t*)buf, (uint16_t)len);
             if (nBytes <= len)
             {
                 // Need to discard the packet now that we're done with it.
-                NET_PRES_SocketDiscard(socket->SocketID);
+                (void)NET_PRES_SocketDiscard(bsocket->SocketID);
             }
         }
 
-        if(nBytes)
+        if(nBytes != 0)
         {
             return nBytes;
         }
         errno = EWOULDBLOCK;
         return SOCKET_ERROR;
+    }
+    else
+    {
+        // do nothing
     }
 
     return 0;
@@ -1620,55 +1957,55 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
     TCP_SOCKET_INFO tcpSockInfo;
     int nBytes;
 
-    struct BSDSocket *socket = _getBsdSocket(s);
-    if (socket == 0)
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+    if (bsocket == NULL)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
 #if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->addressFamily == AF_INET)
+    if (bsocket->addressFamily == (uint8_t)AF_INET)
     {
 #endif
-        rem_addr = (struct sockaddr_in *) from;
+        rem_addr = FC_SockAddr2In(from);
 #if defined(TCPIP_STACK_USE_IPV6)
     }
     else
     {
-        rem_addr6 = (struct sockaddr_in6 *) from;
+        rem_addr6 = FC_SockAddr2In6(from);
     }
 #endif
 
-    if (socket->SocketType == SOCK_DGRAM) //UDP
+    if (bsocket->SocketType == (uint16_t)SOCK_DGRAM) //UDP
     {
         // If this BSD socket doesn't have a Microchip UDP socket associated
         // with it yet, then no data can be received and we must not use the
-        // socket->SocketID parameter, which isn't set yet.
-        if (socket->bsdState != SKT_BOUND)
+        // bsocket->SocketID parameter, which isn't set yet.
+        if (bsocket->bsdState != (uint8_t)SKT_BOUND)
         {
             errno = EINVAL;
             return SOCKET_ERROR;
         }
 
-        if (NET_PRES_SocketReadIsReady(socket->SocketID))
+        if (NET_PRES_SocketReadIsReady(bsocket->SocketID) != 0U)
         {
             // Capture sender information (can change packet to packet)
-            if (from && fromlen)
+            if (from != NULL && fromlen != NULL)
             {
 #if defined(TCPIP_STACK_USE_IPV6)
-                if (socket->addressFamily == AF_INET)
+                if (bsocket->addressFamily == (uint8_t)AF_INET)
                 {
 #endif
                     if ((unsigned int) *fromlen >= sizeof (struct sockaddr_in))
                     {
                         UDP_SOCKET_INFO udpSockInfo;
-                        NET_PRES_SocketInfoGet(socket->SocketID, &udpSockInfo);
+                        (void)NET_PRES_SocketInfoGet(bsocket->SocketID, &udpSockInfo);
                         if (udpSockInfo.addressType == IP_ADDRESS_TYPE_IPV4)
                         {
                             rem_addr->sin_addr.S_un.S_addr = udpSockInfo.sourceIPaddress.v4Add.Val;
                             rem_addr->sin_port = udpSockInfo.remotePort;
-                            *fromlen = sizeof (struct sockaddr_in);
+                            *fromlen = (int)sizeof (struct sockaddr_in);
                         }
                     }
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -1678,25 +2015,25 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
                     if ((unsigned int) *fromlen >= sizeof (struct sockaddr_in6))
                     {
                         UDP_SOCKET_INFO udpSockInfo;
-                        NET_PRES_SocketInfoGet(socket->SocketID, &udpSockInfo);
+                        (void)NET_PRES_SocketInfoGet(bsocket->SocketID, &udpSockInfo);
                         if (udpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                         {
                             uint8_t* sin6 = (uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr);
-                            struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
-                            memcpy(sin6_addr->in6_u.u6_addr8, udpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
+                            struct  in6_addr* sin6_addr = FC_U8Ptr2In6(sin6);
+                            (void)memcpy(sin6_addr->in6_u.u6_addr8, udpSockInfo.remoteIPaddress.v6Add.v, sizeof(IPV6_ADDR));
                             rem_addr6->sin6_port = udpSockInfo.remotePort;
-                            *fromlen = sizeof (struct sockaddr_in6);
+                            *fromlen = (int)sizeof (struct sockaddr_in6);
                         }
                     }
                 }
 #endif
 
             }
-            nBytes = NET_PRES_SocketRead(socket->SocketID, (uint8_t*) buf, len);
+            nBytes = (int)NET_PRES_SocketRead(bsocket->SocketID, (uint8_t*) buf, (uint16_t)len);
             if (nBytes <= len)
             {
-                //Need to discard the packet now that we're done with it.
-                NET_PRES_SocketDiscard(socket->SocketID);
+                // Need to discard the packet now that we're done with it.
+                (void)NET_PRES_SocketDiscard(bsocket->SocketID);
             }
         }
         else
@@ -1704,7 +2041,7 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
             nBytes = 0;
         }
 
-        if (nBytes)
+        if (nBytes != 0)
         {
             return nBytes;
         }
@@ -1713,21 +2050,21 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
     }
     else //TCP recieve from already connected socket.
     {
-        if (from && fromlen)
+        if (from  != NULL && fromlen != NULL)
         {
             // Capture sender information (will always match socket connection information)
 #if defined(TCPIP_STACK_USE_IPV6)
-            if (socket->addressFamily == AF_INET)
+            if (bsocket->addressFamily == (uint8_t)AF_INET)
             {
 #endif
                 if ((unsigned int) *fromlen >= sizeof (struct sockaddr_in))
                 {
-                    NET_PRES_SocketInfoGet(socket->SocketID, &tcpSockInfo);
+                    (void)NET_PRES_SocketInfoGet(bsocket->SocketID, &tcpSockInfo);
                     if (tcpSockInfo.addressType == IP_ADDRESS_TYPE_IPV4)
                     {
                         rem_addr->sin_addr.S_un.S_addr = tcpSockInfo.remoteIPaddress.v4Add.Val;
                         rem_addr->sin_port = tcpSockInfo.remotePort;
-                        *fromlen = sizeof (struct sockaddr_in);
+                        *fromlen = (int)sizeof (struct sockaddr_in);
                     }
                 }
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -1736,14 +2073,14 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
             {
                 if ((unsigned int) *fromlen >= sizeof (struct sockaddr_in6))
                 {
-                    NET_PRES_SocketInfoGet(socket->SocketID, &tcpSockInfo);
+                    (void)NET_PRES_SocketInfoGet(bsocket->SocketID, &tcpSockInfo);
                     if (tcpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                     {
                         uint8_t* sin6 = (uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr);
-                        struct  in6_addr* sin6_addr = (struct  in6_addr*)sin6;
-                        memcpy(sin6_addr->in6_u.u6_addr8, tcpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
+                        struct  in6_addr* sin6_addr = FC_U8Ptr2In6(sin6);
+                        (void)memcpy(sin6_addr->in6_u.u6_addr8, tcpSockInfo.remoteIPaddress.v6Add.v, sizeof(IPV6_ADDR));
                         rem_addr6->sin6_port = tcpSockInfo.remotePort;
-                        *fromlen = sizeof (struct sockaddr_in6);
+                        *fromlen = (int)sizeof (struct sockaddr_in6);
 
                     }
                 }
@@ -1791,22 +2128,24 @@ int gethostname(char* name, int namelen)
     uint16_t wSourceLen;
     uint16_t w;
     uint8_t v;
-    TCPIP_NET_IF* pNetIf;
+    const TCPIP_NET_IF* pNetIf;
 
-    if(name == 0)
+    if(name == NULL)
     {
         errno = EINVAL;
         return SOCKET_ERROR;
     }
 
-    pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet();
+    pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_NetDefaultGet();
     
-    wSourceLen = sizeof(pNetIf->NetBIOSName);
+    wSourceLen = (uint16_t)sizeof(pNetIf->NetBIOSName);
     for(w = 0; w < wSourceLen; w++)
     {
         v = pNetIf->NetBIOSName[w];
-        if((v == ' ') || (v == 0u))
+        if((v == (uint8_t)' ') || (v == 0u))
+        {
             break;
+        }
     }
     wSourceLen = w;
     if(namelen < (int)wSourceLen + 1)
@@ -1818,10 +2157,10 @@ int gethostname(char* name, int namelen)
     for(w = 0; w < wSourceLen; w++)
     {
         v = pNetIf->NetBIOSName[w];
-        name[w] = v;
+        name[w] = (char)v;
     }
 
-    name[wSourceLen] = 0;
+    name[wSourceLen] = (char)0;
 
     return 0;
 }
@@ -1856,53 +2195,59 @@ int gethostname(char* name, int namelen)
   ***************************************************************************/
 int closesocket( SOCKET s )
 {   
-    uint8_t i;
+    int16_t i;
 
-    struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
 
-    if (socket == 0)
+    if (bsocket == NULL)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    if(socket->bsdState == SKT_CLOSED)
+    if(bsocket->bsdState == (uint8_t)SKT_CLOSED)
     {
         return 0;   // Nothing to do, so return success
     }
 
-    if(socket->SocketType == SOCK_STREAM)
+    if(bsocket->SocketType == (uint16_t)SOCK_STREAM)
     {
-        if(socket->bsdState == SKT_BSD_LISTEN)
+        if(bsocket->bsdState == (uint8_t)SKT_BSD_LISTEN)
         {
             // This is a listerner handle, so when we close it we also should 
             // close all TCP sockets that were opened for backlog processing 
             // but didn't actually get connected
             for(i = 0; i < BSD_SOCKET_COUNT; i++)
             {
-                if(BSDSocketArray[i].bsdState != SKT_LISTEN)
+                if(BSDSocketArray[i].bsdState != (uint8_t)SKT_LISTEN)
+                {
                     continue;
-                if(BSDSocketArray[i].localPort == socket->localPort)
+                }
+
+                if(BSDSocketArray[i].localPort == bsocket->localPort)
                 {
                     NET_PRES_SocketClose(BSDSocketArray[i].SocketID);
-                    socket->SocketID = NET_PRES_INVALID_SOCKET;
-                    BSDSocketArray[i].bsdState = SKT_CLOSED;
+                    bsocket->SocketID = NET_PRES_INVALID_SOCKET;
+                    BSDSocketArray[i].bsdState = (uint8_t)SKT_CLOSED;
                 }
             }
         }
-        else if(socket->bsdState >= SKT_LISTEN)
+        else if(bsocket->bsdState >= (uint8_t)SKT_LISTEN)
         {
             // For server sockets, if the parent listening socket is still open, 
             // then return this socket to the queue for future backlog processing.
-            if(socket->isServer)
+            if(bsocket->isServer != 0U)
             {
                 for(i = 0; i < BSD_SOCKET_COUNT; i++)
                 {
-                    if(BSDSocketArray[i].bsdState != SKT_BSD_LISTEN)
-                        continue;
-                    if(BSDSocketArray[i].localPort == socket->localPort)
+                    if(BSDSocketArray[i].bsdState != (uint8_t)SKT_BSD_LISTEN)
                     {
-                        NET_PRES_SocketDisconnect(socket->SocketID);
+                        continue;
+                    }
+
+                    if(BSDSocketArray[i].localPort == bsocket->localPort)
+                    {
+                        (void)NET_PRES_SocketDisconnect(bsocket->SocketID);
                         
                         // Listener socket is still open, so wait for connection to close
                         // and then return to the listening state so that the user must call accept()
@@ -1910,7 +2255,7 @@ int closesocket( SOCKET s )
                         // If the other side has already closed, the signal may be already sent. So this is critical!
                         // don't let the TCP/IP thread interfere
                         OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-                        socket->bsdState = TCPIP_TCP_IsConnected(socket->nativeSkt) ? SKT_DISCONNECTING : SKT_LISTEN;
+                        bsocket->bsdState = TCPIP_TCP_IsConnected(bsocket->nativeSkt) ? (uint8_t)SKT_DISCONNECTING : (uint8_t)SKT_LISTEN;
                         OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
                         return 0;
                     }
@@ -1918,28 +2263,36 @@ int closesocket( SOCKET s )
                 // If we get down here, then the parent listener socket has 
                 // apparently already been closed, so this socket can not be 
                 // reused.  Close it complete.
-                NET_PRES_SocketClose(socket->SocketID);
+                NET_PRES_SocketClose(bsocket->SocketID);
             }
-            else if(socket->bsdState != SKT_DISCONNECTED)   // this is a client socket that isn't already disconnected
+            else if(bsocket->bsdState != (uint8_t)SKT_DISCONNECTED)   // this is a client socket that isn't already disconnected
             {
-                NET_PRES_SocketClose(socket->SocketID);
+                NET_PRES_SocketClose(bsocket->SocketID);
             }
+            else
+            {
+                // do nothing
+            }
+        }
+        else
+        {
+            // do nothing
         }
     }
     else //udp sockets
     {
-        if(socket->bsdState == SKT_BOUND)
+        if(bsocket->bsdState == (uint8_t)SKT_BOUND)
         {
-            NET_PRES_SocketClose(socket->SocketID);
-            socket->SocketID = NET_PRES_INVALID_SOCKET;
+            NET_PRES_SocketClose(bsocket->SocketID);
+            bsocket->SocketID = NET_PRES_INVALID_SOCKET;
         }
     }
 
-    NET_PRES_SocketClose(socket->SocketID);
-    socket->SocketID = NET_PRES_INVALID_SOCKET;
-    socket->bsdState = SKT_CLOSED;
-    socket->SocketID = INVALID_UDP_SOCKET;
-    socket->w = 0;
+    NET_PRES_SocketClose(bsocket->SocketID);
+    bsocket->SocketID = NET_PRES_INVALID_SOCKET;
+    bsocket->bsdState = (uint8_t)SKT_CLOSED;
+    bsocket->SocketID = INVALID_UDP_SOCKET;
+    bsocket->w = 0;
     return 0; //success
 }
 
@@ -1970,36 +2323,36 @@ int closesocket( SOCKET s )
   ***************************************************************************/
 static bool TCP_SocketWasReset(SOCKET s)
 {
-    struct BSDSocket *socket;
-    uint8_t i;
+    struct BSDSocket *bsocket;
+    int16_t i;
 
-    socket = BSDSocketArray + s;
+    bsocket = BSDSocketArray + s;
 
     // Nothing to do if reset has already been handled
-    if(socket->bsdState == SKT_DISCONNECTED)
+    if(bsocket->bsdState == (uint8_t)SKT_DISCONNECTED)
     {
         return true;    
     }
 
     // Find out if a reset has occurred
-    if(!NET_PRES_SocketWasReset(socket->SocketID))
+    if(!NET_PRES_SocketWasReset(bsocket->SocketID))
     {   // Nothing to do if a reset has not occurred
         return false;
     }
 
     // For server sockets, if the parent listening socket is still open, 
     // then return this socket to the queue for future backlog processing.
-    if(socket->isServer)
+    if(bsocket->isServer != 0U)
     {
         for(i = 0; i < BSD_SOCKET_COUNT; i++)
         {
-            if(BSDSocketArray[i].bsdState == SKT_BSD_LISTEN)
+            if(BSDSocketArray[i].bsdState == (uint8_t)SKT_BSD_LISTEN)
             {
-                if(BSDSocketArray[i].localPort == socket->localPort)
+                if(BSDSocketArray[i].localPort == bsocket->localPort)
                 {   // Listener socket is still open, so just return to the 
                     // listening state so that the user must call accept() again to 
                     // reuse this BSD socket
-                    socket->bsdState = SKT_LISTEN;
+                    bsocket->bsdState = (uint8_t)SKT_LISTEN;
                     return true;
                 }
             }
@@ -2010,8 +2363,8 @@ static bool TCP_SocketWasReset(SOCKET s)
     // should be closed so that no more clients can connect to it.  However, 
     // we can't go to the BSD SKT_CLOSED state directly since the user still 
     // has to call closesocket() with this s SOCKET descriptor first.
-    TCPIP_TCP_Abort(socket->nativeSkt, false);
-    socket->bsdState = SKT_DISCONNECTED;
+    TCPIP_TCP_Abort(bsocket->nativeSkt, false);
+    bsocket->bsdState = (uint8_t)SKT_DISCONNECTED;
     return true;
 
 }
@@ -2043,101 +2396,114 @@ static bool TCP_SocketWasReset(SOCKET s)
   ***************************************************************************/
 static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort)
 {
-    struct BSDSocket *socket;
+    struct BSDSocket *bsocket;
 
-    socket = BSDSocketArray + s;
+    bsocket = BSDSocketArray + s;
 
-    if(socket->bsdState == SKT_DISCONNECTED)
+    if(bsocket->bsdState == (uint8_t)SKT_DISCONNECTED)
     {   // Nothing to do if a disconnect has already been handled
         return true;    
     }
 
     // Find out if a reset has occurred
-    if(!NET_PRES_SocketWasDisconnected(socket->SocketID))
+    if(!NET_PRES_SocketWasDisconnected(bsocket->SocketID))
     {   // Nothing to do if a reset has not occurred
         return false;
     }
 
     // For server sockets, if the parent listening socket is still open, 
     // then return this socket to the queue for future backlog processing.
-    if(socket->isServer == 0 && cliAbort)
+    if(bsocket->isServer == 0U && cliAbort)
     {
-        TCPIP_TCP_Abort(socket->nativeSkt, false);
-        socket->bsdState = SKT_DISCONNECTED;
+        TCPIP_TCP_Abort(bsocket->nativeSkt, false);
+        bsocket->bsdState = (uint8_t)SKT_DISCONNECTED;
     }
 
     return true;
 }
 
-int _setsockopt_ip(const struct BSDSocket * s,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
+static int F_setsockopt_ip(const struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
 {
-    switch (option_name)
+
+    if (option_name == (uint32_t)IP_OPTIONS || option_name == (uint32_t)IP_TOS || option_name == (uint32_t)IP_TTL || option_name == (uint32_t)IP_MULTICAST_IF) 
     {
-        case IP_OPTIONS:
-        case IP_TOS:
-        case IP_TTL:
-        case IP_MULTICAST_IF:
-        case IP_MULTICAST_TTL:
-        case IP_MULTICAST_LOOP:
-        case IP_ADD_MEMBERSHIP:
-        case IP_DROP_MEMBERSHIP:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        // do nothing
     }
+    else if(option_name == (uint32_t)IP_MULTICAST_TTL || option_name == (uint32_t)IP_MULTICAST_LOOP || option_name == (uint32_t)IP_ADD_MEMBERSHIP || option_name == (uint32_t)IP_DROP_MEMBERSHIP)
+    {
+        // do nothing
+    } 
+    else
+    {
+        // do nothing
+    }
+
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
 }
 
-int _setsockopt_socket(struct BSDSocket * s,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
+static int F_setsockopt_socket(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
 {
+    union
+    {
+        const uint8_t*  cu8ptr;
+        const uint16_t* cu16ptr;
+        const struct linger * cling;
+        const bool*  cboolptr;
+    }U_CUPTR_OPT;
+
+    int res = 0;
+    U_CUPTR_OPT.cu8ptr = option_value;
+
     switch (option_name)
     {
         case SO_SNDBUF:
         {
-            s->sndBufSize = *((uint16_t*)option_value);
+            s->sndBufSize = *U_CUPTR_OPT.cu16ptr;
             break;
         }
 
         case SO_LINGER:
         {
-            if (s->SocketType == SOCK_DGRAM)
+            if (s->SocketType == (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
+                res = SOCKET_ERROR;
             }
             else
             {
-                struct linger * ling = (struct linger*)option_value;
-                s->tcpLinger = ling->l_onoff != 0;
-                s->lingerTmo = ling->l_linger;
+                const struct linger * ling = U_CUPTR_OPT.cling;
+                s->tcpLinger = (ling->l_onoff != 0) ? 1U : 0U;
+                s->lingerTmo = (uint16_t)ling->l_linger;
             }
             break;
         }
 
         case SO_RCVBUF:
         {
-            if (s->SocketType == SOCK_DGRAM)
+            if (s->SocketType == (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
+                res = SOCKET_ERROR;
             }
-            s->rcvBufSize = *((uint16_t*)option_value);
+            else
+            {
+                s->rcvBufSize = *U_CUPTR_OPT.cu16ptr;
+            }
             break;
         }
 
         case SO_BROADCAST:
         {
-            if (s->SocketType != SOCK_DGRAM)
+            if (s->SocketType != (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
+                res = SOCKET_ERROR;
             }
-            s->udpBcastEnabled = *((bool*)option_value) != 0;
+            else
+            {
+                s->udpBcastEnabled = *U_CUPTR_OPT.cboolptr != false ? 1U : 0U;
+            }
             break;
         }
         
@@ -2152,22 +2518,27 @@ int _setsockopt_socket(struct BSDSocket * s,
         case SO_SNDTIMEO:
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
-    _cfgBsdSocket(s);
-    return 0;
+
+    if(res == 0)
+    {
+        F_cfgBsdSocket(s);
+    }
+
+    return res;
 }
 
-int _setsockopt_tcp(struct BSDSocket * s,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
+static int F_setsockopt_tcp(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
 {
-    if (s->SocketType == SOCK_DGRAM)
+    if (s->SocketType == (uint16_t)SOCK_DGRAM)
     {
         errno = EOPNOTSUPP;
         return SOCKET_ERROR;
     }
+
+    int res = 0;
     switch (option_name)
     {
         case TCP_NODELAY:
@@ -2178,168 +2549,190 @@ int _setsockopt_tcp(struct BSDSocket * s,
 
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
-    _cfgBsdSocket(s);
-    return 0;
 
-}
-
-int _setsockopt_ipv6(struct BSDSocket * s,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
-{
-    switch (option_name)
+    if(res == 0)
     {
-        case IPV6_UNICAST_HOPS:
-        case IPV6_MULTICAST_IF:
-        case IPV6_MULTICAST_HOPS:
-        case IPV6_MULTICAST_LOOP:
-        case IPV6_JOIN_GROUP:
-        case IPV6_LEAVE_GROUP:
-        case IPV6_V6ONLY:
-        case IPV6_CHECKSUM:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        F_cfgBsdSocket(s);
     }
+    return res;
+
 }
 
-int _setsockopt_icmp6(struct BSDSocket * s,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
+static int F_setsockopt_ipv6(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
 {
-    switch (option_name)
+    if (option_name == (uint32_t)IPV6_UNICAST_HOPS || option_name == (uint32_t)IPV6_MULTICAST_IF || option_name == (uint32_t)IPV6_MULTICAST_HOPS || option_name == (uint32_t)IPV6_MULTICAST_LOOP) 
     {
-        case ICMP6_FILTER:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        // do nothing
     }
+    else if(option_name == (uint32_t)IPV6_JOIN_GROUP || option_name == (uint32_t)IPV6_LEAVE_GROUP || option_name == (uint32_t)IPV6_V6ONLY || option_name == (uint32_t)IPV6_CHECKSUM)
+    {
+        // do nothing
+    } 
+    else
+    {
+        // do nothing
+    }
+
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
 }
 
-int setsockopt(SOCKET s,
-               uint32_t level,
-               uint32_t option_name,
-               const uint8_t *option_value,
-               uint32_t option_length)
+static int F_setsockopt_icmp6(struct BSDSocket * s, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
 {
-    struct BSDSocket *socket = _getBsdSocket(s);
+    if (option_name == (uint32_t)ICMP6_FILTER)
+    {
+        // do nothing
+    }
 
-    if (socket == 0 || socket->bsdState == SKT_CLOSED) 
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
+}
+
+int setsockopt(SOCKET s, uint32_t level, uint32_t option_name, const uint8_t *option_value, uint32_t option_length)
+{
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
+    int res;
+    errno = 0;
     switch (level)
     {
         case IPPROTO_IP:
-            return _setsockopt_ip(socket,
-                                  option_name,
-                                  option_value,
-                                  option_length);
+            res = F_setsockopt_ip(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case SOL_SOCKET:
-            return _setsockopt_socket(socket,
-                                      option_name,
-                                      option_value,
-                                      option_length);
+            res = F_setsockopt_socket(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_TCP:
-            return _setsockopt_tcp(socket,
-                                   option_name,
-                                   option_value,
-                                   option_length);
+            res = F_setsockopt_tcp(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_IPV6:
-            return _setsockopt_ipv6(socket,
-                                    option_name,
-                                    option_value,
-                                    option_length);
+            res = F_setsockopt_ipv6(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_ICMPV6:
-            return _setsockopt_icmp6(socket,
-                                     option_name,
-                                     option_value,
-                                     option_length);
+            res = F_setsockopt_icmp6(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
+
+    return res;
 }
 
 
-int _getsockopt_ip(const struct BSDSocket * s,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
+static int F_getsockopt_ip(const struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
 {
-    switch (option_name)
+    if (option_name == (uint32_t)IP_OPTIONS || option_name == (uint32_t)IP_TOS || option_name == (uint32_t)IP_TTL || option_name == (uint32_t)IP_MULTICAST_IF)
     {
-        case IP_OPTIONS:
-        case IP_TOS:
-        case IP_TTL:
-        case IP_MULTICAST_IF:
-        case IP_MULTICAST_TTL:
-        case IP_MULTICAST_LOOP:
-        case IP_ADD_MEMBERSHIP:
-        case IP_DROP_MEMBERSHIP:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        // do nothing
     }
+    else if(option_name == (uint32_t)IP_MULTICAST_TTL || option_name == (uint32_t)IP_MULTICAST_LOOP || option_name == (uint32_t)IP_ADD_MEMBERSHIP || option_name == (uint32_t)IP_DROP_MEMBERSHIP)
+    {
+        // do nothing
+    }
+    else
+    {
+        // do nothing
+    }
+
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
 }
 
-int _getsockopt_socket(struct BSDSocket * s,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
+static int F_getsockopt_socket(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
 {
+    union
+    {
+        uint8_t*  u8ptr;
+        uint16_t* u16ptr;
+        struct linger * ling;
+        bool*  boolptr;
+    }U_CUPTR_OPT;
+
+    int res = 0;
+    U_CUPTR_OPT.u8ptr = option_value;
+
     switch (option_name)
     {
         case SO_SNDBUF:
         {
             if (s->SocketID == INVALID_SOCKET)
             {
-                *(uint16_t*)option_value = s->sndBufSize;
+                *U_CUPTR_OPT.u16ptr = (uint16_t)s->sndBufSize;
             }
             else
             {
-                if (s->SocketType == SOCK_DGRAM)
+                if (s->SocketType == (uint16_t)SOCK_DGRAM)
                 {
-                    NET_PRES_SocketOptionsGet(s->SocketID, UDP_OPTION_TX_BUFF, option_value);
+                    (void)NET_PRES_SocketOptionsGet(s->SocketID, (NET_PRES_SKT_OPTION_TYPE)UDP_OPTION_TX_BUFF, option_value);
                 }
                 else
                 {
-                    NET_PRES_SocketOptionsGet(s->SocketID, UDP_OPTION_TX_BUFF, option_value);
+                    (void)NET_PRES_SocketOptionsGet(s->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, option_value);
 
                 }
                 *option_length = 2;
             }
-            s->sndBufSize = *((uint16_t*)option_value);
+            s->sndBufSize = *U_CUPTR_OPT.u16ptr;
             break;
         }
 
         case SO_LINGER:
         {
-            if (s->SocketType == SOCK_DGRAM)
+            if (s->SocketType == (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
+                res = SOCKET_ERROR;
             }
             else
             {
-                struct linger * ling = (struct linger*)option_value;
+                struct linger * ling = U_CUPTR_OPT.ling;
                 if (s->SocketID == INVALID_SOCKET)
                 {
-                    ling->l_onoff = s->tcpLinger;
-                    ling->l_linger = s->lingerTmo;
+                    ling->l_onoff = (int)s->tcpLinger;
+                    ling->l_linger = (int)s->lingerTmo;
                 }
                 else
                 {
                     TCP_OPTION_LINGER_DATA tcplinger;
-                    NET_PRES_SocketOptionsGet(s->SocketID, TCP_OPTION_LINGER, & tcplinger);
-                    ling->l_onoff = tcplinger.lingerEnable;
-                    ling->l_linger = tcplinger.lingerTmo;
+                    (void)NET_PRES_SocketOptionsGet(s->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_LINGER, & tcplinger);
+                    ling->l_onoff = tcplinger.lingerEnable ? 1 : 0;
+                    ling->l_linger = (int)tcplinger.lingerTmo;
                 }
                 *option_length = sizeof(struct linger);
             }
@@ -2348,33 +2741,39 @@ int _getsockopt_socket(struct BSDSocket * s,
 
         case SO_RCVBUF:
         {
-            if (s->SocketType == SOCK_DGRAM)
+            if (s->SocketType == (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
-            }
-            if (s->SocketID == INVALID_SOCKET)
-            {
-                *(uint16_t*)option_value = s->sndBufSize;
+                res = SOCKET_ERROR;
             }
             else
             {
-                NET_PRES_SocketOptionsGet(s->SocketID, TCP_OPTION_RX_BUFF, option_value);
-                *option_length = 2;
+                if (s->SocketID == INVALID_SOCKET)
+                {
+                    *U_CUPTR_OPT.u16ptr = (uint16_t)s->sndBufSize;
+                }
+                else
+                {
+                    (void)NET_PRES_SocketOptionsGet(s->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, option_value);
+                    *option_length = 2;
+                }
+                s->sndBufSize = *U_CUPTR_OPT.u16ptr;
             }
-            s->sndBufSize = *((uint16_t*)option_value);
             break;
         }
 
         case SO_BROADCAST:
         {
-            if (s->SocketType != SOCK_DGRAM)
+            if (s->SocketType != (uint16_t)SOCK_DGRAM)
             {
                 errno = EOPNOTSUPP;
-                return SOCKET_ERROR;
+                res = SOCKET_ERROR;
+            }
+            else
+            {
+                *U_CUPTR_OPT.boolptr = s->udpBcastEnabled != 0U;
             }
 
-            *(bool*)option_value = s->udpBcastEnabled != 0;
             break;
         }
 
@@ -2389,32 +2788,33 @@ int _getsockopt_socket(struct BSDSocket * s,
         case SO_SNDTIMEO:
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
-    return 0;
+
+    return res;
 }
 
-int _getsockopt_tcp(struct BSDSocket * s,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
+static int F_getsockopt_tcp(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
 {
-    if (s->SocketType == SOCK_DGRAM)
+    if (s->SocketType == (uint16_t)SOCK_DGRAM)
     {
         errno = EOPNOTSUPP;
         return SOCKET_ERROR;
     }
+
+    int res = 0;
     switch (option_name)
     {
         case TCP_NODELAY:
         {
             if (s->SocketID == INVALID_SOCKET)
             {
-                *option_value = s->tcpNoDelay;
+                *option_value = (uint8_t)s->tcpNoDelay;
             }
             else
             {
-                *option_value = NET_PRES_SocketOptionsGet(s->SocketID, TCP_OPTION_NODELAY, option_value);
+                *option_value = NET_PRES_SocketOptionsGet(s->SocketID, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_NODELAY, option_value) ? 1U : 0U;
             }
             *option_length = 1;
         }
@@ -2422,107 +2822,121 @@ int _getsockopt_tcp(struct BSDSocket * s,
 
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
-    return 0;
+
+    return res;
 
 }
 
-int _getsockopt_ipv6(struct BSDSocket * s,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
+static int F_getsockopt_ipv6(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
 {
-    switch (option_name)
+    if (option_name == (uint32_t)IPV6_UNICAST_HOPS || option_name == (uint32_t)IPV6_MULTICAST_IF || option_name == (uint32_t)IPV6_MULTICAST_HOPS || option_name == (uint32_t)IPV6_MULTICAST_LOOP) 
     {
-        case IPV6_UNICAST_HOPS:
-        case IPV6_MULTICAST_IF:
-        case IPV6_MULTICAST_HOPS:
-        case IPV6_MULTICAST_LOOP:
-        case IPV6_JOIN_GROUP:
-        case IPV6_LEAVE_GROUP:
-        case IPV6_V6ONLY:
-        case IPV6_CHECKSUM:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        // do nothing
     }
-}
-
-int _getsockopt_icmp6(struct BSDSocket * s,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
-{
-    switch (option_name)
+    else if(option_name == (uint32_t)IPV6_JOIN_GROUP || option_name == (uint32_t)IPV6_LEAVE_GROUP || option_name == (uint32_t)IPV6_V6ONLY || option_name == (uint32_t)IPV6_CHECKSUM)
     {
-        case ICMP6_FILTER:
-        default:
-            errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+        // do nothing
+    } 
+    else
+    {
+        // do nothing
     }
+
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
 }
 
-int getsockopt(SOCKET s,
-               uint32_t level,
-               uint32_t option_name,
-               uint8_t *option_value,
-               uint32_t *option_length)
+static int F_getsockopt_icmp6(struct BSDSocket * s, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
 {
-    struct BSDSocket *socket = _getBsdSocket(s);
+    if (option_name == (uint32_t)ICMP6_FILTER)
+    {
+        // do nothing
+    }
+    errno = EOPNOTSUPP;
+    return SOCKET_ERROR;
+}
 
-    if (socket == 0 || socket->bsdState == SKT_CLOSED) 
+int getsockopt(SOCKET s, uint32_t level, uint32_t option_name, uint8_t *option_value, uint32_t *option_length)
+{
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
+    int res;
+    errno = 0;
     switch (level)
     {
         case IPPROTO_IP:
-            return _getsockopt_ip(socket,
-                                  option_name,
-                                  option_value,
-                                  option_length);
+            res = F_getsockopt_ip(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case SOL_SOCKET:
-            return _getsockopt_socket(socket,
-                                      option_name,
-                                      option_value,
-                                      option_length);
+            res = F_getsockopt_socket(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_TCP:
-            return _getsockopt_tcp(socket,
-                                   option_name,
-                                   option_value,
-                                   option_length);
+            res = F_getsockopt_tcp(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_IPV6:
-            return _getsockopt_ipv6(socket,
-                                    option_name,
-                                    option_value,
-                                    option_length);
+            res = F_getsockopt_ipv6(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         case IPPROTO_ICMPV6:
-            return _getsockopt_icmp6(socket,
-                                     option_name,
-                                     option_value,
-                                     option_length);
+            res = F_getsockopt_icmp6(bsocket, option_name, option_value, option_length);
+            if(errno != 0)
+            {
+                res = SOCKET_ERROR;
+            }
+            break;
+
         default:
             errno = EOPNOTSUPP;
-            return SOCKET_ERROR;
+            res = SOCKET_ERROR;
+            break;
     }
+
+    return res;
 }
 
 static IPV4_ADDR sAddr;
-static char * sHostArray[2] = {
+static char * sHostArray[2] =
+{
     (char *)&sAddr,
     NULL
 };
 
 int h_errno;
 
-static struct hostent sHostEnt = {
+static struct hostent sHostEnt =
+{
     NULL,
     NULL,
     AF_INET,
-    sizeof(IPV4_ADDR),
+    (int)sizeof(IPV4_ADDR),
     (char**)&sHostArray
 };
 
@@ -2532,18 +2946,18 @@ struct hostent * gethostent(void)
 }
 
 
-static uint8_t sHaveDnsToken = 0;
+static uint8_t sHaveDnsToken = 0U;
 
 struct hostent * gethostbyname(char *name)
 {
     TCPIP_DNS_RESULT dRes;    
 
-    if (sHaveDnsToken == 0)
+    if (sHaveDnsToken == 0U)
     {
         dRes = TCPIP_DNS_Resolve(name, TCPIP_DNS_TYPE_A);
         if (dRes == TCPIP_DNS_RES_NAME_IS_IPADDRESS)
         {
-           TCPIP_Helper_StringToIPAddress(name, & sAddr);
+           (void)TCPIP_Helper_StringToIPAddress(name, & sAddr);
            return &sHostEnt;
         }
         if (dRes != TCPIP_DNS_RES_OK && dRes != TCPIP_DNS_RES_PENDING)
@@ -2551,44 +2965,49 @@ struct hostent * gethostbyname(char *name)
             h_errno = NO_RECOVERY;
             return NULL;
         }
-        sHaveDnsToken = 1;
+        sHaveDnsToken = 1U;
     }
-    dRes = TCPIP_DNS_IsNameResolved(name, &sAddr, 0);
+    
+    dRes = TCPIP_DNS_IsNameResolved(name, &sAddr, NULL);
+    struct hostent* pHost = NULL;
     switch (dRes)
     {
         case TCPIP_DNS_RES_PENDING:
             h_errno = TRY_AGAIN;
-            return NULL;
+            break;
         case TCPIP_DNS_RES_SERVER_TMO:
             h_errno = TRY_AGAIN;
-            sHaveDnsToken = 0;
-            return NULL;
+            sHaveDnsToken = 0U;
+            break;
         case TCPIP_DNS_RES_NO_NAME_ENTRY:
             h_errno = HOST_NOT_FOUND;
-            sHaveDnsToken = 0;
-            return NULL;
+            sHaveDnsToken = 0U;
+            break;
         case TCPIP_DNS_RES_OK:
-            sHaveDnsToken = 0;
-            return &sHostEnt;
+            sHaveDnsToken = 0U;
+            pHost = &sHostEnt;
+            break;
         default:
             h_errno = NO_RECOVERY;
-            sHaveDnsToken = 0;
-            return NULL;
+            sHaveDnsToken = 0U;
+            break;
     }
+
+    return pHost;
 }
 
 int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 {
     struct sockaddr_in *rem_addr;
 
-    if(addrlen == 0)
+    if(addrlen == NULL)
     {
         errno = EINVAL;
         return SOCKET_ERROR;
     }
 
-    struct BSDSocket *socket = _getBsdSocket(s);
-    if (socket == 0 || socket->bsdState == SKT_CLOSED)
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -2596,21 +3015,21 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 
 
 #if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->addressFamily != AF_INET)
+    if (bsocket->addressFamily != (uint8_t)AF_INET)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
-    if(*addrlen >= sizeof(struct sockaddr_in) && addr != 0)
+    if(*addrlen >= (int)sizeof(struct sockaddr_in) && addr != NULL)
     {
-        rem_addr = (struct sockaddr_in*)addr;
+        rem_addr = FC_SockAddr2In(addr);
         rem_addr->sin_family = AF_INET;
-        rem_addr->sin_port = socket->localPort;
-        rem_addr->sin_addr.S_un.S_addr = socket->localIPv4;
+        rem_addr->sin_port = bsocket->localPort;
+        rem_addr->sin_addr.S_un.S_addr = bsocket->localIPv4;
 
-        *addrlen = sizeof(struct sockaddr_in);
+        *addrlen = (int)sizeof(struct sockaddr_in);
         return 0;
     }
 
@@ -2621,63 +3040,50 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 
 int TCPIP_BSD_Socket(SOCKET s)
 {
-    struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
 
-    if (socket == 0 || socket->bsdState == SKT_CLOSED)
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
 
-    int16_t nativeSkt = NET_PRES_SocketGetTransportHandle(socket->SocketID);
+    int16_t nativeSkt = NET_PRES_SocketGetTransportHandle(bsocket->SocketID);
     return nativeSkt < 0 ? SOCKET_ERROR : nativeSkt; 
 }
 
 int TCPIP_BSD_PresSocket(SOCKET s)
 {
-    struct BSDSocket *socket = _getBsdSocket(s);
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
 
-    if (socket == 0 || socket->bsdState == SKT_CLOSED)
+    if (bsocket == NULL || bsocket->bsdState == (uint8_t)SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    return socket->SocketID;
+    return bsocket->SocketID;
 }
 
-typedef enum 
-{
-    TCPIP_BERKELEY_GAI_INACTIVE  = 0,
-    TCPIP_BERKELEY_GAI_START_IPV4,
-    TCPIP_BERKELEY_GAI_WAIT_IPV4,
-    TCPIP_BERKELEY_GAI_START_IPV6,
-    TCPIP_BERKELEY_GAI_WAIT_IPV6,
-    TCPIP_BERKELEY_GAI_FINISHED
-} TCPIP_BERKELEY_GAI_STATE;
-
-uint32_t sgaihash = 0;
-TCPIP_BERKELEY_GAI_STATE sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
 
 // Note: a DNS query with TCPIP_DNS_Resolve(name, TCPIP_DNS_TYPE_ANY) is deprecated by some DNS servers
 // that's why it needs to be done in turn: TCPIP_DNS_TYPE_A, then TCPIP_DNS_TYPE_AAAA
 int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res)
 {
-    int counter;
-    int numDNS;
+    size_t counter, numDNS;
     int setres;
     IPV4_ADDR tmpv4;
     IPV6_ADDR tmpv6;
 
-    if(res == 0)
+    if(res == NULL)
     {
         errno = EINVAL;
         return EAI_SYSTEM;
     }
 
-    uint32_t nodeHash = fnv_32a_hash((void*)node, strlen(node));
-    if (sgaihash != 0)
+    uint32_t nodeHash = fnv_32a_hash((const void*)node, strlen(node));
+    if (sgaihash != 0U)
     {
         if (nodeHash != sgaihash)
         {
@@ -2691,91 +3097,110 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
         sgaistate++;
     }
 
-    *res = 0;
+    *res = NULL;
+
+    int infoRes;
 
     switch (sgaistate)
     {
-        case TCPIP_BERKELEY_GAI_START_IPV4:
+        case (uint32_t)TCPIP_BERKELEY_GAI_START_IPV4:
             if(hints != NULL && hints->ai_family != AF_UNSPEC && hints->ai_family != AF_INET)
             {   // IPv4 resolution not needed; jump to IPv6
-                sgaistate += 2;
-                return EAI_AGAIN;
+                sgaistate += 2U;
+                infoRes = EAI_AGAIN;
             }
+            else
+            {
+                setres = F_BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_A);
 
-            setres = _BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_A);
-
-            if(setres <= 0)
-            {   // either done or some error;
-                sgaihash = 0;
-                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                return setres;
+                if(setres <= 0)
+                {   // either done or some error;
+                    sgaihash = 0U;
+                    sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;
+                    infoRes = setres;
+                }
+                else
+                {
+                    // pending, advance to the new state
+                    sgaistate ++;
+                    infoRes = EAI_AGAIN;
+                }
             }
+            break;
 
-            
-            // pending, advance to the new state
-            sgaistate ++;
-            return EAI_AGAIN;
+        case (uint32_t)TCPIP_BERKELEY_GAI_WAIT_IPV4:
 
-        case TCPIP_BERKELEY_GAI_WAIT_IPV4:
-
-            setres = _BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_A);
+            setres = F_BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_A);
 
             if(setres < 0)
             {   // DNS error; abort
-                sgaihash = 0;
-                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                return EAI_FAIL;
+                sgaihash = 0U;
+                sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;
+                infoRes = EAI_FAIL;
             }
-            else if(setres > 0)
-            {   // wait some more
-                return EAI_AGAIN;
+            else
+            {
+                if(setres > 0)
+                {   // wait some more
+                    infoRes = EAI_AGAIN;
+                }
+                else
+                { // ok, advance to the new state
+                    sgaistate ++;
+                    infoRes = EAI_AGAIN;
+                }
             }
+            break;
 
-            // ok, advance to the new state
-            sgaistate ++;
-            return EAI_AGAIN;
-
-        case TCPIP_BERKELEY_GAI_START_IPV6:
+        case (uint32_t)TCPIP_BERKELEY_GAI_START_IPV6:
             if(hints != NULL && hints->ai_family != AF_UNSPEC && hints->ai_family != AF_INET6)
             {   // IPv6 resolution not needed; jump to done
-                sgaistate += 2;
-                return EAI_AGAIN;
+                sgaistate += 2U;
+                infoRes = EAI_AGAIN;
             }
+            else
+            {
+                setres = F_BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_AAAA);
 
-            setres = _BSD_StartAddrInfo(node, hints, res, TCPIP_DNS_TYPE_AAAA);
-
-            if(setres <= 0)
-            {   // either done or some error;
-                sgaihash = 0;
-                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                return setres;
+                if(setres <= 0)
+                {   // either done or some error;
+                    sgaihash = 0U;
+                    sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;
+                    infoRes = setres;
+                }
+                else
+                {
+                    // pending, advance to the new state
+                    sgaistate ++;
+                    infoRes = EAI_AGAIN;
+                }
             }
+            break;
 
-            // pending, advance to the new state
-            sgaistate ++;
-            return EAI_AGAIN;
+        case (uint32_t)TCPIP_BERKELEY_GAI_WAIT_IPV6:
 
-        case TCPIP_BERKELEY_GAI_WAIT_IPV6:
-
-            setres = _BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_AAAA);
+            setres = F_BSD_CheckAddrInfo(node, TCPIP_DNS_TYPE_AAAA);
 
             if(setres < 0)
             {   // DNS error; abort
-                sgaihash = 0;
-                sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-                return EAI_FAIL;
+                sgaihash = 0U;
+                sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;
+                infoRes = EAI_FAIL;
             }
             else if(setres > 0)
             {   // wait some more
-                return EAI_AGAIN;
+                infoRes = EAI_AGAIN;
             }
+            else
+            {
+                // ok, advance to the new state
+                sgaistate ++;
+                infoRes = EAI_AGAIN;
+            }
+            break;
 
-            // ok, advance to the new state
-            sgaistate ++;
-            return EAI_AGAIN;
-
-        case TCPIP_BERKELEY_GAI_FINISHED:
-            *res = 0;
+        case (uint32_t)TCPIP_BERKELEY_GAI_FINISHED:
+            *res = NULL;
             setres = 0;
             if(hints == NULL || hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET)
             {   // get IPv4
@@ -2783,8 +3208,8 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
 
                 for (counter = 0; counter < numDNS; counter++)
                 {
-                    TCPIP_DNS_GetIPv4Addresses(node, counter, &tmpv4, 1);
-                    setres = _BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
+                    (void)TCPIP_DNS_GetIPv4Addresses(node, counter, &tmpv4, 1);
+                    setres = F_BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
                     if(setres != 0)
                     {   // some failure
                         break;
@@ -2798,8 +3223,8 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
 
                 for (counter = 0; counter < numDNS; counter++)
                 {
-                    TCPIP_DNS_GetIPv6Addresses(node, counter, &tmpv6, 1);
-                    setres = _BSD_SetIp6AddrInfo(&tmpv6, hints, res);
+                    (void)TCPIP_DNS_GetIPv6Addresses(node, counter, &tmpv6, 1);
+                    setres = F_BSD_SetIp6AddrInfo(&tmpv6, hints, res);
                     if(setres != 0)
                     {   // some failure
                         break;
@@ -2807,19 +3232,22 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
                 }
             }
 
-            sgaihash = 0;
-            sgaistate = TCPIP_BERKELEY_GAI_INACTIVE;
-            if (setres == 0 && *res == 0)
+            sgaihash = 0U;
+            sgaistate = (uint32_t)TCPIP_BERKELEY_GAI_INACTIVE;
+            if (setres == 0 && *res == NULL)
             {
                 setres = EAI_NONAME;
             }
-            return setres;
+            infoRes = setres;
+            break;
 
         default:
             SYS_ASSERT(false, "Should not be here!");
-            return EAI_SYSTEM;
+            infoRes = EAI_SYSTEM;
+            break;
     }
 
+    return infoRes;
 }
 
 // starts a DNS resolve query
@@ -2828,14 +3256,14 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
 //      0 if done (query was an IP address, not a name)
 //      1 if pending
 //
-static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype)
+static int F_BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, struct addrinfo** res, TCPIP_DNS_RESOLVE_TYPE dnstype)
 {
     IPV4_ADDR tmpv4;
     IPV6_ADDR tmpv6;
 
     TCPIP_DNS_RESULT result = TCPIP_DNS_Resolve(node, dnstype);
 
-    if(result < 0)
+    if((int)result < 0)
     {   // DNS error; abort
         return EAI_FAIL;
     }
@@ -2847,18 +3275,24 @@ static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, st
     {   // name resolution available
         if (TCPIP_Helper_StringToIPAddress(node, &tmpv4))
         {
-            return _BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
+            return F_BSD_SetIp4AddrInfo(tmpv4.Val, hints, res);
         }
         else if (TCPIP_Helper_StringToIPv6Address(node, &tmpv6))
         {
-            return _BSD_SetIp6AddrInfo(&tmpv6, hints, res);
+            return F_BSD_SetIp6AddrInfo(&tmpv6, hints, res);
+        }
+        else
+        {
+            // do nothing
         }
     }
-
+    else
+    {
+        // do nothing
+    }
     // should not get here
     SYS_ASSERT(false, "getaddrinfo unknown error");
     return EAI_FAIL;
-
 } 
 
 // checks a DNS resolve
@@ -2867,7 +3301,7 @@ static int _BSD_StartAddrInfo(const char* node, const struct addrinfo* hints, st
 //      0 if done
 //      1 if pending
 //
-static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype)
+static int F_BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype)
 {
     IPV4_ADDR tmpv4;
     IPV6_ADDR tmpv6;
@@ -2875,14 +3309,14 @@ static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype)
 
     if(dnstype == TCPIP_DNS_TYPE_A)
     {
-        result = TCPIP_DNS_IsNameResolved(node, &tmpv4, 0);
+        result = TCPIP_DNS_IsNameResolved(node, &tmpv4, NULL);
     }
     else
     {
-        result = TCPIP_DNS_IsNameResolved(node, 0, &tmpv6);
+        result = TCPIP_DNS_IsNameResolved(node, NULL, &tmpv6);
     }
 
-    if(result < 0)
+    if((int)result < 0)
     {   // DNS error; abort
         return EAI_FAIL;
     }
@@ -2894,31 +3328,33 @@ static int _BSD_CheckAddrInfo(const char* node, TCPIP_DNS_RESOLVE_TYPE dnstype)
     {   // ok, done
         return 0;
     }
-
-    // should not get here
-    SYS_ASSERT(false, "getaddrinfo unknown error");
-    return EAI_FAIL;
+    else
+    {
+        // should not get here
+        SYS_ASSERT(false, "getaddrinfo unknown error");
+        return EAI_FAIL;
+    }
 
 } 
 
 // returns 0 if done
 // EAI_MEMORY if out of memory
-static int _BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res)
+static int F_BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, struct addrinfo** res)
 {
     struct addrinfo* ptr = *res;
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
-        ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr = F_BsdCalloc(1, sizeof (struct addrinfo));
         *res = ptr;
     }
     else
     {
-        ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr->ai_next = F_BsdCalloc(1, sizeof (struct addrinfo));
         ptr = ptr->ai_next;
     }
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
         return EAI_MEMORY;
@@ -2935,34 +3371,35 @@ static int _BSD_SetIp4AddrInfo(uint32_t ipAddr, const struct addrinfo* hints, st
     }
 
     ptr->ai_addrlen = sizeof(struct sockaddr_in);
-    ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(struct sockaddr_in));
-    if(ptr->ai_addr == 0)
+    ptr->ai_addr = F_BsdCalloc(1, sizeof(struct sockaddr_in));
+    if(ptr->ai_addr == NULL)
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
         return EAI_MEMORY;
     }
 
-    ((struct sockaddr_in*)(ptr->ai_addr))->sin_family = AF_INET;
-    ((SOCKADDR_IN*)(ptr->ai_addr))->sin_addr.S_un.S_addr = ipAddr;
+    struct sockaddr_in* s_addr_in = FC_SockAddr2In(ptr->ai_addr);
+    s_addr_in->sin_family = AF_INET;
+    s_addr_in->sin_addr.S_un.S_addr = ipAddr;
     return 0;
 }
 
-static int _BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res)
+static int F_BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* hints, struct addrinfo** res)
 {
     struct addrinfo* ptr = *res;
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
-        ptr = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr = F_BsdCalloc(1, sizeof (struct addrinfo));
         *res = ptr;
     }
     else
     {
-        ptr->ai_next = TCPIP_STACK_CALLOC_FUNC(1, sizeof (struct addrinfo));
+        ptr->ai_next = F_BsdCalloc(1, sizeof (struct addrinfo));
         ptr = ptr->ai_next;
     }
 
-    if(ptr == 0)
+    if(ptr == NULL)
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
         return EAI_MEMORY;
@@ -2979,18 +3416,20 @@ static int _BSD_SetIp6AddrInfo(const IPV6_ADDR* ipAddr, const struct addrinfo* h
     }
 
     ptr->ai_addrlen = sizeof(struct sockaddr_in6);
-    ptr->ai_addr = TCPIP_STACK_CALLOC_FUNC(1, sizeof(SOCKADDR_IN6));
-    if(ptr->ai_addr == 0)
+    ptr->ai_addr = F_BsdCalloc(1, sizeof(SOCKADDR_IN6));
+    if(ptr->ai_addr == NULL)
     {
         SYS_ERROR(SYS_ERROR_WARNING, "Could not allocate memory for address info\r\n");
         return EAI_MEMORY;
     }
 
-    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_family = AF_INET6;
-    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[0] = ipAddr->d[0];
-    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[1] = ipAddr->d[1];
-    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[2] = ipAddr->d[2];
-    ((SOCKADDR_IN6*)(ptr->ai_addr))->sin6_addr.in6_u.u6_addr32[3] = ipAddr->d[3];
+    SOCKADDR_IN6* s_addr_in6 = FC_SockAddr2In6(ptr->ai_addr);
+
+    s_addr_in6->sin6_family = AF_INET6;
+    s_addr_in6->sin6_addr.in6_u.u6_addr32[0] = ipAddr->d32[0];
+    s_addr_in6->sin6_addr.in6_u.u6_addr32[1] = ipAddr->d32[1];
+    s_addr_in6->sin6_addr.in6_u.u6_addr32[2] = ipAddr->d32[2];
+    s_addr_in6->sin6_addr.in6_u.u6_addr32[3] = ipAddr->d32[3];
     return 0;
 }
 
@@ -3007,22 +3446,23 @@ void freeaddrinfo(struct addrinfo *res)
         struct addrinfo *ptr2 = ptr->ai_next;
         if (ptr->ai_addr != NULL)
         {
-            TCPIP_STACK_FREE_FUNC(ptr->ai_addr);
+            F_BsdFree(ptr->ai_addr);
         }
-        TCPIP_STACK_FREE_FUNC(ptr);
+        F_BsdFree(ptr);
         ptr = ptr2;
     }
 }
 
 static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param)
 {
-    if((sigType & (TCPIP_TCP_SIGNAL_RX_FIN | TCPIP_TCP_SIGNAL_RX_RST | TCPIP_TCP_SIGNAL_TX_RST)) != 0)
+    uint32_t sig32 = (uint32_t)sigType;
+    if((sig32 & ((uint32_t)TCPIP_TCP_SIGNAL_RX_FIN | (uint32_t)TCPIP_TCP_SIGNAL_RX_RST | (uint32_t)TCPIP_TCP_SIGNAL_TX_RST)) != 0U)
     {   // socket was closed
         // restore the child BSD socket
-        struct BSDSocket* pChild = (struct BSDSocket*)param;
+        struct BSDSocket* pChild = FC_CVPtr2BSD(param);
         while(true)
         {
-            if(pChild->bsdState != SKT_DISCONNECTING)
+            if(pChild->bsdState != (uint8_t)SKT_DISCONNECTING)
             {
                 break;
             }
@@ -3030,19 +3470,19 @@ static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDL
             // socket closed remotedly
             // find the parent it belongs to
             uint16_t parentIx = pChild->parentId;
-            if(BSDSocketArray != 0 && parentIx < BSD_SOCKET_COUNT)
+            if(BSDSocketArray != NULL && parentIx < (uint16_t)BSD_SOCKET_COUNT)
             {
                 struct BSDSocket* pParent = BSDSocketArray + parentIx;
-                if(pParent->bsdState == SKT_BSD_LISTEN && pParent->localPort == pChild->localPort)
+                if(pParent->bsdState == (uint8_t)SKT_BSD_LISTEN && pParent->localPort == pChild->localPort)
                 {   // found the parent up and running; return the child to accepting state
-                    pChild->bsdState = SKT_LISTEN;
+                    pChild->bsdState = (uint8_t)SKT_LISTEN;
                     return;
                 }
             }
 
             // no parent could be found...close the child socket
-            pChild->needsClose = true;
-            _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, true); 
+            pChild->needsClose = 1U;
+            (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, true); 
             break;
         }
     }
@@ -3050,24 +3490,24 @@ static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDL
 
 // debug stuff
 
-#if (__BERKELEY_DEBUG != 0)
+#if (M__BERKELEY_DEBUG != 0)
 bool TCPIP_BSD_State(SOCKET s, BSD_SKT_INFO* pInfo)
 {
-    struct BSDSocket *socket = _getBsdSocket(s);
-    if( socket == 0 )
+    struct BSDSocket *bsocket = F_getBsdSocket(s);
+    if( bsocket == NULL )
     {
         return false;
     }
 
     if(pInfo)
     {
-        pInfo->bsdState = socket->bsdState;
-        pInfo->presSktId = socket->SocketID;
+        pInfo->bsdState = bsocket->bsdState;
+        pInfo->presSktId = bsocket->SocketID;
     }
 
     return true;
 }
-#endif  // (__BERKELEY_DEBUG != 0)
+#endif  // (M__BERKELEY_DEBUG != 0)
 
 
 #endif //TCPIP_STACK_USE_BERKELEY_API
