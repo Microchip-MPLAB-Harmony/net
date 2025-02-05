@@ -12,7 +12,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2024, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -117,23 +117,6 @@ static const char* strdelim(const char* str, const char* delim);
 static const char* strdelimr(const char* str, const char* delim);
 static const char* strstrany(const char* str, const char* delim, const char** pEndDelim);
 
-int FC_sprintf(char* buff, size_t buffSize, const char* fmt, ...)
-{
-    int needBytes;
-    
-    va_list args;
-    va_start( args, fmt );
-
-    needBytes = vsnprintf(buff, buffSize, fmt, args);
-    _TCPIPStack_Assert(needBytes >= 0, __FILE__, __func__, __LINE__);
-
-    va_end( args );
-
-    _TCPIPStack_Assert((size_t)needBytes <= buffSize, __FILE__, __func__, __LINE__);
-    return needBytes;
-}
-
-
 /****************************************************************************
   Section:
     WSC module descriptor global Variable
@@ -142,7 +125,7 @@ typedef struct TAG_TCPIP_WSC_MODULE_DCPT
 {
     TCPIP_WSC_CONN_CTRL*    wscConnCtrl;        // pointer to all WSC connections
     const void*             wscMemH;            // handle to be used in the TCPIP_HEAP_ calls
-    tcpipSignalHandle       wscSignalHandle;    // WSC task signal handle
+    TCPIP_SIGNAL_HANDLE     wscSignalHandle;    // WSC task signal handle
     uint16_t                wscConnNo;          // number of WSC connections
     uint16_t                wscConfigFlags;     // run time flags: TCPIP_WSC_MODULE_FLAGS value
     uint16_t                sktTxBuffSize;      // size of TX buffer for the associated socket
@@ -318,7 +301,7 @@ static __inline__ void __attribute__((always_inline)) WSC_StartSrvWaitTimer(TCPI
 {
     if(pWsc->parent->srvTmoMs != 0U)
     {
-        pWsc->startSrvWaitMs = _TCPIP_MsecCountGet();
+        pWsc->startSrvWaitMs = TCPIP_MsecCountGet();
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SRV_TMO) != 0)
         SYS_CONSOLE_PRINT("WSC conn: %d, Srv Start Wait: %d\r\n", pWsc->connIx, pWsc->startSrvWaitMs);
 #endif  //((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SRV_TMO) != 0)
@@ -328,7 +311,7 @@ static bool WSC_IsSrvTmo(TCPIP_WSC_CONN_CTRL* pWsc)
 {
     if(pWsc->parent->srvTmoMs != 0U)
     {
-        uint32_t currMsec = _TCPIP_MsecCountGet();
+        uint32_t currMsec = TCPIP_MsecCountGet();
         if((currMsec - pWsc->startSrvWaitMs) >= (uint32_t)pWsc->parent->srvTmoMs)
         {
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SRV_TMO) != 0)
@@ -344,7 +327,7 @@ static __inline__ void __attribute__((always_inline)) WSC_StartUsrWaitTimer(TCPI
 {
     if(pWsc->parent->usrTmoMs != 0U)
     {
-        pWsc->startUsrWaitMs = _TCPIP_MsecCountGet();
+        pWsc->startUsrWaitMs = TCPIP_MsecCountGet();
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_USR_TMO) != 0)
         SYS_CONSOLE_PRINT("WSC conn: %d, Usr Start Wait: %d\r\n", pWsc->connIx, pWsc->startUsrWaitMs);
 #endif  //((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_USR_TMO) != 0)
@@ -354,7 +337,7 @@ static bool WSC_IsUsrTmo(TCPIP_WSC_CONN_CTRL* pWsc)
 {
     if(pWsc->parent->usrTmoMs != 0U)
     {
-        uint32_t currMsec = _TCPIP_MsecCountGet();
+        uint32_t currMsec = TCPIP_MsecCountGet();
         if((currMsec - pWsc->startUsrWaitMs) >= (uint32_t)pWsc->parent->usrTmoMs)
         {
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_USR_TMO) != 0)
@@ -507,7 +490,7 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     while(wscInitCount == 0)
     {   // first time we're run
         (void)memset(&wscModDcpt, 0, sizeof(wscModDcpt));
-        _TCPIPStack_Assert(gWscDcpt == NULL, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(gWscDcpt == NULL, __FILE__, __func__, __LINE__);
 
         const TCPIP_WSC_MODULE_CONFIG* wscInitData = (const TCPIP_WSC_MODULE_CONFIG*)initData;
         if(wscInitData == NULL || wscInitData->nConnections == 0U)
@@ -530,7 +513,7 @@ bool  TCPIP_WSC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         wscModDcpt.wscConnNo = nConns;
 
         // create the WSC timer
-        tcpipSignalHandle wscSignalHandle = _TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_WSC_Task, TCPIP_WSC_TASK_RATE);
+        TCPIP_SIGNAL_HANDLE wscSignalHandle = TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_WSC_Task, TCPIP_WSC_TASK_RATE);
         if(wscSignalHandle == NULL)
         {   // cannot create the WSC timer
             initFail = true;
@@ -1041,7 +1024,7 @@ size_t TCPIP_WSC_MessageSend(TCPIP_WSC_CONN_HANDLE hConn, TCPIP_WSC_SEND_MSG_DCP
             break;
         }
 
-        _TCPIPStack_Assert(pWsc->intState == (uint16_t)WSC_INT_STAT_OPEN, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(pWsc->intState == (uint16_t)WSC_INT_STAT_OPEN, __FILE__, __func__, __LINE__);
 
         // sanity check
         pTxMsg = &pWsc->pendTxMsg;
@@ -1332,7 +1315,7 @@ size_t TCPIP_WSC_MessageRead(TCPIP_WSC_CONN_HANDLE hConn, const void* msgHandle,
             res = TCPIP_WSC_RES_NO_MSG;
             break;
         }
-        _TCPIPStack_Assert(pendDcpt->info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(pendDcpt->info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
 
         if(msgHandle != NULL && msgHandle != pendDcpt->msgHandle)
         {
@@ -1348,7 +1331,7 @@ size_t TCPIP_WSC_MessageRead(TCPIP_WSC_CONN_HANDLE hConn, const void* msgHandle,
 
         if(pendDcpt->payloadLen != 0U)
         {   // should not be 0, as it should have been cleared by user read!
-            _TCPIPStack_Assert(usrLeftBytes != 0U, __FILE__, __func__, __LINE__);
+            TCPIPStack_Assert(usrLeftBytes != 0U, __FILE__, __func__, __LINE__);
         }
 
         if(usrLeftBytes > pendDcpt->sktPendLen)
@@ -1439,9 +1422,9 @@ TCPIP_WSC_RES TCPIP_WSC_MessageInfo(TCPIP_WSC_CONN_HANDLE hConn, const void* msg
         return TCPIP_WSC_RES_NO_MSG;
     }
 
-    _TCPIPStack_Assert(pendDcpt1.dcpt.info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(pendDcpt1.dcpt.info.frameType != (uint8_t)TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
     // should not be done, as it should have been cleared by user read!
-    _TCPIPStack_Assert(pendDcpt1.dcpt.renderedLen < pendDcpt1.dcpt.payloadLen, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(pendDcpt1.dcpt.renderedLen < pendDcpt1.dcpt.payloadLen, __FILE__, __func__, __LINE__);
     
     if(msgHandle != NULL && msgHandle != pendDcpt1.dcpt.msgHandle)
     {
@@ -1520,7 +1503,7 @@ static void F_WSC_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         }
 #endif  // (M_WSC_SEM_LOCK != 0) && (M_WSC_SEM_PER_CONNECTION != 0) 
 
-        _TCPIPStack_Assert(gWscDcpt->wscMemH == stackCtrl->memH, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(gWscDcpt->wscMemH == stackCtrl->memH, __FILE__, __func__, __LINE__);
 
         if(gWscDcpt->wscConnCtrl != NULL)
         {
@@ -1530,7 +1513,7 @@ static void F_WSC_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
         if(gWscDcpt->wscSignalHandle != NULL)
         {
-            _TCPIPStackSignalHandlerDeregister(gWscDcpt->wscSignalHandle);
+            TCPIPStackSignalHandlerDeregister(gWscDcpt->wscSignalHandle);
             gWscDcpt->wscSignalHandle = NULL;
         }
 
@@ -1593,13 +1576,13 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
         // set socket options
         if((pConn->connFlags & (uint16_t)TCPIP_WSC_CONN_FLAG_NO_DELAY) != 0U)
         {
-            void* tcpForceFlush = (void*)(1UL);
+            void* tcpForceFlush = FC_Uint2VPtr(1UL);
             (void)NET_PRES_SocketOptionsSet(netSkt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_NODELAY, tcpForceFlush);
         }
 
         if(pDcpt->sktTxBuffSize != (uint16_t)TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE)
         {
-            void* tcpBuffSize = (void*)((uint32_t)pDcpt->sktTxBuffSize);
+            void* tcpBuffSize = FC_Uint2VPtr((uint32_t)pDcpt->sktTxBuffSize);
             if(!NET_PRES_SocketOptionsSet(netSkt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize))
             {   // just a warning....well, since this is critical for the message size, an error should be better
                 res = TCPIP_WSC_RES_SKT_TX_BUFF_ERROR;
@@ -1609,7 +1592,7 @@ static TCPIP_WSC_RES WSC_OpenSocket(TCPIP_WSC_CONN_CTRL* pConn)
 
         if(pDcpt->sktRxBuffSize != (uint16_t)TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE)
         {
-            void* tcpBuffSize = (void*)((uint32_t)pDcpt->sktRxBuffSize);
+            void* tcpBuffSize = FC_Uint2VPtr((uint32_t)pDcpt->sktRxBuffSize);
             if(!NET_PRES_SocketOptionsSet(netSkt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize))
             {   // just a warning
                 res = TCPIP_WSC_RES_SKT_RX_BUFF_ERROR;
@@ -2025,7 +2008,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
 
     // GET /resource HTTP/1.1
     int hdrLen = FC_sprintf(U_HDR_BUFF.resourceBuff, sizeof(U_HDR_BUFF.resourceBuff), wsc_req_header, pWsc->resource);
-    _TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
     totReqLen += (uint16_t)hdrLen;
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.resourceBuff, (uint16_t)hdrLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
@@ -2035,7 +2018,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         
     // Host: server.example.com :port
     hdrLen = FC_sprintf(U_HDR_BUFF.srvBuff, sizeof(U_HDR_BUFF.srvBuff), wsc_host_header, pWsc->srvName, pWsc->connPort);
-    _TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
     totReqLen += (uint16_t)hdrLen;
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.srvBuff, (uint16_t)hdrLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
@@ -2106,7 +2089,7 @@ static void WSC_Task_StartHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
 
     // Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
     hdrLen = FC_sprintf(U_HDR_BUFF.keyBuff, sizeof(U_HDR_BUFF.keyBuff), wsc_key_header, pWsc->cBase64Key);
-    _TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(hdrLen >= 0, __FILE__, __func__, __LINE__);
     totReqLen += (uint16_t)hdrLen;
     outLen += NET_PRES_SocketWrite(skt, U_HDR_BUFF.keyBuff, (uint16_t)hdrLen);
 #if ((WSC_DEBUG_LEVEL & WSC_DEBUG_MASK_SHOW_TX_HSHAKE) != 0)
@@ -2237,11 +2220,11 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
         {
             hdrEnd[1] = '\0';   // end properly but leave the end of line in place
             hdrEnd += hdrEndLen;
-            peekBytes = (uint16_t)(hdrEnd - hdrBuff);
+            peekBytes = (uint16_t)FC_ChPtrDiff2UI16(hdrEnd, hdrBuff);
         }
         else
         {   // find at least an end of line
-            endPeek = (char*)strdelimr(hdrBuff, ws_end_line);
+            endPeek = FC_CStr2Str(strdelimr(hdrBuff, ws_end_line));
             if(endPeek == NULL)
             {   // we need at least a line to process
                 if(peekBytes == (uint16_t)sizeof(pWsc->u_peekBuff))
@@ -2254,7 +2237,7 @@ static void WSC_Task_WaitHandshake(TCPIP_WSC_CONN_CTRL* pWsc)
             else
             {   // got an end of line
                 *(++endPeek) = '\0';
-                peekBytes = (uint16_t)(endPeek - hdrBuff);
+                peekBytes = (uint16_t)FC_ChPtrDiff2UI16(endPeek, hdrBuff);
             }
         }
 
@@ -2574,7 +2557,7 @@ static bool WSC_ProcPendMsg(TCPIP_WSC_CONN_CTRL* pWsc)
 
     TCPIP_WS_FRAME_TYPE frameType = (TCPIP_WS_FRAME_TYPE)pendDcpt->info.frameType;
     // msgHandle != NULL only if a pending frame!
-    _TCPIPStack_Assert(frameType != TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(frameType != TCPIP_WS_FRAME_TYPE_NONE, __FILE__, __func__, __LINE__);
 
     // update the data from the server
     (void)WSC_SrvRxUpdate(pWsc, pendDcpt);
@@ -2737,7 +2720,7 @@ static bool WSC_RxFrame(TCPIP_WSC_CONN_CTRL* pWsc)
     }
     else
     {   // large
-        _TCPIPStack_Assert(U_FRAME_BUFF.cFrame.hdr.payLen == WS_FRAME_LARGE_PAYLEN, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(U_FRAME_BUFF.cFrame.hdr.payLen == WS_FRAME_LARGE_PAYLEN, __FILE__, __func__, __LINE__);
         frameType = TCPIP_WS_FRAME_TYPE_LARGE;
         frameLen = (uint16_t)sizeof(U_FRAME_BUFF.lFrame);
     }
@@ -2910,7 +2893,7 @@ static void WSC_Task_Closed(TCPIP_WSC_CONN_CTRL* pWsc)
             }
 
             // fatal error. abort
-            _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+            TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
             res = TCPIP_WSC_RES_FATAL_ERROR;
             break;
         }
@@ -2922,7 +2905,7 @@ static void WSC_Task_Closed(TCPIP_WSC_CONN_CTRL* pWsc)
         }
 
         // should not happen!
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         res = TCPIP_WSC_RES_FATAL_ERROR;
         break;
     }
@@ -3213,7 +3196,7 @@ static bool WSC_DiscardFrame(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_RES dReason)
 static bool WSC_SrvRxUpdate(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_PEND_MSG_DCPT* rxDcpt)
 {
     // never exceed the payload length
-    _TCPIPStack_Assert(rxDcpt->srvAvlblLen <= rxDcpt->payloadLen, __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(rxDcpt->srvAvlblLen <= rxDcpt->payloadLen, __FILE__, __func__, __LINE__);
 
     // bytes left to be received from the server 
     uint16_t srvLeftBytes = rxDcpt->payloadLen - rxDcpt->srvAvlblLen;
@@ -3226,7 +3209,7 @@ static bool WSC_SrvRxUpdate(TCPIP_WSC_CONN_CTRL* pWsc, TCPIP_WSC_PEND_MSG_DCPT* 
             sktBytes = rxDcpt->payloadLen;
         }
         // cannot go backwards!
-        _TCPIPStack_Assert(sktBytes >= rxDcpt->sktPendLen, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(sktBytes >= rxDcpt->sktPendLen, __FILE__, __func__, __LINE__);
         uint16_t newSrvData = sktBytes - rxDcpt->sktPendLen;    // what was last available
         if(newSrvData != 0U)
         {   // received some new data
@@ -3278,7 +3261,7 @@ static TCPIP_WSC_RES WSC_SendCtrlFrame(TCPIP_WSC_CONN_CTRL* pWsc, uint8_t opCode
     uint16_t frameLen = (uint16_t)sizeof(cFrame);
     uint16_t totLen = frameLen + payloadLen;
     // we should always have enough space for a complete control frame!
-    _TCPIPStack_Assert(totLen <= (uint16_t)sizeof(maskBuff), __FILE__, __func__, __LINE__);
+    TCPIPStack_Assert(totLen <= (uint16_t)sizeof(maskBuff), __FILE__, __func__, __LINE__);
 
     // check for enough space; a control message should go all at once!
     NET_PRES_SKT_HANDLE_T skt = pWsc->netSocket;
@@ -3329,7 +3312,7 @@ static TCPIP_WSC_RES WSC_SendCtrlFrame(TCPIP_WSC_CONN_CTRL* pWsc, uint8_t opCode
     uint16_t wrLen =  NET_PRES_SocketWrite(skt, maskBuff, totLen);
     if(wrLen != totLen)
     {   // fatal, should not happen!
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         {   // cannot recover from this...connection should be aborted!
             return TCPIP_WSC_RES_FATAL_ERROR; 
         }
@@ -3452,7 +3435,7 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
     else
     {   // unsupported large frames (yet)
 #if (M_WSC_LARGE_FRAME_SUPPORT == 0)
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         return TCPIP_WSC_RES_NOT_IMPLEMENTED;
 #else
         frameType = TCPIP_WS_FRAME_TYPE_LARGE; 
@@ -3515,7 +3498,7 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
     }
     else
     {
-        // _TCPIPStack_Assert(frameType == TCPIP_WS_FRAME_TYPE_MEDIUM, __FILE__, __func__, __LINE__);
+        // TCPIPStack_Assert(frameType == TCPIP_WS_FRAME_TYPE_MEDIUM, __FILE__, __func__, __LINE__);
         WS_CLIENT_FRAME_MEDIUM* mFrame = &U_FRAME_BUFF.mFrame;
         mFrame->hdr.fin = (uint8_t)finCode;
         mFrame->hdr.opcode = opCode;
@@ -3533,7 +3516,7 @@ static TCPIP_WSC_RES WSC_WriteFrameHeader(TCPIP_WSC_CONN_CTRL* pWsc, WSC_PEND_TX
 
     if(wrLen != frameLen)
     {   // fatal, should not happen!
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         if(wrLen == 0U)
         {   // OK, at least nothing went on the wire
             return TCPIP_WSC_RES_SKT_WR_ERROR; 
@@ -3579,7 +3562,7 @@ int WSC_RngGenerate(uint8_t* rngBuff, size_t buffSize)
     
     if(CRYPT_RNG_Initialize(&wsCtx) < 0)
     {   // failure ...
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         return -1;
     }
 
@@ -3587,7 +3570,7 @@ int WSC_RngGenerate(uint8_t* rngBuff, size_t buffSize)
 
     if (res < 0)
     {   // failure
-        _TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
         return res;
     }
     return 0;

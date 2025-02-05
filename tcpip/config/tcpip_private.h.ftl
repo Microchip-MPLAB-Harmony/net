@@ -15,7 +15,7 @@
 
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -39,8 +39,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_STACK_PRIVATE_H__
-#define __TCPIP_STACK_PRIVATE_H__
+#ifndef H_TCPIP_STACK_PRIVATE_H_
+#define H_TCPIP_STACK_PRIVATE_H_
 
 #include <string.h>
 #include <stdlib.h>
@@ -64,42 +64,44 @@ Microchip or any third party.
 // Internal adjustments - dependencies
 // change signaling depends on the IPv4
 #if defined(TCPIP_STACK_USE_IPV4) && (TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
-#define _TCPIP_STACK_INTERFACE_CHANGE_SIGNALING     1
+#define M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING     1
 #else
-#define _TCPIP_STACK_INTERFACE_CHANGE_SIGNALING     0
+#define M_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING     0
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 
 // alias interface support depends on IPv4
 #if defined(TCPIP_STACK_USE_IPV4) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
-#define _TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     1
+#define M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     1
 #else
-#define _TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     0
+#define M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT     0
 #endif  // defined(TCPIP_STACK_USE_IPV4) && (TCPIP_STACK_ALIAS_INTERFACE_SUPPORT != 0)
 
 // debug symbols
 
-#define _TCPIP_STACK_DEBUG_MASK_BASIC       0x01    // enable the _TCPIPStack_Assert and _TCPIPStack_Condition calls
-#define _TCPIP_STACK_ENABLE_ASSERT_LOOP     0       // if !0, then an assert call will loop forever 
+#define M_TCPIP_STACK_DEBUG_MASK_BASIC       0x01    // enable the TCPIPStack_Assert and TCPIPStack_Condition calls
+#define M_TCPIP_STACK_ENABLE_ASSERT_LOOP     0       // if !0, then an assert call will loop forever 
                                                     // should be 0 for a release build
-#define _TCPIP_STACK_ENABLE_COND_LOOP       0       // if !0, then an condition call will loop forever 
+#define M_TCPIP_STACK_ENABLE_COND_LOOP       0       // if !0, then an condition call will loop forever 
                                                     // should be 0 for a release build
 
 // enabled debugging masks 
-#define _TCPIP_STACK_DEBUG_LEVEL            (_TCPIP_STACK_DEBUG_MASK_BASIC)  // usually the basic debugging is enabled so asserts are not ignored
+#define M_TCPIP_STACK_DEBUG_LEVEL            (M_TCPIP_STACK_DEBUG_MASK_BASIC)  // usually the basic debugging is enabled so asserts are not ignored
 
 
 // assert and condition functions that all stack modules could use
-#if ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
-void _TCPIPStack_Assert(bool cond, const char* fileName, const char* funcName, int lineNo);
-void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName, int lineNo);
+#if ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+void TCPIPStack_Assert(bool cond, const char* fileName, const char* funcName, int lineNo);
+void TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName, int lineNo);
 #else
-#define _TCPIPStack_Assert(cond, fileName, funcName, lineNo)
-#define _TCPIPStack_Condition(cond, fileName, funcName, lineNo)
-#endif  // ((_TCPIP_STACK_DEBUG_LEVEL & _TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
+#define TCPIPStack_Assert(cond, fileName, funcName, lineNo)
+#define TCPIPStack_Condition(cond, fileName, funcName, lineNo)
+#endif  // ((M_TCPIP_STACK_DEBUG_LEVEL & M_TCPIP_STACK_DEBUG_MASK_BASIC) != 0)
 
 
 // public module interface
 #include "tcpip/tcpip.h"
+
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #include "tcpip/src/tcpip_types.h"
 #include "tcpip/src/link_list.h"
@@ -222,4 +224,4 @@ void _TCPIPStack_Condition(bool cond, const char* fileName, const char* funcName
 #include "tcpip/src/hash_fnv.h"
 #include "tcpip/src/tcpip_notify.h"
 
-#endif  // __TCPIP_STACK_PRIVATE_H__
+#endif  // H_TCPIP_STACK_PRIVATE_H_

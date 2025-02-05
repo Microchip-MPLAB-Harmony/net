@@ -1,5 +1,5 @@
 <#--
-Copyright (C) 2013-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2013-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -316,13 +316,13 @@ TCPIP_DHCPS_CLIENT_OPTION_CONFIG dhcpsOptions${i}[] =
     },
     {
         .optType = TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL,
-        .mult = TCPIP_DHCPS_T1RENEW_MULT_FACT_IDX${i},
-        .div = TCPIP_DHCPS_T1RENEW_DIV_FACT_IDX${i},
+        .multFact = TCPIP_DHCPS_T1RENEW_MULT_FACT_IDX${i},
+        .divFact = TCPIP_DHCPS_T1RENEW_DIV_FACT_IDX${i},
     },
     {
         .optType = TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING,
-        .mult = TCPIP_DHCPS_T2REBIND_MULT_FACT_IDX${i},
-        .div = TCPIP_DHCPS_T2REBIND_DIV_FACT_IDX${i},
+        .multFact = TCPIP_DHCPS_T2REBIND_MULT_FACT_IDX${i},
+        .divFact = TCPIP_DHCPS_T2REBIND_DIV_FACT_IDX${i},
     },
 
 };
@@ -744,7 +744,7 @@ const TCPIP_MAC_BRIDGE_CONFIG  tcpipBridgeInitData =
 <#if (TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP">
 TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 {
-    .heapType = TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP,
+    .heapType = TCPIP_STACK_HEAP_TYPE_INTERNAL,
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
@@ -754,7 +754,7 @@ TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 <#elseif (TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP">
 TCPIP_STACK_HEAP_EXTERNAL_CONFIG tcpipHeapConfig =
 {
-    .heapType = TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP,
+    .heapType = TCPIP_STACK_HEAP_TYPE_EXTERNAL,
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
@@ -779,7 +779,7 @@ TCPIP_STACK_HEAP_EXTERNAL_CONFIG tcpipHeapConfig =
 
 TCPIP_STACK_HEAP_POOL_CONFIG tcpipHeapConfig =
 {
-    .heapType = TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL,
+    .heapType = TCPIP_STACK_HEAP_TYPE_POOL,
     .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
     .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
     .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,

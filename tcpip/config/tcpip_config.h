@@ -18,7 +18,7 @@ Microchip TCP/IP Stack Configuration Header
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -250,8 +250,8 @@ Microchip or any third party.
 // disconnect their sockets that are currently connected on that interface that has changed.
 // User can be notified by registering an event handler either with socket events or
 // with the general stack signaling mechanism
-// Default setting is true
-#define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING  true
+// Default setting is false
+#define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING  false
 
 // This setting enables the configuration get/set operations:
 // TCPIP_STACK_ModuleConfigGet, TCPIP_STACK_NetConfigGet, TCPIP_STACK_NetConfigSet
@@ -307,7 +307,7 @@ Microchip or any third party.
 // This is the timeout (frequency) for checking the PHY link status
 // Since this is a relatively slow event, usually 3 times per second should suffice
 // Currently the minimum enforced value is 200 ms (5 times per second)
-// (the internal value _TCPIP_STACK_LINK_MIN_TMO)
+// (the internal value M_TCPIP_STACK_LINK_MIN_TMO)
 // Default value is 333 ms
 #define TCPIP_STACK_LINK_RATE   333
 

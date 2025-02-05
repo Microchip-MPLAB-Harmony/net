@@ -16,9 +16,8 @@
     of the TCP/IP stack modules.
   
 *******************************************************************************/
-//DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,10 +46,8 @@ Microchip or any third party.
 
 
 
-//DOM-IGNORE-END
-
-#ifndef __TCPIP_H__
-#define __TCPIP_H__
+#ifndef H_TCPIP_H__
+#define H_TCPIP_H__
 
 
 #include <string.h>
@@ -63,20 +60,18 @@ Microchip or any third party.
 #include "system/system_common.h"
 #include "system/system_module.h"
 
-// DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
 
 #endif
-// DOM-IGNORE-END  
 
 
 // TCP/IP stack version
-#define TCPIP_STACK_VERSION_MAJOR         8
-#define TCPIP_STACK_VERSION_MINOR         1
+#define TCPIP_STACK_VERSION_MAJOR         15
+#define TCPIP_STACK_VERSION_MINOR         0
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "8.10 - H3"
+#define TCPIP_STACK_VERSION_STR           "15.0.0 - H3"
 
 
 // *****************************************************************************
@@ -140,7 +135,7 @@ typedef union
 {
     uint8_t  v[16];
     uint16_t w[8];
-    uint32_t d[4];
+    uint32_t d32[4];
 } IPV6_ADDR;
 
 // *****************************************************************************
@@ -159,7 +154,7 @@ typedef union
 typedef enum
 {
     /* either IPv4 or IPv6, unspecified; */
-    IP_ADDRESS_TYPE_ANY /*DOM-IGNORE-BEGIN*/ = 0 /*DOM-IGNORE-END*/,
+    IP_ADDRESS_TYPE_ANY = 0 ,
     /* IPv4 address type */
     IP_ADDRESS_TYPE_IPV4,
     /* IPv6 address type */
@@ -201,13 +196,13 @@ typedef union
 
 typedef enum
 {
-    IPV6_ADDR_SCOPE_UNKNOWN         /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_INTERFACE_LOCAL /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_LINK_LOCAL      /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_ADMIN_LOCAL     /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_SITE_LOCAL      /*DOM-IGNORE-BEGIN*/ = 0x05 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_ORG_LOCAL       /*DOM-IGNORE-BEGIN*/ = 0x08 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_SCOPE_GLOBAL          /*DOM-IGNORE-BEGIN*/ = 0x0E /*DOM-IGNORE-END*/,
+    IPV6_ADDR_SCOPE_UNKNOWN         = 0x00 ,
+    IPV6_ADDR_SCOPE_INTERFACE_LOCAL = 0x01 ,
+    IPV6_ADDR_SCOPE_LINK_LOCAL      = 0x02 ,
+    IPV6_ADDR_SCOPE_ADMIN_LOCAL     = 0x04 ,
+    IPV6_ADDR_SCOPE_SITE_LOCAL      = 0x05 ,
+    IPV6_ADDR_SCOPE_ORG_LOCAL       = 0x08 ,
+    IPV6_ADDR_SCOPE_GLOBAL          = 0x0E ,
 }IPV6_ADDR_SCOPE;
 
 // *****************************************************************************
@@ -226,13 +221,13 @@ typedef enum
 typedef enum
 {
     /* Invalid/unknown address type */
-    IPV6_ADDR_TYPE_UNKNOWN                  /*DOM-IGNORE-BEGIN*/ = 0 /*DOM-IGNORE-END*/,
+    IPV6_ADDR_TYPE_UNKNOWN                  = 0 ,
     /* Only link-local and global are currently valid for unicast */
-    IPV6_ADDR_TYPE_UNICAST                  /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_TYPE_ANYCAST                  /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_TYPE_MULTICAST                /*DOM-IGNORE-BEGIN*/ = 0x03 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_TYPE_SOLICITED_NODE_MULTICAST /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/,
-    IPV6_ADDR_TYPE_UNICAST_TENTATIVE        /*DOM-IGNORE-BEGIN*/ = 0x05 /*DOM-IGNORE-END*/,
+    IPV6_ADDR_TYPE_UNICAST                  = 0x01 ,
+    IPV6_ADDR_TYPE_ANYCAST                  = 0x02 ,
+    IPV6_ADDR_TYPE_MULTICAST                = 0x03 ,
+    IPV6_ADDR_TYPE_SOLICITED_NODE_MULTICAST = 0x04 ,
+    IPV6_ADDR_TYPE_UNICAST_TENTATIVE        = 0x05 ,
 }IPV6_ADDR_TYPE;
 
 
@@ -250,19 +245,19 @@ typedef enum
     None.
 */
 
-typedef struct __attribute__((__packed__)) _IPV6_ADDR_STRUCT
+typedef struct __attribute__((__packed__)) S_IPV6_ADDR_STRUCT
 {
-    struct _IPV6_ADDR_STRUCT * next;
-    struct _IPV6_ADDR_STRUCT * prev;
-    IPV6_ADDR address;
-    unsigned long validLifetime;
-    unsigned long preferredLifetime;
-    unsigned long lastTickTime;
-    unsigned char prefixLen;
+    struct S_IPV6_ADDR_STRUCT * next;
+    struct S_IPV6_ADDR_STRUCT * prev;
+    IPV6_ADDR   address;
+    uint32_t    validLifetime;
+    uint32_t    preferredLifetime;
+    uint32_t    lastTickTime;
+    uint8_t     prefixLen;
     struct __attribute__((__packed__))
     {
         /* Allow preferences */
-        unsigned char precedence;                  
+        uint8_t precedence;                  
         /* Link-local, site-local, global. */
         unsigned scope                  :4;
         /* Policy label */
@@ -304,29 +299,32 @@ typedef const void*   IPV6_ADDR_HANDLE;
     16 bit values only.
 */
 
+#define TCPIP_MODULE_LAYER1 TCPIP_MODULE_ARP
+#define TCPIP_MODULE_LAYER2 TCPIP_MODULE_ICMP
+#define TCPIP_MODULE_LAYER3 TCPIP_MODULE_DHCP_CLIENT
 typedef enum
 {
     /* unspecified/unknown module */
     TCPIP_MODULE_NONE              = 0,
-    /*DOM-IGNORE-BEGIN*/     // manager: layer 0 module /*DOM-IGNORE-END*/
+    // manager: layer 0 module 
     TCPIP_MODULE_MANAGER,    /* stack manager + packet allocation manager */ 
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER1,  // 1st layer modules: 2 - 5 /*DOM-IGNORE-END*/
-    TCPIP_MODULE_ARP        /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER1 /*DOM-IGNORE-END*/,
+    // TCPIP_MODULE_LAYER1 - 1st layer modules: 2 - 5
+    TCPIP_MODULE_ARP,
     TCPIP_MODULE_IPV4,
     TCPIP_MODULE_IPV6,
     TCPIP_MODULE_LLDP,              /* LLDP module */
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER2, // 2nd layer modules: 6 - 11 /*DOM-IGNORE-END*/
-    TCPIP_MODULE_ICMP       /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER2 /*DOM-IGNORE-END*/,
+    // TCPIP_MODULE_LAYER2 - 2nd layer modules: 6 - 11
+    TCPIP_MODULE_ICMP,
     TCPIP_MODULE_ICMPV6,
     TCPIP_MODULE_NDP,
     TCPIP_MODULE_UDP,
     TCPIP_MODULE_TCP,
     TCPIP_MODULE_IGMP,      /* IGMP host module */
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 19 /*DOM-IGNORE-END*/
-    TCPIP_MODULE_DHCP_CLIENT  /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER3 /*DOM-IGNORE-END*/,
+    // TCPIP_MODULE_LAYER3 - 3rd layer modules: 12 - 19
+    TCPIP_MODULE_DHCP_CLIENT,
     TCPIP_MODULE_DHCP_SERVER,
     TCPIP_MODULE_ANNOUNCE,
     TCPIP_MODULE_DNS_CLIENT,
@@ -335,7 +333,7 @@ typedef enum
     TCPIP_MODULE_MDNS,              /* Bonjour/mDNS */
     TCPIP_MODULE_NBNS,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 20 - 29 /*DOM-IGNORE-END*/
+    // 3rd layer modules: 20 - 29
     TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
@@ -347,7 +345,7 @@ typedef enum
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 39 /*DOM-IGNORE-END*/
+    // 3rd layer modules: 30 - 39
     TCPIP_MODULE_BERKELEY,
     TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
@@ -367,10 +365,9 @@ typedef enum
     /*  */
     /* starting here is list of supported MAC modules */
     /* and are defined in the tcpip_mac.h  */
-    TCPIP_MODULE_MAC_START /*DOM-IGNORE-BEGIN*/ = 0x1000 /*DOM-IGNORE-END*/, 
+    TCPIP_MODULE_MAC_START = 0x1000
 
 }TCPIP_STACK_MODULE;
-
 
 // *****************************************************************************
 /* TCP/IP stack supported network interfaces
@@ -453,47 +450,47 @@ typedef enum
 {
     /* Start the interface with a static IP address */
     /* No address service is enabled on this interface (DHCPc, ZCLL or DHCPs) */
-    TCPIP_NETWORK_CONFIG_IP_STATIC            /*DOM-IGNORE-BEGIN*/ = 0x0000 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IP_STATIC            = 0x0000 ,   
     /* DHCP client enabled on this interface */
-    TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON       /*DOM-IGNORE-BEGIN*/ = 0x0001 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON       = 0x0001 ,   
     /* ZeroConf LinkLocal enabled on this interface */
-    TCPIP_NETWORK_CONFIG_ZCLL_ON              /*DOM-IGNORE-BEGIN*/ = 0x0002 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_ZCLL_ON              = 0x0002 ,   
     /* DHCP server enabled on this interface */
-    TCPIP_NETWORK_CONFIG_DHCP_SERVER_ON       /*DOM-IGNORE-BEGIN*/ = 0x0004 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_DHCP_SERVER_ON       = 0x0004 ,   
 
     /* DNS CLIENT enabled on this interface */
-    TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON        /*DOM-IGNORE-BEGIN*/ = 0x0008 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON        = 0x0008 ,   
     /* DNS Server Enabled on this Interface */
-    TCPIP_NETWORK_CONFIG_DNS_SERVER_ON        /*DOM-IGNORE-BEGIN*/ = 0x0010 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_DNS_SERVER_ON        = 0x0010 ,   
     /* Multicast traffic enabled on this Interface */
-    TCPIP_NETWORK_CONFIG_MULTICAST_ON         /*DOM-IGNORE-BEGIN*/ = 0x0020 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_MULTICAST_ON         = 0x0020 ,   
     /* Packet logging is enabled on this Interface */
-    TCPIP_NETWORK_CONFIG_PKT_LOG_ON           /*DOM-IGNORE-BEGIN*/ = 0x0040 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_PKT_LOG_ON           = 0x0040 ,   
 
     /* the network configuration contains an IPv6 static address and subnet prefix length */
-    TCPIP_NETWORK_CONFIG_IPV6_ADDRESS         /*DOM-IGNORE-BEGIN*/ = 0x0100 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_ADDRESS         = 0x0100 ,   
 
     /* G3-PLC IPv6 general interface flags */
     /* the network will be part of a G3-PLC network */
-    TCPIP_NETWORK_CONFIG_IPV6_G3_NET          /*DOM-IGNORE-BEGIN*/ = 0x0200 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_G3_NET          = 0x0200 ,   
 
     /* The IPv6 will suppress the Duplicate Address Detection on this interface */
-    TCPIP_NETWORK_CONFIG_IPV6_NO_DAD          /*DOM-IGNORE-BEGIN*/ = 0x0400 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_NO_DAD          = 0x0400 ,   
     
     /* G3-PLC IPv6 router/coordinator interface flags */
     /* the network will act as an IPv6 border router/coordinator, replying to solicitations */
-    TCPIP_NETWORK_CONFIG_IPV6_ROUTER          /*DOM-IGNORE-BEGIN*/ = 0x0800 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_ROUTER          = 0x0800 ,   
 
     /* when configured as an IPv6 router, sending advertisements is enabled  */
-    TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED     /*DOM-IGNORE-BEGIN*/ = 0x1000 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_ADV_ENABLED     = 0x1000 ,   
 
     /* Suppress the RS (Router Solicitation) messages on this interface */
-    TCPIP_NETWORK_CONFIG_IPV6_NO_RS           /*DOM-IGNORE-BEGIN*/ = 0x2000 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_NO_RS           = 0x2000 ,   
     
     /* G3-PLC IPv6 device interface flags */
     /* Send RS messages to a router unicast address rather than multicast.
       By default the 'all IPv6 routers' multicast address: 'ff02::02' is used */
-    TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS      /*DOM-IGNORE-BEGIN*/ = 0x4000 /*DOM-IGNORE-END*/,   
+    TCPIP_NETWORK_CONFIG_IPV6_UNICAST_RS      = 0x4000 ,   
 
     /* add other configuration flags here */
 }TCPIP_NETWORK_CONFIG_FLAGS;
@@ -607,7 +604,7 @@ typedef struct
     /* subnet prefix length; only if TCPIP_NETWORK_CONFIG_IPV6_ADDRESS specified
        0 means default value (64)
        should probably always be 64 as requested by the RFC */
-    int             ipv6PrefixLen;
+    size_t          ipv6PrefixLen;
 
     /* default IPv6 gateway address; only if TCPIP_NETWORK_CONFIG_IPV6_ADDRESS specified
        can be NULL if not needed */
@@ -708,20 +705,18 @@ typedef struct TCPIP_STACK_INIT
     /* pointer to array of network configurations */
     const TCPIP_NETWORK_CONFIG*         pNetConf;   
     /* number of networks in the configuration array */
-    int                                 nNets;      
+    size_t                              nNets;      
     /* pointer to array of module configurations */
     const TCPIP_STACK_MODULE_CONFIG*    pModConfig; 
     /* number of modules in the array  */
-    int                                 nModules;   
+    size_t                              nModules;   
     /* initialization callback */
     TCPIP_STACK_INIT_CALLBACK           initCback;
 }TCPIP_STACK_INIT;
 
-//DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
 #endif
-//DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
