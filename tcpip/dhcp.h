@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DHCP_H
-#define __DHCP_H
+#ifndef H_DHCP_H
+#define H_DHCP_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -279,11 +279,11 @@ typedef const void* TCPIP_DHCP_HANDLE;
 
 typedef struct
 {
-    bool    dhcpEnable;     // DHCP client enable at module start-up 
-                            // Note: overridden by TCPIP_NETWORK_CONFIG::startFlags!
-    int     dhcpTmo;        // timeout to wait for DHCP lease, seconds
-    int     dhcpCliPort;    // client port for DHCP client transactions
-    int     dhcpSrvPort;    // remote server port for DHCP server messages
+    uint16_t    dhcpEnable;     // DHCP client enable at module start-up 
+                                // Note: overridden by TCPIP_NETWORK_CONFIG::startFlags!
+    uint16_t    dhcpTmo;        // timeout to wait for DHCP lease, seconds
+    uint16_t    dhcpCliPort;    // client port for DHCP client transactions
+    uint16_t    dhcpSrvPort;    // remote server port for DHCP server messages
 
 } TCPIP_DHCP_MODULE_CONFIG;
 
@@ -778,7 +778,7 @@ void  TCPIP_DHCP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __DHCP_H
+#endif  // H_DHCP_H
 
 /*
  End of File

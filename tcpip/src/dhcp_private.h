@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __DHCP_PRIVATE_H_
-#define __DHCP_PRIVATE_H_
+#ifndef H_DHCP_PRIVATE_H_
+#define H_DHCP_PRIVATE_H_
 
 // enable DHCP debugging features
 #define TCPIP_DHCP_DEBUG_MASK_NOTIFY_EVENTS     0x01    // enable notification events display
@@ -127,34 +127,34 @@ Microchip or any third party.
 // This forms the base of the DHCP transactions timeout 
 // and it's used in the expornential backoff
 // Using a default value for 100 Mbps networks
-#define TCPIP_DHCP_EXP_BACKOFF_BASE   2
+#define TCPIP_DHCP_EXP_BACKOFF_BASE   2U
 
 // exponential backoff limit, as set by the standard; seconds
-#define TCPIP_DHCP_EXP_BACKOFF_LIMIT    64
+#define TCPIP_DHCP_EXP_BACKOFF_LIMIT    64U
 
 // random variation for exponential backoff timing, seconds
 // Standard sets it to 1 second 
-#define TCPIP_DHCP_EXP_BACKOFF_FUZZ     1
+#define TCPIP_DHCP_EXP_BACKOFF_FUZZ     1U
 
 // random variation for lease timeout; seconds
-#define TCPIP_DHCP_LEASE_EXPIRE_FUZZ    10
+#define TCPIP_DHCP_LEASE_EXPIRE_FUZZ    10U
 
 // DHCP RENEWING state retry timeout; seconds
 // Standard sets it to 60 seconds
-#define TCPIP_DHCP_RENEW_RETRY_TIMEOUT  60
+#define TCPIP_DHCP_RENEW_RETRY_TIMEOUT  60U
 
 // DHCP REBINDING state retry timeout; seconds
 // Standard sets it to 60 seconds
-#define TCPIP_DHCP_REBIND_RETRY_TIMEOUT  60
+#define TCPIP_DHCP_REBIND_RETRY_TIMEOUT  60U
 
 // DHCP default lease time if the server doesn't provide one; seconds
 // not likely to be used, the server provides one but just in case
-#define TCPIP_DHCP_LEASE_TIME_DEFAULT   120
+#define TCPIP_DHCP_LEASE_TIME_DEFAULT   120U
 
 // Default time out to report the unavailability of a lease
 // and switch to a different address service; seconds
 // This is used only at the initialization
-#define TCPIP_DHCP_INIT_FAIL_TMO        10
+#define TCPIP_DHCP_INIT_FAIL_TMO        10U
 
 
 // DHCP UDP socket minimum size for being able to carry
@@ -162,39 +162,43 @@ Microchip or any third party.
 // The RFC states that the maximum message from the server 
 // may be 576 for lots of options
 // It may need update!
-#define TCPIP_DHCP_MIN_UDP_TX_BUFFER_SIZE     512
+#define TCPIP_DHCP_MIN_UDP_TX_BUFFER_SIZE     512U
 
 
 // DHCP UDP socket minimum amount of free TX space
 // Shouldn't happen because all DHCP transactions
 // are followed by a flush operation
-#define TCPIP_DHCP_MIN_UDP_TX_AVLBL_SIZE     300
+#define TCPIP_DHCP_MIN_UDP_TX_AVLBL_SIZE     300U
 
 
 // DHCP frame minimum packet size
 // A samller packet will be padded with 0s
 // Has to be < TCPIP_DHCP_MIN_UDP_TX_BUFFER_SIZE!
-#define TCPIP_DHCP_MIN_TX_FRAME_SIZE        300
+#define TCPIP_DHCP_MIN_TX_FRAME_SIZE        300U
 
 // DHCP host name illegal character replacement
-#define TCPIP_DHCP_HOST_REPLACE_CHAR    'x'
+#define TCPIP_DHCP_HOST_REPLACE_CHAR    (unsigned char)'x'
 
 
 // DHCP or BOOTP Header structure
-typedef struct
+typedef union U_TCPIP_DHCP_FRAME_HEADER
 {
-    uint8_t     op;             // Message type for this message
-    uint8_t     htype;          // Hardware type for this message
-    uint8_t     hlen;           // Length of hardware type
-    uint8_t     hops;           // Number of hops
-    uint32_t    xid;            // DHCP Transaction ID
-    uint16_t    secs;           // Number of elapsed seconds
-    uint16_t    flags;          // BOOTP Flags
-    uint32_t    ciaddr;         // Client IP
-    uint32_t    yiaddr;         // Your IP
-    uint32_t    siaddr;         // Next Server IP
-    uint32_t    giaddr;         // Relay Agent IP
-    uint8_t     chaddr[16];     // Client MAC Address
+    uint8_t         v[7 * 4 + 16];  // v[sizeof(union U_TCPIP_DHCP_FRAME_HEADER)];
+    struct
+    {
+        uint8_t     op;             // Message type for this message
+        uint8_t     htype;          // Hardware type for this message
+        uint8_t     hlen;           // Length of hardware type
+        uint8_t     hops;           // Number of hops
+        uint32_t    xid;            // DHCP Transaction ID
+        uint16_t    secs;           // Number of elapsed seconds
+        uint16_t    flags;          // BOOTP Flags
+        uint32_t    ciaddr;         // Client IP
+        uint32_t    yiaddr;         // Your IP
+        uint32_t    siaddr;         // Next Server IP
+        uint32_t    giaddr;         // Relay Agent IP
+        uint8_t     chaddr[16];     // Client MAC Address
+    };
 } TCPIP_DHCP_FRAME_HEADER;
 
 typedef struct
@@ -217,18 +221,6 @@ typedef enum
     TCPIP_DHCP_OPTION_RES_END,      // end of options found; stop
 }TCPIP_DHCP_OPTION_RESULT;
 
-// data used for the process/dispatch operation
-typedef struct
-{
-    uint8_t*            pOpt;       // current option pointer
-    int32_t             optSize;    // current option size
-    unsigned int        msgType;    // current message type
-    TCPIP_UINT32_VAL    serverID;   // server ID for the transaction
-    TCPIP_UINT32_VAL    leaseTime;  // lease time or 0 if not valid
-    TCPIP_UINT32_VAL    renewTime;  // renew time or 0 if not valid
-    TCPIP_UINT32_VAL    rebindTime; // rebind time or 0 if not valid
-}TCPIP_DHCP_OPTION_PROCESS_DATA;
-
 typedef struct __attribute__((packed))
 {
     uint8_t     opt;    // should be TCPIP_DHCP_MESSAGE_TYPE
@@ -242,7 +234,7 @@ typedef struct __attribute__((packed))
     uint8_t     opt;        // should be TCPIP_DHCP_PARAM_REQUEST_IP_ADDRESS
     uint8_t     len;        // 4
     uint8_t     reqIpAddr[4];    // requested IP address
-}TCPIP_DHCP_OPTION_DATA_REQUEST_IP_ADDRESS;
+}TCPIP_DHCP_OPTION_DATA_REQ_ADDRESS;
 
 typedef struct __attribute__((packed))
 {
@@ -341,15 +333,15 @@ typedef struct __attribute__((packed))
 {
     uint8_t     opt;        // should be TCPIP_DHCP_PARAM_REQUEST_LIST
     uint8_t     len;        // length of the following options
-    uint8_t     optList[];  // option list
-}TCPIP_DHCP_OPTION_DATA_REQUEST_LIST;
+    uint8_t     optList[2]; // option list: optList[]
+}TCPIP_DHCP_OPTION_DATA_REQ_LIST;
 
 
 typedef struct __attribute__((packed))
 {
     uint8_t     opt;        // should be TCPIP_DHCP_HOST_NAME
     uint8_t     len;        // length of the hostname field
-    uint8_t     hostname[]; // host name
+    uint8_t     hostname[2]; // host name: hostname[]
 }TCPIP_DHCP_OPTION_DATA_HOST_NAME;
 
 
@@ -358,11 +350,49 @@ typedef struct __attribute__((packed))
     uint8_t     opt;        // should be TCPIP_DHCP_END_OPTION
 }TCPIP_DHCP_OPTION_DATA_END;
 
+// data used for the process/dispatch operation
+typedef struct
+{
+    // union of the possible options
+    union
+    {
+        uint8_t*            pOpt;       // current option pointer
+        TCPIP_DHCP_OPTION_DATA_MSG_TYPE* pMsgType;
+        TCPIP_DHCP_OPTION_DATA_SUBNET_MASK* pSubMask;
+        TCPIP_DHCP_OPTION_DATA_ROUTER* pRouter;
+        TCPIP_DHCP_OPTION_TIME_SERVER* pOptTServer;
+        TCPIP_DHCP_OPTION_NTP_SERVER* pOptNtpServer;
+        TCPIP_DHCP_OPTION_DATA_DNS* pDns;
+        TCPIP_DHCP_OPTION_DATA_SERVER_ID* pServId;
+        TCPIP_DHCP_OPTION_DATA_LEASE_TIME* pLease;
+        TCPIP_DHCP_OPTION_DATA_RENEW_TIME* pRenew;
+        TCPIP_DHCP_OPTION_DATA_REBIND_TIME* pRebind;
+    };
+
+    int32_t             optSize;    // current option size
+    unsigned int        msgType;    // current message type
+    TCPIP_UINT32_VAL    serverID;   // server ID for the transaction
+    TCPIP_UINT32_VAL    leaseTime;  // lease time or 0 if not valid
+    TCPIP_UINT32_VAL    renewTime;  // renew time or 0 if not valid
+    TCPIP_UINT32_VAL    rebindTime; // rebind time or 0 if not valid
+}TCPIP_DHCP_OPTION_PROCESS_DATA;
+
 
 // data used for the send/write operation
 typedef struct
 {
-    uint8_t*            pOpt;       // current option pointer
+    // union of the possible write options
+    union
+    {
+        uint8_t*            pOpt;       // current option pointer
+        TCPIP_DHCP_OPTION_DATA_MSG_TYPE* pMsgType;
+        TCPIP_DHCP_OPTION_DATA_SERVER_ID* pServId;
+        TCPIP_DHCP_OPTION_DATA_REQ_LIST* pReqL;
+        TCPIP_DHCP_OPTION_DATA_REQ_ADDRESS* pReqAdd;
+        TCPIP_DHCP_OPTION_DATA_HOST_NAME* pHost;
+        TCPIP_DHCP_OPTION_DATA_CLIENT_ID* pClientId;
+        TCPIP_DHCP_OPTION_DATA_END* pEnd; 
+    };
     int32_t             writeSpace; // current available write space
     int32_t             writeBytes; // written bytes
     unsigned int        msgType;    // current message type
@@ -396,9 +426,9 @@ typedef enum
 
 // DHCP event registration
 
-typedef struct  _TAG_DHCP_LIST_EV_NODE
+typedef struct  S_TAG_DHCP_LIST_EV_NODE
 {
-    struct _TAG_DHCP_LIST_EV_NODE*  next;       // next node in list
+    struct S_TAG_DHCP_LIST_EV_NODE* next;       // next node in list
                                                 // makes it valid SGL_LIST_NODE node
     TCPIP_DHCP_EVENT_HANDLER        handler;    // if !NULL, handler to be called for event
     TCPIP_DHCP_EVENT_HANDLER_EX     xhandler;   // if !NULL, extended handler to be called for event
@@ -419,8 +449,7 @@ typedef enum
 }TCPIP_DHCP_EV_SOURCE;
 
 
-
-#endif  // __DHCP_PRIVATE_H_
+#endif  // H_DHCP_PRIVATE_H_
 
 
 
