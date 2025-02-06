@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DHCPS_MANAGER_H_
-#define _DHCPS_MANAGER_H_
+#ifndef H_DHCPS_MANAGER_H_
+#define H_DHCPS_MANAGER_H_
 
 
 
@@ -75,7 +75,8 @@ Microchip or any third party.
     This function should be called internally just once per interface
     by the stack manager.
 ***************************************************************************/
-bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCPS_MODULE_CONFIG* pDhcpConfig);
+bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
+
 
 
 /*****************************************************************************
@@ -103,6 +104,6 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
 ***************************************************************************/
 void TCPIP_DHCPS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
-#endif  // _DHCPS_MANAGER_H_
+#endif  // H_DHCPS_MANAGER_H_
 
 

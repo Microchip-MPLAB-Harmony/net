@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,16 +46,15 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _DHCPS_PRIVATE_H_ 
-#define _DHCPS_PRIVATE_H_
+#ifndef H_DHCPS_PRIVATE_H_ 
+#define H_DHCPS_PRIVATE_H_
 
 //TCPIP DHCP Server ICMP ECHO request 
-#define TCPIP_DHCPS_ICMP_ECHO_REQUESTS              2
-#define TCPIP_DHCPS_ICMP_ECHO_REQUEST_DELAY         1000
-#define TCPIP_DHCPS_ICMP_ECHO_TIMEOUT               5000
-#define TCPIP_DHCPS_ICMP_ECHO_REQUEST_MIN_DELAY     5  // minimum delay between successive echo requests
-#define TCPIP_DHCPS_ICMP_ECHO_REQUEST_BUFF_SIZE     2000
-#define TCPIP_DHCPS_ICMP_ECHO_REQUEST_DATA_SIZE     100
+#define TCPIP_DHCPS_ICMP_ECHO_REQUESTS          2U
+#define TCPIP_DHCPS_ICMP_ECHO_REQ_DELAY         1000U
+#define TCPIP_DHCPS_ICMP_ECHO_TMO               5000U
+#define TCPIP_DHCPS_ICMP_ECHO_REQ_BUFF_SIZE     2000U
+#define TCPIP_DHCPS_ICMP_ECHO_REQ_DATA_SIZE     100U
 
 // DHCP Server debug levels
 #define TCPIP_DHCPS_DEBUG_MASK_BASIC           (0x0001)
@@ -66,20 +65,20 @@ Microchip or any third party.
 #define TCPIP_DHCPS_DEBUG_LEVEL               (0)
 
 
-#define TCPIP_DHCPS_QUEUE_LIMIT_SIZE            (7)
+#define TCPIP_DHCPS_QUEUE_LIMIT_SIZE            (7U)
 
 // Minimum DHCP Discovery packet size 
-#define TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE     241
+#define TCPIP_DHCPS_MIN_DISCOVERY_PKT_SIZE     241U
 
 // Boot file name, null terminated string; "generic" name or null in DHCPDISCOVER, fully qualified
 // directory-path name in DHCPOFFER.
-#define DHCPS_BOOTFILE_NAME_SIZE 128
+#define DHCPS_BOOTFILE_NAME_SIZE 128U
 // Optional server host name, null terminated string.
-#define DHCPS_HOST_NAME_SIZE     64
+#define DHCPS_HOST_NAME_SIZE     64U
 // Unused Client Hardware address
-#define DHCPS_CLEINT_HW_ADDRESS_SIZE 10
+#define DHCPS_CLEINT_HW_ADDRESS_SIZE 10U
 
-#define DHCPS_UNUSED_BYTES_FOR_TX   (DHCPS_BOOTFILE_NAME_SIZE+DHCPS_HOST_NAME_SIZE+DHCPS_CLEINT_HW_ADDRESS_SIZE)
+#define DHCPS_UNUSED_BYTES_FOR_TX   ((size_t)DHCPS_BOOTFILE_NAME_SIZE + (size_t)DHCPS_HOST_NAME_SIZE + (size_t)DHCPS_CLEINT_HW_ADDRESS_SIZE)
 
 // ICMP Request Reply process steps
 typedef enum
@@ -94,7 +93,7 @@ typedef enum
     DHCPS_ICMP_IDLE,
 }DHCPS_ICMP_PROCESS;
 
-#define DHCPS_MAX_REPONSE_PACKET_SIZE 300u
+#define DHCPS_MAX_REPONSE_PACKET_SIZE 300U
 typedef struct 
 {
     IPV4_ADDR   serverIPAddress;    // Interface IP address when DHCP server is enabled
@@ -296,18 +295,18 @@ typedef enum
 typedef struct
 {
     DHCPS_INTERFACE_CONFIG intfAddrsConf;   // Pool entry and Interface address configuration
-    int     netIx;                 // index of the current interface addressed
+    size_t          netIx;                  // index of the current interface addressed
 }DHCP_SRVR_DCPT;    // DHCP server descriptor
 
 // DHCP Server cache entry
-typedef struct  _TAG_DHCPS_HASH_ENTRY 
+typedef struct  S_TAG_DHCPS_HASH_ENTRY 
 {
     OA_HASH_ENTRY   hEntry; // hash header;
     uint32_t    Client_Lease_Time;
     uint32_t    pendingTime;
     IPV4_ADDR   ipAddress;   // the hash key: the IP address
     TCPIP_MAC_ADDR  hwAdd;  // the hardware address
-    int     intfIdx;
+    size_t      intfIdx;
 }DHCPS_HASH_ENTRY;
 
 // DHCP Server Mode details
@@ -320,7 +319,7 @@ typedef struct
     uint32_t    poolCount;          // Number of Pool supported and it is
                                         // calculated from dhcpLeadAddressValidation
     IPV4_ADDR   dhcpNextLease;          // IP Address to provide for next lease
-    tcpipSignalHandle signalHandle;     // Asynchronous Timer Handle
+    TCPIP_SIGNAL_HANDLE signalHandle;     // Asynchronous Timer Handle
 }DHCPS_MOD;    // DHCP server Mode
 
 #define     DHCPS_HASH_PROBE_STEP      1    // step to advance for hash collision
@@ -362,9 +361,11 @@ void TCPIP_DHCPS_HashIPKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const
 void TCPIP_DHCPS_HashMACKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key);
 OA_HASH_ENTRY* TCPIP_DHCPS_HashDeleteEntry(OA_HASH_DCPT* pOH);
 size_t TCPIP_DHCPS_MACHashKeyHash(OA_HASH_DCPT* pOH, const void* key);
-size_t TCPIP_DHCPS_HashProbeHash(OA_HASH_DCPT* pOH, const void* key);
 size_t TCPIP_DHCPS_IPAddressHashKeyHash(OA_HASH_DCPT* pOH, const void* key);
+#if defined(OA_DOUBLE_HASH_PROBING)
+size_t TCPIP_DHCPS_HashProbeHash(OA_HASH_DCPT* pOH, const void* key);
+#endif
 
-#endif  // _DHCPS_PRIVATE_H_ 
+#endif  // H_DHCPS_PRIVATE_H_ 
 
 

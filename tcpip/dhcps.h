@@ -22,7 +22,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -53,8 +53,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DHCPS_H
-#define __DHCPS_H
+#ifndef H_DHCPS_H_
+#define H_DHCPS_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -88,7 +88,7 @@ Microchip or any third party.
 */
 typedef struct
 {
-     int            interfaceIndex;     // Interface Index
+     size_t         interfaceIndex;     // Interface Index
      uint32_t       poolIndex;          // Server Pool Index
      const char*    serverIPAddress;    // Server IP address
      const char*    startIPAddRange;    // Start IP address 
@@ -323,7 +323,7 @@ bool TCPIP_DHCPS_RemovePoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY
 //******************************************************************************
 /*
  Function:
-    int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYPE type);
+    size_t TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYPE type);
 
   Summary:
     Get all the entries or only used entries of a certain type belonging to a 
@@ -343,14 +343,14 @@ bool TCPIP_DHCPS_RemovePoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY
                 * DHCP_SERVER_POOL_ENTRY_IN_USE
 
   Returns:
-    - true  - If successful
-    - false - If unsuccessful
+    - the number oF pool entries
+    - 0 - If unsuccessful
 
   Remarks:
     None.
 */
 
-int TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYPE type);
+size_t TCPIP_DHCPS_GetPoolEntries(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_POOL_ENTRY_TYPE type);
 
 //******************************************************************************
 /*
@@ -413,4 +413,4 @@ void  TCPIP_DHCPS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif // __DHCPS_H
+#endif // H_DHCPS_H_
