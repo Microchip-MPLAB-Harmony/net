@@ -19,7 +19,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -50,8 +50,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __FTP_H
-#define __FTP_H
+#ifndef H_FTP_H_
+#define H_FTP_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -267,9 +267,9 @@ TCPIP_FTP_HANDLE     TCPIP_FTP_AuthenticationRegister(TCPIP_FTP_AUTH_HANDLER aut
   Example:
     <code>
     TCPIP_FTP_HANDLE myHandle = TCPIP_FTP_AuthenticationRegister(myAuthHandler, myParam );
-    // process incoming login requests
-    // now we're done with it 
-    // no more users will be able to login
+    - process incoming login requests
+    - now we're done with it 
+    - no more users will be able to login
     TCPIP_FTP_AuthenticationDeregister(myHandle);
     </code>
 
@@ -312,4 +312,4 @@ void  TCPIP_FTP_ServerTask(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __FTP_H
+#endif  // H_FTP_H_

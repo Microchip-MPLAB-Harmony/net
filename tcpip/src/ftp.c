@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -34,6 +34,7 @@ Microchip or any third party.
 */
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_FTP_SERVER
+#include <stdarg.h>
 
 #include "tcpip/src/tcpip_private.h"
 
@@ -57,8 +58,8 @@ static const char * const sTCPIPFTPCmdString[] =
     "STOR",                         // TCPIP_FTP_CMD_STOR
     "PORT",                         // TCPIP_FTP_CMD_PORT
     "ABOR",                         // TCPIP_FTP_CMD_ABORT
-    "PWD ",                         // TCPIP_FTP_CMD_PWD
-    "CWD ",                         // TCPIP_FTP_CMD_CWD
+    "PWD",                          // TCPIP_FTP_CMD_PWD
+    "CWD",                          // TCPIP_FTP_CMD_CWD
     "TYPE",                         // TCPIP_FTP_CMD_TYPE
     "RETR",                         // TCPIP_FTP_CMD_RETR // GET command
     "SIZE",                         // TCPIP_FTP_CMD_SIZE
@@ -100,10 +101,10 @@ static const char * const sTCPIPFTPRespStr[] =
     "425 Can't create data socket.\r\n",// TCPIP_FTP_RESP_DATA_NO_SOCKET
     "257 Current working Directory \r\n",   // TCPIP_FTP_RESP_PWD
     "200 Command Ok\r\n",                   // TCPIP_FTP_RESP_OK
-    "550 Requested action not taken. \r\n", // TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN
+    "550 Requested action not taken. \r\n", // TCPIP_FTP_RESP_NO_FILE_NO_ACTION
     "150 File status okay; about to open data connection\r\n", //TCPIP_FTP_RESP_FILE_IS_PRESENT
     "227 Entering passive mode ", // TCPIP_FTP_RESP_ENTER_PASV_MODE
-    "226 Closing data connection. Requested file action successful.\r\n", //TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION,
+    "226 Closing data connection. Requested file action successful.\r\n", //TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN,
     "213 ", // TCPIP_FTP_RESP_FILE_STATUS
     "522 Extended PORT failure - Unknown network protocol\r\n", //TCPIP_FTP_RESP_EXTND_PORT_FAILURE
     "421 Service not available, closing control connection\r\n", // TCPIP_FTP_RESP_FILESYSTEM_FAIL
@@ -120,30 +121,30 @@ static uint8_t gFTPNLSTArgIndex=0xFF;
 static uint8_t TCPIP_FTP_CMD_NLSTArgs[TCPIP_FTP_MAX_NLST_ARGS][5]={"-h\0","-a\0","-ha\0"};
 
 
-static TCPIP_FTP_DCPT* sTCPIPFTPDcpt = 0;
+static TCPIP_FTP_DCPT* sTCPIPFTPDcpt = NULL;
 
 static int              sTCPIPFTPServerCount=0;
-static const void*      sTCPIPFtpMemH = 0;  // memory handle
-static tcpipSignalHandle ftpsSignalHandle = 0;
+static const void*      sTCPIPFtpMemH = NULL;  // memory handle
+static TCPIP_SIGNAL_HANDLE ftpsSignalHandle = NULL;
 
 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
 static TCPIP_FTP_AUTH_HANDLER FTPAuthHandler;
 static const void* FTPAuthHParam;
-#endif  // (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#endif  // (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
 
 
 // Private helper functions.
-static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(uint8_t *cmd);
+static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(char *cmd);
 static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt);
 #ifdef TCPIP_FTP_PUT_ENABLED
 static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt);
 #endif
 static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt);
-static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
+static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, char *cFile);
 static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt);
-static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
+static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, char *cFile);
 static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt);
 static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt);
@@ -154,55 +155,80 @@ static void TCPIP_FTP_Cleanup(void);
 #define TCPIP_FTP_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static void _FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt);
+static void F_FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt);
 
 static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt);
-static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t* login,uint8_t* password);
-static bool _FTP_Send_ErrorResponse(TCPIP_FTP_DCPT* pFTPDcpt);
+static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, const char* login,const char* password);
+static bool F_FTP_Send_ErrorResponse(TCPIP_FTP_DCPT* pFTPDcpt);
 
 static void TCPIP_FTP_ServerProcess(void);
 
-static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TCPIP_TCP_SIGNAL_TYPE sigType, const void* param);
+static void F_FTPSocketRxSignalHandler(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
-#define mMIN(a, b)  ((a<b)?a:b)
+// conversion functions/helpers
+//
 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+static __inline__ TCPIP_FTP_HANDLE __attribute__((always_inline)) FC_AuthHndl2FtpHndl(TCPIP_FTP_AUTH_HANDLER authHndl)
+{
+    union
+    {
+        TCPIP_FTP_AUTH_HANDLER authHndl;
+        TCPIP_FTP_HANDLE  hndl;
+    }U_AUTH_HNDL_FTP_HNDL;
+
+    U_AUTH_HNDL_FTP_HNDL.authHndl = authHndl;
+    return U_AUTH_HNDL_FTP_HNDL.hndl;
+}
+
+static __inline__ FTP_LIST_NODE*  __attribute__((always_inline)) FC_SglNode2FtpNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        FTP_LIST_NODE* ftpNode;
+    }U_NODE_FTP_NODE;
+
+    U_NODE_FTP_NODE.node = node;
+    return U_NODE_FTP_NODE.ftpNode;
+}
+
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK == 0)
 #define TCPIP_FTP_ANNONYMOUS_USER_NAME "anonymous"
 #endif
 
-static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE | TCPIP_TCP_SIGNAL_RX_FIN;
+static const uint16_t ftpClientSignals = (uint16_t)TCPIP_TCP_SIGNAL_RX_DATA | (uint16_t)TCPIP_TCP_SIGNAL_TX_SPACE | (uint16_t)TCPIP_TCP_SIGNAL_RX_FIN;   // TCPIP_TCP_SIGNAL_TYPE
 
-SGL_LIST_NODE* TCPIP_FTP_LIST_Add(PROTECTED_SINGLE_LIST* FileList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
+static SGL_LIST_NODE* TCPIP_FTP_LIST_Add(PROTECTED_SINGLE_LIST* FileList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
     SGL_LIST_NODE* newNode = TCPIP_HEAP_Malloc(heapH, nBytes);
 
-    if(newNode)
+    if(newNode != NULL)
     {
-        TCPIP_Helper_ProtectedSingleListTailAdd(FileList, newNode);
+        TCPIP_Helper_ProtSglListTailAdd(FileList, newNode);
     }
     return newNode;
 
 }
 
-static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t* login, uint8_t* password)
+static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, const char* login, const char* password)
 {
-#if (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
     bool authRes = false;
 
-    if(FTPAuthHandler != 0)
+    if(FTPAuthHandler != NULL)
     {
-#if (TCPIP_FTPS_AUTHENTICATION_CONN_INFO != 0)
+#if defined(TCPIP_FTPS_AUTHENTICATION_CONN_INFO) && (TCPIP_FTPS_AUTHENTICATION_CONN_INFO != 0)
         // we need connection info
         TCPIP_FTP_CONN_INFO connInfo;
-        connInfo.connIx = pFTPDcpt - sTCPIPFTPDcpt;
+        connInfo.connIx = FC_PtrDiff2UI16(pFTPDcpt - sTCPIPFTPDcpt);
         connInfo.presSkt = -1;
         connInfo.tcpSkt = pFTPDcpt->ftpCmdskt;
-        NET_PRES_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
-        authRes = (*FTPAuthHandler)((const char*)login, (const char*)password, &connInfo, FTPAuthHParam);
+        (void)NET_PRES_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
+        authRes = (*FTPAuthHandler)(login, password, &connInfo, FTPAuthHParam);
 #else
-        authRes = (*FTPAuthHandler)((const char*)login, (const char*)password, 0, FTPAuthHParam);
+        authRes = (*FTPAuthHandler)(login, password, NULL, FTPAuthHParam);
 
-#endif  // (TCPIP_FTPS_AUTHENTICATION_CONN_INFO != 0)
+#endif  // defined(TCPIP_FTPS_AUTHENTICATION_CONN_INFO) && (TCPIP_FTPS_AUTHENTICATION_CONN_INFO != 0)
 
     }
 
@@ -211,57 +237,56 @@ static bool TCPIP_FTP_Verify(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t* login, uint8_t* 
     // OBSOLETE authentication method
     // use the init time data
 
-    if ( strncmp((const char*)login, (const char*)TCPIP_FTP_ANNONYMOUS_USER_NAME, TCPIP_FTP_USER_NAME_LEN) == 0 )
+    if ( strncmp(login, (const char*)TCPIP_FTP_ANNONYMOUS_USER_NAME, TCPIP_FTP_USER_NAME_LEN) == 0 )
         return true;
 
-    if ( strncmp((const char*)login, (const char*)ftpConfigData.userName, TCPIP_FTP_USER_NAME_LEN) == 0 )
+    if ( strncmp(login, (const char*)ftpConfigData.userName, TCPIP_FTP_USER_NAME_LEN) == 0 )
     {
-        if ( strncmp((const char*)password, (const char*)ftpConfigData.password, TCPIP_FTP_PASSWD_LEN) == 0)
+        if ( strncmp(password, ftpConfigData.password, TCPIP_FTP_PASSWD_LEN) == 0)
             return true;
     }
     return false;
-#endif  // (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#endif  // (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
 }
 
 
 static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
-    SYS_FS_SHELL_RES fsRes;
+    SYS_FS_RESULT fsRes;
   
 
-    fsRes = (pFTPDcpt->ftp_shell_obj->dirMake)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
-    if(fsRes != SYS_FS_SHELL_RES_OK)
+    fsRes = (pFTPDcpt->ftp_shell_obj->dirMake)(pFTPDcpt->ftp_shell_obj, pFTPDcpt->ftp_argv[1]);
+    if(fsRes != SYS_FS_RES_SUCCESS)
     {// No such directory
-        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
         return true;
     }
     
-    sprintf(ftpMsg,"250 %s is directory is added\r\n",pFTPDcpt->ftp_argv[1]);
-    if(!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
+    (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "250 %s is directory is added\r\n", pFTPDcpt->ftp_argv[1]);
+    if(NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
     {
-        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-        pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+        pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
         return true;
     }
-    NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-    NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+    (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+    pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
     return true;
 }
 
 
-bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
-             const TCPIP_FTP_MODULE_CONFIG* ftpData)
+bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData)
 {
-    int     nServers;
+    size_t  nServers;
     bool    initFail;
     const char* ftpLocalWebPath;
-    TCPIP_FTP_DCPT* pDcpt = 0;
+    TCPIP_FTP_DCPT* pDcpt = NULL;
     SYS_FS_SHELL_RES res;
 
-    if(stackData->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackData->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
        return true;
     }
@@ -270,14 +295,15 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     if(sTCPIPFTPServerCount == 0)
     {
         // Check if there is any FTP server connection configured
-        if(ftpData == 0 || ftpData->nConnections == 0 || ftpData->cmdPort == 0 || ftpData->dataPort == 0)
+        const TCPIP_FTP_MODULE_CONFIG* ftpData = (const TCPIP_FTP_MODULE_CONFIG*)initData;
+        if(ftpData == NULL || ftpData->nConnections == 0U || ftpData->cmdPort == 0U || ftpData->dataPort == 0U)
         {
             SYS_ERROR(SYS_ERROR_ERROR, " FTP: Configuration data error");
             return false;
         }
 
         // state init
-        ftpsSignalHandle = 0;
+        ftpsSignalHandle = NULL;
 
         // basic sanity check
         ftpConfigData.cmdPort = ftpData->cmdPort;
@@ -286,13 +312,13 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         ftpConfigData.dataSktRxBuffSize = ftpData->dataSktRxBuffSize;
         ftpConfigData.dataSktTxBuffSize = ftpData->dataSktTxBuffSize;
 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
-        strncpy(ftpConfigData.userName, ftpData->userName, sizeof(ftpConfigData.userName) - 1);
-        strncpy(ftpConfigData.password, ftpData->password, sizeof(ftpConfigData.password) - 1);
-#endif  // (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+        (void)strncpy(ftpConfigData.userName, ftpData->userName, sizeof(ftpConfigData.userName) - 1);
+        (void)strncpy(ftpConfigData.password, ftpData->password, sizeof(ftpConfigData.password) - 1);
+#endif  // (M_FTP_USE_AUTHENTICATION_CALLBACK == 0)
 
         // Get the mount path from the Initialization data
-        if(ftpData->mountPath != 0)
+        if(ftpData->mountPath != NULL)
         {
             ftpLocalWebPath = ftpData->mountPath;
         }
@@ -303,8 +329,8 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
 
         sTCPIPFtpMemH = stackData->memH;
 
-        sTCPIPFTPDcpt = (TCPIP_FTP_DCPT*)TCPIP_HEAP_Calloc(sTCPIPFtpMemH, ftpConfigData.nConnections, sizeof(TCPIP_FTP_DCPT));
-        if(sTCPIPFTPDcpt == 0)
+        sTCPIPFTPDcpt = (TCPIP_FTP_DCPT*)TCPIP_HEAP_Calloc(sTCPIPFtpMemH, (size_t)ftpConfigData.nConnections, sizeof(TCPIP_FTP_DCPT));
+        if(sTCPIPFTPDcpt == NULL)
         {   // failed
             return false;
         }
@@ -312,9 +338,9 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         // initialize data structures
         initFail = false;
         pDcpt = sTCPIPFTPDcpt;
-        for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++, pDcpt++)
+        for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
         {
-            pDcpt->ftpCmdskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, ftpConfigData.cmdPort, 0, 0);
+            pDcpt->ftpCmdskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_ANY, ftpConfigData.cmdPort, NULL, NULL);
             if(pDcpt->ftpCmdskt == NET_PRES_INVALID_SOCKET)
             {   // failed
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: Socket creation failed");
@@ -322,8 +348,8 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                 break;
             }
             // alert of incoming traffic
-            pDcpt->ftpTcpCmdSocketSignal = NET_PRES_SocketSignalHandlerRegister(pDcpt->ftpCmdskt, TCPIP_TCP_SIGNAL_RX_DATA, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);  
-            if(pDcpt->ftpTcpCmdSocketSignal == 0)
+            pDcpt->ftpTcpCmdSocketSignal = NET_PRES_SocketSignalHandlerRegister(pDcpt->ftpCmdskt, (uint16_t)TCPIP_TCP_SIGNAL_RX_DATA, &F_FTPSocketRxSignalHandler, NULL);  
+            if(pDcpt->ftpTcpCmdSocketSignal == NULL)
             {
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: TCP Signal creation failed");
                 initFail = true;
@@ -331,28 +357,29 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             }
             pDcpt->ftpFlag.val = 0;
             pDcpt->ftpDataPort = 0;
-            pDcpt->ftpStringLen = 0;
+            pDcpt->ftpStringLen = 0U;
             pDcpt->ftpDataskt = NET_PRES_INVALID_SOCKET ;
-            pDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
-            pDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
-            pDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
-            pDcpt->callbackPos = 0;
-            pDcpt->ftpTcpDataSocketSignal=0;
+            pDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED;
+            pDcpt->ftpCommand = (uint8_t)TCPIP_FTP_CMD_NONE;
+            pDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_IDLE;
+            pDcpt->callbackPos = 0UL;
+            pDcpt->ftpTcpDataSocketSignal = NULL;
             pDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
 
-            pDcpt->ftp_shell_obj = (SYS_FS_SHELL_OBJ  *)SYS_FS_Shell_Create(ftpLocalWebPath, 0, 0, 0, &res);
-            if(pDcpt->ftp_shell_obj == 0)
+            pDcpt->ftp_shell_obj = SYS_FS_Shell_Create(ftpLocalWebPath, SYS_FS_SHELL_FLAG_NONE, NULL, NULL, &res);
+            if(pDcpt->ftp_shell_obj == NULL)
             {
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: Wrapper object failure : %d",res);
                 initFail = true;
                 break;
             }            
+            pDcpt++;
         }
 
         if(initFail == false)
         {   // create the FTP timer
-            ftpsSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_FTP_ServerTask, TCPIP_FTPS_TASK_TICK_RATE);
-            if(ftpsSignalHandle == 0)
+            ftpsSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_FTP_ServerTask, TCPIP_FTPS_TASK_TICK_RATE);
+            if(ftpsSignalHandle == NULL)
             {   // cannot create the FTP timer
                 SYS_ERROR(SYS_ERROR_ERROR, " FTP: Signal Handler failed");
                 initFail = true;
@@ -365,9 +392,9 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             return false;
         }
 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
-        FTPAuthHandler = 0;
-#endif  // (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+        FTPAuthHandler = NULL;
+#endif  // (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
     }   
 
     sTCPIPFTPServerCount++;
@@ -380,7 +407,7 @@ void TCPIP_FTP_ServerDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData
 {
     if(sTCPIPFTPServerCount > 0)
     {
-        if(stackData->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackData->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--sTCPIPFTPServerCount == 0)
             {   // all closed
@@ -393,18 +420,18 @@ void TCPIP_FTP_ServerDeinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData
 
 static void TCPIP_FTP_Cleanup(void)
 {
-    int nServers;
+    size_t nServers;
     TCPIP_FTP_DCPT* pFTPDcpt;
 
-    if(sTCPIPFTPDcpt != 0)
+    if(sTCPIPFTPDcpt != NULL)
     {
         pFTPDcpt = sTCPIPFTPDcpt;
-        for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++, pFTPDcpt++)
+        for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
         {
-            if(pFTPDcpt->ftpTcpCmdSocketSignal != 0)
+            if(pFTPDcpt->ftpTcpCmdSocketSignal != NULL)
             {
-                NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpTcpCmdSocketSignal);
-                pFTPDcpt->ftpTcpCmdSocketSignal = 0;
+                (void)NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpTcpCmdSocketSignal);
+                pFTPDcpt->ftpTcpCmdSocketSignal = NULL;
             }
             if(pFTPDcpt->ftpCmdskt != NET_PRES_INVALID_SOCKET )
             {
@@ -412,40 +439,41 @@ static void TCPIP_FTP_Cleanup(void)
                 pFTPDcpt->ftpCmdskt = NET_PRES_INVALID_SOCKET ;
             }
             // Wrapper object cleanup
-            if(pFTPDcpt->ftp_shell_obj != 0)
+            if(pFTPDcpt->ftp_shell_obj != NULL)
             {
-                (pFTPDcpt->ftp_shell_obj->delete)(pFTPDcpt->ftp_shell_obj);
-                pFTPDcpt->ftp_shell_obj = 0;
+                (void)(pFTPDcpt->ftp_shell_obj->delete)(pFTPDcpt->ftp_shell_obj);
+                pFTPDcpt->ftp_shell_obj = NULL;
             }
+            pFTPDcpt++;
         }
         
-        TCPIP_HEAP_Free(sTCPIPFtpMemH, sTCPIPFTPDcpt);
-        sTCPIPFTPDcpt = 0;
+        (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, sTCPIPFTPDcpt);
+        sTCPIPFTPDcpt = NULL;
     }
 
-    if(ftpsSignalHandle)
+    if(ftpsSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(ftpsSignalHandle);
-        ftpsSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(ftpsSignalHandle);
+        ftpsSignalHandle = NULL;
     }
     
-    sTCPIPFtpMemH = 0;
+    sTCPIPFtpMemH = NULL;
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static bool _FTP_Send_ErrorResponse(TCPIP_FTP_DCPT* pFTPDcpt)
+static bool F_FTP_Send_ErrorResponse(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     // Make sure there is enough TCP TX FIFO space to put our response
-    if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0))
+    if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0U) == 0U)
     {
         return false;
     }
-    NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
-    NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], (uint16_t)strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
+    (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
 
     if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
     {
-        _FTP_ReleaseDataSocket(pFTPDcpt);  
+        F_FTP_ReleaseDataSocket(pFTPDcpt);  
     }
     return true;
 }
@@ -454,9 +482,9 @@ void TCPIP_FTP_ServerTask(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if(sigPend != 0)
+    if(sigPend != TCPIP_MODULE_SIGNAL_NONE)
     { // TMO or RX signals occurred
         TCPIP_FTP_ServerProcess();
     }
@@ -465,22 +493,22 @@ void TCPIP_FTP_ServerTask(void)
 
 // send a signal to the FTP module that data is available
 // no manager alert needed since this normally results as a higher layer (TCP) signal
-static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TCPIP_TCP_SIGNAL_TYPE sigType, const void* param)
+static void F_FTPSocketRxSignalHandler(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param)
 {
-    int         nServers=0;
+    size_t nServers;
     TCPIP_FTP_DCPT* pFTPDcpt = NULL; //= (TCPIP_FTP_DCPT*)param;
-    if(sigType & TCPIP_TCP_SIGNAL_RX_DATA)
+    if((sigType & (uint16_t)TCPIP_TCP_SIGNAL_RX_DATA) != 0U)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
     for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
     {
         pFTPDcpt = sTCPIPFTPDcpt + nServers;
-        if(pFTPDcpt->ftpDataskt == hTCP)
+        if(pFTPDcpt->ftpDataskt == (TCP_SOCKET)hTCP)
         {
-            if(sigType & TCPIP_TCP_SIGNAL_RX_FIN)
+            if(((uint16_t)sigType & (uint16_t)TCPIP_TCP_SIGNAL_RX_FIN) != 0U)
             {
-                pFTPDcpt->ftpFlag.Bits.dataRxFin = true;
+                pFTPDcpt->ftpFlag.Bits.dataRxFin = 1U;
                 break;
             }
         }
@@ -493,7 +521,7 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 
 static void TCPIP_FTP_ServerProcess(void)
 {
-    int         nServers;
+    size_t      nServers;
     uint32_t    currentTick;
     TCPIP_FTP_DCPT* pFTPDcpt;
     bool disconRes;
@@ -511,20 +539,20 @@ static void TCPIP_FTP_ServerProcess(void)
         {
             if((disconRes = NET_PRES_SocketDisconnect(pFTPDcpt->ftpCmdskt)) == true)
             {              
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
-                pFTPDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED;
+                pFTPDcpt->ftpCommand = (uint8_t)TCPIP_FTP_CMD_NONE;
                 pFTPDcpt->ftpFlag.val = 0;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_IDLE;
                 if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
                 {
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);  
                 }
                 // close the file descriptor when the connection is getting closed 
                 // during file transfer
                 if(pFTPDcpt->fileDescr != SYS_FS_HANDLE_INVALID)
                 {
-                    pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+                    (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
                 }
             }
             
@@ -532,85 +560,94 @@ static void TCPIP_FTP_ServerProcess(void)
         }
 
 
-        if (NET_PRES_SocketReadIsReady(pFTPDcpt->ftpCmdskt))
+        if (NET_PRES_SocketReadIsReady(pFTPDcpt->ftpCmdskt) != 0U)
         {
             pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
-            pFTPDcpt->ftpStringLen = NET_PRES_SocketRead(pFTPDcpt->ftpCmdskt, pFTPDcpt->ftpCmdString, TCPIP_FTP_CMD_MAX_STRING_LEN);
-            if(pFTPDcpt->ftpStringLen == TCPIP_FTP_CMD_MAX_STRING_LEN)
-            {
-                pFTPDcpt->ftpStringLen = 0;
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_UNKNOWN;
-                _FTP_Send_ErrorResponse(pFTPDcpt);
+            pFTPDcpt->ftpStringLen = (uint16_t)NET_PRES_SocketRead(pFTPDcpt->ftpCmdskt, (uint8_t*)pFTPDcpt->ftpCmdString, (uint16_t)TCPIP_FTP_CMD_MAX_STRING_LEN);
+            if(pFTPDcpt->ftpStringLen >= (uint16_t)TCPIP_FTP_CMD_MAX_STRING_LEN)
+            {   // reject overflow
+                pFTPDcpt->ftpStringLen = 0U;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_UNKNOWN;
+                (void)F_FTP_Send_ErrorResponse(pFTPDcpt);
                 continue;
             }
-            if(pFTPDcpt->ftpCmdString[pFTPDcpt->ftpStringLen-1] == '\n' )
+            if(pFTPDcpt->ftpStringLen != 0U && pFTPDcpt->ftpCmdString[pFTPDcpt->ftpStringLen - 1U] == '\n' )
             {
                 pFTPDcpt->ftpCmdString[pFTPDcpt->ftpStringLen] = '\0';
-                pFTPDcpt->ftpStringLen = 0;
+                pFTPDcpt->ftpStringLen = 0U;
                 TCPIP_FTP_CmdStringParse(pFTPDcpt);
-                pFTPDcpt->ftpCommand = TCPIP_FTP_CmdsParse(pFTPDcpt->ftp_argv[0]);
+                pFTPDcpt->ftpCommand = (uint8_t)TCPIP_FTP_CmdsParse(pFTPDcpt->ftp_argv[0]);
             }
         }
-        else if(pFTPDcpt->ftpSm != TCPIP_FTP_SM_NOT_CONNECTED )
+        else if(pFTPDcpt->ftpSm != (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED )
         {
             currentTick = SYS_TMR_TickCountGet();
             currentTick = currentTick - pFTPDcpt->ftpSysTicklastActivity;
-            if(currentTick >= (TCPIP_FTP_TIMEOUT * SYS_TMR_TickCounterFrequencyGet()) )
+            if(currentTick >= ((uint32_t)TCPIP_FTP_TIMEOUT * SYS_TMR_TickCounterFrequencyGet()) )
             {
                 pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
-                pFTPDcpt->ftpCommand    = TCPIP_FTP_CMD_QUIT;
-                pFTPDcpt->ftpSm  = TCPIP_FTP_SM_CONNECTED;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
+                pFTPDcpt->ftpCommand    = (uint8_t)TCPIP_FTP_CMD_QUIT;
+                pFTPDcpt->ftpSm  = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_IDLE;
             }
         }
-
-        switch(pFTPDcpt->ftpSm)
+        else
         {
-            case TCPIP_FTP_SM_HOME:
-                //No break statement
-            case TCPIP_FTP_SM_NOT_CONNECTED:
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_BANNER;
+            // do nothing
+        }
+
+        if(pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_HOME || pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED || pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_RESPOND)
+        {
+            if(pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_HOME || pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED)
+            {
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_BANNER;
                 pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
-                // No break - Continue...
+            }
 
-            case TCPIP_FTP_SM_RESPOND:
-                // Make sure there is enough TCP TX FIFO space to put our response
-                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0))
+            // Make sure there is enough TCP TX FIFO space to put our response
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]), 0U) != 0U)
+            {
+                (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], (uint16_t)strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
+                (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+            }
+        }
+        else if(pFTPDcpt->ftpSm == (uint8_t)TCPIP_FTP_SM_CONNECTED)
+        {
+            if(pFTPDcpt->ftpCommand != (uint8_t)TCPIP_FTP_CMD_NONE )
+            {
+                if(TCPIP_FTP_CmdsExecute((TCPIP_FTP_CMD)pFTPDcpt->ftpCommand, pFTPDcpt) )
                 {
-                    break;
-                }
-                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)sTCPIPFTPRespStr[pFTPDcpt->ftpResponse], strlen(sTCPIPFTPRespStr[pFTPDcpt->ftpResponse]));
-                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                // No break - this will speed up little bit
+                    if(pFTPDcpt->ftpResponse != (uint8_t)TCPIP_FTP_RESP_NONE )
+                    {
+                        pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_RESPOND;
+                    }
+                    else if(pFTPDcpt->ftpCommand == (uint8_t)TCPIP_FTP_CMD_QUIT )
+                    {
+                        pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_NOT_CONNECTED;
+                    }
+                    else
+                    {
+                        // do nothing
+                    }
 
-            case TCPIP_FTP_SM_CONNECTED:
-                if(pFTPDcpt->ftpCommand != TCPIP_FTP_CMD_NONE )
+                    pFTPDcpt->ftpCommand = (uint8_t)TCPIP_FTP_CMD_NONE;
+                    pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_IDLE;
+                }
+                else if(pFTPDcpt->ftpResponse != (uint8_t)TCPIP_FTP_RESP_NONE )
                 {
-                    if(TCPIP_FTP_CmdsExecute(pFTPDcpt->ftpCommand, pFTPDcpt) )
-                    {
-                        if(pFTPDcpt->ftpResponse != TCPIP_FTP_RESP_NONE )
-                        {
-                            pFTPDcpt->ftpSm = TCPIP_FTP_SM_RESPOND;
-                        }
-                        else if(pFTPDcpt->ftpCommand == TCPIP_FTP_CMD_QUIT )
-                        {
-                            pFTPDcpt->ftpSm = TCPIP_FTP_SM_NOT_CONNECTED;
-                        }
-
-                        pFTPDcpt->ftpCommand = TCPIP_FTP_CMD_NONE;
-                        pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
-                    }
-                    else if(pFTPDcpt->ftpResponse != TCPIP_FTP_RESP_NONE )
-                    {
-                        pFTPDcpt->ftpSm = TCPIP_FTP_SM_RESPOND;
-                    }
+                    pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_RESPOND;
                 }
-                break;
-            case TCPIP_FTP_SM_USER_NAME:
-            case TCPIP_FTP_SM_USER_PASS:
-                break;
+                else
+                {
+                    // do nothing
+                }
+            }
+        }
+        else
+        {
+            // do nothing
         }
     }
 }
@@ -639,23 +676,26 @@ static void TCPIP_FTP_ServerProcess(void)
   ***************************************************************************/
 static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 {
-    int32_t     fp;
+    SYS_FS_HANDLE fp;
     TCP_SOCKET_INFO remoteSockInfo,dataSockInfo;
     char passiveMsg[64];
-    uint32_t fileSize=0;
-    char tempMsg[10];
-    SYS_FS_SHELL_RES fsWrapperRes;
+    int32_t fileSize;
+    char tempMsg[20];
+    SYS_FS_SHELL_RES fsWrapperRes, shellRes;
+    uint32_t port32;
     char ftpMsg[SYS_FS_FILE_NAME_LEN + 18]; // 18 characters for extra parameter
+    char cwd[SYS_FS_FILE_NAME_LEN+1];
 
+    bool execRes =  true;
     switch(cmd)
     {
         case TCPIP_FTP_CMD_USER:
-            pFTPDcpt->ftpFlag.Bits.userSupplied = true;
-            pFTPDcpt->ftpFlag.Bits.loggedIn = false;
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_USER_OK;
-            if(pFTPDcpt->ftp_argv[1] != 0)
+            pFTPDcpt->ftpFlag.Bits.userSupplied = 1U;
+            pFTPDcpt->ftpFlag.Bits.loggedIn = 0U;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_USER_OK;
+            if(pFTPDcpt->ftp_argv[1] != NULL)
             {
-                strncpy((char*)pFTPDcpt->ftpUserName, (char*)pFTPDcpt->ftp_argv[1], TCPIP_FTP_USER_NAME_LEN);
+                (void)strncpy(pFTPDcpt->ftpUserName, pFTPDcpt->ftp_argv[1], TCPIP_FTP_USER_NAME_LEN);
             }
             else
             {
@@ -664,446 +704,455 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
         break;
 
         case TCPIP_FTP_CMD_PASS:
-            if ( !pFTPDcpt->ftpFlag.Bits.userSupplied )
+            if ( pFTPDcpt->ftpFlag.Bits.userSupplied == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
             }
             else
             {
                 if(TCPIP_FTP_Verify(pFTPDcpt, pFTPDcpt->ftpUserName, pFTPDcpt->ftp_argv[1]))
                 {
-                    pFTPDcpt->ftpFlag.Bits.loggedIn = true;
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_PASS_OK;
+                    pFTPDcpt->ftpFlag.Bits.loggedIn = 1U;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_PASS_OK;
                 }
                 else
                 {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
                 }
             }
         break;
 
         case TCPIP_FTP_CMD_QUIT:
-            return TCPIP_FTP_Quit(pFTPDcpt);
+            execRes = TCPIP_FTP_Quit(pFTPDcpt);
+            break;
 
         case TCPIP_FTP_CMD_PORT:
-            pFTPDcpt->ftpDataPort = (uint8_t)atoi((char*)pFTPDcpt->ftp_argv[5]);
-            pFTPDcpt->ftpDataPort = (pFTPDcpt->ftpDataPort << 8)|(uint8_t)atoi((char*)pFTPDcpt->ftp_argv[6]);
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
+
+            (void)FC_Str2UL(pFTPDcpt->ftp_argv[5], 10, &port32);
+            pFTPDcpt->ftpDataPort = (uint8_t)port32;
+            (void)FC_Str2UL(pFTPDcpt->ftp_argv[6], 10, &port32);
+            pFTPDcpt->ftpDataPort = (pFTPDcpt->ftpDataPort << 8) | (uint8_t)port32;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
             break;
 
         case TCPIP_FTP_CMD_FEAT:
+            (void)memset(ftpMsg,0,sizeof(ftpMsg));
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "211-features:\r\n");
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
             {
-                memset(ftpMsg,0,sizeof(ftpMsg));
-                sprintf(ftpMsg,"211-features:\r\n");
-                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
-                {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                    return true;
-                }
-                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-                // send SIZE
-                memset(ftpMsg,0,sizeof(ftpMsg));
-                sprintf(ftpMsg,"SIZE\r\n");
-                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
-                {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                    return true;
-                }
-                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-
-                // End of FEAT fetures support
-                memset(ftpMsg,0,sizeof(ftpMsg));
-                sprintf(ftpMsg,"211 End\r\n");
-                if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
-                {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                    return true;
-                }
-                NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-                NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
             }
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            // send SIZE
+            (void)memset(ftpMsg,0,sizeof(ftpMsg));
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "SIZE\r\n");
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
+            {
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
+            }
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+
+            // End of FEAT fetures support
+            (void)memset(ftpMsg,0,sizeof(ftpMsg));
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "211 End\r\n");
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
+            {
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
+            }
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
             break;
 
         case TCPIP_FTP_CMD_SYST:
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_SYST;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_SYST;
             break;
 
         case TCPIP_FTP_CMD_MLST:
-            break;
-
         case TCPIP_FTP_CMD_MLSD:
-            break;
-
         case TCPIP_FTP_CMD_MDTM:
+            // do nothing
             break;
 
         case TCPIP_FTP_CMD_STOR:
-#ifdef TCPIP_FTP_PUT_ENABLED
-            return TCPIP_FTP_FilePut(pFTPDcpt);
-#else
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
-#endif
         case TCPIP_FTP_CMD_XPWD:
         case TCPIP_FTP_CMD_PWD:
-        {
-            char cwd[SYS_FS_FILE_NAME_LEN+1];
-            SYS_FS_SHELL_RES shellRes;
-            memset(cwd,0,sizeof(cwd));
+            if(cmd == TCPIP_FTP_CMD_STOR)
+            {
+#ifdef TCPIP_FTP_PUT_ENABLED
+                execRes = TCPIP_FTP_FilePut(pFTPDcpt);
+                break;
+#else
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
+#endif
+            }
+
+            (void)memset(cwd,0,sizeof(cwd));
             // Get current directory -
             shellRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_FILE_NAME_LEN);
             if(shellRes != SYS_FS_SHELL_RES_OK)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                break;
             }
-            memset(ftpMsg,0,sizeof(ftpMsg));
-            sprintf(ftpMsg,"257 \"%s\" is cwd\r\n",cwd);
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
+            (void)memset(ftpMsg,0,sizeof(ftpMsg));
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "257 \"%s\" is cwd\r\n",cwd);
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
             }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-        }
-        break;
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+            break;
 
         case TCPIP_FTP_CMD_CWD:
-        {          
             // check if the CWD is Same as the LOCAL_WEBSITE_PATH
             // change the directory to root path and then change path
-            
-            char cwd[SYS_FS_FILE_NAME_LEN+1];
-            fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdSet)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+
+            fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdSet)(pFTPDcpt->ftp_shell_obj, pFTPDcpt->ftp_argv[1]);
             if(fsWrapperRes != SYS_FS_SHELL_RES_OK)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                break;
             }
             fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_FILE_NAME_LEN);
             if(fsWrapperRes != SYS_FS_SHELL_RES_OK)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                break;
             }
 
-            sprintf(ftpMsg,"250 %s is new cwd\r\n",cwd);
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0))
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg), "250 %s is new cwd\r\n",cwd);
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
             }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-        }
-        break;
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+            break;
 
         case TCPIP_FTP_CMD_XMKD:
         case TCPIP_FTP_CMD_MKD:
-            return TCPIP_FTP_MakeDirectory(pFTPDcpt);
+            execRes = TCPIP_FTP_MakeDirectory(pFTPDcpt);
+            break;
        
         case TCPIP_FTP_CMD_TYPE:
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
             break;
 
         case TCPIP_FTP_CMD_ABORT:
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
             if (pFTPDcpt->ftpDataskt!= NET_PRES_INVALID_SOCKET )
             {
-                _FTP_ReleaseDataSocket(pFTPDcpt);  
+                F_FTP_ReleaseDataSocket(pFTPDcpt);  
             }
             break;
 
         case TCPIP_FTP_CMD_NLST:
-            return TCPIP_FTP_LSCmd(pFTPDcpt);
+            execRes = TCPIP_FTP_LSCmd(pFTPDcpt);
+            break;
 
         case TCPIP_FTP_CMD_EXTND_LIST:
-            return TCPIP_FTP_CmdList(pFTPDcpt);
+            execRes = TCPIP_FTP_CmdList(pFTPDcpt);
+            break;
 
         case TCPIP_FTP_CMD_RETR:
-            if(pFTPDcpt->callbackPos == 0x00u)
+            if(pFTPDcpt->callbackPos == 0UL)
             {
-                fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_READ);
+                fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj, pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_READ);
                 if(fp == SYS_FS_HANDLE_INVALID)
                 {// File not found, so abort
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    return true;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    break;
                 }
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+                (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
             }
-            return TCPIP_FTP_ExecuteCmdGet(pFTPDcpt, pFTPDcpt->ftp_argv[1]);
+            execRes = TCPIP_FTP_ExecuteCmdGet(pFTPDcpt, pFTPDcpt->ftp_argv[1]);
+            break;
 
         case TCPIP_FTP_CMD_SIZE:
-            fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_READ);
+            fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj, pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_READ);
             if(fp == SYS_FS_HANDLE_INVALID)
             {// File not found, so abort
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                break;
             }
             fileSize = pFTPDcpt->ftp_shell_obj->fileSize(pFTPDcpt->ftp_shell_obj,fp);
-            strcpy(tempMsg,"");
-            sprintf(tempMsg,"213 %u\r\n",(int)fileSize);
+            (void)strcpy(tempMsg,"");
+            (void)FC_sprintf(tempMsg, sizeof(tempMsg), "213 %u\r\n", fileSize);
 
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(tempMsg), 0))
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(tempMsg), 0U) == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+                break;
             }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)tempMsg, strlen(tempMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)tempMsg, (uint16_t)strlen(tempMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
             
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-            pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+            (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
             break;
 
         case TCPIP_FTP_CMD_PASV:
             // create a server socket with a available port number and send this port number to the client with Response string.
-            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_IPV4, 0, 0, 0);
+            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, (NET_PRES_SKT_ADDR_T)IP_ADDRESS_TYPE_IPV4, 0, NULL, NULL);
             // Make sure that a valid socket was available and returned
             // If not, return with an error
             if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
+                break;
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);
-            if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, &F_FTPSocketRxSignalHandler, NULL);
+            if(pFTPDcpt->ftpTcpDataSocketSignal == NULL)
             {
                 NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
+                break;
             }
             // modify the response string.
             //response string should have server ip address and the new data port number.
 
-            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-            NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
+            (void)NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+            (void)NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
             //prepare additional message IPaddress + Port
-            strcpy(passiveMsg,"");
+            (void)strcpy(passiveMsg,"");
             // add IPv4 address
-            sprintf(passiveMsg,"227 Entering passive mode (%u,%u,%u,%u,%u,%u)\r\n",remoteSockInfo.localIPaddress.v4Add.v[0],
+            (void)FC_sprintf(passiveMsg, sizeof(passiveMsg), "227 Entering passive mode (%u,%u,%u,%u,%u,%u)\r\n",remoteSockInfo.localIPaddress.v4Add.v[0],
                                                             remoteSockInfo.localIPaddress.v4Add.v[1],
                                                             remoteSockInfo.localIPaddress.v4Add.v[2],
                                                             remoteSockInfo.localIPaddress.v4Add.v[3],
-                                                            dataSockInfo.localPort>>8 & 0xFF,
-                                                            dataSockInfo.localPort & 0xFF);
+                                                            dataSockInfo.localPort>>8 & 0xFFU,
+                                                            dataSockInfo.localPort & 0xFFU);
             pFTPDcpt->ftpDataPort = dataSockInfo.localPort;
 
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(passiveMsg), 0))
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(passiveMsg), 0U) == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
             }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, strlen(passiveMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, (uint16_t)strlen(passiveMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
             
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
-            if(ftpConfigData.dataSktTxBuffSize != 0)
+            if(ftpConfigData.dataSktTxBuffSize != 0U)
             {
-                void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
+                void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktTxBuffSize);
                 if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
                 {
-                    return false;
+                    execRes = false;
+                    break;
                 }
             }
 
-            if(ftpConfigData.dataSktRxBuffSize != 0)
+            if(ftpConfigData.dataSktRxBuffSize != 0U)
             {
-                void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
+                void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktRxBuffSize);
                 if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
                 {
-                    return false;
+                    execRes = false;
+                    break;
                 }
             }
 #endif  // (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
-            pFTPDcpt->ftpFlag.Bits.pasvMode = true;
+            pFTPDcpt->ftpFlag.Bits.pasvMode = 1U;
             break;
 
         case TCPIP_FTP_CMD_EPSV:
-            // RFC 2428 , EPSV<space><net-prt>  or EPSV<space>ALL nned to be handled properly.
-            // for Time being If there is any argument return Error code 522. dont start any data communication.
-            if(pFTPDcpt->ftp_argc > 1)
+            // RFC 2428 , EPSV<space><net-prt>  or EPSV<space>ALL need to be handled properly.
+            // for time being If there is any argument return Error code 522. dont start any data communication.
+            if(pFTPDcpt->ftp_argc > 1U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_EXTND_PORT_FAILURE;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_EXTND_PORT_FAILURE;
+                break;
             }
-            NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+            (void)NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
             // create a server socket with a available port number and send this port number to the client with Response string.
-            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, remoteSockInfo.addressType, 0, 0, 0);
+            pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, (NET_PRES_SKT_ADDR_T)remoteSockInfo.addressType, 0, NULL, NULL);
             // Make sure that a valid socket was available and returned
             // If not, return with an error
             if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
+                break;
             }
 
             // catch the RX/TX signals
-            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);
+            pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, &F_FTPSocketRxSignalHandler, NULL);
             
-            if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
+            if(pFTPDcpt->ftpTcpDataSocketSignal == NULL)
             {
                 NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
+                break;
             }
             // modify the response string.
             //response string should have server ip address and the new data port number.
 
-            NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
+            (void)NET_PRES_SocketInfoGet(pFTPDcpt->ftpDataskt, &dataSockInfo);
             //prepare additional message IPaddress + Port
-            strcpy(passiveMsg,"");
+            (void)strcpy(passiveMsg,"");
 
 
-            sprintf(passiveMsg,"229 Extended passive mode entered (|||%u|)\r\n",dataSockInfo.localPort);
+            (void)FC_sprintf(passiveMsg, sizeof(passiveMsg), "229 Extended passive mode entered (|||%u|)\r\n",dataSockInfo.localPort);
             pFTPDcpt->ftpDataPort = dataSockInfo.localPort;
 
-            if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(passiveMsg), 0))
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(passiveMsg), 0U) == 0U)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-                return true;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+                break;
             }
-            NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, strlen(passiveMsg));
-            NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)passiveMsg, (uint16_t)strlen(passiveMsg));
+            (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
-            if(ftpConfigData.dataSktTxBuffSize != 0)
+            if(ftpConfigData.dataSktTxBuffSize != 0U)
             {
-                void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
+                void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktTxBuffSize);
                 if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
                 {
-                    return false;
+                    execRes = false;
+                    break;
                 }
             }
 
-            if(ftpConfigData.dataSktRxBuffSize != 0)
+            if(ftpConfigData.dataSktRxBuffSize != 0U)
             {
-                void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
+                void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktRxBuffSize);
                 if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
                 {
-                    return false;
+                    execRes = false;
+                    break;
                 }
             }
 #endif  // (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
-            pFTPDcpt->ftpFlag.Bits.pasvMode = true;
+            pFTPDcpt->ftpFlag.Bits.pasvMode = 1U;
             break;
 
         case TCPIP_FTP_CMD_EPRT:
-            pFTPDcpt->adressFamilyProtocol = atoi((char *)pFTPDcpt->ftp_argv[1]);
-            pFTPDcpt->ftpDataPort = atoi((char *)pFTPDcpt->ftp_argv[3]);
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
+            (void)FC_Str2UL(pFTPDcpt->ftp_argv[1], 10, &port32);
+            pFTPDcpt->adressFamilyProtocol = (uint16_t)port32;
+            (void)FC_Str2UL(pFTPDcpt->ftp_argv[3], 10, &port32);
+            pFTPDcpt->ftpDataPort = (uint16_t)port32;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
             break;
 
         case TCPIP_FTP_CMD_XRMD:
         case TCPIP_FTP_CMD_DELE: // remove a file or a directory
-            if(pFTPDcpt->ftpFlag.Bits.loggedIn)
+            if(pFTPDcpt->ftpFlag.Bits.loggedIn != 0U)
             {                
                 SYS_FS_RESULT   result = TCPIP_FTP_RemoveFile(pFTPDcpt);                
 
                 if(result == SYS_FS_RES_SUCCESS)
                 {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_FILE_ACTION_OK;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_FILE_ACTION_OK;
                 }
                 else
                 {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
                 }
             }
             else
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
             }
 
             break;
 
      case TCPIP_FTP_CMD_NOOP:
-        if(pFTPDcpt->ftpFlag.Bits.loggedIn)
+        if(pFTPDcpt->ftpFlag.Bits.loggedIn != 0U)
         {
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_OK;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_OK;
         }
         else
         {
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
         }
-
         break;
+
     default:
-        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_UNKNOWN;
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_UNKNOWN;
         break;
 
     }
-    return true;
+    return execRes;
 }
 
 static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     switch(pFTPDcpt->ftpCommandSm)
     {
-        case TCPIP_FTP_CMD_SM_IDLE:
-            if(pFTPDcpt->ftpCommandSm == TCPIP_FTP_CMD_SM_RECEIVE)
+        case (uint8_t)TCPIP_FTP_CMD_SM_IDLE:
+            if(pFTPDcpt->ftpCommandSm == (uint8_t)TCPIP_FTP_CMD_SM_RECEIVE)
             {
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
+                (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
             }
 
             if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
             {
-                if(pFTPDcpt->ftpTcpDataSocketSignal != 0)
+                if(pFTPDcpt->ftpTcpDataSocketSignal != NULL)
                 {
-                    NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
+                    (void)NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
+                    pFTPDcpt->ftpTcpDataSocketSignal = NULL;
                 }
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
+                (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,pFTPDcpt->fileDescr);
                 NET_PRES_SocketClose(pFTPDcpt->ftpDataskt);
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT;
             }
             else
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_QUIT_OK;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_QUIT_OK;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
             }
             break;
 
-        case TCPIP_FTP_CMD_SM_WAIT:
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT:
             if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) )
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_QUIT_OK;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_QUIT_OK;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
             }
             break;
 
-        case TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
-            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, 1, 0))
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
+            if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, 1U, 0U) != 0U)
             {
                 if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpCmdskt) )
                 {
-                    NET_PRES_SocketDisconnect(pFTPDcpt->ftpCmdskt);
+                    (void)NET_PRES_SocketDisconnect(pFTPDcpt->ftpCmdskt);
                 }
             }
             break;
         default:
+            // do nothing
             break;
 
     }
@@ -1112,12 +1161,12 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
 /*
  * Release FTP data socket and also release signal.
  */
-static void _FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
+static void F_FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
 {
-    if(pFTPDcpt->ftpTcpDataSocketSignal != 0)
+    if(pFTPDcpt->ftpTcpDataSocketSignal != NULL)
     {
-        NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
-        pFTPDcpt->ftpTcpDataSocketSignal = 0;
+        (void)NET_PRES_SocketSignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
+        pFTPDcpt->ftpTcpDataSocketSignal = NULL;
     }
     if(pFTPDcpt->ftpDataskt != NET_PRES_INVALID_SOCKET )
     {
@@ -1131,39 +1180,39 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
     TCP_SOCKET_INFO remoteSockInfo;
     bool releaseDataSkt=false;
 
-    NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
-    pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, remoteSockInfo.addressType, pFTPDcpt->ftpDataPort, 0, 0);
+    (void)NET_PRES_SocketInfoGet(pFTPDcpt->ftpCmdskt, &remoteSockInfo);
+    pFTPDcpt->ftpDataskt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_CLIENT, (NET_PRES_SKT_ADDR_T)remoteSockInfo.addressType, pFTPDcpt->ftpDataPort, NULL, NULL);
 
     // Make sure that a valid socket was available and returned
     // If not, return with an error
     if(pFTPDcpt->ftpDataskt == NET_PRES_INVALID_SOCKET)
     {
-        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
         return false;
     }
     // catch the RX/TX signals
-    pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, (NET_PRES_SIGNAL_FUNCTION)_FTPSocketRxSignalHandler, 0);    
+    pFTPDcpt->ftpTcpDataSocketSignal = NET_PRES_SocketSignalHandlerRegister(pFTPDcpt->ftpDataskt, ftpClientSignals, &F_FTPSocketRxSignalHandler, NULL);    
     
-    if(pFTPDcpt->ftpTcpDataSocketSignal == 0)
+    if(pFTPDcpt->ftpTcpDataSocketSignal == NULL)
     {
         releaseDataSkt = true;
     }
     
         
-    if(NET_PRES_SocketBind(pFTPDcpt->ftpDataskt, remoteSockInfo.addressType, ftpConfigData.dataPort, 0) == false)
+    if(NET_PRES_SocketBind(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_ADDR_T)remoteSockInfo.addressType, ftpConfigData.dataPort, NULL) == false)
     {
         releaseDataSkt = true;       
     }
     
-    if(NET_PRES_SocketRemoteBind(pFTPDcpt->ftpDataskt, remoteSockInfo.addressType, 0, (NET_PRES_ADDRESS*)&remoteSockInfo.remoteIPaddress)== false)
+    if(NET_PRES_SocketRemoteBind(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_ADDR_T)remoteSockInfo.addressType, 0, FC_MultiAdd2PresAdd(&remoteSockInfo.remoteIPaddress))== false)
     {
         releaseDataSkt = true;        
     }    
    
     if(releaseDataSkt)
     {
-        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_NO_SOCKET;
-        _FTP_ReleaseDataSocket(pFTPDcpt);
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_NO_SOCKET;
+        F_FTP_ReleaseDataSocket(pFTPDcpt);
         return false;
     }
     
@@ -1173,18 +1222,18 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
         return false;
     }
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
-    if(ftpConfigData.dataSktTxBuffSize != 0)
+    if(ftpConfigData.dataSktTxBuffSize != 0U)
     {
-        void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktTxBuffSize;
+        void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktTxBuffSize);
         if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_TX_BUFF, tcpBuffSize)==false)
         {
             return false;
         }
     }
 
-    if(ftpConfigData.dataSktRxBuffSize != 0)
+    if(ftpConfigData.dataSktRxBuffSize != 0U)
     {
-        void* tcpBuffSize = (void*)(unsigned int)ftpConfigData.dataSktRxBuffSize;
+        void* tcpBuffSize = FC_Uint2VPtr((uint32_t)ftpConfigData.dataSktRxBuffSize);
         if(NET_PRES_SocketOptionsSet(pFTPDcpt->ftpDataskt, (NET_PRES_SKT_OPTION_TYPE)TCP_OPTION_RX_BUFF, tcpBuffSize)==false)
         {
             return false;
@@ -1200,135 +1249,147 @@ static bool TCPIP_FTP_CreateDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
 static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     uint8_t data[512]; // write buffer
-    int32_t    fp;
-    int32_t wCount, wLen,status;
+    SYS_FS_HANDLE fp;
+    uint16_t wCount, wLen;
+    int32_t status;
 
     fp = pFTPDcpt->fileDescr;
-    switch(pFTPDcpt->ftpCommandSm)
+    if(pFTPDcpt->ftpCommandSm == (uint8_t)TCPIP_FTP_CMD_SM_IDLE)
     {
-        case TCPIP_FTP_CMD_SM_IDLE:
-            if ( !pFTPDcpt->ftpFlag.Bits.loggedIn )
+        if ( pFTPDcpt->ftpFlag.Bits.loggedIn == 0U )
+        {
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
+            return true;
+        }
+
+        if(pFTPDcpt->ftpFlag.Bits.pasvMode != 1U)
+        {
+            if(TCPIP_FTP_CreateDataSocket(pFTPDcpt) != true)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
                 return true;
             }
-            else
-            {
-                if(pFTPDcpt->ftpFlag.Bits.pasvMode != true)
-                {
-                    if(TCPIP_FTP_CreateDataSocket(pFTPDcpt) != true)
-                        return true;
-                }
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_IS_PRESENT;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
-            }
-            break;
+        }
+        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_FILE_IS_PRESENT;
+        pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT;
+        return false;
+    }
 
-        case TCPIP_FTP_CMD_SM_WAIT:
-            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
+    if(pFTPDcpt->ftpCommandSm == (uint8_t)TCPIP_FTP_CMD_SM_WAIT || pFTPDcpt->ftpCommandSm == (uint8_t)TCPIP_FTP_CMD_SM_RECEIVE)
+    {
+        if(pFTPDcpt->ftpCommandSm == (uint8_t)TCPIP_FTP_CMD_SM_WAIT)
+        {
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0UL))
             {
-                fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1], SYS_FS_FILE_OPEN_WRITE);
-                if(fp == (int32_t) SYS_FS_HANDLE_INVALID)
+                fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj, pFTPDcpt->ftp_argv[1], SYS_FS_FILE_OPEN_WRITE);
+                if(fp == SYS_FS_HANDLE_INVALID)
                 {// File not found, so abort
-                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);
-                    break;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);
+                    return false;;
                 }
                 pFTPDcpt->fileDescr = fp;
-                pFTPDcpt->ftpCommandSm    = TCPIP_FTP_CMD_SM_RECEIVE;
+                pFTPDcpt->ftpCommandSm    = (uint8_t)TCPIP_FTP_CMD_SM_RECEIVE;
             }
             else
             {
-                break;
+                return false;
             }
-        case TCPIP_FTP_CMD_SM_RECEIVE:
-            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos != 0x00u))
-            {// The file was already opened, so load up its ID and seek
-                if(fp == SYS_FS_HANDLE_INVALID)
-                {// No file handles available, so wait for now
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILESYSTEM_FAIL;
-                    pFTPDcpt->callbackPos = 0;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                    return true;
-                }
-                pFTPDcpt->ftp_shell_obj->fileSeek(pFTPDcpt->ftp_shell_obj,fp,(int32_t)pFTPDcpt->callbackPos,SYS_FS_SEEK_SET);
-            }
-            else if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
-            {
-            // If no bytes were read, an EOF was reached
-                pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
-                pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+        }
+
+        if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos != 0UL))
+        {// The file was already opened, so load up its ID and seek
+            if(fp == SYS_FS_HANDLE_INVALID)
+            {// No file handles available, so wait for now
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_FILESYSTEM_FAIL;
                 pFTPDcpt->callbackPos = 0;
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION;
-                pFTPDcpt->ftpFlag.Bits.pasvMode = false;
-                _FTP_ReleaseDataSocket(pFTPDcpt);                    
+                F_FTP_ReleaseDataSocket(pFTPDcpt);                    
                 return true;
             }
-            
-            if(pFTPDcpt->ftpFlag.Bits.dataRxFin == true)
-            {
-                pFTPDcpt->ftpFlag.Bits.endCommunication = 1;
-            }
+            (void)pFTPDcpt->ftp_shell_obj->fileSeek(pFTPDcpt->ftp_shell_obj,fp,(int32_t)pFTPDcpt->callbackPos,SYS_FS_SEEK_SET);
+        }
+        else if(!NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
+        {
+            // If no bytes were read, an EOF was reached
+            (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+            pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+            pFTPDcpt->callbackPos = 0;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN;
+            pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
+            F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+            return true;
+        }
+        else
+        {
+            // do nothing
+        }
 
-            // Get/put as many bytes as possible
-            while(1)
+        if(pFTPDcpt->ftpFlag.Bits.dataRxFin == 1U)
+        {
+            pFTPDcpt->ftpFlag.Bits.endCommunication = 1U;
+        }
+
+        // Get/put as many bytes as possible
+        while(true)
+        {
+            wCount = NET_PRES_SocketReadIsReady(pFTPDcpt->ftpDataskt);
+            if(wCount == 0U)
             {
-                wCount = NET_PRES_SocketReadIsReady(pFTPDcpt->ftpDataskt);
-                if(wCount == 0)
+                if(pFTPDcpt->ftpFlag.Bits.endCommunication == 1U)
                 {
-                    if(pFTPDcpt->ftpFlag.Bits.endCommunication == 1)
-                    {
-                        pFTPDcpt->ftpFlag.Bits.endCommunication = 0;
-                        SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
-                        pFTPDcpt->callbackPos = 0;
-                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
-                        pFTPDcpt->ftpFlag.Bits.pasvMode = false;
-                        _FTP_ReleaseDataSocket(pFTPDcpt);
-                        pFTPDcpt->ftpFlag.Bits.dataRxFin = false;
-                        return true;
-                    }
-                    break;
-                }
-                memset(data,'\0',sizeof(data));
-                wLen = NET_PRES_SocketRead(pFTPDcpt->ftpDataskt, data, mMIN(wCount, sizeof(data)));
-                if(wLen == 0)
-                {// If no bytes were read, an EOF was reached
-                    pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->ftpFlag.Bits.endCommunication = 0U;
+                    (void)SYS_FS_FileClose(pFTPDcpt->fileDescr);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
                     pFTPDcpt->callbackPos = 0;
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
-                    pFTPDcpt->ftpFlag.Bits.pasvMode = false;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);                    
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_CLOSE;
+                    pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);
+                    pFTPDcpt->ftpFlag.Bits.dataRxFin = 0U;
                     return true;
                 }
-                else  //if(wLen != 0)
-                {// Write the bytes to the socket
-                    if(pFTPDcpt->ftp_shell_obj->fileWrite(pFTPDcpt->ftp_shell_obj,fp,data,wLen) == SYS_FS_HANDLE_INVALID)
-                    {
-                        pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
-                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-                        pFTPDcpt->callbackPos = 0;
-                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
-                        pFTPDcpt->ftpFlag.Bits.pasvMode = false;
-                        _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                        return true;
-                    }
-                    else
-                    {
-                        pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
-                    }
-                    wCount -= wLen;                    
+                break;
+            }
+            (void)memset(data, 0, sizeof(data));
+            wLen = NET_PRES_SocketRead(pFTPDcpt->ftpDataskt, data, FC_MinU16(wCount, (uint16_t)sizeof(data)));
+            if(wLen == 0U)
+            {// If no bytes were read, an EOF was reached
+                (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+                pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                pFTPDcpt->callbackPos = 0;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_CLOSE;
+                pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                return true;
+            }
+            else  //if(wLen != 0)
+            {// Write the bytes to the socket
+                if(pFTPDcpt->ftp_shell_obj->fileWrite(pFTPDcpt->ftp_shell_obj,fp,data,wLen) == SYS_FS_HANDLE_INVALID)
+                {
+                    (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_CLOSE;
+                    pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                    return true;
+                }
+                else
+                {
+                    pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
                 }
             }
-            status = pFTPDcpt->ftp_shell_obj->fileTell(pFTPDcpt->ftp_shell_obj,fp);
-            if(status == -1)
-                pFTPDcpt->callbackPos = 0;
-            else
-                pFTPDcpt->callbackPos = (uint32_t)status;
-        default:
-            break;
+        }
+        status = pFTPDcpt->ftp_shell_obj->fileTell(pFTPDcpt->ftp_shell_obj,fp);
+        if(status == -1)
+        {
+            pFTPDcpt->callbackPos = 0;
+        }
+        else
+        {
+            pFTPDcpt->callbackPos = (uint32_t)status;
+        }
+        return false;
     }
+
     return false;
 }
 #endif
@@ -1337,240 +1398,258 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     uint16_t wCount=0;
     char longFileName[SYS_FS_FILE_NAME_LEN];
-    static uint8_t fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
-                    TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN+
-                    TCPIP_FTP_MAX_FILE_SIZE_STR_LEN+
-                    +40];
+    static char fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN +
+                    TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN +
+                    TCPIP_FTP_MAX_FILE_SIZE_STR_LEN +
+                    + 40];
     char FileRecordsDateTime[TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN];
     char fileRecrdTime[13];
     char FileRecordssize[TCPIP_FTP_MAX_FILE_SIZE_STR_LEN];
-    const char* fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
+    const char fileHeaderStr[]= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
+    
     uint8_t FileRecordInformation;
     FTP_LIST_NODE* newNode=NULL;
-    uint16_t    lfNameLen=0;
-    char    *lfnamePtr=NULL;
+    uint16_t    lfNameLen = 0U;
+    char    *lfnamePtr = NULL;
     static uint16_t  remainingBytes=0;
     SYS_FS_FSTAT fs_stat={0};
-    int32_t fp;
+    SYS_FS_HANDLE fp;
     char filePermission[2][11]={"-rwx------\0","drwx------\0"};
     const char *link = "0\0";
     const char *owner = "0\0";
     const char *group = "0\0";
 
+    bool cmdRes = false;
+    bool doBreak = false;
+
     switch(pFTPDcpt->ftpCommandSm)
     {
-        case TCPIP_FTP_CMD_SM_IDLE:
-            if(pFTPDcpt->ftpFlag.Bits.pasvMode != true)
+        case (uint8_t)TCPIP_FTP_CMD_SM_IDLE:
+            if(pFTPDcpt->ftpFlag.Bits.pasvMode != 1U)
             {
                 if(TCPIP_FTP_CreateDataSocket(pFTPDcpt) != true)
                 {
-                    return true;
+                    cmdRes = true;
+                    break;
                 }
             }
-            if ( !pFTPDcpt->ftpFlag.Bits.loggedIn )
+            if ( pFTPDcpt->ftpFlag.Bits.loggedIn  == 0U)
             {
-                pFTPDcpt->ftpResponse    = TCPIP_FTP_RESP_LOGIN;
-                _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                return true;
+                pFTPDcpt->ftpResponse    = (uint8_t)TCPIP_FTP_RESP_LOGIN;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                cmdRes = true;
+                break;
             }
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_READY;
-            pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_READY;
+            pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT;
             break;
-        case TCPIP_FTP_CMD_SM_WAIT:
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT:
             if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
-                pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_DIR;
+                pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR;
             }
             break;
-       case TCPIP_FTP_CMD_SM_SEND_DIR:
+
+       case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR:
             // get the current working directory to get the directory details
             // used longFileName variable to get the path details
             fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,".");
             if (fp == SYS_FS_HANDLE_INVALID)
-            {// File not found, so abort
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                return true;
+            {   // File not found, so abort
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                cmdRes = true;
+                break;
             }
             pFTPDcpt->fileDescr = fp;
-            pFTPDcpt->callbackPos = 0;
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
-        case TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
-            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
+            pFTPDcpt->callbackPos = 0UL;
+            pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
+            break;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)strlen(fileNameList), 1U);
              // send the Header details of the table
-            if(pFTPDcpt->callbackPos != 0)
+            if(pFTPDcpt->callbackPos != 0UL)
             {
                 if(wCount < remainingBytes)
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList) - (size_t)remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
                 }
                 else
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
-                    remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList) - (size_t)remainingBytes), remainingBytes);
+                    remainingBytes = 0U;
+                    pFTPDcpt->callbackPos = 0UL;
                 }
                 break;
             }
             else
             {
-                memset(fileNameList,0,sizeof(fileNameList));
-                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                (void)memset(fileNameList,0,sizeof(fileNameList));
+                (void)strncpy(fileNameList, fileHeaderStr, FC_MinU16((uint16_t)sizeof(fileNameList), (uint16_t)sizeof(fileHeaderStr)));
+                if(wCount > (uint16_t)strlen(fileNameList))
                 {
-                    strcpy((char*)fileNameList, fileHeaderStr);
-                }
-                if(wCount > strlen((char *)fileNameList))
-                {
-                    remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    remainingBytes = 0 ;
+                    pFTPDcpt->callbackPos = 0UL;
                 }
                 else
                 {
-                    pFTPDcpt->callbackPos = 1;
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
-                    remainingBytes = strlen((char *)fileNameList)- wCount;
+                    pFTPDcpt->callbackPos = 1UL;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
+                    remainingBytes = (uint16_t)strlen(fileNameList)- wCount;
                     break;
                 }
             }
             // If long file name is used, the following elements of the "stat"
              // structure needs to be initialized with address of proper buffer.
-            memset(longFileName,0,sizeof(longFileName));
+            (void)memset(longFileName,0,sizeof(longFileName));
             fs_stat.lfname = longFileName;
             fs_stat.lfsize = SYS_FS_FILE_NAME_LEN;
             fp = pFTPDcpt->fileDescr;
-            if(TCPIP_Helper_ProtectedSingleListInitialize(&DirectoryFileList)!= true)
+            if(TCPIP_Helper_ProtSglListInitialize(&DirectoryFileList)!= true)
             {
-                return true;
+                cmdRes = true;
+                break;
             }
-            while(1)
+            while(true)
             {
-                memset(fs_stat.fname,0,13);
-                memset(longFileName,0,sizeof(longFileName));
+                (void)memset(fs_stat.fname,0,13);
+                (void)memset(longFileName,0,sizeof(longFileName));
                 if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_FILE, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
-                    pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+                    (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
                     break;
                 }
-                newNode = (FTP_LIST_NODE*)TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode));
+                newNode = FC_SglNode2FtpNode(TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode)));
                 if(newNode == NULL)
                 {
-                    pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                    if(DirectoryFileList.list.nNodes > 0)
+                    (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                    while(DirectoryFileList.list.nNodes > 0U)
                     {   // Free if already there are node in the list
-                        while(newNode != 0)
+                        newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                        if(newNode != NULL)
                         {
                             if(newNode->file_stat.lfname != NULL)
                             {
-                                TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                                (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                             }
-                            newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                            TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                            (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
                         }
                     }
-                    TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-                    return true;
+                    TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+                    cmdRes = true;
+                    doBreak = true;
+                    break;
                 }
                 newNode->file_stat.fattrib = fs_stat.fattrib;
                 newNode->file_stat.fdate = fs_stat.fdate;
                 newNode->file_stat.ftime = fs_stat.ftime;
-                memset(newNode->file_stat.fname,0,sizeof(newNode->file_stat.fname));
-                strcpy((char*)newNode->file_stat.fname ,(char*)fs_stat.fname);
+                (void)memset(newNode->file_stat.fname,0,sizeof(newNode->file_stat.fname));
+                (void)strcpy((char*)newNode->file_stat.fname ,(char*)fs_stat.fname);
                 newNode->file_stat.fsize = fs_stat.fsize;
                 newNode->file_stat.lfsize = fs_stat.lfsize;
-                lfNameLen = strlen((char*)fs_stat.lfname);
+                lfNameLen = (uint16_t)strlen((char*)fs_stat.lfname);
                 newNode->file_stat.lfname = NULL;
-                if(lfNameLen>0)
+                if(lfNameLen>0U)
                 {
-                    lfnamePtr = TCPIP_HEAP_Calloc(sTCPIPFtpMemH,1, lfNameLen+1);
+                    lfnamePtr = TCPIP_HEAP_Calloc(sTCPIPFtpMemH, 1UL, (size_t)lfNameLen + 1UL);
                     if(lfnamePtr != NULL)
                     {
                         newNode->file_stat.lfname = lfnamePtr;
-                        memcpy(newNode->file_stat.lfname,fs_stat.lfname,lfNameLen);
-                        newNode->file_stat.lfname[lfNameLen+1]='\0';
+                        (void)memcpy(newNode->file_stat.lfname,fs_stat.lfname,lfNameLen);
+                        newNode->file_stat.lfname[lfNameLen+1U]='\0';
                     }
                     else
                     {
-                        pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                        _FTP_ReleaseDataSocket(pFTPDcpt);                    
-                        if(DirectoryFileList.list.nNodes > 0)
+                        (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                        F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+                        if(DirectoryFileList.list.nNodes > 0U)
                         {   // Free if already there are node in the list
-                            while(newNode != 0)
+                            while(newNode != NULL)
                             {
                                 if(newNode->file_stat.lfname != NULL)
                                 {
-                                    TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                                 }
-                                newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                                TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                                newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                                (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
                             }
                         }
-                        TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-                        return true;
+                        TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+                        cmdRes = true;
+                        doBreak = true;
+                        break;
                     }
                 }
             }
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL;
-            // continue
-        case TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
-            wCount = 0;
-            newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
-            while(newNode != 0)
+            if(doBreak == false)
             {
-                if(wCount == 0)
+                pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL;
+            }
+            break;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
+            newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)strlen(fileNameList), 1U);
+            doBreak = false;
+            while(newNode != NULL)
+            {
+                if(wCount == 0U)
                 {
-                    return false;
+                    doBreak = true;
+                    break;
                 }
                 // transmit the remaining bytes
-                if(pFTPDcpt->callbackPos != 0)
+                if(pFTPDcpt->callbackPos != 0UL)
                 {                    
                     if(wCount < remainingBytes)
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), wCount);
                         remainingBytes = remainingBytes - wCount;
                         wCount=0;
                         continue;
                     }
                     else
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), remainingBytes);
                         wCount = wCount - remainingBytes;
                         remainingBytes =0;
-                        pFTPDcpt->callbackPos = 0;
+                        pFTPDcpt->callbackPos = 0UL;
 
                         // remove the head from the list
-                        newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                        TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
-                        newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-                        if(newNode == 0)
+                        newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                        (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                        newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+                        if(newNode == NULL)
                         {
                             break;
                         }
                     }
                 }
-                memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
-                memset(fileRecrdTime,0,sizeof(fileRecrdTime));
-                memset(FileRecordssize,0,sizeof(FileRecordssize));
-                memset(fileNameList,0,sizeof(fileNameList));
+                (void)memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
+                (void)memset(fileRecrdTime,0,sizeof(fileRecrdTime));
+                (void)memset(FileRecordssize,0,sizeof(FileRecordssize));
+                (void)memset(fileNameList,0,sizeof(fileNameList));
 
-                sprintf(FileRecordsDateTime, "%3s %02d %04d",
-                                    month[(((newNode->file_stat.fdate & 0x01E0) >> 5)-1)],
-                                    (newNode->file_stat.fdate & 0x001F),
-                                    ((newNode->file_stat.fdate & 0xFE00) >> 9) + 1980);
-                sprintf(fileRecrdTime,"%2d:%2d",
-                                    (newNode->file_stat.ftime & 0xF800) >> 11,
-                                    (newNode->file_stat.ftime & 0x07E0) >> 5);
- //                                   (newNode->file_stat.ftime & 0x001F) << 1 );
+                (void)FC_sprintf(FileRecordsDateTime, sizeof(FileRecordsDateTime), "%3s %02d %04d",
+                                    month[(((newNode->file_stat.fdate & 0x01E0U) >> 5) - 1U)],
+                                    (newNode->file_stat.fdate & 0x001FU),
+                                    ((newNode->file_stat.fdate & 0xFE00U) >> 9) + 1980U);
+                (void)FC_sprintf(fileRecrdTime, sizeof(fileRecrdTime),"%2d:%2d",
+                                    (newNode->file_stat.ftime & 0xF800U) >> 11,
+                                    (newNode->file_stat.ftime & 0x07E0U) >> 5);
+ //                                 (newNode->file_stat.ftime & 0x001FU) << 1 );
 
-                sprintf(FileRecordssize, "%d", (int)newNode->file_stat.fsize );
-                if(newNode->file_stat.fattrib & SYS_FS_ATTR_DIR)
+                (void)FC_sprintf(FileRecordssize, sizeof(FileRecordssize), "%d", (int)newNode->file_stat.fsize );
+                if((newNode->file_stat.fattrib & (uint8_t)SYS_FS_ATTR_DIR) != 0U)
                 {
                     FileRecordInformation = 1;
                 }
@@ -1579,155 +1658,172 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                     FileRecordInformation = 0;
                 }
 
-                memset(fileNameList,0,sizeof(fileNameList));
+                (void)memset(fileNameList,0,sizeof(fileNameList));
                 if(newNode->file_stat.lfname != NULL)
                 {
-                    sprintf((char*)fileNameList,"%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.lfname);
+                    (void)FC_sprintf(fileNameList, sizeof(fileNameList),"%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.lfname);
                     // Now Free the allocated memory for the long file name
-                    TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                 }
                 else
                 {
-                    sprintf((char*)fileNameList, "%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.fname);
+                    (void)FC_sprintf(fileNameList, sizeof(fileNameList), "%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.fname);
                 }
                 /* total name byte name length list */
-                lfNameLen = strlen((char *)fileNameList);
+                lfNameLen = (uint16_t)strlen(fileNameList);
                 if(wCount > lfNameLen)
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, lfNameLen));
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, lfNameLen));
                     remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->callbackPos = 0UL;
                     wCount = wCount - lfNameLen;
                     // remove the head from the list
-                    newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                    TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
-                    newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-                    if(newNode == 0)
+                    newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                    newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+                    if(newNode == NULL)
                     {
                         break;
                     }
                 }
                 else
                 {
-                    pFTPDcpt->callbackPos = 1;
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
+                    pFTPDcpt->callbackPos = 1UL;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
                     remainingBytes = lfNameLen - wCount;
                     wCount=0;
                     continue;
                    // break;
                 }
             }
-            TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+            if(doBreak == false)
+            {
+                TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+                pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+            }
             break;
-        case TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
-            _FTP_ReleaseDataSocket(pFTPDcpt);                    
-            pFTPDcpt->ftpResponse   = TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION;
-            return true;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
+            F_FTP_ReleaseDataSocket(pFTPDcpt);                    
+            pFTPDcpt->ftpResponse   = (uint8_t)TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN;
+            cmdRes = true;
+            break;
+
         default:
+            // do nothing
             break;
     }
-    return false;
+    return cmdRes;
 }
 
-static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
+static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, char *cFile)
 {
     switch(pFTPDcpt->ftpCommandSm)
     {
-        case TCPIP_FTP_CMD_SM_IDLE:
-            if ( !pFTPDcpt->ftpFlag.Bits.loggedIn )
+        case (uint8_t)TCPIP_FTP_CMD_SM_IDLE:
+            if ( pFTPDcpt->ftpFlag.Bits.loggedIn == 0U )
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_LOGIN;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_LOGIN;
                 return true;
             }
             else
             {
-                if(pFTPDcpt->ftpFlag.Bits.pasvMode != true)
+                if(pFTPDcpt->ftpFlag.Bits.pasvMode != 1U)
                 {
                     if(TCPIP_FTP_CreateDataSocket(pFTPDcpt) != true)
                     {
                         return true;
                     }
                 }
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_IS_PRESENT;
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_FILE_IS_PRESENT;
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT;
             }
             break;
 
-        case TCPIP_FTP_CMD_SM_WAIT:
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT:
             if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
             {
-                pFTPDcpt->ftpCommandSm    = TCPIP_FTP_CMD_SM_SEND;
+                pFTPDcpt->ftpCommandSm    = (uint8_t)TCPIP_FTP_CMD_SM_SEND;
             }
         break;
 
-        case TCPIP_FTP_CMD_SM_SEND:
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND:
         // Get/put as many bytes as possible
             if(TCPIP_FTP_FileGet(pFTPDcpt, cFile)== false)
             {
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION;
-                pFTPDcpt->callbackPos = 0;
-                _FTP_ReleaseDataSocket(pFTPDcpt);            
-                pFTPDcpt->ftpFlag.Bits.pasvMode = false;
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN;
+                pFTPDcpt->callbackPos = 0UL;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);            
+                pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
                 return true;
             }
-            else if(pFTPDcpt->callbackPos == 0)
+            else if(pFTPDcpt->callbackPos == 0UL)
             {
-                _FTP_ReleaseDataSocket(pFTPDcpt);       
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
-                pFTPDcpt->ftpFlag.Bits.pasvMode = false;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);       
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_CLOSE;
+                pFTPDcpt->ftpFlag.Bits.pasvMode = 0U;
                 return true;
             }
+            else
+            {
+                // do nothing
+            }
+            break;
+
         default:
+            // do nothing
             break;
     }
     return false;
 }
 
-static TCPIP_FTP_RESP TCPIP_FTP_CMDLowerCase(char *upperCmd , char *lowerCmd )
+static TCPIP_FTP_RESP TCPIP_FTP_CMDLowerCase(const char *upperCmd , char *lowerCmd )
 {
-    int i=0;
+    size_t i;
+    uint8_t uCh;
     
     if(upperCmd == NULL)
     {
         return TCPIP_FTP_COMMAND_UNKNOWN;
     }
     
-    for(i=0;i<=strlen(upperCmd);i++)
+    for(i = 0; i <= strlen(upperCmd); i++)
     {
-      if(upperCmd[i]>=65&&upperCmd[i]<=90)
+        uCh = (uint8_t)upperCmd[i];
+      if(uCh >= 65U && uCh <= 90U)
       {
-         lowerCmd[i]=upperCmd[i]+32;
+         uCh += 32U;
+         lowerCmd[i] = (char)uCh;
       }
     }
 
     return  TCPIP_FTP_RESP_OK;
 }
 
-static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(uint8_t *cmd)
+static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(char *cmd)
 {
-    TCPIP_FTP_CMD i;
+    size_t ix;   // TCPIP_FTP_CMD
     char lowerCommandStr[5];
 
-    for ( i = 0; i < (TCPIP_FTP_CMD)TCPIP_FTP_CMD_TBL_SIZE; i++ )
+    for ( ix = 0; ix < TCPIP_FTP_CMD_TBL_SIZE; ix++ )
     {
         // check the incoming command with upper case command
-        if(!memcmp((void*)cmd, (const void*)sTCPIPFTPCmdString[i], strlen((char*)cmd)))
+        if(strcmp(cmd, sTCPIPFTPCmdString[ix]) == 0)
         {
             // return the valid FTP number command 
-            return i;
+            return (TCPIP_FTP_CMD)ix;
         }
         // memset the local command string array
-        memset(lowerCommandStr,0,sizeof(lowerCommandStr));
+        (void)memset(lowerCommandStr,0,sizeof(lowerCommandStr));
         //get the lowercase command for the upper case global command table sTCPIPFTPCmdString[]
-        if(TCPIP_FTP_CMDLowerCase((char*)sTCPIPFTPCmdString[i],(char*)lowerCommandStr)!= TCPIP_FTP_RESP_OK)
+        if(TCPIP_FTP_CMDLowerCase(sTCPIPFTPCmdString[ix], lowerCommandStr)!= TCPIP_FTP_RESP_OK)
         {
             return TCPIP_FTP_CMD_UNKNOWN;
         }
         // check the lowercase command 
-        if(!memcmp((void*)cmd, (const void*)lowerCommandStr, strlen((char*)cmd)))
+        if(strcmp(cmd, lowerCommandStr) == 0)
         {
-            return i;
+            return (TCPIP_FTP_CMD)ix;
         }
     }
 
@@ -1736,12 +1832,12 @@ static TCPIP_FTP_CMD TCPIP_FTP_CmdsParse(uint8_t *cmd)
 
 static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt)
 {
-    uint8_t *p;
-    uint8_t v;
+    char *p;
+    char v;
     enum { SM_FTP_PARSE_PARAM, SM_FTP_PARSE_SPACE } smParseFTP;
 
     smParseFTP  = SM_FTP_PARSE_PARAM;
-    p           = (uint8_t*)&pFTPDcpt->ftpCmdString[0];
+    p           = pFTPDcpt->ftpCmdString;
 
     // Skip white blanks
     while( *p == ' ' )
@@ -1749,10 +1845,10 @@ static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt)
         p++;
     }
 
-    pFTPDcpt->ftp_argv[0]  = (uint8_t*)p;
-    pFTPDcpt->ftp_argc     = 1;
+    pFTPDcpt->ftp_argv[0]  = p;
+    pFTPDcpt->ftp_argc     = 1U;
 
-    while( (v = *p) )
+    while( (v = *p) != '\0' )
     {
         switch(smParseFTP)
         {
@@ -1763,26 +1859,38 @@ static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt)
                     smParseFTP = SM_FTP_PARSE_SPACE;
                 }
                 else if ( v == '\r' || v == '\n' )
+                {
                     *p = '\0';
+                }
+                else
+                {
+                    // do nothing
+                }
                 break;
 
             case SM_FTP_PARSE_SPACE:
                 if (( v != ' ' ) && (v != '|'))
                 {
-                    pFTPDcpt->ftp_argv[pFTPDcpt->ftp_argc++] = (uint8_t*)p;
+                    pFTPDcpt->ftp_argv[pFTPDcpt->ftp_argc++] = p;
                     smParseFTP = SM_FTP_PARSE_PARAM;
                 }
                 break;
+
+            default:
+                // do nothing
+                break;
         }
         p++;
-        if(pFTPDcpt->ftp_argc == TCPIP_FTP_MAX_ARGS)
+        if(pFTPDcpt->ftp_argc == (uint8_t)TCPIP_FTP_MAX_ARGS)
+        {
             break;
+        }
     }
 }
 
 /*****************************************************************************
   Function:
-    static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
+    static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, char *cFile)
 
   Summary:
     Writes a file byte-for-byte to the currently loaded TCP socket.
@@ -1811,49 +1919,54 @@ static void TCPIP_FTP_CmdStringParse(TCPIP_FTP_DCPT* pFTPDcpt)
   Remarks:
     Users should not call this function directly.
   ***************************************************************************/
-static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
+static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, char *cFile)
 {
-    int32_t wCount, wLen,status;
+    uint16_t wCount, wLen;
+    int32_t status;
     uint8_t data[512];
-    int32_t fp;
+    SYS_FS_HANDLE fp;
 
     fp = pFTPDcpt->fileDescr;
 
     // Check if this is a first round call
-    if(pFTPDcpt->callbackPos == 0x00u)
+    if(pFTPDcpt->callbackPos == 0UL)
     {// On initial call, open the file and save its ID
-        fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_READ);
+        fp = (pFTPDcpt->ftp_shell_obj->fileOpen)(pFTPDcpt->ftp_shell_obj, cFile, SYS_FS_FILE_OPEN_READ);
         if(fp == SYS_FS_HANDLE_INVALID)
         {// File not found, so abort
             return false;
         }
         pFTPDcpt->fileDescr = fp;
-        pFTPDcpt->callbackPos = 0;
+        pFTPDcpt->callbackPos = 0UL;
     }
-    else if(pFTPDcpt->callbackPos != 0x00u)
+    else if(pFTPDcpt->callbackPos != 0UL)
     {// The file was already opened, so load up its ID and seek
         if(fp == SYS_FS_HANDLE_INVALID)
         {// No file handles available, so wait for now
             return false;
         }
-        pFTPDcpt->ftp_shell_obj->fileSeek(pFTPDcpt->ftp_shell_obj,fp,(int32_t)pFTPDcpt->callbackPos,SYS_FS_SEEK_SET);
+        (void)pFTPDcpt->ftp_shell_obj->fileSeek(pFTPDcpt->ftp_shell_obj,fp,(int32_t)pFTPDcpt->callbackPos,SYS_FS_SEEK_SET);
+    }
+    else
+    {
+        // do nothing
     }
 
     // Get/put as many bytes as possible
-    wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, sizeof(data), 1);
+    wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)sizeof(data), 1U);
     while(wCount > 0u)
     {
-        wLen = pFTPDcpt->ftp_shell_obj->fileRead(pFTPDcpt->ftp_shell_obj,fp,data,mMIN(wCount, sizeof(data)));
-        if(wLen == 0)
+        wLen = (uint16_t)pFTPDcpt->ftp_shell_obj->fileRead(pFTPDcpt->ftp_shell_obj,fp,data, FC_MinU16(wCount, (uint16_t)sizeof(data)));
+        if(wLen == 0U)
         {// If no bytes were read, an EOF was reached
-            pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
-            pFTPDcpt->fileDescr = -1;
-            pFTPDcpt->callbackPos = 0;
+            (void)pFTPDcpt->ftp_shell_obj->fileClose(pFTPDcpt->ftp_shell_obj,fp);
+            pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+            pFTPDcpt->callbackPos = 0UL;
             return true;
         }
         else
         {// Write the bytes to the socket
-            NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, data, wLen);
+            (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, data, wLen);
             wCount -= wLen;
             pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
         }
@@ -1861,10 +1974,14 @@ static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
 
     // Save the new address and close the file
     status = pFTPDcpt->ftp_shell_obj->fileTell(pFTPDcpt->ftp_shell_obj,fp);
-    if(status == -1)
-        pFTPDcpt->callbackPos = 0;
+    if(status == -1L)
+    {
+        pFTPDcpt->callbackPos = 0UL;
+    }
     else
+    {
         pFTPDcpt->callbackPos = (uint32_t)status;
+    }
 
     return true;
 }
@@ -1872,301 +1989,311 @@ static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
 static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     char longFileName[SYS_FS_FILE_NAME_LEN];
-    uint16_t wCount=0;
-    static uint8_t fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
+    uint16_t wCount, bytestoBeSent;
+    static char fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
                     TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN+
                     TCPIP_FTP_MAX_FILE_SIZE_STR_LEN+
                     +10];
-    int32_t fp;
-    int16_t     bytestoBeSent=0;
-    static uint16_t  remainingBytes=0;
+    SYS_FS_HANDLE fp;
+    static uint16_t  remainingBytes = 0U;
     SYS_FS_FSTAT fs_stat;
-    memset(&fs_stat, 0, sizeof(SYS_FS_FSTAT));
-    const char* fileHeaderStr= "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
+    (void)memset(&fs_stat, 0, sizeof(SYS_FS_FSTAT));
+    const char fileHeaderStr[] = "Date\t\t\tType\tFileSize\tfilename\t\r\n\0";
     uint8_t FileRecordInformation;
     char FileRecordsDateTime[TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN];
     char FileRecordssize[TCPIP_FTP_MAX_FILE_SIZE_STR_LEN];
     static bool  cmdWithArg=false;
-    uint8_t  nlstArgIndex=0;
+    uint8_t  nlstArgIndex;
     FTP_LIST_NODE* newNode=NULL;
     uint16_t    lfNameLen=0;
     char    *lfnamePtr=NULL;
     char fileType[2][5]={"file\0","dir\0"};
 
+    bool cmdRes = false;
+    bool doBreak = false;
     switch(pFTPDcpt->ftpCommandSm)
     {
-        case TCPIP_FTP_CMD_SM_IDLE:
-            if(pFTPDcpt->ftpFlag.Bits.pasvMode != true)
+        case (uint8_t)TCPIP_FTP_CMD_SM_IDLE:
+            if(pFTPDcpt->ftpFlag.Bits.pasvMode != 1U)
             {
                 if(TCPIP_FTP_CreateDataSocket(pFTPDcpt) != true)
                 {
-                    return true;
-                }
-            }
-            if ( !pFTPDcpt->ftpFlag.Bits.loggedIn )
-            {
-                pFTPDcpt->ftpResponse    = TCPIP_FTP_RESP_LOGIN;
-                 _FTP_ReleaseDataSocket(pFTPDcpt);  
-                return true;
-            }
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_READY;
-            pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_WAIT;
-            break;
-        case TCPIP_FTP_CMD_SM_WAIT:
-            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
-            {
-                pFTPDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_SEND;
-            }
-            else
-            {
-                break;
-            }
-            if(strlen((char*)pFTPDcpt->ftp_argv[1])==0)
-            {
-                pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_DIR;
-                break;
-            }
-            // check if the NLST command has any argument
-            for(nlstArgIndex=0;nlstArgIndex<TCPIP_FTP_MAX_NLST_ARGS;nlstArgIndex++)
-            {
-                if(strcmp((char*)pFTPDcpt->ftp_argv[1],(char*)TCPIP_FTP_CMD_NLSTArgs[nlstArgIndex])==0)
-                {
-                    cmdWithArg = true;
-                    gFTPNLSTArgIndex = nlstArgIndex;
+                    cmdRes = true;
                     break;
                 }
-                else
-                {
-                    cmdWithArg = false;
-                    gFTPNLSTArgIndex = 0xFF;
-                }
             }
-            if(cmdWithArg)
-            { // argument two will be the file name
-                if(strlen((char*)pFTPDcpt->ftp_argv[2]) > SYS_FS_FILE_NAME_LEN)
-                {// File not found, so abort
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
-                    cmdWithArg = false;
-                    return true;
-                }
+            if ( pFTPDcpt->ftpFlag.Bits.loggedIn == 0U )
+            {
+                pFTPDcpt->ftpResponse    = (uint8_t)TCPIP_FTP_RESP_LOGIN;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);  
+                cmdRes = true;
+                break;
+            }
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_DATA_READY;
+            pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_WAIT;
+            break;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT:
+            if(NET_PRES_SocketIsConnected(pFTPDcpt->ftpDataskt))
+            {
+                pFTPDcpt->ftpCommandSm = (uint8_t)TCPIP_FTP_CMD_SM_SEND;
             }
             else
-            { // argument first will be the file name
-                if(strlen((char*)pFTPDcpt->ftp_argv[1]) > SYS_FS_FILE_NAME_LEN)
-                {// File not found, so abort
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
-                    cmdWithArg = false;
-                    return true;
-                }
+            {
+                break;
             }
-            break;
-        case TCPIP_FTP_CMD_SM_SEND:
-            if(cmdWithArg)
-            { // argument two will be the file name
-                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[2], &fs_stat) != SYS_FS_HANDLE_INVALID)
+            //reset NLST argument flag
+            gFTPNLSTArgIndex = 0xFF;
+            
+            if(pFTPDcpt->ftp_argc == 1U)
+            {
+                pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR;
+                break;
+            }
+            else
+            { // check if the NLST command has any argument
+            
+                for(nlstArgIndex = 0; nlstArgIndex < (uint8_t)TCPIP_FTP_MAX_NLST_ARGS; nlstArgIndex++)
                 {
-                    if(!(fs_stat.fattrib & SYS_FS_ATTR_DIR))
-                    {  // transmit the remaining bytes
-                        pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_FILE;
+                    if(strcmp(pFTPDcpt->ftp_argv[1],(char*)TCPIP_FTP_CMD_NLSTArgs[nlstArgIndex])==0)
+                    {
+                        cmdWithArg = true;
+                        gFTPNLSTArgIndex = nlstArgIndex;
+                        break;
                     }
                     else
                     {
-                         pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_DIR;
+                        cmdWithArg = false;
+                        gFTPNLSTArgIndex = 0xFF;
+                    }
+                }
+                if(cmdWithArg)
+                { // argument two will be the file name
+                    if(strlen(pFTPDcpt->ftp_argv[2]) > SYS_FS_FILE_NAME_LEN)
+                    {// File not found, so abort
+                        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                        F_FTP_ReleaseDataSocket(pFTPDcpt);  
+                        cmdWithArg = false;
+                        cmdRes = true;
+                        break;
+                    }
+                }
+                else
+                { // argument first will be the file name
+                    if(strlen(pFTPDcpt->ftp_argv[1]) > SYS_FS_FILE_NAME_LEN)
+                    {// File not found, so abort
+                        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                        F_FTP_ReleaseDataSocket(pFTPDcpt);  
+                        cmdWithArg = false;
+                        cmdRes = true;
+                        break;
+                    }
+                }
+            }
+            break;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND:
+            if(cmdWithArg)
+            { // argument two will be the file name
+                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,pFTPDcpt->ftp_argv[2], &fs_stat) == SYS_FS_RES_SUCCESS)
+                {
+                    if((fs_stat.fattrib & (uint8_t)SYS_FS_ATTR_DIR) == 0U)
+                    {  // transmit the remaining bytes
+                        pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_FILE;
+                    }
+                    else
+                    {
+                         pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR;
                     }
                 }
                 else
                 {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);  
                     cmdWithArg = false;
-                    return true;
+                    cmdRes = true;
+                    break;
                 }
             }
             else
             {
-                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[1], &fs_stat) != SYS_FS_HANDLE_INVALID)
+                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,pFTPDcpt->ftp_argv[1], &fs_stat) == SYS_FS_RES_SUCCESS)
                 {
-                    if(!(fs_stat.fattrib & SYS_FS_ATTR_DIR))
+                    if((fs_stat.fattrib & (uint8_t)SYS_FS_ATTR_DIR) == 0U)
                     {  // transmit the remaining bytes
-                        pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_FILE;
+                        pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_FILE;
                     }
                     else
                     {
-                         pFTPDcpt->ftpCommandSm   = TCPIP_FTP_CMD_SM_SEND_DIR;
+                         pFTPDcpt->ftpCommandSm   = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR;
                     }
                 }
                 else
                 {
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);  
                     cmdWithArg = false;
-                    return true;
+                    cmdRes = true;
+                    break;
                 }
             }
-
             break;
-        case TCPIP_FTP_CMD_SM_SEND_FILE:
-            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
-            memset(fileNameList,0,sizeof(fileNameList));
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND_FILE:
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)strlen(fileNameList), 1U);
+            (void)memset(fileNameList, 0, sizeof(fileNameList));
             // If there is no argument
-            if((gFTPNLSTArgIndex == 0xFF)&& (pFTPDcpt->callbackPos==0))
+            if((gFTPNLSTArgIndex == 0xFFU) && (pFTPDcpt->callbackPos == 0UL))
             {
                 // Expected wcount should not be less than ftp argument 1
-                sprintf((char*)fileNameList,"%s\r\n",(char *)pFTPDcpt->ftp_argv[1]);
-                bytestoBeSent = strlen((char*)fileNameList);
+                (void)FC_sprintf(fileNameList, sizeof(fileNameList),"%s\r\n", pFTPDcpt->ftp_argv[1]);
+                bytestoBeSent = (uint16_t)strlen(fileNameList);
                 if(bytestoBeSent > wCount)
                 {
-                    while(bytestoBeSent>0)
+                    while(bytestoBeSent > 0U)
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
-                        bytestoBeSent = bytestoBeSent - wCount;
+                        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
+                        bytestoBeSent -= wCount;
                     }
                 }
                 else
                 {
-                     NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
+                     (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, (uint16_t)strlen(fileNameList));
                 }
-                pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+                pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
                 break;
             }
             // send the complete details of a File
             // for Windows ftp client , NLST command considers -a as a file argument and
             // it ignores the correct file argument.
-            if(pFTPDcpt->callbackPos != 0)
+            if(pFTPDcpt->callbackPos != 0UL)
             {
                 if(wCount < remainingBytes)
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
-                    wCount = 0;
                 }
                 else
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), remainingBytes);
                     remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->callbackPos = 0UL;
                 }
                 break;
             }
             else
             {
-                memset(fileNameList,0,sizeof(fileNameList));
-                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                (void)memset(fileNameList,0,sizeof(fileNameList));
+                (void)strncpy(fileNameList, fileHeaderStr, FC_MinU16((uint16_t)sizeof(fileNameList), (uint16_t)sizeof(fileHeaderStr)));
+                if(wCount > strlen(fileNameList))
                 {
-                    strcpy((char*)fileNameList,fileHeaderStr);
-                }
-                if(wCount > strlen((char *)fileNameList))
-                {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, (uint16_t)strlen(fileNameList));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
                 else
                 {
                     pFTPDcpt->callbackPos = 1;
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
-                    remainingBytes = strlen((char *)fileNameList)- wCount;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
+                    remainingBytes = (uint16_t)strlen(fileNameList)- wCount;
                     break;
                 }
             }
-            memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
-            memset(FileRecordssize,0,sizeof(FileRecordssize));
-            sprintf(FileRecordsDateTime, "%02d-%02d-%04d %02d:%02d:%02d",
-                                    (((fs_stat.fdate & 0x01E0) >> 5)-1),   // month
-                                    (fs_stat.fdate & 0x001F),  // date
-                                    ((fs_stat.fdate & 0xFE00) >> 9) + 1980, // year
-                                    (fs_stat.ftime & 0xF800) >> 11,  // hour
-                                    (fs_stat.ftime & 0x07E0) >> 5, // min
-                                    (fs_stat.ftime & 0x001F) << 1 ); // sec
+            (void)memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
+            (void)memset(FileRecordssize,0,sizeof(FileRecordssize));
+            (void)FC_sprintf(FileRecordsDateTime, sizeof(FileRecordsDateTime), "%02d-%02d-%04d %02d:%02d:%02d",
+                                    (((fs_stat.fdate & 0x01E0U) >> 5) - 1U),   // month
+                                    (fs_stat.fdate & 0x001FU),  // date
+                                    ((fs_stat.fdate & 0xFE00U) >> 9) + 1980U, // year
+                                    (fs_stat.ftime & 0xF800U) >> 11,  // hour
+                                    (fs_stat.ftime & 0x07E0U) >> 5, // min
+                                    (fs_stat.ftime & 0x001FU) << 1 ); // sec
 
-            sprintf(FileRecordssize, "%d",(int) fs_stat.fsize );
-            FileRecordInformation = 0;
+            (void)FC_sprintf(FileRecordssize, sizeof(FileRecordssize), "%d",(int) fs_stat.fsize );
 
-            memset(fileNameList,0,sizeof(fileNameList));
-            sprintf((char*)fileNameList,"%s\t file \t %s\t\t%s\r\n",FileRecordsDateTime,FileRecordssize,pFTPDcpt->ftp_argv[2]);
+            (void)memset(fileNameList,0,sizeof(fileNameList));
+            (void)FC_sprintf(fileNameList, sizeof(fileNameList),"%s\t file \t %s\t\t%s\r\n",FileRecordsDateTime,FileRecordssize,pFTPDcpt->ftp_argv[2]);
 
-            if(wCount > strlen((char *)fileNameList))
+            if(wCount > (uint16_t)strlen(fileNameList))
             {
-                NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
+                (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
                 remainingBytes =0;
                 pFTPDcpt->callbackPos = 0;
-                pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+                pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
             }
             else
             {
                 pFTPDcpt->callbackPos = 1;
-                NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
-                remainingBytes = strlen((char *)fileNameList)- wCount;
+                (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
+                remainingBytes = (uint16_t)strlen(fileNameList)- wCount;
                 break;
             }
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+            pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
             break;
 
-        case TCPIP_FTP_CMD_SM_SEND_DIR:
-            memset(fileNameList,0,sizeof(fileNameList));
-            if(gFTPNLSTArgIndex == 0xFF)
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR:
+            (void)memset(fileNameList,0,sizeof(fileNameList));
+            if(gFTPNLSTArgIndex == 0xFFU)
             {
-                if(strlen((char*)pFTPDcpt->ftp_argv[1]) == 0)
+                if(pFTPDcpt->ftp_argc == 1U)
                 {// No specific directory path
                     fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,".");
                 }
                 else
                 {
-                    fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+                    fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,pFTPDcpt->ftp_argv[1]);
                 }
             }
             else
             {
-                fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[2]);
+                fp = (pFTPDcpt->ftp_shell_obj->dirOpen)(pFTPDcpt->ftp_shell_obj,pFTPDcpt->ftp_argv[2]);
             }
             if (fp == SYS_FS_HANDLE_INVALID)
             {// File not found, so abort
-                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                _FTP_ReleaseDataSocket(pFTPDcpt);  
+                pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                F_FTP_ReleaseDataSocket(pFTPDcpt);  
                 cmdWithArg = false;
-                return true;
+                cmdRes = true;
+                break;
             }
             pFTPDcpt->fileDescr = fp;
             pFTPDcpt->callbackPos = 0;
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
-         case TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
-             wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
+            pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_HEADER;
+            break;
+
+         case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_HEADER:
+             wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)strlen(fileNameList), 1U);
              // send the Header details of the table
-            if(pFTPDcpt->callbackPos != 0)
+            if(pFTPDcpt->callbackPos != 0UL)
             {
                 if(wCount < remainingBytes)
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), wCount);
                     remainingBytes = remainingBytes - wCount;
                 }
                 else
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), remainingBytes);
                     remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->callbackPos = 0UL;
                 }
                 break;
             }
             else
             {
-                memset(fileNameList,0,sizeof(fileNameList));
-                if(sizeof(fileHeaderStr) < sizeof(fileNameList)) 
+                (void)memset(fileNameList,0,sizeof(fileNameList));
+                (void)strncpy(fileNameList, fileHeaderStr, FC_MinU16((uint16_t)sizeof(fileNameList), (uint16_t)sizeof(fileHeaderStr)));                
+                if(wCount > strlen(fileNameList))
                 {
-                    strcpy((char*)fileNameList, fileHeaderStr);
-                }
-                if(wCount > strlen((char *)fileNameList))
-                {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, (uint16_t)strlen(fileNameList));
                     remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->callbackPos = 0UL;
                 }
                 else
                 {
-                    pFTPDcpt->callbackPos = 1;
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, strlen((char *)fileNameList)));
-                    remainingBytes = strlen((char *)fileNameList)- wCount;
+                    pFTPDcpt->callbackPos = 1UL;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, (uint16_t)strlen(fileNameList)));
+                    remainingBytes = (uint16_t)strlen(fileNameList)- wCount;
                     break;
                 }
             }
@@ -2175,135 +2302,149 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             fs_stat.lfname = longFileName;
             fs_stat.lfsize = SYS_FS_FILE_NAME_LEN;
             fp = pFTPDcpt->fileDescr;
-            if(TCPIP_Helper_ProtectedSingleListInitialize(&DirectoryFileList) != true)
+            if(TCPIP_Helper_ProtSglListInitialize(&DirectoryFileList) != true)
             {
-                return true;
+                cmdRes = true;
+                break;
             }
-            while(1)
+
+            while(true)
             {
-                memset(fs_stat.fname,0,13);
-                memset(longFileName,0,sizeof(longFileName));
+                (void)memset(fs_stat.fname,0,13);
+                (void)memset(longFileName,0,sizeof(longFileName));
                 if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_ARC, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
-                    pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+                    (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
                     break;
                 }
-                newNode = (FTP_LIST_NODE*)TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode));
+                newNode = FC_SglNode2FtpNode(TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode)));
                 if(newNode == NULL)
                 {
-                    pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                    _FTP_ReleaseDataSocket(pFTPDcpt);  
-                    if(DirectoryFileList.list.nNodes > 0)
+                    (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                    F_FTP_ReleaseDataSocket(pFTPDcpt);  
+                    while(DirectoryFileList.list.nNodes > 0U)
                     {   // Free if already there are node in the list
-                        while(newNode != 0)
+                        newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                        if(newNode != NULL)
                         {
                             if(newNode->file_stat.lfname != NULL)
                             {
-                                TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                                (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                             }
-                            newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                            TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                            (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
                         }
                     }
-                    TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-                    return true;
+                    TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+                    cmdRes = true;
+                    doBreak = true; 
+                    break;
                 }
                 newNode->file_stat.fattrib = fs_stat.fattrib;
                 newNode->file_stat.fdate = fs_stat.fdate;
                 newNode->file_stat.ftime = fs_stat.ftime;
-                memset(newNode->file_stat.fname,0,sizeof(newNode->file_stat.fname));
-                strcpy((char*)newNode->file_stat.fname ,(char*)fs_stat.fname);
+                (void)memset(newNode->file_stat.fname,0,sizeof(newNode->file_stat.fname));
+                (void)strcpy((char*)newNode->file_stat.fname ,(char*)fs_stat.fname);
                 newNode->file_stat.fsize = fs_stat.fsize;
                 newNode->file_stat.lfsize = fs_stat.lfsize;
-                lfNameLen = strlen((char*)fs_stat.lfname);
+                lfNameLen = (uint16_t)strlen((char*)fs_stat.lfname);
                 newNode->file_stat.lfname = NULL;
-                if(lfNameLen>0)
+                if(lfNameLen > 0U)
                 {
-                    lfnamePtr = TCPIP_HEAP_Calloc(sTCPIPFtpMemH,1, lfNameLen+1);
+                    lfnamePtr = TCPIP_HEAP_Calloc(sTCPIPFtpMemH, 1UL, (size_t)lfNameLen + 1UL);
                     if(lfnamePtr != NULL)
                     {
                         newNode->file_stat.lfname = lfnamePtr;
-                        memcpy(newNode->file_stat.lfname,fs_stat.lfname,lfNameLen);
-                        newNode->file_stat.lfname[lfNameLen+1]='\0';
+                        (void)memcpy(newNode->file_stat.lfname,fs_stat.lfname,lfNameLen);
+                        newNode->file_stat.lfname[lfNameLen + 1U]='\0';
                     }
                     else
                     {
-                        pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
-                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
-                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
-                        _FTP_ReleaseDataSocket(pFTPDcpt);  
-                        if(DirectoryFileList.list.nNodes > 0)
+                        (void)pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
+                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NO_FILE_NO_ACTION;
+                        F_FTP_ReleaseDataSocket(pFTPDcpt);  
+                        if(DirectoryFileList.list.nNodes > 0U)
                         {   // Free if already there are node in the list
-                            while(newNode != 0)
+                            while(newNode != NULL)
                             {
                                 if(newNode->file_stat.lfname != NULL)
                                 {
-                                    TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                                 }
-                                newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                                TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                                newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                                (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
                             }
                         }
-                        TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-                        return true;
+                        TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+                        cmdRes = true;
+                        doBreak = true; 
+                        break;
                     }
                 }
             }
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL;
-            // continue
-        case TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
-            wCount = 0;
-            newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, strlen((char *)fileNameList), 1);
-            while(newNode != 0)
+            if(doBreak)
             {
-                if(wCount == 0)
+                break;
+            }  
+
+            pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL;
+            break;
+            
+        case (uint8_t)TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL:
+            newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+            wCount = NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpDataskt, (uint16_t)strlen(fileNameList), 1U);
+            doBreak = false;
+            while(newNode != NULL)
+            {
+                if(wCount == 0U)
                 {
-                    return false;
+                    cmdRes = false;
+                    doBreak = true;
+                    break;
                 }
                 // transmit the remaining bytes
-                if(pFTPDcpt->callbackPos != 0)
+                if(pFTPDcpt->callbackPos != 0UL)
                 {
                     if(wCount < remainingBytes)
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
+                        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), wCount);
                         remainingBytes = remainingBytes - wCount;
                         wCount=0;
                         continue;
                     }
                     else
                     {
-                        NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), remainingBytes);
+                        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList+(strlen(fileNameList)-remainingBytes), remainingBytes);
                         wCount = wCount - remainingBytes;
                         remainingBytes =0;
-                        pFTPDcpt->callbackPos = 0;
+                        pFTPDcpt->callbackPos = 0UL;
                         // remove the head from the list
-                        newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                        TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
-                        newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-                        if(newNode == 0)
+                        newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                        (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                        newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+                        if(newNode == NULL)
                         {
                             break;
                         }
                     }
                 }
-                memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
-                memset(FileRecordssize,0,sizeof(FileRecordssize));
-                memset(fileNameList,0,sizeof(fileNameList));
+                (void)memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
+                (void)memset(FileRecordssize,0,sizeof(FileRecordssize));
+                (void)memset(fileNameList,0,sizeof(fileNameList));
 
-                sprintf(FileRecordsDateTime, "%02d-%02d-%04d %02d:%02d:%02d",
-                                    (newNode->file_stat.fdate & 0x01E0) >> 5,
-                                    (newNode->file_stat.fdate & 0x001F),
-                                    ((newNode->file_stat.fdate & 0xFE00) >> 9) + 1980,
-                                    (newNode->file_stat.ftime & 0xF800) >> 11,
-                                    (newNode->file_stat.ftime & 0x07E0) >> 5,
-                                    (newNode->file_stat.ftime & 0x001F) << 1 );
+                (void)FC_sprintf(FileRecordsDateTime, sizeof(FileRecordsDateTime), "%02d-%02d-%04d %02d:%02d:%02d",
+                                    (newNode->file_stat.fdate & 0x01E0U) >> 5,
+                                    (newNode->file_stat.fdate & 0x001FU),
+                                    ((newNode->file_stat.fdate & 0xFE00U) >> 9) + 1980U,
+                                    (newNode->file_stat.ftime & 0xF800U) >> 11,
+                                    (newNode->file_stat.ftime & 0x07E0U) >> 5,
+                                    (newNode->file_stat.ftime & 0x001FU) << 1 );
 
-                sprintf(FileRecordssize, "%d",(int) newNode->file_stat.fsize );
-                if(newNode->file_stat.fattrib & SYS_FS_ATTR_DIR)
+                (void)FC_sprintf(FileRecordssize, sizeof(FileRecordssize), "%d",(int) newNode->file_stat.fsize );
+                if((newNode->file_stat.fattrib & (uint8_t)SYS_FS_ATTR_DIR) != 0U)
                 {
                     FileRecordInformation = 1;
                 }
@@ -2312,59 +2453,65 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                     FileRecordInformation = 0;
                 }
 
-                memset(fileNameList,0,sizeof(fileNameList));
+                (void)memset(fileNameList,0,sizeof(fileNameList));
                 if(newNode->file_stat.lfname != NULL)
                 {
-                    sprintf((char*)fileNameList,"%s\t %s \t %s\t\t%s\r\n",FileRecordsDateTime,fileType[FileRecordInformation],FileRecordssize,newNode->file_stat.lfname);
+                    (void)FC_sprintf(fileNameList, sizeof(fileNameList),"%s\t %s \t %s\t\t%s\r\n",FileRecordsDateTime,fileType[FileRecordInformation],FileRecordssize,newNode->file_stat.lfname);
                     // Now Free the allocated memory for the long file name
-                    TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
+                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH,newNode->file_stat.lfname);
                 }
                 else
                 {
-                    sprintf((char*)fileNameList,"%s\t %s \t %s\t\t%s\r\n",FileRecordsDateTime,fileType[FileRecordInformation],FileRecordssize,newNode->file_stat.fname);
+                    (void)FC_sprintf(fileNameList, sizeof(fileNameList),"%s\t %s \t %s\t\t%s\r\n",FileRecordsDateTime,fileType[FileRecordInformation],FileRecordssize,newNode->file_stat.fname);
                 }
 
-                lfNameLen = strlen((char *)fileNameList);
+                lfNameLen = (uint16_t)strlen(fileNameList);
                 if(wCount > lfNameLen)
                 {
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, mMIN(wCount, lfNameLen));
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, FC_MinU16(wCount, lfNameLen));
                     remainingBytes =0;
-                    pFTPDcpt->callbackPos = 0;
+                    pFTPDcpt->callbackPos = 0UL;
                     wCount = wCount - lfNameLen;
-                    //pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
                     // remove the head from the list
-                    newNode = (FTP_LIST_NODE*)TCPIP_Helper_ProtectedSingleListHeadRemove(&DirectoryFileList);
-                    TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
-                    newNode = (FTP_LIST_NODE*)DirectoryFileList.list.head;
-                    if(newNode == 0)
+                    newNode = FC_SglNode2FtpNode(TCPIP_Helper_ProtSglListHeadRemove(&DirectoryFileList));
+                    (void)TCPIP_HEAP_Free(sTCPIPFtpMemH, newNode);
+                    newNode = FC_SglNode2FtpNode(DirectoryFileList.list.head);
+                    if(newNode == NULL)
                     {
                         break;
                     }
                 }
                 else
                 {
-                    pFTPDcpt->callbackPos = 1;
-                    NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
+                    pFTPDcpt->callbackPos = 1UL;
+                    (void)NET_PRES_SocketWrite(pFTPDcpt->ftpDataskt, fileNameList, wCount);
                     remainingBytes = lfNameLen - wCount;
                     wCount=0;
                     continue;
-                   // break;
                 }
             }
-            TCPIP_Helper_ProtectedSingleListDeinitialize(&DirectoryFileList);
-            pFTPDcpt->ftpCommandSm  = TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
+            if(doBreak)
+            {
+                break;
+            }  
+            TCPIP_Helper_ProtSglListDeinitialize(&DirectoryFileList);
+            pFTPDcpt->ftpCommandSm  = (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT;
             break;
-        case TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
-            _FTP_ReleaseDataSocket(pFTPDcpt);  
-            pFTPDcpt->ftpResponse   = TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION;
+
+        case (uint8_t)TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT:
+            F_FTP_ReleaseDataSocket(pFTPDcpt);  
+            pFTPDcpt->ftpResponse   = (uint8_t)TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN;
             gFTPNLSTArgIndex = 0xFF;
             remainingBytes = 0;
             cmdWithArg = false;
-            return true;
+            cmdRes = true;
+            break;
+
         default:
+            // do nothing
             break;
     }
-    return false;
+    return cmdRes;
 }
 /*
  * Remove the file or directory for the FTP command "delete" or "rmdir"
@@ -2375,42 +2522,46 @@ static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt)
     SYS_FS_RESULT   result;
     char            ftpMsg[128];
 
-    result = (pFTPDcpt->ftp_shell_obj->fileDelete)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
-    if(result == SYS_FS_HANDLE_INVALID)
+    result = (pFTPDcpt->ftp_shell_obj->fileDelete)(pFTPDcpt->ftp_shell_obj,pFTPDcpt->ftp_argv[1]);
+    if(result != SYS_FS_RES_SUCCESS)
     {
         fs_err = SYS_FS_Error();
-        memset(ftpMsg,0,sizeof(ftpMsg));
+        (void)memset(ftpMsg,0,sizeof(ftpMsg));
         if(fs_err == SYS_FS_ERROR_DENIED)
         {            
-            sprintf(ftpMsg,"550 \"%s\" Directory is not empty! \r\n",pFTPDcpt->ftp_argv[1]);
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg),"550 \"%s\" Directory is not empty! \r\n",pFTPDcpt->ftp_argv[1]);
         }
         else if(fs_err == SYS_FS_ERROR_LOCKED)
         {           
-            sprintf(ftpMsg,"550 \"%s\" Directory or File is Locked! \r\n",pFTPDcpt->ftp_argv[1]);
+            (void)FC_sprintf(ftpMsg, sizeof(ftpMsg),"550 \"%s\" Directory or File is Locked! \r\n",pFTPDcpt->ftp_argv[1]);
         }
-        if (!NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, strlen(ftpMsg), 0)) 
+        else
         {
-            pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-            pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-            return true;
+            // do nothing
         }
-        NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, strlen(ftpMsg));
-        NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
+        if (NET_PRES_SocketWriteIsReady(pFTPDcpt->ftpCmdskt, (uint16_t)strlen(ftpMsg), 0U) == 0U) 
+        {
+            pFTPDcpt->ftpResponse = (uint8_t)TCPIP_FTP_RESP_NONE;
+            pFTPDcpt->ftpSm = (uint8_t)TCPIP_FTP_SM_CONNECTED;
+            return result;
+        }
+        (void)NET_PRES_SocketWrite(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg, (uint16_t)strlen(ftpMsg));
+        (void)NET_PRES_SocketFlush(pFTPDcpt->ftpCmdskt);
     }
     return result;
 }
 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
 TCPIP_FTP_HANDLE TCPIP_FTP_AuthenticationRegister(TCPIP_FTP_AUTH_HANDLER authHandler, const void* handlerParam)
 {
-    TCPIP_FTP_HANDLE tHandle = 0;
+    TCPIP_FTP_HANDLE tHandle = NULL;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(FTPAuthHandler == 0)
+    if(FTPAuthHandler == NULL)
     {
         FTPAuthHParam = handlerParam;
         FTPAuthHandler = authHandler;
-        tHandle = (TCPIP_FTP_HANDLE) authHandler;
+        tHandle = FC_AuthHndl2FtpHndl(authHandler);
     }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
@@ -2422,9 +2573,9 @@ bool TCPIP_FTP_AuthenticationDeregister(TCPIP_FTP_HANDLE authHandle)
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(FTPAuthHandler == (TCPIP_FTP_AUTH_HANDLER) authHandle)
+    if(FC_AuthHndl2FtpHndl(FTPAuthHandler) == authHandle)
     {
-        FTPAuthHandler = 0;
+        FTPAuthHandler = NULL;
         res = true;
     } 
 
@@ -2432,7 +2583,7 @@ bool TCPIP_FTP_AuthenticationDeregister(TCPIP_FTP_HANDLE authHandle)
     return res;
 }
 
-#endif  // (_FTP_USE_AUTHENTICATION_CALLBACK != 0)
+#endif  // (M_FTP_USE_AUTHENTICATION_CALLBACK != 0)
 
 
 

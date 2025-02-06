@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -37,16 +37,16 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __FTP_PRIVATE_H
-#define __FTP_PRIVATE_H
+#ifndef H_FTP_PRIVATE_H_
+#define H_FTP_PRIVATE_H_
 
 
 // authentication defines
-#if (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)
-#define _FTP_USE_AUTHENTICATION_CALLBACK     1
+#if !defined(TCPIP_FTPS_OBSOLETE_AUTHENTICATION) || (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)
+#define M_FTP_USE_AUTHENTICATION_CALLBACK     1
 #else
-#define _FTP_USE_AUTHENTICATION_CALLBACK     0
-#endif  // (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)
+#define M_FTP_USE_AUTHENTICATION_CALLBACK     0
+#endif  // !defined(TCPIP_FTPS_OBSOLETE_AUTHENTICATION) || (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)
 
 
 // FTP private configuration data
@@ -57,10 +57,10 @@ typedef struct
     uint16_t    nConnections;
     uint16_t    dataSktTxBuffSize;  
     uint16_t    dataSktRxBuffSize; 
-#if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+#if (M_FTP_USE_AUTHENTICATION_CALLBACK == 0)
     char        userName[TCPIP_FTP_USER_NAME_LEN + 1];
     char        password[TCPIP_FTP_PASSWD_LEN];
-#endif // (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+#endif // (M_FTP_USE_AUTHENTICATION_CALLBACK == 0)
 }TCPIP_FTP_MODULE_CONFIG_DATA;
 
 
@@ -83,7 +83,7 @@ typedef struct
 /*
 * FTP initial state machine 
 */
-typedef enum _TCPIP_FTP_SM
+typedef enum 
 {
     TCPIP_FTP_SM_HOME,              // if FTP server home
     TCPIP_FTP_SM_NOT_CONNECTED,    // If FTP Server is not connected
@@ -96,7 +96,7 @@ typedef enum _TCPIP_FTP_SM
 /*
 * FTP command state machine
 */
-typedef enum _TCPIP_FTP_CMD_SM
+typedef enum
 {
     TCPIP_FTP_CMD_SM_IDLE,
     TCPIP_FTP_CMD_SM_WAIT,
@@ -113,7 +113,7 @@ typedef enum _TCPIP_FTP_CMD_SM
 /*
 * List of FTP Commands
 */
-typedef enum _TCPIP_FTP_CMD
+typedef enum
 {
     TCPIP_FTP_CMD_USER, 
     TCPIP_FTP_CMD_PASS,
@@ -150,7 +150,7 @@ typedef enum _TCPIP_FTP_CMD
 /*
 * Enum types for FTP Response 
 */
-typedef enum _TCPIP_FTP_RESP
+typedef enum
 {
     TCPIP_FTP_RESP_BANNER,
     TCPIP_FTP_RESP_USER_OK,
@@ -165,10 +165,10 @@ typedef enum _TCPIP_FTP_RESP
     TCPIP_FTP_RESP_DATA_NO_SOCKET,
     TCPIP_FTP_RESP_PWD,
     TCPIP_FTP_RESP_OK,
-    TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN,
+    TCPIP_FTP_RESP_NO_FILE_NO_ACTION,
     TCPIP_FTP_RESP_FILE_IS_PRESENT,
     TCPIP_FTP_RESP_ENTER_PASV_MODE,
-    TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION,
+    TCPIP_FTP_RESP_FILE_CLOSE_DATA_CONN,
     TCPIP_FTP_RESP_FILE_STATUS,
     TCPIP_FTP_RESP_EXTND_PORT_FAILURE,
     TCPIP_FTP_RESP_FILESYSTEM_FAIL,
@@ -180,25 +180,25 @@ typedef enum _TCPIP_FTP_RESP
 } TCPIP_FTP_RESP;
 
 // FTP Flags
-typedef union _TCPIP_FTP_Flags
+typedef union
 {
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t userSupplied:       1;
-        uint8_t loggedIn:           1;
-        uint8_t pasvMode:           1;
-        uint8_t dataRxFin:          1;
-        uint8_t endCommunication:   1;  // check if the PUT command is completed 
+        unsigned userSupplied:       1;
+        unsigned loggedIn:           1;
+        unsigned pasvMode:           1;
+        unsigned dataRxFin:          1;
+        unsigned endCommunication:   1;  // check if the PUT command is completed 
                                         // and close data socket
-        uint8_t reserved:           3;
+        unsigned reserved:           3;
     } Bits;
     uint8_t val;
 } TCPIP_FTP_Flags;
 
 // TCPIP FTP descriptor details
-typedef struct _TCPIP_FTP_DCPT
+typedef struct
 {
-    SYS_FS_SHELL_OBJ    *ftp_shell_obj;     // FTP wrapper object
+    const SYS_FS_SHELL_OBJ*        ftp_shell_obj;     // FTP wrapper object
 
     NET_PRES_SKT_HANDLE_T          ftpCmdskt;          // associated FTP command socket
     NET_PRES_SKT_HANDLE_T          ftpDataskt;         // associated FTP Data port socket
@@ -211,31 +211,31 @@ typedef struct _TCPIP_FTP_DCPT
     uint8_t             ftpResponse;        // TCPIP_FTP_RESP
 
 
-    uint8_t             *ftp_argv[TCPIP_FTP_MAX_ARGS];  // Parameters for a FTP command
+    char*               ftp_argv[TCPIP_FTP_MAX_ARGS];  // Parameters for a FTP command
     uint32_t            ftpSysTicklastActivity;         // Timeout keeper.
     uint32_t            callbackPos;                    // Callback position indicator
     SYS_FS_HANDLE       fileDescr;
     NET_PRES_SIGNAL_HANDLE ftpTcpCmdSocketSignal;
     NET_PRES_SIGNAL_HANDLE ftpTcpDataSocketSignal;
 
-    uint8_t             ftpStringLen;
+    uint16_t            ftpStringLen;
     uint8_t             ftp_argc;       // Total number of params for a FTP command
     TCPIP_FTP_Flags     ftpFlag;
 
-    uint8_t             ftpUserName[TCPIP_FTP_USER_NAME_LEN + 1];
-    uint8_t             ftpCmdString[TCPIP_FTP_CMD_MAX_STRING_LEN + 2];
+    char                ftpUserName[TCPIP_FTP_USER_NAME_LEN + 1];
+    char                ftpCmdString[TCPIP_FTP_CMD_MAX_STRING_LEN + 2];
     
 }TCPIP_FTP_DCPT;
 
 
-typedef struct  _TAG_FTP_LIST_NODE
+typedef struct  S_TAG_FTP_LIST_NODE
 {
-    struct _TAG_FTP_LIST_NODE*      next;   // next node in list
+    struct S_TAG_FTP_LIST_NODE*      next;   // next node in list
                                             // makes it valid SGL_LIST_NODE node
-    SYS_FS_FSTAT        file_stat;
-    bool        lfNamePresent;
+    SYS_FS_FSTAT    file_stat;
+    bool            lfNamePresent;
 
 }FTP_LIST_NODE;
 
-#endif  // __FTP_PRIVATE_H
+#endif  // H_FTP_PRIVATE_H_
 
