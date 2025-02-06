@@ -10,7 +10,7 @@
 *********************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -58,37 +58,37 @@ Microchip or any third party.
 static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] = 
 {
     // varName                      varFnc
-    {"hellomsg",					TCPIP_HTTP_Print_hellomsg},
-	{"cookiename",					TCPIP_HTTP_Print_cookiename},
-	{"cookiefav",					TCPIP_HTTP_Print_cookiefav},
-	{"builddate",					TCPIP_HTTP_Print_builddate},
-	{"led",							TCPIP_HTTP_Print_led},
-	{"ledSelected",					TCPIP_HTTP_Print_ledSelected},
-	{"version",						TCPIP_HTTP_Print_version},
-	{"btn",							TCPIP_HTTP_Print_btn},
-	{"pot",							TCPIP_HTTP_Print_pot},
-	{"uploadedmd5",					TCPIP_HTTP_Print_uploadedmd5},
-	{"snmp_en",						TCPIP_HTTP_Print_snmp_en},
-	{"read_comm",					TCPIP_HTTP_Print_read_comm},
-	{"write_comm",					TCPIP_HTTP_Print_write_comm},
-	{"status_fail",					TCPIP_HTTP_Print_status_fail},
-	{"config_mac",					TCPIP_HTTP_Print_config_mac},
-	{"config_hostname",				TCPIP_HTTP_Print_config_hostname},
-	{"config_dhcpchecked",			TCPIP_HTTP_Print_config_dhcpchecked},
-	{"config_ip",					TCPIP_HTTP_Print_config_ip},
-	{"config_gw",					TCPIP_HTTP_Print_config_gw},
-	{"config_subnet",				TCPIP_HTTP_Print_config_subnet},
-	{"config_dns1",					TCPIP_HTTP_Print_config_dns1},
-	{"config_dns2",					TCPIP_HTTP_Print_config_dns2},
-	{"reboot",						TCPIP_HTTP_Print_reboot},
-	{"rebootaddr",					TCPIP_HTTP_Print_rebootaddr},
-	{"status_ok",					TCPIP_HTTP_Print_status_ok},
-	{"ddns_status",					TCPIP_HTTP_Print_ddns_status},
-	{"ddns_status_msg",				TCPIP_HTTP_Print_ddns_status_msg},
-	{"ddns_service",				TCPIP_HTTP_Print_ddns_service},
-	{"ddns_user",					TCPIP_HTTP_Print_ddns_user},
-	{"ddns_pass",					TCPIP_HTTP_Print_ddns_pass},
-	{"ddns_host",					TCPIP_HTTP_Print_ddns_host},
+    {"hellomsg",					&TCPIP_HTTP_Print_hellomsg},
+	{"cookiename",					&TCPIP_HTTP_Print_cookiename},
+	{"cookiefav",					&TCPIP_HTTP_Print_cookiefav},
+	{"builddate",					&TCPIP_HTTP_Print_builddate},
+	{"led",							&TCPIP_HTTP_Print_led},
+	{"ledSelected",					&TCPIP_HTTP_Print_ledSelected},
+	{"version",						&TCPIP_HTTP_Print_version},
+	{"btn",							&TCPIP_HTTP_Print_btn},
+	{"pot",							&TCPIP_HTTP_Print_pot},
+	{"uploadedmd5",					&TCPIP_HTTP_Print_uploadedmd5},
+	{"snmp_en",						&TCPIP_HTTP_Print_snmp_en},
+	{"read_comm",					&TCPIP_HTTP_Print_read_comm},
+	{"write_comm",					&TCPIP_HTTP_Print_write_comm},
+	{"status_fail",					&TCPIP_HTTP_Print_status_fail},
+	{"config_mac",					&TCPIP_HTTP_Print_config_mac},
+	{"config_hostname",				&TCPIP_HTTP_Print_config_hostname},
+	{"config_dhcpchecked",			&TCPIP_HTTP_Print_config_dhcpchecked},
+	{"config_ip",					&TCPIP_HTTP_Print_config_ip},
+	{"config_gw",					&TCPIP_HTTP_Print_config_gw},
+	{"config_subnet",				&TCPIP_HTTP_Print_config_subnet},
+	{"config_dns1",					&TCPIP_HTTP_Print_config_dns1},
+	{"config_dns2",					&TCPIP_HTTP_Print_config_dns2},
+	{"reboot",						&TCPIP_HTTP_Print_reboot},
+	{"rebootaddr",					&TCPIP_HTTP_Print_rebootaddr},
+	{"status_ok",					&TCPIP_HTTP_Print_status_ok},
+	{"ddns_status",					&TCPIP_HTTP_Print_ddns_status},
+	{"ddns_status_msg",				&TCPIP_HTTP_Print_ddns_status_msg},
+	{"ddns_service",				&TCPIP_HTTP_Print_ddns_service},
+	{"ddns_user",					&TCPIP_HTTP_Print_ddns_user},
+	{"ddns_pass",					&TCPIP_HTTP_Print_ddns_pass},
+	{"ddns_host",					&TCPIP_HTTP_Print_ddns_host},
 };
 
 // Function that processes the dynamic variables
@@ -163,29 +163,29 @@ void HTTP_APP_Initialize(void)
 
     TCPIP_HTTP_NET_USER_CALLBACK appHttpCBack =
     {
-        .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
-        .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
+        .getExecute = &TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
+        .postExecute = &TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
 <#if ((TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
-        .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
-        .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
+        .fileAuthenticate = &TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
+        .userAuthenticate = &TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
 <#else>
-        .fileAuthenticate = 0,
-        .userAuthenticate = 0,
+        .fileAuthenticate = NULL,
+        .userAuthenticate = NULL,
 </#if>
 
 <#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
-        .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
-        .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
+        .dynamicPrint = &TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
+        .dynamicAck = &TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
 <#else>
-        .dynamicPrint = 0,
-        .dynamicAck = 0,
+        .dynamicPrint = NULL,
+        .dynamicAck = NULL,
 </#if>
-        .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
+        .eventReport = &TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
 
 <#if ((TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (TCPIP_HTTP_NET_SSI_PROCESS  == true)) >
-        .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
+        .ssiNotify = &TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
 <#else>
-        .ssiNotify = 0,
+        .ssiNotify = NULL,
 </#if>
     };
 

@@ -21,7 +21,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2015-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2015-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -52,8 +52,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __HTTP_NET_H_
-#define __HTTP_NET_H_
+#ifndef H_HTTP_NET_H_
+#define H_HTTP_NET_H_
 
 #include "system/fs/sys_fs.h"
 #include "net_pres/pres/net_pres.h"
@@ -77,7 +77,7 @@ Microchip or any third party.
 //Supported Commands and Server Response Codes
 typedef enum
 {
-    TCPIP_HTTP_NET_STAT_GET = 0u,               // GET command is being processed
+    TCPIP_HTTP_NET_STAT_GET = 0U,               // GET command is being processed
     TCPIP_HTTP_NET_STAT_POST,                   // POST command is being processed
     TCPIP_HTTP_NET_STAT_BAD_REQUEST,            // 400 Bad Request will be returned
     TCPIP_HTTP_NET_STAT_UNAUTHORIZED,           // 401 Unauthorized will be returned
@@ -91,7 +91,7 @@ typedef enum
     TCPIP_HTTP_NET_STAT_UPLOAD_FORM,            // Show the Upload form
     TCPIP_HTTP_NET_STAT_UPLOAD_STARTED,         // An upload operation is being processed
     TCPIP_HTTP_NET_STAT_UPLOAD_WRITE,           // An upload operation is currently writing
-    TCPIP_HTTP_NET_STAT_UPLOAD_WRITE_WAIT,      // An upload operation is currently waiting for the write completion
+    TCPIP_HTTP_NET_STAT_UPLOAD_WAIT,            // An upload operation is currently waiting for the write completion
     TCPIP_HTTP_NET_STAT_UPLOAD_OK,              // An Upload was successful
     TCPIP_HTTP_NET_STAT_UPLOAD_ERROR,           // An Upload was not a valid image
 
@@ -108,7 +108,7 @@ typedef enum
 // Result states for execution callbacks
 typedef enum
 {
-    TCPIP_HTTP_NET_IO_RES_DONE = 0u,  // Finished with procedure
+    TCPIP_HTTP_NET_IO_RES_DONE = 0U,  // Finished with procedure
     TCPIP_HTTP_NET_IO_RES_NEED_DATA,  // More data needed to continue, call again later
     TCPIP_HTTP_NET_IO_RES_WAITING,    // Waiting for asynchronous process to complete, 
                                       // call again later
@@ -144,6 +144,7 @@ typedef enum
   Remarks:
     Multiple warnings can be set simultaneously.
 
+    16 bit values only
 */
 typedef enum
 {
@@ -181,10 +182,10 @@ typedef enum
     TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR                = -1,
 
     /* a file name was not specified */
-    TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR                = -2,
+    TCPIP_HTTP_NET_EVENT_FNAME_ERROR                    = -2,
 
     /* a file name was longer than the HTTP storage space */
-    TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR           = -3,
+    TCPIP_HTTP_NET_EVENT_FNAME_SIZE_ERROR           = -3,
 
     /* file size error */
     TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR                = -4,
@@ -208,10 +209,10 @@ typedef enum
     TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR                 = -10,
 
     /* the number of retries for getting a chunk from the pool has been exceeded */
-    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR               = -11,
+    TCPIP_HTTP_NET_EVENT_CK_POOL_ERROR                  = -11,
 
     /* the number of retries for getting a file buffer has been exceeded */
-    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR         = -12,
+    TCPIP_HTTP_NET_EVENT_BF_POOL_ERROR                  = -12,
 
     /* out of memory when trying to allocate space for a dynamic variable descriptor */
     /* Note that dynamic allocation is used for the dynamic variable descriptor */
@@ -228,11 +229,11 @@ typedef enum
     TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR              = -16,
 
     /* a SSI attribute error : command w/o attribute, etc. */
-    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR               = -17,
+    TCPIP_HTTP_NET_EVENT_SSI_ATTR_ERROR                 = -17,
 
     /* out of memory when trying to allocate space for a SSI command descriptor */
     /* Note that dynamic allocation is used for the SSI commands */
-    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR     = -18,
+    TCPIP_HTTP_NET_EVENT_SSI_DCPT_ALLOC_ERROR           = -18,
 
     /* out of memory when trying to allocate memory for the peek buffer */
     /* the peek operation failed */
@@ -240,27 +241,27 @@ typedef enum
 
     /* out of memory when trying to allocate memory for the SSI echo buffer */
     /* the echo operation failed */
-    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR           = -20,
+    TCPIP_HTTP_NET_EVENT_SSI_ECHO_ALLOC_ERROR           = -20,
 
     /* Dynamic parsing warnings. Multiple flags could be set */
 
     /* warning: a dynamic variable argument name too long, truncated */
-    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED      = 0x8001,
+    TCPIP_HTTP_NET_EVENT_DYN_ARG_NAME_TRUNCATED         = 0x8001,
 
     /* warning: too many arguments for a dynamic variable, truncated */
-    TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED    = 0x8002,
+    TCPIP_HTTP_NET_EVENT_DYN_ARG_NUMBER_TRUNCATED       = 0x8002,
 
     /* warning: too many retries for a dynamic variable, stopped */
     TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED        = 0x8003,
 
     /* warning: too many attributes for a SSI command, truncated */
-    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED    = 0x8004,
+    TCPIP_HTTP_NET_EVENT_SSI_ATTR_TRUNCATED             = 0x8004,
 
     /* warning: unrecognized/unsupported SSI command attribute */
-    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN             = 0x8005,
+    TCPIP_HTTP_NET_EVENT_SSI_ATTR_UNKNOWN               = 0x8005,
 
     /* warning: wrong number of SSI command attributes */
-    TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH    = 0x8006,
+    TCPIP_HTTP_NET_EVENT_SSI_ATTR_MISMATCH              = 0x8006,
 
     /* warning: number of SSI set variables exceeded */
     TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED       = 0x8007,
@@ -273,20 +274,20 @@ typedef enum
 
     /* warning: SSI variable hash could not be created, allocation failed */
     /* Ther ewill be no run time SSI variable support */
-    TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED       = 0x800a,
+    TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED         = 0x800a,
 
     /* event: SSI variable deleted */
-    TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED               = 0x800b,
+    TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED                = 0x800b,
 
     /* Other run-time warnings */
 
     /* warning: allocation from the HTTP chunk pool failed */
     /* (the allocation will be retried) */
-    TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY               = 0x8020,
+    TCPIP_HTTP_NET_EVENT_CK_POOL_EMPTY                 = 0x8020,
 
     /* warning: allocation from the HTTP file buffers pool failed */
     /* (the allocation will be retried) */
-    TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY         = 0x8021,
+    TCPIP_HTTP_NET_EVENT_BF_POOL_EMPTY                = 0x8021,
 
     /* warning: the HTTP peek buffer is too small and cannot contain */
     /* all the data available in the transport socket buffer */
@@ -302,6 +303,11 @@ typedef enum
 // HTTP connection identifier, handle of a HTTP connection
 typedef const void*     TCPIP_HTTP_NET_CONN_HANDLE;
 
+
+/* MISRA C-2012 Rule 5.2 deviated:2 Deviation record ID -  H3_MISRAC_2012_R_5_2_NET_DR_6 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:2 "MISRA C-2012 Rule 5.2" "H3_MISRAC_2012_R_5_2_NET_DR_6" 
 // HTTP module configuration flags
 // Multiple flags can be OR-ed
 typedef enum
@@ -324,11 +330,14 @@ typedef enum
 
     TCPIP_HTTP_NET_MODULE_FLAG_SECURE_OFF           = 0x20,     // HTTP connections will be non-secure
                                                                 // Cannot be used together with 
-                                                                // TCPIP_HTTP_NET_MODULE_FLAG_SECURE_ON
+                                                                // TCPIP_HTTP_NET_MODULE_FLAG_SECURE
 
     TCPIP_HTTP_NET_MODULE_FLAG_SECURE_DEFAULT       = 0x00,     //  HTTP security is based on the port numbers
 
 }TCPIP_HTTP_NET_MODULE_FLAGS;
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.2"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
 
 // HTTP module dynamic configuration data
 typedef struct
@@ -412,8 +421,8 @@ typedef struct
 
   Description:
     This function parses a string from URL encoding to plain text.  The following
-    conversions are made: ‘=’ to ‘\0’, ‘&’ to ‘\0’, ‘+’ to ‘ ‘, and
-    “%xx” to a single hex byte.
+    conversions are made: ?=? to ?\0?, ?&? to ?\0?, ?+? to ? ?, and
+    ?%xx? to a single hex byte.
 
     After completion, the data has been decoded and a null terminator
     signifies the end of a name or value.  A second null terminator (or a
@@ -498,7 +507,7 @@ const uint8_t*      TCPIP_HTTP_NET_ArgGet(const uint8_t* cData, const uint8_t* c
 //*****************************************************************************
 /*
   Function:
-    int TCPIP_HTTP_NET_ConnectionDynamicDescriptors(void);
+    size_t TCPIP_HTTP_NET_ConnectionDynamicDescriptors(void);
 
   Summary:
     Returns the number of dynamic variable descriptors
@@ -522,7 +531,7 @@ const uint8_t*      TCPIP_HTTP_NET_ArgGet(const uint8_t* cData, const uint8_t* c
 
  */
 
-int TCPIP_HTTP_NET_ConnectionDynamicDescriptors(void);
+size_t TCPIP_HTTP_NET_ConnectionDynamicDescriptors(void);
 
 
 
@@ -652,7 +661,7 @@ TCPIP_HTTP_NET_READ_STATUS  TCPIP_HTTP_NET_ConnectionPostValueRead (TCPIP_HTTP_N
   <code>
     uint8_t myBuff[20];
 
-    // Get the file handle and read from that file
+    - Get the file handle and read from that file
     SYS_FS_FileRead(myBuff, sizeof(myBuff), TCPIP_HTTP_NET_ConnectionFileGet(connHandle));
   </code>
 
@@ -693,12 +702,12 @@ SYS_FS_HANDLE  TCPIP_HTTP_NET_ConnectionFileGet(TCPIP_HTTP_NET_CONN_HANDLE connH
   
     switch(TCPIP_HTTP_NET_ConnectionPostSmGet(connHandle))
     {
-        // Find the name
+        - Find the name
         case SM_POST_LCD_READ_NAME:
          .
          .
          .
-        // Found the value, so store the LCD and return
+        - Found the value, so store the LCD and return
         case SM_POST_LCD_READ_VALUE:
          .
          .
@@ -748,19 +757,19 @@ uint16_t  TCPIP_HTTP_NET_ConnectionPostSmGet(TCPIP_HTTP_NET_CONN_HANDLE connHand
 
     switch(TCPIP_HTTP_NET_ConnectionPostSmGet(connHandle))
     {
-        // Find the name
+        - Find the name
         case SM_POST_LCD_READ_NAME:
 
-            // Read a name
+            - Read a name
             httpBuffSize = TCPIP_HTTP_NET_ConnectionDataBufferSizeGet(connHandle);
             if(TCPIP_HTTP_NET_ConnectionPostNameRead(connHandle, httpDataBuff, 
                httpBuffSize) == TCPIP_HTTP_NET_READ_INCOMPLETE)
                 return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
 
             TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_POST_LCD_READ_VALUE);
-            // No break...continue reading value
+            - No break...continue reading value
 
-        // Found the value, so store the LCD and return
+        - Found the value, so store the LCD and return
         case SM_POST_LCD_READ_VALUE:
          .
          .
@@ -847,7 +856,7 @@ uint8_t*  TCPIP_HTTP_NET_ConnectionDataBufferGet(TCPIP_HTTP_NET_CONN_HANDLE conn
 
   Example:
   <code>
-    // Read a name
+    - Read a name
     uint8_t* httpDataBuff = TCPIP_HTTP_NET_ConnectionDataBufferGet(connHandle);
     uint16_t httpDataLen = TCPIP_HTTP_NET_ConnectionDataBufferSizeGet(connHandle);
     if(TCPIP_HTTP_NET_ConnectionPostNameRead(connHandle, httpDataBuff, httpDataLen) == TCPIP_HTTP_NET_READ_INCOMPLETE)
@@ -990,13 +999,13 @@ TCPIP_HTTP_NET_STATUS         TCPIP_HTTP_NET_ConnectionStatusGet(TCPIP_HTTP_NET_
   Example:
   <code>
     byteCount = TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle);
-    int sktRxSize;
+    uint16_t sktRxSize;
     
     sktRxSize = TCPIP_HTTP_NET_ConnectionReadBufferSize(connHandle);
 
     if(byteCount > sktRxSize)
-    {   // Configuration Failure
-        // 302 Redirect will be returned
+    {   - Configuration Failure
+        - 302 Redirect will be returned
         TCPIP_HTTP_NET_ConnectionStatusSet(connHandle, TCPIP_HTTP_NET_STAT_REDIRECT);
     }
   </code>
@@ -1099,8 +1108,8 @@ void   TCPIP_HTTP_NET_ConnectionHasArgsSet(TCPIP_HTTP_NET_CONN_HANDLE connHandle
     switch(TCPIP_HTTP_NET_ConnectionPostSmGet(connHandle))
     {
         case SM_CFG_SNMP_READ_NAME:
-            // If all parameters have been read, end
-            if(TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle) == 0u)
+            - If all parameters have been read, end
+            if(TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle) == 0U)
             {
                 return TCPIP_HTTP_NET_IO_RES_DONE;
             }
@@ -1324,7 +1333,7 @@ const void*    TCPIP_HTTP_NET_ConnectionUserDataGet(TCPIP_HTTP_NET_CONN_HANDLE c
 //*****************************************************************************
 /*
   Function:
-    int TCPIP_HTTP_NET_ConnectionIndexGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
+    size_t TCPIP_HTTP_NET_ConnectionIndexGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
 
   Summary:
     Gets the index of the HTTP connection.
@@ -1343,7 +1352,7 @@ const void*    TCPIP_HTTP_NET_ConnectionUserDataGet(TCPIP_HTTP_NET_CONN_HANDLE c
 
   Example:
   <code>
-    int connIx;
+    size_t connIx;
 
     connIx = TCPIP_HTTP_NET_ConnectionIndexGet(connHandle);
   </code>
@@ -1352,12 +1361,12 @@ const void*    TCPIP_HTTP_NET_ConnectionUserDataGet(TCPIP_HTTP_NET_CONN_HANDLE c
     None
 
  */
-int TCPIP_HTTP_NET_ConnectionIndexGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
+size_t TCPIP_HTTP_NET_ConnectionIndexGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
 
 //*****************************************************************************
 /*
   Function:
-    TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(int connIx);
+    TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(size_t connIx);
 
   Summary:
     Gets the connection handle of a HTTP connection.
@@ -1386,12 +1395,12 @@ int TCPIP_HTTP_NET_ConnectionIndexGet(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
     None
 
  */
-TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(int connIx);
+TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(size_t connIx);
 
 //*****************************************************************************
 /*
   Function:
-    int    TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount);
+    size_t    TCPIP_HTTP_NET_ActiveConnectionCountGet(size_t* pOpenCount);
 
   Summary:
     Gets the number of active (and inactive) connections.
@@ -1412,9 +1421,9 @@ TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(int connIx);
 
   Example:
   <code>
-    int nConns;
+    size_t nConns;
 
-    nConns = TCPIP_HTTP_NET_ActiveConnectionCountGet(0);
+    nConns = TCPIP_HTTP_NET_ActiveConnectionCountGet(NULL);
   </code>
 
   Remarks:
@@ -1422,7 +1431,7 @@ TCPIP_HTTP_NET_CONN_HANDLE    TCPIP_HTTP_NET_ConnectionHandleGet(int connIx);
     The number of active connections changes dynamically.
 
  */
-int    TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount);
+size_t    TCPIP_HTTP_NET_ActiveConnectionCountGet(size_t* pOpenCount);
 
 
 //*****************************************************************************
@@ -1504,7 +1513,7 @@ int    TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount);
   Remarks:
     Currently a dynamic variable can have either string or int32_t parameters.
 
-    Only 16 bit values are currently supported.
+    Only 8 bit values are currently supported.
 */
 typedef enum
 {
@@ -1565,7 +1574,7 @@ typedef struct
   Remarks:
     Multiple flags con be set simultaneously.
     New flags will be eventually added.
-    Only 16-bit values are currently supported.
+    Only 8 bit values are currently supported.
 
 */
 typedef enum
@@ -1719,7 +1728,7 @@ typedef struct
 
     const char*                 fileName;       // the file containing the SSI command
     char*                       ssiCommand;     // the SSI command parsed from the command line
-    int                         nAttribs;       // number of attributes descriptors in the command
+    size_t                      nAttribs;       // number of attributes descriptors in the command
     TCPIP_HTTP_SSI_ATTR_DCPT*   pAttrDcpt;      // pointer to an array of descriptors parsed from this SSI command
 }TCPIP_HTTP_SSI_NOTIFY_DCPT;
 
@@ -1742,32 +1751,32 @@ typedef struct
     The extra pCBack parameter is passed back for allowing the user to store 
     additional info in the supplied TCPIP_HTTP_NET_USER_CALLBACK data structure that could be used at run-time.
 */
-typedef struct _tag_TCPIP_HTTP_NET_USER_CALLBACK
+typedef struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK
 {
     /*  template_ConnectionGetExecute GET process function */ 
     TCPIP_HTTP_NET_IO_RESULT (*getExecute)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                         const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+                         const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /*  template_ConnectionPostExecute POST process function */ 
     TCPIP_HTTP_NET_IO_RESULT (*postExecute)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                          const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+                          const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /*  template_ConnectionFileAuthenticate File Authenticate function */ 
     uint8_t (*fileAuthenticate)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cFile, 
-              const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+              const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /*  template_ConnectionUserAuthenticate User Authenticate function */ 
     uint8_t (*userAuthenticate)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cUser, 
-             const char* cPass, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+             const char* cPass, const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /*  template_DynPrint Dynamic variable process function */ 
     TCPIP_HTTP_DYN_PRINT_RES (*dynamicPrint)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                               const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
-                              const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+                              const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /*  template_DynAcknowledge Dynamic variable acknowledge function */ 
     void (*dynamicAck)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void* buffer, 
-          const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+          const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /* template_EventReport run-time HTTP processing report */
     void (*eventReport)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, 
-          const void* evInfo, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+          const void* evInfo, const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
     /* template_SSINotification run-time HTTP SSI processing */
-    bool (*ssiNotify)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+    bool (*ssiNotify)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct S_tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 }TCPIP_HTTP_NET_USER_CALLBACK;
 
@@ -1918,9 +1927,7 @@ bool             TCPIP_HTTP_NET_UserHandlerDeregister(TCPIP_HTTP_NET_USER_HANDLE
     Use the connection callbackPos (TCPIP_HTTP_NET_ConnectionCallbackPosGet)
     or the connection data buffer for storage associated with individual requests.
  */
-TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute 
-                      (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                      const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute (TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2003,9 +2010,7 @@ TCPIP_HTTP_NET_IO_RESULT template_ConnectionGetExecute
     Use the connection callbackPos (TCPIP_HTTP_NET_ConnectionCallbackPosGet)
     or connection data buffer for storage associated with individual requests.
  */
-TCPIP_HTTP_NET_IO_RESULT template_ConnectionPostExecute 
-                            (TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                            const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// TCPIP_HTTP_NET_IO_RESULT template_ConnectionPostExecute (TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2053,8 +2058,7 @@ TCPIP_HTTP_NET_IO_RESULT template_ConnectionPostExecute
   Remarks:
     This function may NOT write to the network transport buffer.
  */
-uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                     const char* cFile, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cFile, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2104,9 +2108,7 @@ uint8_t template_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandl
 
     This function may NOT write to the network transport buffer.
  */
-uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                                          const char* cUser, const char* cPass, 
-                                          const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* cUser, const char* cPass, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2222,16 +2224,14 @@ uint8_t template_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandl
 
 
  */
-TCPIP_HTTP_DYN_PRINT_RES template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                                      const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
-                                      const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// TCPIP_HTTP_DYN_PRINT_RES template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
     void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                                   const void* buffer, 
-                                  const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+                                  const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 
   Summary:
@@ -2263,16 +2263,14 @@ TCPIP_HTTP_DYN_PRINT_RES template_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE connHandle
     It should be kept as short as possible.
 
  */
-void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                          const void* buffer, 
-                          const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void* buffer, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
     void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
                            TCPIP_HTTP_NET_EVENT_TYPE evType, const void* evInfo, 
-                           const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+                           const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 
   Summary:
@@ -2300,8 +2298,8 @@ void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
                     - TCPIP_HTTP_NET_EVENT_FILE_CLOSE: file name pointer
 
                     - TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR: file name pointer
-                    - TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR: 0
-                    - TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR: file name pointer
+                    - TCPIP_HTTP_NET_EVENT_FNAME_ERROR: 0
+                    - TCPIP_HTTP_NET_EVENT_FNAME_SIZE_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR: file name pointer
@@ -2309,29 +2307,29 @@ void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR: dynamic variable name pointer
                     - TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR: file name pointer
-                    - TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR: file name pointer
-                    - TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR: file name pointer
+                    - TCPIP_HTTP_NET_EVENT_CK_POOL_ERROR: file name pointer
+                    - TCPIP_HTTP_NET_EVENT_BF_POOL_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR: dynamic variable name pointer
                     - TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR: SSI command pointer
-                    - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR: SSI command pointer
-                    - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR: SSI command pointer
+                    - TCPIP_HTTP_NET_EVENT_SSI_ATTR_ERROR: SSI command pointer
+                    - TCPIP_HTTP_NET_EVENT_SSI_DCPT_ALLOC_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR: string containing allocation size that failed
-                    - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR: string containing allocation size that failed
+                    - TCPIP_HTTP_NET_EVENT_SSI_ECHO_ALLOC_ERROR: string containing allocation size that failed
                     
-                    - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED: dynamic variable name pointer
-                    - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED: dynamic variable name pointer
+                    - TCPIP_HTTP_NET_EVENT_DYN_ARG_NAME_TRUNCATED: dynamic variable name pointer
+                    - TCPIP_HTTP_NET_EVENT_DYN_ARG_NUMBER_TRUNCATED: dynamic variable name pointer
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED: dynamic variable name pointer
-                    - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED: SSI argument pointer
-                    - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN: SSI attribute pointer
-                    - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH: SSI command pointer
+                    - TCPIP_HTTP_NET_EVENT_SSI_ATTR_TRUNCATED: SSI argument pointer
+                    - TCPIP_HTTP_NET_EVENT_SSI_ATTR_UNKNOWN: SSI attribute pointer
+                    - TCPIP_HTTP_NET_EVENT_SSI_ATTR_MISMATCH: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED: SSI variable pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN: SSI variable pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID: SSI variable pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED: SSI variable pointer
-                    - TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY: file name pointer 
-                    - TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY: file name pointer 
+                    - TCPIP_HTTP_NET_EVENT_CK_POOL_EMPTY: file name pointer 
+                    - TCPIP_HTTP_NET_EVENT_BF_POOL_EMPTY: file name pointer 
                     - TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED: string with excess 
                       number of bytes that cannot be read 
 
@@ -2350,14 +2348,12 @@ void template_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
     This function may NOT write to the network transport buffer.
 
  */
-void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                                 TCPIP_HTTP_NET_EVENT_TYPE evType, const void* evInfo, 
-                                 const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_NET_EVENT_TYPE evType, const void* evInfo, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
   Function:
-    bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+    bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
   Summary:
     Reports an SSI processing event that occurs in the processing of a HTTP web page
@@ -2406,7 +2402,7 @@ void template_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
 
  */
    
- bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
+// bool template_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT* pSSINotifyDcpt, TCPIP_HTTP_NET_USER_CALLBACK* pCBack);
 
 //*****************************************************************************
 /*
@@ -2477,7 +2473,7 @@ bool  TCPIP_HTTP_NET_DynamicFileInclude(TCPIP_HTTP_NET_CONN_HANDLE connHandle, c
 /*
   Function:
     bool TCPIP_HTTP_NET_DynamicWrite(const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
-                              const void * buffer, uint16_t size, bool needAck);
+                              const void * dataBuff, uint16_t size, bool needAck);
 
   Summary:
     Writes a data buffer to the current connection
@@ -2492,7 +2488,7 @@ bool  TCPIP_HTTP_NET_DynamicFileInclude(TCPIP_HTTP_NET_CONN_HANDLE connHandle, c
   Parameters:
     varDcpt    - dynamic variable descriptor as passed in the 
                  template_DynPrint function
-    buffer     - The pointer to the persistent buffer to be written to the HTTP 
+    dataBuff   - The pointer to the persistent buffer to be written to the HTTP 
                  connection as part of this dynamic variable callback
     size       - The number of bytes to be written
     needAck    - if true, once the buffer is processed internally,  
@@ -2528,7 +2524,7 @@ bool  TCPIP_HTTP_NET_DynamicFileInclude(TCPIP_HTTP_NET_CONN_HANDLE connHandle, c
  */
 
 bool TCPIP_HTTP_NET_DynamicWrite(const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, 
-                            const void * buffer, uint16_t size, bool needAck);
+                            const void * dataBuff, uint16_t size, bool needAck);
 
 
 //*****************************************************************************
@@ -2629,7 +2625,7 @@ uint16_t TCPIP_HTTP_NET_ConnectionReadIsReady(TCPIP_HTTP_NET_CONN_HANDLE connHan
 /*
   Function:
     uint16_t TCPIP_HTTP_NET_ConnectionRead(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                                           void * buffer, uint16_t size);
+                                           void * dataBuff, uint16_t size);
 
   Summary:
     Reads an array of data bytes from a connection's RX buffer.
@@ -2643,7 +2639,7 @@ uint16_t TCPIP_HTTP_NET_ConnectionReadIsReady(TCPIP_HTTP_NET_CONN_HANDLE connHan
 
   Parameters:
     connHandle - connection handle
-    buffer - The pointer to the array to store data that was read
+    dataBuff  - The pointer to the array to store data that was read
     size   - The number of bytes to be read.
 
   Returns:
@@ -2656,13 +2652,13 @@ uint16_t TCPIP_HTTP_NET_ConnectionReadIsReady(TCPIP_HTTP_NET_CONN_HANDLE connHan
 
  */
 uint16_t TCPIP_HTTP_NET_ConnectionRead(TCPIP_HTTP_NET_CONN_HANDLE connHandle, 
-                                      void * buffer, uint16_t size);
+                                      void * dataBuff, uint16_t size);
 
 //*****************************************************************************
 /*
   Function:
     uint16_t TCPIP_HTTP_NET_ConnectionPeek(TCPIP_HTTP_NET_CONN_HANDLE connHandle,  
-                void * buffer, uint16_t size);
+                void * dataBuff, uint16_t size);
 
   Summary:
     Reads a specified number of data bytes from the connection RX buffer
@@ -2676,9 +2672,9 @@ uint16_t TCPIP_HTTP_NET_ConnectionRead(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
     connHandle - a valid HTTP connection.
 
   Parameters:
-    connHandle - connection handle
-    buffer - Destination to write the peeked data bytes
-    size   - Length of bytes to peek from the connection RX buffer 
+    connHandle  - connection handle
+    dataBuff    - Destination to write the peeked data bytes
+    size        - Length of bytes to peek from the connection RX buffer 
   
 
   Return Values:
@@ -2689,7 +2685,7 @@ uint16_t TCPIP_HTTP_NET_ConnectionRead(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
  */
 
 uint16_t TCPIP_HTTP_NET_ConnectionPeek(TCPIP_HTTP_NET_CONN_HANDLE connHandle,  
-                                       void * buffer, uint16_t size);
+                                       void * dataBuff, uint16_t size);
 
 //*****************************************************************************
 /*
@@ -2788,13 +2784,13 @@ TCPIP_NET_HANDLE TCPIP_HTTP_NET_ConnectionNetHandle(TCPIP_HTTP_NET_CONN_HANDLE c
   Example:
   <code>
     uint32_t byteCount;
-    int sktRxSize;
+    uint16_t sktRxSize;
 
     byteCount = TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle);
     sktRxSize = TCPIP_HTTP_NET_ConnectionReadBufferSize(connHandle);
 
     if(byteCount > sktRxSize)
-    {   // Configuration Failure
+    {   - Configuration Failure
         TCPIP_HTTP_NET_ConnectionStatusSet(connHandle, TCPIP_HTTP_NET_STAT_REDIRECT);
         return TCPIP_HTTP_NET_IO_RES_DONE;
     }
@@ -2964,7 +2960,7 @@ bool   TCPIP_HTTP_NET_SSIVariableDelete(const char* varName);
 // *****************************************************************************
 /*
   Function:
-    int   TCPIP_HTTP_NET_SSIVariablesNumberGet(int* pMaxNo);
+    size_t   TCPIP_HTTP_NET_SSIVariablesNumberGet(size_t* pMaxNo);
 
   Summary:
     Function to get the number of the current SSI variables.
@@ -2992,12 +2988,12 @@ bool   TCPIP_HTTP_NET_SSIVariableDelete(const char* varName);
     None.
 
 */
-int   TCPIP_HTTP_NET_SSIVariablesNumberGet(int* pMaxNo);
+size_t   TCPIP_HTTP_NET_SSIVariablesNumberGet(size_t* pMaxNo);
 
 // *****************************************************************************
 /*
   Function:
-    const char*   TCPIP_HTTP_NET_SSIVariableGetByIndex(int varIndex, const char** pVarName, TCPIP_HTTP_DYN_ARG_TYPE* pVarType, int32_t* pVarInt);
+    const char*   TCPIP_HTTP_NET_SSIVariableGetByIndex(size_t varIndex, const char** pVarName, TCPIP_HTTP_DYN_ARG_TYPE* pVarType, int32_t* pVarInt);
 
   Summary:
     Function to get access to an existing SSI variable.
@@ -3035,7 +3031,7 @@ int   TCPIP_HTTP_NET_SSIVariablesNumberGet(int* pMaxNo);
     None.
 
 */
-const char*   TCPIP_HTTP_NET_SSIVariableGetByIndex(int varIndex, const char** pVarName, TCPIP_HTTP_DYN_ARG_TYPE* pVarType, int32_t* pVarInt);
+const char*   TCPIP_HTTP_NET_SSIVariableGetByIndex(size_t varIndex, const char** pVarName, TCPIP_HTTP_DYN_ARG_TYPE* pVarType, int32_t* pVarInt);
 
 
 // *****************************************************************************
@@ -3075,5 +3071,5 @@ void  TCPIP_HTTP_NET_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __HTTP_NET_H_
+#endif  // H_HTTP_NET_H_
 
