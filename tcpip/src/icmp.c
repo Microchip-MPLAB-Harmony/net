@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -56,29 +56,39 @@ typedef struct
     uint16_t wChecksum;
     uint16_t wIdentifier;
     uint16_t wSequenceNumber;
-    uint32_t wData[];      // payload
+    // uint8_t wData[];      // payload
+} ICMP_PACKET_BARE;
+
+typedef struct
+{
+    uint8_t vType;
+    uint8_t vCode;
+    uint16_t wChecksum;
+    uint16_t wIdentifier;
+    uint16_t wSequenceNumber;
+    uint8_t wData[1];      // payload
 } ICMP_PACKET;
 
-#define ICMP_TYPE_ECHO_REQUEST      8   // ICMP server is requested echo - type
-#define ICMP_CODE_ECHO_REQUEST      0   // ICMP server is requested echo - code
+#define ICMP_TYPE_ECHO_REQUEST      8U   // ICMP server is requested echo - type
+#define ICMP_CODE_ECHO_REQUEST      0U   // ICMP server is requested echo - code
 
 
-#define ICMP_TYPE_ECHO_REPLY        0   // ICMP client echo reply - type
-#define ICMP_CODE_ECHO_REPLY        0   // ICMP client echo reply - code
+#define ICMP_TYPE_ECHO_REPLY        0U   // ICMP client echo reply - type
+#define ICMP_CODE_ECHO_REPLY        0U   // ICMP client echo reply - code
 
 
 
 static int                  icmpInitCount = 0;  // ICMP module initialization count
 
-static const void*          icmpMemH = 0;       // memory handle
+static const void*          icmpMemH = NULL;       // memory handle
 
-static tcpipSignalHandle    signalHandle = 0;   // registered signal handler   
+static TCPIP_SIGNAL_HANDLE    signalHandle = NULL;   // registered signal handler   
 
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
 
-typedef struct _tag_ICMP_ECHO_REQUEST_NODE
+typedef struct S_tag_ICMP_ECHO_REQUEST_NODE
 {
-    struct _tag_ICMP_ECHO_REQUEST_NODE* next;       // safe cast to SGL_LIST_NODE
+    struct S_tag_ICMP_ECHO_REQUEST_NODE* next;       // safe cast to SGL_LIST_NODE
     uint32_t                            reqStart;   // tick when the request started 
     TCPIP_ICMP_ECHO_REQUEST             request;    // associated request
 }ICMP_ECHO_REQUEST_NODE;
@@ -100,46 +110,124 @@ static void TCPIP_ICMP_Cleanup(void);
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 #if defined(TCPIP_STACK_USE_ICMP_SERVER)
-static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint32_t destAdd, uint32_t srcAdd);
+static bool F_ICMPProcessEchoRequest(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint32_t destAdd, uint32_t srcAdd);
 #endif // defined(TCPIP_STACK_USE_ICMP_SERVER)
 
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
-static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen);
-static void _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pkt, const void* ackParam);
+static IPV4_PACKET * F_ICMPAllocateTxPacketStruct (uint16_t totICMPLen);
+static void F_ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam);
 static void  TCPIP_ICMP_Timeout(void);
 
-static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) _ICMPRequestListLock(void)
+static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) F_ICMPRequestListLock(void)
 {
     return OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 }
 
-static __inline__ void __attribute__((always_inline)) _ICMPRequestListUnlock(OSAL_CRITSECT_DATA_TYPE lock)
+static __inline__ void __attribute__((always_inline)) F_ICMPRequestListUnlock(OSAL_CRITSECT_DATA_TYPE lock)
 {
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, lock);   
 }
 #endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT)
 
 #if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
-#define _TCPIP_IPV4_FRAGMENTATION 1
+#define M_TCPIP_IPV4_FRAGMENTATION 1
 #else
-#define _TCPIP_IPV4_FRAGMENTATION 0
+#define M_TCPIP_IPV4_FRAGMENTATION 0
 #endif
 
 
-#if (_TCPIP_IPV4_FRAGMENTATION != 0)
-static void     _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes);
+#if (M_TCPIP_IPV4_FRAGMENTATION != 0)
+static void     F_ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes);
 #else
-static __inline__ void __attribute__((always_inline)) _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
+static __inline__ void __attribute__((always_inline)) F_ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes);
 }
-#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (M_TCPIP_IPV4_FRAGMENTATION != 0)
 
 
-
-bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_ICMP_MODULE_CONFIG* const pIcmpInit)
+// conversion functions/helpers
+//
+#if defined(TCPIP_STACK_USE_ICMP_CLIENT)
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_ReqNode2SglNode(ICMP_ECHO_REQUEST_NODE* pReqNode)
 {
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    union
+    {
+        ICMP_ECHO_REQUEST_NODE* pReqNode;
+        SGL_LIST_NODE*  node;
+    }U_REQ_NODE_SGL_NODE;
+
+    U_REQ_NODE_SGL_NODE.pReqNode = pReqNode;
+    return U_REQ_NODE_SGL_NODE.node;
+}
+
+static __inline__ ICMP_ECHO_REQUEST_NODE* __attribute__((always_inline)) FC_SglNode2ReqNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        ICMP_ECHO_REQUEST_NODE* pReqNode;
+    }U_SGL_NODE_REQ_NODE;
+
+    U_SGL_NODE_REQ_NODE.node = node;
+    return U_SGL_NODE_REQ_NODE.pReqNode;
+}
+
+static __inline__ ICMP_ECHO_REQUEST_NODE* __attribute__((always_inline)) FC_IcmpH2ReqNode(TCPIP_ICMP_REQUEST_HANDLE icmpHandle)
+{
+    union
+    {
+        TCPIP_ICMP_REQUEST_HANDLE icmpHandle;
+        ICMP_ECHO_REQUEST_NODE* pReqNode;
+    }U_ICMP_H_REQ_NODE;
+
+    U_ICMP_H_REQ_NODE.icmpHandle = icmpHandle;
+    return U_ICMP_H_REQ_NODE.pReqNode;
+}
+#endif
+
+static __inline__ IPV4_PACKET* __attribute__((always_inline)) FC_MacPkt2Ip4Pkt(TCPIP_MAC_PACKET* pMacPkt)
+{
+    union
+    {
+        TCPIP_MAC_PACKET* pMacPkt;
+        IPV4_PACKET*  pIpPkt;
+    }U_MAC_PKT_IP4_PKT;
+
+    U_MAC_PKT_IP4_PKT.pMacPkt = pMacPkt;
+    return U_MAC_PKT_IP4_PKT.pIpPkt;
+}
+
+static __inline__ ICMP_PACKET* __attribute__((always_inline)) FC_U8Ptr2IcmpPkt(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t*      pBuff;
+        ICMP_PACKET*  pIcmpPkt;
+    }U_PTR8_ICMP_PKT;
+
+    U_PTR8_ICMP_PKT.pBuff = pBuff;
+    return U_PTR8_ICMP_PKT.pIcmpPkt;
+}
+
+static __inline__ IPV4_HEADER* __attribute__((always_inline)) FC_U8Ptr2Ip4Hdr(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t*      pBuff;
+        IPV4_HEADER*  pIp4Hdr;
+    }U_PTR8_IP4_HDR;
+
+    U_PTR8_IP4_HDR.pBuff = pBuff;
+    return U_PTR8_IP4_HDR.pIp4Hdr;
+}
+
+///////////////////////////////////////
+//
+
+bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
+{
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
@@ -154,9 +242,9 @@ bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         while(true)
         {
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
-            iniRes = (signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ICMP_Task, TCPIP_ICMP_TASK_TICK_RATE)) != 0;
+            iniRes = (signalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_ICMP_Task, TCPIP_ICMP_TASK_TICK_RATE)) != NULL;
 #else
-            iniRes = (signalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ICMP_Task, 0)) != 0;
+            iniRes = (signalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_ICMP_Task, 0)) != NULL;
 #endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT)
             if(iniRes == false)
             {
@@ -165,14 +253,15 @@ bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
             TCPIP_Helper_SingleListInitialize(&echoRequestFreeList);
             TCPIP_Helper_SingleListInitialize(&echoRequestBusyList);
-            int ix;
+            size_t ix;
             ICMP_ECHO_REQUEST_NODE* pNode = echoRequestPool;
-            for(ix = 0; ix < sizeof(echoRequestPool) / sizeof(*echoRequestPool); ix++, pNode++)
+            for(ix = 0; ix < sizeof(echoRequestPool) / sizeof(*echoRequestPool); ix++)
             {
-                TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pNode);
+                TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, FC_ReqNode2SglNode(pNode));
+                pNode++;
             }
 
-            icmpEchoTmo = (TCPIP_ICMP_ECHO_REQUEST_TIMEOUT * SYS_TMR_TickCounterFrequencyGet() + 999) / 1000;
+            icmpEchoTmo = ((uint32_t)TCPIP_ICMP_ECHO_REQUEST_TIMEOUT * SYS_TMR_TickCounterFrequencyGet() + 999U) / 1000U;
 #endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT)
             break;
         }
@@ -202,7 +291,7 @@ void TCPIP_ICMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     {   // we're up and running
         // one way or another this interface is going down
 
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // stack shut down
             if(--icmpInitCount == 0)
             {   // all closed. release resources
@@ -214,26 +303,27 @@ void TCPIP_ICMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
 static void TCPIP_ICMP_Cleanup(void)
 {
-    if(signalHandle)
+    if(signalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(signalHandle);
-        signalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(signalHandle);
+        signalHandle = NULL;
     }
-    icmpMemH = 0;
+    icmpMemH = NULL;
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 #if defined (TCPIP_STACK_USE_ICMP_CLIENT)
 
-static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen)
+static IPV4_PACKET * F_ICMPAllocateTxPacketStruct (uint16_t totICMPLen)
 {
     IPV4_PACKET * ptrPacket;
 
-    ptrPacket = (IPV4_PACKET*)TCPIP_PKT_SocketAlloc(sizeof(IPV4_PACKET), totICMPLen, 0, TCPIP_MAC_PKT_FLAG_ICMPV4 | TCPIP_MAC_PKT_FLAG_IPV4 | TCPIP_MAC_PKT_FLAG_TX);
+    TCPIP_MAC_PACKET* pMacPkt = TCPIP_PKT_SocketAlloc((uint16_t)sizeof(IPV4_PACKET), totICMPLen, 0U, (TCPIP_MAC_PACKET_FLAGS)(TCPIP_MAC_PKT_FLAG_ICMPV4 | TCPIP_MAC_PKT_FLAG_IPV4 | (uint32_t)TCPIP_MAC_PKT_FLAG_TX));
+    ptrPacket = FC_MacPkt2Ip4Pkt(pMacPkt);
 
-    if (ptrPacket != 0)
+    if (ptrPacket != NULL)
     {
-        TCPIP_PKT_PacketAcknowledgeSet(&ptrPacket->macPkt, _ICMPTxPktAcknowledge, 0);
+        TCPIP_PKT_PacketAcknowledgeSet(&ptrPacket->macPkt, &F_ICMPTxPktAcknowledge, NULL);
     }
 
     return ptrPacket;
@@ -241,7 +331,7 @@ static IPV4_PACKET * _ICMPAllocateTxPacketStruct (uint16_t totICMPLen)
 
 // packet deallocation function
 // packet was transmitted by the IP layer
-static void _ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
+static void F_ICMPTxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
 {
     TCPIP_PKT_PacketFree(pTxPkt);
 }
@@ -253,22 +343,22 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
     uint16_t        pktSize;
     ICMP_ECHO_RESULT res;
 
-    if(pHandle)
+    if(pHandle != NULL)
     {
-        *pHandle = 0;
+        *pHandle = NULL;
     }
 
-    if(pEchoRequest == 0)
+    if(pEchoRequest == NULL)
     {
         return ICMP_ECHO_PARAMETER_ERROR;
     }
 
     // get an echo request from pool
-    OSAL_CRITSECT_DATA_TYPE lock = _ICMPRequestListLock();
-    ICMP_ECHO_REQUEST_NODE* pReqNode = (ICMP_ECHO_REQUEST_NODE*)TCPIP_Helper_SingleListHeadRemove(&echoRequestFreeList);
-    _ICMPRequestListUnlock(lock);
+    OSAL_CRITSECT_DATA_TYPE lock = F_ICMPRequestListLock();
+    ICMP_ECHO_REQUEST_NODE* pReqNode = FC_SglNode2ReqNode(TCPIP_Helper_SingleListHeadRemove(&echoRequestFreeList));
+    F_ICMPRequestListUnlock(lock);
     
-    if(pReqNode == 0)
+    if(pReqNode == NULL)
     {   // too many going on
         return ICMP_ECHO_BUSY;
     }
@@ -276,15 +366,15 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
     while(true)
     {
         // allocate TX packet
-        pktSize = sizeof(ICMP_PACKET) + pEchoRequest->dataSize;
-        pTxPkt = _ICMPAllocateTxPacketStruct(pktSize);
-        if(pTxPkt == 0)
+        pktSize = (uint16_t)sizeof(ICMP_PACKET_BARE) + pEchoRequest->dataSize;
+        pTxPkt = F_ICMPAllocateTxPacketStruct(pktSize);
+        if(pTxPkt == NULL)
         {
             res = ICMP_ECHO_ALLOC_ERROR;
             break;
         }
 
-        pICMPPkt = (ICMP_PACKET*)pTxPkt->macPkt.pTransportLayer;
+        pICMPPkt = FC_U8Ptr2IcmpPkt(pTxPkt->macPkt.pTransportLayer);
 
         pICMPPkt->vType = ICMP_TYPE_ECHO_REQUEST; 
         pICMPPkt->vCode = ICMP_CODE_ECHO_REQUEST;
@@ -292,12 +382,12 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
         pICMPPkt->wIdentifier = pEchoRequest->identifier;
         pICMPPkt->wSequenceNumber = pEchoRequest->sequenceNumber;
         
-        memcpy(pICMPPkt->wData, pEchoRequest->pData, pEchoRequest->dataSize);
+        (void)memcpy(pICMPPkt->wData, pEchoRequest->pData, pEchoRequest->dataSize);
         pICMPPkt->wChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pICMPPkt, pktSize, 0);
         pTxPkt->destAddress.Val = pEchoRequest->targetAddr.Val;
 
         pTxPkt->netIfH = TCPIP_IPV4_SelectSourceInterface(pEchoRequest->netH, &pTxPkt->destAddress, &pTxPkt->srcAddress, false);
-        if(pTxPkt->netIfH == 0)
+        if(pTxPkt->netIfH == NULL)
         {   // could not find an route
             res = ICMP_ECHO_ROUTE_ERROR;
             break;
@@ -305,7 +395,7 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
 
         pReqNode->request = *pEchoRequest;
         pTxPkt->macPkt.pDSeg->segLen += pktSize;
-        TCPIP_IPV4_PacketFormatTx(pTxPkt, IP_PROT_ICMP, pktSize, 0);
+        TCPIP_IPV4_PacketFormatTx(pTxPkt, (uint8_t)IP_PROT_ICMP, pktSize, NULL);
         TCPIP_PKT_FlightLogTx(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID);
         if(!TCPIP_IPV4_PacketTransmit(pTxPkt))
         {
@@ -317,11 +407,11 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
         pReqNode->reqStart = SYS_TMR_TickCountGet();
 
         // success; mark as busy
-        lock = _ICMPRequestListLock();
-        TCPIP_Helper_SingleListTailAdd(&echoRequestBusyList, (SGL_LIST_NODE*)pReqNode);
-        _ICMPRequestListUnlock(lock);
+        lock = F_ICMPRequestListLock();
+        TCPIP_Helper_SingleListTailAdd(&echoRequestBusyList, FC_ReqNode2SglNode(pReqNode));
+        F_ICMPRequestListUnlock(lock);
     
-        if(pHandle)
+        if(pHandle != NULL)
         {
             *pHandle = pReqNode;
         }
@@ -330,11 +420,11 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
     }
 
     // some error
-    lock = _ICMPRequestListLock();
-    TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pReqNode);
-    _ICMPRequestListUnlock(lock);
+    lock = F_ICMPRequestListLock();
+    TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, FC_ReqNode2SglNode(pReqNode));
+    F_ICMPRequestListUnlock(lock);
 
-    if(pTxPkt != 0)
+    if(pTxPkt != NULL)
     {
         TCPIP_PKT_PacketFree(&pTxPkt->macPkt);
     }
@@ -345,30 +435,34 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
 // cancel a echo request
 ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestCancel (TCPIP_ICMP_REQUEST_HANDLE icmpHandle)
 {
-    if(icmpHandle != 0)
+    if(icmpHandle != NULL)
     {
         // traverse the busy list
-        OSAL_CRITSECT_DATA_TYPE lock = _ICMPRequestListLock();
+        OSAL_CRITSECT_DATA_TYPE lock = F_ICMPRequestListLock();
 
         ICMP_ECHO_REQUEST_NODE* pNode, *prev, *pFound;
-        for(pFound = 0, prev = 0, pNode = (ICMP_ECHO_REQUEST_NODE*)echoRequestBusyList.head; pNode != 0; prev = pNode, pNode = pNode->next)
+        pFound = prev = NULL;
+        pNode = FC_SglNode2ReqNode(echoRequestBusyList.head);
+        while(pNode != NULL)
         {
-            if(pNode == (ICMP_ECHO_REQUEST_NODE*)icmpHandle)
+            if(pNode == FC_IcmpH2ReqNode(icmpHandle))
             {   // found it
                 pFound = pNode;
                 break;
             }
+            prev = pNode;
+            pNode = pNode->next;
         }
 
-        if(pFound)
+        if(pFound != NULL)
         {
-            TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, (SGL_LIST_NODE*) prev);
-            TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pFound);
+            (void)TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, FC_ReqNode2SglNode(prev));
+            TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, FC_ReqNode2SglNode(pFound));
         }
 
-        _ICMPRequestListUnlock(lock);
+        F_ICMPRequestListUnlock(lock);
 
-        return pFound? ICMP_ECHO_OK : ICMP_ECHO_BAD_HANDLE;
+        return pFound != NULL? ICMP_ECHO_OK : ICMP_ECHO_BAD_HANDLE;
     }
 
     return ICMP_ECHO_BAD_HANDLE;
@@ -381,15 +475,15 @@ void  TCPIP_ICMP_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_RX_PENDING) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_RX_PENDING) != 0U)
     { //  RX signal occurred
         TCPIP_ICMP_Process();
     }
 
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
-    if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
     { // regular TMO occurred
         TCPIP_ICMP_Timeout();
     }
@@ -414,13 +508,13 @@ static void  TCPIP_ICMP_Process(void)
 
 
     // extract queued ICMP packets
-    while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
+    while((pRxPkt = TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != NULL)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
-        pRxHdr = (ICMP_PACKET*)pRxPkt->pTransportLayer;
+        pRxHdr = FC_U8Ptr2IcmpPkt(pRxPkt->pTransportLayer);
         ackRes = TCPIP_MAC_PKT_ACK_RX_OK;
 
-        pIpv4Header = (IPV4_HEADER*)pRxPkt->pNetLayer;
+        pIpv4Header = FC_U8Ptr2Ip4Hdr(pRxPkt->pNetLayer);
         srcAdd =  pIpv4Header->SourceAddress.Val;
 
 
@@ -428,7 +522,7 @@ static void  TCPIP_ICMP_Process(void)
         {
             icmpTotLength = pRxPkt->totTransportLen;    // length of the 1st segment (if fragmented)
 
-            if(icmpTotLength < sizeof(*pRxHdr))
+            if(icmpTotLength < sizeof(ICMP_PACKET_BARE))
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
@@ -438,19 +532,19 @@ static void  TCPIP_ICMP_Process(void)
             // The checksum data includes the precomputed checksum in the header
             // so a valid packet will always have a checksum of 0x0000
             // do it across all fragment segments
-#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+#if (M_TCPIP_IPV4_FRAGMENTATION != 0)
             TCPIP_MAC_PACKET* pFragPkt;
             checksum = 0;
-            for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
+            for(pFragPkt = pRxPkt; pFragPkt != NULL; pFragPkt = pFragPkt->pkt_next)
             {
                 checksum = ~TCPIP_Helper_PacketChecksum(pFragPkt, pFragPkt->pTransportLayer, pFragPkt->totTransportLen, checksum);
             }
             checksum = ~checksum;
 #else
             checksum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pRxHdr, icmpTotLength, 0);
-#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (M_TCPIP_IPV4_FRAGMENTATION != 0)
 
-            if(checksum != 0)
+            if(checksum != 0U)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
                 break;
@@ -460,14 +554,14 @@ static void  TCPIP_ICMP_Process(void)
             if(pRxHdr->vType == ICMP_TYPE_ECHO_REQUEST && pRxHdr->vCode == ICMP_CODE_ECHO_REQUEST)
             {   // echo request
 #if (TCPIP_ICMP_ECHO_ALLOW_BROADCASTS == 0)
-                if(TCPIP_STACK_IsBcastAddress((TCPIP_NET_IF*)pRxPkt->pktIf, &pIpv4Header->DestAddress))
+                if(TCPIP_STACK_IsBcastAddress((const TCPIP_NET_IF*)pRxPkt->pktIf, &pIpv4Header->DestAddress))
                 {
                     ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;  // ignore request
                     break;  
                 }
 #endif  // (TCPIP_ICMP_ECHO_ALLOW_BROADCASTS == 0)
 
-                _ICMPProcessEchoRequest((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, pIpv4Header->DestAddress.Val, srcAdd);
+                (void)F_ICMPProcessEchoRequest((const TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, pIpv4Header->DestAddress.Val, srcAdd);
                 ackRes = TCPIP_MAC_PKT_ACK_NONE;
                 break;
             }
@@ -477,34 +571,38 @@ static void  TCPIP_ICMP_Process(void)
             if(pRxHdr->vType == ICMP_TYPE_ECHO_REPLY && pRxHdr->vCode == ICMP_CODE_ECHO_REPLY)
             {   // echo reply; check if our own
 
-                OSAL_CRITSECT_DATA_TYPE lock = _ICMPRequestListLock();
+                OSAL_CRITSECT_DATA_TYPE lock = F_ICMPRequestListLock();
 
                 ICMP_ECHO_REQUEST_NODE* pNode, *prev, *pFound;
-                for(pFound = 0, prev = 0, pNode = (ICMP_ECHO_REQUEST_NODE*)echoRequestBusyList.head; pNode != 0; prev = pNode, pNode = pNode->next)
+                pFound = prev = NULL;
+                pNode = FC_SglNode2ReqNode(echoRequestBusyList.head);
+                while(pNode != NULL)
                 {   // Get the sequence number and identifier fields
                     if(pNode->request.identifier == pRxHdr->wIdentifier && pNode->request.sequenceNumber == pRxHdr->wSequenceNumber)
                     {   // our reply
                         pFound = pNode;
                         break;
                     }
+                    prev = pNode;
+                    pNode = pNode->next;
                 }
 
-                if(pFound)
+                if(pFound != NULL)
                 {
                     echoResult = pFound->request;
 
-                    TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, (SGL_LIST_NODE*) prev);
-                    TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pFound);
+                    (void)TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, FC_ReqNode2SglNode(prev));
+                    TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, FC_ReqNode2SglNode(pFound));
                 }
 
-                _ICMPRequestListUnlock(lock);
+                F_ICMPRequestListUnlock(lock);
 
-                if(pFound)
+                if(pFound != NULL)
                 {
-                    echoResult.pData = (uint8_t*)pRxHdr->wData;
-                    echoResult.dataSize = icmpTotLength - sizeof(*pRxHdr);
+                    echoResult.pData = pRxHdr->wData;
+                    echoResult.dataSize = icmpTotLength - (uint16_t)sizeof(ICMP_PACKET_BARE);
                     echoResult.targetAddr.Val = srcAdd; // update the target
-                    if(echoResult.callback != 0)
+                    if(echoResult.callback != NULL)
                     {
                         (echoResult.callback)(&echoResult, pFound, TCPIP_ICMP_ECHO_REQUEST_RES_OK, echoResult.param);
                     }
@@ -521,7 +619,7 @@ static void  TCPIP_ICMP_Process(void)
 
         if(ackRes != TCPIP_MAC_PKT_ACK_NONE)
         {
-            _ICMPRxPktAcknowledge(pRxPkt, ackRes); 
+            F_ICMPRxPktAcknowledge(pRxPkt, ackRes); 
         }
     }
 }
@@ -534,30 +632,33 @@ static void  TCPIP_ICMP_Timeout(void)
     ICMP_ECHO_REQUEST_NODE* pNode, *prev;
     SINGLE_LIST expiredList;
 
-    prev = 0;
+    prev = NULL;
     uint32_t currTick = SYS_TMR_TickCountGet();
     TCPIP_Helper_SingleListInitialize(&expiredList);
 
-    OSAL_CRITSECT_DATA_TYPE lock = _ICMPRequestListLock();
-    for(pNode = (ICMP_ECHO_REQUEST_NODE*)echoRequestBusyList.head; pNode != 0; prev = pNode, pNode = pNode->next)
+    OSAL_CRITSECT_DATA_TYPE lock = F_ICMPRequestListLock();
+    pNode = FC_SglNode2ReqNode(echoRequestBusyList.head);
+    while(pNode != NULL)
     {
         if((currTick - pNode->reqStart) >= icmpEchoTmo) 
         {   // expired: mark it as invalid
-            TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, (SGL_LIST_NODE*) prev);
-            TCPIP_Helper_SingleListTailAdd(&expiredList, (SGL_LIST_NODE*)pNode);
+            (void)TCPIP_Helper_SingleListNextRemove(&echoRequestBusyList, FC_ReqNode2SglNode(prev));
+            TCPIP_Helper_SingleListTailAdd(&expiredList, FC_ReqNode2SglNode(pNode));
         }
+        prev = pNode;
+        pNode = pNode->next;
     }
 
-    _ICMPRequestListUnlock(lock);
+    F_ICMPRequestListUnlock(lock);
 
     // traverse the expired list
-    while((pNode = (ICMP_ECHO_REQUEST_NODE*)TCPIP_Helper_SingleListHeadRemove(&expiredList)) != 0)
+    while((pNode = FC_SglNode2ReqNode(TCPIP_Helper_SingleListHeadRemove(&expiredList))) != NULL)
     {
-        if(pNode->request.callback != 0)
+        if(pNode->request.callback != NULL)
         {
             (pNode->request.callback)(&pNode->request, pNode, TCPIP_ICMP_ECHO_REQUEST_RES_TMO, pNode->request.param);
         }
-        TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, (SGL_LIST_NODE*)pNode);
+        TCPIP_Helper_SingleListTailAdd(&echoRequestFreeList, FC_ReqNode2SglNode(pNode));
     }
 }
 #endif  // defined(TCPIP_STACK_USE_ICMP_CLIENT)
@@ -567,7 +668,7 @@ static void  TCPIP_ICMP_Timeout(void)
 // echo request
 // use the same packet for reply
 // it will be acknowledged by the MAC after transmission
-static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint32_t destAdd, uint32_t srcAdd)
+static bool F_ICMPProcessEchoRequest(const TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint32_t destAdd, uint32_t srcAdd)
 {
     ICMP_PACKET* pTxHdr;
     TCPIP_UINT16_VAL checksum;
@@ -575,12 +676,12 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     IPV4_HEADER* pIpv4Hdr;
 
     // adjust the checksum
-    pTxHdr = (ICMP_PACKET*)pRxPkt->pTransportLayer;
+    pTxHdr = FC_U8Ptr2IcmpPkt(pRxPkt->pTransportLayer);
 
     pTxHdr->vType = ICMP_TYPE_ECHO_REPLY;
     pTxHdr->vCode = ICMP_CODE_ECHO_REPLY;
     checksum.Val = pTxHdr->wChecksum;
-    checksum.v[0] += 8; // Subtract 0x0800 from the checksum
+    checksum.v[0] += 8U; // Subtract 0x0800 from the checksum
     if(checksum.v[0] < 8u)
     {
         checksum.v[1]++;
@@ -591,26 +692,26 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     }
 
     pTxHdr->wChecksum = checksum.Val;
-    pRxPkt->next = 0; // single packet
+    pRxPkt->next = NULL; // single packet
 
-#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+#if (M_TCPIP_IPV4_FRAGMENTATION != 0)
     TCPIP_MAC_PACKET* pFragPkt;
-    for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
+    for(pFragPkt = pRxPkt; pFragPkt != NULL; pFragPkt = pFragPkt->pkt_next)
     {
         TCPIP_PKT_FlightLogTx(pFragPkt, TCPIP_THIS_MODULE_ID);
         TCPIP_IPV4_MacPacketSwitchTxToRx(pFragPkt, true, pFragPkt != pRxPkt); 
-        pFragPkt->next = 0; // single packet
+        pFragPkt->next = NULL; // single packet
     }
 
     // set proper address fields
-    pIpv4Hdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    pIpv4Hdr = FC_U8Ptr2Ip4Hdr(pRxPkt->pNetLayer);
     ipv4Pkt.srcAddress.Val = pIpv4Hdr->SourceAddress.Val;
     ipv4Pkt.destAddress.Val = pIpv4Hdr->DestAddress.Val;
     ipv4Pkt.netIfH = pNetIf;
     
     if(!TCPIP_IPV4_PktTx(&ipv4Pkt, pRxPkt, false))
     {   // failed; discard the segments (these are RX MAC buffers)
-        for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragPkt->pkt_next)
+        for(pFragPkt = pRxPkt; pFragPkt != NULL; pFragPkt = pFragPkt->pkt_next)
         {
             TCPIP_PKT_PacketAcknowledge(pFragPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR);
         }
@@ -620,7 +721,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     TCPIP_IPV4_MacPacketSwitchTxToRx(pRxPkt, true, false); 
 
     // set proper address fields
-    pIpv4Hdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
+    pIpv4Hdr = FC_U8Ptr2Ip4Hdr(pRxPkt->pNetLayer);
     ipv4Pkt.srcAddress.Val = pIpv4Hdr->SourceAddress.Val;
     ipv4Pkt.destAddress.Val = pIpv4Hdr->DestAddress.Val;
     ipv4Pkt.netIfH = pNetIf;
@@ -631,7 +732,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
         TCPIP_PKT_PacketAcknowledge(pRxPkt, TCPIP_MAC_PKT_ACK_MAC_REJECT_ERR);
         return false;
     }
-#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (M_TCPIP_IPV4_FRAGMENTATION != 0)
 
     // went through
     return true;
@@ -639,20 +740,22 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
 #endif // defined(TCPIP_STACK_USE_ICMP_SERVER)
 
 
-#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+#if (M_TCPIP_IPV4_FRAGMENTATION != 0)
 
-static void _ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
+static void F_ICMPRxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_MAC_PACKET *pFragPkt, *pFragNext;
 
-    for(pFragPkt = pRxPkt; pFragPkt != 0; pFragPkt = pFragNext)
+    pFragPkt = pRxPkt;
+    while(pFragPkt != NULL)
     {
         pFragNext = pFragPkt->pkt_next;
         TCPIP_PKT_PacketAcknowledge(pFragPkt, ackRes); 
+        pFragPkt = pFragNext;
     }
 }
 
-#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (M_TCPIP_IPV4_FRAGMENTATION != 0)
 
 #endif //#if defined(TCPIP_STACK_USE_ICMP_SERVER) || defined(TCPIP_STACK_USE_ICMP_CLIENT)
 #endif  // defined(TCPIP_STACK_USE_IPV4)

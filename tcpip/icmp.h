@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -51,8 +51,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __ICMP_H
-#define __ICMP_H
+#ifndef H_ICMP_H
+#define H_ICMP_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -104,7 +104,7 @@ typedef enum
     structure may identify the request, if no reply was received (for example timeout)
 
 */
-typedef struct _tag_TCPIP_ICMP_ECHO_REQUEST
+typedef struct S_tag_TCPIP_ICMP_ECHO_REQUEST
 {
     TCPIP_NET_HANDLE    netH;       // input: The handle of the network interface to use for the request.
                                     //        Can be 0 if a default interface is to be selected 
@@ -121,7 +121,7 @@ typedef struct _tag_TCPIP_ICMP_ECHO_REQUEST
                                     // callback : pointer to the received data buffer
     uint16_t            dataSize;   // input: number of bytes in the input data buffer
                                     // callback: number of bytes in the received data buffer
-    void (*callback)(const struct _tag_TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
+    void (*callback)(const struct S_tag_TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
                                     // callback function to be called
                                     // when a reply/error is received
                                     // result indicates the reason for the call
@@ -194,8 +194,8 @@ typedef struct
 
   Example:
   <code>
-    uint8_t  myDataBuffer[200];     // buffer for the ping data
-    void EchoCallback(TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result);    // callback function to be called
+    uint8_t  myDataBuffer[200];     - buffer for the ping data
+    void EchoCallback(TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result);    - callback function to be called
 
     TCPIP_ICMP_ECHO_REQUEST myEchoRequest;
     myEchoRequest.netH  = 0;
@@ -209,13 +209,13 @@ typedef struct
 
     if(TCPIP_ICMP_EchoRequest(&myEchoRequest, 0) == ICMP_ECHO_OK )
     {
-        // successfully sent the ICMP request
-        //
-        // EchoCallback() will be called and data can be examined
+        - successfully sent the ICMP request
+        -
+        - EchoCallback() will be called and data can be examined
     }
     else
     {
-        // process the error
+        - process the error
     }
   </code>
 
@@ -303,4 +303,4 @@ void  TCPIP_ICMP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __ICMP_H
+#endif  // H_ICMP_H
