@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DHCPV6_H
-#define __DHCPV6_H
+#ifndef H_DHCPV6_H
+#define H_DHCPV6_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -88,6 +88,7 @@ typedef enum
     TCPIP_DHCPV6_CLIENT_RES_ARG_ERR    = -4,   // bad argument supplied
     TCPIP_DHCPV6_CLIENT_RES_IX_ERR     = -5,   // bad index supplied
     TCPIP_DHCPV6_CLIENT_RES_NO_ADDR    = -6,   // no such address
+    TCPIP_DHCPV6_CLIENT_RES_NO_SRVC    = -7,   // service not running
 
     
 
@@ -102,6 +103,9 @@ typedef enum
   Description:
     This enumeration lists the current status of the DHCPv6 module.
     Used in getting info about the DHCPv6 state machine. 
+
+  Remarks:
+    16 bit values only!
  */
 typedef enum
 {
@@ -160,7 +164,7 @@ typedef enum
 // 16 bits only
 typedef enum
 {
-    TCPIP_DHCPV6_IA_SUBSTATE_START,        // message start/preparation
+    TCPIP_DHCPV6_IA_SUBSTATE_START = 0,    // message start/preparation
     TCPIP_DHCPV6_IA_SUBSTATE_IDELAY,       // message wait for iDelay
     TCPIP_DHCPV6_IA_SUBSTATE_TRANSMIT,     // send/transmit message
     TCPIP_DHCPV6_IA_SUBSTATE_WAIT_REPLY,   // wait message reply
@@ -328,7 +332,7 @@ typedef struct
                                                 // if < 0, it will just return the 1st index available
     TCPIP_DHCPV6_IA_STATE       iaState;        // IA state to look for
                                                 // if < 0 the search will look into the free (not currently used) IA list
-    void*                       statusBuff;     //  buffer to copy the latest status message associated with this IA
+    uint8_t*                    statusBuff;     //  buffer to copy the latest status message associated with this IA
     size_t                      statusBuffSize; // size of this buffer
 
     // output parameters
@@ -396,7 +400,7 @@ typedef struct
     // last status code for the client
     TCPIP_DHCPV6_SERVER_STATUS_CODE lastStatusCode;
     // buffer to copy the latest status message associated with the client
-    void*                       statusBuff;
+    uint8_t*                    statusBuff;
     // size of this buffer
     size_t                      statusBuffSize;
     // number of DNS servers
@@ -408,7 +412,7 @@ typedef struct
     // size of domainSearchList
     size_t                      domainSearchListSize;
     // buffer to store the domain Search list obtained from the DHCPv6 server
-    void*                       domainBuff;
+    uint8_t*                    domainBuff;
     // size of this buffer
     size_t                      domainBuffSize;
     
@@ -547,7 +551,7 @@ void  TCPIP_DHCPV6_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __DHCPV6_H
+#endif  // H_DHCPV6_H
 
 /*
  End of File
