@@ -15,7 +15,7 @@ Domain Name System (DNS) server Header file
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,16 +45,16 @@ Microchip or any third party.
 
 
 
-#ifndef _DNSS_MANAGER_H_
-#define _DNSS_MANAGER_H_
+#ifndef H_DNSS_MANAGER_H_
+#define H_DNSS_MANAGER_H_
 
 
 
 
 // DNSs.c function prototypes
-bool        TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DNSS_MODULE_CONFIG* pDnsConfig);
+bool        TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 void        TCPIP_DNSS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
-#endif  // _DNSS_MANAGER_H_
+#endif  // H_DNSS_MANAGER_H_
 

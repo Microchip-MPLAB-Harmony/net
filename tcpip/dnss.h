@@ -15,7 +15,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,8 +45,8 @@ Microchip or any third party.
 
 
 //DOM-IGNORE-END
-#ifndef __DNSS_H
-#define __DNSS_H
+#ifndef H_DNSS_H_
+#define H_DNSS_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -316,8 +316,7 @@ IP_MULTI_ADDRESS* pAdd,uint32_t entryTimeout);
 //*****************************************************************************
 /*
   Function:
-    TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,
-                        int index,IP_MULTI_ADDRESS* pGetAdd,uint32_t *ttltime);
+    TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t* hostName, IP_ADDRESS_TYPE type, size_t index, IP_MULTI_ADDRESS* pGetAdd, uint32_t* ttlTime);
 
   Summary:
     Get DNS server IP address details from resolver pool entry.
@@ -336,7 +335,7 @@ IP_MULTI_ADDRESS* pAdd,uint32_t entryTimeout);
                DNS record type) this can be used for DNS record type
     index    - get the next entry after this index value
     pGetAdd  - get the zero th IPv4 or IPv6 address
-    ttltime  - timeout value
+    ttlTime  - timeout value
     
   Returns:
     TCPIP_DNSS_RESULT
@@ -344,12 +343,12 @@ IP_MULTI_ADDRESS* pAdd,uint32_t entryTimeout);
   Remarks:
     None.
 */
-TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,int index,IP_MULTI_ADDRESS* pGetAdd,uint32_t *ttltime);
+TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t* hostName, IP_ADDRESS_TYPE type, size_t index, IP_MULTI_ADDRESS* pGetAdd, uint32_t* ttlTime);
 
 //*****************************************************************************
 /*
   Function:
-    TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount);
+    TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(size_t index, char* hostName, size_t hostSize, size_t* ipCount);
 
   Summary:
     Get DNS Server IPv4 or IPv4 Address count details for the Input value of Index
@@ -375,7 +374,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
   Remarks:
     None.
 */
-TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index, char* hostName, size_t hostSize, size_t* ipCount);
+TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(size_t index, char* hostName, size_t hostSize, size_t* ipCount);
 
 // *****************************************************************************
 /*
@@ -408,4 +407,4 @@ void  TCPIP_DNSS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __DNSS_H
+#endif  // H_DNSS_H_
