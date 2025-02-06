@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,15 +38,15 @@ Microchip or any third party.
 */
 // DOM-IGNORE-END
 
-#ifndef _FTPC_PRIVATE_H_
-#define _FTPC_PRIVATE_H_
+#ifndef H_FTPC_PRIVATE_H_
+#define H_FTPC_PRIVATE_H_
 
 // defines
 
 // minimum server timeout, seconds
-#define TCPIP_FTPC_MIN_TMO              10 
-#define TCPIP_FTPC_DFLT_SRV_CTRL_PORT   21 
-#define FTPC_BUFF_SIZE_ALIGN_MASK       0xfff0
+#define TCPIP_FTPC_MIN_TMO              10U 
+#define TCPIP_FTPC_DFLT_SRV_CTRL_PORT   21U 
+#define FTPC_BUFF_SIZE_ALIGN_MASK       0xfff0U
 
 // *****************************************************************************
 /*
@@ -284,7 +284,7 @@ typedef struct
 */
 typedef struct
 {
-    int         nMaxClients;    // maximum number of simultaneous Client supported
+    size_t      nMaxClients;    // maximum number of simultaneous Client supported
                                 // This is for multi-client support         
     const void* memH;           // memory handle                                 
     uint32_t    ftpcTmo;        // timeout for reply on FTP Control connection and Data Connection,
@@ -307,9 +307,9 @@ typedef struct
     None
 
 */
-typedef struct _TCPIP_FTPC_DCPT_TYPE
+typedef struct S_TCPIP_FTPC_DCPT_TYPE
 {
-    struct _TCPIP_FTPC_DCPT_TYPE*   next;
+    struct S_TCPIP_FTPC_DCPT_TYPE*   next;
     uint16_t                        ftpcDcptIndex;      // descriptor identifier
     TCPIP_FTPC_STATE_TYPE           ftpcState;          // current state of FTP Client state-machine
     TCPIP_FTPC_SOCKET_TYPE          ftpcSocket;         // control and data socket
@@ -331,21 +331,21 @@ typedef struct _TCPIP_FTPC_DCPT_TYPE
     uint32_t    ftpcDataRxLen;      //  Data Socket receive length
     uint32_t    ftpcDataTxLen;      //  Data Socket transmit length
     uint16_t    ftpcDataLength;
+    uint16_t    ftpcSignal;         // TCPIP_FTPC_SIGNAL_TYPE: last response received
     
-    const char      *ftpcServerPathname;     //  pathname pointer
-    const char      *ftpcClientPathname;     //  pathname pointer
+    const char* ftpcServerPathname;     //  pathname pointer
+    const char* ftpcClientPathname;     //  pathname pointer
     
     const char  *filePathname;  // file name to save files in FS
         
-    int32_t     fileDescr;   // file descriptor 
-    int32_t     filePos;     // file descriptor 
+    SYS_FS_HANDLE   fileDescr;   // file descriptor 
+    int32_t         filePos;     // file descriptor 
     
     TCPIP_FTPC_ERROR_TYPE   error;          // ftp internal errors
     TCPIP_FTPC_CMD          ftpcCommand;    // ftp command type
-    TCPIP_FTPC_SIGNAL_TYPE  ftpcSignal;     // last response received
-    TCPIP_FTPC_FLAG_TYPE    ftpcFlag;       // FTP client status flag
     
     uint32_t    waitTick;     // if a reply is not received, trigger a timeout
+    uint16_t    ftpcFlag;     // TCPIP_FTPC_FLAG_TYPE: FTP client status flag
     bool        ftpcActive;   // busy/ready flag
 }TCPIP_FTPC_DCPT_TYPE;
 
@@ -371,104 +371,104 @@ static __inline__ void __attribute__((always_inline)) ftpcExitCritical(OSAL_CRIT
 
 //////////////////// FTPC state-machine functions ///////////////////////////////
 // state machine initial state
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateHome(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateHome(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
-static TCPIP_FTPC_RESULT_TYPE _ftpcDoneCmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcDoneCmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC Connect Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateDoneConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStartConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateDoneConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC Login Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendUser(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitUser(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendPass(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPass(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendAcct(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitAcct(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateDoneLogin(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendUser(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitUser(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendPass(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitPass(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendAcct(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitAcct(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateDoneLogin(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC CWD Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendCwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitCwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendCwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitCwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC CDUP Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendCdup(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitCdup(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendCdup(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitCdup(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC MKD Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendMkd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitMkd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendMkd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitMkd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC RMD Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendRmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendRmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitRmd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC DELE Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendDele(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitDele(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendDele(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitDele(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC QUIT Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendQuit(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitQuit(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendQuit(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitQuit(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC PWD Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendPwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendPwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitPwd(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC TYPE Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateDoneType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateDoneType(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC STRU Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendStru(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitStru(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendStru(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitStru(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC MODE Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendMode(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitMode(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendMode(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitMode(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC GET routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartGet(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcDoneFileTransfer(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStartGet(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcDoneFileTransfer(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC PUT routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartPut(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStartPut(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC Open Data Socket
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateOpenDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateOpenDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC PORT Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendPort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateDonePort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendPort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitPort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateDonePort(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC PASV Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendPasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateDonePasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPasvDataConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendPasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitPasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateDonePasv(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitPasvDataConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC RETR Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendRetr(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitRetrReadDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateRetrEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendRetr(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitRetrCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitRetrReadDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateRetrEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC STOR Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendStor(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitStorCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStorWriteDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStorEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendStor(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitStorCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStorWriteDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStorEoF(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 //FTPC LST Routines
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartLst(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateSendLst(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitLstReadDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-static TCPIP_FTPC_RESULT_TYPE _ftpcStateLstEoT(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateStartLst(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateSendLst(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitLstCtrlResp(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateWaitLstReadDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static TCPIP_FTPC_RESULT_TYPE F_ftpcStateLstEoT(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 
 /////////////// FTPC internal functions /////////////////////////////////////
 // Process Control Socket response
@@ -480,7 +480,7 @@ static void ftpcSetDcptTmo(TCPIP_FTPC_DCPT_TYPE* pDcpt, uint32_t tmo);
 // Check the timer expiry
 static bool ftpcIsDcptTmoExpired(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 //Error Handling routine
-static void _ftpcErrorUpdate(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static void F_ftpcErrorUpdate(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 // read control socket response
 static TCPIP_FTPC_RESULT_TYPE ftpcReadCtrlSocket(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 // write command to control socket
@@ -494,12 +494,12 @@ static void ftpcCtrlEvent(TCPIP_FTPC_DCPT_TYPE* pDcpt, TCPIP_FTPC_CTRL_EVENT_TYP
 static bool ftpcDataEvent(TCPIP_FTPC_DCPT_TYPE* pDcpt, TCPIP_FTPC_DATA_EVENT_TYPE ftpcEvent,
                           char * databuff, uint16_t * datalen);
 // close control socket
-static void _ftpcCtrlDisconnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static void F_ftpcCtrlDisconnect(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 // close data socket
-static void _ftpcCloseDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+static void F_ftpcCloseDataSkt(TCPIP_FTPC_DCPT_TYPE* pDcpt);
 // set the default value to FTPC internal Descriptor
-static void _ftpcDcptSetDefault(TCPIP_FTPC_DCPT_TYPE* pDcpt, uint16_t index);
+static void F_ftpcDcptSetDefault(TCPIP_FTPC_DCPT_TYPE* pDcpt, size_t index);
 // Set Rx/Tx buffer size for Data Socket
-static TCPIP_FTPC_RESULT_TYPE _ftpcSetDataSktBuff(TCPIP_FTPC_DCPT_TYPE* pDcpt);
-#endif  // _FTPC_PRIVATE_H_
+static TCPIP_FTPC_RESULT_TYPE F_ftpcSetDataSktBuff(TCPIP_FTPC_DCPT_TYPE* pDcpt);
+#endif  // H_FTPC_PRIVATE_H_
 

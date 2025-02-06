@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -38,15 +38,15 @@ Microchip or any third party.
 */
 // DOM-IGNORE-END
 
-#ifndef _FTPC_MANAGER_H_
-#define _FTPC_MANAGER_H_
+#ifndef H_FTPC_MANAGER_H_
+#define H_FTPC_MANAGER_H_
 
 
 // stack private module API
 //FTPC module initialization
-bool        TCPIP_FTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_FTPC_MODULE_CONFIG_TYPE* pftpcConfig);
+bool        TCPIP_FTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 //FTPC de-initailize function
 void        TCPIP_FTPC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
-#endif  // _FTPC_MANAGER_H_
+#endif  // H_FTPC_MANAGER_H_
 

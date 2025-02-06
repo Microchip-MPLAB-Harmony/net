@@ -19,7 +19,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2019-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2019-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 */
 //DOM-IGNORE-END
 
-#ifndef __FTPC_H
-#define __FTPC_H
+#ifndef H_FTPC_H_
+#define H_FTPC_H_
 #include "net_pres/pres/net_pres.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -203,6 +203,7 @@ typedef enum
     TCPIP_FTPC_RET_FAILURE = -1,
     TCPIP_FTPC_RET_NOT_CONNECT = -2,        
     TCPIP_FTPC_RET_NOT_LOGIN = -3,     
+    TCPIP_FTPC_RET_BAD_HANDLE = -4,     
 }TCPIP_FTPC_RETURN_TYPE;
 
 
@@ -384,7 +385,7 @@ typedef bool (*TCPIP_FTPC_DATA_EVENT_CALLBACK_TYPE)(TCPIP_FTPC_CONN_HANDLE_TYPE 
 */
 typedef struct
 {
-    int         nMaxClients;    // maximum number of simultaneous Client supported
+    size_t      nMaxClients;    // maximum number of simultaneous Client supported
                                 // This is for multi-client support    
     uint32_t    ftpcTmo;        // timeout for reply on FTP Control and Data Connections,
                                 // in seconds; Should be adjusted according to the server responsivity
@@ -1176,5 +1177,5 @@ TCPIP_FTPC_RETURN_TYPE TCPIP_FTPC_SetPassiveMode(TCPIP_FTPC_CONN_HANDLE_TYPE ftp
 #endif
 //DOM-IGNORE-END
 
-#endif  // __FTPC_H
+#endif  // H_FTPC_H_
 
