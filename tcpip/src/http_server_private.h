@@ -13,7 +13,7 @@
  *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __HTTP_SERVER_PRIVATE_H_
-#define __HTTP_SERVER_PRIVATE_H_
+#ifndef H_HTTP_SERVER_PRIVATE_H_
+#define H_HTTP_SERVER_PRIVATE_H_
 
 
 // HTTP debugging levels/masks
@@ -61,35 +61,34 @@ Microchip or any third party.
 #define TCPIP_HTTP_DEBUG_MASK_REDIRECT        (0x0100)
 
 // enable HTTP debugging levels
-// #define TCPIP_HTTP_DEBUG_LEVEL                (0)
-#define TCPIP_HTTP_DEBUG_LEVEL                (0x0100)
+#define TCPIP_HTTP_DEBUG_LEVEL                (0x01)
 
 
 #if defined(TCPIP_HTTP_USE_ACCESS_RULES) && (TCPIP_HTTP_USE_ACCESS_RULES != 0)
-#define _TCPIP_HTTP_USE_ACCESS_RULES    1
+#define M_TCPIP_HTTP_USE_ACCESS_RULES    1
 #else
-#define _TCPIP_HTTP_USE_ACCESS_RULES    0
+#define M_TCPIP_HTTP_USE_ACCESS_RULES    0
 #endif
 
-#define _TCPIP_HTTP_REDIR_TYPE_DEFAULT   TCPIP_HTTP_REDIR_TYPE_307
+#define M_TCPIP_HTTP_REDIR_TYPE_DEFAULT   TCPIP_HTTP_REDIR_TYPE_307
 
 
 // the maximum length of a chunk header for a 32 bit chunk length:
 //  n x hexDigits + CRLF
-#define TCPIP_HTTP_CHUNK_HEADER_LEN         10
+#define TCPIP_HTTP_CHUNK_HEADER_LEN         10U
 
 // size of a chunk trailer: CRLF
-#define TCPIP_HTTP_CHUNK_TRAILER_LEN        2
+#define TCPIP_HTTP_CHUNK_TRAILER_LEN        2U
 
 // size of the final chunk trailer: 0 CRLF CRLF
-#define TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN  5
+#define TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN  5U
 
 // Buffer overrun protection limit
-#define TCPIP_HTTP_DEFAULT_LEN        (10)
+#define TCPIP_HTTP_DEFAULT_LEN        (10U)
 
 
 // Max connection timeout, seconds
-#define TCPIP_HTTP_CONN_MAX_TIMEOUT         32767
+#define TCPIP_HTTP_CONN_MAX_TIMEOUT         32767U
 
 
 /****************************************************************************
@@ -119,17 +118,17 @@ typedef enum
 
 typedef enum
 {
-    TCPIP_HTTP_DYNVAR_BUFF_FLAG_ACK     = 0x0001,       // needs buffer acknowledge
+    TCPIP_HTTP_DYNVAR_BUFF_FLAG_ACK     = 0x0001U,       // needs buffer acknowledge
 
 
 
 }TCPIP_HTTP_DYNVAR_BUFF_FLAGS;
 
 
-typedef struct _tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT
+typedef struct S_tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT
 {
     // fixed fields
-    struct _tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT*    next;   // valid single list node
+    struct S_tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT*    next;   // valid single list node
     const void* dynBuffer;                              // persistent dynamic variable buffer
                                                         // this buffer will be printed as part of the 
                                                         // dynamic variable callback procedure
@@ -139,13 +138,24 @@ typedef struct _tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT
     uint16_t    padding;                                // not used                                                        
 }TCPIP_HTTP_DYNVAR_BUFF_DCPT;
 
-typedef struct _tag_TCPIP_HTTP_FILE_BUFF_DCPT
+typedef struct S_tag_HTTP_FILE_BUFF_DCPT_BARE
 {
     // fixed fields
-    struct _tag_TCPIP_HTTP_FILE_BUFF_DCPT*    next;    // valid single list node
+    struct S_tag_HTTP_FILE_BUFF_DCPT_BARE*    next;    // valid single list node
     uint16_t    fileBufferSize;    // size of the chunk buffer: without header/trailer, just the active data: TCPIP_HTTP_FILE_PROCESS_BUFFER_SIZE
     uint16_t    fileBufferTotSize;  // TCPIP_HTTP_CHUNK_HEADER_LEN + TCPIP_HTTP_FILE_PROCESS_BUFFER_SIZE + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1   
-    char        fileBuffer[];       // buffer that's used for storage when a dynamic/binary file is output
+    // char        fileBuffer[4];      // buffer that's used for storage when a dynamic/binary file is output
+                                    // NOTE: this buffer is also used to store the TCPIP_HTTP_DYN_VAR_DCPT and TCPIP_HTTP_DYN_ARG_DCPT[] 
+                                    // when a dynamic variable is passed to the user!
+}TCPIP_HTTP_FILE_BUFF_DCPT_BARE;
+
+typedef struct S_tag_HTTP_FILE_BUFF_DCPT
+{
+    // fixed fields
+    struct S_tag_HTTP_FILE_BUFF_DCPT*    next;    // valid single list node
+    uint16_t    fileBufferSize;    // size of the chunk buffer: without header/trailer, just the active data: TCPIP_HTTP_FILE_PROCESS_BUFFER_SIZE
+    uint16_t    fileBufferTotSize;  // TCPIP_HTTP_CHUNK_HEADER_LEN + TCPIP_HTTP_FILE_PROCESS_BUFFER_SIZE + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1   
+    char        fileBuffer[4];      // buffer that's used for storage when a dynamic/binary file is output
                                     // NOTE: this buffer is also used to store the TCPIP_HTTP_DYN_VAR_DCPT and TCPIP_HTTP_DYN_ARG_DCPT[] 
                                     // when a dynamic variable is passed to the user!
 }TCPIP_HTTP_FILE_BUFF_DCPT;
@@ -154,25 +164,25 @@ typedef struct _tag_TCPIP_HTTP_FILE_BUFF_DCPT
 typedef enum
 {
     // OK codes
-    TCPIP_HTTP_CHUNK_RES_OK             = 0,    // chunk processing OK, continue
-    TCPIP_HTTP_CHUNK_RES_DONE,                  // processing done
+    HTTP_CHUNK_RES_OK             = 0,    // chunk processing OK, continue
+    HTTP_CHUNK_RES_DONE,                  // processing done
 
     // wait codes
-    TCPIP_HTTP_CHUNK_RES_WAIT,                  // waiting for a resource and a retry/break is needed
+    HTTP_CHUNK_RES_WAIT,                  // waiting for a resource and a retry/break is needed
                                                 // could also mean that could not allocate a chunk, pool is empty
     // errors
-    TCPIP_HTTP_CHUNK_RES_DEPTH_ERR      = -1,   // max depth exceeded 
-    TCPIP_HTTP_CHUNK_RES_FILE_ERR       = -2,   // invalid file in the chunk 
-    TCPIP_HTTP_CHUNK_RES_DYNVAR_ERR     = -3,   // dynamic variable parsing failed 
-    TCPIP_HTTP_CHUNK_RES_SSI_ERR        = -4,   // SSI parsing failed 
-    TCPIP_HTTP_CHUNK_RES_RETRY_ERR      = -5,   // maximum retries number exceeded 
-    TCPIP_HTTP_CHUNK_RES_SSI_ATTRIB_ERR = -6,   // SSI attribute error 
-    TCPIP_HTTP_CHUNK_RES_SSI_CACHE_FAIL = -7,   // SSI cache failure 
-    TCPIP_HTTP_CHUNK_RES_SSI_CACHE_FULL = -8,   // SSI variable name cache full 
-    TCPIP_HTTP_CHUNK_RES_SSI_ALLOC_ERR  = -9,   // SSI allocation failed
+    HTTP_CHUNK_RES_DEPTH_ERR      = -1,   // max depth exceeded 
+    HTTP_CHUNK_RES_FILE_ERR       = -2,   // invalid file in the chunk 
+    HTTP_CHUNK_RES_DYNVAR_ERR     = -3,   // dynamic variable parsing failed 
+    HTTP_CHUNK_RES_SSI_ERR        = -4,   // SSI parsing failed 
+    HTTP_CHUNK_RES_RETRY_ERR      = -5,   // maximum retries number exceeded 
+    HTTP_CHUNK_RES_SSI_ATTRIB_ERR = -6,   // SSI attribute error 
+    HTTP_CHUNK_RES_SSI_CACHE_FAIL = -7,   // SSI cache failure 
+    HTTP_CHUNK_RES_SSI_CACHE_FULL = -8,   // SSI variable name cache full 
+    HTTP_CHUNK_RES_SSI_ALLOC_ERR  = -9,   // SSI allocation failed
 
 
-    TCPIP_HTTP_CHUNK_RES_INTERNAL_ERR    = -10,  // internal error, shouldn't happen
+    HTTP_CHUNK_RES_INTERNAL_ERR    = -10,  // internal error, shouldn't happen
 
 }TCPIP_HTTP_CHUNK_RES;
 
@@ -192,7 +202,7 @@ typedef struct
     const char*                     keyWord;    // variable keyword
     TCPIP_HTTP_CHUNK_FLAGS          keyFlags;   // keyword flags
     // keyword default processing function
-    TCPIP_HTTP_DYN_PRINT_RES (*dynamicPrint)(TCPIP_HTTP_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const struct _tag_TCPIP_HTTP_USER_CALLBACK* pCBack);
+    TCPIP_HTTP_DYN_PRINT_RES (*dynamicPrint)(TCPIP_HTTP_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const struct S_tag_TCPIP_HTTP_USER_CALLBACK* pCBack);
 }TCPIP_HTTP_DYN_VAR_KEYWORD_ENTRY;
 
 // structure to be allocated for a TCPIP_HTTP_DYN_VAR_DCPT that's passed to the user
@@ -202,7 +212,7 @@ typedef struct
     TCPIP_HTTP_DYN_VAR_DCPT         dynDcpt;        // this is what's passed to the user
                                                     // also stores the dynamic variable context across multiple calls
 
-    TCPIP_HTTP_DYN_ARG_DCPT         dynArgs[];      // storing the dynamic variable argument descriptors  
+    TCPIP_HTTP_DYN_ARG_DCPT         dynArgs[1];     // storing the dynamic variable argument descriptors  
                                                     // strings are stored in the fileBuffer
 }TCPIP_HTTP_DYNVAR_ALLOC_DCPT;   
 
@@ -220,17 +230,17 @@ typedef struct
     
 
 #if (TCPIP_HTTP_SSI_PROCESS != 0)
-struct _tag_TCPIP_HTTP_CHUNK_DCPT;
-struct _tag_TCPIP_HTTP_CONN;
+struct S_tag_TCPIP_HTTP_CHUNK_DCPT;
+struct S_tag_TCPIP_HTTP_CONN;
 // SSI command process function
 // returns:
-//      TCPIP_HTTP_CHUNK_RES_OK - if a new chunk is spawned and needs to be executed
-//      TCPIP_HTTP_CHUNK_RES_WAIT - waiting for resources needed
-//      TCPIP_HTTP_CHUNK_RES_DONE - processing round completed
+//      HTTP_CHUNK_RES_OK - if a new chunk is spawned and needs to be executed
+//      HTTP_CHUNK_RES_WAIT - waiting for resources needed
+//      HTTP_CHUNK_RES_DONE - processing round completed
 //      < 0 some error when executing this SSI attribute
 //
 // function is required to update the pChDcpt->nCurrAttrib!
-typedef TCPIP_HTTP_CHUNK_RES (*TCPIP_SSI_COMMAND_FNC)(struct _tag_TCPIP_HTTP_CONN* pHttpCon, struct _tag_TCPIP_HTTP_CHUNK_DCPT* pChDcpt, TCPIP_HTTP_SSI_ATTR_DCPT* pAttr, int leftAttribs);
+typedef TCPIP_HTTP_CHUNK_RES (*TCPIP_SSI_COMMAND_FNC)(struct S_tag_TCPIP_HTTP_CONN* pHttpCon, struct S_tag_TCPIP_HTTP_CHUNK_DCPT* pChDcpt, TCPIP_HTTP_SSI_ATTR_DCPT* pAttr, size_t leftAttribs);
 
 typedef struct
 {
@@ -259,11 +269,11 @@ typedef struct
 // not less than 2 attributes per SSI command
 // and always an even number for commands like "set" that need
 // to work on 2 attributes at a time
-#define _TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER 2
-#if (TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER > _TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER)
-#define _TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER  TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER
+#define M_TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER 2
+#if (TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER > M_TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER)
+#define M_TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER  TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER
 #else
-#define _TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER  _TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER
+#define M_TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER  M_TCPIP_HTTP_SSI_STATIC_MIN_ATTTRIB_NUMBER
 #endif
 
 typedef struct 
@@ -274,7 +284,7 @@ typedef struct
     TCPIP_SSI_COMMAND_FNC   ssiFnc;             // SSI processing function                                                
     uint16_t                nStaticAttribs;     // number of static attributes in this command
     uint16_t                nAllocAttribs;      // number of allocated attributes in pAllocAttrib
-    TCPIP_HTTP_SSI_ATTR_DCPT staticAttribs[_TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER]; // array of static SSI attribute descriptors 
+    TCPIP_HTTP_SSI_ATTR_DCPT staticAttribs[M_TCPIP_HTTP_SSI_STATIC_ATTTRIB_NUMBER]; // array of static SSI attribute descriptors 
     TCPIP_HTTP_SSI_ATTR_DCPT* pAllocAttribs;    // array of extra allocated SSI attribute descriptors 
     volatile uint16_t       nCurrAttrib;        // currently processing attribute
                                                 // Note: this is updated by the processing function!
@@ -297,8 +307,8 @@ typedef enum
 typedef struct
 {
     SYS_FS_HANDLE           fHandle;    // file handle
-    int32_t                 fSize;      // size of the file
-    int32_t                 fOffset;    // current file offset: read pointer
+    size_t                  fSize;      // size of the file
+    size_t                  fOffset;    // current file offset: read pointer
     char*                   dynStart;   // pointer in the current line buffer where dynamic variable processing starts
     TCPIP_HTTP_FILE_BUFF_DCPT* fileBuffDcpt;    // associated file buffer descriptor
     uint16_t                fDynCount;  // current dynamic variable count in this file
@@ -308,11 +318,11 @@ typedef struct
 }TCPIP_HTTP_FILE_CHUNK_DCPT;
 
 
-typedef struct _tag_TCPIP_HTTP_CHUNK_DCPT
+typedef struct S_tag_TCPIP_HTTP_CHUNK_DCPT
 {
-    struct _tag_TCPIP_HTTP_CHUNK_DCPT*  next;       // valid single list node
-    struct _tag_TCPIP_HTTP_CONN*        pOwnerCon;  // connection that owns this (dynamic) chunk
-    struct _tag_TCPIP_HTTP_CHUNK_DCPT*  pRootDcpt;  // root (file) descriptor it comes from 
+    struct S_tag_TCPIP_HTTP_CHUNK_DCPT*  next;       // valid single list node
+    struct S_tag_TCPIP_HTTP_CONN*        pOwnerCon;  // connection that owns this (dynamic) chunk
+    struct S_tag_TCPIP_HTTP_CHUNK_DCPT*  pRootDcpt;  // root (file) descriptor it comes from 
     uint16_t                flags;                  // TCPIP_HTTP_CHUNK_FLAGS value
     uint8_t                 status;                 // TCPIP_HTTP_CHUNK_STATE value
     uint8_t                 phase;                  // TCPIP_HTTP_DYNVAR_PROCESS_PHASE value: current processing phase
@@ -332,34 +342,42 @@ typedef struct _tag_TCPIP_HTTP_CHUNK_DCPT
 typedef union
 {
     uint16_t    val;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t    procPhase:      3;         // simple phase counter for processing functions
-        uint16_t    requestError:   1;         // an eror occurred while processing the requests (invalid file, buffer overflow, etc.)
+        unsigned    procPhase:      3;         // simple phase counter for processing functions
+        unsigned    requestError:   1;         // an eror occurred while processing the requests (invalid file, buffer overflow, etc.)
                                                     // the header parsing will just remove from the socket buffer, don't process
-        uint16_t    discardRxBuff:  1;         // socket RX buffer needs to be discarded before listening to a new request
+        unsigned    discardRxBuff:  1;         // socket RX buffer needs to be discarded before listening to a new request
                                                     // set because of an error
-        uint16_t    uploadMemError: 1;         // an out of memory occurred during an upload operation
-        uint16_t    sktLocalReset:  1;         // socket reset/disconnect was initiated locally 
-        uint16_t    sktIsConnected: 1;         // socket connect persistent flag 
-        uint16_t    uploadPhase:    1;         // the upload procedure phase: is waiting for the signature
-        uint16_t    reserved:       7;         // not used
+        unsigned    uploadMemError: 1;         // an out of memory occurred during an upload operation
+        unsigned    sktLocalReset:  1;         // socket reset/disconnect was initiated locally 
+        unsigned    sktIsConnected: 1;         // socket connect persistent flag 
+        unsigned    uploadPhase:    1;         // the upload procedure phase: is waiting for the signature
+        unsigned    reserved:       7;         // not used
     };
 }TCPIP_HTTP_CONN_FLAGS;
 
 
 // Stores extended state data for each connection
-typedef struct _tag_TCPIP_HTTP_CONN
+typedef struct S_tag_TCPIP_HTTP_CONN
 {
     uint32_t                    byteCount;                      // How many bytes have been read so far
     uint32_t                    httpTick;                       // timeout counter
     uint32_t                    callbackPos;                    // Callback position indicator
-    uint8_t*                    ptrData;                        // Points to first free byte in data
+    union
+    {
+        uint8_t*                ptrData;                        // Points to first free byte in data
+        char*                   ptrDataCh;                      // Points to first free byte in data
+    };
     uint8_t*                    ptrRead;                        // Points to current read location
-    struct _tag_TCPIP_HTTP_INST* connInstance;                  // instance it belongs to 
-    struct _tag_TCPIP_HTTP_PORT_DCPT* connPort;                 // port it belongs to, in that instance
+    struct S_tag_TCPIP_HTTP_INST* connInstance;                  // instance it belongs to 
+    struct S_tag_TCPIP_HTTP_PORT_DCPT* connPort;                 // port it belongs to, in that instance
     SYS_FS_HANDLE               file;                           // File pointer for the file being served; 
-    uint8_t*                    httpData;                       // General purpose data buffer
+    union
+    {
+        uint8_t*                httpData;                       // General purpose data buffer
+        char*                   httpDataCh;                     // char version
+    };
     const void*                 userData;                       // user supplied data; not used by the HTTP module
     NET_PRES_SIGNAL_HANDLE      socketSignal;                   // socket signal handler
 #if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
@@ -373,7 +391,7 @@ typedef struct _tag_TCPIP_HTTP_CONN
     uint16_t                    httpStatus;                     // TCPIP_HTTP_STATUS: Request method/status
     uint16_t                    connState;                      // TCPIP_HTTP_CONN_STATE: Current connection state
     uint16_t                    fileType;                       // TCPIP_HTTP_FILE_TYPE: File type to return with Content-Type
-    NET_PRES_SKT_HANDLE_T       socket;                         // Socket being served
+    NET_PRES_SKT_HANDLE_T       netSocket;                      // Socket being served
     uint16_t                    connIx;                         // index of this connection in the HTTP server
     uint16_t                    uploadSectNo;                   // current sector number for upload
     uint16_t                    smPost;                         // POST state machine variable  
@@ -402,7 +420,7 @@ typedef enum
 }TCPIP_HTTP_EXT_FLAGS;
 
 // descriptor for a HTTP port
-typedef struct _tag_TCPIP_HTTP_PORT_DCPT
+typedef struct S_tag_TCPIP_HTTP_PORT_DCPT
 {
     const SYS_FS_SHELL_OBJ*  fileShell;             // file shell object for file access
     TCPIP_HTTP_CONN*    connCtrl;                   // all http connections
@@ -423,20 +441,20 @@ typedef struct _tag_TCPIP_HTTP_PORT_DCPT
 typedef struct
 {
     TCPIP_HTTP_ACCESS_RULE accRule;         // access rule itself
-    char        strSpace[];                 // space for dir, redirServer and redirURI strings
+    char        strSpace[4];                // space for dir, redirServer and redirURI strings
                                             // Note: the memory allocated for dirSpace, redirSpace
-                                            //  follows immediately the _TCPIP_HTTP_ACC_RULE!
-}_TCPIP_HTTP_ACC_RULE;                                                                  
+                                            //  follows immediately the S_TCPIP_HTTP_ACC_RULE!
+}S_TCPIP_HTTP_ACC_RULE;                                                                  
 
 
 // descriptor of HTTP NET instance
-typedef struct _tag_TCPIP_HTTP_INST
+typedef struct S_tag_TCPIP_HTTP_INST
 {
     TCPIP_HTTP_USER_CALLBACK httpRegistry;          // room for one callback registration
                                                     // copy of the user fumctions
 
     uint16_t        chunksNo;                       // number of data chunks
-    int16_t         chunksDepth;                    // chunk max depth
+    uint16_t        chunksDepth;                    // chunk max depth
     SINGLE_LIST     chunkPool;                      // pool of chunks
     TCPIP_HTTP_CHUNK_DCPT* allocChunks;             // allocated pool of chunks
 
@@ -468,14 +486,14 @@ typedef struct _tag_TCPIP_HTTP_INST
 
     TCPIP_HTTP_PORT_DCPT* portDcpt;                 // per port data array
 
-    _TCPIP_HTTP_ACC_RULE* rules;                    // pointer to an array of rules for this port
+    S_TCPIP_HTTP_ACC_RULE* rules;                    // pointer to an array of rules for this port
     // global instance statistics
     uint32_t    dynPoolEmpty;                       // dynamic variables buffer pool empty condition counter
 
 }TCPIP_HTTP_INST;
 
 
-#endif // __HTTP_SERVER_PRIVATE_H_
+#endif // H_HTTP_SERVER_PRIVATE_H_
 
 
 

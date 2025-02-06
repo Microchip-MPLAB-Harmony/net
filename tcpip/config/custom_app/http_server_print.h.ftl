@@ -10,7 +10,7 @@
 *********************************************************************/
 
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -32,8 +32,8 @@ implied, are granted under any patent or other intellectual property rights of
 Microchip or any third party.
 */
 
-#ifndef _HTTP_SERVER_PRINT_H
-#define _HTTP_SERVER_PRINT_H
+#ifndef HTTP_SERVER_PRINT_H_
+#define HTTP_SERVER_PRINT_H_
 
 <#if ((TCPIP_HTTP_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_DYNVAR_PROCESS  == true))>
 /****************************************************************************
@@ -133,15 +133,15 @@ uint8_t TCPIP_HTTP_ConnectionFileAuthenticate(TCPIP_HTTP_CONN_HANDLE connHandle,
  </#if>
  
  // processing the HTTP buffer acknowledgment
-void TCPIP_HTTP_DynAcknowledge(TCPIP_HTTP_CONN_HANDLE connHandle, const void *buffer, const struct _tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
+void TCPIP_HTTP_DynAcknowledge(TCPIP_HTTP_CONN_HANDLE connHandle, const void *buffer, const struct S_tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
 
 // processing the HTTP reported events
-void TCPIP_HTTP_EventReport(TCPIP_HTTP_CONN_HANDLE connHandle, TCPIP_HTTP_EVENT_TYPE evType, const void *evInfo, const struct _tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
+void TCPIP_HTTP_EventReport(TCPIP_HTTP_CONN_HANDLE connHandle, TCPIP_HTTP_EVENT_TYPE evType, const void *evInfo, const struct S_tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
 
 // example of processing an SSI notification
 // return false for standard processing of this SSI command by the HTTP module
 // return true if the processing is done by you and HTTP need take no further action
-bool TCPIP_HTTP_SSINotification(TCPIP_HTTP_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT *pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
+bool TCPIP_HTTP_SSINotification(TCPIP_HTTP_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT *pSSINotifyDcpt, const struct S_tag_TCPIP_HTTP_USER_CALLBACK *pCBack);
 
 /****************************************************************************
   Section:
@@ -200,4 +200,5 @@ HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);
 
 </#if>
 
-#endif /* _HTTP_SERVER_PRINT_H */
+#endif /* HTTP_SERVER_PRINT_H_ */
+

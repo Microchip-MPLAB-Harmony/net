@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __HTTP_SERVER_MANAGER_H_
-#define __HTTP_SERVER_MANAGER_H_
+#ifndef H_HTTP_SERVER_MANAGER_H_
+#define H_HTTP_SERVER_MANAGER_H_
 
 
 /****************************************************************************
@@ -55,8 +55,7 @@ Microchip or any third party.
 
 /*****************************************************************************
   Function:
-    bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
-        const TCPIP_HTTP_SERVER_MODULE_CONFIG* httpInitData)
+    bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_HTTP_SERVER_MODULE_CONFIG* httpInitData)
 
   Summary:
     Initializes the HTTP server module.
@@ -78,12 +77,12 @@ Microchip or any third party.
   Remarks:
     This function is called only one during lifetime of the application.
   ***************************************************************************/
-bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const TCPIP_HTTP_SERVER_MODULE_CONFIG* httpData);
+bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 
 /*****************************************************************************
   Function:
-    bool TCPIP_HTTP_Server_Deinitialize(void)
+    bool TCPIP_HTTP_Server_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
   Summary:
     DeInitializes the HTTP server module.
@@ -104,8 +103,8 @@ bool TCPIP_HTTP_Server_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData
   Remarks:
     This function is called only once during lifetime of the application.
   ***************************************************************************/
-void TCPIP_HTTP_Server_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
+void TCPIP_HTTP_Server_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
-#endif // __HTTP_SERVER_MANAGER_H_
+#endif // H_HTTP_SERVER_MANAGER_H_
 

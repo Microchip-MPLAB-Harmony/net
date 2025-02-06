@@ -10,7 +10,7 @@
 *********************************************************************/
 
 /*
-Copyright (C) 2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2023-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -58,37 +58,37 @@ Microchip or any third party.
 static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] = 
 {
     // varName                      varFnc
-    {"hellomsg",					TCPIP_HTTP_Print_hellomsg},
-	{"cookiename",					TCPIP_HTTP_Print_cookiename},
-	{"cookiefav",					TCPIP_HTTP_Print_cookiefav},
-	{"builddate",					TCPIP_HTTP_Print_builddate},
-	{"led",							TCPIP_HTTP_Print_led},
-	{"ledSelected",					TCPIP_HTTP_Print_ledSelected},
-	{"version",						TCPIP_HTTP_Print_version},
-	{"btn",							TCPIP_HTTP_Print_btn},
-	{"pot",							TCPIP_HTTP_Print_pot},
-	{"uploadedmd5",					TCPIP_HTTP_Print_uploadedmd5},
-	{"snmp_en",						TCPIP_HTTP_Print_snmp_en},
-	{"read_comm",					TCPIP_HTTP_Print_read_comm},
-	{"write_comm",					TCPIP_HTTP_Print_write_comm},
-	{"status_fail",					TCPIP_HTTP_Print_status_fail},
-	{"config_mac",					TCPIP_HTTP_Print_config_mac},
-	{"config_hostname",				TCPIP_HTTP_Print_config_hostname},
-	{"config_dhcpchecked",			TCPIP_HTTP_Print_config_dhcpchecked},
-	{"config_ip",					TCPIP_HTTP_Print_config_ip},
-	{"config_gw",					TCPIP_HTTP_Print_config_gw},
-	{"config_subnet",				TCPIP_HTTP_Print_config_subnet},
-	{"config_dns1",					TCPIP_HTTP_Print_config_dns1},
-	{"config_dns2",					TCPIP_HTTP_Print_config_dns2},
-	{"reboot",						TCPIP_HTTP_Print_reboot},
-	{"rebootaddr",					TCPIP_HTTP_Print_rebootaddr},
-	{"status_ok",					TCPIP_HTTP_Print_status_ok},
-	{"ddns_status",					TCPIP_HTTP_Print_ddns_status},
-	{"ddns_status_msg",				TCPIP_HTTP_Print_ddns_status_msg},
-	{"ddns_service",				TCPIP_HTTP_Print_ddns_service},
-	{"ddns_user",					TCPIP_HTTP_Print_ddns_user},
-	{"ddns_pass",					TCPIP_HTTP_Print_ddns_pass},
-	{"ddns_host",					TCPIP_HTTP_Print_ddns_host},
+    {"hellomsg",					&TCPIP_HTTP_Print_hellomsg},
+	{"cookiename",					&TCPIP_HTTP_Print_cookiename},
+	{"cookiefav",					&TCPIP_HTTP_Print_cookiefav},
+	{"builddate",					&TCPIP_HTTP_Print_builddate},
+	{"led",							&TCPIP_HTTP_Print_led},
+	{"ledSelected",					&TCPIP_HTTP_Print_ledSelected},
+	{"version",						&TCPIP_HTTP_Print_version},
+	{"btn",							&TCPIP_HTTP_Print_btn},
+	{"pot",							&TCPIP_HTTP_Print_pot},
+	{"uploadedmd5",					&TCPIP_HTTP_Print_uploadedmd5},
+	{"snmp_en",						&TCPIP_HTTP_Print_snmp_en},
+	{"read_comm",					&TCPIP_HTTP_Print_read_comm},
+	{"write_comm",					&TCPIP_HTTP_Print_write_comm},
+	{"status_fail",					&TCPIP_HTTP_Print_status_fail},
+	{"config_mac",					&TCPIP_HTTP_Print_config_mac},
+	{"config_hostname",				&TCPIP_HTTP_Print_config_hostname},
+	{"config_dhcpchecked",			&TCPIP_HTTP_Print_config_dhcpchecked},
+	{"config_ip",					&TCPIP_HTTP_Print_config_ip},
+	{"config_gw",					&TCPIP_HTTP_Print_config_gw},
+	{"config_subnet",				&TCPIP_HTTP_Print_config_subnet},
+	{"config_dns1",					&TCPIP_HTTP_Print_config_dns1},
+	{"config_dns2",					&TCPIP_HTTP_Print_config_dns2},
+	{"reboot",						&TCPIP_HTTP_Print_reboot},
+	{"rebootaddr",					&TCPIP_HTTP_Print_rebootaddr},
+	{"status_ok",					&TCPIP_HTTP_Print_status_ok},
+	{"ddns_status",					&TCPIP_HTTP_Print_ddns_status},
+	{"ddns_status_msg",				&TCPIP_HTTP_Print_ddns_status_msg},
+	{"ddns_service",				&TCPIP_HTTP_Print_ddns_service},
+	{"ddns_user",					&TCPIP_HTTP_Print_ddns_user},
+	{"ddns_pass",					&TCPIP_HTTP_Print_ddns_pass},
+	{"ddns_host",					&TCPIP_HTTP_Print_ddns_host},
 };
 
 // Function that processes the dynamic variables
@@ -102,17 +102,18 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
 //
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_DynPrint(TCPIP_HTTP_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt, const TCPIP_HTTP_USER_CALLBACK *pCBack)
 {
-    int ix;
+    size_t ix;
     HTTP_APP_DYNVAR_ENTRY *pEntry;
 
     // search for a dynamic variable name
     pEntry = HTTP_APP_DynVarTbl;
-    for(ix = 0; ix < sizeof(HTTP_APP_DynVarTbl)/sizeof(*HTTP_APP_DynVarTbl); ++ix, ++pEntry)
+    for(ix = 0; ix < sizeof(HTTP_APP_DynVarTbl)/sizeof(*HTTP_APP_DynVarTbl); ++ix)
     {
         if(strcmp(vDcpt->dynName, pEntry->varName) == 0)
         {   // found it
             return (*pEntry->varFnc)(connHandle, vDcpt);
         }
+        pEntry++;
     }
 
     // not found; do nothing
@@ -125,19 +126,20 @@ static HTTP_APP_DYNVAR_BUFFER httpDynVarBuffers[HTTP_APP_DYNVAR_BUFFERS_NO];
 // dynamic variables processing
 HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
 {
-    int ix;
+    size_t ix;
     HTTP_APP_DYNVAR_BUFFER *pDynBuffer;
 
     pDynBuffer = httpDynVarBuffers;
-    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix, pDynBuffer++)
+    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix)
     {
-        if(pDynBuffer->busy == 0)
+        if(pDynBuffer->busy == 0U)
         {
-            pDynBuffer->busy = 1;
+            pDynBuffer->busy = 1U;
             return pDynBuffer;
         }
+        pDynBuffer++;
     }
-    return 0;
+    return NULL;
 }
 
 /****************************************************************************
@@ -152,45 +154,45 @@ HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
  ****************************************************************************/
 void HTTP_APP_Initialize(void)
 {
-    int ix;
+    size_t ix;
     
 
     for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix)
     {
-        httpDynVarBuffers[ix].busy = 0;
+        httpDynVarBuffers[ix].busy = 0U;
         httpDynVarBuffers[ix].bufferSize = HTTP_APP_DYNVAR_BUFFER_SIZE;
     }
 
     TCPIP_HTTP_USER_CALLBACK appHttpCBack =
     {
-        .getExecute = TCPIP_HTTP_ConnectionGetExecute,              // Process the "GET" command
-        .postExecute = TCPIP_HTTP_ConnectionPostExecute,            // Process the "POST" command
+        .getExecute = &TCPIP_HTTP_ConnectionGetExecute,              // Process the "GET" command
+        .postExecute = &TCPIP_HTTP_ConnectionPostExecute,            // Process the "POST" command
 <#if ((TCPIP_HTTP_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_USE_AUTHENTICATION  == true))>
-        .fileAuthenticate = TCPIP_HTTP_ConnectionFileAuthenticate,  // Process the file authentication
-        .userAuthenticate = TCPIP_HTTP_ConnectionUserAuthenticate,  // Process the user authentication
+        .fileAuthenticate = &TCPIP_HTTP_ConnectionFileAuthenticate,  // Process the file authentication
+        .userAuthenticate = &TCPIP_HTTP_ConnectionUserAuthenticate,  // Process the user authentication
 <#else>
-        .fileAuthenticate = 0,
-        .userAuthenticate = 0,
+        .fileAuthenticate = NULL,
+        .userAuthenticate = NULL,
 </#if>
 
 <#if ((TCPIP_HTTP_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_DYNVAR_PROCESS  == true))>
-        .dynamicPrint = TCPIP_HTTP_DynPrint,                        // Process the dynamic variable callback
-        .dynamicAck = TCPIP_HTTP_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
+        .dynamicPrint = &TCPIP_HTTP_DynPrint,                        // Process the dynamic variable callback
+        .dynamicAck = &TCPIP_HTTP_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
 <#else>
-        .dynamicPrint = 0,
-        .dynamicAck = 0,
+        .dynamicPrint = NULL,
+        .dynamicAck = NULL,
 </#if>
-        .eventReport = TCPIP_HTTP_EventReport,                      // HTTP Event notification callback
+        .eventReport = &TCPIP_HTTP_EventReport,                      // HTTP Event notification callback
 
 <#if ((TCPIP_HTTP_SSI_PROCESS?has_content) && (TCPIP_HTTP_SSI_PROCESS  == true)) >
-        .ssiNotify = TCPIP_HTTP_SSINotification,                    // SSI command calback
+        .ssiNotify = &TCPIP_HTTP_SSINotification,                    // SSI command calback
 <#else>
-        .ssiNotify = 0,
+        .ssiNotify = NULL,
 </#if>
     };
 
     TCPIP_HTTP_USER_HANDLE httpH = TCPIP_HTTP_UserHandlerRegister(&appHttpCBack);
-    if(httpH == 0)
+    if(httpH == NULL)
     {
         SYS_CONSOLE_MESSAGE("APP: Failed to register the HTTP callback!\r\n");
     }
