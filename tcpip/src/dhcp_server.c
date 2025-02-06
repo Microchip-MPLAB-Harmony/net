@@ -13,7 +13,7 @@
 
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -51,65 +51,65 @@ Microchip or any third party.
 #if defined(TCPIP_STACK_USE_DHCP_SERVER_V2)
 
 
-static TCPIP_DHCPS_DCPT*        gDhcpDcpt = 0;
+static TCPIP_DHCPS_DCPT*        gDhcpDcpt = NULL;
 static int                      dhcpSInitCount = 0;     // initialization count
-static uint8_t                  gDhcpProcPacket[_TCPIP_DHCPS_PROCESS_BUFFER_SIZE];  // RX/TX processing buffer
+static uint8_t                  gDhcpProcPacket[M_TCPIP_DHCPS_PROCESS_BUFFER_SIZE];  // RX/TX processing buffer
 static TCPIP_DHCPS_RX_OPTIONS   gRxOptions;             // parsed RX options;
                                                         // this buffer increases as we add more options
 
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER *Header, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRelease(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER *pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToRelease(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void _DHCPS_Cleanup(void);
+static void F_DHCPS_Cleanup(void);
 #else
-#define _DHCPS_Cleanup()
+#define F_DHCPS_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 static bool isMacAddrValid(const uint8_t *macAddr);
-static TCPIP_DHCPS_RES _DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart);
-static bool _DHCPS_Disable(TCPIP_NET_IF* pNetIf);
+static TCPIP_DHCPS_RES F_DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart);
+static bool F_DHCPS_Disable(TCPIP_NET_IF* pNetIf);
 
-static void _DHCPS_ProcessTick(void);
-static void _DHCPS_ProcessRx(void);
-static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes);
-static void _DHCPS_SocketRxHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
+static void F_DHCPS_ProcessTick(void);
+static void F_DHCPS_ProcessRx(void);
+static void F_DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes);
+static void F_DHCPS_SocketRxHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
 
-static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG *pIfConfig, size_t ifConfigNo);
-static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig, uint16_t nConfigs);
-static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig);
-static TCPIP_DHCPS_RES _DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLIENT_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig, size_t nOptions);
+static TCPIP_DHCPS_RES F_DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG *pIfConfig, size_t ifConfigNo);
+static TCPIP_DHCPS_RES F_DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig, uint16_t nConfigs);
+static TCPIP_DHCPS_RES F_DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLI_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig);
+static TCPIP_DHCPS_RES F_DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLI_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig, size_t nOptions);
 
 #if (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0) || (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0 || TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES != 0)
-static int _DHCPS_ParseIPStrOption(const char* ipStr, uint32_t* pDest, size_t destSize);
+static int F_DHCPS_ParseIPStrOption(const char* ipStr, uint32_t* pDest, size_t destSize);
 #endif  // (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0) || (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0 || TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES != 0)
 
-static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, BOOTP_HEADER* pHeader);
-static bool _DHCPS_OptionMessageType(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
-static bool _DHCPS_OptionReqClientId(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
-static bool _DHCPS_OptionReqIpAddress(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
-static bool _DHCPS_OptionReqLeaseTime(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
-static bool _DHCPS_OptionReqServerIdentifier(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static bool F_DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, BOOTP_HEADER* pHeader);
+static bool F_DHCPS_OptionMessageType(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static bool F_DHCPS_OptionReqClientId(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static bool F_DHCPS_OptionReqIpAddress(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static bool F_DHCPS_OptionReqLeaseTime(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static bool F_DHCPS_OptionReqServerIdentifier(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
 
-static bool _DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, uint32_t* pLeaseTime);
+static bool F_DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, uint32_t* pLeaseTime);
 
-static void _DHCPS_ProcessMsg(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
-static void _DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, DHCP_MESSAGE_TYPE_VAL msgType);
-static void _DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt);
-static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTRY* he);
-static void _DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
+static void F_DHCPS_ProcessMsg(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt);
+static void F_DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, DHCP_MESSAGE_TYPE_VAL msgType);
+static void F_DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt);
+static bool F_DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param);
 
-static uint8_t* _DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he);
-static uint8_t* _DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint32_t* pSrc, size_t nSources);
-static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy);
-static void _DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy);
+static uint8_t* F_DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he);
+static uint8_t* F_DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint32_t* pSrc, size_t nSources);
+static bool F_DHCPS_SendMessage(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy);
+static void F_DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy);
 
-#if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
-static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo);
-#endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+#if (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+static void F_DHCPS_NotifyClients(const TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo);
+#endif  // (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
 static void IpIndexMarkBusy(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index);
 static void IpIndexMarkFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index);
@@ -118,17 +118,17 @@ static int  IpIndexFindFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool markTaken);
 static void IpIndexMarkBusyBlock(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t stIndex);
 static int  IpIsAddressValid(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uint32_t requestedIpAddr, DHCPS_VALID_CHECK validCheck);
 
-static DHCPS_HASH_ENTRY* _DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, size_t ipIndex);
+static DHCPS_HASH_ENTRY* F_DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, size_t ipIndex);
 
-static size_t _DHCPS_FormatHashKey(uint8_t* destKey, const uint8_t* id, size_t idLen);
-static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo);
+static size_t F_DHCPS_FormatHashKey(uint8_t* destKey, const uint8_t* id, size_t idLen);
+static bool F_DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo);
 
-static void _DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_TickFnc_SendOffer(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he);
-static void _DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_SendOffer(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he);
+static void F_DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he);
 
 
 // hash functions
@@ -140,22 +140,160 @@ static OA_HASH_ENTRY* TCPIP_DHCPS_HashDeleteEntry(OA_HASH_DCPT* pOH);
 static size_t TCPIP_DHCPS_HashProbeHash(OA_HASH_DCPT* pOH, const void* key);
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-volatile int _DhcpsStayAssertLoop = 0;
-static void _DhcpsAssert(bool cond, const char* message, int lineNo)
+// conversion functions/helpers
+//
+static __inline__ OA_HASH_ENTRY* __attribute__((always_inline)) FC_DhcpsHash2OaHash(DHCPS_HASH_ENTRY* dhe)
+{
+    union
+    {
+        DHCPS_HASH_ENTRY* dhe;
+        OA_HASH_ENTRY*    he;
+    }U_DHCPS_HASH_OA_HASH;
+
+    U_DHCPS_HASH_OA_HASH.dhe = dhe;
+    return U_DHCPS_HASH_OA_HASH.he;
+}
+
+static __inline__ DHCPS_HASH_ENTRY* __attribute__((always_inline)) FC_OaHash2DhcpsHash(OA_HASH_ENTRY* he)
+{
+    union
+    {
+        OA_HASH_ENTRY*    he;
+        DHCPS_HASH_ENTRY* dhe;
+    }U_OA_HASH_DHCPS_HASH;
+
+    U_OA_HASH_DHCPS_HASH.he = he;
+    return U_OA_HASH_DHCPS_HASH.dhe;
+}
+
+static __inline__ DHCPS_HASH_ENTRY* __attribute__((always_inline)) FC_Cvptr2DhcpsHash(const void* cvptr)
+{
+    union
+    {
+        const void* cvptr;
+        DHCPS_HASH_ENTRY* dhe;
+    }U_CVPTR_DHCPS_HASH;
+
+    U_CVPTR_DHCPS_HASH.cvptr = cvptr;
+    return U_CVPTR_DHCPS_HASH.dhe;
+}
+
+static __inline__ BOOTP_HEADER* __attribute__((always_inline)) FC_Uptr2BootpHdr(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        BOOTP_HEADER* pHdr;
+    }U_UPTR_BOOTP_HDR;
+
+    U_UPTR_BOOTP_HDR.uptr = uptr;
+    return U_UPTR_BOOTP_HDR.pHdr;
+}
+
+static __inline__ TCPIP_DHCPS_OPT_REQ_CLI_ID* __attribute__((always_inline)) FC_Uptr2OptReqCliId(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_DHCPS_OPT_REQ_CLI_ID* pOpt;
+    }U_UPTR_OPT_REQ_CLI_ID;
+
+    U_UPTR_OPT_REQ_CLI_ID.uptr = uptr;
+    return U_UPTR_OPT_REQ_CLI_ID.pOpt;
+}
+
+static __inline__ TCPIP_DHCPS_OPT_REQ_IP_ADDRESS* __attribute__((always_inline)) FC_Uptr2OptReqIpAdd(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_DHCPS_OPT_REQ_IP_ADDRESS* pOpt;
+    }U_UPTR_OPT_REQ_IP_ADD;
+
+    U_UPTR_OPT_REQ_IP_ADD.uptr = uptr;
+    return U_UPTR_OPT_REQ_IP_ADD.pOpt;
+}
+
+static __inline__ TCPIP_DHCPS_OPT_REQ_LEASE_TIME* __attribute__((always_inline)) FC_Uptr2OptReqLeaseTime(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_DHCPS_OPT_REQ_LEASE_TIME* pOpt;
+    }U_UPTR_OPT_REQ_LEASE_TIME;
+
+    U_UPTR_OPT_REQ_LEASE_TIME.uptr = uptr;
+    return U_UPTR_OPT_REQ_LEASE_TIME.pOpt;
+}
+
+static __inline__ TCPIP_DHCPS_OPT_SRV_IDENT* __attribute__((always_inline)) FC_Uptr2OptReqSrvId(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_DHCPS_OPT_SRV_IDENT* pOpt;
+    }U_UPTR_OPT_REQ_SRV_ID;
+
+    U_UPTR_OPT_REQ_SRV_ID.uptr = uptr;
+    return U_UPTR_OPT_REQ_SRV_ID.pOpt;
+}
+
+static __inline__ TCPIP_DHCPS_OPT_DATA_MSG_TYPE* __attribute__((always_inline)) FC_Uptr2OptMsgType(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        TCPIP_DHCPS_OPT_DATA_MSG_TYPE* pOpt;
+    }U_UPTR_OPT_MSG_TYPE;
+
+    U_UPTR_OPT_MSG_TYPE.uptr = uptr;
+    return U_UPTR_OPT_MSG_TYPE.pOpt;
+}
+
+static __inline__ TCPIP_DHCPS_EVENT_NODE* __attribute__((always_inline)) FC_EvH2EvNode(TCPIP_DHCPS_EVENT_HANDLE hDhcp)
+{
+    union
+    {
+        TCPIP_DHCPS_EVENT_HANDLE hDhcp;
+        TCPIP_DHCPS_EVENT_NODE*  evNode;
+    }U_EVH_EV_NODE;
+
+    U_EVH_EV_NODE.hDhcp = hDhcp;
+    return U_EVH_EV_NODE.evNode;
+}
+
+static __inline__ uint16_t __attribute__((always_inline)) FC_MaxLeases(void)
+{
+    uint16_t maxLeases;
+
+#if (TCPIP_DHCPS_MAX_LEASES < M_TCPIP_DHCPS_MIN_LEASES)
+    maxLeases = M_TCPIP_DHCPS_MIN_LEASES;
+#else
+    maxLeases = (uint16_t)TCPIP_DHCPS_MAX_LEASES;
+#endif
+
+    // make it M32
+    maxLeases = ((maxLeases + 31U) / 32U) * 32U;
+    return maxLeases;
+}
+
+// debug functions
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+volatile int v_DhcpsStayAssertLoop = 0;
+static void F_DhcpsAssert(bool cond, const char* message, int lineNo)
 {
     if(cond == false)
     {
         SYS_CONSOLE_PRINT("DHCPS Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(_DhcpsStayAssertLoop != 0);
+        while(v_DhcpsStayAssertLoop != 0);
     }
 }
 
 #else
-#define _DhcpsAssert(cond, message, lineNo)
-#endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC)
+#define F_DhcpsAssert(cond, message, lineNo)
+#endif  // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC)
 
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
 
 static const char* statMsgTbl[] = 
 {
@@ -171,7 +309,7 @@ static const char* statMsgTbl[] =
     "inform",       // TCPIP_DHCPS_LEASE_STATE_INFORM
 };
 
-static void _DhcpsDisplayStat(DHCPS_HASH_ENTRY* he)
+static void F_DhcpsDisplayStat(DHCPS_HASH_ENTRY* he)
 {
     if(he->state != he->prevState) 
     {
@@ -184,13 +322,13 @@ static void _DhcpsDisplayStat(DHCPS_HASH_ENTRY* he)
     }
 }
 #else
-#define _DhcpsDisplayStat(he)
-#endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS)
+#define F_DhcpsDisplayStat(he)
+#endif  // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS)
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & (_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT | _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT)) != 0
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & (M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT | M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT)) != 0
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
-static const char* _DHCPS_ErrorEvent_Tbl[] = 
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
+static const char* T_DHCPS_ErrorEvent_Tbl[] = 
 {
     "p_lock",       // TCPIP_DHCPS_EVENT_PROCESS_LOCK
     "t_lock",       // TCPIP_DHCPS_EVENT_TICK_LOCK
@@ -198,7 +336,7 @@ static const char* _DHCPS_ErrorEvent_Tbl[] =
     "unfl",         // TCPIP_DHCPS_EVENT_MSG_UNDERFLOW
     "if_dis",       // TCPIP_DHCPS_EVENT_IF_DISABLED
     "if_err",       // TCPIP_DHCPS_EVENT_IF_ERROR
-    "msg_fmt",      // TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR
+    "msg_fmt",      // TCPIP_DHCPS_EVENT_MSG_FMT_ERROR
     "pool_empty",   // TCPIP_DHCPS_EVENT_POOL_EMPTY
     "cache_full",   // TCPIP_DHCPS_EVENT_CACHE_FULL
     "probe_fail",   // TCPIP_DHCPS_EVENT_ECHO_PROBE_FAIL
@@ -207,16 +345,16 @@ static const char* _DHCPS_ErrorEvent_Tbl[] =
     "arp_fail",     // TCPIP_DHCPS_EVENT_ARP_FAIL
     "req_add_err",  // TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR
     "req_unk",      // TCPIP_DHCPS_EVENT_REQ_UNKNOWN
-    "req_fmt_err",  // TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR
-    "info_fmt_err", // TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR
+    "req_fmt_err",  // TCPIP_DHCPS_EVENT_REQ_FMT_ERROR
+    "info_fmt_err", // TCPIP_DHCPS_EVENT_INFO_FMT_ERROR
     "req_unexpct",  // TCPIP_DHCPS_EVENT_REQ_UNEXPECT
     "declined",     // TCPIP_DHCPS_EVENT_DECLINED
     "info_invalid", // TCPIP_DHCPS_EVENT_INFORM_INVALID
 };
-#endif // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
+#endif // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
-static const char* _DHCPS_ClientEvent_Tbl[] = 
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
+static const char* T_DHCPS_ClientEvent_Tbl[] = 
 {
     "probe",        // TCPIP_DHCPS_EVENT_ECHO_PROBE_SENT
     "discover",     // TCPIP_DHCPS_EVENT_DISCOVER
@@ -227,10 +365,10 @@ static const char* _DHCPS_ClientEvent_Tbl[] =
     "svc_ena",      // TCPIP_DHCPS_EVENT_OTHER_SELECT
     "inform",       // TCPIP_DHCPS_EVENT_INFORM
 };
-#endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
+#endif  // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
 
-static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
+static void F_DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
 {
     const char* evStr = "illegal";
     const char* evMsg = "illegal";
@@ -238,35 +376,35 @@ static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType
 
     if(evType == TCPIP_DHCPS_EVENT_NONE)
     {
-        _DhcpsAssert(false, __func__, __LINE__);
+        F_DhcpsAssert(false, __func__, __LINE__);
     }
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
     else if(evType < 0)
     {
         evStr = "error event";
         evIx = -(evType + 1);
-        _DhcpsAssert(evIx < sizeof(_DHCPS_ErrorEvent_Tbl) / sizeof(*_DHCPS_ErrorEvent_Tbl), __func__, __LINE__);
-        evMsg = _DHCPS_ErrorEvent_Tbl[evIx];
+        F_DhcpsAssert(evIx < sizeof(T_DHCPS_ErrorEvent_Tbl) / sizeof(*T_DHCPS_ErrorEvent_Tbl), __func__, __LINE__);
+        evMsg = T_DHCPS_ErrorEvent_Tbl[evIx];
     }
-#endif // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
+#endif // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT ) != 0
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
     else if(evType > 0)
     {
         evStr = "run event";
         evIx = evType - 1;
-        _DhcpsAssert(evIx < sizeof(_DHCPS_ClientEvent_Tbl) / sizeof(*_DHCPS_ClientEvent_Tbl), __func__, __LINE__);
-        evMsg = _DHCPS_ClientEvent_Tbl[evIx];
+        F_DhcpsAssert(evIx < sizeof(T_DHCPS_ClientEvent_Tbl) / sizeof(*T_DHCPS_ClientEvent_Tbl), __func__, __LINE__);
+        evMsg = T_DHCPS_ClientEvent_Tbl[evIx];
     }
-#endif // (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
+#endif // (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT ) != 0
 
     (void)evStr; (void)evMsg;
-    uint32_t ipAddress = 0;
-    uint32_t data = 0;
-    uint16_t flags = 0;
+    uint32_t ipAddress = 0U;
+    uint32_t data = 0U;
+    uint16_t flags = 0U;
 
-    if(evInfo != 0)
+    if(evInfo != NULL)
     {
         flags = evInfo->flags.val;
         ipAddress = evInfo->ipAddress;
@@ -277,14 +415,14 @@ static void _DHCPS_EventPrint(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType
     SYS_CONSOLE_PRINT("DHCPs - if: %d %s: %s, ipAddress: 0x%08x, data: 0x%08x, flags: 0x%04x\r\n", TCPIP_STACK_NetIndexGet(pktIf), evStr, evMsg, ipAddress, data, flags);
 }
 #else
-#define _DHCPS_EventPrint(pktIf, evType, he, evInfo) do { (void)he; (void)evInfo; } while (0)
-#endif  // (_TCPIP_DHCPS_DEBUG_LEVEL & (_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT | _TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT)) != 0
+#define F_DHCPS_EventPrint(pktIf, evType, he, evInfo) do { (void)he; (void)evInfo; } while (false)
+#endif  // (M_TCPIP_DHCPS_DEBUG_LEVEL & (M_TCPIP_DHCPS_DEBUG_MASK_ERROR_EVENT | M_TCPIP_DHCPS_DEBUG_MASK_CLIENT_EVENT)) != 0
 
-#if (_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_SENT_MESSAGE ) != 0
-static void _DHCPS_SendMessagePrint(DHCPS_HASH_ENTRY* he, uint32_t destAdd)
+#if (M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_SENT_MESSAGE ) != 0
+static void F_DHCPS_SendMessagePrint(DHCPS_HASH_ENTRY* he, uint32_t destAdd)
 {
 
-    static const char* _DHCPS_MsgType_Tbl[] = 
+    static const char* T_DHCPS_MsgType_Tbl[] = 
     {
         "discover", // DHCP_MESSAGE_TYPE_DISCOVER
         "offer",    // DHCP_MESSAGE_TYPE_OFFER   
@@ -300,46 +438,46 @@ static void _DHCPS_SendMessagePrint(DHCPS_HASH_ENTRY* he, uint32_t destAdd)
     IPV4_ADDR dAddr;
     dAddr.Val =  destAdd;
     TCPIP_Helper_IPAddressToString(&dAddr, addBuff, sizeof(addBuff));
-    _DhcpsAssert(he->srvMsgType > 0, __func__, __LINE__); 
-    _DhcpsAssert(he->cliMsgType > 0, __func__, __LINE__); 
-    uint8_t srvMsgType = he->srvMsgType - 1;
-    uint8_t cliMsgType = he->cliMsgType - 1;
-    _DhcpsAssert(srvMsgType < sizeof(_DHCPS_MsgType_Tbl) / sizeof(*_DHCPS_MsgType_Tbl), __func__, __LINE__); 
-    _DhcpsAssert(cliMsgType < sizeof(_DHCPS_MsgType_Tbl) / sizeof(*_DHCPS_MsgType_Tbl), __func__, __LINE__); 
-    const char* srvMsg = _DHCPS_MsgType_Tbl[srvMsgType];
-    const char* cliMsg = _DHCPS_MsgType_Tbl[cliMsgType];
+    F_DhcpsAssert(he->srvMsgType > 0U, __func__, __LINE__); 
+    F_DhcpsAssert(he->cliMsgType > 0U, __func__, __LINE__); 
+    uint8_t srvMsgType = he->srvMsgType - 1U;
+    uint8_t cliMsgType = he->cliMsgType - 1U;
+    F_DhcpsAssert(srvMsgType < sizeof(T_DHCPS_MsgType_Tbl) / sizeof(*T_DHCPS_MsgType_Tbl), __func__, __LINE__); 
+    F_DhcpsAssert(cliMsgType < sizeof(T_DHCPS_MsgType_Tbl) / sizeof(*T_DHCPS_MsgType_Tbl), __func__, __LINE__); 
+    const char* srvMsg = T_DHCPS_MsgType_Tbl[srvMsgType];
+    const char* cliMsg = T_DHCPS_MsgType_Tbl[cliMsgType];
 
     (void)cliMsg; (void)srvMsg; (void)addBuff;
     SYS_CONSOLE_PRINT("DHCPs sent msg - if: %d to: %s, cliMsg: %s, srvMsg: %s\r\n", he->parent->pNetIf->netIfIx, addBuff, cliMsg, srvMsg);
 }
 
 #else
-#define _DHCPS_SendMessagePrint(he, destAdd) 
+#define F_DHCPS_SendMessagePrint(he, destAdd) 
 #endif
 
 // DHCPs lock for shared access
-static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) _DHCPS_Lock(void)
+static __inline__ OSAL_CRITSECT_DATA_TYPE __attribute__((always_inline)) F_DHCPS_Lock(void)
 {
     return OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 }
 
-static __inline__ void __attribute__((always_inline)) _DHCPS_Unlock(OSAL_CRITSECT_DATA_TYPE lock)
+static __inline__ void __attribute__((always_inline)) F_DHCPS_Unlock(OSAL_CRITSECT_DATA_TYPE lock)
 {
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, lock);   
 }
 
-#if (_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
-static bool _DHCPS_AccessLock(void)
+#if (M_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
+static bool F_DHCPS_AccessLock(void)
 { 
     bool res = false;
 
     OSAL_CRITSECT_DATA_TYPE critStat = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(gDhcpDcpt != 0)
+    if(gDhcpDcpt != NULL)
     {
-        if(gDhcpDcpt->accessLock == 0)
+        if(gDhcpDcpt->accessLock == 0U)
         {
-            gDhcpDcpt->accessLock = 1;
+            gDhcpDcpt->accessLock = 1U;
             res = true;
         }
     }
@@ -348,84 +486,84 @@ static bool _DHCPS_AccessLock(void)
     return res;
 }
 
-static void _DHCPS_AccessUnlock(void)
+static void F_DHCPS_AccessUnlock(void)
 { 
     OSAL_CRITSECT_DATA_TYPE critStat = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
-    gDhcpDcpt->accessLock = 0;
+    gDhcpDcpt->accessLock = 0U;
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critStat);
 }
 #else
-static __inline__ bool __attribute__((always_inline)) _DHCPS_AccessLock(void)
+static __inline__ bool __attribute__((always_inline)) F_DHCPS_AccessLock(void)
 {
-    if(gDhcpDcpt != 0 && gDhcpDcpt->accessLock == 0)
+    if(gDhcpDcpt != NULL && gDhcpDcpt->accessLock == 0U)
     {
-        gDhcpDcpt->accessLock = 1;
+        gDhcpDcpt->accessLock = 1U;
         return  true;
     }
 
     return false;
 }
-static __inline__ void __attribute__((always_inline)) _DHCPS_AccessUnlock(void)
+static __inline__ void __attribute__((always_inline)) F_DHCPS_AccessUnlock(void)
 {
-    gDhcpDcpt->accessLock = 0;
+    gDhcpDcpt->accessLock = 0U;
 }
-#endif  // (_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
+#endif  // (M_TCPIP_DHCPS_MULTI_THREADED_ACCESS != 0)
 
-static __inline__ void __attribute__((always_inline)) _DHCPS_LeaseRestart(DHCPS_HASH_ENTRY* he, uint32_t leaseTime)
+static __inline__ void __attribute__((always_inline)) F_DHCPS_LeaseRestart(DHCPS_HASH_ENTRY* he, uint32_t leaseTime)
 {
     he->cliLeaseTime = leaseTime;
-    he->leaseStartTime = _TCPIP_SecCountGet();
+    he->leaseStartTime = TCPIP_SecCountGet();
     he->leaseEndTime = he->leaseStartTime + he->cliLeaseTime;
 }
 
 // returns true if the DHCPs is configured on pNetIf
 // false otherwise
 // DHCPs and pNetIf both valid
-static __inline__  bool __attribute__((always_inline)) _DHCPS_MappedOnNet(TCPIP_NET_IF* pNetIf)
+static __inline__  bool __attribute__((always_inline)) F_DHCPS_MappedOnNet(TCPIP_NET_IF* pNetIf)
 {
     DHCPS_IF_MAP* pIfMap = gDhcpDcpt->ifMap + pNetIf->netIfIx;
-    return (pIfMap->mapFlag & DHCPS_IF_FLAG_MAPPED) != 0;
+    return (pIfMap->mapFlag & (uint8_t)DHCPS_IF_FLAG_MAPPED) != 0U;
 }
 
 // calculate an IP mask from a prefix length
 // mask is returned in proper network order
-static __inline__ uint32_t __attribute__((always_inline)) _IPMask_FromPrefix(size_t prefixLen)
+static __inline__ uint32_t __attribute__((always_inline)) F_IPMask_FromPrefix(size_t prefixLen)
 {
-    return TCPIP_Helper_htonl(((1 << prefixLen) - 1) << (32 - prefixLen));
+    return TCPIP_Helper_htonl((((size_t)1U << prefixLen) - 1U) << ((size_t)32U - prefixLen));
 }
 
 // number of leases calculated from the prefix length
-static __inline__ size_t __attribute__((always_inline)) _IPLeases_FromPrefix(size_t prefixLen)
+static __inline__ size_t __attribute__((always_inline)) F_IPLeases_FromPrefix(size_t prefixLen)
 {
-    return (1 << (32 - prefixLen));
+    return ((size_t)1U << ((size_t)32U - prefixLen));
 }
 
 // returns the IP address corresponding to a pool index
 // assumes the index is valid
-static __inline__ uint32_t __attribute__((always_inline)) _IpAddressFromPoolIndex(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t ipIndex)
+static __inline__ uint32_t __attribute__((always_inline)) F_IpAddressFromPoolIndex(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t ipIndex)
 {
     return TCPIP_Helper_htonl(TCPIP_Helper_ntohl(pIDcpt->startIPAddress.Val) + ipIndex);
 }
 
-static __inline__ void __attribute__((always_inline)) _DHCPS_SetEntryState(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_STATE setState)
+static __inline__ void __attribute__((always_inline)) F_DHCPS_SetEntryState(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_STATE setState)
 {
-     he->state = setState;
+     he->state = (uint8_t)setState;
 }
 
-static __inline__ void __attribute__((always_inline)) _DHCPS_InitProbe(DHCPS_HASH_ENTRY* he, bool setReprobe)
+static __inline__ void __attribute__((always_inline)) F_DHCPS_InitProbe(DHCPS_HASH_ENTRY* he, bool setReprobe)
 {
     if(setReprobe)
     {
         he->reprobeCount = gDhcpDcpt->nReprobes;
     }
     he->probeCount = gDhcpDcpt->nProbes;
-    he->icmpRetries = TCPIP_DHCPS_ICMP_ECHO_RETRIES;
+    he->icmpRetries = (uint8_t)TCPIP_DHCPS_ICMP_ECHO_RETRIES;
 }
 
 // returns the pool index corresponding to an IP address
 // the IP address has to be part of the pool
 // returns -1 if error
-static int32_t   _PoolIndexFromIpAddress(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uint32_t ipAddress)
+static int32_t   F_PoolIndexFromIpAddress(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uint32_t ipAddress)
 {
     uint32_t hostAddress = TCPIP_Helper_ntohl(ipAddress);
     uint32_t startAddress = TCPIP_Helper_ntohl(pIDcpt->startIPAddress.Val);
@@ -435,7 +573,7 @@ static int32_t   _PoolIndexFromIpAddress(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uin
         size_t index = hostAddress - startAddress;
         if(index < pIDcpt->leaseEntries)
         {   // valid
-            return index;
+            return (int32_t)index;
         }
     }
 
@@ -446,12 +584,12 @@ static int32_t   _PoolIndexFromIpAddress(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uin
 // returns the DHCPs interface index corresponding
 // to a stack interface
 // DHCPs and pNetIf both valid
-static int _DHCPS_InterfaceMapIx(TCPIP_NET_IF* pNetIf)
+static int F_DHCPS_InterfaceMapIx(const TCPIP_NET_IF* pNetIf)
 {
     DHCPS_IF_MAP* pIfMap = gDhcpDcpt->ifMap + pNetIf->netIfIx;
-    if((pIfMap->mapFlag & DHCPS_IF_FLAG_MAPPED) != 0)
+    if((pIfMap->mapFlag & (uint8_t)DHCPS_IF_FLAG_MAPPED) != 0U)
     {
-        return pIfMap->mapIndex;
+        return (int)pIfMap->mapIndex;
     }
 
     // no DHCPs on this interface
@@ -459,18 +597,18 @@ static int _DHCPS_InterfaceMapIx(TCPIP_NET_IF* pNetIf)
 }
 
 // formats a key to the right size, padding it right if necessary
-// the destKey is _TCPIP_DHCPS_CLIENT_ID_SIZE in length!
+// the destKey is M_TCPIP_DHCPS_CLI_ID_SIZE in length!
 // returns real size of the used key: could be < than idLen if truncation occurred!
-static size_t _DHCPS_FormatHashKey(uint8_t* destKey, const uint8_t* id, size_t idLen)
+static size_t F_DHCPS_FormatHashKey(uint8_t* destKey, const uint8_t* id, size_t idLen)
 {
-    size_t usedSize = idLen > _TCPIP_DHCPS_CLIENT_ID_SIZE ? _TCPIP_DHCPS_CLIENT_ID_SIZE : idLen;
+    size_t usedSize = idLen > M_TCPIP_DHCPS_CLI_ID_SIZE ? M_TCPIP_DHCPS_CLI_ID_SIZE : idLen;
 
-    memcpy(destKey, id, usedSize);
+    (void)memcpy(destKey, id, usedSize);
 
-    if(idLen < _TCPIP_DHCPS_CLIENT_ID_SIZE)
+    if(idLen < M_TCPIP_DHCPS_CLI_ID_SIZE)
     { 
-        size_t padSize = _TCPIP_DHCPS_CLIENT_ID_SIZE - idLen;
-        memset(destKey + idLen, 0, padSize);
+        size_t padSize = M_TCPIP_DHCPS_CLI_ID_SIZE - idLen;
+        (void)memset(destKey + idLen, 0, padSize);
     }
 
     return usedSize;
@@ -479,28 +617,28 @@ static size_t _DHCPS_FormatHashKey(uint8_t* destKey, const uint8_t* id, size_t i
 
 // removes an existing hash entry
 // marks the corresponding pool index as free or keeps it busy
-static void _DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy)
+static void F_DHCPS_RemoveEntry(DHCPS_HASH_ENTRY* he, bool delBusy)
 {
-    _DhcpsAssert(he != 0, __func__, __LINE__);
+    F_DhcpsAssert(he != NULL, __func__, __LINE__);
     uint32_t ipAddr = he->ipAddress.Val;
-    _DhcpsAssert(ipAddr != 0, __func__, __LINE__);
+    F_DhcpsAssert(ipAddr != 0U, __func__, __LINE__);
 
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
-    _DhcpsAssert(pIDcpt != 0, __func__, __LINE__);
+    F_DhcpsAssert(pIDcpt != NULL, __func__, __LINE__);
 
-    TCPIP_OAHASH_EntryRemove(pIDcpt->hashDcpt, (OA_HASH_ENTRY*)he);
+    TCPIP_OAHASH_EntryRemove(pIDcpt->hashDcpt, FC_DhcpsHash2OaHash(he));
     if(delBusy == true)
     {
-        int32_t entryIx = _PoolIndexFromIpAddress(pIDcpt, ipAddr); 
+        int32_t entryIx = F_PoolIndexFromIpAddress(pIDcpt, ipAddr); 
         // should be a valid IP address since it's in the database!
-        _DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-        IpIndexMarkFree(pIDcpt, entryIx);
+        F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
+        IpIndexMarkFree(pIDcpt, (size_t)entryIx);
     }
 }
 
 // removes all existing hash entries
 // marks the corresponding pool indexes as free or keeps them busy
-static void _DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy)
+static void F_DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool delPerm, bool delBusy)
 {
     OA_HASH_ENTRY*  pBkt;
     DHCPS_HASH_ENTRY* he;
@@ -510,77 +648,77 @@ static void _DHCPS_RemoveAllEntries(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool del
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
         pBkt = TCPIP_OAHASH_EntryGet(pOH, bktIx);       
-        he = (DHCPS_HASH_ENTRY*)pBkt;
-        if(pBkt->flags.busy != 0 && (delPerm == true || (he->runFlags & DHCPS_RUN_FLAG_PERM_LEASE) == 0))
+        he = FC_OaHash2DhcpsHash(pBkt);
+        if(pBkt->flags.busy != 0U && (delPerm == true || (he->runFlags & (uint8_t)DHCPS_RUN_FLAG_PERM_LEASE) == 0U))
         {   // delete entry
             uint32_t ipAddr = he->ipAddress.Val;
-            _DhcpsAssert(ipAddr != 0, __func__, __LINE__);
+            F_DhcpsAssert(ipAddr != 0U, __func__, __LINE__);
 
             TCPIP_OAHASH_EntryRemove(pOH, pBkt);
             if(delBusy == true)
             {
-                int32_t entryIx = _PoolIndexFromIpAddress(pIDcpt, ipAddr); 
+                int32_t entryIx = F_PoolIndexFromIpAddress(pIDcpt, ipAddr); 
                 // should be a valid IP address since it's in the database!
-                _DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-                IpIndexMarkFree(pIDcpt, entryIx);
+                F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
+                IpIndexMarkFree(pIDcpt, (size_t)entryIx);
             }
         }
     }
 }
 
 // access should be locked if called at run-time!
-static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig, uint16_t nConfigs)
+static TCPIP_DHCPS_RES F_DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfConfig, uint16_t nConfigs)
 {
-    TCPIP_DHCPS_RES valRes = _DHCPS_ValidateConfig(pIfConfig, nConfigs);
-    if(valRes < 0)
+    TCPIP_DHCPS_RES valRes = F_DHCPS_ValidateConfig(pIfConfig, nConfigs);
+    if((int)valRes < 0)
     {
         return valRes;
     }
 
     
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt;
-    TCPIP_NET_IF* pNetIf;
+    const TCPIP_NET_IF* pNetIf;
     DHCPS_IF_MAP* pIfMap;
     size_t hashMemSize;
     OA_HASH_DCPT*   hashDcpt;
-    TCPIP_DHCPS_CLIENT_OPTIONS cliOptions;
+    TCPIP_DHCPS_CLI_OPTIONS cliOptions;
 
-    int ix;
+    size_t ix;
 
-    for(ix = 0; ix < nConfigs; ix++, pIfConfig++)
+    for(ix = 0; ix < nConfigs; ix++)
     {
-        memset(&cliOptions, 0, sizeof(cliOptions));
-#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+        (void)memset(&cliOptions, 0, sizeof(cliOptions));
+#if (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         // set the T1 and T2 options, just in case; user can overwrite
-        cliOptions.t1Mult = _TCPIP_DHCPS_DEFAULT_T1_MULT;
-        cliOptions.t1Div = _TCPIP_DHCPS_DEFAULT_T1_DIV;
-        cliOptions.t2Mult = _TCPIP_DHCPS_DEFAULT_T2_MULT;
-        cliOptions.t2Div = _TCPIP_DHCPS_DEFAULT_T2_DIV;
-#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+        cliOptions.t1Mult = M_TCPIP_DHCPS_DEFAULT_T1_MULT;
+        cliOptions.t1Div = M_TCPIP_DHCPS_DEFAULT_T1_DIV;
+        cliOptions.t2Mult = M_TCPIP_DHCPS_DEFAULT_T2_MULT;
+        cliOptions.t2Div = M_TCPIP_DHCPS_DEFAULT_T2_DIV;
+#endif  // (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
-        valRes = _DHCPS_ParseConfigOptions(&cliOptions, pIfConfig->pOptConfig, pIfConfig->nOptConfigs);
-        if(valRes < 0)
+        valRes = F_DHCPS_ParseConfigOptions(&cliOptions, pIfConfig->pOptConfig, pIfConfig->nOptConfigs);
+        if((int)valRes < 0)
         {   // failed
             return valRes;
         }
         // 
-#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+#if (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         // check T2 > T1
         if(cliOptions.t1Mult * cliOptions.t2Div > cliOptions.t2Mult * cliOptions.t1Div)
         {   // failed; use defaults
             return TCPIP_DHCPS_RES_T1_T2_ERR;
         } 
-#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+#endif  // (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
-        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pIfConfig->ifIndex); 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
+        pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet((size_t)pIfConfig->ifIndex); 
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
         if(ifIx >= 0)
         {   // this interface is already mapped; kill the DB
             pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
-            _DhcpsAssert(pIDcpt->hashDcpt != 0, __func__, __LINE__);
-            _DHCPS_RemoveAllEntries(pIDcpt, true, true);
-            TCPIP_HEAP_Free(gDhcpDcpt->memH, pIDcpt->hashDcpt);
-            pIDcpt->hashDcpt = 0;
+            F_DhcpsAssert(pIDcpt->hashDcpt != NULL, __func__, __LINE__);
+            F_DHCPS_RemoveAllEntries(pIDcpt, true, true);
+            (void)TCPIP_HEAP_Free(gDhcpDcpt->memH, pIDcpt->hashDcpt);
+            pIDcpt->hashDcpt = NULL;
         }
         else
         {   // new interface to map; get the next free slot
@@ -591,25 +729,25 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
 
         hashMemSize = sizeof(OA_HASH_DCPT) + pIfConfig->leaseEntries * sizeof(DHCPS_HASH_ENTRY);
         hashDcpt = (OA_HASH_DCPT*)TCPIP_HEAP_Malloc(gDhcpDcpt->memH, hashMemSize);
-        if(hashDcpt == 0)
+        if(hashDcpt == NULL)
         {   // failed
             return TCPIP_DHCPS_RES_ALLOC_ERR;
         }
 
         // populate the hash entries
         hashDcpt->memBlk = hashDcpt + 1;
-        hashDcpt->hParam = 0;
+        hashDcpt->hParam = NULL;
         hashDcpt->hEntrySize = sizeof(DHCPS_HASH_ENTRY);
         hashDcpt->hEntries = pIfConfig->leaseEntries;
         hashDcpt->probeStep = DHCPS_HASH_PROBE_STEP;
 
-        hashDcpt->hashF = TCPIP_DHCPS_ClientIdHash;
+        hashDcpt->hashF = &TCPIP_DHCPS_ClientIdHash;
 #if defined(OA_DOUBLE_HASH_PROBING)
-        hashDcpt->probeHash = TCPIP_DHCPS_HashProbeHash;
+        hashDcpt->probeHash = &TCPIP_DHCPS_HashProbeHash;
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
-        hashDcpt->cpyF = TCPIP_DHCPS_IdKeyCopy;
-        hashDcpt->delF = TCPIP_DHCPS_HashDeleteEntry;
-        hashDcpt->cmpF = TCPIP_DHCPS_IdKeyCompare;
+        hashDcpt->cpyF = &TCPIP_DHCPS_IdKeyCopy;
+        hashDcpt->delF = &TCPIP_DHCPS_HashDeleteEntry;
+        hashDcpt->cmpF = &TCPIP_DHCPS_IdKeyCompare;
         TCPIP_OAHASH_Initialize(hashDcpt);
 
         // populate the interface descriptor
@@ -617,24 +755,26 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
         pIDcpt->leaseEntries = pIfConfig->leaseEntries;
         pIDcpt->prefixLen = (uint8_t)pIfConfig->prefixLen;
         pIDcpt->pNetIf = pNetIf;
-        TCPIP_Helper_StringToIPAddress(pIfConfig->serverIPAddress, &pIDcpt->serverIPAddress);
-        pIDcpt->ipMaskAddress.Val =  _IPMask_FromPrefix(pIfConfig->prefixLen);
-        TCPIP_Helper_StringToIPAddress(pIfConfig->startIPAddress, &pIDcpt->startIPAddress);
+        (void)TCPIP_Helper_StringToIPAddress(pIfConfig->serverIPAddress, &pIDcpt->serverIPAddress);
+        pIDcpt->ipMaskAddress.Val =  F_IPMask_FromPrefix(pIfConfig->prefixLen);
+        (void)TCPIP_Helper_StringToIPAddress(pIfConfig->startIPAddress, &pIDcpt->startIPAddress);
         pIDcpt->cliLeaseDuration = pIfConfig->leaseDuration;
-        pIDcpt->minLeaseDuration = (pIfConfig->minLeaseDuration == 0) ? _TCPIP_DHCPS_LEASE_DEFAULT_MIN_TIME : pIfConfig->minLeaseDuration;
-        pIDcpt->maxLeaseDuration = (pIfConfig->maxLeaseDuration == 0) ? pIfConfig->leaseDuration : pIfConfig->maxLeaseDuration;
-        pIDcpt->unreqOfferTmo = (pIfConfig->unreqOfferTmo == 0) ? _TCPIP_DHCPS_LEASE_DEFAULT_UNREQ_OFFER_TMO : pIfConfig->unreqOfferTmo;
+        pIDcpt->minLeaseDuration = (pIfConfig->minLeaseDuration == 0U) ? (uint32_t)M_TCPIP_DHCPS_LEASE_DEFAULT_MIN_TIME : pIfConfig->minLeaseDuration;
+        pIDcpt->maxLeaseDuration = (pIfConfig->maxLeaseDuration == 0U) ? pIfConfig->leaseDuration : pIfConfig->maxLeaseDuration;
+        pIDcpt->unreqOfferTmo = (pIfConfig->unreqOfferTmo == 0U) ? (uint32_t)M_TCPIP_DHCPS_LEASE_DEFAULT_UNREQ_OFFER_TMO : pIfConfig->unreqOfferTmo;
         pIDcpt->hashDcpt = hashDcpt;
-        pIDcpt->ipMapSize = ((pIfConfig->leaseEntries + 31) / 32);  // round up to multiple of 32
-        _DHCPS_InitIpMap(pIDcpt);
+        pIDcpt->ipMapSize = ((pIfConfig->leaseEntries + 31U) / 32U);  // round up to multiple of 32
+        F_DHCPS_InitIpMap(pIDcpt);
 
         // update the if map
         pIfMap = gDhcpDcpt->ifMap + pIfConfig->ifIndex;
-        pIfMap->mapFlag |= DHCPS_IF_FLAG_MAPPED;
-        pIfMap->mapIndex = ifIx;
+        pIfMap->mapFlag |= (uint8_t)DHCPS_IF_FLAG_MAPPED;
+        pIfMap->mapIndex = (uint8_t)ifIx;
 
         // set the client options
         pIDcpt->cliOptions = cliOptions; 
+        // continue
+        pIfConfig++;
     }
 
 
@@ -644,9 +784,9 @@ static TCPIP_DHCPS_RES _DHCPS_AddLeasePools(const TCPIP_DHCPS_INTERFACE_CONFIG* 
 
 
 // validate the DHCP server configuration data
-static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG *pIfConfig, size_t ifConfigNo)
+static TCPIP_DHCPS_RES F_DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG *pIfConfig, size_t ifConfigNo)
 {
-    int ix;
+    size_t ix;
     IPV4_ADDR   serverIPAddress;
     IPV4_ADDR   startIPAddress;
     IPV4_ADDR   ipMaskAddress;
@@ -655,35 +795,35 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
     uint32_t    minLease, maxLease;
     DHCPS_IF_MAP* pIfMap;
     TCPIP_DHCPS_RES optRes;
-    DHCPS_IF_MAP ifMap[_TCPIP_DHCPS_NET_INTERFACES_COUNT]; // map of the used interfaces
+    DHCPS_IF_MAP ifMap[M_TCPIP_DHCPS_NET_INTERFACES_COUNT]; // map of the used interfaces
 
-    if(pIfConfig == 0 || ifConfigNo == 0 || ifConfigNo > TCPIP_DHCPS_INTERFACE_COUNT)
+    if(pIfConfig == NULL || ifConfigNo == 0U || ifConfigNo > (size_t)TCPIP_DHCPS_INTERFACE_COUNT)
     {
         return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
     }
 
     // verify data for each interface
-    memset(ifMap, 0, sizeof(ifMap));
-    for(ix = 0; ix < ifConfigNo; ix++, pIfConfig++)
+    (void)memset(ifMap, 0, sizeof(ifMap));
+    for(ix = 0; ix < ifConfigNo; ix++)
     {
         if(pIfConfig->ifIndex >= gDhcpDcpt->stackIfs)
         {
             return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
         }
 
-        if(pIfConfig->leaseEntries == 0 || pIfConfig->leaseEntries > gDhcpDcpt->maxLeases || pIfConfig->leaseDuration == 0)
+        if(pIfConfig->leaseEntries == 0U || pIfConfig->leaseEntries > gDhcpDcpt->maxLeases || pIfConfig->leaseDuration == 0U)
         {   // wrong parameters
             return TCPIP_DHCPS_RES_LEASE_PARAM_ERR;
         }
-        minLease = (pIfConfig->minLeaseDuration == 0) ? _TCPIP_DHCPS_LEASE_DEFAULT_MIN_TIME : pIfConfig->minLeaseDuration;
-        maxLease = (pIfConfig->maxLeaseDuration == 0) ? pIfConfig->leaseDuration : pIfConfig->maxLeaseDuration;
+        minLease = (pIfConfig->minLeaseDuration == 0U) ? M_TCPIP_DHCPS_LEASE_DEFAULT_MIN_TIME : pIfConfig->minLeaseDuration;
+        maxLease = (pIfConfig->maxLeaseDuration == 0U) ? pIfConfig->leaseDuration : pIfConfig->maxLeaseDuration;
         
         if(minLease > pIfConfig->leaseDuration || maxLease < pIfConfig->leaseDuration)
         {   // wrong parameters
             return TCPIP_DHCPS_RES_LEASE_PARAM_ERR;
         }
 
-        if(pIfConfig->prefixLen == 0 || pIfConfig->prefixLen > 32)
+        if(pIfConfig->prefixLen == 0U || pIfConfig->prefixLen > 32U)
         {
             return TCPIP_DHCPS_RES_PREFIX_LEN_ERR;
         }
@@ -695,29 +835,29 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
             return TCPIP_DHCPS_RES_INVALID_ADDRESS;
         }
 
-        if(serverIPAddress.Val == 0 || startIPAddress.Val == 0)
+        if(serverIPAddress.Val == 0U || startIPAddress.Val == 0U)
         {
             return TCPIP_DHCPS_RES_NULL_ADDRESS;
         }
 
         // check the addresses space 
-        maxLeases = _IPLeases_FromPrefix(pIfConfig->prefixLen);
-        if(maxLeases < 2)
+        maxLeases = F_IPLeases_FromPrefix(pIfConfig->prefixLen);
+        if(maxLeases < 2U)
         {
-            maxLeases = 0;
+            maxLeases = 0U;
         }
         else
         {
-            maxLeases -= 2;   // exclude all 0 and all 1 hosts
+            maxLeases -= 2U;   // exclude all 0 and all 1 hosts
         }
 
-        if(maxLeases == 0 || maxLeases < pIfConfig->leaseEntries)
+        if(maxLeases == 0U || maxLeases < pIfConfig->leaseEntries)
         {   // not enough leases for this
             return TCPIP_DHCPS_RES_NOT_ENOUGH_LEASES;
         }
 
         // check DHCP server is in the same subnet as the leases...
-        ipMaskAddress.Val = _IPMask_FromPrefix(pIfConfig->prefixLen);
+        ipMaskAddress.Val = F_IPMask_FromPrefix(pIfConfig->prefixLen);
         if((serverIPAddress.Val & ipMaskAddress.Val) != (startIPAddress.Val & ipMaskAddress.Val))
         {
             return TCPIP_DHCPS_RES_SUBNET_ERR;
@@ -726,14 +866,14 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
         startIPAddress.Val =  TCPIP_Helper_ntohl(startIPAddress.Val);
         // check that [start, start + leases] length is within [net start, net end]
         netStartAdd.Val = startIPAddress.Val & TCPIP_Helper_ntohl(ipMaskAddress.Val);
-        avlblLeases = maxLeases - (startIPAddress.Val - netStartAdd.Val) + 1;
+        avlblLeases = maxLeases - (startIPAddress.Val - netStartAdd.Val) + 1U;
         if(avlblLeases <  pIfConfig->leaseEntries)
         {
             return TCPIP_DHCPS_RES_NOT_ENOUGH_LEASES;
         }
 
         // check the supplied options
-        optRes = _DHCPS_ParseConfigOptions(0, pIfConfig->pOptConfig, pIfConfig->nOptConfigs);
+        optRes = F_DHCPS_ParseConfigOptions(NULL, pIfConfig->pOptConfig, pIfConfig->nOptConfigs);
         if(optRes != TCPIP_DHCPS_RES_OK)
         {   // failed
             return optRes;
@@ -741,12 +881,13 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
 
         // check we can add this interface to the map
         pIfMap = ifMap + pIfConfig->ifIndex;
-        if((pIfMap->mapFlag & DHCPS_IF_FLAG_MAPPED) != 0) 
+        if((pIfMap->mapFlag & (uint8_t)DHCPS_IF_FLAG_MAPPED) != 0U) 
         {   // same interface multiple times
             return TCPIP_DHCPS_RES_IF_REPEAT_ERR;
         }
 
-        pIfMap->mapFlag |= DHCPS_IF_FLAG_MAPPED; 
+        pIfMap->mapFlag |= (uint8_t)DHCPS_IF_FLAG_MAPPED; 
+        pIfConfig++;
     }
 
     return TCPIP_DHCPS_RES_OK;
@@ -756,30 +897,31 @@ static TCPIP_DHCPS_RES _DHCPS_ValidateConfig(const TCPIP_DHCPS_INTERFACE_CONFIG 
 #if (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0) || (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0) || (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0 || TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES != 0)
 // parses an IP string and returns the number of values set to the destination
 // < 0 if an error
-static int _DHCPS_ParseIPStrOption(const char* ipStr, uint32_t* pDest, size_t destSize)
+static int F_DHCPS_ParseIPStrOption(const char* ipStr, uint32_t* pDest, size_t destSize)
 {
-    int ix;
+    size_t ix;
     IPV4_ADDR ipAddr;
 
     if(!TCPIP_Helper_StringToIPAddress(ipStr, &ipAddr))
     {
         return -1;
     }
-    if(ipAddr.Val == 0)
+    if(ipAddr.Val == 0U)
     {
         return -1;
     }
 
     // OK
-    if(pDest != 0)
+    if(pDest != NULL)
     {   // add it; ignore excess values
-        for(ix = 0; ix < destSize; ix++, pDest++)
+        for(ix = 0; ix < destSize; ix++)
         {
-            if(*pDest == 0)
+            if(*pDest == 0U)
             {
                 *pDest = ipAddr.Val;
                 return 1;
             }
+            pDest++;
         }
     }
     return 0; 
@@ -788,19 +930,20 @@ static int _DHCPS_ParseIPStrOption(const char* ipStr, uint32_t* pDest, size_t de
 
 // parses all configuration options
 // returns TCPIP_DHCPS_RES_OK if OK, otherwise an error 
-static TCPIP_DHCPS_RES _DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLIENT_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig, size_t nOptions)
+static TCPIP_DHCPS_RES F_DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLI_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig, size_t nOptions)
 {
     size_t optIx;
 
-    if(pOptConfig != 0)
+    if(pOptConfig != NULL)
     {   // configuration options provided
-        for(optIx = 0; optIx < nOptions; optIx++, pOptConfig++)
+        for(optIx = 0U; optIx < nOptions; optIx++)
         {
-            TCPIP_DHCPS_RES optRes = _DHCPS_ParseConfigSglOption(pCliOpt, pOptConfig);
+            TCPIP_DHCPS_RES optRes = F_DHCPS_ParseConfigSglOption(pCliOpt, pOptConfig);
             if(optRes != TCPIP_DHCPS_RES_OK)
             {   // failed
                 return optRes;
             }
+            pOptConfig++;
         }
     }
 
@@ -810,7 +953,7 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigOptions(TCPIP_DHCPS_CLIENT_OPTIONS* pCl
 // parses a single configuration option
 // returns TCPIP_DHCPS_RES_OK if OK, otherwise an error 
 // if pCliOpt != 0, it actually stores the data; otherwise just parse
-static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig)
+static TCPIP_DHCPS_RES F_DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLI_OPTIONS* pCliOpt, const TCPIP_DHCPS_CLIENT_OPTION_CONFIG* pOptConfig)
 {
     int nSets = 0;
 
@@ -820,28 +963,36 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
     {
 #if (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
         case TCPIP_DHCPS_CLIENT_OPTION_ROUTER:
-            nSets = _DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == 0 ? 0 : pCliOpt->cliRouter, sizeof(pCliOpt->cliRouter) / sizeof(*pCliOpt->cliRouter));
+            nSets = F_DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == NULL ? NULL : pCliOpt->cliRouter, sizeof(pCliOpt->cliRouter) / sizeof(*pCliOpt->cliRouter));
             if(nSets < 0)
             {
                 res = TCPIP_DHCPS_RES_INVALID_ADDRESS; 
             }
-            else if (pCliOpt != 0 && nSets > 0)
+            else if (pCliOpt != NULL && nSets > 0)
             {
-                pCliOpt->cliOptFlags |= TCPIP_DHCPS_CLIENT_OPTION_FLAG_ROUTER; 
+                pCliOpt->cliOptFlags |= (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_ROUTER; 
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
 #endif // (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
 #if (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0)
         case TCPIP_DHCPS_CLIENT_OPTION_DNS:
-            nSets = _DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == 0 ? 0 : pCliOpt->cliDNS, sizeof(pCliOpt->cliDNS) / sizeof(*pCliOpt->cliDNS));
+            nSets = F_DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == NULL ? NULL : pCliOpt->cliDNS, sizeof(pCliOpt->cliDNS) / sizeof(*pCliOpt->cliDNS));
             if(nSets < 0)
             {
                 res = TCPIP_DHCPS_RES_INVALID_ADDRESS; 
             }
-            else if (pCliOpt != 0 && nSets > 0)
+            else if (pCliOpt != NULL && nSets > 0)
             {
-                pCliOpt->cliOptFlags |= TCPIP_DHCPS_CLIENT_OPTION_FLAG_DNS; 
+                pCliOpt->cliOptFlags |= (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_DNS; 
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
@@ -849,14 +1000,18 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
 
 #if (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
         case TCPIP_DHCPS_CLIENT_OPTION_TIME_SERVER:
-            nSets = _DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == 0 ? 0 : pCliOpt->cliTServer, sizeof(pCliOpt->cliTServer) / sizeof(*pCliOpt->cliTServer));
+            nSets = F_DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == NULL ? NULL : pCliOpt->cliTServer, sizeof(pCliOpt->cliTServer) / sizeof(*pCliOpt->cliTServer));
             if(nSets < 0)
             {
                 res = TCPIP_DHCPS_RES_INVALID_ADDRESS; 
             }
-            else if (pCliOpt != 0 && nSets > 0)
+            else if (pCliOpt != NULL && nSets > 0)
             {
-                pCliOpt->cliOptFlags |= TCPIP_DHCPS_CLIENT_OPTION_FLAG_TIME_SERVER; 
+                pCliOpt->cliOptFlags |= (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_TIME_SERVER; 
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
@@ -864,61 +1019,77 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
 #endif // (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
 #if (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
         case TCPIP_DHCPS_CLIENT_OPTION_NAME_SERVER:
-            nSets = _DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == 0 ? 0 : pCliOpt->cliNServer, sizeof(pCliOpt->cliNServer) / sizeof(*pCliOpt->cliNServer));
+            nSets = F_DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == NULL ? NULL : pCliOpt->cliNServer, sizeof(pCliOpt->cliNServer) / sizeof(*pCliOpt->cliNServer));
             if(nSets < 0)
             {
                 res = TCPIP_DHCPS_RES_INVALID_ADDRESS; 
             }
-            else if (pCliOpt != 0 && nSets > 0)
+            else if (pCliOpt != NULL && nSets > 0)
             {
-                pCliOpt->cliOptFlags |= TCPIP_DHCPS_CLIENT_OPTION_FLAG_NAME_SERVER; 
+                pCliOpt->cliOptFlags |= (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NAME_SERVER; 
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
 #endif  // (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
 #if (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
         case TCPIP_DHCPS_CLIENT_OPTION_NTP_SERVER:
-            nSets = _DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == 0 ? 0 : pCliOpt->cliNtpServer, sizeof(pCliOpt->cliNtpServer) / sizeof(*pCliOpt->cliNtpServer));
+            nSets = F_DHCPS_ParseIPStrOption(pOptConfig->ipStr, pCliOpt == NULL ? NULL : pCliOpt->cliNtpServer, sizeof(pCliOpt->cliNtpServer) / sizeof(*pCliOpt->cliNtpServer));
             if(nSets < 0)
             {
                 res = TCPIP_DHCPS_RES_INVALID_ADDRESS; 
             }
-            else if (pCliOpt != 0 && nSets > 0)
+            else if (pCliOpt != NULL && nSets > 0)
             {
-                pCliOpt->cliOptFlags |= TCPIP_DHCPS_CLIENT_OPTION_FLAG_NTP_SERVER; 
+                pCliOpt->cliOptFlags |= (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NTP_SERVER; 
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
 
 #endif // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
 
-#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+#if (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
         case TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL:
-            if(pOptConfig->mult == 0 || pOptConfig->div == 0)
+            if(pOptConfig->multFact == 0U || pOptConfig->divFact == 0U)
             {
                 res = TCPIP_DHCPS_RES_T1_T2_ERR; 
             }
-            else if(pCliOpt != 0)
+            else if(pCliOpt != NULL)
             {
-                pCliOpt->t1Mult = pOptConfig->mult;
-                pCliOpt->t1Div = pOptConfig->div;
+                pCliOpt->t1Mult = pOptConfig->multFact;
+                pCliOpt->t1Div = pOptConfig->divFact;
+            }
+            else
+            {
+                // do nothing
             }
             break;
             
         case TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING:
-            if(pOptConfig->mult == 0 || pOptConfig->div == 0)
+            if(pOptConfig->multFact == 0U || pOptConfig->divFact == 0U)
             {
                 res = TCPIP_DHCPS_RES_T1_T2_ERR; 
             }
-            else if(pCliOpt != 0)
+            else if(pCliOpt != NULL)
             {
-                pCliOpt->t2Mult = pOptConfig->mult;
-                pCliOpt->t2Div = pOptConfig->div;
+                pCliOpt->t2Mult = pOptConfig->multFact;
+                pCliOpt->t2Div = pOptConfig->divFact;
+            }
+            else
+            {
+                // do nothing
             }
             break;
 
 
-#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+#endif  // (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
 
         default:
             (void)nSets;
@@ -929,25 +1100,25 @@ static TCPIP_DHCPS_RES _DHCPS_ParseConfigSglOption(TCPIP_DHCPS_CLIENT_OPTIONS* p
     return res;
 }
 
-#if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
-static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
+#if (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+static void F_DHCPS_NotifyClients(const TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evType, DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_EVENT_DATA_INFO* evInfo)
 {
-    int ix;
+    size_t ix;
     TCPIP_DHCPS_EVENT_NODE  registeredUsers[TCPIP_DHCPS_MAX_EVENT_REGISTRATIONS];
     TCPIP_DHCPS_EVENT_DATA  evData;
 
-   _DhcpsAssert(evType != 0, __func__, __LINE__);
+   F_DhcpsAssert(evType != 0, __func__, __LINE__);
 
     bool doNotify = false;
 
 #if (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
-    if(evType < 0)
+    if((int)evType < 0)
     {
         doNotify = true;
     }
 #endif  // (TCPIP_DHCPS_REPORT_ERROR_EVENT != 0)
 #if (TCPIP_DHCPS_REPORT_CLIENT_EVENT != 0)
-    if(evType > 0)
+    if((int)evType > 0)
     {
         doNotify = true;
     }
@@ -956,79 +1127,80 @@ static void _DHCPS_NotifyClients(TCPIP_NET_IF* pktIf, TCPIP_DHCPS_EVENT_TYPE evT
    if(doNotify)
    {
        // make a quick copy
-       OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
-       memcpy(registeredUsers, gDhcpDcpt->registeredUsers, sizeof(registeredUsers));
-       _DHCPS_Unlock(lock);
+       OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
+       (void)memcpy(registeredUsers, gDhcpDcpt->registeredUsers, sizeof(registeredUsers));
+       F_DHCPS_Unlock(lock);
 
 
-       memset(&evData, 0, sizeof(evData));
+       (void)memset(&evData, 0, sizeof(evData));
        evData.hNet = (TCPIP_NET_HANDLE)pktIf;
-       evData.evTime = _TCPIP_SecCountGet();
+       evData.evTime = TCPIP_SecCountGet();
        evData.evType = (int16_t)evType;
-       if(evInfo)
+       if(evInfo != NULL)
        {
            evData.evInfo = *evInfo;
        }
        
-       if(he != 0)
+       if(he != NULL)
        {
            int32_t leaseIndex = TCPIP_OAHASH_EntryGetIndex(he->parent->hashDcpt, &he->hEntry);
-            _DhcpsAssert(leaseIndex >= 0, __func__, __LINE__);
+            F_DhcpsAssert(leaseIndex >= 0, __func__, __LINE__);
            evData.leaseIndex = (uint16_t)leaseIndex;
            evData.evInfo.flags.leaseIndexValid = 1;
 
-           memcpy(evData.macAdd.v, he->chaddr, sizeof(evData.macAdd));
+           (void)memcpy(evData.macAdd.v, he->chaddr, sizeof(evData.macAdd));
            evData.evInfo.flags.macAddValid = 1;
 
-           if(evData.evInfo.flags.infoIpValid == 0)
+           if(evData.evInfo.flags.infoIpValid == 0U)
            {
                evData.evInfo.ipAddress = he->ipAddress.Val;
-               evData.evInfo.flags.infoIpValid = 1;
+               evData.evInfo.flags.infoIpValid = 1U;
            }
        }
 
 
 
        TCPIP_DHCPS_EVENT_NODE* pEvent = registeredUsers;
-       for(ix = 0; ix < sizeof(registeredUsers) / sizeof(*registeredUsers); ix++, pEvent++)
+       for(ix = 0; ix < sizeof(registeredUsers) / sizeof(*registeredUsers); ix++)
        {
-           if(pEvent->handler != 0)
+           if(pEvent->handler != NULL)
            {   // found handler
-               if(pEvent->hNet == 0 || pEvent->hNet == pktIf)
+               if(pEvent->hNet == NULL || pEvent->hNet == pktIf)
                {   // trigger event
                    (*pEvent->handler)(&evData, pEvent->hParam);
                }
            }
+           pEvent++;
        }
    }
 
-    _DHCPS_EventPrint(pktIf, evType, he, evInfo);
+    F_DHCPS_EventPrint(pktIf, evType, he, evInfo);
 }
 #else
-#define _DHCPS_NotifyClients(pktIf, evType, he, evInfo) _DHCPS_EventPrint(pktIf, evType, he, evInfo)
-#endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+#define F_DHCPS_NotifyClients(pktIf, evType, he, evInfo) F_DHCPS_EventPrint(pktIf, evType, he, evInfo)
+#endif  // (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
-bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_DHCPS_MODULE_CONFIG* pDhcpsConfig)
+bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {    
     TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt;
     TCPIP_DHCPS_RES initRes;
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
-        _DhcpsAssert(gDhcpDcpt != 0, __func__, __LINE__);
+        F_DhcpsAssert(gDhcpDcpt != NULL, __func__, __LINE__);
 
-        if(_DHCPS_MappedOnNet(stackCtrl->pNetIf))
+        if(F_DHCPS_MappedOnNet(stackCtrl->pNetIf))
         {
             pIfDcpt = gDhcpDcpt->ifDcpt + stackCtrl->pNetIf->netIfIx;
-            if((pIfDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_DELETE_OLD) != 0)
+            if((pIfDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_DELETE_OLD) != 0U)
             {   // remove the old entries, if there
-                _DHCPS_RemoveAllEntries(pIfDcpt, true, true);
+                F_DHCPS_RemoveAllEntries(pIfDcpt, true, true);
             }
         }
 
-        if(stackCtrl->pNetIf->Flags.bIsDHCPSrvEnabled != 0)
+        if(stackCtrl->pNetIf->Flags.bIsDHCPSrvEnabled != 0U)
         {
-            _DHCPS_Enable(stackCtrl->pNetIf, false);
+            (void)F_DHCPS_Enable(stackCtrl->pNetIf, false);
         }
         
         return true;
@@ -1039,17 +1211,18 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
     initRes = TCPIP_DHCPS_RES_OK;
     while(dhcpSInitCount == 0)
     {   // first time we're run
-        gDhcpDcpt = 0;
+        gDhcpDcpt = NULL;
 
-        if(pDhcpsConfig == 0)
+        if(initData == NULL)
         {
             initRes = TCPIP_DHCPS_RES_NO_INIT_DATA;
             break;
         }
+        const TCPIP_DHCPS_MODULE_CONFIG* pDhcpsConfig = (const TCPIP_DHCPS_MODULE_CONFIG*)initData;
 
         // allocate the descriptor
         gDhcpDcpt = (TCPIP_DHCPS_DCPT*)TCPIP_HEAP_Calloc(stackCtrl->memH, 1, sizeof(TCPIP_DHCPS_DCPT));
-        if(gDhcpDcpt == 0)
+        if(gDhcpDcpt == NULL)
         {   // failed
             initRes = TCPIP_DHCPS_RES_ALLOC_ERR;
             break;
@@ -1059,21 +1232,21 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         gDhcpDcpt->stackIfs = stackCtrl->nIfs;
         gDhcpDcpt->uSkt = INVALID_UDP_SOCKET;
         gDhcpDcpt->ifCount = (uint8_t)sizeof(gDhcpDcpt->ifDcpt) / sizeof(*gDhcpDcpt->ifDcpt);
-        gDhcpDcpt->nProbes = pDhcpsConfig->nProbes ? pDhcpsConfig->nProbes : _TCPIP_DHCPS_DEFAULT_PROBE_COUNT;
-        gDhcpDcpt->nReprobes = pDhcpsConfig->conflictAttempts ? pDhcpsConfig->conflictAttempts : _TCPIP_DHCPS_DEFAULT_REPROBE_COUNT;
+        gDhcpDcpt->nProbes = pDhcpsConfig->nProbes != 0U ? pDhcpsConfig->nProbes : (uint8_t)M_TCPIP_DHCPS_DEFAULT_PROBE_COUNT;
+        gDhcpDcpt->nReprobes = pDhcpsConfig->conflictAttempts != 0U ? pDhcpsConfig->conflictAttempts : (uint8_t)M_TCPIP_DHCPS_DEFAULT_REPROBE_COUNT;
         gDhcpDcpt->probeTmoMs = (TCPIP_ICMP_ECHO_REQUEST_TIMEOUT * 3) / 2;  // make sure we timeout after ICMP does!
-        gDhcpDcpt->maxLeases = _TCPIP_DHCPS_MAX_LEASES;
-        gDhcpDcpt->icmpSequenceNo = SYS_RANDOM_PseudoGet();
-        gDhcpDcpt->icmpIdentifier = SYS_RANDOM_PseudoGet();
+        gDhcpDcpt->maxLeases = FC_MaxLeases();
+        gDhcpDcpt->icmpSequenceNo = (uint16_t)SYS_RANDOM_PseudoGet();
+        gDhcpDcpt->icmpIdentifier = (uint16_t)SYS_RANDOM_PseudoGet();
         gDhcpDcpt->maxIx = -1;
-        gDhcpDcpt->stackSigHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_DHCPS_Task, TCPIP_DHCPS_TASK_PROCESS_RATE);
-        if(gDhcpDcpt->stackSigHandle == 0)
+        gDhcpDcpt->stackSigHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_DHCPS_Task, TCPIP_DHCPS_TASK_PROCESS_RATE);
+        if(gDhcpDcpt->stackSigHandle == NULL)
         {
             initRes = TCPIP_DHCPS_RES_SIGNAL_ERR;
             break;
         }
 
-        gDhcpDcpt->uSkt = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_DHCP_SERVER_PORT,  0);
+        gDhcpDcpt->uSkt = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_DHCP_SERVER_PORT, NULL);
         if(gDhcpDcpt->uSkt == INVALID_UDP_SOCKET)
         {
             initRes = TCPIP_DHCPS_RES_SKT_CREATE_ERR;
@@ -1082,9 +1255,10 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
 
         size_t txBuffSize;
         bool optRes = TCPIP_UDP_OptionsGet(gDhcpDcpt->uSkt, UDP_OPTION_TX_BUFF, (void*)&txBuffSize);
-        if(optRes != false && txBuffSize < _TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
+        if(optRes != false && txBuffSize < (size_t)M_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
         {
-            optRes = TCPIP_UDP_OptionsSet(gDhcpDcpt->uSkt, UDP_OPTION_TX_BUFF, (void*)_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE);
+            void* txSize = FC_Uint2VPtr((uint32_t)M_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE); 
+            optRes = TCPIP_UDP_OptionsSet(gDhcpDcpt->uSkt, UDP_OPTION_TX_BUFF, txSize);
         }
         if(optRes ==  false)
         {
@@ -1099,30 +1273,30 @@ bool TCPIP_DHCPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
             break;
         }
 
-        if(TCPIP_UDP_SignalHandlerRegister(gDhcpDcpt->uSkt, TCPIP_UDP_SIGNAL_RX_DATA, _DHCPS_SocketRxHandler, 0) == 0)
+        if(TCPIP_UDP_SignalHandlerRegister(gDhcpDcpt->uSkt, TCPIP_UDP_SIGNAL_RX_DATA, &F_DHCPS_SocketRxHandler, NULL) == NULL)
         {
             initRes = TCPIP_DHCPS_RES_SKT_SIGNAL_ERR;
             break;
         }
 
-        if(pDhcpsConfig->pIfConfig != 0)
+        if(pDhcpsConfig->pIfConfig != NULL)
         {
-            initRes = _DHCPS_AddLeasePools(pDhcpsConfig->pIfConfig, pDhcpsConfig->nConfigs);
+            initRes = F_DHCPS_AddLeasePools(pDhcpsConfig->pIfConfig, pDhcpsConfig->nConfigs);
         }
 
         break;
     }
 
-    if(initRes < 0 )
+    if((int)initRes < 0 )
     {
-        _DHCPS_Cleanup();
+        F_DHCPS_Cleanup();
         SYS_ERROR_PRINT(SYS_ERROR_WARNING, "DHCPS: Initialization failed: %d!\r\n", initRes);
         return false;
     }
     
-    if(stackCtrl->pNetIf->Flags.bIsDHCPSrvEnabled != 0)
+    if(stackCtrl->pNetIf->Flags.bIsDHCPSrvEnabled != 0U)
     {   // override the DHCPs configuration with what the stack manager says
-        _DHCPS_Enable(stackCtrl->pNetIf, false);
+        (void)F_DHCPS_Enable(stackCtrl->pNetIf, false);
     }
 
     dhcpSInitCount++;
@@ -1137,50 +1311,51 @@ void TCPIP_DHCPS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     if(dhcpSInitCount > 0)
     {   // we're up and running
         // this interface is going down no matter what
-        _DHCPS_Disable(stackCtrl->pNetIf);
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        (void)F_DHCPS_Disable(stackCtrl->pNetIf);
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--dhcpSInitCount == 0)
             {   // all closed
                 // release resources
-                _DHCPS_Cleanup();
+                F_DHCPS_Cleanup();
             }
         }
     }
 }
 
 // resources clean up
-static void _DHCPS_Cleanup(void)
+static void F_DHCPS_Cleanup(void)
 {
-    int ix;
+    size_t ix;
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt;
 
-    if(gDhcpDcpt != 0)
+    if(gDhcpDcpt != NULL)
     {
         if( gDhcpDcpt->uSkt != INVALID_UDP_SOCKET)
         {
-            TCPIP_UDP_Close(gDhcpDcpt->uSkt);
+            (void)TCPIP_UDP_Close(gDhcpDcpt->uSkt);
         }
 
         pIDcpt = gDhcpDcpt->ifDcpt;
-        for(ix = 0; ix <  gDhcpDcpt->ifCount; ix++, pIDcpt++)
+        for(ix = 0; ix <  gDhcpDcpt->ifCount; ix++)
         {
-            if(pIDcpt->hashDcpt != 0)
+            if(pIDcpt->hashDcpt != NULL)
             {   
-                _DHCPS_RemoveAllEntries(pIDcpt, true, true);   // Remove all the HASH entries
-                TCPIP_HEAP_Free(gDhcpDcpt->memH, pIDcpt->hashDcpt);       // Free HASH descriptor
-                pIDcpt->hashDcpt = 0;
+                F_DHCPS_RemoveAllEntries(pIDcpt, true, true);   // Remove all the HASH entries
+                (void)TCPIP_HEAP_Free(gDhcpDcpt->memH, pIDcpt->hashDcpt);       // Free HASH descriptor
+                pIDcpt->hashDcpt = NULL;
             }
+            pIDcpt++;
         }
 
-        if(gDhcpDcpt->stackSigHandle)
+        if(gDhcpDcpt->stackSigHandle != NULL)
         {   // Free timer handler
-            _TCPIPStackSignalHandlerDeregister(gDhcpDcpt->stackSigHandle);
-            gDhcpDcpt->stackSigHandle = 0;
+            TCPIPStackSignalHandlerDeregister(gDhcpDcpt->stackSigHandle);
+            gDhcpDcpt->stackSigHandle = NULL;
         }
         // Free Pool entry DHCP server descriptor
-        TCPIP_HEAP_Free(gDhcpDcpt->memH, gDhcpDcpt);
-        gDhcpDcpt = 0;
+        (void)TCPIP_HEAP_Free(gDhcpDcpt->memH, gDhcpDcpt);
+        gDhcpDcpt = NULL;
     }
 
 }
@@ -1188,20 +1363,20 @@ static void _DHCPS_Cleanup(void)
 
 void TCPIP_DHCPS_Task(void)
 {
-    TCPIP_MODULE_SIGNAL sigPend;
+    uint16_t sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = (uint16_t)TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if(gDhcpDcpt != 0)
+    if(gDhcpDcpt != NULL)
     {
-        if((sigPend & TCPIP_MODULE_SIGNAL_RX_PENDING) != 0)
+        if((sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_RX_PENDING) != 0U)
         { //  RX signal occurred
-            _DHCPS_ProcessRx();
+            F_DHCPS_ProcessRx();
         }
 
-        if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+        if((sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
         { // regular TMO occurred
-            _DHCPS_ProcessTick();
+            F_DHCPS_ProcessTick();
         }
     }
 
@@ -1209,11 +1384,11 @@ void TCPIP_DHCPS_Task(void)
 
 // send a signal to the DHCPS module that data is available
 // no manager alert needed since this normally results as a higher layer (UDP) signal
-static void _DHCPS_SocketRxHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
+static void F_DHCPS_SocketRxHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -1221,7 +1396,7 @@ static bool TCPIP_DHCPS_GetDataByte(TCPIP_DHCPS_DATA* getbuf, uint8_t* dst)
 {
     if(getbuf->rdPtr != getbuf->endPtr)
     {
-        if(dst != 0)
+        if(dst != NULL)
         {
             *dst = *getbuf->rdPtr;
         }
@@ -1245,9 +1420,9 @@ static int TCPIP_DHCPS_GetDataArray(TCPIP_DHCPS_DATA *getbuf, uint8_t *destBuff,
         reqBytes = avlblBytes;
     }
 
-    if(destBuff != 0)
+    if(destBuff != NULL)
     {
-        memcpy(destBuff, getbuf->rdPtr, reqBytes);
+        (void)memcpy(destBuff, getbuf->rdPtr, (size_t)reqBytes);
     }
 
     getbuf->rdPtr += reqBytes;
@@ -1255,7 +1430,7 @@ static int TCPIP_DHCPS_GetDataArray(TCPIP_DHCPS_DATA *getbuf, uint8_t *destBuff,
 }
 
 // process incoming DHCPS traffic
-static void _DHCPS_ProcessRx(void)
+static void F_DHCPS_ProcessRx(void)
 {
     UDP_SOCKET          skt;
     uint16_t            avlblBytes;
@@ -1266,30 +1441,30 @@ static void _DHCPS_ProcessRx(void)
     {
         // Check to see if a valid DHCP packet has arrived
         avlblBytes = TCPIP_UDP_GetIsReady(skt);
-        if(avlblBytes == 0) 
+        if(avlblBytes == 0U) 
         {
             break;
         }
 
-        _DHCPS_ProcessSkt(skt, avlblBytes);
+        F_DHCPS_ProcessSkt(skt, avlblBytes);
         // discard the current packet and point to the next queued packet
-        TCPIP_UDP_Discard(skt);
+        (void)TCPIP_UDP_Discard(skt);
     }
 }
 
 
-static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
+static void F_DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
 {
     UDP_SOCKET_INFO     udpSockInfo;
     uint32_t            dhcpCookie;
     int                 ifIx;       // DHCPs interface index
     uint8_t*            rxPtr;
-    BOOTP_HEADER*       pHeader = 0;
+    BOOTP_HEADER*       pHeader = NULL;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE;
     bool processPkt = false;
     bool accessLocked = false;
-    TCPIP_NET_IF*       pktIf;  // interface on which the packet arrived
-    TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt = 0; // associated DHCPs interface descriptor
+    const TCPIP_NET_IF* pktIf;  // interface on which the packet arrived
+    TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt = NULL; // associated DHCPs interface descriptor
     TCPIP_DHCPS_DATA    udpGetData = {0};
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
 
@@ -1297,22 +1472,22 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
     {
         evInfo.flags.val = 0;
 
-        memset(&udpSockInfo, 0, sizeof(udpSockInfo));
-        TCPIP_UDP_SocketInfoGet(skt, &udpSockInfo);
-        pktIf = (TCPIP_NET_IF*)udpSockInfo.hNet;
+        (void)memset(&udpSockInfo, 0, sizeof(udpSockInfo));
+        (void)TCPIP_UDP_SocketInfoGet(skt, &udpSockInfo);
+        pktIf = (const TCPIP_NET_IF*)udpSockInfo.hNet;
 
         // set most common values
         evInfo.ipAddress = udpSockInfo.sourceIPaddress.v4Add.Val;
-        evInfo.flags.infoIpValid = 1;
+        evInfo.flags.infoIpValid = 1U;
 
-        if(_DHCPS_AccessLock() == false)
+        if(F_DHCPS_AccessLock() == false)
         {
             evType = TCPIP_DHCPS_EVENT_PROCESS_LOCK;
             break;
         } 
 
         accessLocked = true;
-        if(avlblBytes < _TCPIP_DHCPS_MIN_PROCESS_PACKET_SIZE)
+        if(avlblBytes < M_TCPIP_DHCPS_MIN_PROCESS_PACKET_SIZE)
         {
             evType = TCPIP_DHCPS_EVENT_MSG_UNDERFLOW;
             evInfo.flags.infoSize = 1;
@@ -1320,14 +1495,14 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
             break;
         }
 
-        if(pktIf->Flags.bIsDHCPSrvEnabled == 0)
+        if(pktIf->Flags.bIsDHCPSrvEnabled == 0U)
         {   // arriving on wrong interface
             evType = TCPIP_DHCPS_EVENT_IF_DISABLED;
             break;
         }
 
         // get the associated DHCP interface
-        ifIx = _DHCPS_InterfaceMapIx(pktIf);
+        ifIx = F_DHCPS_InterfaceMapIx(pktIf);
         if(ifIx < 0)
         {   // arriving on wrong interface
             evType = TCPIP_DHCPS_EVENT_IF_ERROR;
@@ -1335,54 +1510,54 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
         }
         
         pIfDcpt = gDhcpDcpt->ifDcpt + ifIx;
-        _DhcpsAssert(pIfDcpt->hashDcpt != 0, __func__, __LINE__);
+        F_DhcpsAssert(pIfDcpt->hashDcpt != 0, __func__, __LINE__);
 
         if(avlblBytes > sizeof(gDhcpProcPacket))
         {   // truncate if too big
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIfDcpt->statData.msgOvflCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             evType = TCPIP_DHCPS_EVENT_MSG_OVERFLOW;
             evInfo.flags.infoSize = 1;
             evInfo.data = (uint32_t)avlblBytes;
-            avlblBytes = sizeof(gDhcpProcPacket);
+            avlblBytes = (uint16_t)sizeof(gDhcpProcPacket);
         }
 
-        pIfDcpt->msgFlags = 0;
-        if(udpSockInfo.destIPaddress.v4Add.Val == 0xffffffff)
+        pIfDcpt->msgFlags = 0U;
+        if(udpSockInfo.destIPaddress.v4Add.Val == 0xffffffffU)
         {
-            pIfDcpt->msgFlags |= TCPIP_DHCPS_CLIENT_MESSAGE_FLAG_BROADCAST; 
+            pIfDcpt->msgFlags |= (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST; 
         }
 
         rxPtr = gDhcpProcPacket;
 
         // Get Compleate Array of DHCP server Reply bytes
-        TCPIP_UDP_ArrayGet(skt, rxPtr, avlblBytes);
+        (void)TCPIP_UDP_ArrayGet(skt, rxPtr, avlblBytes);
 
         // point to the BOOTP header and validate
-        pHeader = (BOOTP_HEADER*)rxPtr;
-        if((pHeader->op != _TCPIP_DHCPS_BOOT_REQUEST) || (pHeader->htype != _TCPIP_DHCPS_BOOT_HW_TYPE) || (pHeader->hlen != _TCPIP_DHCPS_BOOT_LEN_OF_HW_TYPE))
+        pHeader = FC_Uptr2BootpHdr(rxPtr);
+        if((pHeader->op != M_TCPIP_DHCPS_BOOT_REQUEST) || (pHeader->htype != M_TCPIP_DHCPS_BOOT_HW_TYPE) || (pHeader->hlen != M_TCPIP_DHCPS_BOOT_LEN_OF_HW_TYPE))
         {
-            evType = TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR;
+            evType = TCPIP_DHCPS_EVENT_MSG_FMT_ERROR;
             break;
         }
 
         if(!isMacAddrValid(pHeader->chaddr))
         {   // no entry stored in database for invalid MAC addresses
-            evType = TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR;
+            evType = TCPIP_DHCPS_EVENT_MSG_FMT_ERROR;
             break;
         }
 
         // throw away: server host name, and boot file name -- unsupported
-        rxPtr += sizeof(BOOTP_HEADER) + _TCPIP_DHCPS_UNUSED_BYTES_FOR_TX;
+        rxPtr += sizeof(BOOTP_HEADER) + M_TCPIP_DHCPS_UNUSED_BYTES_FOR_TX;
 
 
         // verify Magic Cookie
-        memcpy((uint8_t*)&dhcpCookie, rxPtr, sizeof(dhcpCookie));
+        (void)memcpy((uint8_t*)&dhcpCookie, rxPtr, sizeof(dhcpCookie));
 
-        if(TCPIP_Helper_htonl(dhcpCookie) != _TCPIP_DHCPS_MAGIC_COOKIE_NET)
+        if(TCPIP_Helper_htonl(dhcpCookie) != M_TCPIP_DHCPS_MAGIC_COOKIE_NET)
         {   // ignore ill formatted message
-            evType = TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR;
+            evType = TCPIP_DHCPS_EVENT_MSG_FMT_ERROR;
             break;
         }
 
@@ -1400,31 +1575,31 @@ static void _DHCPS_ProcessSkt(UDP_SOCKET skt, uint16_t avlblBytes)
 
     if(evType != TCPIP_DHCPS_EVENT_NONE)
     {
-        _DHCPS_NotifyClients(pktIf, evType, 0, &evInfo);
+        F_DHCPS_NotifyClients(pktIf, evType, NULL, &evInfo);
     }
 
     if(processPkt)
     {
         // parse the received options
-        if(_DHCPS_ParseOptions(&udpGetData, &gRxOptions, pHeader))
+        if(F_DHCPS_ParseOptions(&udpGetData, &gRxOptions, pHeader))
         {   // ignore ill formatted options
-            _DHCPS_ProcessMsg(pIfDcpt, pHeader, &gRxOptions);
+            F_DHCPS_ProcessMsg(pIfDcpt, pHeader, &gRxOptions);
         }
     }
     // else ill formatted packet
     if(accessLocked)
     {
-        _DHCPS_AccessUnlock();
+        F_DHCPS_AccessUnlock();
     }
 }
 
 
 // processing function for DHCPs message type    
-static bool _DHCPS_OptionMessageType(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static bool F_DHCPS_OptionMessageType(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
-    if(pRxOpt->messageType.optionType == 0)
+    if(pRxOpt->messageType.optionType == 0U)
     {
-        TCPIP_DHCPS_OPTION_DATA_MSG_TYPE* pMsgType = (TCPIP_DHCPS_OPTION_DATA_MSG_TYPE*)pOpt;
+        TCPIP_DHCPS_OPT_DATA_MSG_TYPE* pMsgType = FC_Uptr2OptMsgType(pOpt);
         pRxOpt->messageType = *pMsgType;
         return true;
     }
@@ -1434,14 +1609,14 @@ static bool _DHCPS_OptionMessageType(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxO
 }
 
 // processing function for DHCPs request client ID
-static bool _DHCPS_OptionReqClientId(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static bool F_DHCPS_OptionReqClientId(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
-    if(pRxOpt->requestClientId.optionType == 0)
+    if(pRxOpt->requestClientId.optionType == 0U)
     {
-        TCPIP_DHCPS_OPTION_REQUEST_CLIENT_ID* pCliId = (TCPIP_DHCPS_OPTION_REQUEST_CLIENT_ID*)pOpt;
-        if(pCliId->hwType == _TCPIP_DHCPS_BOOT_HW_TYPE)
+        TCPIP_DHCPS_OPT_REQ_CLI_ID* pCliId = FC_Uptr2OptReqCliId(pOpt);
+        if(pCliId->hwType == M_TCPIP_DHCPS_BOOT_HW_TYPE)
         {
-            memcpy(&pRxOpt->requestClientId, pCliId, pCliId->optionLen + 2);
+            (void)memcpy(&pRxOpt->requestClientId, pCliId, (size_t)pCliId->optionLen + 2U);
             return true;
         }
     }
@@ -1450,11 +1625,11 @@ static bool _DHCPS_OptionReqClientId(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxO
 }
 
 // processing function for DHCPs request IP address
-static bool _DHCPS_OptionReqIpAddress(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static bool F_DHCPS_OptionReqIpAddress(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
-    if(pRxOpt->requestAddress.optionType == 0)
+    if(pRxOpt->requestAddress.optionType == 0U)
     {
-        TCPIP_DHCPS_OPTION_REQUEST_IP_ADDRESS* pReqAdd = (TCPIP_DHCPS_OPTION_REQUEST_IP_ADDRESS*)pOpt;
+        TCPIP_DHCPS_OPT_REQ_IP_ADDRESS* pReqAdd = FC_Uptr2OptReqIpAdd(pOpt);
         pRxOpt->requestAddress = *pReqAdd;
         return true;
     }
@@ -1462,11 +1637,11 @@ static bool _DHCPS_OptionReqIpAddress(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRx
     return false;
 }
 
-static bool _DHCPS_OptionReqLeaseTime(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static bool F_DHCPS_OptionReqLeaseTime(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
-    if(pRxOpt->requestLeaseTime.optionType == 0)
+    if(pRxOpt->requestLeaseTime.optionType == 0U)
     {
-        TCPIP_DHCPS_OPTION_REQUEST_LEASE_TIME* pReqLease = (TCPIP_DHCPS_OPTION_REQUEST_LEASE_TIME*)pOpt;
+        TCPIP_DHCPS_OPT_REQ_LEASE_TIME* pReqLease = FC_Uptr2OptReqLeaseTime(pOpt);
         pRxOpt->requestLeaseTime = *pReqLease;
         return true;
     }
@@ -1475,11 +1650,11 @@ static bool _DHCPS_OptionReqLeaseTime(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRx
 
 }
 
-static bool _DHCPS_OptionReqServerIdentifier(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static bool F_DHCPS_OptionReqServerIdentifier(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
-    if(pRxOpt->serverIdentifier.optionType == 0)
+    if(pRxOpt->serverIdentifier.optionType == 0U)
     {
-        TCPIP_DHCPS_OPTION_SERVER_IDENTIFIER* pSrvId = (TCPIP_DHCPS_OPTION_SERVER_IDENTIFIER*)pOpt;
+        TCPIP_DHCPS_OPT_SRV_IDENT* pSrvId = FC_Uptr2OptReqSrvId(pOpt);
         pRxOpt->serverIdentifier = *pSrvId;
         return true;
     }
@@ -1488,30 +1663,30 @@ static bool _DHCPS_OptionReqServerIdentifier(uint8_t* pOpt, TCPIP_DHCPS_RX_OPTIO
 
 }
 
-static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, BOOTP_HEADER* pHeader)
+static bool F_DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, BOOTP_HEADER* pHeader)
 {
     // table for processing/parsing received options from a client
     // options not in this table are ignored/skipped 
-    static const _DHCPS_OPT_DCPT    _DHCPS_OptionDcptTbl[] = 
+    static const S_DHCPS_OPT_DCPT    T_DHCPS_OptionDcptTbl[] = 
     {
-        // option type                   // minLen   //max Len                           // process function
-        {DHCP_OPTION_MESSAGE_TYPE,       1,          1,                                  _DHCPS_OptionMessageType},
-        {DHCP_OPTION_CLIENT_ID,          2,          _TCPIP_DHCPS_CLIENT_ID_SIZE + 1,    _DHCPS_OptionReqClientId},
-        {DHCP_OPTION_REQUEST_IP_ADDRESS, 4,          4,                                  _DHCPS_OptionReqIpAddress},
-        {DHCP_OPTION_IP_LEASE_TIME,      4,          4,                                  _DHCPS_OptionReqLeaseTime},
-        {DHCP_OPTION_SERVER_IDENTIFIER,  4,          4,                                  _DHCPS_OptionReqServerIdentifier},
+        // option type                              // minLen   //max Len                           // process function
+        {(uint8_t)DHCP_OPTION_MESSAGE_TYPE,         1U,         1U,                                 &F_DHCPS_OptionMessageType},
+        {(uint8_t)DHCP_OPTION_CLIENT_ID,            2U,         M_TCPIP_DHCPS_CLI_ID_SIZE + 1U,     &F_DHCPS_OptionReqClientId},
+        {(uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS,   4U,         4U,                                 &F_DHCPS_OptionReqIpAddress},
+        {(uint8_t)DHCP_OPTION_IP_LEASE_TIME,        4U,         4U,                                 &F_DHCPS_OptionReqLeaseTime},
+        {(uint8_t)DHCP_OPTION_SERVER_IDENTIFIER,    4U,         4U,                                 &F_DHCPS_OptionReqServerIdentifier},
     };
 
-    int ix;
+    size_t ix;
     uint8_t option, optionLen;
     bool    optRes;
-    const _DHCPS_OPT_DCPT *pDcpt, *pFoundDcpt;
+    const S_DHCPS_OPT_DCPT *pDcpt, *pFoundDcpt;
     uint8_t* pCurrOpt;   
     size_t      keySize;
     uint8_t*    pKeySrc;
 
     // start fresh
-    memset(pRxOpt, 0, sizeof(*pRxOpt));
+    (void)memset(pRxOpt, 0, sizeof(*pRxOpt));
 
     while(true)
     {
@@ -1523,7 +1698,7 @@ static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIO
             return false;
         }
 
-        if(option == DHCP_OPTION_END)
+        if(option == (uint8_t)DHCP_OPTION_END)
         {   // done; ended successfully
             break;
         }
@@ -1535,25 +1710,26 @@ static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIO
         }
 
         // make sure all data is in there and advance to the next option
-        if(TCPIP_DHCPS_GetDataArray(pGetData, 0, optionLen) != optionLen)
+        if(TCPIP_DHCPS_GetDataArray(pGetData, NULL, (int)optionLen) != (int)optionLen)
         {
             return false;
         }
 
         // check if we process this option type
         // simple linear search
-        pDcpt = _DHCPS_OptionDcptTbl;
-        pFoundDcpt = 0;
-        for(ix = 0; ix < sizeof(_DHCPS_OptionDcptTbl) / sizeof(*_DHCPS_OptionDcptTbl); ix++, pDcpt++)
+        pDcpt = T_DHCPS_OptionDcptTbl;
+        pFoundDcpt = NULL;
+        for(ix = 0; ix < sizeof(T_DHCPS_OptionDcptTbl) / sizeof(*T_DHCPS_OptionDcptTbl); ix++)
         {
             if(pDcpt->optionType == option)
             {
                 pFoundDcpt = pDcpt;
                 break;
             }
+            pDcpt++;
         }
 
-        if(pFoundDcpt)
+        if(pFoundDcpt != NULL)
         {   // do a minimum check
             if(optionLen < pFoundDcpt->minLen || optionLen > pFoundDcpt->maxLen)
             {   // wrong option, reject
@@ -1574,11 +1750,11 @@ static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIO
     }
 
     // check that we have received a proper DHCP_OPTION_MESSAGE_TYPE
-    if(pRxOpt->messageType.optionType == DHCP_OPTION_MESSAGE_TYPE)
+    if(pRxOpt->messageType.optionType == (uint8_t)DHCP_OPTION_MESSAGE_TYPE)
     {   // all good; set the client identification
-        if(pRxOpt->requestClientId.optionType == DHCP_OPTION_CLIENT_ID) 
+        if(pRxOpt->requestClientId.optionType == (uint8_t)DHCP_OPTION_CLIENT_ID) 
         {   // use the requested client ID
-            keySize = pRxOpt->requestClientId.optionLen - 1;
+            keySize = (size_t)pRxOpt->requestClientId.optionLen - 1U;
             pKeySrc = pRxOpt->requestClientId.clientId;
         }
         else
@@ -1589,7 +1765,7 @@ static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIO
         
         // properly format the clientId to the standard size
         // and save the actual client ID zise
-        pRxOpt->idSize = _DHCPS_FormatHashKey(pRxOpt->clientId, pKeySrc, keySize);
+        pRxOpt->idSize = F_DHCPS_FormatHashKey(pRxOpt->clientId, pKeySrc, keySize);
 
         return true;
     }
@@ -1599,78 +1775,79 @@ static bool _DHCPS_ParseOptions(TCPIP_DHCPS_DATA* pGetData, TCPIP_DHCPS_RX_OPTIO
 
 // process the DHCP message
 // pRxOpt contains the parsed options
-static void _DHCPS_ProcessMsg(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
+static void F_DHCPS_ProcessMsg(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt)
 {
     // table with the processed messages
     static const DHCPS_MSG_PROC_DCPT    DHCPS_MsgProcTbl[] =
     {
-        // msgType                      // procFlags                    // procFunc
-        {DHCP_MESSAGE_TYPE_DISCOVER,    DHCPS_PROC_FLAG_CHECK_SIZE,     _DHCPS_ReplyToDiscovery}, 
-        {DHCP_MESSAGE_TYPE_REQUEST,     DHCPS_PROC_FLAG_CHECK_SIZE,     _DHCPS_ReplyToRequest}, 
-        {DHCP_MESSAGE_TYPE_RELEASE,     DHCPS_PROC_FLAG_NONE,           _DHCPS_ReplyToRelease}, 
-        {DHCP_MESSAGE_TYPE_DECLINE,     DHCPS_PROC_FLAG_NONE,           _DHCPS_ReplyToDecline}, 
-        {DHCP_MESSAGE_TYPE_INFORM,      DHCPS_PROC_FLAG_CHECK_SIZE,     _DHCPS_ReplyToInform}, 
+        // msgType                              // procFlags                            // procFunc
+        {(uint8_t)DHCP_MESSAGE_TYPE_DISCOVER,   (uint8_t)DHCPS_PROC_FLAG_CHECK_SIZE,    &F_DHCPS_ReplyToDiscovery}, 
+        {(uint8_t)DHCP_MESSAGE_TYPE_REQUEST,    (uint8_t)DHCPS_PROC_FLAG_CHECK_SIZE,    &F_DHCPS_ReplyToRequest}, 
+        {(uint8_t)DHCP_MESSAGE_TYPE_RELEASE,    (uint8_t)DHCPS_PROC_FLAG_NONE,          &F_DHCPS_ReplyToRelease}, 
+        {(uint8_t)DHCP_MESSAGE_TYPE_DECLINE,    (uint8_t)DHCPS_PROC_FLAG_NONE,          &F_DHCPS_ReplyToDecline}, 
+        {(uint8_t)DHCP_MESSAGE_TYPE_INFORM,     (uint8_t)DHCPS_PROC_FLAG_CHECK_SIZE,    &F_DHCPS_ReplyToInform}, 
     };
 
-    int                 ix;
+    size_t              ix;
     UDP_SOCKET          skt;
     DHCPS_HASH_ENTRY    *he, *oldHe;
 
-    oldHe = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookup(pIfDcpt->hashDcpt, pRxOpt->clientId);
-    _DhcpsAssert(oldHe == 0 || oldHe->parent == pIfDcpt, __func__, __LINE__);
+    oldHe = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookup(pIfDcpt->hashDcpt, pRxOpt->clientId));
+    F_DhcpsAssert(oldHe == NULL || oldHe->parent == pIfDcpt, __func__, __LINE__);
 
     const DHCPS_MSG_PROC_DCPT* pProcEntry = DHCPS_MsgProcTbl;
 
-    for(ix = 0; ix < sizeof(DHCPS_MsgProcTbl) / sizeof(*DHCPS_MsgProcTbl); ix++, pProcEntry++)
+    for(ix = 0; ix < sizeof(DHCPS_MsgProcTbl) / sizeof(*DHCPS_MsgProcTbl); ix++)
     {
         if(pRxOpt->messageType.type == pProcEntry->msgType)
         {   // found processing entry
             // check flags
-            if((pProcEntry->procFlags & DHCPS_PROC_FLAG_CHECK_SIZE) != 0)
+            if((pProcEntry->procFlags & (uint8_t)DHCPS_PROC_FLAG_CHECK_SIZE) != 0U)
             {
                 skt = gDhcpDcpt->uSkt;
                 // check enough space is available to generate the DHCP response
-                if(TCPIP_UDP_PutIsReady(skt) < _TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
+                if(TCPIP_UDP_PutIsReady(skt) < (uint16_t)M_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
                 {   // should not happen
-                    _DhcpsAssert(false, __func__, __LINE__);
+                    F_DhcpsAssert(false, __func__, __LINE__);
                     return;
                 }
             }
 
-            if(oldHe != 0)
+            if(oldHe != NULL)
             {   // save client info
-                _DhcpsAssert(oldHe->parent == pIfDcpt, __func__, __LINE__);
+                F_DhcpsAssert(oldHe->parent == pIfDcpt, __func__, __LINE__);
                 // store the info needed for processing
-                _DHCPS_SaveClientState(oldHe, pHeader, pProcEntry->msgType);
+                F_DHCPS_SaveClientState(oldHe, pHeader, (DHCP_MESSAGE_TYPE_VAL)pProcEntry->msgType);
             }
 
             // process
             he = oldHe;
             TCPIP_DHCPS_LEASE_STATE newState = pProcEntry->procFunc(pIfDcpt, pHeader, pRxOpt, &he);
-            if(he != 0)
+            if(he != NULL)
             {
-                _DhcpsAssert(newState != TCPIP_DHCPS_LEASE_STATE_IDLE, __func__, __LINE__);
-                if(oldHe == 0)
+                F_DhcpsAssert(newState != TCPIP_DHCPS_LEASE_STATE_IDLE, __func__, __LINE__);
+                if(oldHe == NULL)
                 {   // new entry; client info needs saving
-                    _DHCPS_SaveClientState(he, pHeader, pProcEntry->msgType);
+                    F_DHCPS_SaveClientState(he, pHeader, (DHCP_MESSAGE_TYPE_VAL)pProcEntry->msgType);
                 }
-                _DHCPS_SetEntryState(he, newState);
+                F_DHCPS_SetEntryState(he, newState);
             }
             break;  // done
         }
+        pProcEntry++;
     }
 
 }
 
 // stores the client info needed for processing
-static void _DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, DHCP_MESSAGE_TYPE_VAL msgType)
+static void F_DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, DHCP_MESSAGE_TYPE_VAL msgType)
 {
     he->ciaddr = pHeader->ciaddr;    // client should use 0 for the Discovery message
     he->giaddr = pHeader->giaddr;  // save where the request came from
     he->xid = pHeader->xid;  // save the client xid
     he->cliFlags = pHeader->flags;  // save the client flags
-    memcpy(he->chaddr, pHeader->chaddr, sizeof(he->chaddr));
-    he->cliMsgType = msgType;
+    (void)memcpy(he->chaddr, pHeader->chaddr, sizeof(he->chaddr));
+    he->cliMsgType = (uint8_t)msgType;
 }
 
 
@@ -1722,7 +1899,7 @@ static void _DHCPS_SaveClientState(DHCPS_HASH_ENTRY* he, BOOTP_HEADER* pHeader, 
         The server may choose to record the address as offered to the client.
 */
 
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_LEASE_STATE newState = TCPIP_DHCPS_LEASE_STATE_SEND_OFFER;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
@@ -1732,13 +1909,13 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     // use the client current or expired binding, if exists
-    if(he == 0 )
+    if(he == NULL )
     {   // no previous entry for this client
         int reqIndex = -1;  // client required index/IP 
                             // if < 0 it's either invalid or unavailable
 
         // use the Requested IP address if present
-        if(pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS)
+        if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS)
         {   // check client requested IP address is valid
             reqIndex = IpIsAddressValid(pIDcpt, pRxOpt->requestAddress.reqIpAddr, DHCPS_VALID_CHECK_FREE_AND_TAKE);
         }
@@ -1751,41 +1928,41 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
             reqIndex = IpIndexFindFree(pIDcpt, true);
             if(reqIndex < 0)
             {   // no pool entry available
-                _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_POOL_EMPTY, 0, 0);
+                F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_POOL_EMPTY, NULL, NULL);
                 return TCPIP_DHCPS_LEASE_STATE_IDLE;
             } 
         }
 
         // assign an entry to this client in the database
         // do not set the state yet
-        he = _DHCPS_AssignNewOffer(pIDcpt, pRxOpt, reqIndex);
-        if( he == 0) 
+        he = F_DHCPS_AssignNewOffer(pIDcpt, pRxOpt, (size_t)reqIndex);
+        if( he == NULL) 
         {   // data base full
             // release the acquired index
-            IpIndexMarkFree(pIDcpt, reqIndex);
+            IpIndexMarkFree(pIDcpt, (size_t)reqIndex);
             evInfo.flags.infoSlots = 1;
             evInfo.data = (uint32_t)pIDcpt->hashDcpt->fullSlots;
-            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_CACHE_FULL, 0, &evInfo);
+            F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_CACHE_FULL, NULL, &evInfo);
             return TCPIP_DHCPS_LEASE_STATE_IDLE;
         }
 
         // assigned new hash entry
         // set its state it so we can send a notification
-        _DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_DISCOVER);
+        F_DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_DISCOVER);
 
         *ppHe = he;
-        if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_CONFLICT_DETECT) == 0)
+        if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_NO_CONFLICT_DETECT) == 0U)
         {
-            _DHCPS_InitProbe(he, true);
+            F_DHCPS_InitProbe(he, true);
             newState = TCPIP_DHCPS_LEASE_STATE_SEND_PROBE;
         } 
         // else regular TCPIP_DHCPS_LEASE_STATE_SEND_OFFER state
     }
     else
     {   // we already have this lease
-        if(he->state < TCPIP_DHCPS_LEASE_STATE_BOUND)
+        if(he->state < (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
         {   // keep doing what you're doing...
-            return he->state;
+            return (TCPIP_DHCPS_LEASE_STATE)he->state;
         }
         // else: grant a new lease 
                 // state == TCPIP_DHCPS_LEASE_STATE_BOUND:
@@ -1825,25 +2002,25 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
     */
 
     uint32_t cliReqTime;
-    uint32_t currTime = _TCPIP_SecCountGet();
-    if(_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
+    uint32_t currTime = TCPIP_SecCountGet();
+    if(F_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
     {   // client wants specific time; restart the lease
-        _DHCPS_LeaseRestart(he, cliReqTime);
+        F_DHCPS_LeaseRestart(he, cliReqTime);
     }
     else
     {   // client has not requested specific lease time
-        if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
+        if(he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
         {   // keep the existent leaseTime; do not restart
-            _DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
+            F_DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
             he->cliLeaseTime = he->leaseEndTime - currTime;
         }
         else
         {
-            _DHCPS_LeaseRestart(he, pIDcpt->cliLeaseDuration);
+            F_DHCPS_LeaseRestart(he, pIDcpt->cliLeaseDuration);
         }
     }
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DISCOVER, he, 0);
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DISCOVER, he, NULL);
 
     return newState;
     
@@ -1878,32 +2055,32 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDiscovery(TCPIP_DHCPS_INTERFACE_DCP
 //      The server includes other parameters in the DHCPACK message as defined in section 4.3.1.
 //
 //
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     DHCP_MESSAGE_TYPE_VAL srvMsgType = DHCP_MESSAGE_TYPE_NAK;
     DHCPS_HASH_ENTRY* he = *ppHe;
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_INFORM;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
 
-    evInfo.flags.infoIpValid = 1;
+    evInfo.flags.infoIpValid = 1U;
     evInfo.ipAddress = pHeader->ciaddr;
     TCPIP_DHCPS_LEASE_STATE newState = TCPIP_DHCPS_LEASE_STATE_INFORM; 
 
     // basic sanity check
     while(true)
     {
-        if(pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS)
+        if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS)
         {   // Requested IP address  MUST NOT be in an INFORM message
-            evType = TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR; 
+            evType = TCPIP_DHCPS_EVENT_INFO_FMT_ERROR; 
             evInfo.flags.infoFmtMask = 1;
-            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET; 
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET; 
             break;
         }
 
         // check client requested IP address is valid
-        int reqIndex = IpIsAddressValid(pIDcpt, pHeader->ciaddr, 0);
+        int reqIndex = IpIsAddressValid(pIDcpt, pHeader->ciaddr, DHCPS_VALID_CHECK_NONE);
         if(reqIndex < 0)
         {   // doesn't seem to be part of our network
             evType = TCPIP_DHCPS_EVENT_INFORM_INVALID; 
@@ -1912,14 +2089,14 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         
         // address OK; do NOT check for existing lease/or if already taken
         // mark it as busy, just in case
-        IpIndexMarkBusy(pIDcpt, reqIndex);
+        IpIndexMarkBusy(pIDcpt, (size_t)reqIndex);
 
         // ok, somehow an available address
-        if(he == 0)
+        if(he == NULL)
         {   // no existing info for this client...we need some to be able to send an DHCPACK message!
             // assign an entry to this client in the database
-            he = _DHCPS_AssignNewOffer(pIDcpt, pRxOpt, reqIndex);
-            if(he == 0) 
+            he = F_DHCPS_AssignNewOffer(pIDcpt, pRxOpt, (size_t)reqIndex);
+            if(he == NULL) 
             {   // data base full
                 // keep the acquired index as busy
                 evType = TCPIP_DHCPS_EVENT_CACHE_FULL;
@@ -1933,7 +2110,7 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         }
         else
         {   // already have something for this client
-            if(he->ipAddress.Val == pHeader->ciaddr && he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
+            if(he->ipAddress.Val == pHeader->ciaddr && he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
             {   // some clients (Windows) send inform after bound (?)...keep them bound
                 newState = TCPIP_DHCPS_LEASE_STATE_BOUND;
             }
@@ -1948,14 +2125,14 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
         break;
     }
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
 
-    if(he != 0)
+    if(he != NULL)
     {
         if(srvMsgType == DHCP_MESSAGE_TYPE_ACK)
         {
-            he->srvMsgType = DHCP_MESSAGE_TYPE_ACK;
-            _DHCPS_SendMessage(he);
+            he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK;
+            (void)F_DHCPS_SendMessage(he);
         }
 
         return newState;
@@ -1968,86 +2145,86 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToInform(TCPIP_DHCPS_INTERFACE_DCPT* 
 
 
 // Replies to a DHCP Request message.
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 
-typedef TCPIP_DHCPS_LEASE_STATE (*_DHCPReplyToRequestFnc)(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+typedef TCPIP_DHCPS_LEASE_STATE (*F_DHCPReplyToRequestFnc)(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe);
 
 
 
-static const _DHCPReplyToRequestFnc _DHCPReplyToRequesTBL[] = 
+static const F_DHCPReplyToRequestFnc T_DHCPReplyToRequesTBL[] = 
 {
-    _DHCPReplyToRequest_Idle,       // TCPIP_DHCPS_LEASE_STATE_IDLE
-    _DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_SEND_PROBE
-    _DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
-    _DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_REPROBE
-    _DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_SEND_OFFER
-    _DHCPReplyToRequest_Offerred,   // TCPIP_DHCPS_LEASE_STATE_OFFERED
-    _DHCPReplyToRequest_Bound,      // TCPIP_DHCPS_LEASE_STATE_BOUND
-    _DHCPReplyToRequest_Expired,    // TCPIP_DHCPS_LEASE_STATE_RELEASED
-    _DHCPReplyToRequest_Expired,    // TCPIP_DHCPS_LEASE_STATE_EXPIRED
+    &F_DHCPReplyToRequest_Idle,       // TCPIP_DHCPS_LEASE_STATE_IDLE
+    &F_DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_SEND_PROBE
+    &F_DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
+    &F_DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_REPROBE
+    &F_DHCPReplyToRequest_Ignore,     // TCPIP_DHCPS_LEASE_STATE_SEND_OFFER
+    &F_DHCPReplyToRequest_Offerred,   // TCPIP_DHCPS_LEASE_STATE_OFFERED
+    &F_DHCPReplyToRequest_Bound,      // TCPIP_DHCPS_LEASE_STATE_BOUND
+    &F_DHCPReplyToRequest_Expired,    // TCPIP_DHCPS_LEASE_STATE_RELEASED
+    &F_DHCPReplyToRequest_Expired,    // TCPIP_DHCPS_LEASE_STATE_EXPIRED
 
 
 };
 
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToRequest(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     // figure out in what state we are
     DHCPS_HASH_ENTRY* he = *ppHe;
 
-    if(he == 0)
+    if(he == NULL)
     {   // no record of this client
-        return _DHCPReplyToRequest_NoRecord(pIDcpt, pHeader, pRxOpt, ppHe);
+        return F_DHCPReplyToRequest_NoRecord(pIDcpt, pHeader, pRxOpt, ppHe);
     }
 
     // else respond according to state
-    return _DHCPReplyToRequesTBL[he->state](pIDcpt, pHeader, pRxOpt, ppHe);
+    return T_DHCPReplyToRequesTBL[he->state](pIDcpt, pHeader, pRxOpt, ppHe);
 }
 
 // he == 0
 // no previous record of this client
 //  DHCPREQUEST generated during INIT-REBOOT state pg 32/46
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
-    uint32_t requestedIpAddr = (pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0; 
+    uint32_t requestedIpAddr = (pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) ? pRxOpt->requestAddress.reqIpAddr : 0U; 
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
     evInfo.flags.val = 0;
 
-    evInfo.flags.infoIpValid = 1;
+    evInfo.flags.infoIpValid = 1U;
     evInfo.ipAddress = requestedIpAddr; 
 
     // do some sanity checks
-    if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0)
+    if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_NO_RECORD_KEEP_SILENT) != 0U)
     {   // keep silent but report
         evType = TCPIP_DHCPS_EVENT_REQ_UNKNOWN;
     }
-    else if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
+    else if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
     }
-    else if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
+    else if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should be a requested IP address. ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
     }
-    else if(pHeader->ciaddr != 0)
+    else if(pHeader->ciaddr != 0U)
     {
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
     } 
-    else if( (pHeader->giaddr == 0 && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0) ||
-            ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0)
+    else if( (pHeader->giaddr == 0U && ((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0U) ||
+            ((pIDcpt->startIPAddress.Val ^ pHeader->giaddr) & pIDcpt->ipMaskAddress.Val) == 0U)
     {   // good client address... since we do not have any record for this client (he == 0) we should stay silent:
         // Note: for giaddr != 0, the server should know the 'remote subnet mask' to check the giaddr
         // DHCPREQUEST generated during INIT-REBOOT state pg 32/46:
@@ -2066,16 +2243,16 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFAC
 
         // initialize it
         he->parent = pIDcpt;
-        _DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_REQUEST);
-        he->srvMsgType = DHCP_MESSAGE_TYPE_NAK;
-        he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
-        _DHCPS_SendMessage(he);
+        F_DHCPS_SaveClientState(he, pHeader, DHCP_MESSAGE_TYPE_REQUEST);
+        he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_NAK;
+        he->nakCode = (uint8_t)DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
+        (void)F_DHCPS_SendMessage(he);
     }
 
 
-    if(evType != 0)
+    if((int)evType != 0)
     {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, 0, &evInfo);
+        F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, NULL, &evInfo);
     }
 
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
@@ -2086,25 +2263,25 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_NoRecord(TCPIP_DHCPS_INTERFAC
 
 // he->state == TCPIP_DHCPS_LEASE_STATE_IDLE
 // which is invalid
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Idle(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
-    _DhcpsAssert(false, __func__, __LINE__);   // this should NOT happen
+    F_DhcpsAssert(false, __func__, __LINE__);   // this should NOT happen
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
 }
 
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     DHCPS_HASH_ENTRY* he = *ppHe;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
     evInfo.flags.val = 0;
 
-    evInfo.flags.infoIpValid = 1;
+    evInfo.flags.infoIpValid = 1U;
     evInfo.ipAddress = he->ipAddress.Val;
     evInfo.flags.infoState = 1;
-    TCPIP_DHCPS_LEASE_STATE currState = he->state;
-    evInfo.data = currState;
+    TCPIP_DHCPS_LEASE_STATE currState = (TCPIP_DHCPS_LEASE_STATE)he->state;
+    evInfo.data = (uint32_t)currState;
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_REQ_UNEXPECT, he, &evInfo);
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_REQ_UNEXPECT, he, &evInfo);
 
     return currState;
 }
@@ -2137,77 +2314,74 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Ignore(TCPIP_DHCPS_INTERFACE_
 //      among leases managed by multiple servers.
 //      A DHCP server MAY extend a client’s lease only if it has local administrative authority to do so.
 //    
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
-    TCPIP_DHCPS_LEASE_STATE newState = he->state;
+    TCPIP_DHCPS_LEASE_STATE newState = (TCPIP_DHCPS_LEASE_STATE)he->state;
 
-    uint32_t currTime = _TCPIP_SecCountGet();
+    uint32_t currTime = TCPIP_SecCountGet();
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
 
-    if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
+    if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
     }
-    else if(pRxOpt->requestAddress.optionType == DHCP_OPTION_REQUEST_IP_ADDRESS) 
+    else if(pRxOpt->requestAddress.optionType == (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should NOT be a requested IP address. ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_SET;
     }
     else if(pHeader->ciaddr != he->ipAddress.Val)
     {
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR;
     } 
     else
     {   // all good...
         // check unicast: renewing, broadcast: rebinding
-        bool bRenew = ((pIDcpt->msgFlags & TCPIP_DHCPS_CLIENT_MESSAGE_FLAG_BROADCAST) == 0) ? true : false;
-        he->srvMsgType = DHCP_MESSAGE_TYPE_ACK;
+        bool bRenew = ((pIDcpt->msgFlags & (uint8_t)TCPIP_DHCPS_CLI_MSG_FLAG_BCAST) == 0U) ? true : false;
+        he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK;
         newState = TCPIP_DHCPS_LEASE_STATE_BOUND; 
 
         // check the lease time
-        if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_NO_LEASE_EXTEND) == 0)
+        if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_NO_LEASE_EXTEND) == 0U)
         {   // we can extend the lease
             uint32_t cliReqTime;
-            if(!_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
+            if(!F_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
             {   // client has not requested a specific lease; use the default value
                 cliReqTime = pIDcpt->cliLeaseDuration;
             }
 
             // restart the lease
-            _DHCPS_LeaseRestart(he, cliReqTime);
+            F_DHCPS_LeaseRestart(he, cliReqTime);
         }
         else
         {   // cannot extend the lease; advertise what's left
-            _DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
+            F_DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
             he->cliLeaseTime = he->leaseEndTime - currTime;
         }
 
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
         if(bRenew == false)
         { // ignore renew request
-            _DHCPS_SendMessage(he);
+            (void)F_DHCPS_SendMessage(he);
         }
 #else
-        _DHCPS_SendMessage(he);
-#endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
+        (void)F_DHCPS_SendMessage(he);
+#endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_IGNORE_RENEW) != 0) 
         evType = bRenew ? TCPIP_DHCPS_EVENT_REQUEST_RENEW : TCPIP_DHCPS_EVENT_REQUEST_REBIND; 
     }
 
-    if(evType != 0)
-    {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
-    }
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
 
     return newState;
 }
@@ -2239,64 +2413,61 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Bound(TCPIP_DHCPS_INTERFACE_D
 //      is incorrect, or is on the wrong network.
 //
 //
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
-    TCPIP_DHCPS_LEASE_STATE newState = he->state;
+    TCPIP_DHCPS_LEASE_STATE newState = (TCPIP_DHCPS_LEASE_STATE)he->state;
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
 
-    if(pRxOpt->serverIdentifier.optionType == DHCP_OPTION_SERVER_IDENTIFIER)
+    if(pRxOpt->serverIdentifier.optionType == (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
     {   // there should NOT be a server identifier! ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_SET;
     }
-    else if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
+    else if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
     {   // there should be a requested IP address. ignore but notify ill formatted message
-        evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+        evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
         evInfo.flags.infoFmtMask = 1;
-        evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+        evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
     }
     else
     {
         // check that the client idea of its IP address is correct
-        _DhcpsAssert(he->ipAddress.Val != 0, __func__, __LINE__);   // an he should have a valid address
+        F_DhcpsAssert(he->ipAddress.Val != 0, __func__, __LINE__);   // an he should have a valid address
         if(pRxOpt->requestAddress.reqIpAddr == he->ipAddress.Val)
         {   // all looks good 
             // we can extend the lease
             uint32_t cliReqTime;
-            if(!_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
+            if(!F_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
             {   // client has not requested a specific lease; use the default value
                 cliReqTime = pIDcpt->cliLeaseDuration;
             }
 
             // restart the lease
-            _DHCPS_LeaseRestart(he, cliReqTime);
-            he->srvMsgType = DHCP_MESSAGE_TYPE_ACK;
+            F_DHCPS_LeaseRestart(he, cliReqTime);
+            he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK;
             newState = TCPIP_DHCPS_LEASE_STATE_BOUND; 
             evType = TCPIP_DHCPS_EVENT_REQUEST_EXPIRED; 
         }
         else
         {
-            he->srvMsgType = DHCP_MESSAGE_TYPE_NAK;
-            he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
+            he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_NAK;
+            he->nakCode = (uint8_t)DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
             // retain expired state
             evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
             evInfo.flags.infoReqIp = 1;
             evInfo.data = pRxOpt->requestAddress.reqIpAddr;
         }
-        _DHCPS_SendMessage(he);
+        (void)F_DHCPS_SendMessage(he);
     }
 
-    if(evType != 0)
-    {   
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
-    }
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
 
     return newState;
 }
@@ -2361,10 +2532,10 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Expired(TCPIP_DHCPS_INTERFACE
 // IP address’, the server SHOULD respond to the client with a DHCPNAK
 // message and may choose to report the problem to the system administrator. 
 //  
-static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
 
     DHCPS_HASH_ENTRY* he = *ppHe;
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
@@ -2373,26 +2544,26 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
 
     while(true)
     {
-        if(pRxOpt->serverIdentifier.optionType != DHCP_OPTION_SERVER_IDENTIFIER)
+        if(pRxOpt->serverIdentifier.optionType != (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER)
         {   // there should be a server identifier; wait some more
-            evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
             evInfo.flags.infoFmtMask = 1;
-            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_MISS;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_ID_MISS;
             break;
         }
 
         // check that there is a requested IP address
-        if(pRxOpt->requestAddress.optionType != DHCP_OPTION_REQUEST_IP_ADDRESS) 
+        if(pRxOpt->requestAddress.optionType != (uint8_t)DHCP_OPTION_REQUEST_IP_ADDRESS) 
         {   // missing option ?
-            evType = TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR;
+            evType = TCPIP_DHCPS_EVENT_REQ_FMT_ERROR;
             evInfo.flags.infoFmtMask = 1;
-            evInfo.data = TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS;
+            evInfo.data = (uint32_t)TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS;
             break;
         }
 
         // check we are selected
         TCPIP_UINT32_VAL uval;
-        memcpy(uval.v, pRxOpt->serverIdentifier.id, sizeof(uval.v));
+        (void)memcpy(uval.v, pRxOpt->serverIdentifier.id, sizeof(uval.v));
         if(uval.Val != pIDcpt->serverIPAddress.Val)
         {   // not selected; 
             // RFC 2131 pg 31/46: Servers SHOULD NOT reuse offerred addresses and use a timeout mechanism to decide when to reuse!
@@ -2408,35 +2579,32 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
         if(pRxOpt->requestAddress.reqIpAddr == he->ipAddress.Val)
         {   // all looks good 
             uint32_t cliReqTime;
-            if(!_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
+            if(!F_DHCPS_ClientReqLeaseTime(pIDcpt, pRxOpt, &cliReqTime))
             {   // client has not requested a specific lease; use the default value
                 cliReqTime = pIDcpt->cliLeaseDuration;
             }
             // restart the lease
-            _DHCPS_LeaseRestart(he, cliReqTime);
+            F_DHCPS_LeaseRestart(he, cliReqTime);
 
-            he->srvMsgType = DHCP_MESSAGE_TYPE_ACK; // reply with DHCPACK
+            he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_ACK; // reply with DHCPACK
             evType = TCPIP_DHCPS_EVENT_REQUEST_OFFERRED; 
             newState = TCPIP_DHCPS_LEASE_STATE_BOUND; 
         }
         else
         {
-            he->srvMsgType = DHCP_MESSAGE_TYPE_NAK; // reply with DHCPNAK
-            he->nakCode = DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
+            he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_NAK; // reply with DHCPNAK
+            he->nakCode = (uint8_t)DHCP_NAK_CODE_REQ_ADDRESS_INVALID;
             newState = TCPIP_DHCPS_LEASE_STATE_OFFERED;   // retain state
             evType = TCPIP_DHCPS_EVENT_REQ_ADDRESS_ERROR;
             evInfo.flags.infoReqIp = 1;
             evInfo.data = pRxOpt->requestAddress.reqIpAddr;
         }
 
-        _DHCPS_SendMessage(he);
+        (void)F_DHCPS_SendMessage(he);
         break;
     }
 
-    if(evType != 0)
-    {
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
-    }
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
 
     return newState;
 }
@@ -2448,25 +2616,25 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPReplyToRequest_Offerred(TCPIP_DHCPS_INTERFAC
 // as not available and SHOULD notify the local system administrator of
 // a possible configuration problem.
 // Note: the client included DHCP_OPTION_MESSAGE should be included in notification
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
     DHCPS_HASH_ENTRY* he = *ppHe;
 
-    if(he != 0)
+    if(he != NULL)
     { // Remove the leased address from the hash table; keep the address marked as 'busy'
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DECLINED, he, 0);
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-        int32_t entryIx = _PoolIndexFromIpAddress(pIDcpt, he->ipAddress.Val); 
+        F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_DECLINED, he, NULL);
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+        int32_t entryIx = F_PoolIndexFromIpAddress(pIDcpt, he->ipAddress.Val); 
         // should be a valid IP address since it's in the database!
-        _DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-        _DhcpsAssert(IpIndexCheckFree(pIDcpt, entryIx, false) == false, __func__, __LINE__); 
-#endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+        F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
+        F_DhcpsAssert(IpIndexCheckFree(pIDcpt, entryIx, false) == false, __func__, __LINE__); 
+#endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
 
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pIDcpt->statData.declinedCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
-        _DHCPS_RemoveEntry(he, false);
-        *ppHe = 0;
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+        F_DHCPS_RemoveEntry(he, false);
+        *ppHe = NULL;
     }
     // else, no record of this lease, ignore
 
@@ -2478,20 +2646,20 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToDecline(TCPIP_DHCPS_INTERFACE_DCPT*
 // address as not allocated.  The server SHOULD retain a record of the
 // client’s initialization parameters for possible reuse in response to
 // subsequent requests from the client.
-static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRelease(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
+static TCPIP_DHCPS_LEASE_STATE F_DHCPS_ReplyToRelease(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, BOOTP_HEADER* pHeader, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, DHCPS_HASH_ENTRY** ppHe)
 {
 
     DHCPS_HASH_ENTRY* he = *ppHe;
 
-    if(he != 0)
+    if(he != NULL)
     {
-        if(he->state >= TCPIP_DHCPS_LEASE_STATE_BOUND)
+        if(he->state >= (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
         {
             return TCPIP_DHCPS_LEASE_STATE_RELEASED;
         }
         else
         {   // some other state
-            return he->state;
+            return (TCPIP_DHCPS_LEASE_STATE)he->state;
         }
     }
     // else, no record of this lease, ignore
@@ -2499,12 +2667,12 @@ static TCPIP_DHCPS_LEASE_STATE _DHCPS_ReplyToRelease(TCPIP_DHCPS_INTERFACE_DCPT*
     return TCPIP_DHCPS_LEASE_STATE_IDLE;
 }
 
-static bool _DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, uint32_t* pLeaseTime)
+static bool F_DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, uint32_t* pLeaseTime)
 {
-    if(pRxOpt->requestLeaseTime.optionType == DHCP_OPTION_IP_LEASE_TIME) 
+    if(pRxOpt->requestLeaseTime.optionType == (uint8_t)DHCP_OPTION_IP_LEASE_TIME) 
     {   // client wants specific time
         TCPIP_UINT32_VAL uval;
-        memcpy(uval.v, pRxOpt->requestLeaseTime.lease, sizeof(uval.v));
+        (void)memcpy(uval.v, pRxOpt->requestLeaseTime.lease, sizeof(uval.v));
         if(uval.Val < pIDcpt->minLeaseDuration)
         {
             uval.Val = pIDcpt->minLeaseDuration;
@@ -2512,6 +2680,10 @@ static bool _DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_
         else if(uval.Val > pIDcpt->maxLeaseDuration)
         {
             uval.Val = pIDcpt->maxLeaseDuration;
+        }
+        else
+        {
+            // do nothing
         }
         // save the lease time
         *pLeaseTime = uval.Val;
@@ -2522,10 +2694,10 @@ static bool _DHCPS_ClientReqLeaseTime(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_
 
 static bool isMacAddrValid(const uint8_t *macAddr)
 {
-    int i;
-    for(i = 0; i < 6; i++)
+    size_t i;
+    for(i = 0; i < 6U; i++)
     {
-        if(macAddr[i] != 0)
+        if(macAddr[i] != 0U)
         {
             return true;
         }
@@ -2555,49 +2727,49 @@ static bool isMacAddrValid(const uint8_t *macAddr)
 
 // sets the BOOTP header to the pBuff
 // srvMsgType is one of {DHCP_MESSAGE_TYPE_OFFER, DHCP_MESSAGE_TYPE_ACK, DHCP_MESSAGE_TYPE_NAK}
-static uint8_t* _DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he)
+static uint8_t* F_DHCPS_SetBootpHeader(uint8_t* pBuff, DHCPS_HASH_ENTRY* he)
 {
     // update the BOOTP header fields
-    memset(pBuff, 0, sizeof(BOOTP_HEADER) + _TCPIP_DHCPS_UNUSED_BYTES_FOR_TX);
+    (void)memset(pBuff, 0, sizeof(BOOTP_HEADER) + M_TCPIP_DHCPS_UNUSED_BYTES_FOR_TX);
 
-    BOOTP_HEADER* pHeader = (BOOTP_HEADER*)pBuff;
-    pHeader->op = _TCPIP_DHCPS_BOOT_REPLY;
-    pHeader->htype = _TCPIP_DHCPS_BOOT_HW_TYPE;
+    BOOTP_HEADER* pHeader = FC_Uptr2BootpHdr(pBuff);
+    pHeader->op = M_TCPIP_DHCPS_BOOT_REPLY;
+    pHeader->htype = M_TCPIP_DHCPS_BOOT_HW_TYPE;
 
-    pHeader->hlen = _TCPIP_DHCPS_BOOT_LEN_OF_HW_TYPE;
+    pHeader->hlen = M_TCPIP_DHCPS_BOOT_LEN_OF_HW_TYPE;
     // pHeader->hops = 0;
     pHeader->xid = he->xid;
     // pHeader->secs = 0;
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_ACK)
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK)
     {
         pHeader->ciaddr = he->ciaddr;
     }
     // else 0
 
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_OFFER || (he->srvMsgType == DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != DHCP_MESSAGE_TYPE_INFORM))
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_OFFER || (he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != (uint8_t)DHCP_MESSAGE_TYPE_INFORM))
     {
         pHeader->yiaddr = he->ipAddress.Val;
     }
     // pHeader->siaddr = 0;
     pHeader->flags = he->cliFlags;
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_NAK && he->cliMsgType == DHCP_MESSAGE_TYPE_REQUEST)
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_NAK && he->cliMsgType == (uint8_t)DHCP_MESSAGE_TYPE_REQUEST)
     {
-        if(he->giaddr != 0)
+        if(he->giaddr != 0U)
         {   // RFC 2131 pg 32/46: special case for DHCPREQUEST
-            pHeader->flags |= _TCPIP_DHCPS_BOOTP_FLAG_BROADCAST;
+            pHeader->flags |= (uint16_t)M_TCPIP_DHCPS_BOOTP_FLAG_BROADCAST;
         }
     }
     
     pHeader->giaddr = he->giaddr;
-    memcpy(pHeader->chaddr, he->chaddr, sizeof(pHeader->chaddr));
+    (void)memcpy(pHeader->chaddr, he->chaddr, sizeof(pHeader->chaddr));
 
-    pBuff += sizeof(BOOTP_HEADER) + _TCPIP_DHCPS_UNUSED_BYTES_FOR_TX;
+    pBuff += sizeof(BOOTP_HEADER) + M_TCPIP_DHCPS_UNUSED_BYTES_FOR_TX;
 
     return pBuff;
 }
 
 // srvMsgType is one of {DHCP_MESSAGE_TYPE_OFFER, DHCP_MESSAGE_TYPE_ACK, DHCP_MESSAGE_TYPE_NAK}
-static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
+static bool F_DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
 {
     // NAK messages
     // Note: less than 256 bytes in length!
@@ -2609,15 +2781,15 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     UDP_SOCKET skt = gDhcpDcpt->uSkt;
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
 
-    if(TCPIP_UDP_PutIsReady(skt) < _TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
+    if(TCPIP_UDP_PutIsReady(skt) < (uint16_t)M_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE)
     {   // socket full ?
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pIDcpt->statData.sktNotReadyCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         return false;
     }
 
-    uint32_t magicCookie = _TCPIP_DHCPS_MAGIC_COOKIE_HOST;
+    uint32_t magicCookie = M_TCPIP_DHCPS_MAGIC_COOKIE_HOST;
     uint8_t* wrStartPtr;
     
     union
@@ -2627,9 +2799,9 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     }uPtr;
 
     wrStartPtr = gDhcpProcPacket;
-    uPtr.wrPtr = _DHCPS_SetBootpHeader(wrStartPtr, he);
+    uPtr.wrPtr = F_DHCPS_SetBootpHeader(wrStartPtr, he);
     // set the magic cookie
-    memcpy(uPtr.wrPtr, &magicCookie, sizeof(magicCookie));
+    (void)memcpy((void*)uPtr.wrPtr, (const void*)&magicCookie, sizeof(magicCookie));
     uPtr.wrPtr += sizeof(magicCookie);
 
     // set options: RFC 2131 Table 3 pg 29/46
@@ -2637,10 +2809,10 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     // Option: DHCP_OPTION_REQUEST_IP_ADDRESS: MUST NOT
     //
     // Option: DHCP_OPTION_IP_LEASE_TIME: MUST/MUST NOT 
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_OFFER || (he->srvMsgType == DHCP_MESSAGE_TYPE_ACK && he->cliMsgType == DHCP_MESSAGE_TYPE_REQUEST))
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_OFFER || (he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK && he->cliMsgType == (uint8_t)DHCP_MESSAGE_TYPE_REQUEST))
     {
-        uPtr.pOption->ipLeaseTimeType.optionType = DHCP_OPTION_IP_LEASE_TIME;
-        uPtr.pOption->ipLeaseTimeType.optionLen = 4;
+        uPtr.pOption->ipLeaseTimeType.optionType = (uint8_t)DHCP_OPTION_IP_LEASE_TIME;
+        uPtr.pOption->ipLeaseTimeType.optionLen = 4U;
         uPtr.pOption->ipLeaseTimeType.intVal = TCPIP_Helper_htonl(he->cliLeaseTime);
         uPtr.wrPtr += sizeof(uPtr.pOption->ipLeaseTimeType);
     }
@@ -2648,25 +2820,25 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     // Option: Use ’file’/’sname’: MAY
 
     // Option: DHCP message type: MUST
-    uPtr.pOption->messageType.optionType = DHCP_OPTION_MESSAGE_TYPE;
-    uPtr.pOption->messageType.optionLen = 1;
+    uPtr.pOption->messageType.optionType = (uint8_t)DHCP_OPTION_MESSAGE_TYPE;
+    uPtr.pOption->messageType.optionLen = 1U;
     uPtr.pOption->messageType.byteVal = he->srvMsgType;
     uPtr.wrPtr += sizeof(uPtr.pOption->messageType);
 
     // Option: DHCP_OPTION_PARAM_REQUEST_LIST: MUST NOT
 
     // Option: DHCP_OPTION_MESSAGE: SHOULD (for DHCP_MESSAGE_TYPE_NAK)
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_NAK)
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_NAK)
     {
-        _DhcpsAssert(he->nakCode != 0, __func__, __LINE__);
-        _DhcpsAssert(he->nakCode - 1 < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl), __func__, __LINE__);
+        F_DhcpsAssert(he->nakCode != 0U, __func__, __LINE__);
+        F_DhcpsAssert(he->nakCode - 1U < sizeof(nak_messgage_tbl) / sizeof(*nak_messgage_tbl), __func__, __LINE__);
 
-        const char* msg = nak_messgage_tbl[he->nakCode - 1];
-        uint8_t msgLen = strlen(msg);
+        const char* msg = nak_messgage_tbl[he->nakCode - 1U];
+        uint8_t msgLen = (uint8_t)strlen(msg);
 
-        uPtr.pOption->multByteType.optionType = DHCP_OPTION_MESSAGE;
+        uPtr.pOption->multByteType.optionType = (uint8_t)DHCP_OPTION_MESSAGE;
         uPtr.pOption->multByteType.optionLen = msgLen;
-        memcpy(uPtr.pOption->multByteType.byteVal, msg, msgLen);
+        (void)memcpy((void*)uPtr.pOption->multByteType.byteVal, (const void*)msg, msgLen);
         uPtr.wrPtr += sizeof(uPtr.pOption->multByteType) + msgLen;
     }
 
@@ -2675,8 +2847,8 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     // Option: Vendor class identifier: MAY
     
     // Option: DHCP_OPTION_SERVER_IDENTIFIER: MUST; the server IP address (RFC 2131 pg 23/46)
-    uPtr.pOption->serverIdType.optionType = DHCP_OPTION_SERVER_IDENTIFIER;
-    uPtr.pOption->serverIdType.optionLen = sizeof(IPV4_ADDR);
+    uPtr.pOption->serverIdType.optionType = (uint8_t)DHCP_OPTION_SERVER_IDENTIFIER;
+    uPtr.pOption->serverIdType.optionLen = (uint8_t)sizeof(IPV4_ADDR);
     uPtr.pOption->serverIdType.intVal = pIDcpt->serverIPAddress.Val;
     uPtr.wrPtr += sizeof(uPtr.pOption->serverIdType);
 
@@ -2686,99 +2858,99 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     // other options: MAY
 
     // Option: Subnet Mask
-    uPtr.pOption->subnetMaskType.optionType = DHCP_OPTION_SUBNET_MASK;
-    uPtr.pOption->subnetMaskType.optionLen = sizeof(IPV4_ADDR);
+    uPtr.pOption->subnetMaskType.optionType = (uint8_t)DHCP_OPTION_SUBNET_MASK;
+    uPtr.pOption->subnetMaskType.optionLen = (uint8_t)sizeof(IPV4_ADDR);
     uPtr.pOption->subnetMaskType.intVal = pIDcpt->ipMaskAddress.Val;
     uPtr.wrPtr += sizeof(uPtr.pOption->subnetMaskType);
    
     // Option: Router/Gateway address
 #if (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & TCPIP_DHCPS_CLIENT_OPTION_FLAG_ROUTER) != 0) 
+    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_ROUTER) != 0U) 
     {   // send the router option
-        uPtr.wrPtr = _DHCPS_SetMultIntOption(uPtr.wrPtr, DHCP_OPTION_ROUTER, pIDcpt->cliOptions.cliRouter, sizeof(pIDcpt->cliOptions.cliRouter) / sizeof(*pIDcpt->cliOptions.cliRouter));
+        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_ROUTER, pIDcpt->cliOptions.cliRouter, sizeof(pIDcpt->cliOptions.cliRouter) / sizeof(*pIDcpt->cliOptions.cliRouter));
     }
 #endif  // (TCPIP_DHCPS_OPTION_ROUTER_VALUES  != 0)
 
     // Option: DNS server address
 #if (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & TCPIP_DHCPS_CLIENT_OPTION_FLAG_DNS) != 0) 
+    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_DNS) != 0U) 
     {   // send the DNS option
-        uPtr.wrPtr = _DHCPS_SetMultIntOption(uPtr.wrPtr, DHCP_OPTION_DNS, pIDcpt->cliOptions.cliDNS, sizeof(pIDcpt->cliOptions.cliDNS) / sizeof(*pIDcpt->cliOptions.cliDNS));
+        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_DNS, pIDcpt->cliOptions.cliDNS, sizeof(pIDcpt->cliOptions.cliDNS) / sizeof(*pIDcpt->cliOptions.cliDNS));
     }
 #endif  // (TCPIP_DHCPS_OPTION_DNS_VALUES  != 0)
 
     // Option: Time server address
 #if (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & TCPIP_DHCPS_CLIENT_OPTION_FLAG_TIME_SERVER) != 0) 
+    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_TIME_SERVER) != 0U) 
     {   // send the Time Server option
-        uPtr.wrPtr = _DHCPS_SetMultIntOption(uPtr.wrPtr, DHCP_OPTION_TIME_SERVER, pIDcpt->cliOptions.cliTServer, sizeof(pIDcpt->cliOptions.cliTServer) / sizeof(*pIDcpt->cliOptions.cliTServer));
+        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_TIME_SERVER, pIDcpt->cliOptions.cliTServer, sizeof(pIDcpt->cliOptions.cliTServer) / sizeof(*pIDcpt->cliOptions.cliTServer));
     }
 #endif  // (TCPIP_DHCPS_OPTION_TIME_SERVER_VALUES  != 0)
 
     // Option: Name server address
 #if (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & TCPIP_DHCPS_CLIENT_OPTION_FLAG_NAME_SERVER) != 0) 
+    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NAME_SERVER) != 0U) 
     {   // send the Time Server option
-        uPtr.wrPtr = _DHCPS_SetMultIntOption(uPtr.wrPtr, DHCP_OPTION_NAME_SERVER, pIDcpt->cliOptions.cliNServer, sizeof(pIDcpt->cliOptions.cliNServer) / sizeof(*pIDcpt->cliOptions.cliNServer));
+        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NAME_SERVER, pIDcpt->cliOptions.cliNServer, sizeof(pIDcpt->cliOptions.cliNServer) / sizeof(*pIDcpt->cliOptions.cliNServer));
     }
 #endif  // (TCPIP_DHCPS_OPTION_NAME_SERVER_VALUES  != 0)
 
 #if (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
-    if((pIDcpt->cliOptions.cliOptFlags & TCPIP_DHCPS_CLIENT_OPTION_FLAG_NTP_SERVER) != 0) 
+    if((pIDcpt->cliOptions.cliOptFlags & (uint32_t)TCPIP_DHCPS_CLI_OPT_FLAG_NTP_SERVER) != 0U) 
     {   // send the Time Server option
-        uPtr.wrPtr = _DHCPS_SetMultIntOption(uPtr.wrPtr, DHCP_OPTION_NTP_SERVER, pIDcpt->cliOptions.cliNtpServer, sizeof(pIDcpt->cliOptions.cliNtpServer) / sizeof(*pIDcpt->cliOptions.cliNtpServer));
+        uPtr.wrPtr = F_DHCPS_SetMultIntOption(uPtr.wrPtr, (uint8_t)DHCP_OPTION_NTP_SERVER, pIDcpt->cliOptions.cliNtpServer, sizeof(pIDcpt->cliOptions.cliNtpServer) / sizeof(*pIDcpt->cliOptions.cliNtpServer));
     }
 #endif  // (TCPIP_DHCPS_OPTION_NTP_SERVER_VALUES  != 0)
 
-#if (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
-    if(he->srvMsgType == DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != DHCP_MESSAGE_TYPE_INFORM)
+#if (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+    if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_ACK && he->cliMsgType != (uint8_t)DHCP_MESSAGE_TYPE_INFORM)
     {
         // option DHCP_OPTION_RENEWAL_T1 
         uint32_t t1 = (he->cliLeaseTime * pIDcpt->cliOptions.t1Mult) / pIDcpt->cliOptions.t1Div;
-        uPtr.pOption->t1RenewalType.optionType = DHCP_OPTION_RENEWAL_T1;
-        uPtr.pOption->t1RenewalType.optionLen = sizeof(uint32_t);
+        uPtr.pOption->t1RenewalType.optionType = (uint8_t)DHCP_OPTION_RENEWAL_T1;
+        uPtr.pOption->t1RenewalType.optionLen = (uint8_t)sizeof(uint32_t);
         uPtr.pOption->t1RenewalType.intVal = TCPIP_Helper_htonl(t1);
         uPtr.wrPtr += sizeof(uPtr.pOption->t1RenewalType);
 
         // option DHCP_OPTION_REBINDING_T2 
         uint32_t t2 = (he->cliLeaseTime * pIDcpt->cliOptions.t2Mult) / pIDcpt->cliOptions.t2Div;
-        uPtr.pOption->t2RebindingType.optionType = DHCP_OPTION_REBINDING_T2;
-        uPtr.pOption->t2RebindingType.optionLen = sizeof(uint32_t);
+        uPtr.pOption->t2RebindingType.optionType = (uint8_t)DHCP_OPTION_REBINDING_T2;
+        uPtr.pOption->t2RebindingType.optionLen = (uint8_t)sizeof(uint32_t);
         uPtr.pOption->t2RebindingType.intVal = TCPIP_Helper_htonl(t2);
         uPtr.wrPtr += sizeof(uPtr.pOption->t2RebindingType);
     }
-#endif  // (_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
+#endif  // (M_TCPIP_DHCPS_OPTION_T1_T2_SUPPRESS == 0)
   
     // No more options, mark ending
-    *uPtr.wrPtr++ = DHCP_OPTION_END;
+    *uPtr.wrPtr++ = (uint8_t)DHCP_OPTION_END;
 
     // Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
-    size_t paddingSz = _TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE - (uPtr.wrPtr - wrStartPtr);
+    ptrdiff_t paddingSz = (ptrdiff_t)M_TCPIP_DHCPS_MIN_REPONSE_PACKET_SIZE - FC_CU8PtrDiff(uPtr.wrPtr, wrStartPtr);
     if(paddingSz > 0)
     {
-        memset(uPtr.wrPtr, 0, paddingSz);
+        (void)memset(uPtr.wrPtr, 0, (size_t)paddingSz);
         uPtr.wrPtr += paddingSz;
     }
 
     // set the remote destination address:
     // unicast or broadcast
     /* RFC2131 pg 23/46 rules:
-        // - If the ’giaddr’ field in a DHCP message from a client is non-zero,
-            // the server sends any return messages to the ’DHCP server’ port (67) on the
-            // BOOTP relay agent whose address appears in ’giaddr’.
+          - If the ’giaddr’ field in a DHCP message from a client is non-zero,
+              the server sends any return messages to the ’DHCP server’ port (67) on the
+              BOOTP relay agent whose address appears in ’giaddr’.
           
-        // - If the ’giaddr’ field is zero and the ’ciaddr’ field is nonzero,
-            //   then the server unicasts DHCPOFFER and DHCPACK messages to the address in ’ciaddr’.
+          - If the ’giaddr’ field is zero and the ’ciaddr’ field is nonzero,
+                then the server unicasts DHCPOFFER and DHCPACK messages to the address in ’ciaddr’.
            
-        // - If ’giaddr’ is zero and ’ciaddr’ is zero, and the broadcast bit is
-            //   set, then the server broadcasts DHCPOFFER and DHCPACK messages to 0xffffffff.
+          - If ’giaddr’ is zero and ’ciaddr’ is zero, and the broadcast bit is
+                set, then the server broadcasts DHCPOFFER and DHCPACK messages to 0xffffffff.
             
-        // - If the broadcast bit is not set and ’giaddr’ is zero and
-            //   ’ciaddr’ is zero, then the server unicasts DHCPOFFER and DHCPACK
-            //   messages to the client’s hardware address and ’yiaddr’ address.
+          - If the broadcast bit is not set and ’giaddr’ is zero and
+                ’ciaddr’ is zero, then the server unicasts DHCPOFFER and DHCPACK
+                messages to the client’s hardware address and ’yiaddr’ address.
 
-        // - In all cases, when ’giaddr’ is zero, the server broadcasts any DHCPNAK messages to 0xffffffff.
-        // 
+          - In all cases, when ’giaddr’ is zero, the server broadcasts any DHCPNAK messages to 0xffffffff.
+          
     
       RFC2131 pg 32/46 rules for DHCPREQUEST:
         If ’giaddr’ is 0x0 in the DHCPREQUEST message, the client is on
@@ -2809,87 +2981,89 @@ static bool _DHCPS_SendMessage(DHCPS_HASH_ENTRY* he)
     IP_MULTI_ADDRESS destAdd;
     bool useBcast = false;
 
-    if(he->giaddr != 0)
+    if(he->giaddr != 0U)
     {   // giaddr != 0
         destPort = TCPIP_DHCP_SERVER_PORT; 
         destAdd.v4Add.Val = he->giaddr;
     }
-    else if(he->srvMsgType == DHCP_MESSAGE_TYPE_NAK)
+    else if(he->srvMsgType == (uint8_t)DHCP_MESSAGE_TYPE_NAK)
     {   // giaddr == 0, DHCPNAK
         useBcast = true;
     }
-    else if(he->ciaddr != 0)
+    else if(he->ciaddr != 0U)
     {   // giaddr == 0, ciaddr != 0
         destAdd.v4Add.Val = he->ciaddr;
     }
-    else if((he->cliFlags & _TCPIP_DHCPS_BOOTP_FLAG_BROADCAST) != 0) 
+    else if((he->cliFlags & (uint16_t)M_TCPIP_DHCPS_BOOTP_FLAG_BROADCAST) != 0U) 
     {   // giaddr == 0, ciaddr == 0, broadcast bit is set
         useBcast = true;
-        destAdd.v4Add.Val = 0xffffffff;
+        destAdd.v4Add.Val = 0xffffffffU;
     }
     else
     {   // giaddr == 0, ciaddr == 0, broadcast bit not set; use yiaddr
         destAdd.v4Add.Val = he->ipAddress.Val;
     }
 
-    TCPIP_UDP_DestinationPortSet(skt, destPort);
+    (void)TCPIP_UDP_DestinationPortSet(skt, destPort);
     if(useBcast)
     {
-        TCPIP_UDP_BcastIPV4AddressSet(skt, UDP_BCAST_NETWORK_LIMITED, pIDcpt->pNetIf);
+        (void)TCPIP_UDP_BcastIPV4AddressSet(skt, UDP_BCAST_NETWORK_LIMITED, pIDcpt->pNetIf);
     }
     else
     {
-        TCPIP_UDP_DestinationIPAddressSet(skt, IP_ADDRESS_TYPE_IPV4, &destAdd);
+        (void)TCPIP_UDP_DestinationIPAddressSet(skt, IP_ADDRESS_TYPE_IPV4, &destAdd);
         // inject to ARP so we can send the UDP packet
-        TCPIP_ARP_RESULT arpRes = TCPIP_ARP_EntrySet(pIDcpt->pNetIf, &destAdd.v4Add, (TCPIP_MAC_ADDR*)he->chaddr, false); 
+        TCPIP_ARP_RESULT arpRes = TCPIP_ARP_EntrySet(pIDcpt->pNetIf, &destAdd.v4Add, FC_CUptr2MacAdd(he->chaddr), false); 
         (void)arpRes;
-        if(arpRes < 0)
+        if((int)arpRes < 0)
         {
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIDcpt->statData.arpFailCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-            memset(&evInfo, 0, sizeof(evInfo));
+            (void)memset(&evInfo, 0, sizeof(evInfo));
             evInfo.flags.infoTargetIp = 1;
             evInfo.data = destAdd.v4Add.Val;
-            _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ARP_FAIL, he, &evInfo);
+            F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ARP_FAIL, he, &evInfo);
         }
         else
         {
-            he->runFlags |= DHCPS_RUN_FLAG_ARP_INJECT;
-            he->injectTimeMs = _TCPIP_MsecCountGet();
+            he->runFlags |= (uint8_t)DHCPS_RUN_FLAG_ARP_INJECT;
+            he->injectTimeMs = TCPIP_MsecCountGet();
             he->injectAdd.Val = destAdd.v4Add.Val;
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIDcpt->statData.arpInjectCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         }
     }
 
     IP_MULTI_ADDRESS srcAdd;
     srcAdd.v4Add = pIDcpt->pNetIf->netIPAddr;
-    TCPIP_UDP_SourceIPAddressSet(skt, IP_ADDRESS_TYPE_IPV4, &srcAdd);
-    TCPIP_UDP_SocketNetSet(skt, pIDcpt->pNetIf);
+    (void)TCPIP_UDP_SourceIPAddressSet(skt, IP_ADDRESS_TYPE_IPV4, &srcAdd);
+    (void)TCPIP_UDP_SocketNetSet(skt, pIDcpt->pNetIf);
 
     // set the data to the socket
-    uint16_t wrBytes = TCPIP_UDP_ArrayPut(skt, wrStartPtr, uPtr.wrPtr - wrStartPtr);
-    if(wrBytes != uPtr.wrPtr - wrStartPtr)
+    ptrdiff_t leftBytes = FC_CU8PtrDiff(uPtr.wrPtr, wrStartPtr);
+    F_DhcpsAssert(leftBytes >= 0, __func__, __LINE__);
+    uint16_t wrBytes = TCPIP_UDP_ArrayPut(skt, wrStartPtr, (uint16_t)leftBytes);
+    if((ptrdiff_t)wrBytes != leftBytes)
     {
-        _DhcpsAssert(false, __func__, __LINE__);   // this should NOT happen
+        F_DhcpsAssert(false, __func__, __LINE__);   // this should NOT happen
     }
 
     // Transmit the packet
-    TCPIP_UDP_Flush(skt);
+    (void)TCPIP_UDP_Flush(skt);
 
-    _DHCPS_SendMessagePrint(he, destAdd.v4Add.Val);
+    F_DHCPS_SendMessagePrint(he, destAdd.v4Add.Val);
 
     return true;
 }
 
 // populates a mult_int option from a source of uint32_t
 // returns the updated pointer
-static uint8_t* _DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint32_t* pSrc, size_t nSources)
+static uint8_t* F_DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint32_t* pSrc, size_t nSources)
 {
-    int ix;
+    size_t ix;
 
     union
     {
@@ -2903,19 +3077,28 @@ static uint8_t* _DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint
         uint32_t    v32;
     }pkd32;
 
+    union
+    {
+        uint32_t*   uptr;
+        pkd32*      pkdPtr;
+    }U_UINT_PDK32;
+
     uPtr.wrPtr = wrPtr;
 
     uPtr.pOption->optionType = optionType;
-    uPtr.pOption->optionLen = 0;
-    pkd32* pVal = (pkd32*)uPtr.pOption->intVal;
-    for(ix = 0; ix < nSources; ix++, pSrc++)
+    uPtr.pOption->optionLen = 0U;
+    U_UINT_PDK32.uptr = uPtr.pOption->intVal;
+    pkd32* pVal = U_UINT_PDK32.pkdPtr;
+
+    for(ix = 0; ix < nSources; ix++)
     {
-        if(*pSrc != 0)
+        if(*pSrc != 0U)
         {
             pVal->v32 = *pSrc;
             pVal++;
-            uPtr.pOption->optionLen += sizeof(uint32_t);
+            uPtr.pOption->optionLen += (uint8_t)sizeof(uint32_t);
         }
+        pSrc++;
     }
 
     return (uint8_t*)pVal;
@@ -2925,52 +3108,52 @@ static uint8_t* _DHCPS_SetMultIntOption(uint8_t* wrPtr, uint8_t optionType, uint
 // defer the actions for the DHCPs task
 // Note: this my occur on different threa dcontext if ICMP runs in a different thread!
 //      That's why protection is (may be) necessary.
-static void _DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param)
+static void F_DHCPS_PingHandler(const TCPIP_ICMP_ECHO_REQUEST* pReqData, TCPIP_ICMP_REQUEST_HANDLE icmpHandle, TCPIP_ICMP_ECHO_REQUEST_RESULT result, const void* param)
 {
-    DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)param;
-    _DhcpsAssert(he->ipAddress.Val == pReqData->targetAddr.Val, __func__, __LINE__);
-    _DhcpsAssert(he->hEntry.flags.busy != 0, __func__, __LINE__);
+    DHCPS_HASH_ENTRY* he = FC_Cvptr2DhcpsHash(param);
+    F_DhcpsAssert(he->ipAddress.Val == pReqData->targetAddr.Val, __func__, __LINE__);
+    F_DhcpsAssert(he->hEntry.flags.busy != 0U, __func__, __LINE__);
 
-    OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
-    _DhcpsAssert((he->state == TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE) != 0, __func__, __LINE__);
+    OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
+    F_DhcpsAssert((he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE) != 0, __func__, __LINE__);
 
     if(result == TCPIP_ICMP_ECHO_REQUEST_RES_OK)
     {   // some host replied to this ping; address is taken, use some other
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-        int32_t entryIx = _PoolIndexFromIpAddress(he->parent, he->ipAddress.Val); 
-        _DhcpsAssert(entryIx >= 0, __func__, __LINE__);
-        _DhcpsAssert(IpIndexCheckFree(he->parent, entryIx, false) == false, __func__, __LINE__);
-#endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_REPROBE);
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+        int32_t entryIx = F_PoolIndexFromIpAddress(he->parent, he->ipAddress.Val); 
+        F_DhcpsAssert(entryIx >= 0, __func__, __LINE__);
+        F_DhcpsAssert(IpIndexCheckFree(he->parent, entryIx, false) == false, __func__, __LINE__);
+#endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_BASIC) != 0)
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_REPROBE);
     }
     else
     {   // ICMP timeout; no replies
-        if(--he->probeCount == 0)
+        if(--he->probeCount == 0U)
         {   // we're done
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
         }
         else
         {   // more retries to be made; 
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
         }
     }
     
-    _DHCPS_Unlock(lock);
+    F_DHCPS_Unlock(lock);
 }
 
 
 // send an ICMP echo request to a target address
 // sets the probeStartTimeMs
-static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTRY* he)
+static bool F_DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTRY* he)
 {
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    int ix;
+    size_t ix;
     uint8_t* pBuff;
     TCPIP_ICMP_ECHO_REQUEST echoRequest;
-    uint8_t pingBuffer[_TCPIP_DHCPS_PING_BUFF_SIZE];
+    uint8_t pingBuffer[M_TCPIP_DHCPS_PING_BUFF_SIZE];
 
     // make sure ARP is flushed, so we make a new query
-    TCPIP_ARP_EntryRemove(pIDcpt->pNetIf, &he->ipAddress);
+    (void)TCPIP_ARP_EntryRemove(pIDcpt->pNetIf, &he->ipAddress);
     
     echoRequest.netH = pIDcpt->pNetIf;
     echoRequest.targetAddr = he->ipAddress;
@@ -2978,174 +3161,176 @@ static bool _DHCPS_SendProbe(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, DHCPS_HASH_ENTR
     echoRequest.identifier = ++gDhcpDcpt->icmpIdentifier;
 
     echoRequest.pData = pingBuffer;
-    echoRequest.dataSize = sizeof(pingBuffer);
-    echoRequest.callback = _DHCPS_PingHandler;
+    echoRequest.dataSize = (uint16_t)sizeof(pingBuffer);
+    echoRequest.callback = &F_DHCPS_PingHandler;
     echoRequest.param = he;
 
     pBuff = pingBuffer;
     for(ix = 0; ix < sizeof(pingBuffer); ix++)
     {
-        *pBuff++ = SYS_RANDOM_PseudoGet();
+        *pBuff++ = (uint8_t)SYS_RANDOM_PseudoGet();
     }
 
     TCPIP_ICMP_REQUEST_HANDLE echoHandle;
     ICMP_ECHO_RESULT echoRes = TCPIP_ICMP_EchoRequest (&echoRequest, &echoHandle);
 
-    if(echoRes >= 0)
+    if((int)echoRes >= 0)
     {
-        he->probeStartTimeMs = _TCPIP_MsecCountGet(); 
+        he->probeStartTimeMs = TCPIP_MsecCountGet(); 
         he->probeHandle = echoHandle;
         evType = TCPIP_DHCPS_EVENT_ECHO_PROBE_SENT;
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         he->parent->statData.icmpProbeCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
     }
     else
     {   // failed; retry at next iteration
         evType = TCPIP_DHCPS_EVENT_ECHO_PROBE_FAIL;
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         he->parent->statData.icmpFailCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
 
     }
 
     (void)evType;
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
     evInfo.flags.infoTargetIp = 1;
     evInfo.data = echoRequest.targetAddr.Val;
 
-    _DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
-    return echoRes >= 0;
+    F_DHCPS_NotifyClients(pIDcpt->pNetIf, evType, he, &evInfo);
+    return (int)echoRes >= 0;
 }
 
 
 // main status processing function
-static void _DHCPS_ProcessTick(void)
+static void F_DHCPS_ProcessTick(void)
 {
     // status processing function table
-    static const _DHCPS_STAT_FUNC   _DHCPS_StatTickFncTbl[] =
+    static const F_DHCPS_STAT_FUNC   T_DHCPS_StatTickFncTbl[] =
     {
-        0,                          // TCPIP_DHCPS_LEASE_STATE_IDLE
-        _DHCPS_TickFnc_ProbeSend,   // TCPIP_DHCPS_LEASE_STATE_SEND_PROBE
-        _DHCPS_TickFnc_ProbeWait,   // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
-        _DHCPS_TickFnc_Reprobe,     // TCPIP_DHCPS_LEASE_STATE_REPROBE
-        _DHCPS_TickFnc_SendOffer,   // TCPIP_DHCPS_LEASE_STATE_SEND_OFFER
-        _DHCPS_TickFnc_Offered,     // TCPIP_DHCPS_LEASE_STATE_OFFERED
-        _DHCPS_TickFnc_Bound,       // TCPIP_DHCPS_LEASE_STATE_BOUND
-        0,                          // TCPIP_DHCPS_LEASE_STATE_RELEASED
-        0,                          // TCPIP_DHCPS_LEASE_STATE_EXPIRED
-        0,                          // TCPIP_DHCPS_LEASE_STATE_INFORM
+        0,                              // TCPIP_DHCPS_LEASE_STATE_IDLE
+        &F_DHCPS_TickFnc_ProbeSend,     // TCPIP_DHCPS_LEASE_STATE_SEND_PROBE
+        &F_DHCPS_TickFnc_ProbeWait,     // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
+        &F_DHCPS_TickFnc_Reprobe,       // TCPIP_DHCPS_LEASE_STATE_REPROBE
+        &F_DHCPS_TickFnc_SendOffer,     // TCPIP_DHCPS_LEASE_STATE_SEND_OFFER
+        &F_DHCPS_TickFnc_Offered,       // TCPIP_DHCPS_LEASE_STATE_OFFERED
+        &F_DHCPS_TickFnc_Bound,         // TCPIP_DHCPS_LEASE_STATE_BOUND
+        0,                              // TCPIP_DHCPS_LEASE_STATE_RELEASED
+        0,                              // TCPIP_DHCPS_LEASE_STATE_EXPIRED
+        0,                              // TCPIP_DHCPS_LEASE_STATE_INFORM
     };
 
     DHCPS_HASH_ENTRY* he;
-    int ifIx, bktIx;
+    size_t ifIx, bktIx;
     OA_HASH_DCPT    *pOH;
 
-    if(_DHCPS_AccessLock() == false)
+    if(F_DHCPS_AccessLock() == false)
     {
-        _DHCPS_NotifyClients(0, TCPIP_DHCPS_EVENT_TICK_LOCK, 0, 0);
+        F_DHCPS_NotifyClients(NULL, TCPIP_DHCPS_EVENT_TICK_LOCK, NULL, NULL);
         return;
     } 
 
-    uint32_t currMsec = _TCPIP_MsecCountGet();
+    uint32_t currMsec = TCPIP_MsecCountGet();
 
     TCPIP_DHCPS_DCPT* pDcpt = gDhcpDcpt;
 
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = pDcpt->ifDcpt;
     // process each interface descriptor
-    for(ifIx = 0; ifIx < pDcpt->ifCount; ifIx++, pIDcpt++)
+    for(ifIx = 0; ifIx < (size_t)pDcpt->ifCount; ifIx++)
     {
-        if((pOH = pIDcpt->hashDcpt) == 0)
+        if((pOH = pIDcpt->hashDcpt) == NULL)
         {
+            pIDcpt++;
             continue;
         }
 
         for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
         {
-            he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(pOH, bktIx);        
-            if(he->hEntry.flags.busy != 0)
+            he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryGet(pOH, bktIx));
+            if(he->hEntry.flags.busy != 0U)
             {
-                _DhcpsAssert(0 < he->state && he->state <= TCPIP_DHCPS_LEASE_STATE_INFORM, __func__, __LINE__); 
-                _DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
+                F_DhcpsAssert(0 < he->state && he->state <= (uint8_t)TCPIP_DHCPS_LEASE_STATE_INFORM, __func__, __LINE__); 
+                F_DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
                 // process run time flags
-                if((he->runFlags & DHCPS_RUN_FLAG_ARP_INJECT) != 0)
+                if((he->runFlags & (uint8_t)DHCPS_RUN_FLAG_ARP_INJECT) != 0U)
                 {
-                    if((currMsec - he->injectTimeMs) >= _TCPIP_DHCPS_ARP_INJECT_TMO)
+                    if((currMsec - he->injectTimeMs) >= M_TCPIP_DHCPS_ARP_INJECT_TMO)
                     {
-                        TCPIP_ARP_EntryRemove(he->parent->pNetIf, &he->injectAdd);
-                        he->runFlags &= ~DHCPS_RUN_FLAG_ARP_INJECT;
+                        (void)TCPIP_ARP_EntryRemove(he->parent->pNetIf, &he->injectAdd);
+                        he->runFlags &= ~(uint8_t)DHCPS_RUN_FLAG_ARP_INJECT;
                     }
                 } 
 
                 // process state
-                _DhcpsDisplayStat(he);
-                _DHCPS_STAT_FUNC statF = _DHCPS_StatTickFncTbl[he->state];
-                if(statF)
+                F_DhcpsDisplayStat(he);
+                F_DHCPS_STAT_FUNC statF = T_DHCPS_StatTickFncTbl[he->state];
+                if(statF != NULL)
                 {
                     statF(he);
                 }
             }
         }
+        pIDcpt++;
     }
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
 }
 
 // Status processing functions
 
 // TCPIP_DHCPS_LEASE_STATE_SEND_PROBE
-static void _DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_ProbeSend(DHCPS_HASH_ENTRY* he)
 {
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
 
-    if(_DHCPS_SendProbe(pIDcpt, he))
+    if(F_DHCPS_SendProbe(pIDcpt, he))
     {   // all good
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE);
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE);
         return;
     }
 
     // ICMP echo failed...
-    if(he->icmpRetries-- != 0)
+    if(he->icmpRetries-- != 0U)
     {   // we have more retries; retry later
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
     }
     else
     {   // icmp retries exhausted...
         // discard our ARP query
-        TCPIP_ARP_EntryRemove(pIDcpt->pNetIf, &he->ipAddress);
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+        (void)TCPIP_ARP_EntryRemove(pIDcpt->pNetIf, &he->ipAddress);
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pIDcpt->statData.echoFailCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
         evInfo.flags.val = 0;
         evInfo.flags.infoIcmpCount = 1;
-        evInfo.data = TCPIP_DHCPS_ICMP_ECHO_RETRIES;
-        _DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ECHO_FAIL, he, &evInfo);
-        if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_ABORT_IF_PROBE_FAILED) == 0)
+        evInfo.data = (uint32_t)TCPIP_DHCPS_ICMP_ECHO_RETRIES;
+        F_DHCPS_NotifyClients(pIDcpt->pNetIf, TCPIP_DHCPS_EVENT_ECHO_FAIL, he, &evInfo);
+        if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_ABORT_IF_PROBE_FAILED) == 0U)
         {   // we're going proceed with the offer as it is
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
         }
         else
         {   // abort the offerring, and let it timeout
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
         }
     }
 }
 
 // TCPIP_DHCPS_LEASE_STATE_WAIT_PROBE
-static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
 {
-    uint32_t currMs = _TCPIP_MsecCountGet(); 
+    uint32_t currMs = TCPIP_MsecCountGet(); 
     if((currMs - he->probeStartTimeMs) >= gDhcpDcpt->probeTmoMs)
     {   // timeout expired and no reply; 
         // check if we need more probes...
-        if(--he->probeCount != 0)
+        if(--he->probeCount != 0U)
         {   // more probes;
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
         }
         else
         {   // probes done; we're good to go
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_OFFER);
         }
     }
     // else wait some more
@@ -3154,19 +3339,19 @@ static void _DHCPS_TickFnc_ProbeWait(DHCPS_HASH_ENTRY* he)
 // TCPIP_DHCPS_LEASE_STATE_REPROBE
 // got a reply from our ping...
 // reissue the ping with the new address
-static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
 {
     TCPIP_DHCPS_EVENT_DATA_INFO evInfo;
-    memset(&evInfo, 0, sizeof(evInfo));
+    (void)memset(&evInfo, 0, sizeof(evInfo));
 
     TCPIP_DHCPS_EVENT_TYPE evType = TCPIP_DHCPS_EVENT_NONE; 
-    bool abort = false;
+    bool dhcpAbort = false;
 
     while(true)
     {
-        if(he->reprobeCount-- == 0)
+        if(he->reprobeCount-- == 0U)
         {
-            abort = true;
+            dhcpAbort = true;
             evType = TCPIP_DHCPS_EVENT_REPROBE_FAIL;
             evInfo.flags.infoIcmpCount = 1;
             evInfo.data = (uint32_t)gDhcpDcpt->nReprobes;
@@ -3178,64 +3363,64 @@ static void _DHCPS_TickFnc_Reprobe(DHCPS_HASH_ENTRY* he)
         if(reqIndex < 0)
         {   // no pool entry available...abort
             evType = TCPIP_DHCPS_EVENT_POOL_EMPTY;
-            abort = true;
+            dhcpAbort = true;
             break;
         }
 
         // all good, set the new entry
-        he->ipAddress.Val = _IpAddressFromPoolIndex(he->parent, reqIndex);
-        _DHCPS_InitProbe(he, false);
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
+        he->ipAddress.Val = F_IpAddressFromPoolIndex(he->parent, (size_t)reqIndex);
+        F_DHCPS_InitProbe(he, false);
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_SEND_PROBE);
         break;
     }
 
     if(evType != TCPIP_DHCPS_EVENT_NONE)
     {
-        _DHCPS_NotifyClients(he->parent->pNetIf, evType, he, &evInfo);
+        F_DHCPS_NotifyClients(he->parent->pNetIf, evType, he, &evInfo);
     }
 
-    if(abort)
+    if(dhcpAbort)
     {   // keep IP address as busy!
-        _DHCPS_RemoveEntry(he, false);
+        F_DHCPS_RemoveEntry(he, false);
     }
 
 }
 
 // TCPIP_DHCPS_LEASE_STATE_SEND_OFFER
-static void _DHCPS_TickFnc_SendOffer(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_SendOffer(DHCPS_HASH_ENTRY* he)
 {
-    he->srvMsgType = DHCP_MESSAGE_TYPE_OFFER; 
-    if(_DHCPS_SendMessage(he))
+    he->srvMsgType = (uint8_t)DHCP_MESSAGE_TYPE_OFFER; 
+    if(F_DHCPS_SendMessage(he))
     {
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_OFFERED);
     }
 }
 
 // TCPIP_DHCPS_LEASE_STATE_OFFERED
-static void _DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_Offered(DHCPS_HASH_ENTRY* he)
 {
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = he->parent;
-    if((pIDcpt->configFlags & TCPIP_DHCPS_CONFIG_FLAG_KEEP_UNREQ_OFFERS) == 0)
+    if((pIDcpt->configFlags & (uint16_t)TCPIP_DHCPS_CONFIG_FLAG_KEEP_UNREQ_OFFERS) == 0U)
     {
-        uint32_t currTime = _TCPIP_SecCountGet();
+        uint32_t currTime = TCPIP_SecCountGet();
         if((currTime - he->leaseStartTime) >= pIDcpt->unreqOfferTmo)
         {
             // remove and mark the IP address as available
-            _DHCPS_RemoveEntry(he, true);
+            F_DHCPS_RemoveEntry(he, true);
         }
     }
 }
 
 // TCPIP_DHCPS_LEASE_STATE_BOUND
-static void _DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he)
+static void F_DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he)
 {
-    uint32_t currTime = _TCPIP_SecCountGet();
+    uint32_t currTime = TCPIP_SecCountGet();
 
-    if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
+    if(he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
     {
         if(currTime > he->leaseEndTime)
         {
-            _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_EXPIRED); 
+            F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_EXPIRED); 
         }
     }
 }
@@ -3243,15 +3428,15 @@ static void _DHCPS_TickFnc_Bound(DHCPS_HASH_ENTRY* he)
 
 static int TCPIP_DHCPS_IdKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key)
 {
-    DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)hEntry;
-    return memcmp(he->clientId, key, sizeof(((DHCPS_HASH_ENTRY*)0)->clientId));
-
+    DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(hEntry);
+    const uint8_t* pKeySrc = FC_CVPtr2CU8(key); 
+    return memcmp(he->clientId, pKeySrc, sizeof(((DHCPS_HASH_ENTRY*)0)->clientId));
 }
 
 static void TCPIP_DHCPS_IdKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
 {
-    DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)dstEntry;
-    memcpy(he->clientId, key, sizeof(((DHCPS_HASH_ENTRY*)0)->clientId));
+    DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(dstEntry);
+    (void)memcpy((uint8_t*)he->clientId, (const uint8_t*)key, sizeof(((DHCPS_HASH_ENTRY*)0)->clientId));
 }
 
 // select one of the released/expired leases
@@ -3259,54 +3444,62 @@ static OA_HASH_ENTRY* TCPIP_DHCPS_HashDeleteEntry(OA_HASH_DCPT* pOH)
 {
     size_t      bktIx;
     DHCPS_HASH_ENTRY  *he;
-    DHCPS_HASH_ENTRY*  pReleased = 0;
-    DHCPS_HASH_ENTRY*  pExpired = 0;
+    DHCPS_HASH_ENTRY*  pReleased = NULL;
+    DHCPS_HASH_ENTRY*  pExpired = NULL;
 
     for(bktIx = 0; bktIx < pOH->hEntries; bktIx++)
     {
-        he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(pOH, bktIx);       
-        if(he->hEntry.flags.busy != 0 && (he->runFlags & DHCPS_RUN_FLAG_PERM_LEASE) == 0)
+        he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryGet(pOH, bktIx));
+        if(he->hEntry.flags.busy != 0U && (he->runFlags & (uint8_t)DHCPS_RUN_FLAG_PERM_LEASE) == 0U)
         {
-            if(he->state == TCPIP_DHCPS_LEASE_STATE_RELEASED )
+            if(he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_RELEASED )
             {
-                if(pReleased == 0 || he->leaseEndTime < pReleased->leaseEndTime)
+                if(pReleased == NULL || he->leaseEndTime < pReleased->leaseEndTime)
                 {
                     pReleased = he;
                 }
             }
-            else if(he->state == TCPIP_DHCPS_LEASE_STATE_EXPIRED)
+            else if(he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_EXPIRED)
             {
-                if(pExpired == 0 || he->leaseEndTime < pExpired->leaseEndTime)
+                if(pExpired == NULL || he->leaseEndTime < pExpired->leaseEndTime)
                 {
                     pExpired = he;
                 }
+            }
+            else
+            {
+                // do nothing
             }
         }
     }
 
 
-    if(pReleased)
+    if(pReleased != NULL)
     {
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pReleased->parent->statData.releasedDelCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         return &pReleased->hEntry;
     }
-    else if(pExpired)
+    else if(pExpired != NULL)
     {
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pExpired->parent->statData.expiredDelCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         return &pExpired->hEntry;
     }
+    else
+    {
+        // do nothing
+    }
 
-    return 0;
+    return NULL;
 }
 
 
 TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseEntriesGet(TCPIP_NET_HANDLE netH, uint16_t* pLeases, uint16_t* pInUse)
 {
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3316,22 +3509,22 @@ TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseEntriesGet(TCPIP_NET_HANDLE netH, uint16_t* pL
     while(true)
     {
 
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
-        if(pInUse)
+        if(pInUse != NULL)
         {
-            *pInUse = pIDcpt->hashDcpt->fullSlots;
+            *pInUse = (uint16_t)pIDcpt->hashDcpt->fullSlots;
         }
-        if(pLeases)
+        if(pLeases != NULL)
         {
             *pLeases = pIDcpt->leaseEntries;
         }
@@ -3340,25 +3533,25 @@ TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseEntriesGet(TCPIP_NET_HANDLE netH, uint16_t* pL
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
-static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo)
+static bool F_DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo)
 {
-    if(he && (he->hEntry.flags.busy != 0))
+    if(he != NULL && (he->hEntry.flags.busy != 0U))
     {   // found entry
-        if(pLeaseInfo)
+        if(pLeaseInfo != NULL)
         {
             pLeaseInfo->hNet = he->parent->pNetIf;
             pLeaseInfo->ipAddress.Val = he->ipAddress.Val;
             pLeaseInfo->leaseState = he->state;
-            memcpy(pLeaseInfo->macAdd.v, he->chaddr, sizeof(pLeaseInfo->macAdd)); 
+            (void)memcpy(pLeaseInfo->macAdd.v, he->chaddr, sizeof(pLeaseInfo->macAdd)); 
 
-            if(he->state == TCPIP_DHCPS_LEASE_STATE_BOUND)
+            if(he->state == (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND)
             {
-                uint32_t currTime = _TCPIP_SecCountGet();
-                _DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
+                uint32_t currTime = TCPIP_SecCountGet();
+                F_DhcpsAssert(he->leaseEndTime >= currTime, __func__, __LINE__);
                 pLeaseInfo->leaseTime = he->leaseEndTime - currTime;
             }
             else
@@ -3367,7 +3560,7 @@ static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_IN
             }
 
             size_t nCpy = he->clientIdLen < pLeaseInfo->clientIdLen ? he->clientIdLen : pLeaseInfo->clientIdLen;
-            memcpy(pLeaseInfo->clientId, he->clientId, nCpy);
+            (void)memcpy(pLeaseInfo->clientId, he->clientId, nCpy);
             pLeaseInfo->clientIdLen = he->clientIdLen;
         }
         return true;
@@ -3379,7 +3572,7 @@ static bool _DHCPS_LeaseEntryPopulate(DHCPS_HASH_ENTRY* he, TCPIP_DHCPS_LEASE_IN
 TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseGetInfo(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo, uint16_t leaseIx)
 {
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3387,15 +3580,15 @@ TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseGetInfo(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_LEA
     TCPIP_DHCPS_RES res;
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
@@ -3403,8 +3596,8 @@ TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseGetInfo(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_LEA
 
         if(leaseIx < pOH->hEntries)
         {
-            DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(pOH, leaseIx);
-            res = _DHCPS_LeaseEntryPopulate(he, pLeaseInfo) ? TCPIP_DHCPS_RES_OK: TCPIP_DHCPS_RES_UNUSED_INDEX;
+            DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryGet(pOH, leaseIx));
+            res = F_DHCPS_LeaseEntryPopulate(he, pLeaseInfo) ? TCPIP_DHCPS_RES_OK: TCPIP_DHCPS_RES_UNUSED_INDEX;
         }
         else
         {
@@ -3413,20 +3606,20 @@ TCPIP_DHCPS_RES  TCPIP_DHCPS_LeaseGetInfo(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_LEA
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
 TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseGetInfoById(TCPIP_NET_HANDLE netH, const uint8_t* clientId, size_t idLen, TCPIP_DHCPS_LEASE_INFO* pLeaseInfo)
 {
-    uint8_t fmtClientId[_TCPIP_DHCPS_CLIENT_ID_SIZE];
+    uint8_t fmtClientId[M_TCPIP_DHCPS_CLI_ID_SIZE];
 
-    if(clientId == 0 || idLen == 0)
+    if(clientId == NULL || idLen == 0U)
     {
         return TCPIP_DHCPS_RES_PARAM_ERROR;
     }
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3435,29 +3628,29 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseGetInfoById(TCPIP_NET_HANDLE netH, const uint8_
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
         OA_HASH_DCPT* pOH = pIDcpt->hashDcpt;
 
-        _DHCPS_FormatHashKey(fmtClientId, clientId, idLen);
-        DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookup(pOH, fmtClientId);
+        (void)F_DHCPS_FormatHashKey(fmtClientId, clientId, idLen);
+        DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookup(pOH, fmtClientId));
 
-        res = _DHCPS_LeaseEntryPopulate(he, pLeaseInfo) ? TCPIP_DHCPS_RES_OK: TCPIP_DHCPS_RES_NO_LEASE;
+        res = F_DHCPS_LeaseEntryPopulate(he, pLeaseInfo) ? TCPIP_DHCPS_RES_OK: TCPIP_DHCPS_RES_NO_LEASE;
         break;
     }
 
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
@@ -3469,47 +3662,48 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Configure(const TCPIP_DHCPS_INTERFACE_CONFIG* pIfCon
     TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt;
     TCPIP_DHCPS_RES res = TCPIP_DHCPS_RES_OK;
 
-    if(pIfConfig == 0 || nConfigs == 0 || nConfigs > TCPIP_DHCPS_INTERFACE_COUNT)
+    if(pIfConfig == NULL || nConfigs == 0U || nConfigs > (uint16_t)TCPIP_DHCPS_INTERFACE_COUNT)
     {
         return TCPIP_DHCPS_RES_IF_CONFIG_ERR;
     }
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
 
     // do configuration one interface at a time 
-    for(ix = 0; ix < nConfigs; ix++, pIfConfig++)
+    for(ix = 0; ix < nConfigs; ix++)
     {
-        res = _DHCPS_AddLeasePools(pIfConfig, 1);
+        res = F_DHCPS_AddLeasePools(pIfConfig, 1);
 
-        if(res < 0)
+        if((int)res < 0)
         {   // failed
             break;
         }
 
         // configure the interface address and mask 
-        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pIfConfig->ifIndex); 
-        if(pNetIf->Flags.bIsDHCPSrvEnabled)
+        pNetIf = FC_NetH2NetIf(TCPIP_STACK_IndexToNet((size_t)pIfConfig->ifIndex)); 
+        if(pNetIf->Flags.bIsDHCPSrvEnabled != 0U)
         {
-            ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-            _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+            ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+            F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
             pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
-            _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
+            TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
         }
+        pIfConfig++;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
 
     return res;
 }
 
 
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
 TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS_STATISTICS_DATA* pStatData)
 {
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3518,18 +3712,18 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
-        if(pStatData != 0)
+        if(pStatData != NULL)
         {
             *pStatData = pIDcpt->statData; 
         }
@@ -3538,7 +3732,7 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 #else
@@ -3547,13 +3741,13 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_StatisticsDataGet(TCPIP_NET_HANDLE netH, TCPIP_DHCPS
     return TCPIP_DHCPS_RES_NOT_AVAILABLE;
 }
 
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
 
 
-#if (_TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
+#if (M_TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemove(TCPIP_NET_HANDLE netH, uint16_t leaseIx, bool keepAddBusy)
 {
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3562,15 +3756,15 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemove(TCPIP_NET_HANDLE netH, uint16_t leaseIx,
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
@@ -3582,34 +3776,34 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemove(TCPIP_NET_HANDLE netH, uint16_t leaseIx,
             break;
         }
 
-        DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryGet(pOH, leaseIx);
-        if(he == 0 || (he->hEntry.flags.busy == 0))
+        DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryGet(pOH, leaseIx));
+        if(he == NULL || (he->hEntry.flags.busy == 0U))
         {
             res = TCPIP_DHCPS_RES_UNUSED_INDEX; 
             break;
         }
 
         // found entry
-        _DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
-        _DHCPS_RemoveEntry(he, keepAddBusy == false);
+        F_DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
+        F_DHCPS_RemoveEntry(he, keepAddBusy == false);
         res = TCPIP_DHCPS_RES_OK;
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
 TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemoveById(TCPIP_NET_HANDLE netH, const uint8_t* clientId, size_t idLen, bool keepAddBusy)
 {
-    uint8_t fmtClientId[_TCPIP_DHCPS_CLIENT_ID_SIZE];
+    uint8_t fmtClientId[M_TCPIP_DHCPS_CLI_ID_SIZE];
 
-    if(clientId == 0 || idLen == 0)
+    if(clientId == NULL || idLen == 0U)
     {
         return TCPIP_DHCPS_RES_PARAM_ERROR;
     }
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3618,44 +3812,44 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemoveById(TCPIP_NET_HANDLE netH, const uint8_t
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
         OA_HASH_DCPT* pOH = pIDcpt->hashDcpt;
 
-        _DHCPS_FormatHashKey(fmtClientId, clientId, idLen);
-        DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookup(pOH, fmtClientId);
+        (void)F_DHCPS_FormatHashKey(fmtClientId, clientId, idLen);
+        DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookup(pOH, fmtClientId));
 
-        if(he == 0)
+        if(he == NULL)
         {
             res = TCPIP_DHCPS_RES_NO_LEASE;
             break;
         }
 
-        _DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
-        _DHCPS_RemoveEntry(he, keepAddBusy == false);
+        F_DhcpsAssert(he->parent == pIDcpt, __func__, __LINE__);
+        F_DHCPS_RemoveEntry(he, keepAddBusy == false);
         res = TCPIP_DHCPS_RES_OK;
         
         break;
     }
 
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
 TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemoveAll(TCPIP_NET_HANDLE netH, bool keepPerm, bool keepAddBusy)
 {
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3664,42 +3858,42 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseRemoveAll(TCPIP_NET_HANDLE netH, bool keepPerm,
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
-        _DHCPS_RemoveAllEntries(pIDcpt, keepPerm == false, keepAddBusy == false);
+        F_DHCPS_RemoveAllEntries(pIDcpt, keepPerm == false, keepAddBusy == false);
 
         res = TCPIP_DHCPS_RES_OK;
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
 
-TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseAddById(TCPIP_NET_HANDLE netH, const TCPIP_DHCPS_LEASE_SET* pSet)
+TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseAddById(TCPIP_NET_HANDLE netH, const TCPIP_DHCPS_LEASE_SET* pLeaseSet)
 {
-    if(pSet == 0 || pSet->ipAddress.Val == 0 || pSet->clientIdLen == 0)
+    if(pLeaseSet == NULL || pLeaseSet->ipAddress.Val == 0U || pLeaseSet->clientIdLen == 0U)
     {
         return TCPIP_DHCPS_RES_PARAM_ERROR;
     }
 
-    if(pSet->leaseState != TCPIP_DHCPS_LEASE_STATE_BOUND && pSet->leaseState != TCPIP_DHCPS_LEASE_STATE_RELEASED && pSet->leaseState != TCPIP_DHCPS_LEASE_STATE_EXPIRED)
+    if(pLeaseSet->leaseState != (uint8_t)TCPIP_DHCPS_LEASE_STATE_BOUND && pLeaseSet->leaseState != (uint8_t)TCPIP_DHCPS_LEASE_STATE_RELEASED && pLeaseSet->leaseState != (uint8_t)TCPIP_DHCPS_LEASE_STATE_EXPIRED)
     {
         return TCPIP_DHCPS_RES_STATE_ERROR;
     }
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3708,19 +3902,19 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseAddById(TCPIP_NET_HANDLE netH, const TCPIP_DHCP
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(netH);
-        if(pNetIf == 0 || !_DHCPS_MappedOnNet(pNetIf))
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(netH);
+        if(pNetIf == NULL || !F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
-        int32_t ipIndex = _PoolIndexFromIpAddress(pIDcpt, pSet->ipAddress.Val);
+        int32_t ipIndex = F_PoolIndexFromIpAddress(pIDcpt, pLeaseSet->ipAddress.Val);
         if(ipIndex < 0)
         {   // not part of our leases ?
             res = TCPIP_DHCPS_RES_INVALID_ADDRESS;
@@ -3729,53 +3923,53 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_LeaseAddById(TCPIP_NET_HANDLE netH, const TCPIP_DHCP
 
         OA_HASH_DCPT* pOH = pIDcpt->hashDcpt;
 
-        uint8_t fmtClientId[_TCPIP_DHCPS_CLIENT_ID_SIZE];
-        size_t keyLen = _DHCPS_FormatHashKey(fmtClientId, pSet->clientId, pSet->clientIdLen);
+        uint8_t fmtClientId[M_TCPIP_DHCPS_CLI_ID_SIZE];
+        size_t keyLen = F_DHCPS_FormatHashKey(fmtClientId, pLeaseSet->clientId, pLeaseSet->clientIdLen);
 
         // allocate a new database entry
-        DHCPS_HASH_ENTRY* he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(pOH, fmtClientId);
-        if(he == 0)
+        DHCPS_HASH_ENTRY* he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookupOrInsert(pOH, fmtClientId));
+        if(he == NULL)
         {   
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             pIDcpt->statData.cacheFullCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
             res = TCPIP_DHCPS_RES_DB_FULL;
             break;
         }
 
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
         // set the prevState for a new entry
         if(he->hEntry.flags.newEntry != 0)
         {
-            he->prevState = TCPIP_DHCPS_LEASE_STATE_IDLE; 
+            he->prevState = (uint8_t)TCPIP_DHCPS_LEASE_STATE_IDLE; 
         }
-#endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
+#endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
 
         // set up the new entry
-        _DHCPS_SetEntryState(he, pSet->leaseState);
+        F_DHCPS_SetEntryState(he, (TCPIP_DHCPS_LEASE_STATE)pLeaseSet->leaseState);
         he->parent = pIDcpt;
-        he->clientIdLen = keyLen;
-        memcpy(he->clientId, fmtClientId, sizeof(he->clientId));
-        memset(he->chaddr, 0, sizeof(he->chaddr));
-        memcpy(he->chaddr, pSet->macAdd.v, sizeof(pSet->macAdd));
-        he->ipAddress.Val = pSet->ipAddress.Val;
-        _DHCPS_LeaseRestart(he, pSet->leaseTime); 
-        if(pSet->leaseTime == 0xffffffff)
+        he->clientIdLen = (uint8_t)keyLen;
+        (void)memcpy(he->clientId, fmtClientId, sizeof(he->clientId));
+        (void)memset(he->chaddr, 0, sizeof(he->chaddr));
+        (void)memcpy(he->chaddr, pLeaseSet->macAdd.v, sizeof(pLeaseSet->macAdd));
+        he->ipAddress.Val = pLeaseSet->ipAddress.Val;
+        F_DHCPS_LeaseRestart(he, pLeaseSet->leaseTime); 
+        if(pLeaseSet->leaseTime == 0xffffffffU)
         {
-            he->runFlags |= DHCPS_RUN_FLAG_PERM_LEASE;
+            he->runFlags |= (uint8_t)DHCPS_RUN_FLAG_PERM_LEASE;
         }
 
-        IpIndexMarkBusy(pIDcpt, ipIndex);
+        IpIndexMarkBusy(pIDcpt, (size_t)ipIndex);
 
         res = TCPIP_DHCPS_RES_OK;
        break; 
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
-#endif  // (_TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
+#endif  // (M_TCPIP_DHCPS_DYNAMIC_DB_ACCESS != 0)
 
 static size_t TCPIP_DHCPS_ClientIdHash(OA_HASH_DCPT* pOH, const void* key)
 {
@@ -3791,7 +3985,7 @@ static size_t TCPIP_DHCPS_HashProbeHash(OA_HASH_DCPT* pOH, const void* key)
 
 TCPIP_DHCPS_RES TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet)
 {    
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3800,21 +3994,21 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet)
 
     while(true)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-        if(pNetIf == 0)
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
+        if(pNetIf == NULL)
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        if(!_DHCPS_MappedOnNet(pNetIf))
+        if(!F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF;
             break; 
         }
         
 
-        if(pNetIf->Flags.bIsDHCPSrvEnabled == 0)
+        if(pNetIf->Flags.bIsDHCPSrvEnabled == 0U)
         {   // already stopped
             res = TCPIP_DHCPS_RES_OK;
             break;
@@ -3822,10 +4016,10 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet)
 
 
 
-         bool disRes = _DHCPS_Disable(pNetIf);
+         bool disRes = F_DHCPS_Disable(pNetIf);
          if(disRes == false)
          {
-             _DhcpsAssert(false, __func__, __LINE__);   // should not happen
+             F_DhcpsAssert(false, __func__, __LINE__);   // should not happen
              res = TCPIP_DHCPS_RES_SERVICE_ERROR;
             break; 
          }
@@ -3834,14 +4028,14 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Disable(TCPIP_NET_HANDLE hNet)
          break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
 TCPIP_DHCPS_RES TCPIP_DHCPS_Enable(TCPIP_NET_HANDLE hNet)
 {
 
-    if(!_DHCPS_AccessLock())
+    if(!F_DHCPS_AccessLock())
     {
         return TCPIP_DHCPS_RES_ACCESS_LOCKED;
     }
@@ -3851,49 +4045,49 @@ TCPIP_DHCPS_RES TCPIP_DHCPS_Enable(TCPIP_NET_HANDLE hNet)
     while(true)
     {
 
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-        if(pNetIf == 0)
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
+        if(pNetIf == NULL)
         {
             res = TCPIP_DHCPS_RES_INVALID_IF; 
             break;
         }
 
-        if(!_DHCPS_MappedOnNet(pNetIf))
+        if(!F_DHCPS_MappedOnNet(pNetIf))
         {
             res = TCPIP_DHCPS_RES_INVALID_IF;
             break; 
         }
 
-        if(pNetIf->Flags.bIsDHCPSrvEnabled != 0)
+        if(pNetIf->Flags.bIsDHCPSrvEnabled != 0U)
         {   // already running
             res = TCPIP_DHCPS_RES_OK;
             break;
         }
 
-        res = _DHCPS_Enable(pNetIf, true);
+        res = F_DHCPS_Enable(pNetIf, true);
 
         break;
     }
 
-    _DHCPS_AccessUnlock();
+    F_DHCPS_AccessUnlock();
     return res;
 }
 
-static TCPIP_DHCPS_RES _DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart)
+static TCPIP_DHCPS_RES F_DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart)
 {
-    bool startDhcps =  checkStart ?  TCPIP_STACK_AddressServiceCanStart(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPS) : true;
+    bool startDhcps =  checkStart ?  TCPIP_STACK_AddressServiceCanStart(pNetIf, TCPIP_STACK_ADDR_SRVC_DHCPS) : true;
 
     if(startDhcps)
     {
-        int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
+        int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
 
-        _DhcpsAssert(ifIx >= 0, __func__, __LINE__);
+        F_DhcpsAssert(ifIx >= 0, __func__, __LINE__);
 
         TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt = gDhcpDcpt->ifDcpt + ifIx;
 
         // configure the interface address, mask and gateway
-        _TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
-        pNetIf->Flags.bIsDHCPSrvEnabled = true;
+        TCPIPStackSetConfigAddress(pNetIf, &pIDcpt->serverIPAddress, &pIDcpt->ipMaskAddress, &pNetIf->DefaultGateway, false);
+        pNetIf->Flags.bIsDHCPSrvEnabled = 1U;
 
         return TCPIP_DHCPS_RES_OK;
     }
@@ -3901,16 +4095,16 @@ static TCPIP_DHCPS_RES _DHCPS_Enable(TCPIP_NET_IF* pNetIf, bool checkStart)
     return TCPIP_DHCPS_RES_SERVICE_START_ERROR;
 }
 
-static bool _DHCPS_Disable(TCPIP_NET_IF* pNetIf)
+static bool F_DHCPS_Disable(TCPIP_NET_IF* pNetIf)
 {
-    int ifIx = _DHCPS_InterfaceMapIx(pNetIf); 
+    int ifIx = F_DHCPS_InterfaceMapIx(pNetIf); 
 
     if(ifIx >= 0)
     {
-        TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_DHCPS, TCPIP_STACK_ADDRESS_SERVICE_EVENT_USER_STOP);
+        TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDR_SRVC_DHCPS, TCPIP_ADDR_SRVC_EV_USER_STOP);
         TCPIP_STACK_AddressServiceDefaultSet(pNetIf);
 
-        pNetIf->Flags.bIsDHCPSrvEnabled = false;
+        pNetIf->Flags.bIsDHCPSrvEnabled = 0U;
 
         return true;
     }
@@ -3923,27 +4117,27 @@ bool TCPIP_DHCPS_IsEnabled(TCPIP_NET_HANDLE hNet)
 {
     bool res = false;
 
-    OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
+    OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
 
-    if(gDhcpDcpt != 0)
+    if(gDhcpDcpt != NULL)
     {
-        TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-        if(pNetIf != 0 && pNetIf->Flags.bIsDHCPSrvEnabled != 0)
+        TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
+        if(pNetIf != NULL && pNetIf->Flags.bIsDHCPSrvEnabled != 0U)
         {
             res = true;
         }
     }
 
-    _DHCPS_Unlock(lock);
+    F_DHCPS_Unlock(lock);
     return res;
 }
 
 // marks net.00...0 and net.11...1 as taken so they cannot be allocated to a client
 // marks the server IP address as taken, so it cannot be allocated to a client
-static void _DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt)
+static void F_DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt)
 {
     // all map available
-    memset(pIfDcpt->ipMap, 0xff, pIfDcpt->ipMapSize * sizeof(pIfDcpt->ipMap[0]));
+    (void)memset(pIfDcpt->ipMap, 0xff, pIfDcpt->ipMapSize * sizeof(pIfDcpt->ipMap[0]));
 
     uint32_t netAdd = TCPIP_Helper_ntohl((pIfDcpt->startIPAddress.Val & pIfDcpt->ipMaskAddress.Val));
     uint32_t startAdd = TCPIP_Helper_ntohl(pIfDcpt->startIPAddress.Val);
@@ -3976,7 +4170,7 @@ static void _DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt)
     } 
 
     // finally mark as taken everything that's outside the lease range 
-    size_t mapMaxIx = pIfDcpt->ipMapSize * 32;
+    size_t mapMaxIx = (size_t)pIfDcpt->ipMapSize * 32U;
     if(leaseMaxIx < mapMaxIx)
     {
         IpIndexMarkBusyBlock(pIfDcpt, leaseMaxIx);
@@ -3988,34 +4182,34 @@ static void _DHCPS_InitIpMap(TCPIP_DHCPS_INTERFACE_DCPT* pIfDcpt)
 // it uses the index as the entry IP address
 // returns a valid entry if succeeded, 0 if database full
 // the hash entry status is set to TCPIP_DHCPS_LEASE_STATE_IDLE/invalid
-static DHCPS_HASH_ENTRY* _DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, size_t ipIndex)
+static DHCPS_HASH_ENTRY* F_DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, TCPIP_DHCPS_RX_OPTIONS* pRxOpt, size_t ipIndex)
 {
     DHCPS_HASH_ENTRY* he;
     // allocate a new database entry
-    he = (DHCPS_HASH_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(pIDcpt->hashDcpt, pRxOpt->clientId);
-    if(he != 0)
+    he = FC_OaHash2DhcpsHash(TCPIP_OAHASH_EntryLookupOrInsert(pIDcpt->hashDcpt, pRxOpt->clientId));
+    if(he != NULL)
     {   
-        _DhcpsAssert(he->hEntry.flags.newEntry != 0, __func__, __LINE__);   // this should be a new entry
-#if ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
+        F_DhcpsAssert(he->hEntry.flags.newEntry != 0, __func__, __LINE__);   // this should be a new entry
+#if ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
         // set the prevState for a new entry
         // if(he->hEntry.flags.newEntry != 0)
-        he->prevState = TCPIP_DHCPS_LEASE_STATE_IDLE; 
-#endif  // ((_TCPIP_DHCPS_DEBUG_LEVEL & _TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
+        he->prevState = (uint8_t)TCPIP_DHCPS_LEASE_STATE_IDLE; 
+#endif  // ((M_TCPIP_DHCPS_DEBUG_LEVEL & M_TCPIP_DHCPS_DEBUG_MASK_STATUS) != 0)
 
         // set up the new entry
-        _DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_IDLE);
+        F_DHCPS_SetEntryState(he, TCPIP_DHCPS_LEASE_STATE_IDLE);
 
         he->parent = pIDcpt;
-        he->clientIdLen = pRxOpt->idSize;
-        memcpy(he->clientId, pRxOpt->clientId, sizeof(he->clientId));
-        he->ipAddress.Val = _IpAddressFromPoolIndex(pIDcpt, ipIndex);
+        he->clientIdLen = (uint8_t)pRxOpt->idSize;
+        (void)memcpy(he->clientId, pRxOpt->clientId, sizeof(he->clientId));
+        he->ipAddress.Val = F_IpAddressFromPoolIndex(pIDcpt, ipIndex);
 
     }
     else
     {
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
         pIDcpt->statData.cacheFullCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
     }
 
     return he;
@@ -4029,14 +4223,14 @@ static DHCPS_HASH_ENTRY* _DHCPS_AssignNewOffer(TCPIP_DHCPS_INTERFACE_DCPT* pIDcp
 // it can also check if that IP address is available (when valid)
 static int IpIsAddressValid(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uint32_t requestedIpAddr, DHCPS_VALID_CHECK validCheck)
 {
-    if(((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0)
+    if(((pIDcpt->startIPAddress.Val ^ requestedIpAddr) & pIDcpt->ipMaskAddress.Val) == 0U)
     {   // ok, address belongs to the same network
-        int32_t index = _PoolIndexFromIpAddress(pIDcpt, requestedIpAddr);
+        int32_t index = F_PoolIndexFromIpAddress(pIDcpt, requestedIpAddr);
 
         if(index >= 0)
         {   // valid
-            bool markTaken = (validCheck & DHCPS_VALID_MARK_TAKEN) != 0; 
-            if((validCheck & DHCPS_VALID_CHECK_FREE) == 0 || IpIndexCheckFree(pIDcpt, index, markTaken))
+            bool markTaken = ((uint16_t)validCheck & (uint16_t)DHCPS_VALID_MARK_TAKEN) != 0U; 
+            if(((uint16_t)validCheck & (uint16_t)DHCPS_VALID_CHECK_FREE) == 0U || IpIndexCheckFree(pIDcpt, (size_t)index, markTaken))
             { 
                 return index;
             }
@@ -4054,8 +4248,8 @@ static int IpIsAddressValid(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, uint32_t request
 static void IpIndexMarkBusy(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index)
 {
     uint8_t* pBPool = (uint8_t*)pIDcpt->ipMap;
-    uint8_t* pElem = pBPool + index / 8;
-    uint8_t elemMask = 1 << (7 - index % 8);
+    uint8_t* pElem = pBPool + index / 8U;
+    uint8_t elemMask = 1U << (7U - index % 8U);
     *pElem &= ~elemMask;
 }
 
@@ -4066,35 +4260,35 @@ static void IpIndexMarkBusy(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index)
 static void IpIndexMarkBusyBlock(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t stIndex)
 {
 
-    uint32_t* pStart32 = pIDcpt->ipMap +  (stIndex + 31) / 32;
+    uint32_t* pStart32 = pIDcpt->ipMap +  (stIndex + 31U) / 32U;
     uint32_t* pEnd32 = pIDcpt->ipMap + pIDcpt->ipMapSize;
 
     // fill 32 bit values
-    while(pStart32 < pEnd32)
+    while(FC_CU32PtrDiff(pStart32, pEnd32) < 0)
     {
-        *(--pEnd32) = 0;
+        *(--pEnd32) = 0U;
     }
 
     // check for bytes at the beginning
-    size_t bytesLeft = stIndex % 32;
-    if(bytesLeft)
+    size_t bytesLeft = stIndex % 32U;
+    if(bytesLeft != 0U)
     {
         uint8_t* pBPool = (uint8_t*)pIDcpt->ipMap;
 
-        uint8_t* stByte = pBPool + (stIndex + 7) / 8;
+        uint8_t* stByte = pBPool + (stIndex + 7U) / 8U;
         uint8_t* endByte = (uint8_t*)pStart32;
 
-        while(stByte < endByte)
+        while(FC_CU8PtrDiff(stByte, endByte) < 0)
         {
-            *(--endByte) = 0;
+            *(--endByte) = 0U;
         }
 
         // finaly check bits left at the beginning
-        size_t bitsLeft = stIndex % 8;
-        if(bitsLeft)
+        size_t bitsLeft = stIndex % 8U;
+        if(bitsLeft != 0U)
         {
-            uint8_t* pElem = pBPool + stIndex / 8;
-            uint8_t mask = ((1 << bitsLeft) - 1) << (8 - bitsLeft);
+            uint8_t* pElem = pBPool + stIndex / 8U;
+            uint8_t mask = ((1U << bitsLeft) - 1U) << (8U - bitsLeft);
             *pElem &= mask;
         }
     }
@@ -4107,8 +4301,8 @@ static void IpIndexMarkBusyBlock(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t stIn
 static void IpIndexMarkFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index)
 {
     uint8_t* pBPool = (uint8_t*)pIDcpt->ipMap;
-    uint8_t* pElem = pBPool + index / 8;
-    uint8_t elemMask = 1 << (7 - index % 8);
+    uint8_t* pElem = pBPool + index / 8U;
+    uint8_t elemMask = 1U << (7U - index % 8U);
     *pElem |= elemMask;
 }
 
@@ -4119,11 +4313,11 @@ static bool IpIndexCheckFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, size_t index, b
 {
     uint8_t* pBPool = (uint8_t*)pIDcpt->ipMap;
 
-    uint8_t* pElem = pBPool + index / 8;
-    uint8_t elemMask = 1 << (7 - index % 8);
+    uint8_t* pElem = pBPool + index / 8U;
+    uint8_t elemMask = 1U << (7U - index % 8U);
 
-    bool isAvailable = ((*pElem) & elemMask) != 0;
-    if(isAvailable & markTaken)
+    bool isAvailable = ((*pElem) & elemMask) != 0U;
+    if(isAvailable && markTaken)
     {
         *pElem &= ~elemMask;
     }
@@ -4143,12 +4337,12 @@ static int IpIndexFindFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool markTaken)
     // select starting random index
     size_t stIndex = SYS_RANDOM_PseudoGet() % (poolSize);
 
-    uint32_t* pFound = 0;
+    uint32_t* pFound = NULL;
     uint32_t* pElem = pPool + stIndex;
     uint32_t* pEnd = pPool + poolSize;
     for(ix = 0; ix < poolSize; ix++)
     {
-        if(*pElem != 0)
+        if(*pElem != 0U)
         {   // found
             pFound = pElem;
             break;
@@ -4163,15 +4357,15 @@ static int IpIndexFindFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool markTaken)
         }
     }
 
-    if(pFound)
+    if(pFound != NULL)
     {
         uint32_t be_elem = TCPIP_Helper_htonl(*pFound); // work in BE
-        size_t lead_z = __builtin_clz(be_elem);
+        int32_t lead_z = __builtin_clz(be_elem);
         
-        int index = (pFound - pPool) * 32 + lead_z;
+        int index = ((pFound - pPool) * 32 + lead_z);
         if(markTaken)
         {
-            IpIndexMarkBusy(pIDcpt, index);
+            IpIndexMarkBusy(pIDcpt, (size_t)index);
         }
 
 
@@ -4180,9 +4374,9 @@ static int IpIndexFindFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool markTaken)
     }
 
     // not found
-#if (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#if (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
     pIDcpt->statData.poolEmptyCount++;
-#endif  // (_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
+#endif  // (M_TCPIP_DHCPS_ENABLE_STATISTICS != 0) 
     return -1;
 }
 
@@ -4194,13 +4388,13 @@ static int IpIndexFindFree(TCPIP_DHCPS_INTERFACE_DCPT* pIDcpt, bool markTaken)
 // The hParam is passed by the client and will be used by the DHCP when the notification is made.
 // It is used for per-thread content or if more modules, for example, share the same handler
 // and need a way to differentiate the callback.
-#if (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+#if (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_DHCPS_EVENT_HANDLER handler, const void* hParam)
 {
-    TCPIP_DHCPS_EVENT_NODE* newEvent = 0;
-    if(handler != 0)
+    TCPIP_DHCPS_EVENT_NODE* newEvent = NULL;
+    if(handler != NULL)
     {
-        int ix;
+        size_t ix;
 
         TCPIP_DHCPS_EVENT_NODE dhcpNode;
         dhcpNode.handler = handler;
@@ -4208,20 +4402,21 @@ TCPIP_DHCPS_EVENT_HANDLE TCPIP_DHCPS_HandlerRegister(TCPIP_NET_HANDLE hNet, TCPI
         dhcpNode.hNet = hNet;
 
 
-        OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
-        if(gDhcpDcpt != 0)
+        OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
+        if(gDhcpDcpt != NULL)
         {
             TCPIP_DHCPS_EVENT_NODE* pEvent = gDhcpDcpt->registeredUsers;
-            for(ix = 0; ix < sizeof(gDhcpDcpt->registeredUsers) / sizeof(*gDhcpDcpt->registeredUsers); ix++, pEvent++)
+            for(ix = 0; ix < sizeof(gDhcpDcpt->registeredUsers) / sizeof(*gDhcpDcpt->registeredUsers); ix++)
             {
-                if(pEvent->handler == 0)
+                if(pEvent->handler == NULL)
                 {   // found spot
                     *pEvent = dhcpNode;
                     newEvent = pEvent;
                     break;
                 }
+                pEvent++;
             }
-            _DHCPS_Unlock(lock);
+            F_DHCPS_Unlock(lock);
         }
     }
 
@@ -4233,28 +4428,28 @@ bool TCPIP_DHCPS_HandlerDeRegister(TCPIP_DHCPS_EVENT_HANDLE hDhcp)
 {
      bool res = false;
 
-    if(hDhcp != 0 && gDhcpDcpt != 0)
+    if(hDhcp != NULL && gDhcpDcpt != NULL)
     {
-        TCPIP_DHCPS_EVENT_NODE* pEvent = (TCPIP_DHCPS_EVENT_NODE*)hDhcp;
+        TCPIP_DHCPS_EVENT_NODE* pEvent = FC_EvH2EvNode(hDhcp);
         int evIx = pEvent - gDhcpDcpt->registeredUsers;
-        if(0 <= evIx && evIx < sizeof(gDhcpDcpt->registeredUsers) / sizeof(*gDhcpDcpt->registeredUsers))
+        if(0 <= evIx && evIx < (int)(sizeof(gDhcpDcpt->registeredUsers) / sizeof(*gDhcpDcpt->registeredUsers)))
         {
-            OSAL_CRITSECT_DATA_TYPE lock = _DHCPS_Lock();
-           if(gDhcpDcpt != 0 && pEvent == gDhcpDcpt->registeredUsers + evIx)
+            OSAL_CRITSECT_DATA_TYPE lock = F_DHCPS_Lock();
+           if(gDhcpDcpt != NULL && pEvent == gDhcpDcpt->registeredUsers + evIx)
            {    // looks like it's hours
-               if(pEvent->handler != 0)
+               if(pEvent->handler != NULL)
                {
-                   pEvent->handler = 0;
+                   pEvent->handler = NULL;
                    res = true;
                } 
            }
-           _DHCPS_Unlock(lock);
+           F_DHCPS_Unlock(lock);
         }
     }
 
     return res;
 }
-#endif  // (_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
+#endif  // (M_TCPIP_DHCPS_NOTIFICATIONS_ENABLE != 0)
 
 
 #else

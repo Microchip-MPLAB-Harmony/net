@@ -26,7 +26,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -57,8 +57,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DHCP_SERVER_H
-#define __DHCP_SERVER_H
+#ifndef H_DHCP_SERVER_H
+#define H_DHCP_SERVER_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -187,10 +187,10 @@ typedef struct
 
         struct
         {                                   // used for TCPIP_DHCPS_CLIENT_OPTION_T1_RENEWAL and TCPIP_DHCPS_CLIENT_OPTION_T2_REBINDING
-            uint16_t mult;                  // the T1 and T2 are obtained as percentages of lease time:
-            uint16_t div;                   // T1 = (leaseTime * mult) / div;   default values are mult = 1, div = 2;
-                                            // T2 = (leaseTime * mult) / div;   default values are mult = 7, div = 8; 
-                                            // Default values are used for mult or div if any of them are 0 
+            uint16_t multFact;              // the T1 and T2 are obtained as percentages of lease time:
+            uint16_t divFact;               // T1 = (leaseTime * multFact) / divFact;   default values are multFact = 1, divFact = 2;
+                                            // T2 = (leaseTime * multFact) / divFact;   default values are multFact = 7, divFact = 8; 
+                                            // Default values are used for multFact or divFact if any of them are 0 
                                             // T2 needs to be greater than T1! 
         };
                                             
@@ -327,30 +327,27 @@ typedef enum
 // *****************************************************************************
 /*
   Enumeration:
-    TCPIP_DHCPS_REQ_FORMAT_ERR_MASK
+    TCPIP_DHCPS_REQ_FMT_ERR_MASK
 
   Summary:
-    DHCPs error mask for a TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR event
+    DHCPs error mask for a TCPIP_DHCPS_EVENT_REQ_FMT_ERROR event
 
   Description:
-    List of errors that can be signaled by a TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR event.
+    List of errors that can be signaled by a TCPIP_DHCPS_EVENT_REQ_FMT_ERROR event.
     More that one error could be set.
 
 */
 
 typedef enum
 {
-    TCPIP_DHCPS_REQ_FORMAT_ERR_NONE             = 0,    // no error occurred
-    TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_SET       = 0x0001,   // server identifier set when it should have been cleared
-    TCPIP_DHCPS_REQ_FORMAT_ERR_SRV_ID_MISS      = 0x0002,   // server identifier missing when it should have been set
-    TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_SET   = 0x0004,   // requested IP address set when it should have been cleared
-    TCPIP_DHCPS_REQ_FORMAT_ERR_REQUEST_IP_MISS  = 0x0008,   // requested IP address missing
-    TCPIP_DHCPS_REQ_FORMAT_ERR_CIADDR_ERR       = 0x0010,   // wrong 'ciaddr' field
+    TCPIP_DHCPS_REQ_FMT_ERR_NONE            = 0,       // no error occurred
+    TCPIP_DHCPS_REQ_FMT_ERR_ID_SET          = 0x0001,  // server identifier set when it should have been cleared
+    TCPIP_DHCPS_REQ_FMT_ERR_ID_MISS         = 0x0002,  // server identifier missing when it should have been set
+    TCPIP_DHCPS_REQ_FMT_ERR_IP_SET          = 0x0004,  // requested IP address set when it should have been cleared
+    TCPIP_DHCPS_REQ_FMT_ERR_IP_MISS         = 0x0008,  // requested IP address missing
+    TCPIP_DHCPS_REQ_FMT_ERR_CIADDR_ERR      = 0x0010,  // wrong 'ciaddr' field
 
-
-
-
-}TCPIP_DHCPS_REQ_FORMAT_ERR_MASK;
+}TCPIP_DHCPS_REQ_FMT_ERR_MASK;
 
 
 // *****************************************************************************
@@ -397,7 +394,7 @@ typedef enum
     TCPIP_DHCPS_EVENT_IF_ERROR          = -6,   // DHCP message received on an interface that the DHCP server has not mapped internally 
                                                     // This should not normally happen
 
-    TCPIP_DHCPS_EVENT_MSG_FORMAT_ERROR  = -7,   // DHCP message received is badly formatted: 
+    TCPIP_DHCPS_EVENT_MSG_FMT_ERROR     = -7,   // DHCP message received is badly formatted: 
                                                     // operation != 1 or header type != 1 or header length != 6 or bad header MAC address or bad magic cookie
 
     TCPIP_DHCPS_EVENT_POOL_EMPTY        = -8,   // DHCP pool was empty, cannot allocate a new lease 
@@ -417,9 +414,9 @@ typedef enum
 
     TCPIP_DHCPS_EVENT_REQ_UNKNOWN       = -15,  // DHCPREQUEST from an unknown client, no entry in the DB for it 
 
-    TCPIP_DHCPS_EVENT_REQ_FORMAT_ERROR  = -16,  // DHCPREQUEST from client with wrong format 
+    TCPIP_DHCPS_EVENT_REQ_FMT_ERROR     = -16,  // DHCPREQUEST from client with wrong format 
 
-    TCPIP_DHCPS_EVENT_INFO_FORMAT_ERROR = -17,  // DHCPINFORM from client with wrong format 
+    TCPIP_DHCPS_EVENT_INFO_FMT_ERROR    = -17,  // DHCPINFORM from client with wrong format 
 
     TCPIP_DHCPS_EVENT_REQ_UNEXPECT      = -18,  // unexpected DHCPREQUEST received a client. ignored 
 
@@ -470,17 +467,17 @@ typedef struct
         uint16_t    val;
         struct
         {
-            uint16_t    infoIpValid:    1;  // if 1, then the ipAddress value is valid 
-            uint16_t    infoSize:       1;  // if 1, then the data value represents message size 
-            uint16_t    infoSlots:      1;  // if 1, then the data value represents the number of slots in the cache
-            uint16_t    infoFmtMask:    1;  // if 1, then the data value represents a TCPIP_DHCPS_REQ_FORMAT_ERR_MASK value
-            uint16_t    infoState:      1;  // if 1, then the data value represents a TCPIP_DHCPS_LEASE_STATE value
-            uint16_t    infoReqIp:      1; // if 1, then the data value represents the requested IP value
-            uint16_t    infoTargetIp:   1; // if 1, then the data value represents a target IP value (ARP/ICMP)
-            uint16_t    infoIcmpCount:  1; // if 1, then the data value represents the number of ICMP retries/probes
-            uint16_t    reserved:       6;  // reserved for future use
-            uint16_t    leaseIndexValid:1;  // if 1, then the leaseIndex value is valid
-            uint16_t    macAddValid:    1;  // if 1, then the macAdd value is valid 
+            unsigned int    infoIpValid:    1;  // if 1, then the ipAddress value is valid 
+            unsigned int    infoSize:       1;  // if 1, then the data value represents message size 
+            unsigned int    infoSlots:      1;  // if 1, then the data value represents the number of slots in the cache
+            unsigned int    infoFmtMask:    1;  // if 1, then the data value represents a TCPIP_DHCPS_REQ_FMT_ERR_MASK value
+            unsigned int    infoState:      1;  // if 1, then the data value represents a TCPIP_DHCPS_LEASE_STATE value
+            unsigned int    infoReqIp:      1; // if 1, then the data value represents the requested IP value
+            unsigned int    infoTargetIp:   1; // if 1, then the data value represents a target IP value (ARP/ICMP)
+            unsigned int    infoIcmpCount:  1; // if 1, then the data value represents the number of ICMP retries/probes
+            unsigned int    reserved:       6;  // reserved for future use
+            unsigned int    leaseIndexValid:1;  // if 1, then the leaseIndex value is valid
+            unsigned int    macAddValid:    1;  // if 1, then the macAdd value is valid 
         };
     }flags;
     uint32_t    ipAddress;  // if flags.infoIpValid != 0, the IP address of the client
@@ -603,7 +600,7 @@ typedef struct
     uint8_t         leaseState;     // A TCPIP_DHCPS_LEASE_STATE value, the current state 
     uint8_t         clientIdLen;    // on input this stores the size of the clientId
                                     // on return, this field stores the actual client ID size
-    uint8_t         clientId[];     // the client ID used for this lease
+    uint8_t         clientId[TCPIP_DHCPS_CLIENT_ID_MAX_SIZE];   // the client ID used for this lease
                                     // should hold >= than TCPIP_DHCPS_CLIENT_ID_MAX_SIZE
                                     // otherwise it will be truncated
                                     // normally a hardware MAC address
@@ -635,7 +632,7 @@ typedef struct
                                     // Normally should be TCPIP_DHCPS_LEASE_STATE_BOUND
                                     // Only TCPIP_DHCPS_LEASE_STATE_BOUND, TCPIP_DHCPS_LEASE_STATE_RELEASED or TCPIP_DHCPS_LEASE_STATE_EXPIRED allowed
     uint8_t         clientIdLen;    // the size of the clientId
-    uint8_t         clientId[];     // the client ID used for this lease
+    uint8_t         clientId[2];    // placeholder - the client ID used for this lease
 }TCPIP_DHCPS_LEASE_SET;
 
 // *****************************************************************************
@@ -1212,4 +1209,4 @@ void  TCPIP_DHCPS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif // __DHCP_SERVER_H
+#endif // H_DHCP_SERVER_H
