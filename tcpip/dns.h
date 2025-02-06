@@ -15,7 +15,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __DNS_H
-#define __DNS_H
+#ifndef H_DNS_H_
+#define H_DNS_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -235,10 +235,10 @@ typedef struct
 {
     bool            deleteOldLease;     // Delete old cache if still in place,
     // specific DNS parameters
-    int             cacheEntries;       // Max number of cache entries 
+    size_t          cacheEntries;       // Max number of cache entries 
     uint32_t        entrySolvedTmo;     // Solved entry removed after this tmo if not referenced - seconds
-    int             nIPv4Entries;       // Number of IPv4 entries per DNS name and Default value is 1.
-    int             nIPv6Entries;       // Number of IPv6 address per DNS Name
+    uint16_t        nIPv4Entries;       // Number of IPv4 entries per DNS name and Default value is 1.
+    uint16_t        nIPv6Entries;       // Number of IPv6 address per DNS Name
                                         // Default value is 1 and is used only when IPv6 is enabled
     IP_ADDRESS_TYPE ipAddressType;      // IP protocol type to use for connecting to the DNS server:
                                         // IPv4 or IPv6
@@ -262,11 +262,11 @@ typedef struct
 {
     // input parameters
     char*               hostName;       // Pointer to a name to receive the host name for that particular entry
-    int                 nameLen;        // hostName buffer size
+    size_t              nameLen;        // hostName buffer size
     IPV4_ADDR           *ipv4Entry;     // array of IPv4 entries/addresses to be populated
-    int                 nIPv4Entries;   // number of entries in the ipv4Entry[] array;
     IPV6_ADDR           *ipv6Entry;     // array of IPv6 entries/addresses to be populated
-    int                 nIPv6Entries;   // number of entries in the ipv6Entry[] array;
+    uint16_t            nIPv4Entries;   // number of entries in the ipv4Entry[] array;
+    uint16_t            nIPv6Entries;   // number of entries in the ipv6Entry[] array;
 
     // output results
     TCPIP_DNS_RESULT    status;         // current status for this name:
@@ -276,9 +276,9 @@ typedef struct
                                         //
     uint32_t            ttlTime;        // time to live for a solved DNS entry
     TCPIP_NET_HANDLE    hNet;           // interface the name was obtained or on which the query is currently ongoing
-    int                 serverIx;       // index of the server used on that interface
-    int                 nIPv4ValidEntries;// number of valid entries written to the ipv4Entry[]
-    int                 nIPv6ValidEntries;// number of valid entries written to the ipv6Entry[]
+    size_t              serverIx;       // index of the server used on that interface
+    size_t              nIPv4ValidEntries;// number of valid entries written to the ipv4Entry[]
+    size_t              nIPv6ValidEntries;// number of valid entries written to the ipv6Entry[]
 }TCPIP_DNS_ENTRY_QUERY;
 
 // *****************************************************************************
@@ -426,7 +426,7 @@ TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* host
 //****************************************************************************
 /*  
   Function:
-    int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* pIPv4Addr, int nIPv4Addresses);
+    size_t TCPIP_DNS_GetIPv4Addresses(const char* hostName, size_t startIndex, IPV4_ADDR* pIPv4Addr, size_t nIPv4Addresses);
 
   Summary:
     Get IPV4 addresses for a DNS resolved name.
@@ -459,12 +459,12 @@ TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* host
   Remarks:
     None.
 */
-int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* pIPv4Addr, int nIPv4Addresses);
+size_t TCPIP_DNS_GetIPv4Addresses(const char* hostName, size_t startIndex, IPV4_ADDR* pIPv4Addr, size_t nIPv4Addresses);
 
 //****************************************************************************
 /*  
   Function:
-    int TCPIP_DNS_GetIPv6Addresses(const char* hostName, int startIndex, IPV6_ADDR* pIPv6Addr, int nIPv6Addresses);
+    size_t TCPIP_DNS_GetIPv6Addresses(const char* hostName, size_t startIndex, IPV6_ADDR* pIPv6Addr, size_t nIPv6Addresses);
 
   Summary:
     Get IPV6 addresses for a DNS resolved name.
@@ -497,12 +497,12 @@ int TCPIP_DNS_GetIPv4Addresses(const char* hostName, int startIndex, IPV4_ADDR* 
   Remarks:
     None.
 */
-int TCPIP_DNS_GetIPv6Addresses(const char* hostName, int startIndex, IPV6_ADDR* pIPv6Addr, int nIPv6Addresses);
+size_t TCPIP_DNS_GetIPv6Addresses(const char* hostName, size_t startIndex, IPV6_ADDR* pIPv6Addr, size_t nIPv6Addresses);
 
 //****************************************************************************
 /*  
   Function:
-    int TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type)
+    size_t TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type)
 
   Summary:
     Get the count of resolved IPv4 and/or IPv6 address for a host name.
@@ -525,7 +525,7 @@ int TCPIP_DNS_GetIPv6Addresses(const char* hostName, int startIndex, IPV6_ADDR* 
   Remarks:
     None.
   */
-int TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type);
+size_t TCPIP_DNS_GetIPAddressesNumber(const char* hostName, IP_ADDRESS_TYPE type);
 
 //****************************************************************************
 /*  
@@ -750,7 +750,7 @@ TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void);
 
 // *****************************************************************************
 /* Function:
-   TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, int queryIndex);
+   TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, size_t queryIndex);
 
   Summary:
     Queries a DNS Resolver specific entry.
@@ -779,7 +779,7 @@ TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void);
     None
 
  */
-TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, int queryIndex);
+TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, size_t queryIndex);
 
 //****************************************************************************
 /*  Function:
@@ -878,5 +878,5 @@ void  TCPIP_DNS_ClientTask(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __DNS_H
+#endif  // H_DNS_H_
 
