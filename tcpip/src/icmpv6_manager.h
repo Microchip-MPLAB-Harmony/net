@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _ICMPV6_MANAGER_H
-#define _ICMPV6_MANAGER_H
+#ifndef H_ICMPV6_MANAGER_H
+#define H_ICMPV6_MANAGER_H
 
 //*************
 // Stack types
@@ -131,24 +131,22 @@ typedef union
 //*************
 // Stack APIs
 //*************
-bool TCPIP_ICMPV6_Initialize (const TCPIP_STACK_MODULE_CTRL* const stackInit,
-                       const void* icmpv6Data);
+bool TCPIP_ICMPV6_Initialize (const TCPIP_STACK_MODULE_CTRL* const stackInit, const void* initData);
 void TCPIP_ICMPV6_Deinitialize (const TCPIP_STACK_MODULE_CTRL* const stackInit);
 
-void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR_STRUCT * localIPStruct, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint16_t dataLen, uint16_t headerLen, uint8_t hopLimit, uint8_t addrType);
+void TCPIP_ICMPV6_Process(const TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_ADDR_STRUCT * localIPStruct, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint16_t dataLen, uint16_t headerLen, uint8_t hopLimit, uint8_t addrType);
 
-IPV6_PACKET * TCPIP_ICMPV6_HeaderErrorPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint8_t code, uint8_t type, uint32_t additionalData);
-IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP);
-IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr);
-IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override);
+IPV6_PACKET * TCPIP_ICMPV6_HeaderErrorPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint8_t code, uint8_t type, uint32_t additionalData);
+IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP);
+IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr);
+IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override);
 
 IPV6_PACKET * TCPIP_ICMPV6_Open (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP);
 
 
-#if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+// Only #if defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
 bool    TCPIP_ICMPV6_G3RouterAdvertisementPut (const TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, const IPV6_ADDR_STRUCT* advIP);
-void    TCPIP_ICMPV6_G3AdvertisementSelect(TCPIP_NET_IF * pNetIf, const IPV6_ADDR_STRUCT** pLclStruct, const IPV6_ADDR_STRUCT** pAdvStruct);
-#endif // defined(TCPIP_IPV6_G3_PLC_BORDER_ROUTER) && (TCPIP_IPV6_G3_PLC_BORDER_ROUTER != 0)
+void    TCPIP_ICMPV6_G3AdvertisementSelect(const TCPIP_NET_IF * pNetIf, const IPV6_ADDR_STRUCT** pLclStruct, const IPV6_ADDR_STRUCT** pAdvStruct);
 
-#endif
+#endif  // H_ICMPV6_MANAGER_H
 
