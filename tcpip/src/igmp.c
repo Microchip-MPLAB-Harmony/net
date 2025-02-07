@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -58,7 +58,7 @@ Microchip or any third party.
 //
 static int                  igmpInitCount = 0;      // IGMP module initialization count
 
-static tcpipSignalHandle    igmpSignalHandle = 0;
+static TCPIP_SIGNAL_HANDLE    igmpSignalHandle = NULL;
 
 static OSAL_MUTEX_HANDLE_TYPE igmpListsMutex;       // IGMP synchronization object: protection for access to the IGMP
                                                     // lists between user threads and manager thread
@@ -71,7 +71,7 @@ static OSAL_MUTEX_HANDLE_TYPE igmpDcptMutex;        // IGMP synchronization obje
                                                     // has to block
 static TCPIP_IGMP_GROUPS_DCPT igmpGroupsDcpt;       // IGMP groups descriptor
 
-static int                  igmpInterfaces;         // number of interfaces
+static size_t               igmpInterfaces;         // number of interfaces
 static uint32_t             igmpSsmAddLow;          // SSM range descriptor
 static uint32_t             igmpSsmAddHigh;
 
@@ -92,15 +92,259 @@ static SINGLE_LIST  igmpGroupQueryFreeList;      // pool of free Group reports t
 static SINGLE_LIST  igmpGenQueryReportList;     // list of GQ reports scheduled to be sent
 static SINGLE_LIST  igmpGroupQueryReportList;   // list of Group reports scheduled to be sent
 
-static uint8_t      igmpRobustnessVar = TCPIP_IGMP_ROBUSTNESS_VARIABLE; // robustness variable count
+static uint8_t      igmpRobustnessVar = (uint8_t)TCPIP_IGMP_ROBUSTNESS_VARIABLE; // robustness variable count
 
 static uint32_t     igmpUnsolicitRepInterval;       // unsolicited report interval, ms
 
-#if (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#if defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 static PROTECTED_SINGLE_LIST   igmpRegisteredUsers;
 static const void*             igmpMemH;
 
-#endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
+
+// conversion functions/helpers
+//
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_RepNode2SglNode(TCPIP_IGMP_SC_REPORT_NODE* pRepNode)
+{
+    union
+    {
+        TCPIP_IGMP_SC_REPORT_NODE* pRepNode;
+        SGL_LIST_NODE*  node;
+    }U_REP_NODE_SGL_NODE;
+
+    U_REP_NODE_SGL_NODE.pRepNode = pRepNode;
+    return U_REP_NODE_SGL_NODE.node;
+}
+
+static __inline__ TCPIP_IGMP_SC_REPORT_NODE* __attribute__((always_inline)) FC_SglNode2RepNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_IGMP_SC_REPORT_NODE* pRepNode;
+    }U_SGL_NODE_REP_NODE;
+
+    U_SGL_NODE_REP_NODE.node = node;
+    return U_SGL_NODE_REP_NODE.pRepNode;
+}
+
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_GqNode2SglNode(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGqNode)
+{
+    union
+    {
+        TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGqNode;
+        SGL_LIST_NODE*  node;
+    }U_GQ_NODE_SGL_NODE;
+
+    U_GQ_NODE_SGL_NODE.pGqNode = pGqNode;
+    return U_GQ_NODE_SGL_NODE.node;
+}
+
+static __inline__ TCPIP_IGMP_GEN_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_SglNode2GqNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGqNode;
+    }U_SGL_NODE_GQ_NODE;
+
+    U_SGL_NODE_GQ_NODE.node = node;
+    return U_SGL_NODE_GQ_NODE.pGqNode;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_GroupNode2SglNode(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGroupNode)
+{
+    union
+    {
+        TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGroupNode;
+        SGL_LIST_NODE*  node;
+    }U_GROUP_NODE_SGL_NODE;
+
+    U_GROUP_NODE_SGL_NODE.pGroupNode = pGroupNode;
+    return U_GROUP_NODE_SGL_NODE.node;
+}
+
+static __inline__ TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_SglNode2GroupNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGroupNode;
+    }U_SGL_NODE_GROUP_NODE;
+
+    U_SGL_NODE_GROUP_NODE.node = node;
+    return U_SGL_NODE_GROUP_NODE.pGroupNode;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_QRepNode2SglNode(TCPIP_IGMP_QUERY_REPORT_NODE* pQrNode)
+{
+    union
+    {
+        TCPIP_IGMP_QUERY_REPORT_NODE* pQrNode;
+        SGL_LIST_NODE*  node;
+    }U_QUERY_REP_NODE_SGL_NODE;
+
+    U_QUERY_REP_NODE_SGL_NODE.pQrNode = pQrNode;
+    return U_QUERY_REP_NODE_SGL_NODE.node;
+}
+
+static __inline__ TCPIP_IGMP_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_SglNode2QRepNode(SGL_LIST_NODE* node)
+{
+    union
+    {
+        SGL_LIST_NODE*  node;
+        TCPIP_IGMP_QUERY_REPORT_NODE* pQrNode;
+    }U_SGL_NODE_QUERY_REP_NODE;
+
+    U_SGL_NODE_QUERY_REP_NODE.node = node;
+    return U_SGL_NODE_QUERY_REP_NODE.pQrNode;
+}
+
+static __inline__ SGL_LIST_NODE* __attribute__((always_inline)) FC_IgmpHndl2SglNode(TCPIP_IGMP_HANDLE igHandle)
+{
+    union
+    {
+        TCPIP_IGMP_HANDLE igHandle;
+        SGL_LIST_NODE*  node;
+    }U_IGMP_HNDL_SGL_NODE;
+
+    U_IGMP_HNDL_SGL_NODE.igHandle = igHandle;
+    return U_IGMP_HNDL_SGL_NODE.node;
+}
+
+
+static __inline__ TCPIP_IGMP_GEN_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_RepNode2GqNode(TCPIP_IGMP_QUERY_REPORT_NODE* repNode)
+{
+    union
+    {
+        TCPIP_IGMP_QUERY_REPORT_NODE* repNode;
+        TCPIP_IGMP_GEN_QUERY_REPORT_NODE*  gqNode;
+    }U_REP_NODE_GQ_NODE;
+
+    U_REP_NODE_GQ_NODE.repNode = repNode;
+    return U_REP_NODE_GQ_NODE.gqNode;
+}
+
+static __inline__ TCPIP_IGMP_HEADER* __attribute__((always_inline)) FC_U8ptr2IgmpHdr(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t* pBuff;
+        TCPIP_IGMP_HEADER*  pHdr;
+    }U_UPTR_IGMP_HDR;
+
+    U_UPTR_IGMP_HDR.pBuff = pBuff;
+    return U_UPTR_IGMP_HDR.pHdr;
+}
+
+static __inline__ TCPIP_IGMPv3_QUERY_MESSAGE* __attribute__((always_inline)) FC_U8ptr2QueryMsg(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t* pBuff;
+        TCPIP_IGMPv3_QUERY_MESSAGE*  pQMsg;
+    }U_UPTR_Q_MSG;
+
+    U_UPTR_Q_MSG.pBuff = pBuff;
+    return U_UPTR_Q_MSG.pQMsg;
+}
+
+static __inline__ TCPIP_IGMPv3_QUERY_MESSAGE* __attribute__((always_inline)) FC_IgmpHdr2QueryMsg(TCPIP_IGMP_HEADER* pHdr)
+{
+    union
+    {
+        TCPIP_IGMP_HEADER* pHdr;
+        TCPIP_IGMPv3_QUERY_MESSAGE*  pQMsg;
+    }U_IGMP_HDR_Q_MSG;
+
+    U_IGMP_HDR_Q_MSG.pHdr = pHdr;
+    return U_IGMP_HDR_Q_MSG.pQMsg;
+}
+
+static __inline__ TCPIP_IGMP_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_GrRep2QRep(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrRep)
+{
+    union
+    {
+        TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrRep;
+        TCPIP_IGMP_QUERY_REPORT_NODE*  pQRep;
+    }U_GROUP_REP_Q_REP;
+
+    U_GROUP_REP_Q_REP.pGrRep = pGrRep;
+    return U_GROUP_REP_Q_REP.pQRep;
+}
+
+static __inline__ TCPIP_IGMP_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_GenQRep2QRep(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGenRep)
+{
+    union
+    {
+        TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGenRep;
+        TCPIP_IGMP_QUERY_REPORT_NODE*  pQRep;
+    }U_GEN_REP_Q_REP;
+
+    U_GEN_REP_Q_REP.pGenRep = pGenRep;
+    return U_GEN_REP_Q_REP.pQRep;
+}
+
+static __inline__ TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* __attribute__((always_inline)) FC_QRepNode2GrRepNode(TCPIP_IGMP_QUERY_REPORT_NODE* repNode)
+{
+    union
+    {
+        TCPIP_IGMP_QUERY_REPORT_NODE* repNode;
+        TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*  grpQRep;
+    }U_REP_NODE_GROUP_REP_NODE;
+
+    U_REP_NODE_GROUP_REP_NODE.repNode = repNode;
+    return U_REP_NODE_GROUP_REP_NODE.grpQRep;
+}
+
+static __inline__ TCPIP_IGMPv3_REPORT_MESSAGE* __attribute__((always_inline)) FC_U8ptr2RepMsg(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t* pBuff;
+        TCPIP_IGMPv3_REPORT_MESSAGE*  pRepMsg;
+    }U_UPTR_REP_MSG;
+
+    U_UPTR_REP_MSG.pBuff = pBuff;
+    return U_UPTR_REP_MSG.pRepMsg;
+}
+
+static __inline__ TCPIP_IGMPv3_GROUP_RECORD* __attribute__((always_inline)) FC_U8ptr2GrpRec(uint8_t* pBuff)
+{
+    union
+    {
+        uint8_t* pBuff;
+        TCPIP_IGMPv3_GROUP_RECORD*  pGrpRec;
+    }U_UPTR_GRP_REC;
+
+    U_UPTR_GRP_REC.pBuff = pBuff;
+    return U_UPTR_GRP_REC.pGrpRec;
+}
+
+static __inline__ TCPIP_IGMP_GROUP_ENTRY* __attribute__((always_inline)) FC_HashE2GrpE(OA_HASH_ENTRY* hE)
+{
+    union
+    {
+        OA_HASH_ENTRY* hE;
+        TCPIP_IGMP_GROUP_ENTRY*  pGrpE;
+    }U_HASH_E_GRP_E;
+
+    U_HASH_E_GRP_E.hE = hE;
+    return U_HASH_E_GRP_E.pGrpE;
+}
+
+static __inline__ TCPIP_IGMP_SOURCE_ENTRY* __attribute__((always_inline)) FC_HashE2SrcE(OA_HASH_ENTRY* hE)
+{
+    union
+    {
+        OA_HASH_ENTRY* hE;
+        TCPIP_IGMP_SOURCE_ENTRY*  pSrcE;
+    }U_HASH_E_SRC_E;
+
+    U_HASH_E_SRC_E.hE = hE;
+    return U_HASH_E_SRC_E.pSrcE;
+}
 
 
 // prototypes
@@ -112,126 +356,100 @@ static void         TCPIP_IGMP_SourceChangeTimeout(void);
 static void         TCPIP_IGMP_GenQueryTimeout(void);
 static void         TCPIP_IGMP_GroupQueryTimeout(void);
 
-static IPV4_PACKET* _IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen);
-static void         _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam);
-static TCPIP_IGMP_RESULT _IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, int ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pOldDcpt, TCPIP_IGMP_GIF_STATE_DCPT* pNewDcpt);
-static TCPIP_IGMP_RESULT _IGMP_ScheduleFmcReport(IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources);
-static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock);
+static IPV4_PACKET* F_IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen);
+static void         F_IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam);
+static TCPIP_IGMP_RESULT F_IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, size_t ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pOldDcpt, TCPIP_IGMP_GIF_STATE_DCPT* pNewDcpt);
+static TCPIP_IGMP_RESULT F_IGMP_ScheduleFmcReport(IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources);
+static TCPIP_IGMP_RESULT F_IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock);
 
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindGifSCReportsDisable(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode);
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_FindGifSCReportsDisable(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode);
 
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_GetNewScReport(void);
-static void     _IGMP_InsertScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode);
-static void     _IGMP_DeleteScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode);
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_GetNewScReport(void);
+static void     F_IGMP_InsertScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode);
+static void     F_IGMP_DeleteScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode);
 
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindScheduledScReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode, bool removeAllowBlock);
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_FindScheduledScReport(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode, bool removeAllowBlock);
 
-static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_TYPE qType, uint32_t groupAddress, int ifIx, bool remove);
+static TCPIP_IGMP_QUERY_REPORT_NODE* F_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_TYPE qType, uint32_t groupAddress, size_t ifIx, bool repRemove);
 
-static void     _IGMP_SetGifSCRecord(TCPIP_IGMP_SC_REPORT_NODE* pRepNode, IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources);
+static void     F_IGMP_SetGifSCRecord(TCPIP_IGMP_SC_REPORT_NODE* pRepNode, IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources);
 
-static size_t   _IGMP_GroupKeyHash(OA_HASH_DCPT* pOH, const void* key);
-static int      _IGMP_GroupKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key);
-static void     _IGMP_GroupKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key);
+static size_t   F_IGMP_GroupKeyHash(OA_HASH_DCPT* pOH, const void* key);
+static int      F_IGMP_GroupKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key);
+static void     F_IGMP_GroupKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key);
 #if defined(OA_DOUBLE_HASH_PROBING)
-static size_t   _IGMP_GroupProbeHash(OA_HASH_DCPT* pOH, const void* key);
+static size_t   F_IGMP_GroupProbeHash(OA_HASH_DCPT* pOH, const void* key);
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
-static size_t   _IGMP_SourceKeyHash(OA_HASH_DCPT* pOH, const void* key);
-static int      _IGMP_SourceKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key);
-static void     _IGMP_SourceKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key);
+static size_t   F_IGMP_SourceKeyHash(OA_HASH_DCPT* pOH, const void* key);
+static int      F_IGMP_SourceKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key);
+static void     F_IGMP_SourceKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key);
 #if defined(OA_DOUBLE_HASH_PROBING)
-static size_t   _IGMP_SourceProbeHash(OA_HASH_DCPT* pOH, const void* key);
+static size_t   F_IGMP_SourceProbeHash(OA_HASH_DCPT* pOH, const void* key);
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
-static bool     _IGMP_IsMcastValid(IPV4_ADDR addr);
+static bool     F_IGMP_IsMcastValid(IPV4_ADDR addr);
 
-static bool     _IGMP_IsSsmAddress(IPV4_ADDR mcastAddress);
+static bool  F_IGMP_IsSsmAddress(IPV4_ADDR mcastAdd);
 
-static bool     _IGMP_CheckIfIndex(int ifIx, bool itExists);
+static bool     F_IGMP_CheckIfIndex(size_t ifIx, bool itExists);
 
-static TCPIP_IGMP_RESULT _IGMP_CheckSubscribeParams(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize, int* pIfIx);
+static TCPIP_IGMP_RESULT F_IGMP_CheckSubscribeParams(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize, size_t* pIfIx);
 
-static TCPIP_IGMP_RESULT _IGMP_SocketRemove(UDP_SOCKET socket, int ifIx, IPV4_ADDR mcastAddress, size_t* nRemoves);
+static TCPIP_IGMP_RESULT F_IGMP_SocketRemove(UDP_SOCKET uSkt, size_t ifIx, IPV4_ADDR mcastAddress, size_t* nRemoves);
 
-static TCPIP_IGMP_RESULT    _IGMP_SocketUpdateSources(UDP_SOCKET socket, int ifIx, IPV4_ADDR mcastAddress, TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
+static TCPIP_IGMP_RESULT    F_IGMP_SocketUpdateSources(UDP_SOCKET uSkt, size_t ifIx, IPV4_ADDR mcastAddress, TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize);
 
-static OA_HASH_DCPT* _IGMP_GetSourceHashDcpt(TCPIP_IGMP_GROUP_ENTRY* pGEntry);
+static OA_HASH_DCPT* F_IGMP_GetSourceHashDcpt(TCPIP_IGMP_GROUP_ENTRY* pGEntry);
 
-static void     _IGMP_SourceEntryInit(TCPIP_IGMP_SOURCE_ENTRY* pSEntry);
+static void     F_IGMP_SourceEntryInit(TCPIP_IGMP_SOURCE_ENTRY* pSEntry);
 
-static TCPIP_IGMP_SKT_RECORD*   _IGMP_SourceFindSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE filtType);
+static TCPIP_IGMP_SKT_RECORD*   F_IGMP_SourceFindSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE filtType);
 
-static TCPIP_IGMP_SKT_RECORD*   _IGMP_SourceCreateSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE filtType);
+static TCPIP_IGMP_SKT_RECORD*   F_IGMP_SourceCreateSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE filtType);
 
-static int      _IGMP_GroupPurgeSktByFilter(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE* pPurgeFilt);
+static size_t   F_IGMP_GroupPurgeSktByFilter(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE* pPurgeFilt);
 
-static bool     _IGMP_GroupPurgeSktBySource(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET socket, int ifIx, const IPV4_ADDR* pPurgeAdd);
+static bool     F_IGMP_GroupPurgeSktBySource(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET uSkt, size_t ifIx, const IPV4_ADDR* pPurgeAdd);
 
-static TCPIP_IGMP_SIF_FILTER_ACTION     _IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_ENTRY* pSEntry, int ifIx, TCPIP_IGMP_FILTER_TYPE* pFilter);
+static TCPIP_IGMP_SIF_FILTER_ACTION     F_IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_ENTRY* pSEntry, size_t ifIx, TCPIP_IGMP_FILTER_TYPE* pFilter);
 
-static void     _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pGifDcpt);
+static void     F_IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, size_t ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pGifDcpt);
 
-static void     _IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
-static void     _IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
-static void     _IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
+static void     F_IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
+static void     F_IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
+static void     F_IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest);
 
-static int      _IGMPSourceEntryCompare(const void* p1, const void* p2);
+static int      F_IGMPSourceEntryCompare(const void* p1, const void* p2);
 
-static bool     _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList);
+static bool     F_IGMP_SendScReport(size_t ifIx, SINGLE_LIST* pReportList);
 
-static void     _IGMP_SetScReportTransmitTime(TCPIP_IGMP_SC_REPORT_NODE* pRNode);
+static void     F_IGMP_SetScReportTransmitTime(TCPIP_IGMP_SC_REPORT_NODE* pRNode);
 
-static void     _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType);
+static void     F_IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType);
 
-static bool     _IGMP_GroupEntryCheckRemove(TCPIP_IGMP_GROUP_ENTRY* pGEntry);
+static bool     F_IGMP_GroupEntryCheckRemove(TCPIP_IGMP_GROUP_ENTRY* pGEntry);
 
-static void     _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx);
+static void     F_IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, size_t ifIx);
 
-static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TYPE qType);
+static TCPIP_IGMP_QUERY_REPORT_NODE* F_IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TYPE qType);
 
-static void     _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit, bool insert);
+static void     F_IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, size_t ifIx, uint32_t tTransmit, bool insert);
 
-static int      _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq);
+static size_t   F_IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq);
 
-static bool     _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEntries);
+static bool     F_IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, size_t nEntries);
 
-static void     _IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, IPV4_ADDR groupAddress, int ifIx, uint32_t tTransmit);
+static void     F_IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, IPV4_ADDR groupAddress, size_t ifIx, uint32_t tTransmit);
 
-static void     _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources, bool insert);
+static void     F_IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, size_t nRecSources, uint32_t* pRecSources, bool insert);
 
-static bool     _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrpNode);
+static bool     F_IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrpNode);
 
 // implementation
 //
 
-#if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_BASIC) != 0)
-volatile int _IGMPStayAssertLoop = 0;
-static void _IGMPAssertCond(bool cond, const char* message, int lineNo)
-{
-    if(cond == false)
-    {
-        SYS_CONSOLE_PRINT("IGMP Assert: %s, in line: %d, \r\n", message, lineNo);
-        while(_IGMPStayAssertLoop != 0);
-    }
-}
-// a debug condition, not really assertion
-volatile int _IGMPStayCondLoop = 0; 
-static void _IGMPDebugCond(bool cond, const char* message, int lineNo)
-{
-    if(cond == false)
-    {
-        SYS_CONSOLE_PRINT("IGMP Cond: %s, in line: %d, \r\n", message, lineNo);
-        while(_IGMPStayCondLoop != 0);
-    }
-}
-
-#else
-#define _IGMPAssertCond(cond, message, lineNo)
-#define _IGMPDebugCond(cond, message, lineNo)
-#endif  // (TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_BASIC)
-
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_EVENTS) != 0)
-static const char* _IGMP_DbgEvNameTbl[] = 
+static const char* T_IGMP_DbgEvNameTbl[] = 
 {
     // general events
     "none",         // TCPIP_IGMP_EVENT_NONE
@@ -242,35 +460,44 @@ static const char* _IGMP_DbgEvNameTbl[] =
     "gq_report",    // TCPIP_IGMP_EVENT_GET_GEN_QUERY_REPORT_ERROR
     "grp_report",   // TCPIP_IGMP_EVENT_GET_GROUP_QUERY_REPORT_ERROR
     "src_exceed",   // TCPIP_IGMP_EVENT_QUERY_SOURCE_NUMBER_EXCEEDED
+    "illegal",      // TCPIP_IGMP_EVENT_ illegal value
 };
 
-static void _IGMP_DbgEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType)
+static void F_IGMP_DbgEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType)
 {
-    int evIx = 1;
-    char addBuff[20];
-    char dbgBuff[100];
+    char addBuff[20] = {'\0'};
+    char dbgBuff[100] = {'\0'};
 
-    while(evType)
+    TCPIP_UINT16_VAL evMask;
+    evMask.Val = (uint16_t)evType; 
+    if(evMask.v[1] != 0U)
     {
-        if((evType & 0x1) != 0)
+        (void)FC_sprintf(dbgBuff, sizeof(dbgBuff), "%s ", "unknown");
+    } 
+    else
+    {
+        uint8_t evIx = 1U;
+        while(evMask.v[0] != 0U)
         {
-            _IGMPAssertCond(evIx < sizeof(_IGMP_DbgEvNameTbl) / sizeof(*_IGMP_DbgEvNameTbl), __func__, __LINE__);
-            sprintf(dbgBuff, "%s ", _IGMP_DbgEvNameTbl[evIx]);  
+            if((evMask.v[0] & 0x1U) != 0U)
+            {
+                (void)FC_sprintf(dbgBuff, sizeof(dbgBuff), "%s ", T_IGMP_DbgEvNameTbl[evIx]);  
+            }
+            evIx++;
+            evMask.v[0] >>= 1U;
         }
-        evIx++;
-        evType >>= 1;
     }
 
-    TCPIP_Helper_IPAddressToString(&mcastAddress, addBuff, sizeof(addBuff));
+    (void)TCPIP_Helper_IPAddressToString(&mcastAddress, addBuff, sizeof(addBuff));
     SYS_CONSOLE_PRINT("IGMP Event: %s, add: %s\r\n", dbgBuff, addBuff);
 }
 #else
-#define _IGMP_DbgEvent(mcastAddress, evType)
+#define F_IGMP_DbgEvent(mcastAddress, evType)
 #endif  // ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_EVENTS) != 0)
 
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_REPORT_LISTS) != 0)
-static void _IGMP_ScListPrint(SINGLE_LIST* pScList);
-static void _IGMP_QueryListPrint(SINGLE_LIST* pQList, TCPIP_IGMP_QUERY_TYPE qType);
+static void F_IGMP_ScListPrint(SINGLE_LIST* pScList);
+static void F_IGMP_QueryListPrint(SINGLE_LIST* pQList, TCPIP_IGMP_QUERY_TYPE qType);
 
 void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
 {
@@ -278,18 +505,18 @@ void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
     SINGLE_LIST *pFreeGqList, *pGqList;
     SINGLE_LIST *pFreeGrpList, *pGrpList;
     bool needFree, needBusy;
-    int nLists = 0;
+    size_t nLists = 0U;
 
-    pFreeScList = pScList = 0;
-    pFreeGqList = pGqList = 0;
-    pFreeGrpList = pGrpList = 0;
+    pFreeScList = pScList = NULL;
+    pFreeGqList = pGqList = NULL;
+    pFreeGrpList = pGrpList = NULL;
 
-    needFree = (listType & TCPIP_IGMP_REPORT_LIST_FLAG_FREE) != 0;
-    needBusy = (listType & TCPIP_IGMP_REPORT_LIST_FLAG_BUSY) != 0;
+    needFree = ((uint16_t)listType & (uint16_t)TCPIP_IGMP_REPORT_LIST_FLAG_FREE) != 0U;
+    needBusy = ((uint16_t)listType & (uint16_t)TCPIP_IGMP_REPORT_LIST_FLAG_BUSY) != 0U;
 
 
     // detect the list types
-    if((listType & TCPIP_IGMP_REPORT_LIST_SC) != 0)
+    if(((uint16_t)listType & (uint16_t)TCPIP_IGMP_REPORT_LIST_SC) != 0U)
     {
         if(needFree)
         {
@@ -301,7 +528,7 @@ void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
         }
         nLists++;
     }
-    if((listType & TCPIP_IGMP_REPORT_LIST_GEN_QUERY) != 0)
+    if(((uint16_t)listType & (uint16_t)TCPIP_IGMP_REPORT_LIST_GEN_QUERY) != 0U)
     {
         if(needFree)
         {
@@ -313,7 +540,7 @@ void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
         }
         nLists++;
     }
-    if((listType & TCPIP_IGMP_REPORT_LIST_GROUP_QUERY) != 0)
+    if(((uint16_t)listType & (uint16_t)TCPIP_IGMP_REPORT_LIST_GROUP_QUERY) != 0U)
     {
         if(needFree)
         {
@@ -326,42 +553,42 @@ void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
         nLists++;
     }
 
-    if(nLists == 0)
+    if(nLists == 0U)
     {
         SYS_CONSOLE_MESSAGE("IGMP Lists: no such list\r\n");
         return;
     }
 
-    if(pFreeScList)
+    if(pFreeScList != NULL)
     {
         SYS_CONSOLE_PRINT("IGMP SC Free List: %d nodes\r\n", TCPIP_Helper_SingleListCount(pFreeScList));
     }
-    if(pScList)
+    if(pScList != NULL)
     {
-        _IGMP_ScListPrint(pScList);
+        F_IGMP_ScListPrint(pScList);
     }
 
-    if(pFreeGqList)
+    if(pFreeGqList != NULL)
     {
         SYS_CONSOLE_PRINT("IGMP GQ Free List: %d nodes\r\n", TCPIP_Helper_SingleListCount(pFreeGqList));
     }
-    if(pGqList)
+    if(pGqList != NULL)
     {
-        _IGMP_QueryListPrint(pGqList, TCPIP_IGMP_QUERY_GENERAL);
+        F_IGMP_QueryListPrint(pGqList, TCPIP_IGMP_QUERY_GENERAL);
     }
     
-    if(pFreeGrpList)
+    if(pFreeGrpList != NULL)
     {
         SYS_CONSOLE_PRINT("IGMP GRPQ Free List: %d nodes\r\n", TCPIP_Helper_SingleListCount(pFreeGrpList));
     }
-    if(pGrpList)
+    if(pGrpList != NULL)
     {
-        _IGMP_QueryListPrint(pGrpList, TCPIP_IGMP_QUERY_GROUP_SPEC);
+        F_IGMP_QueryListPrint(pGrpList, TCPIP_IGMP_QUERY_GROUP_SPEC);
     }
 
 }
 
-static const char* _IGMP_RECORD_TYPE_STR_TBL[] =
+static const char* T_IGMP_RECORD_TYPE_STR_TBL[] =
 {
     "invalid",
     "mode_inc",
@@ -372,40 +599,42 @@ static const char* _IGMP_RECORD_TYPE_STR_TBL[] =
     "block_old",
 };
 
-static void _IGMP_ScListPrint(SINGLE_LIST* pScList)
+static void F_IGMP_ScListPrint(SINGLE_LIST* pScList)
 {
-    int32_t toTransMs;
+    uint32_t toTransMs;
     TCPIP_IGMP_SC_REPORT_NODE* pRNode;
     IPV4_ADDR groupAddr, srcAddr;
     const char* repType;
-    int srcIx;
+    size_t srcIx;
     uint32_t* pSrc;
-    char addBuff[20];
+    char addBuff[20] = {'\0'};
 
-    for(pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)pScList->head; pRNode != 0; pRNode = pRNode->next)
+    for(pRNode = FC_SglNode2RepNode(pScList->head); pRNode != NULL; pRNode = pRNode->next)
     {
-        toTransMs =  ((int32_t)(pRNode->tTransmit - SYS_TMR_TickCountGet()) * 1000) / SYS_TMR_TickCounterFrequencyGet();
+        uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+        toTransMs =  ((pRNode->tTransmit - SYS_TMR_TickCountGet()) * 1000U) / sysFreq;
 
         SYS_CONSOLE_PRINT("IGMP SC Node - if: %d, nTransmit: %d, active: %d, to Transmit: %d\r\n", pRNode->ifIx, pRNode->nTransmit, pRNode->active, toTransMs);
 
         groupAddr.Val = pRNode->repGroup;
-        TCPIP_Helper_IPAddressToString(&groupAddr, addBuff, sizeof(addBuff));
-        repType = _IGMP_RECORD_TYPE_STR_TBL[pRNode->repType];
+        (void)TCPIP_Helper_IPAddressToString(&groupAddr, addBuff, sizeof(addBuff));
+        repType = T_IGMP_RECORD_TYPE_STR_TBL[pRNode->repType];
         SYS_CONSOLE_PRINT("IGMP SC - group: %s, type: %s, nSources\r\n", addBuff, repType, pRNode->repSources.nSources);
 
         pSrc = pRNode->repSources.sourceAddresses;
-        for(srcIx = 0; srcIx < pRNode->repSources.nSources; srcIx++, pSrc++)
+        for(srcIx = 0; srcIx < pRNode->repSources.nSources; srcIx++)
         {
             srcAddr.Val = *pSrc;
-            TCPIP_Helper_IPAddressToString(&srcAddr, addBuff, sizeof(addBuff));
+            (void)TCPIP_Helper_IPAddressToString(&srcAddr, addBuff, sizeof(addBuff));
 
             SYS_CONSOLE_PRINT("IGMP SC Source - source: %s\r\n", addBuff);
+            pSrc++;
         }
     }
 
 }
 
-static const char* _IGMP_QueryTypeStr(TCPIP_IGMP_QUERY_TYPE qType, bool generic)
+static const char* F_IGMP_QueryTypeStr(TCPIP_IGMP_QUERY_TYPE qType, bool generic)
 {
     if(generic)
     {
@@ -415,107 +644,118 @@ static const char* _IGMP_QueryTypeStr(TCPIP_IGMP_QUERY_TYPE qType, bool generic)
     return qType == TCPIP_IGMP_QUERY_GENERAL ? "GQ" : qType == TCPIP_IGMP_QUERY_GROUP_SPEC ? "GSQ" : qType == TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC ? "GSSQ" : "invalid"; 
 }
 
-static void _IGMP_QueryListPrint(SINGLE_LIST* pQList, TCPIP_IGMP_QUERY_TYPE qType)
+static void F_IGMP_QueryListPrint(SINGLE_LIST* pQList, TCPIP_IGMP_QUERY_TYPE qType)
 {
-    int qIx, srcIx;
+    size_t qIx, srcIx;
     TCPIP_IGMP_QUERY_REPORT_NODE* pQNode;
     const char* strType;
-    int32_t toTransMs;
+    uint32_t toTransMs;
     TCPIP_IGMP_QUERY_SOURCES* pQSource;
     IPV4_ADDR groupAddr, srcAddr;
     uint32_t* pSrc;
-    char addBuff[20];
+    char addBuff[20] = {'\0'};
 
 
-    strType = _IGMP_QueryTypeStr(qType, true);
+    strType = F_IGMP_QueryTypeStr(qType, true);
 
-
-    for(pQNode = (TCPIP_IGMP_QUERY_REPORT_NODE*)pQList->head; pQNode != 0; pQNode = pQNode->next)
+    for(pQNode = FC_SglNode2QRepNode(pQList->head); pQNode != NULL; pQNode = pQNode->next)
     {
-        strType = _IGMP_QueryTypeStr(pQNode->queryType, false);
-        toTransMs =  ((int32_t)(pQNode->tTransmit - SYS_TMR_TickCountGet()) * 1000) / SYS_TMR_TickCounterFrequencyGet();
+        strType = F_IGMP_QueryTypeStr((TCPIP_IGMP_QUERY_TYPE)pQNode->queryType, false);
+        uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+        toTransMs =  ((pQNode->tTransmit - SYS_TMR_TickCountGet()) * 1000U) / sysFreq;
 
         SYS_CONSOLE_PRINT("IGMP Q Node - if: %d, type: %s, qSources: %d, to Transmit: %d\r\n", pQNode->ifIx, strType, pQNode->nQSources, toTransMs);
         pQSource = pQNode->qSources;
-        for(qIx = 0; qIx < pQNode->nQSources; qIx++, pQSource++)
+        for(qIx = 0; qIx < pQNode->nQSources; qIx++)
         {
             groupAddr.Val = pQSource->repGroup;
-            TCPIP_Helper_IPAddressToString(&groupAddr, addBuff, sizeof(addBuff));
+            (void)TCPIP_Helper_IPAddressToString(&groupAddr, addBuff, sizeof(addBuff));
             strType = pQSource->repType == TCPIP_IGMP_MODE_IS_INCLUDE ? "inc" : pQSource->repType == TCPIP_IGMP_MODE_IS_EXCLUDE ? "exc" : "invalid";
             SYS_CONSOLE_PRINT("IGMP qSource - group: %s, type: %s, nSources: %d\r\n", addBuff, strType, pQSource->repSources.nSources);
             pSrc = pQSource->repSources.sourceAddresses;
-            for(srcIx = 0; srcIx < pQSource->repSources.nSources; srcIx++, pSrc++)
+            for(srcIx = 0; srcIx < pQSource->repSources.nSources; srcIx++)
             {
                 srcAddr.Val = *pSrc;
-                TCPIP_Helper_IPAddressToString(&srcAddr, addBuff, sizeof(addBuff));
+                (void)TCPIP_Helper_IPAddressToString(&srcAddr, addBuff, sizeof(addBuff));
 
                 SYS_CONSOLE_PRINT("IGMP qSource - source: %s\r\n", addBuff);
+                pSrc++;
             }
+            pQSource++;
         }
     }
 
 
 }
+#else
+void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType)
+{
+}
+
 #endif  // ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_REPORT_LISTS) != 0)
 
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_QUERY_MSG) != 0)
 // respTime in seconds
-TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList, uint16_t nSources, uint16_t respTime, int ifIx, TCPIP_IGMP_ROUTE_FLAG rFlag)
+TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList, uint16_t nSources, uint16_t respTime, size_t ifIx, uint8_t rFlag)
 {
     uint16_t pktSize;
-    TCPIP_NET_IF*    pNetIf;
+    const TCPIP_NET_IF*    pNetIf;
     TCPIP_IGMPv3_QUERY_MESSAGE* pQuery;
     uint32_t*   pDest;
     IPV4_PACKET* pTxPkt;
     TCPIP_IPV4_PACKET_PARAMS pktParams;
-    int srcIx;
-    uint16_t mant, exp;
+    size_t srcIx;
+    uint16_t r_mant, r_exp;
     TCPIP_IGMP_RESP_CODE_FLOAT rCodeFloat;
 
-    if((rFlag & (TCPIP_IGMP_ROUTE_INTERNAL | TCPIP_IGMP_ROUTE_EXTERNAL)) == 0)
+    if((rFlag & ((uint8_t)TCPIP_IGMP_ROUTE_INTERNAL | (uint8_t)TCPIP_IGMP_ROUTE_EXTERNAL)) == 0U)
     {
         return TCPIP_IGMP_ARG_ERROR;
     }
 
-    if(pGroupAdd == 0 || *pGroupAdd == 0)
+    if(pGroupAdd == NULL || *pGroupAdd == 0U)
     {   // general query
-        pGroupAdd = 0;
+        pGroupAdd = NULL;
         nSources = 0;
-        sourceList = 0;
+        sourceList = NULL;
     }
-    else if(nSources != 0 && sourceList == 0)
+    else if(nSources != 0U && sourceList == NULL)
     {
         return TCPIP_IGMP_ARG_ERROR;
     }
+    else
+    {
+        // do nothing
+    }
 
-    pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(ifIx);
+    pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet((int)ifIx);
     if(!TCPIP_STACK_NetIsLinked(pNetIf))
     {
         return TCPIP_IGMP_IF_ERROR;
     }
 
     // calculate the max resp code
-    mant = respTime * 10;
-    exp = 0;
+    r_mant = respTime * 10U;
+    r_exp = 0U;
     do
     {
-        mant /= 2;
-        exp++;
-    }while(mant > 0x1f && exp < 3);
+        r_mant /= 2U;
+        r_exp++;
+    }while(r_mant > 0x1fU && r_exp < 3U);
 
-    if(mant < 0x10 || exp > 10)
+    if(r_mant < 0x10U || r_exp > 10U)
     {   // cannot be represented
         return TCPIP_IGMP_ARG_ERROR;
     }
-    rCodeFloat.mant = mant - 0x10;
-    rCodeFloat.exp = exp - 3;
-    rCodeFloat.unit = 1;
+    rCodeFloat.r_mant = (uint8_t)(r_mant - 0x10U);
+    rCodeFloat.r_exp = (uint8_t)(r_exp - 3U);
+    rCodeFloat.unit = 1U;
 
     // calculate packet size
-    pktSize = sizeof(TCPIP_IGMPv3_QUERY_MESSAGE) + nSources * sizeof(*((TCPIP_IGMPv3_QUERY_MESSAGE*)0)->sources);
+    pktSize = (uint16_t)sizeof(TCPIP_IGMPv3_QUERY_MESSAGE_BARE) + nSources * (uint16_t)sizeof(*((TCPIP_IGMPv3_QUERY_MESSAGE*)0)->sources);
 
-    pTxPkt = _IGMP_AllocateTxPacketStruct(pktSize);
-    if(pTxPkt == 0)
+    pTxPkt = F_IGMP_AllocateTxPacketStruct(pktSize);
+    if(pTxPkt == NULL)
     {   // failed to allocate
         return  TCPIP_IGMP_PACKET_ALLOC_ERROR;
     }
@@ -529,14 +769,14 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList
     pktParams.df = 0;
 
 
-    TCPIP_IPV4_PacketFormatTx(pTxPkt, IP_PROT_IGMP, pktSize, &pktParams);
+    TCPIP_IPV4_PacketFormatTx(pTxPkt, (uint8_t)IP_PROT_IGMP, pktSize, &pktParams);
 
     // populate the query message
-    pQuery = (TCPIP_IGMPv3_QUERY_MESSAGE*)pTxPkt->macPkt.pTransportLayer;
-    memset(pQuery, 0, sizeof(*pQuery));
-    pQuery->type = TCPIP_IGMP_MESSAGE_QUERY;
+    pQuery = FC_U8ptr2QueryMsg(pTxPkt->macPkt.pTransportLayer);
+    (void)memset(pQuery, 0, sizeof(*pQuery));
+    pQuery->type = (uint8_t)TCPIP_IGMP_MESSAGE_QUERY;
     pQuery->maxRespCode = rCodeFloat.val; 
-    pQuery->groupAddress = pGroupAdd ? *pGroupAdd : 0;
+    pQuery->groupAddress = pGroupAdd != NULL ? *pGroupAdd : 0U;
     pQuery->qqic = TCPIP_IGMP_QQIC_INTERVAL_CODE;
     pQuery->nSources = TCPIP_Helper_htons(nSources);
     // set sources
@@ -551,11 +791,11 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList
 
     TCPIP_PKT_FlightLogTx(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID);
 
-    if((rFlag & TCPIP_IGMP_ROUTE_EXTERNAL) != 0)
+    if((rFlag & (uint8_t)TCPIP_IGMP_ROUTE_EXTERNAL) != 0U)
     {
-        if((rFlag & TCPIP_IGMP_ROUTE_INTERNAL) != 0)
+        if((rFlag & (uint8_t)TCPIP_IGMP_ROUTE_INTERNAL) != 0U)
         {   // route both int and ext
-            pTxPkt->macPkt.modPktData = 1;
+            pTxPkt->macPkt.modPktData = 1U;
         }
         if(!TCPIP_IPV4_PacketTransmit(pTxPkt))
         {
@@ -567,26 +807,30 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList
     }
 
     // route internally only
-    pTxPkt->macPkt.modPktData = 0;
-    pTxPkt->macPkt.pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
-    _TCPIPStackInsertRxPacket(pNetIf, &pTxPkt->macPkt, true);
+    pTxPkt->macPkt.modPktData = 0U;
+    pTxPkt->macPkt.pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_MCAST;
+    TCPIPStackInsertRxPacket(pNetIf, &pTxPkt->macPkt, true);
 
     return TCPIP_IGMP_OK;
 }
-
+#else
+TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList, uint16_t nSources, uint16_t respTime, size_t ifIx, uint8_t rFlag)
+{
+    return TCPIP_IGMP_IF_ERROR; 
+}
 #endif // ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_QUERY_MSG) != 0)
 
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-static uint32_t igmpLLockCount = 0;
+static uint32_t igmpLLockCount = 0U;
 #endif
 // locks access to the IGMP report lists 
 // between user threads and manager/dispatcher thread
 static void igmpListsLock(void)
 {
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-    _IGMPAssertCond(igmpLLockCount == 0, __func__, __LINE__);
+    TCPIPStack_Assert(igmpLLockCount == 0U, __FILE__, __func__, __LINE__);
 #endif
-    OSAL_MUTEX_Lock(&igmpListsMutex, OSAL_WAIT_FOREVER);
+    (void)OSAL_MUTEX_Lock(&igmpListsMutex, OSAL_WAIT_FOREVER);
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
     igmpLLockCount++;
 #endif
@@ -596,9 +840,9 @@ static void igmpListsLock(void)
 static void igmpListsUnlock(void)
 {
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-    _IGMPAssertCond(igmpLLockCount == 1, __func__, __LINE__);
+    TCPIPStack_Assert(igmpLLockCount == 1U, __FILE__, __func__, __LINE__);
 #endif
-    OSAL_MUTEX_Unlock(&igmpListsMutex);
+    (void)OSAL_MUTEX_Unlock(&igmpListsMutex);
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
     igmpLLockCount--;
 #endif
@@ -607,14 +851,14 @@ static void igmpListsUnlock(void)
 // locks access to the IGMP global descriptor 
 // between user threads and manager/dispatcher thread
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-static uint32_t igmpDLockCount = 0;
+static uint32_t igmpDLockCount = 0U;
 #endif
 static __inline__ void __attribute__((always_inline)) igmpDcptLock(void)
 {
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-    _IGMPAssertCond(igmpDLockCount == 0, __func__, __LINE__);
+    TCPIPStack_Assert(igmpDLockCount == 0U, __FILE__, __func__, __LINE__);
 #endif
-    OSAL_MUTEX_Lock(&igmpDcptMutex, OSAL_WAIT_FOREVER);
+    (void)OSAL_MUTEX_Lock(&igmpDcptMutex, OSAL_WAIT_FOREVER);
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
     igmpDLockCount++;
 #endif
@@ -623,38 +867,38 @@ static __inline__ void __attribute__((always_inline)) igmpDcptLock(void)
 static __inline__ void __attribute__((always_inline)) igmpDcptUnlock(void)
 {
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
-    _IGMPAssertCond(igmpDLockCount == 1, __func__, __LINE__);
+    TCPIPStack_Assert(igmpDLockCount == 1U, __FILE__, __func__, __LINE__);
 #endif
-    OSAL_MUTEX_Unlock(&igmpDcptMutex);
+    (void)OSAL_MUTEX_Unlock(&igmpDcptMutex);
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
     igmpDLockCount--;
 #endif
 }
 
 // checks that an IPv4 address is multicast
-static __inline__ bool __attribute__((always_inline)) _IGMP_IsMcastAddress(IPV4_ADDR addr)
+static __inline__ bool __attribute__((always_inline)) F_IGMP_IsMcastAddress(IPV4_ADDR addr)
 {
-    return ((addr.v[0] & 0xf0) == 0xe0);
+    return ((addr.v[0] & 0xf0U) == 0xe0U);
 }
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void _IGMPCleanup(void)
+static void F_IGMPCleanup(void)
 {
 
-    if(igmpSignalHandle)
+    if(igmpSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(igmpSignalHandle);
-        igmpSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(igmpSignalHandle);
+        igmpSignalHandle = NULL;
     }
 
     // Remove IGMP register users
-#if (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#if defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
     TCPIP_Notification_Deinitialize(&igmpRegisteredUsers, igmpMemH);
     igmpMemH = 0;
-#endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 
-    OSAL_MUTEX_Delete(&igmpListsMutex);
-    OSAL_MUTEX_Delete(&igmpDcptMutex);
+    (void)OSAL_MUTEX_Delete(&igmpListsMutex);
+    (void)OSAL_MUTEX_Delete(&igmpDcptMutex);
 }
 
 void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl)
@@ -666,32 +910,32 @@ void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl)
     {   // we're up and running
         // one way or another this interface is going down
 
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--igmpInitCount == 0)
             {   // all closed
                 // release resources
-                _IGMPCleanup();
+                F_IGMPCleanup();
             }
         }
     }
 
 }
 #else
-#define _IGMPCleanup()
+#define F_IGMPCleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 
-bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const TCPIP_IGMP_MODULE_CONFIG* pIgmpCfg)
+bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const void* initData)
 {
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     OA_HASH_DCPT    *gHashDcpt, *sHashDcpt;
     TCPIP_IGMP_SC_REPORT_NODE* pRepNode;
     TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode;
     TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pQNode;
-    int groupIx, ix;
+    size_t groupIx, ix;
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
@@ -700,14 +944,14 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
     if(igmpInitCount == 0)
     {   // first time we're run
         // hush compiler
-        _IGMPAssertCond(true, __func__, __LINE__);
-        _IGMPDebugCond(true, __func__, __LINE__);
+        TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
 
         // check configuration data is not missing
-        if(pIgmpCfg == 0)
+        if(initData == NULL)
         {
             return false;
         }
+        const TCPIP_IGMP_MODULE_CONFIG* pIgmpCfg = (const TCPIP_IGMP_MODULE_CONFIG*)initData;
 
         igmpInterfaces = pIgmpCfg->nInterfaces;
         if(igmpInterfaces > stackCtrl->nIfs)
@@ -715,36 +959,36 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
             igmpInterfaces = stackCtrl->nIfs;
         }
 
-        if(igmpInterfaces > TCPIP_IGMP_INTERFACES)
+        if(igmpInterfaces > (size_t)TCPIP_IGMP_INTERFACES)
         {
             return false;
         }
 
         // create synchronization object
-        if(OSAL_MUTEX_Create(&igmpListsMutex) != OSAL_RESULT_TRUE)
+        if(OSAL_MUTEX_Create(&igmpListsMutex) != OSAL_RESULT_SUCCESS)
         {
             return false;
         }
-        if(OSAL_MUTEX_Create(&igmpDcptMutex) != OSAL_RESULT_TRUE)
+        if(OSAL_MUTEX_Create(&igmpDcptMutex) != OSAL_RESULT_SUCCESS)
         {
-            OSAL_MUTEX_Delete(&igmpListsMutex);
+            (void)OSAL_MUTEX_Delete(&igmpListsMutex);
             return false;
         }
 
-#if (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#if defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
         igmpMemH = stackCtrl->memH;
         if(TCPIP_Notification_Initialize(&igmpRegisteredUsers) == false)
         {
-            _IGMPCleanup();
+            F_IGMPCleanup();
             return false;
         }
-#endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 
         // create the IGMP signal + timer
-        igmpSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_IGMP_Task, TCPIP_IGMP_TASK_TICK_RATE);
-        if(igmpSignalHandle == 0 )
+        igmpSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_IGMP_Task, TCPIP_IGMP_TASK_TICK_RATE);
+        if(igmpSignalHandle == NULL )
         {   // cannot create the IGMP signal notification
-            _IGMPCleanup();
+            F_IGMPCleanup();
             return false;
         }
 
@@ -753,24 +997,24 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
         // check the SSM address range
         IPV4_ADDR ssmLow, ssmHigh;
         bool ssmRangeFail = false;
-        if(pIgmpCfg->lowSsmAddress == 0)
+        if(pIgmpCfg->lowSsmAddress == NULL)
         {
             ssmLow.Val = TCPIP_IGMP_IANA_SSM_LOW;
         }
         else
         {
-            if(!TCPIP_Helper_StringToIPAddress(pIgmpCfg->lowSsmAddress, &ssmLow) || !_IGMP_IsMcastAddress(ssmLow))
+            if(!TCPIP_Helper_StringToIPAddress(pIgmpCfg->lowSsmAddress, &ssmLow) || !F_IGMP_IsMcastAddress(ssmLow))
             {   // wrong SSM range
                 ssmRangeFail = true;
             }
         }
-        if(pIgmpCfg->highSsmAddress == 0)
+        if(pIgmpCfg->highSsmAddress == NULL)
         {
             ssmHigh.Val = TCPIP_IGMP_IANA_SSM_HIGH;
         }
         else
         {
-            if(!TCPIP_Helper_StringToIPAddress(pIgmpCfg->highSsmAddress, &ssmHigh) || !_IGMP_IsMcastAddress(ssmHigh))
+            if(!TCPIP_Helper_StringToIPAddress(pIgmpCfg->highSsmAddress, &ssmHigh) || !F_IGMP_IsMcastAddress(ssmHigh))
             {   // wrong SSM range
                 ssmRangeFail = true;
             }
@@ -778,13 +1022,13 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
 
         if(ssmRangeFail)
         {   // wrong SSM range
-            _IGMPCleanup();
+            F_IGMPCleanup();
             return false;
         }
 
         igmpSsmAddLow = ssmLow.Val;
         igmpSsmAddHigh = ssmHigh.Val;
-        memset(&igmpGroupsDcpt, 0, sizeof(igmpGroupsDcpt));
+        (void)memset(&igmpGroupsDcpt, 0, sizeof(igmpGroupsDcpt));
 
         // populate the Group hash entries
         gHashDcpt = &igmpGroupsDcpt.gHashDcpt;
@@ -793,11 +1037,11 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
         gHashDcpt->hEntries = sizeof(igmpGroupsDcpt.gEntryTbl) / sizeof(*igmpGroupsDcpt.gEntryTbl);
         gHashDcpt->probeStep = TCPIP_IGMP_GROUP_HASH_PROBE_STEP;
 
-        gHashDcpt->hashF = _IGMP_GroupKeyHash;
-        gHashDcpt->cmpF = _IGMP_GroupKeyCompare;
-        gHashDcpt->cpyF = _IGMP_GroupKeyCopy;
+        gHashDcpt->hashF = &F_IGMP_GroupKeyHash;
+        gHashDcpt->cmpF = &F_IGMP_GroupKeyCompare;
+        gHashDcpt->cpyF = &F_IGMP_GroupKeyCopy;
 #if defined(OA_DOUBLE_HASH_PROBING)
-        gHashDcpt->probeHash = _IGMP_GroupProbeHash;
+        gHashDcpt->probeHash = &F_IGMP_GroupProbeHash;
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
         TCPIP_OAHASH_Initialize(gHashDcpt);
 
@@ -807,20 +1051,21 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
         sHashDcpt->hEntries = sizeof(pGEntry->srcEntryTbl) / sizeof(*pGEntry->srcEntryTbl);
         sHashDcpt->probeStep = TCPIP_IGMP_SOURCE_HASH_PROBE_STEP;
 
-        sHashDcpt->hashF = _IGMP_SourceKeyHash;
-        sHashDcpt->cmpF = _IGMP_SourceKeyCompare;
-        sHashDcpt->cpyF = _IGMP_SourceKeyCopy;
+        sHashDcpt->hashF = &F_IGMP_SourceKeyHash;
+        sHashDcpt->cmpF = &F_IGMP_SourceKeyCompare;
+        sHashDcpt->cpyF = &F_IGMP_SourceKeyCopy;
 #if defined(OA_DOUBLE_HASH_PROBING)
-        sHashDcpt->probeHash = _IGMP_SourceProbeHash;
+        sHashDcpt->probeHash = &F_IGMP_SourceProbeHash;
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
 
         // initialize every group hash
         pGEntry = igmpGroupsDcpt.gEntryTbl; 
-        for(groupIx = 0; groupIx < sizeof(igmpGroupsDcpt.gEntryTbl) / sizeof(*igmpGroupsDcpt.gEntryTbl); groupIx++, pGEntry++)
+        for(groupIx = 0; groupIx < sizeof(igmpGroupsDcpt.gEntryTbl) / sizeof(*igmpGroupsDcpt.gEntryTbl); groupIx++)
         {
             sHashDcpt->memBlk = pGEntry->srcEntryTbl;
             TCPIP_OAHASH_Initialize(sHashDcpt);
+            pGEntry++;
         }
 
         // initialize the report pool
@@ -831,23 +1076,26 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
         TCPIP_Helper_SingleListInitialize(&igmpGenQueryReportList);
         TCPIP_Helper_SingleListInitialize(&igmpGroupQueryReportList);
         pRepNode = igmpScReportPool;
-        for(ix = 0; ix < sizeof(igmpScReportPool) / sizeof(*igmpScReportPool); ix++, pRepNode++)
+        for(ix = 0; ix < sizeof(igmpScReportPool) / sizeof(*igmpScReportPool); ix++)
         {
-            TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, (SGL_LIST_NODE*)pRepNode);
+            TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, FC_RepNode2SglNode(pRepNode));
+            pRepNode++;
         }
         
         pGQNode = igmpGenQueryReportPool;
-        for(ix = 0; ix < sizeof(igmpGenQueryReportPool) / sizeof(*igmpGenQueryReportPool); ix++, pGQNode++)
+        for(ix = 0; ix < sizeof(igmpGenQueryReportPool) / sizeof(*igmpGenQueryReportPool); ix++)
         {
             pGQNode->nQSources = sizeof(pGQNode->qSources) / sizeof(*pGQNode->qSources);
-            TCPIP_Helper_SingleListTailAdd(&igmpGenQueryFreeList, (SGL_LIST_NODE*)pGQNode);
+            TCPIP_Helper_SingleListTailAdd(&igmpGenQueryFreeList, FC_GqNode2SglNode(pGQNode));
+            pGQNode++;
         }
 
         pQNode = igmpGroupQueryReportPool;
-        for(ix = 0; ix < sizeof(igmpGroupQueryReportPool) / sizeof(*igmpGroupQueryReportPool); ix++, pQNode++)
+        for(ix = 0; ix < sizeof(igmpGroupQueryReportPool) / sizeof(*igmpGroupQueryReportPool); ix++)
         {
             pQNode->nQSources = sizeof(pQNode->qSources) / sizeof(*pQNode->qSources);
-            TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryFreeList, (SGL_LIST_NODE*)pQNode);
+            TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryFreeList, FC_GroupNode2SglNode(pQNode));
+            pQNode++;
         }
 
         igmpUnsolicitRepInterval = pIgmpCfg->reportInterval;
@@ -865,14 +1113,14 @@ void  TCPIP_IGMP_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, (TCPIP_MODULE_SIGNAL)TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_RX_PENDING) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_RX_PENDING) != 0U)
     { //  RX signal occurred
         TCPIP_IGMP_Process();
     }
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
     { // regular TMO occurred
         TCPIP_IGMP_Tick();
     }
@@ -886,17 +1134,19 @@ static void TCPIP_IGMP_Process(void)
     TCPIP_IGMP_HEADER*  pIgmpHdr;
     uint16_t            igmpTotLength;
     uint16_t            checksum;
-    int                 ifIx;
+    size_t ifIx;
     TCPIP_MAC_PKT_ACK_RES ackRes;
 
     // extract queued IGMP packets
-    while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
+    while((pRxPkt = TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != NULL)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
         while(true)
         {
-            ifIx = TCPIP_STACK_NetIndexGet(pRxPkt->pktIf);
-            if(!_IGMP_CheckIfIndex(ifIx, true))
+            int iIx = TCPIP_STACK_NetIndexGet(pRxPkt->pktIf);
+            TCPIPStack_Assert(iIx >= 0, __FILE__,  __func__, __LINE__);
+            ifIx = (size_t)iIx;
+            if(!F_IGMP_CheckIfIndex(ifIx, true))
             {   // not listening on this interface
                 ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
                 break;
@@ -909,7 +1159,7 @@ static void TCPIP_IGMP_Process(void)
                 break;
             }
 
-            if(TCPIP_IPV4_PacketOptionGet(pRxPkt, TCPIP_IPV4_OPTION_ROUTER_ALERT, 0, 0) == 0)
+            if(TCPIP_IPV4_PacketOptionGet(pRxPkt, TCPIP_IPV4_OPTION_ROUTER_ALERT, NULL, 0) == 0U)
             {   // ignore if router alert not set
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
                 break;
@@ -917,7 +1167,7 @@ static void TCPIP_IGMP_Process(void)
 
             igmpTotLength = pRxPkt->totTransportLen;    // length of the 1st segment (if fragmented)
 
-            pIgmpHdr = (TCPIP_IGMP_HEADER*)pRxPkt->pTransportLayer;
+            pIgmpHdr = FC_U8ptr2IgmpHdr(pRxPkt->pTransportLayer);
             if(igmpTotLength < sizeof(*pIgmpHdr))
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
@@ -928,7 +1178,7 @@ static void TCPIP_IGMP_Process(void)
             // The checksum data includes the precomputed checksum in the header
             // so a valid packet will always have a checksum of 0x0000
             checksum = TCPIP_Helper_PacketChecksum(pRxPkt, (uint8_t*)pIgmpHdr, igmpTotLength, 0);
-            if(checksum != 0)
+            if(checksum != 0U)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
                 break;
@@ -936,7 +1186,7 @@ static void TCPIP_IGMP_Process(void)
 
 
             // do some processing here based on type of the IGMP packet
-            if(pIgmpHdr->type != TCPIP_IGMP_MESSAGE_QUERY)
+            if(pIgmpHdr->type != (uint8_t)TCPIP_IGMP_MESSAGE_QUERY)
             {
                 ackRes = TCPIP_MAC_PKT_ACK_TYPE_ERR;
                 break;
@@ -944,13 +1194,13 @@ static void TCPIP_IGMP_Process(void)
 
             // get the query version
             // right now just v3 queries are processed
-            if(igmpTotLength < sizeof(TCPIP_IGMPv3_QUERY_MESSAGE))
+            if(igmpTotLength < sizeof(TCPIP_IGMPv3_QUERY_MESSAGE_BARE))
             {   // discard unknown IGMP version
                 ackRes = TCPIP_MAC_PKT_ACK_TYPE_ERR;
                 break;
             }
 
-            _IGMP_ProcessV3Query((TCPIP_IGMPv3_QUERY_MESSAGE*)pIgmpHdr, ifIx);
+            F_IGMP_ProcessV3Query(FC_IgmpHdr2QueryMsg(pIgmpHdr), ifIx);
             ackRes = TCPIP_MAC_PKT_ACK_RX_OK;
             break;
         }
@@ -973,8 +1223,8 @@ static void TCPIP_IGMP_Tick(void)
 // process timeout for status change list
 static void TCPIP_IGMP_SourceChangeTimeout(void)
 {
-    int ifIx;
-    int nGroups;      // global count of groups pending report
+    size_t ifIx;
+    size_t nGroups;      // global count of groups pending report
     SINGLE_LIST toReportList, newScList, pendingList, filtersDoneList, releaseList;
     TCPIP_IGMP_SC_REPORT_NODE *pRNode, *pFilt, *pAllow, *pBlock;
     IPV4_ADDR groupAddress;
@@ -984,7 +1234,7 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
     // do the SC list timeout processing
     for(ifIx = 0; ifIx < igmpInterfaces; ifIx++)
     {   
-        if((igmpGroupsDcpt.ifMask & (1 << ifIx)) == 0)
+        if((igmpGroupsDcpt.ifMask & (1UL << ifIx)) == 0U)
         {   // not active
             continue;
         }
@@ -995,30 +1245,30 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
         TCPIP_Helper_SingleListInitialize(&pendingList);
         TCPIP_Helper_SingleListInitialize(&filtersDoneList);
         TCPIP_Helper_SingleListInitialize(&releaseList);
-        nGroups = 0;
+        nGroups = 0U;
 
         currTick = SYS_TMR_TickCountGet();
 
         // check if there are reports to be sent
         igmpListsLock();
-        while((pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&igmpScReportList)) != 0)
+        while((pRNode = FC_SglNode2RepNode(TCPIP_Helper_SingleListHeadRemove(&igmpScReportList))) != NULL)
         {
-            if(pRNode->ifIx == ifIx && pRNode->active && (int32_t)(currTick - pRNode->tTransmit) >= 0)
+            if(pRNode->ifIx == ifIx && pRNode->active != 0U && ((int32_t)currTick - (int32_t)pRNode->tTransmit) >= 0)
             {   // found timeout node
-                TCPIP_Helper_SingleListTailAdd(&toReportList, (SGL_LIST_NODE*)pRNode);
+                TCPIP_Helper_SingleListTailAdd(&toReportList, FC_RepNode2SglNode(pRNode));
                 nGroups++;
             }
             else
             {   // not this interface or not active yet
-                TCPIP_Helper_SingleListTailAdd(&newScList, (SGL_LIST_NODE*)pRNode);
+                TCPIP_Helper_SingleListTailAdd(&newScList, FC_RepNode2SglNode(pRNode));
             }
         }
         igmpScReportList = newScList;
         igmpListsUnlock();
 
-        if(nGroups)
+        if(nGroups != 0U)
         {
-            sendRes = _IGMP_SendScReport(ifIx, &toReportList);
+            sendRes = F_IGMP_SendScReport(ifIx, &toReportList);
 
             if(sendRes == false)
             {   // failed to transmit; reappend to pending
@@ -1026,23 +1276,23 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
             }
             else
             {   // report sent fine; process again the toReportList to check for retransmissions
-                while((pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&toReportList)) != 0)
+                while((pRNode = FC_SglNode2RepNode(TCPIP_Helper_SingleListHeadRemove(&toReportList))) != NULL)
                 {   
-                    if(--pRNode->nTransmit == 0)
+                    if(--pRNode->nTransmit == 0U)
                     {    // done with this report; 
-                        if(pRNode->repType == TCPIP_IGMP_FILTER_TO_INCLUDE || pRNode->repType == TCPIP_IGMP_FILTER_TO_EXCLUDE)
+                        if(pRNode->repType == (uint8_t)TCPIP_IGMP_FILTER_TO_INCLUDE || pRNode->repType == (uint8_t)TCPIP_IGMP_FILTER_TO_EXCLUDE)
                         {   // when a filter is done, some SLC reports may be pending!
-                            TCPIP_Helper_SingleListTailAdd(&filtersDoneList, (SGL_LIST_NODE*)pRNode);
+                            TCPIP_Helper_SingleListTailAdd(&filtersDoneList, FC_RepNode2SglNode(pRNode));
                         }
                         else
                         {   // simply release the report
-                            TCPIP_Helper_SingleListTailAdd(&releaseList, (SGL_LIST_NODE*)pRNode);
+                            TCPIP_Helper_SingleListTailAdd(&releaseList, FC_RepNode2SglNode(pRNode));
                         }
                     }
                     else
                     {    // still transmissions to go
-                        _IGMP_SetScReportTransmitTime(pRNode);
-                        TCPIP_Helper_SingleListTailAdd(&pendingList, (SGL_LIST_NODE*)pRNode);
+                        F_IGMP_SetScReportTransmitTime(pRNode);
+                        TCPIP_Helper_SingleListTailAdd(&pendingList, FC_RepNode2SglNode(pRNode));
                     }
                 }
             }
@@ -1053,22 +1303,22 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
         TCPIP_Helper_SingleListAppend(&igmpScReportList, &pendingList);
 
         // process the filters done list
-        while((pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&filtersDoneList)) != 0)
+        while((pRNode = FC_SglNode2RepNode(TCPIP_Helper_SingleListHeadRemove(&filtersDoneList))) != NULL)
         {
             // find a pending SLC report for this group
             groupAddress.Val = pRNode->repGroup;
-            pFilt = _IGMP_FindScheduledScReport(groupAddress, ifIx, &pAllow, &pBlock, false);
+            pFilt = F_IGMP_FindScheduledScReport(groupAddress, ifIx, &pAllow, &pBlock, false);
             (void)pFilt;
-            _IGMPAssertCond(pFilt == 0, __func__, __LINE__);
-            if(pAllow)
+            TCPIPStack_Assert(pFilt == NULL, __FILE__, __func__, __LINE__);
+            if(pAllow != NULL)
             {
                 pAllow->active = 1;
             }
-            if(pBlock)
+            if(pBlock != NULL)
             {
                 pBlock->active = 1;
             }
-            TCPIP_Helper_SingleListTailAdd(&releaseList, (SGL_LIST_NODE*)pRNode);
+            TCPIP_Helper_SingleListTailAdd(&releaseList, FC_RepNode2SglNode(pRNode));
         }
 
         // restore the SC free list
@@ -1084,7 +1334,7 @@ static void TCPIP_IGMP_GenQueryTimeout(void)
 {
     TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode;
     SINGLE_LIST newGQList, toTxList, releaseList, failSendList;
-    int nGenEntries;
+    size_t nGenEntries;
     uint32_t currTick;
     bool sendRes;
 
@@ -1097,28 +1347,28 @@ static void TCPIP_IGMP_GenQueryTimeout(void)
 
     // quick list traverse: avoid keeping the lock for too long
     igmpListsLock();
-    while((pGQNode = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&igmpGenQueryReportList)) != 0)
+    while((pGQNode = FC_SglNode2GqNode(TCPIP_Helper_SingleListHeadRemove(&igmpGenQueryReportList))) != NULL)
     {
-        _IGMPAssertCond(pGQNode->queryType == TCPIP_IGMP_QUERY_GENERAL, __func__, __LINE__);
-        if((int32_t)(currTick - pGQNode->tTransmit) >= 0)
+        TCPIPStack_Assert(pGQNode->queryType == (uint8_t)TCPIP_IGMP_QUERY_GENERAL, __FILE__, __func__, __LINE__);
+        if(((int32_t)currTick - (int32_t)pGQNode->tTransmit) >= 0)
         {   // need to transmit
-            TCPIP_Helper_SingleListTailAdd(&toTxList, (SGL_LIST_NODE*)pGQNode);
+            TCPIP_Helper_SingleListTailAdd(&toTxList, FC_GqNode2SglNode(pGQNode));
         }
         else
         {
-            TCPIP_Helper_SingleListTailAdd(&newGQList, (SGL_LIST_NODE*)pGQNode);
+            TCPIP_Helper_SingleListTailAdd(&newGQList, FC_GqNode2SglNode(pGQNode));
         }
     }
     igmpGenQueryReportList = newGQList;
     igmpListsUnlock();
 
     // process the transmit list
-    while((pGQNode = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&toTxList)) != 0)
+    while((pGQNode = FC_SglNode2GqNode(TCPIP_Helper_SingleListHeadRemove(&toTxList))) != NULL)
     {
-        nGenEntries = _IGMP_GenerateGenQueryReport(pGQNode);
-        if(nGenEntries)
+        nGenEntries = F_IGMP_GenerateGenQueryReport(pGQNode);
+        if(nGenEntries != 0U)
         {   // OK, we've got something to transmit
-            sendRes = _IGMP_SendQueryReport((TCPIP_IGMP_QUERY_REPORT_NODE*)pGQNode, nGenEntries);
+            sendRes = F_IGMP_SendQueryReport(FC_GenQRep2QRep(pGQNode), nGenEntries);
         }
         else
         {
@@ -1127,11 +1377,11 @@ static void TCPIP_IGMP_GenQueryTimeout(void)
 
         if(sendRes == true)
         {   // transmitted OK
-            TCPIP_Helper_SingleListTailAdd(&releaseList, (SGL_LIST_NODE*)pGQNode);
+            TCPIP_Helper_SingleListTailAdd(&releaseList, FC_GqNode2SglNode(pGQNode));
         }
         else
         {
-            TCPIP_Helper_SingleListTailAdd(&failSendList, (SGL_LIST_NODE*)pGQNode);
+            TCPIP_Helper_SingleListTailAdd(&failSendList, FC_GqNode2SglNode(pGQNode));
         }
     }
 
@@ -1164,17 +1414,17 @@ static void TCPIP_IGMP_GroupQueryTimeout(void)
 
     // quick list traverse: avoid keeping the lock for too long
     igmpListsLock();
-    while((pQNode = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&igmpGroupQueryReportList)) != 0)
+    while((pQNode = FC_SglNode2GroupNode(TCPIP_Helper_SingleListHeadRemove(&igmpGroupQueryReportList))) != NULL)
     {
-        _IGMPAssertCond(pQNode->queryType == TCPIP_IGMP_QUERY_GROUP_SPEC || pQNode->queryType == TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC, __func__, __LINE__);
+        TCPIPStack_Assert(pQNode->queryType == (uint8_t)TCPIP_IGMP_QUERY_GROUP_SPEC || pQNode->queryType == (uint8_t)TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC, __FILE__, __func__, __LINE__);
 
-        if((int32_t)(currTick - pQNode->tTransmit) >= 0)
+        if(((int32_t)currTick - (int32_t)pQNode->tTransmit) >= 0)
         {   // need to transmit this node
-            TCPIP_Helper_SingleListTailAdd(&toTxList, (SGL_LIST_NODE*)pQNode);
+            TCPIP_Helper_SingleListTailAdd(&toTxList, FC_GroupNode2SglNode(pQNode));
         }
         else
         {   // not ready yet
-            TCPIP_Helper_SingleListTailAdd(&newQueryList, (SGL_LIST_NODE*)pQNode);
+            TCPIP_Helper_SingleListTailAdd(&newQueryList, FC_GroupNode2SglNode(pQNode));
         }
     }
     igmpGroupQueryReportList = newQueryList;
@@ -1182,11 +1432,11 @@ static void TCPIP_IGMP_GroupQueryTimeout(void)
 
     // process the transmit list
 
-    while((pQNode = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&toTxList)) != 0)
+    while((pQNode = FC_SglNode2GroupNode(TCPIP_Helper_SingleListHeadRemove(&toTxList))) != NULL)
     {
-        if(_IGMP_GenerateGroupQueryReport(pQNode))
+        if(F_IGMP_GenerateGroupQueryReport(pQNode))
         {   // OK, report generated; we've got something to transmit
-            sendRes = _IGMP_SendQueryReport((TCPIP_IGMP_QUERY_REPORT_NODE*)pQNode, 1);
+            sendRes = F_IGMP_SendQueryReport(FC_GrRep2QRep(pQNode), 1);
         }
         else
         {   // nothing to transmit
@@ -1195,11 +1445,11 @@ static void TCPIP_IGMP_GroupQueryTimeout(void)
 
         if(sendRes == true)
         {   // transmitted OK
-            TCPIP_Helper_SingleListTailAdd(&releaseList, (SGL_LIST_NODE*)pQNode);
+            TCPIP_Helper_SingleListTailAdd(&releaseList, FC_GroupNode2SglNode(pQNode));
         }
         else
         {
-            TCPIP_Helper_SingleListTailAdd(&failSendList, (SGL_LIST_NODE*)pQNode);
+            TCPIP_Helper_SingleListTailAdd(&failSendList, FC_GroupNode2SglNode(pQNode));
         }
     }
 
@@ -1215,36 +1465,36 @@ static void TCPIP_IGMP_GroupQueryTimeout(void)
 }
 
 // sends a SC report over the interface
-static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
+static bool F_IGMP_SendScReport(size_t ifIx, SINGLE_LIST* pReportList)
 {
     uint16_t pktSize, groupSize, sourcesBytes, linkMtu, pktOvrhead;
     TCPIP_IGMPv3_GROUP_RECORD* pGroupRec;
     TCPIP_IGMPv3_REPORT_MESSAGE* pIgmpReport;
     TCPIP_IGMP_SC_REPORT_NODE *pRNode;
     IPV4_ADDR evGroup;
-    TCPIP_NET_IF*    pNetIf;
+    const TCPIP_NET_IF*    pNetIf;
     TCPIP_IPV4_PACKET_PARAMS pktParams;
-    int nGroups, nSources, grpIx;
+    size_t nGroups, nSources, grpIx;
 
-    TCPIP_IGMP_EVENT_TYPE evType = TCPIP_IGMP_EVENT_NONE;
+    uint16_t evType = (uint16_t)TCPIP_IGMP_EVENT_NONE;
     bool res = false;
-    IPV4_PACKET* pTxPkt = 0;
+    IPV4_PACKET* pTxPkt = NULL;
     evGroup.Val = 0;
 
-    pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(ifIx);
-    linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
+    pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(ifIx);
+    linkMtu = TCPIPStackNetLinkMtu(pNetIf);
     pktOvrhead = sizeof(TCPIP_IGMP_HEADER) + sizeof(IPV4_HEADER);
 
     // calculate the packet size
-    pktSize = sizeof(TCPIP_IGMPv3_REPORT_MESSAGE);
-    nGroups = nSources = 0;
-    for(pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)pReportList->head; pRNode != 0; pRNode = pRNode->next)
+    pktSize = (uint16_t)sizeof(TCPIP_IGMPv3_REPORT_MESSAGE_BARE);
+    nGroups = nSources = 0U;
+    for(pRNode = FC_SglNode2RepNode(pReportList->head); pRNode != NULL; pRNode = pRNode->next)
     {
-        groupSize = sizeof(TCPIP_IGMPv3_GROUP_RECORD) + pRNode->repSources.nSources * sizeof(*pGroupRec->sourceAddress);
+        groupSize = (uint16_t)sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE) + (uint16_t)pRNode->repSources.nSources * (uint16_t)sizeof(*pGroupRec->sourceAddress);
         if(pktOvrhead + pktSize + groupSize > linkMtu)
         {   // exceeded MTU; truncate
-            _IGMPDebugCond(true, __func__, __LINE__);
-            evType |= TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
+            TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
+            evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
             break;
         }
 
@@ -1254,12 +1504,12 @@ static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
     }
     
 
-    while(nGroups)
+    while(nGroups != 0U)
     {
-        pTxPkt = _IGMP_AllocateTxPacketStruct(pktSize);
-        if(pTxPkt == 0)
+        pTxPkt = F_IGMP_AllocateTxPacketStruct(pktSize);
+        if(pTxPkt == NULL)
         {   // failed to allocate
-            evType |= TCPIP_IGMP_EVENT_PACKET_ALLOC_ERROR;
+            evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_ALLOC_ERROR;
             break;
         }
 
@@ -1271,29 +1521,30 @@ static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
         pktParams.ttl = TCPIP_IGMP_PACKET_TTL;
         pktParams.df = 0;
 
-        TCPIP_IPV4_PacketFormatTx(pTxPkt, IP_PROT_IGMP, pktSize, &pktParams);
+        TCPIP_IPV4_PacketFormatTx(pTxPkt, (uint8_t)IP_PROT_IGMP, pktSize, &pktParams);
 
-        pIgmpReport = (TCPIP_IGMPv3_REPORT_MESSAGE*)pTxPkt->macPkt.pTransportLayer;
-        memset(pIgmpReport, 0, sizeof(*pIgmpReport));
-        pIgmpReport->type = TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP; 
+        pIgmpReport = FC_U8ptr2RepMsg(pTxPkt->macPkt.pTransportLayer);
+        (void)memset(pIgmpReport, 0, sizeof(TCPIP_IGMPv3_REPORT_MESSAGE_BARE));
+        pIgmpReport->type = (uint8_t)TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP; 
         pIgmpReport->checksum = 0;
-        pIgmpReport->nGroupRecords = TCPIP_Helper_htons(nGroups);
+        pIgmpReport->nGroupRecords = TCPIP_Helper_htons((uint16_t)nGroups);
 
         pGroupRec = pIgmpReport->groupRecords;
-        pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)pReportList->head;
-        for(grpIx = 0; grpIx < nGroups; grpIx++, pRNode = pRNode->next)
+        pRNode = FC_SglNode2RepNode(pReportList->head);
+        for(grpIx = 0; grpIx < nGroups; grpIx++)
         {
-            memset(pGroupRec, 0, sizeof(*pGroupRec));
+            (void)memset(pGroupRec, 0, sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE));
             pGroupRec->recordType = pRNode->repType;
-            pGroupRec->nSources = TCPIP_Helper_htons(pRNode->repSources.nSources);
+            pGroupRec->nSources = TCPIP_Helper_htons((uint16_t)pRNode->repSources.nSources);
             pGroupRec->groupAddress = pRNode->repGroup;
             // set source addresses
-            sourcesBytes = pRNode->repSources.nSources * sizeof(*pGroupRec->sourceAddress);
-            if(sourcesBytes)
+            sourcesBytes = (uint16_t)pRNode->repSources.nSources * (uint16_t)sizeof(*pGroupRec->sourceAddress);
+            if(sourcesBytes != 0U)
             {
-                memcpy(pGroupRec->sourceAddress, pRNode->repSources.sourceAddresses, sourcesBytes);
+                (void)memcpy(pGroupRec->sourceAddress, pRNode->repSources.sourceAddresses, sourcesBytes);
             }
-            pGroupRec = (TCPIP_IGMPv3_GROUP_RECORD*)((uint8_t*)pGroupRec + sizeof(*pGroupRec) + sourcesBytes);
+            pGroupRec = FC_U8ptr2GrpRec((uint8_t*)pGroupRec + sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE) + sourcesBytes);
+            pRNode = pRNode->next;
         }
 
         // calculate checksum
@@ -1302,7 +1553,7 @@ static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
         TCPIP_PKT_FlightLogTx(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID);
         if(!TCPIP_IPV4_PacketTransmit(pTxPkt))
         {
-            evType |= TCPIP_IGMP_EVENT_PACKET_TRANSMIT_ERROR;
+            evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_TRANSMIT_ERROR;
             break;
         }
 
@@ -1312,81 +1563,82 @@ static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
 
     if(res == false)
     {   // failed somehow
-        if(pTxPkt != 0)
+        if(pTxPkt != NULL)
         {
             TCPIP_PKT_FlightLogAcknowledge(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_IP_REJECT_ERR);
             TCPIP_PKT_PacketFree(&pTxPkt->macPkt);
         }
     }
 
-    if(evType != TCPIP_IGMP_EVENT_NONE)
+    if(evType != (uint16_t)TCPIP_IGMP_EVENT_NONE)
     {   // select head as representative
-        evGroup.Val = ((TCPIP_IGMP_SC_REPORT_NODE*)pReportList->head)->repGroup;
-        _IGMP_ReportEvent(evGroup, evType);
+        evGroup.Val = (FC_SglNode2RepNode(pReportList->head))->repGroup;
+        F_IGMP_ReportEvent(evGroup, (TCPIP_IGMP_EVENT_TYPE)evType);
     }
 
     return res;
 }
 
 // sends a General Query report over the interface
-static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEntries)
+static bool F_IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, size_t nEntries)
 {
 
-    int qIx;
-    int nSources, nRecords;
+    size_t qIx;
+    size_t nSources, nRecords;
     TCPIP_IGMP_QUERY_SOURCES* pQuery;
     uint16_t pktSize, groupSize, sourcesBytes, linkMtu, pktOvrhead;
     TCPIP_IGMPv3_REPORT_MESSAGE* pIgmpReport;
     TCPIP_IGMPv3_GROUP_RECORD* pGroupRec;
     IPV4_ADDR evGroup;
-    TCPIP_NET_IF*    pNetIf;
+    const TCPIP_NET_IF*    pNetIf;
     TCPIP_IPV4_PACKET_PARAMS pktParams;
 
-    TCPIP_IGMP_EVENT_TYPE evType = TCPIP_IGMP_EVENT_NONE;
+    uint16_t evType = (uint16_t)TCPIP_IGMP_EVENT_NONE;
     bool res = false;
-    IPV4_PACKET* pTxPkt = 0;
+    IPV4_PACKET* pTxPkt = NULL;
     evGroup.Val = 0;
 
-    if(pQNode->queryType == TCPIP_IGMP_QUERY_GENERAL)
+    if(pQNode->queryType == (uint8_t)TCPIP_IGMP_QUERY_GENERAL)
     {
-        _IGMPAssertCond(pQNode->nQSources == sizeof(((TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)0)->qSources) / sizeof(*((TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)0)->qSources), __func__, __LINE__);
+        TCPIPStack_Assert(pQNode->nQSources == sizeof(((TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)0)->qSources) / sizeof(*((TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)0)->qSources), __FILE__, __func__, __LINE__);
     }
     else
     {
-        _IGMPAssertCond(pQNode->nQSources == sizeof(((TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)0)->qSources) / sizeof(*((TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)0)->qSources), __func__, __LINE__);
+        TCPIPStack_Assert(pQNode->nQSources == sizeof(((TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)0)->qSources) / sizeof(*((TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)0)->qSources), __FILE__, __func__, __LINE__);
     }
 
-    pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(pQNode->ifIx);
-    linkMtu = _TCPIPStackNetLinkMtu(pNetIf);
+    pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet((size_t)pQNode->ifIx);
+    linkMtu = TCPIPStackNetLinkMtu(pNetIf);
     pktOvrhead = sizeof(TCPIP_IGMP_HEADER) + sizeof(IPV4_HEADER);
 
     // calculate the packet size
-    pktSize = sizeof(TCPIP_IGMPv3_REPORT_MESSAGE);
-    nRecords = 0;
+    pktSize = (uint16_t)sizeof(TCPIP_IGMPv3_REPORT_MESSAGE_BARE);
+    nRecords = 0U;
     pQuery = pQNode->qSources;
-    for(qIx = 0; qIx < pQNode->nQSources; qIx++, pQuery++)
+    for(qIx = 0; qIx < pQNode->nQSources; qIx++)
     {
         if(pQuery->repType != TCPIP_IGMP_RECORD_NONE) 
         {   // valid query source
-            groupSize = sizeof(TCPIP_IGMPv3_GROUP_RECORD) + pQuery->repSources.nSources * sizeof(pQuery->repSources.sourceAddresses[0]);
+            groupSize = (uint16_t)(sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE) + pQuery->repSources.nSources * sizeof(pQuery->repSources.sourceAddresses[0]));
             if(pktOvrhead + pktSize + groupSize > linkMtu)
             {   // exceeded MTU; truncate;
-                _IGMPDebugCond(true, __func__, __LINE__);
-                evType |= TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
+                TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
+                evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
                 break;
             }
 
             pktSize += groupSize;
             nRecords++;
         }
+        pQuery++;
     }
 
-    while(nRecords)
+    while(nRecords != 0U)
     {
-        pTxPkt = _IGMP_AllocateTxPacketStruct(pktSize);
-        if(pTxPkt == 0)
+        pTxPkt = F_IGMP_AllocateTxPacketStruct(pktSize);
+        if(pTxPkt == NULL)
         {   // failed to allocate
-            evType |= TCPIP_IGMP_EVENT_PACKET_ALLOC_ERROR;
+            evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_ALLOC_ERROR;
             break;
         }
 
@@ -1398,34 +1650,35 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
         pktParams.ttl = TCPIP_IGMP_PACKET_TTL;
         pktParams.df = 0;
 
-        TCPIP_IPV4_PacketFormatTx(pTxPkt, IP_PROT_IGMP, pktSize, &pktParams);
+        TCPIP_IPV4_PacketFormatTx(pTxPkt, (uint8_t)IP_PROT_IGMP, pktSize, &pktParams);
 
-        pIgmpReport = (TCPIP_IGMPv3_REPORT_MESSAGE*)pTxPkt->macPkt.pTransportLayer;
-        memset(pIgmpReport, 0, sizeof(*pIgmpReport));
-        pIgmpReport->type = TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP; 
+        pIgmpReport = FC_U8ptr2RepMsg(pTxPkt->macPkt.pTransportLayer);
+        (void)memset(pIgmpReport, 0, sizeof(TCPIP_IGMPv3_REPORT_MESSAGE_BARE));
+        pIgmpReport->type = (uint8_t)TCPIP_IGMP_MESSAGE_V3_MEMBERSHIP; 
         pIgmpReport->checksum = 0;
-        pIgmpReport->nGroupRecords = TCPIP_Helper_htons(nRecords);
+        pIgmpReport->nGroupRecords = TCPIP_Helper_htons((uint16_t)nRecords);
 
         pGroupRec = pIgmpReport->groupRecords;
         pQuery = pQNode->qSources;
-        for(qIx = 0; qIx < pQNode->nQSources; qIx++, pQuery++)
+        for(qIx = 0; qIx < pQNode->nQSources; qIx++)
         {
             if(pQuery->repType != TCPIP_IGMP_RECORD_NONE) 
             {   // valid query source
                 nSources = pQuery->repSources.nSources;
-                memset(pGroupRec, 0, sizeof(*pGroupRec));
-                pGroupRec->recordType = pQuery->repType;
-                pGroupRec->nSources = TCPIP_Helper_htons(nSources);
+                (void)memset(pGroupRec, 0, sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE));
+                pGroupRec->recordType = (uint8_t)pQuery->repType;
+                pGroupRec->nSources = TCPIP_Helper_htons((uint16_t)nSources);
                 pGroupRec->groupAddress = pQuery->repGroup;
 
                 // set source addresses
-                sourcesBytes = nSources * sizeof(*pGroupRec->sourceAddress);
-                if(sourcesBytes)
+                sourcesBytes = (uint16_t)(nSources * sizeof(*pGroupRec->sourceAddress));
+                if(sourcesBytes != 0U)
                 {
-                    memcpy(pGroupRec->sourceAddress, pQuery->repSources.sourceAddresses, sourcesBytes);
+                    (void)memcpy(pGroupRec->sourceAddress, pQuery->repSources.sourceAddresses, sourcesBytes);
                 }
-                pGroupRec = (TCPIP_IGMPv3_GROUP_RECORD*)((uint8_t*)pGroupRec + sizeof(*pGroupRec) + sourcesBytes);
+                pGroupRec = FC_U8ptr2GrpRec((uint8_t*)pGroupRec + sizeof(TCPIP_IGMPv3_GROUP_RECORD_BARE) + sourcesBytes);
             }
+            pQuery++;
         }
 
         // calculate checksum
@@ -1434,7 +1687,7 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
         TCPIP_PKT_FlightLogTx(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID);
         if(!TCPIP_IPV4_PacketTransmit(pTxPkt))
         {
-            evType |= TCPIP_IGMP_EVENT_PACKET_TRANSMIT_ERROR;
+            evType |= (uint16_t)TCPIP_IGMP_EVENT_PACKET_TRANSMIT_ERROR;
             break;
         }
 
@@ -1444,17 +1697,17 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
 
     if(res == false)
     {   // failed somehow
-        if(pTxPkt != 0)
+        if(pTxPkt != NULL)
         {
             TCPIP_PKT_FlightLogAcknowledge(&pTxPkt->macPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_IP_REJECT_ERR);
             TCPIP_PKT_PacketFree(&pTxPkt->macPkt);
         }
     }
 
-    if(evType != TCPIP_IGMP_EVENT_NONE)
+    if(evType != (uint16_t)TCPIP_IGMP_EVENT_NONE)
     {   // select 1st qSource as representative
         evGroup.Val = pQNode->qSources->repGroup;
-        _IGMP_ReportEvent(evGroup, evType);
+        F_IGMP_ReportEvent(evGroup, (TCPIP_IGMP_EVENT_TYPE)evType);
     }
 
     return res;
@@ -1466,10 +1719,10 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
 
 // all API operations need to access a lock/mutex!
 // since they mess with the global hash descriptor and some user threads add, other delete from this global hash!!!!
-TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
+TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
                       TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize)
 {
-    int  ifIx;
+    size_t  ifIx;
     bool isSsm;
     IPV4_ADDR   allSourcesAdd;
     const IPV4_ADDR* pSources;
@@ -1478,7 +1731,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
     TCPIP_IGMP_RESULT res;
 
     // minimal sanity check
-    checkRes = _IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
+    checkRes = F_IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
     if(checkRes != TCPIP_IGMP_OK)
     {
         return checkRes;
@@ -1489,7 +1742,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
         return TCPIP_IGMP_FILTER_ERROR;
     }
 
-    isSsm = _IGMP_IsSsmAddress(mcastAddress);
+    isSsm = F_IGMP_IsSsmAddress(mcastAddress);
 
     if(isSsm && filterMode == TCPIP_IGMP_FILTER_EXCLUDE)
     {   // exclude is invalid for SSM
@@ -1499,23 +1752,23 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
     igmpDcptLock();
     while(true)
     {
-        if(!_IGMP_CheckIfIndex(ifIx, false))
+        if(!F_IGMP_CheckIfIndex(ifIx, false))
         {
             res = TCPIP_IGMP_IF_ERROR;
             break;
         }
 
-        nSources = listSize ? *listSize : 0;
-        if(nSources == 0)
+        nSources = listSize != NULL ? *listSize : 0U;
+        if(nSources == 0U)
         {
             if(filterMode == TCPIP_IGMP_FILTER_INCLUDE)
             {   // include nothing means remove socket from (G, if)
-                res = _IGMP_SocketRemove(socket, ifIx, mcastAddress, listSize); 
+                res = F_IGMP_SocketRemove(uSkt, ifIx, mcastAddress, listSize); 
                 break;
             }
 
             // exclude nothing i.e. include all is valid for ASM; use the special source address
-            nSources = 1;
+            nSources = 1U;
             allSourcesAdd.Val = TCPIP_IGMP_ASM_ALL_SOURCES; 
             pSources = &allSourcesAdd; 
         }
@@ -1525,7 +1778,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
         }
 
         // non empty list
-        res = _IGMP_SocketUpdateSources(socket, ifIx, mcastAddress, filterMode, pSources, &nSources);
+        res = F_IGMP_SocketUpdateSources(uSkt, ifIx, mcastAddress, filterMode, pSources, &nSources);
         break;
     }
     igmpDcptUnlock();
@@ -1533,19 +1786,19 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Subscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet,
     return res;
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
+TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress,
                       TCPIP_IGMP_FILTER_TYPE* filterMode, IPV4_ADDR* sourceList, size_t* listSize)
 {
-    int ifIx;
+    size_t ifIx;
     TCPIP_IGMP_RESULT res;
 
     // minimal sanity check
-    if(listSize == 0)
+    if(listSize == NULL)
     {
         return TCPIP_IGMP_ARG_ERROR;
     }
 
-    res = _IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
+    res = F_IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
     // save the list size
     size_t nSourceSlots = *listSize;
     *listSize = 0;
@@ -1558,46 +1811,46 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hN
     igmpDcptLock();
     while(true)
     {
-        if(!_IGMP_CheckIfIndex(ifIx, true))
+        if(!F_IGMP_CheckIfIndex(ifIx, true))
         {
             res = TCPIP_IGMP_IF_ERROR;
             break;
         }
 
         TCPIP_IGMP_GROUP_ENTRY* pGEntry;
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-        if(pGEntry == 0)
+        if(pGEntry == NULL)
         {    // no such mcast exists
             res = TCPIP_IGMP_GROUP_INVALID;
             break;
         }
 
-        OA_HASH_DCPT *sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
-        int srcIx;
+        OA_HASH_DCPT *sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
+        size_t srcIx;
         TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
         TCPIP_IGMP_SKT_RECORD* pRec;
-        TCPIP_IGMP_FILTER_TYPE sktFilter = 0;
-        size_t nSources = 0;
+        uint8_t sktFilter = 0U;
+        size_t nSources = 0U;
 
-        for(srcIx = 0; srcIx < sHashDcpt->hEntries; srcIx++)
+        for(srcIx = 0U; srcIx < sHashDcpt->hEntries; srcIx++)
         {
-            pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx);
-            if(pSEntry->hEntry.flags.busy != 0)
+            pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx));
+            if(pSEntry->hEntry.flags.busy != 0U)
             {   // found a valid source entry
-                pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
-                if(pRec)
+                pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
+                if(pRec != NULL)
                 {
-                    if(sktFilter == 0)
+                    if(sktFilter == 0U)
                     {
                         sktFilter = pRec->filter;
                     }
                     else
                     {   // there is only one filter mode per socket for one G!
-                        _IGMPAssertCond(sktFilter == pRec->filter, __func__, __LINE__);
+                        TCPIPStack_Assert(sktFilter == pRec->filter, __FILE__, __func__, __LINE__);
                     }
                     nSources++;
-                    if(nSourceSlots)
+                    if(nSourceSlots != 0U)
                     {
                         *sourceList++ = pSEntry->srcAddress;
                         nSourceSlots--;
@@ -1609,12 +1862,12 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hN
         // report the number of available sources
         *listSize = nSources;
 
-        if(filterMode)
+        if(filterMode != NULL)
         {
-            *filterMode = sktFilter;
+            *filterMode = (TCPIP_IGMP_FILTER_TYPE)sktFilter;
         }
 
-        res = sktFilter == TCPIP_IGMP_FILTER_NONE ? TCPIP_IGMP_SOCKET_INVALID : TCPIP_IGMP_OK;
+        res = sktFilter == (uint8_t)TCPIP_IGMP_FILTER_NONE ? TCPIP_IGMP_SOCKET_INVALID : TCPIP_IGMP_OK;
         break;
     }
     igmpDcptUnlock();
@@ -1622,16 +1875,16 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_SubscribeGet(UDP_SOCKET socket, TCPIP_NET_HANDLE hN
     return res;
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize)
+TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize)
 {
-    int ix, ifIx, removeCnt;
+    size_t ix, ifIx, removeCnt;
     TCPIP_IGMP_GIF_STATE_DCPT oldStateDcpt, newStateDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_RESULT repRes;
     size_t nSources;
     
     // minimal sanity check
-    repRes = _IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
+    repRes = F_IGMP_CheckSubscribeParams(hNet, mcastAddress, sourceList, listSize, &ifIx);
 
     if(repRes != TCPIP_IGMP_OK)
     {
@@ -1639,56 +1892,54 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNe
     }
 
 
-    nSources = listSize ? *listSize : 0;
+    nSources = listSize != NULL ? *listSize : 0U;
 
-    if(nSources == 0)
+    if(nSources == 0U)
     {   // unsubscribe ALL
-        return TCPIP_IGMP_Subscribe(socket, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, 0, 0);
+        return TCPIP_IGMP_Subscribe(uSkt, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, NULL, NULL);
     }
 
     igmpDcptLock();
     while(true)
     {
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-        if(pGEntry == 0)
+        if(pGEntry == NULL)
         {    // no such mcast exists
             repRes = TCPIP_IGMP_GROUP_INVALID;
             break;
         }
 
-        if(!_IGMP_CheckIfIndex(ifIx, true))
+        if(!F_IGMP_CheckIfIndex(ifIx, true))
         {
             repRes = TCPIP_IGMP_IF_ERROR;
             break;
         }
 
         // old state snapshot
-        _IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
+        F_IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
 
-        removeCnt = 0;
-        for(ix = 0; ix < nSources; ix++, sourceList++)
+        removeCnt = 0U;
+        for(ix = 0U; ix < nSources; ix++)
         {
-            if(_IGMP_GroupPurgeSktBySource(pGEntry, socket, ifIx, sourceList))
+            if(F_IGMP_GroupPurgeSktBySource(pGEntry, uSkt, ifIx, sourceList))
             {
                 removeCnt++;
             }
+            sourceList++;
         }
 
         // get new state snapshot
-        _IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
+        F_IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
 
 
         // removed some stuff; check if this entry is free
-        _IGMP_GroupEntryCheckRemove(pGEntry);
+        (void)F_IGMP_GroupEntryCheckRemove(pGEntry);
 
         // generate report
-        repRes = _IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
+        repRes = F_IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
 
-        if(listSize)
-        {
-            *listSize = removeCnt;
-        }
+        *listSize = removeCnt;
         break;
     }
     igmpDcptUnlock();
@@ -1696,29 +1947,29 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_Unsubscribe(UDP_SOCKET socket, TCPIP_NET_HANDLE hNe
     return repRes; 
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_IncludeSource(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
+TCPIP_IGMP_RESULT TCPIP_IGMP_IncludeSource(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
 {
     size_t listSize = 1;
-    return TCPIP_IGMP_Subscribe(socket, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, &sourceAddress, &listSize);
+    return TCPIP_IGMP_Subscribe(uSkt, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, &sourceAddress, &listSize);
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_ExcludeSource(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
+TCPIP_IGMP_RESULT TCPIP_IGMP_ExcludeSource(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
 {
     size_t listSize = 1;
-    return TCPIP_IGMP_Subscribe(socket, hNet, mcastAddress, TCPIP_IGMP_FILTER_EXCLUDE, &sourceAddress, &listSize);
+    return TCPIP_IGMP_Subscribe(uSkt, hNet, mcastAddress, TCPIP_IGMP_FILTER_EXCLUDE, &sourceAddress, &listSize);
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_Join(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress)
+TCPIP_IGMP_RESULT TCPIP_IGMP_Join(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress)
 {
-    return TCPIP_IGMP_Subscribe(socket, hNet, mcastAddress, TCPIP_IGMP_FILTER_EXCLUDE, 0, 0);
+    return TCPIP_IGMP_Subscribe(uSkt, hNet, mcastAddress, TCPIP_IGMP_FILTER_EXCLUDE, NULL, NULL);
 }
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_Leave(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress)
+TCPIP_IGMP_RESULT TCPIP_IGMP_Leave(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress)
 {
-    return TCPIP_IGMP_Subscribe(socket, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, 0, 0);
+    return TCPIP_IGMP_Subscribe(uSkt, hNet, mcastAddress, TCPIP_IGMP_FILTER_INCLUDE, NULL, NULL);
 }
 
-#if (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#if defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_HANDLER handler, const void* hParam)
 {
     if(handler && igmpMemH)
@@ -1730,7 +1981,7 @@ TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_
 
         return (TCPIP_IGMP_LIST_NODE*)TCPIP_Notification_Add(&igmpRegisteredUsers, igmpMemH, &igmpNode, sizeof(igmpNode));
     }
-    return 0;
+    return NULL;
 }
 
 // deregister the event handler
@@ -1738,35 +1989,44 @@ bool TCPIP_IGMP_HandlerDeRegister(TCPIP_IGMP_HANDLE hIgmp)
 {
     if(igmpMemH && hIgmp)
     {
-        if(TCPIP_Notification_Remove((SGL_LIST_NODE*)hIgmp, &igmpRegisteredUsers, igmpMemH))
+        if(TCPIP_Notification_Remove(FC_IgmpHndl2SglNode(hIgmp), &igmpRegisteredUsers, igmpMemH))
         {
             return true;
         }
     }
     return false;
 }
-#endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#else
+TCPIP_IGMP_HANDLE TCPIP_IGMP_HandlerRegister(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_HANDLER handler, const void* hParam)
+{
+    return NULL;
+}
+bool TCPIP_IGMP_HandlerDeRegister(TCPIP_IGMP_HANDLE hIgmp)
+{
+    return false;
+}
+#endif  // defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 
 
-TCPIP_IGMP_RESULT TCPIP_IGMP_GroupsGet(IPV4_ADDR* groupsList, int listSize, int* pnGroups)
+TCPIP_IGMP_RESULT TCPIP_IGMP_GroupsGet(IPV4_ADDR* groupsList, size_t listSize, size_t* pnGroups)
 {
     OA_HASH_DCPT *gHashDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
-    int groupIx, nEntries;
+    size_t groupIx, nEntries;
 
 
-    if(listSize != 0 && groupsList == 0)
+    if(listSize != 0U && groupsList == NULL)
     {
         return TCPIP_IGMP_ARG_ERROR;
     }
 
     igmpDcptLock();
     gHashDcpt = &igmpGroupsDcpt.gHashDcpt;
-    nEntries = 0;
-    for(groupIx = 0; groupIx < gHashDcpt->hEntries; groupIx++)
+    nEntries = 0U;
+    for(groupIx = 0U; groupIx < gHashDcpt->hEntries; groupIx++)
     {
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryGet(gHashDcpt, groupIx);
-        if(pGEntry->hEntry.flags.busy != 0)
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryGet(gHashDcpt, groupIx));
+        if(pGEntry->hEntry.flags.busy != 0U)
         {   // found a valid group entry
             if(nEntries < listSize)
             {
@@ -1777,7 +2037,7 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_GroupsGet(IPV4_ADDR* groupsList, int listSize, int*
     }
     igmpDcptUnlock();
         
-    if(pnGroups)
+    if(pnGroups != NULL)
     {
         *pnGroups = nEntries;
     }
@@ -1788,12 +2048,12 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_GroupsGet(IPV4_ADDR* groupsList, int listSize, int*
 
 TCPIP_IGMP_RESULT TCPIP_IGMP_GroupInfoGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, TCPIP_IGMP_GROUP_INFO* pInfo)
 {
-    int  ifIx;
+    size_t ifIx;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_GIF_STATE_DCPT currStateDcpt;
     TCPIP_IGMP_RESULT res;
 
-    if(pInfo == 0 || (pInfo->listSize != 0 && pInfo->sourceList == 0))
+    if(pInfo == NULL || (pInfo->listSize != 0U && pInfo->sourceList == NULL))
     {
         return TCPIP_IGMP_ARG_ERROR;
     }
@@ -1801,37 +2061,38 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_GroupInfoGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcast
     pInfo->presentSources = 0;
     pInfo->filterType = TCPIP_IGMP_FILTER_NONE;
 
-    if(hNet == 0)
+    if(hNet == NULL)
     {
         hNet = TCPIP_STACK_NetMulticastGet();
     }
 
-    ifIx = TCPIP_STACK_NetIndexGet(hNet);
-    if(ifIx < 0)
+    int iIx = TCPIP_STACK_NetIndexGet(hNet);
+    if(iIx < 0)
     {  
         return TCPIP_IGMP_IF_ERROR;
     }
 
+    ifIx = (size_t)iIx;
     igmpDcptLock();
     while(true)
     {
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-        if(pGEntry == 0)
+        if(pGEntry == NULL)
         {    // no entry
             res = TCPIP_IGMP_GROUP_INVALID; 
             break;
         }
 
-        _IGMP_GetGifState(pGEntry, ifIx, &currStateDcpt);
+        F_IGMP_GetGifState(pGEntry, ifIx, &currStateDcpt);
 
         pInfo->presentSources = currStateDcpt.groupSources.nSources;
         pInfo->filterType = currStateDcpt.ifFilter;
 
-        if(pInfo->listSize)
+        if(pInfo->listSize != 0U)
         {
-            int nCopy = pInfo->presentSources > pInfo->listSize ? pInfo->listSize : pInfo->presentSources;
-            memcpy(pInfo->sourceList, currStateDcpt.groupSources.sourceAddresses, nCopy * sizeof(*pInfo->sourceList));
+            size_t nCopy = pInfo->presentSources > pInfo->listSize ? pInfo->listSize : pInfo->presentSources;
+            (void)memcpy(&pInfo->sourceList->Val, currStateDcpt.groupSources.sourceAddresses, nCopy * sizeof(*pInfo->sourceList));
         }
 
         res = TCPIP_IGMP_OK;
@@ -1843,9 +2104,9 @@ TCPIP_IGMP_RESULT TCPIP_IGMP_GroupInfoGet(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcast
 }
 
 // check that the socket is allowed to receive the multicast traffic
-bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
+bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress)
 {
-    int ifIx;
+    size_t ifIx;
     OA_HASH_DCPT *sHashDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
@@ -1853,7 +2114,7 @@ bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_AD
     IPV4_ADDR exclNone;
     bool res = false;
 
-    if(!_IGMP_IsSsmAddress(mcastAddress))
+    if(!F_IGMP_IsSsmAddress(mcastAddress))
     {
         return true;
     }
@@ -1862,37 +2123,42 @@ bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_AD
     while(true)
     {
         // search group
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-        if(pGEntry == 0)
+        if(pGEntry == NULL)
         {    // no such mcast exists
             break;
         }
 
-        ifIx = TCPIP_STACK_NetIndexGet(hNet);
+        int iIx = TCPIP_STACK_NetIndexGet(hNet);
+        if(iIx < 0)
+        {
+            return false;
+        }
+        ifIx = (size_t)iIx;
 
         // search source
         // get the source hash for this G Entry
-        sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
-        pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryLookup(sHashDcpt, &sourceAddress);
-        if(pSEntry != 0)
+        sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
+        pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryLookup(sHashDcpt, &sourceAddress));
+        if(pSEntry != NULL)
         {
-            pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
-            if(pRec)
+            pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
+            if(pRec != NULL)
             {   // found socket in this entry;
-                res = (pRec->filter == TCPIP_IGMP_FILTER_INCLUDE);
+                res = (pRec->filter == (uint8_t)TCPIP_IGMP_FILTER_INCLUDE);
             }
         }
         else
         {   // we need to search the TCPIP_IGMP_ASM_ALL_SOURCES just in case the socket used exclude {}
             exclNone.Val = TCPIP_IGMP_ASM_ALL_SOURCES;
-            pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryLookup(sHashDcpt, &exclNone);
-            if(pSEntry != 0)
+            pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryLookup(sHashDcpt, &exclNone));
+            if(pSEntry != NULL)
             {
-                pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
-                if(pRec)
+                pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
+                if(pRec != NULL)
                 {   // found socket for exclude none/include all
-                    _IGMPAssertCond(pRec->filter == TCPIP_IGMP_FILTER_EXCLUDE, __func__, __LINE__);
+                    TCPIPStack_Assert(pRec->filter == (uint8_t)TCPIP_IGMP_FILTER_EXCLUDE, __FILE__, __func__, __LINE__);
                     res = true;
                 }
             }
@@ -1907,11 +2173,11 @@ bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_AD
 
 /////////////////////////// helpers //////////////////////////////////////////
 //
-static void _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType)
+static void F_IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evType)
 {
-    _IGMP_DbgEvent(mcastAddress, evType);
+    F_IGMP_DbgEvent(mcastAddress, evType);
 
-#if (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#if defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
     TCPIP_IGMP_LIST_NODE* dNode;
 
     TCPIP_Notification_Lock(&igmpRegisteredUsers);
@@ -1923,7 +2189,7 @@ static void _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evTy
         }
     }    
     TCPIP_Notification_Unlock(&igmpRegisteredUsers);
-#endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
+#endif  // defined(TCPIP_IGMP_USER_NOTIFICATION ) && (TCPIP_IGMP_USER_NOTIFICATION != 0)
 }
 
 
@@ -1931,14 +2197,14 @@ static void _IGMP_ReportEvent(IPV4_ADDR mcastAddress, TCPIP_IGMP_EVENT_TYPE evTy
 
 // packet deallocation function
 // packet was transmitted by the IP layer
-static void _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
+static void F_IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackParam)
 {
-    if(pTxPkt->modPktData != 0)
+    if(pTxPkt->modPktData != 0U)
     {   // redirect internally. once!
-        pTxPkt->modPktData = 0;
-        pTxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_MCAST;
+        pTxPkt->modPktData = 0U;
+        pTxPkt->pktFlags |= (uint32_t)TCPIP_MAC_PKT_FLAG_MCAST;
         TCPIP_PKT_FlightLogTx(pTxPkt, TCPIP_THIS_MODULE_ID);
-        _TCPIPStackInsertRxPacket((TCPIP_NET_IF*)pTxPkt->pktIf, pTxPkt, true);
+        TCPIPStackInsertRxPacket((const TCPIP_NET_IF*)pTxPkt->pktIf, pTxPkt, true);
     }
     else
     {
@@ -1946,7 +2212,7 @@ static void _IGMP_TxPktAcknowledge(TCPIP_MAC_PACKET* pTxPkt, const void* ackPara
     }
 }
 
-static IPV4_PACKET * _IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen)
+static IPV4_PACKET * F_IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen)
 {
     IPV4_PACKET *pPkt;
     TCPIP_IPV4_OPTION_DCPT optionDcpt[1];
@@ -1955,60 +2221,65 @@ static IPV4_PACKET * _IGMP_AllocateTxPacketStruct (uint16_t totIGMPLen)
     optionDcpt[0].optionSize = 0;
 
 
-    pPkt = TCPIP_IPV4_PacketAlloc(totIGMPLen, optionDcpt, 1, TCPIP_MAC_PKT_FLAG_IGMP);
+    uint32_t pktFlags = (uint32_t)TCPIP_MAC_PKT_FLAG_IGMP;
+    pPkt = TCPIP_IPV4_PacketAlloc(totIGMPLen, optionDcpt, 1, (TCPIP_MAC_PACKET_FLAGS)pktFlags);
 
-    if (pPkt != 0)
+    if (pPkt != NULL)
     {
-        TCPIP_PKT_PacketAcknowledgeSet(&pPkt->macPkt, _IGMP_TxPktAcknowledge, 0);
+        TCPIP_PKT_PacketAcknowledgeSet(&pPkt->macPkt, &F_IGMP_TxPktAcknowledge, NULL);
     }
 
     return pPkt;
 }
 
-static size_t _IGMP_GroupKeyHash(OA_HASH_DCPT* pOH, const void* key)
+static size_t F_IGMP_GroupKeyHash(OA_HASH_DCPT* pOH, const void* key)
 {
     // for a Group Entry the key is the gAddress IP address
     return fnv_32_hash(key, sizeof(((TCPIP_IGMP_GROUP_ENTRY*)0)->gAddress)) % (pOH->hEntries);
 }
 
-static int _IGMP_GroupKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key)
+static int F_IGMP_GroupKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key)
 {
-    return ((TCPIP_IGMP_GROUP_ENTRY*)hEntry)->gAddress.Val != ((const IPV4_ADDR*)key)->Val; 
+    TCPIP_IGMP_GROUP_ENTRY* pGrpE = FC_HashE2GrpE(hEntry);
+    return pGrpE->gAddress.Val == ((const IPV4_ADDR*)key)->Val ? 0 : 1; 
 }
 
-static void _IGMP_GroupKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
+static void F_IGMP_GroupKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
 {
-    ((TCPIP_IGMP_GROUP_ENTRY*)dstEntry)->gAddress.Val = ((const IPV4_ADDR*)key)->Val;
+    TCPIP_IGMP_GROUP_ENTRY* pDstE = FC_HashE2GrpE(dstEntry);
+    pDstE->gAddress.Val = ((const IPV4_ADDR*)key)->Val;
 }
 
 
 
 #if defined(OA_DOUBLE_HASH_PROBING)
-static size_t _IGMP_GroupProbeHash(OA_HASH_DCPT* pOH, const void* key)
+static size_t F_IGMP_GroupProbeHash(OA_HASH_DCPT* pOH, const void* key)
 {
     // the key is the gAddress IP address
     return fnv_32a_hash(key, sizeof(((TCPIP_IGMP_GROUP_ENTRY*)0)->gAddress)) % (pOH->hEntries);
 }
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
-static size_t _IGMP_SourceKeyHash(OA_HASH_DCPT* pOH, const void* key)
+static size_t F_IGMP_SourceKeyHash(OA_HASH_DCPT* pOH, const void* key)
 {
     // for a Source Entry the key is the srcAddress IP address
     return fnv_32_hash(key, sizeof(((TCPIP_IGMP_SOURCE_ENTRY*)0)->srcAddress)) % (pOH->hEntries);
 }
 
-static int _IGMP_SourceKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key)
+static int F_IGMP_SourceKeyCompare(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* hEntry, const void* key)
 {
-    return ((TCPIP_IGMP_SOURCE_ENTRY*)hEntry)->srcAddress.Val != ((const IPV4_ADDR*)key)->Val; 
+    TCPIP_IGMP_SOURCE_ENTRY* pSrcE = FC_HashE2SrcE(hEntry); 
+    return pSrcE->srcAddress.Val != ((const IPV4_ADDR*)key)->Val ? 1: 0; 
 }
 
-static void _IGMP_SourceKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
+static void F_IGMP_SourceKeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const void* key)
 {
-    ((TCPIP_IGMP_SOURCE_ENTRY*)dstEntry)->srcAddress.Val = ((const IPV4_ADDR*)key)->Val;
+    TCPIP_IGMP_SOURCE_ENTRY* pDstE = FC_HashE2SrcE(dstEntry); 
+    pDstE->srcAddress.Val = ((const IPV4_ADDR*)key)->Val;
 }
 
 #if defined(OA_DOUBLE_HASH_PROBING)
-static size_t _IGMP_SourceProbeHash(OA_HASH_DCPT* pOH, const void* key)
+static size_t F_IGMP_SourceProbeHash(OA_HASH_DCPT* pOH, const void* key)
 {
     // the key is the srcAddress IP address
     return fnv_32a_hash(key, sizeof(((TCPIP_IGMP_SOURCE_ENTRY*)0)->srcAddress)) % (pOH->hEntries);
@@ -2016,47 +2287,47 @@ static size_t _IGMP_SourceProbeHash(OA_HASH_DCPT* pOH, const void* key)
 #endif  // defined(OA_DOUBLE_HASH_PROBING)
 
 
-static TCPIP_IGMP_RESULT _IGMP_SocketRemove(UDP_SOCKET socket, int ifIx, IPV4_ADDR mcastAddress, size_t* nRemoves)
+static TCPIP_IGMP_RESULT F_IGMP_SocketRemove(UDP_SOCKET uSkt, size_t ifIx, IPV4_ADDR mcastAddress, size_t* nRemoves)
 {
-    int  removeCnt;
+    size_t  removeCnt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_FILTER_TYPE purgeFilter;
     TCPIP_IGMP_GIF_STATE_DCPT oldStateDcpt, newStateDcpt;
 
-    pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+    pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-    if(pGEntry == 0)
+    if(pGEntry == NULL)
     {    // no such mcast exists
         return TCPIP_IGMP_GROUP_INVALID;
     }
 
     // get old state
-    _IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
+    F_IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
     
-    purgeFilter = 0;    // remove every instance of the socket
-    removeCnt = _IGMP_GroupPurgeSktByFilter(pGEntry, socket, ifIx, &purgeFilter);
+    purgeFilter = TCPIP_IGMP_FILTER_NONE;    // remove every instance of the socket
+    removeCnt = F_IGMP_GroupPurgeSktByFilter(pGEntry, uSkt, ifIx, &purgeFilter);
 
-    if(removeCnt == 0)
+    if(removeCnt == 0U)
     {   // nothing changed
         return TCPIP_IGMP_SOCKET_INVALID;
     }
 
-    if(nRemoves)
+    if(nRemoves != NULL)
     {
         *nRemoves = removeCnt;
     }
 
     // get new state
-    _IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
+    F_IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
 
     // rmoved some stuff; check if this entry is free
-    _IGMP_GroupEntryCheckRemove(pGEntry);
+    (void)F_IGMP_GroupEntryCheckRemove(pGEntry);
 
-    return _IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
+    return F_IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
 
 }
 
-static TCPIP_IGMP_RESULT _IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, int ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pOldDcpt, TCPIP_IGMP_GIF_STATE_DCPT* pNewDcpt)
+static TCPIP_IGMP_RESULT F_IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, size_t ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pOldDcpt, TCPIP_IGMP_GIF_STATE_DCPT* pNewDcpt)
 {
     TCPIP_IGMPv3_RECORD_TYPE    recType;
     TCPIP_IGMP_GROUP_SOURCE_ADDRESSES  new_old, old_new;
@@ -2065,51 +2336,51 @@ static TCPIP_IGMP_RESULT _IGMP_GenerateStateReport(IPV4_ADDR mcastAddress, int i
     if(pOldDcpt->ifFilter != pNewDcpt->ifFilter)
     {   // change filter report!
         // SSM should not change filter!
-        _IGMPAssertCond(!_IGMP_IsSsmAddress(mcastAddress), __func__, __LINE__);
+        TCPIPStack_Assert(!F_IGMP_IsSsmAddress(mcastAddress), __FILE__, __func__, __LINE__);
         recType = (pNewDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE) ? TCPIP_IGMP_FILTER_TO_INCLUDE : TCPIP_IGMP_FILTER_TO_EXCLUDE;
-        return _IGMP_ScheduleFmcReport(mcastAddress, recType, ifIx, &pNewDcpt->groupSources);
+        return F_IGMP_ScheduleFmcReport(mcastAddress, recType, ifIx, &pNewDcpt->groupSources);
     }
 
     // no change in filter: Source List change record
     // calculate (new-old) and (old-new) differences
-    _IGMP_SubtractSources(&pNewDcpt->groupSources, &pOldDcpt->groupSources, &new_old);
-    _IGMP_SubtractSources(&pOldDcpt->groupSources, &pNewDcpt->groupSources, &old_new);
+    F_IGMP_SubtractSources(&pNewDcpt->groupSources, &pOldDcpt->groupSources, &new_old);
+    F_IGMP_SubtractSources(&pOldDcpt->groupSources, &pNewDcpt->groupSources, &old_new);
 
-    pAllow = pBlock = 0;
+    pAllow = pBlock = NULL;
     if(pNewDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE)
     {
-        if(new_old.nSources != 0)
+        if(new_old.nSources != 0U)
         {
             pAllow = &new_old;
         }
-        if(old_new.nSources != 0)
+        if(old_new.nSources != 0U)
         {
             pBlock = &old_new;
         }
     }
     else
     {
-        _IGMPAssertCond(!_IGMP_IsSsmAddress(mcastAddress), __func__, __LINE__);
-        if(new_old.nSources != 0)
+        TCPIPStack_Assert(!F_IGMP_IsSsmAddress(mcastAddress), __FILE__, __func__, __LINE__);
+        if(new_old.nSources != 0U)
         {
             pBlock = &new_old;
         }
-        if(old_new.nSources != 0)
+        if(old_new.nSources != 0U)
         {
             pAllow = &old_new;
         }
     }
 
-    return _IGMP_ScheduleSlcReport(mcastAddress, ifIx, pAllow, pBlock);
+    return F_IGMP_ScheduleSlcReport(mcastAddress, ifIx, pAllow, pBlock);
 }
 
 
 // updates the sources for a (G, skt, if) tuple;  non empty list
 // filterMode is the (new) filter type for the socket
-static TCPIP_IGMP_RESULT _IGMP_SocketUpdateSources(UDP_SOCKET socket, int ifIx, IPV4_ADDR mcastAddress, TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize)
+static TCPIP_IGMP_RESULT F_IGMP_SocketUpdateSources(UDP_SOCKET uSkt, size_t ifIx, IPV4_ADDR mcastAddress, TCPIP_IGMP_FILTER_TYPE filterMode, const IPV4_ADDR* sourceList, size_t* listSize)
 {
-    int srcIx;
-    int nSources, nNewSources;
+    size_t srcIx;
+    size_t nSources, nNewSources;
     OA_HASH_DCPT *sHashDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
@@ -2122,52 +2393,52 @@ static TCPIP_IGMP_RESULT _IGMP_SocketUpdateSources(UDP_SOCKET socket, int ifIx, 
     nNewSources = 0;
     while(true)
     {
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(&igmpGroupsDcpt.gHashDcpt, &mcastAddress);
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookupOrInsert(&igmpGroupsDcpt.gHashDcpt, &mcastAddress));
 
-        if(pGEntry == 0)
+        if(pGEntry == NULL)
         {    // full hash...
             updateRes = TCPIP_IGMP_MCAST_CACHE_FULL;
             break;
         }
 
         // old state snapshot
-        _IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
+        F_IGMP_GetGifState(pGEntry, ifIx, &oldStateDcpt);
 
         // get the source hash for this G Entry
-        sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
+        sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
 
-        if(pGEntry->hEntry.flags.newEntry == 0)
+        if(pGEntry->hEntry.flags.newEntry == 0U)
         {   // existing source; if filter changes INCLUDE <-> EXCLUDE, remove the old conflicting socket filter
             // so even if we can't add all sources at least we have a consistent (G, skt, if) state
             purgeFilter = filterMode == TCPIP_IGMP_FILTER_INCLUDE ? TCPIP_IGMP_FILTER_EXCLUDE : TCPIP_IGMP_FILTER_INCLUDE;
-            _IGMP_GroupPurgeSktByFilter(pGEntry, socket, ifIx, &purgeFilter);
+            (void)F_IGMP_GroupPurgeSktByFilter(pGEntry, uSkt, ifIx, &purgeFilter);
         }
 
         nSources = *listSize;
 
-        for(srcIx = 0; srcIx < nSources; srcIx++, sourceList++)
+        for(srcIx = 0; srcIx < nSources; srcIx++)
         {
-            pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryLookupOrInsert(sHashDcpt, sourceList);
-            if(pSEntry == 0)
+            pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryLookupOrInsert(sHashDcpt, sourceList));
+            if(pSEntry == NULL)
             {    // full source hash...
                 updateRes = TCPIP_IGMP_SOURCE_CACHE_FULL;
                 break;
             }
 
-            if(pSEntry->hEntry.flags.newEntry != 0)
+            if(pSEntry->hEntry.flags.newEntry != 0U)
             {   // just adding this source
-                _IGMP_SourceEntryInit(pSEntry);
-                pRec = 0;
+                F_IGMP_SourceEntryInit(pSEntry);
+                pRec = NULL;
             }
             else
             {
-                pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
+                pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
             }
 
-            if(pRec == 0)
+            if(pRec == NULL)
             {
-                pRec = _IGMP_SourceCreateSktRecord(pSEntry, socket, ifIx, filterMode);
-                if(pRec == 0)
+                pRec = F_IGMP_SourceCreateSktRecord(pSEntry, uSkt, ifIx, filterMode);
+                if(pRec == NULL)
                 {   // all records full
                     updateRes = TCPIP_IGMP_SOCKET_RECORD_FULL;
                     break;
@@ -2175,16 +2446,17 @@ static TCPIP_IGMP_RESULT _IGMP_SocketUpdateSources(UDP_SOCKET socket, int ifIx, 
             }
             else
             {   // existent old source
-                _IGMPAssertCond(pRec->filter == filterMode, __func__, __LINE__);
+                TCPIPStack_Assert(pRec->filter == (uint8_t)filterMode, __FILE__, __func__, __LINE__);
             }
             nNewSources++;    // count the old ones, even if already existent...
+            sourceList++;
         }
 
         // get new state snapshot
-        _IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
+        F_IGMP_GetGifState(pGEntry, ifIx, &newStateDcpt);
 
         // generate report
-        repRes = _IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
+        repRes = F_IGMP_GenerateStateReport(mcastAddress, ifIx, &oldStateDcpt, &newStateDcpt);
         
         break;
     }
@@ -2195,7 +2467,7 @@ static TCPIP_IGMP_RESULT _IGMP_SocketUpdateSources(UDP_SOCKET socket, int ifIx, 
 }
 
 // gets the source hash descriptor associated to this G Entry
-static OA_HASH_DCPT* _IGMP_GetSourceHashDcpt(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
+static OA_HASH_DCPT* F_IGMP_GetSourceHashDcpt(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
 {
     OA_HASH_DCPT *sHashDcpt;
     sHashDcpt = &igmpGroupsDcpt.srcHashDcpt;
@@ -2203,99 +2475,101 @@ static OA_HASH_DCPT* _IGMP_GetSourceHashDcpt(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
     return sHashDcpt;
 }
 
-static void _IGMP_SourceEntryInit(TCPIP_IGMP_SOURCE_ENTRY* pSEntry)
+static void F_IGMP_SourceEntryInit(TCPIP_IGMP_SOURCE_ENTRY* pSEntry)
 {
-    memset(pSEntry->sktRec, 0, sizeof(pSEntry->sktRec));
+    (void)memset(pSEntry->sktRec, 0, sizeof(pSEntry->sktRec));
     pSEntry->nRecords = 0;
 }
 
 // finds an existing socket record for the source entry
 // if filtType == 0, then any type of filter matches
 // else filter has to match
-static TCPIP_IGMP_SKT_RECORD* _IGMP_SourceFindSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE filtType)
+static TCPIP_IGMP_SKT_RECORD* F_IGMP_SourceFindSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE filtType)
 {
     TCPIP_IGMP_SKT_RECORD* pRec;
-    int recIx;
+    size_t recIx;
 
-    if(pSEntry->nRecords != 0)
+    if(pSEntry->nRecords != 0U)
     {
         pRec = pSEntry->sktRec;
-        for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++, pRec++)
+        for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++)
         {
-            if(pRec->filter != 0 && pRec->sktNo == socket && pRec->ifIndex == ifIx && (filtType == 0 || filtType == pRec->filter))
+            if(pRec->filter != 0U && pRec->sktNo == (uint16_t)uSkt && pRec->ifIndex == ifIx && ((uint8_t)filtType == 0U || (uint8_t)filtType == pRec->filter))
             {   // found matching record;
                 return pRec;
             }
+            pRec++;
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 
 // creates a new socket record for the source entry
 // filtType != 0 !!!
-static TCPIP_IGMP_SKT_RECORD* _IGMP_SourceCreateSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE filtType)
+static TCPIP_IGMP_SKT_RECORD* F_IGMP_SourceCreateSktRecord(TCPIP_IGMP_SOURCE_ENTRY* pSEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE filtType)
 {
     TCPIP_IGMP_SKT_RECORD* pRec;
-    int recIx;
+    size_t recIx;
 
-    _IGMPAssertCond(filtType != 0, __func__, __LINE__);
+    TCPIPStack_Assert(filtType != TCPIP_IGMP_FILTER_NONE, __FILE__, __func__, __LINE__);
 
     pRec = pSEntry->sktRec;
-    for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++, pRec++)
+    for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++)
     {
-        if(pRec->filter == 0) 
+        if(pRec->filter == 0U) 
         {   // found empty slot
-            pRec->filter = filtType;
+            pRec->filter = (uint8_t)filtType;
             pRec->ifIndex = (uint8_t)ifIx;
-            pRec->sktNo = socket;
+            pRec->sktNo = (uint16_t)uSkt;
 
             pSEntry->nRecords++;
             return pRec;
         }
+        pRec++;
     }
 
-    return 0;
+    return NULL;
 }
 
 // purges a socket record across the whole group entry if the socket has the purgeFilter type!
 // otherwise the socket remains in place
 // if purgeFilter == 0, then deletes the socket record no matter the type
 // returns the number of removed records or 0 if socket not found
-static int _IGMP_GroupPurgeSktByFilter(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET socket, int ifIx, TCPIP_IGMP_FILTER_TYPE* pPurgeFilt)
+static size_t F_IGMP_GroupPurgeSktByFilter(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET uSkt, size_t ifIx, TCPIP_IGMP_FILTER_TYPE* pPurgeFilt)
 {
-    int srcIx;
+    size_t srcIx;
     OA_HASH_DCPT *sHashDcpt;
     TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
     TCPIP_IGMP_SKT_RECORD* pRec;
-    TCPIP_IGMP_FILTER_TYPE sktFilter = 0;
+    uint8_t sktFilter = 0U;
     TCPIP_IGMP_FILTER_TYPE purgeFilter = *pPurgeFilt;
-    int removeCnt = 0;
+    size_t removeCnt = 0U;
 
-    sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
+    sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
     for(srcIx = 0; srcIx < sHashDcpt->hEntries; srcIx++)
     {
-        pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx);
-        if(pSEntry->hEntry.flags.busy != 0)
+        pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx));
+        if(pSEntry->hEntry.flags.busy != 0U)
         {   // found a valid source entry
-            pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
-            if(pRec)
+            pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
+            if(pRec != NULL)
             {   // found socket in this entry 
-                if(sktFilter == 0)
+                if(sktFilter == 0U)
                 {   // first match
-                    sktFilter = (TCPIP_IGMP_FILTER_TYPE)pRec->filter;
+                    sktFilter = pRec->filter;
                 }
                 else
                 {
-                    _IGMPAssertCond(sktFilter == pRec->filter, __func__, __LINE__);
+                    TCPIPStack_Assert(sktFilter == pRec->filter, __FILE__, __func__, __LINE__);
                 }
 
-                if(purgeFilter == 0 || sktFilter == purgeFilter)
+                if((uint8_t)purgeFilter == 0U || sktFilter == (uint8_t)purgeFilter)
                 {   // purged
                     pRec->filter = 0;
                     removeCnt++;
-                    if(--pSEntry->nRecords == 0)
+                    if(--pSEntry->nRecords == 0U)
                     {   // this source Entry is empty
                         TCPIP_OAHASH_EntryRemove(sHashDcpt, &pSEntry->hEntry);
                     }
@@ -2311,43 +2585,43 @@ static int _IGMP_GroupPurgeSktByFilter(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCK
         }
     }
 
-    *pPurgeFilt = sktFilter;
+    *pPurgeFilt = (TCPIP_IGMP_FILTER_TYPE)sktFilter;
     return removeCnt;
 }
 
 // purges a (socket, if, source) tuple across the whole group entry
 // returns true if the socket source removed or false if socket not found in this source
-static bool _IGMP_GroupPurgeSktBySource(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET socket, int ifIx, const IPV4_ADDR* pPurgeAdd)
+static bool F_IGMP_GroupPurgeSktBySource(TCPIP_IGMP_GROUP_ENTRY* pGEntry, UDP_SOCKET uSkt, size_t ifIx, const IPV4_ADDR* pPurgeAdd)
 {
     OA_HASH_DCPT *sHashDcpt;
     TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
     TCPIP_IGMP_SKT_RECORD* pRec;
 
-    pRec = 0;
-    sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
-    pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryLookup(sHashDcpt, pPurgeAdd);
-    if(pSEntry != 0)
+    pRec = NULL;
+    sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
+    pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryLookup(sHashDcpt, pPurgeAdd));
+    if(pSEntry != NULL)
     {
-        pRec = _IGMP_SourceFindSktRecord(pSEntry, socket, ifIx, 0);
-        if(pRec)
+        pRec = F_IGMP_SourceFindSktRecord(pSEntry, uSkt, ifIx, TCPIP_IGMP_FILTER_NONE);
+        if(pRec != NULL)
         {   // found socket in this entry; purge 
             pRec->filter = 0;
-            if(--pSEntry->nRecords == 0)
+            if(--pSEntry->nRecords == 0U)
             {   // this source Entry is empty
                 TCPIP_OAHASH_EntryRemove(sHashDcpt, &pSEntry->hEntry);
             }
         }
     }
 
-    return pRec != 0;
+    return pRec != NULL;
 }
 
 // calculates the state of a (Group, If) pair
 // state consists of a filter mode and list of sources
 // if there are no sources for this (G, if), filter is INCLUDE and sources is {}
-static void _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pGifDcpt)
+static void F_IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, size_t ifIx, TCPIP_IGMP_GIF_STATE_DCPT* pGifDcpt)
 {
-    int srcIx;
+    size_t srcIx;
     TCPIP_IGMP_SIF_FILTER_ACTION srcAction;
     OA_HASH_DCPT *sHashDcpt;
     TCPIP_IGMP_SOURCE_ENTRY*    pSEntry;
@@ -2358,21 +2632,21 @@ static void _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_I
 
 
     // init the structures
-    memset(pGifDcpt, 0, sizeof(*pGifDcpt));
-    memset(&incSources, 0, sizeof(incSources));
-    memset(&excSources, 0, sizeof(excSources));
+    (void)memset(pGifDcpt, 0, sizeof(*pGifDcpt));
+    (void)memset(&incSources, 0, sizeof(incSources));
+    (void)memset(&excSources, 0, sizeof(excSources));
 
     gifFilter = TCPIP_IGMP_FILTER_INCLUDE;
 
-    sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
+    sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
     for(srcIx = 0; srcIx < sHashDcpt->hEntries; srcIx++)
     {
-        pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx);
-        if(pSEntry->hEntry.flags.busy != 0)
+        pSEntry = FC_HashE2SrcE(TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx));
+        if(pSEntry->hEntry.flags.busy != 0U)
         {   // found a valid source entry
-            _IGMPAssertCond(pSEntry->nRecords != 0, __func__, __LINE__);
+            TCPIPStack_Assert(pSEntry->nRecords != 0U, __FILE__, __func__, __LINE__);
 
-            srcAction = _IGMP_GetSifFilter(pSEntry, ifIx, &sifFilter);
+            srcAction = F_IGMP_GetSifFilter(pSEntry, ifIx, &sifFilter);
 
             if(sifFilter == TCPIP_IGMP_FILTER_EXCLUDE)
             {   // switch to exclude mode
@@ -2386,6 +2660,10 @@ static void _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_I
                 {
                     excSources.sourceAddresses[excSources.nSources++] = pSEntry->srcAddress.Val;
                 }
+                else
+                {
+                    // do nothing
+                }
             }
             else if(sifFilter == TCPIP_IGMP_FILTER_INCLUDE)
             {
@@ -2396,13 +2674,16 @@ static void _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_I
                 }
                 // else already in exclude mode, so ignore
             }
-            // else the source is not used
+            else
+            {
+                // else the source is not used
+            }
         }
     }
 
     pGifDcpt->ifFilter = gifFilter;
     pGrSources = (gifFilter == TCPIP_IGMP_FILTER_EXCLUDE) ? &excSources : &incSources;
-    memcpy(&pGifDcpt->groupSources, pGrSources, sizeof(*pGrSources));
+    (void)memcpy(&pGifDcpt->groupSources, pGrSources, sizeof(*pGrSources));
 
 }
 
@@ -2415,38 +2696,39 @@ static void _IGMP_GetGifState(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_I
 //  - if all sockets exclude the source then the filter is EXCLUDE and the source is counted
 //  - if some include and some exclude, filter is EXCLUDE but the source is not counted
 //  - if some sockets have exclude {}, i.e. ASM_ALL_SOURCES on G, then EXCLUDE_NONE is returned
-static TCPIP_IGMP_SIF_FILTER_ACTION _IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_ENTRY* pSEntry, int ifIx, TCPIP_IGMP_FILTER_TYPE* pFilter)
+static TCPIP_IGMP_SIF_FILTER_ACTION F_IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_ENTRY* pSEntry, size_t ifIx, TCPIP_IGMP_FILTER_TYPE* pFilter)
 {
     TCPIP_IGMP_SIF_FILTER_ACTION srcAction = TCPIP_IGMP_SIF_ACTION_NONE;
 
     *pFilter = TCPIP_IGMP_FILTER_NONE;
 
-    if(pSEntry->nRecords != 0)
+    if(pSEntry->nRecords != 0U)
     {
-        int recIx;
+        size_t recIx;
         const TCPIP_IGMP_SKT_RECORD* pRec = pSEntry->sktRec;
-        int nIncludes = 0;
-        int nExcludes = 0;
+        size_t nIncludes = 0U;
+        size_t nExcludes = 0U;
 
         if(pSEntry->srcAddress.Val == TCPIP_IGMP_ASM_ALL_SOURCES)
         {
-            for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++, pRec++)
+            for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++)
             {
-                if(pRec->filter != 0 && pRec->ifIndex == ifIx)
+                if(pRec->filter != 0U && pRec->ifIndex == ifIx)
                 {   // found socket record;
-                    _IGMPAssertCond(pRec->filter == TCPIP_IGMP_FILTER_EXCLUDE, __func__, __LINE__);
+                    TCPIPStack_Assert(pRec->filter == (uint8_t)TCPIP_IGMP_FILTER_EXCLUDE, __FILE__, __func__, __LINE__);
                     *pFilter = TCPIP_IGMP_FILTER_EXCLUDE;
                     return TCPIP_IGMP_SIF_ACTION_EXCLUDE_NONE;
                 }
+                pRec++;
             }
             return TCPIP_IGMP_SIF_ACTION_NONE;
         }
 
-        for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++, pRec++)
+        for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++)
         {
-            if(pRec->filter != 0 && pRec->ifIndex == ifIx)
+            if(pRec->filter != 0U && pRec->ifIndex == ifIx)
             {   // found socket record;
-                if(pRec->filter == TCPIP_IGMP_FILTER_INCLUDE)
+                if(pRec->filter == (uint8_t)TCPIP_IGMP_FILTER_INCLUDE)
                 {   
                     nIncludes++;
                 }
@@ -2455,23 +2737,28 @@ static TCPIP_IGMP_SIF_FILTER_ACTION _IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_E
                     nExcludes++;
                 }
             }
+            pRec++;
         }
 
         // since nRecords != 0, then we should have something
-        _IGMPAssertCond((nExcludes + nIncludes) != 0, __func__, __LINE__);
+        TCPIPStack_Assert((nExcludes + nIncludes) != 0U, __FILE__, __func__, __LINE__);
 
-        if(nExcludes)
+        if(nExcludes != 0U)
         {
             *pFilter = TCPIP_IGMP_FILTER_EXCLUDE;
-            if(nIncludes == 0)
+            if(nIncludes == 0U)
             {   // excluded source
                 srcAction = TCPIP_IGMP_SIF_ACTION_ADD;
             }
         }
-        else if(nIncludes)
+        else if(nIncludes != 0U)
         {   // included source
             *pFilter = TCPIP_IGMP_FILTER_INCLUDE;
             srcAction = TCPIP_IGMP_SIF_ACTION_ADD;
+        }
+        else
+        {
+            // do nothing
         }
 
     }
@@ -2480,16 +2767,16 @@ static TCPIP_IGMP_SIF_FILTER_ACTION _IGMP_GetSifFilter(const TCPIP_IGMP_SOURCE_E
 }
 
 // calculates A-B and places the result at pDest
-static void _IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
+static void F_IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
 {
     uint32_t *ptrA, *aEnd;
     uint32_t *ptrB, *bEnd;
     uint32_t *pRes;
 
     // clear destination
-    memset(pDest, 0, sizeof(*pDest));
+    (void)memset(pDest, 0, sizeof(*pDest));
 
-    if(pA == 0)
+    if(pA == NULL)
     {
         return;
     }
@@ -2499,14 +2786,14 @@ static void _IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_I
 
     pRes = pDest->sourceAddresses;
 
-    if(pB != 0)
+    if(pB != NULL)
     {
         ptrB = pB->sourceAddresses; 
         bEnd = ptrB + pB->nSources;
 
         // sort A and B
-        qsort(ptrA, pA->nSources, sizeof(*ptrA), _IGMPSourceEntryCompare);
-        qsort(ptrB, pB->nSources, sizeof(*ptrB), _IGMPSourceEntryCompare);
+        FC_Sort(ptrA, pA->nSources, sizeof(*ptrA), &F_IGMPSourceEntryCompare);
+        FC_Sort(ptrB, pB->nSources, sizeof(*ptrB), &F_IGMPSourceEntryCompare);
 
 
         while(ptrA != aEnd && ptrB != bEnd)
@@ -2528,31 +2815,36 @@ static void _IGMP_SubtractSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_I
     }
 
     // collect whatever's left in A, if any
-    memcpy(pRes, ptrA, (uint8_t*)aEnd - (uint8_t*)ptrA);
-    pDest->nSources += aEnd - ptrA;
+    uint32_t offset = FC_PtrDiff2UI32(aEnd - ptrA);
+    (void)memcpy(pRes, ptrA, (size_t)offset);
+    pDest->nSources += (size_t)offset;
 
 }
 
 // calculates A+B and places the result at pDest
 // pDest has to be large enough to accomodate both sources!
-static void _IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
+static void F_IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
 {
     uint32_t *ptrA, *aEnd;
     uint32_t *ptrB, *bEnd;
     uint32_t *pRes;
 
     // clear destination
-    memset(pDest, 0, sizeof(*pDest));
+    (void)memset(pDest, 0, sizeof(*pDest));
 
-    if(pA == 0 || pB == 0)
+    if(pA == NULL || pB == NULL)
     {
-        if(pB != 0)
+        if(pB != NULL)
         {
-            memcpy(pDest, pB, sizeof(*pDest));
+            (void)memcpy(pDest, pB, sizeof(*pDest));
         }
-        else if(pA != 0)
+        else if(pA != NULL)
         {
-            memcpy(pDest, pA, sizeof(*pDest));
+            (void)memcpy(pDest, pA, sizeof(*pDest));
+        }
+        else
+        {
+            // do nothing
         }
         return;
     }
@@ -2564,8 +2856,8 @@ static void _IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP
     bEnd = ptrB + pB->nSources;
 
     // sort A and B
-    qsort(ptrA, pA->nSources, sizeof(*ptrA), _IGMPSourceEntryCompare);
-    qsort(ptrB, pB->nSources, sizeof(*ptrB), _IGMPSourceEntryCompare);
+    FC_Sort(ptrA, pA->nSources, sizeof(*ptrA), &F_IGMPSourceEntryCompare);
+    FC_Sort(ptrB, pB->nSources, sizeof(*ptrB), &F_IGMPSourceEntryCompare);
 
     pRes = pDest->sourceAddresses;
 
@@ -2573,15 +2865,17 @@ static void _IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP
     {
         if (ptrA == aEnd)
         {
-            memcpy(pRes, ptrB, (uint8_t*)bEnd - (uint8_t*)ptrB);
-            pDest->nSources += bEnd - ptrB;
+            uint32_t offset = FC_PtrDiff2UI32(bEnd - ptrB);
+            (void)memcpy(pRes, ptrB, (size_t)offset);
+            pDest->nSources += (size_t)offset;
             break;
         }
 
         if (ptrB == bEnd)
         {
-            memcpy(pRes, ptrA, (uint8_t*)aEnd - (uint8_t*)ptrA);
-            pDest->nSources += aEnd - ptrA;
+            uint32_t offset = FC_PtrDiff2UI32(aEnd - ptrA);
+            (void)memcpy(pRes, ptrA, (size_t)offset);
+            pDest->nSources += (size_t)offset;
             break;
         }
 
@@ -2602,16 +2896,16 @@ static void _IGMP_UnionSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP
 }
 
 // calculates intersection of (A, B) and places the result at pDest
-static void _IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
+static void F_IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pB, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pDest)
 {
     uint32_t *ptrA, *aEnd;
     uint32_t *ptrB, *bEnd;
     uint32_t *pRes;
 
     // clear destination
-    memset(pDest, 0, sizeof(*pDest));
+    (void)memset(pDest, 0, sizeof(*pDest));
 
-    if(pA == 0 || pB == 0)
+    if(pA == NULL || pB == NULL)
     {
         return;
     }
@@ -2623,8 +2917,8 @@ static void _IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_
     bEnd = ptrB + pB->nSources;
 
     // sort A and B
-    qsort(ptrA, pA->nSources, sizeof(*ptrA), _IGMPSourceEntryCompare);
-    qsort(ptrB, pB->nSources, sizeof(*ptrB), _IGMPSourceEntryCompare);
+    FC_Sort(ptrA, pA->nSources, sizeof(*ptrA), &F_IGMPSourceEntryCompare);
+    FC_Sort(ptrB, pB->nSources, sizeof(*ptrB), &F_IGMPSourceEntryCompare);
 
     pRes = pDest->sourceAddresses;
 
@@ -2652,10 +2946,10 @@ static void _IGMP_IntersectSources(TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pA, TCPIP_
 
 
 // sorting function
-static int _IGMPSourceEntryCompare(const void* p1, const void* p2)
+static int F_IGMPSourceEntryCompare(const void* p1, const void* p2)
 {
-    uint32_t add1 = *((uint32_t*)p1);
-    uint32_t add2 = *((uint32_t*)p2);
+    uint32_t add1 = *((const uint32_t*)p1);
+    uint32_t add2 = *((const uint32_t*)p2);
    
 
     if(add1 < add2)
@@ -2666,6 +2960,10 @@ static int _IGMPSourceEntryCompare(const void* p1, const void* p2)
     {
         return 1;
     }
+    else
+    {
+        // do nothing
+    }
 
     return 0;    
 }
@@ -2673,100 +2971,100 @@ static int _IGMPSourceEntryCompare(const void* p1, const void* p2)
 // schedule Filter mode change (FMC) report
 // searches the current SC reports and deletes any allow/block report belonging to this group
 // returns TCPIP_IGMP_OK or TCPIP_IGMP_REPORT_POOL_EMPTY if no report node could be found
-static TCPIP_IGMP_RESULT _IGMP_ScheduleFmcReport(IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources)
+static TCPIP_IGMP_RESULT F_IGMP_ScheduleFmcReport(IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources)
 {
     TCPIP_IGMP_SC_REPORT_NODE* pFiltNode;
 
 
     igmpListsLock();
 
-    pFiltNode = _IGMP_FindScheduledScReport(groupAddress, ifIx, 0, 0, true);
+    pFiltNode = F_IGMP_FindScheduledScReport(groupAddress, ifIx, NULL, NULL, true);
 
-    if(pFiltNode)
+    if(pFiltNode != NULL)
     {
         pFiltNode->active = 0;
     }
 
     igmpListsUnlock();
 
-    if(pFiltNode == 0)
+    if(pFiltNode == NULL)
     {   // couldn't find an old report for (G, if)
-        pFiltNode = _IGMP_GetNewScReport();
+        pFiltNode = F_IGMP_GetNewScReport();
     }
 
-    if(pFiltNode == 0)
+    if(pFiltNode == NULL)
     {   // couldn't find a slot for the new report
-        _IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_SC_REPORT_ERROR);
-        _IGMPDebugCond(true, __func__, __LINE__);
+        F_IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_SC_REPORT_ERROR);
+        TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
         return TCPIP_IGMP_REPORT_POOL_EMPTY;
     }
 
-    _IGMP_SetGifSCRecord(pFiltNode, groupAddress, repType, ifIx, pGroupSources);
+    F_IGMP_SetGifSCRecord(pFiltNode, groupAddress, repType, ifIx, pGroupSources);
     
     // add it to the report list
-    _IGMP_InsertScReport(&igmpScReportList, pFiltNode);
+    F_IGMP_InsertScReport(&igmpScReportList, pFiltNode);
 
     return TCPIP_IGMP_OK; 
 }
 
 
 // sets a Source Change report node info
-static void _IGMP_SetGifSCRecord(TCPIP_IGMP_SC_REPORT_NODE* pRepNode, IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources)
+static void F_IGMP_SetGifSCRecord(TCPIP_IGMP_SC_REPORT_NODE* pRepNode, IPV4_ADDR groupAddress, TCPIP_IGMPv3_RECORD_TYPE repType, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pGroupSources)
 {
     pRepNode->nTransmit = igmpRobustnessVar;
-    pRepNode->repType = repType;
-    pRepNode->ifIx = ifIx;
-    pRepNode->active = true;
-    _IGMP_SetScReportTransmitTime(pRepNode);
+    pRepNode->repType = (uint8_t)repType;
+    pRepNode->ifIx = (uint8_t)ifIx;
+    pRepNode->active = 1U;
+    F_IGMP_SetScReportTransmitTime(pRepNode);
     pRepNode->repGroup = groupAddress.Val;
     
-    memcpy(&pRepNode->repSources, pGroupSources, sizeof(pRepNode->repSources));
+    (void)memcpy(&pRepNode->repSources, pGroupSources, sizeof(pRepNode->repSources));
 }
 
 // gets a new available node report from the free list
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_GetNewScReport(void)
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_GetNewScReport(void)
 {
     igmpListsLock();
-    TCPIP_IGMP_SC_REPORT_NODE* pNewRep = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&igmpScFreeList);
+    TCPIP_IGMP_SC_REPORT_NODE* pNewRep = FC_SglNode2RepNode(TCPIP_Helper_SingleListHeadRemove(&igmpScFreeList));
     igmpListsUnlock();
 
     return pNewRep;
 }
 
 // inserts a new node in a SC report list
-static void _IGMP_InsertScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode)
+static void F_IGMP_InsertScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode)
 {
     igmpListsLock();
-    TCPIP_Helper_SingleListTailAdd(pList, (SGL_LIST_NODE*)pRepNode);
+    TCPIP_Helper_SingleListTailAdd(pList, FC_RepNode2SglNode(pRepNode));
     igmpListsUnlock();
 }
 
 // deletes a report node from a SC report list
-static void _IGMP_DeleteScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode)
+static void F_IGMP_DeleteScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* pRepNode)
 {
     igmpListsLock();
 
-    TCPIP_IGMP_SC_REPORT_NODE* pRem = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListNodeRemove(pList, (SGL_LIST_NODE*)pRepNode);
-    _IGMPAssertCond(pRem == pRepNode, __func__, __LINE__);
-    TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, (SGL_LIST_NODE*)pRem);
+    TCPIP_IGMP_SC_REPORT_NODE* pRem = FC_SglNode2RepNode(TCPIP_Helper_SingleListNodeRemove(pList, FC_RepNode2SglNode(pRepNode)));
+    TCPIPStack_Assert(pRem == pRepNode, __FILE__, __func__, __LINE__);
+    TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, FC_RepNode2SglNode(pRem));
     
     igmpListsUnlock();
 }
 
 // schedule a source list change (SLC)
 // returns TCPIP_IGMP_OK or TCPIP_IGMP_REPORT_POOL_EMPTY if no report node could be found
-static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock)
+static TCPIP_IGMP_RESULT F_IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock)
 {
     TCPIP_IGMP_SC_REPORT_NODE *pAllowRep, *pBlockRep, *pFmcRep;
     TCPIP_IGMP_GROUP_SOURCE_ADDRESSES unionAllow, unionBlock;
     TCPIP_IGMP_GROUP_SOURCE_ADDRESSES resultAllow, resultBlock;
     TCPIP_IGMP_GROUP_SOURCE_ADDRESSES *pUnionAllow, *pUnionBlock;
    
-    pFmcRep = _IGMP_FindGifSCReportsDisable(groupAddress, ifIx, &pAllowRep, &pBlockRep);
+    pFmcRep = F_IGMP_FindGifSCReportsDisable(groupAddress, ifIx, &pAllowRep, &pBlockRep);
 
-    if(pAllowRep)
+    if(pAllowRep != NULL)
     {
-        _IGMP_UnionSources(pNewAllow, &pAllowRep->repSources, &unionAllow);
+        F_IGMP_UnionSources(pNewAllow, &pAllowRep->repSources, &unionAllow);
         pUnionAllow = &unionAllow;
     }
     else
@@ -2774,9 +3072,9 @@ static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifI
         pUnionAllow = pNewAllow;
     }
 
-    if(pBlockRep)
+    if(pBlockRep != NULL)
     {
-        _IGMP_UnionSources(pNewBlock, &pBlockRep->repSources, &unionBlock);
+        F_IGMP_UnionSources(pNewBlock, &pBlockRep->repSources, &unionBlock);
         pUnionBlock = &unionBlock;
     }
     else
@@ -2787,74 +3085,74 @@ static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifI
     // finally, calculate:
     // what's allowed: union(allows) - union(blocks)
     // what's blocked: union(blocks) - union(allows)
-    _IGMP_SubtractSources(pUnionAllow, pUnionBlock, &resultAllow);
-    _IGMP_SubtractSources(pUnionBlock, pUnionAllow, &resultBlock);
+    F_IGMP_SubtractSources(pUnionAllow, pUnionBlock, &resultAllow);
+    F_IGMP_SubtractSources(pUnionBlock, pUnionAllow, &resultBlock);
 
     // create the reports
-    if(resultAllow.nSources)
+    if(resultAllow.nSources != 0U)
     {   // need to allow something
-        if(pAllowRep == 0)
+        if(pAllowRep == NULL)
         {   // grab a new one
-            pAllowRep = _IGMP_GetNewScReport();
+            pAllowRep = F_IGMP_GetNewScReport();
         }
 
-        if(pAllowRep == 0)
+        if(pAllowRep == NULL)
         {   // couldn't find a slot for the new report; this is BAD!
-            _IGMPDebugCond(true, __func__, __LINE__);
+            TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
             return TCPIP_IGMP_REPORT_POOL_EMPTY;
         }
     }
     else
     {   // no need to transmit allow report
-        if(pAllowRep != 0)
+        if(pAllowRep != NULL)
         {   // delete the report
-            _IGMP_DeleteScReport(&igmpScReportList, pAllowRep);
+            F_IGMP_DeleteScReport(&igmpScReportList, pAllowRep);
         }
 
-        pAllowRep = 0;
+        pAllowRep = NULL;
     }
     
-    if(resultBlock.nSources)
+    if(resultBlock.nSources != 0U)
     {   // need to block something
-        if(pBlockRep == 0)
+        if(pBlockRep == NULL)
         {   // grab a new one
-            pBlockRep = _IGMP_GetNewScReport();
+            pBlockRep = F_IGMP_GetNewScReport();
         }
 
-        if(pBlockRep == 0)
+        if(pBlockRep == NULL)
         {   // couldn't find a slot for the new report; this is BAD!
-            _IGMPDebugCond(true, __func__, __LINE__);
+            TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
             return TCPIP_IGMP_REPORT_POOL_EMPTY;
         }
     }
     else
     {   // no need to transmit allow report
-        if(pBlockRep != 0)
+        if(pBlockRep != NULL)
         {   // delete the report
-            _IGMP_DeleteScReport(&igmpScReportList, pBlockRep);
+            F_IGMP_DeleteScReport(&igmpScReportList, pBlockRep);
         }
 
-        pBlockRep = 0;
+        pBlockRep = NULL;
     }
 
-    if(pAllowRep)
+    if(pAllowRep != NULL)
     {
-        _IGMP_SetGifSCRecord(pAllowRep, groupAddress, TCPIP_IGMP_SOURCE_ALLOW_NEW, ifIx, &resultAllow);
-        if(pFmcRep)
+        F_IGMP_SetGifSCRecord(pAllowRep, groupAddress, TCPIP_IGMP_SOURCE_ALLOW_NEW, ifIx, &resultAllow);
+        if(pFmcRep != NULL)
         {   // will be activated once the filter is transmitted!
             pAllowRep->active = 0;
         }
-        _IGMP_InsertScReport(&igmpScReportList, pAllowRep);
+        F_IGMP_InsertScReport(&igmpScReportList, pAllowRep);
     }
     
-    if(pBlockRep)
+    if(pBlockRep != NULL)
     {
-        _IGMP_SetGifSCRecord(pBlockRep, groupAddress, TCPIP_IGMP_SOURCE_BLOCK_OLD, ifIx, &resultBlock);
-        if(pFmcRep)
+        F_IGMP_SetGifSCRecord(pBlockRep, groupAddress, TCPIP_IGMP_SOURCE_BLOCK_OLD, ifIx, &resultBlock);
+        if(pFmcRep != NULL)
         {   // will be activated once the filter is transmitted!
             pBlockRep->active = 0;
         }
-        _IGMP_InsertScReport(&igmpScReportList, pBlockRep);
+        F_IGMP_InsertScReport(&igmpScReportList, pBlockRep);
     }
     
     return TCPIP_IGMP_OK; 
@@ -2864,21 +3162,21 @@ static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifI
 // and gets the pointers for the allow ones and block ones
 // Disables the allow and block
 // returns the filter report if it exists
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindGifSCReportsDisable(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode)
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_FindGifSCReportsDisable(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode)
 {
     TCPIP_IGMP_SC_REPORT_NODE *pAllow, *pBlock, *pFmc;
 
-    pAllow = pBlock = pFmc = 0;
+    pAllow = pBlock = pFmc = NULL;
 
     igmpListsLock();
 
     // search for allow, block and filter
-    pFmc = _IGMP_FindScheduledScReport(groupAddress, ifIx, &pAllow, &pBlock, false);
-    if(pAllow)
+    pFmc = F_IGMP_FindScheduledScReport(groupAddress, ifIx, &pAllow, &pBlock, false);
+    if(pAllow != NULL)
     {   // check that allow/block are pending
         pAllow->active = 0;
     }
-    if(pBlock)
+    if(pBlock != NULL)
     {   // check that allow/block are pending
         pBlock->active = 0;
     }
@@ -2896,38 +3194,38 @@ static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindGifSCReportsDisable(IPV4_ADDR groupA
 // searches for a (G, if) report into the SC list
 // ppAllowNode and ppBlockNode could be NULL
 // access to the list should be LOCKED!
-static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindScheduledScReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode, bool removeAllowBlock)
+static TCPIP_IGMP_SC_REPORT_NODE* F_IGMP_FindScheduledScReport(IPV4_ADDR groupAddress, size_t ifIx, TCPIP_IGMP_SC_REPORT_NODE** ppAllowNode, TCPIP_IGMP_SC_REPORT_NODE** ppBlockNode, bool removeAllowBlock)
 {
     TCPIP_IGMP_SC_REPORT_NODE *pRNode;
     TCPIP_IGMP_SC_REPORT_NODE *pAllow, *pBlock, *pFilt;
     SINGLE_LIST  newBusyList;
     bool removeNode;
 
-    pAllow = pBlock = pFilt = 0;
+    pAllow = pBlock = pFilt = NULL;
     TCPIP_Helper_SingleListInitialize(&newBusyList);
 
 
-    while((pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&igmpScReportList)) != 0)
+    while((pRNode = FC_SglNode2RepNode(TCPIP_Helper_SingleListHeadRemove(&igmpScReportList))) != NULL)
     {
         removeNode = false;
 
         if(pRNode->ifIx == ifIx && pRNode->repGroup == groupAddress.Val)
         {   // found node
-            if(pRNode->repType == TCPIP_IGMP_FILTER_TO_INCLUDE || pRNode->repType == TCPIP_IGMP_FILTER_TO_EXCLUDE)
+            if(pRNode->repType == (uint8_t)TCPIP_IGMP_FILTER_TO_INCLUDE || pRNode->repType == (uint8_t)TCPIP_IGMP_FILTER_TO_EXCLUDE)
             {
-                _IGMPAssertCond(pFilt == 0, __func__, __LINE__);
+                TCPIPStack_Assert(pFilt == NULL, __FILE__, __func__, __LINE__);
                 pFilt = pRNode;
             }
-            else if(pRNode->repType == TCPIP_IGMP_SOURCE_ALLOW_NEW || pRNode->repType == TCPIP_IGMP_SOURCE_BLOCK_OLD)
+            else if(pRNode->repType == (uint8_t)TCPIP_IGMP_SOURCE_ALLOW_NEW || pRNode->repType == (uint8_t)TCPIP_IGMP_SOURCE_BLOCK_OLD)
             {
-                if(pRNode->repType == TCPIP_IGMP_SOURCE_ALLOW_NEW)
+                if(pRNode->repType == (uint8_t)TCPIP_IGMP_SOURCE_ALLOW_NEW)
                 {
-                    _IGMPAssertCond(pAllow == 0, __func__, __LINE__);
+                    TCPIPStack_Assert(pAllow == NULL, __FILE__, __func__, __LINE__);
                     pAllow = pRNode;
                 }
                 else
                 {
-                    _IGMPAssertCond(pBlock == 0, __func__, __LINE__);
+                    TCPIPStack_Assert(pBlock == NULL, __FILE__, __func__, __LINE__);
                     pBlock = pRNode;
                 }
                 
@@ -2938,39 +3236,39 @@ static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindScheduledScReport(IPV4_ADDR groupAdd
             }
             else
             {   // unknown type
-                _IGMPAssertCond(false, __func__, __LINE__);
+                TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
             }
         }
         // else not ours
 
         if(removeNode)
         {
-            TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, (SGL_LIST_NODE*)pRNode);
+            TCPIP_Helper_SingleListTailAdd(&igmpScFreeList, FC_RepNode2SglNode(pRNode));
         }
         else
         {   // keep it
-            TCPIP_Helper_SingleListTailAdd(&newBusyList, (SGL_LIST_NODE*)pRNode);
+            TCPIP_Helper_SingleListTailAdd(&newBusyList, FC_RepNode2SglNode(pRNode));
         }
     }
 
-    if(pFilt)
+    if(pFilt != NULL)
     {
-        if(pAllow)
+        if(pAllow != NULL)
         {   // check that allow/block are pending
-            _IGMPAssertCond(pAllow->active == 0, __func__, __LINE__);
+            TCPIPStack_Assert(pAllow->active == 0U, __FILE__, __func__, __LINE__);
         }
-        if(pBlock)
+        if(pBlock != NULL)
         {   // check that allow/block are pending
-            _IGMPAssertCond(pBlock->active == 0, __func__, __LINE__);
+            TCPIPStack_Assert(pBlock->active == 0U, __FILE__, __func__, __LINE__);
         }
     }
     
-    if(ppAllowNode)
+    if(ppAllowNode != NULL)
     {
         *ppAllowNode = pAllow;
     }
 
-    if(ppBlockNode)
+    if(ppBlockNode != NULL)
     {
         *ppBlockNode = pBlock;
     }
@@ -2984,7 +3282,7 @@ static TCPIP_IGMP_SC_REPORT_NODE* _IGMP_FindScheduledScReport(IPV4_ADDR groupAdd
 // searches for a General Query or group (G, if) report into the proper Query list
 // returns found query node 
 // access to the list should be LOCKED!
-static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_TYPE qType, uint32_t groupAddress, int ifIx, bool remove)
+static TCPIP_IGMP_QUERY_REPORT_NODE* F_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_TYPE qType, uint32_t groupAddress, size_t ifIx, bool repRemove)
 {
     TCPIP_IGMP_QUERY_REPORT_NODE *pQNode, *pPrev, *pRemN;
     SINGLE_LIST*  pList;
@@ -2998,31 +3296,35 @@ static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_FindScheduledQueryReport(TCPIP_IGMP_Q
         pList = &igmpGroupQueryReportList;
     }
 
-    for(pQNode = (TCPIP_IGMP_QUERY_REPORT_NODE*)pList->head, pPrev = 0; pQNode != 0; pPrev = pQNode, pQNode = pQNode->next)
+    pPrev = NULL;
+    pQNode = FC_SglNode2QRepNode(pList->head);
+    while(pQNode != NULL)
     {
         if(pQNode->ifIx == ifIx)
         {   // matching interface
-           if(qType == TCPIP_IGMP_QUERY_GENERAL || pQNode->qSources[0].repGroup == groupAddress)
-           {   // matching group; found node
-               if(remove)
-               {
-                   pRemN = (TCPIP_IGMP_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListNextRemove(pList, (SGL_LIST_NODE*)pPrev);
-                   (void)pRemN;
-                   _IGMPAssertCond(pRemN == pQNode, __func__, __LINE__);
-               }
-               return pQNode;
-           }
+            if(qType == TCPIP_IGMP_QUERY_GENERAL || pQNode->qSources[0].repGroup == groupAddress)
+            {   // matching group; found node
+                if(repRemove)
+                {
+                    pRemN = FC_SglNode2QRepNode(TCPIP_Helper_SingleListNextRemove(pList, FC_QRepNode2SglNode(pPrev)));
+                    (void)pRemN;
+                    TCPIPStack_Assert(pRemN == pQNode, __FILE__, __func__, __LINE__);
+                }
+                return pQNode;
+            }
         }
+        pPrev = pQNode;
+        pQNode = pQNode->next;
     }
 
-    return 0;   // not found
+    return NULL;   // not found
 }
 
 
 // checks that an IPv4 multicast address is valid
-static bool _IGMP_IsMcastValid(IPV4_ADDR addr)
+static bool F_IGMP_IsMcastValid(IPV4_ADDR addr)
 {
-    if(_IGMP_IsMcastAddress(addr))
+    if(F_IGMP_IsMcastAddress(addr))
     {
         return addr.Val != TCPIP_IGMP_IANA_ALL_SYSTEMS_MULTICAST && addr.Val != TCPIP_IGMP_IANA_ALL_ROUTERS_MULTICAST && addr.Val != TCPIP_IGMP_IANA_SSM_RESERVED;
     }
@@ -3030,68 +3332,72 @@ static bool _IGMP_IsMcastValid(IPV4_ADDR addr)
     return false;
 }
 
-static bool  _IGMP_IsSsmAddress(IPV4_ADDR mcastAdd)
+static bool  F_IGMP_IsSsmAddress(IPV4_ADDR mcastAdd)
 {
     return (TCPIP_Helper_ntohl(igmpSsmAddLow) <= TCPIP_Helper_ntohl(mcastAdd.Val) &&  TCPIP_Helper_ntohl(mcastAdd.Val) <= TCPIP_Helper_ntohl(igmpSsmAddHigh));
 }
 
 // performs a minimal sanity check for subscribe parameters
-static TCPIP_IGMP_RESULT _IGMP_CheckSubscribeParams(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize, int* pIfIx)
+static TCPIP_IGMP_RESULT F_IGMP_CheckSubscribeParams(TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, const IPV4_ADDR* sourceList, size_t* listSize, size_t* pIfIx)
 {
     int ifIx;
     TCPIP_NET_IF* pNetIf;
 
-    size_t nSources = listSize ? *listSize : 0;
+    size_t nSources = listSize != NULL ? *listSize : 0U;
 
     // minimal sanity check
-    if(nSources)
+    if(nSources != 0U)
     {
-#if (TCPIP_IGMPV2_SUPPORT_ONLY != 0)
+#if defined(TCPIP_IGMPV2_SUPPORT_ONLY) && (TCPIP_IGMPV2_SUPPORT_ONLY != 0)
         return TCPIP_IGMP_SOURCE_INVALID;
 #endif
-       if(sourceList == 0)
+       if(sourceList == NULL)
        {
            return TCPIP_IGMP_ARG_ERROR;
        }
     }
 
-    if(!_IGMP_IsMcastValid(mcastAddress))
+    if(!F_IGMP_IsMcastValid(mcastAddress))
     {
         return TCPIP_IGMP_MCAST_ADDRESS_ERROR;
     }
 
-    if(hNet == 0)
+    if(hNet == NULL)
     {
         hNet = TCPIP_STACK_NetMulticastGet();
     }
 
     ifIx = TCPIP_STACK_NetIndexGet(hNet);
-    pNetIf = _TCPIPStackHandleToNetUp(hNet);
+    pNetIf = TCPIPStackHandleToNetUp(hNet);
 
-    if(ifIx < 0 || pNetIf == 0 || (pNetIf->startFlags & TCPIP_NETWORK_CONFIG_MULTICAST_ON) == 0)
+    if(ifIx < 0 || pNetIf == NULL || (pNetIf->startFlags & (uint16_t)TCPIP_NETWORK_CONFIG_MULTICAST_ON) == 0U)
     {
         return TCPIP_IGMP_IF_ERROR;
     }
 
 
-    *pIfIx = ifIx;
+    *pIfIx = (size_t)ifIx;
     return TCPIP_IGMP_OK;
 }
 
 // checks that the interface index is a valid slot or a new one can be taken
-static bool _IGMP_CheckIfIndex(int ifIx, bool itExists)
+static bool F_IGMP_CheckIfIndex(size_t ifIx, bool itExists)
 {
 
     if(ifIx < igmpInterfaces)
     {   
-        if((igmpGroupsDcpt.ifMask & (1 << ifIx)) != 0)
+        if((igmpGroupsDcpt.ifMask & (1UL << ifIx)) != 0U)
         {
             return true;
         }
         else if(itExists == false)
         {
-            igmpGroupsDcpt.ifMask |= (1 << ifIx);
+            igmpGroupsDcpt.ifMask |= (1UL << ifIx);
             return true;
+        }
+        else
+        {
+            // do nothing
         }
     }
 
@@ -3099,18 +3405,19 @@ static bool _IGMP_CheckIfIndex(int ifIx, bool itExists)
 
 }
 
-static void _IGMP_SetScReportTransmitTime(TCPIP_IGMP_SC_REPORT_NODE* pRNode)
+static void F_IGMP_SetScReportTransmitTime(TCPIP_IGMP_SC_REPORT_NODE* pRNode)
 {
-    pRNode->tTransmit = SYS_TMR_TickCountGet() + (SYS_RANDOM_PseudoGet() % igmpUnsolicitRepInterval) * SYS_TMR_TickCounterFrequencyGet() / 1000;
+    uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+    pRNode->tTransmit = SYS_TMR_TickCountGet() + (SYS_RANDOM_PseudoGet() % igmpUnsolicitRepInterval) * sysFreq / 1000U;
 }
 
 
 // checks if a Group Entry could be removed and removes it if possible
-static bool _IGMP_GroupEntryCheckRemove(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
+static bool F_IGMP_GroupEntryCheckRemove(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
 {
     OA_HASH_DCPT *sHashDcpt;
-    sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
-    if(sHashDcpt->fullSlots == 0)
+    sHashDcpt = F_IGMP_GetSourceHashDcpt(pGEntry);
+    if(sHashDcpt->fullSlots == 0U)
     {   // no more sources in this group
         TCPIP_OAHASH_EntryRemove(&igmpGroupsDcpt.gHashDcpt, &pGEntry->hEntry);
         return true;
@@ -3119,7 +3426,7 @@ static bool _IGMP_GroupEntryCheckRemove(TCPIP_IGMP_GROUP_ENTRY* pGEntry)
     return false;
 }
 
-static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
+static void F_IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, size_t ifIx)
 {
     TCPIP_IGMP_QUERY_TYPE qType;
     uint32_t maxRespTime, tReport;
@@ -3130,15 +3437,15 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     TCPIP_IGMP_GROUP_SOURCE_ADDRESSES newReqSources, unionSources;
     uint16_t nSources = 0;
 
-    igmpRobustnessVar = pQuery->qrv < TCPIP_IGMP_ROBUSTNESS_LOW_LIMIT ? TCPIP_IGMP_ROBUSTNESS_VARIABLE : pQuery->qrv;
+    igmpRobustnessVar = pQuery->qrv < (unsigned)TCPIP_IGMP_ROBUSTNESS_LOW_LIMIT ? (uint8_t)TCPIP_IGMP_ROBUSTNESS_VARIABLE : (uint8_t)pQuery->qrv;
     
-    if((groupAddress.Val = pQuery->groupAddress) == 0)
+    if((groupAddress.Val = pQuery->groupAddress) == 0U)
     {
         qType = TCPIP_IGMP_QUERY_GENERAL;
     }
     else
     {
-        if(pQuery->nSources == 0)
+        if(pQuery->nSources == 0U)
         {
             qType = TCPIP_IGMP_QUERY_GROUP_SPEC;
         }
@@ -3152,23 +3459,24 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     // calculate maxRespTime in milliseconds
     if(pQuery->maxRespCode < TCPIP_IGMP_MAX_RESP_CODE_LIMIT)
     {
-        maxRespTime = pQuery->maxRespCode * 100;
+        maxRespTime = (uint32_t)pQuery->maxRespCode * 100U;
     }
     else
     {
         rCodeFloat.val = pQuery->maxRespCode;
-        maxRespTime = ((rCodeFloat.mant | 0x10) << (rCodeFloat.exp + 3)) * 100;
+        maxRespTime = (((uint32_t)rCodeFloat.r_mant | 0x10U) << ((uint32_t)rCodeFloat.r_exp + 3U)) * 100U;
     }
 
-    tReport = SYS_TMR_TickCountGet() + (SYS_RANDOM_PseudoGet() % maxRespTime) * SYS_TMR_TickCounterFrequencyGet() / 1000;
+    uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+    tReport = SYS_TMR_TickCountGet() + (SYS_RANDOM_PseudoGet() % maxRespTime) * sysFreq / 1000U;
 
     igmpListsLock();
-    pGq = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GENERAL, 0, ifIx, false);
+    pGq = FC_RepNode2GqNode(F_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GENERAL, 0, ifIx, false));
     igmpListsUnlock();
 
     // check the current status report rules
     // #1 rule: check for existing GQ scheduled earlier
-    if(pGq != 0 && pGq->tTransmit < tReport)
+    if(pGq != NULL && pGq->tTransmit < tReport)
     {
         return;
     }
@@ -3177,46 +3485,46 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     if(qType == TCPIP_IGMP_QUERY_GENERAL)
     {
         bool insert = false;
-        if(pGq == 0)
+        if(pGq == NULL)
         {   // couldn't find an old GQ report
-            pGq = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)_IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_GENERAL);
+            pGq = FC_RepNode2GqNode(F_IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_GENERAL));
             insert = true;
         }
 
-        if(pGq != 0)
+        if(pGq != NULL)
         {   // prepare the GQ report and schedule it;
-            _IGMP_ScheduleGenQueryReport(pGq, ifIx, tReport, insert);
+            F_IGMP_ScheduleGenQueryReport(pGq, ifIx, tReport, insert);
         }
         else
         {   // couldn't find a slot for the new GQ report; should NOT happen!
-            _IGMPAssertCond(true, __func__, __LINE__);
-            _IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_GEN_QUERY_REPORT_ERROR);
+            TCPIPStack_Assert(true, __FILE__, __func__, __LINE__);
+            F_IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_GEN_QUERY_REPORT_ERROR);
         }
         return;
     }
 
     // #3 rule: GSQ or GSSQ received; if no pending response, then schedule a group report 
     igmpListsLock();
-    pGsq = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GROUP_SPEC, groupAddress.Val, ifIx, false);
+    pGsq = FC_QRepNode2GrRepNode(F_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GROUP_SPEC, groupAddress.Val, ifIx, false));
     igmpListsUnlock();
-    if(pGsq == 0)
+    if(pGsq == NULL)
     {
-        pGsq = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)_IGMP_GetNewQueryReport(qType);
-        if(pGsq != 0)
+        pGsq = FC_QRepNode2GrRepNode(F_IGMP_GetNewQueryReport(qType));
+        if(pGsq != NULL)
         {
-            _IGMP_InitGroupQueryReport(pGsq, groupAddress, ifIx, tReport);
-            _IGMP_SourceScheduleGroupQueryReport(pGsq, nSources, pQuery->sources, true);
+            F_IGMP_InitGroupQueryReport(pGsq, groupAddress, ifIx, tReport);
+            F_IGMP_SourceScheduleGroupQueryReport(pGsq, nSources, pQuery->sources, true);
         }
         else
         {   // couldn't find a slot for the new group report
-            _IGMPDebugCond(true, __func__, __LINE__);
-            _IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_GROUP_QUERY_REPORT_ERROR);
+            TCPIPStack_Condition(true, __FILE__, __func__, __LINE__);
+            F_IGMP_ReportEvent(groupAddress, TCPIP_IGMP_EVENT_GET_GROUP_QUERY_REPORT_ERROR);
         }
         return;
     }
 
     // #4 rule: if GSQ received or pending GSQ, then schedule a GSQ 
-    if(qType == TCPIP_IGMP_QUERY_GROUP_SPEC || pGsq->qSources[0].repSources.nSources == 0)
+    if(qType == TCPIP_IGMP_QUERY_GROUP_SPEC || pGsq->qSources[0].repSources.nSources == 0U)
     {
         pGsq->qSources[0].repSources.nSources = 0;  // clear old pending sources
         if(tReport < pGsq->tTransmit)
@@ -3233,16 +3541,16 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     }
     
     newReqSources.nSources = nSources;
-    memcpy(&newReqSources, pQuery->sources, nSources * sizeof(newReqSources.sourceAddresses[0]));
+    (void)memcpy(newReqSources.sourceAddresses, pQuery->sources, nSources * sizeof(newReqSources.sourceAddresses[0]));
     
-    _IGMP_UnionSources(&newReqSources, &pGsq->qSources[0].repSources, &unionSources);
-    _IGMP_SourceScheduleGroupQueryReport(pGsq, unionSources.nSources, unionSources.sourceAddresses, false);
+    F_IGMP_UnionSources(&newReqSources, &pGsq->qSources[0].repSources, &unionSources);
+    F_IGMP_SourceScheduleGroupQueryReport(pGsq, unionSources.nSources, unionSources.sourceAddresses, false);
     
 
 }
 
 // gets a new query report node
-static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TYPE qType)
+static TCPIP_IGMP_QUERY_REPORT_NODE* F_IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TYPE qType)
 {
     SINGLE_LIST* pList;
     TCPIP_IGMP_QUERY_REPORT_NODE* pQNode;
@@ -3257,12 +3565,12 @@ static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TY
     }
 
     igmpListsLock();
-    pQNode = (TCPIP_IGMP_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(pList);
+    pQNode = FC_SglNode2QRepNode(TCPIP_Helper_SingleListHeadRemove(pList));
     igmpListsUnlock();
 
     if(qType == TCPIP_IGMP_QUERY_GENERAL)
     {   // GQ should naever fail
-        _IGMPAssertCond(pQNode != 0, __func__, __LINE__);
+        TCPIPStack_Assert(pQNode != NULL, __FILE__, __func__, __LINE__);
     }
 
     return pQNode;
@@ -3270,17 +3578,17 @@ static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TY
 }
 
 // prepare a Gen Query report for which the tTransmit expired 
-static int _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq)
+static size_t F_IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq)
 {
     OA_HASH_DCPT *gHashDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
     TCPIP_IGMP_GIF_STATE_DCPT currStateDcpt, *pDcpt;
     TCPIP_IGMP_QUERY_SOURCES* pQSource;
-    int groupIx, nEntries;
+    size_t groupIx, nEntries;
 
     // mark all qSources as invalid!
-    _IGMPAssertCond(pGq->nQSources == sizeof(pGq->qSources) / sizeof(*pGq->qSources), __func__, __LINE__);
-    memset(pGq->qSources, 0, pGq->nQSources * sizeof(*pGq->qSources));
+    TCPIPStack_Assert(pGq->nQSources == sizeof(pGq->qSources) / sizeof(*pGq->qSources), __FILE__, __func__, __LINE__);
+    (void)memset(pGq->qSources, 0, pGq->nQSources * sizeof(*pGq->qSources));
 
     igmpDcptLock();
     gHashDcpt = &igmpGroupsDcpt.gHashDcpt;
@@ -3288,13 +3596,13 @@ static int _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq)
     pQSource = pGq->qSources;
     for(groupIx = 0; groupIx < gHashDcpt->hEntries; groupIx++)
     {
-        pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryGet(gHashDcpt, groupIx);
-        if(pGEntry->hEntry.flags.busy != 0)
+        pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryGet(gHashDcpt, groupIx));
+        if(pGEntry->hEntry.flags.busy != 0U)
         {   // found a valid group entry; get state snapshot
             pDcpt = &currStateDcpt;
-            _IGMP_GetGifState(pGEntry, pGq->ifIx, pDcpt);
+            F_IGMP_GetGifState(pGEntry, pGq->ifIx, pDcpt);
 
-            if(pDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE && pDcpt->groupSources.nSources == 0)
+            if(pDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE && pDcpt->groupSources.nSources == 0U)
             {   // empty sources
                 continue;
             }
@@ -3302,10 +3610,10 @@ static int _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq)
             {   // found valid entry
                 pQSource->repGroup = pGEntry->gAddress.Val;
                 pQSource->repType = pDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE ? TCPIP_IGMP_MODE_IS_INCLUDE : TCPIP_IGMP_MODE_IS_EXCLUDE;
-                memcpy(&pQSource->repSources, &pDcpt->groupSources, sizeof(pQSource->repSources));
+                (void)memcpy(&pQSource->repSources, &pDcpt->groupSources, sizeof(pQSource->repSources));
                 nEntries++;
                 pQSource++;
-                _IGMPAssertCond(nEntries <= sizeof(pGq->qSources) / sizeof(*pGq->qSources), __func__, __LINE__);
+                TCPIPStack_Assert(nEntries <= sizeof(pGq->qSources) / sizeof(*pGq->qSources), __FILE__, __func__, __LINE__);
             }
         }
     }
@@ -3316,7 +3624,7 @@ static int _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq)
 
 // prepare a Group Query report for which the tTransmit expired 
 // returns number of records that need to be sent, 0 if none 
-static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrpNode)
+static bool F_IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrpNode)
 {
     OA_HASH_DCPT *gHashDcpt;
     TCPIP_IGMP_GROUP_ENTRY* pGEntry;
@@ -3326,7 +3634,7 @@ static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* p
     IPV4_ADDR groupAddress;
     bool genReport;
 
-    _IGMPAssertCond(pGrpNode->nQSources == sizeof(pGrpNode->qSources) / sizeof(*pGrpNode->qSources), __func__, __LINE__);
+    TCPIPStack_Assert(pGrpNode->nQSources == sizeof(pGrpNode->qSources) / sizeof(*pGrpNode->qSources), __FILE__, __func__, __LINE__);
 
     gHashDcpt = &igmpGroupsDcpt.gHashDcpt;
     groupAddress.Val = pGrpNode->qSources[0].repGroup;
@@ -3335,20 +3643,20 @@ static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* p
     // pGrpNode holds the router requested sources!
 
     igmpDcptLock();
-    pGEntry = (TCPIP_IGMP_GROUP_ENTRY*)TCPIP_OAHASH_EntryLookup(gHashDcpt, &groupAddress);
-    if(pGEntry != 0 && pGEntry->hEntry.flags.busy != 0)
+    pGEntry = FC_HashE2GrpE(TCPIP_OAHASH_EntryLookup(gHashDcpt, &groupAddress));
+    if(pGEntry != NULL && pGEntry->hEntry.flags.busy != 0U)
     {   // found a valid group entry; get state snapshot
         pDcpt = &currStateDcpt;
-        _IGMP_GetGifState(pGEntry, pGrpNode->ifIx, pDcpt);
+        F_IGMP_GetGifState(pGEntry, pGrpNode->ifIx, pDcpt);
 
-        if(pDcpt->ifFilter != TCPIP_IGMP_FILTER_INCLUDE || pDcpt->groupSources.nSources != 0)
+        if(pDcpt->ifFilter != TCPIP_IGMP_FILTER_INCLUDE || pDcpt->groupSources.nSources != 0U)
         {   // reception state for this group: valid non empty sources
             pQSource = pGrpNode->qSources;
             pQSource->repGroup = groupAddress.Val;
-            if(pGrpNode->qSources[0].repSources.nSources == 0)
+            if(pGrpNode->qSources[0].repSources.nSources == 0U)
             {   // A Group Specific report is needed
                 pQSource->repType = pDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE ? TCPIP_IGMP_MODE_IS_INCLUDE : TCPIP_IGMP_MODE_IS_EXCLUDE;
-                memcpy(&pQSource->repSources, &pDcpt->groupSources, sizeof(pQSource->repSources));
+                (void)memcpy(&pQSource->repSources, &pDcpt->groupSources, sizeof(pQSource->repSources));
                 genReport = true;
             }
             else
@@ -3356,16 +3664,16 @@ static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* p
                 pQSource->repType = TCPIP_IGMP_MODE_IS_INCLUDE;
                 if(pDcpt->ifFilter == TCPIP_IGMP_FILTER_INCLUDE)
                 {
-                    _IGMP_IntersectSources(&pGrpNode->qSources[0].repSources, &currStateDcpt.groupSources, &resultSources);
+                    F_IGMP_IntersectSources(&pGrpNode->qSources[0].repSources, &currStateDcpt.groupSources, &resultSources);
                 }
                 else
                 {
-                    _IGMP_SubtractSources(&pGrpNode->qSources[0].repSources, &currStateDcpt.groupSources, &resultSources);
+                    F_IGMP_SubtractSources(&pGrpNode->qSources[0].repSources, &currStateDcpt.groupSources, &resultSources);
                 }
 
-                if(resultSources.nSources != 0)
+                if(resultSources.nSources != 0U)
                 {   // need to send something
-                    memcpy(&pQSource->repSources, &resultSources, sizeof(pQSource->repSources));
+                    (void)memcpy(&pQSource->repSources, &resultSources, sizeof(pQSource->repSources));
                     genReport = true;
                 }
             }
@@ -3378,56 +3686,56 @@ static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* p
 
 
 // sets up a Gen Query node and inserts it in a Gen Query report list
-static void _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit, bool insert)
+static void F_IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, size_t ifIx, uint32_t tTransmit, bool insert)
 {
-    pGQNode->ifIx = ifIx;
-    pGQNode->queryType = TCPIP_IGMP_QUERY_GENERAL;
+    pGQNode->ifIx = (uint8_t)ifIx;
+    pGQNode->queryType = (uint8_t)TCPIP_IGMP_QUERY_GENERAL;
     pGQNode->tTransmit = tTransmit;
 
     if(insert)
     {
         igmpListsLock();
-        TCPIP_Helper_SingleListTailAdd(&igmpGenQueryReportList, (SGL_LIST_NODE*)pGQNode);
+        TCPIP_Helper_SingleListTailAdd(&igmpGenQueryReportList, FC_GqNode2SglNode(pGQNode));
         igmpListsUnlock();
     }
 }
 
 // initializes a Group Query node in a GS mode (no sources updated) 
 // it does NOT insert in the report list!
-static void _IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, IPV4_ADDR groupAddress, int ifIx, uint32_t tTransmit)
+static void F_IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, IPV4_ADDR groupAddress, size_t ifIx, uint32_t tTransmit)
 {
-    pGNode->ifIx = ifIx;
-    pGNode->queryType = TCPIP_IGMP_QUERY_GROUP_SPEC;
+    pGNode->ifIx = (uint8_t)ifIx;
+    pGNode->queryType = (uint8_t)TCPIP_IGMP_QUERY_GROUP_SPEC;
     pGNode->tTransmit = tTransmit;
-    pGNode->qSources[0].repType = 0;    // updated at transmit time
+    pGNode->qSources[0].repType = TCPIP_IGMP_RECORD_NONE;    // updated at transmit time
     pGNode->qSources[0].repGroup = groupAddress.Val;
-    pGNode->qSources[0].repSources.nSources = 0;
+    pGNode->qSources[0].repSources.nSources = 0U;
 }
 
 // sets up a Group Query node with sources and inserts it in a Group Query report list
-static void _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources, bool insert)
+static void F_IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, size_t nRecSources, uint32_t* pRecSources, bool insert)
 {
-    pGNode->queryType = nRecSources == 0 ? TCPIP_IGMP_QUERY_GROUP_SPEC : TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC;
+    pGNode->queryType = nRecSources == 0U ? (uint8_t)TCPIP_IGMP_QUERY_GROUP_SPEC : (uint8_t)TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC;
     pGNode->qSources[0].repSources.nSources = nRecSources;
 
-    int nAvlblSources = sizeof(pGNode->qSources[0].repSources.sourceAddresses) / sizeof(*pGNode->qSources[0].repSources.sourceAddresses);
-    if(nRecSources)
+    size_t nAvlblSources = sizeof(pGNode->qSources[0].repSources.sourceAddresses) / sizeof(*pGNode->qSources[0].repSources.sourceAddresses);
+    if(nRecSources != 0U)
     {
         if(nRecSources > nAvlblSources)
         {   // truncate
             IPV4_ADDR groupAddr;
             groupAddr.Val = pGNode->qSources[0].repGroup;
-            _IGMP_ReportEvent(groupAddr, TCPIP_IGMP_EVENT_QUERY_SOURCE_NUMBER_EXCEEDED);
+            F_IGMP_ReportEvent(groupAddr, TCPIP_IGMP_EVENT_QUERY_SOURCE_NUMBER_EXCEEDED);
             nRecSources = nAvlblSources;
         }
         // store the sources for report
-        memcpy(pGNode->qSources[0].repSources.sourceAddresses, pRecSources, nRecSources * sizeof(*pRecSources));
+        (void)memcpy(pGNode->qSources[0].repSources.sourceAddresses, pRecSources, nRecSources * sizeof(*pRecSources));
     }
 
     if(insert)
     {
         igmpListsLock();
-        TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryReportList, (SGL_LIST_NODE*)pGNode);
+        TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryReportList, FC_GroupNode2SglNode(pGNode));
         igmpListsUnlock();
     }
 

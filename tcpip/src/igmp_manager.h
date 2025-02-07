@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __IGMP_MANAGER_H_
-#define __IGMP_MANAGER_H_
+#ifndef H_IGMP_MANAGER_H_
+#define H_IGMP_MANAGER_H_
 
 /*****************************************************************************
   Function:
@@ -73,7 +73,7 @@ Microchip or any third party.
   Remarks:
    None
  */
-bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const TCPIP_IGMP_MODULE_CONFIG* pIgmpCfg);
+bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const void* initData);
 
 /*****************************************************************************
   Function:
@@ -105,7 +105,7 @@ void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl);
 
 /*****************************************************************************
   Function:
-    bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress);
+    bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress);
 
   Summary:
     Checks that multicast traffic towards the specified socket is enabled.
@@ -118,7 +118,7 @@ void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl);
     TCPIP_IGMP_Initialize() should have been called
 
   Parameters:
-    socket       - the UDP multicast socket
+    uSkt       - the UDP multicast socket
     hNet         - Interface handle.
     mcastAddress - the multicast group addressthat's the destination of this traffic
     sourceAddress   - the source of the multicast traffic
@@ -131,7 +131,7 @@ void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl);
    This function checks SSM traffic only.
    Any other multicast traffic is unchecked and the return value will be true.
  */
-bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET socket, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress);
+bool TCPIP_IGMP_IsMcastEnabled(UDP_SOCKET uSkt, TCPIP_NET_HANDLE hNet, IPV4_ADDR mcastAddress, IPV4_ADDR sourceAddress);
 
 
 // debugging helpers
@@ -153,8 +153,9 @@ typedef enum
     TCPIP_IGMP_REPORT_LIST_MASK_ALL     = 0xc007,   // all options set
 }TCPIP_IGMP_REPORT_LIST_TYPE;
 
-void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE rListType);
+void TCPIP_IGMP_ReportListPrint(TCPIP_IGMP_REPORT_LIST_TYPE listType);
 
+// 8 bit values only
 typedef enum
 {
     TCPIP_IGMP_ROUTE_INTERNAL   = 0x01,     // route the query request internally
@@ -166,8 +167,9 @@ typedef enum
 // pGroupAdd == 0 or *pGroupAdd == 0 -> General Query
 // nSources == 0 -> Group Specific Query
 // nSources != 0, sourceList != 0 -> Group Source Specific Query
-TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList, uint16_t nSources, uint16_t respTime, int ifIx, TCPIP_IGMP_ROUTE_FLAG rFlag);
+// rFlag is a TCPIP_IGMP_ROUTE_FLAG value
+TCPIP_IGMP_RESULT TCPIP_IGMP_SendQuery(uint32_t* pGroupAdd, uint32_t* sourceList, uint16_t nSources, uint16_t respTime, size_t ifIx, uint8_t rFlag);
 
 
-#endif  // __IGMP_MANAGER_H_
+#endif  // H_IGMP_MANAGER_H_
 
