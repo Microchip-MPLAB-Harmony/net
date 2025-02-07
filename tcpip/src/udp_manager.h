@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,25 +44,25 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __UDP__MANAGER_H_
-#define __UDP__MANAGER_H_
+#ifndef H__UDP__MANAGER_H_
+#define H__UDP__MANAGER_H_
 
 
-bool TCPIP_UDP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_UDP_MODULE_CONFIG* pUdpInit);
-void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit);
+bool TCPIP_UDP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
+void TCPIP_UDP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 // BSD sockets support
 typedef enum
 {
-    UDP_OPEN_SERVER         = 0x01,        // create a server socket
-    UDP_OPEN_CLIENT         = 0x02,        // create a client socket
+    UDP_OPEN_SERVER         = 0x0001U,      // create a server socket
+    UDP_OPEN_CLIENT         = 0x0002U,      // create a client socket
     // extra creation flags
-    UDP_OPEN_TX_SPLIT       = 0x80,        // create a ZC BSD socket, the payload is external
-                                           // No PUT operations available for this socket
-    UDP_OPEN_CONFIG_SERVICE = 0x100,       // the owner of this socket is a stack configuration service
+    UDP_OPEN_TX_SPLIT       = 0x0080U,      // create a ZC BSD socket, the payload is external
+                                            // No PUT operations available for this socket
+    UDP_OPEN_CONFIG_SERVICE = 0x0100U,      // the owner of this socket is a stack configuration service
 
-}UDP_OPEN_TYPE;
+}UDP_OPEN_TYPE;     // 16 bits
 
 // Stores the header of a UDP packet
 typedef struct
@@ -91,7 +91,22 @@ bool TCPIP_UDP_SetSplitPayload(UDP_SOCKET s, void* pLoad, uint16_t loadSize);
 // where is needed before and after this call
 uint8_t*    TCPIP_UDP_TxPointerGet(UDP_SOCKET s);
 
+// conversion functions/helpers
+//
 
-#endif // __UDP__MANAGER_H_
+static __inline__ UDP_HEADER* __attribute__((always_inline)) FC_U8Ptr2UdpHdr(uint8_t* u8Ptr)
+{
+    union
+    {
+        uint8_t* u8Ptr;
+        UDP_HEADER* pHdr;
+    }U_U8_PTR_UDP_HDR;
+
+    U_U8_PTR_UDP_HDR.u8Ptr = u8Ptr;
+    return U_U8_PTR_UDP_HDR.pHdr;
+}
+
+
+#endif // H__UDP__MANAGER_H_
 
 

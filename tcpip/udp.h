@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __UDP_H_
-#define __UDP_H_
+#ifndef H__UDP_H_
+#define H__UDP_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -112,7 +112,8 @@ typedef int16_t UDP_SOCKET;
   Remarks:
     Multiple flags can be simultaneously set
 
-*/
+    8 bits only.
+ */
 typedef enum
 {
     UDP_SOCKET_FLAG_NONE        = 0x00,     // no flag set
@@ -178,7 +179,7 @@ typedef struct
     List of options to be set for a UDP socket
 
   Remarks:
-    None
+    16 bit values
 
 */
 typedef enum
@@ -367,29 +368,29 @@ typedef enum
   Remarks:
     Using the mask and value members, multiple flags can be set and cleared in one single operations.
     The TCPIP_UDP_OptionsSet() operation for UDP_OPTION_MULTICAST will apply the folowing to the socket flags:
-    flags &= ~flagsMask;    // clear all flags touched by mask
-    flags |= (flagsValue & flagsMask);  // set the corresponding flags that are set in flagsValue. All others will remain cleared.
+    flags &= ~flagsMask;    - clear all flags touched by mask
+    flags |= (flagsValue & flagsMask);  - set the corresponding flags that are set in flagsValue. All others will remain cleared.
     
 
   Example:
     <code>
-    // set the flag UDP_MCAST_FLAG_LOOP:
+    - set the flag UDP_MCAST_FLAG_LOOP:
     UDP_OPTION_MULTICAST_DATA mcastData;
-    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
-    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP;     // new value for the flag:
-                                                    // any value with the bit set for the UDP_MCAST_FLAG_LOOP bit
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      - specify the flag to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP;     - new value for the flag:
+                                                    - any value with the bit set for the UDP_MCAST_FLAG_LOOP bit
     TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
 
-    // clear the flag UDP_MCAST_FLAG_LOOP:
-    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
-    mcastData.flagsValue = 0;                       // new value for the flag:
-                                                    // any value with the bit cleared for the UDP_MCAST_FLAG_LOOP bit
+    - clear the flag UDP_MCAST_FLAG_LOOP:
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      - specify the flag to touch
+    mcastData.flagsValue = 0;                       - new value for the flag:
+                                                    - any value with the bit cleared for the UDP_MCAST_FLAG_LOOP bit
     TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
 
-    // set UDP_MCAST_FLAG_LOOP and UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
-    // clear  UDP_MCAST_FLAG_IGNORE_SOURCE_ADD and UDP_MCAST_FLAG_IGNORE_SOURCE_PORT
-    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT; // flags to touch
-    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK ;  // value with bits set for the first 2 flags, cleared for the others
+    - set UDP_MCAST_FLAG_LOOP and UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
+    - clear  UDP_MCAST_FLAG_IGNORE_SOURCE_ADD and UDP_MCAST_FLAG_IGNORE_SOURCE_PORT
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT; - flags to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK ;  - value with bits set for the first 2 flags, cleared for the others
     TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
     </code>
 */
@@ -503,7 +504,7 @@ typedef const void* TCPIP_UDP_PROCESS_HANDLE;
 /* UDP packet handler Pointer
 
   Function:
-    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
   Summary:
     Pointer to a function(handler) that will get called to process an incoming UDP packet.
@@ -551,7 +552,7 @@ typedef const void* TCPIP_UDP_PROCESS_HANDLE;
     See the tcpip_mac.h for details.
     
  */
-typedef bool(*TCPIP_UDP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+typedef bool(*TCPIP_UDP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
 
 // *****************************************************************************
@@ -1668,7 +1669,7 @@ bool   TCPIP_UDP_BcastIPV4AddressSet(UDP_SOCKET hUDP, UDP_SOCKET_BCAST_TYPE bcas
 /*
   Function:
     bool TCPIP_UDP_DestinationIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
-                                    IP_MULTI_ADDRESS* remoteAddress)
+                                    const IP_MULTI_ADDRESS* remoteAddress)
 
   Summary:
     Sets the destination IP address of a socket
@@ -1706,7 +1707,7 @@ bool   TCPIP_UDP_BcastIPV4AddressSet(UDP_SOCKET hUDP, UDP_SOCKET_BCAST_TYPE bcas
     
   */
 bool    TCPIP_UDP_DestinationIPAddressSet(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, 
-                                           IP_MULTI_ADDRESS* remoteAddress);
+                                           const IP_MULTI_ADDRESS* remoteAddress);
 
 // *****************************************************************************
 
@@ -1870,7 +1871,7 @@ bool   TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE h
 
 // *****************************************************************************
 /* Function:
-    int TCPIP_UDP_SocketsNumberGet(void)
+    size_t TCPIP_UDP_SocketsNumberGet(void)
 
   Summary:
     Returns the number of existent UDP sockets.
@@ -1890,7 +1891,7 @@ bool   TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE h
     The number of UDP sockets
  */
 
-int     TCPIP_UDP_SocketsNumberGet(void);
+size_t     TCPIP_UDP_SocketsNumberGet(void);
 
 //*******************************************************************************
 /*
@@ -1935,7 +1936,7 @@ TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HA
 //*******************************************************************************
 /*
   Function:
-    bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+    bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE procHandle);
 
   Summary:
     Deregisters a previously registered packet handler.
@@ -1947,7 +1948,7 @@ TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HA
     UDP properly initialized
 
   Parameters:
-    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_UDP_PacketHandlerRegister
+    procHandle   - TCPIP packet process handle obtained by a call to TCPIP_UDP_PacketHandlerRegister
 
 
   Returns:
@@ -1957,8 +1958,8 @@ TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HA
   Example:
     <code>
     TCPIP_UDP_PROCESS_HANDLE myHandle = TCPIP_UDP_PacketHandlerRegister(myPacketHandler, myParam );
-    // process incoming packets
-    // now we're done with it
+    - process incoming packets
+    - now we're done with it
     TCPIP_UDP_PacketHandlerDeregister(myHandle);
     </code>
 
@@ -1966,7 +1967,7 @@ TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HA
     Exists only if TCPIP_UDP_EXTERN_PACKET_PROCESS is true 
 
   */
-bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE procHandle);
 
 
 
@@ -2002,4 +2003,4 @@ void  TCPIP_UDP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __UDP_H_
+#endif  // H__UDP_H_

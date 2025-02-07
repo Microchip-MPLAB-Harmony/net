@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __UDP_PRIVATE_H_
-#define __UDP_PRIVATE_H_
+#ifndef H__UDP_PRIVATE_H_
+#define H__UDP_PRIVATE_H_
 
 /****************************************************************************
   Section:
@@ -67,38 +67,45 @@ Microchip or any third party.
 #define UDP_CHECKSUM_OFFSET     6u
 
 #if defined(TCPIP_IPV4_FRAGMENTATION) && (TCPIP_IPV4_FRAGMENTATION != 0)
-#define _TCPIP_IPV4_FRAGMENTATION    1
+#define TCPIP_IPV4_UDP_FRAGMENTATION    1
 #else
-#define _TCPIP_IPV4_FRAGMENTATION    0
+#define TCPIP_IPV4_UDP_FRAGMENTATION    0
 #endif
 
 typedef struct
 {
     IPV4_PACKET             v4Pkt;     // safe cast to IPV4_PACKET
-    TCPIP_MAC_DATA_SEGMENT  zcSeg[];   // zero copy data segment (only if BSD used)
 }UDP_V4_PACKET;
+
+typedef struct
+{
+    IPV4_PACKET             v4Pkt;      // safe cast to IPV4_PACKET
+    TCPIP_MAC_DATA_SEGMENT  zcSeg[1];   // if BSD used, zero copy data segment
+}UDP_V4_ZC_PACKET;
 
 
 // flags the packet as belonging to the UDP pool
 #define UDP_SOCKET_POOL_BUFFER_FLAG     (TCPIP_MAC_PKT_FLAG_USER)
 
 // minimum size of buffer in the pool
-#define UDP_SOCKET_POOL_BUFFER_MIN_SIZE 256
+#define UDP_SOCKET_POOL_BUFFER_MIN_SIZE 256U
 
 // default TTL for multicast traffic
-#define UDP_MULTICAST_DEFAULT_TTL       1
+#define UDP_MULTICAST_DEFAULT_TTL       1U
 
 // incoming packet match flags
+// 8 bits
 typedef enum
 {
+    TCPIP_UDP_PKT_MATCH_NONE        = 0x00,     // no match
     TCPIP_UDP_PKT_MATCH_IP_TYPE     = 0x01,     // match occurred on the packet type Ipv4/IPv6
     TCPIP_UDP_PKT_MATCH_SRC_PORT    = 0x02,     // match occurred on the packet source port
     TCPIP_UDP_PKT_MATCH_NET         = 0x04,     // match occurred on the packet incoming interface
-    TCPIP_UDP_PKT_MACTH_SRC_ADD     = 0x08,     // match occurred on the packet source address
+    TCPIP_UDP_PKT_MATCH_SRC_ADD     = 0x08,     // match occurred on the packet source address
 
     //
     // good match mask
-    TCPIP_UDP_PKT_MACTH_MASK        = (TCPIP_UDP_PKT_MATCH_IP_TYPE | TCPIP_UDP_PKT_MATCH_SRC_PORT | TCPIP_UDP_PKT_MATCH_NET | TCPIP_UDP_PKT_MACTH_SRC_ADD)
+    TCPIP_UDP_PKT_MATCH_MASK        = (TCPIP_UDP_PKT_MATCH_IP_TYPE | TCPIP_UDP_PKT_MATCH_SRC_PORT | TCPIP_UDP_PKT_MATCH_NET | TCPIP_UDP_PKT_MATCH_SRC_ADD)
 
 }TCPIP_UDP_PKT_MATCH;
 
@@ -106,53 +113,50 @@ typedef enum
 typedef union
 {
     uint32_t     Val;
-    struct
+    struct __attribute__((packed))
     {
-        uint32_t    bcastForceType   : 2;   // destination forced to broadcast, if any
-        uint32_t    looseRemPort     : 1;   // allows receiving data from any socket having the same destination Port
-                                            // but irrespective its local port
-        uint32_t    looseNetIf       : 1;   // allows receiving data on any interface        
-        uint32_t    looseRemAddress  : 1;   // allows receiving data from any host address        
-        uint32_t    srcSet           : 1;   // source address is set/forced
-        uint32_t    srcValid         : 1;   // source address is valid (could be even 0) 
-        uint32_t    srcSolved        : 1;   // source address map to network interface is solved 
+        unsigned int    bcastForceType   : 2;   // destination forced to broadcast, if any
+        unsigned int    looseRemPort     : 1;   // allows receiving data from any socket having the same destination Port
+                                                // but irrespective its local port
+        unsigned int    looseNetIf       : 1;   // allows receiving data on any interface        
+        unsigned int    looseRemAddress  : 1;   // allows receiving data from any host address        
+        unsigned int    srcSet           : 1;   // source address is set/forced
+        unsigned int    srcValid         : 1;   // source address is valid (could be even 0) 
+        unsigned int    srcSolved        : 1;   // source address map to network interface is solved 
 
-        uint32_t    destSet          : 1;   // destination address is set/forced
-        uint32_t    txSplitAlloc     : 1;   // if set, will perform a split (ZC) TX allocation
-        uint32_t    usePool          : 1;   // allows allocating from the private pool        
-        uint32_t    stackConfig      : 1;   // socket allocated by some stack configuration module
-        uint32_t    openAddType      : 2;   // the address type used at open
-        uint32_t    openBindIf       : 1;   // socket is bound to interface when opened 
-        uint32_t    openBindAdd      : 1;   // socket is bound to address when opened 
+        unsigned int    destSet          : 1;   // destination address is set/forced
+        unsigned int    txSplitAlloc     : 1;   // if set, will perform a split (ZC) TX allocation
+        unsigned int    usePool          : 1;   // allows allocating from the private pool        
+        unsigned int    stackConfig      : 1;   // socket allocated by some stack configuration module
+        unsigned int    openAddType      : 2;   // the address type used at open
+        unsigned int    openBindIf       : 1;   // socket is bound to interface when opened 
+        unsigned int    openBindAdd      : 1;   // socket is bound to address when opened 
         
-        uint32_t    rxAutoAdvance    : 1;   // automatic RX socket advance
-        uint32_t    rxEnable         : 1;   // enable socket receive
-        uint32_t    mcastLoop        : 1;   // loop internally the multicast traffic
-        uint32_t    mcastSkipCheck   : 1;   // skip the checking of the incoming multicast traffic
-        uint32_t    fixedDestAddress;       // ignore packet source address
-        uint32_t    fixedDestPort    : 1;   // ignore packet source port
-        uint32_t    mcastOnly        : 1;   // ignore non multicast packets
-        uint32_t    serverSkt        : 1;   // socket opened as server
-        uint32_t    tos              : 6;   // Type of Service: 6 bits!
-        uint32_t    df               : 1;   // Don't Fragment bit
-        uint32_t    noNetStrict      : 1;   // do not enforce net strictness
+        unsigned int    rxAutoAdvance    : 1;   // automatic RX socket advance
+        unsigned int    rxEnable         : 1;   // enable socket receive
+        unsigned int    mcastLoop        : 1;   // loop internally the multicast traffic
+        unsigned int    mcastSkipCheck   : 1;   // skip the checking of the incoming multicast traffic
+        unsigned int    fixedDestAddress : 1;       // ignore packet source address
+        unsigned int    fixedDestPort    : 1;   // ignore packet source port
+        unsigned int    mcastOnly        : 1;   // ignore non multicast packets
+        unsigned int    serverSkt        : 1;   // socket opened as server
+
+        unsigned int    tos              : 6;   // Type of Service: 6 bits!
+        unsigned int    df               : 1;   // Don't Fragment bit
+        unsigned int    noNetStrict      : 1;   // do not enforce net strictness
     };
 }TCPIP_UDP_SKT_FLAGS;
 
 // additional socket flags
-typedef union
+// used as discrete masks rather than bit fields because a bit field will ocupy 32 bits
+// 8 bits
+typedef enum
 {
-    uint8_t Val;
-    struct
-    {
-        uint8_t     stickyLooseRemPort: 1;      // the looseRemPort is sticky, not changed by:
-        uint8_t     stickyLooseNetIf: 1;        // the looseNetIf is sticky, not changed by:
-        uint8_t     stickyLooseRemAddress: 1;   // the looseRemAddress is sticky, not changed by:
-        uint8_t     reserved:5;                 // not used
-    };
-}TCPIP_UDP_SKT_EXT_FLAGS;
-
-
+    UDP_EFLAG_NONE                      = 0x00,     // no flag set
+    UDP_EFLAG_STICKY_LOOSE_REM_PORT     = 0x01,     // the looseRemPort is sticky, not changed by a remote bind operation
+    UDP_EFLAG_STICKY_LOOSE_NET_IF       = 0x02,     // the looseNetIf is sticky, not changed by a bind or TCPIP_UDP_SocketNetSet operation 
+    UDP_EFLAG_STICKY_LOOSE_REM_ADDRESS  = 0x04,     // the looseRemAddress is sticky, not changed by a remote bind operation
+}UDP_EXT_FLAGS;
 
 // Stores information about a current UDP socket
 typedef struct
@@ -195,7 +199,7 @@ typedef struct
                                     // used in match find, if not looseRemAddress
     IPV4_ADDR       pktDestAddress; // destination address of last received packet
                                     // info only
-    TCPIP_NET_IF*   pSktNet;        // local interface; 
+    const TCPIP_NET_IF* pSktNet;    // local interface; 
                                     // srcAddress can be outside of pSktNet to allow
                                     // sending packets with chosen IP address  
                                     // Used by:
@@ -228,9 +232,9 @@ typedef struct
     TCPIP_MAC_PACKET       *pCurrRxPkt;   // current RX packet 
     TCPIP_MAC_DATA_SEGMENT *pCurrRxSeg;   // current segment in the current packet
                                           // support for multi segment packets
-#if (_TCPIP_IPV4_FRAGMENTATION != 0)
+#if (TCPIP_IPV4_UDP_FRAGMENTATION != 0)
     TCPIP_MAC_PACKET       *pCurrFrag;    // current RX fragment; fragmentation support 
-#endif  // (_TCPIP_IPV4_FRAGMENTATION != 0)
+#endif  // (TCPIP_IPV4_UDP_FRAGMENTATION != 0)
     uint16_t        rxSegLen;       // current segment len
     uint16_t        rxTotLen;       // total remaining data length, across segments 
     uint8_t*        rxCurr;         // current RX pointer 
@@ -243,15 +247,16 @@ typedef struct
     uint16_t        txAllocCnt;     // current number of packets that are allocated for TX
     uint16_t        rxQueueLimit;   // max number of RX packets that can be queued at a certain time
     uint16_t        sigMask;        // TCPIP_UDP_SIGNAL_TYPE: active events
+
     uint8_t         addType;        // IPV4/6 socket type, IP_ADDRESS_TYPE;
-    TCPIP_UDP_SKT_EXT_FLAGS extFlags; // additional socket flags; 8 bit value
+    uint8_t         extFlags;       // a UDP_EXT_FLAGS value, 8 bit
     uint8_t         ttl;            // socket TTL value 
-    uint8_t         padding[1];     // padding; not used
+    uint8_t         padding;        // padding; not used
 
 } UDP_SOCKET_DCPT;
 
 
-#endif  // __UDP_PRIVATE_H_
+#endif  // H__UDP_PRIVATE_H_
 
 
 
