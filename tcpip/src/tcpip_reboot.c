@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,13 +45,12 @@ Microchip or any third party.
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_REBOOT_SERVER)
 
-// #include "system/reset/sys_reset.h"
-#include "system/sys_reset_h2_adapter.h"
+#include "system/reset/sys_reset.h"
 
 
 static UDP_SOCKET       rebootSocket = INVALID_UDP_SOCKET;
 static int              rebootInitCount = 0;
-static tcpipSignalHandle rebootSignalHandle = 0;
+static TCPIP_SIGNAL_HANDLE rebootSignalHandle = NULL;
 
 static void TCPIP_REBOOT_Process(void);
 static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
@@ -59,7 +58,7 @@ static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, 
 
 /*****************************************************************************
   Function:
-    bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* pRebootConfig);
+    bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
   Summary:
     Resets the reboot server module for the specified interface.
@@ -80,9 +79,9 @@ static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, 
     This function should be called internally just once per interface 
     by the stack manager.
 ***************************************************************************/
-bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* pRebootConfig)
+bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
@@ -92,20 +91,20 @@ bool TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
     if(rebootInitCount == 0)
     {   // first time we're run
 
-        rebootSocket = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_REBOOT_SERVER_PORT, 0);
+        rebootSocket = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_REBOOT_SERVER_PORT, NULL);
 
         if(rebootSocket == INVALID_UDP_SOCKET)
         {   // failed
             return false;
         }
 
-        TCPIP_UDP_SignalHandlerRegister(rebootSocket, TCPIP_UDP_SIGNAL_RX_DATA, RebootSocketRxSignalHandler, 0);
+        (void)TCPIP_UDP_SignalHandlerRegister(rebootSocket, TCPIP_UDP_SIGNAL_RX_DATA, &RebootSocketRxSignalHandler, NULL);
 
         // create the reboot timer
-        rebootSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_REBOOT_Task, 0);
-        if(rebootSignalHandle == 0)
+        rebootSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_REBOOT_Task, 0);
+        if(rebootSignalHandle == NULL)
         {   // cannot create the reboot timer
-            TCPIP_UDP_Close(rebootSocket);
+            (void)TCPIP_UDP_Close(rebootSocket);
             rebootSocket = INVALID_UDP_SOCKET;
             return false;
         }
@@ -148,17 +147,17 @@ void TCPIP_REBOOT_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
     if(rebootInitCount > 0)
     {   // we're up and running
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--rebootInitCount == 0)
             {   // all closed
                 // release resources
-                TCPIP_UDP_Close(rebootSocket);
+                (void)TCPIP_UDP_Close(rebootSocket);
                 rebootSocket = INVALID_UDP_SOCKET;
-                if(rebootSignalHandle)
+                if(rebootSignalHandle != NULL)
                 {
-                    _TCPIPStackSignalHandlerDeregister(rebootSignalHandle);
-                    rebootSignalHandle = 0;
+                    TCPIPStackSignalHandlerDeregister(rebootSignalHandle);
+                    rebootSignalHandle = NULL;
                 }
             }
         }
@@ -170,9 +169,9 @@ void TCPIP_REBOOT_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_RX_PENDING) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_RX_PENDING) != 0U)
     { //  RX signal occurred
         TCPIP_REBOOT_Process();
     }
@@ -186,7 +185,7 @@ static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, 
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -194,8 +193,7 @@ static void RebootSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, 
 
 static void TCPIP_REBOOT_Process(void)
 {
-    int     nBytes;
-    int     rebootMsgSize;
+    uint16_t nBytes, rebootMsgSize;
     bool    msgFail, needReboot;
     uint8_t rebootBuffer[sizeof(TCPIP_REBOOT_MESSAGE)];
 
@@ -203,19 +201,19 @@ static void TCPIP_REBOOT_Process(void)
     UDP_SOCKET_INFO     sktInfo;
 #endif  // defined(TCPIP_REBOOT_SAME_SUBNET_ONLY)
 
-    rebootMsgSize = strlen(TCPIP_REBOOT_MESSAGE);
+    rebootMsgSize = (uint16_t)strlen(TCPIP_REBOOT_MESSAGE);
 
     while(true)
     {
         // Do nothing if no data is waiting
         nBytes = TCPIP_UDP_GetIsReady(rebootSocket);
 
-        if(nBytes == 0)
+        if(nBytes == 0U)
         {   // no more data pending
             return;
         }
 
-        msgFail = needReboot = 0;
+        msgFail = needReboot = false;
         if(nBytes < rebootMsgSize)
         {   // wrong message received
             msgFail = true;
@@ -223,8 +221,9 @@ static void TCPIP_REBOOT_Process(void)
 #if defined(TCPIP_REBOOT_SAME_SUBNET_ONLY)
         else
         {   // Respond only to name requests sent to us from nodes on the same subnet
-            TCPIP_UDP_SocketInfoGet(rebootSocket, &sktInfo);
-            if(_TCPIPStackIpAddFromAnyNet(0, &sktInfo.remoteIPaddress.v4Add) == 0)
+            (void)memset(&sktInfo, 0, sizeof(sktInfo));
+            (void)TCPIP_UDP_SocketInfoGet(rebootSocket, &sktInfo);
+            if(TCPIPStackIpAddFromAnyNet(NULL, &sktInfo.remoteIPaddress.v4Add) == NULL)
             {
                 msgFail = true;
             }
@@ -233,7 +232,7 @@ static void TCPIP_REBOOT_Process(void)
 
         if(!msgFail)
         {   // check that we got the reset message
-            TCPIP_UDP_ArrayGet(rebootSocket, rebootBuffer, rebootMsgSize);
+            (void)TCPIP_UDP_ArrayGet(rebootSocket, rebootBuffer, rebootMsgSize);
             rebootBuffer[rebootMsgSize] = 0;
 
             if(strcmp((char*)rebootBuffer, TCPIP_REBOOT_MESSAGE) == 0)
@@ -242,7 +241,7 @@ static void TCPIP_REBOOT_Process(void)
             }
         }
 
-        TCPIP_UDP_Discard(rebootSocket);
+        (void)TCPIP_UDP_Discard(rebootSocket);
         if(needReboot)
         {
             SYS_ERROR(SYS_ERROR_WARNING, "System remote reset requested\r\n");

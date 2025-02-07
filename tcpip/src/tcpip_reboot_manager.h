@@ -14,7 +14,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,13 +45,13 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_REBOOT_MANAGER_H_
-#define __TCPIP_REBOOT_MANAGER_H_
+#ifndef H_TCPIP_REBOOT_MANAGER_H_
+#define H_TCPIP_REBOOT_MANAGER_H_
 
-bool    TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* pRebootConfig);
+bool    TCPIP_REBOOT_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 void    TCPIP_REBOOT_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
-#endif  // __TCPIP_REBOOT_MANAGER_H_
+#endif  // H_TCPIP_REBOOT_MANAGER_H_
 
