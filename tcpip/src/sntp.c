@@ -12,7 +12,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -56,17 +56,17 @@ Microchip or any third party.
 
 // enable SNTP debugging levels
 // #define TCPIP_SNTP_DEBUG_LEVEL  (TCPIP_SNTP_DEBUG_MASK_BASIC | TCPIP_SNTP_DEBUG_MASK_STATE | TCPIP_SNTP_DEBUG_MASK_ERROR | TCPIP_SNTP_DEBUG_MASK_TIME_STAMP | TCPIP_SNTP_DEBUG_MASK_DNS)
-#define TCPIP_SNTP_DEBUG_LEVEL  (0)
+#define TCPIP_SNTP_DEBUG_LEVEL  (0x01)
 
 
 // Defines the structure of an NTP packet
 typedef struct
 {
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t mode            : 3;  // NTP mode
-        uint8_t versionNumber   : 3;  // SNTP version number
-        uint8_t leapIndicator   : 2;  // Leap second indicator
+        unsigned mode            : 3;  // NTP mode
+        unsigned versionNumber   : 3;  // SNTP version number
+        unsigned leapIndicator   : 2;  // Leap second indicator
     } flags;                          // Flags for the packet
 
     uint8_t stratum;                  // Stratum level of local clock
@@ -86,12 +86,12 @@ typedef struct
 
 } NTP_PACKET;
 
-static TCPIP_NET_IF*    pSntpIf = 0;    // we use only one interface for SNTP (for now at least)
-static TCPIP_NET_IF*    pSntpDefIf = 0;    // default SNTP interface
+static const TCPIP_NET_IF*    pSntpIf = NULL;    // we use only one interface for SNTP (for now at least)
+static const TCPIP_NET_IF*    pSntpDefIf = NULL;    // default SNTP interface
 
 static UDP_SOCKET       sntpSocket = INVALID_UDP_SOCKET;    // UDP socket we use
 
-static tcpipSignalHandle sntpSignalHandle = 0;
+static TCPIP_SIGNAL_HANDLE sntpSignalHandle = NULL;
 static int              sntpInitCount = 0;
 
 static char             sntpServerName[TCPIP_NTP_SERVER_MAX_LENGTH + 1];
@@ -105,6 +105,8 @@ static uint32_t         sntp_error_interval;
 
 typedef enum
 {
+    SM_INVALID = -1,    // invalid state
+    //
     SM_INIT = 0,
     SM_HOME,
     SM_WAIT_DNS,
@@ -114,6 +116,7 @@ typedef enum
     SM_SHORT_WAIT,
     SM_WAIT,
     SM_END,         
+    //...
 
 }TCPIP_SNTP_STATE;
 
@@ -137,34 +140,8 @@ static uint32_t TCPIP_SNTP_CurrTime(uint32_t* pMs);
 
 static void     TCPIP_SNTP_Event(TCPIP_SNTP_EVENT evType, const void* param);
 
-#if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_BASIC) != 0)
-volatile int _SNTPStayAssertLoop = 0;
-static void _SNTPAssertCond(bool cond, const char* message, int lineNo)
-{
-    if(cond == false)
-    {
-        SYS_CONSOLE_PRINT("SNTP Assert: %s, in line: %d\r\n", message, lineNo);
-        while(_SNTPStayAssertLoop != 0);
-    }
-}
-// a debug condition, not really assertion
-volatile int _SNTPStayCondLoop = 0;
-static void _SNTPDbgCond(bool cond, const char* message, int lineNo)
-{
-    if(cond == false)
-    {
-        SYS_CONSOLE_PRINT("SNTP Cond: %s, in line: %d\r\n", message, lineNo);
-        while(_SNTPStayCondLoop != 0);
-    }
-}
-
-#else
-#define _SNTPAssertCond(cond, message, lineNo)
-#define _SNTPDbgCond(cond, message, lineNo)
-#endif  // (TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_BASIC)
-
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_STATE) != 0)
-static const char* const _SNTP_DbgState_Tbl[] = 
+static const char* const T_SNTP_DbgState_Tbl[] = 
 {
     "init",            //    SM_INIT,
     "home",            //    SM_HOME,
@@ -179,16 +156,17 @@ static const char* const _SNTP_DbgState_Tbl[] =
 
 
 
-static TCPIP_SNTP_STATE oldState =  -1;
-static void _SNTP_DbgNewState(TCPIP_SNTP_STATE newState)
+static TCPIP_SNTP_STATE oldState =  SM_INVALID;
+static void F_SNTP_DbgNewState(TCPIP_SNTP_STATE newState)
 {
     if(newState != oldState)
     {
-        uint32_t sntpSecond = _TCPIP_SecCountGet(); 
+        uint32_t sntpSecond = TCPIP_SecCountGet(); 
         oldState = newState;
-        if(newState >= 0 && newState < sizeof(_SNTP_DbgState_Tbl) / sizeof(*_SNTP_DbgState_Tbl))
+        int stateI = (int)newState;
+        if(stateI >= 0 && stateI < (int)(sizeof(T_SNTP_DbgState_Tbl) / sizeof(*T_SNTP_DbgState_Tbl)))
         {
-            SYS_CONSOLE_PRINT("SNTP State: %d - %s, time: %d\r\n", newState, _SNTP_DbgState_Tbl[newState], sntpSecond);
+            SYS_CONSOLE_PRINT("SNTP State: %d - %s, time: %d\r\n", newState, T_SNTP_DbgState_Tbl[stateI], sntpSecond);
         }
         else
         {
@@ -198,17 +176,17 @@ static void _SNTP_DbgNewState(TCPIP_SNTP_STATE newState)
 }
 
 #else
-#define _SNTP_DbgNewState(newState)
+#define F_SNTP_DbgNewState(newState)
 #endif  // (TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_STATE)
 
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_ERROR) != 0)
-static const char* const _SNTP_DbgResOk_Tbl[] = 
+static const char* const T_SNTP_DbgResOk_Tbl[] = 
 {
     "ok",         // SNTP_RES_OK,            
     "progress",   // SNTP_RES_PROGRESS,
 };
 
-static const char* const _SNTP_DbgResError_Tbl[] = 
+static const char* const T_SNTP_DbgResError_Tbl[] = 
 {
     "Unknown",    // None            
     "busy",       // SNTP_RES_BUSY           
@@ -226,60 +204,63 @@ static const char* const _SNTP_DbgResError_Tbl[] =
     "conn_err",   // SNTP_RES_NTP_CONN_ERR        
 };
     
-static void _SNTP_DbgNewError(TCPIP_SNTP_RESULT newError)
+static void F_SNTP_DbgNewError(TCPIP_SNTP_RESULT newError)
 {
     const char* const* pTbl;
     size_t tblEntries;
 
-    if(newError >= 0)
+    size_t errVal;
+    if((int)newError >= 0)
     {
-        pTbl = _SNTP_DbgResOk_Tbl;
-        tblEntries = sizeof(_SNTP_DbgResOk_Tbl) / sizeof(*_SNTP_DbgResOk_Tbl);
+        errVal = (size_t)newError;
+        pTbl = T_SNTP_DbgResOk_Tbl;
+        tblEntries = sizeof(T_SNTP_DbgResOk_Tbl) / sizeof(*T_SNTP_DbgResOk_Tbl);
     }
     else
     {
-        newError = -newError;
-        pTbl = _SNTP_DbgResError_Tbl;
-        tblEntries = sizeof(_SNTP_DbgResError_Tbl) / sizeof(*_SNTP_DbgResError_Tbl);
+        errVal = (size_t)(-(int)newError);
+        pTbl = T_SNTP_DbgResError_Tbl;
+        tblEntries = sizeof(T_SNTP_DbgResError_Tbl) / sizeof(*T_SNTP_DbgResError_Tbl);
     }
 
-    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
-    if(newError >= 0 && newError < tblEntries)
+    uint32_t sntpSecond = TCPIP_SecCountGet(); 
+    if(errVal < tblEntries)
     {
-        SYS_CONSOLE_PRINT("SNTP Error: %d - %s, time: %d\r\n", newError, pTbl[newError], sntpSecond);
+        SYS_CONSOLE_PRINT("SNTP Error: %d - %s, time: %d\r\n", errVal, pTbl[errVal], sntpSecond);
     }
     else
     {
-        SYS_CONSOLE_PRINT("SNTP Error: %d - %s, time: %d\r\n", newError, "Unknown", sntpSecond);
+        SYS_CONSOLE_PRINT("SNTP Error: %d - %s, time: %d\r\n", errVal, "Unknown", sntpSecond);
     }
 }
 #else
-#define _SNTP_DbgNewError(newError)
+#define F_SNTP_DbgNewError(newError)
 #endif  // ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_ERROR) != 0)
 
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_TIME_STAMP) != 0)
-static __inline__ void __attribute__((always_inline)) _SNTP_DbgNewTimeStamp(uint32_t tStamp)
+static __inline__ void __attribute__((always_inline)) F_SNTP_DbgNewTimeStamp(uint32_t tStamp)
 {
-    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
+    uint32_t sntpSecond = TCPIP_SecCountGet(); 
     SYS_CONSOLE_PRINT("SNTP new TStamp: %d, time: %d\r\n", tStamp, sntpSecond);
 }
 #else
-#define _SNTP_DbgNewTimeStamp(tStamp)
+#define F_SNTP_DbgNewTimeStamp(tStamp)
 #endif  // ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_TIME_STAMP) != 0)
 
 #if ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_DNS) != 0)
-static void _SNTP_DbgNewDns(const char* srvName, const IP_MULTI_ADDRESS* srvAdd)
+static void F_SNTP_DbgNewDns(const char* srvName, const IP_MULTI_ADDRESS* srvAdd)
 {
     char addBuff[42];
 
-    if(srvAdd)
+    addBuff[0] = '\0';
+    if(srvAdd != NULL)
     {
 #if defined (TCPIP_STACK_USE_IPV6)           
         if(ntpConnection == IP_ADDRESS_TYPE_IPV6)
         {
             if(!TCPIP_Helper_IPv6AddressToString (&srvAdd->v6Add, addBuff, sizeof(addBuff)))
             {
-                strcpy(addBuff, "Invalid IPv6 Address");
+                (void)strcpy(addBuff, "Invalid IPv6 Address");
             }
         }
 #endif  // defined (TCPIP_STACK_USE_IPV6)           
@@ -288,14 +269,14 @@ static void _SNTP_DbgNewDns(const char* srvName, const IP_MULTI_ADDRESS* srvAdd)
         {
             if(!TCPIP_Helper_IPAddressToString (&srvAdd->v4Add, addBuff, sizeof(addBuff)))
             {
-                strcpy(addBuff, "Invalid IPv4 Address");
+                (void)strcpy(addBuff, "Invalid IPv4 Address");
             }
         }
 #endif  // defined (TCPIP_STACK_USE_IPV4)           
     }
 
-    uint32_t sntpSecond = _TCPIP_SecCountGet(); 
-    if(srvAdd)
+    uint32_t sntpSecond = TCPIP_SecCountGet(); 
+    if(srvAdd != NULL)
     {
         SYS_CONSOLE_PRINT("SNTP solved DNS: %s, address: %s, time: %d\r\n", srvName, addBuff, sntpSecond);
     }
@@ -305,21 +286,36 @@ static void _SNTP_DbgNewDns(const char* srvName, const IP_MULTI_ADDRESS* srvAdd)
     }
 }
 #else
-#define _SNTP_DbgNewDns(srvName, srvAdd)
+#define F_SNTP_DbgNewDns(srvName, srvAdd)
 #endif  // ((TCPIP_SNTP_DEBUG_LEVEL & TCPIP_SNTP_DEBUG_MASK_DNS) != 0)
 
+// conversion helpers
+//
+static __inline__ TCPIP_SNTP_HANDLE __attribute__((always_inline)) FC_EvHndl2SntpHndl(TCPIP_SNTP_EVENT_HANDLER evHandler)
+{
+    union
+    {
+        TCPIP_SNTP_EVENT_HANDLER evHandler;
+        TCPIP_SNTP_HANDLE hndl;
+    }U_EV_HNDL_SNTP_HNDL;
+
+    U_EV_HNDL_SNTP_HNDL.evHandler = evHandler;
+    return U_EV_HNDL_SNTP_HNDL.hndl;
+}
+
+// inline helpers
 static __inline__ void __attribute__((always_inline)) TCPIP_SNTP_SetNewState(TCPIP_SNTP_STATE newState)
 {
-    _SNTP_DbgNewState(newState);
+    F_SNTP_DbgNewState(newState);
     sntpState = newState;
 }
 
 static __inline__ void __attribute__((always_inline)) TCPIP_SNTP_SetError(TCPIP_SNTP_RESULT newError, TCPIP_SNTP_EVENT evType)
 {
-    _SNTP_DbgNewError(newError);
+    F_SNTP_DbgNewError(newError);
     ntpLastError = newError;
     uint32_t tickCount = SYS_TMR_TickCountGet();
-    TCPIP_SNTP_Event(evType, (const void*)tickCount);
+    TCPIP_SNTP_Event(evType, FC_Uint2VPtr(tickCount));
 }
 
 
@@ -348,31 +344,31 @@ static void     TCPIP_SNTP_SocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HAND
 
 static __inline__ void __attribute__((always_inline)) TCPIP_SNTP_SetIdleState(TCPIP_SNTP_STATE newState)
 {
-    pSntpIf = 0;
+    pSntpIf = NULL;
     TCPIP_SNTP_SetNewState(newState);
 }
 
 
 // returns true if the module is idle
 // and a new connection can be started
-static bool _SntpCanStart(void)
+static bool F_SntpCanStart(void)
 {
     return (sntpState == SM_HOME || sntpState == SM_SHORT_WAIT || sntpState == SM_WAIT);
 }
 
 // returns true if the module is idle
 // and SNTP parameters changed
-static bool _SntpCanChangeParams(void)
+static bool F_SntpCanChangeParams(void)
 {
     return (sntpState == SM_HOME || sntpState == SM_SHORT_WAIT || sntpState == SM_WAIT || sntpState == SM_END);
 }
 
-bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_SNTP_MODULE_CONFIG* pSNTPConfig)
+bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
-        if(pSntpIf == 0 || pSntpIf == stackCtrl->pNetIf)
+        if(pSntpIf == NULL || pSntpIf == stackCtrl->pNetIf)
         {   // this interface is going up/re-initialized, etc
             TCPIP_SNTP_SetIdleState(SM_HOME);
         }
@@ -383,7 +379,8 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     while(sntpInitCount == 0)
     {   // first time we run
         // basic sanity check
-        if(pSNTPConfig == 0 || (pSNTPConfig->ntp_connection_type != IP_ADDRESS_TYPE_IPV4 && pSNTPConfig->ntp_connection_type != IP_ADDRESS_TYPE_IPV6))
+        const TCPIP_SNTP_MODULE_CONFIG* pSNTPConfig = (const TCPIP_SNTP_MODULE_CONFIG*)initData;
+        if(pSNTPConfig == NULL || (pSNTPConfig->ntp_connection_type != IP_ADDRESS_TYPE_IPV4 && pSNTPConfig->ntp_connection_type != IP_ADDRESS_TYPE_IPV6))
         {
             return false;
         }
@@ -402,12 +399,12 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         }
 #endif  // !defined (TCPIP_STACK_USE_IPV4)
 
-        memset(&ntpData, 0, sizeof(ntpData));
-        sntpServerName[0] = 0;
-        if(pSNTPConfig->ntp_server != 0)
+        (void)memset(&ntpData, 0, sizeof(ntpData));
+        sntpServerName[0] = '\0';
+        if(pSNTPConfig->ntp_server != NULL)
         {
-            strncpy(sntpServerName, pSNTPConfig->ntp_server, sizeof(sntpServerName) - 1);
-            sntpServerName[sizeof(sntpServerName) - 1] = 0;
+            (void)strncpy(sntpServerName, pSNTPConfig->ntp_server, sizeof(sntpServerName) - 1U);
+            sntpServerName[sizeof(sntpServerName) - 1U] = '\0';
         }
         ntpConnection = pSNTPConfig->ntp_connection_type;
         sntp_reply_timeout = pSNTPConfig->ntp_reply_timeout;
@@ -415,27 +412,27 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         sntp_query_interval = pSNTPConfig->ntp_success_interval;
         sntp_error_interval = pSNTPConfig->ntp_error_interval;
 
-        pSntpDefIf = (TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pSNTPConfig->ntp_interface);
+        pSntpDefIf = (const TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pSNTPConfig->ntp_interface);
 
         // allow changing the connection type at run time
-        sntpSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_ANY, TCPIP_NTP_SERVER_REMOTE_PORT, 0);
+        sntpSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_ANY, TCPIP_NTP_SERVER_REMOTE_PORT, NULL);
         if(sntpSocket == INVALID_UDP_SOCKET)
         {
             return false;
         }
         // receiving from multiple SNTP servers
-        TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_STRICT_ADDRESS, (void*)false);
-        TCPIP_UDP_SignalHandlerRegister(sntpSocket, TCPIP_UDP_SIGNAL_RX_DATA, TCPIP_SNTP_SocketRxSignalHandler, 0);
+        (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_STRICT_ADDRESS, FC_Uint2VPtr(0U));
+        (void)TCPIP_UDP_SignalHandlerRegister(sntpSocket, TCPIP_UDP_SIGNAL_RX_DATA, &TCPIP_SNTP_SocketRxSignalHandler, NULL);
 
         // create the SNTP timer
-        sntpSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_SNTP_Task, TCPIP_NTP_TASK_TICK_RATE); 
-        if(sntpSignalHandle == 0)
+        sntpSignalHandle = TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_SNTP_Task, TCPIP_NTP_TASK_TICK_RATE); 
+        if(sntpSignalHandle == NULL)
         {   // cannot create the SNTP timer
             TCPIP_SNTP_Cleanup();
             return false;
         }
 
-        ntpEventHandler = 0;
+        ntpEventHandler = NULL;
         sntpDisabled = false;
         break;
     }
@@ -466,7 +463,7 @@ void TCPIP_SNTP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
             TCPIP_SNTP_SetIdleState(SM_END);
         }
 
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--sntpInitCount == 0)
             {   // all closed
@@ -482,14 +479,14 @@ static void TCPIP_SNTP_Cleanup(void)
 {
     if(sntpSocket != INVALID_UDP_SOCKET)
     {
-        TCPIP_UDP_Close(sntpSocket);
+        (void)TCPIP_UDP_Close(sntpSocket);
         sntpSocket = INVALID_UDP_SOCKET;
     }
 
-    if(sntpSignalHandle)
+    if(sntpSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(sntpSignalHandle);
-        sntpSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(sntpSignalHandle);
+        sntpSignalHandle = NULL;
     }
 
 }
@@ -499,9 +496,9 @@ void TCPIP_SNTP_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if(sigPend != 0)
+    if(sigPend != TCPIP_MODULE_SIGNAL_NONE)
     { // TMO or RX occurred
         TCPIP_SNTP_Process();
     }
@@ -514,7 +511,7 @@ static void TCPIP_SNTP_SocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE h
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -541,13 +538,13 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         case SM_HOME:
-            if(sntpDisabled || sntpServerName[0] == 0)
+            if(sntpDisabled || sntpServerName[0] == '\0')
             {   // idle or no active server name
                 break;
             }
 
-            pNetIf = _TCPIPStackAnyNetLinked(false);
-            if(pNetIf == 0 || _TCPIPStackIsConfig(pNetIf) != 0 || TCPIP_STACK_NetAddressGet(pNetIf) == 0)
+            pNetIf = TCPIPStackAnyNetLinked(false);
+            if(pNetIf == NULL || TCPIPStackIsConfig(pNetIf) || TCPIP_STACK_NetAddressGet(pNetIf) == 0U)
             {   // not yet up and running
                 break;
             }
@@ -575,7 +572,7 @@ static void TCPIP_SNTP_Process(void)
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
             dnsRes = TCPIP_DNS_Resolve(sntpServerName, ntpConnection == IP_ADDRESS_TYPE_IPV6 ? TCPIP_DNS_TYPE_AAAA : TCPIP_DNS_TYPE_A);
-            if(dnsRes < 0)
+            if((int)dnsRes < 0)
             {   // some DNS error occurred; retry after waiting a while
                 TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_DNS_ERROR, true);
             }
@@ -586,13 +583,13 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         case SM_WAIT_DNS:
-            _SNTP_DbgNewDns(sntpServerName, 0);
+            F_SNTP_DbgNewDns(sntpServerName, NULL);
             dnsRes = TCPIP_DNS_IsResolved(sntpServerName, &ntpServerIP, ntpConnection);
             if(dnsRes == TCPIP_DNS_RES_PENDING)
             {   // ongoing operation;
                 break;
             }
-            else if(dnsRes < 0)
+            else if((int)dnsRes < 0)
             {   // some DNS error occurred; retry after waiting a while
                 TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_DNS_ERROR, true);
             }
@@ -603,26 +600,26 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         case SM_DNS_RESOLVED:
-            _SNTP_DbgNewDns(sntpServerName, &ntpServerIP);
+            F_SNTP_DbgNewDns(sntpServerName, &ntpServerIP);
             // select a running interface
             pSntpIf = pSntpDefIf;
             if(!TCPIP_STACK_NetworkIsLinked(pSntpIf))
             {
-                pSntpIf = _TCPIPStackAnyNetLinked(true);
+                pSntpIf = TCPIPStackAnyNetLinked(true);
             }
 
-            if(pSntpIf == 0)
+            if(pSntpIf == NULL)
             {   // wait some more
                 TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_IF_ERR, TCPIP_SNTP_EVENT_IF_ERROR, false);
                 break;
             }
             // bind socket to the (new) connection type 
-            TCPIP_UDP_Disconnect(sntpSocket, true);
+            (void)TCPIP_UDP_Disconnect(sntpSocket, true);
             bindRes = TCPIP_UDP_RemoteBind(sntpSocket, ntpConnection, TCPIP_NTP_SERVER_REMOTE_PORT, &ntpServerIP);
             if(bindRes)
             {
                 bindRes = TCPIP_UDP_SocketNetSet(sntpSocket, pSntpIf);
-                TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_STRICT_ADDRESS, (void*)false);
+                (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_STRICT_ADDRESS, FC_Uint2VPtr(0U));
             }
 
             SNTPTimer = SYS_TMR_TickCountGet();
@@ -639,9 +636,10 @@ static void TCPIP_SNTP_Process(void)
         case SM_UDP_SEND:
             // Open up the sending UDP socket
             // Make certain the socket can be written to
-            if(!TCPIP_UDP_TxPutIsReady(sntpSocket, sizeof(pkt)))
+            if(TCPIP_UDP_TxPutIsReady(sntpSocket, (uint16_t)sizeof(pkt)) == 0U)
             {   // Wait no more than 1 sec
-                if((SYS_TMR_TickCountGet() - SNTPTimer > 1 * SYS_TMR_TickCounterFrequencyGet()))
+                uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet();
+                if((SYS_TMR_TickCountGet() - SNTPTimer > 1U * sysFreq))
                 {
                     TCPIP_SNTP_SetErrorState(SM_DNS_RESOLVED, SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
                 }
@@ -650,14 +648,14 @@ static void TCPIP_SNTP_Process(void)
 
             // Success
             // Transmit a time request packet
-            memset(&pkt, 0, sizeof(pkt));
-            pkt.flags.versionNumber = TCPIP_NTP_VERSION;
-            pkt.flags.mode = 3;             // NTP Client
+            (void)memset(&pkt, 0, sizeof(pkt));
+            pkt.flags.versionNumber = (uint8_t)TCPIP_NTP_VERSION;
+            pkt.flags.mode = 3U;             // NTP Client
             pkt.orig_ts_secs = TCPIP_Helper_htonl(TCPIP_NTP_EPOCH);
             // enable packets RX
-            TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)TCPIP_NTP_RX_QUEUE_LIMIT);
-            TCPIP_UDP_ArrayPut(sntpSocket, (uint8_t*) &pkt, sizeof(pkt));
-            TCPIP_UDP_Flush(sntpSocket);
+            (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, FC_Uint2VPtr((uint32_t)TCPIP_NTP_RX_QUEUE_LIMIT));
+            (void)TCPIP_UDP_ArrayPut(sntpSocket, (uint8_t*) &pkt, (uint16_t)sizeof(pkt));
+            (void)TCPIP_UDP_Flush(sntpSocket);
 
             SNTPTimer = SYS_TMR_TickCountGet();
             TCPIP_SNTP_SetNewState(SM_UDP_RECV);
@@ -671,7 +669,7 @@ static void TCPIP_SNTP_Process(void)
                 break;
             }
 
-            if(!TCPIP_UDP_GetIsReady(sntpSocket))
+            if(TCPIP_UDP_GetIsReady(sntpSocket) == 0U)
             {
                 if((SYS_TMR_TickCountGet()) - SNTPTimer <= sntp_reply_timeout )
                 {   // no timeout yet
@@ -685,7 +683,7 @@ static void TCPIP_SNTP_Process(void)
             dataAvlbl = false;
 
             // consume all available data
-            while(TCPIP_UDP_GetIsReady(sntpSocket))
+            while(TCPIP_UDP_GetIsReady(sntpSocket) != 0U)
             {
                 dataAvlbl = true;
                 if(TCPIP_SNTP_ProcessPkt())
@@ -701,9 +699,9 @@ static void TCPIP_SNTP_Process(void)
             }
 
             // disable RX of further packets
-            TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)0);
+            (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, FC_Uint2VPtr(0U));
             // flush any pending data
-            TCPIP_UDP_Disconnect(sntpSocket, true);
+            (void)TCPIP_UDP_Disconnect(sntpSocket, true);
 
             SNTPTimer = SYS_TMR_TickCountGet();
             break;
@@ -726,6 +724,7 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         default:
+            // do nothing
             break;
     }
 
@@ -741,25 +740,25 @@ static bool TCPIP_SNTP_ProcessPkt(void)
 
 
     // Get the response time packet
-    w = TCPIP_UDP_ArrayGet(sntpSocket, (uint8_t*) &pkt, sizeof(pkt));
+    w = TCPIP_UDP_ArrayGet(sntpSocket, (uint8_t*) &pkt, (uint16_t)sizeof(pkt));
 
     // sanity packet check
-    if(w != sizeof(pkt) || pkt.flags.versionNumber != TCPIP_NTP_VERSION )
+    if(w != sizeof(pkt) || pkt.flags.versionNumber != (uint8_t)TCPIP_NTP_VERSION )
     {
         TCPIP_SNTP_SetError(SNTP_RES_NTP_VERSION_ERR, TCPIP_SNTP_EVENT_VER_ERROR); 
         return false;
     }
-    if((pkt.tx_ts_secs == 0 && pkt.tx_ts_fraq == 0))
+    if((pkt.tx_ts_secs == 0U && pkt.tx_ts_fraq == 0U))
     {
         TCPIP_SNTP_SetError(SNTP_RES_NTP_TSTAMP_ERR, TCPIP_SNTP_EVENT_TSTAMP_ERROR); 
         return false;
     }
-    if(pkt.stratum == 0 )
+    if(pkt.stratum == 0U)
     {
         TCPIP_SNTP_SetError(SNTP_RES_NTP_KOD_ERR, TCPIP_SNTP_EVENT_KOD_ERROR); 
         return false;
     }
-    if(pkt.stratum >= TCPIP_NTP_MAX_STRATUM || pkt.flags.leapIndicator == 3 )
+    if(pkt.stratum >= (uint8_t)TCPIP_NTP_MAX_STRATUM || pkt.flags.leapIndicator == 3U)
     {
         TCPIP_SNTP_SetError(SNTP_RES_NTP_SYNC_ERR, TCPIP_SNTP_EVENT_SYNC_ERROR); 
         return false;
@@ -771,13 +770,13 @@ static bool TCPIP_SNTP_ProcessPkt(void)
     ntpData.tStamp.tStampFraction = TCPIP_Helper_ntohl(pkt.tx_ts_fraq);
     ntpData.tStampTick = SYS_TMR_TickCountGetLong();
     ntpData.tUnixSeconds = ntpData.tStamp.tStampSeconds - TCPIP_NTP_EPOCH;
-    msStamp.llStamp = (uint64_t)ntpData.tStamp.tStampFraction * 1000;
+    msStamp.llStamp = (uint64_t)ntpData.tStamp.tStampFraction * 1000U;
     ntpData.tMilliseconds = msStamp.tStampSeconds;
     ntpData.nUpdates++;
 
     TCPIP_SNTP_Event(TCPIP_SNTP_EVENT_TSTAMP_OK, (const void*)&ntpData);
 
-    _SNTP_DbgNewTimeStamp(ntpData.tUnixSeconds);
+    F_SNTP_DbgNewTimeStamp(ntpData.tUnixSeconds);
     return true;
 }
 
@@ -797,7 +796,7 @@ static uint32_t TCPIP_SNTP_CurrTime(uint32_t* pMs)
     deltaStamp.tStampSeconds = (uint32_t)(deltaTick / ticksPerSec);
 
     // calculate fract part: (deltaTick % ticksPerSec) / ticksPerSec) * 2^32 ; 
-    fractStamp.tStampSeconds = deltaTick - deltaStamp.tStampSeconds * ticksPerSec;
+    fractStamp.tStampSeconds = (uint32_t)(deltaTick - (uint64_t)deltaStamp.tStampSeconds * ticksPerSec);
     fractStamp.tStampFraction = 0;
 
     deltaStamp.tStampFraction = (uint32_t)(fractStamp.llStamp / ticksPerSec);
@@ -807,9 +806,9 @@ static uint32_t TCPIP_SNTP_CurrTime(uint32_t* pMs)
 
 
     // calculate milliseconds: (fract / 2 ^ 32) * 1000;
-    if(pMs)
+    if(pMs != NULL)
     {
-        fractStamp.llStamp = (uint64_t)deltaStamp.tStampFraction * 1000;
+        fractStamp.llStamp = (uint64_t)deltaStamp.tStampFraction * 1000U;
         *pMs = fractStamp.tStampSeconds;
     }
 
@@ -828,7 +827,7 @@ uint32_t TCPIP_SNTP_UTCSecondsGet(void)
     }
     else
     {   // we could get the time
-        currSec = TCPIP_SNTP_CurrTime(0);
+        currSec = TCPIP_SNTP_CurrTime(NULL);
     }
 
 
@@ -837,7 +836,7 @@ uint32_t TCPIP_SNTP_UTCSecondsGet(void)
 
 TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionParamSet(TCPIP_NET_HANDLE netH, IP_ADDRESS_TYPE ntpConnType, const char* ntpServer)
 {
-    if(!_SntpCanChangeParams())
+    if(!F_SntpCanChangeParams())
     {
         return SNTP_RES_BUSY;
     }
@@ -866,19 +865,19 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionParamSet(TCPIP_NET_HANDLE netH, IP_ADDRES
         ntpConnection = ntpConnType;
     }
 
-    if(netH)
+    if(netH != NULL)
     {
-        pSntpDefIf = _TCPIPStackHandleToNet(netH);
+        pSntpDefIf = TCPIPStackHandleToNet(netH);
     }
 
-    if(ntpServer)
+    if(ntpServer != NULL)
     {
-        strncpy(sntpServerName, ntpServer, sizeof(sntpServerName) - 1);
-        sntpServerName[sizeof(sntpServerName) - 1] = 0;
+        (void)strncpy(sntpServerName, ntpServer, sizeof(sntpServerName) - 1U);
+        sntpServerName[sizeof(sntpServerName) - 1U] = '\0';
     }
     else
     {
-        sntpServerName[0] = 0;
+        sntpServerName[0] = '\0';
     }
 
     return SNTP_RES_OK;
@@ -887,7 +886,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionParamSet(TCPIP_NET_HANDLE netH, IP_ADDRES
 
 TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionInitiate(void)
 {
-    if(!_SntpCanStart())
+    if(!F_SntpCanStart())
     {
         return SNTP_RES_PROGRESS;
     }
@@ -902,11 +901,11 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_Disable(void)
     {
         if(sntpState > SM_INIT)
         {   // no more rx data
-            TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, (void*)0);
+            (void)TCPIP_UDP_OptionsSet(sntpSocket, UDP_OPTION_RX_QUEUE_LIMIT, FC_Uint2VPtr(0U));
             // discard any data
-            while(TCPIP_UDP_GetIsReady(sntpSocket))
+            while(TCPIP_UDP_GetIsReady(sntpSocket) != 0U)
             {
-                TCPIP_UDP_Discard(sntpSocket);
+                (void)TCPIP_UDP_Discard(sntpSocket);
             }
             TCPIP_SNTP_SetNewState(SM_HOME);
         }
@@ -921,7 +920,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_Enable(void)
 {
     if(sntpDisabled == true)
     {   // re-enable the module
-        _SNTPAssertCond(sntpState == SM_INIT || sntpState == SM_HOME, __func__, __LINE__);
+        TCPIPStack_Assert(sntpState == SM_INIT || sntpState == SM_HOME, __FILE__, __func__, __LINE__);
         sntpDisabled = false;
     }
 
@@ -937,7 +936,7 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_TimeStampStatus(void)
 {
     TCPIP_SNTP_RESULT res;
 
-    if(ntpData.nUpdates == 0)
+    if(ntpData.nUpdates == 0U)
     {   // no data available
         res = SNTP_RES_TSTAMP_ERROR;
     }
@@ -958,13 +957,13 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_TimeStampGet(TCPIP_SNTP_TIME_STAMP* pTStamp, uint32
 {
     TCPIP_SNTP_RESULT res = TCPIP_SNTP_TimeStampStatus();
 
-    if(pTStamp)
+    if(pTStamp != NULL)
     {
-        pTStamp->llStamp = res == SNTP_RES_TSTAMP_ERROR ? 0 : ntpData.tStamp.llStamp;
+        pTStamp->llStamp = res == SNTP_RES_TSTAMP_ERROR ? 0U : ntpData.tStamp.llStamp;
     }
-    if(pLastUpdate)
+    if(pLastUpdate != NULL)
     {
-        *pLastUpdate = res == SNTP_RES_TSTAMP_ERROR ? 0 : (uint32_t)ntpData.tStampTick;
+        *pLastUpdate = res == SNTP_RES_TSTAMP_ERROR ? 0U : (uint32_t)ntpData.tStampTick;
     }
 
     return res;
@@ -984,12 +983,12 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_TimeGet(uint32_t* pUTCSeconds, uint32_t* pMs)
         currSec = TCPIP_SNTP_CurrTime(&currMs);
     }
 
-    if(pUTCSeconds)
+    if(pUTCSeconds != NULL)
     {
         *pUTCSeconds = currSec;
     }
 
-    if(pMs)
+    if(pMs != NULL)
     {
         *pMs = currMs;
     }
@@ -999,10 +998,6 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_TimeGet(uint32_t* pUTCSeconds, uint32_t* pMs)
 
 TCPIP_SNTP_RESULT TCPIP_SNTP_LastErrorGet(void)
 {
-    // keep compiler happy
-    _SNTPAssertCond(true, 0, 0);
-    _SNTPDbgCond(true, 0, 0);
-
     TCPIP_SNTP_RESULT res = ntpLastError;
     ntpLastError = SNTP_RES_OK;
     return res; 
@@ -1010,30 +1005,30 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_LastErrorGet(void)
 
 TCPIP_SNTP_HANDLE TCPIP_SNTP_HandlerRegister(TCPIP_SNTP_EVENT_HANDLER handler)
 {
-    if(handler == 0 || ntpEventHandler != 0)
+    if(handler == NULL || ntpEventHandler != NULL)
     {
-        return 0;
+        return NULL;
     }
 
     ntpEventHandler = handler;
-    return (TCPIP_SNTP_HANDLE) ntpEventHandler;
+    return FC_EvHndl2SntpHndl(ntpEventHandler);
 }
 
 bool TCPIP_SNTP_HandlerDeRegister(TCPIP_SNTP_HANDLE hSntp)
 {
-    if( (TCPIP_SNTP_EVENT_HANDLER) hSntp != ntpEventHandler )
+    if( hSntp != FC_EvHndl2SntpHndl(ntpEventHandler) )
     {
         return false;
     }
 
-    ntpEventHandler = 0;
+    ntpEventHandler = NULL;
     return true;
 }
     
 // signals an SNTP event
 static void TCPIP_SNTP_Event(TCPIP_SNTP_EVENT evType, const void* param)
 {
-    if(ntpEventHandler != 0)
+    if(ntpEventHandler != NULL)
     {
         (*ntpEventHandler)(evType, param);
     }
