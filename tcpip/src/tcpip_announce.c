@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -63,7 +63,7 @@ typedef struct
     uint32_t    requestMask;    // request mask per interface: bit x for interface x
     uint32_t    readyMask;      // ready mask per interface: bit x for interface x
     const void* memH;           // memory handle
-    tcpipSignalHandle   sigHandle;      // asynchronous handle
+    TCPIP_SIGNAL_HANDLE   sigHandle;      // asynchronous handle
     TCPIP_ANNOUNCE_MESSAGE_CALLBACK usrCback;   // user callback
 #if defined (TCPIP_STACK_USE_DHCP_CLIENT)
     TCPIP_DHCP_HANDLE dhcpHandler;
@@ -116,7 +116,7 @@ typedef struct __attribute__((packed))
     TCPIP_ANNOUNCE_MIN_HOST_NAME_DCPT   hostNameDcpt;
     TCPIP_ANNOUNCE_IPV4_ADDR_DCPT       ipv4AddDcpt;
     TCPIP_ANNOUNCE_IPV6_ADDR_DCPT       ipv6UnicastDcpt[4];
-}_TCPIP_ANNOUNCE_MIN_MESSAGE;
+}S_TCPIP_ANNOUNCE_MIN_MESSAGE;
 #elif defined(TCPIP_STACK_USE_IPV6)
 typedef struct __attribute__((packed))
 {
@@ -125,7 +125,7 @@ typedef struct __attribute__((packed))
     TCPIP_ANNOUNCE_MIN_MAC_NAME_DCPT    macNameDcpt;
     TCPIP_ANNOUNCE_MIN_HOST_NAME_DCPT   hostNameDcpt;
     TCPIP_ANNOUNCE_IPV6_ADDR_DCPT       ipv6UnicastDcpt[6];
-}_TCPIP_ANNOUNCE_MIN_MESSAGE;
+}S_TCPIP_ANNOUNCE_MIN_MESSAGE;
 #else
 typedef struct __attribute__((packed))
 {
@@ -134,42 +134,51 @@ typedef struct __attribute__((packed))
     TCPIP_ANNOUNCE_MIN_MAC_NAME_DCPT    macNameDcpt;
     TCPIP_ANNOUNCE_MIN_HOST_NAME_DCPT   hostNameDcpt;
     TCPIP_ANNOUNCE_IPV4_ADDR_DCPT       ipv4AddDcpt;
-}_TCPIP_ANNOUNCE_MIN_MESSAGE;
+}S_TCPIP_ANNOUNCE_MIN_MESSAGE;
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IPV6)
 
 
-#define _ANNOUNCE_SEPARATOR_1   0x0d
-#define _ANNOUNCE_SEPARATOR_2   0x0a
+#define M_ANNOUNCE_SEPARATOR_1   0x0d
+#define M_ANNOUNCE_SEPARATOR_2   0x0a
 
 // prototypes
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void             _TCPIP_AnnounceCleanup(void);
+static void             F_TCPIP_AnnounceCleanup(void);
 #else
-#define                 _TCPIP_AnnounceCleanup()
+#define                 F_TCPIP_AnnounceCleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static void             ANNOUNCE_Notify(TCPIP_NET_HANDLE hNet, uint8_t dhcpEvType, const void * param);
+static void             ANNOUNCE_Notify(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE dhcpEvType, const void * param);
 
 #if defined (TCPIP_STACK_USE_IPV6)
-static void             IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, uint8_t evType, const void * param);
+static void             IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, IPV6_EVENT_TYPE addEvType, const void * param, const void* usrParam);
 #endif // defined (TCPIP_STACK_USE_IPV6)
 
 static void             TCPIP_ANNOUNCE_Send(void);
 
-static bool             TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t* pAnnBuffer);
+static bool             TCPIP_ANNOUNCE_SendIf(size_t netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t* pAnnBuffer);
 
 static void             TCPIP_ANNOUNCE_Timeout(void);
 
-static void             _TCPIP_AnnounceSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
+static void             F_TCPIP_AnnounceSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param);
 
 typedef struct
 {
     TCPIP_ANNOUNCE_MESSAGE*         pMsg;       // pointer to the message currently assembled
     TCPIP_ANNOUNCE_FIELD_PAYLOAD    fieldType;  // current processed field
-    TCPIP_NET_IF*                   pNetIf;     // interface for which this message is prepared
-    int                             msgLen;     // current assembled message length
-    int                             leftLen;    // current space left in the write buffer 
-    uint8_t*                        pWrPtr;     // current write pointer to write buffer
+    const TCPIP_NET_IF*             pNetIf;     // interface for which this message is prepared
+    uint16_t                        msgLen;     // current assembled message length
+    uint16_t                        leftLen;    // current space left in the write buffer 
+    union
+    {
+        uint8_t*                        pWrPtr;     // current write pointer to write buffer
+        TCPIP_ANNOUNCE_TRUNC_DCPT*      pTDcpt;
+        TCPIP_ANNOUNCE_MAC_ADDR_DCPT*   pMDcpt;
+        TCPIP_ANNOUNCE_MAC_NAME_DCPT*   pNDcpt;
+        TCPIP_ANNOUNCE_HOST_NAME_DCPT*  pHNDcpt;
+        TCPIP_ANNOUNCE_IPV4_ADDR_DCPT*  pIpDcpt;
+        TCPIP_ANNOUNCE_IPV6_ADDR_DCPT*  pIp6Dcpt;
+    };
 #if defined (TCPIP_STACK_USE_IPV6)
     const IPV6_ADDR_STRUCT*         currAddress;    // current procesed IPv6 address
     const IPV6_HEAP_NDP_DR_ENTRY*   currRouter;     // current procesed router
@@ -179,7 +188,7 @@ typedef struct
 }TCPIP_ANNOUNCE_SEND_DCPT;
 
 
-static bool             _AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static bool             F_AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 
 // function that sets a specific Announce field
 // Returns:
@@ -188,103 +197,116 @@ static bool             _AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 //   -1 - if not enough space; This stops the processing and sets the truncated bit!
 // It always check for the terminator space available (CRLF) but it may not set it
 // (taken care when the individual function is called)
-typedef int            (*_AnnounceFieldFnc)(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+typedef int            (*F_AnnounceFieldFnc)(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 
-int _FieldSetNone(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
-int _FieldSetTruncated(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
-int _FieldSetMacAddr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
-int _FieldSetMacName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
-int _FieldSetHostName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetNone(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetTruncated(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetMacAddr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetMacName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetHostName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 #if defined (TCPIP_STACK_USE_IPV4)
-int _FieldSetIpv4Addr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetIpv4Addr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 #endif  //  defined (TCPIP_STACK_USE_IPV4)
 #if defined (TCPIP_STACK_USE_IPV6)
-int _FieldSetIpv6Address(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetIpv6Address(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 
-const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+const IPV6_ADDR* F_FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 #endif  //  defined (TCPIP_STACK_USE_IPV6)
-int _FieldSetUserStart(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
+static int F_FieldSetUserStart(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt);
 
-static const _AnnounceFieldFnc    _AnnounceSendTbl[] = 
+static const F_AnnounceFieldFnc    T_AnnounceSendTbl[] = 
 {
-    _FieldSetNone,             // TCPIP_ANNOUNCE_FIELD_NONE
-    _FieldSetTruncated,        // TCPIP_ANNOUNCE_FIELD_TRUNCATED,
-    _FieldSetMacAddr,          // TCPIP_ANNOUNCE_FIELD_MAC_ADDR,
-    _FieldSetMacName,          // TCPIP_ANNOUNCE_FIELD_MAC_NAME,
-    _FieldSetHostName,         // TCPIP_ANNOUNCE_FIELD_HOST_NAME,
+    &F_FieldSetNone,             // TCPIP_ANNOUNCE_FIELD_NONE
+    &F_FieldSetTruncated,        // TCPIP_ANNOUNCE_FIELD_TRUNCATED,
+    &F_FieldSetMacAddr,          // TCPIP_ANNOUNCE_FIELD_MAC_ADDR,
+    &F_FieldSetMacName,          // TCPIP_ANNOUNCE_FIELD_MAC_NAME,
+    &F_FieldSetHostName,         // TCPIP_ANNOUNCE_FIELD_HOST_NAME,
 #if defined (TCPIP_STACK_USE_IPV4)
-    _FieldSetIpv4Addr,         // TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS,
+    &F_FieldSetIpv4Addr,         // TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS,
 #endif  //  defined (TCPIP_STACK_USE_IPV4)
 #if defined (TCPIP_STACK_USE_IPV6)
-    _FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST,
-    _FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_MULTICAST,
-    _FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER,
-    _FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_GATEWAY,
+    &F_FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST,
+    &F_FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_MULTICAST,
+    &F_FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_ROUTER,
+    &F_FieldSetIpv6Address,      // TCPIP_ANNOUNCE_FIELD_IPV6_GATEWAY,
 #endif  //  defined (TCPIP_STACK_USE_IPV6)
-    _FieldSetUserStart,         // TCPIP_ANNOUNCE_FIELD_HOST_NAME,
+    &F_FieldSetUserStart,         // TCPIP_ANNOUNCE_FIELD_HOST_NAME,
 };
 
+// conversion functions/helpers
+//
+static __inline__ TCPIP_ANNOUNCE_MESSAGE* __attribute__((always_inline)) FC_U8Ptr2AnnMsg(uint8_t* u8Ptr)
+{
+    union
+    {
+        uint8_t* u8Ptr; 
+        TCPIP_ANNOUNCE_MESSAGE* msgPtr;
+    }U_U8_PTR_ANN_MSG;
+
+    U_U8_PTR_ANN_MSG.u8Ptr = u8Ptr;
+    return U_U8_PTR_ANN_MSG.msgPtr;
+}
 
 // debug functions
 #if (TCPIP_ANNOUNCE_DEBUG_MASK & TCPIP_ANNOUNCE_DEBUG_MASK_NOTIFY_EVENTS) != 0
-static void _AnnounceDbgNotifyEvent(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_EVENT_TYPE annEvType, uint32_t reqMask, int callEvent)
+static void F_AnnounceDbgNotifyEvent(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_EVENT_TYPE annEvType, uint32_t reqMask, int callEvent)
 {
     char   ifBuff[20];
     char    evBuff[20];
-    if(hNet != 0)
+    if(hNet != NULL)
     {
-        TCPIP_STACK_NetAliasNameGet(hNet, ifBuff, sizeof(ifBuff));
+        (void)TCPIP_STACK_NetAliasNameGet(hNet, ifBuff, sizeof(ifBuff));
     }
     else
     {
-        strcpy(ifBuff, "all ifs");
+        (void)strcpy(ifBuff, "all ifs");
     }
     switch(annEvType)
     {
         case TCPIP_ANNOUNCE_EVENT_IPV6_ADDRESS:
-            strcpy(evBuff, "ipv6");
+            (void)strcpy(evBuff, "ipv6");
             break;
         case TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST:
-            strcpy(evBuff, "remote");
+            (void)strcpy(evBuff, "remote");
             break;
         case TCPIP_ANNOUNCE_EVENT_USER_REQUEST:
-            strcpy(evBuff, "user");
+            (void)strcpy(evBuff, "user");
             break;
         default:    // TCPIP_ANNOUNCE_EVENT_IPV4_DHCP:
-            strcpy(evBuff, "dhcp");
+            (void)strcpy(evBuff, "dhcp");
             break;
     }
 
     SYS_CONSOLE_PRINT("Announce if: %s, event: %s, req: 0x%8x, call event: %d\r\n", ifBuff, evBuff, reqMask, callEvent);
 }
 #else
-#define _AnnounceDbgNotifyEvent(hNet, annEvType, reqMask, callEvent)
+#define F_AnnounceDbgNotifyEvent(hNet, annEvType, reqMask, callEvent)
 #endif  // (TCPIP_ANNOUNCE_DEBUG_MASK & TCPIP_ANNOUNCE_DEBUG_MASK_NOTIFY_EVENTS) != 0
 
 #if (TCPIP_ANNOUNCE_DEBUG_MASK & TCPIP_ANNOUNCE_DEBUG_MASK_SEND_EVENTS) != 0
-static void _AnnounceDbgSendEvent(int netIx, uint32_t reqMask, bool success)
+static void F_AnnounceDbgSendEvent(size_t netIx, uint32_t reqMask, bool success)
 {
     char   ifBuff[20];
 
     TCPIP_NET_HANDLE hNet = TCPIP_STACK_IndexToNet(netIx);
-    TCPIP_STACK_NetAliasNameGet(hNet, ifBuff, sizeof(ifBuff));
+    (void)TCPIP_STACK_NetAliasNameGet(hNet, ifBuff, sizeof(ifBuff));
 
     SYS_CONSOLE_PRINT("Announce send on if: %s, mask: 0x%8x, %s\r\n", ifBuff, reqMask, success ? "Success" : "Failed!");
 }
 #else
-#define _AnnounceDbgSendEvent(netIx, reqMask, success)
+#define F_AnnounceDbgSendEvent(netIx, reqMask, success)
 #endif  // (TCPIP_ANNOUNCE_DEBUG_MASK & TCPIP_ANNOUNCE_DEBUG_MASK_SEND_EVENTS) != 0
 
 // implementation; API functions
 
-bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_ANNOUNCE_MODULE_CONFIG* announceData)
+bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {
     UDP_SOCKET  s;
     TCPIP_UDP_SIGNAL_HANDLE sigHandle;
     uint16_t currBuffSize;
     bool        initFail = false;
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
     }
@@ -294,36 +316,36 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
     {   // first time we're run
         initFail = true;
         // initstatus
-        memset(&announceDcpt, 0, sizeof(announceDcpt));
+        (void)memset(&announceDcpt, 0, sizeof(announceDcpt));
         announceDcpt.skt = INVALID_UDP_SOCKET;
 
         // store the memory allocation handle
         announceDcpt.memH = stackCtrl->memH;
         announceDcpt.nIfs = stackCtrl->nIfs;
 #if defined (TCPIP_STACK_USE_DHCP_CLIENT)
-        announceDcpt.dhcpHandler = TCPIP_DHCP_HandlerRegister(0, (TCPIP_DHCP_EVENT_HANDLER)ANNOUNCE_Notify, (const void*)TCPIP_ANNOUNCE_EVENT_IPV4_DHCP);
+        announceDcpt.dhcpHandler = TCPIP_DHCP_HandlerRegister(NULL, &ANNOUNCE_Notify, (const void*)TCPIP_ANNOUNCE_EVENT_IPV4_DHCP);
         if (announceDcpt.dhcpHandler == NULL)
         {
             break;
         }
 #endif
 #if defined (TCPIP_STACK_USE_IPV6)
-        announceDcpt.ipv6Handler = TCPIP_IPV6_HandlerRegister(0, (IPV6_EVENT_HANDLER)IPv6_Announce_Notify, 0);
+        announceDcpt.ipv6Handler = TCPIP_IPV6_HandlerRegister(NULL, &IPv6_Announce_Notify, NULL);
         if (announceDcpt.ipv6Handler == NULL)
         {
             break;
         }
 #endif
 
-        announceDcpt.sigHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ANNOUNCE_Task, TCPIP_ANNOUNCE_TASK_RATE); 
-        if(announceDcpt.sigHandle == 0)
+        announceDcpt.sigHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_ANNOUNCE_Task, TCPIP_ANNOUNCE_TASK_RATE); 
+        if(announceDcpt.sigHandle == NULL)
         {
             break;
         }
 
         // Open a UDP socket for inbound and outbound transmission
         // Allow receive on any interface 
-        s = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT, 0);
+        s = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT, NULL);
 
         if(s == INVALID_UDP_SOCKET)
         {
@@ -331,27 +353,28 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
         }
         announceDcpt.skt = s;
 
-        if(!TCPIP_UDP_RemoteBind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT,  0))
+        if(!TCPIP_UDP_RemoteBind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT,  NULL))
         {
             break;
         }
         // locally bind to the same port
-        if(!TCPIP_UDP_Bind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT,  0))
+        if(!TCPIP_UDP_Bind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_ANNOUNCE_PORT,  NULL))
         {
             break;
         }
 
-        if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_STRICT_PORT, (void*)true))
+        if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_STRICT_PORT, FC_Uint2VPtr(1UL)))
         {
             break;
         }
 
         // make sure the socket is created with enough TX space
-        announceDcpt.txBuffSize = TCPIP_ANNOUNCE_MAX_PAYLOAD < sizeof(_TCPIP_ANNOUNCE_MIN_MESSAGE) ? sizeof(_TCPIP_ANNOUNCE_MIN_MESSAGE) : TCPIP_ANNOUNCE_MAX_PAYLOAD;
-        TCPIP_UDP_OptionsGet(s, UDP_OPTION_TX_BUFF, (void*)&currBuffSize);
+        uint16_t minMsgSize = (uint16_t)sizeof(S_TCPIP_ANNOUNCE_MIN_MESSAGE);
+        announceDcpt.txBuffSize = (uint16_t)TCPIP_ANNOUNCE_MAX_PAYLOAD < minMsgSize ? minMsgSize : (uint16_t)TCPIP_ANNOUNCE_MAX_PAYLOAD;
+        (void)TCPIP_UDP_OptionsGet(s, UDP_OPTION_TX_BUFF, (void*)&currBuffSize);
         if(currBuffSize < announceDcpt.txBuffSize)
         {
-            if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_TX_BUFF, (void*)(uintptr_t)announceDcpt.txBuffSize))
+            if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_TX_BUFF, FC_Uint2VPtr((uint32_t)announceDcpt.txBuffSize)))
             {
                 break;
             }
@@ -363,10 +386,10 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
         announceDcpt.bcastType = UDP_BCAST_NETWORK_LIMITED;
 #endif
 
-        TCPIP_UDP_OptionsSet(s, UDP_OPTION_BROADCAST, (void*)(intptr_t)announceDcpt.bcastType);
+        (void)TCPIP_UDP_OptionsSet(s, UDP_OPTION_BROADCAST, FC_Uint2VPtr((uint32_t)announceDcpt.bcastType));
 
-        sigHandle = TCPIP_UDP_SignalHandlerRegister(s, TCPIP_UDP_SIGNAL_RX_DATA, _TCPIP_AnnounceSocketRxSignalHandler, 0);
-        if(!sigHandle)
+        sigHandle = TCPIP_UDP_SignalHandlerRegister(s, TCPIP_UDP_SIGNAL_RX_DATA, &F_TCPIP_AnnounceSocketRxSignalHandler, NULL);
+        if(sigHandle == NULL)
         {
             break;
         }
@@ -378,7 +401,7 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
 
     if(initFail)    
     {
-        _TCPIP_AnnounceCleanup();
+        F_TCPIP_AnnounceCleanup();
         return false;
     }
     
@@ -396,19 +419,23 @@ void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
     if(announceInitCount > 0)
     {   // we're up and running
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_DOWN)
         {
-            announceDcpt.requestMask &= ~(1 << stackCtrl->netIx);
-            announceDcpt.readyMask &= ~(1 << stackCtrl->netIx);
+            announceDcpt.requestMask &= ~(1UL << stackCtrl->netIx);
+            announceDcpt.readyMask &= ~(1UL << stackCtrl->netIx);
         }
-        else if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        else if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--announceInitCount == 0)
             {   // all closed
                 // release resources
-                _TCPIP_AnnounceCleanup();
-                announceDcpt.memH = 0;
+                F_TCPIP_AnnounceCleanup();
+                announceDcpt.memH = NULL;
             }
+        }
+        else
+        {
+            // do nothing
         }
     }
 
@@ -426,12 +453,12 @@ void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 static void TCPIP_ANNOUNCE_Send(void)
 {
     UDP_SOCKET  annSkt;
-    int         nIter;
+    uint16_t    nIter;
     bool        sendOk;
     uint8_t*    pAnnBuffer;
 
     pAnnBuffer = (uint8_t*)TCPIP_HEAP_Malloc(announceDcpt.memH, announceDcpt.txBuffSize);
-    if(pAnnBuffer == 0)
+    if(pAnnBuffer == NULL)
     {   // failed allocation; retry next time
         return;
     }
@@ -439,23 +466,23 @@ static void TCPIP_ANNOUNCE_Send(void)
     annSkt = announceDcpt.skt;
 
     // reset the broadcast type, it may have changed
-    TCPIP_UDP_OptionsSet(annSkt, UDP_OPTION_BROADCAST, (void*)(intptr_t)announceDcpt.bcastType);
+    (void)TCPIP_UDP_OptionsSet(annSkt, UDP_OPTION_BROADCAST, FC_Uint2VPtr((uint32_t)announceDcpt.bcastType));
 
-    nIter = 0;
+    nIter = 0U;
     while(true)
     {
         // reply to the request on the interface it arrived on
-        if((announceDcpt.requestMask & (1 << announceDcpt.currIx)) != 0)
+        if((announceDcpt.requestMask & (1UL << announceDcpt.currIx)) != 0U)
         {
-            sendOk = TCPIP_ANNOUNCE_SendIf(announceDcpt.currIx, &announceDcpt, pAnnBuffer);
-            _AnnounceDbgSendEvent(announceDcpt.currIx, announceDcpt.requestMask, sendOk);
+            sendOk = TCPIP_ANNOUNCE_SendIf((size_t)announceDcpt.currIx, &announceDcpt, pAnnBuffer);
+            F_AnnounceDbgSendEvent((size_t)announceDcpt.currIx, announceDcpt.requestMask, sendOk);
             
             if(!sendOk)
             {   // failed to send; try next time
                 break;
             }
 
-            announceDcpt.requestMask &= ~(1 << announceDcpt.currIx);   // clear requests on this interface
+            announceDcpt.requestMask &= ~(1UL << announceDcpt.currIx);   // clear requests on this interface
         }
 
         if(++announceDcpt.currIx == announceDcpt.nIfs)
@@ -470,17 +497,17 @@ static void TCPIP_ANNOUNCE_Send(void)
     }
 
     // unbind socket so it listens on all networks
-    TCPIP_UDP_OptionsSet(annSkt, UDP_OPTION_STRICT_NET, 0);
+    (void)TCPIP_UDP_OptionsSet(annSkt, UDP_OPTION_STRICT_NET, NULL);
 
-    TCPIP_HEAP_Free(announceDcpt.memH, pAnnBuffer);
+    (void)TCPIP_HEAP_Free(announceDcpt.memH, pAnnBuffer);
 }
 
 // send a message on the specified interface
-static bool TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t* pAnnBuffer)
+static bool TCPIP_ANNOUNCE_SendIf(size_t netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t* pAnnBuffer)
 {
     UDP_SOCKET  annSkt;
-    TCPIP_NET_IF *pNetIf;
-    IPV4_ADDR ifAdd;
+    const TCPIP_NET_IF *pNetIf;
+    IP_MULTI_ADDRESS ifAdd;
     TCPIP_ANNOUNCE_SEND_DCPT annDcpt;
     TCPIP_ANNOUNCE_TRUNC_DCPT* pTDcpt;
     uint8_t*    outData;
@@ -488,7 +515,7 @@ static bool TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t
 
     annSkt = pDcpt->skt;
 
-    pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+    pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
 
     if(TCPIP_STACK_NetworkIsLinked(pNetIf))
     {   // reply only if this interface is up and running
@@ -498,18 +525,18 @@ static bool TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t
             return false;
         }
 
-        annDcpt.pMsg = (TCPIP_ANNOUNCE_MESSAGE*)pAnnBuffer;
+        annDcpt.pMsg = FC_U8Ptr2AnnMsg(pAnnBuffer);
         annDcpt.pNetIf = pNetIf;
-        annDcpt.msgLen = 0;
+        annDcpt.msgLen = 0U;
         annDcpt.leftLen = pDcpt->txBuffSize;
         annDcpt.pWrPtr = pAnnBuffer;
         annDcpt.usrCback = pDcpt->usrCback;
 
         pTDcpt = &annDcpt.pMsg->truncDcpt;
-        if(_AnnounceFieldProcess(&annDcpt))
+        if(F_AnnounceFieldProcess(&annDcpt))
         {   // everything went well
             // skip the truncation field
-            annDcpt.msgLen -= sizeof(*pTDcpt);
+            annDcpt.msgLen -= (uint16_t)sizeof(*pTDcpt);
             outData = (uint8_t*)(pTDcpt + 1);
             isTruncated = false;
         }
@@ -519,16 +546,16 @@ static bool TCPIP_ANNOUNCE_SendIf(int netIx, TCPIP_ANNOUNCE_DCPT* pDcpt, uint8_t
             isTruncated = true;
         }
 
-        TCPIP_UDP_SocketNetSet (annSkt, pNetIf);
-        ifAdd.Val = _TCPIPStackNetAddress(pNetIf);
-        TCPIP_UDP_SourceIPAddressSet(annSkt, IP_ADDRESS_TYPE_IPV4, (IP_MULTI_ADDRESS*)&ifAdd);
-        TCPIP_UDP_ArrayPut (annSkt, outData, annDcpt.msgLen);
+        (void)TCPIP_UDP_SocketNetSet (annSkt, pNetIf);
+        ifAdd.v4Add.Val = TCPIPStackNetAddress(pNetIf);
+        (void)TCPIP_UDP_SourceIPAddressSet(annSkt, IP_ADDRESS_TYPE_IPV4, &ifAdd);
+        (void)TCPIP_UDP_ArrayPut (annSkt, outData, annDcpt.msgLen);
 
-        if(!isTruncated && pDcpt->usrCback != 0)
+        if(!isTruncated && pDcpt->usrCback != NULL)
         {   // call the user handler
             (*pDcpt->usrCback)(pNetIf, annSkt);
         }
-        TCPIP_UDP_Flush (annSkt);
+        (void)TCPIP_UDP_Flush (annSkt);
         return true;
     }
 
@@ -539,17 +566,17 @@ void TCPIP_ANNOUNCE_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
     { // regular TMO occurred
         TCPIP_ANNOUNCE_Timeout();
     }
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_ASYNC) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_ASYNC) != 0U)
     { // async message occurred
         // clear the ASYNC request
-        _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC);
+        (void)TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC);
         TCPIP_ANNOUNCE_Send();
     }
 
@@ -557,11 +584,11 @@ void TCPIP_ANNOUNCE_Task(void)
 
 // send a signal to the Announce module that data is available
 // no manager alert needed since this normally results as a higher layer (UDP) signal
-static void _TCPIP_AnnounceSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
+static void F_TCPIP_AnnounceSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TCPIP_UDP_SIGNAL_TYPE sigType, const void* param)
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -577,35 +604,40 @@ static void TCPIP_ANNOUNCE_Timeout(void)
 
     while(true)
     {   // consume all queued packets
-        if(!TCPIP_UDP_GetIsReady(s))
+        if(TCPIP_UDP_GetIsReady(s) == 0U)
         {
             break;
         }
             
         // See if this is a discovery query or reply
-        TCPIP_UDP_Get(s, &discQuery);
-        if(discQuery == 'D')
+        (void)TCPIP_UDP_Get(s, &discQuery);
+        if(discQuery == (uint8_t)'D')
         {   // We received a discovery request, reply
-            TCPIP_UDP_SocketInfoGet(s, &sktInfo);
+            (void)memset(&sktInfo, 0, sizeof(sktInfo));
+            (void)TCPIP_UDP_SocketInfoGet(s, &sktInfo);
             // fake a legitimate DHCP event on that interface   
-            ANNOUNCE_Notify (sktInfo.hNet, DHCP_EVENT_BOUND, (const void*)TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST);
+            ANNOUNCE_Notify (sktInfo.hNet, DHCP_EVENT_BOUND, FC_Uint2VPtr((uint32_t)TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST));
         }
-        TCPIP_UDP_Discard(s);
+        (void)TCPIP_UDP_Discard(s);
     }   
 
-    TCPIP_NET_IF *pNetIf;
-    int netIx;
+    const TCPIP_NET_IF *pNetIf;
+    size_t netIx;
     for(netIx = 0; netIx < announceDcpt.nIfs; netIx++)
     {
-        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+        pNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
         if(!TCPIP_STACK_NetIsReady(pNetIf))
         {   // network not ready
-            announceDcpt.readyMask &= ~(1 << netIx);
+            announceDcpt.readyMask &= ~(1UL << netIx);
         }
-        else if((announceDcpt.readyMask & (1 << netIx)) == 0)
+        else if((announceDcpt.readyMask & (1UL << netIx)) == 0U)
         {   // now it becomes ready
-            announceDcpt.readyMask |= (1 << netIx);
+            announceDcpt.readyMask |= (1UL << netIx);
             ANNOUNCE_Notify (pNetIf, DHCP_EVENT_BOUND, (const void*)TCPIP_ANNOUNCE_EVENT_IPV4_DHCP);
+        }
+        else
+        {
+            // do nothing
         }
     }
 
@@ -621,78 +653,78 @@ static void TCPIP_ANNOUNCE_Timeout(void)
 // When param == TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST the aliases
 // need to have their request mask updated too
 // That's because broadcast messages are not propagated on aliases (yet)
-static void ANNOUNCE_Notify(TCPIP_NET_HANDLE hNet, uint8_t dhcpEvType, const void * param)
+static void ANNOUNCE_Notify(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_EVENT_TYPE dhcpEvType, const void * param)
 {
-    if(announceDcpt.memH)
+    if(announceDcpt.memH != NULL)
     {
         if(dhcpEvType == DHCP_EVENT_BOUND || dhcpEvType == DHCP_EVENT_CONN_LOST || dhcpEvType == DHCP_EVENT_SERVICE_DISABLED)
         {
-            if(hNet != 0)
+            if(hNet != NULL)
             {
-                TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(hNet);
-                announceDcpt.requestMask |= (1 << pNetIf->netIfIx);
+                TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(hNet);
+                announceDcpt.requestMask |= (1UL << pNetIf->netIfIx);
 
-#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+#if (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
                 TCPIP_ANNOUNCE_EVENT_TYPE annEvType = (TCPIP_ANNOUNCE_EVENT_TYPE)param;
-                if(annEvType == TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST && _TCPIPStackNetIsPrimary(pNetIf))
+                if(annEvType == TCPIP_ANNOUNCE_EVENT_REMOTE_REQUEST && TCPIPStackNetIsPrimary(pNetIf))
                 {
                     TCPIP_NET_IF* pIf;
-                    for(pIf = _TCPIPStackNetGetAlias(pNetIf); pIf != 0; pIf = _TCPIPStackNetGetAlias(pIf)) 
+                    for(pIf = TCPIPStackNetGetAlias(pNetIf); pIf != NULL; pIf = TCPIPStackNetGetAlias(pIf)) 
                     {
-                        announceDcpt.requestMask |= (1 << pIf->netIfIx);
+                        announceDcpt.requestMask |= (1UL << pIf->netIfIx);
                     }
                 }
-#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+#endif  // (M_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
             }
-            _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, 0); 
-            _AnnounceDbgNotifyEvent(hNet, (TCPIP_ANNOUNCE_EVENT_TYPE)param, announceDcpt.requestMask, dhcpEvType);
+            (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, false); 
+            F_AnnounceDbgNotifyEvent(hNet, (TCPIP_ANNOUNCE_EVENT_TYPE)param, announceDcpt.requestMask, (int)dhcpEvType);
         }
     }
 }
 
 #if defined (TCPIP_STACK_USE_IPV6)
-static void IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, uint8_t addEvType, const void * param)
+static void IPv6_Announce_Notify(TCPIP_NET_HANDLE hNet, IPV6_EVENT_TYPE addEvType, const void * param, const void* usrParam)
 {
-    if(announceDcpt.memH)
+    if(announceDcpt.memH != NULL)
     {
         if(addEvType == IPV6_EVENT_ADDRESS_ADDED || addEvType == IPV6_EVENT_ADDRESS_REMOVED || addEvType == IPV6_EVENT_ULA_ADDRESS_GENERATED)                
         {
-            TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(hNet);
-            announceDcpt.requestMask |= (1 << pNetIf->netIfIx);
-            _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, 0); 
-            _AnnounceDbgNotifyEvent(hNet, TCPIP_ANNOUNCE_EVENT_IPV6_ADDRESS, announceDcpt.requestMask, addEvType);
+            TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNet(hNet);
+            announceDcpt.requestMask |= (1UL << pNetIf->netIfIx);
+            (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_ASYNC, false); 
+            F_AnnounceDbgNotifyEvent(hNet, TCPIP_ANNOUNCE_EVENT_IPV6_ADDRESS, announceDcpt.requestMask, (int)addEvType);
         }
     }
 }
 #endif    //TCPIP_STACK_USE_IPV6 
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void _TCPIP_AnnounceCleanup(void)
+static void F_TCPIP_AnnounceCleanup(void)
 {
 #if defined   ( TCPIP_STACK_USE_DHCP_CLIENT)
     if (announceDcpt.dhcpHandler != NULL)
     {
-        TCPIP_DHCP_HandlerDeRegister(announceDcpt.dhcpHandler);
+        (void)TCPIP_DHCP_HandlerDeRegister(announceDcpt.dhcpHandler);
         announceDcpt.dhcpHandler = NULL;
     }
 #endif
 #if defined (TCPIP_STACK_USE_IPV6)
     if (announceDcpt.ipv6Handler != NULL)
     {
-        TCPIP_IPV6_HandlerDeregister(announceDcpt.ipv6Handler);
+        (void)TCPIP_IPV6_HandlerDeregister(announceDcpt.ipv6Handler);
         announceDcpt.ipv6Handler = NULL;
     }
 #endif
 
-    if(announceDcpt.sigHandle != 0)
+    if(announceDcpt.sigHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(announceDcpt.sigHandle);
-        announceDcpt.sigHandle = 0;
+        TCPIPStackSignalHandlerDeregister(announceDcpt.sigHandle);
+        announceDcpt.sigHandle = NULL;
     }
 
     if(announceDcpt.skt != INVALID_UDP_SOCKET)
     {
-        TCPIP_UDP_Close(announceDcpt.skt);
+        (void)TCPIP_UDP_Close(announceDcpt.skt);
         announceDcpt.skt = INVALID_UDP_SOCKET;
     }
 
@@ -706,20 +738,20 @@ static void _TCPIP_AnnounceCleanup(void)
 // returns true if manages to put all message in the pSDcpt buffer
 // false if there was not enough room
 // number of bytes set in the buffer is updated in pSDcpt
-static bool _AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static bool F_AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    int ix;
-    int fieldBytes;
-    const _AnnounceFieldFnc* pFieldFnc;
+    size_t ix;
+    int    fieldBytes;
+    const F_AnnounceFieldFnc* pFieldFnc;
 
-    pFieldFnc = _AnnounceSendTbl;
-    for(ix = 0; ix < sizeof(_AnnounceSendTbl) / sizeof(*_AnnounceSendTbl); ix++, pFieldFnc++)
+    pFieldFnc = T_AnnounceSendTbl;
+    for(ix = 0; ix < sizeof(T_AnnounceSendTbl) / sizeof(*T_AnnounceSendTbl); ix++)
     {
         pSDcpt->fieldType = (TCPIP_ANNOUNCE_FIELD_PAYLOAD)ix; 
 #if defined (TCPIP_STACK_USE_IPV6)
-        pSDcpt->currAddress = 0;
-        pSDcpt->currRouter = 0;
-        pSDcpt->currGateway = 0;
+        pSDcpt->currAddress = NULL;
+        pSDcpt->currRouter = NULL;
+        pSDcpt->currGateway = NULL;
 #endif  //  defined (TCPIP_STACK_USE_IPV6)
         fieldBytes = (*pFieldFnc)(pSDcpt);
         if(fieldBytes < 0)
@@ -728,15 +760,16 @@ static bool _AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
         }
 
         // success
-        pSDcpt->msgLen += fieldBytes;
-        pSDcpt->leftLen -= fieldBytes;
+        pSDcpt->msgLen += (uint16_t)fieldBytes;
+        pSDcpt->leftLen -= (uint16_t)fieldBytes;
         pSDcpt->pWrPtr += fieldBytes;
 
         if(fieldBytes != 0)
         {   // set the terminator
-            *(pSDcpt->pWrPtr - 2) = _ANNOUNCE_SEPARATOR_1;
-            *(pSDcpt->pWrPtr - 1) = _ANNOUNCE_SEPARATOR_2;
+            *(pSDcpt->pWrPtr - 2) = M_ANNOUNCE_SEPARATOR_1;
+            *(pSDcpt->pWrPtr - 1) = M_ANNOUNCE_SEPARATOR_2;
         }
+        pFieldFnc++;
     }
 
     return true;
@@ -744,21 +777,21 @@ static bool _AnnounceFieldProcess(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 
 // dummy function
 // TCPIP_ANNOUNCE_FIELD_NONE
-int _FieldSetNone(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetNone(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
     return 0;
 }
 
 // just make it not truncated for now; it will be set only when needed
 // TCPIP_ANNOUNCE_FIELD_TRUNCATED
-int _FieldSetTruncated(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetTruncated(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_TRUNC_DCPT* pTDcpt = (TCPIP_ANNOUNCE_TRUNC_DCPT*)pSDcpt->pWrPtr;
+    TCPIP_ANNOUNCE_TRUNC_DCPT* pTDcpt = pSDcpt->pTDcpt;
     
-    if(pSDcpt->leftLen >= sizeof(*pTDcpt))
+    if(pSDcpt->leftLen >= (uint16_t)sizeof(*pTDcpt))
     {
-        pTDcpt->type = TCPIP_ANNOUNCE_FIELD_TRUNCATED;
-        return sizeof(*pTDcpt);
+        pTDcpt->type = (uint8_t)TCPIP_ANNOUNCE_FIELD_TRUNCATED;
+        return FC_UI322I32((uint32_t)sizeof(*pTDcpt));
     }
 
     // failed
@@ -766,21 +799,21 @@ int _FieldSetTruncated(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 }
 
 // insert a terminator only if there's user data
-int _FieldSetUserStart(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetUserStart(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    return (pSDcpt->usrCback != 0) ? sizeof(TCPIP_ANNOUNCE_USER_START) : 0;
+    return (pSDcpt->usrCback != NULL) ? FC_UI322I32((uint32_t)sizeof(TCPIP_ANNOUNCE_USER_START)) : 0;
 }
 
 // TCPIP_ANNOUNCE_FIELD_MAC_ADDR
-int _FieldSetMacAddr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetMacAddr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_MAC_ADDR_DCPT* pMDcpt = (TCPIP_ANNOUNCE_MAC_ADDR_DCPT*)pSDcpt->pWrPtr;
+    TCPIP_ANNOUNCE_MAC_ADDR_DCPT* pMDcpt = pSDcpt->pMDcpt;
     
-    if(pSDcpt->leftLen >= sizeof(*pMDcpt))
+    if(pSDcpt->leftLen >= (uint16_t)sizeof(*pMDcpt))
     {
-        pMDcpt->type = TCPIP_ANNOUNCE_FIELD_MAC_ADDR;
-        memcpy(pMDcpt->macAddr, _TCPIPStack_NetMACAddressGet(pSDcpt->pNetIf), sizeof(pMDcpt->macAddr));
-        return sizeof(*pMDcpt);
+        pMDcpt->type = (uint8_t)TCPIP_ANNOUNCE_FIELD_MAC_ADDR;
+        (void)memcpy(pMDcpt->macAddr, TCPIPStack_NetMACAddressGet(pSDcpt->pNetIf), sizeof(pMDcpt->macAddr));
+        return FC_UI322I32((uint32_t)sizeof(*pMDcpt));
     }
 
     // failed
@@ -788,18 +821,18 @@ int _FieldSetMacAddr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 }
 
 // TCPIP_ANNOUNCE_FIELD_MAC_NAME
-int _FieldSetMacName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetMacName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_MAC_NAME_DCPT* pNDcpt = (TCPIP_ANNOUNCE_MAC_NAME_DCPT*)pSDcpt->pWrPtr;
-    const char* macName = TCPIP_STACK_MACIdToString(pSDcpt->pNetIf->macId);
-    int nameLen = strlen(macName);
+    TCPIP_ANNOUNCE_MAC_NAME_DCPT* pNDcpt = pSDcpt->pNDcpt;
+    const char* macName = TCPIP_STACK_MACIdToString((TCPIP_STACK_MODULE)pSDcpt->pNetIf->macId);
+    size_t nameLen = strlen(macName);
 
     
-    if(pSDcpt->leftLen >= sizeof(*pNDcpt) + nameLen)
+    if(pSDcpt->leftLen >= (uint16_t)sizeof(*pNDcpt) + nameLen)
     {
-        pNDcpt->type = TCPIP_ANNOUNCE_FIELD_MAC_NAME;
-        strcpy(pNDcpt->macName, macName);
-        return sizeof(*pNDcpt) + nameLen;
+        pNDcpt->type = (uint8_t)TCPIP_ANNOUNCE_FIELD_MAC_NAME;
+        (void)strcpy(pNDcpt->macName, macName);
+        return FC_UI322I32((uint32_t)sizeof(*pNDcpt) + nameLen);
     }
 
     // failed
@@ -807,18 +840,18 @@ int _FieldSetMacName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 }
 
 // TCPIP_ANNOUNCE_FIELD_HOST_NAME
-int _FieldSetHostName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetHostName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_HOST_NAME_DCPT* pHNDcpt = (TCPIP_ANNOUNCE_HOST_NAME_DCPT*)pSDcpt->pWrPtr;
-    const char* hostName = _TCPIPStack_NetBIOSName(pSDcpt->pNetIf);
-    int hostLen = strlen(hostName);
+    TCPIP_ANNOUNCE_HOST_NAME_DCPT* pHNDcpt = pSDcpt->pHNDcpt;
+    const char* hostName = TCPIPStack_NetBIOSNameGet(pSDcpt->pNetIf);
+    size_t hostLen = strlen(hostName);
 
     
-    if(pSDcpt->leftLen >= sizeof(*pHNDcpt) + hostLen)
+    if(pSDcpt->leftLen >= (uint16_t)sizeof(*pHNDcpt) + hostLen)
     {
-        pHNDcpt->type = TCPIP_ANNOUNCE_FIELD_HOST_NAME;
-        strcpy(pHNDcpt->hostName, hostName);
-        return sizeof(*pHNDcpt) + hostLen;
+        pHNDcpt->type = (uint8_t)TCPIP_ANNOUNCE_FIELD_HOST_NAME;
+        (void)strcpy(pHNDcpt->hostName, hostName);
+        return FC_UI322I32((uint32_t)sizeof(*pHNDcpt) + hostLen);
     }
 
     // failed
@@ -827,18 +860,18 @@ int _FieldSetHostName(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 
 // TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS
 #if defined (TCPIP_STACK_USE_IPV4)
-int _FieldSetIpv4Addr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+static int F_FieldSetIpv4Addr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_IPV4_ADDR_DCPT* pIpDcpt = (TCPIP_ANNOUNCE_IPV4_ADDR_DCPT*)pSDcpt->pWrPtr;
+    TCPIP_ANNOUNCE_IPV4_ADDR_DCPT* pIpDcpt = pSDcpt->pIpDcpt;
     IPV4_ADDR ipAdd;
 
     
-    if(pSDcpt->leftLen >= sizeof(*pIpDcpt))
+    if(pSDcpt->leftLen >= (uint16_t)sizeof(*pIpDcpt))
     {
-        pIpDcpt->type = TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS;
-        ipAdd.Val = _TCPIPStackNetAddress(pSDcpt->pNetIf);
-        memcpy(pIpDcpt->ipv4Addr, ipAdd.v, sizeof(ipAdd));
-        return sizeof(*pIpDcpt);
+        pIpDcpt->type = (uint8_t)TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS;
+        ipAdd.Val = TCPIPStackNetAddress(pSDcpt->pNetIf);
+        (void)memcpy(pIpDcpt->ipv4Addr, ipAdd.v, sizeof(ipAdd));
+        return FC_UI322I32((uint32_t)sizeof(*pIpDcpt));
     }
 
     // failed
@@ -848,7 +881,7 @@ int _FieldSetIpv4Addr(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 
 #if defined (TCPIP_STACK_USE_IPV6)
 
-const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+const IPV6_ADDR* F_FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
     IPV6_INTERFACE_CONFIG*  pIpv6Config;
 
@@ -856,25 +889,25 @@ const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
     {
         IPV6_ADDR_STRUCT* addressPtr;
 
-        if(pSDcpt->currAddress == 0)
+        if(pSDcpt->currAddress == NULL)
         {
             pIpv6Config = TCPIP_IPV6_InterfaceConfigGet(pSDcpt->pNetIf);
             DOUBLE_LIST* pHead = pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST ? &pIpv6Config->listIpv6UnicastAddresses : &pIpv6Config->listIpv6MulticastAddresses;
-            addressPtr = (IPV6_ADDR_STRUCT *)pHead->head;
+            addressPtr = FC_DblNode2AddStruct(pHead->head);
         }
         else
         {
             addressPtr = pSDcpt->currAddress->next;
         }
 
-        return (pSDcpt->currAddress = addressPtr) == 0 ? 0 :  (const IPV6_ADDR*)((uint8_t*)addressPtr + offsetof(struct _IPV6_ADDR_STRUCT, address));
+        return (pSDcpt->currAddress = addressPtr) == NULL ? NULL :  &addressPtr->address;
     }
 
-    if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER)
+    if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_ROUTER)
     {
         IPV6_HEAP_NDP_DR_ENTRY* routerPtr;
 
-        if(pSDcpt->currRouter == 0)
+        if(pSDcpt->currRouter == NULL)
         {
             pIpv6Config = TCPIP_IPV6_InterfaceConfigGet(pSDcpt->pNetIf);
             routerPtr = pIpv6Config->currentDefaultRouter;
@@ -886,66 +919,66 @@ const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 
         pSDcpt->currRouter = routerPtr;
 
-        if(routerPtr == 0 || routerPtr->neighborInfo == 0)
+        if(routerPtr == NULL || routerPtr->neighborInfo == NULL)
         {
-           return 0;
+           return NULL;
         }
 
         return  &routerPtr->neighborInfo->remoteIPAddress;
 
     }
 
-    if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_GATEWAY)
+    if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_GATEWAY)
     {
-        if(pSDcpt->currGateway == 0)
+        if(pSDcpt->currGateway == NULL)
         {
             return (pSDcpt->currGateway = TCPIP_STACK_NetDefaultIPv6GatewayGet(pSDcpt->pNetIf));
         }
 
         // return only one default gateway, no list!
-        return 0;
+        return NULL;
     }
 
     // unknown field type
-    return 0;
+    return NULL;
 }
 
 
 // TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST
 // TCPIP_ANNOUNCE_FIELD_IPV6_MULTICAST
-// TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER
-// TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_GATEWAY
-int _FieldSetIpv6Address(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
+// TCPIP_ANNOUNCE_FIELD_IPV6_ROUTER
+// TCPIP_ANNOUNCE_FIELD_IPV6_GATEWAY
+static int F_FieldSetIpv6Address(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
 {
-    TCPIP_ANNOUNCE_IPV6_ADDR_DCPT*  pIp6Dcpt;
     const IPV6_ADDR*    pCurrAddress;
-    int                 addressLen, leftLen, nAddresses;
+    uint16_t    addressLen, leftLen, nAddresses;
 
 
     // calculate the needed size
-    addressLen = nAddresses = 0;
+    addressLen = nAddresses = 0U;
     leftLen = pSDcpt->leftLen;
 
-    pIp6Dcpt = (TCPIP_ANNOUNCE_IPV6_ADDR_DCPT*)pSDcpt->pWrPtr;
-    for(pCurrAddress = _FieldIpV6NextAddress(pSDcpt); pCurrAddress != 0; pCurrAddress = _FieldIpV6NextAddress(pSDcpt), pIp6Dcpt++)
+    TCPIP_ANNOUNCE_IPV6_ADDR_DCPT* pIp6Dcpt = pSDcpt->pIp6Dcpt;
+    for(pCurrAddress = F_FieldIpV6NextAddress(pSDcpt); pCurrAddress != NULL; pCurrAddress = F_FieldIpV6NextAddress(pSDcpt))
     {
         nAddresses++;
-        if(leftLen < addressLen + sizeof(*pIp6Dcpt))
+        if(leftLen < addressLen + (uint16_t)sizeof(*pIp6Dcpt))
         {   // no more room, done
             break;
         }
 
         // set this entry
         pIp6Dcpt->type = (uint8_t)pSDcpt->fieldType;
-        memcpy(pIp6Dcpt->ipv6Addr, pCurrAddress->v, sizeof(pIp6Dcpt->ipv6Addr));
-        pIp6Dcpt->separator[0] = _ANNOUNCE_SEPARATOR_1;
-        pIp6Dcpt->separator[1] = _ANNOUNCE_SEPARATOR_2;
+        (void)memcpy(pIp6Dcpt->ipv6Addr, pCurrAddress->v, sizeof(pIp6Dcpt->ipv6Addr));
+        pIp6Dcpt->separator[0] = (char)M_ANNOUNCE_SEPARATOR_1;
+        pIp6Dcpt->separator[1] = (char)M_ANNOUNCE_SEPARATOR_2;
 
-        addressLen += sizeof(*pIp6Dcpt);
+        addressLen += (uint16_t)sizeof(*pIp6Dcpt);
+        pIp6Dcpt++;
     }
 
     // return -1 if no space, 0 if no IPv6 addresses
-    return addressLen != 0 ? addressLen : nAddresses == 0 ? 0 : -1;
+    return addressLen != 0U ? (int)addressLen : nAddresses == 0U ? 0 : -1;
 }
 
 #endif  //  defined (TCPIP_STACK_USE_IPV6)
@@ -955,20 +988,20 @@ bool TCPIP_ANNOUNCE_MessageRequest(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_BROADCA
     uint32_t reqMask;
     OSAL_CRITSECT_DATA_TYPE status;
 
-    while(announceDcpt.nIfs != 0)
+    while(announceDcpt.nIfs != 0U)
     {   // up and running
-        if(hNet != 0)
+        if(hNet != NULL)
         {
-            TCPIP_NET_IF* pIf = _TCPIPStackHandleToNetLinked(hNet);
-            if(pIf == 0)
+            TCPIP_NET_IF* pIf = TCPIPStackHandleToNetLinked(hNet);
+            if(pIf == NULL)
             {
                 break;
             }
-            reqMask = 1 << pIf->netIfIx; 
+            reqMask = 1UL << pIf->netIfIx; 
         }
         else
         {
-            reqMask = (1 << announceDcpt.nIfs) - 1;
+            reqMask = (1UL << announceDcpt.nIfs) - 1UL;
         }
 
 
@@ -980,7 +1013,7 @@ bool TCPIP_ANNOUNCE_MessageRequest(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_BROADCA
         announceDcpt.requestMask |= reqMask;
         OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
         // force notification
-        ANNOUNCE_Notify (0, DHCP_EVENT_BOUND, (const void*)TCPIP_ANNOUNCE_EVENT_USER_REQUEST);
+        ANNOUNCE_Notify (NULL, DHCP_EVENT_BOUND, FC_Uint2VPtr((uint32_t)TCPIP_ANNOUNCE_EVENT_USER_REQUEST));
 
 
         return true;
@@ -991,7 +1024,7 @@ bool TCPIP_ANNOUNCE_MessageRequest(TCPIP_NET_HANDLE hNet, TCPIP_ANNOUNCE_BROADCA
 
 bool TCPIP_ANNOUNCE_CallbackRegister(TCPIP_ANNOUNCE_MESSAGE_CALLBACK callback)
 {
-    while(announceDcpt.nIfs != 0)
+    while(announceDcpt.nIfs != 0U)
     {   // up and running
         announceDcpt.usrCback = callback;
         return true; 

@@ -18,7 +18,7 @@ Announce Service Module API Definitions Header File
   **************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TCPIP_ANNOUNCE_H
-#define __TCPIP_ANNOUNCE_H
+#ifndef H_TCPIP_ANNOUNCE_H_
+#define H_TCPIP_ANNOUNCE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -72,6 +72,9 @@ Microchip or any third party.
 
   Description:
     Describes the current types supported by the announce module payload.
+
+  Remarks:
+    8 bit values only.  
  */
 typedef enum
 {
@@ -83,8 +86,8 @@ typedef enum
     TCPIP_ANNOUNCE_FIELD_IPV4_ADDRESS,              // the payload is the IPv4 address
     TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST,              // the payload is the IPv6 unicast address
     TCPIP_ANNOUNCE_FIELD_IPV6_MULTICAST,            // the payload is the IPv6 multicast address
-    TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER,       // the payload is the IPv6 router address
-    TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_GATEWAY,      // the payload is the IPv6 gateway address
+    TCPIP_ANNOUNCE_FIELD_IPV6_ROUTER,               // the payload is the IPv6 router address
+    TCPIP_ANNOUNCE_FIELD_IPV6_GATEWAY,              // the payload is the IPv6 gateway address
 } TCPIP_ANNOUNCE_FIELD_PAYLOAD;
 
 
@@ -180,7 +183,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
     uint8_t     type;       // TCPIP_ANNOUNCE_FIELD_IPV6_UNICAST/TCPIP_ANNOUNCE_FIELD_IPV6_MULTICAST/
-                            // TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER/TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_GATEWAY
+                            // TCPIP_ANNOUNCE_FIELD_IPV6_ROUTER/TCPIP_ANNOUNCE_FIELD_IPV6_GATEWAY
     uint8_t     ipv6Addr[16]; // IPv6 address, binary
     char        separator[2];   // CRLF terminator
 }TCPIP_ANNOUNCE_IPV6_ADDR_DCPT;
@@ -396,4 +399,4 @@ void  TCPIP_ANNOUNCE_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  //#ifndef __TCPIP_ANNOUNCE_H
+#endif  //#ifndef H_TCPIP_ANNOUNCE_H_

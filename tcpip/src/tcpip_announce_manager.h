@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,14 +44,14 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_ANNOUNCE_MANAGER_H_
-#define __TCPIP_ANNOUNCE_MANAGER_H_
+#ifndef H_TCPIP_ANNOUNCE_MANAGER_H_
+#define H_TCPIP_ANNOUNCE_MANAGER_H_
 
 
 // manager
-bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const TCPIP_ANNOUNCE_MODULE_CONFIG* announceData);
-void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
+bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
+void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
-#endif  // __TCPIP_ANNOUNCE_MANAGER_H_
+#endif  // H_TCPIP_ANNOUNCE_MANAGER_H_
 
