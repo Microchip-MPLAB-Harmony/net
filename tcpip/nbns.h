@@ -18,7 +18,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __NBNS_H_
-#define __NBNS_H_
+#ifndef H_NBNS_H_
+#define H_NBNS_H_
 
 
 // DOM-IGNORE-BEGIN
@@ -116,4 +116,4 @@ void  TCPIP_NBNS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __NBNS_H_
+#endif  // H_NBNS_H_

@@ -12,7 +12,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,7 +49,7 @@ Microchip or any third party.
 
 
 // NBNS Header structure
-typedef struct __attribute__((packed)) _NBNS_HEADER
+typedef struct __attribute__((packed)) S_NBNS_HEADER
 {
     TCPIP_UINT16_VAL TransactionID;
     TCPIP_UINT16_VAL Flags;
@@ -59,7 +59,7 @@ typedef struct __attribute__((packed)) _NBNS_HEADER
     TCPIP_UINT16_VAL AdditionalRecords;
 } NBNS_HEADER;
 
-typedef struct __attribute__((packed)) _NBNS_QUESTION
+typedef struct __attribute__((packed)) S_NBNS_QUESTION
 {
     uint8_t StringTerminator;
         TCPIP_UINT16_VAL Type;
@@ -88,7 +88,7 @@ typedef struct
 static TCPIP_NBNS_DCPT    nbnsDcpt;
 static int                nbnsInitCount = 0;
 
-static tcpipSignalHandle   nbnsSignalHandle = 0;
+static TCPIP_SIGNAL_HANDLE   nbnsSignalHandle = NULL;
 
 /*********************************************************************
  * Function:        void TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_NBNS_MODULE_CONFIG* pNbnsInit)
@@ -106,12 +106,12 @@ static tcpipSignalHandle   nbnsSignalHandle = 0;
  *
  * Note:            None
  ********************************************************************/
-bool TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_NBNS_MODULE_CONFIG* pNbnsInit)
+bool TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData)
 {
     TCPIP_UDP_SIGNAL_HANDLE sigHandle;
     bool    initFail = false;
 
-    if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
+    if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {  // interface restart
         return true;
     }
@@ -123,21 +123,21 @@ bool TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
         nbnsDcpt.uSkt = INVALID_UDP_SOCKET;
 
-        s = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_NBNS_SERVER_PORT, 0);
+        s = TCPIP_UDP_ServerOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_NBNS_SERVER_PORT, NULL);
         if ( s == INVALID_UDP_SOCKET)
         {
             initFail = true;
             break;
         }
         
-        sigHandle = TCPIP_UDP_SignalHandlerRegister(s, TCPIP_UDP_SIGNAL_RX_DATA, NBNSSocketRxSignalHandler, 0);
-        if(!sigHandle)
+        sigHandle = TCPIP_UDP_SignalHandlerRegister(s, TCPIP_UDP_SIGNAL_RX_DATA, &NBNSSocketRxSignalHandler, NULL);
+        if(sigHandle == NULL)
         {
             initFail = true;
             break;
         }
 
-        if (!TCPIP_UDP_RemoteBind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_NBNS_SERVER_PORT, 0))
+        if (!TCPIP_UDP_RemoteBind(s, IP_ADDRESS_TYPE_IPV4, TCPIP_NBNS_SERVER_PORT, NULL))
         {
             initFail = true;
             break;
@@ -146,8 +146,8 @@ bool TCPIP_NBNS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
         nbnsDcpt.uSkt = s;
 
         // create the NBNS timer
-        nbnsSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_NBNS_Task, TCPIP_NBNS_TASK_TICK_RATE); 
-        if(nbnsSignalHandle == 0)
+        nbnsSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_NBNS_Task, TCPIP_NBNS_TASK_TICK_RATE); 
+        if(nbnsSignalHandle == NULL)
         {   // cannot create the NBNS timer
             initFail = true;
         }
@@ -192,7 +192,7 @@ void TCPIP_NBNS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     if(nbnsInitCount > 0)
     {   // we're up and running
         // one way or another this interface is going down
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--nbnsInitCount == 0)
             {   // all closed
@@ -212,14 +212,14 @@ static void TCPIP_NBNS_Cleanup(void)
 
     if(nbnsDcpt.uSkt != INVALID_UDP_SOCKET)
     {
-        TCPIP_UDP_Close(nbnsDcpt.uSkt);
+        (void)TCPIP_UDP_Close(nbnsDcpt.uSkt);
         nbnsDcpt.uSkt = INVALID_UDP_SOCKET;
     }
 
-    if(nbnsSignalHandle)
+    if(nbnsSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(nbnsSignalHandle);
-        nbnsSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(nbnsSignalHandle);
+        nbnsSignalHandle = NULL;
     }
 
 }
@@ -229,9 +229,9 @@ void TCPIP_NBNS_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if(sigPend != 0)
+    if(sigPend != TCPIP_MODULE_SIGNAL_NONE)
     { // TMO or RX signal occurred
         TCPIP_NBNS_Process();
     }
@@ -244,7 +244,7 @@ static void NBNSSocketRxSignalHandler(UDP_SOCKET hUDP, TCPIP_NET_HANDLE hNet, TC
 {
     if(sigType == TCPIP_UDP_SIGNAL_RX_DATA)
     {
-        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+        (void)TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
     }
 }
 
@@ -254,16 +254,18 @@ static void TCPIP_NBNS_Process(void)
     NBNS_HEADER NBNSHeader;
     uint8_t NameString[16];
     UDP_SOCKET s;
-    int nBytes;
-    int nbnsTxSize;
+    uint16_t nBytes;
+    uint16_t nbnsTxSize;
     UDP_SOCKET_INFO sktInfo;
+    const uint8_t * pNetName;
 
     s = nbnsDcpt.uSkt;
+    (void)memset(&sktInfo, 0x0, sizeof(sktInfo));
 
     while(true)
     {
         nBytes = TCPIP_UDP_GetIsReady(s);
-        if (nBytes == 0)
+        if (nBytes == 0U)
         {
             break;
         }
@@ -271,58 +273,59 @@ static void TCPIP_NBNS_Process(void)
         // Respond only to name requests sent to us from nodes on the same subnet
         // This prevents us from sending out the wrong IP address information if 
         // we haven't gotten a DHCP lease yet.
-        TCPIP_UDP_SocketInfoGet(s, &sktInfo);
+        (void)TCPIP_UDP_SocketInfoGet(s, &sktInfo);
         if (sktInfo.addressType != IP_ADDRESS_TYPE_IPV4 ||
-                _TCPIPStackIpAddFromAnyNet(0, &sktInfo.remoteIPaddress.v4Add) == 0)
+                TCPIPStackIpAddFromAnyNet(NULL, &sktInfo.remoteIPaddress.v4Add) == NULL)
         {
-            TCPIP_UDP_Discard(s);
+            (void)TCPIP_UDP_Discard(s);
             continue;
         }
 
         // Retrieve the NBNS header and de-big-endian it
-        nBytes = TCPIP_UDP_ArrayGet(s, (uint8_t*) & NBNSHeader, sizeof (NBNS_HEADER));
-        if(nBytes < sizeof(NBNS_HEADER))
+        nBytes = TCPIP_UDP_ArrayGet(s, (uint8_t*) & NBNSHeader, (uint16_t)sizeof (NBNS_HEADER));
+        if(nBytes < (uint16_t)sizeof(NBNS_HEADER))
         {
-            TCPIP_UDP_Discard(s);
+            (void)TCPIP_UDP_Discard(s);
             continue;
         }
-        //NBNSHeader.TransactionID.Val = NBNSHeader.TransactionID.v[0] << 8 | NBNSHeader.TransactionID.v[1];
-        NBNSHeader.Questions.Val = NBNSHeader.Questions.v[0] << 8 | NBNSHeader.Questions.v[1];
+        // NBNSHeader.TransactionID.Val = TCPIP_Helper_ntohs(NBNSHeader.TransactionID.Val);
+        NBNSHeader.Questions.Val = TCPIP_Helper_ntohs(NBNSHeader.Questions.Val);
         // Remove all questions
-        while (NBNSHeader.Questions.Val--)
+        while (NBNSHeader.Questions.Val-- != 0U)
         {
-            NBNS_QUESTION question;
+            NBNS_QUESTION nbQuestion;
             TCPIP_NBNS_NameGet(s, NameString);
 
-            nBytes = TCPIP_UDP_ArrayGet(s, (uint8_t*) & question, sizeof (NBNS_QUESTION));
-            if(nBytes < sizeof(NBNS_QUESTION))
+            nBytes = TCPIP_UDP_ArrayGet(s, (uint8_t*) & nbQuestion, (uint16_t)sizeof (NBNS_QUESTION));
+            if(nBytes < (uint16_t)sizeof(NBNS_QUESTION))
             {
                 break;
             }
 
-            question.Class.Val = question.Class.v[0] << 8 | question.Class.v[1];
-            question.Type.Val = question.Type.v[0] << 8 | question.Type.v[1];
-            if (question.Type.Val == 0x0020u && question.Class.Val == 0x0001u)
+            nbQuestion.Class.Val = TCPIP_Helper_ntohs(nbQuestion.Class.Val);
+            nbQuestion.Type.Val = TCPIP_Helper_ntohs(nbQuestion.Type.Val);
+            if (nbQuestion.Type.Val == 0x0020u && nbQuestion.Class.Val == 0x0001u)
             {
-                int nIfs, nIx;
+                size_t nIfs, nIx;
                 TCPIP_NET_IF* pIf;
                 const char* netbName;
 
                 nIfs = TCPIP_STACK_NumberOfNetworksGet();
                 for (nIx = 0; nIx < nIfs; nIx++)
                 {
-                    pIf = _TCPIPStackHandleToNetUp(TCPIP_STACK_IndexToNet(nIx));
-                    if(pIf == 0)
+                    pIf = TCPIPStackHandleToNetUp(TCPIP_STACK_IndexToNet(nIx));
+                    if(pIf == NULL)
                     {   // interface down
                         continue;
                     }
 
                     netbName = TCPIP_STACK_NetBIOSName(pIf);
 
-                    if (netbName != 0 && memcmp((void*) NameString, netbName, sizeof (pIf->NetBIOSName)) == 0)
+                    pNetName = (const uint8_t*) netbName;
+                    if (netbName != NULL && memcmp(NameString, pNetName, sizeof (pIf->NetBIOSName)) == 0)
                     { // one of our interfaces has this name
-                        nbnsTxSize = TCPIP_UDP_TxPutIsReady(s, 64);
-                        if (nbnsTxSize)
+                        nbnsTxSize = TCPIP_UDP_TxPutIsReady(s, 64U);
+                        if (nbnsTxSize != 0U)
                         {
                             uint8_t nbnsMessage[] = {
                                 0, 0,
@@ -352,26 +355,26 @@ static void TCPIP_NBNS_Process(void)
                                 pIf->netIPAddr.v[3],
 
                             };
-                            uint16_t* idPtr = (uint16_t*)nbnsMessage;
-                            *idPtr = NBNSHeader.TransactionID.Val;
+                            // set the transaction ID
+                            nbnsMessage[0] = NBNSHeader.TransactionID.v[0];
+                            nbnsMessage[1] = NBNSHeader.TransactionID.v[1];
 
-                            const uint8_t * pNetName = (uint8_t*) netbName;
                             uint8_t i;
-                            for (i = 13; i < 13 + 32; i += 2)
+                            for (i = 13U; i < 13U + 32U; i += 2U)
                             {
                                 uint8_t j = *pNetName++;
 
-                                nbnsMessage[i] = (j >> 4) + 'A';
-                                nbnsMessage[i + 1] = (j & 0x0F) + 'A';
+                                nbnsMessage[i] = (j >> 4U) + (uint8_t)'A';
+                                nbnsMessage[i + 1U] = (j & 0x0FU) + (uint8_t)'A';
 
                             }
 
-                            TCPIP_UDP_ArrayPut(s, nbnsMessage, sizeof (nbnsMessage));
+                            (void)TCPIP_UDP_ArrayPut(s, nbnsMessage, (uint16_t)sizeof (nbnsMessage));
 
                             // Change the destination address to the unicast address of the last received packet
-                            TCPIP_UDP_SocketInfoGet(s, &sktInfo);
-                            TCPIP_UDP_DestinationIPAddressSet(s, sktInfo.addressType, &sktInfo.sourceIPaddress);
-                            TCPIP_UDP_Flush(s);
+                            (void)TCPIP_UDP_SocketInfoGet(s, &sktInfo);
+                            (void)TCPIP_UDP_DestinationIPAddressSet(s, sktInfo.addressType, &sktInfo.sourceIPaddress);
+                            (void)TCPIP_UDP_Flush(s);
                         }
                         break;
                     }
@@ -379,7 +382,7 @@ static void TCPIP_NBNS_Process(void)
             }
         }
 
-        TCPIP_UDP_Discard(s);
+        (void)TCPIP_UDP_Discard(s);
     }
 
 }
@@ -406,7 +409,7 @@ static void TCPIP_NBNS_NameGet(UDP_SOCKET s, uint8_t *String)
     uint8_t i, j, k;
 
     uint8_t encodedString[33] = {0}; // NetBIOS strings are 16 characters long, encoded 32 bytes, 1 byte for length
-    TCPIP_UDP_ArrayGet(s, encodedString, sizeof (encodedString));
+    (void)TCPIP_UDP_ArrayGet(s, encodedString, (uint16_t)sizeof (encodedString));
 
     if (String == NULL)
     {
@@ -419,13 +422,13 @@ static void TCPIP_NBNS_NameGet(UDP_SOCKET s, uint8_t *String)
             *String = 0;
             return;
         }
-        for (i = 1; i < 33; i+=2)
+        for (i = 1U; i < 33U; i+=2U)
         {
             j = encodedString[i];
-            j -= 'A';
-            k = j << 4;
-            j = encodedString[i+1];
-            j -= 'A';
+            j -= (uint8_t)'A';
+            k = j << 4U;
+            j = encodedString[i+1U];
+            j -= (uint8_t)'A';
             *String++ = k | j;
         }
     }
