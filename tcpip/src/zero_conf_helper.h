@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,51 +44,24 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __ZEROCONF_HELPER_H
-#define __ZEROCONF_HELPER_H
-
-// Debugging levels
-//#define DEBUG_ZCLL  y     /* Debug Enable for Zeroconf Link-Local Module */
-//#define INFO_ZCLL   y
-//#define WARN_ZCLL   y
-
-// Debugging levels
-//#define DEBUG_MDNS y
-//#define INFO_MDNS  y
-//#define WARN_MDNS  y
+#ifndef H_ZEROCONF_HELPER_H_
+#define H_ZEROCONF_HELPER_H_
 
 extern uint8_t zeroconf_dbg_level;
 
-#if defined(DEBUG_ZCLL) || defined(INFO_ZCLL) || defined(DEBUG_MDNS) || defined(INFO_MDNS)
-    /* defined(WARN_ZCLL) || defined(WARN_MDNS */
+void info_zcll_print(const char * msg);
+void debug_zcll_print(const char * msg);
 
-    #define NEED_TO_DEFINE_zeroconf_dbg_msg     y
-    #define ZEROCONF_DBG_MSG_SIZE  256
-    
-    extern char zeroconf_dbg_msg[ZEROCONF_DBG_MSG_SIZE];
+void info_mdns_print(const char * msg);
 
-#if defined(INFO_ZCLL)
-    extern void info_zcll_print(char * msg);
-#endif
-#if defined(DEBUG_ZCLL)
-    extern void debug_zcll_print(char * msg);
-#endif
+void debug_mdns_print(const char * msg);
 
-#if defined(INFO_MDNS)
-    extern void info_mdns_print(char * msg);
-#endif
-
-#if defined(DEBUG_MDNS)
-    extern void debug_mdns_print(char * msg);
-#endif
-
-#endif//#if defined(DEBUG_ZCLL) || defined(INFO_ZCLL) || defined(DEBUG_MDNS) || defined(INFO_MDNS)
 
 #define ZGZC_STARTED_WAITING  (1u)
 #define ZGZC_KEEP_WAITING     (3u)
 #define ZGZC_DONE_WAITING     (5u)
 
-uint8_t zgzc_wait_for(uint32_t *pTicksToWait, uint32_t *pStartingTickTime, uint8_t *pIsStarted);
+uint8_t zgzc_wait_for(uint32_t *pTicksToWait, uint32_t *pStartingTickTime, uint8_t *pWaitingHasStarted);
 
 
-#endif//__ZEROCONF_HELPER_H
+#endif//H_ZEROCONF_HELPER_H_

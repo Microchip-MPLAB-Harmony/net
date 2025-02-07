@@ -8,7 +8,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,73 +46,49 @@ Microchip or any third party.
 
 uint8_t zeroconf_dbg_level = 3; // All levels of debug info are printed.
 
-#if defined(NEED_TO_DEFINE_zeroconf_dbg_msg)
-
-char zeroconf_dbg_msg[ZEROCONF_DBG_MSG_SIZE];
-
-#endif
-
-#if defined(TCPIP_ZC_INFO_ZCLL)
 void info_zcll_print(const char * msg)
 {
-    if (zeroconf_dbg_level >= 1)
+#if defined(TCPIP_ZC_INFO_ZCLL)
+    if (zeroconf_dbg_level >= 1U)
+    {
         SYS_CONSOLE_MESSAGE(msg);
-}
+    }
 #endif
+}
 
-#if defined(TCPIP_ZC_DEBUG_ZCLL)
 void debug_zcll_print(const char * msg)
 {
-    if (zeroconf_dbg_level >= 2)
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+    if (zeroconf_dbg_level >= 2U)
+    {
         SYS_CONSOLE_MESSAGE(msg);
-}
+    }
 #endif
+}
 
-#if defined(TCPIP_ZC_INFO_MDNS)
 void info_mdns_print(const char * msg)
 {
-    if (zeroconf_dbg_level >= 1)
+#if defined(TCPIP_ZC_INFO_MDNS)
+    if (zeroconf_dbg_level >= 1U)
+    {
         SYS_CONSOLE_MESSAGE(msg);
-}
+    }
 #endif
+}
 
-#if defined(TCPIP_ZC_DEBUG_MDNS)
 void debug_mdns_print(const char * msg)
 {
-    if (zeroconf_dbg_level >= 2)
-        SYS_CONSOLE_MESSAGE(msg);
-}
-#endif
-
-/*
-The calling convention is:
-
-    static uint32_t event_time = 0;
-    static uint32_t random_delay = 0;
-    static uint8_t time_recorded = 0;
-
-    switch ( zgzc_wait_for(&random_delay, &event_time, &time_recorded) )
+#if defined(TCPIP_ZC_DEBUG_MDNS)
+    if (zeroconf_dbg_level >= 2U)
     {
-    case ZGZC_STARTED_WAITING:
-
-        # Set random_delay value;
-
-        // Intentional fall-through
-
-    case ZGZC_KEEP_WAITING:
-
-        // Not Completed the delay proposed
-        return;
+        SYS_CONSOLE_MESSAGE(msg);
     }
-
-    // Completed the delay required
-
-    # Do the scheduled work;
-*/
+#endif
+}
 
 uint8_t zgzc_wait_for(uint32_t *pTicksToWait, uint32_t *pStartingTickTime, uint8_t *pWaitingHasStarted)
 {
-    if ( !(*pWaitingHasStarted) )
+    if ( (*pWaitingHasStarted) == 0U )
     {
         // start a new waiting period
         *pStartingTickTime = SYS_TMR_TickCountGet();// The time we started the waiting.

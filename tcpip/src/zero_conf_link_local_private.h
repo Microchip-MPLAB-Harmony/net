@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,80 +42,50 @@ Microchip or any third party.
 
 #include "zero_conf_helper.h"
 
-void info_zcll_print(const char * msg);
-void debug_zcll_print(const char * msg);
-void info_mdns_print(const char * msg);
-void debug_mdns_print(const char * msg);
-
 // For verbose debugging
 #ifdef TCPIP_ZC_DEBUG_MDNS
 #define DEBUG_MDNS_PRINT(x) debug_mdns_print(x)
-#define DEBUG_MDNS_MESG     sprintf
 #else
 #define DEBUG_MDNS_PRINT(x)
-#define DEBUG_MDNS_MESG(x,y,...)      
 #endif
 
 // For less verbose debugging
 #ifdef TCPIP_ZC_INFO_MDNS
 #define INFO_MDNS_PRINT(x) info_mdns_print(x)
-#define INFO_MDNS_MESG     sprintf
 #else
 #define INFO_MDNS_PRINT(x)
-#define INFO_MDNS_MESG(x,y,...)      
 #endif
 
 // For warnings, errors, and other exceptions
 #ifdef TCPIP_ZC_WARN_MDNS
 #define WARN_MDNS_PRINT(x) SYS_CONSOLE_MESSAGE(x)
-#define WARN_MDNS_MESG     sprintf
 #else
 #define WARN_MDNS_PRINT(x)
-#define WARN_MDNS_MESG(x,y,...)      
 #endif
 
-// Always print
-#define MDNS_PRINT(x) SYS_CONSOLE_MESSAGE(x)
-#define MDNS_MESG     sprintf
-
 #define DEBUG0_MDNS_PRINT  INFO_MDNS_PRINT
-#define DEBUG0_MDNS_MESG   INFO_MDNS_MESG
-
 
 
 // For verbose debugging
 #ifdef TCPIP_ZC_DEBUG_ZCLL
 #define DEBUG_ZCLL_PRINT(x) debug_zcll_print(x)
-#define DEBUG_ZCLL_MESG     sprintf
 #else
 #define DEBUG_ZCLL_PRINT(x)
-#define DEBUG_ZCLL_MESG(x,y,...) 
 #endif
 
 // For less verbose debugging
 #ifdef TCPIP_ZC_INFO_ZCLL
 #define INFO_ZCLL_PRINT(x) info_zcll_print(x)
-#define INFO_ZCLL_MESG     sprintf
 #else
 #define INFO_ZCLL_PRINT(x)
-#define INFO_ZCLL_MESG(x,y,...) 
 #endif
 
 // For warnings, errors, and other exceptions
 #ifdef CONFIG_TCPIP_ZC_WARN_ZCLL
 #define WARN_ZCLL_PRINT(x) SYS_CONSOLE_MESSAGE(x)
-#define WARN_ZCLL_MESG     sprintf
 #else
 #define WARN_ZCLL_PRINT(x)
-#define WARN_ZCLL_MESG(x,y,...) 
 #endif
-
-// Always print
-#define ZCLL_PRINT(x) SYS_CONSOLE_MESSAGE(x)
-#define ZCLL_MESG     sprintf
-
-#define DEBUG0_ZCLL_PRINT  DEBUG_ZCLL_PRINT
-#define DEBUG0_ZCLL_MESG   DEBUG_ZCLL_MESG
 
 /* ARP  States Enum */
 typedef enum
@@ -174,13 +144,13 @@ typedef enum
 /* Flags for the ZCLL State Machine */
 typedef union
 {
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t probe_conflict  : 1 ;     // Conflict When selecting IP-addr
-        uint8_t late_conflict   : 1;      // Conflict When using IP-addr
-        uint8_t defended        : 1;      // whether or not defended earlier
+        unsigned probe_conflict  : 1 ;     // Conflict When selecting IP-addr
+        unsigned late_conflict   : 1;      // Conflict When using IP-addr
+        unsigned defended        : 1;      // whether or not defended earlier
         //
-        uint8_t reserved        : 5;        // not used
+        unsigned reserved        : 5;        // not used
     };
     uint8_t Val;
 }ZCLL_FLAGS;
@@ -204,10 +174,5 @@ typedef struct
 
 
 
-void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet
-              ,IPV4_ADDR *SrcIPAddr
-              ,IPV4_ADDR *DestIPAddr
-              ,TCPIP_ARP_OPERATION_TYPE op_req
-              ,ZCLL_ARP_STATE arp_action);
 
 #endif

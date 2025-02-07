@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -67,55 +67,50 @@ bool TCPIP_ZCLL_IsEnabled(TCPIP_NET_HANDLE hNet)
 
 
 /**************** Global Declarations ***************/
-static ZCLL_NET_HANDLE* phZCLL = 0;
+static ZCLL_NET_HANDLE* phZCLL = NULL;
 
-static int              zcllInitCount = 0;      // ZCLL module initialization count
-static tcpipSignalHandle zcllSignalHandle = 0;    // ZCLL timer handle
+static int              zcllInitCount = 0;          // ZCLL module initialization count
+static TCPIP_SIGNAL_HANDLE zcllSignalHandle = NULL; // ZCLL timer handle
 
 /***************** Forward Declarations **************/
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-static void     _ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
+static void     F_ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 #else
-#define _ZCLLCleanup(stackCtrl)
+#define F_ZCLLCleanup(stackCtrl)
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static void     _ZCLLDisable(TCPIP_NET_IF* pNetIf);
+static void     F_ZCLLDisable(TCPIP_NET_IF* pNetIf);
 
-static bool     _ZCLLEnable(TCPIP_NET_IF* pNetIf);
+static bool     F_ZCLLEnable(TCPIP_NET_IF* pNetIf);
 
 
 
-static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
-                                 ,uint32_t SenderIPAddr
-                                 ,uint32_t TargetIPAddr
-                                 ,TCPIP_MAC_ADDR* SenderMACAddr
-                                 ,TCPIP_MAC_ADDR* TargetMACAddr
-                                 ,uint8_t op_req);
+static void F_ZeroconfARPPktNotify (const TCPIP_NET_IF*  pNetIf, uint32_t SenderIPAddr, uint32_t TargetIPAddr,
+                                   TCPIP_MAC_ADDR* SenderMACAddr, TCPIP_MAC_ADDR* TargetMACAddr, uint8_t op_req);
 
-static ARP_PKT_TYPE _FindARPPktType(uint32_t SrcIPAddr
-                                   ,uint32_t DestIPAddr
-                                   ,uint8_t op_req);
+static ARP_PKT_TYPE F_FindARPPktType(uint32_t SrcIPAddr, uint32_t DestIPAddr, uint8_t op_req);
 
 
 static void TCPIP_ZCLL_Process(void);
 
-
+static void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* SrcIPAddr, const IPV4_ADDR* DestIPAddr,
+              uint16_t arpOpType, ZCLL_ARP_STATE arp_action);
 
 static struct arp_app_callbacks callbacks =
 {
-   .TCPIP_ARP_PacketNotify  = _ZeroconfARPPktNotify,
+   .TCPIP_ARP_PacketNotify  = &F_ZeroconfARPPktNotify,
 };
 
 
-static void _ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, TCPIP_NET_IF *pNetIf)
+static void F_ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, const TCPIP_NET_IF* pNetIf)
 {
-    if(hZcll->rand_state == 0)
+    if(hZcll->rand_state == 0UL)
     {   // Seed the pseudo-rng with the interface's MAC address as recommended by RFC3927, Section 2.1.
         // Different hosts will generate unique values
         const uint8_t *mac_addr = TCPIP_STACK_NetUpMACAddressGet(pNetIf);
         uint32_t rand_val = 0;
-        if(mac_addr != 0)
+        if(mac_addr != NULL)
         {
             rand_val =  (((uint32_t)mac_addr[2] << 24)  | ((uint32_t)mac_addr[3] << 16) |
                         ((uint32_t)mac_addr[4] << 8)    | ((uint32_t)mac_addr[5]));
@@ -123,7 +118,7 @@ static void _ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, TCPIP_NET_IF *pNetIf)
 
         // The MAC address should never be zero.
         // But here's a way to recover just in case.
-        if(rand_val == 0)
+        if(rand_val == 0UL)
         {
             rand_val = SYS_RANDOM_PseudoGet();
         }
@@ -136,18 +131,18 @@ static void _ZCLL_RandInit(ZCLL_NET_HANDLE *hZcll, TCPIP_NET_IF *pNetIf)
 // returns a pseudo-random number in the range [min, max].
 // Use a LCG modulo p, with p=2^32
 // simplest case to implement, since the modulo arithmetic is made automatically
-#define ZCLL_LCG32_A    (2147001325ul)
-#define ZCLL_LCG32_B    (715136305ul)
-static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
+#define ZCLL_LCG32_A    (2147001325UL)
+#define ZCLL_LCG32_B    (715136305UL)
+static uint32_t F_zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
 {
     hZcll->rand_state = ZCLL_LCG32_A * hZcll->rand_state + ZCLL_LCG32_B;
 
-   return min + hZcll->rand_state % (max - min + 1);
+   return min + hZcll->rand_state % (max - min + 1UL);
 }
 
 /***************************************************************
   Function:
-   void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet, IPV4_ADDR* SrcIPAddr, IPV4_ADDR* DestIPAddr, TCPIP_ARP_OPERATION_TYPE op_req, ARP_STATE TCPIP_ZCLL_ARPAction)
+   void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet, IPV4_ADDR* SrcIPAddr, IPV4_ADDR* DestIPAddr, uint16_t arpOpType, ZCLL_ARP_STATE arp_action)
 
   Summary:
      a).ZCLL_ARP_PROBE:
@@ -207,22 +202,19 @@ static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
      target HW address: FF:FF:FF:FF:FF:FF
 
   Parameters:
-   None
+   arpOpType - a TCPIP_ARP_OPERATION_TYPE value
 
   Returns:
      None
   ***************************************************************/
- void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet
-              ,IPV4_ADDR *SrcIPAddr
-              ,IPV4_ADDR *DestIPAddr
-              ,TCPIP_ARP_OPERATION_TYPE op_req
-              ,ZCLL_ARP_STATE arp_action)
+ static void TCPIP_ZCLL_ARPAction(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* SrcIPAddr, const IPV4_ADDR* DestIPAddr,
+              uint16_t arpOpType, ZCLL_ARP_STATE arp_action)
 {
-    bool rc;
+    TCPIP_ARP_RESULT probeRes;
 
-    rc=TCPIP_ARP_Probe(hNet, DestIPAddr, SrcIPAddr, op_req);
+    probeRes = TCPIP_ARP_Probe(hNet, DestIPAddr, SrcIPAddr, (TCPIP_ARP_OPERATION_TYPE)arpOpType);
 
-    if(rc == false)
+    if((int)probeRes < 0)
     {
         switch (arp_action)
         {
@@ -235,6 +227,11 @@ static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
             case ZCLL_ARP_DEFEND:
                 INFO_ZCLL_PRINT("ZCLL_ARP_DEFEND: Error in sending out ARP-Defend pkt \n");
                 break;
+
+            default:
+                // should not happen
+                TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+                break;
         }
     }
 
@@ -242,7 +239,7 @@ static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
 
 /***************************************************************
   Function:
-   ARP_PKT_TYPE _FindARPPktType (uint32_t SrcIPAddr, uint32_t DestIPAddr,
+   ARP_PKT_TYPE F_FindARPPktType (uint32_t SrcIPAddr, uint32_t DestIPAddr,
                                  uint8_t op_req)
 
   Summary:
@@ -264,34 +261,46 @@ static uint32_t _zcll_rand(ZCLL_NET_HANDLE* hZcll, uint32_t min, uint32_t max)
      ARP_PKT_TYPE - Type of ARP-Packet (Probe, Claim, Defend or
                     generic ARP-request/response)
   ***************************************************************/
-ARP_PKT_TYPE _FindARPPktType (uint32_t SrcIPAddr, uint32_t DestIPAddr,uint8_t op_req)
+static ARP_PKT_TYPE F_FindARPPktType (uint32_t SrcIPAddr, uint32_t DestIPAddr, uint8_t op_req)
 {
-    if(op_req == ARP_OPERATION_REQ)
+    if(op_req == (uint8_t)ARP_OPERATION_REQ)
     {
-        if(SrcIPAddr == 0x0)
+        if(SrcIPAddr == 0UL)
+        {
             return ARP_PROBE_TYPE;
+        }
         else if (SrcIPAddr == DestIPAddr)
+        {
             return ARP_CLAIM_TYPE;
+        }
         else
+        {
             return ARP_REQUEST_TYPE;
+        }
 
     }
 
-    else if(op_req == ARP_OPERATION_RESP)
+    else if(op_req == (uint8_t)ARP_OPERATION_RESP)
     {
         if(SrcIPAddr == DestIPAddr)
+        {
             return ARP_DEFEND_TYPE;
+        }
         else
+        {
             return ARP_RESPONSE_TYPE;
+        }
     }
 
     else
+    {
         return UNKNOWN_TYPE;
+    }
 }
 
 /***************************************************************
   Function:
-static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
+static void F_ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
                                  ,uint32_t SenderIPAddr
                                  ,uint32_t TargetIPAddr
                                  ,TCPIP_MAC_ADDR* SenderMACAddr
@@ -307,7 +316,7 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
     notified about incoming Packet-events. Based on the type of packet
     received and Link-Local current state, appropriate action will be
     taken. To find the type of ARP-Packet this function makes use of
-    _FindARPPktType routine.
+    F_FindARPPktType routine.
 
     Primary purpose of this function is to decipher the ARP-Packet rxed
     and check whether its leading to a conflict with the selected IP-
@@ -329,7 +338,7 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
   Returns:
      None
   ***************************************************************/
-static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
+static void F_ZeroconfARPPktNotify ( const TCPIP_NET_IF*  pNetIf
                                  ,uint32_t SenderIPAddr
                                  ,uint32_t TargetIPAddr
                                  ,TCPIP_MAC_ADDR* SenderMACAddr
@@ -341,13 +350,15 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
 
     int i;
 
-    pkt_type = _FindARPPktType (SenderIPAddr, TargetIPAddr, op_req);
+    pkt_type = F_FindARPPktType (SenderIPAddr, TargetIPAddr, op_req);
 
     if(pkt_type == UNKNOWN_TYPE)
+    {
         return; // Can't hit this
+    }
 
     i = TCPIP_STACK_NetIxGet(pNetIf);
-    hZcll =(phZCLL+i);
+    hZcll =(phZCLL + i);
 
     switch (hZcll->zcll_state)
     {
@@ -361,9 +372,9 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
                     case ARP_DEFEND_TYPE:
                         if(hZcll->temp_IP_addr.Val == TargetIPAddr ) // Probe-Conflict
                         {
-                            if(memcmp(SenderMACAddr, &pNetIf->netMACAddr.v, 6))
+                            if(memcmp(SenderMACAddr->v, pNetIf->netMACAddr.v, 6) != 0)
                             {
-                                hZcll->zcll_flags.probe_conflict =1;
+                                hZcll->zcll_flags.probe_conflict = 1U;
                             }
                         }
                         break;
@@ -374,10 +385,12 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
                         if(hZcll->temp_IP_addr.Val == SenderIPAddr)
                         {
                             INFO_ZCLL_PRINT("IP address conflict. Please wait...\r\n");
-                            hZcll->zcll_flags.probe_conflict =1;
+                            hZcll->zcll_flags.probe_conflict = 1U;
                         }
                         break;
+
                     default:
+                        // do nothing
                         break;
                 }
             }
@@ -386,65 +399,66 @@ static void _ZeroconfARPPktNotify ( TCPIP_NET_IF*  pNetIf
         case SM_ADDR_DEFEND:
             if(pNetIf->netIPAddr.Val == SenderIPAddr)
             {
-                if(memcmp(SenderMACAddr, &pNetIf->netMACAddr, 6))
+                if(memcmp(SenderMACAddr->v, pNetIf->netMACAddr.v, 6) != 0)
                 {
                     INFO_ZCLL_PRINT("Zero Conf is defending the IP address\r\n");
-                    hZcll->zcll_flags.late_conflict = 1;
+                    hZcll->zcll_flags.late_conflict = 1U;
                 }
             }
             break;
 
         default:
-            break; // Nothing to do in other states
+            // Nothing to do in other states
+            break;
     }
 
 }
 
-static void _ZCLLDisable(TCPIP_NET_IF* pNetIf)
+static void F_ZCLLDisable(TCPIP_NET_IF* pNetIf)
 {
     ZCLL_NET_HANDLE *hZcll;
 
-    hZcll = (phZCLL+TCPIP_STACK_NetIxGet(pNetIf));
-    TCPIP_ARP_CallbacksDeregister(hZcll->arpRegId);
+    hZcll = (phZCLL + TCPIP_STACK_NetIxGet(pNetIf));
+    (void)TCPIP_ARP_CallbacksDeregister((size_t)hZcll->arpRegId);
     hZcll->zcll_state = SM_INIT;   //  stop the ZCLL state machine
-    pNetIf->Flags.bIsZcllEnabled = false;
+    pNetIf->Flags.bIsZcllEnabled = 0U;
 }
 
-static bool _ZCLLEnable(TCPIP_NET_IF* pNetIf)
+static bool F_ZCLLEnable(TCPIP_NET_IF* pNetIf)
 {
     ZCLL_NET_HANDLE* hZcll;
 
-    hZcll = (phZCLL+TCPIP_STACK_NetIxGet(pNetIf));
-    hZcll->arpRegId = TCPIP_ARP_CallbacksRegister(&callbacks);
+    hZcll = (phZCLL + TCPIP_STACK_NetIxGet(pNetIf));
+    hZcll->arpRegId = (int8_t)TCPIP_ARP_CallbacksRegister(&callbacks);
     if(hZcll->arpRegId <0)
     {
         hZcll->zcll_state = SM_INIT;   //  should already be in idle state
-        SYS_ERROR(SYS_ERROR_ERROR, "_ZCLLEnable: ARP registration Failed!!! \r\n");
+        SYS_ERROR(SYS_ERROR_ERROR, "F_ZCLLEnable: ARP registration Failed!!! \r\n");
         return false;
     }
 
-    pNetIf->Flags.bIsZcllEnabled = true;
+    pNetIf->Flags.bIsZcllEnabled = 1U;
     hZcll->zcll_state = SM_ADDR_INIT;
     return true;
 }
 
 bool TCPIP_ZCLL_Enable(TCPIP_NET_HANDLE hNet)
 {
-    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
 
-    if(pNetIf == 0)
+    if(pNetIf == NULL)
     {
         return false;
     }
 
-    if(pNetIf->Flags.bIsZcllEnabled != 0)
+    if(pNetIf->Flags.bIsZcllEnabled != 0U)
     {   // already started
         return true;
     }
 
-    if(TCPIP_STACK_AddressServiceCanStart(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_ZCLL))
+    if(TCPIP_STACK_AddressServiceCanStart(pNetIf, TCPIP_STACK_ADDR_SRVC_ZCLL))
     { 
-        return _ZCLLEnable(pNetIf);
+        return F_ZCLLEnable(pNetIf);
     }
 
     return false;
@@ -452,13 +466,13 @@ bool TCPIP_ZCLL_Enable(TCPIP_NET_HANDLE hNet)
 
 bool TCPIP_ZCLL_Disable(TCPIP_NET_HANDLE hNet)
 {
-    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-    if(pNetIf)
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
+    if(pNetIf != NULL)
     {
-        if(pNetIf->Flags.bIsZcllEnabled != 0)
+        if(pNetIf->Flags.bIsZcllEnabled != 0U)
         {
-            _ZCLLDisable(pNetIf);
-            TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_ZCLL, TCPIP_STACK_ADDRESS_SERVICE_EVENT_USER_STOP);
+            F_ZCLLDisable(pNetIf);
+            TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDR_SRVC_ZCLL, TCPIP_ADDR_SRVC_EV_USER_STOP);
         }
         return true;
     }
@@ -468,10 +482,10 @@ bool TCPIP_ZCLL_Disable(TCPIP_NET_HANDLE hNet)
 
 bool TCPIP_ZCLL_IsEnabled(TCPIP_NET_HANDLE hNet)
 {
-    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-    if(pNetIf)
+    TCPIP_NET_IF* pNetIf = TCPIPStackHandleToNetUp(hNet);
+    if(pNetIf != NULL)
     {
-        return pNetIf->Flags.bIsZcllEnabled != 0;
+        return pNetIf->Flags.bIsZcllEnabled != 0U;
     }
 
     return false;
@@ -484,14 +498,18 @@ bool TCPIP_ZCLL_ServiceEnable(TCPIP_NET_IF* pNetIf, bool enable)
 {
     bool res = false;
 
-    if(enable == true && pNetIf->Flags.bIsZcllEnabled == 0)
+    if(enable == true && pNetIf->Flags.bIsZcllEnabled == 0U)
     {
-        res = _ZCLLEnable(pNetIf);
+        res = F_ZCLLEnable(pNetIf);
     }
-    else if(enable == false && pNetIf->Flags.bIsZcllEnabled != 0)
+    else if(enable == false && pNetIf->Flags.bIsZcllEnabled != 0U)
     {
-        _ZCLLDisable(pNetIf);
+        F_ZCLLDisable(pNetIf);
         res = true;
+    }
+    else
+    {
+        // do nothing
     }
 
     return res;
@@ -523,27 +541,27 @@ void TCPIP_ZCLL_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     if(zcllInitCount > 0)
     {   // we're up and running
         // one way or another this interface is going down
-        _ZCLLDisable(stackCtrl->pNetIf);
+        F_ZCLLDisable(stackCtrl->pNetIf);
 
-        if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT)
+        if(stackCtrl->stackAction == (uint8_t)TCPIP_STACK_ACTION_DEINIT)
         {   // whole stack is going down
             if(--zcllInitCount == 0)
             {   // all closed
                 // release resources
-                _ZCLLCleanup(stackCtrl);
+                F_ZCLLCleanup(stackCtrl);
             }
         }
     }
 }
 
-static void _ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
+static void F_ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 {
-    TCPIP_HEAP_Free(stackCtrl->memH, phZCLL);  // free the allocated memory
-    phZCLL = (ZCLL_NET_HANDLE*)0;
-    if(zcllSignalHandle)
+    (void)TCPIP_HEAP_Free(stackCtrl->memH, phZCLL);  // free the allocated memory
+    phZCLL = NULL;
+    if(zcllSignalHandle != NULL)
     {
-        _TCPIPStackSignalHandlerDeregister(zcllSignalHandle);
-        zcllSignalHandle = 0;
+        TCPIPStackSignalHandlerDeregister(zcllSignalHandle);
+        zcllSignalHandle = NULL;
     }
 
 }
@@ -552,7 +570,7 @@ static void _ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
 
 /***************************************************************
   Function:
-   void TCPIP_ZCLL_Initialize(void)
+   bool TCPIP_ZCLL_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData);
 
   Summary:
    Initialization routine for Zeroconf Link-Local state-machine.
@@ -571,32 +589,32 @@ static void _ZCLLCleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
   Returns:
      None
   ***************************************************************/
-bool TCPIP_ZCLL_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const ZCLL_MODULE_CONFIG* zeroData)
+bool TCPIP_ZCLL_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData)
 {
-    if(stackCtrl->stackAction != TCPIP_STACK_ACTION_IF_UP)
+    if(stackData->stackAction != (uint8_t)TCPIP_STACK_ACTION_IF_UP)
     {   // stack init/restart
         if(zcllInitCount == 0)
         {   // 1st time we run
 
-            phZCLL = (ZCLL_NET_HANDLE*)TCPIP_HEAP_Calloc(stackCtrl->memH, stackCtrl->nIfs, sizeof(ZCLL_NET_HANDLE));
-            if(phZCLL == (ZCLL_NET_HANDLE*)0)
+            phZCLL = (ZCLL_NET_HANDLE*)TCPIP_HEAP_Calloc(stackData->memH, stackData->nIfs, sizeof(ZCLL_NET_HANDLE));
+            if(phZCLL == NULL)
             {
                 SYS_ERROR(SYS_ERROR_ERROR, "TCPIP_ZCLL_Initialize: Failed to allocate memory\r\n");
                 return false;
             }
-            zcllSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_ZCLL_Task, ZCLL_TASK_TICK_RATE); 
-            if(zcllSignalHandle == 0)
+            zcllSignalHandle =TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, &TCPIP_ZCLL_Task, ZCLL_TASK_TICK_RATE); 
+            if(zcllSignalHandle == NULL)
             {   // cannot create the ZCLL timer
-                _ZCLLCleanup(stackCtrl);
+                F_ZCLLCleanup(stackData);
                 return false;
             }
         }
         zcllInitCount++;
     }
 
-    if(stackCtrl->pNetIf->Flags.bIsZcllEnabled != 0)
+    if(stackData->pNetIf->Flags.bIsZcllEnabled != 0U)
     {
-        _ZCLLEnable(stackCtrl->pNetIf);
+        (void)F_ZCLLEnable(stackData->pNetIf);
     }
 
     return true;
@@ -606,9 +624,9 @@ void TCPIP_ZCLL_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
 
-    sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
+    sigPend = TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
-    if((sigPend & TCPIP_MODULE_SIGNAL_TMO) != 0)
+    if(((uint16_t)sigPend & (uint16_t)TCPIP_MODULE_SIGNAL_TMO) != 0U)
     { // regular TMO occurred
         TCPIP_ZCLL_Process();
     }
@@ -618,20 +636,23 @@ void TCPIP_ZCLL_Task(void)
 
 static void TCPIP_ZCLL_Process(void)
 {
-    int netIx;
+    size_t netIx;
     ZCLL_NET_HANDLE *hZcll;
-    TCPIP_NET_IF*   pNetIf;
-    int     zgzc_action;
+    const TCPIP_NET_IF* cNetIf;
+    TCPIP_NET_IF* pNetIf;
+    uint8_t     zgzc_action;
     IPV4_ADDR zeroAdd = {0};
 #if defined(TCPIP_ZC_INFO_ZCLL) || defined(TCPIP_ZC_DEBUG_ZCLL)
     char zeroconf_dbg_msg[256];
 #endif
 
+    uint32_t sysFreq = SYS_TMR_TickCounterFrequencyGet(); 
     for(netIx = 0; netIx < TCPIP_STACK_NumberOfNetworksGet(); netIx++)
     {
 
         hZcll = phZCLL + netIx;
-        pNetIf = (TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+        cNetIf = (const TCPIP_NET_IF*)TCPIP_STACK_IndexToNet(netIx);
+        pNetIf = FC_CNetIf2NetIf(cNetIf);
 
 
         if(hZcll->zcll_state == SM_INIT)
@@ -639,10 +660,10 @@ static void TCPIP_ZCLL_Process(void)
             continue;
         }
 
-        if(!TCPIP_STACK_NetworkIsLinked(pNetIf))
+        if(!TCPIP_STACK_NetworkIsLinked(cNetIf))
         {   // lost connection; re-start
             hZcll->zcll_state = SM_ADDR_INIT;
-            TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDRESS_SERVICE_ZCLL, TCPIP_STACK_ADDRESS_SERVICE_EVENT_CONN_LOST);
+            TCPIP_STACK_AddressServiceEvent(pNetIf, TCPIP_STACK_ADDR_SRVC_ZCLL, TCPIP_ADDR_SRVC_EV_CONN_LOST);
             return;
         }
 
@@ -650,16 +671,16 @@ static void TCPIP_ZCLL_Process(void)
         {
             case SM_ADDR_INIT:
                 // Setup random number generator
-                _ZCLL_RandInit(hZcll, pNetIf);
+                F_ZCLL_RandInit(hZcll, cNetIf);
 
-                hZcll->conflict_count = 0;
-                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
-                hZcll->probe_count = 0;
+                hZcll->conflict_count = 0U;
+                TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
+                hZcll->probe_count = 0U;
 
                 hZcll->zcll_state = SM_ADDR_PROBE;
                 INFO_ZCLL_PRINT("ADDR_INIT --> ADDR_PROBE \r\n");
 
-                // No break. Fall through
+                break;
 
             case SM_ADDR_PROBE:
 
@@ -667,69 +688,73 @@ static void TCPIP_ZCLL_Process(void)
 
                 if(zgzc_action == ZGZC_STARTED_WAITING)
                 {
-
-                    if (hZcll->probe_count == 0)
+                    if (hZcll->probe_count == 0U)
                     {
                         // First probe. Wait for [0 ~ PROBE_WAIT] seconds before sending the probe.
 
-                        hZcll->random_delay = _zcll_rand(hZcll, 0, PROBE_WAIT * SYS_TMR_TickCounterFrequencyGet());
-                        DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"PROBE_WAIT Random Delay [%d]: %lu secs \r\n",
-                                hZcll->probe_count,
-                                (unsigned long)hZcll->random_delay);
+                        hZcll->random_delay = F_zcll_rand(hZcll, 0L, (uint32_t)PROBE_WAIT * sysFreq);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                        (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"PROBE_WAIT Random Delay [%d]: %lu secs \r\n", hZcll->probe_count, (unsigned long)hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
                     }
-                    else if (hZcll->probe_count < PROBE_NUM)
+                    else if (hZcll->probe_count < (uint8_t)PROBE_NUM)
                     {
                         // Subsequent probes. Wait for [PROBE_MIN ~ PROBE_MAX] seconds before sending the probe.
 
-                        hZcll->random_delay = _zcll_rand(hZcll, PROBE_MIN * SYS_TMR_TickCounterFrequencyGet(),
-                                                          PROBE_MAX * SYS_TMR_TickCounterFrequencyGet());
+                        hZcll->random_delay = F_zcll_rand(hZcll, (uint32_t)PROBE_MIN * sysFreq,
+                                                          (uint32_t)PROBE_MAX * sysFreq);
 
-                        DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"PROBE Random Delay [%d]: %lu ticks \r\n",
-                                hZcll->probe_count,
-                                (unsigned long)hZcll->random_delay);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                        (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"PROBE Random Delay [%d]: %lu ticks \r\n", hZcll->probe_count, (unsigned long)hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
                     }
                     else
                     {
                         // Completed PROBE_NUM of probes. Now wait for ANNOUNCE_WAIT seconds to determine if
                         // we can claim it.
 
-                        hZcll->random_delay = (ANNOUNCE_WAIT * SYS_TMR_TickCounterFrequencyGet());
-                        DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"ANNOUNCE_WAIT delay [%d]: %lu ticks\r\n",
-                                hZcll->probe_count,
-                                (unsigned long)hZcll->random_delay /*SYS_TMR_TickCounterFrequencyGet() */);
+                        hZcll->random_delay = ((uint32_t)ANNOUNCE_WAIT * sysFreq);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                        (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"ANNOUNCE_WAIT delay [%d]: %lu ticks\r\n", hZcll->probe_count, (unsigned long)hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
                     }
 
-                    DEBUG0_ZCLL_PRINT((char*)zeroconf_dbg_msg);
+                    DEBUG_ZCLL_PRINT((char*)zeroconf_dbg_msg);
                     break;
                 }
                 else if(zgzc_action == ZGZC_KEEP_WAITING)
                 {   // Not Completed the delay proposed
                     break;
                 }
+                else
+                {
+                    // do nothing
+                }
 
                 // Completed the delay required
 
-                DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"   delay: %lu ticks " \
-                        "completed \r\n", (unsigned long)hZcll->random_delay);
-                DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"   delay: %lu ticks completed \r\n", (unsigned long)hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
-                if(hZcll->zcll_flags.probe_conflict)
+                if(hZcll->zcll_flags.probe_conflict != 0U)
                 {
                     /* Conflict with selected address */
                     INFO_ZCLL_PRINT("Probe Conflict-1 Detected. Need to select diff addr \r\n");
                     hZcll->temp_IP_addr.Val = 0x0;
 
                     hZcll->conflict_count++;
-                    _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
+                    TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
                 }
-                else if((hZcll->conflict_count == 0) &&
-                        hZcll->temp_IP_addr.Val      &&
-                        pNetIf->netIPAddr.Val != 0x0 &&
-                        (TCPIP_ARP_IsResolved(pNetIf,&hZcll->temp_IP_addr, &hZcll->temp_MAC_addr)) )
+                else if((hZcll->conflict_count == 0U) &&
+                        hZcll->temp_IP_addr.Val != 0UL &&
+                        pNetIf->netIPAddr.Val != 0UL &&
+                        (TCPIP_ARP_IsResolved(cNetIf,&hZcll->temp_IP_addr, &hZcll->temp_MAC_addr)) )
                 {
-                    if(!memcmp (&hZcll->temp_MAC_addr, &pNetIf->netMACAddr, 6) )
+                    if(memcmp (hZcll->temp_MAC_addr.v, cNetIf->netMACAddr.v, 6) == 0)
                     {
-                        DEBUG0_ZCLL_PRINT("SM_ADDR_PROBE: Resolved with our address only. " \
+                        DEBUG_ZCLL_PRINT("SM_ADDR_PROBE: Resolved with our address only. " \
                                 "Rare Case !!!! \r\n");
                     }
                     else
@@ -739,12 +764,16 @@ static void TCPIP_ZCLL_Process(void)
                         hZcll->temp_IP_addr.Val = 0x0;
 
                         hZcll->conflict_count++;
-                        _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
+                        TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
                     }
                 }
+                else
+                {
+                    // do nothing
+                }
 
-                if ((hZcll->zcll_flags.probe_conflict == 1) ||
-                        (!hZcll->bDefaultIPTried))
+                if ((hZcll->zcll_flags.probe_conflict == 1U) ||
+                        (hZcll->bDefaultIPTried == 0U))
                 {
                     /*
                      * Pick random IP address in IPv4 link-local range
@@ -755,70 +784,76 @@ static void TCPIP_ZCLL_Process(void)
                      * The link-local address must start with 169.254.#.#
                      * If it does not then pick a random link-local address.
                      */
-                    hZcll->probe_count = 0;
+                    hZcll->probe_count = 0U;
 
-                    if(!hZcll->bDefaultIPTried)
+                    if(hZcll->bDefaultIPTried == 0U)
                     {
                         // First probe, and the default IP is a valid IPV4_SOFTAP_LLBASE address.
-                        if(pNetIf->DefaultIPAddr.v[0] != 169 ||
-                           pNetIf->DefaultIPAddr.v[1] != 254 ||
-                           pNetIf->DefaultIPAddr.v[2] == 0   ||
-                           pNetIf->DefaultIPAddr.v[2] == 255)
+                        if(cNetIf->DefaultIPAddr.v[0] != 169U ||
+                           cNetIf->DefaultIPAddr.v[1] != 254U ||
+                           cNetIf->DefaultIPAddr.v[2] == 0U   ||
+                           cNetIf->DefaultIPAddr.v[2] == 255U)
                         {
 
-                            WARN_ZCLL_MESG(zeroconf_dbg_msg,"\r\n%d.%d.%d.%d not a valid link local addess. "
+#if defined(CONFIG_TCPIP_ZC_WARN_ZCLL)
+                            (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"\r\n%d.%d.%d.%d not a valid link local addess. "
                                     "Autogenerating address.\r\n"
-                                    ,pNetIf->DefaultIPAddr.v[0],pNetIf->DefaultIPAddr.v[1]
-                                    ,pNetIf->DefaultIPAddr.v[2],pNetIf->DefaultIPAddr.v[3]);
+                                    ,cNetIf->DefaultIPAddr.v[0],cNetIf->DefaultIPAddr.v[1]
+                                    ,cNetIf->DefaultIPAddr.v[2],cNetIf->DefaultIPAddr.v[3]);
+#endif  // CONFIG_TCPIP_ZC_WARN_ZCLL(TCPIP_ZC_INFO_ZCLL)
                             WARN_ZCLL_PRINT((char *)zeroconf_dbg_msg);
                             // First probe, if the default IP is a valid IPv4 LL then use it.
-                            hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
+                            hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
                         }
                         else
                         {
-                            hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl(pNetIf->DefaultIPAddr.Val);
+                            hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl(cNetIf->DefaultIPAddr.Val);
                         }
 
-                        hZcll->bDefaultIPTried = 1;
+                        hZcll->bDefaultIPTried = 1U;
                     }
                     else
                     {
-                        hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
+                        hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
                     }
 
-                    INFO_ZCLL_MESG(zeroconf_dbg_msg,"Picked IP-Addr [%d]: %d.%d.%d.%d \r\n",
+#if defined(TCPIP_ZC_INFO_ZCLL)
+                    (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg), "Picked IP-Addr [%d]: %d.%d.%d.%d \r\n",
                             hZcll->probe_count,
                             hZcll->temp_IP_addr.v[3],hZcll->temp_IP_addr.v[2],
                             hZcll->temp_IP_addr.v[1],hZcll->temp_IP_addr.v[0]);
+#endif  // defined(TCPIP_ZC_INFO_ZCLL)
                     INFO_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
                     hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl((uint32_t) hZcll->temp_IP_addr.Val);
                 }
 
-                if((hZcll->zcll_flags.probe_conflict == 1) || (hZcll->probe_count < PROBE_NUM))
+                if((hZcll->zcll_flags.probe_conflict == 1U) || (hZcll->probe_count < (uint8_t)PROBE_NUM))
                 {
 
-                    hZcll->zcll_flags.probe_conflict = 0;
+                    hZcll->zcll_flags.probe_conflict = 0U;
 
-                    TCPIP_ZCLL_ARPAction( pNetIf
-                            , &pNetIf->netIPAddr
+                    TCPIP_ZCLL_ARPAction( cNetIf
+                            , &cNetIf->netIPAddr
                             , &hZcll->temp_IP_addr
-                            , ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY
+                            , (uint16_t)ARP_OPERATION_REQ | (uint16_t)ARP_OPERATION_CONFIGURE | (uint16_t)ARP_OPERATION_PROBE_ONLY
                             , ZCLL_ARP_PROBE);
                     hZcll->probe_count++;
 
-                    DEBUG0_ZCLL_MESG(zeroconf_dbg_msg, "Sending ARP [%d]\r\n", hZcll->probe_count);
-                    DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                    (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg), "Sending ARP [%d]\r\n", hZcll->probe_count);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                    DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
                     break;
                 }
 
                 // No conflict detected ...
 
-                if(hZcll->probe_count >= PROBE_NUM)
+                if(hZcll->probe_count >= (uint8_t)PROBE_NUM)
                 {
                     hZcll->zcll_state = SM_ADDR_CLAIM;
-                    hZcll->bDefaultIPTried = 0;
+                    hZcll->bDefaultIPTried = 0U;
 
                     INFO_ZCLL_PRINT("ADDR_PROBE --> ADDR_CLAIM \r\n");
                 }
@@ -830,19 +865,19 @@ static void TCPIP_ZCLL_Process(void)
 
                 if(zgzc_action == ZGZC_STARTED_WAITING)
                 {
-                    if (hZcll->bDefaultIPTried == 0)
+                    if (hZcll->bDefaultIPTried == 0U)
                     {
                         // First announcement is immediate. We have passed the ANNOUNCE_WAIT in
                         // PROBE state already.
 
-                        hZcll->random_delay = 0;
+                        hZcll->random_delay = 0UL;
                     }
                     else
                     {
                         // Subsequent announcements need to wait ANNOUNCE_INTERVAL seconds
                         // before sending the announcement.
 
-                        hZcll->random_delay = (ANNOUNCE_INTERVAL * SYS_TMR_TickCounterFrequencyGet());
+                        hZcll->random_delay = ((uint32_t)ANNOUNCE_INTERVAL * SYS_TMR_TickCounterFrequencyGet());
                     }
                     break;
                 }
@@ -850,31 +885,40 @@ static void TCPIP_ZCLL_Process(void)
                 {   // Not Completed the delay proposed
                     break;
                 }
+                else
+                {
+                    // do nothing
+                }
 
                 // Completed the delay required
 
-                DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"ANNOUNCE delay: %lu ticks completed \r\n", (unsigned long)hZcll->random_delay);
-                DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"ANNOUNCE delay: %lu ticks completed \r\n", hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
-                if ( hZcll->bDefaultIPTried < ANNOUNCE_NUM )
+                if ( hZcll->bDefaultIPTried < (uint8_t)ANNOUNCE_NUM )
                 {
-                    TCPIP_ZCLL_ARPAction(pNetIf,&hZcll->temp_IP_addr,&hZcll->temp_IP_addr, ARP_OPERATION_REQ | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY, ZCLL_ARP_CLAIM);
+                    TCPIP_ZCLL_ARPAction(cNetIf,&hZcll->temp_IP_addr,&hZcll->temp_IP_addr, (uint16_t)ARP_OPERATION_REQ | (uint16_t)ARP_OPERATION_CONFIGURE | (uint16_t)ARP_OPERATION_PROBE_ONLY, ZCLL_ARP_CLAIM);
                     (hZcll->bDefaultIPTried)++;
 
-                    DEBUG0_ZCLL_MESG(zeroconf_dbg_msg, "Sending ANNOUNCEMENT [%d]\r\n", hZcll->bDefaultIPTried);
-                    DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                    (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg), "Sending ANNOUNCEMENT [%d]\r\n", hZcll->bDefaultIPTried);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                    DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
                 }
                 else
                 {
                     // Claim it. Goto DEFEND state
                     IPV4_ADDR   zcllMask;
                     zcllMask.Val = IPV4_LLBASE_MASK;
-                    _TCPIPStackSetConfigAddress(pNetIf, &hZcll->temp_IP_addr, &zcllMask, 0, false);
+                    TCPIPStackSetConfigAddress(pNetIf, &hZcll->temp_IP_addr, &zcllMask, NULL, false);
                     hZcll->zcll_state = SM_ADDR_DEFEND;
-                    INFO_ZCLL_MESG(zeroconf_dbg_msg,"\r\n******** Taken IP-Addr: " \
-                            "%d.%d.%d.%d ******** \r\n",
-                            pNetIf->netIPAddr.v[0],pNetIf->netIPAddr.v[1],
-                            pNetIf->netIPAddr.v[2],pNetIf->netIPAddr.v[3]);
+#if defined(TCPIP_ZC_INFO_ZCLL)
+                    (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg), "\r\n******** Taken IP-Addr: %d.%d.%d.%d ******** \r\n",
+                            cNetIf->netIPAddr.v[0],cNetIf->netIPAddr.v[1],
+                            cNetIf->netIPAddr.v[2],cNetIf->netIPAddr.v[3]);
+#endif  // defined(TCPIP_ZC_INFO_ZCLL)
                     INFO_ZCLL_PRINT((char *)zeroconf_dbg_msg);
                     INFO_ZCLL_PRINT("ADDR_CLAIM --> ADDR_DEFEND \r\n");
                 }
@@ -883,21 +927,21 @@ static void TCPIP_ZCLL_Process(void)
 
             case SM_ADDR_DEFEND:
 
-                if( hZcll->zcll_flags.late_conflict)
+                if( hZcll->zcll_flags.late_conflict != 0U)
                 {
-                    if (!hZcll->zcll_flags.defended)
+                    if (hZcll->zcll_flags.defended == 0U)
                     {
-                        hZcll->zcll_flags.late_conflict = 0;
+                        hZcll->zcll_flags.late_conflict = 0U;
                         INFO_ZCLL_PRINT("CONFLICT DETECTED !!! \r\n");
 
                         INFO_ZCLL_PRINT("Defending the Self Address once \r\n");
-                        TCPIP_ZCLL_ARPAction( pNetIf
-                                ,&pNetIf->netIPAddr
-                                ,&pNetIf->netIPAddr
-                                ,ARP_OPERATION_RESP | ARP_OPERATION_CONFIGURE | ARP_OPERATION_PROBE_ONLY
+                        TCPIP_ZCLL_ARPAction( cNetIf
+                                ,&cNetIf->netIPAddr
+                                ,&cNetIf->netIPAddr
+                                ,(uint16_t)ARP_OPERATION_RESP | (uint16_t)ARP_OPERATION_CONFIGURE | (uint16_t)ARP_OPERATION_PROBE_ONLY
                                 ,ZCLL_ARP_DEFEND);
 
-                        hZcll->zcll_flags.defended = true;
+                        hZcll->zcll_flags.defended = 1U;
                     }
                     else
                     {
@@ -907,25 +951,26 @@ static void TCPIP_ZCLL_Process(void)
 
                         hZcll->zcll_state = SM_ADDR_RELEASE;
 
-                        hZcll->zcll_flags.defended = false;
-                        hZcll->event_time = false;
-                        hZcll->random_delay = false;
+                        hZcll->zcll_flags.defended = 0U;
+                        hZcll->event_time = 0UL;
+                        hZcll->random_delay = 0UL;
 
                         INFO_ZCLL_PRINT("ADDR_DEFEND --> ADDR_RELEASE \r\n");
                         break;
                     }
                 }
 
-                if (hZcll->zcll_flags.defended)
+                if (hZcll->zcll_flags.defended != 0U)
                 {
                     zgzc_action = zgzc_wait_for(&hZcll->random_delay, &hZcll->event_time, &hZcll->time_recorded);
 
                     if(zgzc_action == ZGZC_STARTED_WAITING)
                     {
-                        hZcll->random_delay = (DEFEND_INTERVAL * SYS_TMR_TickCounterFrequencyGet());
-                        DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"DEFEND_INTERVAL Delay : %lu ticks\r\n",
-                                (unsigned long)hZcll->random_delay/*SYS_TMR_TickCounterFrequencyGet() */);
-                        DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+                        hZcll->random_delay = ((uint32_t)DEFEND_INTERVAL * SYS_TMR_TickCounterFrequencyGet());
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                        (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"DEFEND_INTERVAL Delay : %lu ticks\r\n", hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                        DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
                         break; 
                     }
@@ -933,14 +978,19 @@ static void TCPIP_ZCLL_Process(void)
                     {   // Not Completed the delay proposed
                         break;
                     }
+                    else
+                    {
+                        // do nothing
+                    }
 
                     // Completed the delay required
 
-                    DEBUG0_ZCLL_MESG(zeroconf_dbg_msg,"ANNOUNCE delay: %lu ticks " \
-                            "completed \r\n", (unsigned long)hZcll->random_delay);
-                    DEBUG0_ZCLL_PRINT((char *)zeroconf_dbg_msg);
+#if defined(TCPIP_ZC_DEBUG_ZCLL)
+                    (void)FC_sprintf(zeroconf_dbg_msg, sizeof(zeroconf_dbg_msg),"ANNOUNCE delay: %lu ticks completed \r\n", hZcll->random_delay);
+#endif  // defined(TCPIP_ZC_DEBUG_ZCLL)
+                    DEBUG_ZCLL_PRINT((char *)zeroconf_dbg_msg);
 
-                    hZcll->zcll_flags.defended = false;
+                    hZcll->zcll_flags.defended = 0U;
                 }
 
                 break;
@@ -949,19 +999,20 @@ static void TCPIP_ZCLL_Process(void)
 
                 INFO_ZCLL_PRINT("ADDR_RELEASE --> ADDR_INIT\r\n");
 
-                _TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, 0, true);
+                TCPIPStackSetConfigAddress(pNetIf, &zeroAdd, &zeroAdd, NULL, true);
 
                 // Need New Addr
-                hZcll->temp_IP_addr.Val = _zcll_rand(hZcll, IPV4_LLBASE, IPV4_LLBASE + 0xfdff);
+                hZcll->temp_IP_addr.Val = F_zcll_rand(hZcll, (uint32_t)IPV4_LLBASE, (uint32_t)IPV4_LLBASE + 0xfdffUL);
                 hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl((uint32_t) hZcll->temp_IP_addr.Val);
 
                 hZcll->zcll_state = SM_ADDR_INIT;
-                hZcll->time_recorded = false;
-                hZcll->zcll_flags.defended      = false;
-                hZcll->event_time    = false;
+                hZcll->time_recorded = 0U;
+                hZcll->zcll_flags.defended = 0U;
+                hZcll->event_time = 0UL;
                 break;
 
             default:
+                // do nothing
                 break;
         }
 

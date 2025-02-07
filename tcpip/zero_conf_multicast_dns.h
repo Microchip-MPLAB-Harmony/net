@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -51,8 +51,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __ZEROCONF_MULTICAST_DNS_H
-#define __ZEROCONF_MULTICAST_DNS_H
+#ifndef H_ZEROCONF_MULTICAST_DNS_H_
+#define H_ZEROCONF_MULTICAST_DNS_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -138,7 +138,7 @@ typedef enum
 
                 For a iTunes Music Sharing "_daap._tcp.local"
                 For a Printing Service "_ipp._tcp.local"
-                Refer to  http://www.dns-sd.org/ServiceTypes.html
+                Refer to  www.dns-sd.org/ServiceTypes.html
                 for more service types.
 
     port      - Port number on which service is running
@@ -298,4 +298,4 @@ void  TCPIP_MDNS_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __ZEROCONF_MULTICAST_DNS_H
+#endif  // H_ZEROCONF_MULTICAST_DNS_H_

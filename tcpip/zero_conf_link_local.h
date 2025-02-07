@@ -20,7 +20,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -50,8 +50,8 @@ Microchip or any third party.
 
 
 //DOM-IGNORE-END
-#ifndef __ZEROCONF_LINK_LOCAL_H
-#define __ZEROCONF_LINK_LOCAL_H
+#ifndef H_ZEROCONF_LINK_LOCAL_H_
+#define H_ZEROCONF_LINK_LOCAL_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -187,4 +187,4 @@ void  TCPIP_ZCLL_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif //#ifndef __ZEROCONF_LINK_LOCAL_H
+#endif //#ifndef H_ZEROCONF_LINK_LOCAL_H_
