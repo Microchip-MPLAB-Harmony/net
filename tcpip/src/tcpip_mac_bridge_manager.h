@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,15 +42,15 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _TCPIP_MAC_BRIDGE_MANAGER_H_
-#define _TCPIP_MAC_BRIDGE_MANAGER_H_
+#ifndef H_TCPIP_MAC_BRIDGE_MANAGER_H_
+#define H_TCPIP_MAC_BRIDGE_MANAGER_H_
 
 
 // private stack API
 
 
 // standard initialization function
-bool TCPIP_MAC_Bridge_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_MAC_BRIDGE_CONFIG* pBConfig);
+bool TCPIP_MAC_Bridge_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 
 void TCPIP_MAC_Bridge_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
@@ -60,9 +60,9 @@ void TCPIP_MAC_Bridge_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtr
 typedef enum
 {
     TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS   = 0,        // the host should process this packet
-    TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_DISCARD,            // the packet was discarded by the bridge
+    TCPIP_MAC_BRIDGE_PKT_RES_BR_DISCARD,                // the packet was discarded by the bridge
                                                         // the host should ignore the packet and not process
-    TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_PROCESS,            // the packet is processed by the bridge
+    TCPIP_MAC_BRIDGE_PKT_RES_BR_PROCESS,                // the packet is processed by the bridge
                                                         // the host should ignore the packet and not process
 
 
@@ -74,11 +74,11 @@ typedef enum
 //      - TCPIP_MAC_BRIDGE_PKT_RES_HOST_PROCESS:
 //              - normal packet processing should occur
 //                (the bridge does not handle the packet)
-//      - TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_DISCARD:
+//      - TCPIP_MAC_BRIDGE_PKT_RES_BR_DISCARD:
 //              the stack should ignore the packet
 //              was discarded by the bridge too
 //
-//      - TCPIP_MAC_BRIDGE_PKT_RES_BRIDGE_PROCESS:
+//      - TCPIP_MAC_BRIDGE_PKT_RES_BR_PROCESS:
 //              all processing was done by the bridge
 //              the stack should ignore the packet
 //
@@ -86,7 +86,7 @@ TCPIP_MAC_BRIDGE_PKT_RES    TCPIP_MAC_Bridge_ProcessPacket(TCPIP_MAC_PACKET* pRx
 
 
 
-#endif  // _TCPIP_MAC_BRIDGE_MANAGER_H_
+#endif  // H_TCPIP_MAC_BRIDGE_MANAGER_H_
 
 
 

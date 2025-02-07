@@ -18,7 +18,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -42,8 +42,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_MAC_BRIDGE_H_
-#define __TCPIP_MAC_BRIDGE_H_
+#ifndef H_TCPIP_MAC_BRIDGE_H_
+#define H_TCPIP_MAC_BRIDGE_H_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -97,8 +97,8 @@ typedef enum
     TCPIP_MAC_BRIDGE_RES_PARAM_ERROR        = -13,      // invalid parameter supplied
     TCPIP_MAC_BRIDGE_RES_INDEX_ERROR        = -14,      // invalid FDB index
     TCPIP_MAC_BRIDGE_RES_INDEX_NO_ENTRY     = -15,      // FDB index exists but the entry is not used
-    TCPIP_MAC_BRIDGE_RES_LOCK_ERROR         = -16,      // another FDB operation is in progress and the FDB is locked
-                                                        // retry
+    TCPIP_MAC_BRIDGE_RES_LOCK_ERROR         = -16,      // another FDB operation is in progress and the FDB is locked; retry
+    TCPIP_MAC_BRIDGE_RES_NO_OP              = -17,      // operation not available/supported
 
 }TCPIP_MAC_BRIDGE_RESULT;
 
@@ -260,13 +260,15 @@ typedef enum
     operation of the MAC bridging module ports
 
   Remarks:
-    The meaning of the TCPIP_MAC_BRIDGE_CONTROL_TYPE_DEFAULT could be different
+    The meaning of the TCPIP_MAC_BRIDGE_CONTROL_DEFAULT could be different
     depending on the type of entry in the FDB
+
+    8 bit values supported.
  */
 
 typedef enum
 {
-    TCPIP_MAC_BRIDGE_CONTROL_TYPE_DEFAULT     = 0,      // default behavior:
+    TCPIP_MAC_BRIDGE_CONTROL_DEFAULT     = 0,           // default behavior:
                                                         //  - when controlling an out port (a different port than the one the packet arrived on)
                                                         //    this referrs to the forwarding/filtering of packets on the output ports/interfaces:
                                                         //      forward or filter based on the dynamic filtering info
@@ -275,9 +277,9 @@ typedef enum
                                                         //         - host processes multicast packets
                                                         //         - host discards unicast packets not address to this host
                                                         //         - host processes unicast packets addressed to this host
-    TCPIP_MAC_BRIDGE_CONTROL_TYPE_FORWARD,              // out port: forward irrespective of the dynamic filtering info
+    TCPIP_MAC_BRIDGE_CONTROL_FORWARD,                   // out port: forward irrespective of the dynamic filtering info
                                                         // in port: host should process this packet
-    TCPIP_MAC_BRIDGE_CONTROL_TYPE_FILTER,               // out port: filter irrespective of the dynamic filtering info
+    TCPIP_MAC_BRIDGE_CONTROL_FILTER,                    // out port: filter irrespective of the dynamic filtering info
                                                         // in port: host should discard this packet
     // TCPIP_MAC_BRIDGE_CONTROL_TYPE_GROUP,             // out port: currently not supported - forward or filter based on the Default Group filtering behavior
 
@@ -332,7 +334,7 @@ typedef struct
                                                         // describing the control for each output port
                                                         // This should <= nPorts (the number of bridge ports derived from TCPIP_MAC_BRIDGE_CONFIG::bridgeTable).
                                                         // excess entries are ignored
-                                                        // missing entries will have the default control type:  TCPIP_MAC_BRIDGE_CONTROL_TYPE_DEFAULT
+                                                        // missing entries will have the default control type:  TCPIP_MAC_BRIDGE_CONTROL_DEFAULT
                                                         //
                                                         // pDcptMap->outIx should be different than inIx
                                                         // if it's the same, then the setting it is used only for a MAC address belonging to the host
@@ -502,6 +504,7 @@ typedef struct
     uint32_t    failSize;          // forwarding failures due to packet size
     uint32_t    failLocks;         // FDB was locked
     uint32_t    fdbFull;           // FDB was full
+    uint32_t    failPort;          // failure because wrong port number 
 
     uint32_t    allocPackets;      // number of run time allocated packets
     uint32_t    allocDcpts;        // number of run time allocated descriptors
@@ -956,7 +959,7 @@ void  TCPIP_MAC_Bridge_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif //  __TCPIP_MAC_BRIDGE_H_
+#endif //  H_TCPIP_MAC_BRIDGE_H_
 
 
 

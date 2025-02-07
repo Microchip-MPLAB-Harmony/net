@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -40,8 +40,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TCPIP_MAC_BRIDGE_PRIVATE_H_
-#define __TCPIP_MAC_BRIDGE_PRIVATE_H_
+#ifndef H_TCPIP_MAC_BRIDGE_PRIVATE_H_
+#define H_TCPIP_MAC_BRIDGE_PRIVATE_H_
 
 
 // definitions
@@ -64,21 +64,21 @@ Microchip or any third party.
 
 // local define symbols
 #if defined(TCPIP_MAC_BRIDGE_STATISTICS) && (TCPIP_MAC_BRIDGE_STATISTICS != 0)
-#define _TCPIP_MAC_BRIDGE_STATISTICS 1
+#define M_TCPIP_MAC_BRIDGE_STATISTICS 1
 #else
-#define _TCPIP_MAC_BRIDGE_STATISTICS 0
+#define M_TCPIP_MAC_BRIDGE_STATISTICS 0
 #endif
 
 #if defined(TCPIP_MAC_BRIDGE_EVENT_NOTIFY) && (TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
-#define _TCPIP_MAC_BRIDGE_EVENT_NOTIFY   1
+#define M_TCPIP_MAC_BRIDGE_EVENT_NOTIFY   1
 #else
-#define _TCPIP_MAC_BRIDGE_EVENT_NOTIFY   0
+#define M_TCPIP_MAC_BRIDGE_EVENT_NOTIFY   0
 #endif
 
 #if defined(TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS) &&(TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS != 0)
-#define _TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 1
+#define M_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 1
 #else
-#define _TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 0
+#define M_TCPIP_MAC_BRIDGE_DYNAMIC_FDB_ACCESS 0
 #endif
 
 
@@ -87,36 +87,42 @@ Microchip or any third party.
 // keep it in sync with TCPIP_MAC_BRIDGE_STAT 
 typedef enum
 {
-    MAC_BRIDGE_STAT_TYPE_FAIL_PKT_ALLOC = 0,
-    MAC_BRIDGE_STAT_TYPE_FAIL_DCPT_ALLOC,
-    MAC_BRIDGE_STAT_TYPE_FAIL_MAC,
-    MAC_BRIDGE_STAT_TYPE_FAIL_MTU,
-    MAC_BRIDGE_STAT_TYPE_FAIL_SIZE,
-    MAC_BRIDGE_STAT_TYPE_FAIL_LOCK,
-    MAC_BRIDGE_STAT_TYPE_FDB_FULL,
+    MAC_BRIDGE_STAT_FAIL_PKT_ALLOC = 0,
+    MAC_BRIDGE_STAT_FAIL_DCPT_ALLOC,
+    MAC_BRIDGE_STAT_FAIL_MAC,
+    MAC_BRIDGE_STAT_FAIL_MTU,
+    MAC_BRIDGE_STAT_FAIL_SIZE,
+    MAC_BRIDGE_STAT_FAIL_LOCK,
+    MAC_BRIDGE_STAT_FDB_FULL,
+    MAC_BRIDGE_STAT_FAIL_PORT,
 
-    MAC_BRIDGE_STAT_TYPE_ALLOC_PKTS,
-    MAC_BRIDGE_STAT_TYPE_ALLOC_DCPTS,
-    MAC_BRIDGE_STAT_TYPE_FREE_PKTS,
-    MAC_BRIDGE_STAT_TYPE_ACK_PKTS,
-    MAC_BRIDGE_STAT_TYPE_DELAY_PKTS,
-    MAC_BRIDGE_STAT_TYPE_PKT_POOL_EMPTY,
-    MAC_BRIDGE_STAT_TYPE_PKT_POOL_LOW,
-    MAC_BRIDGE_STAT_TYPE_PKT_POOL_SIZE,
-    MAC_BRIDGE_STAT_TYPE_DCPT_POOL_EMPTY,
-    MAC_BRIDGE_STAT_TYPE_DCPT_POOL_SIZE,
-    MAC_BRIDGE_STAT_TYPE_DCPT_POOL_LOW_SIZE,
-    // per interface
-    MAC_BRIDGE_STAT_TYPE_RX_PKTS = 0,
-    MAC_BRIDGE_STAT_TYPE_RX_DEST_ME_UCAST,
-    MAC_BRIDGE_STAT_TYPE_RX_DEST_NOT_ME_UCAST,
-    MAC_BRIDGE_STAT_TYPE_RX_DEST_MCAST,
-    MAC_BRIDGE_STAT_TYPE_RESERVED_PKTS,
-    MAC_BRIDGE_STAT_TYPE_FWD_UCAST_PKTS,
-    MAC_BRIDGE_STAT_TYPE_FWD_MCAST_PKTS,
-    MAC_BRIDGE_STAT_TYPE_FWD_DIRECT_PKTS,
-    
+    MAC_BRIDGE_STAT_ALLOC_PKTS,
+    MAC_BRIDGE_STAT_ALLOC_DCPTS,
+    MAC_BRIDGE_STAT_FREE_PKTS,
+    MAC_BRIDGE_STAT_ACK_PKTS,
+    MAC_BRIDGE_STAT_DELAY_PKTS,
+    MAC_BRIDGE_STAT_PKT_POOL_EMPTY,
+    MAC_BRIDGE_STAT_PKT_POOL_LOW,
+    MAC_BRIDGE_STAT_PKT_POOL_SIZE,
+    MAC_BRIDGE_STAT_DCPT_POOL_EMPTY,
+    MAC_BRIDGE_STAT_DCPT_POOL_SIZE,
+    MAC_BRIDGE_STAT_DCPT_POOL_LOW_SIZE,
 }MAC_BRIDGE_STAT_TYPE;
+
+// enumeration for port/interface statistics function
+// specify the statistics index (type)
+// keep it in sync with TCPIP_MAC_BRIDGE_STAT 
+typedef enum
+{
+    BRIDGE_PORT_STAT_RX_PKTS = 0,
+    BRIDGE_PORT_STAT_RX_DEST_ME_UCAST,
+    BRIDGE_PORT_STAT_RX_DEST_NOT_ME_UCAST,
+    BRIDGE_PORT_STAT_RX_DEST_MCAST,
+    BRIDGE_PORT_STAT_RESERVED_PKTS,
+    BRIDGE_PORT_STAT_FWD_UCAST_PKTS,
+    BRIDGE_PORT_STAT_FWD_MCAST_PKTS,
+    BRIDGE_PORT_STAT_FWD_DIRECT_PKTS,
+}BRIDGE_PORT_STAT_TYPE;
 
 
 // Bridge input/output port descriptor
@@ -193,7 +199,7 @@ typedef enum
 }MAC_BRIDGE_HASH_FLAGS;
 
 // Bridge FDB entry
-typedef struct _TAG_MAC_BRIDGE_HASH_ENTRY 
+typedef struct S_TAG_MAC_BRIDGE_HASH_ENTRY 
 {
     OA_HASH_ENTRY       hEntry;         // hash header;
     // use the same filtering database for both static and dynamic entries
@@ -232,7 +238,7 @@ typedef struct
     uint32_t            purgeTmo;       // purge timeout: expiration time for a dynamic entry, in SYS_TICKS
                                         // range: [10 - 1,000,000] sec. Default 300s. Granularity 1 sec.
     uint32_t            transitDelay;   // allowed bridge transit delay, in SYS_TICKS
-    tcpipSignalHandle   tmrSigHandle;   // registration with the manager for periodic timer purposes
+    TCPIP_SIGNAL_HANDLE   tmrSigHandle;   // registration with the manager for periodic timer purposes
     uint16_t            pktPoolSize;    // number of packets in the pool for run time forwarding
     uint16_t            pktSize;        // size of the packets in the pool
     uint8_t             pktReplenish;   // Number of packets to replenish the pool, when it becomes empty
@@ -249,17 +255,17 @@ typedef struct
                                         // each packet to be processed by the bridge has an associated descriptor
                                         // no protection enforced on access to the descriptor pool 
     // statistics
-#if (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#if (M_TCPIP_MAC_BRIDGE_STATISTICS != 0)
     union
     {
         TCPIP_MAC_BRIDGE_STAT   stat;    
         uint32_t                stat_array[sizeof(TCPIP_MAC_BRIDGE_STAT)];
     };
-#endif  // (_TCPIP_MAC_BRIDGE_STATISTICS != 0)
+#endif  // (M_TCPIP_MAC_BRIDGE_STATISTICS != 0)
     
-#if (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#if (M_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
     TCPIP_MAC_BRIDGE_EVENT_HANDLER  evHandler;
-#endif  // (_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
+#endif  // (M_TCPIP_MAC_BRIDGE_EVENT_NOTIFY  != 0) 
 
     uint8_t             bridgeFlags;        // TCPIP_MAC_BRIDGE_FLAGS value
     uint8_t             dcptReplenish;      // Number of descriptors to replenish the pool, when it becomes empty
@@ -290,9 +296,9 @@ typedef enum
 
 // map of the ports need to be forwarded/flooded
 // limits the bridge ports to <= 32!
-typedef struct _tag_MAC_BRIDGE_FWD_DCPT
+typedef struct S_tag_MAC_BRIDGE_FWD_DCPT
 {
-    struct _tag_MAC_BRIDGE_FWD_DCPT* next;  // safe cast to SGL_LIST_NODE   
+    struct S_tag_MAC_BRIDGE_FWD_DCPT* next;  // safe cast to SGL_LIST_NODE   
     const void*               ownAckParam;  
     TCPIP_MAC_PACKET_ACK_FUNC ownAckFunc;   // when processed packet does not belong to the bridge
 
@@ -305,9 +311,9 @@ typedef struct _tag_MAC_BRIDGE_FWD_DCPT
     
 // special port control for static FDB entries that rely on the learnt behavior as a default
 // Note: has to be different from the TCPIP_MAC_BRIDGE_CONTROL_TYPE values! 
-#define TCPIP_MAC_BRIDGE_CONTROL_TYPE_DYN_LEARN (TCPIP_MAC_BRIDGE_CONTROL_TYPES + 1) 
+#define TCPIP_MAC_BRIDGE_CONTROL_DYN_LEARN ((uint8_t)TCPIP_MAC_BRIDGE_CONTROL_TYPES + 1U) 
 
 
-#endif //  __TCPIP_MAC_BRIDGE_PRIVATE_H_
+#endif //  H_TCPIP_MAC_BRIDGE_PRIVATE_H_
 
 
