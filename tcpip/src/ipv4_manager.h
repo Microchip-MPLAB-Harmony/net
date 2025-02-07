@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,8 +44,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _IPV4_MANAGER_H_
-#define _IPV4_MANAGER_H_
+#ifndef H_IPV4_MANAGER_H_
+#define H_IPV4_MANAGER_H_
 
 
 // Stack structures
@@ -66,8 +66,8 @@ typedef struct
 // 
    
 
-bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const TCPIP_IPV4_MODULE_CONFIG* pIpInit);
-void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackInit);
+bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const void* initData);
+void TCPIP_IPV4_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 // Interface functions
@@ -125,7 +125,21 @@ void                    TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPk
 // Otherwise, the pMacPkt will be used if ARP queuing needed
 bool TCPIP_IPV4_PktTx(IPV4_PACKET* pPkt, TCPIP_MAC_PACKET* pMacPkt, bool isPersistent);
 
-#endif // _IPV4_MANAGER_H_
+// conversion functions/helpers
+//
+static __inline__ IPV4_HEADER* __attribute__((always_inline)) FC_Uptr2IpHdr(uint8_t* uptr)
+{
+    union
+    {
+        uint8_t* uptr;
+        IPV4_HEADER* pIpHdr;
+    }U_UPTR_IP_HDR;
+
+    U_UPTR_IP_HDR.uptr = uptr;
+    return U_UPTR_IP_HDR.pIpHdr;
+}
+
+#endif // H_IPV4_MANAGER_H_
 
 
 

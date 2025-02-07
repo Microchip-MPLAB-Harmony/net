@@ -18,7 +18,7 @@ IPv4 Header File
 
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,8 +49,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __IPV4_H_
-#define __IPV4_H_
+#ifndef H_IPV4_H_
+#define H_IPV4_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -151,17 +151,17 @@ Microchip or any third party.
     forwardTable[] = 
     {
         Network         Mask             Gateway        inputInterface  outInterface
-        // interface 0 entries    
-        {192.168.2.240, 255.255.255.255, 0,             eth0,           eth1},       // traffic received on LAN0 for host 192.168.2.240 goes directly to it on LAN1
-        {192.168.2.0,   255.255.255.0,   0,             eth0,           eth1},       // traffic received on LAN0 for hosts on LAN1 goes to LAN1 over interface eth1 directly to that host
-                                                                                     // Note that this entry makes the previous one unncecessary
-        {192.168.3.0,   255.255.255.0,   192.168.2.1,   eth0,           eth1},       // traffic received for hosts on network 192.168.3.0/24 goes to LAN1 over interface eth1 using router 192.168.2.1
-        // default entry; will match everything
-        {0.0.0.0,       0.0.0.0,         192.168.1.100, eth0,           eth0},       // default entry; will match everything:
-                                                                                     // all other traffic on LAN0  will be sent on eth0 to router 192.168.1.100 
-        // interface 1 entries    
-        {192.168.1.147, 255.255.255.255, 0,             eth1,           eth0},       // traffic received on LAN1 for host 192.168.1.147 goes directly to it on LAN0
-        {192.168.1.0,   255.255.255.0,   192.168.1.100, eth1,           eth0},       // traffic received on LAN1 for hosts on LAN0 goes to LAN0 over interface eth0 using router 192.168.1.100
+        - interface 0 entries    
+        {192.168.2.240, 255.255.255.255, 0,             eth0,           eth1},       traffic received on LAN0 for host 192.168.2.240 goes directly to it on LAN1
+        {192.168.2.0,   255.255.255.0,   0,             eth0,           eth1},       traffic received on LAN0 for hosts on LAN1 goes to LAN1 over interface eth1 directly to that host
+                                                                                     Note that this entry makes the previous one unncecessary
+        {192.168.3.0,   255.255.255.0,   192.168.2.1,   eth0,           eth1},       traffic received for hosts on network 192.168.3.0/24 goes to LAN1 over interface eth1 using router 192.168.2.1
+        - default entry; will match everything
+        {0.0.0.0,       0.0.0.0,         192.168.1.100, eth0,           eth0},       default entry; will match everything:
+                                                                                     all other traffic on LAN0  will be sent on eth0 to router 192.168.1.100 
+        - interface 1 entries    
+        {192.168.1.147, 255.255.255.255, 0,             eth1,           eth0},       traffic received on LAN1 for host 192.168.1.147 goes directly to it on LAN0
+        {192.168.1.0,   255.255.255.0,   192.168.1.100, eth1,           eth0},       traffic received on LAN1 for hosts on LAN0 goes to LAN0 over interface eth0 using router 192.168.1.100
     }
 
 
@@ -220,25 +220,28 @@ typedef struct
   Remarks:
     The binary format is always supported 
 */
-
-typedef struct
+typedef union
 {
-    /* Network destination address, network order */
-    uint32_t        netAddress;
-    /* Network mask, network order */
-    uint32_t        netMask;
-    /* Gateway destination address, network order */
-    uint32_t        gwAddress;
-    /* The number of the input interface this entry applies to.
-     * The forwarding tables are built per interface */
-    uint8_t         inIfIx;
-    /* The number of the interface to go out on if this entry is selected. */
-    uint8_t         outIfIx;
-    /* The path efficiency */
-    uint8_t         metric;
-    /* number of leading ones in the netMask; negative means entry is invalid/unused.
-     * used only for TCPIP_IPV4_ForwadTableEntryGet function */
-    int8_t          nOnes;
+    struct
+    {
+        /* Network destination address, network order */
+        uint32_t        netAddress;
+        /* Network mask, network order */
+        uint32_t        netMask;
+        /* Gateway destination address, network order */
+        uint32_t        gwAddress;
+        /* The number of the input interface this entry applies to.
+         * The forwarding tables are built per interface */
+        uint8_t         inIfIx;
+        /* The number of the interface to go out on if this entry is selected. */
+        uint8_t         outIfIx;
+        /* The path efficiency */
+        uint8_t         metric;
+        /* number of leading ones in the netMask; negative means entry is invalid/unused.
+         * used only for TCPIP_IPV4_ForwadTableEntryGet function */
+        int8_t          nOnes;
+    };
+    uint8_t entryBytes[16];  // access to entry bytes 
 }TCPIP_IPV4_FORWARD_ENTRY_BIN;
 
 // *****************************************************************************
@@ -272,7 +275,7 @@ typedef union
     IPv4 forwarding module
 
   Remarks:
-    None.
+    16 bit values only!
  */
 typedef enum
 {
@@ -469,12 +472,12 @@ typedef enum
 typedef union
 {
     uint16_t        val;
-    struct
+    struct __attribute__((packed))
     {
-        uint16_t    fragOffset:     13;     // fragment offset
-        uint16_t    MF:             1;      // more fragments
-        uint16_t    DF:             1;      // don't fragment
-        uint16_t    reserved:       1;
+        unsigned    fragOffset:     13;     // fragment offset
+        unsigned    MF:             1;      // more fragments
+        unsigned    DF:             1;      // don't fragment
+        unsigned    reserved:       1;
     };
 }IPV4_FRAGMENT_INFO;
 
@@ -492,14 +495,14 @@ typedef union
  */
 typedef struct
 {
-    struct
+    struct __attribute__((packed))
     {   // option type
-        uint8_t     optNumber:  5;      // specifies an option
-        uint8_t     optClass:   2;      // option class: 0 - control; 2 - debugging and measurement; 1, 3 - reserved
-        uint8_t     optCopied:  1;      // option copied to all fragments
+        unsigned    optNumber:  5;      // specifies an option
+        unsigned    optClass:   2;      // option class: 0 - control; 2 - debugging and measurement; 1, 3 - reserved
+        unsigned    optCopied:  1;      // option copied to all fragments
     };
     uint8_t         optLength;          // size of the entire option
-    uint16_t        optData[];          // option specific variable data
+    // uint16_t        optData[];          // option specific variable data
 }IPV4_OPTION_FIELD;
 
 // *****************************************************************************
@@ -517,13 +520,13 @@ typedef struct
 typedef union
 {
     uint8_t     val;
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t     reserved:       2;      // not used
-        uint8_t     reliability:    1;      // reliability settings: normal/high
-        uint8_t     throughput:     1;      // throughput settings: normal/high
-        uint8_t     delay:          1;      // delay settings: normal/low
-        uint8_t     precedence:     3;      // precedence; one of TCPIP_IPV4_PRECEDENCE_ values
+        unsigned    reserved:       2;      // not used
+        unsigned    reliability:    1;      // reliability settings: normal/high
+        unsigned    throughput:     1;      // throughput settings: normal/high
+        unsigned    delay:          1;      // delay settings: normal/low
+        unsigned    precedence:     3;      // precedence; one of TCPIP_IPV4_PRECEDENCE_ values
     };
 }IPV4_TYPE_OF_SERVICE;
 
@@ -541,10 +544,10 @@ typedef union
  */
 typedef struct
 {
-    struct
+    struct __attribute__((packed))
     {
-        uint8_t IHL:        4;
-        uint8_t Version:    4;
+        unsigned IHL:        4;
+        unsigned Version:    4;
     };
     IPV4_TYPE_OF_SERVICE TypeOfService;
     uint16_t TotalLength;
@@ -555,9 +558,8 @@ typedef struct
     uint16_t HeaderChecksum;
     IPV4_ADDR SourceAddress;
     IPV4_ADDR DestAddress;
-    uint32_t  options[];
+    //uint32_t  options[];  // variable options field
 } IPV4_HEADER;
-
 
 // *****************************************************************************
 /* IPv4 packet structure definition
@@ -603,6 +605,8 @@ typedef struct
     Multiple filters can be set
     
     If no filter is set, all packets are accepted this is the default case.
+
+    16 bit only values!
  */
 typedef enum
 {
@@ -651,7 +655,7 @@ typedef enum
 typedef struct
 {
     TCPIP_IPV4_OPTION_TYPE  optionType;     // current option type
-    int                     optionSize;     // current option type in bytes, including the IPV4_OPTION_FIELD data;
+    uint16_t                optionSize;     // current option type in bytes, including the IPV4_OPTION_FIELD data;
 }TCPIP_IPV4_OPTION_DCPT;
 
 // *****************************************************************************
@@ -670,7 +674,7 @@ typedef struct
 
     Default value is 0x00, i.e. normal precedence, delay, throughput and reliability.
 
-    Currently only 6 bit values are supported!
+    Currently only 8 bit values are supported!
  */
 
 typedef enum __attribute__ ((__packed__))
@@ -747,7 +751,7 @@ typedef const void* TCPIP_IPV4_PROCESS_HANDLE;
 /* IPv4 packet handler Pointer
 
   Function:
-    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
   Summary:
     Pointer to a function(handler) that will get called to process an incoming IPv4 packet.
@@ -793,7 +797,7 @@ typedef const void* TCPIP_IPV4_PROCESS_HANDLE;
     See the tcpip_mac.h for details.
     
  */
-typedef bool(*TCPIP_IPV4_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+typedef bool(*TCPIP_IPV4_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -955,12 +959,7 @@ TCPIP_NET_HANDLE    TCPIP_IPV4_SelectDestInterface(const IPV4_ADDR* pDestAddress
   Remarks:
     This function is primarily meant for RX packets.
  */
-static __inline__ const IPV4_ADDR* TCPIP_IPV4_PacketGetDestAddress(TCPIP_MAC_PACKET* pPkt);
-
-static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_PacketGetDestAddress(TCPIP_MAC_PACKET* pPkt)
-{
-    return &((IPV4_HEADER*)pPkt->pNetLayer)->DestAddress;
-}
+const IPV4_ADDR* TCPIP_IPV4_PacketGetDestAddress(TCPIP_MAC_PACKET* pPkt);
 
 // *****************************************************************************
 /*
@@ -991,12 +990,7 @@ static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_Pac
   Remarks:
     This function is primarily meant for RX packets.
  */
-static __inline__ const IPV4_ADDR* TCPIP_IPV4_PacketGetSourceAddress(TCPIP_MAC_PACKET* pPkt);
-
-static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_PacketGetSourceAddress(TCPIP_MAC_PACKET* pPkt)
-{
-    return &((IPV4_HEADER*)pPkt->pNetLayer)->SourceAddress;
-}
+const IPV4_ADDR* TCPIP_IPV4_PacketGetSourceAddress(TCPIP_MAC_PACKET* pPkt);
 
 // *****************************************************************************
 /*
@@ -1109,7 +1103,7 @@ bool    TCPIP_IPV4_MacPacketTransmit(TCPIP_MAC_PACKET* pPkt, TCPIP_NET_HANDLE hN
 // *****************************************************************************
 /*
   Function:
-    IPV4_PACKET* TCPIP_IPV4_PacketAlloc(uint16_t pktPayload, TCPIP_IPV4_OPTION_DCPT* pOptions, int nOptions,  TCPIP_MAC_PACKET_FLAGS flags);
+    IPV4_PACKET* TCPIP_IPV4_PacketAlloc(uint16_t pktPayload, TCPIP_IPV4_OPTION_DCPT* pOptions, size_t nOptions,  TCPIP_MAC_PACKET_FLAGS flags);
 
   Summary:
     Allocates an IPv4 packet for transmission over the network.
@@ -1144,7 +1138,7 @@ bool    TCPIP_IPV4_MacPacketTransmit(TCPIP_MAC_PACKET* pPkt, TCPIP_NET_HANDLE hN
 
 
  */
-IPV4_PACKET* TCPIP_IPV4_PacketAlloc(uint16_t pktPayload, TCPIP_IPV4_OPTION_DCPT* pOptions, int nOptions,  TCPIP_MAC_PACKET_FLAGS flags);
+IPV4_PACKET* TCPIP_IPV4_PacketAlloc(uint16_t pktPayload, TCPIP_IPV4_OPTION_DCPT* pOptions, size_t nOptions,  TCPIP_MAC_PACKET_FLAGS flags);
 
 // *****************************************************************************
 /*
@@ -1194,7 +1188,7 @@ IPV4_OPTION_FIELD* TCPIP_IPV4_PacketOptionFieldSet(IPV4_PACKET* pPkt, uint16_t o
 // *****************************************************************************
 /*
   Function:
-    int TCPIP_IPV4_PacketOptionListGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_DCPT* pOptions, int nOptions );
+    size_t TCPIP_IPV4_PacketOptionListGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_DCPT* pOptions, size_t nOptions );
 
   Summary:
     Helper to get the options that a IPv4 receive packet has.
@@ -1225,13 +1219,13 @@ IPV4_OPTION_FIELD* TCPIP_IPV4_PacketOptionFieldSet(IPV4_PACKET* pPkt, uint16_t o
     On return, the pOptions is updated, up to nOptions;
 
  */
-int TCPIP_IPV4_PacketOptionListGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_DCPT* pOptions, int nOptions );
+size_t TCPIP_IPV4_PacketOptionListGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_DCPT* pOptions, size_t nOptions );
 
 
 // *****************************************************************************
 /*
   Function:
-    int TCPIP_IPV4_PacketOptionGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_TYPE optType, IPV4_OPTION_FIELD* pOptField, int optSize);
+    size_t TCPIP_IPV4_PacketOptionGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_TYPE optType, IPV4_OPTION_FIELD* pOptField, size_t optSize);
 
   Summary:
     Helper to get the options that a IPv4 receive packet has.
@@ -1263,12 +1257,12 @@ int TCPIP_IPV4_PacketOptionListGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_D
     Only minimal consistency check is done.
 
  */
-int TCPIP_IPV4_PacketOptionGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_TYPE optType, IPV4_OPTION_FIELD* pOptField, int optSize);
+size_t TCPIP_IPV4_PacketOptionGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_TYPE optType, IPV4_OPTION_FIELD* pOptField, size_t optSize);
 
 // *****************************************************************************
 /*
   Function:
-    int TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH);
+    uint16_t TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH);
 
   Summary:
     Helper to get the maximum datagream data size (MDDS) on a specific interface.
@@ -1292,7 +1286,7 @@ int TCPIP_IPV4_PacketOptionGet(TCPIP_MAC_PACKET* pRxPkt, TCPIP_IPV4_OPTION_TYPE 
     None
 
  */
-int TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH);
+uint16_t TCPIP_IPV4_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH);
 
 // *****************************************************************************
 /*
@@ -1386,8 +1380,8 @@ TCPIP_IPV4_PROCESS_HANDLE     TCPIP_IPV4_PacketHandlerRegister(TCPIP_IPV4_PACKET
   Example:
     <code>
     TCPIP_IPV4_PROCESS_HANDLE myHandle = TCPIP_IPV4_PacketHandlerRegister(myPacketHandler, myParam );
-    // process incoming packets
-    // now we're done with it
+    - process incoming packets
+    - now we're done with it
     TCPIP_IPV4_PacketHandlerDeregister(myHandle);
     </code>
 
@@ -1400,7 +1394,7 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
 // *****************************************************************************
 /*
   Function:
-    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pArrEntry, size_t nEntries);
 
   Summary:
     Helper to dynamically add entries to the FIB using the ASCII format
@@ -1414,7 +1408,7 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
         
 
   Parameters:
-    pEntry    - pointer to a valid ASCII format entries
+    pArrEntry - pointer to a valid ASCII format entries
     nEntries  - number of entries in the array
 
   Returns:
@@ -1435,12 +1429,12 @@ bool    TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle);
     Returning an error may still mean that some entries have been added to the FIB!
     Use one single entry if control needed over individual entries.
  */
-TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pArrEntry, size_t nEntries);
 
 // *****************************************************************************
 /*
   Function:
-    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+    TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pArrEntry, size_t nEntries);
 
   Summary:
     Helper to dynamically remove entries from the FIB using the ASCII format
@@ -1454,7 +1448,7 @@ TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII*
         
 
   Parameters:
-    pEntry    - pointer to a valid ASCII format entries
+    pArrEntry - pointer to a valid ASCII format entries
     nEntries  - number of entries in the array
 
   Returns:
@@ -1475,7 +1469,7 @@ TCPIP_IPV4_RES TCPIP_IPV4_FwdTableAddAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII*
     Returning an error may still mean that some entries have been removed to the FIB!
     Use one single entry if control needed over individual entries.
  */
-TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pEntry, size_t nEntries);
+TCPIP_IPV4_RES TCPIP_IPV4_FwdTableRemoveAscii(const TCPIP_IPV4_FORWARD_ENTRY_ASCII* pArrEntry, size_t nEntries);
 
 // *****************************************************************************
 /*
@@ -1764,4 +1758,4 @@ void  TCPIP_IPV4_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif // __IPV4_H_ 
+#endif // H_IPV4_H_ 

@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,16 +44,40 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _IPV4_PRIVATE_H_
-#define _IPV4_PRIVATE_H_
+#ifndef H_IPV4_PRIVATE_H_
+#define H_IPV4_PRIVATE_H_
 
 // internal
 
-#if defined(TCPIP_IPV4_FORWARDING_STATS) && (TCPIP_IPV4_FORWARDING_STATS != 0)
-#define _TCPIP_IPV4_FORWARDING_STATS 1
+#if defined(TCPIP_IPV4_FORWARDING_ENABLE) && (TCPIP_IPV4_FORWARDING_ENABLE != 0)
+#define M_TCPIP_IPV4_FWD_ENABLE  1
 #else
-#define _TCPIP_IPV4_FORWARDING_STATS 0
+#define M_TCPIP_IPV4_FWD_ENABLE  0
+#endif
+
+#if defined(TCPIP_IPV4_FORWARDING_TABLE_ASCII) && (TCPIP_IPV4_FORWARDING_TABLE_ASCII != 0)
+#define M_TCPIP_IPV4_FWD_TABLE_ASCII     1
+#else
+#define M_TCPIP_IPV4_FWD_TABLE_ASCII     0
+#endif
+
+#if defined(TCPIP_IPV4_FORWARDING_DYNAMIC_API) && (TCPIP_IPV4_FORWARDING_DYNAMIC_API != 0)
+#define M_TCPIP_IPV4_FWD_DYN_API 1
+#else
+#define M_TCPIP_IPV4_FWD_DYN_API 0
+#endif
+
+#if defined(TCPIP_IPV4_FORWARDING_STATS) && (TCPIP_IPV4_FORWARDING_STATS != 0)
+#define M_TCPIP_IPV4_FORWARDING_STATS 1
+#else
+#define M_TCPIP_IPV4_FORWARDING_STATS 0
 #endif  // defined(TCPIP_IPV4_FORWARDING_STATS) && (TCPIP_IPV4_FORWARDING_STATS != 0)
+
+#if defined(TCPIP_IPV4_EXTERN_PACKET_PROCESS) && (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+#define M_TCPIP_IPV4_EXT_PKT_PROCESS  1
+#else
+#define M_TCPIP_IPV4_EXT_PKT_PROCESS  0
+#endif
 
 // debugging
 #define TCPIP_IPV4_DEBUG_MASK_BASIC             (0x0001)
@@ -65,14 +89,14 @@ Microchip or any third party.
 #define TCPIP_IPV4_DEBUG_MASK_FILT_COUNT        (0x0040)
 
 // enable IPV4 debugging levels
-#define TCPIP_IPV4_DEBUG_LEVEL  (0)
+#define TCPIP_IPV4_DEBUG_LEVEL  (0x01)
 
 
 // IPv4 packet filter registration
 
-typedef struct  _TAG_IPV4_FILTER_LIST_NODE
+typedef struct  S_TAG_IPV4_FILTER_LIST_NODE
 {
-    struct _TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
+    struct S_TAG_IPV4_FILTER_LIST_NODE*  next;       // next node in list
                                                     // makes it valid SGL_LIST_NODE node
     IPV4_FILTER_FUNC                    handler;    // handler to be called for the filter
     uint8_t                             active;     // the filter is active
@@ -83,9 +107,9 @@ typedef struct  _TAG_IPV4_FILTER_LIST_NODE
 
 // IPv4 fragment reassembly
 
-typedef struct _TAG_IPV4_FRAGMENT_NODE
+typedef struct S_TAG_IPV4_FRAGMENT_NODE
 {
-    struct _TAG_IPV4_FRAGMENT_NODE* next;       // next fragment node: ipv4FragmentQueue 
+    struct S_TAG_IPV4_FRAGMENT_NODE* next;       // next fragment node: ipv4FragmentQueue 
     TCPIP_MAC_PACKET*               fragHead;   // head fragments list; connected with pkt_next;
     uint32_t                        fragTStart; // fragment occurring tick 
     uint16_t                        nFrags;     // number of fragments in this node
@@ -104,6 +128,7 @@ typedef struct
 }IPV4_FRAG_TX_PKT;                                           
 
 
+// 8 bit values only!
 typedef enum
 {
     IPV4_FRAG_TX_ACK_HEAD   = 0x01,         // acknowledge the head of a frgmented TX packet
@@ -126,17 +151,22 @@ typedef enum
 }IPV4_OPTION_TYPE_MASK;
 
 
-#define IPV4_ROUTER_ALERT_OPTION_SIZE       4   // fixed option requiring 4 bytes
-#define IPV4_ROUTER_ALERT_OPTION_COPIED     1 
-#define IPV4_ROUTER_ALERT_OPTION_CLASS      0
-#define IPV4_ROUTER_ALERT_OPTION_DATA       0
+#define IPV4_ROUTER_ALERT_OPTION_SIZE       4U   // fixed option requiring 4 bytes
+#define IPV4_ROUTER_ALERT_OPTION_COPIED     1U 
+#define IPV4_ROUTER_ALERT_OPTION_CLASS      0U
+#define IPV4_ROUTER_ALERT_OPTION_DATA       0U
+
 typedef struct
 {
-    struct
-    {   // option type
-        uint8_t     optNumber:  5;      // TCPIP_IPV4_OPTION_ROUTER_ALERT
-        uint8_t     optClass:   2;      // option class: 0 - control; 2 - debugging and measurement; 1, 3 - reserved
-        uint8_t     optCopied:  1;      // option copied to all fragments
+    union
+    {
+        uint8_t val;
+        struct __attribute__((packed))
+        {   // option type
+            unsigned    optNumber:  5;      // TCPIP_IPV4_OPTION_ROUTER_ALERT
+            unsigned    optClass:   2;      // option class: 0 - control; 2 - debugging and measurement; 1, 3 - reserved
+            unsigned    optCopied:  1;      // option copied to all fragments
+        };
     };
     uint8_t         optLength;          // size of the entire option
     uint16_t        optValue;           // option value
@@ -144,10 +174,51 @@ typedef struct
 
 
 // maximum size of options in an IPv4 packet
-#define IPV4_OPTIONS_MAXIMUM_SIZE           40  // 40 bytes + 20 bytes header == 60 bytes maximum packet
+#define IPV4_OPTIONS_MAXIMUM_SIZE           40U  // 40 bytes + 20 bytes header == 60 bytes maximum packet
 
 // maximum size ofIPv4 header
-#define IPV4_HEADER_MAXIMUM_SIZE            60  // 20 bytes header + 40 bytes max options
+#define IPV4_HEADER_MAXIMUM_SIZE            60U  // 20 bytes header + 40 bytes max options
+
+
+// private definitions of the IPV4_HEADER 
+typedef struct
+{
+    struct __attribute__((packed))
+    {
+        unsigned IHL:        4;
+        unsigned Version:    4;
+    };
+    IPV4_TYPE_OF_SERVICE TypeOfService;
+    uint16_t TotalLength;
+    uint16_t Identification;
+    IPV4_FRAGMENT_INFO FragmentInfo;
+    uint8_t TimeToLive;
+    uint8_t Protocol;
+    uint16_t HeaderChecksum;
+    IPV4_ADDR SourceAddress;
+    IPV4_ADDR DestAddress;
+    //uint32_t  options[];  // variable options field
+} IPV4_HEADER_BARE;
+
+// IPV4 header containing options
+typedef struct
+{
+    struct __attribute__((packed))
+    {
+        unsigned IHL:        4;
+        unsigned Version:    4;
+    };
+    IPV4_TYPE_OF_SERVICE TypeOfService;
+    uint16_t TotalLength;
+    uint16_t Identification;
+    IPV4_FRAGMENT_INFO FragmentInfo;
+    uint8_t TimeToLive;
+    uint8_t Protocol;
+    uint16_t HeaderChecksum;
+    IPV4_ADDR SourceAddress;
+    IPV4_ADDR DestAddress;
+    uint32_t  options[1];  // variable options field
+} IPV4_HEADER_OPT;
 
 // ARP support
 typedef enum
@@ -161,9 +232,9 @@ typedef enum
 
 
 // entry queued for an ARP operation
-typedef struct _tag_IPV4_ARP_ENTRY
+typedef struct S_tag_IPV4_ARP_ENTRY
 {
-    struct _tag_IPV4_ARP_ENTRY* next;   // SGL_LIST_NODE safe cast
+    struct S_tag_IPV4_ARP_ENTRY* next;   // SGL_LIST_NODE safe cast
     uint8_t                 type;       // IPV4_ARP_PKT_TYPE: packet type
     uint8_t                 arpIfIx;    // index of the interface for which ARP is queued
     uint16_t                reserved;   // not used    
@@ -201,6 +272,7 @@ typedef enum
 typedef TCPIP_IPV4_FORWARD_ENTRY_BIN IPV4_ROUTE_TABLE_ENTRY;
 
 // run time forwarding flags
+// 8 bit values only!
 typedef enum
 {
     IPV4_FWD_FLAG_NONE          = 0x00,
@@ -236,10 +308,10 @@ typedef struct
 
 // forwarded packets that need to also be processed locally
 // these are bcast/mcast packets
-typedef struct _tag_IPV4_FORWARD_NODE
+typedef struct S_tag_IPV4_FORWARD_NODE
 {
-    struct _tag_IPV4_FORWARD_NODE*  next;           // DBL_LIST_NODE safe cast
-    struct _tag_IPV4_FORWARD_NODE*  prev;           // DBL_LIST_NODE safe cast
+    struct S_tag_IPV4_FORWARD_NODE*  next;           // DBL_LIST_NODE safe cast
+    struct S_tag_IPV4_FORWARD_NODE*  prev;           // DBL_LIST_NODE safe cast
     TCPIP_MAC_PACKET*               pFwdPkt;        // packet that's being forwarded
     TCPIP_MAC_PACKET_ACK_FUNC       ownerAckFunc;   // the acknowledge function of the packet owner
                                                     // that's the original ackFnc in the packet before being forwarded
@@ -250,7 +322,7 @@ typedef struct _tag_IPV4_FORWARD_NODE
 
 
 
-#endif // _IPV4_PRIVATE_H_
+#endif // H_IPV4_PRIVATE_H_
 
 
 
