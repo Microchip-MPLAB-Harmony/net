@@ -15,7 +15,7 @@
   **************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __TELNET_H
-#define __TELNET_H
+#ifndef H_TELNET_H_
+#define H_TELNET_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -291,9 +291,9 @@ TCPIP_TELNET_HANDLE     TCPIP_TELNET_AuthenticationRegister(TCPIP_TELNET_AUTH_HA
   Example:
     <code>
     TCPIP_TELNET_HANDLE myHandle = TCPIP_TELNET_AuthenticationRegister(myAuthHandler, myParam );
-    // process incoming login requests
-    // now we're done with it 
-    // no more users will be able to login
+    - process incoming login requests
+    - now we're done with it 
+    - no more users will be able to login
     TCPIP_TELNET_AuthenticationDeregister(myHandle);
     </code>
 
@@ -390,4 +390,4 @@ void  TCPIP_TELNET_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  //#ifndef __TELNET_H
+#endif  //#ifndef H_TELNET_H_

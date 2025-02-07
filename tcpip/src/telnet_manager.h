@@ -14,7 +14,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,19 +45,18 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __TELNET__MANAGER_H_
-#define __TELNET__MANAGER_H_
+#ifndef H_TELNET__MANAGER_H_
+#define H_TELNET__MANAGER_H_
 
 #include <stdbool.h>
 
 
 
-bool        TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
-                const TCPIP_TELNET_MODULE_CONFIG* pTelConfig);
+bool        TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 void        TCPIP_TELNET_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 
     
-#endif  //#ifndef __TELNET__MANAGER_H_
+#endif  //#ifndef H_TELNET__MANAGER_H_
