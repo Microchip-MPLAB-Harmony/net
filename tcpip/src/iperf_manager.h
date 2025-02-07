@@ -16,7 +16,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -47,8 +47,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef  _IPERF_H_
-#define  _IPERF_H_
+#ifndef  H_IPERF_MANAGER_H_
+#define  H_IPERF_MANAGER_H_
 
 
 bool        TCPIP_IPERF_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
@@ -57,6 +57,6 @@ bool        TCPIP_IPERF_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtr
 void        TCPIP_IPERF_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
-#endif  //  _IPERF_H_
+#endif  //  H_IPERF_MANAGER_H_
 
 
