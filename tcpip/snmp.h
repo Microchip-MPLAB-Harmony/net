@@ -26,7 +26,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -57,8 +57,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef __SNMP_H
-#define __SNMP_H
+#ifndef H_SNMP_H_
+#define H_SNMP_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -166,6 +166,10 @@ typedef enum
     IPV6_SNMP_TRAP,
 }SNMP_TRAP_IP_ADDRESS_TYPE;
 
+/* MISRA C-2012 Rule 5.6 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_6_NET_DR_14 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.6" "H3_MISRAC_2012_R_5_6_NET_DR_14" 
 // *****************************************************************************
 /*
   Union:
@@ -187,6 +191,10 @@ typedef union
     uint8_t  byte;                  //byte value
     uint8_t  v[sizeof(uint32_t)];   //byte array
 } SNMP_VAL;
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.6"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
+
 
 
 // *****************************************************************************
@@ -337,7 +345,7 @@ typedef struct
   Remarks:
     None.
 */
-TCPIP_NET_HANDLE TCPIP_SNMP_ClientGetNet(int *netIx,TCPIP_NET_HANDLE hNet);
+TCPIP_NET_HANDLE TCPIP_SNMP_ClientGetNet(size_t* netIx,TCPIP_NET_HANDLE hNet);
 
 
 //*********************************************************************
@@ -385,38 +393,38 @@ TCPIP_NET_HANDLE TCPIP_SNMP_ClientGetNet(int *netIx,TCPIP_NET_HANDLE hNet);
     <code>
     switch(var)
     {
-        // LED_D5 - generated from the Microchip style MIB script using mib2bib.jar is a scalar variable
+        - LED_D5 - generated from the Microchip style MIB script using mib2bib.jar is a scalar variable
         case LED_D5:
             LED2_IO = val.byte;
             return true;
             
-        // TRAP_COMMUNITY - generated from the Microchip style MIB script using mib2bib.jar,
-        // is a Sequence variable.  
+        - TRAP_COMMUNITY - generated from the Microchip style MIB script using mib2bib.jar,
+        - is a Sequence variable.  
         
         case TRAP_COMMUNITY:
-            // Since this is a ASCII_STRING data type, SNMP will call with
-            // SNMP_END_OF_VAR to indicate no more bytes or end of SNMP SET process
-            // Use this information to determine if we just added new row
-            // or updated an existing one.
+            - Since this is a ASCII_STRING data type, SNMP will call with
+            - SNMP_END_OF_VAR to indicate no more bytes or end of SNMP SET process
+            - Use this information to determine if we just added new row
+            - or updated an existing one.
             if ( ref ==  SNMP_END_OF_VAR )
             {
-                // Index equal to table size means that we have new row.
+                - Index equal to table size means that we have new row.
                 if ( index == trapInfo.Size )
                     trapInfo.Size++;
 
-                // Length of string is one more than index.
+                - Length of string is one more than index.
                 trapInfo.table[index].communityLen++;
 
                 return true;
             }
 
-            // Make sure that index is within our range.
+            - Make sure that index is within our range.
             if ( index < trapInfo.Size )
             {
-                // Copy given value into local buffer.
+                - Copy given value into local buffer.
                 trapInfo.table[index].community[ref] = val.byte;
-                // Keep track of length too.
-                // This may not be NULL terminate string.
+                - Keep track of length too.
+                - This may not be NULL terminate string.
                 trapInfo.table[index].communityLen = (uint8_t)ref;
                 return true;
             }
@@ -475,27 +483,27 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index,uint8_t ref, SNMP_VAL v
     Usage of MIB OID within this function for a ASCII string ( multi byte variable)
   <code>
     
-    // In the beginning *ref is equal to SNMP_START_OF_VAR
+    - In the beginning *ref is equal to SNMP_START_OF_VAR
     myRef = *ref;
     switch(var)
     {
-    // TRAP_COMMUNITY - generated from the Microchip style MIB script using mib2bib.jar,
-    // is a Sequence variable.
+    - TRAP_COMMUNITY - generated from the Microchip style MIB script using mib2bib.jar,
+    - is a Sequence variable.
         case TRAP_COMMUNITY:   
             if ( index < trapInfo.Size )
             {
-            // check if the myRef should not cross the maximum length 
+            - check if the myRef should not cross the maximum length 
                  if ( myRef == trapInfo.table[index].communityLen )
                  {
-                 // End of SNMP GET process
+                 - End of SNMP GET process
                      *ref = SNMP_END_OF_VAR;
                      return true;
                  }
                 if ( trapInfo.table[index].communityLen == 0u )
-                    *ref = SNMP_END_OF_VAR; // End of SNMP GET process
+                    *ref = SNMP_END_OF_VAR; - End of SNMP GET process
                 else
                 {
-                    // Start of SNMP GET process byte by byte
+                    - Start of SNMP GET process byte by byte
                     val->byte = trapInfo.table[index].community[myRef];
                     myRef++;
                     *ref = myRef;
@@ -503,7 +511,7 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index,uint8_t ref, SNMP_VAL v
                 return true;
             }
             break;
-    // LED_D5 - generated from the Microchip style MIB script using mib2bib.jar is a scalar variable
+    - LED_D5 - generated from the Microchip style MIB script using mib2bib.jar is a scalar variable
         case LED_D5:
             val->byte = LED2_IO;
             return true;
@@ -917,7 +925,7 @@ void TCPIP_SNMP_TrapSendFlagGet(bool *trapNotify);
 //****************************************************************************
 /*
   Function:
-    void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *socket)
+    void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *skt)
 
   Summary:
     Gets the Socket ID for SNMP Server socket.
@@ -930,7 +938,7 @@ void TCPIP_SNMP_TrapSendFlagGet(bool *trapNotify);
     TCPIP_SNMP_Initialize is already called.
 
   Parameters:
-    socket - Trap client socket ID  
+    skt - Trap client socket ID  
             
   Returns:
     None.
@@ -938,12 +946,12 @@ void TCPIP_SNMP_TrapSendFlagGet(bool *trapNotify);
   Remarks:
    None.
  */
-void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *socket);
+void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *skt);
 
 //****************************************************************************
 /*
   Function:
-    void TCPIP_SNMP_SocketIDSet(UDP_SOCKET socket)
+    void TCPIP_SNMP_SocketIDSet(UDP_SOCKET skt)
 
   Summary:
     Sets the Socket ID for SNMP Server socket.
@@ -955,7 +963,7 @@ void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *socket);
     TCPIP_SNMP_Initialize is already called.
 
   Parameters:
-    socket - Trap client socket ID  
+    skt - Trap client socket ID  
             
   Returns:
     None.
@@ -963,7 +971,7 @@ void TCPIP_SNMP_SocketIDGet(UDP_SOCKET *socket);
   Remarks:
    None.
  */
-void TCPIP_SNMP_SocketIDSet(UDP_SOCKET socket);
+void TCPIP_SNMP_SocketIDSet(UDP_SOCKET skt);
 
 //****************************************************************************
 /*
@@ -997,19 +1005,19 @@ void TCPIP_SNMP_SocketIDSet(UDP_SOCKET socket);
     <code>
     void SNMPv2TrapDemo(void)
     {
-        //set TRAP send flag to true , it signifies that there are more than one
-        // variable need to be the part of SNMP v2 TRAP.
+        -set TRAP send flag to true , it signifies that there are more than one
+        - variable need to be the part of SNMP v2 TRAP.
         TCPIP_SNMP_TrapSendFlagSet(true);
         
-        // PUSH button varbind 
+        - PUSH button varbind 
         TCPIP_SNMP_Notify(PUSH_BUTTON,analogPotVal,0);
         
-        // Before adding the last varbind to the TRAP PDU, TRAP send flag should 
-        // be set to  false. That it indicates it is the last varbind to the 
-        // Notification PDU.
+        - Before adding the last varbind to the TRAP PDU, TRAP send flag should 
+        - be set to  false. That it indicates it is the last varbind to the 
+        - Notification PDU.
         TCPIP_SNMP_TrapSendFlagSet(false);
         
-        // Last varbind LED0_IO 
+        - Last varbind LED0_IO 
         TCPIP_SNMP_Notify(LED0_IO,analogPotVal,0);      
         
     }
@@ -1529,4 +1537,4 @@ void  TCPIP_SNMP_Task(void);
 #endif
 //DOM-IGNORE-END
 
-#endif  // __SNMP_H
+#endif  // H_SNMP_H_

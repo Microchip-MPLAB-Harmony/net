@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,10 +46,14 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SNMPV3_PRIVATE_H_
-#define _SNMPV3_PRIVATE_H_
+#ifndef H_SNMPV3_PRIVATE_H_
+#define H_SNMPV3_PRIVATE_H_
 
 #include "snmp_private.h"
+#include "tcpip/src/common/sys_fs_shell.h"
+
+extern TCPIP_SNMP_DCPT gSnmpDcpt;
+extern const SYS_FS_SHELL_OBJ*  snmpFileShell;
 
 /*=======================================================================================*/
 
@@ -537,20 +541,20 @@ typedef struct
 {
     uint16_t UserInfoDataBaseIndx;
 
-    uint8_t SnmpEngineID[32]; //Reserving 32 bytes for the snmpEngineID as the octet string length can vary form 5 to 32 //**
-    uint8_t SnmpEngnIDLength;//**
+    uint8_t SnmpEngineID[32]; // Reserving 32 bytes for the snmpEngineID as the octet string length can vary form 5 to 32
+    uint8_t SnmpEngnIDLength; //
 
     uint16_t SnmpMsgBufSeekPos;
-    uint16_t ScopedPduDataPos;//**
+    uint16_t ScopedPduDataPos;//
 
     uint32_t SnmpEngineTimeOffset;//**
-    uint32_t SnmpEngineBoots;//The number of times that the SNMP engine has (re-)initialized itself since snmpEngineID was last configured.//**
+    uint32_t SnmpEngineBoots;//The number of times that the SNMP engine has (re-)initialized itself since snmpEngineID was last configured.
 
     uint32_t    UsmStatsEngineID;  //**
     uint32_t    AuthoritativeSnmpEngineBoots;//**
     uint32_t    AuthoritativeSnmpEngnTime;//**
     uint32_t    IncmngSnmpPduMsgID;//**
-    uint32_t    SnmpEngineTime;//The number of seconds since the value of the SnmpEngineBoots object last changed//**
+    uint32_t    SnmpEngineTime;//The number of seconds since the value of the SnmpEngineBoots object last changed
     uint32_t    SnmpEngnMaxMsgSize;//**
 
     SNMPV3_REQUEST_WHOLEMSG InPduWholeMsgBuf;//**
@@ -608,14 +612,11 @@ typedef struct
 
 
 void SNMPv3USMOutMsgPrivParam(SNMPV3_PRIV_PROT_TYPE privType);
-void SNMPv3InitializeUserDataBase(void);
-void TCPIP_SNMPv3_DynAllocMemFree(void);
 void TCPIP_SNMPv3_AuthEngineTimeGet(void);
 void SNMPv3UsmAesEncryptDecrptInitVector(uint8_t inOutPdu);
 void SNMPv3UsmOutMsgAuthParam(uint8_t hashType);
 
 uint8_t SNMPv3AESDecryptRxedScopedPdu(void);
-uint8_t TCPIP_SNMPv3_ProcessBuffDataGet(SNMPV3MSGDATA getbuf,uint16_t pos);
 bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t targetIndex);
 uint8_t TCPIP_SNMPv3_TrapSecurityLevelGet(STD_BASED_SNMPV3_SECURITY_LEVEL securityLevel);
 uint8_t SNMPv3GetSecurityLevel(uint8_t userIndex);
@@ -629,7 +630,7 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
 SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu);
 SNMP_ERR_STATUS TCPIP_SNMPv3_ScopedPDUProcessing(INOUT_SNMP_PDU inOutPdu);
 
-void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpIntf);
+void F_SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier, const TCPIP_NET_IF* snmpIntf);
 bool SNMPv3ValidateSecNameAndSecLevel(void);
 bool SNMPv3ValidateUserSecurityName(void);
 bool SNMPv3ValidateSnmpEngnId(void);
@@ -755,7 +756,7 @@ void SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(uint8_t userDBIndex);
  */
 void SNMPv3USMAuthPrivPswdLocalization(uint8_t userDBIndex);
 
-uint16_t _SNMPv3_Header_Length(void);
-#endif 
+uint16_t F_SNMPv3_Header_Length(void);
+#endif  // H_SNMPV3_PRIVATE_H_ 
 
 

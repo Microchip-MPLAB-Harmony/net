@@ -14,7 +14,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -45,14 +45,14 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SNMP_PRIVATE_H_
-#define _SNMP_PRIVATE_H_
+#ifndef H_SNMP_PRIVATE_H_
+#define H_SNMP_PRIVATE_H_
 
 
 /*
  * This macro is used to calculate the LENGTH from a Integer  Signed value.
  */
-#define SNMP_MASK_FF8 (0xFF800000)
+#define SNMP_MASK_FF8 (0xFF800000U)
 
 
 // Section:  SNMP specific variables
@@ -89,21 +89,21 @@ Microchip or any third party.
 
 
 // Section:  SNMP specific data validation
-#define IS_STRUCTURE(a)         (a==STRUCTURE)
-#define IS_ASN_INT(a)           (a==ASN_INT)
-#define IS_OCTET_STRING(a)      (a==OCTET_STRING)
-#define IS_OID(a)               (a==ASN_OID)
-#define IS_ASN_NULL(a)          (a==ASN_NULL)
-#define IS_GET_REQUEST(a)       (a==GET_REQUEST)
-#define IS_GET_NEXT_REQUEST(a)  (a==GET_NEXT_REQUEST)
-#define IS_GET_RESPONSE(a)      (a==GET_RESPONSE)
-#define IS_SET_REQUEST(a)       (a==SET_REQUEST)
-#define IS_TRAP(a)              (a==TRAP)
-#define IS_AGENT_PDU(a)         (a==GET_REQUEST || \
-                                 a==GET_NEXT_REQUEST || \
-                                 a==SET_REQUEST || \
-                                 a==SNMP_V2C_GET_BULK)
-#define IS_SNMPV3_AUTH_STRUCTURE(a) (a==SNMPV3_ENCRYPTION)
+#define IS_STRUCTURE(a)         ((a) == STRUCTURE)
+#define IS_ASN_INT(a)           ((a) == ASN_INT)
+#define IS_OCTET_STRING(a)      ((a) == OCTET_STRING)
+#define IS_OID(a)               ((a) == ASN_OID)
+#define IS_ASN_NULL(a)          ((a) == ASN_NULL)
+#define IS_GET_REQUEST(a)       ((a) == GET_REQUEST)
+#define IS_GET_NEXT_REQUEST(a)  ((a) == GET_NEXT_REQUEST)
+#define IS_GET_RESPONSE(a)      ((a) == GET_RESPONSE)
+#define IS_SET_REQUEST(a)       ((a) == SET_REQUEST)
+#define IS_TRAP(a)              ((a) == TRAP)
+#define IS_AGENT_PDU(a)         ((a) == GET_REQUEST || \
+                                 (a) == GET_NEXT_REQUEST || \
+                                 (a) == SET_REQUEST || \
+                                 (a) == SNMP_V2C_GET_BULK)
+#define IS_SNMPV3_AUTH_STRUCTURE(a) ((a) == SNMPV3_ENCRYPTION)
 
 
 
@@ -162,14 +162,6 @@ typedef struct
     uint8_t asnLen; //ASN data length
 } SNMP_DATA_TYPE_INFO;
 
-typedef enum
-{
-    SNMP_HOME = 0,
-    SNMP_LISTEN,
-    SNMP_PROCESS,
-    SNMP_PACKET_DISCARD,
-}TCPIP_SNMP_SM;
-
 // Section:  SNMP PDU information database
 typedef struct
 {
@@ -206,7 +198,7 @@ typedef struct
     uint8_t communityLen;             //Community name length
     SNMP_ID agentIDVar;               //Agent id for trap identification
     uint8_t notificationCode;         //Trap notification code
-    UDP_SOCKET socket;                //UDP socket number
+    UDP_SOCKET sktv4;                 //UDP socket number
 #ifdef TCPIP_STACK_USE_IPV6
     UDP_SOCKET socketv6;
 #endif
@@ -227,17 +219,17 @@ typedef struct
 // Section:  SNMP object information
 typedef union
 {
-    struct
+    struct __attribute__((packed))
     {
-        unsigned int bIsDistantSibling : 1; //Object has distant sibling node
-        unsigned int bIsConstant : 1;       //Object is constant
-        unsigned int bIsSequence : 1;       //Object is sequence
-        unsigned int bIsSibling : 1;        //Sibling node flag
+        unsigned  bIsDistantSibling : 1;    // Object has distant sibling node
+        unsigned  bIsConstant       : 1;    // Object is constant
+        unsigned  bIsSequence       : 1;    // Object is sequence
+        unsigned  bIsSibling        : 1;    // Sibling node flag
 
-        unsigned int bIsParent : 1;         //Node is parent flag
-        unsigned int bIsEditable : 1;       //Node is editable flag
-        unsigned int bIsAgentID : 1;        //Node has agent id flag
-        unsigned int bIsIDPresent : 1;      //Id present flag
+        unsigned  bIsParent         : 1;    // Node is parent flag
+        unsigned  bIsEditable       : 1;    // Node is editable flag
+        unsigned  bIsAgentID        : 1;    // Node has agent id flag
+        unsigned  bIsIDPresent      : 1;    // Id present flag
     } Flags;
     uint8_t Val;    //MIB Obj info as byte value
 } MIB_INFO;
@@ -246,10 +238,11 @@ typedef union
 // Section:  SNMP specific MIB file access information
 typedef union
 {
-    struct
+    struct __attribute__((packed))
     {
-        unsigned char bIsFileOpen : 1;  //MIB file access int flag
-        unsigned char bIsSnmpIntfUp : 1;  // SNMP Interface is UP and this flag is used to initialize SNMPv3
+        unsigned bIsFileOpen    : 1;  // MIB file access int flag
+        unsigned bIsSnmpIntfUp  : 1;  // SNMP Interface is UP and this flag is used to initialize SNMPv3
+        unsigned reserved       : 6;
     } Flags;
     uint8_t Val;
 } SNMP_STATUS;
@@ -258,9 +251,10 @@ typedef union
 // Section:  SNMP OID index information
 typedef union 
 {
-    struct
+    struct __attribute__((packed))
     {
-        unsigned int bIsOID:1;  //value is OID/index int flag
+        unsigned bIsOID     : 1;    //value is OID/index int flag
+        unsigned reserved   : 7;    // not used
     } Flags;
     uint8_t Val;                    //value is OID/index byte flag
 } SNMP_INDEX_INFO;
@@ -335,11 +329,10 @@ typedef struct
 
 typedef struct
 {
-    TCPIP_SNMP_SM   sm;     // current status
     UDP_SOCKET      skt;    // associated socket
     bool readFromSnmpBuf;
     TCPIP_SNMP_DATABUF udpGetBufferData; // this is assigned by Local buffer
-    tcpipSignalHandle snmpSignalHandle;
+    TCPIP_SIGNAL_HANDLE snmpSignalHandle;
 #if defined (TCPIP_STACK_USE_IPV6)
     IPV6_HANDLE snmpIPV6Handler;
     IPV6_EVENT_TYPE ipv6EventType;
@@ -347,7 +340,7 @@ typedef struct
     bool trapEnable;    /* true = agent can send the trap, flase= agent shouldn't send the trap */
     bool snmp_trapv2_use; /* true = agent uses Trap version v2 and false = uses Tarp version 1*/
     bool snmpv3_trapv1v2_use; /* SNMPv3 trap should be true , only if SNMP version is 3 */
-    TCPIP_NET_IF* pSnmpIf;
+    const TCPIP_NET_IF* pSnmpIf;
 }TCPIP_SNMP_DCPT;
 
 
@@ -396,8 +389,8 @@ typedef struct
 uint8_t *TCPIP_SNMP_GenericTrapCodeToTrapOID(uint8_t generic_trap_code,uint8_t *len);
 
 bool TCPIP_SNMP_VarDataTypeIsValidInteger(uint32_t* val);
-bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr,OID_INFO* rec);
-bool TCPIP_SNMP_OIDStringFindByID(int32_t fileDescr,SNMP_ID id, OID_INFO* info, uint8_t* oidString, uint8_t* len);
+bool TCPIP_SNMP_NextLeafGet(SYS_FS_HANDLE fileDescr,OID_INFO* rec);
+bool TCPIP_SNMP_OIDStringFindByID(SYS_FS_HANDLE fileDescr,SNMP_ID id, OID_INFO* info, uint8_t* oidString, uint8_t* len);
 bool TCPIP_SNMP_PDUProcessDuplexInit(UDP_SOCKET socket);
 bool TCPIP_SNMP_DataTypeInfoGet(SNMP_DATA_TYPE dataType, SNMP_DATA_TYPE_INFO *info );
 
@@ -406,23 +399,19 @@ uint8_t TCPIP_SNMP_ProcessGetVar(OID_INFO* rec, bool bAsOID,PDU_INFO* pduDbPtr);
 uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr);
 uint8_t TCPIP_SNMP_ProcessSetVar(PDU_INFO* pduDbPtr,OID_INFO* rec, SNMP_ERR_STATUS* errorStatus);
 uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_t* oidLenPtr,uint8_t* successor,PDU_INFO* pduDbPtr);
-uint8_t TCPIP_SNMP_ReadByte(UDP_SOCKET skt);
 uint8_t TCPIP_SNMP_LengthIsValid(uint16_t *len);
 uint8_t TCPIP_SNMP_StructureIsValid(uint16_t* dataLen);
-uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,uint8_t* oid, uint8_t oidLen, OID_INFO* rec);
-
-
-void TCPIP_SNMP_PutByte(UDP_SOCKET socket,uint8_t v);
+uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(SYS_FS_HANDLE fileDescr,PDU_INFO* pduDbPtr,uint8_t* oid, uint8_t oidLen, OID_INFO* rec);
 
 /*
 * Set the File Descriptor
 */
-void TCPIP_SNMP_FileDescrSet(int32_t fileDescr);
+void TCPIP_SNMP_FileDescrSet(SYS_FS_HANDLE fileDescr);
 
 /*
 *  Get The File Descriptor
 */
-int32_t TCPIP_SNMP_FileDescrGet(void);
+SYS_FS_HANDLE TCPIP_SNMP_FileDescrGet(void);
 
 /****************************************************************************
   Function:
@@ -544,5 +533,5 @@ void TCPIP_SNMP_FreeMemory(void);
 uint32_t TCPIP_SNMP_GetRXOffset(void);
 void TCPIP_SNMP_SetRXOffset(uint32_t offset);
 void TCPIP_SNMP_CopyOfDataToINUDPBuff(TCPIP_SNMP_DATABUF *getbuf,int val);
-#endif 
+#endif  // H_SNMP_PRIVATE_H_ 
 

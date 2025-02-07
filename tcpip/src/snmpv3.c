@@ -10,7 +10,7 @@
 *******************************************************************************/
 
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -49,35 +49,28 @@ Microchip or any third party.
 
 
 
-static SNMPV3_STACK_DCPT_STUB * Snmpv3StackDcptStubPtr=0;
+static SNMPV3_STACK_DCPT_STUB * Snmpv3StackDcptStubPtr= NULL;
 
 /*Length of the SNMPv3 msg header(x) = Header length (2 bytes)
 + MSGID size (type(1 byte) + length of value(1 byte)+4 bytes value)
 + msgMAXSIZE(type + length of value +4 bytes value)
 + msg flag(type + length of value +1 byte value)
 + security model type(type + length of value +1 byte value) */
-#define MSGGLOBAL_HEADER_LEN(x) ( x= (2 \
-                                      +1+1+4 \
-                                      +1+1+4 \
-                                      +1+1+1  \
-                                      +1+1+1)\
-                                )
+#define MSGGLOBAL_HEADER_LEN    20U     // (2+1+1+4+1+1+4+1+1+1+1+1+1)
 /*Length of SNMPv3 authoratative msg header length =
 Header length ( 2 + 2 bytes)  + engineID ( snmpEngnIDLength bytes)
 + engine boot( 4 bytes)+ engine time(4 bytes)
 +security name (securityPrimitivesOfIncomingPdu value)
 +authentication parameters (snmpOutMsgAuthParamLen value)
 +privacy parameters (snmpOutMsgAuthParamLen value)*/
-#define MSG_AUTHORITATIVE_HEADER_LEN(x)   ( x=(2+2 \
-                                             +1+1+sizeof(Snmpv3StackDcptStubPtr->SnmpEngineID)\
-                                             +1+1+4 \
-                                             +1+1+4 \
-                                             +1+1+TCPIP_SNMPV3_USER_SECURITY_NAME_LEN \
-                                             +1+1+SNMPv3_MSG_AUTH_PARAM_STRING_LEN \
-                                             +1+1+SNMPv3_MSG_PRIV_PARAM_STRING_LEN) \
+#define MSG_AUTHORITATIVE_HEADER_LEN  ((uint16_t)(2U + 2U +1U +1U + (uint16_t)sizeof(Snmpv3StackDcptStubPtr->SnmpEngineID)\
+                                             +1U+1U+4U +1U+1U+4U \
+                                             +1U+1U+(uint16_t)TCPIP_SNMPV3_USER_SECURITY_NAME_LEN \
+                                             +1U+1U+(uint16_t)SNMPv3_MSG_AUTH_PARAM_STRING_LEN \
+                                             +1U+1U+(uint16_t)SNMPv3_MSG_PRIV_PARAM_STRING_LEN) \
                                             )
 
-static int32_t Snmpv3TrapFileDescrptr=(int32_t)SYS_FS_HANDLE_INVALID;
+static SYS_FS_HANDLE Snmpv3TrapFileDescrptr = SYS_FS_HANDLE_INVALID;
 
 typedef struct 
 {
@@ -85,10 +78,21 @@ typedef struct
     uint8_t reportableFlag :1;
 }snmpV3MsgFlagsBitWise;
 
-extern TCPIP_SNMP_DCPT gSnmpDcpt;
-
-// file shell object for file access
-extern const SYS_FS_SHELL_OBJ*  snmpFileShell;
+typedef enum 
+{
+    SM_PKT_STRUCT_LEN_OFFSET=0u,
+    SM_RESPONSE_PDU_LEN_OFFSET,
+    SM_ERROR_STATUS_OFFSET,
+    SM_ERROR_INDEX_OFFSET,
+    SM_FIND_NO_OF_REQUESTED_VARBINDS,
+    SM_FIND_NO_OF_RESPONSE_VARBINDS,
+    SM_VARBIND_STRUCT_OFFSET,
+    SM_VARSTRUCT_LEN_OFFSET,
+    SM_POPULATE_REQ_OID,
+    SM_FIND_OID_IN_MIB,
+    SM_NON_REPETITIONS,
+    SM_MAX_REPETITIONS
+}SM_SNMP_V3;
 
 /*   
 SNMP_ENGINE_MAX_MSG_SIZE is determined as the minimum of the max msg size
@@ -96,30 +100,31 @@ values supported among all of the transports available to and supported by the e
 */
 #define SNMP_ENGINE_MAX_MSG_SIZE    1024 
 
-static uint8_t _SNMPv3_FindOIDsFrmIncmingV3Req(uint16_t pdulen);
+static uint8_t F_SNMPv3_FindOIDsFrmIncmingV3Req(uint16_t pdulen);
 
-static void _SNMPv3_ConstructReportPDU(SNMPV3MSGDATA *dynScopedBufPtr);
-static void _SNMPv3_SetErrorStatus(uint16_t errorStatusOffset        ,
+static void F_SNMPv3_ConstructReportPDU(SNMPV3MSGDATA *dynScopedBufPtr);
+static void F_SNMPv3_SetErrorStatus(uint16_t errorStatusOffset        ,
                                 uint16_t errorIndexOffset,
                                 SNMP_ERR_STATUS errorStatus,
                                 uint8_t errorIndex                ,
                                 SNMPV3MSGDATA *dynScopedPduPutBuf );
 
 
-static uint8_t _SNMPv3_CheckIfValidAuthStructure(uint16_t* dataLen);
-extern void SaveAppConfig(void);
-static bool _SNMP_V3ContextNameLengthGet(uint16_t* dataLen);
+static uint8_t F_SNMPv3_CheckIfValidAuthStructure(uint16_t* dataLen);
+static bool F_SNMP_V3ContextNameLengthGet(uint16_t* len);
 static SNMPV3_PRIV_PROT_TYPE TCPIP_SNMPV3_PrivProtocolGet(uint8_t *username);
 static void TCPIP_SNMPV3_DESEncryptionPadding(SNMPV3MSGDATA *dynTrapScopedPduBuf);
 
+static uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void);
+static void TCPIP_SNMPv3_EngineBootsRcrdUpdate(void);
+static uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex);
+static bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex);
 
-uint16_t _SNMPv3_Header_Length(void)
+uint16_t F_SNMPv3_Header_Length(void)
 {
-    uint16_t  snmpv3MsgGlobalHeaderlength=0,snmpv3MsgAuthHeaderLength=0;
-    uint16_t snmpv3Headerlength=0;
+    uint16_t snmpv3Headerlength=0U;
      // SNMPv3 Trap header allocation and construction
-    snmpv3Headerlength = MSGGLOBAL_HEADER_LEN(snmpv3MsgGlobalHeaderlength)+
-                  MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength);
+    snmpv3Headerlength = (uint16_t)MSGGLOBAL_HEADER_LEN + MSG_AUTHORITATIVE_HEADER_LEN;
 
     return snmpv3Headerlength;
 }
@@ -149,7 +154,7 @@ uint16_t _SNMPv3_Header_Length(void)
 void TCPIP_SNMPv3_Initialize(void)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    uint32_t        snmpv3Headerlength=0,msgDataLen=0;
+    uint16_t        snmpv3Headerlength=0,msgDataLen=0;
     uint8_t         *ptr=NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
@@ -161,20 +166,20 @@ void TCPIP_SNMPv3_Initialize(void)
     Snmpv3StackDcptStubPtr->PduHeaderBuf.head = NULL;
 
     // SNMPv3 Outgoing MSG header allocation and construction
-    snmpv3Headerlength = _SNMPv3_Header_Length();
+    snmpv3Headerlength = F_SNMPv3_Header_Length();
     ptr = Snmpv3StackDcptStubPtr->PduHeaderBuf.head =
-            (uint8_t *)(TCPIP_HEAP_Calloc(snmpv3PktProcessingMemPntr.snmpHeapMemHandler,1,(size_t)snmpv3Headerlength+5));
+            (uint8_t *)(TCPIP_HEAP_Calloc(snmpv3PktProcessingMemPntr.snmpHeapMemHandler,1,(size_t)snmpv3Headerlength+5U));
     if(ptr == NULL)
     {
         TCPIP_SNMP_FreeMemory();
         return;
     }
     Snmpv3StackDcptStubPtr->PduHeaderBuf.length = 0;
-    Snmpv3StackDcptStubPtr->PduHeaderBuf.maxlength = snmpv3Headerlength+1;
+    Snmpv3StackDcptStubPtr->PduHeaderBuf.maxlength = snmpv3Headerlength + 1U;
 // scoped trap PDU
-    msgDataLen = TCPIP_SNMP_MAX_MSG_SIZE - snmpv3Headerlength;
+    msgDataLen = (uint16_t)TCPIP_SNMP_MAX_MSG_SIZE - snmpv3Headerlength;
     ptr = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.head =
-            (uint8_t*)(TCPIP_HEAP_Calloc(snmpv3PktProcessingMemPntr.snmpHeapMemHandler,1,(size_t)msgDataLen+5));
+            (uint8_t*)(TCPIP_HEAP_Calloc(snmpv3PktProcessingMemPntr.snmpHeapMemHandler,1U,(size_t)msgDataLen+5U));
     if(ptr == NULL)
     {
         TCPIP_SNMP_FreeMemory();
@@ -215,22 +220,26 @@ void TCPIP_SNMPv3_Initialize(void)
     used by the SNMP engine to send respond or inform PDUs to the other SNMP nodes.
     'SnmpEngnSecurityModel' value is used for interoperability.
 ***************************************************************************/
-uint8_t TCPIP_SNMPv3_EngnSecrtyModelConfig(uint32_t securityModelInRequest)
+static bool TCPIP_SNMPv3_EngnSecrtyModelConfig(uint32_t securityModelInRequest)
 {
-    if(securityModelInRequest < 0x80000000  )
+    if(securityModelInRequest < 0x80000000U  )
     {
-        if(securityModelInRequest > ANY_SECUTIRY_MODEL &&
-           securityModelInRequest <= SNMPV3_USM_SECURITY_MODEL
+        if(securityModelInRequest > (uint32_t)ANY_SECUTIRY_MODEL &&
+           securityModelInRequest <= (uint32_t)SNMPV3_USM_SECURITY_MODEL
            /* && User can add the Enterprise specific Security Model if reuired and is implemented */ )
         {
             Snmpv3StackDcptStubPtr->SnmpEngnSecurityModel=securityModelInRequest;
             return true;
         }
         else
+        {
             return false;
+        }
     }
     else
+    {
         return false;
+    }
 }
 
 /****************************************************************************
@@ -264,47 +273,52 @@ uint8_t TCPIP_SNMPv3_EngnSecrtyModelConfig(uint32_t securityModelInRequest)
     decide on the course of action to be taken while processing the incoming request.
 ***************************************************************************/
 
+#if 0
+// obsolete function
 uint8_t TCPIP_SNMPv3_EngnDecodeMsgFlags(uint8_t msgFlasgInRequest)
 {
     if(msgFlasgInRequest > REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED) /*if all msgFlags are SET*/
     {
-        return INVALID_MSG;
+        return (uint8_t)INVALID_MSG;
     }
     else if( (msgFlasgInRequest & NO_REPORT_NO_PRIVACY_NO_AUTH) == NO_REPORT_NO_PRIVACY_NO_AUTH)
     {
-        return NO_REPORT_NO_PRIVACY_NO_AUTH;
+        return (uint8_t)NO_REPORT_NO_PRIVACY_NO_AUTH;
     }
     else if( (msgFlasgInRequest & NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED) == NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED)
     {
-        return NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED;
+        return (uint8_t)NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED;
     }
     else if( (msgFlasgInRequest & NO_REPORT_PRIVACY_PROVIDED_BUT_NO_AUTH) == NO_REPORT_PRIVACY_PROVIDED_BUT_NO_AUTH)
     {
-        return INVALID_MSG;
+        return (uint8_t)INVALID_MSG;
     }
     else if( (msgFlasgInRequest & NO_REPORT_PRIVACY_AND_AUTH_PROVIDED) == NO_REPORT_PRIVACY_AND_AUTH_PROVIDED)
     {
-        return NO_REPORT_PRIVACY_AND_AUTH_PROVIDED;
+        return (uint8_t)NO_REPORT_PRIVACY_AND_AUTH_PROVIDED;
     }
     else if( (msgFlasgInRequest & REPORT2REQ_NO_PRIVACY_NO_AUTH) == REPORT2REQ_NO_PRIVACY_NO_AUTH)
     {
-        return REPORT2REQ_NO_PRIVACY_NO_AUTH;
+        return (uint8_t)REPORT2REQ_NO_PRIVACY_NO_AUTH;
     }
     else if( (msgFlasgInRequest & REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED) == REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED)
     {
-        return REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED;
+        return (uint8_t)REPORT2REQ_NO_PRIVACY_BUT_AUTH_PROVIDED;
     }
     else if( (msgFlasgInRequest & REPORT2REQ_PRIVACY_PROVIDED_BUT_NO_AUTH) == REPORT2REQ_PRIVACY_PROVIDED_BUT_NO_AUTH)
     {
-        return INVALID_MSG;
+        return (uint8_t)INVALID_MSG;
     }
     else if( (msgFlasgInRequest & REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED) == REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED)
     {
-        return REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED;
+        return (uint8_t)REPORT2REQ_PRIVACY_AND_AUTH_PROVIDED;
     }
     else
-        return INVALID_MSG;
+    {
+        return (uint8_t)INVALID_MSG;
+    }
 }
+#endif
 
 /****************************************************************************
   Function:
@@ -329,7 +343,7 @@ uint8_t TCPIP_SNMPv3_EngnDecodeMsgFlags(uint8_t msgFlasgInRequest)
   Remarks:
     None
 ***************************************************************************/
-uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void)
+static uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void)
 {
   
     uint32_t    timeStamp;
@@ -337,7 +351,7 @@ uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void)
     // convert the current system tick to 10 ms units
     uint32_t tickCount = SYS_TMR_TickCountGet();
     uint32_t tickFreq = SYS_TMR_TickCounterFrequencyGet();
-    timeStamp = ((uint64_t)tickCount * 100) / tickFreq;
+    timeStamp = (uint32_t)(((uint64_t)tickCount * 100U) / tickFreq);
 
     return timeStamp;
 }
@@ -383,23 +397,23 @@ uint32_t TCPIP_SNMPv3_AuthEngineTimeTickGet(void)
     would also change. Hence while using this API to change the SnmpEngineID dynamically,
     care should be taken to update the new localized keys at the agent as well as at the manager.
 ***************************************************************************/
-void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpIntf )
+void F_SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier, const TCPIP_NET_IF* snmpIntf )
 {
     unsigned int i;
 
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL};
-    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;
+    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
     //Modify this private enterprise assigned number to your organization number asssigned by IANA
     TCPIP_UINT32_VAL mchpPvtEntpriseAssignedNumber;
 
-    mchpPvtEntpriseAssignedNumber.Val = 0x42C7; //microchip = 17095.
+    mchpPvtEntpriseAssignedNumber.Val = 0x42C7U; //microchip = 17095.
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
 
     //Set the first bit as '1b' .  Refer to RFC3411 section5 Page# 41
-    mchpPvtEntpriseAssignedNumber.Val = ((0x80000000) | mchpPvtEntpriseAssignedNumber.Val);
+    mchpPvtEntpriseAssignedNumber.Val = ((0x80000000U) | mchpPvtEntpriseAssignedNumber.Val);
 
     Snmpv3StackDcptStubPtr->SnmpEngineID[0]=mchpPvtEntpriseAssignedNumber.v[3];
     Snmpv3StackDcptStubPtr->SnmpEngineID[1]=mchpPvtEntpriseAssignedNumber.v[2];
@@ -407,25 +421,26 @@ void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpInt
     Snmpv3StackDcptStubPtr->SnmpEngineID[3]=mchpPvtEntpriseAssignedNumber.v[0];
 
     //Refer to RFC3411 section5 Page# 41
-    fifthOctectIdentifier=MAC_ADDR_ENGN_ID;
+    fifthOctectIdentifier = (uint8_t)MAC_ADDR_ENGN_ID;
 
     Snmpv3StackDcptStubPtr->SnmpEngineID[4]= fifthOctectIdentifier;
 
-    if(fifthOctectIdentifier == MAC_ADDR_ENGN_ID)
+    // if(fifthOctectIdentifier == MAC_ADDR_ENGN_ID)
     {
-        for(i=0;i<6/*sizeof(TCPIP_MAC_ADDR)*/;i++)
+        for(i=0;i<6U/*sizeof(TCPIP_MAC_ADDR)*/;i++)
         {
-            Snmpv3StackDcptStubPtr->SnmpEngineID[5+i]=snmpIntf->netMACAddr.v[i];
+            Snmpv3StackDcptStubPtr->SnmpEngineID[5U+i]=snmpIntf->netMACAddr.v[i];
         }
 
-        Snmpv3StackDcptStubPtr->SnmpEngineID[5+6/*sizeof(TCPIP_MAC_ADDR)*/]='\0';
-        Snmpv3StackDcptStubPtr->SnmpEngnIDLength=4/* 4 Bytes of IANA Pvt Enterprise Assigned Number*/
-                                            +1/* 1 Byte for fifthOctectIdentifier*/
-                                            +6/*sizeof(TCPIP_MAC_ADDR)*/;
+        Snmpv3StackDcptStubPtr->SnmpEngineID[5+6/*sizeof(TCPIP_MAC_ADDR)*/]=0;
+        Snmpv3StackDcptStubPtr->SnmpEngnIDLength=4U /* 4 Bytes of IANA Pvt Enterprise Assigned Number*/
+                                            +1U /* 1 Byte for fifthOctectIdentifier*/
+                                            +6U /*sizeof(TCPIP_MAC_ADDR)*/;
     }
+#if 0
     else if(fifthOctectIdentifier == IPV4_ADDR_ENGN_ID)
     {
-        Snmpv3StackDcptStubPtr->SnmpEngineID[5+4/*sizeof(IP_ADDR)*/]='\0';
+        Snmpv3StackDcptStubPtr->SnmpEngineID[5+4/*sizeof(IP_ADDR)*/]=0;
         Snmpv3StackDcptStubPtr->SnmpEngnIDLength=4/* 4 Bytes of IANA Pvt Enterprise Assigned Number*/
                                             +1/* 1 Byte for fifthOctectIdentifier*/
                                             +4 /*sizeof(IP_ADDR)*/;
@@ -437,10 +452,15 @@ void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpInt
         ;
         //Snmpv3StackDcptStubPtr->SnmpEngnIDLength=strlen((const char*) Snmpv3StackDcptStubPtr->SnmpEngineID);
     }
+    else
+    {
+        // do nothing
+    }
+#endif
         
 
     //Increment the SnmpEngineBoots record as Snmpv3StackDcptStubPtr->SnmpEngineID reconfigured
-    Snmpv3StackDcptStubPtr->SnmpEngineBoots+=1;
+    Snmpv3StackDcptStubPtr->SnmpEngineBoots+=1U;
 
     //Increment the snmpEngineBootRcrd to be stored in the non volatile memory
     snmpStkDcptMemStubPtr->snmpNetConfig.SnmpEngineBootRcrd=Snmpv3StackDcptStubPtr->SnmpEngineBoots;
@@ -476,17 +496,17 @@ void _SNMPv3_EngnIDFormulate(uint8_t fifthOctectIdentifier,TCPIP_NET_IF* snmpInt
     Should be called only during tcp/ip stack initialization and only after the InitAppConfig();
     is called.
 ***************************************************************************/
-void TCPIP_SNMPv3_EngineBootsRcrdUpdate(void)
+static void TCPIP_SNMPv3_EngineBootsRcrdUpdate(void)
 {
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL};
-    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;
+    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
     //Increment the snmpEngineBootRcrd as due to power cycle snmp egine reinitialization happened
     //to be stored in the non volatile memory
-    snmpStkDcptMemStubPtr->snmpNetConfig.SnmpEngineBootRcrd+=1;
+    snmpStkDcptMemStubPtr->snmpNetConfig.SnmpEngineBootRcrd+=1U;
 
     //Assgined this counter value to Global cntr which will track the snmp engine boot in real time.
     //'snmpEnigineBoots' can incremement in case of 'SnmpEngineTime' overflow or adminstrator configuring
@@ -527,7 +547,7 @@ void TCPIP_SNMPv3_AuthEngineTimeGet(void)
     Snmpv3StackDcptStubPtr->SnmpEngineTime = TCPIP_SNMPv3_AuthEngineTimeTickGet()-Snmpv3StackDcptStubPtr->SnmpEngineTimeOffset;
 
     if((TCPIP_SNMPv3_AuthEngineTimeTickGet() < Snmpv3StackDcptStubPtr->SnmpEngineTimeOffset)/* Internal Timer Reset occured*/
-       ||(Snmpv3StackDcptStubPtr->SnmpEngineTime > 2147483647 /* (2^31 -1) Refer RFC 3411 Section 5 */))
+       ||(Snmpv3StackDcptStubPtr->SnmpEngineTime > 2147483647UL /* (2^31 -1) Refer RFC 3411 Section 5 */))
     {
         /*This means the SnmpEngineTime cntr ovrflowed the (2^31 -1) value
             or the internal Tick timer Reset occured*/
@@ -572,16 +592,16 @@ void TCPIP_SNMPv3_AuthEngineTimeGet(void)
     SNMP_ENGINE_MAX_MSG_SIZE should not be more than 0x80000000 (2^31 -1).
     
 ***************************************************************************/
-uint8_t TCPIP_SNMPv3_EngnMaxMsgSizeNegotiate(uint32_t maxMsgSizeInRequest)
+static bool TCPIP_SNMPv3_EngnMaxMsgSizeNegotiate(uint32_t maxMsgSizeInRequest)
 {
 
     Snmpv3StackDcptStubPtr->SnmpEngnMaxMsgSize=SNMP_ENGINE_MAX_MSG_SIZE;//"The maximum length in octets of an SNMP message ranges 484 to (2^31-1), send or receive and process.RFC3411
 
-    if(maxMsgSizeInRequest > 0x80000000 || maxMsgSizeInRequest< 484)
+    if(maxMsgSizeInRequest > 0x80000000U || maxMsgSizeInRequest< 484UL)
     {
         return false;
     }
-    else if(maxMsgSizeInRequest < SNMP_ENGINE_MAX_MSG_SIZE )
+    else if(maxMsgSizeInRequest < (uint32_t)SNMP_ENGINE_MAX_MSG_SIZE )
     {
         Snmpv3StackDcptStubPtr->SnmpEngnMaxMsgSize=maxMsgSizeInRequest;
         return true;
@@ -670,8 +690,8 @@ bool TCPIP_SNMPv3_DataCopyToProcessBuff(const uint8_t val ,SNMPV3MSGDATA *putbuf
 SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPdu)
 {
     TCPIP_UINT32_VAL tempLen={0};
+    uint16_t temp16;
     uint8_t tempData=0;
-    uint8_t snmpv3MsgGlobalHeaderlength=0;
 
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
@@ -679,30 +699,40 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
 
     if(inOutPdu == SNMP_REQUEST_PDU)
     {
-        if (!TCPIP_SNMP_StructureIsValid((uint16_t*)&tempLen.Val))
+        if (TCPIP_SNMP_StructureIsValid(&temp16) == 0U)
+        {
             return SNMP_NO_CREATION;
+        }
     
         //Check and collect "msgID"
         if(!TCPIP_SNMP_VarDataTypeIsValidInteger(&tempLen.Val))
+        {
             return SNMP_NO_CREATION;
+        }
         
 
         Snmpv3StackDcptStubPtr->IncmngSnmpPduMsgID = tempLen.Val;
 
         //Check and collect "msgMaxSize"
         if(!TCPIP_SNMP_VarDataTypeIsValidInteger(&tempLen.Val))
+        {
             return SNMP_NO_CREATION;
+        }
         
         Snmpv3StackDcptStubPtr->incomingPdu.maxSizeResponseScopedPDU = tempLen.Val;
 
         if(TCPIP_SNMPv3_EngnMaxMsgSizeNegotiate(tempLen.Val)==false)
+        {
             return SNMP_NO_CREATION;
+        }
 
         //Check and collect "msgFlags"
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         
         if ( !IS_OCTET_STRING(tempData) )
-                return false;
+        {
+            return SNMP_NO_CREATION;
+        }
 
         tempData=TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);//Length byte of "msgFlags"
         tempData=TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);//"msgFlag"
@@ -713,15 +743,19 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
 
         //Check and collect "msgSecurityModel"
         if(!TCPIP_SNMP_VarDataTypeIsValidInteger(&tempLen.Val))
+        {
             return SNMP_NO_CREATION;
+        }
 
         if(TCPIP_SNMPv3_EngnSecrtyModelConfig(tempLen.Val))
         {
-            Snmpv3StackDcptStubPtr->incomingPdu.securityModel= tempLen.Val;
+            Snmpv3StackDcptStubPtr->incomingPdu.securityModel= (uint8_t)tempLen.Val;
             Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityModel= (uint8_t)tempLen.Val;
         }
         else
+        {
             return SNMP_NO_CREATION;
+        }
 
     }
     else if(inOutPdu == SNMP_RESPONSE_PDU)
@@ -735,58 +769,62 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
 
 
         //message header
-        TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(MSGGLOBAL_HEADER_LEN(snmpv3MsgGlobalHeaderlength)-2,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSGGLOBAL_HEADER_LEN - 2U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
         //Put "msgID" type ASN_INT of length 4 bytes
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         TCPIP_UINT32_VAL pduMsgId;
         pduMsgId.Val = Snmpv3StackDcptStubPtr->IncmngSnmpPduMsgID;
 
-        TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
         //Put "msgMaxSize"  type ASN_INT of length 4 bytes
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         
         TCPIP_UINT32_VAL maxMsgSize;
         maxMsgSize.Val = Snmpv3StackDcptStubPtr->SnmpEngnMaxMsgSize;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
         //Put "msgFlags"  type octet_string
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x01,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x01U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x03)==0x03) // Rxed pkt is authenticated and encrypted
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x03U)==0x03U) // Rxed pkt is authenticated and encrypted
         {
-            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x03;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
+            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x03U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
         }
-        else if ((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x01)==0x01) // Rxed pkt is  authenticated and no priv
+        else if ((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x01U)==0x01U) // Rxed pkt is  authenticated and no priv
         {
-            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x01;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
+            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x01U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
         }
         else
         {
-            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x00;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+            Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg=0x00U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpRespnsSecrtyFlg,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         }
         //Put "msgSecurityModel"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x01,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        retBuf = TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngnSecurityModel,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x01U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        retBuf = TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)Snmpv3StackDcptStubPtr->SnmpEngnSecurityModel, &Snmpv3StackDcptStubPtr->PduHeaderBuf);
         if(retBuf != true)
         {
             return SNMP_NO_CREATION;
         }
+    }
+    else
+    {
+        // do nothing
     }
     return SNMP_NO_ERR;
 }
@@ -794,7 +832,7 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_MsgProcessingModelProcessPDU(INOUT_SNMP_PDU inOutPd
 TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(uint8_t userIndex)
 {
     // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
-    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    if(userIndex == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
     {
         return SNMPV3_USM_INVALID_USER;
     }
@@ -807,14 +845,14 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(uint8_t 
 TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(char *userName, uint8_t userLen, uint8_t userIndex)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
     // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
-    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    if(userIndex == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
     {
         return SNMPV3_USM_INVALID_USER;
     }
@@ -829,14 +867,14 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(char *userName, u
         return SNMPV3_USM_INVALID_USERNAME;
     }
     // User name length validation
-    if(userLen > TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
+    if(userLen > (uint8_t)TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
     {
         return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
     }
     // overwrite the user name at that valid position
     snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength = userLen;
-    memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,'\0',TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
-    strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)userName,userLen);
+    (void)memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName, 0, (size_t)TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
+    (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)userName,userLen);
     
     return SNMPV3_USM_SUCCESS;
 }
@@ -844,13 +882,13 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMUserName(char *userName, u
 TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMUserName(char *userName, uint8_t *userLen, uint8_t userIndex)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
-    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    if(userIndex == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
     {
         return SNMPV3_USM_INVALID_USER;
     }
@@ -860,7 +898,7 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMUserName(char *userName, u
         return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
     }
     *userLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength;
-    strncpy(userName,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,*userLen);
+    (void)strncpy(userName,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,*userLen);
 
     return SNMPV3_USM_SUCCESS;
 }
@@ -872,18 +910,18 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMAuth(char *userName,
     bool    userNameFound=false;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
-    if(authPasswdLen>TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+    if(authPasswdLen>(uint8_t)TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
     {
         return SNMPV3_USM_INVALID_PRIVAUTH_PASSWORD_LEN;
     }
     // find the user name from the list and then update the authpassword
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
@@ -891,9 +929,9 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMAuth(char *userName,
             {
                 return SNMPV3_USM_INVALID_AUTH_CONFIG_NOT_ALLOWED;
             }
-            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,(char*)authPasswd,authPasswdLen);
+            (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,(char*)authPasswd,authPasswdLen);
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswdLen = authPasswdLen;
-            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userHashType = hashType;
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userHashType = (uint8_t)hashType;
             userNameFound = true;
             break;
         }       
@@ -915,19 +953,19 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMAuth(char *userName,
     uint8_t passwdLen=0;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
     // find the user name from the list and then get the authpassword
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
             passwdLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswdLen;
-            strncpy((char*)authPasswd,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,passwdLen); 
+            (void)strncpy((char*)authPasswd,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userAuthPswd,passwdLen); 
             *hashType = (SNMPV3_HMAC_HASH_TYPE)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userHashType;
             userNameFound = true;
             break;
@@ -950,18 +988,18 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMPrivacy(char *userName,
     bool    userNameFound=false;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
-    if(privPasswdLen>TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
+    if(privPasswdLen>(uint8_t)TCPIP_SNMPV3_PRIVAUTH_PASSWORD_LEN)
     {
         return SNMPV3_USM_INVALID_PRIVAUTH_PASSWORD_LEN;
     }
     // find the user name from the list and then update the privpassword
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
@@ -970,9 +1008,9 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMPrivacy(char *userName,
             {
                 return SNMPV3_USM_INVALID_PRIV_CONFIG_NOT_ALLOWED;
             }
-            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd,(char*)privPasswd, privPasswdLen);
+            (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd,(char*)privPasswd, privPasswdLen);
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswdLen = privPasswdLen;
-            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivType = privType;
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivType = (uint8_t)privType;
             userNameFound = true;
             break;
         }       
@@ -994,19 +1032,19 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMPrivacy(char *userName,
     uint8_t passwdLen=0;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
     // find the user name from the list and then get the authpassword
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
             passwdLen = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswdLen;
-            strncpy((char*)privPasswd, (char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd, passwdLen);
+            (void)strncpy((char*)privPasswd, (char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivPswd, passwdLen);
             *privType = (SNMPV3_PRIV_PROT_TYPE)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userPrivType;
             userNameFound = true;
             break;
@@ -1027,7 +1065,7 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMSecLevel(char *userName, u
     bool    userNameFound=false;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
@@ -1038,7 +1076,7 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_SetUSMSecLevel(char *userName, u
         return SNMPV3_USM_INVALID_SECURITY_LEVEL;
     }
     // find the user name from the list and then update the security level
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
@@ -1063,14 +1101,14 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName, u
     bool    userNameFound=false;
     
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB *snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
     
     // find the user name from the list and then get the security level
-    for(;userDBIndex<TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
+    for(;userDBIndex<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;userDBIndex++)
     {
         if(strncmp((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userDBIndex].userName,userName,userLen) == 0)
         {
@@ -1088,115 +1126,136 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName, u
     return SNMPV3_USM_SUCCESS;
 }
 
+/* MISRA C-2012 Rule 5.1 deviated:1 Deviation record ID -  H3_MISRAC_2012_R_5_1_NET_DR_10 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma coverity compliance block deviate:1 "MISRA C-2012 Rule 5.1" "H3_MISRAC_2012_R_5_1_NET_DR_10" 
 bool TCPIP_SNMPV3_EngineUserDataBaseSet(
     TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType, uint8_t len, 
     uint8_t userIndex,void *val)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
     // check if the number of users are not more than TCPIP_SNMPV3_USM_MAX_USER
-    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    if(userIndex == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
     {
         return false;
     }
-    if(val == 0)
+    if(val == NULL)
     {
         return false;
     }
         
+    bool res = true;
     switch(userDataBaseType)
     {
         case SNMPV3_USERNAME_CONFIG_TYPE:            
             // User name "initial" should not be allowed 
-            if(val == 0)
-            {
-                return false;
-            }
             if(strncmp((char*)val,"initial",7)== 0)
             {
-                return false;
+                res = false;
+                break;
             }
-            if(len > TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
+            if(len > (uint8_t)TCPIP_SNMPV3_USER_SECURITY_NAME_LEN)
             {
-                return SNMPV3_USM_INVALID_USER_NAME_LENGTH;
+                res = false;
+                break;
             }
             snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength = len;
-            memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,'\0',TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
-            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)val,len);
-            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength = strlen((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName);           
+            (void)memset(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName, 0, (size_t)TCPIP_SNMPV3_USER_SECURITY_NAME_LEN);
+            (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName,(char*)val,len);
+            snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength =  (uint8_t)strlen((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName);           
             break;
+
         case SNMPV3_AUTHPASSWD_CONFIG_TYPE:
             break;
+
         case SNMPV3_PRIVPASSWD_CONFIG_TYPE:
             break;
+
         case SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len>TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len>(uint8_t)TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
             {
-                return false;
+                res = false;
+                break;
             }
-            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userAuthPswdLoclizdKey,(char*)val,len);
+            (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userAuthPswdLoclizdKey,(char*)val,len);
             SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(userIndex);
             break;
+
         case SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len>TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len>(uint8_t)TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN)
             {   
-                return false;
+                res = false;
+                break;
             }
-            strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey,(char*)val,len);
+            (void)strncpy((char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey,(char*)val,len);
             break;
+
         case SNMPV3_HASHTYPE_CONFIG_TYPE:
             if(*((USM_SECURITY_LEVEL*)val)== hmacMD5Auth)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = SNMPV3_HMAC_MD5;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = (uint8_t)SNMPV3_HMAC_MD5;
             }
             else if(*((USM_SECURITY_LEVEL*)val) == hmacSHAAuth)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = SNMPV3_HMAC_SHA1;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = (uint8_t)SNMPV3_HMAC_SHA1;
             }
             else if(*((USM_SECURITY_LEVEL*)val) == noAuthProtocol)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = SNMPV3_NO_HMAC_AUTH;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType = (uint8_t)SNMPV3_NO_HMAC_AUTH;
             }
             else
-                return false;
+            {
+                res = false;
+                break;
+            }
 
             SNMPv3USMAuthPrivPswdLocalization(userIndex);
             SNMPv3ComputeHMACIpadOpadForAuthLoclzedKey(userIndex);
             break;
+
         case SNMPV3_PRIVTYPE_CONFIG_TYPE:
-            if((snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == SNMPV3_NO_HMAC_AUTH)
+            if((snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == (uint8_t)SNMPV3_NO_HMAC_AUTH)
                 && (*((USM_SECURITY_LEVEL*)val) != noPrivProtocol))
             {
-                return false;
+                res = false;
+                break;
             }
             if(*((USM_SECURITY_LEVEL*)val) == aesPrivProtocol)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = SNMPV3_AES_PRIV;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = (uint8_t)SNMPV3_AES_PRIV;
             }
             else if(*((USM_SECURITY_LEVEL*)val) == desPrivProtocol)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = SNMPV3_DES_PRIV;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = (uint8_t)SNMPV3_DES_PRIV;
             }
             else if(*((USM_SECURITY_LEVEL*)val) == noPrivProtocol)
             {
-                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = SNMPV3_NO_PRIV;
+                snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType = (uint8_t)SNMPV3_NO_PRIV;
             }
             else
-                return false;
+            {
+                res = false;
+                break;
+            }
             break;
+
         case SNMPV3_TARGET_SECURITY_LEVEL_TYPE:
-            if(TCPIP_SNMPv3_CmprTrapSecNameAndSecLvlWithUSMDb(userIndex,strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName),
+            if(TCPIP_SNMPv3_CmprTrapSecNameAndSecLvlWithUSMDb(userIndex, (uint8_t)strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName),
                 snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName,(*(STD_BASED_SNMPV3_SECURITY_LEVEL*)val))!= true)
             {
-                return false;
+                res = false;
+                break;
             }
-            snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType = (*(STD_BASED_SNMPV3_SECURITY_LEVEL*)val);
+            snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType = (*(STD_BASED_SNMP_SECURITY_MODEL*)val);
             break;
+
         case SNMPV3_TARGET_SECURITY_NAME_TYPE:
         {
             uint8_t index = 0;
@@ -1204,143 +1263,169 @@ bool TCPIP_SNMPV3_EngineUserDataBaseSet(
             // restrict the user security name "initial"
             if(strncmp((char*)val,"initial",len)== 0)
             {
-                return false;
+                res = false;
+                break;
             }
             // check if the target security name is the part of the user security name table,
             // if target security name is not present in that table then return false.
 
-            for(index=0;index<TCPIP_SNMPV3_USM_MAX_USER;index++)
+            for(index=0;index<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;index++)
             {
                 if(strncmp((char*)val,(char*)snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[index].userName,len)== 0)
                 {
                     break;
                 }
             }
-            if(index == TCPIP_SNMPV3_USM_MAX_USER)
+            if(index == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
             {
-                return false;
+                res = false;
+                break;
             }
 
-            return true;
+            break;
         }
         case SNMPV3_TARGET_SECURITY_MODEL_TYPE:
             snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType = *(STD_BASED_SNMP_SECURITY_MODEL*)val;
             break;
+
         case SNMPV3_TARGET_MP_MODEL_TYPE:
             snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType = *(STD_BASED_SNMP_MESSAGE_PROCESSING_MODEL*)val;
             break;
+
         default:
-            return true;            
+            // OK
+            break;
     }
-    return true;
+    return res;
 }
+#pragma coverity compliance end_block "MISRA C-2012 Rule 5.1"
+#pragma GCC diagnostic pop
+/* MISRAC 2012 deviation block end */
+
 
 bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE userDataBaseType,uint8_t len,uint8_t userIndex,void *val)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
-    if(userIndex == TCPIP_SNMPV3_USM_MAX_USER)
+    if(userIndex == (uint8_t)TCPIP_SNMPV3_USM_MAX_USER)
     {
         return false;
     }
 
+    bool retRes = true;
     switch(userDataBaseType)
     {
         case SNMPV3_USERNAME_CONFIG_TYPE:
             if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength == 0u)
             {
-                return false;
+                retRes = false;
+                break;
             }
             if(len == snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userNameLength)
             {
-                return false;
+                retRes = false;
+                break;
             }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userName[len];
             break;
+
         case SNMPV3_AUTHPASSWD_CONFIG_TYPE:
             break;
+
         case SNMPV3_PRIVPASSWD_CONFIG_TYPE:
             break;
+
         case SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len >= TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len >= (uint8_t)TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
             {
-                return false;
+                retRes = false;
+                break;
             }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userAuthPswdLoclizdKey[len];            
             break;
+
         case SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE:
-            if(len >= TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
+            if(len >= (uint8_t)TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN)
             {
-                return false;
-            }
-            *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey[len];
-            
-            break;
-            
-        case SNMPV3_HASHTYPE_CONFIG_TYPE:
-            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == SNMPV3_HMAC_MD5)
-            {
-                *(uint8_t*)val = hmacMD5Auth;
-            }
-            else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == SNMPV3_HMAC_SHA1)
-            {
-                *(uint8_t*)val = hmacSHAAuth;
+                retRes = false;
             }
             else
             {
-                *(uint8_t*)val = noAuthProtocol;
+                *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivPswdLoclizdKey[len];
+            }
+            break;
+            
+        case SNMPV3_HASHTYPE_CONFIG_TYPE:
+            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == (uint8_t)SNMPV3_HMAC_MD5)
+            {
+                *(uint8_t*)val = (uint8_t)hmacMD5Auth;
+            }
+            else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userHashType == (uint8_t)SNMPV3_HMAC_SHA1)
+            {
+                *(uint8_t*)val = (uint8_t)hmacSHAAuth;
+            }
+            else
+            {
+                *(uint8_t*)val = (uint8_t)noAuthProtocol;
             }
             break;
             
         case SNMPV3_PRIVTYPE_CONFIG_TYPE:
-            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_AES_PRIV)
+            if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == (uint8_t)SNMPV3_AES_PRIV)
             {
-                 *(uint8_t*)val = aesPrivProtocol;
+                 *(uint8_t*)val = (uint8_t)aesPrivProtocol;
             }
-            else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == SNMPV3_DES_PRIV)
+            else if(snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[userIndex].userPrivType == (uint8_t)SNMPV3_DES_PRIV)
             {
-                 *(uint8_t*)val = desPrivProtocol;
+                 *(uint8_t*)val = (uint8_t)desPrivProtocol;
             }
             else
             {
-                *(uint8_t*)val = noPrivProtocol;
+                *(uint8_t*)val = (uint8_t)noPrivProtocol;
             }
             break;
             
         case SNMPV3_TARGET_SECURITY_LEVEL_TYPE:
-            *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityLevelType;
+            *(uint8_t*)val = (uint8_t)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityLevelType;
             break;
             
         case SNMPV3_TARGET_SECURITY_NAME_TYPE:
             if (strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName) == 0u)
-                return false;
+            {
+                retRes = false;
+                break;
+            }
             if (len == strlen((char*)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName))
-                return false;
+            {
+                retRes = false;
+                break;
+            }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].userSecurityName[len];
-            return true;
             break;
             
         case SNMPV3_TARGET_SECURITY_MODEL_TYPE:
-            *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType;            
+            *(uint8_t*)val = (uint8_t)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType;            
             break;
             
         case SNMPV3_TARGET_MP_MODEL_TYPE:
-            *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType;
+            *(uint8_t*)val = (uint8_t)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType;
             break;
             
         case SNMPV3_ENGINE_ID_TYPE:
             if(snmpv3EngnDcptMemoryStubPtr->SnmpEngnIDLength == 0u)
             {
-                return false;
+                retRes = false;
+                break;
             }
             if ( len == snmpv3EngnDcptMemoryStubPtr->SnmpEngnIDLength)
             {
-                return false;
+                retRes = false;
+                break;
             }
             *(uint8_t*)val = snmpv3EngnDcptMemoryStubPtr->SnmpEngineID[len];
             break;
@@ -1348,17 +1433,20 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(TCPIP_SNMPV3_USERDATABASECONFIG_TYPE use
         case SNMPV3_ENGINE_BOOT_TYPE:
             *(uint32_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineBoots;
             break;
+
         case SNMPV3_ENGINE_TIME_TYPE:
             *(uint32_t*)val = (uint32_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngineTime;
             break;
+
         case SNMPV3_ENGINE_MAX_MSG_TYPE:
             *(uint16_t*)val = (uint16_t)snmpv3EngnDcptMemoryStubPtr->SnmpEngnMaxMsgSize;
             break;
             
         default:
-            return false;
+            retRes = false;
+            break;
     }
-    return true;
+    return retRes;
 }
 
 /****************************************************************************
@@ -1400,6 +1488,7 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
     uint8_t* ptr=NULL;
     uint8_t engnIdCntr=0;
     uint8_t tempData=0,putCntr=0;
+    uint16_t temp16;
     SNMPV3_PRIV_PROT_TYPE privType=SNMPV3_NO_PRIV;
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
@@ -1411,99 +1500,127 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
         // 0x04 [len] 0x30 [len]  .....
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         if ( !IS_OCTET_STRING(tempData) )
+        {
             return SNMP_NO_CREATION;
+        }
          
         //Msg security Parameter length
         tempLen.Val = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
             
          //Start collecting the security parameters from the incoming PDU.
          //Check if the security parametrs are binded in ASN structure format
-        if (!TCPIP_SNMP_StructureIsValid((uint16_t*)&tempLen.Val))
+        if (TCPIP_SNMP_StructureIsValid(&temp16) == 0U)
+        {
             return SNMP_NO_CREATION;
+        }
 
         //Collect "msgAuthoritiveEngineID"
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         if ( !IS_OCTET_STRING(tempData) )
-        return false;
+        {
+            return SNMP_NO_CREATION;
+        }
 
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
 
         Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineIDLen=tempData;
-        memset(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID,0,sizeof(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID));
-        if(tempData != 0x00)
+        (void)memset(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID,0,sizeof(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID));
+        if(tempData != 0x00U)
         {
-            TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData,tempData,Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID);
+            (void)TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData, (int)tempData, Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityEngineID);
         }
 
         //Check and collect "msgAuthoritiveEngineBoots" 
         if(!TCPIP_SNMP_VarDataTypeIsValidInteger(&tempLen.Val))
+        {
             return SNMP_NO_CREATION;
+        }
         Snmpv3StackDcptStubPtr->AuthoritativeSnmpEngineBoots = tempLen.Val;
 
         //Check and collect "msgAuthoritiveEngineTime"  
         if(!TCPIP_SNMP_VarDataTypeIsValidInteger(&tempLen.Val))
+        {
             return SNMP_NO_CREATION;
+        }
         Snmpv3StackDcptStubPtr->AuthoritativeSnmpEngnTime = tempLen.Val;
 
 
         //Collect "msgUserName" 
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         if ( !IS_OCTET_STRING(tempData) )
-        return false;
+        {
+            return SNMP_NO_CREATION;
+        }
          
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength=tempData;
-        memset(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName,0,sizeof(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName));
-        if(tempData!= 0x00)
+        (void)memset(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName,0,sizeof(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName));
+        if(tempData!= 0x00U)
         {
-            TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData,tempData,Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName);
+            (void)TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData, (int)tempData,Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName);
         }
 
         //validate user security name with security level
         if(!SNMPv3ValidateSecNameAndSecLevel())
+        {
             return SNMP_NO_CREATION;
+        }
 
         //Validate if the "msgAuthoritiveEngineID" matches to this agent's SNMP Engine ID
         if(!SNMPv3ValidateSnmpEngnId())
+        {
             return SNMP_NO_CREATION;
+        }
 
         //Check and collect "msgAuthenticationParameters"   
         tempData = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         if ( !IS_OCTET_STRING(tempData) )
-            return false;
+        {
+            return SNMP_NO_CREATION;
+        }
 
  //(SnmpInMsgAuthParamLen should be 12 bytes if using HAMC-MD5-96 or HMAC-SHA-96)
         Snmpv3StackDcptStubPtr->SnmpInMsgAuthParamLen=tempData= TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);//TCPIP_SNMPv3_WholeMsgBufferDataGet(Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.snmpMsgHead,&tempPos);
 
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel&0x01)==0x01)//If message is authenticated
-            if(Snmpv3StackDcptStubPtr->SnmpInMsgAuthParamLen !=12 /* if using HAMC-MD5-96 or HMAC-SHA-96 */)
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel&0x01U)==0x01U)//If message is authenticated
+        {
+            if(Snmpv3StackDcptStubPtr->SnmpInMsgAuthParamLen !=12U /* if using HAMC-MD5-96 or HMAC-SHA-96 */)
+            {
                 return SNMP_NO_CREATION;
+            }
+        }
         
-        if(tempData != 0x00)
+        if(tempData != 0x00U)
         {
             ptr=Snmpv3StackDcptStubPtr->SnmpInMsgAuthParmStrng;
             Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.msgAuthParamOffsetInWholeMsg=(uint16_t)TCPIP_SNMP_GetRXOffset();
-            TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData,tempData,ptr);
+            (void)TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData, (int)tempData, ptr);
         }
 
         
 //Check and collect "msgPrivacyParameters"  
         tempData= TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         if ( !IS_OCTET_STRING(tempData) )
-        return false;
+        {
+            return SNMP_NO_CREATION;
+        }
 
 //(SnmpInMsgPrivParmLen should be 8 bytes) 
         Snmpv3StackDcptStubPtr->SnmpInMsgPrivParmLen=tempData= TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);//TCPIP_SNMPv3_WholeMsgBufferDataGet(Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.snmpMsgHead,&tempPos);
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel&0x02)==0x02)//If message is encrypted
-            if(Snmpv3StackDcptStubPtr->SnmpInMsgPrivParmLen !=8)
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel&0x02U)==0x02U)//If message is encrypted
+        {
+            if(Snmpv3StackDcptStubPtr->SnmpInMsgPrivParmLen !=8U)
+            {
                 return SNMP_NO_CREATION;
+            }
+        }
         
-        if(tempData != 0x00)
+        if(tempData != 0x00U)
         {
             ptr=Snmpv3StackDcptStubPtr->snmpInMsgPrvParamStrng;
-            TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData,tempData,ptr);
+            (void)TCPIP_SNMP_GetArrayOfDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData, (int)tempData, ptr);
             //This is a secured request. Compute the AES decryption IV
-            SNMPv3UsmAesEncryptDecrptInitVector(SNMP_REQUEST_PDU);
+            SNMPv3UsmAesEncryptDecrptInitVector((uint8_t)SNMP_REQUEST_PDU);
         }
 
         /* global variable to find out how many times SNMPv3 engine id has been validated*/
@@ -1511,89 +1628,90 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
     }
     else if(inOutPdu == SNMP_RESPONSE_PDU)
     {
-        uint16_t snmpv3MsgAuthHeaderLength=0;
         bool   retBuf=true;
         uint16_t msgHeaderOffset1=0;
         uint16_t msgHeaderOffset2=0;
         uint16_t tempMsgHeaderOffset=0;
 
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);  //Security Parameter string
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);  //Security Parameter string
         msgHeaderOffset1 = Snmpv3StackDcptStubPtr->PduHeaderBuf.length;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength)-2,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSG_AUTHORITATIVE_HEADER_LEN - 2U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         msgHeaderOffset2 = Snmpv3StackDcptStubPtr->PduHeaderBuf.length;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength)-4,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSG_AUTHORITATIVE_HEADER_LEN - 4U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
                 //Put "msgAuthoritiveEngineID"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngnIDLength,&Snmpv3StackDcptStubPtr->PduHeaderBuf); //Integer Length
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngnIDLength,&Snmpv3StackDcptStubPtr->PduHeaderBuf); //Integer Length
         tempData=Snmpv3StackDcptStubPtr->SnmpEngnIDLength;
         for(;engnIdCntr<tempData;engnIdCntr++)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineID[engnIdCntr],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineID[engnIdCntr],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         }
 
                 //Put "msgAuthoritiveEngineBoots"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>24,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>16,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>8,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>24), &Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>16), &Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>8), &Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots), &Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
             //Put "msgAuthoritiveEngineTime"
         TCPIP_SNMPv3_AuthEngineTimeGet();
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         TCPIP_UINT32_VAL engTime;
         engTime.Val = Snmpv3StackDcptStubPtr->SnmpEngineTime;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[3],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[2],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[1],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[0],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
 
 
             //Put "msgUserName"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         tempData=Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength ;
-        if(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength != 0)
+        if(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength != 0U)
         {
             ptr= Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName;
             for(putCntr=0;putCntr<tempData;putCntr++)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(*(ptr+putCntr),&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*(ptr+putCntr),&Snmpv3StackDcptStubPtr->PduHeaderBuf);
             }
         }
 
         putCntr = 0;
 
     //Put "msgAuthenticationParameters"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x01) == 0x01)
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x01U) == 0x01U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen,&Snmpv3StackDcptStubPtr->PduHeaderBuf); //Not supported with the Alpha Release.
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen,&Snmpv3StackDcptStubPtr->PduHeaderBuf); //Not supported with the Alpha Release.
 
             Snmpv3StackDcptStubPtr->PduHeaderBuf.msgAuthParamOffset=Snmpv3StackDcptStubPtr->PduHeaderBuf.length;
 
             //Put 0x00 to msgAuthenticationParameters, Once the response WholeMsg is
             //populated, this offset can be updated with the new msgAuthenticationParam
             for(;putCntr<Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen;putCntr++)
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//RFC3414 Section 6.3.2 Page#56 Step3
+            {
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);//RFC3414 Section 6.3.2 Page#56 Step3
+            }
         }
         else
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
         }
         putCntr = 0;
         privType = TCPIP_SNMPV3_PrivProtocolGet(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName);
         SNMPv3USMOutMsgPrivParam(privType);
 
             //Put "msgPrivacyParameters"
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02) == 0x02)
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02U) == 0x02U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
             for(;putCntr<Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen;putCntr++)
             {
                 retBuf = TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrvParmStrng[putCntr],&Snmpv3StackDcptStubPtr->PduHeaderBuf);
@@ -1601,7 +1719,7 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
         }
         else
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,&Snmpv3StackDcptStubPtr->PduHeaderBuf); 
         }
         
         if(retBuf != true)
@@ -1610,13 +1728,17 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
         }
         tempMsgHeaderOffset = Snmpv3StackDcptStubPtr->PduHeaderBuf.length;
         Snmpv3StackDcptStubPtr->PduHeaderBuf.length = msgHeaderOffset2;
-        TCPIP_SNMPv3_DataCopyToProcessBuff((tempMsgHeaderOffset-msgHeaderOffset2)-1,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempMsgHeaderOffset-msgHeaderOffset2) - 1U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         Snmpv3StackDcptStubPtr->PduHeaderBuf.length = tempMsgHeaderOffset;
 
         tempMsgHeaderOffset = Snmpv3StackDcptStubPtr->PduHeaderBuf.length;
         Snmpv3StackDcptStubPtr->PduHeaderBuf.length = msgHeaderOffset1;
-        TCPIP_SNMPv3_DataCopyToProcessBuff((tempMsgHeaderOffset-msgHeaderOffset1)-1,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempMsgHeaderOffset-msgHeaderOffset1) - 1U,&Snmpv3StackDcptStubPtr->PduHeaderBuf);
         Snmpv3StackDcptStubPtr->PduHeaderBuf.length = tempMsgHeaderOffset;
+    }
+    else
+    {
+        // do nothing
     }
     return SNMP_NO_ERR;
 }
@@ -1655,17 +1777,15 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_UserSecurityModelProcessPDU(INOUT_SNMP_PDU inOutPdu
 ***************************************************************************/
 SNMP_ERR_STATUS TCPIP_SNMPv3_ScopedPDUProcessing(INOUT_SNMP_PDU inOutPdu)
 {
-    TCPIP_UINT32_VAL tempLen={0};
+    uint16_t tempLen;
     uint16_t dataLen=0;
     SNMPV3MSGDATA scopedPtr={NULL,0,0,0};
-
     uint16_t    contextIDlen=0;
-    uint16_t    contextNameLength=0;
-
+    bool getLen;
 
     if(inOutPdu == SNMP_REQUEST_PDU)
     {
-        if ( !_SNMPv3_CheckIfValidAuthStructure((uint16_t*)&tempLen) )
+        if ( F_SNMPv3_CheckIfValidAuthStructure(&tempLen) == 0U )
         {
             return SNMP_NO_CREATION;
         }
@@ -1680,76 +1800,81 @@ SNMP_ERR_STATUS TCPIP_SNMPv3_ScopedPDUProcessing(INOUT_SNMP_PDU inOutPdu)
         Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.length = 0;
         Snmpv3StackDcptStubPtr->ScopedPduDataPos = 0;
 
-
         //Start collecting the plaint text Scoped PDU data byte from the WholeMsg buffer
         //Check if the plain text scoped pdu data bytes are binded in ASN structure format
         scopedPtr = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&scopedPtr); // First item to Response buffer is packet structure
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,&scopedPtr);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0,&scopedPtr);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0,&scopedPtr);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&scopedPtr); // First item to Response buffer is packet structure
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,&scopedPtr);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,&scopedPtr);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,&scopedPtr);
 
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02)==0x02)
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02U)==0x02U)
         {
             contextIDlen=TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData) ;
             contextIDlen=TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData) ;
-            if(contextIDlen == 0x81)
+            if(contextIDlen == 0x81U)
             {
-                TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
+                (void)TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
             }
-            else if(contextIDlen == 0x82)
+            else if(contextIDlen == 0x82U)
             {
-                TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
-                TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
+                (void)TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
+                (void)TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
             }           
+            else
+            {
+                // do nothing
+            }
         }
 
-        contextIDlen = _SNMP_V3ContextNameLengthGet(&dataLen);
-        if(contextIDlen != true)
+        getLen = F_SNMP_V3ContextNameLengthGet(&dataLen);
+        if(getLen != true)
         {
             return SNMP_NO_CREATION;
         }
 //        //Collect context engine id
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&scopedPtr);
-        if(dataLen == 0)
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&scopedPtr);
+        if(dataLen == 0U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,&scopedPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,&scopedPtr);
         }
         else
         {
             //copy context engine id from a local buffer            
-            TCPIP_SNMPv3_DataCopyToProcessBuff(dataLen,&scopedPtr);
-            while(dataLen!=0)
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)dataLen,&scopedPtr);
+            while(dataLen!=0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData),&scopedPtr);
-                dataLen-=1;
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData),&scopedPtr);
+                dataLen-=1U;
             }
         }
 
         //Check and collect "contextName"
-        contextNameLength = _SNMP_V3ContextNameLengthGet(&dataLen);
-        if(contextNameLength != true)
+        getLen = F_SNMP_V3ContextNameLengthGet(&dataLen);
+        if(getLen != true)
         {
             return SNMP_NO_CREATION;
         }
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&scopedPtr);
-        if(dataLen == 0x00)
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&scopedPtr);
+        if(dataLen == 0x00U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,&scopedPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,&scopedPtr);
         }
         else
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(dataLen,&scopedPtr);
-            while(dataLen!=0x00)
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)dataLen,&scopedPtr);
+            while(dataLen != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData),&scopedPtr);
-                dataLen-=1;
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData),&scopedPtr);
+                dataLen -= 1U;
             }
         }
-
         Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.length = scopedPtr.length;
     }
-
+    else
+    {
+        // do nothing
+    }
     return SNMP_NO_ERR;
 }
 
@@ -1786,7 +1911,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
     uint8_t                 OIDValue[TCPIP_SNMP_OID_MAX_LEN];
     uint8_t                 OIDlen=0;
     uint8_t                 oidLookUpRet=0;
-    uint8_t                 noOfVarbindreq=0xFF;
+    uint8_t                 noOfVarbindreq=0xFFU;
     uint8_t                 tempBuf[4];
     tempBuf[0] = 0U;
     tempBuf[1] = 0U;
@@ -1797,7 +1922,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
     uint8_t*                outBufPtr=NULL;
     uint8_t                 varIndex=0;
     uint8_t                 repeatCntr=0,varBindCntr=0;
-    uint8_t                 succesor=0,tempRet=0xFF;
+    uint8_t                 succesor=0,tempRet=0xFFU;
     uint16_t                pduLenOffset=0;
     uint16_t                pduLength=0;
     uint16_t                errorStatusOffset=0;
@@ -1812,114 +1937,131 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
     TCPIP_UINT32_VAL        tempVal={0};
     static SNMPV3MSGDATA    *dynScopedBufPtr=NULL;
     OID_INFO                OIDInfo;  
-    memset(&OIDInfo, 0, sizeof(OID_INFO));
+    (void)memset(&OIDInfo, 0, sizeof(OID_INFO));
     SNMP_ERR_STATUS         errorStatus;
     bool                    bSnmpV3GetBulkResError = false;
-    enum 
-    {
-        SM_PKT_STRUCT_LEN_OFFSET=0u,
-        SM_RESPONSE_PDU_LEN_OFFSET,
-        SM_ERROR_STATUS_OFFSET,
-        SM_ERROR_INDEX_OFFSET,
-        SM_FIND_NO_OF_REQUESTED_VARBINDS,
-        SM_FIND_NO_OF_RESPONSE_VARBINDS,
-        SM_VARBIND_STRUCT_OFFSET,
-        SM_VARSTRUCT_LEN_OFFSET,
-        SM_POPULATE_REQ_OID,
-        SM_FIND_OID_IN_MIB,
-        SM_NON_REPETITIONS,
-        SM_MAX_REPETITIONS
-    }smSnmp=SM_PKT_STRUCT_LEN_OFFSET;
+    ptrdiff_t               msgLen;
+    int smSnmp = (int)SM_PKT_STRUCT_LEN_OFFSET;
 
     
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
-    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
+    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
-    while(1)
+    bool doRet = false;
+    bool retRes = false;
+    while(true)
     {
         switch(smSnmp)
         {
             // Before each variables are processed, prepare necessary header.
-            case SM_PKT_STRUCT_LEN_OFFSET:
-    
+            case (int)SM_PKT_STRUCT_LEN_OFFSET:
+
                 if(TCPIP_SNMPv3_MsgProcessingModelProcessPDU(SNMP_RESPONSE_PDU)!= SNMP_NO_ERR)
                 {
-                    return false;
+                    doRet = true;
+                    retRes = false;
+                    break;
                 }
                 if(TCPIP_SNMPv3_UserSecurityModelProcessPDU(SNMP_RESPONSE_PDU)!= SNMP_NO_ERR)
                 {
-                    return false;
+                    doRet = true;
+                    retRes = false;
+                    break;
                 }
                 contextNameOffset = 0;
                 if(TCPIP_SNMPv3_ScopedPDUProcessing(SNMP_RESPONSE_PDU)!= SNMP_NO_ERR)
                 {
-                    return false;
+                    doRet = true;
+                    retRes = false;
+                    break;
                 }
-                
+
                 dynScopedBufPtr = &Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf;                  
                 dynScopedBufPtr->head = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.head;
                 dynScopedBufPtr->length = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.length;
-                
+
                 pduDbPtr->pduType = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
                 pduLength = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
-                if(pduLength == 0x81)
+                if(pduLength == 0x81U)
                 {
                     pduLength = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
                 }
-                else if(pduLength == 0x82)
+                else if(pduLength == 0x82U)
                 {
                     pduLength = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
                     pduLength = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
                 }                   
-            
+                else
+                {
+                    // do nothing
+                }
+
                 varBindHeaderOffset = dynScopedBufPtr->length;
                 smSnmp++;
-            case SM_RESPONSE_PDU_LEN_OFFSET:
+                break;
+
+            case (int)SM_RESPONSE_PDU_LEN_OFFSET:
                 // The exact Reponse will be updated with varBindHeaderOffset
                 // After reading no of varbinds from SNMPv3FindOIDsFrmIncmingV3Req
-                if(!noOfVarbindreq)
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(REPORT_RESPONSE,dynScopedBufPtr);
+                if(noOfVarbindreq == 0U)
+                {
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(REPORT_RESPONSE,dynScopedBufPtr);
+                }
                 else
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(GET_RESPONSE,dynScopedBufPtr);
+                {
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(GET_RESPONSE,dynScopedBufPtr);
+                }
                 // Since we don't know length of this response, use placeholders until
                 pduLenOffset = dynScopedBufPtr->length;
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynScopedBufPtr);
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
-            
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynScopedBufPtr);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+
                 if(TCPIP_SNMP_VarDataTypeIsValidInteger(&tempVal.Val) != true)
                 {                   
-                    return false;
+                    doRet = true;
+                    retRes = false;
+                    break;
                 }
                 else
                 {
                     // Put original request back.
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);   // Int type.
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynScopedBufPtr);     // To simplify logic, always use 4 byte long requestID
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[3],dynScopedBufPtr); // Start MSB
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[2],dynScopedBufPtr);
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[1],dynScopedBufPtr);
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[0],dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);   // Int type.
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynScopedBufPtr);     // To simplify logic, always use 4 byte long requestID
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[3],dynScopedBufPtr); // Start MSB
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[2],dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[1],dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(tempVal.v[0],dynScopedBufPtr);
                 }
 
                 smSnmp++;
-            case SM_ERROR_STATUS_OFFSET :
+                break;
+
+            case (int)SM_ERROR_STATUS_OFFSET :
                 /*update pduDbPtr structure for error index and eroor status 
-                and non repeators and max repeators */
-                if(pduDbPtr->pduType != GET_BULK_REQUEST)
+                  and non repeators and max repeators */
+                if(pduDbPtr->pduType != (uint8_t)GET_BULK_REQUEST)
                 {
                     // ignore error index and error status but update pduDBptr
                     tempVal.Val = 0;
                     if(! TCPIP_SNMP_VarDataTypeIsValidInteger(&tempVal.Val))
-                        return false;
-                    pduDbPtr->errorStatus = tempVal.Val;
+                    {
+                        doRet = true;
+                        retRes = false;
+                        break;
+                    }
+                    pduDbPtr->errorStatus = (uint8_t)tempVal.Val;
                     tempVal.Val = 0;
                     if(! TCPIP_SNMP_VarDataTypeIsValidInteger(&tempVal.Val))
-                        return false;
-                    pduDbPtr->erroIndex = tempVal.Val;
+                    {
+                        doRet = true;
+                        retRes = false;
+                        break;
+                    }
+                    pduDbPtr->erroIndex = (uint8_t)tempVal.Val;
                 }
                 else
                 {
@@ -1927,82 +2069,89 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                     tempVal.Val = 0;
                     if(TCPIP_SNMP_VarDataTypeIsValidInteger(&tempVal.Val)==true)
                     {
-                       pduDbPtr->nonRepeators = tempVal.Val;
+                        pduDbPtr->nonRepeators = (uint8_t)tempVal.Val;
                     }
                     else
                     {                       
-                        return false;
+                        doRet = true;
+                        retRes = false;
+                        break;
                     }
                     tempVal.Val = 0;
                     if(TCPIP_SNMP_VarDataTypeIsValidInteger(&tempVal.Val)==true)
                     {
-                       pduDbPtr->maxRepetitions = tempVal.Val;
+                        pduDbPtr->maxRepetitions = (uint8_t)tempVal.Val;
                     }
                     else
                     {                       
-                        return false;
+                        doRet = true;
+                        retRes = false;
+                        break;
                     }
                 }
-                
+
                 // Put error status.
                 // Since we do not know error status, put place holder until we know it...
-                TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);               // Int type
-                TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynScopedBufPtr);                 // One byte long.
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);               // Int type
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynScopedBufPtr);                 // One byte long.
                 errorStatusOffset = dynScopedBufPtr->length;
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);                 // Placeholder.
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);                 // Placeholder.
                 smSnmp++;
-    
-            case SM_ERROR_INDEX_OFFSET :
-    
+                break;
+
+            case (int)SM_ERROR_INDEX_OFFSET :
+
                 // Similarly put error index.
-                TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);               // Int type
-                TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynScopedBufPtr);                 // One byte long
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynScopedBufPtr);               // Int type
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynScopedBufPtr);                 // One byte long
                 errorIndexOffset = dynScopedBufPtr->length;
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);                 // Placeholder.
-    
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);                 // Placeholder.
+
                 smSnmp++;
-    
-            case SM_FIND_NO_OF_REQUESTED_VARBINDS:
+                break;
+
+            case (int)SM_FIND_NO_OF_REQUESTED_VARBINDS:
 
                 // Decode variable binding structure
-                if ( TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) == false)
+                if ( TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) == 0U)
                 {
                     noOfVarbindreq = 0;                     
                 }
                 else    //Find number of OIDs/varbinds's data requested in received PDU.
                 {
-                    noOfVarbindreq = _SNMPv3_FindOIDsFrmIncmingV3Req(varBindHeaderLen);
+                    noOfVarbindreq = F_SNMPv3_FindOIDsFrmIncmingV3Req(varBindHeaderLen);
                 }
-                
+
                 tempOffset = dynScopedBufPtr->length;
                 dynScopedBufPtr->length = varBindHeaderOffset;
-                if(!noOfVarbindreq)
+                if(noOfVarbindreq == 0U)
                 {
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(REPORT_RESPONSE,dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(REPORT_RESPONSE,dynScopedBufPtr);
                 }
                 else
                 {
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(GET_RESPONSE,dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(GET_RESPONSE,dynScopedBufPtr);
                 }               
                 dynScopedBufPtr->length = tempOffset;
-                                
-                TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr);
+
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr);
                 varBindHeaderOffset_3 = dynScopedBufPtr->length;
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynScopedBufPtr);
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
-                if(noOfVarbindreq == 0)
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynScopedBufPtr);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+                if(noOfVarbindreq == 0U)
                 {
-                    _SNMPv3_ConstructReportPDU(dynScopedBufPtr);
+                    F_SNMPv3_ConstructReportPDU(dynScopedBufPtr);
                     break;
                 }
                 smSnmp++;
-    
-            case SM_FIND_NO_OF_RESPONSE_VARBINDS:
+                break;
+
+            case (int)SM_FIND_NO_OF_RESPONSE_VARBINDS:
                 //Calculate number of variables to be responded for the received request
                 Getbulk_N = noOfVarbindreq; Getbulk_M=0; Getbulk_R=0;
                 if((pduDbPtr->snmpVersion == (uint8_t)SNMP_V3) &&
-                        (pduDbPtr->pduType == GET_BULK_REQUEST))
+                        (pduDbPtr->pduType == (uint8_t)GET_BULK_REQUEST))
                 {
                     if((pduDbPtr->nonRepeators) <= noOfVarbindreq)
                     {
@@ -2011,39 +2160,53 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                     Getbulk_M = pduDbPtr->maxRepetitions;
 
                     if((noOfVarbindreq - Getbulk_N)>=0u)
-                            Getbulk_R = noOfVarbindreq-Getbulk_N;
-                    
+                    {
+                        Getbulk_R = noOfVarbindreq-Getbulk_N;
+                    }
+
                     noOfVarbindreq = Getbulk_N + (Getbulk_M * Getbulk_R);//Refer RFC 3416
 
-                    if(Getbulk_N == 0)
+                    if(Getbulk_N == 0U)
                     {
-                        smSnmp=SM_MAX_REPETITIONS;
+                        smSnmp=(int)SM_MAX_REPETITIONS;
                         break;
                     }
                 }
                 //noOfVarbindreq = Getbulk_N + (Getbulk_M * Getbulk_R);//Refer RFC 3416
 
                 smSnmp++;
-            case SM_VARSTRUCT_LEN_OFFSET:
-                if(noOfVarbindreq == 0)
-                    break;
-                
-                if(Getbulk_N!= 0u) // decreament non repeators.
-                    Getbulk_N--;
-                else if(Getbulk_M > 0) // jump to max repeatations
+                break;
+
+            case (int)SM_VARSTRUCT_LEN_OFFSET:
+                if(noOfVarbindreq == 0U)
                 {
-                    smSnmp = SM_MAX_REPETITIONS;
                     break;
                 }
-                
-                varIndex++;
-                if(TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) ==  false)
+
+                if(Getbulk_N!= 0u) // decreament non repeators.
                 {
-                    _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
+                    Getbulk_N--;
+                }
+                else if(Getbulk_M > 0U) // jump to max repeatations
+                {
+                    smSnmp = (int)SM_MAX_REPETITIONS;
+                    break;
+                }
+                else
+                {
+                    // do nothing
+                }
+
+                varIndex++;
+                if(TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) ==  0U)
+                {
+                    F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
                     break;
                 }
                 smSnmp++;
-            case SM_POPULATE_REQ_OID:
+                break;
+
+            case (int)SM_POPULATE_REQ_OID:
                 for(OIDlen=0;OIDlen<sizeof(OIDValue);OIDlen++)
                 {
                     OIDValue[OIDlen]=0;
@@ -2051,24 +2214,25 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                 OIDlen=0;
                 if(TCPIP_SNMP_OIDIsValid(OIDValue,&OIDlen) == false)
                 {
-                    _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
+                    F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
                     break;
                 }
-                
+
                 // For Get & Get-Next, value must be NULL.
                 if ( pduDbPtr->pduType != (uint8_t)SET_REQUEST )
                 {
                     if(!TCPIP_SNMP_DataIsASNNull())
                     {
-                        _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
+                        F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
                         break;
                     }
                 }
                 noOfVarbindreq--;
                 smSnmp++;
-            
-            case SM_FIND_OID_IN_MIB:
-            
+                break;
+
+            case (int)SM_FIND_OID_IN_MIB:
+
                 /* Search for the requested OID in the MIB database with the agent.*/
                 //Searching the requested OID in the MIB database
                 oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,OIDValue, OIDlen, &OIDInfo);
@@ -2078,88 +2242,91 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                     break;
                 }
                 varStructLenOffset= dynScopedBufPtr->length;
-                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr)!= true)
+                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr)!= true)
                 {    
                     bSnmpV3GetBulkResError = true;
                     break;
                 }
-        
+
                 // ASN OID data type
                 if(TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr)!= true)
                 {    
                     bSnmpV3GetBulkResError = true;
                     break;
                 }
-        
+
                 /* send the error code for SNMPv3 version for GET request and SET - request.
-                As the follwing code is only for the get and set response, so SNMPv3CopyDataToProcessBuff is not
-                under the buffer over flow check.
-                */
-                if(oidLookUpRet != (uint8_t)true /*&& (pduDbPtr->pduType != GET_NEXT_REQUEST)*/ &&
-                        (pduDbPtr->pduType != GET_BULK_REQUEST))
+                   As the follwing code is only for the get and set response, so SNMPv3CopyDataToProcessBuff is not
+                   under the buffer over flow check.
+                   */
+                if(oidLookUpRet != (uint8_t)true /*&& (pduDbPtr->pduType != (uint8_t)GET_NEXT_REQUEST)*/ &&
+                        (pduDbPtr->pduType != (uint8_t)GET_BULK_REQUEST))
                 {
-                    if(snmpStkDcptMemStubPtr->appendZeroToOID)
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr);//for appending "0"
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen + 1U,dynScopedBufPtr);//for appending "0"
                     }
                     else
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr);//do not append "0"
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr);//do not append "0"
                     }
                     pduLength = 0;
                     //Put OID
-                    while( OIDlen-- )
+                    while( OIDlen--  != 0U)
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDValue[pduLength++],dynScopedBufPtr);//do not append "0"
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDValue[pduLength++],dynScopedBufPtr);//do not append "0"
                     }
-                    
-                    if(snmpStkDcptMemStubPtr->appendZeroToOID)
+
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,dynScopedBufPtr);//Appending '0' to OID in response
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,dynScopedBufPtr);//Appending '0' to OID in response
                     }
                     if(( pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)
-                                    && (pduDbPtr->pduType == SNMP_GET))
+                            && (pduDbPtr->pduType == (uint8_t)SNMP_GET))
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(oidLookUpRet,dynScopedBufPtr);//Appending '0' to OID in response
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynScopedBufPtr);//Appending '0' to OID in response
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(oidLookUpRet,dynScopedBufPtr);//Appending '0' to OID in response
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynScopedBufPtr);//Appending '0' to OID in response
                     }
-                    else if((pduDbPtr->pduType == SNMP_GET_NEXT) && (oidLookUpRet == SNMP_END_OF_MIB_VIEW))
+                    else if((pduDbPtr->pduType == (uint8_t)SNMP_GET_NEXT) && (oidLookUpRet == (uint8_t)SNMP_END_OF_MIB_VIEW))
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_END_OF_MIB_VIEW,dynScopedBufPtr);
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)SNMP_END_OF_MIB_VIEW,dynScopedBufPtr);
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+                    }
+                    else
+                    {
+                        // do nothing
                     }
                     tempOffset = dynScopedBufPtr->length;
-                    pduLength = dynScopedBufPtr->length-(varStructLenOffset+1);
+                    pduLength = dynScopedBufPtr->length - (varStructLenOffset + 1U);
                     dynScopedBufPtr->length = varStructLenOffset;
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(pduLength,dynScopedBufPtr);
+                    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)pduLength,dynScopedBufPtr);
                     dynScopedBufPtr->length = tempOffset;
                     //Reset to state machine to access the next oid in request
-                    smSnmp=SM_VARSTRUCT_LEN_OFFSET;
+                    smSnmp=(int)SM_VARSTRUCT_LEN_OFFSET;
                     break;
                 }
                 smSnmp++;
+                break;
 
-            //return false;
-
-            case SM_NON_REPETITIONS:
+            case (int)SM_NON_REPETITIONS:
 
                 /*  Variables in get,get_next,set and get_bulk ( non repetition variables)
-                        of snmp request are processed in this part of the state machine.*/
+                    of snmp request are processed in this part of the state machine.*/
 
-                if(pduDbPtr->pduType == SNMP_SET)
+                if(pduDbPtr->pduType == (uint8_t)SNMP_SET)
                 {
                     uint8_t templen=OIDlen;
                     uint8_t *ptroid=OIDValue;
                     //to validate the REC ID is present or not
 
-                    if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion,OIDInfo.nodeInfo.Flags.bIsIDPresent,OIDInfo.id,OIDValue,OIDlen) != true)
+                    if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion, OIDInfo.nodeInfo.Flags.bIsIDPresent != 0U, (uint16_t)OIDInfo.id, OIDValue, OIDlen) != true)
                     {
                         /*if(pduDbPtr->snmpVersion == (uint8_t)SNMP_V1)
-                        *errorStatus = SNMP_NO_SUCH_NAME;
-                        else if ((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C) ||
-                                                        (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3))*/
+                         *errorStatus = SNMP_NO_SUCH_NAME;
+                         else if ((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C) ||
+                         (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3))*/
 
-                         /*if the variable binding's name specifies a
+                        /*if the variable binding's name specifies a
                          * variable which does not exist and could not ever be
                          * created, then the value of the Response-PDU's error-
                          * status field is set to `noCreation', and the value of its
@@ -2167,50 +2334,107 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                          * variable binding.
                          */
                         errorStatus = SNMP_NO_CREATION;
-                        return false;
+                        doRet = true;
+                        retRes = false;
+                        break;
                     }
-                        
-                    if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr);//for appending "0"
-                    else
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr);//do not append "0"
-                        
-                    //Put OID
-                    while( templen-- )
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr);//do not append "0"
-                        
-                    if(snmpStkDcptMemStubPtr->appendZeroToOID)
+
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
                     {
-                        TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,dynScopedBufPtr);//Appending '0' to OID in response
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen + 1U,dynScopedBufPtr);//for appending "0"
+                    }
+                    else
+                    {
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr);//do not append "0"
+                    }
+
+                    //Put OID
+                    while( templen--  != 0U)
+                    {
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr);//do not append "0"
+                    }
+
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                    {
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,dynScopedBufPtr);//Appending '0' to OID in response
                     }
                     //Now process the SET command
                     tempRet = TCPIP_SNMP_ProcessSetVar(pduDbPtr,&OIDInfo, &errorStatus);
-                
+
                     if ( errorStatus != SNMP_NO_ERR )
                     {
                         //SET var command failed. Update the error status.
-                           _SNMPv3_SetErrorStatus(errorStatusOffset, \
-                           errorIndexOffset, \
-                           errorStatus, \
-                           varIndex,dynScopedBufPtr); \
-                
+                        F_SNMPv3_SetErrorStatus(errorStatusOffset, \
+                                errorIndexOffset, \
+                                errorStatus, \
+                                varIndex,dynScopedBufPtr); \
+
                     }
-                        
+
                 }/*Get-Next-rquest also calls the TCPIP_SNMP_ProcessGetVar for 0the instance.  */
-                else if((pduDbPtr->pduType == SNMP_GET) ||
-                        ((pduDbPtr->pduType == SNMP_V2C_GET_BULK) && (oidLookUpRet == true)))
+                else if((pduDbPtr->pduType == (uint8_t)SNMP_GET) ||
+                        ((pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK) && (oidLookUpRet != 0U)))
                 {
                     uint8_t templen=OIDlen;
                     uint8_t *ptroid=OIDValue;
 
-                        //to validate the REC ID is present or not
-                        if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion,OIDInfo.nodeInfo.Flags.bIsIDPresent,OIDInfo.id,OIDValue,OIDlen) != true)
-                        {
-                            return false;
+                    //to validate the REC ID is present or not
+                    if(TCPIP_SNMP_RecordIDValidation(pduDbPtr->snmpVersion, OIDInfo.nodeInfo.Flags.bIsIDPresent != 0U, (uint16_t)OIDInfo.id, OIDValue, OIDlen) != true)
+                    {
+                        doRet = true;
+                        retRes = false;
+                        break;
+                    }
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                    {
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen + 1U,dynScopedBufPtr)!= true) //for appending "0"
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
                         }
-                        if(snmpStkDcptMemStubPtr->appendZeroToOID)
+                    }
+                    else
+                    {
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr) != true)//do not append "0"
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                    }
+
+                    //Put OID
+                    while( templen--  != 0U)
+                    {
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr)!= true)//do not append "0"
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                    }
+
+                    if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                    {
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,dynScopedBufPtr)!= true)//Appending '0' to OID in response
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                    }
+
+                    tempRet = TCPIP_SNMP_ProcessGetVar(&OIDInfo,false,pduDbPtr);
+                }
+                else if((pduDbPtr->pduType == (uint8_t)SNMP_GET_NEXT)||
+                        ((pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK) && (oidLookUpRet == 0U)))
+                {
+                    tempRet = TCPIP_SNMP_ProcessGetNextVar(&OIDInfo,pduDbPtr);
+                    if(tempRet == 0U)
+                    {
+                        uint8_t templen=OIDlen;
+                        uint8_t *ptroid=OIDValue;
+
+                        if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
                         {
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr)!= true) //for appending "0"
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen + 1U,dynScopedBufPtr) != true)//for appending "0"
                             {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
@@ -2218,15 +2442,15 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                         }
                         else
                         {
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr) != true)//do not append "0"
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr)!= true)//do not append "0"
                             {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
                             }
                         }
-                        
+
                         //Put OID
-                        while( templen-- )
+                        while( templen--  != 0U)
                         {
                             if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr)!= true)//do not append "0"
                             {    
@@ -2235,347 +2459,327 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                             }
                         }
 
-                        if(snmpStkDcptMemStubPtr->appendZeroToOID)
+                        if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
                         {
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,dynScopedBufPtr)!= true)//Appending '0' to OID in response
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x00U,dynScopedBufPtr)!= true)//Appending '0' to OID in response
                             {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
                             }
                         }
-
-                        tempRet = TCPIP_SNMP_ProcessGetVar(&OIDInfo,false,pduDbPtr);
                     }
-                    else if((pduDbPtr->pduType == SNMP_GET_NEXT)||
-                            ((pduDbPtr->pduType == SNMP_V2C_GET_BULK) && (oidLookUpRet != true)))
-                    {
-                        tempRet = TCPIP_SNMP_ProcessGetNextVar(&OIDInfo,pduDbPtr);
-                        if(tempRet ==0)
-                        {
-                            uint8_t templen=OIDlen;
-                            uint8_t *ptroid=OIDValue;
-                            
-                            if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                            {
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr) != true)//for appending "0"
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr)!= true)//do not append "0"
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                            }
-                            
-                            //Put OID
-                            while( templen-- )
-                            {
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr)!= true)//do not append "0"
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                            }
-                            
-                            if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                            {
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x00,dynScopedBufPtr)!= true)//Appending '0' to OID in response
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                            }
-                        }
+                }
+                else
+                {
+                    // do nothing
+                }
+                /*  If the request command processing is failed, update
+                    the error status, index accordingly and response pdu.*/
+                if(tempRet == 0u &&(pduDbPtr->pduType != (uint8_t)SNMP_SET))
+                {
+                    if(dynScopedBufPtr->length >= dynScopedBufPtr->maxlength)
+                    {    
+                        bSnmpV3GetBulkResError = true;
+                        break;
                     }
-                    /*  If the request command processing is failed, update
-                            the error status, index accordingly and response pdu.*/
-                    if(tempRet == 0u &&(pduDbPtr->pduType != SNMP_SET))
+                    if(((pduDbPtr->pduType == (uint8_t)SNMP_GET_NEXT)|| (pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK))&&pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)
                     {
-                        if(dynScopedBufPtr->length >= dynScopedBufPtr->maxlength)
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)SNMP_END_OF_MIB_VIEW,dynScopedBufPtr)!= true)
                         {    
                             bSnmpV3GetBulkResError = true;
                             break;
                         }
-                        if(((pduDbPtr->pduType == SNMP_GET_NEXT)|| (pduDbPtr->pduType == SNMP_V2C_GET_BULK))&&pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)
-                        {
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_END_OF_MIB_VIEW,dynScopedBufPtr)!= true)
-                            {    
-                                bSnmpV3GetBulkResError = true;
-                                break;
-                            }
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr)!= true)
-                            {    
-                                bSnmpV3GetBulkResError = true;
-                                break;
-                            }
-                            //if get bulk response reaches END of mIB view break from the loop.
-                            noOfVarbindreq = 0;
-                            Getbulk_N = 0u;
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(0U, dynScopedBufPtr)!= true)
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
                         }
-                
-                    }
-                    dynScopedBufPtr->length = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.length;
-                    tempOffset = dynScopedBufPtr->length;
-                    pduLength = dynScopedBufPtr->length-(varStructLenOffset+1);
-                    dynScopedBufPtr->length = varStructLenOffset;
-                    TCPIP_SNMPv3_DataCopyToProcessBuff(pduLength,dynScopedBufPtr);
-                    dynScopedBufPtr->length = tempOffset;
-
-                    /* to avoid Dynamic out buffer crash   we need to calculate buffer
-                    availability .Approximatly the next variable bind length should be less than 30.*/
-
-                    if(dynScopedBufPtr->length>= dynScopedBufPtr->maxlength)
-                    {
-                        noOfVarbindreq = 0;
+                        //if get bulk response reaches END of mIB view break from the loop.
+                        noOfVarbindreq = 0U;
                         Getbulk_N = 0u;
-                        break;
                     }
-                    /*  Decide on the number of Non repetition variables remained to
-                            be processed, decide the course of state machine.*/
-                    if((pduDbPtr->pduType==GET_BULK_REQUEST) && (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)
-                                                                            &&( Getbulk_N == 0u))
-                    {
-                        smSnmp=SM_MAX_REPETITIONS;
-                    }
-                    else
-                    {
-                        smSnmp=SM_VARSTRUCT_LEN_OFFSET;
-                    }
-                
-                    snmpStkDcptMemStubPtr->getZeroInstance = false;
-                    break;
-                case SM_MAX_REPETITIONS:
-                    maxRepeatationOffset = (uint32_t)TCPIP_SNMP_GetRXOffset();
-                    /*Process each variable in request as Get_Next for
-                      Getbulk_M (Max_repetition) times */
-                    for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
-                    {
-                        TCPIP_SNMP_SetRXOffset((uint32_t)maxRepeatationOffset);
 
-                        //Process every veriable in the request.
-                        for(varBindCntr=0;varBindCntr<Getbulk_R;varBindCntr++)
+                }
+                dynScopedBufPtr->length = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf.length;
+                tempOffset = dynScopedBufPtr->length;
+                pduLength = dynScopedBufPtr->length - (varStructLenOffset + 1U);
+                dynScopedBufPtr->length = varStructLenOffset;
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)pduLength, dynScopedBufPtr);
+                dynScopedBufPtr->length = tempOffset;
+
+                /* to avoid Dynamic out buffer crash   we need to calculate buffer
+                   availability .Approximatly the next variable bind length should be less than 30.*/
+
+                if(dynScopedBufPtr->length>= dynScopedBufPtr->maxlength)
+                {
+                    noOfVarbindreq = 0U;
+                    Getbulk_N = 0u;
+                    break;
+                }
+                /*  Decide on the number of Non repetition variables remained to
+                    be processed, decide the course of state machine.*/
+                if((pduDbPtr->pduType==(uint8_t)GET_BULK_REQUEST) && (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)
+                        &&( Getbulk_N == 0u))
+                {
+                    smSnmp=(int)SM_MAX_REPETITIONS;
+                }
+                else
+                {
+                    smSnmp=(int)SM_VARSTRUCT_LEN_OFFSET;
+                }
+
+                snmpStkDcptMemStubPtr->getZeroInstance = false;
+                break;
+
+            case (int)SM_MAX_REPETITIONS:
+                maxRepeatationOffset = (uint16_t)TCPIP_SNMP_GetRXOffset();
+                /*Process each variable in request as Get_Next for
+                  Getbulk_M (Max_repetition) times */
+                for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
+                {
+                    TCPIP_SNMP_SetRXOffset((uint32_t)maxRepeatationOffset);
+
+                    //Process every veriable in the request.
+                    for(varBindCntr=0;varBindCntr<Getbulk_R;varBindCntr++)
+                    {
+                        if(noOfVarbindreq != 0U)
                         {
-                            if(noOfVarbindreq != 0)
+                            noOfVarbindreq--;
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                        if(varBindCntr==0u)
+                        {
+                            varIndex=(noOfVarbindreq - Getbulk_R);
+                        }
+
+                        varIndex++;
+
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr)!= true)
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                        varStructLenOffset= dynScopedBufPtr->length;
+                        if(TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr)!= true)
+                        {    
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                        succesor=repeatCntr;
+
+                        // Decode variable length structure
+                        if(TCPIP_SNMP_StructureIsValid(&varBindHeaderLen) == 0U)
+                        {
+                            F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
+                            break;
+                        }
+                        // Decode next object
+                        if(!TCPIP_SNMP_OIDIsValid(OIDValue, &OIDlen))
+                        {
+                            F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
+                            break;
+                        }
+
+                        // For Get & Get-Next, value must be NULL.
+                        if ( pduDbPtr->pduType != (uint8_t)SET_REQUEST )
+                        {
+                            if(!TCPIP_SNMP_DataIsASNNull())
                             {
-                                noOfVarbindreq--;
+                                break;
+                            }
+                        }
+
+                        oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,OIDValue, OIDlen, &OIDInfo);
+                        if(oidLookUpRet == (uint8_t)SNMP_END_OF_MIB_VIEW)
+                        {
+                            tempRet = TCPIP_SNMP_NextLeafGet(TCPIP_SNMP_FileDescrGet(),&OIDInfo) ? 1U : 0U;
+                        }
+                        if(oidLookUpRet == 0U)
+                        {
+                            uint8_t templen=OIDlen;
+                            uint8_t *ptroid=OIDValue;
+
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr)!= true)
+                            {    
+                                bSnmpV3GetBulkResError = true;
+                                break;
+                            }
+                            if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen + 1U, dynScopedBufPtr)!= true)
+                                {    
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                                OIDlen += 1U;
+                            }
+                            else if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr) != true)
+                            {
+                                bSnmpV3GetBulkResError = true;
+                                break;
                             }
                             else
                             {
-                                break;
+                                // do nothing
                             }
-                            
-                            if(varBindCntr==0u)
-                            {
-                                varIndex=(noOfVarbindreq - Getbulk_R);
-                            }
-                
-                            varIndex++;
 
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr)!= true)
+                            //Put OID
+                            while( templen--  != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr) != true)
+                                {
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                            }
+                            if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynScopedBufPtr) != true)
+                                {
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                            }
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)SNMP_END_OF_MIB_VIEW,dynScopedBufPtr) != true)
                             {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
                             }
-                            varStructLenOffset= dynScopedBufPtr->length;
-                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr)!= true)
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynScopedBufPtr)!= true)
                             {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
                             }
-                            succesor=repeatCntr;
-                
-                            // Decode variable length structure
-                            if(TCPIP_SNMP_StructureIsValid(&varBindHeaderLen)==false)
-                            {
-                                _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
-                                break;
-                            }
-                            // Decode next object
-                            if(!TCPIP_SNMP_OIDIsValid(OIDValue, &OIDlen))
-                            {
-                                _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);
-                                break;
-                            }
-                            
-                            // For Get & Get-Next, value must be NULL.
-                            if ( pduDbPtr->pduType != (uint8_t)SET_REQUEST )
-                            {
-                                if(!TCPIP_SNMP_DataIsASNNull())
-                                    break;
-                            }
-                
-                            oidLookUpRet = TCPIP_SNMP_OIDFindInMgmtInfoBase(TCPIP_SNMP_FileDescrGet(),pduDbPtr,OIDValue, OIDlen, &OIDInfo);
-                            if(oidLookUpRet == SNMP_END_OF_MIB_VIEW)
-                            {
-                                tempRet = TCPIP_SNMP_NextLeafGet(TCPIP_SNMP_FileDescrGet(),&OIDInfo);
-                            }
-                            if(oidLookUpRet == false)
-                            {
-                                uint8_t templen=OIDlen;
-                                uint8_t *ptroid=OIDValue;
-                                
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr)!= true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                                if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr)!= true)
-                                    {    
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                    OIDlen += 1;
-                                }
-                                else if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr) != true)
-                                {
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                
-                                //Put OID
-                                while( templen-- )
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr) != true)
-                                    {
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                }
-                                if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynScopedBufPtr) != true)
-                                    {
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                }
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_END_OF_MIB_VIEW,dynScopedBufPtr) != true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynScopedBufPtr)!= true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
 
-                                noOfVarbindreq = 0;
+                            noOfVarbindreq = 0U;
 
-                            }
-                            else if(tempRet != 0)//if(oidLookUpRet != SNMP_END_OF_MIB_VIEW)
-                            {
-                                tempRet = TCPIP_SNMP_ProcessGetBulkVar(&OIDInfo, &OIDValue[0],&OIDlen,&succesor,pduDbPtr);
-                            }
-                            if ( tempRet == 0u )
-                            {
-                                uint8_t templen=OIDlen;
-                                uint8_t *ptroid=OIDValue;
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr) != true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                                if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1,dynScopedBufPtr)!= true) //for appending "0"
-                                    {    
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                    OIDlen += 1;
-                                }
-                                else if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr)!=  true)
-                                {
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }               
-                                //Put OID
-                                while( templen-- )
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr) != true)
-                                    {    
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                }
-                
-                                /*Do send back the Same OID if get_next is EndOfMibView. Do not
-                                  append zero to this OID*/
-                                
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_END_OF_MIB_VIEW,dynScopedBufPtr) != true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynScopedBufPtr) != true)
-                                {    
-                                    bSnmpV3GetBulkResError = true;
-                                    break;
-                                }
-                
-                                if(snmpStkDcptMemStubPtr->appendZeroToOID)
-                                {
-                                    if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynScopedBufPtr) != true)
-                                    {    
-                                        bSnmpV3GetBulkResError = true;
-                                        break;
-                                    }
-                                }
-                                noOfVarbindreq = 0;
-                                
-                            }
-
-                            dynScopedBufPtr = &Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf;
-                            tempOffset = dynScopedBufPtr->length;
-                            pduLength = dynScopedBufPtr->length -(varStructLenOffset+1);
-                            dynScopedBufPtr->length = varStructLenOffset;
-                            TCPIP_SNMPv3_DataCopyToProcessBuff(pduLength,dynScopedBufPtr);
-                            dynScopedBufPtr->length = tempOffset;
-
-                            /* if length dynamic buffer length increases more than the allocated memory
-                            then break from the loop.*/
-                            if(dynScopedBufPtr->length>= dynScopedBufPtr->maxlength)
-                            {
-                                noOfVarbindreq = 0;
-                                Getbulk_N = 0u;
+                        }
+                        else if(tempRet != 0U)//if(oidLookUpRet != SNMP_END_OF_MIB_VIEW)
+                        {
+                            tempRet = TCPIP_SNMP_ProcessGetBulkVar(&OIDInfo, &OIDValue[0],&OIDlen,&succesor,pduDbPtr);
+                        }
+                        else
+                        {
+                            // do nothing
+                        }
+                        if ( tempRet == 0u )
+                        {
+                            uint8_t templen=OIDlen;
+                            uint8_t *ptroid=OIDValue;
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr) != true)
+                            {    
                                 bSnmpV3GetBulkResError = true;
                                 break;
                             }
-                            tempRet = 0xFF;
-                        }//for(varBindCntr=0;varBindCntr<Getbulk_R;varBindCntr++)
-                    }//for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
-                    /* check length*/
-                    break;
+                            if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen+1U,dynScopedBufPtr)!= true) //for appending "0"
+                                {    
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                                OIDlen += 1U;
+                            }
+                            else if(TCPIP_SNMPv3_DataCopyToProcessBuff(OIDlen,dynScopedBufPtr)!=  true)
+                            {
+                                bSnmpV3GetBulkResError = true;
+                                break;
+                            }               
+                            else
+                            {
+                                // do nothing
+                            }
+                            //Put OID
+                            while( templen--  != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(*ptroid++,dynScopedBufPtr) != true)
+                                {    
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                            }
 
-                default:
-                    return false;
-            }
-            if(noOfVarbindreq == 0)
-            {
+                            /*Do send back the Same OID if get_next is EndOfMibView. Do not
+                              append zero to this OID*/
+
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)SNMP_END_OF_MIB_VIEW,dynScopedBufPtr) != true)
+                            {    
+                                bSnmpV3GetBulkResError = true;
+                                break;
+                            }
+                            if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynScopedBufPtr) != true)
+                            {    
+                                bSnmpV3GetBulkResError = true;
+                                break;
+                            }
+
+                            if(snmpStkDcptMemStubPtr->appendZeroToOID != 0U)
+                            {
+                                if(TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynScopedBufPtr) != true)
+                                {    
+                                    bSnmpV3GetBulkResError = true;
+                                    break;
+                                }
+                            }
+                            noOfVarbindreq = 0U;
+
+                        }
+
+                        dynScopedBufPtr = &Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf;
+                        tempOffset = dynScopedBufPtr->length;
+                        pduLength = dynScopedBufPtr->length -(varStructLenOffset+1U);
+                        dynScopedBufPtr->length = varStructLenOffset;
+                        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)pduLength,dynScopedBufPtr);
+                        dynScopedBufPtr->length = tempOffset;
+
+                        /* if length dynamic buffer length increases more than the allocated memory
+                           then break from the loop.*/
+                        if(dynScopedBufPtr->length>= dynScopedBufPtr->maxlength)
+                        {
+                            noOfVarbindreq = 0U;
+                            Getbulk_N = 0u;
+                            bSnmpV3GetBulkResError = true;
+                            break;
+                        }
+                        tempRet = 0xFFU;
+                    }//for(varBindCntr=0;varBindCntr<Getbulk_R;varBindCntr++)
+                }//for(repeatCntr=0;repeatCntr<Getbulk_M;repeatCntr++)
+                /* check length*/
                 break;
-            }
+
+            default:
+                doRet = true;
+                retRes = false;
+                break;
+        }
+
+        if(doRet)
+        {
+            return retRes;
+        }
+
+        if(noOfVarbindreq == 0U)
+        {
+            break;
+        }
     }
 
     if(bSnmpV3GetBulkResError && (dynScopedBufPtr->length >= dynScopedBufPtr->maxlength))
     {
-            if(pduDbPtr->pduType == SNMP_V2C_GET_BULK)
+            if(pduDbPtr->pduType == (uint8_t)SNMP_V2C_GET_BULK)
             {
-                pduLength = dynScopedBufPtr->length - (varStructLenOffset-1);
+                pduLength = dynScopedBufPtr->length - (varStructLenOffset-1U);
                 dynScopedBufPtr->length = dynScopedBufPtr->length - pduLength;
             }
             else
             {
                 dynScopedBufPtr->length = varBindHeaderOffset_3;
-                TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
-                _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_TOO_BIG,varIndex,dynScopedBufPtr);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
+                F_SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_TOO_BIG,varIndex,dynScopedBufPtr);
             }
     }
 
@@ -2595,91 +2799,91 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
         tempScopedData = Snmpv3StackDcptStubPtr->ScopedPduRespnsBuf;
 
         // update length for variable binds
-        scoped_pdu_len_3.Val = (dynScopedBufPtr->length-3)-varBindHeaderOffset_3;
-        dynScopedBufPtr->length = varBindHeaderOffset_3+1;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_3.v[1],dynScopedBufPtr);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_3.v[0],dynScopedBufPtr);
+        scoped_pdu_len_3.Val = (dynScopedBufPtr->length-3U)-varBindHeaderOffset_3;
+        dynScopedBufPtr->length = varBindHeaderOffset_3+1U;
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_3.v[1],dynScopedBufPtr);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_3.v[0],dynScopedBufPtr);
         dynScopedBufPtr->length = scopedpduHeaderOffset;
 
         //update the length for get response pduLenOffset
-        scoped_pdu_len_2.Val = (dynScopedBufPtr->length-3)-pduLenOffset;
-        dynScopedBufPtr->length = pduLenOffset+1;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_2.v[1],dynScopedBufPtr);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_2.v[0],dynScopedBufPtr);
+        scoped_pdu_len_2.Val = (dynScopedBufPtr->length-3U)-pduLenOffset;
+        dynScopedBufPtr->length = pduLenOffset+1U;
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_2.v[1],dynScopedBufPtr);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_2.v[0],dynScopedBufPtr);
         dynScopedBufPtr->length = scopedpduHeaderOffset;
 
-        scoped_pdu_len_1.Val = dynScopedBufPtr->length-4;
-        if((scoped_pdu_len_1.Val >= 0x80) && (scoped_pdu_len_1.Val <= 0xFF))
+        scoped_pdu_len_1.Val = dynScopedBufPtr->length-4U;
+        if((scoped_pdu_len_1.Val >= 0x80U) && (scoped_pdu_len_1.Val <= 0xFFU))
         {// total scoped pdu length decreamented by 1
-            dynScopedBufPtr->length = contextNameOffset+1;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x30,dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x81,dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.Val,dynScopedBufPtr);
+            dynScopedBufPtr->length = contextNameOffset+1U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x30U,dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x81U,dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)scoped_pdu_len_1.Val,dynScopedBufPtr);
             dynScopedBufPtr->length = scopedpduHeaderOffset;
             tempScopedData.head++;
             tempScopedData.length--;
         }
-        else if((scoped_pdu_len_1.Val > 0xFF) && (scoped_pdu_len_1.Val < 0xFFFF))
+        else if((scoped_pdu_len_1.Val > 0xFFU) && (scoped_pdu_len_1.Val < 0xFFFFU))
         {
             dynScopedBufPtr->length = contextNameOffset;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x30,dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.v[1],dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.v[0],dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x30U,dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.v[1],dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.v[0],dynScopedBufPtr);
             dynScopedBufPtr->length = scopedpduHeaderOffset;
         }
         else
         {// total scoped PDU length decremented by 2
-            dynScopedBufPtr->length = contextNameOffset+2;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x30,dynScopedBufPtr);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(scoped_pdu_len_1.Val,dynScopedBufPtr);
+            dynScopedBufPtr->length = contextNameOffset+2U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x30U,dynScopedBufPtr);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)scoped_pdu_len_1.Val,dynScopedBufPtr);
             dynScopedBufPtr->length = scopedpduHeaderOffset;
             tempScopedData.head=tempScopedData.head+2;
-            tempScopedData.length=tempScopedData.length-2;
+            tempScopedData.length=tempScopedData.length-2U;
         }
 
         configPrivType = TCPIP_SNMPV3_PrivProtocolGet(Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityName);
         //DES padding
         if(configPrivType == SNMPV3_DES_PRIV)
         {
-            if((desPaddingCntr=tempScopedData.length %8)!=0)
+            if((desPaddingCntr = (uint8_t)tempScopedData.length %8U)!=0U)
             {
-                desPaddingCntr = 8-desPaddingCntr;
-                tempScopedData.length += desPaddingCntr;
+                desPaddingCntr = 8U - desPaddingCntr;
+                tempScopedData.length += (uint16_t)desPaddingCntr;
             }
         }
 
         totalPdulength.Val = tempScopedData.length + \
                      Snmpv3StackDcptStubPtr->PduHeaderBuf.length + \
-                     3; // asn_int+len+version
+                     3U; // asn_int+len+version
 
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02)==0x02)
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02U)==0x02U)
         {
             tempPtr=tempBuf;
-            *tempPtr++=0X04;
-            if((tempScopedData.length >= 0x80) && (tempScopedData.length <= 0xFF))
+            *tempPtr++=0X04U;
+            if((tempScopedData.length >= 0x80U) && (tempScopedData.length <= 0xFFU))
             {
-                *tempPtr++=0x81;
-                *tempPtr=tempScopedData.length;
+                *tempPtr++=0x81U;
+                *tempPtr=(uint8_t)tempScopedData.length;
                 tempCntr=3; //0x04(encrypted pkt),0x81,len
             }
-            else if((tempScopedData.length > 0xFF) && (tempScopedData.length < 0xFFFF))
+            else if((tempScopedData.length > 0xFFU) && (tempScopedData.length < 0xFFFFU))
             {
-                *tempPtr++=0x82;
-                *tempPtr++=tempScopedData.length>>8;
-                *tempPtr=tempScopedData.length;
+                *tempPtr++=0x82U;
+                *tempPtr++=(uint8_t)(tempScopedData.length>>8);
+                *tempPtr=(uint8_t)tempScopedData.length;
                 tempCntr=4; //0x04(encrypted pkt),0x81,len_1,len_0
             }
             else
             {
-                *tempPtr=tempScopedData.length;
+                *tempPtr=(uint8_t)tempScopedData.length;
                 tempCntr=2; //0x04(encrypted pkt),len
             }
         }
 
           
-        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead= 0x00;
-        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = 0x00;
+        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead= NULL;
+        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = 0U;
         Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.snmpMsgHead = NULL;
         Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.msgAuthParamOffsetOutWholeMsg = NULL;
         Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.scopedPduOffset =  NULL;
@@ -2704,24 +2908,24 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
 
         totalPdulength.Val+=tempCntr;
 
-        if((totalPdulength.Val >= 0x80) && (totalPdulength.Val <= 0xFF))
+        if((totalPdulength.Val >= 0x80U) && (totalPdulength.Val <= 0xFFU))
         {
-            *outBufPtr++=0x81;
-            *outBufPtr++=totalPdulength.Val;
+            *outBufPtr++=0x81U;
+            *outBufPtr++=(uint8_t)totalPdulength.Val;
         }
-        else if((totalPdulength.Val > 0xFF) && (totalPdulength.Val < 0xFFFF))
+        else if((totalPdulength.Val > 0xFFU) && (totalPdulength.Val < 0xFFFFU))
         {
-            *outBufPtr++=0x82;
+            *outBufPtr++=0x82U;
             *outBufPtr++=totalPdulength.v[1];
             *outBufPtr++=totalPdulength.v[0];
         }
         else
         {
-            *outBufPtr++=totalPdulength.Val;
+            *outBufPtr++=(uint8_t)totalPdulength.Val;
         }
 
         *outBufPtr++=ASN_INT;
-        *outBufPtr++=0x1;
+        *outBufPtr++=0x1U;
         *outBufPtr++=SNMP_V3;
 
         Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.msgAuthParamOffsetOutWholeMsg=(uint8_t*)(outBufPtr+Snmpv3StackDcptStubPtr->PduHeaderBuf.msgAuthParamOffset);
@@ -2732,7 +2936,7 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
         }
 
         //Copy Scoped PDU to the Out Buffer
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02)==0x02) //Encrypted message
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & 0x02U)==0x02U) //Encrypted message
         {
             //Copy Packet Auth indicator, length
             for(i=0;i<tempCntr;i++)
@@ -2752,12 +2956,12 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
         i=0;
         *outBufPtr++=tempScopedData.head[i++];//0x30
 
-        if(tempScopedData.head[1] == 0x81)
+        if(tempScopedData.head[1] == 0x81U)
         {
             *outBufPtr++=tempScopedData.head[i++];//0x81
             *outBufPtr++=tempScopedData.head[i++];//len_0
         }
-        else if(tempScopedData.head[1] == 0x82)
+        else if(tempScopedData.head[1] == 0x82U)
         {
             *outBufPtr++=tempScopedData.head[i++]; //0x82
             *outBufPtr++=tempScopedData.head[i++]; //len_1
@@ -2776,49 +2980,55 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
         }
 
         /*Encrypt the Response to the messgae originator*/
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & NO_REPORT_PRIVACY_AND_AUTH_PROVIDED)
-            ==NO_REPORT_PRIVACY_AND_AUTH_PROVIDED) //Encrypted message
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & (uint8_t)NO_REPORT_PRIVACY_AND_AUTH_PROVIDED)
+            ==(uint8_t)NO_REPORT_PRIVACY_AND_AUTH_PROVIDED) //Encrypted message
         {
-             /*Rxed SNMPv3 message is encrypted. Hence Response should be encrypted*/
-             Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = outBufPtr-Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+            /*Rxed SNMPv3 message is encrypted. Hence Response should be encrypted*/
+            msgLen = outBufPtr - Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+            Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = (uint16_t)msgLen;
 
-             /*If user privacy protocol is AES*/
-             if(configPrivType == SNMPV3_AES_PRIV)  //user privacy protocol is AES
-             {
-                if(SNMPv3AESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf) != SNMPV3_MSG_PRIV_PASS)
+            /*If user privacy protocol is AES*/
+            if(configPrivType == SNMPV3_AES_PRIV)  //user privacy protocol is AES
+            {
+                if(SNMPv3AESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf) != (uint8_t)SNMPV3_MSG_PRIV_PASS)
                 {
-                   return SNMPV3_MSG_PRIV_FAIL;
+                    return false;
                 }
-             }
-             else if(configPrivType == SNMPV3_DES_PRIV)  //user privacy protocol is DES
-             {
+            }
+            else if(configPrivType == SNMPV3_DES_PRIV)  //user privacy protocol is DES
+            {
                 //DES PADDING
                 for(i=0;i<desPaddingCntr;i++)
                 {
-                    *outBufPtr++=0x00;
+                    *outBufPtr++=0x00U;
                 }
                 if(configPrivType == SNMPV3_DES_PRIV)
                 {
-                    if(SNMPv3DESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf) != SNMPV3_MSG_PRIV_PASS)
+                    if(SNMPv3DESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf) != (uint8_t)SNMPV3_MSG_PRIV_PASS)
                     {
-                        return SNMPV3_MSG_PRIV_FAIL;
+                        return false;
                     }
                 }               
+            }
+            else
+            {
+                // do nothing
             }
             /*If user privacy Protocol is DES*/
             //snmpV3DESDecryptRxedScopedPdu();
         }
 
         /* Authenticate the whole message to be transmitted*/
-        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED)
-            ==NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED) //Authenticated message
+        if((Snmpv3StackDcptStubPtr->SnmpSecurityLevel & (uint8_t)NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED)
+            ==(uint8_t)NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED) //Authenticated message
         {
              /*Rxed SNMPv3 message is Authenticated.Send authentication parameters for the Response*/
-            Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = outBufPtr-Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+            msgLen = outBufPtr - Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+            Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = (uint16_t)msgLen;
              /*If user authentication is HAMC-MD5-96*/
-            if(SNMPv3AuthenticateTxPduForDataIntegrity(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf)!=SNMPV3_MSG_AUTH_PASS)
+            if(SNMPv3AuthenticateTxPduForDataIntegrity(&Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf)!=(uint8_t)SNMPV3_MSG_AUTH_PASS)
             {
-                return SNMPV3_MSG_AUTH_FAIL;
+                return false;
             }
 
             tempPtr = outBufPtr;
@@ -2830,7 +3040,8 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
             outBufPtr = tempPtr;
         }
 
-        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = outBufPtr-Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+        msgLen = outBufPtr - Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgHead;
+        Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen = (uint16_t)msgLen;
 
         snmpStkDcptMemStubPtr->outPduBufData.length  = Snmpv3StackDcptStubPtr->OUTPduWholeMsgBuf.wholeMsgLen;
 
@@ -2839,21 +3050,25 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
 }
 
 
-static bool _SNMP_V3ContextNameLengthGet(uint16_t *len)
+static bool F_SNMP_V3ContextNameLengthGet(uint16_t *len)
 {
-    TCPIP_UINT32_VAL tempLen;
+    uint16_t tempLen = 0U;
     uint8_t retLen = 0;
 
     *len =0;
 
     if (!IS_OCTET_STRING(TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData)))
+    {
         return false;
+    }
 
     // Retrieve structure length
-    retLen= TCPIP_SNMP_LengthIsValid((uint16_t *)&tempLen.Val);
-    if (!retLen)
+    retLen= TCPIP_SNMP_LengthIsValid(&tempLen);
+    if (retLen == 0U)
+    {
         return false;
-    *len = tempLen.Val;
+    }
+    *len = tempLen;
     return true;
 }
 
@@ -2883,7 +3098,7 @@ Remarks:
     None.
     
 ***************************************************************************/
-static uint8_t _SNMPv3_FindOIDsFrmIncmingV3Req(uint16_t pdulen)
+static uint8_t F_SNMPv3_FindOIDsFrmIncmingV3Req(uint16_t pdulen)
 {
     uint8_t varCount=0;
     uint16_t prevUDPRxOffset;
@@ -2894,15 +3109,17 @@ static uint8_t _SNMPv3_FindOIDsFrmIncmingV3Req(uint16_t pdulen)
     snmpPduLen=pdulen;
 
     prevUDPRxOffset=(uint16_t)TCPIP_SNMP_GetRXOffset();
-    while(snmpPduLen)
+    while(snmpPduLen != 0U)
     {
-        if(!TCPIP_SNMP_StructureIsValid(&varBindLen))
-            return false;
+        if(TCPIP_SNMP_StructureIsValid(&varBindLen) == 0U)
+        {
+            return 0U;
+        }
 
         varCount++;
-        snmpPduLen=snmpPduLen
-                                -1      //  1   byte for STRUCTURE identifier
-                                -1  //  1  byte for varbind length
+        snmpPduLen = snmpPduLen
+                                -1U      //  1   byte for STRUCTURE identifier
+                                -1U  //  1  byte for varbind length
                                 -varBindLen;
         tempPos = TCPIP_SNMP_GetRXOffset()+varBindLen;
         TCPIP_SNMP_SetRXOffset((uint32_t)tempPos);
@@ -2939,7 +3156,7 @@ Remarks:
     None.
     
 ***************************************************************************/
-static void _SNMPv3_ConstructReportPDU(SNMPV3MSGDATA *dynScopedBufPtr)
+static void F_SNMPv3_ConstructReportPDU(SNMPV3MSGDATA *dynScopedBufPtr)
 {
     static const uint8_t    usmStatEngineIds[]={43,6,1,6,3,15,1,1,4,0};
     uint8_t reportPduLenOffset=0;
@@ -2947,32 +3164,34 @@ static void _SNMPv3_ConstructReportPDU(SNMPV3MSGDATA *dynScopedBufPtr)
     uint16_t    varbindPairOffset1=0;
     
 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynScopedBufPtr);
     varbindPairOffset1 = dynScopedBufPtr->length;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynScopedBufPtr);
 
 /* put  usm OID */
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr);
-    usmLen = sizeof(usmStatEngineIds);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(usmLen,dynScopedBufPtr);
-    while(usmLen--)
-        TCPIP_SNMPv3_DataCopyToProcessBuff(usmStatEngineIds[i++],dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynScopedBufPtr);
+    usmLen = (uint8_t)sizeof(usmStatEngineIds);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(usmLen,dynScopedBufPtr);
+    while(usmLen-- != 0U)
+    {
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(usmStatEngineIds[i++],dynScopedBufPtr);
+    }
 
 /* put engine ID stat value */  
-    TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_COUNTER32,dynScopedBufPtr);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_COUNTER32,dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynScopedBufPtr);
     TCPIP_UINT32_VAL engId;
     engId.Val = Snmpv3StackDcptStubPtr->UsmStatsEngineID;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[3],dynScopedBufPtr);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[2],dynScopedBufPtr);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[1],dynScopedBufPtr);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[0],dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[3],dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[2],dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[1],dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engId.v[0],dynScopedBufPtr);
     
-    reportPduLenOffset = dynScopedBufPtr->length;
+    reportPduLenOffset = (uint8_t)dynScopedBufPtr->length;
 
-    usmLen = dynScopedBufPtr->length - (varbindPairOffset1+1) ;
+    usmLen = (uint8_t)(dynScopedBufPtr->length - (varbindPairOffset1 + 1U));
     dynScopedBufPtr->length = varbindPairOffset1;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(usmLen,dynScopedBufPtr);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(usmLen,dynScopedBufPtr);
     
     dynScopedBufPtr->length = reportPduLenOffset;
 }
@@ -3006,7 +3225,7 @@ Returns:
 Remarks:
     None.
 ***************************************************************************/
-static void _SNMPv3_SetErrorStatus(uint16_t errorStatusOffset,
+static void F_SNMPv3_SetErrorStatus(uint16_t errorStatusOffset,
                            uint16_t errorIndexOffset,
                            SNMP_ERR_STATUS errorStatus,
                            uint8_t errorIndex,SNMPV3MSGDATA *dynScopedPduPutBuf)
@@ -3015,11 +3234,11 @@ static void _SNMPv3_SetErrorStatus(uint16_t errorStatusOffset,
 
     prevOffset = dynScopedPduPutBuf->length;
     dynScopedPduPutBuf->length = errorStatusOffset;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(errorStatus,dynScopedPduPutBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)errorStatus,dynScopedPduPutBuf);
 
     
     dynScopedPduPutBuf->length = errorIndexOffset;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(errorIndex,dynScopedPduPutBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(errorIndex,dynScopedPduPutBuf);
 
     dynScopedPduPutBuf->length = prevOffset;
 }
@@ -3050,7 +3269,7 @@ Return Values:
 Remarks:
     None.
 ***************************************************************************/
-static uint8_t _SNMPv3_CheckIfValidAuthStructure(uint16_t* dataLen)
+static uint8_t F_SNMPv3_CheckIfValidAuthStructure(uint16_t* dataLen)
 {
     TCPIP_UINT16_VAL tempLen;
     uint8_t headerBytes;
@@ -3061,39 +3280,41 @@ static uint8_t _SNMPv3_CheckIfValidAuthStructure(uint16_t* dataLen)
     
 
     if ( !IS_STRUCTURE(authStructure) && !IS_SNMPV3_AUTH_STRUCTURE(authStructure) )
-        return false;
+    {
+        return 0U;
+    }
 
     
     // Initialize length value.
     tempLen.Val = 0;
-    headerBytes = 0;
 
     tempData= TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
     tempLen.v[0] = tempData;
-    if ( tempData & 0x80 )
+    if ( (tempData & 0x80U) != 0U  )
     {
-        tempData &= 0x7F;
+        tempData &= 0x7FU;
 
         // We do not support any length byte count of more than 2
         // i.e. total length value must not be more than 16-bit.
         if ( tempData > 2u )
-            return false;
+        {
+            return 0U;
+        }
 
         // Total length bytes are 0x80 itself plus tempData.
-        headerBytes = tempData + 1;
+        headerBytes = tempData + 1U;
 
         // Get upto 2 bytes of length value.
-        while( tempData-- )
+        while( tempData--  != 0U)
         {
          //   tempLen.v[tempData] = TCPIP_SNMPv3_WholeMsgBufferDataGet(Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.snmpMsgHead,&tempPos);
             tempLen.v[tempData] = TCPIP_SNMP_GetDataFromUDPBuff(&gSnmpDcpt.udpGetBufferData);
         }
     }
     else
+    {
         headerBytes = 1;
-
-    if ( !headerBytes )
-        return false;
+    }
 
     Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.scopedPduAuthStructVal=authStructure;
     Snmpv3StackDcptStubPtr->InPduWholeMsgBuf.scopedPduStructLen=tempLen.Val;
@@ -3113,7 +3334,7 @@ static SNMPV3_PRIV_PROT_TYPE TCPIP_SNMPV3_PrivProtocolGet(uint8_t *username)
     uint8_t *userSecurityName=NULL;
     uint8_t i=0;
 
-    for(i=0;i<TCPIP_SNMPV3_USM_MAX_USER;i++)
+    for(i=0;i<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;i++)
     {
         userSecurityName = Snmpv3StackDcptStubPtr->UserInfoDataBase[i].userName;
         if(strcmp((char *)username,(char *)userSecurityName) == 0)
@@ -3125,8 +3346,8 @@ static SNMPV3_PRIV_PROT_TYPE TCPIP_SNMPV3_PrivProtocolGet(uint8_t *username)
     return SNMPV3_NO_PRIV;
 }
 
-static uint8_t gSNMPV3TrapSecurityLevel = NO_REPORT_NO_PRIVACY_NO_AUTH;
-#define INVALID_INDEX 0xFF
+static uint8_t gSNMPV3TrapSecurityLevel = (uint8_t)NO_REPORT_NO_PRIVACY_NO_AUTH;
+#define INVALID_INDEX 0xFFU
 
 /****************************************************************************
 Function:
@@ -3155,7 +3376,7 @@ Return Values:
 Remarks:
     None.
 ***************************************************************************/
-uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex)
+static uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex)
 {
     uint8_t *userSecurityName=NULL;
     uint8_t userDBsecurityLevel=0;
@@ -3165,24 +3386,32 @@ uint8_t TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(uint8_t targetIndex)
     uint8_t i=0;
 
     trapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet((STD_BASED_SNMPV3_SECURITY_LEVEL)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
-    if(trapSecurityLevel == INVALID_MSG)
+    if(trapSecurityLevel == (uint8_t)AUTH_INVALID)
+    {
         return INVALID_INDEX;
+    }
 
-    for(i=0;i<TCPIP_SNMPV3_USM_MAX_USER;i++)
+    for(i=0;i<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;i++)
     {
         userSecurityName = Snmpv3StackDcptStubPtr->UserInfoDataBase[i].userName;
         userDBsecurityLevel = SNMPv3GetSecurityLevel(i);
-        userTrapSecLen = strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
+        userTrapSecLen = (uint8_t)strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
         userTrapSecurityName = Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName;
 
         if(userTrapSecLen != Snmpv3StackDcptStubPtr->UserInfoDataBase[i].userNameLength)
-                continue;
+        {
+            continue;
+        }
         if(strncmp((char *)userTrapSecurityName,(char *)userSecurityName,userTrapSecLen) == 0)
         {
             if(trapSecurityLevel == userDBsecurityLevel)
+            {
                 return i;
+            }
             else
+            {
                 continue;
+            }
         }
     }
 
@@ -3238,21 +3467,29 @@ bool TCPIP_SNMPv3_CmprTrapSecNameAndSecLvlWithUSMDb(uint8_t tragetIndex,
     uint8_t i=0;
 
     trapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(securityLevel);
-    if(trapSecurityLevel == INVALID_MSG)
+    if(trapSecurityLevel == (uint8_t)AUTH_INVALID)
+    {
         return false;
+    }
 
-    for(i=0;i<TCPIP_SNMPV3_USM_MAX_USER;i++)
+    for(i=0;i<(uint8_t)TCPIP_SNMPV3_USM_MAX_USER;i++)
     {
         userSecurityName = Snmpv3StackDcptStubPtr->UserInfoDataBase[i].userName;
         userDBsecurityLevel = SNMPv3GetSecurityLevel(i);
         if(userTrapSecLen != Snmpv3StackDcptStubPtr->UserInfoDataBase[i].userNameLength)
-                continue;
+        {
+            continue;
+        }
         if(strncmp((char *)userTrapSecurityName,(char *)userSecurityName,userTrapSecLen) == 0)
         {
             if(trapSecurityLevel == userDBsecurityLevel)
+            {
                 return true;
+            }
             else
+            {
                 continue;
+            }
         }
     }
 
@@ -3283,28 +3520,29 @@ Return Values:
     NO_REPORT_NO_PRIVACY_NO_AUTH - No authentication, no encryption
     NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED - authentication but no encryption
     NO_REPORT_PRIVACY_AND_AUTH_PROVIDED - authentication and encryption
-    INVALID_MSG - if security level doesn't match any of the above
+    AUTH_INVALID - if security level doesn't match any of the above
 
 Remarks:
     None.
 ***************************************************************************/
 uint8_t TCPIP_SNMPv3_TrapSecurityLevelGet(STD_BASED_SNMPV3_SECURITY_LEVEL securityLevel)
 {
-    uint8_t tempSecurityLevel=0xFF;
+    uint8_t tempSecurityLevel=0xFFU;
 
     switch(securityLevel)
     {
         case NO_AUTH_NO_PRIV:
-            tempSecurityLevel =  NO_REPORT_NO_PRIVACY_NO_AUTH;
+            tempSecurityLevel =  (uint8_t)NO_REPORT_NO_PRIVACY_NO_AUTH;
             break;
         case AUTH_NO_PRIV:
-            tempSecurityLevel = NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED;
+            tempSecurityLevel = (uint8_t)NO_REPORT_NO_PRIVACY_BUT_AUTH_PROVIDED;
             break;
         case AUTH_PRIV:
-            tempSecurityLevel = NO_REPORT_PRIVACY_AND_AUTH_PROVIDED;
+            tempSecurityLevel = (uint8_t)NO_REPORT_PRIVACY_AND_AUTH_PROVIDED;
             break;
         default:
-            return INVALID_MSG;
+            tempSecurityLevel = (uint8_t)AUTH_INVALID;
+            break;
     }
     return tempSecurityLevel;
 }
@@ -3336,13 +3574,10 @@ Return Values:
 Remarks:
     None.
 ***************************************************************************/
-bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex)
+static bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex)
 {
     uint8_t putCntr=0;
     uint8_t *ptr=NULL;
-    bool retBuf=true;
-    uint8_t snmpv3MsgGlobalHeaderlength=0;
-    uint16_t snmpv3MsgAuthHeaderLength=0;
     uint8_t tempData=0;
     uint16_t msgHeaderOffset1=0;
     uint16_t msgHeaderOffset2=0;
@@ -3358,10 +3593,10 @@ bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex)
         return false;
     }
     temp_index = Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength ;
-    USM_Index = TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(targetIndex);
+    USM_Index = (uint8_t)TCPIP_SNMPv3_UserIndxGetFromUsmUserDB((uint8_t)targetIndex);
     if(USM_Index != INVALID_INDEX)
     {
-        Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength = strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
+        Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength = (uint8_t)strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
     }
 
     // update the IN pdu trap security name size
@@ -3370,148 +3605,154 @@ bool TCPIP_SNMPv3_TrapMsgHeaderPDU(unsigned int targetIndex)
     /*Msg Processing Model PDU header */
     /*ID + Msg Size + Msg Flag + Security Model */
     //message header
-    TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(MSGGLOBAL_HEADER_LEN(snmpv3MsgGlobalHeaderlength)-2,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSGGLOBAL_HEADER_LEN - 2U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
 
     //Put "msgID" type ASN_INT of length 4 bytes    
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     TCPIP_UINT32_VAL pduMsgId;
     pduMsgId.Val = Snmpv3StackDcptStubPtr->IncmngSnmpPduMsgID;
 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(pduMsgId.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
 
     //Put "msgMaxSize"  type ASN_INT of length 4 bytes
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     TCPIP_UINT32_VAL maxMsgSize;
     maxMsgSize.Val = Snmpv3StackDcptStubPtr->SnmpEngnMaxMsgSize;
     
-    TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(maxMsgSize.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
 
     //Put "msgFlags"  type octet_string 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x01,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(gSNMPV3TrapSecurityLevel&0x03,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x01U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(gSNMPV3TrapSecurityLevel&0x03U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);//Rsponse "msgFlags" value as Reportable, Encrypted and Authenticated Bits are not set.
 
     //Put "msgSecurityModel"    
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x01,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityModelType,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x01U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityModelType,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
 
     /*User Security Module pdu header
     Authoritative Engin ID + Authoritative Boots + Authoritative Engine Time+
     User name + Authentication parameters + Privacy Parameter
     */
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);  //Security Parameter string
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);  //Security Parameter string
     msgHeaderOffset1 = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength)-2,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSG_AUTHORITATIVE_HEADER_LEN - 2U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)STRUCTURE,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     msgHeaderOffset2 = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength)-4,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)MSG_AUTHORITATIVE_HEADER_LEN - 4U, &Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     
     //Put "msgAuthoritiveEngineID"  
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngnIDLength,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Integer Length
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngnIDLength,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Integer Length
     putCntr = 0;
     for(;putCntr<Snmpv3StackDcptStubPtr->SnmpEngnIDLength;putCntr++)
     {
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineID[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineID[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     }
 
     //Put "msgAuthoritiveEngineBoots" 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>24,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>16,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>8,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpEngineBoots,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>24),&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>16),&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots>>8),&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(Snmpv3StackDcptStubPtr->SnmpEngineBoots),&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     
     //Put "msgAuthoritiveEngineTime" 
     TCPIP_SNMPv3_AuthEngineTimeGet();
-    TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x04,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x04U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     TCPIP_UINT32_VAL engTime;
     engTime.Val = Snmpv3StackDcptStubPtr->SnmpEngineTime;
     
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[3],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[2],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[1],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(engTime.v[0],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     
     putCntr = 0;
-    // warning removal for retBuf
-    if(retBuf == 0)
-    {
-        
-    }
-
     //Put "msgUserName" 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    tempData = strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(tempData,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    if(tempData != 0)
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    tempData = (uint8_t)strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(tempData,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    if(tempData != 0U)
     {
         ptr= Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName;
 
         for(;putCntr<tempData;putCntr++)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ptr[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ptr[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
         }
     }
 
     putCntr = 0;
 
-    SNMPv3UsmOutMsgAuthParam(Snmpv3StackDcptStubPtr->UserInfoDataBase[USM_Index].userHashType);
+    if((size_t)USM_Index < sizeof(Snmpv3StackDcptStubPtr->UserInfoDataBase) / sizeof(*Snmpv3StackDcptStubPtr->UserInfoDataBase))
+    {
+        SNMPv3UsmOutMsgAuthParam(Snmpv3StackDcptStubPtr->UserInfoDataBase[USM_Index].userHashType);
+    }
+    else
+    {
+        TCPIPStack_Assert(false, __FILE__, __func__, __LINE__);
+        return false;
+    }
 
     //Put "msgAuthenticationParameters"
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    if((gSNMPV3TrapSecurityLevel &0x01) == 0x01)
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    if((gSNMPV3TrapSecurityLevel &0x01U) == 0x01U)
     {
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
 
         Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.msgAuthParamOffset=Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length;
 
         for(;putCntr<Snmpv3StackDcptStubPtr->SnmpOutMsgAuthParmLen;putCntr++)
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+        {
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+        }
     }
     else
     {
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
     }
     
     putCntr = 0;
     SNMPv3USMOutMsgPrivParam(privType);
 
     //Put "msgPrivacyParameters" 
-    TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
-    if((gSNMPV3TrapSecurityLevel&0x02) == 0x02)
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    if((gSNMPV3TrapSecurityLevel&0x02U) == 0x02U)
     {
         SNMPv3USMOutMsgPrivParam(privType);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release
         for(;putCntr<Snmpv3StackDcptStubPtr->SnmpOutMsgPrivParmLen;putCntr++)
-            retBuf = TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrvParmStrng[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+        {
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(Snmpv3StackDcptStubPtr->SnmpOutMsgPrvParmStrng[putCntr],&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+        }
     }
     else
     {
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf); //Not supported with the Alpha Release.
     }
 
 
     tempMsgHeaderOffset = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length;
     Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length = msgHeaderOffset2;
-    TCPIP_SNMPv3_DataCopyToProcessBuff((tempMsgHeaderOffset-msgHeaderOffset2)-1,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempMsgHeaderOffset-msgHeaderOffset2) - 1U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length = tempMsgHeaderOffset;
     
     tempMsgHeaderOffset = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length;
     Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length = msgHeaderOffset1;
-    TCPIP_SNMPv3_DataCopyToProcessBuff((tempMsgHeaderOffset-msgHeaderOffset1)-1,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempMsgHeaderOffset-msgHeaderOffset1)-1U,&Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf);
     Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length = tempMsgHeaderOffset;
 
     return true;
@@ -3558,9 +3799,9 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     uint8_t         OIDLen=0; 
     uint8_t         len=0;
     uint8_t         OIDValue[TCPIP_SNMP_OID_MAX_LEN];
-    uint8_t             snmptrap_oids[]  = {0x2b,6,1,6,3,1,1,4,1 }; /* len=10 */
-    uint8_t         sysUpTime_oids[] = {0x2b,6,1,2,1,1,3}; /* len = 8 */
-    int             i=0;
+    uint8_t             snmptrap_oids[]  = {0x2bU,6U,1U,6U,3U,1U,1U,4U,1U }; /* len=10 */
+    uint8_t         sysUpTime_oids[] = {0x2bU,6U,1U,2U,1U,1U,3U}; /* len = 8 */
+    uint8_t             i=0;
     uint16_t            contextIDlen=0;
     uint16_t            contextNameLength=0;
     SNMPV3MSGDATA   *dynTrapScopedPduBuf;
@@ -3575,7 +3816,7 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     SNMPV3_PRIV_PROT_TYPE       usmPrivType = SNMPV3_NO_PRIV;
 
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
-    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
+    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;
 
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
@@ -3584,15 +3825,14 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     {
         return false;
     }
-    if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length == 0)
+    if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length == 0U)
     {
         temp_index = Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength ;
         USM_Index = TCPIP_SNMPv3_UserIndxGetFromUsmUserDB(targetIndex);
         if(USM_Index != INVALID_INDEX)
         {
-            Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength = strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
+            Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength = (uint8_t)strlen((char *)Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].userSecurityName);
         }
-//                                                                  MSG_AUTHORITATIVE_HEADER_LEN(snmpv3MsgAuthHeaderLength);
         // update the IN pdu trap security name size
         Snmpv3StackDcptStubPtr->SecurtyPrimtvesOfIncmngPdu.securityNameLength = temp_index;
 
@@ -3600,118 +3840,118 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
         //Check if the plain text scoped pdu data bytes are binded in ASN structure format 
 
         dynTrapScopedPduBuf = &Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf); // First item to Response buffer is packet structure
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf); // First item to Response buffer is packet structure
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
         //Collect context engine id
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,dynTrapScopedPduBuf);
         // populate context Engine id to contextEngId
-        contextIDlen = strlen((char*)contextEngId);
-        if(contextIDlen == 0)
+        contextIDlen = (uint16_t)strlen((char*)contextEngId);
+        if(contextIDlen == 0U)
         {           
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
         }
         else
         {
                 //copy context engine id from a local buffer            
-            TCPIP_SNMPv3_DataCopyToProcessBuff(contextIDlen,dynTrapScopedPduBuf);
-            while(contextIDlen--)
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)contextIDlen,dynTrapScopedPduBuf);
+            while(contextIDlen-- != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(contextEngId[count++],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(contextEngId[count++],dynTrapScopedPduBuf);
             }
         }
         //Check and collect "contextName" 
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,dynTrapScopedPduBuf);
-        contextNameLength = strlen((char*)contextName);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OCTET_STRING,dynTrapScopedPduBuf);
+        contextNameLength = (uint16_t)strlen((char*)contextName);
         count = 0;
-        if(contextNameLength == 0)
+        if(contextNameLength == 0U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
         }
         else
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(contextNameLength,dynTrapScopedPduBuf);
-            while(contextNameLength--)
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)contextNameLength,dynTrapScopedPduBuf);
+            while(contextNameLength-- != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(contextName[count++],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(contextName[count++],dynTrapScopedPduBuf);
             }
         }   
 // Trap V2 PDU update
         if(TCPIP_SNMP_TRAPTypeGet()==true)
         {
             //TRAP Version type.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_V2_TRAP,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)SNMP_V2_TRAP,dynTrapScopedPduBuf);
             pduStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             //put Request ID for the trapv2 as 1
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// To simplify logic, always use 4 byte long requestID
-            TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// To simplify logic, always use 4 byte long requestID
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynTrapScopedPduBuf);
 
             // Put error status.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// Int type
-            TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynTrapScopedPduBuf); // One byte long.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf); // Placeholder.
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// Int type
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynTrapScopedPduBuf); // One byte long.
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf); // Placeholder.
 
             // Similarly put error index.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// Int type
-            TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynTrapScopedPduBuf); // One byte long.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf); // Placeholder.
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);// Int type
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynTrapScopedPduBuf); // One byte long.
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf); // Placeholder.
 
             // Variable binding structure header
-            TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
             varBindStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Create variable name-pair structure
-            TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
             varPairStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Set 1st varbind object i,e sysUpTime.0 time stamp for the snmpv2 trap
             // Get complete notification variable OID string.
 
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             OIDLen = (uint8_t)sizeof(sysUpTime_oids);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1U,dynTrapScopedPduBuf);
             ptr = sysUpTime_oids;
-            while( OIDLen-- )
+            while( OIDLen--  != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
             }
 
             //1st varbind    and this is a scalar object so index = 0
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Time stamp
-            TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_TIME_TICKS,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>24)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>16)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>8)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp&0xFF,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_TIME_TICKS,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>24)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>16)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>8)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp&0xFFU),dynTrapScopedPduBuf);
 
             tempOffset = dynTrapScopedPduBuf->length;
             //set the snmp time varbind trap offset
             dynTrapScopedPduBuf->length = varPairStructLenOffset;
 
-            /*// SNMP time stamp varbind length
-            OIDLen = 2                          // 1st varbind header
+            /* SNMP time stamp varbind length
+            OIDLen = 2                          1st varbind header
                + (uint8_t)sizeof(sysUpTime_oids)
-               + 1                         // index byte
-               + 6 ;                        // time stamp */
+               + 1                         index byte
+               + 6 ;                        time stamp */
 
-            TCPIP_SNMPv3_DataCopyToProcessBuff((tempOffset-varPairStructLenOffset)-1,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempOffset-varPairStructLenOffset)-1U,dynTrapScopedPduBuf);
             //set the previous TX offset
             dynTrapScopedPduBuf->length = tempOffset;
 
@@ -3719,54 +3959,54 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             // Get complete notification variable OID string.
 
             // Create variable name-pair structure
-            TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
             varPairStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
                     // Copy OID string into PDU.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             OIDLen = (uint8_t)sizeof(snmptrap_oids);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1U,dynTrapScopedPduBuf);
 
             ptr = snmptrap_oids;
-            while( OIDLen-- )
+            while( OIDLen--  != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
             }
 
                     //2nd varbind  and this is a scalar object so index = 0
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             if (!TCPIP_SNMP_OIDStringFindByID(Snmpv3TrapFileDescrptr,snmpStkDcptMemStubPtr->SNMPNotifyInfo.trapIDVar, &rec, OIDValue, &OIDLen) )
             {
                 return false;
             }
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
             len = OIDLen;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
             for(i=0;i<len;i++)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(OIDValue[i],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDValue[i],dynTrapScopedPduBuf);
             }
             tempOffset = dynTrapScopedPduBuf->length;
             //set the snmp varbind trap offset
             dynTrapScopedPduBuf->length = varPairStructLenOffset;
             // Snmp trap varbind length
-            /*OIDLen = 2                     // Agent ID header bytes
+            /*OIDLen = 2                     Agent ID header bytes
                     + (uint8_t)sizeof(snmptrap_oids)
-                    + 1                        // index byte
-                    + 2                      // header
-                    + agentIDLen;                // Agent ID bytes                */
-            TCPIP_SNMPv3_DataCopyToProcessBuff((tempOffset-varPairStructLenOffset)-1,dynTrapScopedPduBuf);
+                    + 1                        index byte
+                    + 2                      header
+                    + agentIDLen;                Agent ID bytes                */
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempOffset-varPairStructLenOffset)-1U,dynTrapScopedPduBuf);
             //set the previous TX offset
             dynTrapScopedPduBuf->length = tempOffset;
         }
         else
         {
             // Put PDU type.  SNMP agent's response is always GET RESPONSE
-            TCPIP_SNMPv3_DataCopyToProcessBuff(TRAP,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(TRAP,dynTrapScopedPduBuf);
             pduStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Get complete OID string from snmp.bib.
             if(!TCPIP_SNMP_OIDStringFindByID(Snmpv3TrapFileDescrptr,snmpStkDcptMemStubPtr->SNMPNotifyInfo.agentIDVar,&rec, OIDValue, &OIDLen))
@@ -3774,57 +4014,57 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
                 return false;
             }
 
-            if(!rec.nodeInfo.Flags.bIsAgentID )
+            if(rec.nodeInfo.Flags.bIsAgentID == 0U)
             {
                 return false;
             }
-            (*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr,rec.hData,SYS_FS_SEEK_SET);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
-            (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,(uint8_t*)&len,1);
+            (void)(*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr,rec.hData,SYS_FS_SEEK_SET);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+            (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,(uint8_t*)&len,1);
             OIDLen = len;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
-            while( len-- )
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
+            while( len--  != 0U)
             {
                 uint8_t c;
-                (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
-                TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+                (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
             }
 
                     // This agent's IP address.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_IP_ADDR,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(((TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[0],dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(((TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[1],dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(((TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[2],dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(((TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[3],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_IP_ADDR,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(((const TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[0],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(((const TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[1],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(((const TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[2],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(((const TCPIP_NET_IF*)(snmpStkDcptMemStubPtr->SNMPNotifyInfo.snmpTrapInf))->netIPAddr.v[3],dynTrapScopedPduBuf);
 
             // Geberic/Enterprise Trap code
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(snmpStkDcptMemStubPtr->gGenericTrapNotification,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(snmpStkDcptMemStubPtr->gGenericTrapNotification,dynTrapScopedPduBuf);
 
             // Specific Trap code
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(1,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(snmpStkDcptMemStubPtr->SNMPNotifyInfo.notificationCode,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_INT,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(1U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(snmpStkDcptMemStubPtr->SNMPNotifyInfo.notificationCode,dynTrapScopedPduBuf);
 
             // Time stamp
-            TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_TIME_TICKS,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(4,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>24)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>16)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>8)&0xFF,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp)&0xFF,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(SNMP_TIME_TICKS,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(4U,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>24)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>16)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp>>8)&0xFFU),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)((snmpStkDcptMemStubPtr->SNMPNotifyInfo.timestamp)&0xFFU),dynTrapScopedPduBuf);
 
             // Variable binding structure header
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x30,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x30U,dynTrapScopedPduBuf);
             varBindStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Create variable name-pair structure
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x30,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x30U,dynTrapScopedPduBuf);
             varPairStructLenOffset = dynTrapScopedPduBuf->length;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
 
             // Get complete notification variable OID string.
             if ( !TCPIP_SNMP_OIDStringFindByID(Snmpv3TrapFileDescrptr,var, &rec, OIDValue, &OIDLen) )
@@ -3833,15 +4073,15 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             }
 
             // Copy OID string into packet.
-            TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen+1),dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen+1U),dynTrapScopedPduBuf);
             len = OIDLen;
             ptr = OIDValue;
-            while( len-- )
+            while( len--  != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
             }
-            TCPIP_SNMPv3_DataCopyToProcessBuff(index,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(index,dynTrapScopedPduBuf);
 
             // Encode and Copy actual data bytes
             if ( !TCPIP_SNMP_DataTypeInfoGet(rec.dataType, &dataTypeInfo) )
@@ -3849,40 +4089,40 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
                 return false;
             }
 
-            TCPIP_SNMPv3_DataCopyToProcessBuff(dataTypeInfo.asnType,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(dataTypeInfo.asnType,dynTrapScopedPduBuf);
 
             //Modified to Send trap even for  dataTypeInfo.asnType= ASCII_STRING,
             //where dataTypeInfo.asnLen=0xff
-            if ( dataTypeInfo.asnLen == 0xff )
+            if ( dataTypeInfo.asnLen == 0xffU )
             {
-                dataTypeInfo.asnLen=0x4;
+                dataTypeInfo.asnLen=0x4U;
                 val.dword=0;
             }
             len = dataTypeInfo.asnLen;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
-            while( len-- )
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
+            while( len--  != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(val.v[len],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(val.v[len],dynTrapScopedPduBuf);
             }
 
             tempOffset = dynTrapScopedPduBuf->length;
             dynTrapScopedPduBuf->length = varPairStructLenOffset;
-            varBindLen.Val = (tempOffset - varPairStructLenOffset)-1;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+            varBindLen.Val = (tempOffset - varPairStructLenOffset)-1U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
             dynTrapScopedPduBuf->length = varBindStructLenOffset;
-            varBindLen.Val = (tempOffset - varBindStructLenOffset)-1;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+            varBindLen.Val = (tempOffset - varBindStructLenOffset)-1U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
             dynTrapScopedPduBuf->length = pduStructLenOffset;
-            varBindLen.Val = (tempOffset - pduStructLenOffset)-1;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+            varBindLen.Val = (tempOffset - pduStructLenOffset)-1U;
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
             dynTrapScopedPduBuf->length = 1;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-            varBindLen.Val = tempOffset - 4; // equal to tempOffset - dynTrapScopedPduBuf->length
-            TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
-            TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+            varBindLen.Val = tempOffset - 4U; // equal to tempOffset - dynTrapScopedPduBuf->length
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
             dynTrapScopedPduBuf->length = tempOffset;
 
@@ -3898,11 +4138,11 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     }
     
     // Create variable name-pair structure
-    TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(STRUCTURE,dynTrapScopedPduBuf);
     varPairStructLenOffset = dynTrapScopedPduBuf->length;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
     /* to send generic trap trap */
-    if(snmpStkDcptMemStubPtr->gGenericTrapNotification != ENTERPRISE_SPECIFIC)
+    if(snmpStkDcptMemStubPtr->gGenericTrapNotification != (uint8_t)ENTERPRISE_SPECIFIC)
     {
         ptr = (uint8_t*)TCPIP_SNMP_GenericTrapCodeToTrapOID(snmpStkDcptMemStubPtr->gGenericTrapNotification,&OIDLen);
         if(ptr == NULL)
@@ -3910,50 +4150,50 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             return false;
         }
         // Copy OID string into PDU.
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1,dynTrapScopedPduBuf);
-        while( OIDLen-- )
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen)+1U,dynTrapScopedPduBuf);
+        while( OIDLen--  != 0U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
         }
 
 //2nd varbind  and this is a scalar object so index = 0
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0U,dynTrapScopedPduBuf);
         if ( !TCPIP_SNMP_OIDStringFindByID(Snmpv3TrapFileDescrptr,snmpStkDcptMemStubPtr->SNMPNotifyInfo.agentIDVar, &rec, OIDValue, &OIDLen) )
         {
-            (*snmpFileShell->fileClose)(snmpFileShell,Snmpv3TrapFileDescrptr);
+            (void)(*snmpFileShell->fileClose)(snmpFileShell,Snmpv3TrapFileDescrptr);
             
             Snmpv3TrapFileDescrptr = SYS_FS_HANDLE_INVALID;
             return false;
         }
-        if ( !rec.nodeInfo.Flags.bIsAgentID )
+        if ( rec.nodeInfo.Flags.bIsAgentID == 0U)
         {
             return false;
         }
 
-        (*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr, rec.hData, SYS_FS_SEEK_SET);       
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+        (void)(*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr, rec.hData, SYS_FS_SEEK_SET);       
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
         
-        (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&len,1);        
+        (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&len,1);        
         OIDLen = len;
-        TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
-        while( OIDLen-- )
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
+        while( OIDLen--  != 0U)
         {
             uint8_t c;          
-            (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
+            (void)(*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
             
-            TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
         }
         tempOffset = dynTrapScopedPduBuf->length;
         //set the snmp varbind trap offset
         dynTrapScopedPduBuf->length = varPairStructLenOffset;
-        /*OIDLen = 2                     // Agent ID header bytes
+        /*OIDLen = 2                     Agent ID header bytes
                 + (uint8_t)sizeof(snmptrap_oids)
-                + 1                        // index byte
-                + 2                      // header
-                + agentIDLen;                // Agent ID bytes                */
+                + 1                        index byte
+                + 2                      header
+                + agentIDLen;                Agent ID bytes                */
         
-        TCPIP_SNMPv3_DataCopyToProcessBuff((tempOffset-varPairStructLenOffset)-1,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempOffset-varPairStructLenOffset)-1U,dynTrapScopedPduBuf);
         //set the previous TX offset
         dynTrapScopedPduBuf->length = tempOffset;
     }
@@ -3967,60 +4207,60 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
         ptr = OIDValue;
 
         // Copy OID string into packet.
-        TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
-        TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen+1),dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(OIDLen+1U),dynTrapScopedPduBuf);
         len = OIDLen;
-        while( len-- )
+        while( len--  != 0U)
         {
-            TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(*ptr++,dynTrapScopedPduBuf);
         }
-        TCPIP_SNMPv3_DataCopyToProcessBuff(index,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(index,dynTrapScopedPduBuf);
 
         // Encode and Copy actual data bytes
         if ( !TCPIP_SNMP_DataTypeInfoGet(rec.dataType, &dataTypeInfo) )
         {
             return false;
         }
-        TCPIP_SNMPv3_DataCopyToProcessBuff(dataTypeInfo.asnType,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(dataTypeInfo.asnType,dynTrapScopedPduBuf);
      //Modified to Send trap even for  dataTypeInfo.asnType= ASCII_STRING,
         //where dataTypeInfo.asnLen=0xff
-        if ( dataTypeInfo.asnLen == 0xff )
+        if ( dataTypeInfo.asnLen == 0xffU )
         {
             uint8_t *asciiStr= (uint8_t *)val.dword;
-            int k=0;
-            dataTypeInfo.asnLen=strlen((char *)asciiStr);
+            uint8_t k=0;
+            dataTypeInfo.asnLen=(uint8_t)strlen((char *)asciiStr);
             len = dataTypeInfo.asnLen;
             //val.dword=0;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
             for(k=0;k<len;k++)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(asciiStr[k],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(asciiStr[k],dynTrapScopedPduBuf);
             }
         }
         else
         {
             len = dataTypeInfo.asnLen;
-            TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
-            while( len-- )
+            (void)TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
+            while( len--  != 0U)
             {
-                TCPIP_SNMPv3_DataCopyToProcessBuff(val.v[len],dynTrapScopedPduBuf);
+                (void)TCPIP_SNMPv3_DataCopyToProcessBuff(val.v[len],dynTrapScopedPduBuf);
             }
         }
       
-        /*len    = dataTypeInfo.asnLen  // data bytes count
-                 + 1                    // Length byte
-                 + 1                    // Data type byte
-                 + OIDLen               // OID bytes
-                 + 2                    // OID header bytes
-                 + 1;                   // index byte */
+        /*len    = dataTypeInfo.asnLen  data bytes count
+                 + 1                    Length byte
+                 + 1                    Data type byte
+                 + OIDLen               OID bytes
+                 + 2                    OID header bytes
+                 + 1;                   index byte */
         tempOffset = dynTrapScopedPduBuf->length;
         dynTrapScopedPduBuf->length = varPairStructLenOffset;
-        TCPIP_SNMPv3_DataCopyToProcessBuff((tempOffset-varPairStructLenOffset)-1,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff((uint8_t)(tempOffset-varPairStructLenOffset)-1U,dynTrapScopedPduBuf);
         dynTrapScopedPduBuf->length = tempOffset;
     }
     //set the previous TX offset
 
-    if((TCPIP_SNMP_TRAPTypeGet()== true)&& (snmpStkDcptMemStubPtr->gSetTrapSendFlag == true))
+    if((TCPIP_SNMP_TRAPTypeGet()== true)&& (snmpStkDcptMemStubPtr->gSetTrapSendFlag != 0U))
     {
         return true;
     }
@@ -4031,22 +4271,22 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
     }
     tempOffset = dynTrapScopedPduBuf->length;
     dynTrapScopedPduBuf->length = varBindStructLenOffset;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-    varBindLen.Val = (tempOffset - varBindStructLenOffset)-3;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+    varBindLen.Val = (tempOffset - varBindStructLenOffset)-3U;
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
     dynTrapScopedPduBuf->length = pduStructLenOffset;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-    varBindLen.Val = (tempOffset - pduStructLenOffset)-3;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+    varBindLen.Val = (tempOffset - pduStructLenOffset)-3U;
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
     dynTrapScopedPduBuf->length = 1;
-    TCPIP_SNMPv3_DataCopyToProcessBuff(0x82,dynTrapScopedPduBuf);
-    varBindLen.Val = tempOffset - 4; // equal to tempOffset - dynTrapScopedPduBuf->length
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
-    TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x82U,dynTrapScopedPduBuf);
+    varBindLen.Val = tempOffset - 4U; // equal to tempOffset - dynTrapScopedPduBuf->length
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[1],dynTrapScopedPduBuf);
+    (void)TCPIP_SNMPv3_DataCopyToProcessBuff(varBindLen.v[0],dynTrapScopedPduBuf);
 
     dynTrapScopedPduBuf->length = tempOffset;
     pduStructLenOffset = 0;
@@ -4100,20 +4340,21 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     uint16_t        i=0;
     uint8_t     USM_Index=0;
     SNMP_PROCESSING_MEM_INFO_PTRS snmpPktProcsMemPtrsInfo = {NULL}; 
-    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr=0;     
+    SNMP_STACK_DCPT_STUB * snmpStkDcptMemStubPtr= NULL;     
     uint8_t tempBuf[4] = {0U, 0U, 0U, 0U};
     uint8_t tempCntr=0;
     uint8_t* tempPtr=NULL;
     uint8_t* outBufPtr=NULL;
     UDP_SOCKET skt = INVALID_UDP_SOCKET;
-                        
+    ptrdiff_t msgLen;
+
     TCPIP_SNMP_PacketProcStubPtrsGet(&snmpPktProcsMemPtrsInfo);
     snmpStkDcptMemStubPtr=snmpPktProcsMemPtrsInfo.snmpStkDynMemStubPtr;
 
     //validate the trap user security name , message processing model 
     //, security model and the security level
     gSNMPV3TrapSecurityLevel = TCPIP_SNMPv3_TrapSecurityLevelGet(Snmpv3StackDcptStubPtr->Snmpv3TrapConfigData[targetIndex].securityLevelType);
-    if( gSNMPV3TrapSecurityLevel == INVALID_MSG)
+    if( gSNMPV3TrapSecurityLevel == (uint8_t)AUTH_INVALID)
     {
         return false;
     }
@@ -4129,7 +4370,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         return false;
     }
     
-    if(Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length == 0)
+    if(Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length == 0U)
     {
         if(TCPIP_SNMPv3_TrapMsgHeaderPDU(targetIndex)!= true)
         {       
@@ -4141,7 +4382,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         return false;
     }
 
-    if((TCPIP_SNMP_TRAPTypeGet()== true)&&(snmpStkDcptMemStubPtr->gSetTrapSendFlag == true))
+    if((TCPIP_SNMP_TRAPTypeGet()== true)&&(snmpStkDcptMemStubPtr->gSetTrapSendFlag != 0U))
     {   
         return true;
     }
@@ -4152,34 +4393,34 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         return false;
     }
 
-    totaltrapLen.Val = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length + Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length+3;
+    totaltrapLen.Val = Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.length + Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length+3U;
     //tempScopedPduLen = Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length-4; // 4 == STRUCTURE+0x82+len1+len2
-    if((gSNMPV3TrapSecurityLevel & 0x02)==0x02) //Encrypted message 
+    if((gSNMPV3TrapSecurityLevel & 0x02U)==0x02U) //Encrypted message 
     {
         tempPtr=tempBuf;
         *tempPtr++=0X04;
-        if((Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length >= 0x80) && (Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length <= 0xFF))
+        if((Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length >= 0x80U) && (Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length <= 0xFFU))
         {
-            *tempPtr++=0x81;
-            *tempPtr=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
+            *tempPtr++=0x81U;
+            *tempPtr= (uint8_t)Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
             tempCntr=3; //0x04(encrypted pkt),0x81,len
         }
-        else if((Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length > 0xFF) && (Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length < 0xFFFF))
+        else if((Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length > 0xFFU) && (Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length < 0xFFFFU))
         {           
-            *tempPtr++=0x82;
-            *tempPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length>>8;
-            *tempPtr=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
+            *tempPtr++=0x82U;
+            *tempPtr++= (uint8_t)(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length>>8);
+            *tempPtr= (uint8_t)Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
             tempCntr=4; //0x04(encrypted pkt),0x81,len_1,len_0
         }
         else
         {
-            *tempPtr=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
+            *tempPtr= (uint8_t)Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.length;
             tempCntr=2; //0x04(encrypted pkt),len
         }
     }
     if(eTrapMultiAddressType == IPV4_SNMP_TRAP)
     {
-        skt  = snmpStkDcptMemStubPtr->SNMPNotifyInfo.socket;
+        skt  = snmpStkDcptMemStubPtr->SNMPNotifyInfo.sktv4;
     }
 #ifdef TCPIP_STACK_USE_IPV6
     else
@@ -4187,9 +4428,9 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         skt = snmpStkDcptMemStubPtr->SNMPNotifyInfo.socketv6;
     }
 #endif
-    TCPIP_SNMP_PDUProcessDuplexInit(skt);
+    (void)TCPIP_SNMP_PDUProcessDuplexInit(skt);
     //this will put the start pointer at the beginning of the TX buffer
-    TCPIP_UDP_TxOffsetSet(skt,0,false);
+    (void)TCPIP_UDP_TxOffsetSet(skt,0,false);
     Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgLen =(totaltrapLen.Val+tempCntr/*0x04,0x82,len_1,len_0*/);
     Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead= TCPIP_UDP_TxPointerGet(skt);
     if(Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead == NULL)
@@ -4201,22 +4442,24 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
 
     *outBufPtr++=STRUCTURE;
     totaltrapLen.Val+=tempCntr;
-    if((totaltrapLen.Val >= 0x80) && (totaltrapLen.Val <= 0xFF))
+    if((totaltrapLen.Val >= 0x80U) && (totaltrapLen.Val <= 0xFFU))
     {
-        *outBufPtr++=0x81;
-        *outBufPtr++=totaltrapLen.Val;
+        *outBufPtr++=0x81U;
+        *outBufPtr++= (uint8_t)totaltrapLen.Val;
     }
-    else if((totaltrapLen.Val > 0xFF) && (totaltrapLen.Val < 0xFFFF))
+    else if((totaltrapLen.Val > 0xFFU) && (totaltrapLen.Val < 0xFFFFU))
     {           
-        *outBufPtr++=0x82;
+        *outBufPtr++=0x82U;
         *outBufPtr++=totaltrapLen.v[1];
         *outBufPtr++=totaltrapLen.v[0];
     }
     else
-        *outBufPtr++=totaltrapLen.Val;
+    {
+        *outBufPtr++= (uint8_t)totaltrapLen.Val;
+    }
 
     *outBufPtr++=ASN_INT;
-    *outBufPtr++=0x1;       
+    *outBufPtr++=0x1U;       
     *outBufPtr++=SNMP_V3;
 
     Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.msgAuthParamOffsetOutWholeMsg=(uint8_t*)(outBufPtr+Snmpv3StackDcptStubPtr->TrapMsgHeaderBuf.msgAuthParamOffset);
@@ -4227,7 +4470,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     }
 
     //Copy Scoped PDU to the Out Buffer
-    if((gSNMPV3TrapSecurityLevel & 0x02)==0x02) //Encrypted message 
+    if((gSNMPV3TrapSecurityLevel & 0x02U)==0x02U) //Encrypted message 
     {   //Copy Packet Auth indicator, length
         for(i=0;i<tempCntr;i++) 
         {
@@ -4240,19 +4483,21 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     i=0;
     *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++];//0x30
 
-    if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[1] == 0x81)
+    if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[1] == 0x81U)
     {
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++];//0x81
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++];//len_0
     }
-    else if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[1] == 0x82)
+    else if(Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[1] == 0x82U)
     {
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++]; //0x82
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++]; //len_1
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++]; //len_0
     }
     else
+    {
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i++];//len_o
+    }
 
     // send context id and context name and the get response 
     // Authentication and privacy data packet will be sent from here onwards
@@ -4261,30 +4506,34 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         *outBufPtr++=Snmpv3StackDcptStubPtr->TrapScopdPduRespnsBuf.head[i];
     }
     /*Encrypt the Response to the messgae originator*/
-    if((gSNMPV3TrapSecurityLevel & 0x02)==0x02) //Encrypted message
+    if((gSNMPV3TrapSecurityLevel & 0x02U)==0x02U) //Encrypted message
     {
         uint8_t temp_usm_index = 0;
         /*Rxed SNMPv3 message is encrypted. Hence Response should be encrypted*/
 
         /*If user privacy protocol is AES*/
-        temp_usm_index = Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx;
+        temp_usm_index =  (uint8_t)Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx;
         Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = USM_Index;
         if(Snmpv3StackDcptStubPtr->UserInfoDataBase[Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx].userPrivType
-                    == SNMPV3_AES_PRIV)  //user privacy protocol is AES
+                    == (uint8_t)SNMPV3_AES_PRIV)  //user privacy protocol is AES
         {
-            if(SNMPv3AESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf) != SNMPV3_MSG_PRIV_PASS)
+            if(SNMPv3AESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf) != (uint8_t)SNMPV3_MSG_PRIV_PASS)
             {
                 Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = temp_usm_index;
-                return SNMPV3_MSG_PRIV_FAIL;
+                return false;
             }
         }
         else if(Snmpv3StackDcptStubPtr->UserInfoDataBase[Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx].userPrivType
-                    == SNMPV3_DES_PRIV)  //user privacy protocol is DES
+                    == (uint8_t)SNMPV3_DES_PRIV)  //user privacy protocol is DES
         {
-            if(SNMPv3DESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf) != SNMPV3_MSG_PRIV_PASS)
+            if(SNMPv3DESEncryptResponseScopedPdu(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf) != (uint8_t)SNMPV3_MSG_PRIV_PASS)
             {
-                return SNMPV3_MSG_PRIV_FAIL;
+                return false;
             }
+        }
+        else
+        {
+            // do nothing
         }
         Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = temp_usm_index;
         /*If user privacy Protocol is DES*/
@@ -4292,18 +4541,19 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
     }
 
     /* Authenticate the whole message to be transmitted*/
-    if((gSNMPV3TrapSecurityLevel & 0x01)==0x01) //Authenticatd message
+    if((gSNMPV3TrapSecurityLevel & 0x01U)==0x01U) //Authenticatd message
     {
         uint8_t temp_usm_index = 0;
         /*Rxed SNMPv3 message is Authenticated.Send authenticatin parameters for the Response*/
-        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgLen = outBufPtr - Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead;
+        msgLen = outBufPtr - Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead;
+        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgLen =(uint16_t)msgLen;
         /*If user authentication is HAMC-MD5-96*/
-        temp_usm_index = Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx;
+        temp_usm_index = (uint8_t)Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx;
         Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = USM_Index;
-        if(SNMPv3AuthenticateTxPduForDataIntegrity(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf)!=SNMPV3_MSG_AUTH_PASS)
+        if(SNMPv3AuthenticateTxPduForDataIntegrity(&Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf)!=(uint8_t)SNMPV3_MSG_AUTH_PASS)
         {
             Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = temp_usm_index;
-            return SNMPV3_MSG_AUTH_FAIL;
+            return false;
         }
         Snmpv3StackDcptStubPtr->UserInfoDataBaseIndx = temp_usm_index;
         tempPtr = outBufPtr;
@@ -4315,13 +4565,14 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         outBufPtr = tempPtr;
     }   
     
-    TCPIP_UDP_TxOffsetSet(skt,(uint16_t)(outBufPtr-Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead), false);
-    TCPIP_UDP_Flush(skt);
+    msgLen = outBufPtr - Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead;
+    (void)TCPIP_UDP_TxOffsetSet(skt,(uint16_t)msgLen, false);
+    (void)TCPIP_UDP_Flush(skt);
     
     if(Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead != NULL)
     {
-        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead=0x00;
-        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgLen=0x00;
+        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgHead= NULL;
+        Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.wholeMsgLen=0x00U;
         Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.snmpMsgHead = NULL;
         Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.msgAuthParamOffsetOutWholeMsg = NULL;
         Snmpv3StackDcptStubPtr->TrapOUTPduWholeMsgBuf.scopedPduOffset = NULL;
@@ -4335,13 +4586,13 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
 void TCPIP_SNMPv3_TrapConfigDataGet(uint8_t userIndex,uint8_t *msgModelType,uint8_t *securityModelType)
 {
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
-    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
+    SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr= NULL;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet (&snmpv3PktProcessingMemPntr);
 
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
-    *msgModelType = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType;
-    *securityModelType  = snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType;
+    *msgModelType = (uint8_t)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].messageProcessingModelType;
+    *securityModelType  = (uint8_t)snmpv3EngnDcptMemoryStubPtr->Snmpv3TrapConfigData[userIndex].securityModelType;
 }
 
 
@@ -4352,14 +4603,14 @@ static void TCPIP_SNMPV3_DESEncryptionPadding(SNMPV3MSGDATA *dynTrapScopedPduBuf
 /*
  DES expects the data to be encrypted in multiples of 8 bytes.
 */
-    if((desPaddingLen=dynTrapScopedPduBuf->length %8)!=0)
+    if((desPaddingLen = (uint8_t)(dynTrapScopedPduBuf->length % 8U)) != 0U)
     {
-        desPaddingLen = 8-desPaddingLen;
+        desPaddingLen = 8U - desPaddingLen;
     }
     for(;i<desPaddingLen;i++)
     {
         // adding 0 padding for the remaining bytes
-        TCPIP_SNMPv3_DataCopyToProcessBuff(0x0,dynTrapScopedPduBuf);
+        (void)TCPIP_SNMPv3_DataCopyToProcessBuff(0x0U,dynTrapScopedPduBuf);
     }
 }
 #endif // #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)

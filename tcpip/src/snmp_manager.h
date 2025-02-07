@@ -13,7 +13,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -44,12 +44,12 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef __SNMP_MANAGER_H_
-#define __SNMP_MANAGER_H_
+#ifndef H_SNMP_MANAGER_H_
+#define H_SNMP_MANAGER_H_
 
 /****************************************************************************
   Function:
-    bool TCPIP_SNMP_Initialize(void)
+    bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const TCPIP_SNMP_MODULE_CONFIG* snmpData);
 
   Summary:
     Initialize SNMP module internals.
@@ -72,7 +72,7 @@ Microchip or any third party.
     This function is called only once during lifetime of the application.
     One UDP socket will be used.
  */
-bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const TCPIP_SNMP_MODULE_CONFIG* snmpData);
+bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const void* initData);
 
 
 /****************************************************************************
@@ -101,6 +101,9 @@ bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData, const
 void TCPIP_SNMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData);
 
 
+#ifdef TCPIP_STACK_USE_SNMPV3_SERVER
+void TCPIP_SNMPv3_Initialize(void);
+#endif
 
-#endif  // __SNMP_MANAGER_H_
+#endif  // H_SNMP_MANAGER_H_
 

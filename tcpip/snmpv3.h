@@ -30,7 +30,7 @@
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2012-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2012-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -61,8 +61,8 @@ Microchip or any third party.
 
 //DOM-IGNORE-END
 
-#ifndef _SNMPV3_H_
-#define _SNMPV3_H_
+#ifndef H_SNMPV3_H_
+#define H_SNMPV3_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -214,8 +214,10 @@ typedef enum
 */
 typedef enum
 {
+    /* invalid authentication/security level */
+    AUTH_INVALID = 0,
     /* without authentication and without privacy */
-    NO_AUTH_NO_PRIV=1,
+    NO_AUTH_NO_PRIV,
     /* with authentication but without privacy */
     AUTH_NO_PRIV,
     /* with authentication but with privacy */
@@ -507,7 +509,7 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(
 /*
   Function:
     TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(
-                                       SNMP_INDEX index)
+                                       uint8_t userIndex)
 
   Summary:
     Calculate Auth and Priv  password to the localized key with present USM
@@ -529,15 +531,15 @@ bool TCPIP_SNMPV3_EngineUserDataBaseGet(
   Example:
   <code>
     uint8_t index=0;
-    // The below API should be called after all the USM SET opeartion.
-    TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
+    - The below API should be called after all the USM SET opeartion.
+    TCPIP_SNMPV3_USMAuthPrivLocalization(uint8_t userIndex);
   </code>
   
   Remarks:
     TCPIP_SNMPV3_USMAuthPrivLocaziation(SNMP_INDEX index) should be called after 
  setting USM Authentication and Privacy password configuration.
  */
-TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
+TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(uint8_t userIndex);
 
 //****************************************************************************
 /*
@@ -574,23 +576,23 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_IND
     switch(var)
     {
         case USER_SECURITY_NAME:
-            if(ref ==  SNMP_END_OF_VAR)
+            if ( ref ==  SNMP_END_OF_VAR )
             {
                 if(TCPIP_SNMPV3_EngineUserDataBaseSet(SNMPV3_USERNAME_CONFIG_TYPE,strlen((char*)gSnmpv3UserSecurityName),
                                                 index,gSnmpv3UserSecurityName) != true)
                     return false;
             }
-            // Make sure that index is within our range.
-            if(index < TCPIP_SNMPV3_USM_MAX_USER)
+            - Make sure that index is within our range.
+            if ( index < TCPIP_SNMPV3_USM_MAX_USER )
             {
-                // Copy given value into local buffer.
+                - Copy given value into local buffer.
                 gSnmpv3UserSecurityName[ref]=val.byte;
                 return true;
             }
             break;
     }
   }
-   // The below API should be called after all the USM SET opeartion.
+   - The below API should be called after all the USM SET opeartion.
     TCPIP_SNMPV3_USMAuthPrivLocalization(SNMP_INDEX index);
   </code>
   
@@ -944,4 +946,4 @@ TCPIP_SNMPV3_USM_CONFIG_ERROR_TYPE TCPIP_SNMPV3_GetUSMSecLevel(char *userName,
 #endif
 //DOM-IGNORE-END
 
-#endif//#ifndef _SNMPV3_H_
+#endif//#ifndef H_SNMPV3_H_
