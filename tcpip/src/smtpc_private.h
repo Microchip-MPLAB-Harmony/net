@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,8 +46,8 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMTPC_PRIVATE_H_
-#define _SMTPC_PRIVATE_H_
+#ifndef H_SMTPC_PRIVATE_H_
+#define H_SMTPC_PRIVATE_H_
 
 // definitions
 //
@@ -63,39 +63,39 @@ Microchip or any third party.
 
 
 // enable SMTPC debugging levels
-#define TCPIP_SMTPC_DEBUG_LEVEL                 (0)
+#define TCPIP_SMTPC_DEBUG_LEVEL                 (0x1)
 
 // extra guard space needed for the plain line buffer size
 // extra 4 bytes are needed: . at beg, crLF + 0 at end
-#define TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE_GUARD       4
+#define SMTPC_PLAIN_LINE_BUFF_SIZE_GUARD       4U
 // space needed in the socket buffer for the plain line buffer processing, in %
 // Chosen so that a 256 size line + extra 4 bytes 
 // will fit into a 512 bytes socket buffer
-#define TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE_RATIO      196
+#define SMTPC_PLAIN_LINE_BUFF_SIZE_RATIO      196U
 
 
 // Size of buffer for processing BASE64 bodies
 // Always (TCPIP_SMTP_BASE64_BUFF_SIZE * 4/3 * 1.8) < socket TX size!
 // the 1.8 factor is NET_PRES empyrical thresholds!
-#define TCPIP_SMTP_BASE64_BUFF_SIZE     200
+#define TCPIP_SMTP_BASE64_BUFF_SIZE     200U
 // minimum space to be available in the socket
 // if no such space, don't even bother
 // always < TCPIP_SMTP_BASE64_BUFF_SIZE!
-#define TCPIP_SMTP_BASE64_MIN_SKT_SIZE  100
+#define TCPIP_SMTP_BASE64_MIN_SKT_SIZE  100U
 
 
 // minimum number of retries
 // allow for 0 retries
-#define TCPIP_SMTPC_MIN_RETRIES         0 
+#define TCPIP_SMTPC_MIN_RETRIES             0U 
 
 // minimum server timeout, seconds
-#define TCPIP_SMTPC_MIN_SERVER_TMO            10 
+#define TCPIP_SMTPC_MIN_SERVER_TMO            10U
 
 // minimum server retry interval, seconds
-#define TCPIP_SMTPC_MIN_SERVER_RETRY_TMO       60 
+#define TCPIP_SMTPC_MIN_SERVER_RETRY_TMO       60U 
 
 // minimum internal retry interval, seconds
-#define TCPIP_SMTPC_MIN_INTERNAL_RETRY_TMO     10 
+#define TCPIP_SMTPC_MIN_INTERNAL_RETRY_TMO     10U 
 
 
 // server reply codes
@@ -107,7 +107,7 @@ Microchip or any third party.
 #define TCPIP_SMTP_AUTH_FINAL_SUCCESS_CODE          235
 #define TCPIP_SMTP_MAIL_FROM_SUCCESS_CODE           250
 #define TCPIP_SMTP_MAIL_RCPT_SUCCESS_CODE           250
-#define TCPIP_SMTP_MAIL_RCPT_SUCCESS_CODE_ALT       251
+#define TCPIP_SMTP_MAIL_RCPT_SUCCESS_ALT            251
 #define TCPIP_SMTP_MAIL_DATA_SUCCESS_CODE           354
 #define TCPIP_SMTP_MAIL_SENT_SUCCESS_CODE           250
 
@@ -129,67 +129,65 @@ typedef enum
     TCPIP_SMTPC_CMD_QUIT, 
 }TCPIP_SMTPC_CMD_TYPE;
 
-// type of SMTP status
-typedef enum
-{
-    TCPIP_SMTPC_STAT_WAIT_RETRY,            // waiting for a retry timeout to  pass
+// values for the SMTP status
+#define     SMTPC_STAT_WAIT_RETRY               0U      // waiting for a retry timeout to  pass
 
-    TCPIP_SMTPC_STAT_DNS_START,             // start DNS resolution  
-    TCPIP_SMTPC_STAT_DNS_WAIT,              // wait DNS resolution 
-    TCPIP_SMTPC_STAT_SOCKET_GET,            // get communication channel 
-    TCPIP_SMTPC_STAT_SKT_WAIT_CONNECT,      // wait server to respond 
-    TCPIP_SMTPC_STAT_SERVER_CONNECTED,      // from now on the server was connected
-    // server helo, tls and authentication
-    TCPIP_SMTPC_STAT_EHLO_PLAIN = TCPIP_SMTPC_STAT_SERVER_CONNECTED, // send ehlo in plain mode
-    TCPIP_SMTPC_STAT_EHLO_PLAIN_WAIT,       // wait EHLO reply
-    TCPIP_SMTPC_STAT_TLS_START,             // start TLS command
-    TCPIP_SMTPC_STAT_TLS_WAIT,              // wait STARTTLS server reply
-    TCPIP_SMTPC_STAT_TLS_WAIT_SECURE,       // wait TLS handshake to be done
-    TCPIP_SMTPC_STAT_EHLO_SECURE,           // send ehlo in encrypted/secure mode
-    TCPIP_SMTPC_STAT_EHLO_SECURE_WAIT,      // wait ehlo reply
-    TCPIP_SMTPC_STAT_AUTH,                  // authentication phase
-    TCPIP_SMTPC_STAT_AUTH_WAIT_LOGIN_USER,  // Login authentication wait for server user request
-    TCPIP_SMTPC_STAT_AUTH_LOGIN_USER,       // Send Login user
-    TCPIP_SMTPC_STAT_AUTH_WAIT_LOGIN_PASS,  // Login authentication wait for server pass request
-    TCPIP_SMTPC_STAT_AUTH_LOGIN_PASS,       // Send Login password
-    TCPIP_SMTPC_STAT_AUTH_WAIT_FINAL,       // wait final authentication response
-    // mail start
-    TCPIP_SMTPC_STAT_MAIL_START,            // mail start
-    TCPIP_SMTPC_STAT_MAIL_ENVL_FROM = TCPIP_SMTPC_STAT_MAIL_START, // send mail envelope: from
-    TCPIP_SMTPC_STAT_MAIL_ENVL_FROM_WAIT,   // wait mail from response
-    TCPIP_SMTPC_STAT_MAIL_ENVL_RCPT,        // send mail envelope: rcpt
-    TCPIP_SMTPC_STAT_MAIL_ENVL_RCPT_WAIT,   // wait mail rcpt response
-    TCPIP_SMTPC_STAT_MAIL_ENVL_DATA,        // send mail envelope: data
-    TCPIP_SMTPC_STAT_MAIL_ENVL_DATA_WAIT,   // wait mail data response
-    // mail body 
-    TCPIP_SMTPC_STAT_MAIL_MSG_START,       // mail message body starts; no more answers from the server
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_DATE = TCPIP_SMTPC_STAT_MAIL_MSG_START, // send mail header: date
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_FROM,     // send mail header: from
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_TO,       // send mail header: to
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_SENDER,   // send mail header: sender
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_SUBJECT,  // send mail header: subject
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_MSG_ID,   // send mail header:  message ID
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_MIME_HDR, // send mail header: mime header
-    TCPIP_SMTPC_STAT_MAIL_MSG_HDR_PREAMBLE, // send mail preamble header
-    TCPIP_SMTPC_STAT_MAIL_MSG_BODY_HDR,     // send mail body header
-    TCPIP_SMTPC_STAT_MAIL_MSG_BODY,         // send mail body
-    TCPIP_SMTPC_STAT_MAIL_MSG_BUFF_HDR,     // send mail buffer header
-    TCPIP_SMTPC_STAT_MAIL_MSG_BUFF_BODY,    // send mail buffer body
-    TCPIP_SMTPC_STAT_MAIL_MSG_FILE_HDR,     // send mail file header
-    TCPIP_SMTPC_STAT_MAIL_MSG_FILE_BODY,    // send mail file body
-    TCPIP_SMTPC_STAT_MAIL_DONE,             // send mail stop/end
-    TCPIP_SMTPC_STAT_MAIL_DONE_WAIT,        // wait mail confirmation from the server
-    TCPIP_SMTPC_STAT_MAIL_DONE_REPORT,      // done; report result to the user
-    // after mail done
-    TCPIP_SMTPC_STAT_TRANSACTION_RESET,     // reset server transaction if smth went wrong
-    TCPIP_SMTPC_STAT_TRANSACTION_RESET_WAIT,// wait server reply
-    TCPIP_SMTPC_STAT_TRANSACTION_QUIT,      // quit server transaction
-    TCPIP_SMTPC_STAT_TRANSACTION_QUIT_WAIT, // wait server reply
-    TCPIP_SMTPC_STAT_TRANSACTION_CLOSE,     // done with this transaction, close everything
-    // done
-    TCPIP_SMTPC_STAT_FREED,                 // this descriptor/transaction is no longer busy
-                                            // needs to be freed
-}TCPIP_SMTPC_STATUS;
+#define     SMTPC_STAT_DNS_START                1U      // start DNS resolution  
+#define     SMTPC_STAT_DNS_WAIT                 2U      // wait DNS resolution 
+#define     SMTPC_STAT_SOCKET_GET               3U      // get communication channel 
+#define     SMTPC_STAT_SKT_WAIT_CONNECT         4U      // wait server to respond 
+#define     SMTPC_STAT_SERVER_CONNECTED         5U      // from now on the server was connected
+// server helo, tls and authentication
+#define     SMTPC_STAT_EHLO_PLAIN    SMTPC_STAT_SERVER_CONNECTED // send ehlo in plain mode
+#define     SMTPC_STAT_EHLO_PLAIN_WAIT          6U      // wait EHLO reply
+#define     SMTPC_STAT_TLS_START                7U      // start TLS command
+#define     SMTPC_STAT_TLS_WAIT                 8U      // wait STARTTLS server reply
+#define     SMTPC_STAT_TLS_WAIT_SECURE          9U      // wait TLS handshake to be done
+#define     SMTPC_STAT_EHLO_SECURE              10U     // send ehlo in encrypted/secure mode
+#define     SMTPC_STAT_EHLO_SECURE_WAIT         11U     // wait ehlo reply
+#define     SMTPC_STAT_AUTH                     12U     // authentication phase
+#define     SMTPC_STAT_AUTH_WAIT_LOGIN_USER     13U     // Login authentication wait for server user request
+#define     SMTPC_STAT_AUTH_LOGIN_USER          14U     // Send Login user
+#define     SMTPC_STAT_AUTH_WAIT_LOGIN_PASS     15U     // Login authentication wait for server pass request
+#define     SMTPC_STAT_AUTH_LOGIN_PASS          16U     // Send Login password
+#define     SMTPC_STAT_AUTH_WAIT_FINAL          17U     // wait final authentication response
+// mail start
+#define     SMTPC_STAT_MAIL_START               18U     // mail start
+#define     SMTPC_STAT_MAIL_ENVL_FROM   SMTPC_STAT_MAIL_START // send mail envelope: from
+#define     SMTPC_STAT_MAIL_ENVL_FROM_WAIT      19U     // wait mail from response
+#define     SMTPC_STAT_MAIL_ENVL_RCPT           20U     // send mail envelope: rcpt
+#define     SMTPC_STAT_MAIL_ENVL_RCPT_WAIT      21U     // wait mail rcpt response
+#define     SMTPC_STAT_MAIL_ENVL_DATA           22U     // send mail envelope: data
+#define     SMTPC_STAT_MAIL_ENVL_DATA_WAIT      23U     // wait mail data response
+// mail body 
+#define     SMTPC_STAT_MAIL_MSG_START           24U     // mail message body starts; no more answers from the server
+#define     SMTPC_STAT_MAIL_MSG_HDR_DATE    SMTPC_STAT_MAIL_MSG_START // send mail header: date
+#define     SMTPC_STAT_MAIL_MSG_HDR_FROM        25U     // send mail header: from
+#define     SMTPC_STAT_MAIL_MSG_HDR_TO          26U     // send mail header: to
+#define     SMTPC_STAT_MAIL_MSG_HDR_SENDER      27U     // send mail header: sender
+#define     SMTPC_STAT_MAIL_MSG_HDR_SUBJECT     28U     // send mail header: subject
+#define     SMTPC_STAT_MAIL_MSG_HDR_MSG_ID      29U     // send mail header:  message ID
+#define     SMTPC_STAT_MAIL_MSG_HDR_MIME_HDR    30U     // send mail header: mime header
+#define     SMTPC_STAT_MAIL_MSG_HDR_PREAMBLE    31U     // send mail preamble header
+#define     SMTPC_STAT_MAIL_MSG_BODY_HDR        32U     // send mail body header
+#define     SMTPC_STAT_MAIL_MSG_BODY            33U     // send mail body
+#define     SMTPC_STAT_MAIL_MSG_BUFF_HDR        34U     // send mail buffer header
+#define     SMTPC_STAT_MAIL_MSG_BUFF_BODY       35U     // send mail buffer body
+#define     SMTPC_STAT_MAIL_MSG_FILE_HDR        36U     // send mail file header
+#define     SMTPC_STAT_MAIL_MSG_FILE_BODY       37U     // send mail file body
+#define     SMTPC_STAT_MAIL_DONE                38U     // send mail stop/end
+#define     SMTPC_STAT_MAIL_DONE_WAIT           39U     // wait mail confirmation from the server
+#define     SMTPC_STAT_MAIL_DONE_REPORT         40U     // done; report result to the user
+// after mail done
+#define     SMTPC_STAT_TRANSACTION_RESET        41U     // reset server transaction if smth went wrong
+#define     SMTPC_STAT_TRANSACTION_RESET_WAIT   42U     // wait server reply
+#define     SMTPC_STAT_TRANSACTION_QUIT         43U     // quit server transaction
+#define     SMTPC_STAT_TRANSACTION_QUIT_WAIT    44U     // wait server reply
+#define     SMTPC_STAT_TRANSACTION_CLOSE        45U     // done with this transaction, close everything
+// done
+#define     SMTPC_STAT_FREED                    46U     // this descriptor/transaction is no longer busy, needs to be freed
+
+typedef unsigned int TCPIP_SMTPC_STATUS;     // one of the SMTPC_STAT_ values
 
 // type of supported mail envelopes
 typedef enum
@@ -201,6 +199,7 @@ typedef enum
 }TCPIP_SMTPC_ENVELOPE;
 
 // server supported flags: TLS, authentication, etc.
+// 16 bit values only
 typedef enum
 {
     TCPIP_SMTPC_DCPT_FLAG_NONE          = 0x0000,       // no flag set
@@ -240,7 +239,7 @@ typedef enum
 }TCPIP_SMTPC_DCPT_FLAGS;
 
 // forward reference
-struct _tag_TCPIP_SMTP_READ_DCPT;
+struct S_tag_TCPIP_SMTP_READ_DCPT;
 
 // structure for allowing reads from buffers or files to be done in the same way
 typedef struct 
@@ -250,15 +249,15 @@ typedef struct
     // buffer and buffSize for buffers 
     // returns true for success
     // it should allow multiple init ops with the same buffer/file!
-    bool        (*init)(struct _tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, const char* name, const uint8_t* buffer, size_t buffSize);
+    bool        (*fInit)(struct S_tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, const char* name, const uint8_t* buffer, size_t buffSize);
     // deinitialization function;
-    void        (*deinit)(struct _tag_TCPIP_SMTP_READ_DCPT* pReadDcpt);
+    void        (*fDeinit)(struct S_tag_TCPIP_SMTP_READ_DCPT* pReadDcpt);
     // reads data into pBuffer;
     // returns -1 for eof; 
     // returns >= 0  for number of bytes read
-    int         (*read)(struct _tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, uint8_t* pBuffer, size_t nBytes);
+    int         (*fRead)(struct S_tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, uint8_t* pBuffer, size_t nBytes);
     // pushes back to the stream the number of bytes
-    int         (*push)(struct _tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, size_t nBytes);
+    int         (*fPush)(struct S_tag_TCPIP_SMTP_READ_DCPT* pReadDcpt, size_t nBytes);
 }TCPIP_SMTP_READ_OBJ;
 
 // read descriptor for a buffer
@@ -280,7 +279,7 @@ typedef struct
 }TCPIP_SMTP_READ_DCPT_FILE;
 
 // read descriptor encapsulating a read object
-typedef struct _tag_TCPIP_SMTP_READ_DCPT
+typedef struct S_tag_TCPIP_SMTP_READ_DCPT
 {
     const TCPIP_SMTP_READ_OBJ*  pReadObj;       // generic
     union
@@ -292,12 +291,16 @@ typedef struct _tag_TCPIP_SMTP_READ_DCPT
 
 
 // structure describing a client mail message operation
-typedef struct _tag_SMTPC_MESSAGE_DCPT
+typedef struct S_tag_SMTPC_MESSAGE_DCPT
 {
-    struct _tag_SMTPC_MESSAGE_DCPT*     next;       // safe cast to single list
+    struct S_tag_SMTPC_MESSAGE_DCPT*     next;       // safe cast to single list
     uint16_t                            dcptIx;     // descriptor identifier
     NET_PRES_SKT_HANDLE_T               skt;        // comm socket
-    IP_MULTI_ADDRESS                    serverAdd;
+    union
+    {
+        IP_MULTI_ADDRESS                serverAdd;
+        NET_PRES_ADDRESS                presServerAdd;
+    };
     IP_ADDRESS_TYPE                     addType;
     TCPIP_SMTPC_MAIL_MESSAGE            smtpMailMessage;    // current message to be sent 
     TCPIP_SMTPC_STATUS                  currStat;           // current descriptor status
@@ -309,12 +312,12 @@ typedef struct _tag_SMTPC_MESSAGE_DCPT
     TCPIP_SMTPC_MESSAGE_RESULT          messageRes;     // result of this message
     TCPIP_SMTPC_MESSAGE_WARNING         messageWarn;    // occurred warnings
     uint32_t                            waitTick;       // if a reply is not received, trigger a timeout
-    TCPIP_SMTPC_DCPT_FLAGS              dcptFlags;      // descriptor flags
     TCPIP_SMTP_READ_DCPT                smtpReadDcpt;
-    TCPIP_SMTPC_ATTACH_TYPE             smtpPartAttachType;     // type of the part attachment to be transmitted
-    TCPIP_SMTPC_ENCODE_TYPE             smtpPartEncodeType;     // encoding for the part to be transmitted
     const TCPIP_SMTPC_ATTACH_BUFFER*    smtpAttachBuffer;       // current attach buffer to be sent
     const TCPIP_SMTPC_ATTACH_FILE*      smtpAttachFile;         // current file attachment to be sent
+    uint16_t                            smtpPartAttachType;     // TCPIP_SMTPC_ATTACH_TYPE: type of the part attachment to be transmitted
+    uint16_t                            smtpPartEncodeType;     // TCPIP_SMTPC_ENCODE_TYPE: encoding for the part to be transmitted
+    uint16_t                            dcptFlags;      // descriptor flags: TCPIP_SMTPC_DCPT_FLAGS value
     uint16_t                            nSmtpAttachBuffers;     // how many attached buffers
     uint16_t                            nSmtpAttachFiles;       // how many attached files
     uint16_t                            retryCnt;               // current retry counter
@@ -322,5 +325,5 @@ typedef struct _tag_SMTPC_MESSAGE_DCPT
 }TCPIP_SMTPC_MESSAGE_DCPT;
 
 
-#endif  // _SMTPC_PRIVATE_H_
+#endif  // H_SMTPC_PRIVATE_H_
 

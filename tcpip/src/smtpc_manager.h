@@ -15,7 +15,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*
-Copyright (C) 2016-2023, Microchip Technology Inc., and its subsidiaries. All rights reserved.
+Copyright (C) 2016-2025, Microchip Technology Inc., and its subsidiaries. All rights reserved.
 
 The software and documentation is provided by microchip and its contributors
 "as is" and any express, implied or statutory warranties, including, but not
@@ -46,18 +46,18 @@ Microchip or any third party.
 
 // DOM-IGNORE-END
 
-#ifndef _SMTPC_MANAGER_H_
-#define _SMTPC_MANAGER_H_
+#ifndef H_SMTPC_MANAGER_H_
+#define H_SMTPC_MANAGER_H_
 
 
 // stack private module API
 
-bool        TCPIP_SMTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_SMTPC_MODULE_CONFIG* pSmtpcConfig);
+bool        TCPIP_SMTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const void* initData);
 
 
 void        TCPIP_SMTPC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl);
 
 
 
-#endif  // _SMTPC_MANAGER_H_
+#endif  // H_SMTPC_MANAGER_H_
 
